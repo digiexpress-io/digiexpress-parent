@@ -445,11 +445,11 @@ const en = {
   'activities.frontoffice.accessManagement.title': 'Access management',
   'activities.frontoffice.accessManagement.desc': 'Roles, permissions, and user access settings',
 
-  'activities.frontoffice.userProfile.title': 'User profile',
-  'activities.frontoffice.userProfile.desc': 'My personal information, settings, preferences, and recent activity',
+  'activities.frontoffice.myProfile.title': 'My profile',
+  'activities.frontoffice.myProfile.desc': 'My personal information, settings, preferences, and recent activity',
 
-  'activities.frontoffice.allUserProfiles.title': 'All user profiles',
-  'activities.frontoffice.allUserProfiles.desc': 'View all registered users',
+  'activities.frontoffice.allProfiles.title': 'All profiles',
+  'activities.frontoffice.allProfiles.desc': 'View all registered users',
 
   'activities.frontoffice.permissions.rolesOverview.title': 'Overview',
   'activities.frontoffice.permissions.orgChart.desc': 'Permissions, roles, users',
@@ -459,7 +459,6 @@ const en = {
   'activities.frontoffice.allUsers.title': 'All users',
 
   'activities.frontoffice.systemOverview.title': 'System overiview',
-
 
   'activities.profile.title': 'My profile',
 
@@ -478,18 +477,18 @@ const en = {
   'explorer.frontoffice.myoverview.menuOption': 'My daily overview',
   'explorer.frontoffice.myhistory.menuOption': 'My activity history',
   'explorer.frontoffice.assetMgmt.menuOption': 'Asset management',
-  'explorer.frontoffice.userProfile.menuOption': 'User profile',
-  'explorer.frontoffice.administration.menuOption': 'Administration',
+  'explorer.frontoffice.myProfile.menuOption': 'My profile',
+  'explorer.frontoffice.allProfiles.menuOption': 'All profiles',
+  'explorer.frontoffice.userProfiles.menuOption': 'User profiles',
 
+  'explorer.frontoffice.systemOverview.menuOption': 'System overview',
   'explorer.frontoffice.accessManagement.menuOption': 'Access Management',
   'explorer.frontoffice.accessManagement.allUsers.menuOption': 'All users',
   'explorer.frontoffice.accessManagement.allPermissions.menuOption': 'All permissions',
   'explorer.frontoffice.accessManagement.allRoles.menuOption': 'All roles',
   'explorer.frontoffice.accessManagement.orgChart.menuOption': 'Overview',
 
-  'explorer.frontoffice.allUserProfiles.menuOption': 'All user profiles',
   'explorer.frontoffice.allRoles.menuOption': 'All roles',
-
 
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
   'activities.frontoffice.crm.tenant.title': 'Current tenant',

@@ -141,8 +141,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
   function handleSystemOverview() { actions.handleTabAdd({ id: 'systemOverview', label: <FormattedMessage id="activities.frontoffice.systemOverview.title" /> }) }
   function handleTenant() { actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) }
 
-  function handleCurrentUserProfile() { actions.handleTabAdd({ id: 'currentUserProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> }) }
-  function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> }) }
+  function handleMyUserProfile() { actions.handleTabAdd({ id: 'myProfile', label: <FormattedMessage id="activities.frontoffice.myProfile.title" /> }) }
+  function handleAllUserProfiles() { actions.handleTabAdd({ id: 'allProfiles', label: <FormattedMessage id="activities.frontoffice.allProfiles.title" /> }) }
   function handleOrgChart() { actions.handleTabAdd({ id: 'rolesOverview', label: <FormattedMessage id="activities.frontoffice.permissions.rolesOverview.title" /> }) }
 
 
@@ -207,12 +207,15 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
         <StyledExplorerSubTab value='explorer.releaseMgmt' label={<FormattedMessage id="explorer.frontoffice.releaseMgmt.menuOption" />} onClick={handleDeployments}
           icon={<FormatListBulletedOutlinedIcon fontSize='small' />} />
 
-        <StyledExplorerTab value='explorer.administration' label={<FormattedMessage id="explorer.frontoffice.administration.menuOption" />} onClick={undefined}
+        <StyledExplorerTab value='explorer.userProfiles' label={<FormattedMessage id="explorer.frontoffice.userProfiles.menuOption" />} onClick={undefined}
           icon={<SupervisorAccountOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.currentUserProfile' label={<FormattedMessage id="explorer.frontoffice.userProfile.menuOption" />} onClick={handleCurrentUserProfile}
+        <StyledExplorerSubTab value='explorer.myProfile' label={<FormattedMessage id="explorer.frontoffice.myProfile.menuOption" />} onClick={handleMyUserProfile}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='explorer.allUserProfiles' label={<FormattedMessage id="explorer.frontoffice.allUserProfiles.menuOption" />} onClick={handleAllUserProfiles}
+        <StyledExplorerSubTab value='explorer.allProfiles' label={<FormattedMessage id="explorer.frontoffice.allProfiles.menuOption" />} onClick={handleAllUserProfiles}
           icon={<PersonOutlineOutlinedIcon fontSize='small' />} />
+
+        <StyledExplorerTab value='explorer.systemOverview' label={<FormattedMessage id="explorer.frontoffice.systemOverview.menuOption" />} onClick={undefined}
+          icon={<SupervisorAccountOutlinedIcon fontSize='small' />} />
         <StyledExplorerSubTab value='explorer.tenant' label={<FormattedMessage id="explorer.frontoffice.tenant.menuOption" />} onClick={handleTenant}
           icon={<CorporateFareOutlinedIcon fontSize='small' />} />
 

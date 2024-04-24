@@ -87,24 +87,24 @@ const createActivities: (props: {
   },
   {
     id: "userProfile",
-    title: "activities.frontoffice.userProfile.title",
+    title: "activities.frontoffice.myProfile.title",
     content: {
-      label: "activities.frontoffice.userProfile.desc"
+      label: "activities.frontoffice.myProfile.desc"
     },
     primary: {
       label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'userProfile', label: <FormattedMessage id="activities.frontoffice.userProfile.title" /> })
+      onClick: () => actions.handleTabAdd({ id: 'myProfile', label: <FormattedMessage id="activities.frontoffice.myProfile.title" /> })
     }
   },
   {
     id: "allUserProfiles",
-    title: "activities.frontoffice.allUserProfiles.title",
+    title: "activities.frontoffice.allProfiles.title",
     content: {
-      label: "activities.frontoffice.allUserProfiles.desc"
+      label: "activities.frontoffice.allProfiles.desc"
     },
     primary: {
       label: "buttons.view",
-      onClick: () => actions.handleTabAdd({ id: 'allUserProfiles', label: <FormattedMessage id="activities.frontoffice.allUserProfiles.title" /> })
+      onClick: () => actions.handleTabAdd({ id: 'allProfiles', label: <FormattedMessage id="activities.frontoffice.allProfiles.title" /> })
     }
   },
   {

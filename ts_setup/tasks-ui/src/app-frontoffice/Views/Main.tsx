@@ -53,9 +53,9 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><Tasks.Dev /></Box>);
     } else if (active.id === 'tenant') {
       return (<Box sx={root}><CurrentTenant /></Box>)
-    } else if (active.id === 'currentUserProfile') {
+    } else if (active.id === 'myProfile') {
       return (<Box sx={root}><CurrentUserProfile /></Box>)
-    } else if (active.id === 'allUserProfiles') {
+    } else if (active.id === 'allProfiles') {
       return (<Box sx={root}><UserProfiles /></Box>)
     } else if (active.id === 'allRoles') {
       return (<Box sx={root}><RolesOverview /></Box>)
