@@ -13,6 +13,7 @@ const modules: string[] = [
   'components-project',
   'components-stencil',
   'components-asset-mgmt',
+  'components-release-mgmt',
   'components-task',
   'components-dialob',
   'components-dialob-composer',

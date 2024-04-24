@@ -191,7 +191,7 @@ const en = {
   'task.event.createChecklist': 'Checklist created',
   'task.event.addChecklistItem': 'Checklist item added',
 
-  // --------------- ASSET-MGMT START -----------------
+  // --------------- RELEASE MANAGEMENT START -----------------
 
 
   'core.sysconfig.hide': 'Hide: {records} forms',
@@ -199,16 +199,15 @@ const en = {
   'core.sysconfig.current_config': 'Current config',
   'core.sysconfig.all_config': 'All config',
 
-  'assetMgmt.dialobComposer.open': 'Open Dialob Composer',
-  'assetMgmt.stencil.articles': 'Articles:',
-  'assetMgmt.stencil.articles.noneAvailable': 'Articles: None available',
-  'assetMgmt.notAvailable': 'Not available',
-  'assetMgmt.stencil.serviceName': 'Service name: {serviceName}',
+  'releaseMgmt.dialobComposer.open': 'Open Dialob Composer',
+  'releaseMgmt.stencil.articles': 'Articles:',
+  'releaseMgmt.stencil.articles.noneAvailable': 'Articles: None available',
+  'releaseMgmt.notAvailable': 'Not available',
+  'releaseMgmt.stencil.serviceName': 'Service name: {serviceName}',
+  'releaseMgmt.dialob.form': 'Form: ',
 
-  'assetMgmt.dialob.form': 'Form: ',
 
-
-  // --------------- ACCESS-MGMT END -----------------
+  // --------------- RELEASE MANAGEMENT END -----------------
 
 
   'core.taskCreate.fields.roles': 'Roles',

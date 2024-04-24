@@ -31,14 +31,14 @@ const StencilArticles: React.FC<{ release: StencilClient.Release, service: SysCo
   const workflow = release.body.workflows.find(wk => wk.value === service.serviceName);
 
   if (!workflow) {
-    return (<FormattedMessage id='assetMgmt.stencil.articles.noneAvailable' />);
+    return (<FormattedMessage id='releaseMgmt.stencil.articles.noneAvailable' />);
   }
   function handleArticleToggle() {
 
   }
 
   return <Box>
-    <FormattedMessage id='assetMgmt.stencil.articles' />
+    <FormattedMessage id='releaseMgmt.stencil.articles' />
     {workflow.articles
       .flatMap(articleId => release.body.articles.filter(article => article.id === articleId))
       .map(article => (<Burger.SecondaryButton
@@ -77,12 +77,12 @@ export const SysConfigForm: React.FC<{ index: number }> = ({ index }) => {
           }} />
 
           <Box flexGrow={1}>
-            <Box><FormattedMessage id='assetMgmt.stencil.serviceName' values={{ serviceName: service.serviceName }} /></Box>
+            <Box><FormattedMessage id='releaseMgmt.stencil.serviceName' values={{ serviceName: service.serviceName }} /></Box>
             <StencilRelease index={index} />
             <Box>
-              <FormattedMessage id='assetMgmt.dialob.form' />
+              <FormattedMessage id='releaseMgmt.dialob.form' />
               <Burger.SecondaryButton
-                label={'assetMgmt.dialobComposer.open'}
+                label={'releaseMgmt.dialobComposer.open'}
                 onClick={handleFormToggle} />
             </Box>
           </Box>

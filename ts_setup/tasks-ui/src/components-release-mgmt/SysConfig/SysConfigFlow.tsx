@@ -19,7 +19,7 @@ export const FlowYaml: React.FC<{ flowId: string }> = ({ flowId }) => {
 
   const flow = Object.values(hdesSite.flows).find(flow => flow.ast?.name === flowId);
   if (!flow) {
-    return (<FormattedMessage id='assetMgmt.notAvailable' />);
+    return (<FormattedMessage id='releaseMgmt.notAvailable' />);
   }
 
   return (<FlowReadOnly flow={flow} />);
@@ -34,11 +34,11 @@ export const FlowGraph: React.FC<{ flowId: string }> = ({ flowId }) => {
 
   const flow = Object.values(hdesSite.flows).find(flow => flow.ast?.name === flowId);
   if (!flow) {
-    return (<FormattedMessage id='assetMgmt.notAvailable' />);
+    return (<FormattedMessage id='releaseMgmt.notAvailable' />);
   }
   const { ast } = flow;
   if (!ast) {
-    return (<FormattedMessage id='assetMgmt.notAvailable' />);
+    return (<FormattedMessage id='releaseMgmt.notAvailable' />);
   }
   return (<FlowReadOnlyGraph flow={ast} site={hdesSite} />);
 }
