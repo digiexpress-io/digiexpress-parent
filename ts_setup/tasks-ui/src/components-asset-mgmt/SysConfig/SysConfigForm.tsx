@@ -41,6 +41,7 @@ const StencilArticles: React.FC<{ release: StencilClient.Release, service: SysCo
     articles: {workflow.articles
       .flatMap(articleId => release.body.articles.filter(article => article.id === articleId))
       .map(article => (<Burger.SecondaryButton
+        key={article.id}
         label={article.name}
         onClick={handleArticleToggle} />))}
   </Box>

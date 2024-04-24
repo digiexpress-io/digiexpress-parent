@@ -191,10 +191,17 @@ const en = {
   'task.event.createChecklist': 'Checklist created',
   'task.event.addChecklistItem': 'Checklist item added',
 
+  // --------------- ASSET-MGMT START -----------------
+
+
   'core.sysconfig.hide': 'Hide: {records} forms',
   'core.sysconfig.show': 'Show: {records} forms',
   'core.sysconfig.current_config': 'Current config',
   'core.sysconfig.all_config': 'All config',
+
+  'assetMgmt.dialobComposer.open': 'Open Dialob Composer',
+
+  // --------------- ACCESS-MGMT END -----------------
 
 
   'core.taskCreate.fields.roles': 'Roles',
