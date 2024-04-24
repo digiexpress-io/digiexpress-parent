@@ -50,10 +50,12 @@ public class BatchForOneDocModify {
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
     
+    final var now = OffsetDateTime.now();
+    
     final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(docLock.getDoc().get().getId())
-        .createdAt(OffsetDateTime.now())
+        .createdAt(now)
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(docLock.getDoc().get().getCommitId())
@@ -96,6 +98,8 @@ public class BatchForOneDocModify {
           .docId(doc.getId())
           .commitId(commitBuilder.getCommitId())
           .commands(commands)
+          .createdAt(now)
+          .createdBy(author)
           .build()
         );
     docLogs.forEach(command -> commitBuilder.add(command));

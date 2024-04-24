@@ -82,7 +82,7 @@ public class BatchDocTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     
     Assertions.assertEquals(10, findAllDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(10, findAllDocs.getObjects().getCommits().size());
+    Assertions.assertEquals(10, findAllDocs.getObjects().getBranches().size());
     
     
     // update branches
