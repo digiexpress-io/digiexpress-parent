@@ -42,7 +42,7 @@ const StencilArticles: React.FC<{ release: StencilClient.Release, service: SysCo
       .flatMap(articleId => release.body.articles.filter(article => article.id === articleId))
       .map(article => (<Burger.SecondaryButton
         key={article.id}
-        label={article.name}
+        label={<>{article.name}</>} // prevent translation errors
         onClick={handleArticleToggle} />))}
   </Box>
 }
