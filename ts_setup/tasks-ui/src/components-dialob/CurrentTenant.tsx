@@ -23,7 +23,7 @@ const SectionLayout: React.FC<{ label: string, value: string | undefined }> = ({
 
 const CurrentTenant: React.FC<{}> = () => {
   const am = useAm();
-  const data = am.profile.tenant; 
+  const data = am.profile.tenant;
 
   if (!data) {
     return (<>No data</>)
@@ -56,9 +56,9 @@ const CurrentTenant: React.FC<{}> = () => {
         <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='tenantConfig.frontoffice.repoConfigs' /></Typography>
           <>
-            {data.repoConfigs ? data.repoConfigs.map((repo) => (<>
+            {data.repoConfigs ? data.repoConfigs.map((repo) => (<div key={repo.repoId}>
               <SectionLayout label={`tenantConfig.frontoffice.${repo.repoType}`} value={repo.repoId} />
-            </>
+            </div>
             )) : <FormattedMessage id='tenantConfig.frontoffice.noRepos' />}
           </>
 

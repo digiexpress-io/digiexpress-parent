@@ -148,8 +148,8 @@ const Secondary: React.FC<{ init?: { profile: UserProfileAndOrg, backend: Backen
 
   React.useEffect(() => {
     // handleTaskSearch();
-    // handleDeployments();
-    handleRolesOverview();
+    handleDeployments();
+    // handleRolesOverview();
     // handlePermissionsOverview();
     // handlePrincipalsOverview();
   }, []);

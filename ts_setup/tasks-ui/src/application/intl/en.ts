@@ -393,6 +393,8 @@ const en = {
   'tenantConfig.frontoffice.WRENCH': 'Wrench',
   'tenantConfig.frontoffice.DIALOB': 'Dialob',
   'tenantConfig.frontoffice.SYS_CONFIG': 'SYS CONFIG',
+  'tenantConfig.frontoffice.USER_PROFILE': 'User profile',
+  'tenantConfig.frontoffice.PERMISSIONS': 'Permissions',
 
   'userProfile.frontoffice.title': 'User profile',
   'userProfile.frontoffice.info': 'Profile info',
