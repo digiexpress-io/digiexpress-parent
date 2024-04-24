@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Box, Stack, Collapse, useTheme } from '@mui/material';
+import { Paper, Box, Stack, Collapse } from '@mui/material';
 
 
 import Burger from 'components-burger';
@@ -28,16 +28,16 @@ export const SysConfigFlowGroup: React.FC<{ group: Group }> = ({ group }) => {
           <Burger.PrimaryButton sx={sx} label={<>{group.id}</>} onClick={() => { }} />
           <Box flexGrow={1} />
           <Burger.SecondaryButton
-            label={formsVisible ? "core.sysconfig.hide" : "core.sysconfig.show"} 
-            labelValues={{records: group.value.length}}
+            label={formsVisible ? "core.sysconfig.hide" : "core.sysconfig.show"}
+            labelValues={{ records: group.value.length }}
             onClick={handleFormToggle} />
         </Box>
         <Paper sx={{ borderTopLeftRadius: '0px', minHeight: '100px' }}>
-          <SysConfigFlow flowId={group.id}/>
+          <SysConfigFlow flowId={group.id} />
         </Paper>
       </Box>
 
-      
+
       <Collapse orientation="vertical" in={formsVisible}>
         <Stack spacing={1}>
           <Box />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Paper, Box, useTheme } from '@mui/material';
-
+import { FormattedMessage } from 'react-intl';
 
 import { DialobEditor } from 'components-dialob';
 import * as colors from 'components-colors';
@@ -31,14 +31,15 @@ const StencilArticles: React.FC<{ release: StencilClient.Release, service: SysCo
   const workflow = release.body.workflows.find(wk => wk.value === service.serviceName);
 
   if (!workflow) {
-    return <Box>articles: not available</Box>;
+    return (<FormattedMessage id='assetMgmt.stencil.articles.noneAvailable' />);
   }
   function handleArticleToggle() {
 
   }
 
   return <Box>
-    articles: {workflow.articles
+    <FormattedMessage id='assetMgmt.stencil.articles' />
+    {workflow.articles
       .flatMap(articleId => release.body.articles.filter(article => article.id === articleId))
       .map(article => (<Burger.SecondaryButton
         key={article.id}
@@ -76,14 +77,14 @@ export const SysConfigForm: React.FC<{ index: number }> = ({ index }) => {
           }} />
 
           <Box flexGrow={1}>
-            <Box>service name: {service.serviceName}</Box>
+            <Box><FormattedMessage id='assetMgmt.stencil.serviceName' values={{ serviceName: service.serviceName }} /></Box>
             <StencilRelease index={index} />
-            <Box>form:
+            <Box>
+              <FormattedMessage id='assetMgmt.dialob.form' />
               <Burger.SecondaryButton
-                label={"assetMgmt.dialobComposer.open"}
+                label={'assetMgmt.dialobComposer.open'}
                 onClick={handleFormToggle} />
             </Box>
-
           </Box>
         </Box>
       </Paper>

@@ -200,6 +200,13 @@ const en = {
   'core.sysconfig.all_config': 'All config',
 
   'assetMgmt.dialobComposer.open': 'Open Dialob Composer',
+  'assetMgmt.stencil.articles': 'Articles:',
+  'assetMgmt.stencil.articles.noneAvailable': 'Articles: None available',
+  'assetMgmt.notAvailable': 'Not available',
+  'assetMgmt.stencil.serviceName': 'Service name: {serviceName}',
+
+  'assetMgmt.dialob.form': 'Form: ',
+
 
   // --------------- ACCESS-MGMT END -----------------
 

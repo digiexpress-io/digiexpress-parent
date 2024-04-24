@@ -1,26 +1,25 @@
 import React from 'react';
 import { useTheme, CircularProgress, Tab, Tabs, Box } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 
 import { FlowReadOnly, FlowReadOnlyGraph } from 'components-hdes/core';
-
 
 import * as colors from 'components-colors';
 import Burger from 'components-burger';
 import { Group } from 'descriptor-grouping';
-
 
 import { useSysConfig } from '../SysConfigContext';
 
 export const FlowYaml: React.FC<{ flowId: string }> = ({ flowId }) => {
   const { hdesSite } = useSysConfig();
 
-  if(!hdesSite) {
+  if (!hdesSite) {
     return null;
   }
 
   const flow = Object.values(hdesSite.flows).find(flow => flow.ast?.name === flowId);
-  if(!flow) {
-    return <>not available</>;
+  if (!flow) {
+    return (<FormattedMessage id='assetMgmt.notAvailable' />);
   }
 
   return (<FlowReadOnly flow={flow} />);
@@ -29,25 +28,25 @@ export const FlowYaml: React.FC<{ flowId: string }> = ({ flowId }) => {
 export const FlowGraph: React.FC<{ flowId: string }> = ({ flowId }) => {
   const { hdesSite } = useSysConfig();
 
-  if(!hdesSite) {
+  if (!hdesSite) {
     return null;
   }
 
   const flow = Object.values(hdesSite.flows).find(flow => flow.ast?.name === flowId);
-  if(!flow) {
-    return <>not available</>;
+  if (!flow) {
+    return (<FormattedMessage id='assetMgmt.notAvailable' />);
   }
-  const {ast} = flow;
-  if(!ast) {
-    return <>not available</>;
+  const { ast } = flow;
+  if (!ast) {
+    return (<FormattedMessage id='assetMgmt.notAvailable' />);
   }
-  return (<FlowReadOnlyGraph flow={ast} site={hdesSite}/>);
+  return (<FlowReadOnlyGraph flow={ast} site={hdesSite} />);
 }
 
 
 const TabContent: React.FC<{ selected: number, id: number, children: React.ReactNode }> = ({ selected, id, children }) => {
 
-  if(selected !== id) {
+  if (selected !== id) {
     return null;
   }
 
@@ -59,18 +58,18 @@ export const SysConfigFlow: React.FC<{ flowId: string }> = ({ flowId }) => {
   const { hdesSite } = useSysConfig();
   const [tabValue, setTabValue] = React.useState(0);
 
-  function handleTabValue (event: React.SyntheticEvent, newValue: number) {
+  function handleTabValue(event: React.SyntheticEvent, newValue: number) {
     setTabValue(newValue);
   }
 
 
-  if(!hdesSite) {
-    return (<CircularProgress color='secondary'/>);
+  if (!hdesSite) {
+    return (<CircularProgress color='secondary' />);
   }
-  
+
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
-    <Tabs
+      <Tabs
         orientation="vertical"
         variant="scrollable"
         value={tabValue}
