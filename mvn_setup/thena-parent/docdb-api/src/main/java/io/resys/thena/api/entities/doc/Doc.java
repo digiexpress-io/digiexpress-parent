@@ -23,12 +23,9 @@ public interface Doc extends DocEntity, IsDocObject, ThenaTable {
 
   String getCommitId();
   String getCreatedWithCommitId();
-  String getUpdatedTreeWithCommitId();
 
   OffsetDateTime getCreatedAt(); // transitive from commit
   OffsetDateTime getUpdatedAt(); // transitive from commit
-  OffsetDateTime getUpdatedTreeAt(); // transitive from commit
-  
   
   @Nullable String getOwnerId();
   @Nullable String getParentId();

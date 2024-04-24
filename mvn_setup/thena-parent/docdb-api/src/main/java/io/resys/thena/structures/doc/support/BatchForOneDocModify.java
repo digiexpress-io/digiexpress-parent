@@ -57,6 +57,7 @@ public class BatchForOneDocModify {
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(docLock.getDoc().get().getCommitId())
+        .commitLog("")
         .build());
     
 

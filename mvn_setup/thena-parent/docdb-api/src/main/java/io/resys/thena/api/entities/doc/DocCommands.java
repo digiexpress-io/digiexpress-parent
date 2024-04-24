@@ -20,7 +20,8 @@ public interface DocCommands extends DocEntity, IsDocObject, ThenaTable {
   String getDocId();
   Optional<String> getBranchId();
   OffsetDateTime getCreatedAt(); // transitive from commit
-
+  String getCreatedBy(); // transitive from commit
+  
   List<JsonObject> getCommands();
   
   @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_BRANCH; };

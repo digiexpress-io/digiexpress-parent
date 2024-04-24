@@ -108,14 +108,17 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     final var branchId = OidUtils.gen();
     final var doc = lock.getDoc().get();
     
+    final var now = OffsetDateTime.now();
+    
     final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
       .id(OidUtils.gen())
       .docId(doc.getId())
       .branchId(branchId)
-      .createdAt(OffsetDateTime.now())
+      .createdAt(now)
       .commitAuthor(this.author)
       .commitMessage(this.message)
       .parent(lock.getCommit().get().getId())
+      .commitLog("")
       .build()
     );
 
@@ -126,6 +129,8 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .createdWithCommitId(commitBuilder.getCommitId())
       .branchName(branchName)
       .value(appendbranchContents)
+      .createdAt(now)
+      .updatedAt(now)
       .status(Doc.DocStatus.IN_FORCE)
       .build();
     commitBuilder.add(docBranch);
@@ -162,7 +167,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
 
       return ImmutableOneDocEnvelope.builder()
         .repoId(repoId)
-        .doc(batch.getDoc().get())
+        .doc(doc)
         .commit(batch.getDocCommit().iterator().next())
         .branch(batch.getDocBranch().iterator().next())
         .commands(batch.getDocCommands())

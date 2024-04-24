@@ -58,6 +58,7 @@ public abstract class TenantTableNames {
   public abstract String getCommits();
   
   // doc structures
+  public abstract String getDocCommands();
   public abstract String getDocCommits();
   public abstract String getDocBranch();
   public abstract String getDocLog();
@@ -89,6 +90,7 @@ public abstract class TenantTableNames {
         .treeItems( prefix + DEFAULTS.getTreeItems())
         .commits(   prefix + DEFAULTS.getCommits())
         
+        .docCommands(prefix + DEFAULTS.getDocCommands())
         .docCommits(prefix + DEFAULTS.getDocCommits())
         .docBranch( prefix + DEFAULTS.getDocBranch())
         .docLog(    prefix + DEFAULTS.getDocLog())
@@ -133,6 +135,7 @@ public abstract class TenantTableNames {
         .treeItems("git_treeItems")
         .commits("git_commits")
         
+        .docCommands("doc_commands")
         .docCommits("doc_commits")
         .docBranch("doc_branch")
         .docLog("doc_log")

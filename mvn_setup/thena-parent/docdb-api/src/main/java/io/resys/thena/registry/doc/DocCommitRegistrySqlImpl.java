@@ -71,13 +71,19 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDocCommits())
-        .append(" (id, datetime, author, message, branch_id, doc_id, parent, commit_log) VALUES($1, $2, $3, $4, $5, $6, $7, $8)")
+        .append(" (id, created_at, author, message, branch_id, doc_id, parent, commit_log) VALUES($1, $2, $3, $4, $5, $6, $7, $8)")
         .build())
         .props(commits.stream().map(commit -> {
           
           return Tuple.from(Arrays.asList(
-              commit.getId(), commit.getCreatedAt(), commit.getCommitAuthor(), commit.getCommitMessage(), 
-              commit.getBranchId(), commit.getDocId(), commit.getParent().orElse(null), commit.getCommitLog()));
+              commit.getId(), 
+              commit.getCreatedAt(), 
+              commit.getCommitAuthor(), 
+              commit.getCommitMessage(), 
+              commit.getBranchId().orElse(null), 
+              commit.getDocId(), 
+              commit.getParent().orElse(null), 
+              commit.getCommitLog()));
           
         }) .collect(Collectors.toList()))
         .build();
@@ -92,10 +98,10 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     return ImmutableDocCommit.builder()
         .id(row.getString("id"))
         .commitAuthor(row.getString("author"))
-        .createdAt(row.getOffsetDateTime("datetime"))
+        .createdAt(row.getOffsetDateTime("created_at"))
         .commitMessage(row.getString("message"))
         .parent(Optional.ofNullable(row.getString("parent")))
-        .branchId(row.getString("branch_id"))
+        .branchId(Optional.ofNullable(row.getString("branch_id")))
         .commitLog(row.getString("commit_log"))
         .docId(row.getString("doc_id"))
         .build();
@@ -108,7 +114,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  branch_id VARCHAR(40),").ln()
     .append("  doc_id VARCHAR(40) NOT NULL,").ln()
-    .append("  datetime TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
+    .append("  created_at TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
     .append("  author VARCHAR(255) NOT NULL,").ln()
     .append("  message TEXT NOT NULL,").ln()
     .append("  commit_log TEXT NOT NULL,").ln()

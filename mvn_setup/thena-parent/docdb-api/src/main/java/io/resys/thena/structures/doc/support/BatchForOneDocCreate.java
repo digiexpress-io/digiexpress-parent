@@ -60,14 +60,16 @@ public class BatchForOneDocCreate {
     // fallbacks: json.id ?? this.docId ?? generate doc id
     final var docId = Optional.ofNullable(this.docId).orElseGet(() -> Optional.ofNullable(branchContent.getString("id")).orElse(OidUtils.gen()));
     final var branchId = OidUtils.gen();
+    final var now = OffsetDateTime.now();
     final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(docId)
         .branchId(branchId)
-        .createdAt(OffsetDateTime.now())
+        .createdAt(now)
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(Optional.empty())
+        .commitLog("")
         .build());
     
     final var doc = ImmutableDoc.builder()
@@ -80,6 +82,8 @@ public class BatchForOneDocCreate {
         .type(docType)
         .status(Doc.DocStatus.IN_FORCE)
         .meta(docMeta)
+        .createdAt(now)
+        .updatedAt(now)
         .build();
     commitBuilder.add(doc);
     
@@ -91,6 +95,8 @@ public class BatchForOneDocCreate {
       .branchName(branchName)
       .value(branchContent)
       .status(Doc.DocStatus.IN_FORCE)
+      .createdAt(now)
+      .updatedAt(now)
       .build();
     commitBuilder.add(docBranch);
     
@@ -101,6 +107,8 @@ public class BatchForOneDocCreate {
           .branchId(branchId)
           .commitId(commitBuilder.getCommitId())
           .commands(commands)
+          .createdAt(now)
+          .createdBy(author)
           .build()
         );
     docLogs.forEach(command -> commitBuilder.add(command));

@@ -17,7 +17,6 @@ import io.vertx.core.json.JsonObject;
 public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.SqlTuple findAllByIds(Collection<String> ids);
   
-  ThenaSqlClient.SqlTuple findById(String id); // matches by external_id or id or parent_id
   ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
   ThenaSqlClient.SqlTuple deleteById(String id);
   ThenaSqlClient.Sql findAll();

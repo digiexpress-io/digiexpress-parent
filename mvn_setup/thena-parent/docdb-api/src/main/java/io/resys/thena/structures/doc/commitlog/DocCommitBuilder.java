@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
@@ -24,13 +25,17 @@ public class DocCommitBuilder {
   private final List<DocCommitTree> trees = new ArrayList<>();
   private final DocCommitLogger logger;
   private final OffsetDateTime createdAt;
+  private final String docId;
+  private final Optional<String> branchId;
   public DocCommitBuilder(String tenantId, DocCommit commit) {
     super();
     this.commitId = commit.getId();
     this.tenantId = tenantId;
+    this.docId = commit.getDocId();
     this.commit = ImmutableDocCommit.builder().from(commit);
     this.logger = new DocCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
+    this.branchId = commit.getBranchId();
   }
   public String getTenantId() {
     return tenantId;
@@ -45,6 +50,8 @@ public class DocCommitBuilder {
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
+        .docId(docId)
+        .branchId(branchId)
         .operationType(DocCommitTreeOperation.ADD)
         .bodyAfter(JsonObject.mapFrom(entity))
         .build());
@@ -55,6 +62,8 @@ public class DocCommitBuilder {
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
+        .docId(docId)
+        .branchId(branchId)
         .operationType(DocCommitTreeOperation.ADD)
         .bodyBefore(JsonObject.mapFrom(previous))
         .bodyAfter(JsonObject.mapFrom(next))
@@ -65,6 +74,8 @@ public class DocCommitBuilder {
   public DocCommitBuilder rm(IsDocObject current) {
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
+        .docId(docId)
+        .branchId(branchId)
         .commitId(commitId)
         .operationType(DocCommitTreeOperation.REMOVE)
         .bodyBefore(JsonObject.mapFrom(current))

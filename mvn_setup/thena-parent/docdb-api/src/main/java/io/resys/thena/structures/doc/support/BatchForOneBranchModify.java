@@ -66,6 +66,7 @@ public class BatchForOneBranchModify {
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(lock.getBranch().get().getCommitId())
+        .commitLog("")
         .build());
     
 
