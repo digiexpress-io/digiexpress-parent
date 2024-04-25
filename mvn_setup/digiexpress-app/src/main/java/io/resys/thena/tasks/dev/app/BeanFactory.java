@@ -188,7 +188,7 @@ public class BeanFactory {
 
   @Produces
   public CrmClient crmClient(CurrentPgPool currentPgPool, ObjectMapper om) {
-    final var store = io.resys.crm.client.spi.CrmStoreImpl.builder()
+    final var store = io.resys.crm.client.spi.CrmStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)

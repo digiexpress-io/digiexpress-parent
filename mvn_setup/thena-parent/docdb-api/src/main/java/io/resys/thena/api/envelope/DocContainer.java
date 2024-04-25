@@ -17,7 +17,7 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 
 public interface DocContainer extends ThenaContainer {
 
-  interface DocObjectsVisitor<T> {
+  interface DocContainerVisitor<T> {
     T visit(
         Doc doc, 
         DocBranch docBranch, 
@@ -37,7 +37,7 @@ public interface DocContainer extends ThenaContainer {
     Map<String, DocCommit> getCommits();
     Map<String, DocCommitTree> getCommitTrees();
     
-    default <T> List<T> accept(DocContainer.DocObjectsVisitor<T> visitor) {
+    default <T> List<T> accept(DocContainer.DocContainerVisitor<T> visitor) {
       final var result = new ArrayList<T>();
       
       // branches for each doc
@@ -89,7 +89,7 @@ public interface DocContainer extends ThenaContainer {
     Map<String, DocCommit> getCommits();
     Map<String, DocCommitTree> getCommitTrees();
     
-    default <T> List<T> accept(DocObjectsVisitor<T> visitor) {
+    default <T> List<T> accept(DocContainerVisitor<T> visitor) {
       final var result = new ArrayList<T>();
       final var doc = getDoc();
       

@@ -6,7 +6,6 @@ import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.actions.CreateCustomerActionImpl;
 import io.resys.crm.client.spi.actions.CustomerQueryImpl;
 import io.resys.crm.client.spi.actions.UpdateCustomerActionImpl;
-import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -20,12 +19,12 @@ public class CrmClientImpl implements CrmClient {
   
   @Override
   public CrmClient withRepoId(String repoId) {
-    return new CrmClientImpl(ctx.withRepoId(repoId));
+    return new CrmClientImpl(ctx.withTenantId(repoId));
   }
 
   @Override
   public Uni<Tenant> getRepo() {
-    return ctx.getRepo();
+    return ctx.getTenant();
   }
   
   @Override
@@ -45,7 +44,7 @@ public class CrmClientImpl implements CrmClient {
   
   @Override
   public RepositoryQuery repoQuery() {
-    CrmStore.CrmTenantQuery repo = ctx.query();
+    var repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       

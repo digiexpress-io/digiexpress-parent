@@ -16,7 +16,7 @@ import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiRep;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.api.model.ImmutablePerson;
-import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
@@ -24,19 +24,19 @@ import io.vertx.core.json.JsonObject;
 
 public class CustomerCommandVisitor {
   @SuppressWarnings("unused")
-  private final CrmStoreConfig ctx;
+  private final ThenaDocConfig ctx;
   @SuppressWarnings("unused")
   private final Customer start;
   private final List<CustomerCommand> visitedCommands = new ArrayList<>();
   private ImmutableCustomer current;
   
-  public CustomerCommandVisitor(CrmStoreConfig ctx) {
+  public CustomerCommandVisitor(ThenaDocConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public CustomerCommandVisitor(Customer start, CrmStoreConfig ctx) {
+  public CustomerCommandVisitor(Customer start, ThenaDocConfig ctx) {
     this.start = start;
     this.current = ImmutableCustomer.builder().from(start).build();
     this.ctx = ctx;

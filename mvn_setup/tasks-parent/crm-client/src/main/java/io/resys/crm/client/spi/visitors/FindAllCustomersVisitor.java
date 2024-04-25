@@ -10,9 +10,7 @@ import io.resys.crm.client.api.model.CustomerCommand;
 import io.resys.crm.client.api.model.CustomerTransaction;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomerTransaction;
-import io.resys.crm.client.spi.store.CrmStoreConfig;
-import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
-import io.resys.crm.client.spi.store.CrmStoreException;
+import io.resys.crm.client.spi.CrmStore;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.entities.doc.Doc;
@@ -23,25 +21,28 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
 import io.smallrye.mutiny.Uni;
 
 public class FindAllCustomersVisitor implements DocObjectsVisitor<List<Customer>> {
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder) {
-    return builder.docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
+    return builder.docType(CrmStore.DOC_TYPE_CUSTOMER)
         .include(IncludeInQuery.COMMANDS)
         .findAll();
   }
   @Override
-  public DocTenantObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw CrmStoreException.builder("FIND_ALL_CUSTOMERS_FAIL").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_CUSTOMERS_FAIL").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
 
   @Override
-  public List<Customer> end(CrmStoreConfig config, DocTenantObjects ref) {
+  public List<Customer> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

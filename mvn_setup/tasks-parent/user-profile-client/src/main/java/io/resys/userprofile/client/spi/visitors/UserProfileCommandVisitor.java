@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;

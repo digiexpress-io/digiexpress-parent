@@ -31,14 +31,15 @@ import java.util.stream.Collectors;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.CrmStoreConfig;
-import io.resys.crm.client.spi.store.CrmStoreConfig.DocCreateVisitor;
-import io.resys.crm.client.spi.store.CrmStoreException;
+import io.resys.crm.client.spi.CrmStore;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocCreateVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -48,7 +49,7 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
   private final List<Customer> customers = new ArrayList<Customer>();
   
   @Override
-  public CreateManyDocs start(CrmStoreConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder.commitAuthor(config.getAuthor().get()).commitMessage("creating customer");
     
     for(final var command : commands) {
@@ -56,7 +57,7 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
         final var entity = new CustomerCommandVisitor(config).visitTransaction(Arrays.asList(command));
         final var json = JsonObject.mapFrom(entity.getItem1());
         builder.item()
-          .docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+          .docType(CrmStore.DOC_TYPE_CUSTOMER)
           .branchContent(json)
           .docId(entity.getItem1().getId())
           .externalId(entity.getItem1().getExternalId())
@@ -69,14 +70,14 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
     return builder;
   }
   @Override
-  public List<DocBranch> visitEnvelope(CrmStoreConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new CrmStoreException("CUSTOMER_CREATE_FAIL", CrmStoreException.convertMessages(envelope));
+    throw new DocStoreException("CUSTOMER_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
   @Override
-  public List<Customer> end(CrmStoreConfig config, List<DocBranch> branches) {
+  public List<Customer> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, Customer> configsById = new HashMap<>(
         this.customers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

@@ -2,7 +2,6 @@ package io.resys.thena.spi;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.entities.doc.ThenaDocConfig;
 
 /*-
  * #%L

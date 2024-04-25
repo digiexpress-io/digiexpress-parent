@@ -8,7 +8,6 @@ import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.ImmutableThenaDocConfig;
-import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;

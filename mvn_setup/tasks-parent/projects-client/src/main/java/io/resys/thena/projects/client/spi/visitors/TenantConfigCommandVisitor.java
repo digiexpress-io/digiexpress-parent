@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
 import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
@@ -15,6 +14,7 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;

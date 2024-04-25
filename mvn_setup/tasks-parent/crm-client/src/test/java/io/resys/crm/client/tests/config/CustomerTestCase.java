@@ -41,7 +41,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.CrmClientImpl;
-import io.resys.crm.client.spi.CrmStoreImpl;
+import io.resys.crm.client.spi.CrmStore;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
@@ -55,7 +55,7 @@ public class CustomerTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private CrmStoreImpl store;
+  private CrmStore store;
   private CrmClientImpl client;
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
@@ -65,7 +65,7 @@ public class CustomerTestCase {
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = CrmStoreImpl.builder()
+    store = CrmStore.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
         .build();
     client = new CrmClientImpl(store);
@@ -102,7 +102,7 @@ public class CustomerTestCase {
     store = null;
   }
 
-  public CrmStoreImpl getStore() {
+  public CrmStore getStore() {
     return store;
   }
 

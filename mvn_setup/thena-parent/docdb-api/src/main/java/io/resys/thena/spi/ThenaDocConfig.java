@@ -1,4 +1,4 @@
-package io.resys.thena.api.entities.doc;
+package io.resys.thena.spi;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;

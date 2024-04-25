@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.resys.crm.client.api.CrmClient.CustomerQuery;
 import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.spi.store.CrmStore;
+import io.resys.crm.client.spi.CrmStore;
 import io.resys.crm.client.spi.visitors.DeleteAllCustomersVisitor;
 import io.resys.crm.client.spi.visitors.FindAllCustomersVisitor;
 import io.resys.crm.client.spi.visitors.GetActiveCustomerVisitor;
