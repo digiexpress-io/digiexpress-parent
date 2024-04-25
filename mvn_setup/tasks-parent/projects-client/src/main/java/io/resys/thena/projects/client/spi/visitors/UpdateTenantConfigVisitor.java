@@ -36,14 +36,14 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.ProjectStore;
 import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
@@ -70,12 +70,12 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(tenantIds));
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw ProjectStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -96,7 +96,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public Uni<List<TenantConfig>> end(ProjectStoreConfig config, DocTenantObjects blob) {
+  public Uni<List<TenantConfig>> end(ThenaDocConfig config, DocTenantObjects blob) {
     final var updatedTenants = blob
       .accept((Doc doc, 
           DocBranch docBranch, 

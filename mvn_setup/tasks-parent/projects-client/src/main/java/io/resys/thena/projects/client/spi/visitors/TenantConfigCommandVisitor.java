@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
 import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
@@ -14,7 +15,6 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
@@ -23,19 +23,19 @@ import io.vertx.core.json.JsonObject;
 public class TenantConfigCommandVisitor {
   
   @SuppressWarnings("unused")
-  private final ProjectStoreConfig ctx;
+  private final ThenaDocConfig ctx;
   @SuppressWarnings("unused")
   private final TenantConfig start;
   private final List<TenantConfigCommand> visitedCommands = new ArrayList<>();
   private ImmutableTenantConfig current;
   
-  public TenantConfigCommandVisitor(ProjectStoreConfig ctx) {
+  public TenantConfigCommandVisitor(ThenaDocConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public TenantConfigCommandVisitor(TenantConfig start, ProjectStoreConfig ctx) {
+  public TenantConfigCommandVisitor(TenantConfig start, ThenaDocConfig ctx) {
     this.start = start;
     this.current = ImmutableTenantConfig.builder().from(start).build();
     this.ctx = ctx;

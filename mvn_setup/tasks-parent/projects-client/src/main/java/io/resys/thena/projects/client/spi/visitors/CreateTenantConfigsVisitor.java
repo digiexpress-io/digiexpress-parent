@@ -32,11 +32,11 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocCreateVisitor;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocCreateVisitor;
 import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
   private final List<TenantConfig> createdTenants = new ArrayList<TenantConfig>();
   
   @Override
-  public CreateManyDocs start(ProjectStoreConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
       .commitAuthor(config.getAuthor().get())
       .commitMessage("creating tenant");
@@ -67,7 +67,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(ProjectStoreConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
@@ -75,7 +75,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
   }
 
   @Override
-  public List<TenantConfig> end(ProjectStoreConfig config, List<DocBranch> branches) {
+  public List<TenantConfig> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, TenantConfig> configsById = new HashMap<>(
         this.createdTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

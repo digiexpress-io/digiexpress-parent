@@ -2,6 +2,7 @@ package io.resys.thena.projects.client.spi.store;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 
 /*-
  * #%L
@@ -27,7 +28,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface ProjectStore {
   DocumentRepositoryQuery query();
-  ProjectStoreConfig getConfig();
+  ThenaDocConfig getConfig();
   Uni<Tenant> getRepo();
   ProjectStore withRepoId(String repoId);
   

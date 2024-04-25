@@ -29,12 +29,11 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.doc.ImmutableThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.ImmutableDocumentExceptionMsg;
-import io.resys.thena.projects.client.spi.store.ImmutableProjectStoreConfig;
 import io.resys.thena.projects.client.spi.store.ProjectStore;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocumentAuthorProvider;
 import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
@@ -52,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 public class ProjectStoreImpl implements ProjectStore {
-  private final ProjectStoreConfig config;
+  private final ThenaDocConfig config;
   
 
   @Override
@@ -60,7 +59,7 @@ public class ProjectStoreImpl implements ProjectStore {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }
-  @Override public ProjectStoreConfig getConfig() { return config; }
+  @Override public ThenaDocConfig getConfig() { return config; }
   @Override public DocumentRepositoryQuery query() {
     return new DocumentRepositoryQuery() {
       private String repoName, externalId;
@@ -141,7 +140,7 @@ public class ProjectStoreImpl implements ProjectStore {
   
   private ProjectStore createClientStore(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    return new ProjectStoreImpl(ImmutableProjectStoreConfig.builder().from(config).repoId(repoName).build());
+    return new ProjectStoreImpl(ImmutableThenaDocConfig.builder().from(config).repoId(repoName).build());
   }
   
   public static Builder builder() {
@@ -156,7 +155,7 @@ public class ProjectStoreImpl implements ProjectStore {
     private String repoName;
     private String headName;
     private ObjectMapper objectMapper;
-    private DocumentAuthorProvider authorProvider;
+    private ThenaDocConfig.AuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -165,7 +164,7 @@ public class ProjectStoreImpl implements ProjectStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private DocumentAuthorProvider getAuthorProvider() {
+    private ThenaDocConfig.AuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
@@ -224,13 +223,13 @@ public class ProjectStoreImpl implements ProjectStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
-      final ProjectStoreConfig config = ImmutableProjectStoreConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
+      final ThenaDocConfig config = ImmutableThenaDocConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
       return new ProjectStoreImpl(config);
     }
   }
 
   @Override
   public ProjectStore withRepoId(String repoId) {
-    return new ProjectStoreImpl(ImmutableProjectStoreConfig.builder().from(config).repoId(repoId).build());
+    return new ProjectStoreImpl(ImmutableThenaDocConfig.builder().from(config).repoId(repoId).build());
   }
 }

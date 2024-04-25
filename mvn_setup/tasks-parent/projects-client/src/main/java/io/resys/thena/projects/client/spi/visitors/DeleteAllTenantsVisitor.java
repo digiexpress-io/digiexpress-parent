@@ -10,13 +10,13 @@ import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -29,7 +29,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   private ModifyManyDocs removeCommand;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery query) {
     // Create two commands: one for making changes by adding archive flag, the other for deleting Project from commit tree
     this.archiveCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
         .commitAuthor(config.getAuthor().get())
@@ -43,7 +43,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw ProjectStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -51,7 +51,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   }
   
   @Override
-  public Uni<List<TenantConfig>> end(ProjectStoreConfig config, DocTenantObjects ref) {
+  public Uni<List<TenantConfig>> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }

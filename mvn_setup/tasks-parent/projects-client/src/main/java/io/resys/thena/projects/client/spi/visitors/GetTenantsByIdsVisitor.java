@@ -33,12 +33,12 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +49,12 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   private final Collection<String> projectIds;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(projectIds));
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw ProjectStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
@@ -72,7 +72,7 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public List<TenantConfig> end(ProjectStoreConfig config, DocTenantObjects ref) {
+  public List<TenantConfig> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
