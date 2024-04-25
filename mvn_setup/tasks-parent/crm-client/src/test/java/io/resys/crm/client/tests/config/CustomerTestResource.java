@@ -1,5 +1,6 @@
 package io.resys.crm.client.tests.config;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class CustomerTestResource implements CrmRestApi {
       .addTransactions(
           ImmutableCustomerTransaction.builder()
           .id("transation-1")
+          .userId("")
+          .targetDate(OffsetDateTime.now())
           .addCommands(ImmutableCreateCustomer
               .builder()
               .externalId("220276-840H")
