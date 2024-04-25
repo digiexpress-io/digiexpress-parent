@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -65,8 +66,8 @@ public class DocQuerySqlPool implements DocQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd(new SqlFailed("Can't find 'DOC'!", sql, e)));
   }
   @Override
-  public Multi<Doc> findAllById(Collection<String> ids) {
-    final var sql = registry.docs().findAllByIds(ids);
+  public Multi<Doc> findAll(DocFilter filter) {
+    final var sql = registry.docs().findAll(filter);
     if(log.isDebugEnabled()) {
       log.debug("Doc findAllByIds query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),

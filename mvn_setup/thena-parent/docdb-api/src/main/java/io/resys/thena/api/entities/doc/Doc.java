@@ -32,5 +32,12 @@ public interface Doc extends DocEntity, IsDocObject, ThenaTable {
   @Nullable JsonObject getMeta();
   
   @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC; };
-  
+ 
+  @Value.Immutable
+  interface DocFilter {
+    @Nullable String getDocIds();
+    @Nullable String getType();
+    @Nullable String getBranch();
+  }
+
 }

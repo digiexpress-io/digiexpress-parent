@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
@@ -23,7 +24,7 @@ public interface DocBranchRegistry extends ThenaRegistryService<DocBranch, io.ve
   ThenaSqlClient.SqlTuple getDocLocks(List<DocLockCriteria> crit);
   ThenaSqlClient.Sql findAll();
   
-  ThenaSqlClient.SqlTuple findAllById(List<String> docId, String branchIdOrName);
+  ThenaSqlClient.SqlTuple findAll(DocFilter filter);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

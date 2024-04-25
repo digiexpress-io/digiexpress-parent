@@ -1,7 +1,6 @@
 package io.resys.thena.api.registry.doc;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -9,13 +8,14 @@ import java.util.function.Function;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.vertx.core.json.JsonObject;
 
 
 public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.mutiny.sqlclient.Row> {
-  ThenaSqlClient.SqlTuple findAllByIds(Collection<String> ids);
+  ThenaSqlClient.SqlTuple findAll(DocFilter filter);
   
   ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
   ThenaSqlClient.SqlTuple deleteById(String id);

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -27,8 +28,8 @@ public class DocLogQuerySqlPool implements DocCommitTreeQuery {
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
-  public Multi<DocCommitTree> findAllByDocIdsAndBranch(Collection<String> id, String branchId) {
-    final var sql = registry.docCommitTrees().findAllByDocIdsAndBranch(id, branchId);
+  public Multi<DocCommitTree> findAll(DocFilter filter) {
+    final var sql = registry.docCommitTrees().findAll(filter);
     if(log.isDebugEnabled()) {
       log.debug("DocLog byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

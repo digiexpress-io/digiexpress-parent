@@ -108,7 +108,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     RepoAssert.notNull(type, () -> "type must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, type).build();
+    final var newRepo = client.tenants().commit().name(repoName, type).externalId(externalId).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
         throw new DocStoreException("DOC_REPO_CREATE_FAIL", 

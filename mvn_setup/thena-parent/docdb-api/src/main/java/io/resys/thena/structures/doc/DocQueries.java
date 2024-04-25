@@ -1,6 +1,5 @@
 package io.resys.thena.structures.doc;
 
-import java.util.Collection;
 import java.util.List;
 
 /*-
@@ -26,6 +25,7 @@ import java.util.List;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
@@ -45,23 +45,23 @@ public interface DocQueries {
   
   interface DocQuery {
     Multi<Doc> findAll();
-    Multi<Doc> findAllById(Collection<String> ids);
+    Multi<Doc> findAll(DocFilter filter);
     Uni<Doc> getById(String ids);
   }
   
   interface DocCommitQuery {
     Multi<DocCommit> findAll();
-    Multi<DocCommit> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+    Multi<DocCommit> findAll(DocFilter filter);
   }
   
   interface DocCommitTreeQuery {
     Multi<DocCommitTree> findAll();
-    Multi<DocCommitTree> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+    Multi<DocCommitTree> findAll(DocFilter filter);
   }
   
   interface DocCommandsQuery {
     Multi<DocCommands> findAll();
-    Multi<DocCommands> findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+    Multi<DocCommands> findAll(DocFilter filter);
   }  
   
   interface DocBranchQuery {
@@ -74,8 +74,9 @@ public interface DocQueries {
     Uni<List<DocLock>> getDocLocks(List<DocLockCriteria> criteria);
     Uni<DocBranch> getById(String branchId);
     
-    Multi<DocBranch> findAllById(List<String> docId, String branchIdOrName);
+    Multi<DocBranch> findAll(DocFilter filter);
   }
+  
 
   @Value.Immutable
   interface DocBranchLockCriteria {

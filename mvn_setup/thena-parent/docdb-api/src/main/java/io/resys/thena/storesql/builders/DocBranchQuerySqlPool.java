@@ -12,6 +12,7 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocLock;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -201,8 +202,8 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
   }
 
   @Override
-  public Multi<DocBranch> findAllById(List<String> docId, String branchIdOrName) {
-    final var sql = registry.docBranches().findAllById(docId, branchIdOrName);
+  public Multi<DocBranch> findAll(DocFilter filter) {
+    final var sql = registry.docBranches().findAll(filter);
     if(log.isDebugEnabled()) {
       log.debug("DocBranch findAllById query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -12,7 +13,7 @@ public interface DocCommitRegistry extends ThenaRegistryService<DocCommit, io.ve
   
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommit> commits);
-  ThenaSqlClient.SqlTuple findAllByDocIdsAndBranch(Collection<String> id, String branchId);
+  ThenaSqlClient.SqlTuple findAll(DocFilter filter);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

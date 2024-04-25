@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.DocCommands;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -27,8 +28,8 @@ public class DocCommandsQuerySqlPool implements DocCommandsQuery {
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
-  public Multi<DocCommands> findAllByDocIdsAndBranch(Collection<String> id, String branchId) {
-    final var sql = registry.docCommands().findAllByDocIdsAndBranch(id, branchId);
+  public Multi<DocCommands> findAll(DocFilter filter) {
+    final var sql = registry.docCommands().findAll(filter);
     if(log.isDebugEnabled()) {
       log.debug("DocCommands byId query, with props: {} \r\n{}", 
           sql.getProps().deepToString(),

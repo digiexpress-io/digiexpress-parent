@@ -15,6 +15,7 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.ImmutableDocObject;
@@ -48,27 +49,28 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
 
   @Override
   public Uni<QueryEnvelope<DocObject>> get(String id) {
+    final DocFilter filter = null;
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();
       
       // Query commits only on demand
       final Uni<List<DocCommit>> commits = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMITS) ?
-          docState.query().commits().findAllByDocIdsAndBranch(Arrays.asList(id), branchName).collect().asList() :
+          docState.query().commits().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       // Query trees only on demand
       final Uni<List<DocCommitTree>> trees = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMIT_TREE) ?
-          docState.query().trees().findAllByDocIdsAndBranch(Arrays.asList(id), branchName).collect().asList() :
+          docState.query().trees().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       // Query commands only on demand
       final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
-          docState.query().commands().findAllByDocIdsAndBranch(Arrays.asList(id), branchName).collect().asList() :
+          docState.query().commands().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       return Uni.combine().all().unis(
-          docState.query().docs().findAllById(Arrays.asList(id)).collect().asList(),
-          docState.query().branches().findAllById(Arrays.asList(id), branchName).collect().asList(),
+          docState.query().docs().findAll(filter).collect().asList(),
+          docState.query().branches().findAll(filter).collect().asList(),
           commits, trees, commands
       ).asTuple()
       .onItem().transform(data -> {
@@ -92,27 +94,28 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> docs) {
+    final DocFilter filter = null;
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();
       
       // Query commits only on demand
       final Uni<List<DocCommit>> commits = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMITS) ?
-          docState.query().commits().findAllByDocIdsAndBranch(docs, branchName).collect().asList() :
+          docState.query().commits().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       // Query trees only on demand
       final Uni<List<DocCommitTree>> trees = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMIT_TREE) ?
-          docState.query().trees().findAllByDocIdsAndBranch(docs, branchName).collect().asList() :
+          docState.query().trees().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       // Query commands only on demand
       final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
-          docState.query().commands().findAllByDocIdsAndBranch(docs, branchName).collect().asList() :
+          docState.query().commands().findAll(filter).collect().asList() :
           Uni.createFrom().item(Collections.emptyList());
       
       return Uni.combine().all().unis(
-          docState.query().docs().findAllById(docs).collect().asList(),
-          docState.query().branches().findAllById(docs, branchName).collect().asList(),
+          docState.query().docs().findAll(filter).collect().asList(),
+          docState.query().branches().findAll(filter).collect().asList(),
           commits, trees, commands
       ).asTuple()
       .onItem().transform(data -> {
