@@ -1,10 +1,8 @@
 package io.resys.thena.storesql.builders;
 
-import java.util.Collection;
-
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -40,7 +38,7 @@ public class DocCommandsQuerySqlPool implements DocCommandsQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<DocCommands> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMANDS' by id: '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMANDS' for filter: '" + filter + "'!", sql, e)));
   }
   @Override
   public Multi<DocCommands> findAll() {

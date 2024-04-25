@@ -1,7 +1,5 @@
 package io.resys.thena.storesql.builders;
 
-import java.util.Collection;
-
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
@@ -78,6 +76,6 @@ public class DocQuerySqlPool implements DocQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<Doc> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC' by 'id': '" + ids + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC' for filter: '" + filter + "'!", sql, e)));
   }
 }

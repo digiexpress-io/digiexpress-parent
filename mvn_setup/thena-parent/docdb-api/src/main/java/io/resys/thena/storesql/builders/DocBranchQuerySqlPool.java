@@ -215,7 +215,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
         .onItem()
         .transformToMulti((RowSet<DocBranch> rowset) -> Multi.createFrom().iterable(rowset))
         .onFailure().invoke(e -> {
-          errorHandler.deadEnd(new SqlTupleFailed("Can't find 'DOC_BRANCH', for doc id:'" + String.join(", ", docId) + "'!", sql, e));
+          errorHandler.deadEnd(new SqlTupleFailed("Can't find 'DOC_BRANCH', for filter:'" + filter + "'!", sql, e));
         });
     
   }

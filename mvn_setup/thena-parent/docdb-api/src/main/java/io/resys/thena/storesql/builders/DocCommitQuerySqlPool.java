@@ -1,10 +1,8 @@
 package io.resys.thena.storesql.builders;
 
-import java.util.Collection;
-
 import io.resys.thena.api.LogConstants;
-import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
+import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -55,7 +53,7 @@ public class DocCommitQuerySqlPool implements DocCommitQuery {
         .execute(sql.getProps())
         .onItem()
         .transformToMulti((RowSet<DocCommit> rowset) -> Multi.createFrom().iterable(rowset))
-        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMIT' by doc id: '" + id + "'!", sql, e)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(new SqlTupleFailed("Can't get 'DOC_COMMIT' for filter: '" + filter + "'!", sql, e)));
   }
 
 }
