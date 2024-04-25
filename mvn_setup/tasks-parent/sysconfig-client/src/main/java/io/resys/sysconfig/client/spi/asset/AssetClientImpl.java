@@ -10,7 +10,7 @@ import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.support.ErrorMsg;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -87,9 +87,9 @@ public class AssetClientImpl implements AssetClient {
         .from(clientConfig)
         .tenantConfigId(tenantConfigId)
         .addAllRepoConfigs(tenantConfig)
-        .hdes(clientConfig.getHdes().withRepo(wrench.get().getRepoId(), MainBranch.HEAD_NAME))
-        .stencil(clientConfig.getStencil().withRepo(stencil.get().getRepoId(), MainBranch.HEAD_NAME))
-        .dialob(clientConfig.getDialob().withRepo(dialob.get().getRepoId(), MainBranch.HEAD_NAME))
+        .hdes(clientConfig.getHdes().withRepo(wrench.get().getRepoId(), DocObjectsQueryImpl.BRANCH_MAIN))
+        .stencil(clientConfig.getStencil().withRepo(stencil.get().getRepoId(), DocObjectsQueryImpl.BRANCH_MAIN))
+        .dialob(clientConfig.getDialob().withRepo(dialob.get().getRepoId(), DocObjectsQueryImpl.BRANCH_MAIN))
         .build());
   }
   @Override

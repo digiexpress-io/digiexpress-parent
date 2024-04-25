@@ -25,8 +25,6 @@ import io.smallrye.mutiny.Uni;
 public interface DocumentConfig {
   ThenaClient getClient();
   String getRepoId();
-  String getBranchName();
-  DocumentGidProvider getGid();
   DocumentAuthorProvider getAuthor();
   
   interface DocumentGidProvider {

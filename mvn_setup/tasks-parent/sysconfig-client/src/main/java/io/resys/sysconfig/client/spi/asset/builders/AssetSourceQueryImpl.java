@@ -16,7 +16,7 @@ import io.resys.sysconfig.client.api.AssetClient.AssetSource;
 import io.resys.sysconfig.client.api.AssetClient.AssetSourceQuery;
 import io.resys.sysconfig.client.api.ImmutableAssetSource;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -74,7 +74,7 @@ public class AssetSourceQueryImpl implements AssetSourceQuery {
           .assetName(state.getForms().get(revision.getHead()).getName())
           .labelName(state.getForms().get(revision.getHead()).getData().getMetadata().getLabel())
           .assetType(AssetType.DIALOB)
-          .branchName(MainBranch.HEAD_NAME)
+          .branchName(DocObjectsQueryImpl.BRANCH_MAIN)
           .branchType(AssetBranchType.BRANCH)
           .build());
     }
