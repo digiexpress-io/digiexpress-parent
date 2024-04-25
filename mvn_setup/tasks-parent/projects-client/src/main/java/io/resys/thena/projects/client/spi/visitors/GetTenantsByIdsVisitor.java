@@ -24,23 +24,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.api.model.Document;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -49,15 +49,12 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   private final Collection<String> projectIds;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
-    return builder
-        .docType(Document.DocumentType.TENANT_CONFIG.name())
-        .branchName(MainBranch.HEAD_NAME)
-        .matchIds(new ArrayList<>(projectIds));
+  public Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder) {
+    return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(projectIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
@@ -75,13 +72,14 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public List<TenantConfig> end(DocumentConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
-      docBranch.getValue()
-      .mapTo(ImmutableTenantConfig.class).withVersion(commit.getId())
-    );
+    return ref.accept((Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToUserProfile(docBranch));
   }
 }

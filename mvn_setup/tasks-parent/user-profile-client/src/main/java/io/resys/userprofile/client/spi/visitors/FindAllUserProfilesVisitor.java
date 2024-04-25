@@ -54,6 +54,5 @@ public class FindAllUserProfilesVisitor implements DocObjectsVisitor<List<UserPr
       .withVersion(docBranch.getCommitId())
       .withCreated(docBranch.getCreatedAt().toInstant())
       .withUpdated(docBranch.getUpdatedAt().toInstant());
-        
   }
 }

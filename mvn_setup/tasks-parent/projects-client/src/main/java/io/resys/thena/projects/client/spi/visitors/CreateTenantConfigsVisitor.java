@@ -32,7 +32,6 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.thena.projects.client.api.model.Document;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
@@ -50,15 +49,19 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.TENANT_CONFIG.name())
-      .author(config.getAuthor().get())
-      .message("creating tenant");
+      .commitAuthor(config.getAuthor().get())
+      .commitMessage("creating tenant");
     
     for(final var command : commands) {
       final var entity = new TenantConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
       final var json = JsonObject.mapFrom(entity);
-      builder.item().append(json).docId(entity.getId()).next();
-      createdTenants.add(entity);
+      builder.item()
+      .docType(TenantConfig.TENANT_CONFIG)
+      .docId(entity.getItem1().getId())
+      .branchContent(json)
+      .commands(entity.getItem2())
+      .next();
+      createdTenants.add(entity.getItem1());
     }
     return builder;
   }

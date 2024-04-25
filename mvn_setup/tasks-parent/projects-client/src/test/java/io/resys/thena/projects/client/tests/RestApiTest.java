@@ -56,19 +56,15 @@ public class RestApiTest {
   @Test
   public void postOneTenant() throws JsonProcessingException {
     final var body = ImmutableCreateTenantConfig.builder()
-      .userId("user-1")
-      //.targetDate(ProjectTestCase.getTargetDate())
       .commandType(TenantConfigCommandType.CreateTenantConfig)
       .name("name x")
       .repoId("repo-1")
-      
       .build();
 
     final TenantConfig[] response = RestAssured.given()
       .body(Arrays.asList(body)).accept("application/json").contentType("application/json")
       .when().post("/q/digiexpress/api/tenants").then()
       .statusCode(200).contentType("application/json")
-      
       .extract().as(TenantConfig[].class);
   
     Assertions.assertEquals("tenant-1", response[0].getId());
@@ -80,7 +76,6 @@ public class RestApiTest {
         //.targetDate(ProjectTestCase.getTargetDate())
         .name("very important title no: init")
         .repoId("repo-1")
-        .userId("user-1")
         .commandType(TenantConfigCommandType.CreateTenantConfig)
         .build();
 
@@ -99,7 +94,6 @@ public class RestApiTest {
         //.targetDate(ProjectTestCase.getTargetDate())
         .name("very important title no: init")
         .tenantConfigId("tenant-1")
-        .userId("user1")
         .build();
         
 
@@ -116,8 +110,6 @@ public class RestApiTest {
   public void deleteTenants() throws JsonProcessingException {
     final var command = ImmutableArchiveTenantConfig.builder()
         .tenantConfigId("tenant-1")
-        .userId("user1")
-        //.targetDate(ProjectTestCase.getTargetDate())
         .build();
         
     

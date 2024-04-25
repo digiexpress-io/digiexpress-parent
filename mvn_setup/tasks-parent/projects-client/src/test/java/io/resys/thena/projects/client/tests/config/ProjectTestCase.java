@@ -37,10 +37,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.TenantConfigClient;
-import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.spi.DocumentStoreImpl;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.git.GitPrinter;
 import io.vertx.core.json.JsonObject;
@@ -58,7 +56,6 @@ public class ProjectTestCase {
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
-  private final AtomicInteger id_provider = new AtomicInteger();
   
   @BeforeEach
   public void setUp() {
@@ -66,17 +63,6 @@ public class ProjectTestCase {
     final var db = DB + DB_ID.getAndIncrement();
     store = DocumentStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-          
-          @Override
-          public String getNextId(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-        })
         .build();
     client = new ProjectsClientImpl(store);
     objectMapper();

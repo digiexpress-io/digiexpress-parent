@@ -21,9 +21,6 @@ package io.resys.thena.projects.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -45,13 +42,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 })
 public interface TenantConfigCommand extends Serializable {
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   TenantConfigCommandType getCommandType();
-  
-  
-  TenantConfigCommand withUserId(String userId);
-  TenantConfigCommand withTargetDate(Instant targetDate);
   
   enum TenantConfigCommandType {
     ArchiveTenantConfig, CreateTenantConfig, ChangeTenantConfigInfo
@@ -78,8 +69,6 @@ public interface TenantConfigCommand extends Serializable {
   })
   interface TenantConfigUpdateCommand extends TenantConfigCommand {
     String getTenantConfigId();
-    TenantConfigUpdateCommand withUserId(String userId);
-    TenantConfigUpdateCommand withTargetDate(Instant targetDate);
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableArchiveTenantConfig.class) @JsonDeserialize(as = ImmutableArchiveTenantConfig.class)

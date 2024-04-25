@@ -29,13 +29,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
@@ -45,7 +46,6 @@ import io.resys.thena.projects.client.spi.store.DocumentConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
 import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
@@ -65,17 +65,17 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
         .collect(Collectors.groupingBy(TenantConfigUpdateCommand::getTenantConfigId));
     this.tenantIds = new ArrayList<>(commandsByTenantId.keySet());
     this.commitBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
-        .message("Update Tenants: " + commandsByTenantId.size())
-        .author(config.getAuthor().get());
+        .commitMessage("Update Tenants: " + commandsByTenantId.size())
+        .commitAuthor(config.getAuthor().get());
   }
 
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(tenantIds).branchName(MainBranch.HEAD_NAME);
+  public Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder) {
+    return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(tenantIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -96,16 +96,22 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public Uni<List<TenantConfig>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
-    final var updatedTenants = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {
-      final var start = docBranch.getValue().mapTo(ImmutableTenantConfig.class);
-      final var commands = commandsByTenantId.get(start.getId());
-      final var updated = new TenantConfigCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
-      this.commitBuilder.item()
-        .branchName(updated.getId())
-        .append(JsonObject.mapFrom(updated));
-      return updated;
-    });
+  public Uni<List<TenantConfig>> end(DocumentConfig config, DocTenantObjects blob) {
+    final var updatedTenants = blob
+      .accept((Doc doc, 
+          DocBranch docBranch, 
+          Map<String, DocCommit> commit, 
+          List<DocCommands> _commands,
+          List<DocCommitTree> trees) -> {
+        final var start = docBranch.getValue().mapTo(ImmutableTenantConfig.class);
+        final var commands = commandsByTenantId.get(start.getId());
+        final var updated = new TenantConfigCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
+        this.commitBuilder.item()
+          .branchName(updated.getItem1().getId())
+          .replace(JsonObject.mapFrom(updated.getItem1()))
+          .commands(updated.getItem2());
+        return updated.getItem1();
+      });
     
     return commitBuilder.build().onItem().transform(response -> {
       if(response.getStatus() != CommitResultStatus.OK) {
@@ -113,19 +119,12 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
         throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
       }
       
-      final Map<String, TenantConfig> configsById = new HashMap<>(
-          updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
+      final Map<String, TenantConfig> configsById = new HashMap<>(updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
       
-      
-      response.getCommit().forEach(commit -> {
-        
-        final var next = ImmutableTenantConfig.builder()
-            .from(configsById.get(commit.getDocId()))
-            .version(commit.getId())
-            .build();
+      response.getBranch().forEach(branch -> {
+        final var next = FindAllTenantsVisitor.mapToUserProfile(branch);
         configsById.put(next.getId(), next);
       });
-      
       return Collections.unmodifiableList(new ArrayList<>(configsById.values()));
     });
   }

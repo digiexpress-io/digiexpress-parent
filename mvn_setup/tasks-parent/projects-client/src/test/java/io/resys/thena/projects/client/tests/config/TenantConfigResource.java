@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.projects.client.api.model.Document.DocumentType;
-import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
 import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
 import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -15,7 +12,6 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigTyp
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantStatus;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigCommandType;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.projects.client.rest.TenantConfigRestApi;
 import io.smallrye.mutiny.Uni;
@@ -41,17 +37,6 @@ public class TenantConfigResource implements TenantConfigRestApi {
           .repoId("repo-1")
           .repoType(TenantRepoConfigType.TASKS)
           .build())
-      .addTransactions(
-          ImmutableTenantConfigTransaction.builder()
-          .id("transation-1")
-          .addCommands(ImmutableCreateTenantConfig
-              .builder()
-              .commandType(TenantConfigCommandType.CreateTenantConfig)
-              .repoId("repo-1")
-              .name("tasks-tenant")
-              .build())
-          .build())
-      .documentType(DocumentType.TENANT_CONFIG)
       .build();
 
   @Override

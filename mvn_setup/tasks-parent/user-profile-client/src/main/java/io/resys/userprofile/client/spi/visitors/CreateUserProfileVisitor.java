@@ -32,12 +32,11 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocCreateVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.vertx.core.json.JsonObject;
@@ -87,10 +86,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
         this.profiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
-      final var next = ImmutableUserProfile.builder()
-          .from(configsById.get(branch.getDocId()))
-          .version(branch.getCommitId())
-          .build();
+      final var next = FindAllUserProfilesVisitor.mapToUserProfile(branch);
       configsById.put(next.getId(), next);
     });
     

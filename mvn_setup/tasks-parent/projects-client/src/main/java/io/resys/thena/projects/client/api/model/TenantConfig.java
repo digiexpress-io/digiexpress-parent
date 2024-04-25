@@ -17,20 +17,19 @@ import io.vertx.core.json.JsonObject;
 
 
 @Value.Immutable @JsonSerialize(as = ImmutableTenantConfig.class) @JsonDeserialize(as = ImmutableTenantConfig.class)
-public interface TenantConfig extends Document {
+public interface TenantConfig extends Serializable {
+  
   String getId();
   String getName();
-  Instant getCreated();
-  Instant getUpdated();
-  @Nullable Instant getArchived();
+  @Nullable String getVersion();
   TenantStatus getStatus();
+
+  @Nullable Instant getCreated();
+  @Nullable Instant getUpdated();
+  @Nullable Instant getArchived();
   
   TenantPreferences getPreferences();
   List<TenantRepoConfig> getRepoConfigs();
-  
-  List<TenantConfigTransaction> getTransactions(); 
-  @Value.Default default DocumentType getDocumentType() { return DocumentType.TENANT_CONFIG; }
-
   
   @JsonIgnore
   default TenantRepoConfig getRepoConfig(TenantRepoConfigType type) {
@@ -46,12 +45,6 @@ public interface TenantConfig extends Document {
   }
 
 
-  enum TenantStatus { IN_FORCE, ARCHIVED }
-  enum TenantRepoConfigType { 
-    WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE, PERMISSIONS
-  }
-  
-  
   @Value.Immutable @JsonSerialize(as = ImmutableTenantRepoConfig.class) @JsonDeserialize(as = ImmutableTenantRepoConfig.class)
   interface TenantRepoConfig {
     String getRepoId();
@@ -64,15 +57,16 @@ public interface TenantConfig extends Document {
     String getLandingApp();
   }
   
-  public static final String APP_BACKOFFICE = "app-frontoffice";
+  
 
-  @Value.Immutable @JsonSerialize(as = ImmutableTenantConfigTransaction.class) @JsonDeserialize(as = ImmutableTenantConfigTransaction.class)
-  interface TenantConfigTransaction extends Serializable {
-    String getId();
-    List<TenantConfigCommand> getCommands(); 
+  enum TenantStatus { IN_FORCE, ARCHIVED }
+  enum TenantRepoConfigType { 
+    WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE, PERMISSIONS
   }
   
-  
+  public static final String TENANT_CONFIG = "TENANT_CONFIG";
+  public static final String APP_BACKOFFICE = "app-frontoffice";
+
   class TenantConfigDocumentException extends RuntimeException {
     private static final long serialVersionUID = 2015078308320434722L;
     public TenantConfigDocumentException(String code) {

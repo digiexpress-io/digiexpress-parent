@@ -2,12 +2,9 @@ package io.resys.thena.projects.client.spi.visitors;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfigTransaction;
 import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
 import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
@@ -18,10 +15,16 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenan
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.store.DocumentConfig;
+import io.resys.thena.support.OidUtils;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 
 
 public class TenantConfigCommandVisitor {
+  
+  @SuppressWarnings("unused")
   private final DocumentConfig ctx;
+  @SuppressWarnings("unused")
   private final TenantConfig start;
   private final List<TenantConfigCommand> visitedCommands = new ArrayList<>();
   private ImmutableTenantConfig current;
@@ -38,18 +41,11 @@ public class TenantConfigCommandVisitor {
     this.ctx = ctx;
   }
   
-  public TenantConfig visitTransaction(List<? extends TenantConfigCommand> commands) {
+  public Tuple2<TenantConfig, List<JsonObject>> visitTransaction(List<? extends TenantConfigCommand> commands) {
     commands.forEach(this::visitCommand);
-    
-    final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
-    final var id = String.valueOf(transactions.size() +1);
-    transactions
-      .add(ImmutableTenantConfigTransaction.builder()
-        .id(id)
-        .commands(visitedCommands)
-        .build());
-    this.current = this.current.withVersion(id).withTransactions(transactions);
-    return this.current;
+    return Tuple2.of(this.current, this.visitedCommands.stream()
+        .map(JsonObject::mapFrom)
+        .toList());
   }
   
   private TenantConfig visitCommand(TenantConfigCommand command) {
@@ -68,13 +64,8 @@ public class TenantConfigCommandVisitor {
   
   private TenantConfig visitCreateTenantConfig(CreateTenantConfig command) {
     final var id = command.getName();
-    final var targetDate = requireTargetDate(command);
-    
     this.current = ImmutableTenantConfig.builder()
-      .id(id)
-      .name(id)
-      .created(targetDate)
-      .updated(targetDate)
+      .id(id).name(id)
       .status(TenantStatus.IN_FORCE)
       .preferences(ImmutableTenantPreferences.builder()
           .landingApp(TenantConfig.APP_BACKOFFICE)
@@ -111,51 +102,23 @@ public class TenantConfigCommandVisitor {
           .repoId(nextRepoId())
           .repoType(TenantRepoConfigType.PERMISSIONS)
           .build())
-      .addTransactions(
-          ImmutableTenantConfigTransaction.builder()
-          .id("1")
-          .addCommands(command)
-          .build())
-      .documentType(DocumentType.TENANT_CONFIG)
       .build();
     
     return this.current;
   }
+  private final String nextRepoId() {
+    final var gen = OidUtils.gen();
+    return gen.substring(0, 7);
+  }
 
   private TenantConfig visitArchiveTenantConfig(ArchiveTenantConfig command) {
-    final var targetDate = requireTargetDate(command);
-    this.current = this.current
-        .withArchived(targetDate)
-        .withUpdated(targetDate)
-        .withStatus(TenantStatus.ARCHIVED);
+    this.current = this.current.withArchived(Instant.now()).withStatus(TenantStatus.ARCHIVED);
     return this.current;
   }
-
-
   private TenantConfig visitChangeTenantConfigInfo(ChangeTenantConfigInfo command) {
-    this.current = this.current
-        .withName(command.getName())
-        .withUpdated(requireTargetDate(command));
+    this.current = this.current.withName(command.getName());
     return this.current;
   }
-  
-
-  public static Instant requireTargetDate(TenantConfigCommand command) {
-    final var targetDate = command.getTargetDate();
-    if (targetDate == null) {
-      throw new UpdateProjectVisitorException("targetDate not defined");
-    }
-    return targetDate;
-  }
-  
-  
-  private final String nextRepoId() {
-    final var gen = ctx.getGid();
-    final var id = gen.getNextId(DocumentType.TENANT_CONFIG);
-    return id.substring(0, 7);
-  }
-  
-  
   public static class UpdateProjectVisitorException extends RuntimeException {
 
     private static final long serialVersionUID = -1385190644836838881L;

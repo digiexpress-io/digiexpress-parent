@@ -1,6 +1,5 @@
 package io.resys.thena.projects.client.api;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +40,7 @@ public interface TenantConfigClient {
     Uni<List<TenantConfig>> findAll();
     Uni<List<TenantConfig>> findByIds(Collection<String> tenantConfigIds);
     Uni<TenantConfig> get(String tenantConfigId);
-    Uni<List<TenantConfig>> deleteAll(String userId, Instant targetDate);
+    Uni<List<TenantConfig>> deleteAll();
   }
   
   public interface RepositoryQuery {
