@@ -68,7 +68,14 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
 
     if(filter.getBranch() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( branches.branch_name = $" + index + " OR branches.branch_id = $" + index + ") ");
+      filters.add(
+          new StringBuilder()
+          .append("(SELECT count(branch_id) ")
+          .append(" FROM ").append(options.getDocBranch()).append(" as branches ")
+          .append(" WHERE branches.doc_id = docs.id ")
+          .append(" AND branches.branch_name = $" + index + " OR branches.branch_id = $" + index)
+          .append(") > 0")
+          .toString());
       params.add(filter.getBranch());
     }
     
@@ -78,11 +85,8 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         .value(new SqlStatement()
         .append("SELECT commits.* FROM ").append(options.getDocCommits()).append(" as commits ").ln()
         
-        .append(" INNER JOIN ").append(options.getDoc()).append(" as docs").ln()
+        .append(" LEFT JOIN ").append(options.getDoc()).append(" as docs").ln()
         .append(" ON(docs.id = commits.doc_id) ").ln()
-        
-        .append(" LEFT JOIN ").append(options.getDocBranch()).append(" as branches").ln()
-        .append(" ON(branches.doc_id = docs.id)")
         
         .append(where).ln()
         .build())

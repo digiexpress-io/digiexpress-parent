@@ -66,10 +66,16 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
       params.add(filter.getDocType());
     }
     
-
     if(filter.getBranch() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( branches.branch_name = $" + index + " OR branches.branch_id = $" + index + ") ");
+      filters.add(
+          new StringBuilder()
+          .append("(SELECT count(branch_id) ")
+          .append(" FROM ").append(options.getDocBranch()).append(" as branches ")
+          .append(" WHERE branches.doc_id = docs.id ")
+          .append(" AND branches.branch_name = $" + index + " OR branches.branch_id = $" + index)
+          .append(") > 0")
+          .toString());
       params.add(filter.getBranch());
     }
     
@@ -78,13 +84,10 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT doc_log.* ").ln()
-        .append("  FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
+        .append(" FROM ").append(options.getDocLog()).append(" AS doc_log").ln()
 
-        .append(" INNER JOIN ").append(options.getDoc()).append(" as docs").ln()
+        .append(" LEFT JOIN ").append(options.getDoc()).append(" as docs").ln()
         .append(" ON(docs.id = doc_log.doc_id)")
-        
-        .append(" LEFT JOIN ").append(options.getDocBranch()).append(" as branches").ln()
-        .append(" ON(branches.branch_id = doc_log.branch_id OR doc_log.branch_id IS NULL)")
 
         .append(where).ln()
         .build())

@@ -104,7 +104,7 @@ public class SimpleDocTest extends DbTestTemplate {
         .findAll()
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(2, findAllMainBranchDocs.getObjects().getBranches().size());
+    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().size());
   }
   
   
