@@ -26,18 +26,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfig;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
@@ -50,15 +48,12 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
   private final Collection<String> projectIds;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObject>> start(ThenaDocConfig config, DocObjectsQuery builder) {
-    return builder
-        .docType(Document.DocumentType.SYS_CONFIG.name())
-        .branchName(MainBranch.HEAD_NAME)
-        .matchIds(new ArrayList<>(projectIds));
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
+    return builder.findAll(new ArrayList<>(projectIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocStoreException.builder("GET_SYS_CONFIG_BY_ID_FAIL")
         .add(config, envelope)
@@ -76,7 +71,7 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
   }
 
   @Override
-  public List<SysConfig> end(ThenaDocConfig config, DocQueryActions.DocObjects ref) {
+  public List<SysConfig> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
