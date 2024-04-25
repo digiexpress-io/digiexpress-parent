@@ -34,6 +34,7 @@ import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DocStoreException;
@@ -53,7 +54,7 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");

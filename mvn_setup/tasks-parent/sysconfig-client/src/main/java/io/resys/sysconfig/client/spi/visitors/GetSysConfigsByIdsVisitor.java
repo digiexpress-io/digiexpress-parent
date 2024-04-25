@@ -41,6 +41,7 @@ import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -49,7 +50,7 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
   private final Collection<String> projectIds;
   
   @Override
-  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObject>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.SYS_CONFIG.name())
         .branchName(MainBranch.HEAD_NAME)

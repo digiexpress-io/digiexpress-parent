@@ -12,16 +12,18 @@ import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
+import io.smallrye.mutiny.Uni;
 
 public class FindAllSysConfigsVisitor implements DocObjectsVisitor<List<SysConfig>> {
   @Override
-  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.SYS_CONFIG.name())
         .branchName(MainBranch.HEAD_NAME);
