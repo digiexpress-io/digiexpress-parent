@@ -32,7 +32,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
   @Override
   public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("DROP TABLE ").append(options.getDocCommands()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getDocCommands()).append(";").ln()
         .build()).build();
   }
   @Override

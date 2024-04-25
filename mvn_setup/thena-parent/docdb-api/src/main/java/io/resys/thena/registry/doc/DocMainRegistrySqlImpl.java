@@ -214,7 +214,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   @Override
   public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("DROP TABLE ").append(options.getDoc()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getDoc()).append(";").ln()
         .build()).build();
   }
 }

@@ -29,13 +29,11 @@ import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
 import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
-import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
-import io.resys.sysconfig.client.spi.store.ThenaDocConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
@@ -44,9 +42,9 @@ import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
@@ -168,7 +166,7 @@ public class TestCaseBuilder {
     final var config = ImmutableDialobStoreConfig.builder()
         .client(doc)
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .gidProvider((type) -> OidUtils.gen())
         .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(io.dialob.client.api.ImmutableStoreEntity.builder().from(entity).build()))))
         .deserializer(new io.dialob.client.spi.store.BlobDeserializer(objectMapper))
@@ -186,7 +184,7 @@ public class TestCaseBuilder {
     final var config = ImmutableThenaConfig.builder()
         .client(doc)
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .gidProvider((type) -> OidUtils.gen())
         .serializer((entity) -> applyOm((om) -> new JsonObject(om.writeValueAsString(io.resys.hdes.client.api.ImmutableStoreEntity.builder().from(entity).hash("").build()))))
         .deserializer(new io.resys.hdes.client.spi.store.BlobDeserializer(objectMapper))
@@ -208,7 +206,7 @@ public class TestCaseBuilder {
         .client(docDb)
         .objectMapper(objectMapper)
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .deserializer(deserializer)
         .serializer((entity) -> {
           try {

@@ -189,7 +189,7 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
   @Override
   public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("DROP TABLE ").append(options.getDocLog()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getDocLog()).append(";").ln()
         .build()).build();
   }
 }

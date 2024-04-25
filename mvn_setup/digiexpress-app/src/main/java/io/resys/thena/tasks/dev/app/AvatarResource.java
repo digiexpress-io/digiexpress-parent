@@ -1,19 +1,13 @@
 package io.resys.thena.tasks.dev.app;
 
-import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
-import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api/avatars")
 public class AvatarResource {

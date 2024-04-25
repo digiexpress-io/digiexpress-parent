@@ -433,7 +433,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
   @Override
   public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
-        .append("DROP TABLE ").append(options.getDocBranch()).append(";").ln()
+        .append("DROP TABLE IF EXISTS ").append(options.getDocBranch()).append(";").ln()
         .build()).build();
   }
   
