@@ -32,16 +32,16 @@ public class CreateSysConfigDeploymentVisitor implements DocCreateVisitor<SysCon
   @Override
   public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.SYS_CONFIG_DEPLOYMENT.name())
-      .author(config.getAuthor().get())
-      .message("creating sys-config-deployment");
+      .commitAuthor(config.getAuthor().get())
+      .commitMessage("creating sys-config-deployment");
     
     for(final var command : commands) {
       try {
         final var entity = new SysConfigDeploymentCommandVisitor(config).visitTransaction(Arrays.asList(command));
         final var json = JsonObject.mapFrom(entity);
         builder.item()
-          .append(json)
+          .docType(Document.DocumentType.SYS_CONFIG_DEPLOYMENT.name())
+          .branchContent(json)
           .docId(entity.getId())
           .next();
         entities.add(entity);

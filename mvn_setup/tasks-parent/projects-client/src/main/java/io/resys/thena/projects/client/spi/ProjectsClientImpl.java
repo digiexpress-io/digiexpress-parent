@@ -11,7 +11,6 @@ import io.resys.thena.projects.client.spi.actions.ActiveTenantConfigQueryImpl;
 import io.resys.thena.projects.client.spi.actions.CreateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.actions.UpdateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +61,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
       public RepositoryQuery repoName(String repoName, TenantRepoConfigType type) {
         this.repoName = repoName;
         this.type = type;
-        repo.repoName(type.name()).externalId(repoName).headName(MainBranch.HEAD_NAME);
+        repo.repoName(type.name()).externalId(repoName);
         
         switch (type) {
         case CRM: { repo.repoType(StructureType.doc); break; }

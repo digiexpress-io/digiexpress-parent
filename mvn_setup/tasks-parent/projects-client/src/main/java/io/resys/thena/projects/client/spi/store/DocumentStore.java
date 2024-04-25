@@ -34,7 +34,6 @@ public interface DocumentStore {
   interface DocumentRepositoryQuery {
     DocumentRepositoryQuery repoName(String repoName);
     DocumentRepositoryQuery externalId(String externalId);
-    DocumentRepositoryQuery headName(String headName);
     DocumentRepositoryQuery repoType(StructureType repoType);
     DocumentStore build();
     Uni<DocumentStore> delete();

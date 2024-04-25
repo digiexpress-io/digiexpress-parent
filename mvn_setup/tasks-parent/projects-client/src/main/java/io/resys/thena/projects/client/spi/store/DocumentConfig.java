@@ -29,11 +29,11 @@ import org.immutables.value.Value;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
-import io.resys.thena.projects.client.api.model.Document.DocumentType;
 import io.smallrye.mutiny.Uni;
 
 
@@ -41,14 +41,7 @@ import io.smallrye.mutiny.Uni;
 public interface DocumentConfig {
   ThenaClient getClient();
   String getRepoId();
-  String getBranchName();
-  DocumentGidProvider getGid();
   DocumentAuthorProvider getAuthor();
-  
-  interface DocumentGidProvider {
-    String getNextId(DocumentType entity);
-    String getNextVersion(DocumentType entity);
-  }
   
   @FunctionalInterface
   interface DocumentAuthorProvider {
@@ -57,15 +50,15 @@ public interface DocumentConfig {
   interface DocVisitor {}
   
   interface DocObjectsVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObjects ref);
+    Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder);
+    @Nullable DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope);
+    T end(DocumentConfig config, @Nullable DocTenantObjects ref);
   }
   
   interface DocObjectVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObject ref);
+    Uni<QueryEnvelope<DocObject>> start(DocumentConfig config, DocObjectsQuery builder);
+    @Nullable DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope);
+    T end(DocumentConfig config, @Nullable DocObject ref);
   }
   
   interface DocCreateVisitor<T> extends DocVisitor { 
@@ -76,9 +69,7 @@ public interface DocumentConfig {
   
   
   default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .commit().createManyDocs()
-        .branchName(getBranchName()));
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).commit().createManyDocs());
     
     return builder.build()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
@@ -86,21 +77,17 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocObjectsVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .find().docQuery()
-        .branchName(getBranchName()));
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).find().docQuery());
     
-    return builder.findAll()
+    return builder
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }
   
   default <T> Uni<T> accept(DocObjectVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .find().docQuery()
-        .branchName(getBranchName()));
-    
-    return builder.get()
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).find().docQuery());
+   
+    return builder
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }

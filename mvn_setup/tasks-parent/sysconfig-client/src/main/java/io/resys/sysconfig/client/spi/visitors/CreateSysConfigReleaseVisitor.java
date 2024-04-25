@@ -47,17 +47,16 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
 
     this.ctx = ctx;
     this.command = command;
-    
     this.assetClient = assetClient;
     
     final var config = ctx.getConfig();
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyOneBranch()
-        .message("Update config for release")
-        .author(config.getAuthor().get());
+        .commitMessage("Update config for release")
+        .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createOneDoc()
         .docType(Document.DocumentType.SYS_CONFIG_RELEASE.name())
-        .message("Create new release")
-        .author(config.getAuthor().get())
+        .commitMessage("Create new release")
+        .commitAuthor(config.getAuthor().get())
         .branchName(config.getBranchName());
   }
 
