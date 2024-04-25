@@ -32,25 +32,23 @@ import java.util.stream.Collectors;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
-import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
+import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.store.CrmStoreConfig;
 import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
-import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.store.CrmStoreException;
-import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -73,22 +71,20 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
         .collect(Collectors.groupingBy(CustomerUpdateCommand::getCustomerId));
     this.customerIds = new ArrayList<>(commandsByCustomerId.keySet());
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
-        .message("Update customers: " + commandsByCustomerId.size())
-        .author(config.getAuthor().get());
+        .commitMessage("Update customers: " + commandsByCustomerId.size())
+        .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createManyDocs()
-        .docType(Document.DocumentType.CUSTOMER.name())
-        .message("Upsert customers: " + commandsByCustomerId.size())
-        .author(config.getAuthor().get())
-        .branchName(config.getBranchName());
+        .commitMessage("Upsert customers: " + commandsByCustomerId.size())
+        .commitAuthor(config.getAuthor().get());
   }
 
   @Override
-  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(customerIds).branchName(MainBranch.HEAD_NAME);
+  public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder) {
+    return builder.findAll(customerIds);
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw CrmStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -111,7 +107,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   }
 
   @Override
-  public Uni<List<Customer>> end(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
+  public Uni<List<Customer>> end(CrmStoreConfig config, DocTenantObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<Customer>();
@@ -121,7 +117,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       }));
   }
   
-  private Uni<List<Customer>> applyInserts(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<Customer>> applyInserts(CrmStoreConfig config, DocTenantObjects blob) {
     final var insertedCustomers = new ArrayList<Customer>(); 
     for(final var entry : commandsByCustomerId.entrySet()) {
       try {
@@ -130,11 +126,13 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
         }
         final var inserted = new CustomerCommandVisitor(ctx.getConfig()).visitTransaction(entry.getValue());
         this.createBuilder.item()
-          .docId(inserted.getId())
-          .externalId(inserted.getExternalId())
-          .append(JsonObject.mapFrom(inserted))
+          .docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+          .docId(inserted.getItem1().getId())
+          .externalId(inserted.getItem1().getExternalId())
+          .branchContent(JsonObject.mapFrom(inserted.getItem1()))
+          .commands(inserted.getItem2())
           .next();
-        insertedCustomers.add(inserted);
+        insertedCustomers.add(inserted.getItem1());
       } catch(NoChangesException e) {
         // nothing to do
       }
@@ -146,8 +144,12 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedCustomers));
   }
 
-  private Uni<List<Customer>> applyUpdates(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
-    final var updatedCustomers = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
+  private Uni<List<Customer>> applyUpdates(CrmStoreConfig config, DocTenantObjects blob) {
+    final var updatedCustomers = blob.accept((Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> _commands,
+        List<DocCommitTree> trees) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
       
       final List<CustomerUpdateCommand> commands = new ArrayList<>();
@@ -168,12 +170,12 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       try {
         final var updated = new CustomerCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
         this.updateBuilder.item()
-          .docId(updated.getId())
-          .branchName(docBranch.getBranchName())
-          .append(JsonObject.mapFrom(updated))
+          .docId(updated.getItem1().getId())
+          .replace(JsonObject.mapFrom(updated.getItem1()))
+          .commands(updated.getItem2())
           .next();
         
-        return updated;
+        return updated.getItem1();
       } catch(NoChangesException e) {
         return start;
       }
@@ -211,12 +213,11 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       throw new CrmStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), CrmStoreException.convertMessages(response));
     }
     final Map<String, Customer> customerById = new HashMap<>(updatedCustomers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
-    response.getCommit().forEach(commit -> {
+    response.getBranch().forEach(commit -> {
       
-      final var next = ImmutableCustomer.builder()
-          .from(customerById.get(commit.getDocId()))
-          .version(commit.getId())
-          .build();
+      final var next = FindAllCustomersVisitor.mapToCustomer(commit, response.getCommands().stream()
+          .filter(command -> command.getDocId().equals(commit.getDocId()))
+          .toList());
       customerById.put(next.getId(), next);
     });
     
