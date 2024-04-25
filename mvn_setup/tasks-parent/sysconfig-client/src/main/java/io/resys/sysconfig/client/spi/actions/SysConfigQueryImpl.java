@@ -51,7 +51,7 @@ public class SysConfigQueryImpl implements SysConfigQuery {
 
   @Override
   public Uni<List<SysConfig>> deleteAll(String userId, Instant targetDate) {
-    return ctx.getConfig().accept(new DeleteAllSysConfigsVisitor(userId, targetDate))
+    return ctx.getConfig().accept(new DeleteAllSysConfigsVisitor())
         .onItem().transformToUni(unwrap -> unwrap);
   }
   
