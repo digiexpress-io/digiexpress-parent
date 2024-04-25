@@ -7,7 +7,6 @@ import io.resys.crm.client.spi.actions.CreateCustomerActionImpl;
 import io.resys.crm.client.spi.actions.CustomerQueryImpl;
 import io.resys.crm.client.spi.actions.UpdateCustomerActionImpl;
 import io.resys.crm.client.spi.store.CrmStore;
-import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -58,7 +57,7 @@ public class CrmClientImpl implements CrmClient {
       @Override
       public RepositoryQuery repoName(String repoName) {
         this.repoName = repoName;
-        repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
+        repo.repoName(repoName);
         return this;
       }
       @Override
