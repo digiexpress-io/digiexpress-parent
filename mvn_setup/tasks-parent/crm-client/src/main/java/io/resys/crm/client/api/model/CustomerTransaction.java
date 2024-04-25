@@ -1,7 +1,7 @@
 package io.resys.crm.client.api.model;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -16,5 +16,5 @@ interface CustomerTransaction extends Serializable {
   List<CustomerCommand> getCommands(); 
   
   String getUserId();
-  Instant getTargetDate();
+  OffsetDateTime getTargetDate();
 }

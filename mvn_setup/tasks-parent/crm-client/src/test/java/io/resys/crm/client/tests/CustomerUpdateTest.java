@@ -1,5 +1,7 @@
 package io.resys.crm.client.tests;
 
+import org.junit.jupiter.api.Assertions;
+
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.crm.client.api.CrmClient;
@@ -13,9 +15,8 @@ import io.resys.crm.client.api.model.ImmutablePerson;
 import io.resys.crm.client.api.model.ImmutableUpsertSuomiFiPerson;
 import io.resys.crm.client.tests.config.CrmPgProfile;
 import io.resys.crm.client.tests.config.CustomerTestCase;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @QuarkusTest
 @TestProfile(CrmPgProfile.class)
 public class CustomerUpdateTest extends CustomerTestCase {
@@ -114,6 +115,15 @@ public class CustomerUpdateTest extends CustomerTestCase {
     .await().atMost(atMost);
 
     assertRepo(client, "update-test-cases/upsert-suomi-fi-person-change-address.txt");
+    
+    final var allCustomers = client.customerQuery().findAll().await().atMost(atMost);
+    Assertions.assertEquals(1, allCustomers.size());
+    Assertions.assertEquals(1, allCustomers.get(0).getTransactions().size());
+    Assertions.assertEquals(1, allCustomers.get(0).getTransactions().get(0).getCommands().size());
+    Assertions.assertNotNull(allCustomers.get(0).getCreated());
+    Assertions.assertNotNull(allCustomers.get(0).getUpdated());
+    Assertions.assertNotNull(allCustomers.get(0).getVersion());
+    
   }
 
 

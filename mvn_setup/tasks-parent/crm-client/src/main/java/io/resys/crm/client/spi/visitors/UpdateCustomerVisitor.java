@@ -42,6 +42,7 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
@@ -80,7 +81,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
 
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder) {
-    return builder.findAll(customerIds);
+    return builder.include(IncludeInQuery.COMMANDS).findAll(customerIds);
   }
 
   @Override

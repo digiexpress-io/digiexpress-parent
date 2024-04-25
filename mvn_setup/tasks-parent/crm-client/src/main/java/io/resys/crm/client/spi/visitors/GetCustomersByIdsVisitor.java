@@ -32,6 +32,7 @@ import io.resys.crm.client.spi.store.CrmStoreConfig;
 import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
 import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
+import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
@@ -52,6 +53,7 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder) {
     return builder
         .docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+        .include(IncludeInQuery.COMMANDS)
         .findAll(new ArrayList<>(projectIds));
   }
 

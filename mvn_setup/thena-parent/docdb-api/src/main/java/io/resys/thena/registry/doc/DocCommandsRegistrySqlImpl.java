@@ -58,7 +58,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append(" FROM ").append(options.getDocCommands()).append(" as commands")
         
         .append(" INNER JOIN ").append(options.getDocCommits()).append(" as commits").ln()
-        .append(" ON(commands.commit_id = commits.commit_id)").ln()
+        .append(" ON(commands.commit_id = commits.id)").ln()
 
         .append(" INNER JOIN ").append(options.getDoc()).append(" as docs").ln()
         .append(" ON(docs.id = commands.doc_id)")
@@ -69,7 +69,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append(" WHERE ").ln() 
         .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
         .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.branch_id = $2 OR $2 IS NULL)").ln()
+        .append(" (branches.branch_name = $2 OR branches.branch_id = $2 OR $2 IS NULL)").ln()
         
         .build())
         .props(Tuple.of(docIds.toArray(), branchId))
