@@ -40,10 +40,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.crm.client.api.CrmClient;
-import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.crm.client.spi.CrmStoreImpl;
-import io.resys.crm.client.spi.store.CrmStoreConfig.DocumentGidProvider;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
@@ -62,7 +60,6 @@ public class CustomerTestCase {
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
-  private final AtomicInteger id_provider = new AtomicInteger();
   
   @BeforeEach
   public void setUp() {
@@ -70,17 +67,6 @@ public class CustomerTestCase {
     final var db = DB + DB_ID.getAndIncrement();
     store = CrmStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-          
-          @Override
-          public String getNextId(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-        })
         .build();
     client = new CrmClientImpl(store);
     objectMapper();

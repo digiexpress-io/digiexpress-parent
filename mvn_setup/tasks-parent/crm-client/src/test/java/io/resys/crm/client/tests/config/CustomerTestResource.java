@@ -6,7 +6,6 @@ import java.util.List;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
-import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.api.model.ImmutableCreateCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.api.model.ImmutableCustomerTransaction;
@@ -46,7 +45,6 @@ public class CustomerTestResource implements CrmRestApi {
                   .build())
               .build())
           .build())
-      .documentType(DocumentType.CUSTOMER)
       .build();
 
 

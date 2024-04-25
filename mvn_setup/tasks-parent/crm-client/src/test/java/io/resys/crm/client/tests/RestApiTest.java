@@ -62,7 +62,6 @@ public class RestApiTest {
             .lastName("SaladsMacgoo")
             .username("Waldorf SaladsMacGoo")
             .build())
-        .userId("user-1")
         .externalId("ssn")
         .commandType(CustomerCommandType.CreateCustomer)
         .build();
@@ -82,9 +81,7 @@ public class RestApiTest {
     final var command = ImmutableChangeCustomerFirstName.builder()
         .firstName("John")
         .customerId("customer-id-1")
-        .userId("user1")
         .build();
-        
 
       final Customer response = RestAssured.given()
         .body(Arrays.asList(command, command, command, command)).accept("application/json").contentType("application/json")

@@ -23,7 +23,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
   private Customer createCustomerForUpdating(CrmClient client) {
     return client.createCustomer()
       .createOne(ImmutableCreateCustomer.builder()
-        .targetDate(getTargetDate())
         .body(ImmutablePerson.builder()
             .username("Amanda Smith")
             .firstName("Amanda")
@@ -41,7 +40,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
                 .build())
             .build())
         .externalId("external-id")
-        .userId("tester-bob")
         .build())
       .await().atMost(atMost);
   }
@@ -55,8 +53,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
     client.updateCustomer().updateOne(ImmutableChangeCustomerFirstName.builder()
         .firstName("Jack")
         .customerId(customer.getExternalId())
-        .targetDate(getTargetDate())
-        .userId("jane.doe@morgue.com")
         .build())
     .await().atMost(atMost);
 
@@ -71,7 +67,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
     final var customer = createCustomerForUpdating(client);
     
     client.updateCustomer().updateOne(ImmutableUpsertSuomiFiPerson.builder()
-        .userId("tester-bob")
         .userName("Jack Brachus")
         .customerId(customer.getExternalId())
         .protectionOrder(true)
@@ -87,7 +82,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
             .addressValue("1234 My street, Helsinki, FI, 12345")
             .email("suomi-fi-customer@gmail.com")
             .build())
-        .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
 
@@ -101,7 +95,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
     final var customer = createCustomerForUpdating(client);
     
     client.updateCustomer().updateOne(ImmutableUpsertSuomiFiPerson.builder()
-        .userId("tester-bob")
         .userName("Jack Brachus")
         .customerId(customer.getExternalId())
         .protectionOrder(true)
@@ -117,7 +110,6 @@ public class CustomerUpdateTest extends CustomerTestCase {
             .addressValue("35 Lake Avenue, Sipoo, FI, 85477")
             .email("suomi-fi-customer@gmail.com")
             .build())
-        .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
 
