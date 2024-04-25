@@ -23,7 +23,6 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
-import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -96,11 +95,11 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
         .onItem().transformToUni(client -> doInAssetClient(client, sysConfig))
         .onItem().transformToUni(entity -> {
           final var json = JsonObject.mapFrom(entity);
-          return createBuilder.append(json).docId(entity.getId()).build().onItem().transform(envelope -> {
+          return createBuilder.branchContent(json).docId(entity.getId()).build().onItem().transform(envelope -> {
             if(envelope.getStatus() == CommitResultStatus.OK) {
               return ImmutableSysConfigRelease.builder().from(entity).version(envelope.getBranch().getCommitId()).build();
             }
-            throw new DocumentStoreException("CREATE_SYS_CONFIG_RELEASE_FAIL", DocumentStoreException.convertMessages(envelope));
+            throw new DocStoreException("CREATE_SYS_CONFIG_RELEASE_FAIL", DocStoreException.convertMessages(envelope));
           });
         });
   }

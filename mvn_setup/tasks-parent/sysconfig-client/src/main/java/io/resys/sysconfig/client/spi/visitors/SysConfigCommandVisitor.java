@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigService;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigTransaction;
@@ -63,21 +62,21 @@ public class SysConfigCommandVisitor {
   
   private SysConfig visitCreateSysConfig(CreateSysConfig command) {
     final var id = OidUtils.gen();
-    final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG);
+
     final var targetDate = requireTargetDate(command);
     
     this.current = ImmutableSysConfig.builder()
       .id(id)
       .created(targetDate)
       .updated(targetDate)
-      .version(version)
+      .version("")
       .tenantId(command.getTenantId())
       .name(command.getName())
       .wrenchHead(command.getWrenchHead())
       .stencilHead(command.getStencilHead())
       .services(command.getServices().stream()
           .map(init -> ImmutableSysConfigService.builder().from(init)
-              .id(ctx.getGid().getNextId(DocumentType.SYS_CONFIG))
+              .id(OidUtils.gen())
               .build())
           .toList())
       .addTransactions(

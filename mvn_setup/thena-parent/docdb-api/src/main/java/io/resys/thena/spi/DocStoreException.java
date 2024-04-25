@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -69,7 +70,13 @@ public class DocStoreException extends RuntimeException {
         .addAllArgs(commit.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()))
         .build();
   }
-
+  public static DocumentExceptionMsg convertMessages(OneDocEnvelope envelope) {
+    return ImmutableDocumentExceptionMsg.builder()
+        .id(envelope.getRepoId())
+        .value("") //TODO
+        .addAllArgs(envelope.getMessages().stream().map(message-> message.getText()).collect(Collectors.toList()))
+        .build();
+  }
   public static DocumentExceptionMsg convertMessages(ManyDocsEnvelope envelope) {
     return ImmutableDocumentExceptionMsg.builder()
         .id(envelope.getRepoId())

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigDeploymentTransaction;
 import io.resys.sysconfig.client.api.model.SysConfigDeployment;
@@ -63,7 +62,7 @@ public class SysConfigDeploymentCommandVisitor {
   
   private SysConfigDeployment visitCreateSysConfig(CreateSysConfigDeployment command) {
     final var id = command.getDeploymentId();
-    final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG_DEPLOYMENT);
+    
     final var targetDate = requireTargetDate(command);
     
     this.current = ImmutableSysConfigDeployment.builder()
@@ -74,7 +73,7 @@ public class SysConfigDeploymentCommandVisitor {
       .disabled(Boolean.TRUE.equals(command.getDisabled()))
       .tenantId(command.getBody().getTenantId())
       .hash("TODO::")
-      .version(version)
+      .version("")
       .addTransactions(
           ImmutableSysConfigDeploymentTransaction.builder()
           .id("1")
