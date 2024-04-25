@@ -36,7 +36,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.spi.ProjectStoreImpl;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.spi.ThenaClientPgSql;
@@ -110,7 +110,7 @@ public class ProjectTestCase {
     return targetDate;
   }
 
-  public String printRepo(TenantConfigClient client) {
+  public String printRepo(ProjectClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
@@ -118,7 +118,7 @@ public class ProjectTestCase {
     return result;
   }
   
-  public String toStaticData(TenantConfigClient client) {
+  public String toStaticData(ProjectClient client) {
     final var config = ((ProjectsClientImpl) client).getCtx().getConfig();
     final var state = ((ThenaClientPgSql) config.getClient()).getState();
     final var repo = client.getRepo().await().atMost(Duration.ofMinutes(1));
@@ -129,7 +129,7 @@ public class ProjectTestCase {
     return RepositoryToStaticData.toString(ProjectTestCase.class, fileName);
   }
   
-  public void assertRepo(TenantConfigClient client, String expectedFileName) {
+  public void assertRepo(ProjectClient client, String expectedFileName) {
     final var expected = toExpectedFile(expectedFileName);
     final var actual = toStaticData(client);
     Assertions.assertLinesMatch(expected.lines(), actual.lines());

@@ -1,6 +1,6 @@
 package io.resys.thena.tasks.dev.app;
 
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Path("q/digiexpress/api")
 public class TenantsResource implements TenantConfigRestApi {
 
-  @Inject TenantConfigClient tenantConfigClient;
+  @Inject ProjectClient tenantConfigClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
   

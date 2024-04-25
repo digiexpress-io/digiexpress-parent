@@ -15,7 +15,7 @@ import io.dialob.client.api.DialobDocument.FormDocument;
 import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.spi.DialobComposerImpl;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -38,7 +38,7 @@ public class DialobResource {
   
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject DialobClient dialobClient;
 
   @lombok.Data @lombok.Builder @Jacksonized

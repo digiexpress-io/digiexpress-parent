@@ -12,7 +12,7 @@ import io.resys.permission.client.api.PermissionClient;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
 import io.resys.sysconfig.client.mig.model.MigrationAssets;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.client.api.TaskClient;
@@ -40,7 +40,7 @@ public class DemoResource {
   @Inject PermissionClient permissions;
   @Inject TaskClient taskClient;
   @Inject CrmClient crmClient;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject SysConfigClient sysConfigClient;
   @Inject CurrentSetup setup;

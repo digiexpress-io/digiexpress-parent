@@ -8,7 +8,7 @@ import io.resys.permission.client.api.model.ImmutableCreatePermission;
 import io.resys.permission.client.api.model.ImmutableCreatePrincipal;
 import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.permission.client.api.model.Principal;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @ApplicationScoped
 public class CurrentSetup {
   @Inject PermissionClient permissions;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject UserProfileClient userProfileClient;
   @Inject PrincipalCache cache;

@@ -7,7 +7,7 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.SysConfigUpdateCommand;
 import io.resys.sysconfig.client.rest.SysConfigRestApi;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
@@ -20,7 +20,7 @@ public class SysConfigResource implements SysConfigRestApi {
   @Inject SysConfigClient sysConfigClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   
   @Override
   public Uni<List<SysConfig>> findAllSysConfigs() {

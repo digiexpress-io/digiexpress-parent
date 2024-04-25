@@ -38,7 +38,7 @@ import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
@@ -65,7 +65,7 @@ public class TestCaseBuilder {
   private TenantConfig tenant;
   private AssetClient assetClient;
   private ExecutorClient executorClient;
-  private TenantConfigClient tenantClient;
+  private ProjectClient tenantClient;
   private final ThenaClient doc;
   private final DbState docState;
   private final String author = "jane.doe@morgue.com";
@@ -131,7 +131,7 @@ public class TestCaseBuilder {
   public AssetClient getClient() {
     return assetClient;
   }
-  public TenantConfigClient getTenantClient() {
+  public ProjectClient getTenantClient() {
     return tenantClient;
   }
   public TenantConfig getTenant() {

@@ -14,7 +14,7 @@ import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateComm
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.permission.client.rest.PermissionRestApi;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
@@ -32,7 +32,7 @@ public class PermissionsResource implements PermissionRestApi {
   @Inject PermissionClient permissions;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject PrincipalCache cache;
 
   @Override

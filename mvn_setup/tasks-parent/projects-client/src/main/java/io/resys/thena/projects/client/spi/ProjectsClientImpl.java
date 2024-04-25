@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.actions.ActiveTenantConfigQueryImpl;
@@ -16,7 +16,7 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ProjectsClientImpl implements TenantConfigClient {
+public class ProjectsClientImpl implements ProjectClient {
   private final ProjectStore ctx;
   
 
@@ -52,11 +52,11 @@ public class ProjectsClientImpl implements TenantConfigClient {
       private String repoName;
       private TenantRepoConfigType type;
       
-      @Override public Uni<TenantConfigClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public Uni<TenantConfigClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public TenantConfigClient build() { return new ProjectsClientImpl(repo.build()); }
-      @Override public Uni<TenantConfigClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
-      @Override public Uni<TenantConfigClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
+      @Override public Uni<ProjectClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public Uni<ProjectClient> create() { return repo.create().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public ProjectClient build() { return new ProjectsClientImpl(repo.build()); }
+      @Override public Uni<ProjectClient> delete() { return repo.delete().onItem().transform(doc -> new ProjectsClientImpl(doc)); }
+      @Override public Uni<ProjectClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new ProjectsClientImpl(ctx)); }
       @Override
       public RepositoryQuery repoName(String repoName, TenantRepoConfigType type) {
         this.repoName = repoName;
@@ -102,7 +102,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
 
 
   @Override
-  public TenantConfigClient withRepoId(String repoId) {
+  public ProjectClient withRepoId(String repoId) {
     return new ProjectsClientImpl(ctx.withRepoId(repoId));
   }
 }

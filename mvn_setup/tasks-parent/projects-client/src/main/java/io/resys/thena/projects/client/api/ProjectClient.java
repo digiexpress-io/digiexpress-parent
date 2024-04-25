@@ -11,9 +11,9 @@ import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenant
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.smallrye.mutiny.Uni;
 
-public interface TenantConfigClient {
+public interface ProjectClient {
 
-  TenantConfigClient withRepoId(String repoId);
+  ProjectClient withRepoId(String repoId);
   RepositoryQuery query();
   Uni<Tenant> getRepo();
   
@@ -45,12 +45,12 @@ public interface TenantConfigClient {
   
   public interface RepositoryQuery {
     RepositoryQuery repoName(String repoName, TenantRepoConfigType type);
-    TenantConfigClient build();
+    ProjectClient build();
 
-    Uni<TenantConfigClient> deleteAll();
-    Uni<TenantConfigClient> delete();
-    Uni<TenantConfigClient> create();
-    Uni<TenantConfigClient> createIfNot();
+    Uni<ProjectClient> deleteAll();
+    Uni<ProjectClient> delete();
+    Uni<ProjectClient> create();
+    Uni<ProjectClient> createIfNot();
     
     Uni<Optional<TenantConfig>> get(String tenantId);
   } 

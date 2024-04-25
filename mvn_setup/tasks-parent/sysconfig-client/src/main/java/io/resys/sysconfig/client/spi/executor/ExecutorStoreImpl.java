@@ -13,7 +13,7 @@ import io.resys.sysconfig.client.spi.executor.visitors.GetFlowProgramFromRelease
 import io.resys.sysconfig.client.spi.store.DocumentStore;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.smallrye.mutiny.Uni;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExecutorStoreImpl implements ExecutorStore {
   
-  private final TenantConfigClient tenantClient;
+  private final ProjectClient tenantClient;
   private final AssetClient assetClient;
   private final ExecutorClientConfig config;
   private final DocumentStore ctx;

@@ -7,7 +7,7 @@ import io.resys.sysconfig.client.api.AssetClient.AssetSource;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.rest.SysConfigAssetsRestApi;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
@@ -22,7 +22,7 @@ public class SysConfigAssetsResource implements SysConfigAssetsRestApi {
   @Inject SysConfigClient sysConfigClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   
   @Override
   public Uni<List<AssetSource>> findAllAssetSources() {

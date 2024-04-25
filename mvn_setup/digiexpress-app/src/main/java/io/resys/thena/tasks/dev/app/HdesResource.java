@@ -19,7 +19,7 @@ import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
 import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -45,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 public class HdesResource {
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject HdesClient hdesClient;
   @Inject ObjectMapper objectMapper;
 

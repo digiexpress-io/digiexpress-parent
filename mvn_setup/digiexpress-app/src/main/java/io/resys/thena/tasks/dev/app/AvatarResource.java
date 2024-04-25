@@ -2,7 +2,7 @@ package io.resys.thena.tasks.dev.app;
 
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.permission.client.api.PermissionClient;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
@@ -21,7 +21,7 @@ public class AvatarResource {
   @Inject PermissionClient permissions;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   @Inject UserProfileClient userProfileClient;
   @Inject PrincipalCache cache;
   

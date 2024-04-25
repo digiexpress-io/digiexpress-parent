@@ -42,7 +42,7 @@ import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -149,7 +149,7 @@ public class BeanFactory {
     return new TaskClientImpl(store);
   }
   @Produces
-  public TenantConfigClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
+  public ProjectClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
     final var store = io.resys.thena.projects.client.spi.ProjectStoreImpl.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
@@ -251,7 +251,7 @@ public class BeanFactory {
   @Produces
   public SysConfigClient sysConfigClient(
       CurrentPgPool currentPgPool, ObjectMapper om, 
-      TenantConfigClient tenantClient,
+      ProjectClient tenantClient,
       StencilClient stencil,
       HdesClient wrench,
       DialobClient dialob) {

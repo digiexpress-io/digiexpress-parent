@@ -7,7 +7,7 @@ import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
 import io.resys.sysconfig.client.spi.asset.builders.AssetQueryImpl;
 import io.resys.sysconfig.client.spi.asset.builders.AssetSourceQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AssetClientImpl implements AssetClient {
 
-  private final TenantConfigClient tenantClient;
+  private final ProjectClient tenantClient;
   private final AssetClientConfig clientConfig;
 
   @Override

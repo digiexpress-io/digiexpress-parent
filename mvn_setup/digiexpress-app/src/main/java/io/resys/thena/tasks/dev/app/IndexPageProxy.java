@@ -7,7 +7,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.common.annotation.Blocking;
@@ -31,7 +31,7 @@ public class IndexPageProxy {
   WebClient client;
 
   @Inject
-  TenantConfigClient tenantClient;
+  ProjectClient tenantClient;
 
   @ConfigProperty(name = "digiexpress.assets-url", defaultValue = "http://localhost:3000")
   String assetsUrl;

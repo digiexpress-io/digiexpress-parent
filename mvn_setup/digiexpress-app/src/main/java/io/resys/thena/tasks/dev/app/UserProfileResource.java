@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
@@ -24,7 +24,7 @@ public class UserProfileResource implements UserProfileRestApi {
   @Inject UserProfileClient userProfileClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
 
   @Override
   public Uni<List<UserProfile>> findAllUserProfiles() {

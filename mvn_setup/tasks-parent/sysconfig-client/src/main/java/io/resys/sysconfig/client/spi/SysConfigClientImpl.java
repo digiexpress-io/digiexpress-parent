@@ -10,7 +10,7 @@ import io.resys.sysconfig.client.spi.actions.SysConfigQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
 import io.resys.sysconfig.client.spi.store.DocumentStore;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.store.MainBranch;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class SysConfigClientImpl implements SysConfigClient {
   private final DocumentStore ctx;
   private final AssetClient assets;
-  private final TenantConfigClient tenantClient;
+  private final ProjectClient tenantClient;
   public DocumentStore getCtx() { return ctx; }
 
   @Override public Uni<Tenant> getRepo() { return ctx.getRepo(); }

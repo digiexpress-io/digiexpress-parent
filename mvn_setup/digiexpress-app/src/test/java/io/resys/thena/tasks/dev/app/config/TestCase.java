@@ -29,7 +29,7 @@ import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.SysConfigClient;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
@@ -98,7 +98,7 @@ public class TestCase {
         .onItem().transform(_junk -> builder.getClient());
   }
   
-  private Uni<TenantConfig> init(TenantConfigClient tenantClient, String repoId, String tenantId) {
+  private Uni<TenantConfig> init(ProjectClient tenantClient, String repoId, String tenantId) {
     return tenantClient.query().repoName(repoId, TenantRepoConfigType.TENANT).createIfNot()
         .onItem().transformToUni(created -> {
           return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()

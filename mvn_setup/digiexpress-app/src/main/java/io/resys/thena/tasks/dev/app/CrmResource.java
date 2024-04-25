@@ -15,7 +15,7 @@ import io.resys.crm.client.api.model.Customer.Person;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.rest.CrmRestApi;
-import io.resys.thena.projects.client.api.TenantConfigClient;
+import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
@@ -30,7 +30,7 @@ public class CrmResource implements CrmRestApi {
   @Inject CrmClient crmClient;
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;
-  @Inject TenantConfigClient tenantClient;
+  @Inject ProjectClient tenantClient;
   
   @Override
   public Uni<List<Customer>> findAllCustomers() {
