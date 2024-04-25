@@ -1,6 +1,5 @@
 package io.resys.crm.client.api;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public interface CrmClient {
     Uni<List<Customer>> findAll();
     Uni<List<Customer>> findByIds(Collection<String> crmIds);
     Uni<Customer> get(String crmId);
-    Uni<List<Customer>> deleteAll(String userId, Instant targetDate);
+    Uni<List<Customer>> deleteAll();
   }
   
   public interface RepositoryQuery {

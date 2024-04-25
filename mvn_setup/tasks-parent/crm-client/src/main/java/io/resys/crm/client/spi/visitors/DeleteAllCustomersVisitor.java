@@ -1,70 +1,43 @@
 package io.resys.crm.client.spi.visitors;
 
-/*-
- * #%L
- * thena-Projects-client
- * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.CrmStoreConfig;
 import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.crm.client.spi.store.CrmStoreException;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Customer>>>{
 
-  private final String userId;
-  private final Instant targetDate;
-  
   private ModifyManyDocBranches archiveCommand;
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
-        .author(config.getAuthor().get())
-        .message("Delete Tenants");
+        .commitAuthor(config.getAuthor().get())
+        .commitMessage("Delete Tenants");
     
     // Build the blob criteria for finding all documents of type Project
-    return query.docType(Document.DocumentType.CUSTOMER.name());
+    return query.docType(CrmStoreConfig.DOC_TYPE_CUSTOMER).findAll();
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw CrmStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -72,7 +45,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   }
   
   @Override
-  public Uni<List<Customer>> end(CrmStoreConfig config, DocQueryActions.DocObjects ref) {
+  public Uni<List<Customer>> end(CrmStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -98,16 +71,13 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   
   
   
-  private List<Customer> visitTree(DocQueryActions.DocObjects state) {
-    return state.getBranches().values().stream().flatMap(e -> e.stream())
+  private List<Customer> visitTree(DocTenantObjects state) {
+    return state.getBranches().values().stream()
       .map(blob -> blob.getValue().mapTo(ImmutableCustomer.class))
-      .map(TenantConfig -> visitTenantConfig(TenantConfig))
+      .map(customer -> archiveCustomer(customer))
       .collect(Collectors.toUnmodifiableList());
   }
-  private Customer visitTenantConfig(Customer customer) {
-    
-    final var json = JsonObject.mapFrom(customer);
-
+  private Customer archiveCustomer(Customer customer) {
     removeCommand.item().docId(customer.getId()).remove();
     return customer;
   }
