@@ -13,7 +13,7 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
-import io.resys.sysconfig.client.spi.store.SysConfigStore;
+import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocQueryActions;

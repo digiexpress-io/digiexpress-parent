@@ -6,11 +6,7 @@ import java.util.List;
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.sysconfig.client.spi.store.ThenaDocConfig;
-import io.resys.sysconfig.client.spi.store.ThenaDocConfig.DocObjectVisitor;
-import io.resys.sysconfig.client.spi.store.DocStoreException;
 import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObject;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
@@ -19,6 +15,9 @@ import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocObjectVisitor;
 import lombok.RequiredArgsConstructor;
 
 

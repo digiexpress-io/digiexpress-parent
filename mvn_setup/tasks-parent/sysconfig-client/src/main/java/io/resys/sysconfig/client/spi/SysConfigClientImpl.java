@@ -7,7 +7,6 @@ import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.actions.CreateSysConfigActionImpl;
 import io.resys.sysconfig.client.spi.actions.SysConfigQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;

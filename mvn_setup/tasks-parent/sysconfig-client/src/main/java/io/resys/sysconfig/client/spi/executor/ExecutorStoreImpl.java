@@ -8,9 +8,9 @@ import io.resys.sysconfig.client.api.ExecutorClient.ExecutorClientConfig;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
+import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.executor.visitors.GetDialobProgramFromReleaseVisitor;
 import io.resys.sysconfig.client.spi.executor.visitors.GetFlowProgramFromReleaseVisitor;
-import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
 import io.resys.thena.projects.client.api.ProjectClient;
@@ -93,7 +93,7 @@ public class ExecutorStoreImpl implements ExecutorStore {
   public ExecutorStore withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
     final var sysConfig = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst();
     final var config = ImmutableExecutorClientConfig.builder().tenantConfigId(tenantConfigId).repoConfigs(tenantConfig).build();
-    final var ctx = this.ctx.withRepoId(sysConfig.get().getRepoId());
+    final var ctx = this.ctx.withTenantId(sysConfig.get().getRepoId());
     return new ExecutorStoreImpl(tenantClient, assetClient.withTenantConfig(tenantConfigId, tenantConfig), config, ctx);
   }
 }

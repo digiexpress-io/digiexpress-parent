@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigQuery;
 import io.resys.sysconfig.client.api.model.SysConfig;
-import io.resys.sysconfig.client.spi.store.SysConfigStore;
+import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.visitors.DeleteAllSysConfigsVisitor;
 import io.resys.sysconfig.client.spi.visitors.FindAllSysConfigsVisitor;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigVisitor;

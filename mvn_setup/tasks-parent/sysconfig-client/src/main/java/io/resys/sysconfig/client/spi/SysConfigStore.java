@@ -1,4 +1,4 @@
-package io.resys.sysconfig.client.spi.store;
+package io.resys.sysconfig.client.spi;
 
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.DocStoreImpl;
