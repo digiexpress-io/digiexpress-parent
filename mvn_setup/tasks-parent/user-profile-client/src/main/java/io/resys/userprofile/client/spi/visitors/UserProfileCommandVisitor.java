@@ -1,6 +1,5 @@
 package io.resys.userprofile.client.spi.visitors;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.resys.userprofile.client.api.model.Document.DocumentType;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;
@@ -18,9 +16,8 @@ import io.resys.userprofile.client.api.model.ImmutableUiSettings;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingsForSorting;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
-import io.resys.userprofile.client.api.model.ImmutableUserProfileTransaction;
+import io.resys.userprofile.client.api.model.UiSettings;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ArchiveUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeNotificationSetting;
@@ -32,9 +29,12 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUiSettings
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 
 
 public class UserProfileCommandVisitor {
+  @SuppressWarnings("unused")
   private final UserProfile start;
   private final List<UserProfileCommand> visitedCommands = new ArrayList<>();
   private ImmutableUserProfile current;
@@ -49,7 +49,7 @@ public class UserProfileCommandVisitor {
     this.current = ImmutableUserProfile.builder().from(start).build(); 
   }
   
-  public UserProfile visitTransaction(List<? extends UserProfileCommand> commands) throws NoChangesException {
+  public Tuple2<UserProfile, List<JsonObject>> visitTransaction(List<? extends UserProfileCommand> commands) throws NoChangesException {
     for(final var command : commands) {
       visitCommand(command);
     }
@@ -57,23 +57,13 @@ public class UserProfileCommandVisitor {
     if(visitedCommands.isEmpty()) {
       throw new NoChangesException();
     }
-    
     // don't bother logging ui settings to commands
-    final var loggedCommands = visitedCommands.stream().filter(d -> d.getCommandType() != UserProfileCommandType.UpsertUiSettings).collect(Collectors.toList());
-    final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
-    final var id = String.valueOf(transactions.size() +1);
-    
-    if(loggedCommands.isEmpty()) {
-      this.current = this.current.withVersion(id);
-      return this.current; 
-    }
-    transactions
-      .add(ImmutableUserProfileTransaction.builder()
-        .id(id)
-        .commands(loggedCommands)
-        .build());
-    this.current = this.current.withVersion(id).withTransactions(transactions);
-    return this.current;
+    final var loggedCommands = visitedCommands.stream()
+        .filter(d -> d.getCommandType() != UserProfileCommandType.UpsertUiSettings)
+        .map(JsonObject::mapFrom)
+        .collect(Collectors.toList());
+
+    return Tuple2.of(this.current, loggedCommands);
   }
   
   private UserProfile visitCommand(UserProfileCommand command) throws NoChangesException {
@@ -171,7 +161,6 @@ public class UserProfileCommandVisitor {
   }
   private UserProfile visitCreateUserProfile(CreateUserProfile command) {
     final var id = command.getId();
-    final var targetDate = requireTargetDate(command);
     this.current = ImmutableUserProfile.builder()
       .id(id)
       .details(createDetails(command))
@@ -180,15 +169,6 @@ public class UserProfileCommandVisitor {
               .from(e)
               .build())
           .toList())
-      .created(targetDate)
-      .updated(targetDate)
-      
-      .addTransactions(
-          ImmutableUserProfileTransaction.builder()
-          .id("1")
-          .addCommands(command)
-          .build())
-      .documentType(DocumentType.USER_PROFILE)
       .build();
     visitedCommands.add(command);
     
@@ -197,10 +177,10 @@ public class UserProfileCommandVisitor {
 
 
   private UserProfile visitUpsertUserProfile(UpsertUserProfile command) {
-    final var targetDate = requireTargetDate(command);
     if(this.current == null) {
       final var id = command.getId();
       final var details = createDetails(ImmutableCreateUserProfile.builder()
+          .id(id)
           .username(command.getUsername())
           .firstName(command.getFirstName())
           .lastName(command.getLastName())
@@ -215,15 +195,6 @@ public class UserProfileCommandVisitor {
                   .from(e)
                   .build())
               .toList())
-          .created(targetDate)
-          .updated(targetDate)
-
-          .addTransactions(
-              ImmutableUserProfileTransaction.builder()
-              .id("1")
-              .addCommands(command)
-              .build())
-          .documentType(DocumentType.USER_PROFILE)
           .build();
       visitedCommands.add(command);
       return this.current;
@@ -238,55 +209,33 @@ public class UserProfileCommandVisitor {
         .withDetails(ImmutableUserDetails.builder()
             .from(this.current.getDetails())
             .firstName(command.getFirstName())
-            .build())        
-        .withUpdated(requireTargetDate(command));
+            .build());
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO 
   private UserProfile visitChangeUserDetailsLastName(ChangeUserDetailsLastName command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO
   private UserProfile visitChangeUserDetailsEmail(ChangeUserDetailsEmail command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO
   private UserProfile visitChangeNotificationSetting(ChangeNotificationSetting command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO 
-  private UserProfile visitArchiveUserProfile(ArchiveUserProfile command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
+  private UserProfile visitArchiveUserProfile(ArchiveUserProfile command) {;
     visitedCommands.add(command);
     return this.current;
-  }
-  
-  
-  public static Instant requireTargetDate(UserProfileCommand command) {
-    final var targetDate = command.getTargetDate();
-    if (targetDate == null) {
-      throw new UpdateUserProfileVisitorException("targetDate not defined");
-    }
-    final var userId = command.getUserId();
-    if (userId == null) {
-      throw new UpdateUserProfileVisitorException("userId not defined");
-    }
-    return targetDate;
   }
 
   

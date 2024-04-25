@@ -7,17 +7,17 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
+import io.resys.userprofile.client.spi.support.DataConstants;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -29,25 +29,25 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(UserProfileStoreConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
-        .author(config.getAuthor().get())
-        .message("Delete Tenants");
+        .commitAuthor(config.getAuthor().get())
+        .commitMessage("Delete Tenants");
     
     // Build the blob criteria for finding all documents of type Project
-    return query.docType(Document.DocumentType.USER_PROFILE.name());
+    return query.docType(DataConstants.DOC_TYPE_USER_PROFILE).findAll();
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw UserProfileStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
   
   @Override
-  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocQueryActions.DocObjects ref) {
+  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -58,14 +58,14 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("USER_PROFILE_ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new UserProfileStoreException("USER_PROFILE_ARCHIVE_FAIL", UserProfileStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("USER_PROFILE_REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new UserProfileStoreException("USER_PROFILE_REMOVE_FAIL", UserProfileStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> profilesRemoved);
   }
@@ -73,8 +73,8 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   
   
   
-  private List<UserProfile> visitTree(DocQueryActions.DocObjects state) {
-    return state.getBranches().values().stream().flatMap(e -> e.stream())
+  private List<UserProfile> visitTree(DocTenantObjects state) {
+    return state.getBranches().values().stream()
       .map(blob -> blob.getValue().mapTo(ImmutableUserProfile.class))
       .map(UserProfile -> visitUserProfile(UserProfile))
       .collect(Collectors.toUnmodifiableList());
@@ -85,5 +85,6 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
     removeCommand.item().docId(userProfile.getId()).remove();
     return userProfile;
   }
+
 
 }

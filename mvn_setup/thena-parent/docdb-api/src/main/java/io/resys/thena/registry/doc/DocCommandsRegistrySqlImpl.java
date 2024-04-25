@@ -69,7 +69,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append(" WHERE ").ln() 
         .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
         .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.branch_id = $2)").ln()
+        .append(" (branch.branch_name = $2 OR branch.branch_id = $2 OR $2 IS NULL)").ln()
         
         .build())
         .props(Tuple.of(docIds.toArray(), branchId))

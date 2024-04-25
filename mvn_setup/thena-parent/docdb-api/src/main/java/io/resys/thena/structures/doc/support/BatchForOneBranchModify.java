@@ -57,12 +57,12 @@ public class BatchForOneBranchModify {
     
     final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();
-    
+    final var now = OffsetDateTime.now();
     final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(doc.getId())
         .branchId(branchId)
-        .createdAt(OffsetDateTime.now())
+        .createdAt(now)
         .commitAuthor(this.author)
         .commitMessage(this.message)
         .parent(lock.getBranch().get().getCommitId())
@@ -86,6 +86,8 @@ public class BatchForOneBranchModify {
           .branchId(branchId)
           .commitId(commitBuilder.getCommitId())
           .commands(commands)
+          .createdAt(now)
+          .createdBy(author)
           .build()
         );
     docLogs.forEach(command -> commitBuilder.add(command));

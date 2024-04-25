@@ -21,7 +21,6 @@ package io.resys.userprofile.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -35,7 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.userprofile.client.api.model.UserProfile.NotificationSetting;
-import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
 
 
 
@@ -55,13 +53,7 @@ import io.resys.userprofile.client.api.model.UserProfile.UiSettings;
 })
 public interface UserProfileCommand extends Serializable {
   String getId();
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   UserProfileCommandType getCommandType();
-  
-  
-  UserProfileCommand withUserId(String userId);
-  UserProfileCommand withTargetDate(Instant targetDate);
   
   enum UserProfileCommandType {
     CreateUserProfile, 
@@ -105,10 +97,7 @@ public interface UserProfileCommand extends Serializable {
     @Type(value = ImmutableArchiveUserProfile.class, name = "ArchiveUserProfile"),
     @Type(value = ImmutableUpsertUiSettings.class, name = "UpsertUiSettings")
   })
-  interface UserProfileUpdateCommand extends UserProfileCommand {
-    UserProfileUpdateCommand withUserId(String userId);
-    UserProfileUpdateCommand withTargetDate(Instant targetDate);
-  }
+  interface UserProfileUpdateCommand extends UserProfileCommand {}
   
   @Value.Immutable @JsonSerialize(as = ImmutableUpsertUserProfile.class) @JsonDeserialize(as = ImmutableUpsertUserProfile.class)
   interface UpsertUserProfile extends UserProfileUpdateCommand {

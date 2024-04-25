@@ -1,17 +1,80 @@
 
 Docs
-  - 1: jerry-id-1
+  - 2: 2
 
 Branches
-  - branch name: main/2
-    doc id: 1
-    commit id: 3
-    {"id":"jerry-id-1","created":"2023-01-01T01:01:00Z","details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jack"},"updated":"2023-01-01T01:01:00Z","version":"2","uiSettings":null,"documentType":"USER_PROFILE","transactions":[{"id":"1","commands":[{"id":"jerry-id-1","email":"jerry@thejerryspringershow.com","userId":"userId1234","lastName":"Springer","username":"jerryspringer","colorCode":null,"firstName":"Jerry","letterCode":null,"targetDate":"2023-01-01T01:01:00Z","commandType":"CreateUserProfile","displayName":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]},{"id":"2","commands":[{"id":"jerry-id-1","userId":"userId1234","firstName":"Jack","targetDate":"2023-01-01T01:01:00Z","commandType":"ChangeUserDetailsFirstName"}]}],"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
+  - branch name: main
+    branch id: 3
+    doc id: 2
+    commit id: 4
+    {"id":"2","created":null,"details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jack"},"updated":null,"version":null,"uiSettings":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
+
+Commands
+  - commands for doc: 2
+    commands id: 5
+    branch id: 3
+    value: [{"id":"2","email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","colorCode":null,"firstName":"Jerry","letterCode":null,"commandType":"CreateUserProfile","displayName":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]
+
+  - commands for doc: 2
+    commands id: 6
+    branch id: 3
+    value: [{"id":"2","firstName":"Jack","commandType":"ChangeUserDetailsFirstName"}]
+
 
 Commits
+  - id: 7
+    doc id: 2, branch id: 3, parent: 8, message: creating user profile, author: not-configured
+  - commit log:
+commit: 7, tenant: UserProfileUpdateTestChangeUserDetailsFirstName
+author: not-configured, message: creating user profile
+ | created
+  + added new: 3 entries
+  + 2::DOC
+    {"id":"2","type":"USER_PROFILE","status":"IN_FORCE","externalId":"2","commitId":"7","createdWithCommitId":"7","ownerId":null,"parentId":null,"meta":null}
+  + 3::DOC_BRANCH_PATCH
+    {"id":"3","patchValue":[{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"username":"jerryspringer","firstName":"Jerry","lastName":"Springer","email":"jerry@thejerryspringershow.com"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null},{"op":"add","path":"/uiSettings","value":null}],"docType":"DOC_BRANCH_PATCH"}
+  + 5::DOC_COMMANDS
+    {"id":"5","commitId":"7","docId":"2","branchId":"3","createdBy":"not-configured","commands":[{"commandType":"CreateUserProfile","id":"2","username":"jerryspringer","firstName":"Jerry","lastName":"Springer","colorCode":null,"letterCode":null,"displayName":null,"email":"jerry@thejerryspringershow.com","notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
   - id: 4
-    doc id: 1, branch id: 2, parent: 5, message: creating user profile, author: not-configured
-  - id: 3
-    doc id: 1, branch id: 2, parent: 4, message: Update user profiles: 1, author: not-configured
+    doc id: 2, branch id: 3, parent: 7, message: Update user profiles: 1, author: not-configured
+  - commit log:
+commit: 4, tenant: 1
+author: not-configured, message: Update user profiles: 1
+ | created
+  + added new: 2 entries
+  + 3::DOC_BRANCH_PATCH
+    {"id":"3","patchValue":[{"op":"replace","path":"/details/firstName","value":"Jack"}],"docType":"DOC_BRANCH_PATCH"}
+  + 6::DOC_COMMANDS
+    {"id":"6","commitId":"4","docId":"2","branchId":"3","createdBy":"not-configured","commands":[{"commandType":"ChangeUserDetailsFirstName","id":"2","firstName":"Jack"}]}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
 
 Logs
+  - id: 9::DOC
+    log patch: null    log before: null    log after: {"id":"2","meta":null,"type":"USER_PROFILE","status":"IN_FORCE","ownerId":null,"commitId":"7","parentId":null,"externalId":"2","createdWithCommitId":"7"}
+  - id: 10::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"7","branchName":"main","createdWithCommitId":"7"}
+  - id: 11::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null},{"op":"add","path":"/uiSettings","value":null}]    log before: null    log after: null
+  - id: 12::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"5","docId":"2","branchId":"3","commands":[{"id":"2","email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","colorCode":null,"firstName":"Jerry","letterCode":null,"commandType":"CreateUserProfile","displayName":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}],"commitId":"7","createdBy":"not-configured"}
+  - id: 13::DOC_BRANCH
+    log patch: null    log before: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"7","branchName":"main","createdWithCommitId":"7"}    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"4","branchName":"main","createdWithCommitId":"7"}
+  - id: 14::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/details/firstName","value":"Jack"}]    log before: null    log after: null
+  - id: 15::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"6","docId":"2","branchId":"3","commands":[{"id":"2","firstName":"Jack","commandType":"ChangeUserDetailsFirstName"}],"commitId":"4","createdBy":"not-configured"}

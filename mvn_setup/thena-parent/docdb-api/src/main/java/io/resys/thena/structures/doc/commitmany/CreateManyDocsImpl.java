@@ -14,6 +14,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
@@ -59,7 +60,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
         return parent;
       }
     };
-    
+    lasItemBuilder.branchName(DocObjectsQueryImpl.BRANCH_MAIN);
     return lasItemBuilder;
   }
 

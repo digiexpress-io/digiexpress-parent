@@ -14,6 +14,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
@@ -35,7 +36,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   
   private String docId;
   private final String repoId;
-  private String branchName;
+  private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
   private String author;
   private String message;
   private boolean remove;

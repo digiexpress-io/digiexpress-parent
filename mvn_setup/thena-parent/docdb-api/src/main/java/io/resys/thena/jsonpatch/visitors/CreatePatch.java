@@ -3,6 +3,7 @@ package io.resys.thena.jsonpatch.visitors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.resys.thena.jsonpatch.model.ChangeType;
 import io.resys.thena.jsonpatch.model.JsonPatchPointer;
@@ -58,7 +59,7 @@ public class CreatePatch implements JsonTypeVisitor<JsonArray> {
       
       for (int nextId = id + 1; nextId < moved.size(); nextId++) {
         final var nextChange = moved.get(nextId);
-        final var identicalValues = change.getValue().equals(nextChange.getValue());
+        final var identicalValues = Objects.equals(change.getValue(), nextChange.getValue());
         if (!identicalValues) {
           continue;
         }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
@@ -18,7 +19,9 @@ public interface DocContainer extends ThenaContainer {
 
   interface DocObjectsVisitor<T> {
     T visit(
-        Doc doc, DocBranch docBranch, DocCommit commit,
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit,
         // loaded on demand
         List<DocCommands> commands,
         // loaded on demand
@@ -51,6 +54,9 @@ public interface DocContainer extends ThenaContainer {
           .filter(c -> c.getBranchId().isPresent())
           .collect(Collectors.groupingBy(b -> b.getBranchId().get()));
       
+      final var commits = getCommits().values().stream()
+          .collect(Collectors.groupingBy(b -> b.getDocId()));
+      
       
       for(final var doc : getDocs().values()) {
         if(!branches.containsKey(doc.getId())) {
@@ -60,8 +66,14 @@ public interface DocContainer extends ThenaContainer {
         for(final var branch : branches.get(doc.getId())) {
           final List<DocCommands> branchCommands = commands.get(branch.getId());
           final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getId());
-          final var commit = getCommits().get(branch.getCommitId());
-          final T value = visitor.visit(doc, branch, commit, branchCommands, branchCommitTrees);
+          final var docCommit = Optional.ofNullable(commits.get(doc.getId()))
+              .orElse(Collections.emptyList())
+              .stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+          
+          final T value = visitor.visit(
+              doc, branch, 
+              Optional.ofNullable(docCommit).orElse(Collections.emptyMap()), 
+              branchCommands, branchCommitTrees);
           result.add(value);
         }
       }
@@ -99,7 +111,8 @@ public interface DocContainer extends ThenaContainer {
       for(final var branch : branches.get(doc.getId())) {
         final List<DocCommands> branchCommands = commands.get(branch.getId());
         final List<DocCommitTree> branchCommitTrees = commitTrees.get(branch.getId());
-        final var commit = getCommits().get(branch.getCommitId());
+        final var commit = getCommits();
+        
         final T value = visitor.visit(doc, branch, commit, branchCommands, branchCommitTrees);
         result.add(value);
       }

@@ -32,16 +32,12 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
-import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.ImmutableUserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.MainBranch;
 import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocumentAuthorProvider;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocumentGidProvider;
+import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.UserProfileAuthorProvider;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -71,26 +67,25 @@ public class UserProfileStoreImpl implements UserProfileStore {
   @Override public UserProfileStoreConfig getConfig() { return config; }
   @Override public UserProfileTenantQuery query() {
     return new UserProfileTenantQuery() {
-      private String repoName, headName;
+      private String repoName;
       @Override public UserProfileTenantQuery repoName(String repoName) { this.repoName = repoName; return this; }
-      @Override public UserProfileTenantQuery headName(String headName) { this.headName = headName; return this; }
-      @Override public Uni<UserProfileStore> create() { return createRepo(repoName, headName); }
-      @Override public UserProfileStore build() { return createClientStore(repoName, headName); }
-      @Override public Uni<UserProfileStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
-      @Override public Uni<UserProfileStore> delete() { return deleteRepo(repoName, headName); }
+      @Override public Uni<UserProfileStore> create() { return createRepo(repoName); }
+      @Override public UserProfileStore build() { return createClientStore(repoName); }
+      @Override public Uni<UserProfileStore> createIfNot() { return createRepoOrGetRepo(repoName); }
+      @Override public Uni<UserProfileStore> delete() { return deleteRepo(repoName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  private Uni<UserProfileStore> createRepoOrGetRepo(String repoName, String headName) {
+  private Uni<UserProfileStore> createRepoOrGetRepo(String repoName) {
     final var client = config.getClient();
     
     return client.tenants().find().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
-            return createRepo(repoName, headName); 
+            return createRepo(repoName); 
           }
-          return Uni.createFrom().item(createClientStore(repoName, headName));
+          return Uni.createFrom().item(createClientStore(repoName));
     });
   }
   
@@ -110,7 +105,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
-  private Uni<UserProfileStore> deleteRepo(String repoName, String headName) {
+  private Uni<UserProfileStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
     final var existingRepo = client.git(repoName).tenants().get();
@@ -118,7 +113,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
+        throw new UserProfileStoreException("USER_PROFILE_REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -128,21 +123,21 @@ public class UserProfileStoreImpl implements UserProfileStore {
       
       final var repoId = repoResult.getRepo().getId();
       final var rev = repoResult.getRepo().getRev();
-      final var docStore = createClientStore(repoName, headName);
+      final var docStore = createClientStore(repoName);
       
       return client.tenants().find().id(repoId).rev(rev).delete()
           .onItem().transform(junk -> docStore);
     });
   }
     
-  private Uni<UserProfileStore> createRepo(String repoName, String headName) {
+  private Uni<UserProfileStore> createRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
     final var newRepo = client.tenants().commit().name(repoName, StructureType.doc).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_CREATE_FAIL", 
+        throw new UserProfileStoreException("USER_PROFILE_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -150,16 +145,15 @@ public class UserProfileStoreImpl implements UserProfileStore {
             .build()); 
       }
       
-      return createClientStore(repoName, headName);
+      return createClientStore(repoName);
     });
   }
   
-  private UserProfileStore createClientStore(String repoName, String headName) {
+  private UserProfileStore createClientStore(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     return new UserProfileStoreImpl(ImmutableUserProfileStoreConfig.builder()
         .from(config)
         .repoId(repoName)
-        .branchName(headName == null ? config.getBranchName() : headName)
         .build());
     
   }
@@ -174,10 +168,9 @@ public class UserProfileStoreImpl implements UserProfileStore {
   @Data
   public static class Builder {
     private String repoName;
-    private String headName;
+    
     private ObjectMapper objectMapper;
-    private DocumentGidProvider gidProvider;
-    private DocumentAuthorProvider authorProvider;
+    private UserProfileAuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -186,28 +179,19 @@ public class UserProfileStoreImpl implements UserProfileStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private DocumentGidProvider getGidProvider() {
-      return this.gidProvider != null ? this.gidProvider : new DocumentGidProvider() {
-        @Override public String getNextVersion(DocumentType entity) { return OidUtils.gen(); }
-        @Override public String getNextId(DocumentType entity) { return OidUtils.gen(); }
-      };
-    }
-    
-    private DocumentAuthorProvider getAuthorProvider() {
+    private UserProfileAuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
     public UserProfileStoreImpl build() {
       RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
-      final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
+      
       if(log.isDebugEnabled()) {
         log.debug("""
           Configuring Thena:
             repoName: {}
-            headName: {}
             objectMapper: {}
-            gidProvider: {}
             authorProvider: {}
             pgPool: {}
             pgPoolSize: {}
@@ -218,9 +202,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
             pgPass: {}
           """,
           this.repoName,
-          headName,
           this.objectMapper == null ? "configuring" : "provided",
-          this.gidProvider == null ? "configuring" : "provided",
           this.authorProvider == null ? "configuring" : "provided",
           this.pgPool == null ? "configuring" : "provided",
           this.pgPoolSize,
@@ -256,11 +238,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
-      final UserProfileStoreConfig config = ImmutableUserProfileStoreConfig.builder()
-          .client(thena).repoId(repoName).branchName(headName)
-          .gid(getGidProvider())
-          .author(getAuthorProvider())
-          .build();
+      final UserProfileStoreConfig config = ImmutableUserProfileStoreConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
       return new UserProfileStoreImpl(config);
     }
   }

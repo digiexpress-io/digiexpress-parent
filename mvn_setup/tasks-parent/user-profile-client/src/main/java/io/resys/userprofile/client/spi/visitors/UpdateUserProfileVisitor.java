@@ -32,25 +32,25 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
+import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
-import io.resys.userprofile.client.spi.store.MainBranch;
+import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -72,31 +72,29 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
         .collect(Collectors.groupingBy(UserProfileUpdateCommand::getId));
     this.profileIds = new ArrayList<>(commandsByUserProfileId.keySet());
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
-        .message("Update user profiles: " + commandsByUserProfileId.size())
-        .author(config.getAuthor().get());
+        .commitMessage("Update user profiles: " + commandsByUserProfileId.size())
+        .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createManyDocs()
-        .docType(Document.DocumentType.USER_PROFILE.name())
-        .message("Upsert user profiles: " + commandsByUserProfileId.size())
-        .author(config.getAuthor().get())
-        .branchName(config.getBranchName());
+        .commitMessage("Upsert user profiles: " + commandsByUserProfileId.size())
+        .commitAuthor(config.getAuthor().get());
   }
 
   @Override
-  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(profileIds).branchName(MainBranch.HEAD_NAME);
+  public Uni<QueryEnvelope<DocTenantObjects>>  start(UserProfileStoreConfig config, DocObjectsQuery builder) {
+    return builder.findAll(profileIds);
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
+      throw UserProfileStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw UserProfileStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -104,13 +102,13 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     
     final var totalUpserts = this.commandsByUserProfileId.values().stream().flatMap(e -> e.stream()).filter(e -> upserts.contains(e.getCommandType())).count();
     if(profileIds.size() < Math.max((result.getDocs().size() - totalUpserts), 0)) {
-      throw new DocumentStoreException("USER_PROFILES_UPDATE_FAIL_NOT_ALL_USER_PROFILES_FOUND", JsonObject.of("failedUpdates", profileIds));
+      throw new UserProfileStoreException("USER_PROFILES_UPDATE_FAIL_NOT_ALL_USER_PROFILES_FOUND", JsonObject.of("failedUpdates", profileIds));
     }
     return result;
   }
 
   @Override
-  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
+  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocTenantObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<UserProfile>();
@@ -120,7 +118,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }));
   }
   
-  private Uni<List<UserProfile>> applyInserts(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<UserProfile>> applyInserts(UserProfileStoreConfig config, DocTenantObjects blob) {
     final var insertedProfiles = new ArrayList<UserProfile>(); 
     for(final var entry : commandsByUserProfileId.entrySet()) {
       try {
@@ -129,10 +127,12 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
         }
         final var inserted = new UserProfileCommandVisitor(ctx.getConfig()).visitTransaction(entry.getValue());
         this.createBuilder.item()
-          .docId(inserted.getId())
-          .append(JsonObject.mapFrom(inserted))
+          .docId(inserted.getItem1().getId())
+          .docType(DataConstants.DOC_TYPE_USER_PROFILE)
+          .branchContent(JsonObject.mapFrom(inserted.getItem1()))
+          .commands(inserted.getItem2())
           .next();
-        insertedProfiles.add(inserted);
+        insertedProfiles.add(inserted.getItem1());
       } catch(NoChangesException e) {
         // nothing to do
       }
@@ -144,8 +144,14 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedProfiles));
   }
 
-  private Uni<List<UserProfile>> applyUpdates(UserProfileStoreConfig config, DocQueryActions.DocObjects blob) {
-    final var updatedProfiles = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
+  private Uni<List<UserProfile>> applyUpdates(UserProfileStoreConfig config, DocTenantObjects blob) {
+    final var updatedProfiles = blob.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> _commands,
+        List<DocCommitTree> trees
+        ) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableUserProfile.class);
       
       final List<UserProfileUpdateCommand> commands = new ArrayList<>();
@@ -159,19 +165,20 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }
       
       if(commands.isEmpty()) {
-        throw DocumentStoreException.builder("USER_PROFILES_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
+        throw UserProfileStoreException.builder("USER_PROFILES_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
           .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
           .build();
       }
       try {
         final var updated = new UserProfileCommandVisitor(start, ctx.getConfig()).visitTransaction(commands);
         this.updateBuilder.item()
-          .docId(updated.getId())
+          .docId(updated.getItem1().getId())
           .branchName(docBranch.getBranchName())
-          .append(JsonObject.mapFrom(updated))
+          .replace(JsonObject.mapFrom(updated.getItem1()))
+          .commands(updated.getItem2())
           .next();
         
-        return updated;
+        return updated.getItem1();
       } catch(NoChangesException e) {
         return start;
       }
@@ -187,7 +194,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   
   private List<UserProfile> mapInsertedResponse(ManyDocsEnvelope envelope, List<UserProfile> insertedProfiles) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
-      throw new DocumentStoreException("USER_PROFILE_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+      throw new UserProfileStoreException("USER_PROFILE_CREATE_FAIL", UserProfileStoreException.convertMessages(envelope));
     }
     
     final var branches = envelope.getBranch();
@@ -206,18 +213,16 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   private List<UserProfile> mapUpdateResponse(ManyDocsEnvelope response, List<UserProfile> updatedProfiles) {
     if(response.getStatus() != CommitResultStatus.OK) {
       final var failedUpdates = profileIds.stream().collect(Collectors.joining(",", "{", "}"));
-      throw new DocumentStoreException("USER_PROFILES_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
+      throw new UserProfileStoreException("USER_PROFILES_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), UserProfileStoreException.convertMessages(response));
     }
     final Map<String, UserProfile> profileById = new HashMap<>(updatedProfiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
-    response.getCommit().forEach(commit -> {
-      
-      final var next = ImmutableUserProfile.builder()
-          .from(profileById.get(commit.getDocId()))
-          .version(commit.getId())
-          .build();
+    response.getBranch().forEach(branch -> {
+      final var next = FindAllUserProfilesVisitor.mapToUserProfile(branch);
       profileById.put(next.getId(), next);
     });
     
     return Collections.unmodifiableList(new ArrayList<>(profileById.values()));
   }
+
+
 }

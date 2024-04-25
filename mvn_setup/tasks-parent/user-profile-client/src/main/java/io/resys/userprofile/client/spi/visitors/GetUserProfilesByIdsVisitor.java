@@ -24,23 +24,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.userprofile.client.api.model.Document;
-import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
-import io.resys.userprofile.client.spi.store.MainBranch;
+import io.resys.userprofile.client.spi.support.DataConstants;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -49,24 +50,23 @@ public class GetUserProfilesByIdsVisitor implements DocObjectsVisitor<List<UserP
   private final Collection<String> profileIds;
   
   @Override
-  public DocObjectsQuery start(UserProfileStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(UserProfileStoreConfig config, DocObjectsQuery builder) {
     return builder
-        .docType(Document.DocumentType.USER_PROFILE.name())
-        .branchName(MainBranch.HEAD_NAME)
-        .matchIds(new ArrayList<>(profileIds));
+        .docType(DataConstants.DOC_TYPE_USER_PROFILE)
+        .findAll(new ArrayList<>(profileIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
+      throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_USER_PROFILE_BY_ID_NOT_FOUND")   
+      throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -75,13 +75,18 @@ public class GetUserProfilesByIdsVisitor implements DocObjectsVisitor<List<UserP
   }
 
   @Override
-  public List<UserProfile> end(UserProfileStoreConfig config, DocQueryActions.DocObjects ref) {
+  public List<UserProfile> end(UserProfileStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
-      docBranch.getValue()
-      .mapTo(ImmutableUserProfile.class).withVersion(commit.getId())
+    return ref.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees
+        ) -> 
+      FindAllUserProfilesVisitor.mapToUserProfile(docBranch)
     );
   }
 }

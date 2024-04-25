@@ -23,8 +23,6 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     return client.createUserProfile()
       .createOne(ImmutableCreateUserProfile.builder()
         .id("jerry-id-1")
-        .targetDate(getTargetDate())
-        .userId("userId1234")
         .firstName("Jerry")
         .lastName("Springer")
         .username("jerryspringer")
@@ -47,10 +45,8 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     final var userProfile = createUserProfileForUpdating(client);
     
     final var updated = client.updateUserProfile().updateOne(ImmutableChangeUserDetailsFirstName.builder()
-        .userId("userId1234")
         .id(userProfile.getId())
         .firstName("Jack")
-        .targetDate(getTargetDate())
         .build())
     .await().atMost(atMost);
 
@@ -65,8 +61,6 @@ public class UserProfileUpdateTest extends UserProfileTestCase {
     final var userProfile = createUserProfileForUpdating(client);
     
     final var existingUserProfile = client.createUserProfile().createOne(ImmutableUpsertUserProfile.builder()
-        .userId("tester-bob")
-        .targetDate(getTargetDate())
         .id(userProfile.getId())
         .email(userProfile.getDetails().getEmail())
         .build())

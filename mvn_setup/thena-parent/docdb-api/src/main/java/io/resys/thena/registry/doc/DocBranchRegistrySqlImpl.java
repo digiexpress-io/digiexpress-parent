@@ -68,7 +68,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(" ON(branch_created_commit.id = branch.created_with_commit_id)").ln()
 
         
-        .append(" WHERE branch.branch_id = $1")
+        .append(" WHERE branch.branch_id = $1 OR $1 IS NULL")
         .append(" FETCH FIRST ROW ONLY")
         .build())
         .props(Tuple.of(branchId))
@@ -123,7 +123,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(" WHERE ").ln() 
         .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
         .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.branch_id = $2)").ln()
+        .append(" (branch.branch_name = $2 OR branch.branch_id = $2 OR $2 IS NULL)").ln()
         
         .build())
         .props(Tuple.of(docId.toArray(), branchIdOrName))

@@ -3,12 +3,9 @@ package io.resys.crm.client.tests.config;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.userprofile.client.api.model.Document.DocumentType;
-import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
-import io.resys.userprofile.client.api.model.ImmutableUserProfileTransaction;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
@@ -65,21 +62,6 @@ public class UserProfileTestResource implements UserProfileRestApi {
         .type("TASK_ASSIGNED")
         .enabled(true)
         .build()))
-    
-    .addTransactions(
-        ImmutableUserProfileTransaction.builder()
-        .id("transation-1")
-        .addCommands(ImmutableCreateUserProfile
-            .builder()
-            .id("id-1234")
-            .userId("userDonald")
-            .firstName("Donald")
-            .lastName("Trum")
-            .email("donald@gmail.com")
-            .username("donaldtrump")
-            .build())
-        .build())
-    .documentType(DocumentType.USER_PROFILE)
     .build();
   }
 }

@@ -12,6 +12,7 @@ import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -33,7 +34,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String docId;
   private String externalId;
   private String docType;
-  private String branchName;
+  private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
   private String author;
   private String message;
   private String ownerId;

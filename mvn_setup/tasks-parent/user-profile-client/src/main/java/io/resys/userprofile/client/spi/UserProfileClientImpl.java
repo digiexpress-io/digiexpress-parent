@@ -9,7 +9,6 @@ import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
 import io.resys.userprofile.client.spi.store.UserProfileStore;
-import io.resys.userprofile.client.spi.store.MainBranch;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -58,7 +57,7 @@ public class UserProfileClientImpl implements UserProfileClient {
       @Override
       public RepositoryQuery repoName(String repoName) {
         this.repoName = repoName;
-        repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
+        repo.repoName(repoName);
         return this;
       }
       @Override

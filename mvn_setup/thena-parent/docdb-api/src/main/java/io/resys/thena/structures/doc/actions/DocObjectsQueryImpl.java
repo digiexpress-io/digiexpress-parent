@@ -32,14 +32,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class DocObjectsQueryImpl implements DocObjectsQuery {
+  public static String BRANCH_MAIN = "main";
   private final DbState state;
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();
   private String branchName;
+  private String docType;
  
   @Override public DocObjectsQuery branchName(String branchName) { this.branchName = branchName; return this; }
   @Override public DocObjectsQuery include(IncludeInQuery ... children) { this.include.addAll(Arrays.asList(children)); return this; }
-  
+  @Override public DocObjectsQuery docType(String docType) {
+    this.docType = docType;
+    return this;
+  }
+
   @Override
   public Uni<QueryEnvelope<DocObject>> get(String id) {
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
@@ -119,54 +125,6 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         });
     });
   }
-  
-  private DocTenantObjects toDocObjects(
-      List<Doc> docs,
-      List<DocBranch> branches,
-      List<DocCommit> commits,
-      List<DocCommitTree> trees,
-      List<DocCommands> commands) { 
-    
-    return ImmutableDocTenantObjects.builder()
-        .docs(docs.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .branches(branches.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commands(commands.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commitTrees(trees.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .build();
-  }
-  
-  private DocObject toDocObject(
-      List<Doc> docs,
-      List<DocBranch> branches,
-      List<DocCommit> commits,
-      List<DocCommitTree> trees,
-      List<DocCommands> commands) { 
-    
-    return ImmutableDocObject.builder()
-        .doc(docs.iterator().next())
-        .branches(branches.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commands(commands.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commitTrees(trees.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .build();
-  }
-
-  
-  private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
-    final var msg = new StringBuilder()
-      .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
-      .toString();
-    return QueryEnvelope.docNotFound(existing, log, msg, ex);
-  }
-  
-  private <T extends ThenaContainer> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
-    final var msg = new StringBuilder()
-      .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
-      .append(", from repo: '").append(existing.getId()).append("'!")
-      .toString();
-    return QueryEnvelope.docUnexpected(existing, log, msg);
-  }
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> findAll() {
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
@@ -202,5 +160,51 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         });
     });
   }
+  private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
+    final var msg = new StringBuilder()
+      .append("Document not found by given id, from repo: '").append(existing.getId()).append("'!")
+      .toString();
+    return QueryEnvelope.docNotFound(existing, log, msg, ex);
+  }
+  
+  private <T extends ThenaContainer> QueryEnvelope<T> docUnexpected(Tenant existing, Set<String> unexpected) {
+    final var msg = new StringBuilder()
+      .append("Expecting: '1' document, but found: '").append(unexpected.size()).append("'")
+      .append(", from repo: '").append(existing.getId()).append("'!")
+      .toString();
+    return QueryEnvelope.docUnexpected(existing, log, msg);
+  }
+  
 
+  private DocTenantObjects toDocObjects(
+      List<Doc> docs,
+      List<DocBranch> branches,
+      List<DocCommit> commits,
+      List<DocCommitTree> trees,
+      List<DocCommands> commands) { 
+    
+    return ImmutableDocTenantObjects.builder()
+        .docs(docs.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .branches(branches.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commands(commands.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commitTrees(trees.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .build();
+  }
+  
+  private DocObject toDocObject(
+      List<Doc> docs,
+      List<DocBranch> branches,
+      List<DocCommit> commits,
+      List<DocCommitTree> trees,
+      List<DocCommands> commands) { 
+    
+    return ImmutableDocObject.builder()
+        .doc(docs.iterator().next())
+        .branches(branches.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commands(commands.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commitTrees(trees.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .commits(commits.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .build();
+  }
 }

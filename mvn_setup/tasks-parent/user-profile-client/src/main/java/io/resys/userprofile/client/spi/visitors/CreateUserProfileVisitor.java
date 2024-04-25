@@ -32,13 +32,13 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.userprofile.client.api.model.Document;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocCreateVisitor;
-import io.resys.userprofile.client.spi.store.DocumentStoreException;
+import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -51,20 +51,21 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   @Override
   public CreateManyDocs start(UserProfileStoreConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.USER_PROFILE.name())
-      .author(config.getAuthor().get())
-      .message("creating user profile");
+      .commitAuthor(config.getAuthor().get())
+      .commitMessage("creating user profile");
     
     for(final var command : commands) {
       try {
         final var entity = new UserProfileCommandVisitor(config).visitTransaction(Arrays.asList(command));
-        final var json = JsonObject.mapFrom(entity);
+        final var json = JsonObject.mapFrom(entity.getItem1());
         builder.item()
-          .append(json)
-          .docId(entity.getId())
-          .externalId(entity.getId())
+          .docType(DataConstants.DOC_TYPE_USER_PROFILE)
+          .branchContent(json)
+          .docId(entity.getItem1().getId())
+          .externalId(entity.getItem1().getId())
+          .commands(entity.getItem2())
           .next();
-        profiles.add(entity);
+        profiles.add(entity.getItem1());
       } catch (NoChangesException e) {
         throw new RuntimeException(e.getMessage(), e);
       }
@@ -77,7 +78,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("USER_PROFILE_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new UserProfileStoreException("USER_PROFILE_CREATE_FAIL", UserProfileStoreException.convertMessages(envelope));
   }
 
   @Override
@@ -86,12 +87,10 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
         this.profiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
-      
       final var next = ImmutableUserProfile.builder()
           .from(configsById.get(branch.getDocId()))
           .version(branch.getCommitId())
           .build();
-      
       configsById.put(next.getId(), next);
     });
     

@@ -17,6 +17,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
@@ -80,6 +81,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         return parent;
       }
     };
+    
+    lastItem.branchName(DocObjectsQueryImpl.BRANCH_MAIN);
     return lastItem;
   }
   

@@ -32,7 +32,6 @@ public interface UserProfileStore {
   
   interface UserProfileTenantQuery {
     UserProfileTenantQuery repoName(String repoName);
-    UserProfileTenantQuery headName(String headName);
     UserProfileStore build();
     Uni<UserProfileStore> delete();
     Uni<UserProfileStore> create();

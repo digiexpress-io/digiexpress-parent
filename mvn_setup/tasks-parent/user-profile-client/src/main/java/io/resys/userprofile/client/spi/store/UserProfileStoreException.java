@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class UserProfileStoreException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -46,13 +46,13 @@ public class DocumentStoreException extends RuntimeException {
   private final JsonObject target;
   private final List<DocumentExceptionMsg> messages = new ArrayList<>();
 
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  public UserProfileStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public UserProfileStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -114,8 +114,8 @@ public class DocumentStoreException extends RuntimeException {
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+    public UserProfileStoreException build() {
+      return new UserProfileStoreException(id, msg.build());
     }
   }
 }
