@@ -31,6 +31,7 @@ import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.api.model.Document.DocumentType;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
+import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
@@ -41,6 +42,7 @@ import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DbState;
@@ -90,7 +92,7 @@ public class TestCaseBuilder {
         .tenantConfigId("")
         .build();
     
-    final var tenantStore =  io.resys.thena.projects.client.spi.ProjectStoreImpl.builder()
+    final var tenantStore =  ProjectStore.builder()
         .repoName(repoId)
         .pgPool(pgPool)
         .objectMapper(objectMapper)
@@ -149,36 +151,14 @@ public class TestCaseBuilder {
     final var config = ImmutableExecutorClientConfig.builder()
         .tenantConfigId("")
         .build();
-    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
+    final var store = SysConfigStore.builder()
         .repoName("").pgPool(pgPool)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return OidUtils.gen();
-          }
-          @Override
-          public String getNextId(DocumentType entity) {
-            return OidUtils.gen();
-          }
-        })
         .build();
     return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, assetClient, config, store), assetClient);
   }
   
   private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {
-    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
-        .repoName("").pgPool(pgPool)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return OidUtils.gen();
-          }
-          @Override
-          public String getNextId(DocumentType entity) {
-            return OidUtils.gen();
-          }
-        })
-        .build();
+    final var store = SysConfigStore.builder().build();
     return new SysConfigClientImpl(store, assetClient, tenantClient);
   }
 
