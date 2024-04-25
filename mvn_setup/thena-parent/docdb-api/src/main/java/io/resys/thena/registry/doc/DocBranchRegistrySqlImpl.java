@@ -16,6 +16,7 @@ import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.doc.DocBranchRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -102,7 +103,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
 
 
   @Override
-  public SqlTuple findAllById(List<String> docId, String branchIdOrName) {
+  public SqlTuple findAll(DocFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
 

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.doc.DocMainRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -68,7 +69,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .build();
   }
   @Override
-  public SqlTuple findAllByIds(Collection<String> ids) {
+  public SqlTuple findAll(DocFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ")

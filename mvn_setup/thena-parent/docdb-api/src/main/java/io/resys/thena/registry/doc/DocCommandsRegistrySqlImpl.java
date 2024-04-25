@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.doc.DocCommandsRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -51,7 +52,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .build();
   }
   @Override
-  public SqlTuple findAllByDocIdsAndBranch(Collection<String> docIds, String branchId) {
+  public SqlTuple findAll(DocFilter filter) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT commands.*, commits.created_at as created_at, commits.author as created_by ")
