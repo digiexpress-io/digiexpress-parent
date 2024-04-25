@@ -24,24 +24,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.api.model.Document;
-import io.resys.crm.client.api.model.ImmutableCustomer;
 import io.resys.crm.client.spi.store.CrmStoreConfig;
 import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.crm.client.spi.store.CrmStoreException;
-import io.resys.crm.client.spi.store.MainBranch;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -50,15 +49,14 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   private final Collection<String> projectIds;
   
   @Override
-  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder) {
     return builder
-        .docType(Document.DocumentType.CUSTOMER.name())
-        .branchName(MainBranch.HEAD_NAME)
-        .matchIds(new ArrayList<>(projectIds));
+        .docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+        .findAll(new ArrayList<>(projectIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw CrmStoreException.builder("GET_CUSTOMER_BY_ID_FAIL")
         .add(config, envelope)
@@ -76,13 +74,14 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   }
 
   @Override
-  public List<Customer> end(CrmStoreConfig config, DocQueryActions.DocObjects ref) {
+  public List<Customer> end(CrmStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
-      docBranch.getValue()
-      .mapTo(ImmutableCustomer.class).withVersion(commit.getId())
-    );
+    return ref.accept((Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees) -> FindAllCustomersVisitor.mapToCustomer(docBranch, commands));
   }
 }
