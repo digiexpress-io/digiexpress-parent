@@ -39,7 +39,7 @@ import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreException;
+import io.resys.thena.spi.DocStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -56,14 +56,14 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw ProjectStoreException.builder("GET_TENANT_BY_ID_FAIL")
+      throw DocStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw ProjectStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
+      throw DocStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();

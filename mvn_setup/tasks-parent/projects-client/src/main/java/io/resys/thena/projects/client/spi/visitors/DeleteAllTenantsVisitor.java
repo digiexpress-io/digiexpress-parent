@@ -17,7 +17,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreException;
+import io.resys.thena.spi.DocStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw ProjectStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
@@ -62,14 +62,14 @@ public class DeleteAllTenantsVisitor implements DocObjectsVisitor<Uni<List<Tenan
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new ProjectStoreException("TENANT_ARCHIVE_FAIL", ProjectStoreException.convertMessages(commit));
+        throw new DocStoreException("TENANT_ARCHIVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new ProjectStoreException("TENANT_REMOVE_FAIL", ProjectStoreException.convertMessages(commit));
+        throw new DocStoreException("TENANT_REMOVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> tenantsRemoved);
   }

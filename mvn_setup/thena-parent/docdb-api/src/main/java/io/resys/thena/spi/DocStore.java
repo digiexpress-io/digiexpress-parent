@@ -1,6 +1,7 @@
 package io.resys.thena.spi;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.ThenaDocConfig;
 
 /*-
@@ -34,11 +35,15 @@ public interface DocStore<T extends DocStore<T>> {
   interface StoreTenantQuery<T extends DocStore<T>> {
     StoreTenantQuery<T> repoName(String repoName);
     StoreTenantQuery<T> headName(String headName);
+    StoreTenantQuery<T> externalId(String externalId);
+    StoreTenantQuery<T> repoType(StructureType repoType);
     T build();
     Uni<T> delete();
     Uni<T> create();
     Uni<T> createIfNot();
     Uni<Void> deleteAll();
+
+    
   } 
   
 

@@ -44,8 +44,8 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
-import io.resys.thena.projects.client.spi.store.ProjectStore;
-import io.resys.thena.projects.client.spi.store.ProjectStoreException;
+import io.resys.thena.projects.client.spi.ProjectStore;
+import io.resys.thena.spi.DocStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
@@ -77,20 +77,20 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw ProjectStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
+      throw DocStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw ProjectStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw DocStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     if(tenantIds.size() != result.getDocs().size()) {
-      throw new ProjectStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
+      throw new DocStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
     }
     return result;
   }
@@ -116,7 +116,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
     return commitBuilder.build().onItem().transform(response -> {
       if(response.getStatus() != CommitResultStatus.OK) {
         final var failedUpdates = tenantIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new ProjectStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), ProjectStoreException.convertMessages(response));
+        throw new DocStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocStoreException.convertMessages(response));
       }
       
       final Map<String, TenantConfig> configsById = new HashMap<>(updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));

@@ -37,7 +37,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.spi.ProjectStoreImpl;
+import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.structures.git.GitPrinter;
@@ -51,7 +51,7 @@ public class ProjectTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private ProjectStoreImpl store;
+  private ProjectStore store;
   private ProjectsClientImpl client;
   private static final String DB = "junit-tasks-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
@@ -61,7 +61,7 @@ public class ProjectTestCase {
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = ProjectStoreImpl.builder()
+    store = ProjectStore.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
         .build();
     client = new ProjectsClientImpl(store);
@@ -98,7 +98,7 @@ public class ProjectTestCase {
     store = null;
   }
 
-  public ProjectStoreImpl getStore() {
+  public ProjectStore getStore() {
     return store;
   }
 

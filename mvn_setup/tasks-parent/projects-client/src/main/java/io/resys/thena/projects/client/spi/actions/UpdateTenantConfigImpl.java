@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.projects.client.api.ProjectClient.UpdateTenantConfigAction;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
-import io.resys.thena.projects.client.spi.store.ProjectStore;
+import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.visitors.UpdateTenantConfigVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;

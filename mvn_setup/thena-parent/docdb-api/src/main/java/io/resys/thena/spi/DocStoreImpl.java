@@ -48,41 +48,35 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   @Override public ThenaDocConfig getConfig() { return config; }
   @Override public StoreTenantQuery<T> query() {
     return new StoreTenantQuery<T>() {
-      protected String repoName, headName;
+      protected StructureType repoType;
+      protected String repoName, headName, externalId;
+      @Override public StoreTenantQuery<T> externalId(String externalId) { this.externalId = externalId; return this; }
+      @Override public StoreTenantQuery<T> repoType(StructureType repoType) { this.repoType = repoType; return this; }
       @Override public StoreTenantQuery<T> repoName(String repoName) { this.repoName = repoName; return this; }
       @Override public StoreTenantQuery<T> headName(String headName) { this.headName = headName; return this; }
-      @Override public Uni<T> create() { return createRepo(repoName, headName); }
+      @Override public Uni<T> create() { return createRepo(repoName, headName, externalId, repoType); }
       @Override public T build() { return withRepo(repoName, headName); }
-      @Override public Uni<T> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
+      @Override public Uni<T> createIfNot() { return createRepoOrGetRepo(repoName, headName, externalId, repoType); }
       @Override public Uni<T> delete() { return deleteRepo(repoName, headName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  protected Uni<T> createRepoOrGetRepo(String repoName, String headName) {
+  protected Uni<T> createRepoOrGetRepo(String repoName, String headName, String externalId, StructureType type) {
     final var client = config.getClient();
     
     return client.tenants().find().id(repoName).get()
         .onItem().transformToUni(repo -> {        
           if(repo == null) {
-            return createRepo(repoName, headName); 
+            return createRepo(repoName, headName, externalId, type); 
           }
           return Uni.createFrom().item(withRepo(repoName, headName));
     });
   }
   
   protected Uni<Void> deleteRepos() {
-    final var client = config.getClient();
-    final var existingRepos = client.tenants().find().findAll();
-    
-    
-    return existingRepos.onItem().transformToUni((repo) -> {
-        final var repoId = repo.getId();
-        final var rev = repo.getRev();
-        return client.tenants().find().id(repoId).rev(rev).delete();
-      })
-      .concatenate().collect().asList()
-      .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+    final var client = config.getClient();    
+    return client.tenants().delete().onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
   protected Uni<T> deleteRepo(String repoName, String headName) {
@@ -93,7 +87,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
+        throw new DocStoreException("DOC_REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -110,11 +104,12 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     });
   }
     
-  protected Uni<T> createRepo(String repoName, String headName) {
+  protected Uni<T> createRepo(String repoName, String headName, String externalId, StructureType type) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
+    RepoAssert.notNull(type, () -> "type must be defined!");
     
     final var client = config.getClient();
-    final var newRepo = client.tenants().commit().name(repoName, StructureType.doc).build();
+    final var newRepo = client.tenants().commit().name(repoName, type).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
         throw new DocStoreException("DOC_REPO_CREATE_FAIL", 

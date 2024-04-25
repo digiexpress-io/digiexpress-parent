@@ -37,7 +37,7 @@ import io.resys.thena.api.entities.doc.ThenaDocConfig.DocCreateVisitor;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreException;
+import io.resys.thena.spi.DocStoreException;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -71,7 +71,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new ProjectStoreException("TENANT_CREATE_FAIL", ProjectStoreException.convertMessages(envelope));
+    throw new DocStoreException("TENANT_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
 
   @Override

@@ -17,7 +17,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStoreException;
+import io.resys.thena.spi.DocStoreException;
 import io.smallrye.mutiny.Uni;
 
 public class FindAllTenantsVisitor implements DocObjectsVisitor<List<TenantConfig>> {
@@ -28,7 +28,7 @@ public class FindAllTenantsVisitor implements DocObjectsVisitor<List<TenantConfi
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw ProjectStoreException.builder("FIND_ALL_TENANTS_FAIL").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_TENANTS_FAIL").add(config, envelope).build();
     }
     return envelope.getObjects();
   }

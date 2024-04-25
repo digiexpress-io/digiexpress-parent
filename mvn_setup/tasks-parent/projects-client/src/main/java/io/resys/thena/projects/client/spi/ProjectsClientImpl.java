@@ -10,7 +10,6 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigTyp
 import io.resys.thena.projects.client.spi.actions.ActiveTenantConfigQueryImpl;
 import io.resys.thena.projects.client.spi.actions.CreateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.actions.UpdateTenantConfigImpl;
-import io.resys.thena.projects.client.spi.store.ProjectStore;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +17,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProjectsClientImpl implements ProjectClient {
   private final ProjectStore ctx;
-  
-
   public ProjectStore getCtx() {
     return ctx;
   }
-
-
+  @Override
+  public ProjectClient withRepoId(String repoId) {
+    return new ProjectsClientImpl(ctx.withTenantId(repoId));
+  }
   @Override
   public Uni<Tenant> getRepo() {
-    return ctx.getRepo();
+    return ctx.getTenant();
   }
   
   @Override
@@ -47,7 +46,7 @@ public class ProjectsClientImpl implements ProjectClient {
   
   @Override
   public RepositoryQuery query() {
-    ProjectStore.DocumentRepositoryQuery repo = ctx.query();
+    var repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       private TenantRepoConfigType type;
@@ -100,9 +99,4 @@ public class ProjectsClientImpl implements ProjectClient {
     };
   }
 
-
-  @Override
-  public ProjectClient withRepoId(String repoId) {
-    return new ProjectsClientImpl(ctx.withRepoId(repoId));
-  }
 }

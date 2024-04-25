@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.resys.thena.projects.client.api.ProjectClient.ActiveTenantConfigQuery;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.ProjectStore;
+import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.visitors.DeleteAllTenantsVisitor;
 import io.resys.thena.projects.client.spi.visitors.FindAllTenantsVisitor;
 import io.resys.thena.projects.client.spi.visitors.GetActiveTenantVisitor;
