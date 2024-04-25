@@ -80,6 +80,6 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
         DocBranch docBranch, 
         Map<String, DocCommit> commit, 
         List<DocCommands> commands,
-        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToUserProfile(docBranch));
+        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToTeanntConfig(docBranch));
   }
 }

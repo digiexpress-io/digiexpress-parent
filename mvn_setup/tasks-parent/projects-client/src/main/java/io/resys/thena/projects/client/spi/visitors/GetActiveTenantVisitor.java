@@ -53,6 +53,6 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
         DocBranch docBranch, 
         Map<String, DocCommit> commit, 
         List<DocCommands> commands,
-        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToUserProfile(docBranch)).get(0);
+        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToTeanntConfig(docBranch)).get(0);
   }
 }

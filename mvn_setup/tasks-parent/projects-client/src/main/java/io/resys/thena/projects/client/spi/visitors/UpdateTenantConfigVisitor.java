@@ -122,7 +122,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
       final Map<String, TenantConfig> configsById = new HashMap<>(updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
       
       response.getBranch().forEach(branch -> {
-        final var next = FindAllTenantsVisitor.mapToUserProfile(branch);
+        final var next = FindAllTenantsVisitor.mapToTeanntConfig(branch);
         configsById.put(next.getId(), next);
       });
       return Collections.unmodifiableList(new ArrayList<>(configsById.values()));

@@ -42,10 +42,10 @@ public class FindAllTenantsVisitor implements DocObjectsVisitor<List<TenantConfi
         DocBranch docBranch, 
         Map<String, DocCommit> commit, 
         List<DocCommands> commands,
-        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToUserProfile(docBranch));
+        List<DocCommitTree> trees) -> FindAllTenantsVisitor.mapToTeanntConfig(docBranch));
   }
   
-  public static ImmutableTenantConfig mapToUserProfile(DocBranch docBranch) {
+  public static ImmutableTenantConfig mapToTeanntConfig(DocBranch docBranch) {
     return docBranch.getValue()
       .mapTo(ImmutableTenantConfig.class)
       .withVersion(docBranch.getCommitId())

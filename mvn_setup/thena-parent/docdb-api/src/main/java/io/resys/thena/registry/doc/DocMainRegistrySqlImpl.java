@@ -1,14 +1,14 @@
 package io.resys.thena.registry.doc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.doc.Doc;
-import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
+import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.registry.doc.DocMainRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -70,6 +70,22 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   }
   @Override
   public SqlTuple findAll(DocFilter filter) {
+    final var params = new ArrayList<Object>();
+    final var filters = new ArrayList<String>();
+    
+    if(filter.getDocIds() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      params.add(filter.getDocIds().toArray());
+    }
+
+    if(filter.getDocType() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_type = $" + index + " ) ");
+      params.add(filter.getDocType());
+    }
+    final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT ")
@@ -85,9 +101,9 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as created_commit").ln()
         .append(" ON(created_commit.id = docs.created_with_commit_id)").ln()
         
-        .append(" WHERE docs.id = ANY($1) OR docs.external_id = ANY($1)").ln()
+        .append(where).ln()
         .build())
-        .props(Tuple.of(ids.toArray()))
+        .props(Tuple.from(params))
         .build();
   }
 

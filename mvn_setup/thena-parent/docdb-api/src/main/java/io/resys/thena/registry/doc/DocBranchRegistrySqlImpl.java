@@ -104,6 +104,30 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
 
   @Override
   public SqlTuple findAll(DocFilter filter) {
+    final var params = new ArrayList<Object>();
+    final var filters = new ArrayList<String>();
+    
+    if(filter.getDocIds() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      params.add(filter.getDocIds().toArray());
+    }
+
+    if(filter.getDocType() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_type = $" + index + " ) ");
+      params.add(filter.getDocType());
+    }
+    
+
+    if(filter.getBranch() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( branch.branch_name = $" + index + " OR branch.branch_id = $" + index + ") ");
+      params.add(filter.getBranch());
+    }
+    
+    final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
 
@@ -121,13 +145,9 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as branch_created_commit").ln()
         .append(" ON(branch_created_commit.id = branch.created_with_commit_id)").ln()
 
-        .append(" WHERE ").ln() 
-        .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
-        .append(" AND ").ln()
-        .append(" (branch.branch_name = $2 OR branch.branch_id = $2 OR $2 IS NULL)").ln()
-        
+        .append(where).ln()
         .build())
-        .props(Tuple.of(docId.toArray(), branchIdOrName))
+        .props(Tuple.from(params))
         .build();
   }
 

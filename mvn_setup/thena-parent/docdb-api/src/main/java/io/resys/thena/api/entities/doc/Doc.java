@@ -1,6 +1,7 @@
 package io.resys.thena.api.entities.doc;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -35,8 +36,8 @@ public interface Doc extends DocEntity, IsDocObject, ThenaTable {
  
   @Value.Immutable
   interface DocFilter {
-    @Nullable String getDocIds();
-    @Nullable String getType();
+    @Nullable List<String> getDocIds();
+    @Nullable String getDocType();
     @Nullable String getBranch();
   }
 

@@ -15,6 +15,7 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ImmutableDocFilter;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
@@ -49,7 +50,11 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
 
   @Override
   public Uni<QueryEnvelope<DocObject>> get(String id) {
-    final DocFilter filter = null;
+    final DocFilter filter = ImmutableDocFilter.builder()
+        .docIds(Arrays.asList(id))
+        .docType(docType)
+        .branch(branchName)
+        .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();
       
@@ -94,7 +99,11 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> docs) {
-    final DocFilter filter = null;
+    final DocFilter filter = ImmutableDocFilter.builder()
+        .docIds(docs)
+        .docType(docType)
+        .branch(branchName)
+        .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();
       
@@ -130,38 +139,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   }
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> findAll() {
-    return state.toDocState(repoId).onItem().transformToUni(docState -> {
-      final var tenant = docState.getDataSource().getTenant();
-      
-      // Query commits only on demand
-      final Uni<List<DocCommit>> commits = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMITS) ?
-          docState.query().commits().findAll().collect().asList() :
-          Uni.createFrom().item(Collections.emptyList());
-      
-      // Query trees only on demand
-      final Uni<List<DocCommitTree>> trees = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMIT_TREE) ?
-          docState.query().trees().findAll().collect().asList() :
-          Uni.createFrom().item(Collections.emptyList());
-      
-      // Query commands only on demand
-      final Uni<List<DocCommands>> commands = this.include.contains(IncludeInQuery.ALL) || this.include.contains(IncludeInQuery.COMMANDS) ?
-          docState.query().commands().findAll().collect().asList() :
-          Uni.createFrom().item(Collections.emptyList());
-      
-      return Uni.combine().all().unis(
-          docState.query().docs().findAll().collect().asList(),
-          docState.query().branches().findAll().collect().asList(),
-          commits, trees, commands
-      ).asTuple()
-      .onItem().transform(data -> {
-          final var objects = toDocObjects(data.getItem1(), data.getItem2(), data.getItem3(), data.getItem4(), data.getItem5());
-          return ImmutableQueryEnvelope.<DocTenantObjects>builder()
-              .repo(tenant)
-              .status(QueryEnvelopeStatus.OK)
-              .objects(objects)
-              .build();
-        });
-    });
+    return findAll(null);
   }
   private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(Tenant existing, DocNotFoundException ex) {
     final var msg = new StringBuilder()

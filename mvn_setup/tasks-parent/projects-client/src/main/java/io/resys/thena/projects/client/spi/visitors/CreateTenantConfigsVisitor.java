@@ -54,7 +54,7 @@ public class CreateTenantConfigsVisitor implements DocCreateVisitor<TenantConfig
     
     for(final var command : commands) {
       final var entity = new TenantConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
-      final var json = JsonObject.mapFrom(entity);
+      final var json = JsonObject.mapFrom(entity.getItem1());
       builder.item()
       .docType(TenantConfig.TENANT_CONFIG)
       .docId(entity.getItem1().getId())

@@ -1,5 +1,6 @@
 package io.resys.thena.registry.doc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
@@ -53,6 +54,31 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
   }
   @Override
   public SqlTuple findAll(DocFilter filter) {
+    
+    final var params = new ArrayList<Object>();
+    final var filters = new ArrayList<String>();
+    
+    if(filter.getDocIds() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      params.add(filter.getDocIds().toArray());
+    }
+
+    if(filter.getDocType() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_type = $" + index + " ) ");
+      params.add(filter.getDocType());
+    }
+    
+
+    if(filter.getBranch() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( branches.branch_name = $" + index + " OR branches.branch_id = $" + index + ") ");
+      params.add(filter.getBranch());
+    }
+    
+    final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT commands.*, commits.created_at as created_at, commits.author as created_by ")
@@ -67,13 +93,10 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append(" INNER JOIN ").append(options.getDocBranch()).append(" as branches").ln()
         .append(" ON(branches.doc_id = docs.id)")
 
-        .append(" WHERE ").ln() 
-        .append(" (docs.id = ANY($1) or docs.external_id = ANY($1)) ").ln()
-        .append(" AND ").ln()
-        .append(" (branches.branch_name = $2 OR branches.branch_id = $2 OR $2 IS NULL)").ln()
         
+        .append(where).ln()
         .build())
-        .props(Tuple.of(docIds.toArray(), branchId))
+        .props(Tuple.from(params))
         .build();
   }
   @Override
