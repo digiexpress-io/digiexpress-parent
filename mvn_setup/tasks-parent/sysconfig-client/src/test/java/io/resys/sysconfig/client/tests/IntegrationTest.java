@@ -18,7 +18,7 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.tests.config.SysConfigPgProfile;
 import io.resys.sysconfig.client.tests.config.TestCase;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,8 +50,8 @@ public class IntegrationTest extends TestCase {
             .targetDate(getTargetDate())
             .userId(getUserId())
             .name("system config to bind stencil-dialob-wrench")
-            .wrenchHead(MainBranch.HEAD_NAME)
-            .stencilHead(MainBranch.HEAD_NAME)
+            .wrenchHead(DocObjectsQueryImpl.BRANCH_MAIN)
+            .stencilHead(DocObjectsQueryImpl.BRANCH_MAIN)
             .tenantId(builder.getTenant().getId())
             .addServices(ImmutableSysConfigService.builder()
                 .addLocales("en")

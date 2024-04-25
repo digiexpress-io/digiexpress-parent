@@ -104,7 +104,6 @@ public class TestCase {
           return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
               .name(tenantId)
               .repoId(repoId)
-              .targetDate(Instant.now())
               .build())
               .onItem().transformToUni(this::createNested);
         });
