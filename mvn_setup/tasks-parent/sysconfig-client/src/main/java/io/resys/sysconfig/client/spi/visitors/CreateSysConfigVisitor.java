@@ -51,16 +51,16 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
   @Override
   public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
-      .docType(Document.DocumentType.SYS_CONFIG.name())
-      .author(config.getAuthor().get())
-      .message("creating sys config");
+      .commitAuthor(config.getAuthor().get())
+      .commitMessage("creating sys config");
     
     for(final var command : commands) {
       try {
         final var entity = new SysConfigCommandVisitor(config).visitTransaction(Arrays.asList(command));
         final var json = JsonObject.mapFrom(entity);
         builder.item()
-          .append(json)
+          .docType(Document.DocumentType.SYS_CONFIG.name())
+          .branchContent(json)
           .docId(entity.getId())
           .next();
         customers.add(entity);

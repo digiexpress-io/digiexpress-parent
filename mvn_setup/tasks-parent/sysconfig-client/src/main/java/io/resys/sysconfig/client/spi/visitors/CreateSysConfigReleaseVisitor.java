@@ -1,7 +1,6 @@
 package io.resys.sysconfig.client.spi.visitors;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 
 import io.resys.sysconfig.client.api.AssetClient;
@@ -16,17 +15,15 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
 import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
-import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectVisitor;
@@ -56,17 +53,16 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createOneDoc()
         .docType(Document.DocumentType.SYS_CONFIG_RELEASE.name())
         .commitMessage("Create new release")
-        .commitAuthor(config.getAuthor().get())
-        .branchName(config.getBranchName());
+        .commitAuthor(config.getAuthor().get());
   }
 
   @Override
   public Uni<QueryEnvelope<DocObject>> start(ThenaDocConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(Arrays.asList(command.getId())).branchName(MainBranch.HEAD_NAME);
+    return builder.get(command.getId());
   }
 
   @Override
-  public DocQueryActions.DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
+  public DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_FAIL")
         .add(config, envelope)
@@ -84,7 +80,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   }
 
   @Override
-  public Uni<SysConfigRelease> end(ThenaDocConfig config, DocQueryActions.DocObject blob) {
+  public Uni<SysConfigRelease> end(ThenaDocConfig config, DocObject blob) {
     final var sysConfig = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableSysConfig.class))
         .stream().findFirst().get();
   
