@@ -1,66 +1,31 @@
 package io.resys.sysconfig.client.spi;
 
 import java.util.List;
-import java.util.Optional;
 
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.actions.CreateSysConfigActionImpl;
 import io.resys.sysconfig.client.spi.actions.SysConfigQueryImpl;
 import io.resys.sysconfig.client.spi.asset.exceptions.AssetClientException;
-import io.resys.sysconfig.client.spi.store.DocumentStore;
+import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.support.ErrorMsg;
-import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SysConfigClientImpl implements SysConfigClient {
-  private final DocumentStore ctx;
+  private final SysConfigStore ctx;
   private final AssetClient assets;
   private final ProjectClient tenantClient;
-  public DocumentStore getCtx() { return ctx; }
+  public SysConfigStore getCtx() { return ctx; }
 
-  @Override public Uni<Tenant> getRepo() { return ctx.getRepo(); }
-  @Override public SysConfigClient withRepoId(String repoId) { return new SysConfigClientImpl(ctx.withRepoId(repoId), assets, tenantClient); }
-
-  @Override
-  public RepositoryQuery repoQuery() {
-    DocumentStore.DocumentRepositoryQuery repo = ctx.query();
-    return new RepositoryQuery() {
-      @Override public Uni<SysConfigClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new SysConfigClientImpl(doc, assets, tenantClient)); }
-      @Override public Uni<SysConfigClient> create() { return repo.create().onItem().transform(doc -> new SysConfigClientImpl(doc, assets, tenantClient)); }
-      @Override public SysConfigClient build() { return new SysConfigClientImpl(repo.build(), assets, tenantClient); }
-      @Override public Uni<SysConfigClient> delete() { return repo.delete().onItem().transform(doc -> new SysConfigClientImpl(doc, assets, tenantClient)); }
-      @Override public Uni<SysConfigClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new SysConfigClientImpl(ctx, assets, tenantClient)); }
-      @Override
-      public RepositoryQuery repoName(String repoName) {
-        repo.repoName(repoName).headName(MainBranch.HEAD_NAME);
-        return this;
-      }
-      @Override
-      public Uni<Optional<SysConfigClient>> get(String repoName) {
-        RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
-        
-        final var client = ctx.getConfig().getClient();
-        return client.tenants().find().id(repoName)
-            .get().onItem().transform(existing -> {
-              if(existing == null) {
-                final Optional<SysConfigClient> result = Optional.empty();
-                return result;
-              }
-              return Optional.of(new SysConfigClientImpl(repo.build(), assets, tenantClient));
-            });
-        
-      }
-    };
-  }
+  @Override public Uni<Tenant> getRepo() { return ctx.getTenant(); }
+  @Override public SysConfigClient withRepoId(String repoId) { return new SysConfigClientImpl(ctx.withTenantId(repoId), assets, tenantClient); }
 
   @Override
   public CreateSysConfigAction createConfig() {
@@ -116,7 +81,7 @@ public class SysConfigClientImpl implements SysConfigClient {
     }
     
     final var assets = this.assets.withTenantConfig(tenantConfigId, tenantConfig);
-    return new SysConfigClientImpl(this.ctx.withRepoId(sysConfig.get().getRepoId()), assets, tenantClient);
+    return new SysConfigClientImpl(this.ctx.withTenantId(sysConfig.get().getRepoId()), assets, tenantClient);
   }
 
   @Override

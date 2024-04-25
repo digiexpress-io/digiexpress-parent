@@ -28,18 +28,17 @@ import java.util.stream.Collectors;
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectsVisitor;
+import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +53,7 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
+  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");
@@ -64,7 +63,7 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("FIND_ALL_SYS_CONFIGS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -72,7 +71,7 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
   }
   
   @Override
-  public Uni<List<SysConfig>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public Uni<List<SysConfig>> end(ThenaDocConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }

@@ -17,8 +17,6 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface SysConfigClient {
-
-  RepositoryQuery repoQuery();
   Uni<Tenant> getRepo();
   SysConfigClient withRepoId(String repoId);
   

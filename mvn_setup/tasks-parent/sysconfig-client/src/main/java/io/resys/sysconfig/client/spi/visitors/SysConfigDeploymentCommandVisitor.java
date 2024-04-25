@@ -13,22 +13,22 @@ import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.UpdateSysConfigDeploymentDisabled;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.UpdateSysConfigDeploymentLiveDate;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
+import io.resys.thena.spi.ThenaDocConfig;
 
 
 public class SysConfigDeploymentCommandVisitor {
-  private final DocumentConfig ctx;
+  private final ThenaDocConfig ctx;
   private final SysConfigDeployment start;
   private final List<SysConfigDeploymentCommand> visitedCommands = new ArrayList<>();
   private ImmutableSysConfigDeployment current;
   
-  public SysConfigDeploymentCommandVisitor(DocumentConfig ctx) {
+  public SysConfigDeploymentCommandVisitor(ThenaDocConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public SysConfigDeploymentCommandVisitor(SysConfigDeployment start, DocumentConfig ctx) {
+  public SysConfigDeploymentCommandVisitor(SysConfigDeployment start, ThenaDocConfig ctx) {
     this.start = start;
     this.current = ImmutableSysConfigDeployment.builder().from(start).build();
     this.ctx = ctx;

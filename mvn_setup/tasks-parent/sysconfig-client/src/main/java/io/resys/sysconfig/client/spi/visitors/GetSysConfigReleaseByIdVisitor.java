@@ -6,9 +6,9 @@ import java.util.List;
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectVisitor;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.sysconfig.client.spi.store.ThenaDocConfig;
+import io.resys.sysconfig.client.spi.store.ThenaDocConfig.DocObjectVisitor;
+import io.resys.sysconfig.client.spi.store.DocStoreException;
 import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObject;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
@@ -27,7 +27,7 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
   private final String projectId;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.SYS_CONFIG_RELEASE.name())
         .branchName(MainBranch.HEAD_NAME)
@@ -35,16 +35,16 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
   }
 
   @Override
-  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_SYS_CONFIG_RELEASE_BY_ID_FAIL")
+      throw DocStoreException.builder("GET_SYS_CONFIG_RELEASE_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectId))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_SYS_CONFIG_RELEASE_BY_ID_NOT_FOUND")   
+      throw DocStoreException.builder("GET_SYS_CONFIG_RELEASE_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectId))
         .build();
@@ -53,7 +53,7 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
   }
 
   @Override
-  public SysConfigRelease end(DocumentConfig config, DocQueryActions.DocObject ref) {
+  public SysConfigRelease end(ThenaDocConfig config, DocQueryActions.DocObject ref) {
     return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
       docBranch.getValue()
       .mapTo(ImmutableSysConfigRelease.class).withVersion(commit.getId())

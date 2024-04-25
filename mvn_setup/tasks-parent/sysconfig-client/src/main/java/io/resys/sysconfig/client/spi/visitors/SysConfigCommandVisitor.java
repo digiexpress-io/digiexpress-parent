@@ -13,22 +13,23 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelease;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.support.OidUtils;
 
 
 public class SysConfigCommandVisitor {
-  private final DocumentConfig ctx;
+  private final ThenaDocConfig ctx;
   private final SysConfig start;
   private final List<SysConfigCommand> visitedCommands = new ArrayList<>();
   private ImmutableSysConfig current;
   
-  public SysConfigCommandVisitor(DocumentConfig ctx) {
+  public SysConfigCommandVisitor(ThenaDocConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public SysConfigCommandVisitor(SysConfig start, DocumentConfig ctx) {
+  public SysConfigCommandVisitor(SysConfig start, ThenaDocConfig ctx) {
     this.start = start;
     this.current = ImmutableSysConfig.builder().from(start).build();
     this.ctx = ctx;
@@ -61,7 +62,7 @@ public class SysConfigCommandVisitor {
   }
   
   private SysConfig visitCreateSysConfig(CreateSysConfig command) {
-    final var id = ctx.getGid().getNextId(DocumentType.SYS_CONFIG);
+    final var id = OidUtils.gen();
     final var version = ctx.getGid().getNextVersion(DocumentType.SYS_CONFIG);
     final var targetDate = requireTargetDate(command);
     

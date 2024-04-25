@@ -34,7 +34,7 @@ import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorClientImpl;
 import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.sysconfig.client.spi.store.ThenaDocConfig.DocumentGidProvider;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;

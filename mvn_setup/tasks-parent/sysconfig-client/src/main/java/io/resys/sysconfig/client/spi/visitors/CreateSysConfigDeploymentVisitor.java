@@ -12,14 +12,14 @@ import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocCreateVisitor;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.sysconfig.client.spi.visitors.SysConfigDeploymentCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocCreateVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ public class CreateSysConfigDeploymentVisitor implements DocCreateVisitor<SysCon
   private final List<SysConfigDeployment> entities = new ArrayList<SysConfigDeployment>();
   
   @Override
-  public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
       .commitAuthor(config.getAuthor().get())
       .commitMessage("creating sys-config-deployment");
@@ -53,15 +53,15 @@ public class CreateSysConfigDeploymentVisitor implements DocCreateVisitor<SysCon
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("SYS_CONFIG_DEPLOYMENT_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocStoreException("SYS_CONFIG_DEPLOYMENT_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
 
   @Override
-  public List<SysConfigDeployment> end(DocumentConfig config, List<DocBranch> branches) {
+  public List<SysConfigDeployment> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, SysConfigDeployment> configsById = new HashMap<>(
         this.entities.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

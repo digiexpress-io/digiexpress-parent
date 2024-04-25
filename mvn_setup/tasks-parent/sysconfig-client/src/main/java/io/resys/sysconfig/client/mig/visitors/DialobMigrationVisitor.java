@@ -22,7 +22,7 @@ import io.dialob.client.api.ImmutableFormRevisionEntryDocument;
 import io.dialob.client.spi.support.OidUtils;
 import io.resys.sysconfig.client.mig.visitors.DialobMigration.FormsAndRevs;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +91,7 @@ public class DialobMigrationVisitor {
         .id(src.getId())
         .name(src.getMetadata().getLabel())
         .description("")
-        .head(MainBranch.HEAD_NAME)
+        .head(DocObjectsQueryImpl.BRANCH_MAIN)
         .created(toDateTime.apply(created))
         .updated(toDateTime.apply(updated))
         .build();

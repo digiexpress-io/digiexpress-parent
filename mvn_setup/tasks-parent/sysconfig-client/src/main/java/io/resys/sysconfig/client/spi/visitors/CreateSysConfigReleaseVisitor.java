@@ -13,10 +13,10 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocObjectVisitor;
-import io.resys.sysconfig.client.spi.store.DocumentStore;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
+import io.resys.sysconfig.client.spi.store.ThenaDocConfig;
+import io.resys.sysconfig.client.spi.store.ThenaDocConfig.DocObjectVisitor;
+import io.resys.sysconfig.client.spi.store.SysConfigStore;
+import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocQueryActions;
@@ -37,12 +37,12 @@ import io.vertx.core.json.JsonObject;
 
 public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysConfigRelease>> {
   private final AssetClient assetClient;
-  private final DocumentStore ctx;
+  private final SysConfigStore ctx;
   private final ModifyOneDocBranch updateBuilder;
   private final CreateOneDoc createBuilder;
   private final CreateSysConfigRelease command;
   
-  public CreateSysConfigReleaseVisitor(CreateSysConfigRelease command, DocumentStore ctx, AssetClient assetClient) {
+  public CreateSysConfigReleaseVisitor(CreateSysConfigRelease command, SysConfigStore ctx, AssetClient assetClient) {
     super();
 
     this.ctx = ctx;
@@ -61,12 +61,12 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   }
 
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder.matchIds(Arrays.asList(command.getId())).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
+  public DocQueryActions.DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw DocumentStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_FAIL")
         .add(config, envelope)
@@ -84,7 +84,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   }
 
   @Override
-  public Uni<SysConfigRelease> end(DocumentConfig config, DocQueryActions.DocObject blob) {
+  public Uni<SysConfigRelease> end(ThenaDocConfig config, DocQueryActions.DocObject blob) {
     final var sysConfig = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableSysConfig.class))
         .stream().findFirst().get();
   

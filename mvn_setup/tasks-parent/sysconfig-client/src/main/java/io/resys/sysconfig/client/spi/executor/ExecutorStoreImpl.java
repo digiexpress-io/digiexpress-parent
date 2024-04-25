@@ -10,7 +10,7 @@ import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.executor.visitors.GetDialobProgramFromReleaseVisitor;
 import io.resys.sysconfig.client.spi.executor.visitors.GetFlowProgramFromReleaseVisitor;
-import io.resys.sysconfig.client.spi.store.DocumentStore;
+import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
 import io.resys.thena.projects.client.api.ProjectClient;
@@ -25,7 +25,7 @@ public class ExecutorStoreImpl implements ExecutorStore {
   private final ProjectClient tenantClient;
   private final AssetClient assetClient;
   private final ExecutorClientConfig config;
-  private final DocumentStore ctx;
+  private final SysConfigStore ctx;
   
   @Override
   public SysConfigReleaseQuery queryReleases() {

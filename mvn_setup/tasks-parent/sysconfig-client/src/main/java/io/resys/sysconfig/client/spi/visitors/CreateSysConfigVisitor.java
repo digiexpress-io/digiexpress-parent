@@ -32,14 +32,14 @@ import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocCreateVisitor;
 import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.sysconfig.client.spi.visitors.SysConfigCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocCreateVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +49,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
   private final List<SysConfig> customers = new ArrayList<SysConfig>();
   
   @Override
-  public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
       .docType(Document.DocumentType.SYS_CONFIG.name())
       .author(config.getAuthor().get())
@@ -72,7 +72,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
@@ -80,7 +80,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
   }
 
   @Override
-  public List<SysConfig> end(DocumentConfig config, List<DocBranch> branches) {
+  public List<SysConfig> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, SysConfig> configsById = new HashMap<>(
         this.customers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

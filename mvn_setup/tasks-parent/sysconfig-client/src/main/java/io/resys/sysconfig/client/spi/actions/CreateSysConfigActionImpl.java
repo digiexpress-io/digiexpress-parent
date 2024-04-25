@@ -30,7 +30,7 @@ import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfigRelea
 import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.sysconfig.client.spi.store.DocumentStore;
+import io.resys.sysconfig.client.spi.store.SysConfigStore;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigDeploymentVisitor;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigVisitor;
 import io.resys.sysconfig.client.spi.visitors.CreateSysConfigReleaseVisitor;
@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateSysConfigActionImpl implements CreateSysConfigAction {
-  private final DocumentStore ctx;
+  private final SysConfigStore ctx;
   private final AssetClient assetClient;
   
   @Override
