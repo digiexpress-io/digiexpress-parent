@@ -8,7 +8,7 @@ import io.resys.userprofile.client.api.UserProfileClient.CreateUserProfileAction
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
+import io.resys.userprofile.client.spi.UserProfileStore;
 import io.resys.userprofile.client.spi.visitors.CreateUserProfileVisitor;
 import io.resys.userprofile.client.spi.visitors.UpdateUserProfileVisitor;
 import io.smallrye.mutiny.Uni;

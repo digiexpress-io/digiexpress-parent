@@ -44,12 +44,12 @@ import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
+import io.resys.userprofile.client.spi.UserProfileStore;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.smallrye.mutiny.Uni;
@@ -87,14 +87,14 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw UserProfileStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
+      throw DocStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw UserProfileStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw DocStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -102,7 +102,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     
     final var totalUpserts = this.commandsByUserProfileId.values().stream().flatMap(e -> e.stream()).filter(e -> upserts.contains(e.getCommandType())).count();
     if(profileIds.size() < Math.max((result.getDocs().size() - totalUpserts), 0)) {
-      throw new UserProfileStoreException("USER_PROFILES_UPDATE_FAIL_NOT_ALL_USER_PROFILES_FOUND", JsonObject.of("failedUpdates", profileIds));
+      throw new DocStoreException("USER_PROFILES_UPDATE_FAIL_NOT_ALL_USER_PROFILES_FOUND", JsonObject.of("failedUpdates", profileIds));
     }
     return result;
   }
@@ -165,7 +165,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }
       
       if(commands.isEmpty()) {
-        throw UserProfileStoreException.builder("USER_PROFILES_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
+        throw DocStoreException.builder("USER_PROFILES_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
           .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
           .build();
       }
@@ -194,7 +194,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   
   private List<UserProfile> mapInsertedResponse(ManyDocsEnvelope envelope, List<UserProfile> insertedProfiles) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
-      throw new UserProfileStoreException("USER_PROFILE_CREATE_FAIL", UserProfileStoreException.convertMessages(envelope));
+      throw new DocStoreException("USER_PROFILE_CREATE_FAIL", DocStoreException.convertMessages(envelope));
     }
     
     final var branches = envelope.getBranch();
@@ -213,7 +213,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   private List<UserProfile> mapUpdateResponse(ManyDocsEnvelope response, List<UserProfile> updatedProfiles) {
     if(response.getStatus() != CommitResultStatus.OK) {
       final var failedUpdates = profileIds.stream().collect(Collectors.joining(",", "{", "}"));
-      throw new UserProfileStoreException("USER_PROFILES_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), UserProfileStoreException.convertMessages(response));
+      throw new DocStoreException("USER_PROFILES_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocStoreException.convertMessages(response));
     }
     final Map<String, UserProfile> profileById = new HashMap<>(updatedProfiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     response.getBranch().forEach(branch -> {

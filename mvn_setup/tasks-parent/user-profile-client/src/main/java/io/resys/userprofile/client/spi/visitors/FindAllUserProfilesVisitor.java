@@ -15,9 +15,9 @@ import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.smallrye.mutiny.Uni;
 
@@ -29,7 +29,7 @@ public class FindAllUserProfilesVisitor implements DocObjectsVisitor<List<UserPr
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw UserProfileStoreException.builder("FIND_ALL_USER_PROFILES_FAIL").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_USER_PROFILES_FAIL").add(config, envelope).build();
     }
     return envelope.getObjects();
   }

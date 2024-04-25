@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ExMessageFormatter {
+  
+  
   private final String code;
   private final JsonObject target;
   private final DocumentExceptionMsg[] msg;

@@ -275,7 +275,7 @@ public class BeanFactory {
 
   @Produces
   public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, ObjectMapper om) {
-    final var store = io.resys.userprofile.client.spi.UserProfileStoreImpl.builder()
+    final var store = io.resys.userprofile.client.spi.UserProfileStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)

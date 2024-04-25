@@ -1,6 +1,7 @@
 package io.resys.crm.client.spi.store;
 
 import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 
 /*-
  * #%L
@@ -26,7 +27,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface CrmStore {
   CrmTenantQuery query();
-  CrmStoreConfig getConfig();
+  ThenaDocConfig getConfig();
   Uni<Tenant> getRepo();
   CrmStore withRepoId(String repoId);
   

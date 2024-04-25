@@ -14,8 +14,8 @@ import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +31,14 @@ public class GetActiveUserProfileVisitor implements DocObjectVisitor<UserProfile
   @Override
   public DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
+      throw DocStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_NOT_FOUND")   
+      throw DocStoreException.builder("GET_USER_PROFILE_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();

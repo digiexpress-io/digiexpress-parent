@@ -33,9 +33,9 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.vertx.core.json.JsonObject;
@@ -76,7 +76,7 @@ public class CreateUserProfileVisitor implements ThenaDocConfig.DocCreateVisitor
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new UserProfileStoreException("USER_PROFILE_CREATE_FAIL", UserProfileStoreException.convertMessages(envelope));
+    throw new DocStoreException("USER_PROFILE_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
 
   @Override

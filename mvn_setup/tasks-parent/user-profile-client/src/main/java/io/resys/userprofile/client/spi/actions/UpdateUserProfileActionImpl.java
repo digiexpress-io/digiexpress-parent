@@ -28,7 +28,7 @@ import io.resys.thena.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient.UpdateUserProfileAction;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
+import io.resys.userprofile.client.spi.UserProfileStore;
 import io.resys.userprofile.client.spi.visitors.UpdateUserProfileVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;

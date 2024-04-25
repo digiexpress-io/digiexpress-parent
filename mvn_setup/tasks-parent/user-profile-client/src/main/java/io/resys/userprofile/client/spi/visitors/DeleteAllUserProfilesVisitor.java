@@ -14,9 +14,9 @@ import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw UserProfileStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
@@ -58,14 +58,14 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new UserProfileStoreException("USER_PROFILE_ARCHIVE_FAIL", UserProfileStoreException.convertMessages(commit));
+        throw new DocStoreException("USER_PROFILE_ARCHIVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new UserProfileStoreException("USER_PROFILE_REMOVE_FAIL", UserProfileStoreException.convertMessages(commit));
+        throw new DocStoreException("USER_PROFILE_REMOVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> profilesRemoved);
   }

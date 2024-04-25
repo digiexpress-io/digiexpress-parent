@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.resys.userprofile.client.api.UserProfileClient.UserProfileQuery;
 import io.resys.userprofile.client.api.model.UserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
+import io.resys.userprofile.client.spi.UserProfileStore;
 import io.resys.userprofile.client.spi.visitors.DeleteAllUserProfilesVisitor;
 import io.resys.userprofile.client.spi.visitors.FindAllUserProfilesVisitor;
 import io.resys.userprofile.client.spi.visitors.GetActiveUserProfileVisitor;

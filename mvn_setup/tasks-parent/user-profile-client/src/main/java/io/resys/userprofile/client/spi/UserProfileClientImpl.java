@@ -8,7 +8,6 @@ import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
-import io.resys.userprofile.client.spi.store.UserProfileStore;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,7 @@ public class UserProfileClientImpl implements UserProfileClient {
 
   @Override
   public Uni<Tenant> getRepo() {
-    return ctx.getRepo();
+    return ctx.getTenant();
   }
   
   @Override
@@ -45,7 +44,7 @@ public class UserProfileClientImpl implements UserProfileClient {
   
   @Override
   public RepositoryQuery repoQuery() {
-    UserProfileStore.UserProfileTenantQuery repo = ctx.query();
+    var repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       
