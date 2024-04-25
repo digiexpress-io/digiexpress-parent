@@ -33,13 +33,13 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.spi.store.UserProfileStoreException;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -50,14 +50,14 @@ public class GetUserProfilesByIdsVisitor implements DocObjectsVisitor<List<UserP
   private final Collection<String> profileIds;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(UserProfileStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder
         .docType(DataConstants.DOC_TYPE_USER_PROFILE)
         .findAll(new ArrayList<>(profileIds));
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
         .add(config, envelope)
@@ -75,7 +75,7 @@ public class GetUserProfilesByIdsVisitor implements DocObjectsVisitor<List<UserP
   }
 
   @Override
-  public List<UserProfile> end(UserProfileStoreConfig config, DocTenantObjects ref) {
+  public List<UserProfile> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

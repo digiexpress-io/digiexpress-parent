@@ -9,13 +9,13 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.spi.store.UserProfileStoreException;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectVisitor;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +25,11 @@ public class GetActiveUserProfileVisitor implements DocObjectVisitor<UserProfile
   private final String id;
   
   @Override
-  public Uni<QueryEnvelope<DocObject>> start(UserProfileStoreConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocObject>> start(ThenaDocConfig config, DocObjectsQuery query) {
     return query.get(id);
   }
   @Override
-  public DocObject visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocObject> envelope) {
+  public DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw UserProfileStoreException.builder("GET_USER_PROFILE_BY_ID_FAIL")
         .add(config, envelope)
@@ -47,7 +47,7 @@ public class GetActiveUserProfileVisitor implements DocObjectVisitor<UserProfile
   }
 
   @Override
-  public UserProfile end(UserProfileStoreConfig config, DocObject ref) {
+  public UserProfile end(ThenaDocConfig config, DocObject ref) {
     return ref.accept((
         Doc doc, 
         DocBranch docBranch, 

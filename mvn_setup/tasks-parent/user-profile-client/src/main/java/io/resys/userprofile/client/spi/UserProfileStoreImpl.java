@@ -29,15 +29,14 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.entities.doc.ImmutableThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
-import io.resys.userprofile.client.spi.store.ImmutableUserProfileStoreConfig;
 import io.resys.userprofile.client.spi.store.UserProfileStore;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.UserProfileAuthorProvider;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -52,11 +51,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 public class UserProfileStoreImpl implements UserProfileStore {
-  private final UserProfileStoreConfig config;
+  private final ThenaDocConfig config;
   
   @Override
   public UserProfileStore withTenantId(String repoId) {
-    return new UserProfileStoreImpl(ImmutableUserProfileStoreConfig.builder().from(config).repoId(repoId).build());
+    return new UserProfileStoreImpl(ImmutableThenaDocConfig.builder().from(config).repoId(repoId).build());
   }
   
   @Override
@@ -64,7 +63,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }
-  @Override public UserProfileStoreConfig getConfig() { return config; }
+  @Override public ThenaDocConfig getConfig() { return config; }
   @Override public UserProfileTenantQuery query() {
     return new UserProfileTenantQuery() {
       private String repoName;
@@ -151,7 +150,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
   
   private UserProfileStore createClientStore(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    return new UserProfileStoreImpl(ImmutableUserProfileStoreConfig.builder()
+    return new UserProfileStoreImpl(ImmutableThenaDocConfig.builder()
         .from(config)
         .repoId(repoName)
         .build());
@@ -170,7 +169,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
     private String repoName;
     
     private ObjectMapper objectMapper;
-    private UserProfileAuthorProvider authorProvider;
+    private ThenaDocConfig.AuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -179,7 +178,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private UserProfileAuthorProvider getAuthorProvider() {
+    private ThenaDocConfig.AuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
@@ -238,7 +237,7 @@ public class UserProfileStoreImpl implements UserProfileStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
-      final UserProfileStoreConfig config = ImmutableUserProfileStoreConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
+      final ThenaDocConfig config = ImmutableThenaDocConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
       return new UserProfileStoreImpl(config);
     }
   }

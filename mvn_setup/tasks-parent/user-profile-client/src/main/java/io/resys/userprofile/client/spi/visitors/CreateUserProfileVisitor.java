@@ -32,10 +32,9 @@ import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocCreateVisitor;
 import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
@@ -43,12 +42,12 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
+public class CreateUserProfileVisitor implements ThenaDocConfig.DocCreateVisitor<UserProfile> {
   private final List<? extends CreateUserProfile> commands;
   private final List<UserProfile> profiles = new ArrayList<UserProfile>();
   
   @Override
-  public CreateManyDocs start(UserProfileStoreConfig config, CreateManyDocs builder) {
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
       .commitAuthor(config.getAuthor().get())
       .commitMessage("creating user profile");
@@ -73,7 +72,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(UserProfileStoreConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
@@ -81,7 +80,7 @@ public class CreateUserProfileVisitor implements DocCreateVisitor<UserProfile> {
   }
 
   @Override
-  public List<UserProfile> end(UserProfileStoreConfig config, List<DocBranch> branches) {
+  public List<UserProfile> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, UserProfile> configsById = new HashMap<>(
         this.profiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

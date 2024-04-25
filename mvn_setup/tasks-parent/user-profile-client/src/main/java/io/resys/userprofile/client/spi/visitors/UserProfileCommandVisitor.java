@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;
@@ -28,7 +29,6 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfil
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 
@@ -39,12 +39,12 @@ public class UserProfileCommandVisitor {
   private final List<UserProfileCommand> visitedCommands = new ArrayList<>();
   private ImmutableUserProfile current;
   
-  public UserProfileCommandVisitor(UserProfileStoreConfig ctx) {
+  public UserProfileCommandVisitor(ThenaDocConfig ctx) {
     this.start = null;
     this.current = null;
   }
   
-  public UserProfileCommandVisitor(UserProfile start, UserProfileStoreConfig ctx) {
+  public UserProfileCommandVisitor(UserProfile start, ThenaDocConfig ctx) {
     this.start = start;
     this.current = ImmutableUserProfile.builder().from(start).build(); 
   }

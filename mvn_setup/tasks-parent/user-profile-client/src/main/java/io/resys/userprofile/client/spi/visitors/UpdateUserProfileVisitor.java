@@ -39,6 +39,8 @@ import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -46,10 +48,8 @@ import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.store.UserProfileStore;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
+import io.resys.userprofile.client.spi.store.UserProfileStoreException;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.resys.userprofile.client.spi.visitors.UserProfileCommandVisitor.NoChangesException;
 import io.smallrye.mutiny.Uni;
@@ -80,12 +80,12 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>>  start(UserProfileStoreConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>>  start(ThenaDocConfig config, DocObjectsQuery builder) {
     return builder.findAll(profileIds);
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw UserProfileStoreException.builder("GET_USER_PROFILES_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
@@ -108,7 +108,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
   }
 
   @Override
-  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocTenantObjects blob) {
+  public Uni<List<UserProfile>> end(ThenaDocConfig config, DocTenantObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<UserProfile>();
@@ -118,7 +118,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
       }));
   }
   
-  private Uni<List<UserProfile>> applyInserts(UserProfileStoreConfig config, DocTenantObjects blob) {
+  private Uni<List<UserProfile>> applyInserts(ThenaDocConfig config, DocTenantObjects blob) {
     final var insertedProfiles = new ArrayList<UserProfile>(); 
     for(final var entry : commandsByUserProfileId.entrySet()) {
       try {
@@ -144,7 +144,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedProfiles));
   }
 
-  private Uni<List<UserProfile>> applyUpdates(UserProfileStoreConfig config, DocTenantObjects blob) {
+  private Uni<List<UserProfile>> applyUpdates(ThenaDocConfig config, DocTenantObjects blob) {
     final var updatedProfiles = blob.accept((
         Doc doc, 
         DocBranch docBranch, 

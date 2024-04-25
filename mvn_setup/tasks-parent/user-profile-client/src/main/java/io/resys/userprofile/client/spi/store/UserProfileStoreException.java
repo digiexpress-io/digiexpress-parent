@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
@@ -103,7 +104,7 @@ public class UserProfileStoreException extends RuntimeException {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
-    public Builder add(UserProfileStoreConfig config, QueryEnvelope<?> envelope) {
+    public Builder add(ThenaDocConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));

@@ -25,17 +25,13 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.sysconfig.client.api.model.Document.DocumentType;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentAuthorProvider;
-import io.resys.sysconfig.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.sysconfig.client.spi.store.DocumentConfig.SysConfigAuthorProvider;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
@@ -154,7 +150,6 @@ public class DocumentStoreImpl implements DocumentStore {
     return new DocumentStoreImpl(ImmutableDocumentConfig.builder()
         .from(config)
         .repoId(repoName)
-        .branchName(headName == null ? config.getBranchName() : headName)
         .build());
     
   }
@@ -169,10 +164,8 @@ public class DocumentStoreImpl implements DocumentStore {
   @Data
   public static class Builder {
     private String repoName;
-    private String headName;
     private ObjectMapper objectMapper;
-    private DocumentGidProvider gidProvider;
-    private DocumentAuthorProvider authorProvider;
+    private SysConfigAuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -181,29 +174,20 @@ public class DocumentStoreImpl implements DocumentStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private DocumentGidProvider getGidProvider() {
-      return this.gidProvider != null ? this.gidProvider : new DocumentGidProvider() {
-        @Override public String getNextVersion(DocumentType entity) { return OidUtils.gen(); }
-        @Override public String getNextId(DocumentType entity) { return OidUtils.gen(); }
-      };
-    }
-    
-    private DocumentAuthorProvider getAuthorProvider() {
+    private SysConfigAuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
     public DocumentStoreImpl build() {
       RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
-      final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
+
       if(log.isDebugEnabled()) {
         final var msg = new StringBuilder()
           .append(System.lineSeparator())
           .append("Configuring Thena: ").append(System.lineSeparator())
           .append("  repoName: '").append(this.repoName).append("'").append(System.lineSeparator())
-          .append("  headName: '").append(headName).append("'").append(System.lineSeparator())
           .append("  objectMapper: '").append(this.objectMapper == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
-          .append("  gidProvider: '").append(this.gidProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           .append("  authorProvider: '").append(this.authorProvider == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
           
           .append("  pgPool: '").append(this.pgPool == null ? "configuring" : "provided").append("'").append(System.lineSeparator())
@@ -243,8 +227,7 @@ public class DocumentStoreImpl implements DocumentStore {
       }
       
       final DocumentConfig config = ImmutableDocumentConfig.builder()
-          .client(thena).repoId(repoName).branchName(headName)
-          .gid(getGidProvider())
+          .client(thena).repoId(repoName)
           .author(getAuthorProvider())
           .build();
       return new DocumentStoreImpl(config);

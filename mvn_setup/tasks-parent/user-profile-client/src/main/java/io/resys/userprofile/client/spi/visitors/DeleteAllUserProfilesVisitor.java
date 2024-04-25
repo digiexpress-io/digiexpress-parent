@@ -9,14 +9,14 @@ import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.doc.ThenaDocConfig;
+import io.resys.thena.api.entities.doc.ThenaDocConfig.DocObjectsVisitor;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.spi.store.UserProfileStoreException;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig;
-import io.resys.userprofile.client.spi.store.UserProfileStoreConfig.DocObjectsVisitor;
 import io.resys.userprofile.client.spi.support.DataConstants;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   private ModifyManyDocs removeCommand;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(UserProfileStoreConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .commitAuthor(config.getAuthor().get())
         .commitMessage("Delete Tenants");
@@ -39,7 +39,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(UserProfileStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw UserProfileStoreException.builder("FIND_ALL_USER_PROFILES_FAIL_FOR_DELETE").add(config, envelope).build();
     }
@@ -47,7 +47,7 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   }
   
   @Override
-  public Uni<List<UserProfile>> end(UserProfileStoreConfig config, DocTenantObjects ref) {
+  public Uni<List<UserProfile>> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
