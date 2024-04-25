@@ -1,6 +1,5 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +18,6 @@ import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
-import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
@@ -29,7 +27,6 @@ public class CrmResource implements CrmRestApi {
 
   @Inject CrmClient crmClient;
   @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
   @Inject ProjectClient tenantClient;
   
   @Override
@@ -94,23 +91,20 @@ public class CrmResource implements CrmRestApi {
   @Override
   public Uni<Customer> createCustomer(CreateCustomer command) {
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).createCustomer()
-        .createOne((CreateCustomer) command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
+        .createOne((CreateCustomer) command));
   }
 
   @Override
   public Uni<Customer> updateCustomer(String customerId, List<CustomerUpdateCommand> commands) {
-    final var modifiedCommands = commands.stream()
-        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.userId()))
-        .collect(Collectors.toList());
-    
+
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).updateCustomer()
-        .updateOne(modifiedCommands));
+        .updateOne(commands));
   }
 
   @Override
   public Uni<Customer> deleteCustomer(String customerId, CustomerUpdateCommand command) {
     return getCrmConfig().onItem().transformToUni(config -> crmClient.withRepoId(config.getRepoId()).updateCustomer()
-        .updateOne(command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
+        .updateOne(command));
   }
 
   private Uni<TenantRepoConfig> getCrmConfig() {

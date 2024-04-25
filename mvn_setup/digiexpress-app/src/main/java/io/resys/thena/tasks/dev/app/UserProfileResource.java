@@ -1,8 +1,6 @@
 package io.resys.thena.tasks.dev.app;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
@@ -42,23 +40,19 @@ public class UserProfileResource implements UserProfileRestApi {
   @Override
   public Uni<UserProfile> createUserProfile(CreateUserProfile command) {
     return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).createUserProfile()
-        .createOne((CreateUserProfile) command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
+        .createOne(command));
   }
 
   @Override
   public Uni<UserProfile> updateUserProfile(String profileId, List<UserProfileUpdateCommand> commands) {
-    final var modifiedCommands = commands.stream()
-        .map(command -> command.withTargetDate(Instant.now()).withUserId(currentUser.userId()))
-        .collect(Collectors.toList());
     
     return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).updateUserProfile()
-        .updateOne(modifiedCommands));
+        .updateOne(commands));
   }
 
   @Override
   public Uni<UserProfile> deleteUserProfile(String profileId, UserProfileUpdateCommand command) {
-    return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).updateUserProfile()
-        .updateOne(command.withTargetDate(Instant.now()).withUserId(currentUser.userId())));
+    return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).updateUserProfile().updateOne(command));
   }
   
   private Uni<TenantRepoConfig> getUserProfileConfig() {

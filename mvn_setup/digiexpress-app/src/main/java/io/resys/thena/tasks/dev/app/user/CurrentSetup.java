@@ -1,7 +1,5 @@
 package io.resys.thena.tasks.dev.app.user;
 
-import java.time.Instant;
-
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.api.model.ImmutableChangePrincipalName;
 import io.resys.permission.client.api.model.ImmutableCreatePermission;
@@ -138,7 +136,6 @@ public class CurrentSetup {
     .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
         .repoId(currentTenant.tenantsStoreId())
         .name(currentTenant.tenantId())
-        .targetDate(Instant.now())
         .build()))
     .onItem().transformToUni(tenantConfig -> {
       return Multi.createFrom().items(tenantConfig.getRepoConfigs().stream())
@@ -177,8 +174,6 @@ public class CurrentSetup {
   private Uni<UserProfile> getOrCreateUserProfile(TenantConfig config, CurrentUser currentUser) {
     final var userProfileConfig = config.getRepoConfig(TenantRepoConfigType.USER_PROFILE);
     final var command = ImmutableUpsertUserProfile.builder()
-        .userId(currentUser.getUserId())
-        .targetDate(Instant.now())
         .id(currentUser.getUserId())
         .username(currentUser.getUserId())
         .firstName(currentUser.getGivenName())

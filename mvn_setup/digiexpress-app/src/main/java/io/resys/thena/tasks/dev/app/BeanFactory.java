@@ -40,12 +40,13 @@ import io.resys.permission.client.spi.PermissionClientImpl;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
+import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.asset.AssetClientImpl;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
-import io.resys.thena.projects.client.spi.store.MainBranch;
 import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -150,7 +151,7 @@ public class BeanFactory {
   }
   @Produces
   public ProjectClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
-    final var store = io.resys.thena.projects.client.spi.ProjectStoreImpl.builder()
+    final var store = io.resys.thena.projects.client.spi.ProjectStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)
@@ -167,7 +168,7 @@ public class BeanFactory {
         .client(docDb)
         .objectMapper(om)
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .deserializer(deserializer)
         .serializer((entity) -> {
           try {
@@ -201,7 +202,7 @@ public class BeanFactory {
     final var config = ImmutableThenaConfig.builder()
         .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .gidProvider((type) -> OidUtils.gen())
         .serializer((entity) -> {
           try {
@@ -228,7 +229,7 @@ public class BeanFactory {
     final var config = ImmutableDialobStoreConfig.builder()
         .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
         .repoName("")
-        .headName(MainBranch.HEAD_NAME)
+        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
         .gidProvider((type) -> OidUtils.gen())
         .serializer((entity) -> {
           try {
@@ -255,7 +256,7 @@ public class BeanFactory {
       StencilClient stencil,
       HdesClient wrench,
       DialobClient dialob) {
-    final var store = io.resys.sysconfig.client.spi.store.DocumentStoreImpl.builder()
+    final var store = SysConfigStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)

@@ -22,7 +22,7 @@ import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
@@ -113,7 +113,7 @@ public class HdesResource {
   
   private Uni<HdesComposer> getComposer() {
     return getConfig().onItem().transform(config -> 
-      new HdesComposerImpl(hdesClient.withRepo(config.getRepoId(), MainBranch.HEAD_NAME))
+      new HdesComposerImpl(hdesClient.withRepo(config.getRepoId(), DocObjectsQueryImpl.BRANCH_MAIN))
     );
   }
   private Uni<TenantRepoConfig> getConfig() {

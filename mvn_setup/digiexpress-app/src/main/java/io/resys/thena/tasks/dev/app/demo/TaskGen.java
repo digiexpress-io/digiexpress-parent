@@ -26,8 +26,6 @@ public class TaskGen {
     return windows.stream().map(junk -> {
       final var person = provider.person();
       return ImmutableUpsertSuomiFiPerson.builder()
-          .userId("demo-gen-1")
-          .targetDate(targetDate)
           .customerId(provider.ssn())
           .userName(person.getUsername())
           .firstName(person.getFirstName())
