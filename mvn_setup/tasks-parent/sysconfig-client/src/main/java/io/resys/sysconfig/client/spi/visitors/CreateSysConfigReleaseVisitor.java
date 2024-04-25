@@ -2,6 +2,7 @@ package io.resys.sysconfig.client.spi.visitors;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.model.Document;
@@ -19,7 +20,9 @@ import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -81,8 +84,13 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
 
   @Override
   public Uni<SysConfigRelease> end(ThenaDocConfig config, DocObject blob) {
-    final var sysConfig = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableSysConfig.class))
-        .stream().findFirst().get();
+    final var sysConfig = blob.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees
+   ) -> docBranch.getValue().mapTo(ImmutableSysConfig.class)).stream().findFirst().get();
   
     return assetClient.withTenantConfig(sysConfig.getTenantId())
         .onItem().transformToUni(client -> doInAssetClient(client, sysConfig))

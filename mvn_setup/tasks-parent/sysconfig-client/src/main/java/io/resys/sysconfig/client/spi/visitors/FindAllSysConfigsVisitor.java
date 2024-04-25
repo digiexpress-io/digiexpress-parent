@@ -2,6 +2,7 @@ package io.resys.sysconfig.client.spi.visitors;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
@@ -9,8 +10,9 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -37,6 +39,10 @@ public class FindAllSysConfigsVisitor implements DocObjectsVisitor<List<SysConfi
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> docBranch.getValue().mapTo(ImmutableSysConfig.class));
+    return ref.accept((Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees) -> docBranch.getValue().mapTo(ImmutableSysConfig.class));
   }
 }

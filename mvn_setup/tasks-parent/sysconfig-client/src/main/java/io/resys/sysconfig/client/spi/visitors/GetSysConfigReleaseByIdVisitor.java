@@ -1,14 +1,16 @@
 package io.resys.sysconfig.client.spi.visitors;
 
 import java.util.List;
+import java.util.Map;
 
 import io.resys.sysconfig.client.api.model.ImmutableSysConfigRelease;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -48,9 +50,13 @@ public class GetSysConfigReleaseByIdVisitor implements DocObjectVisitor<SysConfi
 
   @Override
   public SysConfigRelease end(ThenaDocConfig config, DocObject ref) {
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
-      docBranch.getValue()
-      .mapTo(ImmutableSysConfigRelease.class).withVersion(commit.getId())
+    return ref.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees) -> 
+      docBranch.getValue().mapTo(ImmutableSysConfigRelease.class).withVersion(docBranch.getCommitId())
     ).get(0);
   }
 }

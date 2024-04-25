@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
@@ -31,8 +32,9 @@ import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -75,9 +77,15 @@ public class GetSysConfigsByIdsVisitor implements DocObjectsVisitor<List<SysConf
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
+    return ref.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees
+        ) -> 
       docBranch.getValue()
-      .mapTo(ImmutableSysConfig.class).withVersion(commit.getId())
+      .mapTo(ImmutableSysConfig.class).withVersion(docBranch.getCommitId())
     );
   }
 }
