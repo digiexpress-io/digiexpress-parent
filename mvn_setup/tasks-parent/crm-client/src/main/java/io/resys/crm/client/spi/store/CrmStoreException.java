@@ -30,18 +30,16 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObject;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class CrmStoreException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -56,13 +54,13 @@ public class DocumentStoreException extends RuntimeException {
     List<String> getArgs();
   }
   
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  public CrmStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public CrmStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -113,7 +111,7 @@ public class DocumentStoreException extends RuntimeException {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
-    public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
+    public Builder add(CrmStoreConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
@@ -124,8 +122,8 @@ public class DocumentStoreException extends RuntimeException {
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+    public CrmStoreException build() {
+      return new CrmStoreException(id, msg.build());
     }
   }
 }

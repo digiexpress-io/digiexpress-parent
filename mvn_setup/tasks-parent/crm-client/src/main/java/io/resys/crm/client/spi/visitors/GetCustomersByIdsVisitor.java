@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
 import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
@@ -40,7 +40,7 @@ import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.crm.client.spi.store.DocumentStoreException;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.crm.client.spi.store.MainBranch;
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +50,7 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   private final Collection<String> projectIds;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery builder) {
     return builder
         .docType(Document.DocumentType.CUSTOMER.name())
         .branchName(MainBranch.HEAD_NAME)
@@ -58,16 +58,16 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_CUSTOMER_BY_ID_FAIL")
+      throw CrmStoreException.builder("GET_CUSTOMER_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_CUSTOMER_BY_ID_NOT_FOUND")   
+      throw CrmStoreException.builder("GET_CUSTOMER_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -76,7 +76,7 @@ public class GetCustomersByIdsVisitor implements DocObjectsVisitor<List<Customer
   }
 
   @Override
-  public List<Customer> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public List<Customer> end(CrmStoreConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

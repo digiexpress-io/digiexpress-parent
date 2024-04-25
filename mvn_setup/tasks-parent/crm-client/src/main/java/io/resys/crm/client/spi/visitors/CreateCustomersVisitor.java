@@ -30,11 +30,10 @@ import java.util.stream.Collectors;
 
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
-import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocCreateVisitor;
-import io.resys.crm.client.spi.store.DocumentStoreException;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig.DocCreateVisitor;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
@@ -49,49 +48,43 @@ public class CreateCustomersVisitor implements DocCreateVisitor<Customer> {
   private final List<Customer> customers = new ArrayList<Customer>();
   
   @Override
-  public CreateManyDocs start(DocumentConfig config, CreateManyDocs builder) {
-    builder
-      .docType(Document.DocumentType.CUSTOMER.name())
-      .author(config.getAuthor().get())
-      .message("creating customer");
+  public CreateManyDocs start(CrmStoreConfig config, CreateManyDocs builder) {
+    builder.commitAuthor(config.getAuthor().get()).commitMessage("creating customer");
     
     for(final var command : commands) {
       try {
         final var entity = new CustomerCommandVisitor(config).visitTransaction(Arrays.asList(command));
-        final var json = JsonObject.mapFrom(entity);
+        final var json = JsonObject.mapFrom(entity.getItem1());
         builder.item()
-          .append(json)
-          .docId(entity.getId())
-          .externalId(entity.getExternalId())
+          .docType(CrmStoreConfig.DOC_TYPE_CUSTOMER)
+          .branchContent(json)
+          .docId(entity.getItem1().getId())
+          .externalId(entity.getItem1().getExternalId())
           .next();
-        customers.add(entity);
+        customers.add(entity.getItem1());
       } catch (NoChangesException e) {
         throw new RuntimeException(e.getMessage(), e);
       }
     }
     return builder;
   }
-
   @Override
-  public List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(CrmStoreConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("CUSTOMER_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new CrmStoreException("CUSTOMER_CREATE_FAIL", CrmStoreException.convertMessages(envelope));
   }
-
   @Override
-  public List<Customer> end(DocumentConfig config, List<DocBranch> branches) {
+  public List<Customer> end(CrmStoreConfig config, List<DocBranch> branches) {
     final Map<String, Customer> configsById = new HashMap<>(
         this.customers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     
     branches.forEach(branch -> {
-      
       final var next = ImmutableCustomer.builder()
-          .from(configsById.get(branch.getDocId()))
-          .version(branch.getCommitId())
-          .build();
-      
+        .from(configsById.get(branch.getDocId()))
+        .version(branch.getCommitId())
+        .build();
       configsById.put(next.getId(), next);
     });
     

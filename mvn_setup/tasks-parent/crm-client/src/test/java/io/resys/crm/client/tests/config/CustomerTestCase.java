@@ -42,8 +42,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.spi.CrmClientImpl;
-import io.resys.crm.client.spi.DocumentStoreImpl;
-import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
+import io.resys.crm.client.spi.CrmStoreImpl;
+import io.resys.crm.client.spi.store.CrmStoreConfig.DocumentGidProvider;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
@@ -57,7 +57,7 @@ public class CustomerTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private DocumentStoreImpl store;
+  private CrmStoreImpl store;
   private CrmClientImpl client;
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
@@ -68,7 +68,7 @@ public class CustomerTestCase {
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = DocumentStoreImpl.builder()
+    store = CrmStoreImpl.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
         .gidProvider(new DocumentGidProvider() {
           @Override
@@ -116,7 +116,7 @@ public class CustomerTestCase {
     store = null;
   }
 
-  public DocumentStoreImpl getStore() {
+  public CrmStoreImpl getStore() {
     return store;
   }
 

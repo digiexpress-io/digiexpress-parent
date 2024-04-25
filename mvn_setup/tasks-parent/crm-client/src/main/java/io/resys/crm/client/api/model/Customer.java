@@ -1,8 +1,9 @@
 package io.resys.crm.client.api.model;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -14,13 +15,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Value.Immutable @JsonSerialize(as = ImmutableCustomer.class) @JsonDeserialize(as = ImmutableCustomer.class)
-public interface Customer extends Document {
+public interface Customer {
   String getId();
   String getExternalId(); //SSN or Business ID
-  Instant getCreated();
-  Instant getUpdated();
-  
+  @Nullable String getVersion();
+  @Nullable Instant getCreated();
+  @Nullable Instant getUpdated();
   CustomerBody getBody();
+  List<CustomerTransaction> getTransactions(); 
   
   enum CustomerBodyType {
     COMPANY, PERSON
@@ -66,14 +68,5 @@ public interface Customer extends Document {
     String getStreet();
     String getPostalCode();
     String getCountry();
-  }
-    
-  List<CustomerTransaction> getTransactions(); 
-  @Value.Default default DocumentType getDocumentType() { return DocumentType.CUSTOMER; }
-  
-  @Value.Immutable @JsonSerialize(as = ImmutableCustomerTransaction.class) @JsonDeserialize(as = ImmutableCustomerTransaction.class)
-  interface CustomerTransaction extends Serializable {
-    String getId();
-    List<CustomerCommand> getCommands(); 
   }
 }

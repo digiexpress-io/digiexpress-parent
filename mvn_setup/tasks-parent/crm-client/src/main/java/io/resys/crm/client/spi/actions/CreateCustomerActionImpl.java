@@ -29,7 +29,7 @@ import io.resys.crm.client.api.CrmClient.CreateCustomerAction;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
-import io.resys.crm.client.spi.store.DocumentStore;
+import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.visitors.CreateCustomersVisitor;
 import io.resys.crm.client.spi.visitors.UpdateCustomerVisitor;
 import io.smallrye.mutiny.Uni;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CreateCustomerActionImpl implements CreateCustomerAction {
-  private final DocumentStore ctx;
+  private final CrmStore ctx;
   
   @Override
   public Uni<Customer> createOne(CreateCustomer command) {

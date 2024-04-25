@@ -27,7 +27,7 @@ import java.util.List;
 import io.resys.crm.client.api.CrmClient.UpdateCustomerAction;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
-import io.resys.crm.client.spi.store.DocumentStore;
+import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.visitors.UpdateCustomerVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UpdateCustomerActionImpl implements UpdateCustomerAction {
 
-  private final DocumentStore ctx;
+  private final CrmStore ctx;
 
   @Override
   public Uni<Customer> updateOne(CustomerUpdateCommand command) {        

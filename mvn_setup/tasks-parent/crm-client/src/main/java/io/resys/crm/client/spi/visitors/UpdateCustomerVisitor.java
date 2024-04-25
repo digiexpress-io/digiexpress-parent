@@ -34,10 +34,10 @@ import io.resys.crm.client.api.model.CustomerCommand.CustomerCommandType;
 import io.resys.crm.client.api.model.CustomerCommand.CustomerUpdateCommand;
 import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
-import io.resys.crm.client.spi.store.DocumentStore;
-import io.resys.crm.client.spi.store.DocumentStoreException;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
+import io.resys.crm.client.spi.store.CrmStore;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.crm.client.spi.visitors.CustomerCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
@@ -58,14 +58,14 @@ import io.vertx.core.json.JsonObject;
 
 
 public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Customer>>> {
-  private final DocumentStore ctx;
+  private final CrmStore ctx;
   private final List<String> customerIds;
   private final ModifyManyDocBranches updateBuilder;
   private final CreateManyDocs createBuilder;
   private final Map<String, List<CustomerUpdateCommand>> commandsByCustomerId; 
   private final List<CustomerCommandType> upserts = Arrays.asList(CustomerCommandType.UpsertSuomiFiPerson, CustomerCommandType.UpsertSuomiFiPerson);
   
-  public UpdateCustomerVisitor(List<CustomerUpdateCommand> commands, DocumentStore ctx) {
+  public UpdateCustomerVisitor(List<CustomerUpdateCommand> commands, CrmStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
@@ -83,21 +83,21 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   }
 
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder) {
+  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery builder) {
     return builder.matchIds(customerIds).branchName(MainBranch.HEAD_NAME);
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_FAIL")
+      throw CrmStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw CrmStoreException.builder("GET_CUSTOMERS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -105,13 +105,13 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     
     final var totalUpserts = this.commandsByCustomerId.values().stream().flatMap(e -> e.stream()).filter(e -> upserts.contains(e.getCommandType())).count();
     if(customerIds.size() < Math.max((result.getDocs().size() - totalUpserts), 0)) {
-      throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL_NOT_ALL_CUSTOMERS_FOUND", JsonObject.of("failedUpdates", customerIds));
+      throw new CrmStoreException("CUSTOMERS_UPDATE_FAIL_NOT_ALL_CUSTOMERS_FOUND", JsonObject.of("failedUpdates", customerIds));
     }
     return result;
   }
 
   @Override
-  public Uni<List<Customer>> end(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  public Uni<List<Customer>> end(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
     return applyUpdates(config, blob).onItem()
       .transformToUni(updated -> applyInserts(config, blob).onItem().transform(inserted -> {
         final var result = new ArrayList<Customer>();
@@ -121,7 +121,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       }));
   }
   
-  private Uni<List<Customer>> applyInserts(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<Customer>> applyInserts(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
     final var insertedCustomers = new ArrayList<Customer>(); 
     for(final var entry : commandsByCustomerId.entrySet()) {
       try {
@@ -146,7 +146,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
     return createBuilder.build().onItem().transform(envelope -> mapInsertedResponse(envelope, insertedCustomers));
   }
 
-  private Uni<List<Customer>> applyUpdates(DocumentConfig config, DocQueryActions.DocObjects blob) {
+  private Uni<List<Customer>> applyUpdates(CrmStoreConfig config, DocQueryActions.DocObjects blob) {
     final var updatedCustomers = blob.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> {  
       final var start = docBranch.getValue().mapTo(ImmutableCustomer.class);
       
@@ -161,7 +161,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
       }
       
       if(commands.isEmpty()) {
-        throw DocumentStoreException.builder("CUSTOMERS_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
+        throw CrmStoreException.builder("CUSTOMERS_UPDATE_FAIL_COMMANDS_ARE_EMPTY")   
           .add((callback) -> callback.addArgs(customerIds.stream().collect(Collectors.joining(",", "{", "}"))))
           .build();
       }
@@ -189,7 +189,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   
   private List<Customer> mapInsertedResponse(ManyDocsEnvelope envelope, List<Customer> insertedCustomers) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
-      throw new DocumentStoreException("CUSTOMER_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+      throw new CrmStoreException("CUSTOMER_CREATE_FAIL", CrmStoreException.convertMessages(envelope));
     }
     
     final var branches = envelope.getBranch();
@@ -208,7 +208,7 @@ public class UpdateCustomerVisitor implements DocObjectsVisitor<Uni<List<Custome
   private List<Customer> mapUpdateResponse(ManyDocsEnvelope response, List<Customer> updatedCustomers) {
     if(response.getStatus() != CommitResultStatus.OK) {
       final var failedUpdates = customerIds.stream().collect(Collectors.joining(",", "{", "}"));
-      throw new DocumentStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
+      throw new CrmStoreException("CUSTOMERS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), CrmStoreException.convertMessages(response));
     }
     final Map<String, Customer> customerById = new HashMap<>(updatedCustomers.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     response.getCommit().forEach(commit -> {

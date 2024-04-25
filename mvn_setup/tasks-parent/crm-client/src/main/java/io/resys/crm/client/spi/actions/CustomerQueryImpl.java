@@ -26,7 +26,7 @@ import java.util.List;
 
 import io.resys.crm.client.api.CrmClient.CustomerQuery;
 import io.resys.crm.client.api.model.Customer;
-import io.resys.crm.client.spi.store.DocumentStore;
+import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.visitors.DeleteAllCustomersVisitor;
 import io.resys.crm.client.spi.visitors.FindAllCustomersVisitor;
 import io.resys.crm.client.spi.visitors.GetActiveCustomerVisitor;
@@ -37,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomerQueryImpl implements CustomerQuery {
-  private final DocumentStore ctx;
+  private final CrmStore ctx;
   
   @Override
   public Uni<Customer> get(String id) {

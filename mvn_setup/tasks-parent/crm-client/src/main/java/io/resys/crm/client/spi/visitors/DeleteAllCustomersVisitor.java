@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.crm.client.api.model.Document;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocObjectsVisitor;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig.DocObjectsVisitor;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
@@ -39,7 +39,7 @@ import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.crm.client.spi.store.DocumentStoreException;
+import io.resys.crm.client.spi.store.CrmStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   private ModifyManyDocs removeCommand;
   
   @Override
-  public DocObjectsQuery start(DocumentConfig config, DocObjectsQuery query) {
+  public DocObjectsQuery start(CrmStoreConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .author(config.getAuthor().get())
         .message("Delete Tenants");
@@ -64,15 +64,15 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocQueryActions.DocObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw CrmStoreException.builder("FIND_ALL_TENANTS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
   
   @Override
-  public Uni<List<Customer>> end(DocumentConfig config, DocQueryActions.DocObjects ref) {
+  public Uni<List<Customer>> end(CrmStoreConfig config, DocQueryActions.DocObjects ref) {
     if(ref == null) {
       return Uni.createFrom().item(Collections.emptyList());
     }
@@ -83,14 +83,14 @@ public class DeleteAllCustomersVisitor implements DocObjectsVisitor<Uni<List<Cus
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("TENANT_ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new CrmStoreException("TENANT_ARCHIVE_FAIL", CrmStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("TENANT_REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new CrmStoreException("TENANT_REMOVE_FAIL", CrmStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> tenantsRemoved);
   }

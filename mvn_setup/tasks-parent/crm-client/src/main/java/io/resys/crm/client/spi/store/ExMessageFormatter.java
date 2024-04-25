@@ -23,7 +23,7 @@ package io.resys.crm.client.spi.store;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.crm.client.spi.store.DocumentStoreException.DocumentExceptionMsg;
+import io.resys.crm.client.spi.store.CrmStoreException.DocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

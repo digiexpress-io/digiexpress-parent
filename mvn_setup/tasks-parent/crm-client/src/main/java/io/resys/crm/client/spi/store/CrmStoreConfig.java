@@ -26,61 +26,52 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
-import io.resys.thena.api.actions.DocQueryActions;
-import io.resys.thena.api.actions.DocQueryActions.DocObject;
-import io.resys.thena.api.actions.DocQueryActions.DocObjects;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 
 @Value.Immutable
-public interface DocumentConfig {
+public interface CrmStoreConfig {
+  public final String DOC_TYPE_CUSTOMER = "CUSTOMER";
+  
   ThenaClient getClient();
   String getRepoId();
-  String getBranchName();
-  DocumentGidProvider getGid();
-  DocumentAuthorProvider getAuthor();
-  
-  interface DocumentGidProvider {
-    String getNextId(DocumentType entity);
-    String getNextVersion(DocumentType entity);
-  }
+  CrmAuthorProvider getAuthor();
   
   @FunctionalInterface
-  interface DocumentAuthorProvider {
+  interface CrmAuthorProvider {
     String get();
   }
   interface DocVisitor {}
   
   interface DocObjectsVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObjects ref);
+    Uni<QueryEnvelope<DocTenantObjects>> start(CrmStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocTenantObjects visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocTenantObjects> envelope);
+    T end(CrmStoreConfig config, @Nullable DocTenantObjects ref);
   }
   
   interface DocObjectVisitor<T> extends DocVisitor { 
-    DocObjectsQuery start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocQueryActions.DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope);
-    T end(DocumentConfig config, @Nullable DocQueryActions.DocObject ref);
+    Uni<QueryEnvelope<DocObject>> start(CrmStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocObject visitEnvelope(CrmStoreConfig config, QueryEnvelope<DocObject> envelope);
+    T end(CrmStoreConfig config, @Nullable DocObject ref);
   }
   
   interface DocCreateVisitor<T> extends DocVisitor { 
-    CreateManyDocs start(DocumentConfig config, CreateManyDocs builder);
-    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope);
-    List<T> end(DocumentConfig config, List<DocBranch> commit);
+    CreateManyDocs start(CrmStoreConfig config, CreateManyDocs builder);
+    List<DocBranch> visitEnvelope(CrmStoreConfig config, ManyDocsEnvelope envelope);
+    List<T> end(CrmStoreConfig config, List<DocBranch> commit);
   }
   
   
   default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .commit().createManyDocs()
-        .branchName(getBranchName()));
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).commit().createManyDocs());
     
     return builder.build()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
@@ -88,21 +79,17 @@ public interface DocumentConfig {
   }
   
   default <T> Uni<T> accept(DocObjectsVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .find().docQuery()
-        .branchName(getBranchName()));
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).find().docQuery());
     
-    return builder.findAll()
+    return builder
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }
   
   default <T> Uni<T> accept(DocObjectVisitor<T> visitor) {
-    final var builder = visitor.start(this, getClient().doc(getRepoId())
-        .find().docQuery()
-        .branchName(getBranchName()));
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).find().docQuery());
     
-    return builder.get()
+    return builder
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
         .onItem().transform(ref -> visitor.end(this, ref));
   }

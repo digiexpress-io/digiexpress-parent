@@ -6,7 +6,7 @@ import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.actions.CreateCustomerActionImpl;
 import io.resys.crm.client.spi.actions.CustomerQueryImpl;
 import io.resys.crm.client.spi.actions.UpdateCustomerActionImpl;
-import io.resys.crm.client.spi.store.DocumentStore;
+import io.resys.crm.client.spi.store.CrmStore;
 import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CrmClientImpl implements CrmClient {
-  private final DocumentStore ctx;
+  private final CrmStore ctx;
   
-  public DocumentStore getCtx() { return ctx; }
+  public CrmStore getCtx() { return ctx; }
   
   @Override
   public CrmClient withRepoId(String repoId) {
@@ -46,7 +46,7 @@ public class CrmClientImpl implements CrmClient {
   
   @Override
   public RepositoryQuery repoQuery() {
-    DocumentStore.DocumentRepositoryQuery repo = ctx.query();
+    CrmStore.CrmTenantQuery repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       

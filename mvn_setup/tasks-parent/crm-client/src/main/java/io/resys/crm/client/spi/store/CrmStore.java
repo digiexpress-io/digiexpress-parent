@@ -1,5 +1,7 @@
 package io.resys.crm.client.spi.store;
 
+import io.resys.thena.api.entities.Tenant;
+
 /*-
  * #%L
  * thena-tasks-client
@@ -20,11 +22,23 @@ package io.resys.crm.client.spi.store;
  * #L%
  */
 
-public class MainBranch {
+import io.smallrye.mutiny.Uni;
 
-  public static String HEAD_NAME = "main";
+public interface CrmStore {
+  CrmTenantQuery query();
+  CrmStoreConfig getConfig();
+  Uni<Tenant> getRepo();
+  CrmStore withRepoId(String repoId);
   
-  public static boolean isMain(String tagName) {
-    return tagName.equals(HEAD_NAME);
-  }
+  interface CrmTenantQuery {
+    CrmTenantQuery repoName(String repoName);
+    CrmTenantQuery headName(String headName);
+    CrmStore build();
+    Uni<CrmStore> delete();
+    Uni<CrmStore> create();
+    Uni<CrmStore> createIfNot();
+    Uni<Void> deleteAll();
+  } 
+  
+
 }

@@ -25,22 +25,18 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.resys.crm.client.api.model.Document.DocumentType;
-import io.resys.crm.client.spi.store.DocumentConfig;
-import io.resys.crm.client.spi.store.DocumentConfig.DocumentAuthorProvider;
-import io.resys.crm.client.spi.store.DocumentConfig.DocumentGidProvider;
-import io.resys.crm.client.spi.store.DocumentStore;
-import io.resys.crm.client.spi.store.DocumentStoreException;
-import io.resys.crm.client.spi.store.ImmutableDocumentConfig;
+import io.resys.crm.client.spi.store.CrmStore;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig.CrmAuthorProvider;
+import io.resys.crm.client.spi.store.CrmStoreException;
+import io.resys.crm.client.spi.store.ImmutableCrmStoreConfig;
 import io.resys.crm.client.spi.store.ImmutableDocumentExceptionMsg;
-import io.resys.crm.client.spi.store.MainBranch;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
@@ -55,34 +51,33 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
-public class DocumentStoreImpl implements DocumentStore {
-  private final DocumentConfig config;
+public class CrmStoreImpl implements CrmStore {
+  private final CrmStoreConfig config;
   
   @Override
-  public DocumentStore withRepoId(String repoId) {
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config).repoId(repoId).build());
+  public CrmStore withRepoId(String repoId) {
+    return new CrmStoreImpl(ImmutableCrmStoreConfig.builder().from(config).repoId(repoId).build());
   }
-  
   @Override
   public Uni<Tenant> getRepo() {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }
-  @Override public DocumentConfig getConfig() { return config; }
-  @Override public DocumentRepositoryQuery query() {
-    return new DocumentRepositoryQuery() {
+  @Override public CrmStoreConfig getConfig() { return config; }
+  @Override public CrmTenantQuery query() {
+    return new CrmTenantQuery() {
       private String repoName, headName;
-      @Override public DocumentRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
-      @Override public DocumentRepositoryQuery headName(String headName) { this.headName = headName; return this; }
-      @Override public Uni<DocumentStore> create() { return createRepo(repoName, headName); }
-      @Override public DocumentStore build() { return createClientStore(repoName, headName); }
-      @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
-      @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName, headName); }
+      @Override public CrmTenantQuery repoName(String repoName) { this.repoName = repoName; return this; }
+      @Override public CrmTenantQuery headName(String headName) { this.headName = headName; return this; }
+      @Override public Uni<CrmStore> create() { return createRepo(repoName, headName); }
+      @Override public CrmStore build() { return createClientStore(repoName, headName); }
+      @Override public Uni<CrmStore> createIfNot() { return createRepoOrGetRepo(repoName, headName); }
+      @Override public Uni<CrmStore> delete() { return deleteRepo(repoName, headName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String headName) {
+  private Uni<CrmStore> createRepoOrGetRepo(String repoName, String headName) {
     final var client = config.getClient();
     
     return client.tenants().find().id(repoName).get()
@@ -100,17 +95,15 @@ public class DocumentStoreImpl implements DocumentStore {
     
     
     return existingRepos.onItem().transformToUni((repo) -> {
-        
         final var repoId = repo.getId();
         final var rev = repo.getRev();
-        
         return client.tenants().find().id(repoId).rev(rev).delete();
       })
       .concatenate().collect().asList()
       .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
-  private Uni<DocumentStore> deleteRepo(String repoName, String headName) {
+  private Uni<CrmStore> deleteRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
     final var existingRepo = client.git(repoName).tenants().get();
@@ -118,7 +111,7 @@ public class DocumentStoreImpl implements DocumentStore {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
+        throw new CrmStoreException("CRM_REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -135,14 +128,14 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
     
-  private Uni<DocumentStore> createRepo(String repoName, String headName) {
+  private Uni<CrmStore> createRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
     final var client = config.getClient();
     final var newRepo = client.tenants().commit().name(repoName, StructureType.doc).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
-        throw new DocumentStoreException("CRM_REPO_CREATE_FAIL", 
+        throw new CrmStoreException("CRM_REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -154,13 +147,9 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
   
-  private DocumentStore createClientStore(String repoName, String headName) {
+  private CrmStore createClientStore(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder()
-        .from(config)
-        .repoId(repoName)
-        .branchName(headName == null ? config.getBranchName() : headName)
-        .build());
+    return new CrmStoreImpl(ImmutableCrmStoreConfig.builder().from(config).repoId(repoName).build());
     
   }
   
@@ -174,10 +163,8 @@ public class DocumentStoreImpl implements DocumentStore {
   @Data
   public static class Builder {
     private String repoName;
-    private String headName;
     private ObjectMapper objectMapper;
-    private DocumentGidProvider gidProvider;
-    private DocumentAuthorProvider authorProvider;
+    private CrmAuthorProvider authorProvider;
     private io.vertx.mutiny.pgclient.PgPool pgPool;
     private String pgHost;
     private String pgDb;
@@ -186,28 +173,17 @@ public class DocumentStoreImpl implements DocumentStore {
     private String pgPass;
     private Integer pgPoolSize;
     
-    private DocumentGidProvider getGidProvider() {
-      return this.gidProvider != null ? this.gidProvider : new DocumentGidProvider() {
-        @Override public String getNextVersion(DocumentType entity) { return OidUtils.gen(); }
-        @Override public String getNextId(DocumentType entity) { return OidUtils.gen(); }
-      };
-    }
-    
-    private DocumentAuthorProvider getAuthorProvider() {
+    private CrmAuthorProvider getAuthorProvider() {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
-    public DocumentStoreImpl build() {
+    public CrmStoreImpl build() {
       RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    
-      final var headName = this.headName == null ? MainBranch.HEAD_NAME: this.headName;
       if(log.isDebugEnabled()) {
         log.debug("""
           Configuring Thena:
             repoName: {}
-            headName: {}
             objectMapper: {}
-            gidProvider: {}
             authorProvider: {}
             pgPool: {}
             pgPoolSize: {}
@@ -218,9 +194,7 @@ public class DocumentStoreImpl implements DocumentStore {
             pgPass: {}
           """,
           this.repoName,
-          headName,
           this.objectMapper == null ? "configuring" : "provided",
-          this.gidProvider == null ? "configuring" : "provided",
           this.authorProvider == null ? "configuring" : "provided",
           this.pgPool == null ? "configuring" : "provided",
           this.pgPoolSize,
@@ -256,12 +230,11 @@ public class DocumentStoreImpl implements DocumentStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
-      final DocumentConfig config = ImmutableDocumentConfig.builder()
-          .client(thena).repoId(repoName).branchName(headName)
-          .gid(getGidProvider())
+      final CrmStoreConfig config = ImmutableCrmStoreConfig.builder()
+          .client(thena).repoId(repoName)
           .author(getAuthorProvider())
           .build();
-      return new DocumentStoreImpl(config);
+      return new CrmStoreImpl(config);
     }
   }
 

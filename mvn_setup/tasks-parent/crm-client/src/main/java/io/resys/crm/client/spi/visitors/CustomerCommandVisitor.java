@@ -1,8 +1,6 @@
 package io.resys.crm.client.spi.visitors;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.resys.crm.client.api.model.Customer;
@@ -16,47 +14,43 @@ import io.resys.crm.client.api.model.CustomerCommand.ChangeCustomerSsn;
 import io.resys.crm.client.api.model.CustomerCommand.CreateCustomer;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiPerson;
 import io.resys.crm.client.api.model.CustomerCommand.UpsertSuomiFiRep;
-import io.resys.crm.client.api.model.Document.DocumentType;
 import io.resys.crm.client.api.model.ImmutableCustomer;
-import io.resys.crm.client.api.model.ImmutableCustomerTransaction;
 import io.resys.crm.client.api.model.ImmutablePerson;
-import io.resys.crm.client.spi.store.DocumentConfig;
+import io.resys.crm.client.spi.store.CrmStoreConfig;
+import io.resys.thena.support.OidUtils;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 
 
 public class CustomerCommandVisitor {
-  private final DocumentConfig ctx;
+  @SuppressWarnings("unused")
+  private final CrmStoreConfig ctx;
+  @SuppressWarnings("unused")
   private final Customer start;
   private final List<CustomerCommand> visitedCommands = new ArrayList<>();
   private ImmutableCustomer current;
   
-  public CustomerCommandVisitor(DocumentConfig ctx) {
+  public CustomerCommandVisitor(CrmStoreConfig ctx) {
     this.start = null;
     this.current = null;
     this.ctx = ctx;
   }
   
-  public CustomerCommandVisitor(Customer start, DocumentConfig ctx) {
+  public CustomerCommandVisitor(Customer start, CrmStoreConfig ctx) {
     this.start = start;
     this.current = ImmutableCustomer.builder().from(start).build();
     this.ctx = ctx;
   }
   
-  public Customer visitTransaction(List<? extends CustomerCommand> commands) throws NoChangesException {
+  public Tuple2<Customer, List<JsonObject>> visitTransaction(List<? extends CustomerCommand> commands) throws NoChangesException {
     commands.forEach(this::visitCommand);
     
     if(visitedCommands.isEmpty()) {
       throw new NoChangesException();
     }
-    
-    final var transactions = new ArrayList<>(start == null ? Collections.emptyList() : start.getTransactions());
-    final var id = String.valueOf(transactions.size() +1);
-    transactions
-      .add(ImmutableCustomerTransaction.builder()
-        .id(id)
-        .commands(visitedCommands)
-        .build());
-    this.current = this.current.withVersion(id).withTransactions(transactions);
-    return this.current;
+    return Tuple2.of(this.current, this.visitedCommands.stream()
+        .map(JsonObject::mapFrom)
+        .toList());
   }
   
   private Customer visitCommand(CustomerCommand command) {
@@ -86,33 +80,19 @@ public class CustomerCommandVisitor {
   
   
   private Customer visitCreateCustomer(CreateCustomer command) {
-    final var id = ctx.getGid().getNextId(DocumentType.CUSTOMER);
-    final var targetDate = requireTargetDate(command);
-    
     this.current = ImmutableCustomer.builder()
-      .id(id)
+      .id(OidUtils.gen())
       .body(ImmutablePerson.builder().from(command.getBody()).build())
       .externalId(command.getExternalId())
-      .created(targetDate)
-      .updated(targetDate)
-      
-      .addTransactions(
-          ImmutableCustomerTransaction.builder()
-          .id("1")
-          .addCommands(command)
-          .build())
-      .documentType(DocumentType.CUSTOMER)
       .build();
     visitedCommands.add(command);
-    
     return this.current;
   }
 
 
   private Customer visitUpsertSuomiFiPerson(UpsertSuomiFiPerson command) {
-    final var targetDate = requireTargetDate(command);
     if(this.current == null) {
-      final var id = ctx.getGid().getNextId(DocumentType.CUSTOMER);
+      final var id = OidUtils.gen();
       this.current = ImmutableCustomer.builder()
           .id(id)
           .body(ImmutablePerson.builder()
@@ -123,14 +103,6 @@ public class CustomerCommandVisitor {
               .protectionOrder(command.getProtectionOrder())
               .build())
           .externalId(command.getCustomerId())
-          .created(targetDate)
-          .updated(targetDate)
-          .addTransactions(
-              ImmutableCustomerTransaction.builder()
-              .id("1")
-              .addCommands(command)
-              .build())
-          .documentType(DocumentType.CUSTOMER)
           .build();
       visitedCommands.add(command);
       return this.current;
@@ -151,17 +123,13 @@ public class CustomerCommandVisitor {
       return this.current;
     }
     
-    this.current = this.current
-        .withUpdated(requireTargetDate(command))
-        .withBody(nextBody);
+    this.current = this.current.withBody(nextBody);
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO
   private Customer visitUpsertSuomiFiRep(UpsertSuomiFiRep command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
@@ -172,65 +140,43 @@ public class CustomerCommandVisitor {
         .withBody(ImmutablePerson.builder()
             .from(this.current.getBody())
             .firstName(command.getFirstName())
-            .build())
-        .withUpdated(requireTargetDate(command));
+            .build());
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO 
   private Customer visitChangeCustomerLastName(ChangeCustomerLastName command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
 
   //TODO 
   private Customer visitChangeCustomerSsn(ChangeCustomerSsn command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO
   private Customer visitChangeCustomerEmail(ChangeCustomerEmail command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO
   private Customer visitChangeCustomerAddress(ChangeCustomerAddress command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
   //TODO 
   private Customer visitArchiveCustomer(ArchiveCustomer command) {
-    this.current = this.current
-        .withUpdated(requireTargetDate(command));
     visitedCommands.add(command);
     return this.current;
   }
   
-  
-  
-  public static Instant requireTargetDate(CustomerCommand command) {
-    final var targetDate = command.getTargetDate();
-    if (targetDate == null) {
-      throw new UpdateProjectVisitorException("targetDate not defined");
-    }
-    return targetDate;
-  }
-
-  
   public static class NoChangesException extends Exception {
-    
+    private static final long serialVersionUID = -7810791570521457088L;
   }
 
   public static class UpdateProjectVisitorException extends RuntimeException {

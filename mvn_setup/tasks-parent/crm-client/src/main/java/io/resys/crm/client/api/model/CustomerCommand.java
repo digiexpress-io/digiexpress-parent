@@ -21,10 +21,7 @@ package io.resys.crm.client.api.model;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
@@ -57,13 +54,7 @@ import io.resys.crm.client.api.model.Customer.CustomerContact;
   @Type(value = ImmutableArchiveCustomer.class, name = "ArchiveCustomer")
 })
 public interface CustomerCommand extends Serializable {
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   CustomerCommandType getCommandType();
-  
-  
-  CustomerCommand withUserId(String userId);
-  CustomerCommand withTargetDate(Instant targetDate);
   
   enum CustomerCommandType {
     CreateCustomer, 
@@ -102,8 +93,6 @@ public interface CustomerCommand extends Serializable {
   })
   interface CustomerUpdateCommand extends CustomerCommand {
     String getCustomerId(); // SSN or Business ID or Internal ID
-    CustomerUpdateCommand withUserId(String userId);
-    CustomerUpdateCommand withTargetDate(Instant targetDate);
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableUpsertSuomiFiPerson.class) @JsonDeserialize(as = ImmutableUpsertSuomiFiPerson.class)
