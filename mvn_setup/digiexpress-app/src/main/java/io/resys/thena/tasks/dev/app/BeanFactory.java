@@ -150,7 +150,7 @@ public class BeanFactory {
   }
   @Produces
   public TenantConfigClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
-    final var store = io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()
+    final var store = io.resys.thena.projects.client.spi.ProjectStoreImpl.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)

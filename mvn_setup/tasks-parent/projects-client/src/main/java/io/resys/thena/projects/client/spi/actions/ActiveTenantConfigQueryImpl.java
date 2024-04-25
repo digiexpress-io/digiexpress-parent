@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.resys.thena.projects.client.api.TenantConfigClient.ActiveTenantConfigQuery;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.DocumentStore;
+import io.resys.thena.projects.client.spi.store.ProjectStore;
 import io.resys.thena.projects.client.spi.visitors.DeleteAllTenantsVisitor;
 import io.resys.thena.projects.client.spi.visitors.FindAllTenantsVisitor;
 import io.resys.thena.projects.client.spi.visitors.GetActiveTenantVisitor;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ActiveTenantConfigQueryImpl implements ActiveTenantConfigQuery {
-  private final DocumentStore ctx;
+  private final ProjectStore ctx;
   
   @Override
   public Uni<TenantConfig> get(String id) {

@@ -38,7 +38,7 @@ import io.smallrye.mutiny.Uni;
 
 
 @Value.Immutable
-public interface DocumentConfig {
+public interface ProjectStoreConfig {
   ThenaClient getClient();
   String getRepoId();
   DocumentAuthorProvider getAuthor();
@@ -50,21 +50,21 @@ public interface DocumentConfig {
   interface DocVisitor {}
   
   interface DocObjectsVisitor<T> extends DocVisitor { 
-    Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope);
-    T end(DocumentConfig config, @Nullable DocTenantObjects ref);
+    Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope);
+    T end(ProjectStoreConfig config, @Nullable DocTenantObjects ref);
   }
   
   interface DocObjectVisitor<T> extends DocVisitor { 
-    Uni<QueryEnvelope<DocObject>> start(DocumentConfig config, DocObjectsQuery builder);
-    @Nullable DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope);
-    T end(DocumentConfig config, @Nullable DocObject ref);
+    Uni<QueryEnvelope<DocObject>> start(ProjectStoreConfig config, DocObjectsQuery builder);
+    @Nullable DocObject visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocObject> envelope);
+    T end(ProjectStoreConfig config, @Nullable DocObject ref);
   }
   
   interface DocCreateVisitor<T> extends DocVisitor { 
-    CreateManyDocs start(DocumentConfig config, CreateManyDocs builder);
-    List<DocBranch> visitEnvelope(DocumentConfig config, ManyDocsEnvelope envelope);
-    List<T> end(DocumentConfig config, List<DocBranch> commit);
+    CreateManyDocs start(ProjectStoreConfig config, CreateManyDocs builder);
+    List<DocBranch> visitEnvelope(ProjectStoreConfig config, ManyDocsEnvelope envelope);
+    List<T> end(ProjectStoreConfig config, List<DocBranch> commit);
   }
   
   

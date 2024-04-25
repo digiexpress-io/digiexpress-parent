@@ -15,26 +15,26 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 
 public class FindAllTenantsVisitor implements DocObjectsVisitor<List<TenantConfig>> {
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder) {
     return builder.docType(TenantConfig.TENANT_CONFIG).findAll();
   }
   @Override
-  public DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_TENANTS_FAIL").add(config, envelope).build();
+      throw ProjectStoreException.builder("FIND_ALL_TENANTS_FAIL").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, DocTenantObjects ref) {
+  public List<TenantConfig> end(ProjectStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

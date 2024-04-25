@@ -23,7 +23,7 @@ package io.resys.thena.projects.client.spi.store;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import io.resys.thena.projects.client.spi.store.DocumentStoreException.DocumentExceptionMsg;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException.DocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 

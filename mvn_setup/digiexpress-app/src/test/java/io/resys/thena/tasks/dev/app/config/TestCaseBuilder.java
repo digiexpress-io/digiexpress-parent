@@ -90,7 +90,7 @@ public class TestCaseBuilder {
         .tenantConfigId("")
         .build();
     
-    final var tenantStore =  io.resys.thena.projects.client.spi.DocumentStoreImpl.builder()
+    final var tenantStore =  io.resys.thena.projects.client.spi.ProjectStoreImpl.builder()
         .repoName(repoId)
         .pgPool(pgPool)
         .objectMapper(objectMapper)

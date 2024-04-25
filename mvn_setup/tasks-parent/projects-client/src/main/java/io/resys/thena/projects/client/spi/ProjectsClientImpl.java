@@ -10,17 +10,17 @@ import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigTyp
 import io.resys.thena.projects.client.spi.actions.ActiveTenantConfigQueryImpl;
 import io.resys.thena.projects.client.spi.actions.CreateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.actions.UpdateTenantConfigImpl;
-import io.resys.thena.projects.client.spi.store.DocumentStore;
+import io.resys.thena.projects.client.spi.store.ProjectStore;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ProjectsClientImpl implements TenantConfigClient {
-  private final DocumentStore ctx;
+  private final ProjectStore ctx;
   
 
-  public DocumentStore getCtx() {
+  public ProjectStore getCtx() {
     return ctx;
   }
 
@@ -47,7 +47,7 @@ public class ProjectsClientImpl implements TenantConfigClient {
   
   @Override
   public RepositoryQuery query() {
-    DocumentStore.DocumentRepositoryQuery repo = ctx.query();
+    ProjectStore.DocumentRepositoryQuery repo = ctx.query();
     return new RepositoryQuery() {
       private String repoName;
       private TenantRepoConfigType type;

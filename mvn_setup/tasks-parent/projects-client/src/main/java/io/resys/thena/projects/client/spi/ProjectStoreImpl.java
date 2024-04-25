@@ -30,12 +30,12 @@ import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocumentAuthorProvider;
-import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
-import io.resys.thena.projects.client.spi.store.ImmutableDocumentConfig;
 import io.resys.thena.projects.client.spi.store.ImmutableDocumentExceptionMsg;
+import io.resys.thena.projects.client.spi.store.ImmutableProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStore;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocumentAuthorProvider;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -51,8 +51,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
-public class DocumentStoreImpl implements DocumentStore {
-  private final DocumentConfig config;
+public class ProjectStoreImpl implements ProjectStore {
+  private final ProjectStoreConfig config;
   
 
   @Override
@@ -60,7 +60,7 @@ public class DocumentStoreImpl implements DocumentStore {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }
-  @Override public DocumentConfig getConfig() { return config; }
+  @Override public ProjectStoreConfig getConfig() { return config; }
   @Override public DocumentRepositoryQuery query() {
     return new DocumentRepositoryQuery() {
       private String repoName, externalId;
@@ -68,15 +68,15 @@ public class DocumentStoreImpl implements DocumentStore {
       @Override public DocumentRepositoryQuery externalId(String externalId) { this.externalId = externalId; return this; }
       @Override public DocumentRepositoryQuery repoName(String repoName) { this.repoName = repoName; return this; }
       @Override public DocumentRepositoryQuery repoType(StructureType repoType) { this.repoType = repoType; return this; }
-      @Override public Uni<DocumentStore> create() { return createRepo(repoName, externalId, repoType); }
-      @Override public DocumentStore build() { return createClientStore(repoName); }
-      @Override public Uni<DocumentStore> createIfNot() { return createRepoOrGetRepo(repoName, externalId, repoType); }
-      @Override public Uni<DocumentStore> delete() { return deleteRepo(repoName); }
+      @Override public Uni<ProjectStore> create() { return createRepo(repoName, externalId, repoType); }
+      @Override public ProjectStore build() { return createClientStore(repoName); }
+      @Override public Uni<ProjectStore> createIfNot() { return createRepoOrGetRepo(repoName, externalId, repoType); }
+      @Override public Uni<ProjectStore> delete() { return deleteRepo(repoName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };
   }
   
-  private Uni<DocumentStore> createRepoOrGetRepo(String repoName, String externalId, StructureType type) {
+  private Uni<ProjectStore> createRepoOrGetRepo(String repoName, String externalId, StructureType type) {
     final var client = config.getClient();
     
     return client.tenants().find().id(repoName).get()
@@ -94,7 +94,7 @@ public class DocumentStoreImpl implements DocumentStore {
     .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
   }
   
-  private Uni<DocumentStore> deleteRepo(String repoName) {
+  private Uni<ProjectStore> deleteRepo(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     final var client = config.getClient();
     final var existingRepo = client.git(repoName).tenants().get();
@@ -102,7 +102,7 @@ public class DocumentStoreImpl implements DocumentStore {
     
     return existingRepo.onItem().transformToUni((repoResult) -> {
       if(repoResult.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new DocumentStoreException("REPO_GET_FOR_DELETE_FAIL", 
+        throw new ProjectStoreException("REPO_GET_FOR_DELETE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -119,7 +119,7 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
     
-  private Uni<DocumentStore> createRepo(String repoName, String externalId, StructureType repoType) {
+  private Uni<ProjectStore> createRepo(String repoName, String externalId, StructureType repoType) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     RepoAssert.notNull(repoType, () -> "repoType must be defined!");
     
@@ -127,7 +127,7 @@ public class DocumentStoreImpl implements DocumentStore {
     final var newRepo = client.tenants().commit().externalId(externalId).name(repoName, repoType).build();
     return newRepo.onItem().transform((repoResult) -> {
       if(repoResult.getStatus() != CommitStatus.OK) {
-        throw new DocumentStoreException("REPO_CREATE_FAIL", 
+        throw new ProjectStoreException("REPO_CREATE_FAIL", 
             ImmutableDocumentExceptionMsg.builder()
             .id(repoResult.getStatus().toString())
             .value(repoName)
@@ -139,9 +139,9 @@ public class DocumentStoreImpl implements DocumentStore {
     });
   }
   
-  private DocumentStore createClientStore(String repoName) {
+  private ProjectStore createClientStore(String repoName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config).repoId(repoName).build());
+    return new ProjectStoreImpl(ImmutableProjectStoreConfig.builder().from(config).repoId(repoName).build());
   }
   
   public static Builder builder() {
@@ -169,7 +169,7 @@ public class DocumentStoreImpl implements DocumentStore {
       return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
     } 
     
-    public DocumentStoreImpl build() {
+    public ProjectStoreImpl build() {
       RepoAssert.notNull(repoName, () -> "repoName must be defined!");
     
       
@@ -224,16 +224,13 @@ public class DocumentStoreImpl implements DocumentStore {
         thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
       }
       
-      final DocumentConfig config = ImmutableDocumentConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
-      return new DocumentStoreImpl(config);
+      final ProjectStoreConfig config = ImmutableProjectStoreConfig.builder().client(thena).repoId(repoName).author(getAuthorProvider()).build();
+      return new ProjectStoreImpl(config);
     }
   }
 
   @Override
-  public DocumentStore withRepoId(String repoId) {
-    return new DocumentStoreImpl(ImmutableDocumentConfig.builder().from(config)
-        .repoId(repoId)
-        .build());
+  public ProjectStore withRepoId(String repoId) {
+    return new ProjectStoreImpl(ImmutableProjectStoreConfig.builder().from(config).repoId(repoId).build());
   }
-
 }

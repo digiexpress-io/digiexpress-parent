@@ -13,9 +13,9 @@ import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectVisitor;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectVisitor;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -25,21 +25,21 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
   private final String id;
   
   @Override
-  public Uni<QueryEnvelope<DocObject>> start(DocumentConfig config, DocObjectsQuery query) {
+  public Uni<QueryEnvelope<DocObject>> start(ProjectStoreConfig config, DocObjectsQuery query) {
     return query.get(id);
   }
 
   @Override
-  public DocObject visitEnvelope(DocumentConfig config, QueryEnvelope<DocObject> envelope) {
+  public DocObject visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
+      throw ProjectStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
+      throw ProjectStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))
         .build();
@@ -48,7 +48,7 @@ public class GetActiveTenantVisitor implements DocObjectVisitor<TenantConfig>{
   }
 
   @Override
-  public TenantConfig end(DocumentConfig config, DocObject ref) {
+  public TenantConfig end(ProjectStoreConfig config, DocObject ref) {
     return ref.accept((Doc doc, 
         DocBranch docBranch, 
         Map<String, DocCommit> commit, 

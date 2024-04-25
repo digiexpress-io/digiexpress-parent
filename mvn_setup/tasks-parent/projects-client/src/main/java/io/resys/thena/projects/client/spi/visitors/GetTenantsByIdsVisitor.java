@@ -37,9 +37,9 @@ import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -49,21 +49,21 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   private final Collection<String> projectIds;
   
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder) {
     return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(projectIds));
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_FAIL")
+      throw ProjectStoreException.builder("GET_TENANT_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
+      throw ProjectStoreException.builder("GET_TENANT_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(projectIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -72,7 +72,7 @@ public class GetTenantsByIdsVisitor implements DocObjectsVisitor<List<TenantConf
   }
 
   @Override
-  public List<TenantConfig> end(DocumentConfig config, DocTenantObjects ref) {
+  public List<TenantConfig> end(ProjectStoreConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }

@@ -42,22 +42,22 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfig;
 import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
-import io.resys.thena.projects.client.spi.store.DocumentConfig;
-import io.resys.thena.projects.client.spi.store.DocumentConfig.DocObjectsVisitor;
-import io.resys.thena.projects.client.spi.store.DocumentStore;
-import io.resys.thena.projects.client.spi.store.DocumentStoreException;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig;
+import io.resys.thena.projects.client.spi.store.ProjectStoreConfig.DocObjectsVisitor;
+import io.resys.thena.projects.client.spi.store.ProjectStore;
+import io.resys.thena.projects.client.spi.store.ProjectStoreException;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 
 
 public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<TenantConfig>>> {
-  private final DocumentStore ctx;
+  private final ProjectStore ctx;
   private final List<String> tenantIds;
   private final ModifyManyDocBranches commitBuilder;
   private final Map<String, List<TenantConfigUpdateCommand>> commandsByTenantId; 
   
   
-  public UpdateTenantConfigVisitor(List<TenantConfigUpdateCommand> commands, DocumentStore ctx) {
+  public UpdateTenantConfigVisitor(List<TenantConfigUpdateCommand> commands, ProjectStore ctx) {
     super();
     this.ctx = ctx;
     final var config = ctx.getConfig();
@@ -70,33 +70,33 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
   }
 
   @Override
-  public Uni<QueryEnvelope<DocTenantObjects>> start(DocumentConfig config, DocObjectsQuery builder) {
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ProjectStoreConfig config, DocObjectsQuery builder) {
     return builder.docType(TenantConfig.TENANT_CONFIG).findAll(new ArrayList<>(tenantIds));
   }
 
   @Override
-  public DocTenantObjects visitEnvelope(DocumentConfig config, QueryEnvelope<DocTenantObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ProjectStoreConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
+      throw ProjectStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw DocumentStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
+      throw ProjectStoreException.builder("GET_TENANTS_BY_IDS_FOR_UPDATE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(tenantIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     if(tenantIds.size() != result.getDocs().size()) {
-      throw new DocumentStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
+      throw new ProjectStoreException("TENANTS_UPDATE_FAIL_MISSING_TENANTS", JsonObject.of("failedUpdates", tenantIds));
     }
     return result;
   }
 
   @Override
-  public Uni<List<TenantConfig>> end(DocumentConfig config, DocTenantObjects blob) {
+  public Uni<List<TenantConfig>> end(ProjectStoreConfig config, DocTenantObjects blob) {
     final var updatedTenants = blob
       .accept((Doc doc, 
           DocBranch docBranch, 
@@ -116,7 +116,7 @@ public class UpdateTenantConfigVisitor implements DocObjectsVisitor<Uni<List<Ten
     return commitBuilder.build().onItem().transform(response -> {
       if(response.getStatus() != CommitResultStatus.OK) {
         final var failedUpdates = tenantIds.stream().collect(Collectors.joining(",", "{", "}"));
-        throw new DocumentStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), DocumentStoreException.convertMessages(response));
+        throw new ProjectStoreException("TENANTS_UPDATE_FAIL", JsonObject.of("failedUpdates", failedUpdates), ProjectStoreException.convertMessages(response));
       }
       
       final Map<String, TenantConfig> configsById = new HashMap<>(updatedTenants.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));

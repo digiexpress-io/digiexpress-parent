@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
-public class DocumentStoreException extends RuntimeException {
+public class ProjectStoreException extends RuntimeException {
 
   private static final long serialVersionUID = 7058468238867536222L;
 
@@ -54,13 +54,13 @@ public class DocumentStoreException extends RuntimeException {
     List<String> getArgs();
   }
   
-  public DocumentStoreException(String code, DocumentExceptionMsg ... msg) {
+  public ProjectStoreException(String code, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, null, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
     this.target = null;
   }
-  public DocumentStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
+  public ProjectStoreException(String code, JsonObject target, DocumentExceptionMsg ... msg) {
     super(new ExMessageFormatter(code, target, msg).format());
     this.code = code;
     this.messages.addAll(Arrays.asList(msg));
@@ -111,7 +111,7 @@ public class DocumentStoreException extends RuntimeException {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
-    public Builder add(DocumentConfig config, QueryEnvelope<?> envelope) {
+    public Builder add(ProjectStoreConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
@@ -122,8 +122,8 @@ public class DocumentStoreException extends RuntimeException {
       return this;
     }
     
-    public DocumentStoreException build() {
-      return new DocumentStoreException(id, msg.build());
+    public ProjectStoreException build() {
+      return new ProjectStoreException(id, msg.build());
     }
   }
 }
