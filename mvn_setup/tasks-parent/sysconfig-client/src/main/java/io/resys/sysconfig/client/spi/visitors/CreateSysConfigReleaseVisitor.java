@@ -26,6 +26,7 @@ import io.resys.thena.api.entities.doc.DocLog;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.projects.client.spi.store.MainBranch;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectVisitor;
 import io.resys.thena.support.OidUtils;
@@ -66,14 +67,14 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
   @Override
   public DocQueryActions.DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObject> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_FAIL")
+      throw DocStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(JsonObject.mapFrom(command).encode()))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null || result.getDoc() == null) {
-      throw DocumentStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_NOT_FOUND")   
+      throw DocStoreException.builder("GET_SYS_CONFIG_FOR_CREATING_RELEASE_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(JsonObject.mapFrom(command).encode()))
         .build();

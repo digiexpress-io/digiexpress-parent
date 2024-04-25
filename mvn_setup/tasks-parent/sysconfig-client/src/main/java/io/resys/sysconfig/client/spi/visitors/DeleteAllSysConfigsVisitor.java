@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfig;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
@@ -37,6 +36,7 @@ import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
 import io.smallrye.mutiny.Uni;
@@ -65,7 +65,7 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
   @Override
   public DocQueryActions.DocObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw DocumentStoreException.builder("FIND_ALL_SYS_CONFIGS_FAIL_FOR_DELETE").add(config, envelope).build();
+      throw DocStoreException.builder("FIND_ALL_SYS_CONFIGS_FAIL_FOR_DELETE").add(config, envelope).build();
     }
     return envelope.getObjects();
   }
@@ -82,14 +82,14 @@ public class DeleteAllSysConfigsVisitor implements DocObjectsVisitor<Uni<List<Sy
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("SYS_CONFIG_ARCHIVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocStoreException("SYS_CONFIG_ARCHIVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transformToUni(archived -> removeCommand.build())
       .onItem().transform((ManyDocsEnvelope commit) -> {
         if(commit.getStatus() == CommitResultStatus.OK) {
           return commit;
         }
-        throw new DocumentStoreException("SYS_CONFIG_REMOVE_FAIL", DocumentStoreException.convertMessages(commit));
+        throw new DocStoreException("SYS_CONFIG_REMOVE_FAIL", DocStoreException.convertMessages(commit));
       })
       .onItem().transform((commit) -> tenantsRemoved);
   }

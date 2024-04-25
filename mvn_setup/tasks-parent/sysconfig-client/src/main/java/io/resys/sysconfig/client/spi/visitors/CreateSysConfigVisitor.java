@@ -32,12 +32,12 @@ import io.resys.sysconfig.client.api.model.Document;
 import io.resys.sysconfig.client.api.model.ImmutableSysConfig;
 import io.resys.sysconfig.client.api.model.SysConfig;
 import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
-import io.resys.sysconfig.client.spi.store.DocumentStoreException;
 import io.resys.sysconfig.client.spi.visitors.SysConfigCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocCreateVisitor;
 import io.vertx.core.json.JsonObject;
@@ -76,7 +76,7 @@ public class CreateSysConfigVisitor implements DocCreateVisitor<SysConfig> {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new DocumentStoreException("SYS_CONFIG_CREATE_FAIL", DocumentStoreException.convertMessages(envelope));
+    throw new DocStoreException("SYS_CONFIG_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
 
   @Override
