@@ -10,6 +10,7 @@ import io.quarkus.vertx.web.RouteBase;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import io.vertx.mutiny.core.Vertx;
@@ -62,13 +63,14 @@ public class IndexPageProxy {
   // TODO Baking fixed urls into root page would be better option...
   @Route(path = "/static/*", methods = Route.HttpMethod.GET)
   @Route(path = "favicon.*", methods = Route.HttpMethod.GET)
-  public Uni<Void> redirectToStaticAssets(io.vertx.ext.web.RoutingContext rc) {
+  // Needs to be blocking, because redirect terminates response and return type must be void.
+  // But url it fetched asynchronously
+  @Blocking
+  void redirectToStaticAssets(io.vertx.ext.web.RoutingContext rc) {
     io.vertx.mutiny.ext.web.RoutingContext routingContext = new io.vertx.mutiny.ext.web.RoutingContext(rc);
-    
-    return getAssetsBaseUrl()
+    getAssetsBaseUrl()
       .map(redirectUrl -> redirectUrl + routingContext.normalizedPath())
-      .map(routingContext::redirectAndForget)
-      .onItem().transformToUni((junk) -> Uni.createFrom().voidItem());
+      .map(routingContext::redirectAndForget).await().indefinitely();
   }
 
   @Route(path = "/", methods = Route.HttpMethod.GET, produces = "text/html")  // Overrides default static resource
