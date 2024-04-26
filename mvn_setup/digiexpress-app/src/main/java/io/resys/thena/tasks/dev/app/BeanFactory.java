@@ -69,8 +69,7 @@ import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
+import io.vertx.mutiny.pgclient.PgPool;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
@@ -90,19 +89,6 @@ public class BeanFactory {
 
   @ConfigProperty(name = "tenant.db.pg.repositoryName")
   String tenantsStoreId;
-  @ConfigProperty(name = "tenant.db.pg.pgPoolSize")
-  Integer pgPoolSize;
-  @ConfigProperty(name = "tenant.db.pg.pgHost")
-  String pgHost;
-  @ConfigProperty(name = "tenant.db.pg.pgPort")
-  Integer pgPort;
-  @ConfigProperty(name = "tenant.db.pg.pgDb")
-  String pgDb;
-  @ConfigProperty(name = "tenant.db.pg.pgUser")
-  String pgUser;
-  @ConfigProperty(name = "tenant.db.pg.pgPass")
-  String pgPass;
-
   @ConfigProperty(name = "tenant.currentTenantId")
   String tenantId;
 
@@ -298,15 +284,8 @@ public class BeanFactory {
   }
   
   @Produces
-  public CurrentPgPool currentPgPool(Vertx vertx) {
-    log.debug("PgConnectOptions: pgHost={}, pgPort={}, pgUser={}, pgPass={}, pgDb={}, pgPoolSize={}",
-      pgHost, pgPort, pgUser, pgPass != null ? "***" : "null", pgDb, pgPoolSize);
-    final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
-      .setHost(pgHost).setPort(pgPort)
-      .setUser(pgUser).setPassword(pgPass);
-    final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
-    final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
-    return new CurrentPgPool(pgPool);
+  public CurrentPgPool currentPgPool(Vertx vertx, PgPool pool) {
+    return new CurrentPgPool(pool);
   }
 
   @Produces

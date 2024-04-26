@@ -59,7 +59,7 @@ public class AvatarTestCase {
   
   private AvatarStore store;
   private AvatarClientImpl client;
-  private static final String DB = "junit-crm-"; 
+  private static final String DB = "junit-avatar-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
   

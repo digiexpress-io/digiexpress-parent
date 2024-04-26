@@ -27,19 +27,23 @@ quarkus:
     resources:
       includes: asset_sysconfig_flat.json
 
+  datasource: 
+    db-kind: postgresql 
+    username: postgres
+    password: postgres
+    reactive:
+      url: postgresql://localhost:5432/tasks_db
+      max-size: 300
+# QUARKUS_DATASOURCE_USERNAME
+# QUARKUS_DATASOURCE_PASSWORD
+# QUARKUS_DATASOURCE_REACTIVE_URL
+
 tenant:
   currentTenantId: "local_test_tenant"
   failSafeUsers: olev.mutso@resys.io;jocelyn.mutso@resys.io
   db:
     pg: 
       repositoryName: "tenant_store"
-      pgPort: 5432
-      pgHost: "localhost"
-      pgDb: "tasks_db"
-      pgUser: "postgres"
-      pgPass: "postgres"
-      pgPoolSize: 60
-
 
 "%dev": 
   tenant:

@@ -31,6 +31,7 @@ public class AvatarTestResource implements AvatarRestApi {
     .id("id-1234")
     .version("v1.0")
     .externalId("ext-id")
+    .avatarType("XX")
     .created(AvatarTestCase.getTargetDate())
     .updated(AvatarTestCase.getTargetDate())
     .colorCode("color")

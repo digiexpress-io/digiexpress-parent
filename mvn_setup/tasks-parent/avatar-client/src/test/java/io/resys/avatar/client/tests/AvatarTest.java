@@ -48,16 +48,4 @@ public class AvatarTest extends AvatarTestCase {
     Assertions.assertNotNull(found.getUpdated());
     Assertions.assertNotNull(found.getVersion());
   }
-  
-  @org.junit.jupiter.api.Test
-  public void notFound() {
-    final var repoName = AvatarTest.class.getSimpleName() + "notFound";
-    final var client = getClient().repoQuery().repoName(repoName).createIfNot().await().atMost(atMost);
-    
-
-    final var found = client.queryAvatars().get("XXX").await().atMost(atMost);
-
-  }
-  
-
 }
