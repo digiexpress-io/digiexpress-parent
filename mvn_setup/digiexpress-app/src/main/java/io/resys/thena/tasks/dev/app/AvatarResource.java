@@ -104,7 +104,10 @@ public class AvatarResource implements AvatarRestApi {
       .createOne(ImmutableCreateAvatar.builder()
         .avatarType("CUSTOMER")
         .id(profile.getId())
-        .seedData(profile.getBody().getUsername())
+        .seedData(profile.getBody().getContact().isPresent() ? 
+          profile.getBody().getContact().map(contact -> contact.getEmail()).get()
+          : 
+          profile.getBody().getUsername())
         .externalId(profile.getId())
       .build())
   );

@@ -86,22 +86,22 @@ public class AvatarCommandVisitor {
     throw new UpdateAvatarVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
   }
   
-  private String createUserName(CreateAvatar command) {
-    final var email = command.getSeedData();
-    final var splitAt = email.indexOf("@");
-    if(splitAt <= 0) {
-      return email;
-    }
-    return email.substring(splitAt);
-  }
   private String createFirstName(CreateAvatar command) {
     final var email = command.getSeedData();
-    final var frags = email.split("\\.");
+    var frags = email.split("\\.");
+    if(frags.length == 1) {
+      frags = email.split("_");
+    }
+    
     return StringUtils.capitalize(frags[0]);
   }
   private String createLastName(CreateAvatar command) {
-    final var userName = createUserName(command);
-    final var frags = userName.split("\\.");
+    final var userName = command.getSeedData();
+    var frags = userName.split("\\.");
+    if(frags.length == 1) {
+      frags = userName.split("_");
+    }
+    
     if(frags.length == 1) {
       return StringUtils.capitalize(frags[0]);
     }
