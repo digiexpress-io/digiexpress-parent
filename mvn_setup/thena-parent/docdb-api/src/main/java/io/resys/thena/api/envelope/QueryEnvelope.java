@@ -46,6 +46,19 @@ public interface QueryEnvelope<T extends ThenaContainer> extends ThenaEnvelope {
   QueryEnvelopeStatus getStatus();
   List<Message> getMessages();
   
+  default boolean isNotFound() {
+    if(getStatus() == QueryEnvelopeStatus.OK) {
+      return false;
+    }
+    if(getMessages().isEmpty()) {
+      return false;
+    }
+    return getMessages().stream()
+      .filter(m -> m.getException() != null)
+      .filter(m -> m.getException() instanceof DocNotFoundException)
+      .findFirst().isPresent();
+  }
+  
   enum QueryEnvelopeStatus { OK, ERROR }
 
   public default QueryEnvelopeList<T> toList() {

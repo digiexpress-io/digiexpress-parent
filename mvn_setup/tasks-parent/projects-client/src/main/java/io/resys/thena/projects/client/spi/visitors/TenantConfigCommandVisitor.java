@@ -4,16 +4,16 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableTenantPreferences;
-import io.resys.thena.projects.client.api.model.ImmutableTenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantStatus;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ChangeTenantConfigInfo;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableTenantPreferences;
+import io.resys.thena.projects.client.api.ImmutableTenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig.TenantStatus;
+import io.resys.thena.projects.client.api.TenantConfigCommand;
+import io.resys.thena.projects.client.api.TenantConfigCommand.ArchiveTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.ChangeTenantConfigInfo;
+import io.resys.thena.projects.client.api.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -101,6 +101,10 @@ public class TenantConfigCommandVisitor {
       .addRepoConfigs(ImmutableTenantRepoConfig.builder()
           .repoId(nextRepoId())
           .repoType(TenantRepoConfigType.PERMISSIONS)
+          .build())
+      .addRepoConfigs(ImmutableTenantRepoConfig.builder()
+          .repoId(nextRepoId())
+          .repoType(TenantRepoConfigType.AVATARS)
           .build())
       .build();
     

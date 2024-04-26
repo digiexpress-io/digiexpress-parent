@@ -106,4 +106,13 @@ public interface PermissionClient {
   interface PermissionAccessEvaluator {
     boolean evaluate(Permission permission);
   }
+  
+
+  class RoleNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 5706579544456750293L;
+
+    public RoleNotFoundException(String message) {
+      super(message);
+    }
+  }
 }

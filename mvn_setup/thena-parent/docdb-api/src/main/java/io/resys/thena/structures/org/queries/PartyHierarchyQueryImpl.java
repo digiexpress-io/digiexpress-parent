@@ -10,6 +10,7 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.spi.DbState;
@@ -32,18 +33,18 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
     
     return new OrgProjectQueryImpl(state, repoId).get()
-        .onItem().transform(resp -> {
-          if(resp.getStatus() != QueryEnvelopeStatus.OK) {
-            return resp.toType();
-          }
-          
-          try {
-            final QueryEnvelope<OrgPartyHierarchy> success = createOneHierarchy(resp, groupIdOrNameOrExternalId);
-            return success;
-          } catch(Exception e) {
-            return QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
-          }
-        });
+      .onItem().transform(resp -> {
+        if(resp.getStatus() != QueryEnvelopeStatus.OK) {
+          return resp.toType();
+        }
+        
+        try {
+          final QueryEnvelope<OrgPartyHierarchy> success = createOneHierarchy(resp, groupIdOrNameOrExternalId);
+          return success;
+        } catch(Exception e) {
+          return QueryEnvelope.fatalError(resp.getRepo(), "Failed to build hierarchy for all groups", log, e);
+        }
+      });
   }
   @Override
   public Uni<QueryEnvelopeList<OrgPartyHierarchy>> findAll() {
@@ -87,7 +88,14 @@ public class PartyHierarchyQueryImpl implements PartyHierarchyQuery {
     final var log = container.accept(new OrgPartyLogVisitor(groupIdOrNameOrExternalId, true));
     final var visited = container.accept(new PartyHierarchyContainerVisitor(groupIdOrNameOrExternalId));
     final OrgPartyHierarchy group = visited == null ? null : visited.withLog(log);
-    
+    if(group == null) {
+      return QueryEnvelope
+          .docNotFound(
+              init.getRepo(), 
+              PartyHierarchyQueryImpl.log, 
+              "Can't find party by id: '" + groupIdOrNameOrExternalId + "'!", 
+              new DocNotFoundException());      
+    }
     
     return ImmutableQueryEnvelope.<OrgPartyHierarchy>builder()
         .objects(group)

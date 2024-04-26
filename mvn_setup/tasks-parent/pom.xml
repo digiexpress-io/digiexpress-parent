@@ -15,6 +15,7 @@
   <modules>
     <module>tasks-client</module>
     <module>projects-client</module>
+    <module>avatar-client</module>
     <module>crm-client</module>
     <module>sysconfig-client</module>
     <module>permissions-client</module>

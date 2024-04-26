@@ -3,6 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.RoleAccessEvaluator;
+import io.resys.permission.client.api.PermissionClient.RoleNotFoundException;
 import io.resys.permission.client.api.PermissionClient.RoleQuery;
 import io.resys.permission.client.api.model.ImmutableRole;
 import io.resys.permission.client.api.model.Principal.Role;
@@ -22,10 +23,16 @@ public class RoleQueryImpl implements RoleQuery {
 
   @Override
   public Uni<Role> get(String roleId) {
+    
+    
     final var repoId = ctx.getConfig().getRepoId();
     final Uni<QueryEnvelope<OrgPartyHierarchy>> role = ctx.getOrg(repoId).find().partyHierarchyQuery().get(roleId);
     
     return role.onItem().transform((response) -> {
+      if(response.isNotFound()) {
+        throw new RoleNotFoundException("Can't find role by id: " + roleId + "!");
+      }
+
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "failed to get role by id = '%s'!".formatted(roleId);
         final var exception = new RoleQueryException(msg);
@@ -40,7 +47,7 @@ public class RoleQueryImpl implements RoleQuery {
         throw exception;
       }
       return mapTo(response.getObjects());
-    }) ;
+    });
   }
 
   @Override

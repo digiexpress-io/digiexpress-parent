@@ -1,9 +1,9 @@
 package io.resys.thena.projects.client.tests.config;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableArchiveTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableCreateTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableTenantConfig;
 /*-
  * #%L
  * thena-quarkus-dev-app

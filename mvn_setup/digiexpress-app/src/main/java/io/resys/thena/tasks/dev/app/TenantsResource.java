@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
-import io.resys.thena.projects.client.rest.TenantConfigRestApi;
+import io.resys.thena.projects.client.api.TenantConfigRestApi;
+import io.resys.thena.projects.client.api.TenantConfigCommand.ArchiveTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -21,11 +21,11 @@ public class TenantsResource implements TenantConfigRestApi {
   @Inject CurrentTenant currentTenant;
   
   @Override
-  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> findTenantConfigs() {
+  public Uni<List<io.resys.thena.projects.client.api.TenantConfig>> findTenantConfigs() {
     return tenantConfigClient.queryActiveTenantConfig().findAll();
   }
   @Override
-  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> createTenantConfigs(List<CreateTenantConfig> commands) {
+  public Uni<List<io.resys.thena.projects.client.api.TenantConfig>> createTenantConfigs(List<CreateTenantConfig> commands) {
 
     return tenantConfigClient.createTenantConfig().createMany(commands)
         .onItem().transformToUni(items -> {
@@ -42,19 +42,19 @@ public class TenantsResource implements TenantConfigRestApi {
         });
   }
   @Override
-  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> updateTenantConfigs(List<TenantConfigUpdateCommand> commands) {
+  public Uni<List<io.resys.thena.projects.client.api.TenantConfig>> updateTenantConfigs(List<TenantConfigUpdateCommand> commands) {
 
     return tenantConfigClient.updateTenantConfig().updateMany(commands);
   }
   @Override
-  public Uni<List<io.resys.thena.projects.client.api.model.TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands) {
+  public Uni<List<io.resys.thena.projects.client.api.TenantConfig>> deleteTenantConfigs(List<ArchiveTenantConfig> commands) {
     final var modifiedCommands = commands.stream()
         .map(command -> (TenantConfigUpdateCommand) command)
         .collect(Collectors.toList());
     return tenantConfigClient.updateTenantConfig().updateMany(modifiedCommands);
   }
   @Override
-  public Uni<io.resys.thena.projects.client.api.model.TenantConfig> updateOneTenantConfig(String projectId, List<TenantConfigUpdateCommand> commands) {
+  public Uni<io.resys.thena.projects.client.api.TenantConfig> updateOneTenantConfig(String projectId, List<TenantConfigUpdateCommand> commands) {
     return tenantConfigClient.updateTenantConfig().updateOne(commands);
   }
 }

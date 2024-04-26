@@ -32,6 +32,10 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
+      <artifactId>thena-avatar-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-crm-client</artifactId>
     </dependency>
     <dependency>

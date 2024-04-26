@@ -3,13 +3,13 @@ package io.resys.crm.client.tests.config;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.userprofile.client.api.UserProfileRestApi;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.rest.UserProfileRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;

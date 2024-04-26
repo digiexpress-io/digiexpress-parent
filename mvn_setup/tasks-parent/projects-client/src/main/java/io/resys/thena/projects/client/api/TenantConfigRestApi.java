@@ -1,11 +1,10 @@
-package io.resys.thena.projects.client.rest;
+package io.resys.thena.projects.client.api;
 
 import java.util.List;
 
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.ArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
+import io.resys.thena.projects.client.api.TenantConfigCommand.ArchiveTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;

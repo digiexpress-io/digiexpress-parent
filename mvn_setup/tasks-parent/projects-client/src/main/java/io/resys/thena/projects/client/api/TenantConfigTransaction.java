@@ -1,4 +1,4 @@
-package io.resys.thena.projects.client.api.model;
+package io.resys.thena.projects.client.api;
 
 import java.io.Serializable;
 import java.util.List;

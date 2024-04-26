@@ -3,6 +3,7 @@ package io.resys.permission.client.tests.config;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.permission.client.api.PermissionRestApi;
 import io.resys.permission.client.api.model.ImmutablePermission;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.ImmutableRole;
@@ -15,7 +16,6 @@ import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.permission.client.rest.PermissionRestApi;
 import io.resys.thena.api.entities.org.OrgActorStatusType;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;

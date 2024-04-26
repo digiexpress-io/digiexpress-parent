@@ -18,7 +18,7 @@ import io.dialob.client.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;

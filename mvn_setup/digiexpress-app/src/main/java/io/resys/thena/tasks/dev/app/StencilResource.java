@@ -3,8 +3,8 @@ package io.resys.thena.tasks.dev.app;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer;

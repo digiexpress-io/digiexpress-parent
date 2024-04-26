@@ -38,7 +38,7 @@ tenant:
       pgDb: "tasks_db"
       pgUser: "postgres"
       pgPass: "postgres"
-      pgPoolSize: 5
+      pgPoolSize: 60
 
 
 "%dev": 

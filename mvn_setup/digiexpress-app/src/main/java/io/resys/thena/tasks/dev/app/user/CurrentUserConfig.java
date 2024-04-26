@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.userprofile.client.api.model.UserProfile;
 import jakarta.annotation.Nullable;
 

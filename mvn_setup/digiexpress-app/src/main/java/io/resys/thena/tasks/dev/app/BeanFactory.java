@@ -27,6 +27,9 @@ import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.resys.avatar.client.api.AvatarClient;
+import io.resys.avatar.client.spi.AvatarClientImpl;
+import io.resys.avatar.client.spi.AvatarStore;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.hdes.client.api.HdesClient;
@@ -284,6 +287,15 @@ public class BeanFactory {
     return new UserProfileClientImpl(store);
   }
 
+  @Produces
+  public AvatarClient avatarClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+    final var store = AvatarStore.builder()
+      .repoName(tenantsStoreId)
+      .pgPool(currentPgPool.pgPool)
+      .objectMapper(om)
+      .build();
+    return new AvatarClientImpl(store);
+  }
   
   @Produces
   public CurrentPgPool currentPgPool(Vertx vertx) {

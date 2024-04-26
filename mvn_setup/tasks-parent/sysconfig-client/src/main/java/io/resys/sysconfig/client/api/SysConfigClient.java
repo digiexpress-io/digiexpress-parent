@@ -13,7 +13,7 @@ import io.resys.sysconfig.client.api.model.SysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigDeploymentCommand.CreateSysConfigDeployment;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface SysConfigClient {

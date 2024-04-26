@@ -1,4 +1,4 @@
-package io.resys.permission.client.rest;
+package io.resys.permission.client.api;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorStore {

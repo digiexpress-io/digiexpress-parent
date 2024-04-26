@@ -8,7 +8,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;

@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigUpdateCommand;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.TenantConfigUpdateCommand;
 import io.smallrye.mutiny.Uni;
 
 public interface ProjectClient {

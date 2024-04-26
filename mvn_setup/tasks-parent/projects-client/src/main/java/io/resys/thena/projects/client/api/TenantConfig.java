@@ -1,4 +1,4 @@
-package io.resys.thena.projects.client.api.model;
+package io.resys.thena.projects.client.api;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -61,7 +61,7 @@ public interface TenantConfig extends Serializable {
 
   enum TenantStatus { IN_FORCE, ARCHIVED }
   enum TenantRepoConfigType { 
-    WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE, PERMISSIONS
+    WRENCH, STENCIL, TASKS, DIALOB, CRM, TENANT, SYS_CONFIG, USER_PROFILE, PERMISSIONS, AVATARS
   }
   
   public static final String TENANT_CONFIG = "TENANT_CONFIG";

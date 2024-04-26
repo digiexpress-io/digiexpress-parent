@@ -14,8 +14,8 @@ import io.resys.sysconfig.client.spi.executor.visitors.GetFlowProgramFromRelease
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

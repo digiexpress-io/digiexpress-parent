@@ -268,7 +268,11 @@ permissions and limitations under the
         <artifactId>thena-permission-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>thena-avatar-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>io.digiexpress</groupId>

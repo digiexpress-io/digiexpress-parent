@@ -3,15 +3,15 @@ package io.resys.thena.tasks.dev.app;
 import java.util.List;
 
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
+import io.resys.userprofile.client.api.UserProfileRestApi;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
-import io.resys.userprofile.client.rest.UserProfileRestApi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;

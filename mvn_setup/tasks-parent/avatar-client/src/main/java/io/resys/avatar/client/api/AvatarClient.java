@@ -35,7 +35,7 @@ public interface AvatarClient {
     Uni<List<Avatar>> findByIds(Collection<String> avatarIds);
     Uni<Avatar> get(String avatarId);
   }
-  public interface RepositoryQuery {
+  interface RepositoryQuery {
     RepositoryQuery repoName(String repoName);
     AvatarClient build();
 
@@ -45,5 +45,4 @@ public interface AvatarClient {
     Uni<AvatarClient> createIfNot();
     Uni<Optional<AvatarClient>> get();
   }
-
 }

@@ -36,7 +36,7 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.projects.client.api.model.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.spi.DocStoreException;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;

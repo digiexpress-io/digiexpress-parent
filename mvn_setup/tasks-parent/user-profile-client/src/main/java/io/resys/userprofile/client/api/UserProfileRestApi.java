@@ -1,4 +1,4 @@
-package io.resys.userprofile.client.rest;
+package io.resys.userprofile.client.api;
 
 import java.util.List;
 

@@ -52,5 +52,11 @@ public interface CrmClient {
     
     Uni<Optional<CrmClient>> get(String repoId);
   } 
+  class CustomerNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 5706579544456750293L;
 
+    public CustomerNotFoundException(String message) {
+      super(message);
+    }
+  }
 }

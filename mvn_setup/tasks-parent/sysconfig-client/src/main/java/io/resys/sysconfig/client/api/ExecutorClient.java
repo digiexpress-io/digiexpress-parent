@@ -11,7 +11,7 @@ import io.dialob.client.api.DialobClient;
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigReleaseQuery;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorClient {

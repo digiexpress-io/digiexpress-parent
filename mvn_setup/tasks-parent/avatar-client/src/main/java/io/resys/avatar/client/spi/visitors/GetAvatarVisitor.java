@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.resys.avatar.client.api.Avatar;
+import io.resys.avatar.client.api.AvatarNotFoundException;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
@@ -31,7 +32,11 @@ public class GetAvatarVisitor implements DocObjectVisitor<Avatar>{
 
   @Override
   public DocObject visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocObject> envelope) {
-    if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
+    if(envelope.isNotFound()) {
+      throw new AvatarNotFoundException("Can't find avatar by id: " + id + "!");
+    }
+    
+    if(envelope.getStatus() != QueryEnvelopeStatus.OK) {      
       throw DocStoreException.builder("GET_AVATAR_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(id))

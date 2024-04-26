@@ -53,4 +53,11 @@ public interface UserProfileClient {
     Uni<Optional<UserProfileClient>> get();
   }
 
+  class UserProfileNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 5706579544456750293L;
+
+    public UserProfileNotFoundException(String message) {
+      super(message);
+    }
+  }
 }

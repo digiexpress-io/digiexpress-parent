@@ -30,11 +30,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.LogDetail;
-import io.resys.thena.projects.client.api.model.ImmutableArchiveTenantConfig;
-import io.resys.thena.projects.client.api.model.ImmutableChangeTenantConfigInfo;
-import io.resys.thena.projects.client.api.model.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.TenantConfigCommandType;
+import io.resys.thena.projects.client.api.ImmutableArchiveTenantConfig;
+import io.resys.thena.projects.client.api.ImmutableChangeTenantConfigInfo;
+import io.resys.thena.projects.client.api.ImmutableCreateTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.TenantConfigCommandType;
 
 
 //add this to vm args to run in IDE -Djava.util.logging.manager=org.jboss.logmanager.LogManager

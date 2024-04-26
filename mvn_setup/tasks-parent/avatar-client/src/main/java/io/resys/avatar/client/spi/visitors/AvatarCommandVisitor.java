@@ -121,6 +121,7 @@ public class AvatarCommandVisitor {
         .colorCode(Optional.ofNullable(command.getColorCode()).orElse(createColorCode(command)))
         .letterCode(Optional.ofNullable(command.getLetterCode()).orElse(LetterCodeProvider.getInstance(colorCodes, firstName, lastName).getNextCode()))
         .displayName(firstName + " " + lastName)
+        .avatarType(command.getAvatarType())
         .build();
     
     this.colorCodes.add(current.getColorCode());

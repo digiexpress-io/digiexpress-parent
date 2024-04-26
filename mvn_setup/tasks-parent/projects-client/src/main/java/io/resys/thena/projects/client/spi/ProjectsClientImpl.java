@@ -5,8 +5,8 @@ import java.util.Optional;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.projects.client.spi.actions.ActiveTenantConfigQueryImpl;
 import io.resys.thena.projects.client.spi.actions.CreateTenantConfigImpl;
 import io.resys.thena.projects.client.spi.actions.UpdateTenantConfigImpl;
@@ -68,7 +68,8 @@ public class ProjectsClientImpl implements ProjectClient {
         case SYS_CONFIG: { repo.repoType(StructureType.doc); break; }
         case PERMISSIONS: { repo.repoType(StructureType.org); break; }
         case USER_PROFILE: { repo.repoType(StructureType.doc); break; }
-
+        case AVATARS: { repo.repoType(StructureType.doc); break; }
+        
         case DIALOB: { repo.repoType(StructureType.git); break; }
         case TASKS: { repo.repoType(StructureType.grim); break; }
         case STENCIL: { repo.repoType(StructureType.git); break; }

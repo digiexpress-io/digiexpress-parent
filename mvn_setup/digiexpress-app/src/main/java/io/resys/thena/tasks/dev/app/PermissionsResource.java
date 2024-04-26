@@ -4,6 +4,7 @@ package io.resys.thena.tasks.dev.app;
 import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.PermissionRestApi;
 import io.resys.permission.client.api.model.PermissionCommand.CreatePermission;
 import io.resys.permission.client.api.model.PermissionCommand.PermissionUpdateCommand;
 import io.resys.permission.client.api.model.Principal;
@@ -13,10 +14,8 @@ import io.resys.permission.client.api.model.PrincipalCommand.CreatePrincipal;
 import io.resys.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
 import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
-import io.resys.permission.client.rest.PermissionRestApi;
 import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.model.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
@@ -102,14 +101,10 @@ public class PermissionsResource implements PermissionRestApi {
   }
   
   private Uni<PermissionClient> getClient() {
-    return getPermissionConfig().onItem().transform(config -> permissions.withRepoId(config.getRepoId()));
-  }
-  
-  private Uni<TenantRepoConfig> getPermissionConfig() {
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())
-      .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS));
+        .onItem().transform(config -> config.getRepoConfig(TenantRepoConfigType.PERMISSIONS)) 
+        .onItem().transform(config -> permissions.withRepoId(config.getRepoId()));
   }
-
   
   private <T> Uni<T> invalidateCache(T data) {
     return cache.invalidate()

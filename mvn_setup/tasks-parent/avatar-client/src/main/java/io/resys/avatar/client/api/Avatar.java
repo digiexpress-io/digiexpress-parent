@@ -14,6 +14,7 @@ public interface Avatar  {
   String getId();
   @Nullable String getVersion();
   String getExternalId();
+  String getAvatarType();
   
   @Nullable Instant getCreated();
   @Nullable Instant getUpdated();

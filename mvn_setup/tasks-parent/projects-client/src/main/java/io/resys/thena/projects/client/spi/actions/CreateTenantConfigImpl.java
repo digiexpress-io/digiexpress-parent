@@ -23,9 +23,9 @@ package io.resys.thena.projects.client.spi.actions;
 import java.util.Arrays;
 import java.util.List;
 
+import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.projects.client.api.ProjectClient.CreateTenantConfigAction;
-import io.resys.thena.projects.client.api.model.TenantConfig;
-import io.resys.thena.projects.client.api.model.TenantConfigCommand.CreateTenantConfig;
+import io.resys.thena.projects.client.api.TenantConfigCommand.CreateTenantConfig;
 import io.resys.thena.projects.client.spi.ProjectStore;
 import io.resys.thena.projects.client.spi.visitors.CreateTenantConfigsVisitor;
 import io.smallrye.mutiny.Uni;
