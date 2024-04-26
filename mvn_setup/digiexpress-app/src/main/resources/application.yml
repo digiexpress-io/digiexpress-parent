@@ -5,6 +5,9 @@ quarkus:
     category: 
       io.resys:
         level: INFO
+    console:  
+      json: false
+      
   http:
     tcp-quick-ack: true
     tcp-cork: true
