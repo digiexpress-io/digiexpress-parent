@@ -10,7 +10,7 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Path;
 
-@Path("q/digiexpress/api")
+@Path("q/digiexpress/api/avatars")
 @ApplicationScoped
 public class AvatarTestResource implements AvatarRestApi {
 
