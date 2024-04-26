@@ -19,7 +19,9 @@ export type RepoType = (
   'HEALTH' |
   'USER_PROFILE' |
   'TENANT' |
-  'SYS_CONFIG');
+  'SYS_CONFIG' |
+  'AVATAR'
+  );
 
 export interface RepoConfig {
   repoId: string;

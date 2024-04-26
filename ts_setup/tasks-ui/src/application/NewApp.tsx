@@ -70,6 +70,7 @@ const store: Backend.Store = new Backend.BackendStoreImpl({
     'SYS_CONFIG': baseUrl + "/q/digiexpress/api/",
     'PERMISSIONS': baseUrl + "/q/digiexpress/api/",
     'DIALOB': baseUrl + "/q/digiexpress/api/",
+    'AVATAR': baseUrl + "/q/digiexpress/api/",
   },
   performInitCheck: false,
   csrf: window._env_?.csrf,

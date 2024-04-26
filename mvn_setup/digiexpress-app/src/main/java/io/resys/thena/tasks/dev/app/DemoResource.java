@@ -28,6 +28,7 @@ import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.vertx.mutiny.core.Vertx;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -35,6 +36,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("q/demo/api/")
+@Singleton
 public class DemoResource {
   @Inject Vertx vertx;
   @Inject PermissionClient permissions;

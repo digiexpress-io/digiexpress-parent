@@ -39,7 +39,8 @@ public class AvatarTestResource implements AvatarRestApi {
     .letterCode("letter code")
     .build();
   }
-
-
-
+  @Override
+  public Uni<List<Avatar>> getOrCreateAvatars(GetOrCreateAvatars request) {
+    return Uni.createFrom().item(Arrays.asList(mockData, mockData));
+  }
 }

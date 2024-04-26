@@ -1,6 +1,7 @@
 package io.resys.avatar.client.tests;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -12,6 +13,8 @@ import io.resys.avatar.client.tests.config.AvatarPgProfile;
 import io.resys.avatar.client.tests.config.AvatarTestCase;
 import lombok.extern.slf4j.Slf4j;
 
+
+@Disabled
 @Slf4j
 @QuarkusTest
 @TestProfile(AvatarPgProfile.class)

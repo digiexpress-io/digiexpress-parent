@@ -74,6 +74,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 @Dependent
@@ -105,7 +106,7 @@ public class BeanFactory {
   }
 
   @Produces
-  @ApplicationScoped
+  @Singleton
   public CurrentTenant currentTenant() {
     return new CurrentTenantRecord(tenantId, tenantsStoreId);
   }
@@ -119,7 +120,9 @@ public class BeanFactory {
   {
     return new CurrentUserRecord(userId, givenName, familyName, email);
   }
+  
   @Produces
+  @Singleton
   public PermissionClient permissionClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = io.resys.permission.client.spi.PermissionStoreImpl.builder()
       .repoName("")
@@ -130,6 +133,7 @@ public class BeanFactory {
   }
 
   @Produces
+  @Singleton
   public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = TaskStoreImpl.builder()
       .repoName("")
@@ -138,6 +142,7 @@ public class BeanFactory {
       .build();
     return new TaskClientImpl(store);
   }
+  @Singleton
   @Produces
   public ProjectClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
     final var store = io.resys.thena.projects.client.spi.ProjectStore.builder()
@@ -147,7 +152,7 @@ public class BeanFactory {
       .build();
     return new ProjectsClientImpl(store);
   }
-
+  @Singleton
   @Produces
   public StencilClient stencilClient(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {
     final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).build();
@@ -171,11 +176,12 @@ public class BeanFactory {
       .build();
     return new StencilClientImpl(store);
   }
+  @Singleton
   @Produces
   public StencilComposer stencilComposer(StencilClient client) {
     return new StencilComposerImpl(client);
   }
-
+  @Singleton
   @Produces
   public CrmClient crmClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = io.resys.crm.client.spi.CrmStore.builder()
@@ -185,7 +191,7 @@ public class BeanFactory {
       .build();
     return new CrmClientImpl(store);
   }
-  
+  @Singleton
   @Produces
   public HdesClient hdesClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var config = ImmutableThenaConfig.builder()
@@ -210,7 +216,7 @@ public class BeanFactory {
         .serviceInit(defaultHdesServiceInit())
         .build();    
   }
-  
+  @Singleton
   @Produces
   public DialobClient dialobClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var dialobFr = defaultDialobFr();
@@ -238,6 +244,7 @@ public class BeanFactory {
         .functionRegistry(dialobFr)
         .build();
   }
+  @Singleton
   @Produces
   public SysConfigClient sysConfigClient(
       CurrentPgPool currentPgPool, ObjectMapper om, 
@@ -262,7 +269,7 @@ public class BeanFactory {
     return new SysConfigClientImpl(store, assets, tenantClient);
   }
 
-
+  @Singleton
   @Produces
   public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = io.resys.userprofile.client.spi.UserProfileStore.builder()
@@ -272,7 +279,7 @@ public class BeanFactory {
       .build();
     return new UserProfileClientImpl(store);
   }
-
+  @Singleton
   @Produces
   public AvatarClient avatarClient(CurrentPgPool currentPgPool, ObjectMapper om) {
     final var store = AvatarStore.builder()
@@ -283,11 +290,13 @@ public class BeanFactory {
     return new AvatarClientImpl(store);
   }
   
+  @Singleton
   @Produces
   public CurrentPgPool currentPgPool(Vertx vertx, PgPool pool) {
     return new CurrentPgPool(pool);
   }
 
+  @Singleton
   @Produces
   public ObjectMapperCustomizer objectMapperCustomizer() {
     return mapper -> mapper

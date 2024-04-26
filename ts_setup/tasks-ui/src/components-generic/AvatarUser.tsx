@@ -12,14 +12,14 @@ export const AvatarUser: React.FC<{ children: string }> = React.memo(({ children
     return null;
   }
 
-  const bgcolor: string = avatar.color;
+  const bgcolor: string = avatar.colorCode;
   return (
     <MAvatar sx={{
       bgcolor,
       width: 24,
       height: 24,
       fontSize: 10 }}>
-      {avatar.twoLetterCode}
+      {avatar.letterCode}
     </MAvatar>
   );
 });

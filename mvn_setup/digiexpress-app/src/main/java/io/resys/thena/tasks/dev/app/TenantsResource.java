@@ -12,13 +12,15 @@ import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
+@Singleton
 public class TenantsResource implements TenantConfigRestApi {
 
-  @Inject ProjectClient tenantConfigClient;
-  @Inject CurrentTenant currentTenant;
+  @Inject private ProjectClient tenantConfigClient;
+  @Inject private CurrentTenant currentTenant;
   
   @Override
   public Uni<List<io.resys.thena.projects.client.api.TenantConfig>> findTenantConfigs() {

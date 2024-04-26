@@ -28,6 +28,7 @@ import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -42,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @Path("q/digiexpress/api/hdes")
+@Singleton
 public class HdesResource {
   @Inject CurrentTenant currentTenant;
   @Inject CurrentUser currentUser;

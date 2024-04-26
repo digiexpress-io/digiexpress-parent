@@ -23,6 +23,7 @@ import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -34,6 +35,7 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.extern.jackson.Jacksonized;
 
 @Path("q/digiexpress/api/dialob/api")
+@Singleton
 public class DialobResource {
   
   @Inject CurrentTenant currentTenant;

@@ -11,12 +11,14 @@ import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("q/digiexpress/api")
+@Singleton
 public class ConfigResource {
   
   @Inject JsonWebToken jwt;

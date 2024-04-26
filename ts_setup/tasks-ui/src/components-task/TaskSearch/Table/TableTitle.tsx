@@ -12,7 +12,7 @@ import { GroupByTypes } from '../TableContext';
 const TitleButtonOwner: React.FC<{ groupType: GroupByTypes, classifierValue: string }> = ({ groupType, classifierValue }) => {
   const intl = useIntl();
   const avatar = useAvatar(classifierValue);
-  const backgroundColor = avatar?.color;
+  const backgroundColor = avatar?.colorCode;
 
   return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
       {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : classifierValue}
@@ -22,7 +22,7 @@ const TitleButtonOwner: React.FC<{ groupType: GroupByTypes, classifierValue: str
 const TitleButtonRole: React.FC<{ groupType: GroupByTypes, classifierValue: string }> = ({ groupType, classifierValue }) => {
   const intl = useIntl();
   const avatar = useAvatar(classifierValue);
-  const backgroundColor = avatar?.color;
+  const backgroundColor = avatar?.colorCode;
 
   return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
   {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : classifierValue}

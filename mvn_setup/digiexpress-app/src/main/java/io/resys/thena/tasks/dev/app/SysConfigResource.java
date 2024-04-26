@@ -12,15 +12,17 @@ import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
+@Singleton
 public class SysConfigResource implements SysConfigRestApi {
 
-  @Inject SysConfigClient sysConfigClient;
-  @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
-  @Inject ProjectClient tenantClient;
+  @Inject private SysConfigClient sysConfigClient;
+  @Inject private CurrentTenant currentTenant;
+  @Inject private CurrentUser currentUser;
+  @Inject private ProjectClient tenantClient;
   
   @Override
   public Uni<List<SysConfig>> findAllSysConfigs() {

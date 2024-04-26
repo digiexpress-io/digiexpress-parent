@@ -1,23 +1,46 @@
 
+export interface AvatarStoreConfig {
+  fetch<T>(path: string, init: RequestInit & { notFound?: () => T, repoType: 'AVATAR' }): Promise<T>;
+}
 
+export class AvatarStore {
+  private _store: AvatarStoreConfig;
+
+  constructor(store: AvatarStoreConfig) {
+    this._store = store;
+  }
+
+  withStore(store: AvatarStoreConfig): AvatarStore {
+    return new AvatarStore(store);
+  }
+
+  get store() { return this._store }
+
+
+  async findAvatars(id: string[]): Promise<Avatar[]> {
+    return await this._store.fetch<Avatar[]>(`avatars`, { 
+      repoType: 'AVATAR',  
+      method: 'POST',
+      body: JSON.stringify({ id }),
+    });
+  }
+}
 export interface Avatar {
-  origin: string;
-  twoLetterCode: string;
-  displayName: string | undefined;
-  color: string;
-  index: number; // duplication index, same initial but the rest of letters are different
+  id: string;
+  version: string;
+  externalId: string;
+  avatarType: string;
+  
+  created: string;
+  updated: string;
+  colorCode: string;
+  letterCode: string;
+  displayName: string;
 }
 
-export interface Avatars {
-  values: Record<string, Avatar>;
-}
-
-export interface AvatarReducer {
-  withAvatar: (letters: string) => void;
-  withAvatars: (letters: string[]) => void;
-}
+export type Avatars = Readonly<Record<string, Avatar>>;
 
 export interface AvatarContextType {
-  reducer: AvatarReducer;
+  withAvatars(id: string[]): void;
   avatars: Avatars; 
 }

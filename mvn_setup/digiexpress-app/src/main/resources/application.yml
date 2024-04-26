@@ -33,7 +33,7 @@ quarkus:
     password: postgres
     reactive:
       url: postgresql://localhost:5432/tasks_db
-      max-size: 300
+      max-size: 90
 # QUARKUS_DATASOURCE_USERNAME
 # QUARKUS_DATASOURCE_PASSWORD
 # QUARKUS_DATASOURCE_REACTIVE_URL

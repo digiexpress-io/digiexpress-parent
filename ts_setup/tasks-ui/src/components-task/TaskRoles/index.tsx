@@ -17,8 +17,8 @@ import { usePopover, TablePopover } from '../TablePopover';
 const checkboxSx = { height: "40px", color: cyan, '&.Mui-checked': { color: cyan } };
 
 const RoleAvatar: React.FC<{ children?: Avatar, onClick?: (event: React.MouseEvent<HTMLElement>) => void }> = ({ children, onClick }) => {
-  const bgcolor: string | undefined = children ? children.color : undefined;
-  const avatar = children ? children.twoLetterCode : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
+  const bgcolor: string | undefined = children ? children.colorCode : undefined;
+  const avatar = children ? children.letterCode : <AdminPanelSettingsIcon sx={{ fontSize: 15 }} />;
 
   return (
     <MAvatar onClick={onClick}
@@ -47,7 +47,7 @@ const RoleAvatars: React.FC<{
 
   return task.roles.length ?
     <AvatarGroup spacing='medium' sx={{ cursor: 'pointer' }} >
-      {avatars.map((role) => (<RoleAvatar key={role.origin}>{role}</RoleAvatar>))}
+      {avatars.map((role) => (<RoleAvatar key={role.id}>{role}</RoleAvatar>))}
     </AvatarGroup> :
     <RoleAvatar />
 }
@@ -65,8 +65,8 @@ const FullnamesAndAvatars: React.FC<{
 
   return avatars.length ?
     (<Stack spacing={1}>
-      {avatars.map((role) => (<Box key={role.origin} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
-        <RoleAvatar key={role.origin}>{role}</RoleAvatar>
+      {avatars.map((role) => (<Box key={role.id} display='flex' alignItems='center' sx={{ cursor: 'pointer' }}>
+        <RoleAvatar key={role.id}>{role}</RoleAvatar>
         <Box pl={1}><Typography>{role.displayName}</Typography></Box>
       </Box>))}
     </Stack>)
@@ -77,7 +77,7 @@ const FullnamesAndAvatars: React.FC<{
 
 const RoleBackgroundColor: React.FC<{ roleId: string }> = ({roleId}) => {
   const avatar = useAvatar(roleId);
-  return (<Box sx={{ width: 8, height: 40, backgroundColor: avatar?.color }} />);
+  return (<Box sx={{ width: 8, height: 40, backgroundColor: avatar?.colorCode }} />);
 }
 
 const SelectRoles: React.FC<{

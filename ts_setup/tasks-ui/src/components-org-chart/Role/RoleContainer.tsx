@@ -107,7 +107,7 @@ export const RoleContainer: React.FC<{ role: Role }> = ({ role }) => {
       display: "inline-block",
       borderTop: "5px solid",
       whiteSpace: "nowrap",
-      borderTopColor: avatar?.color,
+      borderTopColor: avatar?.colorCode,
     }}>
       <List subheader={<RoleHeader role={role} />}>
         <ListItemButton onClick={handleTogglePrincipals} disabled={!role.principals.length}>

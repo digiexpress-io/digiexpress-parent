@@ -22,16 +22,18 @@ import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
+@Singleton
 public class TasksResource implements TaskRestApi {
 
-  @Inject TaskClient tasks;
-  @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
-  @Inject ProjectClient tenantClient;
-  @Inject DataAccessPolicy accessPolicy;
+  @Inject private TaskClient tasks;
+  @Inject private CurrentTenant currentTenant;
+  @Inject private CurrentUser currentUser;
+  @Inject private ProjectClient tenantClient;
+  @Inject private DataAccessPolicy accessPolicy;
   
   @Override
   public Uni<List<Task>> findTasks() {

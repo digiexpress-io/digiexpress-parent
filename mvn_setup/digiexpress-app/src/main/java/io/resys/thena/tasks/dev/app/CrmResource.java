@@ -20,9 +20,11 @@ import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api")
+@Singleton
 public class CrmResource implements CrmRestApi {
 
   @Inject CrmClient crmClient;

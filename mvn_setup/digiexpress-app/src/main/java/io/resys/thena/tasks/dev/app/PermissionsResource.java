@@ -21,18 +21,20 @@ import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Path("q/digiexpress/api/am")
+@Singleton
 public class PermissionsResource implements PermissionRestApi {
 
-  @Inject PermissionClient permissions;
-  @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
-  @Inject ProjectClient tenantClient;
-  @Inject PrincipalCache cache;
+  @Inject private PermissionClient permissions;
+  @Inject private CurrentTenant currentTenant;
+  @Inject private CurrentUser currentUser;
+  @Inject private ProjectClient tenantClient;
+  @Inject private PrincipalCache cache;
 
   @Override
   public Uni<List<Principal>> findAllPrincipals() {

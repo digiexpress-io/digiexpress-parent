@@ -10,9 +10,11 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.rest.StencilRestApi;
 import io.thestencil.client.rest.StencilRestApiTemplate;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
 @Path("q/digiexpress/api/stencil")
+@Singleton
 public class StencilResource extends StencilRestApiTemplate implements StencilRestApi {
   private final ProjectClient tenantClient;
   private final CurrentTenant currentTenant;

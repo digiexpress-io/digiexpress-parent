@@ -14,15 +14,17 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfil
 import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Path;
 
+@Singleton
 @Path("q/digiexpress/api")
 public class UserProfileResource implements UserProfileRestApi {
 
-  @Inject UserProfileClient userProfileClient;
-  @Inject CurrentTenant currentTenant;
-  @Inject CurrentUser currentUser;
-  @Inject ProjectClient tenantClient;
+  @Inject private UserProfileClient userProfileClient;
+  @Inject private CurrentTenant currentTenant;
+  @Inject private CurrentUser currentUser;
+  @Inject private ProjectClient tenantClient;
 
   @Override
   public Uni<List<UserProfile>> findAllUserProfiles() {
