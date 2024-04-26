@@ -62,9 +62,16 @@ public class OrgProjectQueryImpl implements OrgProjectQuery {
       
       // USER_ROLE 6
       tuple.getItem6().forEach(userRole -> container.putMemberRights(userRole.getId(), userRole));
+      
+      for(final var mem : tuple.getItem4()) {
+        if(tuple.getItem2().stream().filter(e -> e.getId().equals(mem.getMemberId())).findFirst().isEmpty()) {
+          break;
+        }
+      }
 
       final QueryEnvelope<OrgProjectObjects> envelope = ImmutableQueryEnvelope.<OrgProjectObjects>builder()
           .objects(container.build())
+          .repo(org.getDataSource().getTenant())
           .status(QueryEnvelopeStatus.OK)
           .build();
       return envelope;
