@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.DocumentType;
 
 import io.resys.avatar.client.api.Avatar;
 import io.resys.avatar.client.api.AvatarCommand;
@@ -13,24 +12,28 @@ import io.resys.avatar.client.api.AvatarCommand.ChangeAvatarColorCode;
 import io.resys.avatar.client.api.AvatarCommand.ChangeAvatarDisplayName;
 import io.resys.avatar.client.api.AvatarCommand.ChangeAvatarLetterCode;
 import io.resys.avatar.client.api.AvatarCommand.CreateAvatar;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig;
+import io.resys.avatar.client.api.ImmutableAvatar;
+import io.resys.avatar.client.api.ImmutableCreateAvatar;
 import io.resys.avatar.client.spi.support.ColorProvider;
 import io.resys.avatar.client.spi.support.LetterCodeProvider;
-import io.resys.userprofile.client.api.ImmutableAvatar;
-import io.resys.userprofile.client.api.ImmutableChangeAvatarLetterCode;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 
 
 public class AvatarCommandVisitor {
+  @SuppressWarnings("unused")
   private final Avatar start;
-  private final List<AvatarCommand> visitedCommands = new ArrayList<>();
   @SuppressWarnings("unused")
   private final List<Avatar> allExistingProfiles;
+  
+  private final List<AvatarCommand> visitedCommands = new ArrayList<>();
   private final List<String> letterCodes = new ArrayList<>();
   private final List<String> colorCodes = new ArrayList<>();
   private final List<String> displayNames = new ArrayList<>();
   private ImmutableAvatar current;
   
-  public AvatarCommandVisitor(AvatarStoreConfig ctx, List<Avatar> allExistingProfiles) {
+  public AvatarCommandVisitor(ThenaDocConfig ctx, List<Avatar> allExistingProfiles) {
     this.start = null;
     this.current = null;
     this.allExistingProfiles = allExistingProfiles;
@@ -42,7 +45,7 @@ public class AvatarCommandVisitor {
     } 
   }
   
-  public AvatarCommandVisitor(Avatar start, AvatarStoreConfig ctx, List<Avatar> allExistingProfiles) {
+  public AvatarCommandVisitor(Avatar start, ThenaDocConfig ctx, List<Avatar> allExistingProfiles) {
     this.start = start;
     this.current = ImmutableAvatar.builder().from(start).build();
     this.allExistingProfiles = allExistingProfiles;
@@ -57,7 +60,7 @@ public class AvatarCommandVisitor {
     } 
   }
   
-  public Avatar visitTransaction(List<? extends AvatarCommand> commands) throws NoChangesException {
+  public Tuple2<Avatar, List<JsonObject>> visitTransaction(List<? extends AvatarCommand> commands) throws NoChangesException {
     for(final var command : commands) {
       visitCommand(command);
     }
@@ -65,7 +68,7 @@ public class AvatarCommandVisitor {
     if(visitedCommands.isEmpty()) {
       throw new NoChangesException();
     }
-    return this.current;
+    return Tuple2.of(this.current, visitedCommands.stream().map(JsonObject::mapFrom).toList());
   }
   
   private Avatar visitCommand(AvatarCommand command) throws NoChangesException {
@@ -82,28 +85,9 @@ public class AvatarCommandVisitor {
     
     throw new UpdateAvatarVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
   }
-  private ImmutableUserDetails createDetails(CreateAvatar command) {
-    final var firstName = Optional.ofNullable(command.getFirstName()).orElse(createFirstName(command));
-    final var lastName = Optional.ofNullable(command.getLastName()).orElse(createLastName(command));
-    
-    final var details = ImmutableUserDetails.builder()
-        .username(Optional.ofNullable(command.getUsername()).orElse(createUserName(command)))
-        .firstName(firstName)
-        .lastName(lastName)
-        .colorCode(Optional.ofNullable(command.getColorCode()).orElse(createColorCode(command)))
-        .letterCode(Optional.ofNullable(command.getLetterCode()).orElse(LetterCodeProvider.getInstance(colorCodes, firstName, lastName).getNextCode()))
-        .displayName(firstName + " " + lastName)
-        .email(command.getEmail())
-        .build();
-    
-    this.colorCodes.add(details.getColorCode());
-    this.letterCodes.add(details.getLetterCode());
-    this.displayNames.add(details.getDisplayName());
-    return details;
-  }
   
   private String createUserName(CreateAvatar command) {
-    final var email = command.getEmail();
+    final var email = command.getSeedData();
     final var splitAt = email.indexOf("@");
     if(splitAt <= 0) {
       return email;
@@ -111,7 +95,7 @@ public class AvatarCommandVisitor {
     return email.substring(splitAt);
   }
   private String createFirstName(CreateAvatar command) {
-    final var email = command.getEmail();
+    final var email = command.getSeedData();
     final var frags = email.split("\\.");
     return StringUtils.capitalize(frags[0]);
   }
@@ -128,27 +112,21 @@ public class AvatarCommandVisitor {
   }
   private Avatar visitCreateAvatar(CreateAvatar command) {
     final var id = command.getId();
-    final var targetDate = requireTargetDate(command);
-    this.current = ImmutableAvatar.builder()
-      .id(id)
-      .details(createDetails(command))
-      .notificationSettings(command.getNotificationSettings().stream()
-          .map(e -> ImmutableNotificationSetting.builder()
-              .from(e)
-              .build())
-          .toList())
-      .created(targetDate)
-      .updated(targetDate)
-      
-      .addTransactions(
-          ImmutableAvatarTransaction.builder()
-          .id("1")
-          .addCommands(command)
-          .build())
-      .documentType(DocumentType.USER_PROFILE)
-      .build();
-    visitedCommands.add(command);
+    final var firstName = createFirstName(command);
+    final var lastName = createLastName(command);
     
+    this.current = ImmutableAvatar.builder()
+        .id(id)
+        .externalId(command.getExternalId())
+        .colorCode(Optional.ofNullable(command.getColorCode()).orElse(createColorCode(command)))
+        .letterCode(Optional.ofNullable(command.getLetterCode()).orElse(LetterCodeProvider.getInstance(colorCodes, firstName, lastName).getNextCode()))
+        .displayName(firstName + " " + lastName)
+        .build();
+    
+    this.colorCodes.add(current.getColorCode());
+    this.letterCodes.add(current.getLetterCode());
+    this.displayNames.add(current.getDisplayName());
+    visitedCommands.add(ImmutableCreateAvatar.builder().from(command).seedData("").build());
     return this.current;
   }
 

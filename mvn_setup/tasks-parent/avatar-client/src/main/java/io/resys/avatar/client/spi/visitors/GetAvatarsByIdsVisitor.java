@@ -24,44 +24,46 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.resys.avatar.client.api.Avatar;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig;
-import io.resys.avatar.client.spi.store.AvatarStoreException;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig.AvatarDocObjectsVisitor;
-import io.resys.thena.api.actions.DocQueryActions;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
-import io.resys.thena.api.entities.doc.DocLog;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.userprofile.client.api.ImmutableAvatar;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocObjectsVisitor;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class GetAvatarsByIdsVisitor implements AvatarDocObjectsVisitor<List<Avatar>> {
+public class GetAvatarsByIdsVisitor implements DocObjectsVisitor<List<Avatar>> {
   private final Collection<String> profileIds;
   
   @Override
-  public DocObjectsQuery start(AvatarStoreConfig config, DocObjectsQuery builder) {
-    return builder.matchIds(new ArrayList<>(profileIds));
+  public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
+    return builder.findAll(new ArrayList<>(profileIds));
   }
 
   @Override
-  public DocQueryActions.DocObjects visitEnvelope(AvatarStoreConfig config, QueryEnvelope<DocQueryActions.DocObjects> envelope) {
+  public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw AvatarStoreException.builder("GET_AVATAR_BY_ID_FAIL")
+      throw DocStoreException.builder("GET_AVATAR_BY_ID_FAIL")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
     }
     final var result = envelope.getObjects();
     if(result == null) {
-      throw AvatarStoreException.builder("GET_AVATAR_BY_ID_NOT_FOUND")   
+      throw DocStoreException.builder("GET_AVATAR_BY_ID_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(profileIds.stream().collect(Collectors.joining(",", "{", "}"))))
         .build();
@@ -70,15 +72,16 @@ public class GetAvatarsByIdsVisitor implements AvatarDocObjectsVisitor<List<Avat
   }
 
   @Override
-  public List<Avatar> end(AvatarStoreConfig config, DocQueryActions.DocObjects ref) {
+  public List<Avatar> end(ThenaDocConfig config, DocTenantObjects ref) {
     if(ref == null) {
       return Collections.emptyList();
     }
-    return ref.accept((Doc doc, DocBranch docBranch, DocCommit commit, List<DocLog> log) -> 
-      docBranch.getValue()
-      .mapTo(ImmutableAvatar.class)
-      .withVersion(commit.getId())
-      .withExternalId(doc.getExternalId())
+    return ref.accept((
+        Doc doc, 
+        DocBranch docBranch, 
+        Map<String, DocCommit> commit, 
+        List<DocCommands> commands,
+        List<DocCommitTree> trees) -> FindAllAvatarsVisitor.mapToAvatar(docBranch)
     );
   }
 }

@@ -16,7 +16,7 @@ public interface AvatarClient {
   CreateAvatarAction createAvatar();
   UpdateAvatarAction updateAvatar();
   AvatarQuery queryAvatars();
-  AvatarTenantQuery queryTenants();
+  RepositoryQuery repoQuery();
   
   
   interface CreateAvatarAction {
@@ -35,9 +35,8 @@ public interface AvatarClient {
     Uni<List<Avatar>> findByIds(Collection<String> avatarIds);
     Uni<Avatar> get(String avatarId);
   }
-  
-  public interface AvatarTenantQuery {
-    AvatarTenantQuery tenantName(String tenantName);
+  public interface RepositoryQuery {
+    RepositoryQuery repoName(String repoName);
     AvatarClient build();
 
     Uni<AvatarClient> deleteAll();
@@ -45,6 +44,6 @@ public interface AvatarClient {
     Uni<AvatarClient> create();
     Uni<AvatarClient> createIfNot();
     Uni<Optional<AvatarClient>> get();
-  } 
+  }
 
 }

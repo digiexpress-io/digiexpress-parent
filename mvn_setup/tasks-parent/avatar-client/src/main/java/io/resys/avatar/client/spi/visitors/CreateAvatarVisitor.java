@@ -30,38 +30,44 @@ import java.util.stream.Collectors;
 
 import io.resys.avatar.client.api.Avatar;
 import io.resys.avatar.client.api.AvatarCommand.CreateAvatar;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig;
-import io.resys.avatar.client.spi.store.AvatarStoreException;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig.AvatarDocCreateVisitor;
+import io.resys.avatar.client.api.ImmutableAvatar;
+import io.resys.avatar.client.spi.AvatarStore;
 import io.resys.avatar.client.spi.visitors.AvatarCommandVisitor.NoChangesException;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocBranch;
-import io.resys.userprofile.client.api.ImmutableAvatar;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
+import io.resys.thena.spi.ThenaDocConfig.DocCreateVisitor;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;  
 
 @RequiredArgsConstructor
-public class CreateAvatarVisitor implements AvatarDocCreateVisitor<Avatar> {
+public class CreateAvatarVisitor implements DocCreateVisitor<Avatar> {
+  private final AvatarStore ctx;
   private final List<? extends CreateAvatar> commands;
   private final List<Avatar> allExistingProfiles;
   private final List<Avatar> profiles = new ArrayList<Avatar>();
   
   @Override
-  public CreateManyDocs start(AvatarStoreConfig config, CreateManyDocs builder) {
-    builder.message("creating avatar");
+  public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
+    builder
+      .commitMessage("creating avatar")
+      .commitAuthor(ctx.getConfig().getAuthor().get());
     
     for(final var command : commands) {
       try {
         final var entity = new AvatarCommandVisitor(config, allExistingProfiles).visitTransaction(Arrays.asList(command));
-        final var json = JsonObject.mapFrom(entity);
+        final var json = JsonObject.mapFrom(entity.getItem1());
         builder.item()
-          .append(json)
-          .docId(entity.getId())
-          .externalId(entity.getExternalId())
+          .branchContent(json)
+          .docType(AvatarStore.DOC_TYPE_AVATAR)
+          .docId(entity.getItem1().getId())
+          .externalId(entity.getItem1().getExternalId())
+          .commands(entity.getItem2())
           .next();
-        profiles.add(entity);
+        profiles.add(entity.getItem1());
       } catch (NoChangesException e) {
         throw new RuntimeException(e.getMessage(), e);
       }
@@ -70,15 +76,15 @@ public class CreateAvatarVisitor implements AvatarDocCreateVisitor<Avatar> {
   }
 
   @Override
-  public List<DocBranch> visitEnvelope(AvatarStoreConfig config, ManyDocsEnvelope envelope) {
+  public List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope) {
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope.getBranch();
     }
-    throw new AvatarStoreException("AVATAR_CREATE_FAIL", AvatarStoreException.convertMessages(envelope));
+    throw new DocStoreException("AVATAR_CREATE_FAIL", DocStoreException.convertMessages(envelope));
   }
 
   @Override
-  public List<Avatar> end(AvatarStoreConfig config, List<DocBranch> branches) {
+  public List<Avatar> end(ThenaDocConfig config, List<DocBranch> branches) {
     final Map<String, Avatar> configsById = new HashMap<>(
         this.profiles.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)));
     

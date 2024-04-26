@@ -51,6 +51,6 @@ public interface UserProfileClient {
     Uni<UserProfileClient> create();
     Uni<UserProfileClient> createIfNot();
     Uni<Optional<UserProfileClient>> get();
-  } 
+  }
 
 }

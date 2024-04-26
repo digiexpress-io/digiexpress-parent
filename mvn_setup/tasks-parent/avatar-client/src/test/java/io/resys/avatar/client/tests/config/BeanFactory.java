@@ -1,16 +1,6 @@
 package io.resys.avatar.client.tests.config;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import io.resys.avatar.client.api.model.ImmutableArchiveUserProfile;
-import io.resys.avatar.client.api.model.ImmutableChangeNotificationSetting;
-import io.resys.avatar.client.api.model.ImmutableChangeUserDetailsEmail;
-import io.resys.avatar.client.api.model.ImmutableChangeUserDetailsFirstName;
-import io.resys.avatar.client.api.model.ImmutableChangeUserDetailsLastName;
-import io.resys.avatar.client.api.model.ImmutableCreateUserProfile;
-import io.resys.avatar.client.api.model.ImmutableNotificationSetting;
-import io.resys.avatar.client.api.model.ImmutableUpsertUserProfile;
-import io.resys.avatar.client.api.model.ImmutableUserDetails;
-import io.resys.avatar.client.api.model.ImmutableUserProfile;
 /*-
  * #%L
  * thena-quarkus-dev-app
@@ -34,16 +24,7 @@ import jakarta.enterprise.context.Dependent;
 
 @Dependent
 @RegisterForReflection(targets = {
-    ImmutableUserProfile.class,
-    ImmutableCreateUserProfile.class,
-    ImmutableUpsertUserProfile.class,    
-    ImmutableUserDetails.class,
-    ImmutableNotificationSetting.class,
-    ImmutableChangeUserDetailsFirstName.class,
-    ImmutableChangeUserDetailsLastName.class,
-    ImmutableChangeUserDetailsEmail.class,
-    ImmutableChangeNotificationSetting.class,
-    ImmutableArchiveUserProfile.class
+    
 })
 public class BeanFactory {
 

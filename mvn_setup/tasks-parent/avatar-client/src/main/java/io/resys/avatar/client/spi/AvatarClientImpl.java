@@ -9,8 +9,6 @@ import io.resys.avatar.client.api.Avatar;
 import io.resys.avatar.client.api.AvatarClient;
 import io.resys.avatar.client.api.AvatarCommand.AvatarUpdateCommand;
 import io.resys.avatar.client.api.AvatarCommand.CreateAvatar;
-import io.resys.avatar.client.spi.store.AvatarStore;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig;
 import io.resys.avatar.client.spi.visitors.CreateAvatarVisitor;
 import io.resys.avatar.client.spi.visitors.FindAllAvatarsVisitor;
 import io.resys.avatar.client.spi.visitors.GetAvatarVisitor;
@@ -47,7 +45,7 @@ public class AvatarClientImpl implements AvatarClient {
       @Override
       public Uni<List<Avatar>> createMany(List<? extends CreateAvatar> commands) {
         return ctx.getConfig().accept(new FindAllAvatarsVisitor()).onItem()
-            .transformToUni(allProfiles -> ctx.getConfig().accept(new CreateAvatarVisitor(commands, allProfiles)));
+            .transformToUni(allProfiles -> ctx.getConfig().accept(new CreateAvatarVisitor(ctx, commands, allProfiles)));
       }
     };
   }
@@ -100,11 +98,13 @@ public class AvatarClientImpl implements AvatarClient {
       }
     };
   }
+  
+
   @Override
-  public AvatarTenantQuery queryTenants() {
-    AvatarStore.InternalAvatarTenantQuery repo = ctx.query();
-    return new AvatarTenantQuery() {
-      private String tenantName;
+  public RepositoryQuery repoQuery() {
+    var repo = ctx.query();
+    return new RepositoryQuery() {
+      private String repoName;
       
       @Override public Uni<AvatarClient> createIfNot() { return repo.createIfNot().onItem().transform(doc -> new AvatarClientImpl(doc)); }
       @Override public Uni<AvatarClient> create() { return repo.create().onItem().transform(doc -> new AvatarClientImpl(doc)); }
@@ -112,17 +112,17 @@ public class AvatarClientImpl implements AvatarClient {
       @Override public Uni<AvatarClient> delete() { return repo.delete().onItem().transform(doc -> new AvatarClientImpl(doc)); }
       @Override public Uni<AvatarClient> deleteAll() { return repo.deleteAll().onItem().transform(doc -> new AvatarClientImpl(ctx)); }
       @Override
-      public AvatarTenantQuery tenantName(String tenantName) {
-        this.tenantName = tenantName;
-        repo.repoName(tenantName).headName(AvatarStoreConfig.HEAD_NAME);
+      public RepositoryQuery repoName(String repoName) {
+        this.repoName = repoName;
+        repo.repoName(repoName);
         return this;
       }
       @Override
       public Uni<Optional<AvatarClient>> get() {
-        RepoAssert.notEmpty(tenantName, () -> "tenantName must be defined!");
+        RepoAssert.notEmpty(repoName, () -> "repoName must be defined!");
         
         final var client = ctx.getConfig().getClient();
-        return client.tenants().find().id(tenantName)
+        return client.tenants().find().id(repoName)
             .get().onItem().transform(existing -> {
               if(existing == null) {
                 final Optional<AvatarClient> result = Optional.empty();

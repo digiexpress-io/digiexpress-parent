@@ -40,10 +40,8 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.resys.avatar.client.api.AvatarClient;
-import io.resys.avatar.client.api.model.Document.DocumentType;
 import io.resys.avatar.client.spi.AvatarClientImpl;
-import io.resys.avatar.client.spi.AvatarStoreImpl;
-import io.resys.avatar.client.spi.store.AvatarStoreConfig.DocumentGidProvider;
+import io.resys.avatar.client.spi.AvatarStore;
 import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.support.DocDbPrinter;
@@ -55,34 +53,23 @@ import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UserProfileTestCase {
+public class AvatarTestCase {
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   public final Duration atMost = Duration.ofMinutes(5);
   
-  private AvatarStoreImpl store;
+  private AvatarStore store;
   private AvatarClientImpl client;
   private static final String DB = "junit-crm-"; 
   private static final AtomicInteger DB_ID = new AtomicInteger();
   private static final Instant targetDate = LocalDateTime.of(2023, 1, 1, 1, 1).toInstant(ZoneOffset.UTC);
-  private final AtomicInteger id_provider = new AtomicInteger();
   
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
     final var db = DB + DB_ID.getAndIncrement();
-    store = AvatarStoreImpl.builder()
+    store = AvatarStore.builder()
         .repoName(db).pgPool(pgPool).pgDb(db)
-        .gidProvider(new DocumentGidProvider() {
-          @Override
-          public String getNextVersion(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-          
-          @Override
-          public String getNextId(DocumentType entity) {
-            return id_provider.incrementAndGet() + "_" + entity.name();
-          }
-        })
+      
         .build();
     client = new AvatarClientImpl(store);
     objectMapper();
@@ -125,7 +112,7 @@ public class UserProfileTestCase {
     store = null;
   }
 
-  public AvatarStoreImpl getStore() {
+  public AvatarStore getStore() {
     return store;
   }
 
@@ -153,7 +140,7 @@ public class UserProfileTestCase {
   }
   
   public static String toExpectedFile(String fileName) {
-    return toString(UserProfileTestCase.class, fileName);
+    return toString(AvatarTestCase.class, fileName);
   }
   
   public void assertRepo(AvatarClient client, String expectedFileName) {

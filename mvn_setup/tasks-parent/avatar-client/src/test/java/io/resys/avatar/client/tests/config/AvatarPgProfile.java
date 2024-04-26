@@ -24,7 +24,7 @@ import java.util.Map;
 
 import io.quarkus.test.junit.QuarkusTestProfile;
 
-public class UserProfilePgProfile implements QuarkusTestProfile {
+public class AvatarPgProfile implements QuarkusTestProfile {
   @Override
   public Map<String, String> getConfigOverrides() {
     return Map.of(

@@ -21,7 +21,6 @@ package io.resys.avatar.client.api;
  */
 
 import java.io.Serializable;
-import java.time.Instant;
 
 import javax.annotation.Nullable;
 
@@ -47,12 +46,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 })
 public interface AvatarCommand extends Serializable {
   String getId();
-  @Nullable String getUserId();
-  @Nullable Instant getTargetDate();
   AvatarCommandType getCommandType();
   
   enum AvatarCommandType {
-    CREATE_AVATAR, 
+    CREATE_AVATAR,
     CHANGE_COLOR_CODE,
     CHANGE_LETTER_CODE,
     CHANGE_DISPLAY_NAME;
@@ -62,10 +59,11 @@ public interface AvatarCommand extends Serializable {
   interface CreateAvatar extends AvatarCommand {
     String getExternalId();
     String getAvatarType();
+    String getSeedData();
     @Nullable String getColorCode();
     @Nullable String getLetterCode();
     @Nullable String getDisplayName();
-    
+    @Override default AvatarCommandType getCommandType() { return AvatarCommandType.CREATE_AVATAR; } 
   }
   
   @JsonTypeInfo(
@@ -80,7 +78,6 @@ public interface AvatarCommand extends Serializable {
   interface AvatarUpdateCommand extends AvatarCommand {
     String getId();
   }
-
   @Value.Immutable @JsonSerialize(as = ImmutableChangeAvatarColorCode.class) @JsonDeserialize(as = ImmutableChangeAvatarColorCode.class)
   interface ChangeAvatarColorCode extends AvatarUpdateCommand {
     String getColorCode();
