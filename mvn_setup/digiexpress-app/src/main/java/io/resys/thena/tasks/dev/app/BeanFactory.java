@@ -69,7 +69,6 @@ import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
-import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import jakarta.enterprise.context.Dependent;
@@ -306,7 +305,7 @@ public class BeanFactory {
   
   @Singleton
   @Produces
-  public CurrentPgPool currentPgPool(Vertx vertx, PgPool pool) {
+  public CurrentPgPool currentPgPool(Vertx vertx) {
     log.debug("PgConnectOptions: pgHost={}, pgPort={}, pgUser={}, pgPass={}, pgDb={}, pgPoolSize={}",
         pgHost, pgPort, pgUser, pgPass != null ? "***" : "null", pgDb, pgPoolSize);
       final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
