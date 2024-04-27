@@ -29,7 +29,10 @@ export class ImmutableAmStore implements AmStore {
   async currentUserProfile(): Promise<UserProfileAndOrg> {
     try {
       const config = await this._store.fetch<{
-        permissions: { permissions: string[] };
+        permissions: { 
+          principal: Principal;
+          permissions: string[];
+        };
         user: {
           userId: string;
           email: string;
@@ -39,12 +42,19 @@ export class ImmutableAmStore implements AmStore {
         tenant: TenantConfig;
         profile: UserProfile
 
-      }>(`config/current-user`, { repoType: 'USER_PROFILE' })
+      }>(`config/current-user`, { repoType: 'USER_PROFILE' });
+
       return {
         userId: config.profile.id,
         am: {
+          principal: config.permissions.principal,
           permissions: config.permissions.permissions,
           roles: []
+        },
+        all: {
+          permissions: {},
+          principals: {},
+          roles: {}
         },
         user: config.profile,
         tenant: config.tenant,

@@ -18,7 +18,14 @@ export function getDaysUntilDue(task: Task, today: Date) {
 }
 
 export function getTeamspaceType(task: Task, profile: UserProfileAndOrg, today: Date): TeamGroupType | undefined {
-  if (profile.am.roles.filter((role) => task.roles.includes(role)).length === 0) {
+
+  const taskPermission = task.roles.map(roleId => profile.all.roles[roleId]).flatMap(role => role.permissions);
+  const userPermissions = profile.am.permissions;
+
+  if (!task.assigneeIds.includes(profile.am.principal.id) &&
+    taskPermission.filter(permission => userPermissions.includes(permission)).length === 0) {
+
+    console.warn("TASK", taskPermission, " USER ", userPermissions);
     return undefined;
   }
 

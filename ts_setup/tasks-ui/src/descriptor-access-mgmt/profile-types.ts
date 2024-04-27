@@ -1,15 +1,21 @@
 import { TenantConfig } from './tenant-types';
-import { PrincipalId } from './permission-types';
+import { Permission, Principal, PrincipalId, Role } from './permission-types';
 
 
 export type NotificationType = string;
 
 export interface UserProfileAndOrg {
-  userId: string;
-  am: { 
+  userId: string; 
+  am: {  // current user related AM
+    principal: Principal;
     permissions: string[];
     roles: string[];
   };
+  all: {
+    permissions: Record<string, Permission>;
+    principals: Record<string, Principal>;
+    roles: Record<string, Role>;
+  }
   tenant: TenantConfig;
   user: UserProfile;
   today: Date;

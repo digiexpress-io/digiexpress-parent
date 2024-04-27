@@ -69,6 +69,8 @@ export const AccessMgmtContextProvider: React.FC<{
       {props.children}
   </AccessMgmtContextProviderDelegate>)
 }
+
+
 const AccessMgmtContextProviderDelegate: React.FC<{ 
   children: React.ReactNode, 
   profile: UserProfileAndOrg, 
@@ -135,7 +137,7 @@ const AccessMgmtContextProviderDelegate: React.FC<{
     function getPrincipal(idOrName: string) {
       const result = principals.find(({ id, name }) => id === idOrName || name === idOrName);
       if (!result) {
-        throw new Error("Principal not found by id/name/externalId" + idOrName);
+        throw new Error("Principal not found by id/name/externalId: " + idOrName);
       }
       return result;
     }
@@ -145,16 +147,33 @@ const AccessMgmtContextProviderDelegate: React.FC<{
     function findTaskRoles(searchFor: string, checkedRoles: RoleId[]): RoleSearchResult[] {
       return container.findTaskRoles(searchFor, checkedRoles);
     }
-    const iam = getPrincipal(profile.userId);
+
+    const combinedProfile: UserProfileAndOrg = {
+      ...profile,
+      all: { roles: toRecord(roles), permissions: toRecord(permissions), principals: toRecord(principals) }
+    };
+
+    const iam = getPrincipal(profile.am.principal.id);
     return { 
       userId: profile.userId,
       loading: false,
-      iam, profile, reload, roles, permissions, principals, 
-      getPermission, getRole, getPrincipal, findTaskRoles, findTaskUsers };
+      profile: combinedProfile,
+      iam, 
+      roles, 
+      permissions, 
+      principals, 
+      reload, getPermission, getRole, getPrincipal, findTaskRoles, findTaskUsers };
   }, [profile, store, roles, permissions, principals, loadAllRoles, loadAllPermissions, loadAllPrincipals]);
 
 
   return (<AccessMgmtContext.Provider value={contextValue}>
     {props.children}
   </AccessMgmtContext.Provider>);
+}
+
+function toRecord<V extends {id: string}>(iterable: V[]) {
+  return [...iterable].reduce((obj, value) => {
+    obj[value.id] = value
+    return obj
+  }, {} as {[k: string]: V})
 }

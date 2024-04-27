@@ -308,9 +308,12 @@ public class BeanFactory {
   public CurrentPgPool currentPgPool(Vertx vertx) {
     log.debug("PgConnectOptions: pgHost={}, pgPort={}, pgUser={}, pgPass={}, pgDb={}, pgPoolSize={}",
         pgHost, pgPort, pgUser, pgPass != null ? "***" : "null", pgDb, pgPoolSize);
-      final var connectOptions = new PgConnectOptions().setDatabase(pgDb)
-        .setHost(pgHost).setPort(pgPort)
-        .setUser(pgUser).setPassword(pgPass);
+      final var connectOptions = new PgConnectOptions()
+        .setDatabase(pgDb)
+        .setHost(pgHost)
+        .setPort(pgPort)
+        .setUser(pgUser)
+        .setPassword(pgPass);
       final var poolOptions = new PoolOptions().setMaxSize(pgPoolSize);
       final var pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
     return new CurrentPgPool(pgPool);

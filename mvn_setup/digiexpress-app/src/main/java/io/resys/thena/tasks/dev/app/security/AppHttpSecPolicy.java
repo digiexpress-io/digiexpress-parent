@@ -22,7 +22,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
         );
         return CheckResult.PERMIT;
       }
-      log.debug("application security policy: user: {} is denied access for path: '{}', method: '{}'", 
+      log.warn("application security policy: user: {} is denied access for path: '{}', method: '{}'", 
           i.getPrincipal().getName(), 
           request.request().path(),
           request.request().method()

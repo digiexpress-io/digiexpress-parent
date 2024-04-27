@@ -24,11 +24,12 @@ import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@ApplicationScoped
+@Singleton
 public class DemoOrg {
   @Inject PermissionClient permissions;
   @Inject ProjectClient tenantClient;

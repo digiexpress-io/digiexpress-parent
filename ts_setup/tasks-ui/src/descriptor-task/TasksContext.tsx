@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Backend } from 'descriptor-backend';
-import { UserProfileAndOrg } from 'descriptor-access-mgmt';
+import { useAm, UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { Task, TaskUpdateCommand, TaskId, CreateTask } from './backend-types';
 import { TasksContextType, TaskDescriptor } from './descriptor-types';
@@ -52,9 +52,9 @@ function initTasks(tasks: Task[], profile: UserProfileAndOrg): {
   }
 }
 
-export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
-  const { backend, profile } = init;
-
+export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend } }> = ({ children, init }) => {
+  const { backend } = init;
+  const { profile } = useAm();
   
   const [loading, setLoading] = React.useState<boolean>(true);
   const [tasks, setTasks] = React.useState<Record<string, TaskDescriptor>>({});

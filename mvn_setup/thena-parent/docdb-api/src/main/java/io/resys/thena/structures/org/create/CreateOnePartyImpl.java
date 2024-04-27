@@ -80,7 +80,10 @@ public class CreateOnePartyImpl implements CreateOneParty {
 		// fetch parent group
 		final Uni<Optional<OrgParty>> parentUni = this.parentId == null ? 
 			Uni.createFrom().item(Optional.empty()) : 
-			tx.query().parties().getById(parentId).onItem().transform(parent -> Optional.of(parent));
+			tx.query().parties().getById(parentId).onItem().transform(parent -> {
+		    RepoAssert.notNull(parent, () -> "Can't find parent party: '" + parentId + "'!");
+			  return Optional.of(parent);
+			});
 	
 		// join data
 		return Uni.combine().all().unis(usersUni, rolesUni, parentUni).asTuple()

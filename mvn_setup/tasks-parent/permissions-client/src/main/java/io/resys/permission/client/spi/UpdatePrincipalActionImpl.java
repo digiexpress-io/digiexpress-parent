@@ -9,6 +9,7 @@ import io.resys.permission.client.api.model.ChangeType;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalEmail;
+import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalExternalId;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalName;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalPermissions;
 import io.resys.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
@@ -101,7 +102,11 @@ public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
         modifyOneMember.email(email.getEmail());
         break;
       }
-      
+      case CHANGE_PRINCIPAL_EXT_ID: {
+        final var externalId = (ChangePrincipalExternalId) command;
+        modifyOneMember.externalId(externalId.getExternalId());
+        break;
+      }      
       default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
       }
     }

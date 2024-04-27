@@ -46,7 +46,9 @@ import jakarta.annotation.Nullable;
   @Type(value = ImmutableChangePrincipalName.class, name = "CHANGE_PRINCIPAL_NAME"), 
   @Type(value = ImmutableChangePrincipalEmail.class, name = "CHANGE_PRINCIPAL_EMAIL"), 
   @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
-  @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS"), 
+  @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS"),
+  @Type(value = ImmutableChangePrincipalExternalId.class, name = "CHANGE_PRINCIPAL_EXT_ID"),
+  
 })
 
 public interface PrincipalCommand extends Serializable {
@@ -57,7 +59,7 @@ public interface PrincipalCommand extends Serializable {
     CHANGE_PRINCIPAL_STATUS,
     CHANGE_PRINCIPAL_NAME,
     CHANGE_PRINCIPAL_EMAIL,
-    
+    CHANGE_PRINCIPAL_EXT_ID,
     
     CHANGE_PRINCIPAL_ROLES,
     CHANGE_PRINCIPAL_PERMISSIONS,
@@ -83,6 +85,7 @@ public interface PrincipalCommand extends Serializable {
   @JsonSubTypes({
     @Type(value = ImmutableChangePrincipalStatus.class, name = "CHANGE_PRINCIPAL_STATUS"), 
     @Type(value = ImmutableChangePrincipalName.class, name = "CHANGE_PRINCIPAL_NAME"),
+    @Type(value = ImmutableChangePrincipalExternalId.class, name = "CHANGE_PRINCIPAL_EXT_ID"),
     @Type(value = ImmutableChangePrincipalEmail.class, name = "CHANGE_PRINCIPAL_EMAIL"), 
     @Type(value = ImmutableChangePrincipalRoles.class, name = "CHANGE_PRINCIPAL_ROLES"), 
     @Type(value = ImmutableChangePrincipalPermissions.class, name = "CHANGE_PRINCIPAL_PERMISSIONS")
@@ -131,6 +134,16 @@ public interface PrincipalCommand extends Serializable {
     
     @Value.Default
     @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_NAME; }
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalExternalId.class) @JsonDeserialize(as = ImmutableChangePrincipalExternalId.class)
+  interface ChangePrincipalExternalId extends PrincipalUpdateCommand {
+    String getId();
+    String getExternalId();
+    String getComment(); // for auditing purposes, user who made changes must describe why, in a comment.
+    
+    @Value.Default
+    @Override default PrincipalCommandType getCommandType() { return PrincipalCommandType.CHANGE_PRINCIPAL_EXT_ID; }
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableChangePrincipalEmail.class) @JsonDeserialize(as = ImmutableChangePrincipalEmail.class)

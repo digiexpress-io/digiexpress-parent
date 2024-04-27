@@ -59,7 +59,7 @@ const OneTable: React.FC<{ index: number, groupId: string, classifierName: Group
 const ManyTables: React.FC = () => {
   const { collection } = useGrouping();
 
-  return (<>{collection.groups.map((group, index) => <OneTable 
+  return (<>{collection.groups.map((group, index) => <OneTable key={group.id}
     index={index} 
     groupId={group.id} 
     classifierName={collection.classifierName as GroupByTypes}

@@ -9,9 +9,12 @@ import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.ImmutableCreatePermission;
+import io.resys.permission.client.api.model.ImmutableCreateRole;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.mig.MigrationClient;
 import io.resys.sysconfig.client.mig.model.MigrationAssets;
+import io.resys.thena.projects.client.api.ImmutableCreateTenantConfig;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
@@ -19,10 +22,14 @@ import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.dev.app.demo.DemoOrg;
 import io.resys.thena.tasks.dev.app.demo.RandomDataProvider;
 import io.resys.thena.tasks.dev.app.demo.TaskGen;
-import io.resys.thena.tasks.dev.app.user.CurrentSetup;
+import io.resys.thena.tasks.dev.app.security.BuiltInDataPermissions;
+import io.resys.thena.tasks.dev.app.security.BuiltInRoles;
+import io.resys.thena.tasks.dev.app.security.BuiltInUIPermissions;
+import io.resys.thena.tasks.dev.app.user.UserConfigSetup;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -34,7 +41,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Path("q/demo/api/")
 @Singleton
 public class DemoResource {
@@ -45,7 +54,7 @@ public class DemoResource {
   @Inject ProjectClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject SysConfigClient sysConfigClient;
-  @Inject CurrentSetup setup;
+  @Inject UserConfigSetup setup;
   @Inject CurrentUser currentUser;
   @Inject DemoOrg demoOrg;
   
@@ -95,9 +104,76 @@ public class DemoResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("reinit")
   public Uni<CurrentUserConfig> reinit() {
-    return tenantClient.query().deleteAll().onItem()
-        .transformToUni(junk -> setup.getOrCreateCurrentUserConfig(currentUser))
-        .onItem().transformToUni(config -> demoOrg.generate().onItem().transform(junk -> config));
+    return tenantClient.query().deleteAll()
+        .onItem().transformToUni(junk -> createTenant())
+        .onItem().transformToUni(tenant -> createRoles(tenant).onItem().transformToUni(junk -> createPermissions(tenant)))
+        .onItem().transformToUni(junk -> demoOrg.generate())
+        .onItem().transformToUni(junk -> setup.getOrCreateCurrentUserConfig(currentUser));
+  }
+  
+  
+  private Uni<Void> createRoles(TenantConfig tenant) {
+    final var config = tenant.getRepoConfig(TenantRepoConfigType.PERMISSIONS);
+    final var client = permissions.withRepoId(config.getRepoId());
+    
+    return Multi.createFrom().items(BuiltInRoles.values())
+        .onItem().transformToUni(role -> {
+          return  client.roleQuery().get(role.name())
+            .onFailure().recoverWithUni(e -> {
+              log.warn("App setup, system role: '{}' not defined, trying to create it!", role.name());
+              return client.createRole().createOne(ImmutableCreateRole.builder()
+                  .comment("created by default on first user registration")
+                  .name(role.name())
+                  .description(role.getDescription())
+                  .build());
+            });
+        })
+        .concatenate().collect().asList()
+        .onItem().transformToUni(junk -> Uni.createFrom().voidItem());
+  }
+  
+  private Uni<Void> createPermissions(TenantConfig tenant) {
+    final var config = tenant.getRepoConfig(TenantRepoConfigType.PERMISSIONS);
+    final var client = permissions.withRepoId(config.getRepoId());
+    
+    return Multi.createFrom().items(BuiltInDataPermissions.values())
+      .onItem().transformToUni(permission -> {
+        // default data permissions
+        final var command = ImmutableCreatePermission.builder()
+            .name(permission.name())
+            .description(permission.getDescription())
+            .comment("created by default")
+            .build();
+        return client.createPermission().createOne(command);
+      })
+      .concatenate().collect().asList()
+      .onItem().transformToMulti(junk_ -> Multi.createFrom().items(BuiltInUIPermissions.values()))
+      .onItem().transformToUni(permission -> {
+        // default ui permissions
+        final var command = ImmutableCreatePermission.builder()
+            .name(permission.name())
+            .description(permission.getDescription())
+            .comment("created by default")
+            .build();
+        return client.createPermission().createOne(command);
+      }).concatenate().collect().asList().onItem().transformToUni(e -> Uni.createFrom().voidItem());
+    
+  }
+  
+  
+  
+  private Uni<TenantConfig> createTenant() {
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).createIfNot()
+        .onItem().transformToUni(created -> tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
+            .repoId(currentTenant.tenantsStoreId())
+            .name(currentTenant.tenantId())
+            .build()))
+        .onItem().transformToUni(tenantConfig -> {
+          return Multi.createFrom().items(tenantConfig.getRepoConfigs().stream())
+            .onItem().transformToUni(child -> tenantClient.query().repoName(child.getRepoId(), child.getRepoType()).createIfNot())
+            .concatenate().collect().asList()
+            .onItem().transform(junk -> tenantConfig);
+        });
   }
   
   @GET
