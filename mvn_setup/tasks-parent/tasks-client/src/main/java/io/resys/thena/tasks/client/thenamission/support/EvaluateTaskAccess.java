@@ -1,5 +1,8 @@
 package io.resys.thena.tasks.client.thenamission.support;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccess;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
@@ -78,6 +81,7 @@ public class EvaluateTaskAccess {
   
   private final static class AccessGranted implements TaskAccess {
     @Override public boolean isAccessGranted() { return true; }
+    @Override public List<String> getRequired() { return Collections.emptyList(); }
     @Override public String getMessage() { return "all-access-always"; }
   }
 }

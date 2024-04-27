@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Backend } from 'descriptor-backend';
+import { Backend, useBackend } from 'descriptor-backend';
 import { useAm, UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 import { Task, TaskUpdateCommand, TaskId, CreateTask } from './backend-types';
@@ -52,16 +52,17 @@ function initTasks(tasks: Task[], profile: UserProfileAndOrg): {
   }
 }
 
-export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend } }> = ({ children, init }) => {
-  const { backend } = init;
+export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend } }> = ({ children }) => {
+  const backend = useBackend();
   const { profile } = useAm();
   
   const [loading, setLoading] = React.useState<boolean>(true);
   const [tasks, setTasks] = React.useState<Record<string, TaskDescriptor>>({});
   const [roles, setRoles] = React.useState<readonly string[]>([]);
   const [owners, setOwners] = React.useState<readonly string[]>([]);
-  const [store] = React.useState(new ImmutableTaskStore(backend.store));
+  const store = React.useMemo(() => new ImmutableTaskStore(backend.store), [backend]);
 
+  console.log(store);
 
 
   const withTasks: WithTasks = React.useCallback((tasks: Task[]) => {

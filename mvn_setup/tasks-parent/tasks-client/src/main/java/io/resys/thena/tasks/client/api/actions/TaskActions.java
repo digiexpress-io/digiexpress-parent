@@ -80,5 +80,6 @@ public interface TaskActions {
   interface TaskAccess {
     boolean isAccessGranted();
     String getMessage();
+    List<String> getRequired();
   }
 }

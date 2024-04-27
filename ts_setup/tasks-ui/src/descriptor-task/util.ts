@@ -25,7 +25,7 @@ export function getTeamspaceType(task: Task, profile: UserProfileAndOrg, today: 
   if (!task.assigneeIds.includes(profile.am.principal.id) &&
     taskPermission.filter(permission => userPermissions.includes(permission)).length === 0) {
 
-    console.warn("TASK", taskPermission, " USER ", userPermissions);
+    //console.warn("TASK", taskPermission, " USER ", userPermissions);
     return undefined;
   }
 

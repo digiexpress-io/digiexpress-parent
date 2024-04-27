@@ -1,5 +1,5 @@
 import { StoreErrorImpl } from './error-types';
-import { Store, StoreConfig, RepoType } from './backend-types';
+import { Store, StoreConfig, RepoType, ForbiddenCallback, BackendAccess } from './backend-types';
 
 import LoggerFactory from 'logger';
 const log = LoggerFactory.getLogger();
@@ -10,10 +10,12 @@ export class BackendStoreImpl implements Store {
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
   private _defRef: RequestInit;
+  private _forbidden: ForbiddenCallback | undefined;
   private _urls: Record<RepoType, string>;
 
-  constructor(config: StoreConfig) {
+  constructor(config: StoreConfig, forbidden?: ((access: BackendAccess) => void) | undefined) {
     this._config = config;
+    this._forbidden = forbidden;
     this._urls = { ... config.urls};
     const headers = {
       "Content-Type": "application/json;charset=UTF-8",
@@ -30,6 +32,9 @@ export class BackendStoreImpl implements Store {
       headers[this._config.csrf.key] = this._config.csrf.value;
     }
     log.target(config).debug("Composer::init DefaultStore");
+  }
+  withForbidden(handles: ((access: BackendAccess) => void) | undefined): Store {
+    return new BackendStoreImpl(this._config, handles)
   }
   get config() {
     return this._config;
@@ -154,6 +159,12 @@ export class BackendStoreImpl implements Store {
           });
         });
     }
+    if(response.status === 403 && this._forbidden) {
+      const text = await response.json() 
+      this._forbidden(text)
+      return {} as any;
+    }
+
     if (response.status === 204) {
       return {} as any;
     }

@@ -1,22 +1,32 @@
 package io.resys.thena.tasks.dev.app.security;
 
 import java.util.Collections;
+import java.util.List;
+
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccess;
 import io.resys.thena.tasks.client.api.actions.TaskActions.TaskAccessEvaluator;
 import io.resys.thena.tasks.client.api.model.Task;
+import io.resys.thena.tasks.client.thenamission.support.TaskAccessException;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 
-@ApplicationScoped
+@Singleton
 public class DataAccessPolicy {
   @Inject PrincipalCache principals;
   private static final DigiExpTaskAccessGranted GRANTED = new DigiExpTaskAccessGranted();
   
+  @ServerExceptionMapper(value = TaskAccessException.class)
+  public RestResponse<TaskAccess> mapException(TaskAccessException x) {
+      return RestResponse.status(Response.Status.FORBIDDEN, x.getAccess());
+  }
   
   public Uni<TaskAccessEvaluator> getTaskAccessEvaluator(CurrentUser currentUser) {
     return principals.getPrincipalPermissions(currentUser.getUserId(), currentUser.getEmail())
@@ -33,7 +43,7 @@ public class DataAccessPolicy {
                 return GRANTED;
               } 
               
-              return new DigiExpTaskAccessDenied("Task requires one of the following roles: " + task.getRoles() + "!");
+              return new DigiExpTaskAccessDenied("Task requires one of the following roles: " + task.getRoles() + "!", task.getRoles());
             }
             @Override
             public TaskAccess getCreateAccess(Task task) {
@@ -55,11 +65,14 @@ public class DataAccessPolicy {
   @RequiredArgsConstructor
   public static class DigiExpTaskAccessDenied implements TaskAccess {
     private final String msg;
+    private final List<String> required;
     @Override public boolean isAccessGranted() { return false; }
-    @Override public String getMessage() { return msg; } 
+    @Override public String getMessage() { return msg; }
+    @Override public List<String> getRequired() { return required; } 
   }
   public static class DigiExpTaskAccessGranted implements TaskAccess {
     @Override public boolean isAccessGranted() { return true; }
     @Override public String getMessage() { return ""; } 
+    @Override public List<String> getRequired() { return Collections.emptyList(); } 
   }
 }
