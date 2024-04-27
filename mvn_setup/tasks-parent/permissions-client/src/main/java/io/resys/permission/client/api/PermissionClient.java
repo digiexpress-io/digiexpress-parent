@@ -115,4 +115,12 @@ public interface PermissionClient {
       super(message);
     }
   }
+  
+  class PrincipalNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 5706579544456750293L;
+
+    public PrincipalNotFoundException(String message) {
+      super(message);
+    }
+  }
 }

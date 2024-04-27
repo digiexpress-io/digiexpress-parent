@@ -3,6 +3,7 @@ package io.resys.permission.client.spi;
 import java.util.List;
 
 import io.resys.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
+import io.resys.permission.client.api.PermissionClient.PrincipalNotFoundException;
 import io.resys.permission.client.api.PermissionClient.PrincipalQuery;
 import io.resys.permission.client.api.model.ImmutablePrincipal;
 import io.resys.permission.client.api.model.Principal;
@@ -24,6 +25,10 @@ public class PrincipalQueryImpl implements PrincipalQuery {
     final var repoId = ctx.getConfig().getRepoId();
     final Uni<QueryEnvelope<OrgMemberHierarchy>> user = ctx.getOrg(repoId).find().memberHierarchyQuery().get(principalId);
     return user.onItem().transform((response) -> {
+      if(response.isNotFound()) {
+        throw new PrincipalNotFoundException("Can't find principal by id: " + principalId + "!");
+      }
+      
       if(response.getStatus() != QueryEnvelopeStatus.OK) {
         final var msg = "Failed to get principal by id = '%s'!".formatted(principalId);
         final var exception = new PrincipalQueryException(msg);

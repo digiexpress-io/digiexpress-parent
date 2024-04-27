@@ -23,8 +23,10 @@ import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.OrgPartyLogVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.DocNotFoundException;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.structures.org.anytree.AnyTreeContainerContextImpl;
@@ -34,9 +36,11 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
   private final DbState state;
   private final String repoId;
@@ -70,7 +74,12 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
         org.query().rights().findAll().collect().asList()
         
       ).asTuple()
-      .onItem().transform(tuple -> createUserResult(tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6()));
+      .onItem().transform(tuple -> {
+        if(tuple.getItem1() == null) {
+          return docNotFound(userId, new DocNotFoundException());
+        }
+        return createUserResult(tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4(), tuple.getItem5(), tuple.getItem6());
+      });
 	}
 	
 
@@ -83,15 +92,16 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	    List<OrgRight> rights
   ) {
 	  
-
     final var ctx = new AnyTreeContainerContextImpl(ImmutableOrgProjectObjects.builder()
         .parties(parties.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .memberships(memberships.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
-        .members(Arrays.asList(member).stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
+        .members(member == null ? Collections.emptyMap() : Arrays.asList(member).stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .memberRights(memberRights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .partyRights(partyRights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .rights(rights.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
         .build());
+    
+    
     final var container = new AnyTreeContainerImpl(ctx);
     final var logger = new StringBuilder();
 
@@ -151,6 +161,7 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
             .log(logger.toString())
             .build())
         .build();
+
 	}
 	
 	private QueryEnvelopeList<OrgMemberHierarchy> createUsersResult(List<QueryEnvelope<OrgMemberHierarchy>> users) {
@@ -169,4 +180,13 @@ public class MemberHierarchyQueryImpl implements MemberHierarchyQuery {
 	  
     return builder.objects(Collections.unmodifiableList(objects)).build();
   }
+	
+	private <T extends ThenaContainer> QueryEnvelope<T> docNotFound(String id, DocNotFoundException ex) {
+	  final var existing = this.state.getDataSource().getTenant();
+    final var msg = new StringBuilder()
+      .append("Member not found by given id: '").append(id).append("', from repo: '").append(existing.getId()).append("'!")
+      .toString();
+    return QueryEnvelope.docNotFound(existing, log, msg, ex);
+  }
+  
 }

@@ -15,13 +15,13 @@ import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@ApplicationScoped
+@Singleton
 public class PrincipalCache {
   private static final String CACHE_NAME = "PRINCIPAL_CACHE";
   @Inject PermissionClient client;

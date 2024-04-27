@@ -1,10 +1,10 @@
 package io.resys.thena.tasks.dev.app;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 
+import io.quarkus.cache.CacheResult;
 import io.resys.avatar.client.api.Avatar;
 import io.resys.avatar.client.api.AvatarClient;
 import io.resys.avatar.client.api.AvatarNotFoundException;
@@ -14,7 +14,9 @@ import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.api.CrmClient.CustomerNotFoundException;
 import io.resys.crm.client.api.model.Customer;
 import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.PermissionClient.PrincipalNotFoundException;
 import io.resys.permission.client.api.PermissionClient.RoleNotFoundException;
+import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
@@ -22,11 +24,7 @@ import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
-import io.resys.userprofile.client.api.UserProfileClient.UserProfileNotFoundException;
-import io.resys.userprofile.client.api.model.UserProfile;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
 import io.smallrye.mutiny.tuples.Tuple4;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -36,7 +34,7 @@ import jakarta.ws.rs.Path;
 @Singleton
 @Path("q/digiexpress/api/avatars")
 public class AvatarResource implements AvatarRestApi {
-
+  private static final String CACHE_NAME = "AVATAR_CACHE";
   @Inject PermissionClient permissions;
   @Inject CrmClient crmClient;
   @Inject CurrentTenant currentTenant;
@@ -46,15 +44,16 @@ public class AvatarResource implements AvatarRestApi {
   @Inject AvatarClient avatarClient;
   @Inject PrincipalCache cache;
   
+  @CacheResult(cacheName = AvatarResource.CACHE_NAME)
   @Override
   public Uni<io.resys.avatar.client.api.Avatar> getOrCreateAvatar(String userId) {
     return getAvatarClient().onItem().transformToUni(clients -> clients.getItem1().queryAvatars().get(userId)
       
       .onFailure(AvatarNotFoundException.class)
-      .recoverWithUni((t) -> clients.getItem2().userProfileQuery().get(userId).onItem().transformToUni(data ->
+      .recoverWithUni((t) -> clients.getItem4().principalQuery().get(userId).onItem().transformToUni(data ->
         clients.getItem1().createAvatar().createOne(createAvatar(data))))
       
-      .onFailure(UserProfileNotFoundException.class)
+      .onFailure(PrincipalNotFoundException.class)
       .recoverWithUni((t) -> clients.getItem4().roleQuery().get(userId).onItem().transformToUni(data -> 
         clients.getItem1().createAvatar().createOne(createAvatar(data))))
 
@@ -63,10 +62,11 @@ public class AvatarResource implements AvatarRestApi {
         clients.getItem1().createAvatar().createOne(createAvatar(data))))
       
       .onFailure(CustomerNotFoundException.class)
-      .transform((t) -> new AvatarNotFoundException("Avatar not found by id: '" + userId + "'!"))
+      .transform((t) -> new AvatarNotFoundException("Avatar can't be created for id: '" + userId + "'!"))
     );
   }
   
+  @CacheResult(cacheName = AvatarResource.CACHE_NAME)
   @Override
   public Uni<List<Avatar>> getOrCreateAvatars(GetOrCreateAvatars request) {
     return getAvatarClient().onItem()
@@ -74,46 +74,37 @@ public class AvatarResource implements AvatarRestApi {
   }
   
   public Uni<List<Avatar>> getOrCreateAvatars(Tuple4<AvatarClient, UserProfileClient, CrmClient, PermissionClient> clients, GetOrCreateAvatars request) {
-    final Stream<Uni<Tuple2<Avatar, ImmutableCreateAvatar>>> stream = request.getId().stream().map(id -> create(clients, id));
     
-    
-    return Multi.createFrom().items(stream)
-        .onItem().transformToUni(x -> x).concatenate().collect().asList()
-        .onItem().transformToUni(requests -> {
+    return clients.getItem1().queryAvatars().findByIds(request.getId())
+        .onItem().transformToUni(found -> {
+          if(found.size() == request.getId().size()) {
+            return Uni.createFrom().item(found);
+          }
           
-          final var avatars = requests.stream().filter(e -> e.getItem1() != null).map(e -> e.getItem1()).toList();
-          final List<ImmutableCreateAvatar> commands = requests.stream().filter(e -> e.getItem2() != null).map(e -> e.getItem2()).toList();
+          final var foundIds = found.stream().map(e -> e.getId()).toList();
+          final var requests = request.getId().stream().filter(f -> !foundIds.contains(f)).map(id -> create(clients, id)).toList();
           
-          return clients.getItem1().createAvatar().createMany(commands)
-              .onItem().transform(created -> ImmutableList.<Avatar>builder()
-                  .addAll(created)
-                  .addAll(avatars)
-                  .build());
+          
+          return Uni.join().all(requests).andCollectFailures()
+              .onItem().transformToUni(commands -> clients.getItem1().createAvatar().createMany(commands)
+                  .onItem().transform(created -> ImmutableList.<Avatar>builder()
+                      .addAll(created)
+                      .addAll(found)
+                      .build()));
+          
         });
-
   }
 
-  private Uni<Tuple2<Avatar, ImmutableCreateAvatar>> create(Tuple4<AvatarClient, UserProfileClient, CrmClient, PermissionClient> clients, String userId) {
-    return clients.getItem1().queryAvatars().get(userId)
-    .onItem().transform(avatar -> Tuple2.<Avatar, ImmutableCreateAvatar>of(avatar, null))
-    .onFailure(AvatarNotFoundException.class)
-    .recoverWithUni((t) -> clients.getItem2().userProfileQuery().get(userId)
-        .onItem().transform(this::createAvatar)
-        .onItem().transform(data -> Tuple2.<Avatar, ImmutableCreateAvatar>of(null, data)))
+  private Uni<ImmutableCreateAvatar> create(Tuple4<AvatarClient, UserProfileClient, CrmClient, PermissionClient> clients, String userId) {
+    return clients.getItem4().principalQuery().get(userId).onItem().transform(this::createAvatar)
    
-    .onFailure(UserProfileNotFoundException.class)
-    .recoverWithUni((t) -> clients.getItem4().roleQuery().get(userId)
-        .onItem().transform(this::createAvatar)
-        .onItem().transform(data -> Tuple2.<Avatar, ImmutableCreateAvatar>of(null, data)))
-
+    .onFailure(PrincipalNotFoundException.class)
+    .recoverWithUni((t) -> clients.getItem4().roleQuery().get(userId).onItem().transform(this::createAvatar))
 
     .onFailure(RoleNotFoundException.class)
-    .recoverWithUni((t) ->  
-      clients.getItem3().customerQuery().get(userId)
-      .onItem().transform(this::createAvatar)
-      .onItem().transform(data -> Tuple2.<Avatar, ImmutableCreateAvatar>of(null, data))
-      .onFailure(CustomerNotFoundException.class).transform((junk) -> new AvatarNotFoundException("Avatar not found by id: '" + userId + "'!"))
-     );
+    .recoverWithUni((t) -> clients.getItem3().customerQuery().get(userId).onItem().transform(this::createAvatar))
+    
+    .onFailure(CustomerNotFoundException.class).transform((junk) -> new AvatarNotFoundException("Avatar can't be created for id: '" + userId + "'!"));
   }
   
 
@@ -132,11 +123,11 @@ public class AvatarResource implements AvatarRestApi {
         });
   }
   
-  private ImmutableCreateAvatar createAvatar(UserProfile profile) {
+  private ImmutableCreateAvatar createAvatar(Principal profile) {
     return ImmutableCreateAvatar.builder()
-          .avatarType("PROFILE")
+          .avatarType("PERMISSION")
           .id(profile.getId())
-          .seedData(profile.getDetails().getEmail())
+          .seedData(profile.getEmail())
           .externalId(profile.getId())
         .build();
   } 
