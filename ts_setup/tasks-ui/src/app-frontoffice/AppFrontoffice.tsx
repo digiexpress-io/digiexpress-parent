@@ -58,11 +58,13 @@ const NestedApps: React.FC<{ profile: UserProfileAndOrg, tenantConfig: TenantCon
   return (<Burger.Provider secondary="toolbar.activities" drawerOpen={drawerOpen} appId={appId} children={[ stencil, hdes, frontoffice ]} />)
 }
 
-export const AppFrontoffice: React.FC<{ profile: UserProfileAndOrg, tenantConfig: TenantConfig }> = ({ profile, tenantConfig }) => {
+export const AppFrontoffice: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }) => {
+  const { tenant } = profile;
+
   return (
-    <AccessMgmtContextProvider profile={profile} tenantConfig={tenantConfig}>
+    <AccessMgmtContextProvider profile={profile} tenantConfig={tenant}>
       <FrontofficePrefs>
-        <NestedApps profile={profile} tenantConfig={tenantConfig}/>
+        <NestedApps profile={profile} tenantConfig={tenant}/>
       </FrontofficePrefs>
     </AccessMgmtContextProvider>
   );

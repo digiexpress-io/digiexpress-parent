@@ -116,8 +116,8 @@ export function useSecondary() {
 
   const callbacks = {
     crm: function()              { session.setNextValue('customerSearch');  actions.handleTabAdd({ id: 'customerSearch',  label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) },
-    stencil: function ()         { session.setNextValue('stencil');         app.changeApp("stencil") },
-    hdes: function ()            { session.setNextValue('hdes');            app.changeApp("hdes") },
+    stencil: function ()         { app.changeApp("stencil") },
+    hdes: function ()            { app.changeApp("hdes") },
     dialob: function()           { session.setNextValue('dialob');          actions.handleTabAdd({ id: 'dialob',          label: <FormattedMessage id="activities.frontoffice.dialob.title" /> }) },
     teamSpace: function()        { session.setNextValue('teamSpace');       actions.handleTabAdd({ id: 'teamSpace',       label: <FormattedMessage id="activities.teamSpace.title" /> }) },
 

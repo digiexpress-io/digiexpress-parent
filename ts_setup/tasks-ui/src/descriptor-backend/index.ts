@@ -3,7 +3,7 @@ import * as ctx from './backend-ctx';
 import {useBackend, BackendProvider}  from './backend-ctx';
 
 import {
-  BackendError, Backend, StoreConfig, Store,
+  BackendError, Backend, StoreConfig, Store, Health
 } from './backend-types';
 
 import {
@@ -16,7 +16,7 @@ import {
 export { useBackend, BackendProvider }
 export type {
   BackendError, Backend, StoreConfig, Store,
-  ServiceErrorMsg, ServiceErrorProps, StoreError,
+  ServiceErrorMsg, ServiceErrorProps, StoreError, Health
 }
 
 declare namespace BackendNS {
