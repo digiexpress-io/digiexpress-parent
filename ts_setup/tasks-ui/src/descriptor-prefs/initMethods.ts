@@ -45,12 +45,13 @@ export function initPreference(
   const sorting: Record<string, SortingRule> = {};
   const visibility: Record<string, VisibilityRule> = {};
   const config: Record<string, ConfigRule> = {};
-  const stored = initProfile.uiSettings?.find((settings) => settings.settingsId);
+  const stored = initProfile.uiSettings?.find((settings) => settings.settingsId === id);
 
   // defaults first
-  sorting[init.sorting.dataId] = init.sorting;
-  init.fields.forEach(field => visibility[field] = { dataId: field, enabled: true });
-
+  if(init.sorting) {
+    sorting[init.sorting.dataId] = init.sorting;
+    init.fields.forEach(field => visibility[field] = { dataId: field, enabled: true });
+  }
   // backend
   if(stored) {
     stored.sorting.forEach(e => sorting[e.dataId] = e);
@@ -58,6 +59,24 @@ export function initPreference(
     stored.config?.forEach(e => config[e.dataId] = e);
   }
   return new ImmutablePreference({ id, fields, sorting, visibility, backendId: stored?.id, config });
+}
+
+export function parsePreference(
+  settingsId: string, initProfile: UserProfile
+): ImmutablePreference {
+  const fields: string[] = [];
+  const sorting: Record<string, SortingRule> = {};
+  const visibility: Record<string, VisibilityRule> = {};
+  const config: Record<string, ConfigRule> = {};
+  const stored = initProfile.uiSettings?.find((settings) => settings.settingsId === settingsId);
+
+  // backend
+  if(stored) {
+    stored.sorting.forEach(e => sorting[e.dataId] = e);
+    stored.visibility.forEach(e => visibility[e.dataId] = e);
+    stored.config?.forEach(e => config[e.dataId] = e);
+  }
+  return new ImmutablePreference({ id: settingsId, fields, sorting, visibility, backendId: stored?.id, config });
 }
 
 export function initWithConfig(
@@ -68,6 +87,16 @@ export function initWithConfig(
 ) {
 
   setPref(currentState => {
+
+    if(!Array.isArray(config)) {
+      const noChanges = currentState.getConfig(config.dataId)?.value === config.value;
+      if(noChanges) {
+        return currentState;
+      }
+    } else {
+
+    }
+
     const nextState = currentState.withConfig(config);
     storeSettings(backend, userId, nextState);
     return nextState;

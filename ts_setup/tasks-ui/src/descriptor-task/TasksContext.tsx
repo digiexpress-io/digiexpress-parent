@@ -62,9 +62,6 @@ export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backen
   const [owners, setOwners] = React.useState<readonly string[]>([]);
   const store = React.useMemo(() => new ImmutableTaskStore(backend.store), [backend]);
 
-  console.log(store);
-
-
   const withTasks: WithTasks = React.useCallback((tasks: Task[]) => {
     const next = initTasks(tasks, profile);
     setTasks(next.tasksById);

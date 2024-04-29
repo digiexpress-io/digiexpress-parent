@@ -26,7 +26,6 @@ export class BackendImpl implements Backend {
 
   withForbidden(handles: (access: BackendAccess) => void): Backend {
     const next = this._store.withForbidden(handles);
-    console.log("XXX", next);
     return new BackendImpl(next, handles);
   }
 }
@@ -38,8 +37,7 @@ export const BackendProvider: React.FC<{ children: React.ReactNode, backend: Bac
   const init = props.backend;
   const [access, setAccess] = React.useState<BackendAccess>();
   const contextValue = React.useMemo(() => init.withForbidden(setAccess), [init]);
-  console.log(contextValue.store);
-
+  
   function handleAccessClose() {
     setAccess(undefined);
   }

@@ -19,7 +19,7 @@ export interface ConfigRule {
 
 export interface Preference {
   id: PreferenceId;
-  fields: readonly DataId[];
+  fields: readonly DataId[]; //used for visibility and sorting as definition for all the field names on top of what constrains can be added
   
   visibility: readonly VisibilityRule[];
   sorting: readonly SortingRule[];
@@ -43,5 +43,6 @@ export interface PreferenceContextType {
 export interface PreferenceInit {
   id: PreferenceId;
   fields: DataId[];
-  sorting: SortingRule; 
+  sorting?: SortingRule;
+  config?: ConfigRule;
 }

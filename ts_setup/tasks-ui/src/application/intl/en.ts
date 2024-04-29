@@ -483,7 +483,7 @@ const en = {
   'explorer.frontoffice.releaseMgmt.menuOption': 'Release management',
   'explorer.frontoffice.tasks.menuOption': 'Task management',
   'explorer.frontoffice.stencil.menuOption': 'Stencil content',
-  'explorer.frontoffice.wrench.menuOption': 'Wrench assets',
+  'explorer.frontoffice.hdes.menuOption': 'Wrench assets',
   'explorer.frontoffice.dialob.menuOption': 'Dialob forms',
   'explorer.frontoffice.taskSearch.menuOption': 'Task search',
   'explorer.frontoffice.teamSpace.menuOption': 'Team space',
@@ -498,12 +498,10 @@ const en = {
 
   'explorer.frontoffice.systemOverview.menuOption': 'System overview',
   'explorer.frontoffice.accessManagement.menuOption': 'Access Management',
-  'explorer.frontoffice.accessManagement.allUsers.menuOption': 'All users',
-  'explorer.frontoffice.accessManagement.allPermissions.menuOption': 'All permissions',
-  'explorer.frontoffice.accessManagement.allRoles.menuOption': 'All roles',
-  'explorer.frontoffice.accessManagement.orgChart.menuOption': 'Overview',
-
+  'explorer.frontoffice.allUsers.menuOption': 'All users',
+  'explorer.frontoffice.allPermissions.menuOption': 'All permissions',
   'explorer.frontoffice.allRoles.menuOption': 'All roles',
+  'explorer.frontoffice.rolesOverview.menuOption': 'Overview',
 
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
   'activities.frontoffice.crm.tenant.title': 'Current tenant',

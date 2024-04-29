@@ -20,7 +20,7 @@ export class LoggerFactoryDelegate implements LoggerFactory {
     }
   }
 
-  getLogger(id?: string) {
+  getLogger(id?: string): Logger {
     return this._delegate.getLogger(id);
   }
 }
