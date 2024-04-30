@@ -38,6 +38,10 @@ public class DataAccessPolicy {
                 return GRANTED;
               }
               
+              if(task.getRoles().isEmpty()) {
+                return GRANTED;
+              }
+              
               final var rolesOverlap = !Collections.disjoint(task.getRoles(), principal.getRoles());
               if(rolesOverlap) {
                 return GRANTED;
@@ -47,7 +51,7 @@ public class DataAccessPolicy {
             }
             @Override
             public TaskAccess getCreateAccess(Task task) {
-              return getReadAccess(task);
+              return GRANTED;
             }
             @Override
             public TaskAccess getUpdatedAccess(Task task) {

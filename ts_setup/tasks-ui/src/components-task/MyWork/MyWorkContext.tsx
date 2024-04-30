@@ -103,8 +103,6 @@ export const MyWorkTabbing: React.FC<{children: React.ReactNode}> = ({children})
       assigneeOther:            { body: initTable("assigneeOther", grouping), active: false },
       recentActivities:         { body: initTable("assigneeOther", grouping), active: false }
     };
-  
-    //Object.values(result).find(v => v.body.entries.length > 0);
     return result;
   }
 

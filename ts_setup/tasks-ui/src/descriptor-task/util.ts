@@ -43,7 +43,11 @@ export function getTeamspaceType(task: Task, profile: UserProfileAndOrg, today: 
 
 
 export function getMyWorkType(task: Task, profile: UserProfileAndOrg, today: Date): AssigneeGroupType | undefined {
-  if (!task.assigneeIds.includes(profile.userId)) {
+
+  const assignedToMe = task.assigneeIds.includes(profile.am.principal.id);
+  const createdByMe = task.reporterId.includes(profile.am.principal.id);
+
+  if (!assignedToMe && !createdByMe) {
     return undefined;
   }
 

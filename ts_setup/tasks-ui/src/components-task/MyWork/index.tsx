@@ -14,6 +14,10 @@ import TaskItem from './TaskItem';
 
 const MyWorkPagination: React.FC = () => {
   const { setTabRowsPerPage, setTabPageNo, table } = useMyWork();
+  if(table.src.length === 0) {
+    return null;
+  }
+
   return (<TablePagination component="div"
     rowsPerPageOptions={table.rowsPerPageOptions}
     count={table.src.length}

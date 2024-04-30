@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Typography, IconButton, Skeleton, useTheme } from '@mui/material';
+import { Box, Stack, Typography, IconButton, useTheme } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { FormattedMessage } from 'react-intl';
 
@@ -87,22 +87,7 @@ const PermissionItemActive: React.FC = () => {
     );
   }
 
-  return (<StyledStack>
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-    <Skeleton animation={false} variant="rounded" width='100%' height={40} />
-
-    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-    <Skeleton animation={false} variant="rounded" width='100%' height={70} />
-
-    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-    <Skeleton animation={false} variant="text" width='85%' height='1rem' />
-    <Skeleton animation={false} variant="text" width='35%' height='1rem' />
-    <Skeleton animation={false} variant="text" width='60%' height='1rem' />
-
-    <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-    <Skeleton animation={false} variant="rounded" width='25%' height={30} sx={{ borderRadius: '15px' }} />
-  </StyledStack>);
+  return null;
 }
 
 const PermissionItemActiveWithRefresh: React.FC<{}> = () => {

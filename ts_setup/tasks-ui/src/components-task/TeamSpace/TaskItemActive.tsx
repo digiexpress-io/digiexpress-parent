@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Alert, AlertTitle, Typography, Skeleton, useTheme, AlertColor, IconButton } from '@mui/material';
+import { Box, Stack, Alert, AlertTitle, Typography, useTheme, AlertColor, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
@@ -161,24 +161,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     );
   }
 
-  return (<StyledStack>
-    <Stack spacing={1}>
-      <Skeleton animation={false} variant="circular" width='100%' height={40} />
-      <Skeleton animation={false} variant="circular" width='100%' height={40} />
-      <Skeleton animation={false} variant="circular" width='100%' height={40} />
-
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="circular" width='100%' height={70} />
-
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="text" width='85%' height='1rem' />
-      <Skeleton animation={false} variant="text" width='35%' height='1rem' />
-      <Skeleton animation={false} variant="text" width='60%' height='1rem' />
-
-      <Skeleton animation={false} variant="text" width='100%' height='2rem' />
-      <Skeleton animation={false} variant="circular" width='25%' height={30} sx={{ borderRadius: '15px' }} />
-    </Stack>
-  </StyledStack>);
+  return null;
 }
 
 

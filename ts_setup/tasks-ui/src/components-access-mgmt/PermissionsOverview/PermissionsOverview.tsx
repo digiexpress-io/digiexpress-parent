@@ -54,14 +54,10 @@ const PermissionItems: React.FC = () => {
   )
 }
 
-const PermissionOverviewActive: React.FC = () => {
-  return (<PermissionItemActive />);
-}
-
 const PermissionsOverviewLayout: React.FC = () => {
   const navigation = <PermissionsNavigation />;
   const pagination = <></>;
-  const active = <PermissionOverviewActive />;
+  const active = <PermissionItemActive />;
   const items = <PermissionItems />;
 
   return (<LayoutList slots={{ navigation, active, items, pagination }} />)

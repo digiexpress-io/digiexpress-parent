@@ -68,6 +68,9 @@ function initTable(prefCtx: PreferenceContextType): CustomerPagination {
 const CustomerPagination: React.FC<{ state: CustomerPagination, setState: SetCustomerPagination }> = (props) => {
   const { loading } = useTasks();
   const { state, setState } = props;
+  if(state.src.length === 0) {
+    return null;
+  }
 
   return loading ? null :
     (<MPagination

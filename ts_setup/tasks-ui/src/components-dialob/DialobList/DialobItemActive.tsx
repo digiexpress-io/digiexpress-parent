@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Typography, IconButton, Skeleton, useTheme, CircularProgress, Avatar, Chip, Grid } from '@mui/material';
+import { Box, Stack, Typography, IconButton, useTheme, CircularProgress, Avatar, Chip, Grid } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -337,12 +337,7 @@ const DialobItemActive: React.FC<DialobItemActiveProps> = ({ entry, setActiveDia
     );
   }
 
-  return (<StyledStack>
-    <Skeleton animation={false} variant="circular" width='100%' height={40} />
-    <Skeleton animation={false} variant="circular" width='100%' height={40} />
-    <Skeleton animation={false} variant="circular" width='100%' height={40} />
-    <Skeleton animation={false} variant="circular" width='100%' height={40} />
-  </StyledStack>);
+  return null;
 }
 
 const DialobItemActiveWithRefresh: React.FC<DialobItemActiveProps> = ({ entry, setActiveDialob }) => {

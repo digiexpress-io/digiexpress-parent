@@ -21,6 +21,11 @@ export const DialobListPagination: React.FC<{
     setState((prev) => prev.withRowsPerPage(parseInt(event.target.value, 10)))
   }
 
+  if(state.src.length === 0) {
+    return null;
+  }
+
+
   return (<TablePagination
     rowsPerPageOptions={state.rowsPerPageOptions}
     component="div"

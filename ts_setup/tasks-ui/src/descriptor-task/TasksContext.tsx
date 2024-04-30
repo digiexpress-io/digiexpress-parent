@@ -72,7 +72,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backen
   const contextValue: TasksContextType = React.useMemo(() => {
     
     async function createTask(command: CreateTask): Promise<Task> {
-      const task = store.createTask(command);
+      const task = await store.createTask(command);
       await store.getActiveTasks().then(data => withTasks(data.records));
       return task;
     }
