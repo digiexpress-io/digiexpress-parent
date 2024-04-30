@@ -1,6 +1,7 @@
 package io.resys.avatar.client.spi.visitors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,26 +87,28 @@ public class AvatarCommandVisitor {
     throw new UpdateAvatarVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
   }
   
-  private String createFirstName(CreateAvatar command) {
-    final var email = command.getSeedData();
-    var frags = email.split("\\.");
-    if(frags.length == 1) {
-      frags = email.split("_");
+  private String cleanSeedData(CreateAvatar command) {
+    var value = command.getSeedData().replace("-", "_").replace(".", "_").toLowerCase();
+    final var email = value.indexOf("@") ;
+    if(email > 0) {
+      value = value.substring(0, email);
     }
     
+    return value;
+  }
+  
+  private String createFirstName(CreateAvatar command) {
+    final var frags = cleanSeedData(command).split("_");
     return StringUtils.capitalize(frags[0]);
   }
   private String createLastName(CreateAvatar command) {
-    final var userName = command.getSeedData();
-    var frags = userName.split("\\.");
+    final var frags = cleanSeedData(command).split("_");
     if(frags.length == 1) {
-      frags = userName.split("_");
+      return "";
     }
-    
-    if(frags.length == 1) {
-      return StringUtils.capitalize(frags[0]);
-    }
-    return StringUtils.capitalize(frags[1]);
+    return String.join(" ", Arrays.asList(Arrays.copyOfRange(frags, 1, frags.length)).stream()
+        .map(StringUtils::capitalize)
+        .toList());
   }
   private String createColorCode(CreateAvatar command) {
     return ColorProvider.getInstance(colorCodes).getNextColor();

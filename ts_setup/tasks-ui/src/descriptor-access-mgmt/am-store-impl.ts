@@ -2,7 +2,7 @@ import type { UserProfile, UserProfileAndOrg, UserProfileUpdateCommand } from '.
 import type {
   Permission, Role, Principal,
   CreatePermission, CreateRole, CreatePrincipal,
-  PermissionUpdateCommand, RoleUpdateCommand,
+  PermissionUpdateCommand, RoleUpdateCommand, PrincipalUpdateCommand,
 } from './permission-types';
 
 import type { TenantConfig } from './tenant-types';
@@ -132,6 +132,15 @@ export class ImmutableAmStore implements AmStore {
   async findAllPrincipals(): Promise<Principal[]> {
     return await this._store.fetch<Principal[]>(`am/principals`, { repoType: 'PERMISSIONS' });
   }
+
+  async updatePrincipal(id: string, commands: PrincipalUpdateCommand[]): Promise<Permission> {
+    return await this._store.fetch<Permission>(`am/principals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(commands),
+      repoType: 'PERMISSIONS'
+    });
+  }
+
 
   async createPrincipal(command: CreatePrincipal): Promise<Principal> {
     return await this._store.fetch<Principal>(`am/principals`, {

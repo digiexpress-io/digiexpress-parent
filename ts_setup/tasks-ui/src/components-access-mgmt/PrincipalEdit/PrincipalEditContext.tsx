@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   ActorStatus, ChangePrincipalPermissions, ChangePrincipalRoles,
-  Permission, Principal, PrincipalId, PrincipalUpdateCommand, Role
+  Permission, Principal, PrincipalId, PrincipalUpdateCommand, Role,
+  ChangePrincipalName
 } from 'descriptor-access-mgmt';
 import { getInstance as createTabsContext, SingleTabInit, Tab } from 'descriptor-tabbing';
 
@@ -44,6 +45,12 @@ class CommandBag {
   }
 
   build(entity: PrincipalToEdit, start: Principal): PrincipalUpdateCommand[] {
+    if (entity.name !== start.name) {
+      this.push<ChangePrincipalName>({
+        commandType: 'CHANGE_PRINCIPAL_NAME', id: start.id, name: entity.name, comment: '',
+      });
+    }
+
     if ([entity.permissions].sort().join(',') !== [start.permissions].sort().join(',')) {
       this.push<ChangePrincipalPermissions>({
         commandType: 'CHANGE_PRINCIPAL_PERMISSIONS', changeType: 'SET_ALL', id: start.id, comment: '', permissions: [...entity.permissions]

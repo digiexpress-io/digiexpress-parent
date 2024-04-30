@@ -18,7 +18,6 @@ const PrincipalUsername: React.FC = () => {
     placeholder={intl.formatMessage({ id: 'permissions.principal.name.create.placeholder' })}
     fullWidth
     value={entity.name}
-    disabled
     onChange={handleUsernameChange}
   />)
 }
@@ -53,7 +52,6 @@ const PrincipalCommitComment: React.FC = () => {
     placeholder={intl.formatMessage({ id: 'permissions.principal.commitComment.placeholder' })}
     fullWidth
     value={entity.commitComment}
-    disabled
     onChange={handleChangeCommitComment}
   />)
 }

@@ -27,7 +27,7 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <Box display='flex' alignItems='center'>
       <Box width='50%' marginRight={5}>
-        <Typography variant='h4'><FormattedMessage id='permissions.principal.create' /></Typography>
+        <Typography variant='h4'><FormattedMessage id='permissions.principal.edit' /></Typography>
       </Box>
 
       <Box width='50%'>

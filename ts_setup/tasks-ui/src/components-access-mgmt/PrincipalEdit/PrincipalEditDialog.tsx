@@ -21,14 +21,10 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   async function handlePrincipalChange() {
     const { id } = entity;
 
-    await new ImmutableAmStore(backend.store).updatePermission(id, commands);
+    await new ImmutableAmStore(backend.store).updatePrincipal(id, commands);
     await reload();
     onClose();
   };
-
-
-
-
   return (
     <>
       <Burger.SecondaryButton label='buttons.cancel' onClick={onClose} />

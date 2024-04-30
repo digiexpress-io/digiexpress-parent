@@ -679,7 +679,7 @@ const en = {
   'permissions.principal.permissionsOverview.permissionName': 'Name',
   'permissions.principal.permissionsOverview.none': 'None',
 
-
+  'permissions.principal.edit': 'Edit principal',
   'permissions.principal.create': 'Create a new member',
   'permissions.principal.username': 'Username',
   'permissions.principal.email': 'Email',

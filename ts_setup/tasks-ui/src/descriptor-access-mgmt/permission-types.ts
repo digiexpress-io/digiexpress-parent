@@ -184,7 +184,8 @@ export type PrincipalCommandType =
   'CREATE_PRINCIPAL' |
   'CHANGE_PRINCIPAL_STATUS' |
   'CHANGE_PRINCIPAL_PERMISSIONS' |
-  'CHANGE_PRINCIPAL_ROLES';
+  'CHANGE_PRINCIPAL_ROLES' |
+  'CHANGE_PRINCIPAL_NAME';
 
 export interface PrincipalUpdateCommand extends PrincipalCommand { }
 
@@ -202,6 +203,13 @@ export interface ChangePrincipalStatus extends PrincipalUpdateCommand {
   status: ActorStatus;
   commandType: 'CHANGE_PRINCIPAL_STATUS';
 }
+
+export interface ChangePrincipalName extends PrincipalUpdateCommand {
+  id: PrincipalId;
+  name: string;
+  commandType: 'CHANGE_PRINCIPAL_NAME';
+}
+
 
 export interface ChangePrincipalRoles extends PrincipalUpdateCommand {
   id: PrincipalId;

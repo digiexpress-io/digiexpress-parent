@@ -109,14 +109,9 @@ public class DocDbInsertsSqlPool implements DocInserts {
                 tuple.getItem6(),
                 tuple.getItem7()
         ))
-        .onFailure(Exception.class)
+        .onFailure(DocBatchManyException.class)
         .recoverWithUni((ex) -> {
-          if(ex instanceof DocBatchManyException) {
-            final var batchError = (DocBatchManyException) ex; 
-            return tx.rollback().onItem().transform(junk -> batchError.getBatch());
-          }
-          
-          final var batchError = failOutput(many, ex.getMessage(), ex);
+          final var batchError = (DocBatchManyException) ex;
           return tx.rollback().onItem().transform(junk -> batchError.getBatch());
         });
   }
