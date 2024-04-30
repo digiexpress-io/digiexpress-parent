@@ -41,6 +41,8 @@ const Version: React.FC<{}> = ({ }) => {
 
 export const Loader: React.FC<{ health: Health | undefined, profile: UserProfileAndOrg | undefined }> = ({ profile, health }) => {
   const [open, setOpen] = React.useState(true);
+  const [closeRightNow, setCloseRightNowOpen] = React.useState(false);
+
   React.useEffect(() => {
     if (!open) {
       return;
@@ -58,7 +60,15 @@ export const Loader: React.FC<{ health: Health | undefined, profile: UserProfile
 
 
   function handleClose() {
+    if (!profile || !health) {
+      return;
+    }
+    setOpen(false);
+    setCloseRightNowOpen(true);
+  }
 
+  if(closeRightNow) {
+    return null;
   }
 
   return (

@@ -61,7 +61,7 @@ const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) 
   const tasksByCustomer: TaskDescriptor[] = tasks.filter((task) => task.customerId === customer.entry.id);
 
   return (<>
-    {tasksByCustomer.map((task, index) => (<>
+    {tasksByCustomer.map((task, index) => (<React.Fragment key={index}>
       <Stack direction='column' spacing={1}>
         <Grid container alignItems='center'>
           <Grid item md={3} lg={3}>
@@ -84,7 +84,7 @@ const CustomerTask: React.FC<{ customer: CustomerDescriptor }> = ({ customer }) 
         </Grid>
       </Stack>
       {tasksByCustomer.length - 1 === index ? undefined : <Divider sx={{ my: 1 }} />}
-    </>))}
+    </React.Fragment>))}
   </>
   )
 }

@@ -155,7 +155,7 @@ const AccessMgmtContextProviderDelegate: React.FC<{
 
     const iam = getPrincipal(profile.am.principal.id);
     return { 
-      userId: profile.userId,
+      userId: profile.am.principal.id,
       loading: false,
       profile: combinedProfile,
       iam, 

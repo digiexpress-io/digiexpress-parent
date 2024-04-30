@@ -21,9 +21,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const CellMenuItem: React.FC<{
   onClick?: () => void,
   title: string,
-}> = ({ title, onClick }) => {
+  disabled?: boolean
+}> = ({ title, onClick, disabled }) => {
+
   return (
-    <MenuItem onClick={onClick}>
+    <MenuItem onClick={onClick} disabled={disabled}>
       <ListItemText>
         <FormattedMessage id={title} />
       </ListItemText>
@@ -31,10 +33,11 @@ const CellMenuItem: React.FC<{
   )
 }
 
-const CellMenu: React.FC<{
+const TaskMenu: React.FC<{
   onEdit: () => void,
   onCRM: () => void,
-}> = ({ onEdit, onCRM }) => {
+  row: TaskDescriptor,
+}> = ({ onEdit, onCRM, row }) => {
   const Popover = useTableCellPopover();
 
   return (
@@ -42,7 +45,7 @@ const CellMenu: React.FC<{
       <Popover.Delegate>
         <MenuList dense>
           <CellMenuItem onClick={onEdit} title={`tasktable.menu.edit`} />
-          <CellMenuItem onClick={onCRM} title={`tasktable.menu.viewData`} />
+          <CellMenuItem onClick={onCRM} title={`tasktable.menu.viewData`} disabled={!!!row.customerId}/>
           <Divider />
           <MenuItem>
             <StyledBox>
@@ -90,11 +93,9 @@ const FormattedCell: React.FC<{
       <Box width="35px" justifyContent='right'> {/* Box is needed to prevent table cell resize on hover */}
         <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
         <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} customer={row.customerId} />
+
         {active &&
-          <CellMenu
-            onEdit={handleStartEdit}
-            onCRM={handleStartWork}
-          />}
+        <TaskMenu row={row} onEdit={handleStartEdit} onCRM={handleStartWork} />}
       </Box>
     </StyledTableCell>
   );

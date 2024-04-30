@@ -125,7 +125,7 @@ public class AvatarResource implements AvatarRestApi {
   
   private ImmutableCreateAvatar createAvatar(Principal profile) {
     return ImmutableCreateAvatar.builder()
-          .avatarType("PERMISSION")
+          .avatarType("PRINCIPAL")
           .id(profile.getId())
           .seedData(profile.getEmail())
           .externalId(profile.getId())

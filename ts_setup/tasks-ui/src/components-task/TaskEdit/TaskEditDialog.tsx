@@ -96,7 +96,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
       <Button startIcon={<CrmIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskEdit.clientData' /></Button>
-      <Burger.PrimaryButton label='buttons.accept' onClick={onClose} />
+      <Burger.PrimaryButton label='buttons.close' onClick={onClose} />
     </>
   )
 }
