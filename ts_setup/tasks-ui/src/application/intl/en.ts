@@ -473,14 +473,21 @@ const en = {
   'activities.frontoffice.allRoles.title': 'All roles',
   'activities.frontoffice.allUsers.title': 'All users',
 
-  'activities.frontoffice.systemOverview.title': 'System overiview',
 
   'activities.profile.title': 'My profile',
 
+
+  'explorer.frontoffice.ci.menuOption': 'Chuck CI',
+  'explorer.frontoffice.ci.releaseMgmt.menuOption': 'Releases',
+  'explorer.frontoffice.ci.deployments.menuOption': 'Deployments',
+
+  'explorer.frontoffice.libra.menuOption': 'Libra Automation',
+  'explorer.frontoffice.libra.playbooks.menuOption': 'Playbooks',
+  'explorer.frontoffice.libra.references.menuOption': 'Asset references',
+
+
   'explorer.frontoffice.crm.menuOption': 'CRM data',
   'explorer.frontoffice.crm.customerSearch.menuOption': 'Customer search',
-  'explorer.frontoffice.deployments.menuOption': 'Deployments',
-  'explorer.frontoffice.releaseMgmt.menuOption': 'Release management',
   'explorer.frontoffice.tasks.menuOption': 'Task management',
   'explorer.frontoffice.stencil.menuOption': 'Stencil content',
   'explorer.frontoffice.hdes.menuOption': 'Wrench assets',
@@ -503,8 +510,13 @@ const en = {
   'explorer.frontoffice.allRoles.menuOption': 'All roles',
   'explorer.frontoffice.rolesOverview.menuOption': 'Overview',
 
+
   'explorer.frontoffice.tenant.menuOption': 'Tenant',
-  'activities.frontoffice.crm.tenant.title': 'Current tenant',
+  'explorer.frontoffice.tenant.config.menuOption': 'Apps',
+  'explorer.frontoffice.tenant.readaudit.menuOption': 'App read audit',
+  'explorer.frontoffice.tenant.writeaudit.menuOption': 'App write audit',
+
+
 
   'taskSearch.filter.columns': 'Show/Hide columns',
   'taskSearch.filter.assignees': 'Filter by assignees',
