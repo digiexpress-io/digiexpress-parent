@@ -44,7 +44,7 @@ quarkus:
 
 tenant:
   currentTenantId: "local_test_tenant"
-  failSafeUsers: olev.mutso@resys.io;jocelyn.mutso@resys.io
+  failSafeUsers: olev.mutso@resys.io
   db:
     pg: 
       repositoryName: "tenant_store"
