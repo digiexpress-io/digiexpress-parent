@@ -10,12 +10,12 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@ApplicationScoped
+@RequestScoped
 @Slf4j
 public class ProdIdentityAugmentor implements SecurityIdentityAugmentor {
   @Inject PrincipalCache cache;
@@ -35,9 +35,15 @@ public class ProdIdentityAugmentor implements SecurityIdentityAugmentor {
     final var principal = (JsonWebToken) src.getPrincipal();
     final var sub = (String) principal.getClaim(Claims.sub.name());
     final var email = (String) principal.getClaim(Claims.email.name());
+    
+    log.debug("Augment identity merge: {}, {}", sub, email);
     return cache.getPrincipalPermissions(sub, email).onItem()
-        .transform(permissions -> QuarkusSecurityIdentity.builder(src)
-              .addRoles(new HashSet<>(permissions.getPermissions()))
-              .build());
+        .transform(permissions -> {
+          
+          log.debug("Merging: {}", permissions.getPermissions());
+          return QuarkusSecurityIdentity.builder(src)
+          .addRoles(new HashSet<>(permissions.getPermissions()))
+          .build();
+        });
   }
 }

@@ -4,7 +4,7 @@ quarkus:
     level: INFO
     category: 
       io.resys:
-        level: INFO
+        level: DEBUG
     console:  
       json: false
       
