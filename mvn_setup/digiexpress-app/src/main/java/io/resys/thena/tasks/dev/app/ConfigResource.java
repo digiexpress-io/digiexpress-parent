@@ -5,9 +5,10 @@ import java.util.Map;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import io.resys.thena.tasks.dev.app.user.UserConfigSetup;
+import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
+import io.resys.thena.tasks.dev.app.user.UserConfigSetup;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
@@ -24,12 +25,20 @@ public class ConfigResource {
   @Inject JsonWebToken jwt;
   @Inject UserConfigSetup setup;
   @Inject CurrentUser currentUser;
+  @Inject PrincipalCache cache;
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-user")
   public Uni<CurrentUserConfig> currentUserConfig() {
     return setup.getOrCreateCurrentUserConfig(currentUser);
+  }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("config/cache")
+  public Uni<Void> cache() {
+    return cache.invalidate();
   }
   
   @GET

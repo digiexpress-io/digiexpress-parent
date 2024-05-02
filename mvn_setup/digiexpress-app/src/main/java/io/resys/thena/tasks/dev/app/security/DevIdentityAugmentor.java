@@ -12,6 +12,7 @@ import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
+import io.resys.permission.client.api.model.Principal;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -39,9 +40,14 @@ public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
     final var sub = (String) principal.getClaim(Claims.sub.name());
     final var email = (String) principal.getClaim(Claims.email.name());
     return cache.getPrincipalPermissions(sub, email).onItem()
-        .transform(permissions -> QuarkusSecurityIdentity.builder(src)
-              .addRoles(new HashSet<>(permissions.getPermissions()))
-              .build());
+        .transform(permissions -> merge(src, permissions));
+  }
+  
+  
+  private SecurityIdentity merge(SecurityIdentity src, Principal permissions) {
+    return QuarkusSecurityIdentity.builder(src)
+    .addRoles(new HashSet<>(permissions.getPermissions()))
+    .build();
   }
   
   private SecurityIdentity create(SecurityIdentity src) {

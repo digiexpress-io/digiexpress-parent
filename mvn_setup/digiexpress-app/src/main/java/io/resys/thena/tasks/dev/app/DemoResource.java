@@ -1,6 +1,7 @@
 package io.resys.thena.tasks.dev.app;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -142,9 +143,14 @@ public class DemoResource {
         final var command = ImmutableCreatePermission.builder()
             .name(permission.name())
             .description(permission.getDescription())
-            .comment("created by default")
-            .build();
-        return client.createPermission().createOne(command);
+            .comment("created by default");
+        
+        if(permission == BuiltInDataPermissions.DATA_TENANT_READ ||
+            permission == BuiltInDataPermissions.DATA_PERMISSIONS_READ ) {
+          command.addAllRoles(Arrays.asList(BuiltInRoles.LOBBY.name())); 
+        }
+        
+        return client.createPermission().createOne(command.build());
       })
       .concatenate().collect().asList()
       .onItem().transformToMulti(junk_ -> Multi.createFrom().items(BuiltInUIPermissions.values()))
@@ -153,9 +159,9 @@ public class DemoResource {
         final var command = ImmutableCreatePermission.builder()
             .name(permission.name())
             .description(permission.getDescription())
-            .comment("created by default")
-            .build();
-        return client.createPermission().createOne(command);
+            .comment("created by default");
+
+        return client.createPermission().createOne(command.build());
       }).concatenate().collect().asList().onItem().transformToUni(e -> Uni.createFrom().voidItem());
     
   }
