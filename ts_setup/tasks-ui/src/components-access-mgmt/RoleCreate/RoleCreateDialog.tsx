@@ -3,7 +3,7 @@ import Burger from 'components-burger';
 import { RoleCreateProvider, useNewRole } from './RoleCreateContext';
 import Backend from 'descriptor-backend';
 
-import { StyledDialogLarge } from '../Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 import Header from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
@@ -49,7 +49,7 @@ const RoleCreateDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ op
 
   return (
     <RoleCreateProvider>
-      <StyledDialogLarge
+      <StyledFullScreenDialog
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}

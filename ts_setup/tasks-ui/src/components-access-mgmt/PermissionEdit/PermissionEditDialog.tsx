@@ -1,7 +1,7 @@
 import React from 'react';
 import Burger from 'components-burger';
 import { ImmutableAmStore, Permission, useAm } from 'descriptor-access-mgmt';
-import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 import { Left } from './Left';
 import { Right } from './Right';
 import { Header } from './Header';
@@ -39,7 +39,7 @@ const PermissionEditDialog: React.FC<{ open: boolean, onClose: () => void, permi
 
   return (
     <PermissionEditProvider permission={permission}>
-      <StyledDialogLarge
+      <StyledFullScreenDialog
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}

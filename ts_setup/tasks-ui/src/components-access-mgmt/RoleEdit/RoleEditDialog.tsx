@@ -1,7 +1,7 @@
 import React from 'react';
 import Burger from 'components-burger';
 import { ImmutableAmStore, Role, useAm } from 'descriptor-access-mgmt';
-import { StyledDialogLarge } from 'components-access-mgmt/Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 import { Header } from './Header';
 import { Left } from './Left';
 import { Right } from './Right';
@@ -38,7 +38,7 @@ const RoleEditDialog: React.FC<{ open: boolean, onClose: () => void, role: Role 
 
   return (
     <RoleEditProvider role={role}>
-      <StyledDialogLarge
+      <StyledFullScreenDialog
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}

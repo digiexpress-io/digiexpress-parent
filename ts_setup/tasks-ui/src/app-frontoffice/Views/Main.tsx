@@ -7,8 +7,9 @@ import { CurrentTenant, DialobList } from 'components-dialob';
 import SysConfig from 'components-release-mgmt';
 import Tasks from 'components-task';
 import Customer from 'components-customer';
+import OrgChart from 'components-org-chart';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
-import { RolesOverview, DeOrgChart, PermissionsOverview, PrincipalsOverview } from 'components-access-mgmt';
+import { RolesOverview, PermissionsOverview, PrincipalsOverview } from 'components-access-mgmt';
 import { wash_me } from 'components-colors';
 import LoggerFactory from 'logger';
 
@@ -64,7 +65,7 @@ const Main: React.FC<{}> = () => {
     } else if (active.id === 'allPrincipals') {
       return (<Box sx={root}><PrincipalsOverview /></Box>)
     } else if (active.id === 'rolesOverview') {
-      return (<Box sx={root}><DeOrgChart /></Box>)
+      return (<Box sx={root}><OrgChart /></Box>)
     } else if (active.id === 'reporting') {
       return (<>reporting</>);
     }

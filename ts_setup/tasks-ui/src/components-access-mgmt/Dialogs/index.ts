@@ -1,1 +1,0 @@
-export { StyledDialogLarge } from './StyledDialogLarge';

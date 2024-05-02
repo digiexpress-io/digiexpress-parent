@@ -2,7 +2,7 @@ import React from 'react';
 import Burger from 'components-burger';
 import Backend from 'descriptor-backend';
 
-import { StyledDialogLarge } from '../Dialogs';
+import { StyledFullScreenDialog } from 'components-generic';
 import { Left } from './Left';
 import { Right } from './Right';
 import Header from './Header';
@@ -41,7 +41,7 @@ const PrincipalEditDialog: React.FC<{ open: boolean, onClose: () => void, princi
 
   return (
     <PrincipalEditProvider principal={principal}>
-      <StyledDialogLarge
+      <StyledFullScreenDialog
         open={open}
         onClose={onClose}
         header={<Header onClose={onClose} />}
