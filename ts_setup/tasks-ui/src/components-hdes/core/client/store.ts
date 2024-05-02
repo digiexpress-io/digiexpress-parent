@@ -73,9 +73,9 @@ class DefaultStore implements Store {
     return false;
   }
 
-  handle401(): Promise<void> {
-    this.iapLogin();
-    return this.iapRefresh();
+  async handle401() {
+    //this.iapLogin();
+    //return this.iapRefresh();
   }
 
   fetch<T>(path: string, req?: RequestInit): Promise<T> {
