@@ -44,10 +44,11 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
         );
         return CheckResult.PERMIT;
       }
-      log.warn("application security policy: user: {} is denied access for path: '{}', method: '{}'", 
+      log.warn("application security policy: user: {} is denied access for path: '{}', method: '{}', known permissions: {}", 
           i.getItem1().getPrincipal().getName(),
           request.request().path(),
-          request.request().method()
+          request.request().method(),
+          i.getItem2().getPermissions()
       );
       return CheckResult.DENY;
     });
@@ -74,7 +75,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_CRM_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_CRM_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_CRM_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
@@ -84,7 +85,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_DIALOB_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_DIALOB_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_DIALOB_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
 
@@ -94,7 +95,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_WRENCH_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_WRENCH_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_WRENCH_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
@@ -104,7 +105,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
@@ -114,7 +115,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_STENCIL_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_STENCIL_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_STENCIL_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
@@ -124,7 +125,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     // SYS CONFIG II
@@ -133,7 +134,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_SYSCONFIG_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
@@ -143,7 +144,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_TENANT_READ.name());
       case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_TENANT_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_TENANT_DELETE.name());
-      default: return false;
+      default: return true;
       }
     }
     
