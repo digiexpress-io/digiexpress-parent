@@ -10,12 +10,12 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 
-@RequestScoped
+@ApplicationScoped
 @Slf4j
 public class ProdIdentityAugmentor implements SecurityIdentityAugmentor {
   @Inject PrincipalCache cache;
