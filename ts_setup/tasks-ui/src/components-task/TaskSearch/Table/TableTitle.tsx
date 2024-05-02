@@ -21,11 +21,12 @@ const TitleButtonOwner: React.FC<{ groupType: GroupByTypes, classifierValue: str
 
 const TitleButtonRole: React.FC<{ groupType: GroupByTypes, classifierValue: string }> = ({ groupType, classifierValue }) => {
   const intl = useIntl();
+  
   const avatar = useAvatar(classifierValue);
   const backgroundColor = avatar?.colorCode;
 
   return (<Button variant="contained" sx={{ ...sx, backgroundColor }}>
-  {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : classifierValue}
+  {classifierValue === _nobody_ ? intl.formatMessage({ id: classifierValue }) : avatar?.displayName}
 </Button>);
 }
 
@@ -60,7 +61,6 @@ const TitleButton: React.FC<{ groupByType: GroupByTypes, classifierValue: string
 }
 
 const Title: React.FC<{ groupByType: GroupByTypes, classifierValue: string, groupCount: number }> = ({ groupByType, groupCount, classifierValue }) => {
-
   return (<>
     <TitleButton groupByType={groupByType} classifierValue={classifierValue}/>
     <Typography sx={{ ml: 1 }} variant='caption'><FormattedMessage id={'core.teamSpace.taskCount'} values={{ values: groupCount }} /></Typography>

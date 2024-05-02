@@ -5,10 +5,18 @@ import java.util.Map;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
-import io.resys.thena.tasks.dev.app.security.PrincipalCache;
+import io.resys.permission.client.api.PermissionClient;
+import io.resys.permission.client.api.model.Principal;
+import io.resys.thena.projects.client.api.ProjectClient;
+import io.resys.thena.projects.client.api.TenantConfig;
+import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.security.IdentitySupplier;
+import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
-import io.resys.thena.tasks.dev.app.user.UserConfigSetup;
+import io.resys.thena.tasks.dev.app.user.ImmutableCurrentPermissions;
+import io.resys.thena.tasks.dev.app.user.ImmutableCurrentUserConfig;
+import io.resys.userprofile.client.api.UserProfileClient;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import jakarta.inject.Inject;
@@ -23,15 +31,43 @@ import jakarta.ws.rs.core.MediaType;
 public class ConfigResource {
   
   @Inject JsonWebToken jwt;
-  @Inject UserConfigSetup setup;
   @Inject CurrentUser currentUser;
-  @Inject PrincipalCache cache;
+  @Inject IdentitySupplier cache;
+  @Inject CurrentTenant currentTenant;
+  @Inject ProjectClient tenantClient;
+  @Inject PermissionClient permissionsClient;
+  @Inject UserProfileClient userProfileClient;
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("config/current-user")
   public Uni<CurrentUserConfig> currentUserConfig() {
-    return setup.getOrCreateCurrentUserConfig(currentUser);
+    return tenantClient.query().repoName(currentTenant.tenantsStoreId(), TenantRepoConfigType.TENANT).get(currentTenant.tenantId())
+    .onItem().transformToUni(tenantConfig -> 
+        cache.getPrincipalPermissions(currentUser.getUserId(), currentUser.getEmail())
+        .onItem().transformToUni(principal -> getProfile(tenantConfig.get(), principal))
+    );
+  }
+
+  
+  private Uni<CurrentUserConfig> getProfile(TenantConfig tenantConfig, Principal principal) {
+    return userProfileClient
+    .withRepoId(tenantConfig.getRepoConfig(TenantRepoConfigType.USER_PROFILE).getRepoId())
+    .userProfileQuery().get(principal.getId())
+    .onItem().transform(profile -> {
+      
+      final var permissions = ImmutableCurrentPermissions.builder()
+        .principal(principal)
+        .addAllPermissions(principal.getPermissions())
+        .build();
+    
+      return ImmutableCurrentUserConfig.builder()
+        .profile(profile)
+        .tenant(tenantConfig)
+        .permissions(permissions)
+        .build();
+      
+    });
   }
   
   @GET

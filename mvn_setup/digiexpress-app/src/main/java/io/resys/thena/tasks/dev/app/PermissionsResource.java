@@ -16,7 +16,7 @@ import io.resys.permission.client.api.model.RoleCommand.CreateRole;
 import io.resys.permission.client.api.model.RoleCommand.RoleUpdateCommand;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.tasks.dev.app.security.PrincipalCache;
+import io.resys.thena.tasks.dev.app.security.IdentitySupplier;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
@@ -34,7 +34,7 @@ public class PermissionsResource implements PermissionRestApi {
   @Inject private CurrentTenant currentTenant;
   @Inject private CurrentUser currentUser;
   @Inject private ProjectClient tenantClient;
-  @Inject private PrincipalCache cache;
+  @Inject private IdentitySupplier cache;
 
   @Override
   public Uni<List<Principal>> findAllPrincipals() {

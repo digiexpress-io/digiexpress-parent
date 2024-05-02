@@ -26,7 +26,7 @@ import io.resys.thena.tasks.dev.app.demo.TaskGen;
 import io.resys.thena.tasks.dev.app.security.BuiltInDataPermissions;
 import io.resys.thena.tasks.dev.app.security.BuiltInRoles;
 import io.resys.thena.tasks.dev.app.security.BuiltInUIPermissions;
-import io.resys.thena.tasks.dev.app.user.UserConfigSetup;
+import io.resys.thena.tasks.dev.app.security.IdentitySupplier;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
@@ -55,7 +55,7 @@ public class DemoResource {
   @Inject ProjectClient tenantClient;
   @Inject CurrentTenant currentTenant;
   @Inject SysConfigClient sysConfigClient;
-  @Inject UserConfigSetup setup;
+  @Inject IdentitySupplier setup;
   @Inject CurrentUser currentUser;
   @Inject DemoOrg demoOrg;
   
@@ -108,8 +108,11 @@ public class DemoResource {
     return tenantClient.query().deleteAll()
         .onItem().transformToUni(junk -> createTenant())
         .onItem().transformToUni(tenant -> createRoles(tenant).onItem().transformToUni(junk -> createPermissions(tenant)))
+        
         .onItem().transformToUni(junk -> demoOrg.generate())
-        .onItem().transformToUni(junk -> setup.getOrCreateCurrentUserConfig(currentUser));
+        .onItem().transformToUni(junk -> setup.invalidate())
+        .onItem().transformToUni(junk -> setup.getOrCreateCurrentUserConfig(currentUser))
+        ;
   }
   
   

@@ -19,8 +19,9 @@ import lombok.RequiredArgsConstructor;
 
 
 @Singleton
-public class DataAccessPolicy {
-  @Inject PrincipalCache principals;
+public class SecurityPolicyData {
+  @Inject private IdentitySupplier principals;
+  
   private static final DigiExpTaskAccessGranted GRANTED = new DigiExpTaskAccessGranted();
   
   @ServerExceptionMapper(value = TaskAccessException.class)
@@ -29,8 +30,15 @@ public class DataAccessPolicy {
   }
   
   public Uni<TaskAccessEvaluator> getTaskAccessEvaluator(CurrentUser currentUser) {
-    return principals.getPrincipalPermissions(currentUser.getUserId(), currentUser.getEmail())
-        .onItem().transform(principal -> {
+    
+    return Uni.combine().all().unis(
+        principals.getRolePermissions(), 
+        principals.getPrincipalPermissions(currentUser.getUserId(), currentUser.getEmail())
+    ).asTuple().onItem().transform(tuple -> {
+          final var principal = tuple.getItem2();
+          final var roles = tuple.getItem1();
+          final var principalPermissions = principal.getPermissions();
+          
           return new TaskAccessEvaluator() {
             @Override
             public TaskAccess getReadAccess(Task task) {
@@ -41,8 +49,13 @@ public class DataAccessPolicy {
               if(task.getRoles().isEmpty()) {
                 return GRANTED;
               }
+
+              //final var taskRoles = task.getRoles().stream().map(role -> roles.get(role)).toList();
               
-              final var rolesOverlap = !Collections.disjoint(task.getRoles(), principal.getRoles());
+              final var taskPrincipals = task.getRoles().stream().map(role -> roles.get(role))
+                  .flatMap(role -> role.getDirectPermissions().stream())
+                  .toList();
+              final var rolesOverlap = !Collections.disjoint(taskPrincipals, principalPermissions);
               if(rolesOverlap) {
                 return GRANTED;
               } 

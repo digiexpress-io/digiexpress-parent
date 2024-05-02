@@ -5,6 +5,7 @@ import java.util.List;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
+import io.resys.thena.tasks.dev.app.security.IdentitySupplier;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
@@ -25,6 +26,7 @@ public class UserProfileResource implements UserProfileRestApi {
   @Inject private CurrentTenant currentTenant;
   @Inject private CurrentUser currentUser;
   @Inject private ProjectClient tenantClient;
+  @Inject private IdentitySupplier identitySupplier;
 
   @Override
   public Uni<List<UserProfile>> findAllUserProfiles() {
@@ -34,7 +36,13 @@ public class UserProfileResource implements UserProfileRestApi {
   @Override
   public Uni<UserProfile> getUserProfileById(String profileId) {
     if("current".equals(profileId)) {
-      return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).userProfileQuery().get(currentUser.getUserId()));
+      return identitySupplier.getPrincipalPermissions(currentUser.getUserId(), currentUser.getEmail())
+          .onItem().transformToUni(principal -> {
+            return getUserProfileConfig()
+                .onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).userProfileQuery().get(principal.getId()));
+          });
+          
+
     }
     return getUserProfileConfig().onItem().transformToUni(config -> userProfileClient.withRepoId(config.getRepoId()).userProfileQuery().get(profileId));
   }

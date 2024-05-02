@@ -16,13 +16,11 @@ import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.tasks.dev.app.security.BuiltInRoles;
-import io.resys.thena.tasks.dev.app.security.PrincipalCache;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Singleton
 public class DemoOrg {
-  @Inject PermissionClient permissions;
-  @Inject ProjectClient tenantClient;
-  @Inject CurrentTenant currentTenant;
-  @Inject UserProfileClient userProfileClient;
-  @Inject PrincipalCache cache;
+  @Inject private PermissionClient permissions;
+  @Inject private ProjectClient tenantClient;
+  @Inject private CurrentTenant currentTenant;
+  @Inject private UserProfileClient userProfileClient;
   
   public static final Map<String, Integer> ASSIGNEES = Map.of(
     "olev.mutso@resys.io", 1,
@@ -47,7 +44,7 @@ public class DemoOrg {
 
   private static final String taskAdmin = "task-admin-role";
   public static final Map<String, Integer> ROLES = Map.of(
-      taskAdmin, 1,
+      "parks-and-recreation", 1,
       "water-department", 2,
       "education-department", 3,
       "elderly-care-department", 4,

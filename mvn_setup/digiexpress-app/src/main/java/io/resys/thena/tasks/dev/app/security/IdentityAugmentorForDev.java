@@ -12,7 +12,7 @@ import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
-import io.resys.permission.client.api.model.Principal;
+import io.resys.thena.tasks.dev.app.BeanFactory.CurrentUserRecord;
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,9 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @IfBuildProfile("dev")
 @ApplicationScoped
 @Slf4j
-public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
+public class IdentityAugmentorForDev implements SecurityIdentityAugmentor {
   @ConfigProperty(name = "tenant.devLoggedInUser") String devLoggedInUser;
-  @Inject PrincipalCache cache;
+  @Inject IdentitySupplier cache;
   
   @Override
   public Uni<SecurityIdentity> augment(SecurityIdentity identity, AuthenticationRequestContext context) {
@@ -39,15 +39,20 @@ public class DevIdentityAugmentor implements SecurityIdentityAugmentor {
     final var principal = (JsonWebToken) src.getPrincipal();
     final var sub = (String) principal.getClaim(Claims.sub.name());
     final var email = (String) principal.getClaim(Claims.email.name());
-    return cache.getPrincipalPermissions(sub, email).onItem()
-        .transform(permissions -> merge(src, permissions));
-  }
-  
-  
-  private SecurityIdentity merge(SecurityIdentity src, Principal permissions) {
-    return QuarkusSecurityIdentity.builder(src)
-    .addRoles(new HashSet<>(permissions.getPermissions()))
-    .build();
+    final var givenName = (String) principal.getClaim(Claims.given_name.name());
+    final var familyName = (String) principal.getClaim(Claims.family_name.name());
+    
+    final var record = new CurrentUserRecord(sub, givenName, familyName, email);
+    
+    log.debug("Augment identity merge: {}, {}", sub, email);
+    return cache.getOrCreateCurrentUserConfig(record).onItem()
+        .transform(permissions -> {
+          
+          log.debug("Merging: {}", permissions.getPermissions());
+          return QuarkusSecurityIdentity.builder(src)
+          .addRoles(new HashSet<>(permissions.getPermissions().getPermissions()))
+          .build();
+        });
   }
   
   private SecurityIdentity create(SecurityIdentity src) {

@@ -5,8 +5,13 @@ import { FormattedMessage } from 'react-intl';
 
 import { FilterByRoles, FilterBy, useTasks } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
+import { useAvatar } from 'descriptor-avatar';
 
 
+const RoleAvatar: React.FC<{roleId: string}> = ({roleId}) => {
+  const avatar = useAvatar(roleId);
+  return (<Typography>{avatar?.displayName}</Typography>);
+}
 
 const FilterRoles: React.FC<{
   onChange: (value: string[]) => void;
@@ -23,7 +28,7 @@ const FilterRoles: React.FC<{
   }
 
   const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
-
+  
   return (<>
     <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
 
@@ -58,7 +63,7 @@ const FilterRoles: React.FC<{
             handleClose();
             props.onChange([type]);
           }}>
-            <ListItemText inset><Typography>{type}</Typography></ListItemText>
+            <ListItemText inset><RoleAvatar roleId={type}/></ListItemText>
           </MenuItem>;
         })}
 

@@ -20,7 +20,7 @@ import io.resys.permission.client.api.model.Principal;
 import io.resys.permission.client.api.model.Principal.Role;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.tasks.dev.app.security.PrincipalCache;
+import io.resys.thena.tasks.dev.app.security.IdentitySupplier;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.userprofile.client.api.UserProfileClient;
@@ -42,7 +42,7 @@ public class AvatarResource implements AvatarRestApi {
   @Inject ProjectClient tenantClient;
   @Inject UserProfileClient profileClient;
   @Inject AvatarClient avatarClient;
-  @Inject PrincipalCache cache;
+  @Inject IdentitySupplier cache;
   
   @CacheResult(cacheName = AvatarResource.CACHE_NAME)
   @Override

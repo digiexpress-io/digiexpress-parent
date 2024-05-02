@@ -35,6 +35,7 @@ public interface Principal {
     String getName();
     String getDescription();
     List<String> getPermissions();  // permission names
+    List<String> getDirectPermissions();  // permission names
     List<String> getPrincipals();   // user names
     OrgActorStatusType getStatus();
   }

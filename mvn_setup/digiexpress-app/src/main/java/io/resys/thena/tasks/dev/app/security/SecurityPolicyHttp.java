@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ApplicationScoped
-public class AppHttpSecPolicy implements HttpSecurityPolicy {
+public class SecurityPolicyHttp implements HttpSecurityPolicy {
 
-  @Inject private PrincipalCache cache;
+  @Inject private IdentitySupplier cache;
   
   
   @Override
@@ -60,13 +60,13 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
     return null;
   }
  
-  private static boolean isPermitted(RoutingContext event, SecurityIdentity identity, Principal principal) {
+  private static boolean isPermitted(RoutingContext event, SecurityIdentity _identity, Principal principal) {
     final var path = event.request().path();
     final var httpMethod = HttpMethodInterm.parse(event);
     
     // DEMO
     if(path.contains("demo/api")) {
-      return principal.getPermissions().contains(BuiltInDataPermissions.DATA_DEMO.name());
+      return true;//principal.getPermissions().contains(BuiltInDataPermissions.DATA_DEMO.name());
     }
     
     // CRM
@@ -103,7 +103,7 @@ public class AppHttpSecPolicy implements HttpSecurityPolicy {
     if(path.contains("digiexpress/api/am")) {
       switch (httpMethod) {
       case READ: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_READ.name());
-      case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_WRITE.name());
+      //case WRITE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_WRITE.name());
       case DELETE: return principal.getPermissions().contains(BuiltInDataPermissions.DATA_PERMISSIONS_DELETE.name());
       default: return true;
       }
