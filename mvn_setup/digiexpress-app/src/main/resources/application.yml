@@ -3,7 +3,7 @@ quarkus:
   log:
     level: INFO
     category: 
-      io.resys:
+      io.resys.thena.tasks.dev.app:
         level: DEBUG
     console:  
       json: false
