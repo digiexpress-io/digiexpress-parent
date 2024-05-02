@@ -91,6 +91,7 @@ class DefaultStore implements Store {
           return null;
         }
         if (response.status === 401) {
+          /*
           return this.handle401()
             .then(() => fetch(url + path, finalInit))
             .then(response => {
@@ -105,7 +106,7 @@ class DefaultStore implements Store {
                   errors: data
                 });
               });
-            });
+            });*/
         }
 
         if (!response.ok) {
