@@ -2,31 +2,24 @@ import React from 'react';
 
 
 import Burger from 'components-burger';
-import { UserProfileAndOrg, TenantConfig, AccessMgmtContextProvider } from 'descriptor-access-mgmt';
+import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 import { Backend, useBackend } from 'descriptor-backend';
-import { TasksProvider } from 'descriptor-task';
-import { TenantProvider } from 'descriptor-dialob';
-import { AvatarProvider } from 'descriptor-avatar';
 import AppStencil from 'app-stencil';
 import AppHdes from 'app-hdes';
 
 
 import Views from './Views';
 import { getDrawerOpen, FrontofficePrefs, SyncDrawer, InitNav } from './FrontofficePrefs';
+import { useProfile } from 'descriptor-backend/backend-ctx';
 
 
 const AppConfigProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
   return (
-    <TasksProvider init={init}>
-      <TenantProvider init={init}>
-        <AvatarProvider>
-          <>
-            <SyncDrawer />
-            {children}
-          </>
-        </AvatarProvider>
-      </TenantProvider>
-    </TasksProvider>);
+
+    <>
+      <SyncDrawer />
+      {children}
+    </>);
 }
 
 
@@ -47,26 +40,24 @@ function AppConfig(backend: Backend, profile: UserProfileAndOrg): Burger.App<{},
   }
 }
 
-const NestedApps: React.FC<{ profile: UserProfileAndOrg, tenantConfig: TenantConfig }> = ({ profile, tenantConfig }) => {
+const NestedApps: React.FC<{  }> = ({ }) => {
   const backend = useBackend();
+  const profile = useProfile();
+  const tenantConfig = profile.tenant;
   const drawerOpen = getDrawerOpen(profile);
 
   const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
   const frontoffice: Burger.App<{}, any> = React.useMemo(() => AppConfig(backend, profile), [backend, profile]);
   const appId = tenantConfig.preferences.landingApp;
-  return (<Burger.Provider secondary="toolbar.activities" drawerOpen={drawerOpen} appId={appId} children={[ stencil, hdes, frontoffice ]} />)
+  return (<Burger.Provider secondary="toolbar.activities" drawerOpen={drawerOpen} appId={appId} children={[stencil, hdes, frontoffice]} />)
 }
 
-export const AppFrontoffice: React.FC<{ profile: UserProfileAndOrg }> = ({ profile }) => {
-  const { tenant } = profile;
-
+export const AppFrontoffice: React.FC<{  }> = ({  }) => {  
   return (
-    <AccessMgmtContextProvider profile={profile} tenantConfig={tenant}>
-      <FrontofficePrefs>
-        <NestedApps profile={profile} tenantConfig={tenant}/>
-      </FrontofficePrefs>
-    </AccessMgmtContextProvider>
+    <FrontofficePrefs>
+      <NestedApps />
+    </FrontofficePrefs>
   );
 }
 

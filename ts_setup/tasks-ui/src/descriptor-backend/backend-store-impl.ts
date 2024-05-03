@@ -5,6 +5,8 @@ import LoggerFactory from 'logger';
 const log = LoggerFactory.getLogger();
 
 
+
+
 export class BackendStoreImpl implements Store {
   private _config: StoreConfig;
   private _updateStarted: boolean = false;
@@ -12,8 +14,11 @@ export class BackendStoreImpl implements Store {
   private _defRef: RequestInit;
   private _forbidden: ForbiddenCallback | undefined;
   private _urls: Record<RepoType, string>;
-
+  
   constructor(config: StoreConfig, forbidden?: ((access: BackendAccess) => void) | undefined) {
+    if(forbidden) {
+      console.log(config.urls);
+    }
     this._config = config;
     this._forbidden = forbidden;
     this._urls = { ... config.urls};

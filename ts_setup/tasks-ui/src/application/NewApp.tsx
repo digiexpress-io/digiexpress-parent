@@ -11,27 +11,19 @@ import AppFrontoffice from 'app-frontoffice';
 import { initLogging } from './LoggetSetup';
 import messages from './intl';
 
-import { initBackend, useHealth, useProfile } from './initBackend';
-import { Loader } from './Loader';
+import { initBackend } from './initBackend';
+import { AvatarProvider } from 'descriptor-avatar';
+import { AccessMgmtContextProvider } from 'descriptor-access-mgmt';
+import { TasksProvider } from 'descriptor-task';
+import { DialobProvider } from 'descriptor-dialob';
+import { EventsProvider } from 'descriptor-events';
 
 
 const locale = 'en';
 const backend = initBackend();
-
 initLogging();
 
 
-const InternalInit: React.FC<{}> = ({ }) => {
-  const { health } = useHealth();
-  const { profile } = useProfile();
-
-  return (
-    <>
-      <Loader health={health} profile={profile}/>
-      {health && profile && <AppFrontoffice profile={profile} /> }
-    </>
-  )
-}
 
 
 const NewApp: React.FC<{}> = () => (
@@ -40,7 +32,17 @@ const NewApp: React.FC<{}> = () => (
       <ThemeProvider theme={siteTheme}>
         <SnackbarProvider>
           <BackendProvider backend={backend}>
-            <InternalInit />
+            <AvatarProvider>
+              <AccessMgmtContextProvider>
+                <TasksProvider>
+                  <DialobProvider>
+                    <EventsProvider>
+                      <AppFrontoffice />
+                    </EventsProvider>
+                  </DialobProvider>
+                </TasksProvider>
+              </AccessMgmtContextProvider>
+            </AvatarProvider>
           </BackendProvider>
         </SnackbarProvider>
       </ThemeProvider>

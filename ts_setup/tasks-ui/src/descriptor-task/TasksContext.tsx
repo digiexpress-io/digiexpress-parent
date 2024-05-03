@@ -52,7 +52,7 @@ function initTasks(tasks: Task[], profile: UserProfileAndOrg): {
   }
 }
 
-export const TasksProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend } }> = ({ children }) => {
+export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const backend = useBackend();
   const { profile } = useAm();
   

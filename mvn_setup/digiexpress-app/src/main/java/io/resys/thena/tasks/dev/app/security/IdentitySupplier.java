@@ -27,6 +27,7 @@ import io.resys.thena.projects.client.api.TenantConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.resys.thena.support.RepoAssert;
+import io.resys.thena.tasks.dev.app.events.EventPolicy;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.resys.thena.tasks.dev.app.user.CurrentUserConfig;
@@ -49,6 +50,7 @@ public class IdentitySupplier {
   @Inject private ProjectClient tenantClient;  
   @Inject private PermissionClient permissions;
   @Inject private UserProfileClient userProfileClient;
+  @Inject private EventPolicy events;
 
   @ConfigProperty(name = "tenant.failSafeUsers")
   String failSafeUsers;
@@ -92,7 +94,8 @@ public class IdentitySupplier {
   
   @CacheInvalidateAll(cacheName = IdentitySupplier.CACHE_NAME)
   public Uni<Void> invalidate() {
-    return Uni.createFrom().voidItem();
+    return Uni.createFrom().voidItem()
+        .onItem().transformToUni(junk -> events.sendAmUpdate());
   }  
   
   @CacheResult(cacheName = IdentitySupplier.CACHE_NAME)

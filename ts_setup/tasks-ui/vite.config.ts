@@ -21,6 +21,7 @@ const modules: string[] = [
   'components-org-chart',
   'components-user-profile',
 
+  'descriptor-events',
   'descriptor-customer',
   'descriptor-organization',
   'descriptor-project',

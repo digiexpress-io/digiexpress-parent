@@ -27,7 +27,26 @@ const getUrl = () => {
   }
 }
 
+const getWs = () => {
+  try {
+    const url = getUrl()
+
+    if(url.indexOf("https") === 0) {
+      return "ws" + url.substring(5)
+    }
+
+    if(url.indexOf("http") === 0) {
+      return "ws" + url.substring(4)
+    }
+
+    return "ws"+ url
+  } catch (error) {
+    return "";
+  }
+}
+
 const baseUrl = getUrl();
+const baseWs = getWs();
 
 const store: Backend.Store = new Backend.BackendStoreImpl({
   urls: {
@@ -43,6 +62,7 @@ const store: Backend.Store = new Backend.BackendStoreImpl({
     'PERMISSIONS': baseUrl + "/q/digiexpress/api/",
     'DIALOB': baseUrl + "/q/digiexpress/api/",
     'AVATAR': baseUrl + "/q/digiexpress/api/",
+    'EVENTS': baseWs + "/q/digiexpress/api/",
   },
   performInitCheck: false,
   csrf: window._env_?.csrf,
@@ -55,43 +75,3 @@ const store: Backend.Store = new Backend.BackendStoreImpl({
 export function initBackend() {
   return new Backend.BackendImpl(store);
 }
-
-
-export function useHealth() {
-  const backend = useBackend();
-  const [health, setHealth] = React.useState<Health>();
-
-  React.useEffect(() => {
-    backend.health().then(health => {
-      if (health.contentType === 'NO_CONNECTION') {
-
-      } else if (health.contentType === 'BACKEND_NOT_FOUND') {
-
-      }
-      setHealth(health);
-    })
-      .catch(err => {
-        console.error(err);
-      });
-  }, []);
-
-  return { health };
-}
-
-export function useProfile() {
-  const backend = useBackend();
-  const [profile, setProfile] = React.useState<UserProfileAndOrg>();
-
-  React.useEffect(() => {
-    new ImmutableAmStore(backend.store).currentUserProfile()
-      .then(setProfile)
-      .catch(err => {
-        console.error(err);
-      });
-  }, []);
-
-
-  return { profile }
-}
-
-

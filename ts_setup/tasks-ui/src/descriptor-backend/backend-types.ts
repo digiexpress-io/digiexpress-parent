@@ -20,7 +20,8 @@ export type RepoType = (
   'USER_PROFILE' |
   'TENANT' |
   'SYS_CONFIG' |
-  'AVATAR'
+  'AVATAR' | 
+  'EVENTS'
   );
 
 export interface BackendAccess {

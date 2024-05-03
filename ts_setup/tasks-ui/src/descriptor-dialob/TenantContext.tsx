@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Backend } from 'descriptor-backend';
+import { Backend, useBackend } from 'descriptor-backend';
 import { UserProfileAndOrg } from 'descriptor-access-mgmt';
 
 
@@ -22,12 +22,8 @@ type WithTenantEntries = (tenantEntries: TenantEntry[]) => void;
 
 export const TenantContext = React.createContext<TenantContextType>({} as TenantContextType);
 
-export const TenantProvider: React.FC<{ children: React.ReactNode, 
-  init: {
-    backend: Backend;
-    profile: UserProfileAndOrg;
-  } }> = ({ children, init }) => {
-  const { backend } = init;
+export const DialobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const backend = useBackend();
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [state, setState] = React.useState<ImmutableTenantState>(initState);

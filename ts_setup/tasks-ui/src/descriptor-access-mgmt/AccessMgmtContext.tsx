@@ -8,6 +8,7 @@ import { ImmutableAmStore } from './am-store-impl';
 import { UserSearchResult, RoleSearchResult } from './permission-container-types';
 import { TenantConfig } from './tenant-types';
 import { ImmutablePermissionContainer } from './permission-container-impl';
+import { useProfile } from 'descriptor-backend/backend-ctx';
 
 export type { UserSearchResult, RoleSearchResult };
 export interface AmContextType {
@@ -35,13 +36,9 @@ export function useAm() {
 
 export const AccessMgmtContext = React.createContext<AmContextType>({} as any);
 
-export const AccessMgmtContextProvider: React.FC<{ 
-  children: React.ReactNode, 
-  profile: UserProfileAndOrg, 
-  tenantConfig: TenantConfig 
-}> 
-= (props) => {
+export const AccessMgmtContextProvider: React.FC<{ children: React.ReactNode }> = (props) => {
   const backend = useBackend();
+  
   const [data, setData] = React.useState<[
     Permission[],
     Principal[],
@@ -63,9 +60,7 @@ export const AccessMgmtContextProvider: React.FC<{
   return (<AccessMgmtContextProviderDelegate
     permissions={permissions}
     principals={principals}
-    roles={roles}
-    profile={props.profile}
-    tenantConfig={props.tenantConfig}>
+    roles={roles}>
       {props.children}
   </AccessMgmtContextProviderDelegate>)
 }
@@ -73,8 +68,7 @@ export const AccessMgmtContextProvider: React.FC<{
 
 const AccessMgmtContextProviderDelegate: React.FC<{ 
   children: React.ReactNode, 
-  profile: UserProfileAndOrg, 
-  tenantConfig: TenantConfig,
+ 
   permissions: Permission[],
   principals: Principal[];
   roles: Role[];
@@ -82,11 +76,12 @@ const AccessMgmtContextProviderDelegate: React.FC<{
 = (props) => {
 
   const backend = useBackend();
+  const profile = useProfile();
+
   const [roles, setRoles] = React.useState<Role[]>(props.roles);
   const [permissions, setPermissions] = React.useState<Permission[]>(props.permissions);
   const [principals, setPrincipals] = React.useState<Principal[]>(props.principals);
   const store = React.useMemo(() => new ImmutableAmStore(backend.store), [backend]);
-  const profile = React.useMemo(() => props.profile, [props.profile]);
 
   async function loadAllRoles(): Promise<void> {
     return store.findAllRoles().then(allRoles => {

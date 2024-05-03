@@ -1,6 +1,10 @@
 import React from 'react';
 import { Backend, Store, Health, BackendAccess, ForbiddenCallback } from './backend-types';
 import { Forbidden } from './Forbidden';
+import { ImmutableAmStore, UserProfileAndOrg } from 'descriptor-access-mgmt';
+import { Loader } from './Loader';
+
+
 
 export class BackendImpl implements Backend {
   private _store: Store;
@@ -30,17 +34,35 @@ export class BackendImpl implements Backend {
   }
 }
 
-export const BackendContext = React.createContext<Backend>({} as any);
+export interface BackendContextType {
+  backend: Backend;
+  profile: UserProfileAndOrg;
+  health: Health;
+}
+
+export const BackendContext = React.createContext<BackendContextType>({} as any);
 
 
-export const BackendProvider: React.FC<{ children: React.ReactNode, backend: Backend}> = (props) => {
+const BackendProviderDelegate: React.FC<{ 
+  children: React.ReactNode;
+  backend: Backend;
+  profile: UserProfileAndOrg;
+  health: Health;
+}> = (props) => {
+
   const init = props.backend;
   const [access, setAccess] = React.useState<BackendAccess>();
-  const contextValue = React.useMemo(() => init.withForbidden(setAccess), [init]);
-  
+  const [profile, setProfile] = React.useState<UserProfileAndOrg>(props.profile);
+  const [health, setHealth] = React.useState<Health>(props.health);
+  const backend = React.useMemo(() => init.withForbidden(setAccess), [init]);
+
+
   function handleAccessClose() {
     setAccess(undefined);
   }
+  const contextValue: BackendContextType = React.useMemo(() => ({
+    backend, profile, health
+  }), [backend, profile, health]);
 
   return (<BackendContext.Provider value={contextValue}>
     {props.children}
@@ -48,6 +70,42 @@ export const BackendProvider: React.FC<{ children: React.ReactNode, backend: Bac
   </BackendContext.Provider>);
 }
 
+
+export const BackendProvider: React.FC<{ children: React.ReactNode, backend: Backend}> = ({ backend, children }) => {
+  const [profile, setProfile] = React.useState<UserProfileAndOrg>();
+  const [health, setHealth] = React.useState<Health>();
+
+
+  React.useEffect(() => {
+    new ImmutableAmStore(backend.store).currentUserProfile()
+      .then(setProfile)
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  React.useEffect(() => {
+    backend.health().then(health => {
+      if (health.contentType === 'NO_CONNECTION') {
+
+      } else if (health.contentType === 'BACKEND_NOT_FOUND') {
+
+      }
+      setHealth(health);
+    }).catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  return (<>
+    <Loader health={health} profile={profile}/>
+    {health && profile && <BackendProviderDelegate backend={backend} health={health} profile={profile}>{children}</BackendProviderDelegate>}
+  </>);
+}
 export const useBackend = () => {
-  return React.useContext(BackendContext);
+  return React.useContext(BackendContext).backend;
+}
+
+export const useProfile = () => {
+  return React.useContext(BackendContext).profile;
 }
