@@ -12,7 +12,6 @@ const FormattedCell: React.FC<{
   row: UserProfileDescriptor,
   children: React.ReactNode
 }> = ({ row, children }) => {
-  console.log(row.displayName)
   return (
     <StyledTableCell width="500px">
       <Box justifyContent='left' display='flex'>
