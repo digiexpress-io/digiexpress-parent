@@ -32,7 +32,7 @@ const getWs = () => {
     const url = getUrl()
 
     if(url.indexOf("https") === 0) {
-      return "ws" + url.substring(5)
+      return "wss://dev.env.digiexpress.io";
     }
 
     if(url.indexOf("http") === 0) {
