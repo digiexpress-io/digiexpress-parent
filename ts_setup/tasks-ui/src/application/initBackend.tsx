@@ -30,16 +30,10 @@ const getUrl = () => {
 const getWs = () => {
   try {
     const url = getUrl()
-
-    if(url.indexOf("https") === 0) {
-      return "wss" + window.location.origin.substring(5);
-    }
-
     if(url.indexOf("http") === 0) {
       return "ws" + url.substring(4)
     }
-
-    return "ws"+ url
+    return "wss" + window.location.origin.substring(5);
   } catch (error) {
     return "";
   }
