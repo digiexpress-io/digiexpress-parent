@@ -74,8 +74,9 @@ export function useSearch() {
  */
 const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy: GroupByTypes, searchString: string}}> = ({children, init}) => {
   const ctx = useTasks();
+  const { tasks } = ctx;
   const [groupBy, setGroupBy] = React.useState<GroupByTypes>(init.groupBy);
-  const [state, setState] = React.useState<ImmutableTaskSearch>(new ImmutableTaskSearch({ data: ctx.tasks, searchString: init.searchString }));
+  const [state, setState] = React.useState<ImmutableTaskSearch>(new ImmutableTaskSearch({ data: [], searchString: init.searchString }));
 
   const withGrouBy: WithGroupBy = React.useCallback((groupBy) => initWithGroupBy(groupBy, setState, setGroupBy), [setState, setGroupBy]);
 
@@ -86,8 +87,13 @@ const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy:
   const withFilterByPriority: WithFilterByPriority = React.useCallback((priority) => initWithFilterByPriority(priority, setState), [setState, setGroupBy]);
   const withFilterByOwner: WithFilterByOwner = React.useCallback((owner) => initWithFilterByOwner(owner, setState), [setState, setGroupBy]);
   const withFilterByRoles: WithFilterByRoles = React.useCallback((roles) => initWithFilterByRoles(roles, setState), [setState, setGroupBy]);
-
   const withoutFilters: WithoutFilters = React.useCallback(() => initWithoutFilters(setState), [setState]);
+
+
+  React.useEffect(() => {
+    console.log("reloading tasks");
+    setState((prev) => prev.withData(tasks));
+  }, [tasks]);
 
 
   const contextValue: TaskSearchContextType = React.useMemo(() => {
