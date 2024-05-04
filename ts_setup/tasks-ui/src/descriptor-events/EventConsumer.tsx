@@ -20,9 +20,10 @@ export const EventConsumer: React.FC<{ }> = (props) => {
     }
 
     if(event.type === 'EVENT_AM_UPDATE') {
-      am.reload();
-      profileReload();
-      tasks.reload();
+      profileReload().then(() => {
+        am.reload();
+        tasks.reload();
+      });
       events.replay();
     }
   }, [event]);  

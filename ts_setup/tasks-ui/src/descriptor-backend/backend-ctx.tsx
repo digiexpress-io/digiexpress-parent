@@ -38,7 +38,7 @@ export interface BackendContextType {
   backend: Backend;
   profile: UserProfileAndOrg;
   health: Health;
-  reload: () => void;
+  reload: () => Promise<void>;
 }
 
 export const BackendContext = React.createContext<BackendContextType>({} as any);
@@ -64,7 +64,7 @@ const BackendProviderDelegate: React.FC<{
   const contextValue: BackendContextType = React.useMemo(() => {
 
     function reload() {
-      new ImmutableAmStore(backend.store).currentUserProfile()
+      return new ImmutableAmStore(backend.store).currentUserProfile()
       .then(setProfile)
       .catch(err => {
         console.error(err);
