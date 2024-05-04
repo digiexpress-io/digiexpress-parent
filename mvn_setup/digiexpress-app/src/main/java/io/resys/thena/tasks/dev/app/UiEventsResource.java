@@ -30,7 +30,7 @@ public class UiEventsResource {
   public void onOpen(Session session) {
     final var username = currentUser.getUserId();
     log.debug("User: {} has joined", username);
-    sessions.put(username, session);
+    sessions.computeIfAbsent(username, (_username) -> session);
   }
 
   @OnClose
