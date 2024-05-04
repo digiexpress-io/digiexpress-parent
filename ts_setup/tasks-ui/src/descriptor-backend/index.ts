@@ -1,6 +1,6 @@
 import * as store from './backend-store-impl';
 import * as ctx from './backend-ctx';
-import {useBackend, BackendProvider}  from './backend-ctx';
+import {useBackend, BackendProvider, useProfileReload}  from './backend-ctx';
 
 import {
   BackendError, Backend, StoreConfig, Store, Health
@@ -13,7 +13,7 @@ import {
   StoreErrorImpl as StoreErrorImplAs
 } from './error-types';
 
-export { useBackend, BackendProvider }
+export { useBackend, useProfileReload, BackendProvider }
 export type {
   BackendError, Backend, StoreConfig, Store,
   ServiceErrorMsg, ServiceErrorProps, StoreError, Health
@@ -27,6 +27,7 @@ declare namespace BackendNS {
 }
 namespace BackendNS {
   export const useBackend = ctx.useBackend;
+  export const useProfileReload = ctx.useProfileReload;
   export const BackendProvider = ctx.BackendProvider;
   export const BackendImpl = ctx.BackendImpl;
   export const BackendStoreImpl = store.BackendStoreImpl;

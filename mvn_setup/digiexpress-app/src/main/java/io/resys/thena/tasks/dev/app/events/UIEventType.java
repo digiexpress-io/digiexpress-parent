@@ -1,6 +1,6 @@
 package io.resys.thena.tasks.dev.app.events;
 
-public enum UIEventType {  
+public enum UIEventType {
   
   EVENT_AM_UPDATE(EventPolicy.EVENT_AM_UPDATE_STRING);
   

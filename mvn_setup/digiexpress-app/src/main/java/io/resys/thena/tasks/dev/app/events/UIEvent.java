@@ -1,9 +1,11 @@
 package io.resys.thena.tasks.dev.app.events;
 
-import lombok.Builder;
-import lombok.Data;
+import org.immutables.value.Value;
 
-@Data @Builder
-public class UIEvent {
-  private final UIEventType type;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@Value.Immutable @JsonSerialize(as = ImmutableUIEvent.class) @JsonDeserialize(as = ImmutableUIEvent.class)
+public interface UIEvent {
+  UIEventType getType();
 }

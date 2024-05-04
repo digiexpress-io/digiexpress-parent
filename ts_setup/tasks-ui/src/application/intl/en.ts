@@ -704,7 +704,10 @@ const en = {
 
   'am.chart.tree.tip.name': 'Application roles',
   'am.chart.tree.node.users': 'Members - {members}',
-  'am.chart.tree.node.permissions': 'Permissions - {permissions}'
+  'am.chart.tree.node.permissions': 'Permissions - {permissions}',
+
+
+  'events.am.update': 'Access updated',
 };
 
 export default en;

@@ -38,6 +38,7 @@ export interface BackendContextType {
   backend: Backend;
   profile: UserProfileAndOrg;
   health: Health;
+  reload: () => void;
 }
 
 export const BackendContext = React.createContext<BackendContextType>({} as any);
@@ -60,9 +61,20 @@ const BackendProviderDelegate: React.FC<{
   function handleAccessClose() {
     setAccess(undefined);
   }
-  const contextValue: BackendContextType = React.useMemo(() => ({
-    backend, profile, health
-  }), [backend, profile, health]);
+  const contextValue: BackendContextType = React.useMemo(() => {
+
+    function reload() {
+      new ImmutableAmStore(backend.store).currentUserProfile()
+      .then(setProfile)
+      .catch(err => {
+        console.error(err);
+      });      
+    }
+
+    return {
+      backend, profile, health, reload
+    };
+  }, [backend, profile, health]);
 
   return (<BackendContext.Provider value={contextValue}>
     {props.children}
@@ -108,4 +120,7 @@ export const useBackend = () => {
 
 export const useProfile = () => {
   return React.useContext(BackendContext).profile;
+}
+export const useProfileReload = () => {
+  return React.useContext(BackendContext).reload;
 }
