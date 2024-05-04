@@ -35,7 +35,8 @@ class ImmutableTaskDescriptor implements TaskDescriptor {
   equals(next: TaskDescriptor): boolean {
     return ( 
       this._entry.id === next.entry.id &&
-      this._entry.treeVersion === next.entry.treeVersion
+      this._entry.treeVersion === next.entry.treeVersion &&
+      this._entry.title === next.entry.title
     )
   }
   

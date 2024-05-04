@@ -89,13 +89,6 @@ const TaskSearchDelegate: React.FC<{ children: React.ReactNode, init: { groupBy:
   const withFilterByRoles: WithFilterByRoles = React.useCallback((roles) => initWithFilterByRoles(roles, setState), [setState, setGroupBy]);
   const withoutFilters: WithoutFilters = React.useCallback(() => initWithoutFilters(setState), [setState]);
 
-
-  React.useEffect(() => {
-    console.log("reloading tasks");
-    setState((prev) => prev.withData(tasks));
-  }, [tasks]);
-
-
   const contextValue: TaskSearchContextType = React.useMemo(() => {
     return { 
       groupBy, state, withGrouBy,
