@@ -12,6 +12,8 @@ const RoleDetails: React.FC<{ role: Role }> = ({ role }) => {
 
   return (
     <Stack spacing={1}>
+      <SectionLayout label='permissions.roles.name' value={role.name} />
+
       {parentRole ? <SectionLayout label='permissions.roles.parent' value={parentRole.name} /> :
         <SectionLayout label='permissions.roles.parent' value={intl.formatMessage({ id: 'permissions.roles.parent.none' })} />
       }

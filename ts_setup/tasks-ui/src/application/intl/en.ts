@@ -706,6 +706,7 @@ const en = {
   'am.chart.tree.node.users': 'Members - {members}',
   'am.chart.tree.node.permissions': 'Permissions - {permissions}',
 
+  'activities.frontoffice.playbooks.title': 'Playbooks',
 
   'events.am.update': 'Access updated',
 };

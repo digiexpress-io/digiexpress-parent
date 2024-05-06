@@ -1,9 +1,9 @@
 import React from 'react';
-import { Stack, Toolbar, AppBar, Button, Typography, lighten, darken  } from '@mui/material';
+import { Stack, Toolbar, AppBar, Button, Typography, lighten, darken } from '@mui/material';
 import { SxProps } from '@mui/system';
 import { FormattedMessage } from 'react-intl';
 import { wash_me } from 'components-colors';
-
+import Burger from 'components-burger';
 
 interface NavigationButtonProps {
   onClick: () => void,
@@ -35,7 +35,7 @@ function getButtonStyles(color: string, active: boolean | undefined) {
 
 const NavigationButton: React.FC<NavigationButtonProps> = ({ active, color, onClick, id, values }) => {
   const sx = React.useMemo(() => getButtonStyles(color, active), [color, active]);
-  
+
   return (
     <Button variant='outlined' sx={sx} onClick={onClick}>
       <Typography variant='caption' fontWeight='bolder'>
@@ -46,17 +46,14 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({ active, color, onCl
 
 
 
-const NavigationSticky: React.FC<{ children: React.ReactNode, extendedAppBar?: React.ReactNode}> = ({ children, extendedAppBar }) => {
-
+const NavigationSticky: React.FC<{ children: React.ReactNode, extendedAppBar?: React.ReactNode }> = ({ children, extendedAppBar }) => {
   return (
-    <AppBar color='inherit' position='sticky' sx={{ boxShadow: 1 }}>
-      <Toolbar sx={{ backgroundColor: 'table.main', '&.MuiToolbar-root': { p: 1, m: 0 } }}>
-        <Stack direction='row' spacing={1} alignItems='center'>
-          {children}
-        </Stack>
-      </Toolbar>
-       {extendedAppBar}
-    </AppBar>
+    <Burger.Toolbar>
+      <Stack direction='row' spacing={1} alignItems='center'>
+        {children}
+      </Stack>
+      {extendedAppBar}
+    </Burger.Toolbar>
   );
 }
 

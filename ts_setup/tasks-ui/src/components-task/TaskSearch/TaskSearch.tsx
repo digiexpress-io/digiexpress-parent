@@ -11,6 +11,7 @@ import { FilterColumns } from './TableFilters/FilterColumns';
 import { GroupBySelect } from './TableFilters/GroupBy';
 import { TableForGroupBy } from './Table'; 
 
+
 import { 
   TaskSearchProvider, TaskPopperContext, TaskGroupingProvider, TaskPrefsProvider, 
   useSearch, useGrouping, useTaskPrefs,  ColumnNameOptions, GroupByTypes,
@@ -31,17 +32,17 @@ const Navigation: React.FC<{}> = () => {
         ctx.withSearchString(target.value);
         withConfig({dataId: PrefConfigFields.searchBy, value: target.value});
       }} />
-      <Stack direction='row' spacing={1}>
-        <GroupBySelect value={ctx.groupBy} onChange={(value) => {
-          ctx.withGrouBy(value)
-          withConfig({dataId: PrefConfigFields.groupBy, value});
-        }} />
-        <FilterStatus value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByStatus(value)} />
-        <FilterPriority value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByPriority(value)} />
-        <FilterAssignees value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByOwner(value)} />
-        <FilterRoles value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByRoles(value)} />
-        <FilterColumns types={ColumnNameOptions} value={selectedCols} onChange={(value) => withVisibleFields(value)} />
-      </Stack>
+      
+      <GroupBySelect value={ctx.groupBy} onChange={(value) => {
+        ctx.withGrouBy(value)
+        withConfig({dataId: PrefConfigFields.groupBy, value});
+      }} />
+      <FilterStatus value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByStatus(value)} />
+      <FilterPriority value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByPriority(value)} />
+      <FilterAssignees value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByOwner(value)} />
+      <FilterRoles value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByRoles(value)} />
+      <FilterColumns types={ColumnNameOptions} value={selectedCols} onChange={(value) => withVisibleFields(value)} />
+
     </NavigationSticky>
   );
 }
@@ -77,6 +78,7 @@ export const TaskSearch: React.FC<{}> = () => {
             
             <TaskReloadProvider />
             <Navigation />
+
             <Box mt={1} />
             <ManyTables />
           

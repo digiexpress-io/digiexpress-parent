@@ -29,7 +29,7 @@ export const OneRoleDataTabs: React.FC<{ role: Role }> = ({ role }) => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
+    <Box sx={{ flexGrow: 1, display: 'flex' }}>
       <Tabs
         orientation="vertical"
         variant="scrollable"

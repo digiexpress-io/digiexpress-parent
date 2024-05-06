@@ -11,6 +11,7 @@ interface App<T extends Object, ContextInitProps extends Object> {
   components: {
     toolbar: React.ElementType<ToolbarProps>;
     primary: React.ElementType<PrimaryProps>;
+    tabs?: boolean | undefined;
     secondary: React.ElementType<SecondaryProps & { init?: ContextInitProps }>;
     context: React.ElementType<{init: ContextInitProps, children: React.ReactNode}>;
   }
@@ -51,11 +52,14 @@ interface ToolbarProps {
 interface PrimaryProps {
 
 }
+interface TabProps {
+
+}
 interface SecondaryProps {
 
 }
 
 export type { 
-  AppContextType, AppSession, AppActions, 
+  AppContextType, AppSession, AppActions, TabProps,
   App, AppId, AppState, AppStateCreate, AppStateRestore
 };

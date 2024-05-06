@@ -31,7 +31,8 @@ function AppConfig(backend: Backend, profile: UserProfileAndOrg): Burger.App<{},
       primary: Views.Main,
       secondary: Views.Secondary,
       toolbar: Views.Toolbar,
-      context: AppConfigProvider
+      context: AppConfigProvider,
+      tabs: false
     },
     state: [
       (children: React.ReactNode, _restorePoint?: Burger.AppState<{}>) => (<>{children}<InitNav /></>),

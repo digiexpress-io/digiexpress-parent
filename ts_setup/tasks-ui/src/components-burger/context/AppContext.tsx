@@ -57,6 +57,7 @@ const CreateContainer: React.FC<{ app: API.App<any, any> }> = ({ app }) => {
   const Main: React.ElementType = React.useMemo(() => app.components.primary, [app]);
   const Secondary: React.ElementType = React.useMemo(() => app.components.secondary, [app]);
   const Toolbar: React.ElementType = React.useMemo(() => app.components.toolbar, [app]);
+  const tabs: boolean = React.useMemo(() => app.components.tabs === undefined || app.components.tabs === true, [app]);
 
   // @ts-ignore
   const main = <Main />;
@@ -64,9 +65,10 @@ const CreateContainer: React.FC<{ app: API.App<any, any> }> = ({ app }) => {
   const secondary = <Secondary init={app.init}/>;
   // @ts-ignore
   const toobar = <Toolbar />;
+
   return (
     <Context init={app.init}>
-      <Container main={main} secondary={secondary} toolbar={toobar} />
+      <Container main={main} secondary={secondary} toolbar={toobar} tabs={tabs}/>
     </Context>
   );
 }

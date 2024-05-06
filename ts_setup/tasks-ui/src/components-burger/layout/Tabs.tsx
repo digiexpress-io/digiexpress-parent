@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tabs as MuiTabs, Tab as MuiTab, useTheme, Box } from '@mui/material';
+import { Tabs as MuiTabs, Tab as MuiTab, useTheme, Box, Typography } from '@mui/material';
 import { SxProps } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -11,9 +11,9 @@ import LoggerFactory from 'logger';
 
 const log = LoggerFactory.getLogger();
 
-const indicator: SxProps = { "& .MuiTabs-indicator": { backgroundColor: cyan, marginRight: "49px" }};
+const indicator: SxProps = { "& .MuiTabs-indicator": { backgroundColor: cyan, marginRight: "49px" } };
 
-const Tabs: React.FC<{}> = () => {
+export const Tabs: React.FC<{}> = () => {
   const { session, actions } = useTabs();
   const theme = useTheme();
   const active = session.history.open;
@@ -29,33 +29,34 @@ const Tabs: React.FC<{}> = () => {
       _event.stopPropagation();
       actions.handleTabClose(newValue);
     };
-    return (<MuiTabs value={active} onChange={handleTabChange} variant="scrollable" scrollButtons="auto"
-      sx={indicator}>
-      {
-        tabs.map((tab, index) => (
-          <MuiTab key={index} value={index} wrapped={true}
-            label={tab.label}
-            iconPosition="end"
-            sx={{ minHeight: 'unset', color: sambucus, "&:focus": { color: cyan } }}
-            icon={(<>
-              {tab.icon ? tab.icon : null}
-              <CloseIcon color="disabled"
-                onClick={(e) => handleTabClose(e, tab)}
-                sx={{
-                  m: 0,
-                  color: cyan,
-                  "&:hover": {
-                    color: sambucus
-                  }
-                }}
-              />
-              <Box component="span" sx={{ flexGrow: 1 }}></Box>
-            </>)}
-          />))
-      }
-    </MuiTabs >
+    return (
+      <Typography noWrap component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+        <MuiTabs value={active} onChange={handleTabChange} variant="scrollable" scrollButtons="auto"
+          sx={indicator}>
+          {
+            tabs.map((tab, index) => (
+              <MuiTab key={index} value={index} wrapped={true}
+                label={tab.label}
+                iconPosition="end"
+                sx={{ minHeight: 'unset', color: sambucus, "&:focus": { color: cyan } }}
+                icon={(<>
+                  {tab.icon ? tab.icon : null}
+                  <CloseIcon color="disabled"
+                    onClick={(e) => handleTabClose(e, tab)}
+                    sx={{
+                      m: 0,
+                      color: cyan,
+                      "&:hover": {
+                        color: sambucus
+                      }
+                    }}
+                  />
+                  <Box component="span" sx={{ flexGrow: 1 }}></Box>
+                </>)}
+              />))
+          }
+        </MuiTabs >
+      </Typography>
     )
   }, [tabs, active, theme, actions]);
 }
-
-export default Tabs;

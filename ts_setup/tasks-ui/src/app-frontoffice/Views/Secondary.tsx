@@ -146,6 +146,7 @@ export function useSecondary() {
 
     systemOverview: function () { session.setNextValue('systemOverview'); actions.handleTabAdd({ id: 'systemOverview', label: <FormattedMessage id="activities.frontoffice.systemOverview.title" /> }) },
     tenant: function () { session.setNextValue('tenant'); actions.handleTabAdd({ id: 'tenant', label: <FormattedMessage id="activities.frontoffice.crm.tenant.title" /> }) },
+    playbooks: function () { session.setNextValue('playbooks'); actions.handleTabAdd({ id: 'playbooks', label: <FormattedMessage id="activities.frontoffice.playbooks.title" /> }) },
 
     myProfile: function () { session.setNextValue('myProfile'); actions.handleTabAdd({ id: 'myProfile', label: <FormattedMessage id="activities.frontoffice.myProfile.title" /> }) },
     allProfiles: function () { session.setNextValue('allProfiles'); actions.handleTabAdd({ id: 'allProfiles', label: <FormattedMessage id="activities.frontoffice.allProfiles.title" /> }) },
@@ -268,7 +269,7 @@ export const Secondary: React.FC<{}> = () => {
         {/** Libra management */}
         <StyledExplorerTab value='explorer.deployments' label={<FormattedMessage id="explorer.frontoffice.libra.menuOption" />} onClick={undefined}
           icon={<AutoModeIcon fontSize='small' />} />
-        <StyledExplorerSubTab value='playbooks' label={<FormattedMessage id="explorer.frontoffice.libra.playbooks.menuOption" />} onClick={undefined}
+        <StyledExplorerSubTab value='playbooks' label={<FormattedMessage id="explorer.frontoffice.libra.playbooks.menuOption" />} onClick={callbacks.playbooks}
           icon={<AutoStoriesIcon fontSize='small' />} />
         <StyledExplorerSubTab value='references' label={<FormattedMessage id="explorer.frontoffice.libra.references.menuOption" />} onClick={undefined}
           icon={<ShareIcon fontSize='small' />} />

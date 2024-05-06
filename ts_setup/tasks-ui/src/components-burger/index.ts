@@ -37,6 +37,7 @@ import {
 import { ReleaseTable as ReleaseTableAs, Release, ReleaseTableProps } from './releases/ReleaseTable';
 
 import { Section as SectionAs } from './section';
+import { Toolbar as ToolbarAs } from './layout';
 
 declare namespace Burger {
   export {
@@ -51,6 +52,7 @@ declare namespace Burger {
 }
 
 namespace Burger {
+  export const Toolbar = ToolbarAs;
   export const Provider = AppProvider;
   export const useApps = useAppsAlias;
   export const useDrawer = useDrawerAlias;

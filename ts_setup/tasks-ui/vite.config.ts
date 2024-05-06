@@ -20,6 +20,7 @@ const modules: string[] = [
   'components-access-mgmt',
   'components-org-chart',
   'components-user-profile',
+  'components-libra',
 
   'descriptor-events',
   'descriptor-customer',
@@ -34,6 +35,7 @@ const modules: string[] = [
   'descriptor-access-mgmt',
   'descriptor-popper',
   'descriptor-sys-config',
+  'descriptor-libra',
   'descriptor-backend',
 
 

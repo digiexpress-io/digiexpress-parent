@@ -14,6 +14,7 @@ import { wash_me } from 'components-colors';
 import LoggerFactory from 'logger';
 
 import Activities from '../Activities';
+import { Playbooks } from 'components-libra';
 
 const log = LoggerFactory.getLogger();
 
@@ -24,8 +25,6 @@ const Main: React.FC<{}> = () => {
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
   log.debug("front office routing to tab", active?.id);
-
-  //composers which are NOT linked directly with an article
 
   return React.useMemo(() => {
     if (!active) {
@@ -66,6 +65,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><PrincipalsOverview /></Box>)
     } else if (active.id === 'rolesOverview') {
       return (<Box sx={root}><OrgChart /></Box>)
+    } else if (active.id === 'playbooks') {
+      return (<Box sx={root}><Playbooks /></Box>)
     } else if (active.id === 'reporting') {
       return (<>reporting</>);
     }

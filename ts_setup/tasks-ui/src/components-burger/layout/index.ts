@@ -1,5 +1,4 @@
-import { Container, ContainerProps } from "./Layout"
-
+import { Container, ContainerProps, Toolbar } from "./Layout"
 
 export type {ContainerProps};
-export {Container};
+export {Container, Toolbar};
