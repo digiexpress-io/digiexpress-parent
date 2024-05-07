@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 import { TaskDescriptor, TaskSearch } from 'descriptor-task';
 import { getInstance as createGroups } from 'descriptor-grouping';
 import { ImmutableCollection } from 'descriptor-grouping';
@@ -10,9 +9,7 @@ import { GroupByTypes, useSearch } from './TaskSearchContext';
 import LoggerFactory from 'logger';
 const _logger = LoggerFactory.getLogger();
 
-
-
-const defs: Record<GroupByTypes, (task: TaskDescriptor) => any> = {
+const GROUP_BY_CONFIG: Record<GroupByTypes, (task: TaskDescriptor) => any> = {
   none: () => "",
   owners: (task) => task.assignees,
   roles: (task) => task.roles,
@@ -20,12 +17,11 @@ const defs: Record<GroupByTypes, (task: TaskDescriptor) => any> = {
   priority: (task) => task.priority,
 }
 
-function initCollection(search: TaskSearch, type: GroupByTypes) {
-
+function initTaskGroup(search: TaskSearch, type: GroupByTypes) {
   return new ImmutableCollection<TaskDescriptor>({
     classifierName: type,
     origin: Object.freeze(search.data),
-    definition: defs[type],
+    definition: GROUP_BY_CONFIG[type],
     groupValues: []
   });
 }
@@ -63,14 +59,14 @@ export const TaskGroupingProvider: React.FC<{ children: React.ReactNode }> = ({ 
   _logger.target({ groupBy }).debug("loading group");
 
   if(groupBy === 'owners') {
-    return <GroupByOwners.Provider init={initCollection(state, groupBy)}><>{children}</></GroupByOwners.Provider>;
+    return <GroupByOwners.Provider init={initTaskGroup(state, groupBy)}><>{children}</></GroupByOwners.Provider>;
   } else if(groupBy === 'roles') {
-    return <GroupByRoles.Provider init={initCollection(state, groupBy)}><>{children}</></GroupByRoles.Provider>;
+    return <GroupByRoles.Provider init={initTaskGroup(state, groupBy)}><>{children}</></GroupByRoles.Provider>;
   } else if(groupBy === 'status') {
-    return <GroupByStatus.Provider init={initCollection(state, groupBy)}><>{children}</></GroupByStatus.Provider>;
+    return <GroupByStatus.Provider init={initTaskGroup(state, groupBy)}><>{children}</></GroupByStatus.Provider>;
   } else if(groupBy === 'priority') {
-    return <GroupByPriority.Provider init={initCollection(state, groupBy)}><>{children}</></GroupByPriority.Provider>;
+    return <GroupByPriority.Provider init={initTaskGroup(state, groupBy)}><>{children}</></GroupByPriority.Provider>;
   }
-  return <GroupByNone.Provider init={initCollection(state, groupBy)}><>{children}</></GroupByNone.Provider>;
+  return <GroupByNone.Provider init={initTaskGroup(state, groupBy)}><>{children}</></GroupByNone.Provider>;
 }
 

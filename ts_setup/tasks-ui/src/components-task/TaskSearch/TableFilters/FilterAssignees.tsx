@@ -5,7 +5,13 @@ import { FormattedMessage } from 'react-intl';
 
 import { FilterByOwners, FilterBy, useTasks } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
+import { useAvatar } from 'descriptor-avatar';
 
+
+const AssigneeAvatar: React.FC<{assigneeId: string}> = ({assigneeId}) => {
+  const avatar = useAvatar(assigneeId);
+  return (<Typography>{avatar?.displayName}</Typography>);
+}
 
 const FilterAssignees: React.FC<{
   onChange: (value: string[]) => void;
@@ -42,7 +48,7 @@ const FilterAssignees: React.FC<{
             return (
               <MenuItem key={type} onClick={() => { handleClose(); props.onChange([type]); } }>
                 <ListItemIcon><Check /></ListItemIcon>
-                <Typography fontWeight='bolder'>{type}</Typography>
+                <AssigneeAvatar assigneeId={type}/>
               </MenuItem>
             );
           }
@@ -50,7 +56,7 @@ const FilterAssignees: React.FC<{
             handleClose();
             props.onChange([type]);
           }}>
-            <ListItemText inset><Typography>{type}</Typography></ListItemText>
+            <ListItemText inset><AssigneeAvatar assigneeId={type}/></ListItemText>
           </MenuItem>)
         })}
 
