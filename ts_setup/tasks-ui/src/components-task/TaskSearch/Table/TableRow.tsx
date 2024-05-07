@@ -16,8 +16,6 @@ import CellStatus from '../TableCells/CellStatus';
 import CellRoles from '../TableCells/CellRoles';
 
 
-import LoggerFactory from 'logger';
-
 function getRowBackgroundColor(index: number): SxProps {
   const isOdd = index % 2 === 1;
 

@@ -9,11 +9,11 @@ const StyledLinearProgress: React.FC<{}> = () => {
 }
 
 
-const StyledTableCell = styled(TableCell)<TableCellProps & { rowtype?: 'large' | 'medium' }>(({ rowtype, theme }) => ({
+const StyledTableCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
   textAlign: 'left',
   fontSize: "13px",
   fontWeight: '400',
-  height: (rowtype === 'large' ? lineHeightLarge : lineHeight) + 'px',
+  height: lineHeight + 'px',
 
   paddingLeft: theme.spacing(1),
   paddingRight: theme.spacing(1),

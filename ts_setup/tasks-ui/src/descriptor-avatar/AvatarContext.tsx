@@ -43,15 +43,19 @@ export function useAvatars(entries: string[]): Avatar[] | undefined {
   return calculated;
 }
 
-export function useAvatar(entry: string): Avatar | undefined {
+export function useAvatar(entry: string, enabled?: boolean): Avatar | undefined {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
   const calculated: Avatar | undefined = ctx.avatars[entry];
 
   React.useEffect(() => {
+    if(enabled === false) {
+      return;
+    }
+
     if(calculated === undefined) {
       ctx.withAvatars([entry]);
     }
-  }, [calculated, entry]);
+  }, [calculated, entry, enabled]);
 
   return calculated;
 }

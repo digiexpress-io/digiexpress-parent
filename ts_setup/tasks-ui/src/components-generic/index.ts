@@ -1,5 +1,4 @@
 import FilterByString from './FilterByString';
-import TableBody from './TableBody';
 import { useTableCellPopover } from './TableCellPopover';
 import { TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge } from './TableFillerRows';
 
@@ -14,4 +13,4 @@ export * from './AvatarIndicator';
 export * from './SectionLayout';
 export * from './StyledFullScreenDialog';
 
-export { FilterByString, TableBody, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };
+export { FilterByString, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };

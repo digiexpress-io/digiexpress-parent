@@ -9,7 +9,7 @@ const FormattedCell: React.FC<{
   row: UserProfileDescriptor,
 }> = ({ row }) => {
 
-  return (<StyledTableCell width='180px' rowtype='medium'>
+  return (<StyledTableCell width='180px'>
     <Box width='180px'>
       <TableCell id={row.id + "/Email"} name={(
         <Box display='flex' alignItems='center'>

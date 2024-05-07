@@ -517,7 +517,7 @@ const en = {
   'explorer.frontoffice.tenant.writeaudit.menuOption': 'App write audit',
 
 
-
+  'taskSearch.filter.groupedByTitle': 'Tasks grouped by: {type}',
   'taskSearch.filter.columns': 'Show/Hide columns',
   'taskSearch.filter.assignees': 'Filter by assignees',
   'taskSearch.filter.roles': 'Filter by roles',
@@ -555,6 +555,7 @@ const en = {
   'mywork.table.header.description': 'Description',
   'mywork.table.header.dueDate': 'Due date',
 
+  'tasktable.header.title': 'Title',
   'tasktable.header.created': 'Created',
   'tasktable.header.subject': 'Subject',
   'tasktable.header.priority': 'Priority',

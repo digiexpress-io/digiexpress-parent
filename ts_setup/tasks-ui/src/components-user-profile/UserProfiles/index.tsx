@@ -1,9 +1,9 @@
 import React from 'react';
-import { TableHead, TableCell, TableRow, Box } from '@mui/material';
+import { TableHead, TableCell, TableRow, Box, TableBody } from '@mui/material';
 
 import Backend from 'descriptor-backend';
 import { UserProfileDescriptor, ImmutableAmStore } from 'descriptor-access-mgmt';
-import { NavigationSticky, FilterByString, TableBody, TableFillerRows } from 'components-generic';
+import { NavigationSticky, FilterByString, TableFillerRows } from 'components-generic';
 import { wash_me } from 'components-colors';
 
 import { UserProfileSearchState, CustomerTable, initUserProfileSearchState, TableConfigProps } from './table-ctx';

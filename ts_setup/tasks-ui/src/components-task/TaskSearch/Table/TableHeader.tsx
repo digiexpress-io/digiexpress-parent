@@ -3,6 +3,7 @@ import { TableCell as MTableCell, TableSortLabel, Box } from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
 import { useTaskPrefs, ColumnName, SetTaskPagination, TaskPagination, getPrefSortId } from '../TableContext';
+import { StyledTableCell } from 'components-generic';
 
 
 
@@ -38,12 +39,12 @@ export const TableHeader: React.FC<{
   const active = content.orderBy === name;
   const sortDirection = active ? content.order : false;
 
-  return (<MTableCell align='left' padding='none' sortDirection={sortDirection}>
+  return (<StyledTableCell align='left' padding='none' sortDirection={sortDirection}>
     <TableSortLabel active={active} direction={active ? content.order : 'asc'} onClick={createSortHandler(name)}>
       <>
-        {children}
+        <b>{children}</b>
         {active ? (<Box component="span" sx={visuallyHidden}>{content.order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>) : null}
       </>
     </TableSortLabel>
-  </MTableCell>);
+  </StyledTableCell>);
 }
