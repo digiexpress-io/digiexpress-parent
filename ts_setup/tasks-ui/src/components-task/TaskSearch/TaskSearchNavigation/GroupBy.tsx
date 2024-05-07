@@ -1,62 +1,59 @@
 import React from 'react';
-import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
+
+import GroupsIcon from '@mui/icons-material/Groups';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
+import Face5Icon from '@mui/icons-material/Face5';
+import FlagIcon from '@mui/icons-material/Flag';
+import PendingIcon from '@mui/icons-material/Pending';
+import { useIntl } from 'react-intl';
 
 import { ButtonSearch } from 'components-generic';
 import { GroupByOptions, GroupByTypes } from '../TableContext';
+import { FlyoutMenu, FlyoutMenuItem, FlyoutMenuTrigger } from 'components-flyout-menu';
 
 
+const Icon: React.FC<{ type: GroupByTypes }> = ({ type }) => {
+  switch (type) {
+    case 'none': return <FolderOffIcon />
+    case 'owners': return <Face5Icon />
+    case 'priority': return <FlagIcon />
+    case 'roles': return <GroupsIcon />
+    case 'status': return <PendingIcon />
+  }
+}
 
-const GroupBySelect: React.FC<{
+
+const GroupByMenuItem: React.FC<{
+  currentlySelected: GroupByTypes, 
+  displaying: GroupByTypes,
+  onClick: (value: GroupByTypes) => void;
+}> = ({
+  currentlySelected, displaying, onClick
+}) => {
+    const active = currentlySelected === displaying;
+
+    const intl = useIntl();
+    const selected: string = intl.formatMessage({ id: `taskSearch.filter.groupBy.selected` });
+    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.groupBy.${displaying}` }) ;
+    const subtitle: string = intl.formatMessage({ id: `taskSearch.filter.groupBy.subtitle.${displaying}` });
+
+    function handleOnClick() {
+      onClick(displaying);
+    }
+
+    return (<FlyoutMenuItem active={active} onClick={handleOnClick} title={title} subtitle={subtitle}><Icon type={displaying} /></FlyoutMenuItem>);
+  }
+
+export const GroupBySelect: React.FC<{
   onChange: (value: GroupByTypes) => void;
   value: GroupByTypes;
 }> = ({ onChange, value }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
-
-  return (<>
-    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.groupBy' values={{ groupBy: value }} />
-
-    <Menu sx={{ width: 320 }}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      <MenuList dense>
-        <MenuItem>
-          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.groupBy' /></Typography></ListItemText>
-        </MenuItem>
-        {GroupByOptions.map(type => {
-
-          if (value === type) {
-            return <MenuItem key={type}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>
-          }
-          return <MenuItem key={type} onClick={() => {
-            handleClose();
-            onChange(type);
-
-          }}><ListItemText inset><Typography>{type}</Typography></ListItemText></MenuItem>;
-        })}
-      </MenuList>
-    </Menu>
-  </>
+  return (<FlyoutMenu>
+    <FlyoutMenuTrigger>
+      <ButtonSearch onClick={() => { }} id='taskSearch.searchBar.groupBy' values={{ groupBy: value }} />
+    </FlyoutMenuTrigger>
+    {GroupByOptions.map(displaying => <GroupByMenuItem key={displaying} currentlySelected={value} displaying={displaying} onClick={onChange} />)}
+  </FlyoutMenu>
   );
 }
-
-export { GroupBySelect };

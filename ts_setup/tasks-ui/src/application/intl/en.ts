@@ -525,6 +525,21 @@ const en = {
   'taskSearch.filter.status': 'Filter by status',
   'taskSearch.filter.groupBy': 'Group by',
 
+
+  'taskSearch.filter.groupBy.selected': 'Currently selected - ',
+  'taskSearch.filter.groupBy.none': 'No grouping',
+  'taskSearch.filter.groupBy.subtitle.none': 'All results will be shown in single table',
+  'taskSearch.filter.groupBy.owners': 'Assignees',
+  'taskSearch.filter.groupBy.subtitle.owners': 'For each assignee a separate table will be show',
+  'taskSearch.filter.groupBy.priority': 'Priority',
+  'taskSearch.filter.groupBy.subtitle.priority': 'For each priority a separate table will be show',
+  'taskSearch.filter.groupBy.roles': 'AM roles',
+  'taskSearch.filter.groupBy.subtitle.roles': 'For each access managment role a separate table will be show',
+  'taskSearch.filter.groupBy.status': 'Status',
+  'taskSearch.filter.groupBy.subtitle.status': 'For each status type(created|in progress|etc...) a separate table will be show',
+
+
+  
   'taskSearch.searchBar.groupBy': 'Group by {groupBy}',
   'taskSearch.searchBar.filterColumns': 'Columns',
   'taskSearch.searchBar.filterRoles': 'Roles {count}',

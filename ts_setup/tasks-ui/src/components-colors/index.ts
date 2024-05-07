@@ -1,5 +1,7 @@
 // A bit too many colors... TODO:: lessen them
 
+import { alpha } from "@mui/material";
+
 // https://coolors.co/ff595e-26c485-ffca3a-1982c4-6a4c93
 const bittersweet: string = '#FF595E'; //red
 const sunglow: string = '#FFCA3A';     //yellow
@@ -43,8 +45,11 @@ const sambucus = '#121828' //rgb(18, 24, 40) - rgb(17, 24, 39)
 const wash_me = '#f9fafc' //rgb(249, 250, 252) // white
 
 
-const grey_light = 'RGB(209, 213, 219)';
+const grey_light = 'rgb(209, 213, 219)';
+const grey_light_2 = alpha(grey_light, 0.3);
 const turquoise = '#14B8A6'; //green
+
+
 
 
 const PALETTE = { red: bittersweet, green: emerald, yellow: sunglow, blue: steelblue, violet: ultraviolet };
@@ -84,6 +89,7 @@ export {
   sambucus,
   turquoise,
   grey_light,
+  grey_light_2,
   cyan_mud,
   withColors,
   ultraviolet,
