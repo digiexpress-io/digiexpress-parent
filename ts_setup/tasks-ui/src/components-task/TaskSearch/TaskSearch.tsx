@@ -25,7 +25,8 @@ const ManyTables: React.FC = () => {
     index={index} 
     groupId={group.id} 
     classifierName={collection.classifierName as GroupByTypes}
-  />)}</>);
+  />)}
+  </>);
 }
 
 
