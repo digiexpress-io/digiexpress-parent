@@ -1,0 +1,76 @@
+import * as React from 'react';
+import { Menu, ListItemText, MenuList, MenuItem, ListItemIcon, Typography } from '@mui/material';
+import Check from '@mui/icons-material/Check';
+import { FormattedMessage } from 'react-intl';
+
+import { FilterByRoles, FilterBy, useTasks } from 'descriptor-task';
+import { ButtonSearch } from 'components-generic';
+import { useAvatar } from 'descriptor-avatar';
+
+
+const RoleAvatar: React.FC<{roleId: string}> = ({roleId}) => {
+  const avatar = useAvatar(roleId);
+  return (<Typography>{avatar?.displayName}</Typography>);
+}
+
+const FilterRoles: React.FC<{
+  onChange: (value: string[]) => void;
+  value: readonly FilterBy[];
+}> = (props) => {
+  const ctx = useTasks();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
+
+  const filterByRoles = props.value.find(filter => filter.type === 'FilterByRoles') as FilterByRoles | undefined;
+  
+  return (<>
+    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterRoles' values={{ count: filterByRoles?.roles.length }} />
+
+    <Menu sx={{ width: 320 }}
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+    >
+      <MenuList dense>
+        <MenuItem>
+          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.roles' /></Typography></ListItemText>
+        </MenuItem>
+        {ctx.roles.map(type => {
+          const found = props.value.find(filter => filter.type === 'FilterByRoles');
+          const selected = found ? found.type === 'FilterByRoles' && found.roles.includes(type) : false
+
+          if (selected) {
+            return (<MenuItem key={type} onClick={() => {
+              handleClose();
+              props.onChange([type]);
+            }}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bold'>{type}</Typography></MenuItem>);
+          }
+          return <MenuItem key={type} onClick={() => {
+            handleClose();
+            props.onChange([type]);
+          }}>
+            <ListItemText inset><RoleAvatar roleId={type}/></ListItemText>
+          </MenuItem>;
+        })}
+
+      </MenuList>
+    </Menu>
+  </>
+  );
+}
+
+export { FilterRoles };
