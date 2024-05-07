@@ -10,9 +10,8 @@ import { TaskSearchGroupedBy } from './TaskSearchGroupedBy';
 
 const OneTable: React.FC<{ index: number, groupId: string, classifierName: GroupByTypes }> = React.memo((props) => {
   return (<React.Fragment key={props.groupId}>
-    <Box sx={{ p: 2 }} />
 
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', px: 2, pt: 3 }}>
       <TaskSearchGroupedBy groupId={props.groupId} groupByType={props.classifierName} />
     </Box>
   </React.Fragment>)

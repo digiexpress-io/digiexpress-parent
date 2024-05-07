@@ -46,7 +46,7 @@ export const TaskTable: React.FC<DelegateProps> = ({ groupByType, groupId, conte
   }, [pref]);
 
 
-  return (<Paper sx={{ mx: 1 }}>
+  return (<Paper>
     <Box sx={{
       width: '100%', 
       height: 3, 
