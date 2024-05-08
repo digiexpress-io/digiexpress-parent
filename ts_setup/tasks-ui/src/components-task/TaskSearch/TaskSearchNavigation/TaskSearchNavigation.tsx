@@ -22,6 +22,7 @@ export const TaskSearchNavigation: React.FC<{}> = () => {
   
   return (
     <NavigationSticky>
+      
       <FilterByString defaultValue={ctx.state.searchString ?? ''} onChange={({ target }) => {
         ctx.withSearchString(target.value);
         withConfig({dataId: PrefConfigFields.searchBy, value: target.value});
@@ -31,6 +32,7 @@ export const TaskSearchNavigation: React.FC<{}> = () => {
         ctx.withGrouBy(value)
         withConfig({dataId: PrefConfigFields.groupBy, value});
       }} />
+
       <FilterStatus value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByStatus(value)} />
       <FilterPriority value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByPriority(value)} />
       <FilterAssignees value={ctx.state.filterBy} onChange={(value) => ctx.withFilterByOwner(value)} />

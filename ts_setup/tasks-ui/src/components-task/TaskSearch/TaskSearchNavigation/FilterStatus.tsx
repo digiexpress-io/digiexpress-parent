@@ -1,71 +1,67 @@
-import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography, Chip } from '@mui/material';
-import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import { useIntl } from 'react-intl';
 
+import PendingIcon from '@mui/icons-material/Pending';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import HailIcon from '@mui/icons-material/Hail';
 
+import { FlyoutMenu, FlyoutMenuItem, FlyoutMenuTrigger } from 'components-flyout-menu';
 import { FilterByStatus, FilterBy, TaskStatus } from 'descriptor-task';
 import { ButtonSearch } from 'components-generic';
 
 
 const statustypes: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
+const Icon: React.FC<{ type: TaskStatus }> = ({ type }) => {
+  switch (type) {
+    case 'CREATED': return <HailIcon />
+    case 'IN_PROGRESS': return <PendingIcon />
+    case 'COMPLETED': return <ThumbUpIcon />
+    case 'REJECTED': return <ThumbDownIcon />
+  }
+}
+
+
+const FilterByMenuItem: React.FC<{
+  currentlySelected: readonly FilterBy[],
+  displaying: TaskStatus,
+  onClick: (value: TaskStatus[]) => void;
+}> = ({
+  currentlySelected, displaying, onClick
+}) => {
+
+    const found = currentlySelected.find(filter => filter.type === 'FilterByStatus');
+    const active = found ? found.type === 'FilterByStatus' && found.status.includes(displaying) : false
+
+    const intl = useIntl();
+    const selected: string = intl.formatMessage({ id: `taskSearch.filter.status.selected` });
+    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.status.${displaying}` });
+    const subtitle: string = intl.formatMessage({ id: `taskSearch.filter.status.subtitle.${displaying}` });
+
+    function handleOnClick() {
+      onClick([displaying]);
+    }
+
+    return (<FlyoutMenuItem active={active} onClick={handleOnClick} title={title} subtitle={subtitle}><Icon type={displaying} /></FlyoutMenuItem>);
+  }
+
+
+
 const FilterStatus: React.FC<{
   onChange: (value: TaskStatus[]) => void;
   value: readonly FilterBy[];
 }> = (props) => {
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const filterByStatus = props.value.find(filter => filter.type === 'FilterByStatus') as FilterByStatus | undefined;
 
-  return (<>
-    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
-
-    <Menu sx={{ width: 320 }}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      <MenuList dense>
-        <MenuItem>
-          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.status' /></Typography></ListItemText>
-        </MenuItem>
-        {statustypes.map(type => {
-          const found = props.value.find(filter => filter.type === 'FilterByStatus');
-          const selected = found ? found.type === 'FilterByStatus' && found.status.includes(type) : false
-
-          if (selected) {
-            return (<MenuItem key={type} onClick={() => {
-              handleClose();
-              props.onChange([type]);
-            }}><ListItemIcon><Check /></ListItemIcon><Chip size='small' label={type} /></MenuItem>);
-          }
-          return <MenuItem key={type} onClick={() => {
-            handleClose();
-            props.onChange([type]);
-          }}>
-            <ListItemText inset><Chip label={type} size='small' /></ListItemText>
-          </MenuItem>;
-        })}
-
-      </MenuList>
-    </Menu>
-  </>
+  return (
+    <FlyoutMenu>
+      <FlyoutMenuTrigger>
+        <ButtonSearch onClick={() => { }} id='taskSearch.searchBar.filterStatus' values={{ count: filterByStatus?.status.length }} />
+      </FlyoutMenuTrigger>
+      {statustypes.map(displaying => <FilterByMenuItem key={displaying} currentlySelected={props.value} displaying={displaying} onClick={props.onChange} />)}
+    </FlyoutMenu>
   );
 }
 

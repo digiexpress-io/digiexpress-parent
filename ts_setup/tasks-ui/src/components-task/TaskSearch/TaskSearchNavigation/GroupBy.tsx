@@ -24,7 +24,7 @@ const Icon: React.FC<{ type: GroupByTypes }> = ({ type }) => {
 
 
 const GroupByMenuItem: React.FC<{
-  currentlySelected: GroupByTypes, 
+  currentlySelected: GroupByTypes,
   displaying: GroupByTypes,
   onClick: (value: GroupByTypes) => void;
 }> = ({
@@ -34,7 +34,7 @@ const GroupByMenuItem: React.FC<{
 
     const intl = useIntl();
     const selected: string = intl.formatMessage({ id: `taskSearch.filter.groupBy.selected` });
-    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.groupBy.${displaying}` }) ;
+    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.groupBy.${displaying}` });
     const subtitle: string = intl.formatMessage({ id: `taskSearch.filter.groupBy.subtitle.${displaying}` });
 
     function handleOnClick() {
