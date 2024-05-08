@@ -19,7 +19,6 @@ public interface UserProfile extends Serializable {
   @Nullable String getVersion();
   @Nullable Instant getCreated();
   @Nullable Instant getUpdated();
-  @Nullable List<UiSettings> getUiSettings(); // might not be defined at all
   
     
   @Value.Immutable @JsonSerialize(as = ImmutableUserDetails.class) @JsonDeserialize(as = ImmutableUserDetails.class)

@@ -86,12 +86,12 @@ ALTER TABLE git_treeItems
 
 CREATE TABLE doc
 (
-  id VARCHAR(40) PRIMARY KEY,
+  id VARCHAR(100) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
   created_with_commit_id VARCHAR(40) NOT NULL,
-  external_id VARCHAR(40) UNIQUE,
-  owner_id VARCHAR(40),
-  doc_parent_id VARCHAR(40),
+  external_id VARCHAR(100) UNIQUE,
+  owner_id VARCHAR(100),
+  doc_parent_id VARCHAR(100),
   doc_type VARCHAR(40) NOT NULL,
   doc_status VARCHAR(8) NOT NULL,
   doc_meta jsonb
@@ -108,7 +108,7 @@ ALTER TABLE doc
 
 CREATE TABLE doc_branch
 (
-  doc_id                   VARCHAR(40) NOT NULL,
+  doc_id                   VARCHAR(100) NOT NULL,
   branch_id                VARCHAR(40) NOT NULL,
   commit_id                VARCHAR(40) NOT NULL,
   created_with_commit_id   VARCHAR(40) NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE doc_commits
 (
   id VARCHAR(40) PRIMARY KEY,
   branch_id VARCHAR(40),
-  doc_id VARCHAR(40) NOT NULL,
+  doc_id VARCHAR(100) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL,
   author VARCHAR(255) NOT NULL,
   message TEXT NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE doc_log
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  doc_id VARCHAR(40) NOT NULL,
+  doc_id VARCHAR(100) NOT NULL,
   branch_id VARCHAR(40),
   operation_type VARCHAR(100) NOT NULL,
   body_type VARCHAR(100) NOT NULL,
@@ -180,7 +180,7 @@ CREATE TABLE doc_commands
 (
   id VARCHAR(40) PRIMARY KEY,
   commit_id VARCHAR(40) NOT NULL,
-  doc_id VARCHAR(40) NOT NULL,
+  doc_id VARCHAR(100) NOT NULL,
   branch_id VARCHAR(40),
   commands JSONB[] NOT NULL
 );

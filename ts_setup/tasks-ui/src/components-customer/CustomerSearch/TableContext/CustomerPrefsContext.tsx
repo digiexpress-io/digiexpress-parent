@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { usePreference, PreferenceProvider, PreferenceInit } from 'descriptor-prefs';
+import { PreferenceInit } from 'descriptor-prefs';
 import { CustomerDescriptor  } from 'descriptor-customer';
 
 
@@ -25,9 +25,8 @@ function initPrefs(): PreferenceInit {
     }
   }
 }
-export const useCustomerPrefs = usePreference;
 
 
 export const CustomerPrefsProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  return (<PreferenceProvider init={initPrefs()}><>{children}</></PreferenceProvider>);
+  return (<><>{children}</></>);
 }

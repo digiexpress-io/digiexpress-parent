@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { usePreference, PreferenceProvider, PreferenceInit } from 'descriptor-prefs';
+import { createPrefContext, PreferenceInit } from 'descriptor-prefs';
 import { TaskDescriptor  } from 'descriptor-task';
 import { GroupByOptions, GroupByTypes } from '.';
 
@@ -29,7 +29,9 @@ export const PrefConfigFields = {
   groupBy: "groupByField",
   searchBy: "searchByField"
 }
-export const useTaskPrefs = usePreference;
+
+const TaskPrefContext = createPrefContext(initPrefs());
+export const useTaskPrefs = TaskPrefContext.usePreference;
 
 export function useTaskPrefsInit(): { groupBy: GroupByTypes, searchString: string} {
   const ctx = useTaskPrefs();
@@ -41,5 +43,5 @@ export function useTaskPrefsInit(): { groupBy: GroupByTypes, searchString: strin
 }
 
 export const TaskPrefsProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  return (<PreferenceProvider init={initPrefs()}><>{children}</></PreferenceProvider>);
+  return (<TaskPrefContext.Provider><>{children}</></TaskPrefContext.Provider>);
 }

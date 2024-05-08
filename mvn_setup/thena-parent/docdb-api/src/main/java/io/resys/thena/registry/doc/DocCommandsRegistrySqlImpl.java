@@ -64,6 +64,18 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
       params.add(filter.getDocIds().toArray());
     }
 
+    if(filter.getParentId() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_parent_id = $" + index + " ) ");
+      params.add(filter.getParentId());
+    }
+    if(filter.getOwnerId() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.owner_id = $" + index + " ) ");
+      params.add(filter.getOwnerId());
+    }    
+    
+    
     if(filter.getDocType() != null) {
       final var index = params.size() + 1;
       filters.add(" ( docs.doc_type = $" + index + " ) ");
@@ -134,7 +146,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
-    .append("  doc_id VARCHAR(40) NOT NULL,").ln()
+    .append("  doc_id VARCHAR(100) NOT NULL,").ln()
     .append("  branch_id VARCHAR(40),").ln()
     .append("  commands JSONB[] NOT NULL").ln()
     .append(");").ln()

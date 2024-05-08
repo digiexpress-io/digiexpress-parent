@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,12 +12,12 @@ import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.ImmutableDocFilter;
-import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.ImmutableDocObject;
@@ -40,7 +41,11 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final List<IncludeInQuery> include = new ArrayList<>();
   private String branchName;
   private String docType;
+  private String parentId;
+  private String ownerId;
  
+  @Override public DocObjectsQuery ownerId(String ownerId) { this.ownerId = ownerId; return this; }
+  @Override public DocObjectsQuery parentId(String parentId) { this.parentId = parentId; return this; }
   @Override public DocObjectsQuery branchName(String branchName) { this.branchName = branchName; return this; }
   @Override public DocObjectsQuery include(IncludeInQuery ... children) { this.include.addAll(Arrays.asList(children)); return this; }
   @Override public DocObjectsQuery docType(String docType) {
@@ -49,12 +54,34 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   }
 
   @Override
+  public Uni<QueryEnvelope<DocObject>> get() {
+    return get(Optional.empty(), true);
+  }
+
+  @Override
   public Uni<QueryEnvelope<DocObject>> get(String id) {
-    final DocFilter filter = ImmutableDocFilter.builder()
-        .docIds(Arrays.asList(id))
+    return get(Optional.of(id), true);
+  }
+  
+
+  @Override
+  public Uni<QueryEnvelope<DocObject>> findOne() {
+    return get(Optional.empty(), false);
+  }
+  
+  public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
+    final var filterBuilder = ImmutableDocFilter.builder()
         .docType(docType)
-        .branch(branchName)
-        .build();
+        .parentId(parentId)
+        .ownerId(ownerId)
+        .branch(branchName);
+    
+    if(id.isPresent()) {
+      filterBuilder.docIds(Arrays.asList(id.get()));
+    }
+    
+    final DocFilter filter = filterBuilder.build();
+    
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();
       
@@ -80,7 +107,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
       ).asTuple()
       .onItem().transform(data -> {
           if(data.getItem2().isEmpty()) {
-            return docNotFound(tenant, new DocNotFoundException());
+            if(failOnNotFound) {
+              return docNotFound(tenant, new DocNotFoundException());
+            }
+            return ImmutableQueryEnvelope.<DocObject>builder()
+                .repo(tenant)
+                .status(QueryEnvelopeStatus.OK)
+                .objects(null)
+                .build();
           }
           final var docIds = data.getItem2().stream().map(d -> d.getDocId() + "::" + d.getBranchName()).collect(Collectors.toSet());
           if(data.getItem2().size() > 1) {
@@ -103,6 +137,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .docIds(docs)
         .docType(docType)
         .branch(branchName)
+        .parentId(parentId)
+        .ownerId(ownerId)
         .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();

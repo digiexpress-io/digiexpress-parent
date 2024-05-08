@@ -21,8 +21,12 @@ public interface DocQueryActions {
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
     DocObjectsQuery docType(String docType);
+    DocObjectsQuery parentId(String parentId);
+    DocObjectsQuery ownerId(String ownerId);
     DocObjectsQuery include(IncludeInQuery ... includeChildren);
-    
+
+    Uni<QueryEnvelope<DocObject>> get();
+    Uni<QueryEnvelope<DocObject>> findOne();
     Uni<QueryEnvelope<DocObject>> get(String matchId);
     Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> matchId);
     Uni<QueryEnvelope<DocTenantObjects>> findAll();

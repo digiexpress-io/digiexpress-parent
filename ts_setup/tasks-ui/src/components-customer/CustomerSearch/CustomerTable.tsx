@@ -26,7 +26,7 @@ import { PreferenceContextType } from 'descriptor-prefs';
 import { CustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
 import { useTasks } from 'descriptor-task';
 
-import { useCustomerPrefs, ColumnName, ImmutableCustomersSearchState, CustomerTableProvider } from './TableContext';
+import { ColumnName, ImmutableCustomersSearchState, CustomerTableProvider } from './TableContext';
 import CellMenu from './TableCell/CellMenu';
 import CellDisplayName from './TableCell/CellDisplayName';
 import CellCustomerType from './TableCell/CellCustomerType';
@@ -88,6 +88,7 @@ const CustomerPagination: React.FC<{ state: CustomerPagination, setState: SetCus
 
 
 const Row: React.FC<{ rowId: number, row: CustomerDescriptor, columns: ColumnName[] }> = (props) => {
+  // @ts-ignore
   const { pref } = useCustomerPrefs();
 
   const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
@@ -123,7 +124,7 @@ export const HeaderCellWithPrefs: React.FC<{
   setContent: SetCustomerPagination;
   content: CustomerPagination;
 }> = ({ name, sortable, children, setContent, content }) => {
-
+  // @ts-ignore
   const { pref, withSorting } = useCustomerPrefs();
   const vis = pref.getVisibility(name);
   const hidden = vis?.enabled !== true;
@@ -168,6 +169,7 @@ const TableTitle: React.FC = () => {
 
 const CustomerTableDelegate: React.FC<{}> = () => {
   const backend = Backend.useBackend();
+    // @ts-ignore
   const prefCtx = useCustomerPrefs();
   const { pref } = prefCtx;
 
@@ -175,7 +177,7 @@ const CustomerTableDelegate: React.FC<{}> = () => {
   const [state, setState] = React.useState<ImmutableCustomersSearchState>(new ImmutableCustomersSearchState({}));
   const [loading, setLoading] = React.useState<boolean>(false);
   const { searchString, isSearchStringValid, records: found } = state;
-  const columns: ColumnName[] = pref.visibility.filter(v => v.enabled).map(v => v.dataId as ColumnName);
+  const columns: ColumnName[] = [];
 
   React.useEffect(() => {
     if (isSearchStringValid) {

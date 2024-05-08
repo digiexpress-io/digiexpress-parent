@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { PreferenceInit, PreferenceProvider, usePreference } from 'descriptor-prefs';
+import { PreferenceInit, createPrefContext } from 'descriptor-prefs';
 import Burger from 'components-burger';
-import { UserProfileAndOrg } from 'descriptor-access-mgmt';
+import { UiSettings, UserProfileAndOrg } from 'descriptor-access-mgmt';
 import { parsePreference } from 'descriptor-prefs';
 import { useSecondary } from './Views/Secondary';
 
@@ -22,9 +22,11 @@ function initPrefs(): PreferenceInit {
   }
 }
 
-export function getDrawerOpen( profile: UserProfileAndOrg) {
-  const prefs = parsePreference(CONFIG_ID, profile.user);
-  const config = prefs.getConfig(SECONDARY_DRAWER);
+const PrefContext = createPrefContext(initPrefs());
+
+export function useDrawerOpen() {
+  const { pref } = PrefContext.usePreference();
+  const config = pref.getConfig(SECONDARY_DRAWER);
 
   if(config) {
     return config.value === 'true';
@@ -33,7 +35,7 @@ export function getDrawerOpen( profile: UserProfileAndOrg) {
 }
 
 export function useSecondaryMenuItem() {
-  const { pref, withConfig } = usePreference();
+  const { pref, withConfig } = PrefContext.usePreference();
   const currentValue = pref.getConfig(SECONDARY_MENU_ITEM)?.value ?? 'mytasks';
 
   function setNextValue(nextMenuSelected: string) {
@@ -47,7 +49,7 @@ export function useSecondaryMenuItem() {
 }
 
 export const InitNav: React.FC<{ }> = ({}) => {
-  const { pref } = usePreference();
+  const { pref } = PrefContext.usePreference();
   const { callbacks } = useSecondary();
   
   React.useEffect(() => {
@@ -69,7 +71,7 @@ export const InitNav: React.FC<{ }> = ({}) => {
 }
 
 export const SyncDrawer: React.FC<{ }> = ({}) => {
-  const { withConfig } = usePreference();
+  const { withConfig } = PrefContext.usePreference();
   const { session } = Burger.useDrawer();
   const { drawer } = session;
 
@@ -83,6 +85,6 @@ export const SyncDrawer: React.FC<{ }> = ({}) => {
   return (<></>);
 }
 export const FrontofficePrefs: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  return (<PreferenceProvider init={initPrefs()}><>{children}</></PreferenceProvider>);
+  return (<PrefContext.Provider><>{children}</></PrefContext.Provider>);
 }
 

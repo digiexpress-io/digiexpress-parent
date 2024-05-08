@@ -6,6 +6,8 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.support.RepoAssert;
 import io.resys.userprofile.client.api.UserProfileClient;
 import io.resys.userprofile.client.spi.actions.CreateUserProfileActionImpl;
+import io.resys.userprofile.client.spi.actions.UiSettingsQueryImpl;
+import io.resys.userprofile.client.spi.actions.UpdateUiSettingsActionImpl;
 import io.resys.userprofile.client.spi.actions.UpdateUserProfileActionImpl;
 import io.resys.userprofile.client.spi.actions.UserProfileQueryImpl;
 import io.smallrye.mutiny.Uni;
@@ -31,17 +33,22 @@ public class UserProfileClientImpl implements UserProfileClient {
   public CreateUserProfileAction createUserProfile(){
     return new CreateUserProfileActionImpl(ctx);
   }
-
   @Override
   public UpdateUserProfileAction updateUserProfile() {
     return new UpdateUserProfileActionImpl(ctx);
   }
-
   @Override
   public UserProfileQuery userProfileQuery() {
     return new UserProfileQueryImpl(ctx);
   }
-  
+  @Override
+  public UiSettingsQuery uiSettingsQuery() {
+    return new UiSettingsQueryImpl(ctx);
+  }
+  @Override
+  public UpdateUiSettingsAction updateUiSettings() {
+    return new UpdateUiSettingsActionImpl(ctx);
+  }
   @Override
   public RepositoryQuery repoQuery() {
     var repo = ctx.query();
@@ -76,4 +83,5 @@ public class UserProfileClientImpl implements UserProfileClient {
       }
     };
   }
+
 }

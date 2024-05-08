@@ -1,4 +1,4 @@
-import type { UserProfile, UserProfileAndOrg, UserProfileUpdateCommand } from './profile-types';
+import type { UiSettings, UpsertUiSettings, UserProfile, UserProfileAndOrg, UserProfileUpdateCommand } from './profile-types';
 import type {
   Permission, Role, Principal,
   CreatePermission, CreateRole, CreatePrincipal,
@@ -77,6 +77,20 @@ export class ImmutableAmStore implements AmStore {
       method: 'PUT',
       body: JSON.stringify(commands),
       repoType: 'USER_PROFILE'
+    });
+  }
+
+  async updateUiSettings(commands: UpsertUiSettings): Promise<UserProfile> {
+    return await this._store.fetch<UserProfile>(`config/current-user/ui-settings`, {
+      method: 'PUT',
+      body: JSON.stringify(commands),
+      repoType: 'USER_PROFILE'
+    });
+  }
+  async findUiSettings(settingsId: string): Promise<UiSettings | undefined> {
+    return await this._store.fetch<UiSettings| undefined>(`config/current-user/ui-settings/${settingsId}`, {
+      repoType: 'USER_PROFILE',
+      notFound: () => undefined
     });
   }
 

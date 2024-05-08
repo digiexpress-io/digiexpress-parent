@@ -66,7 +66,7 @@ export class ImmutablePreference implements Preference {
   }
 
   withSorting(newValue: SortingRule): ImmutablePreference {
-    const sorting: Record<DataId, SortingRule> = { ...this._sorting }; // composite sorting not supported yet
+    const sorting: Record<DataId, SortingRule> = {  }; // composite sorting not supported yet
     sorting[newValue.dataId] = { ...newValue };
     return new ImmutablePreference(this.clone({ sorting }));
   }

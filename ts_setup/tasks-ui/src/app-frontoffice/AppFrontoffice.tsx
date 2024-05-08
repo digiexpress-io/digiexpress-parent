@@ -9,13 +9,12 @@ import AppHdes from 'app-hdes';
 
 
 import Views from './Views';
-import { getDrawerOpen, FrontofficePrefs, SyncDrawer, InitNav } from './FrontofficePrefs';
+import { FrontofficePrefs, SyncDrawer, InitNav, useDrawerOpen } from './FrontofficePrefs';
 import { useProfile } from 'descriptor-backend/backend-ctx';
 
 
 const AppConfigProvider: React.FC<{ children: React.ReactNode, init: { backend: Backend, profile: UserProfileAndOrg } }> = ({ children, init }) => {
   return (
-
     <>
       <SyncDrawer />
       {children}
@@ -45,7 +44,7 @@ const NestedApps: React.FC<{  }> = ({ }) => {
   const backend = useBackend();
   const profile = useProfile();
   const tenantConfig = profile.tenant;
-  const drawerOpen = getDrawerOpen(profile);
+  const drawerOpen = useDrawerOpen();
 
   const hdes: Burger.App<{}, any> = React.useMemo(() => AppHdes(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);
   const stencil: Burger.App<{}, any> = React.useMemo(() => AppStencil(backend, profile, tenantConfig!), [backend, profile, tenantConfig]);

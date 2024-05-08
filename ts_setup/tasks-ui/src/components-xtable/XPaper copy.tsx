@@ -1,4 +1,6 @@
 import React from 'react';
+
+/*
 import {
   TableHead as MTableHead,
   TableCell as MTableCell,
@@ -71,7 +73,7 @@ export const TaskTable: React.FC<DelegateProps> = ({ groupByType, groupId, conte
               </TableHeader>
             ))}
 
-            {/* menu column */}
+            
             {columns.length > 0 && <MTableCell />}
           </MTableRow>
         </MTableHead>
@@ -91,3 +93,4 @@ export const TaskTable: React.FC<DelegateProps> = ({ groupByType, groupId, conte
     </Box>
   </Paper>);
 }
+*/

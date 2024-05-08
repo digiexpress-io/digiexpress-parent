@@ -79,6 +79,18 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
       params.add(filter.getDocIds().toArray());
     }
 
+    if(filter.getParentId() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_parent_id = $" + index + " ) ");
+      params.add(filter.getParentId());
+    }
+    
+    if(filter.getOwnerId() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.owner_id = $" + index + " ) ");
+      params.add(filter.getOwnerId());
+    }    
+    
     if(filter.getDocType() != null) {
       final var index = params.size() + 1;
       filters.add(" ( docs.doc_type = $" + index + " ) ");
@@ -125,7 +137,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id, commit_id, created_with_commit_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id, commit_id, created_with_commit_id, owner_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(docs.stream()
             .map(doc -> Tuple.from(Arrays.asList(
@@ -136,7 +148,8 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
                 doc.getMeta(), 
                 doc.getParentId(),
                 doc.getCommitId(),
-                doc.getCreatedWithCommitId()
+                doc.getCreatedWithCommitId(),
+                doc.getOwnerId()
             )))
             .collect(Collectors.toList()))
         .build();
@@ -160,6 +173,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
     return row -> ImmutableDoc.builder()
         .id(row.getString("id"))
         .externalId(row.getString("external_id"))
+        .ownerId(row.getString("owner_id"))
         .parentId(row.getString("doc_parent_id"))
         .commitId(row.getString("commit_id"))
         .createdWithCommitId(row.getString("created_with_commit_id"))
@@ -175,13 +189,13 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
     return ImmutableSql.builder().value(new SqlStatement().ln()
         .append("CREATE TABLE ").append(options.getDoc()).ln()
         .append("(").ln()
-        .append("  id VARCHAR(40) PRIMARY KEY,").ln()
+        .append("  id VARCHAR(100) PRIMARY KEY,").ln()
         .append("  commit_id VARCHAR(40) NOT NULL,").ln()
         .append("  created_with_commit_id VARCHAR(40) NOT NULL,").ln()
         
-        .append("  external_id VARCHAR(40) UNIQUE,").ln()
-        .append("  owner_id VARCHAR(40),").ln()
-        .append("  doc_parent_id VARCHAR(40),").ln()
+        .append("  external_id VARCHAR(100) UNIQUE,").ln()
+        .append("  owner_id VARCHAR(100),").ln()
+        .append("  doc_parent_id VARCHAR(100),").ln()
         .append("  doc_type VARCHAR(40) NOT NULL,").ln()
         .append("  doc_status VARCHAR(8) NOT NULL,").ln()
         .append("  doc_meta jsonb").ln()

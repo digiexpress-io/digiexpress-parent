@@ -1,7 +1,6 @@
 package io.resys.userprofile.client.spi.visitors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,13 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.resys.userprofile.client.api.model.ImmutableNotificationSetting;
-import io.resys.userprofile.client.api.model.ImmutableUiSettingForConfig;
-import io.resys.userprofile.client.api.model.ImmutableUiSettingForVisibility;
-import io.resys.userprofile.client.api.model.ImmutableUiSettings;
-import io.resys.userprofile.client.api.model.ImmutableUiSettingsForSorting;
 import io.resys.userprofile.client.api.model.ImmutableUserDetails;
 import io.resys.userprofile.client.api.model.ImmutableUserProfile;
-import io.resys.userprofile.client.api.model.UiSettings;
 import io.resys.userprofile.client.api.model.UserProfile;
 import io.resys.userprofile.client.api.model.UserProfileCommand;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ArchiveUserProfile;
@@ -26,9 +20,7 @@ import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetail
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsFirstName;
 import io.resys.userprofile.client.api.model.UserProfileCommand.ChangeUserDetailsLastName;
 import io.resys.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
-import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUiSettings;
 import io.resys.userprofile.client.api.model.UserProfileCommand.UpsertUserProfile;
-import io.resys.userprofile.client.api.model.UserProfileCommand.UserProfileCommandType;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonObject;
 
@@ -59,7 +51,6 @@ public class UserProfileCommandVisitor {
     }
     // don't bother logging ui settings to commands
     final var loggedCommands = visitedCommands.stream()
-        .filter(d -> d.getCommandType() != UserProfileCommandType.UpsertUiSettings)
         .map(JsonObject::mapFrom)
         .collect(Collectors.toList());
 
@@ -82,46 +73,9 @@ public class UserProfileCommandVisitor {
       return visitChangeNotificationSetting((ChangeNotificationSetting) command);
     case ArchiveUserProfile:
       return visitArchiveUserProfile((ArchiveUserProfile) command);
-    case UpsertUiSettings:
-      return visitUpsertUiSettings((UpsertUiSettings) command);
     }
     
     throw new UpdateUserProfileVisitorException(String.format("Unsupported command type: %s, body: %s", command.getClass().getSimpleName(), command.toString())); 
-  }
-  private UserProfile visitUpsertUiSettings(UpsertUiSettings command) throws NoChangesException {
-    final List<UiSettings> next = new ArrayList<>();
-    final List<UiSettings> old = this.current.getUiSettings() != null ? this.current.getUiSettings() : Collections.emptyList();
-    
-    // deep copy, just in case of accidental json fields
-    final var newEntity = ImmutableUiSettings.builder()
-        .from(command.getUiSettings())
-        .config(command.getUiSettings().getConfig().stream().map(e -> ImmutableUiSettingForConfig.builder().from(e).build()).toList())
-        .sorting(command.getUiSettings().getSorting().stream().map(e -> ImmutableUiSettingsForSorting.builder().from(e).build()).toList())
-        .visibility(command.getUiSettings().getVisibility().stream().map(e -> ImmutableUiSettingForVisibility.builder().from(e).build()).toList())
-        .build();
-    
-    boolean claimed = false;
-    for(final UiSettings entry : old) {
-      if(entry.getSettingsId().equals(command.getUiSettings().getSettingsId())) {
-        final var updated = newEntity;
-        if(updated.equals(entry)) {
-          throw new NoChangesException();
-        }
-        
-        next.add(updated);
-        claimed = true;
-      } else {
-        next.add(entry);
-      }
-    }
-    
-    if(!claimed) {
-      next.add(newEntity);
-    }
-    
-    this.current = this.current.withUiSettings(next);
-    visitedCommands.add(command);
-    return this.current;
   }
   
   private ImmutableUserDetails createDetails(CreateUserProfile command) {

@@ -37,7 +37,10 @@ public interface Doc extends DocEntity, IsDocObject, ThenaTable {
   @Value.Immutable
   interface DocFilter {
     @Nullable List<String> getDocIds();
+    @Nullable String getParentId();
+    @Nullable String getOwnerId();
     @Nullable String getDocType();
+    
     @Nullable String getBranch();
   }
 

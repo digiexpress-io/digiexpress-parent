@@ -9,9 +9,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Value.Immutable @JsonSerialize(as = ImmutableUiSettings.class) @JsonDeserialize(as = ImmutableUiSettings.class)
-public
-interface UiSettings extends Serializable {
+public interface UiSettings extends Serializable {
+  String getId();
+  String getUserId();
   String getSettingsId();
+  
   List<UiSettings.UiSettingForConfig> getConfig();
   List<UiSettings.UiSettingForVisibility> getVisibility();
   List<UiSettings.UiSettingsForSorting> getSorting();

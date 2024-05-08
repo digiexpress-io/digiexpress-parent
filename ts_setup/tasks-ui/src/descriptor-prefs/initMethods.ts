@@ -16,21 +16,18 @@ export type WithConfig = (config: ConfigRule | (ConfigRule[])) => void;
 
 
 async function storeSettings(backend: Backend, userId: string, pref: ImmutablePreference): Promise<void> {
-  const uiSettings: UiSettings = {
-    id: pref.backendId,
+  const command: UpsertUiSettings = {
+    userId,
+    commandType: 'UpsertUiSettings',
+
     settingsId: pref.id,
     sorting: pref.sorting,
     visibility: pref.visibility,
     config: pref.config
-  };
-
-  const command: UpsertUiSettings = {
-    commandType: 'UpsertUiSettings',
-    id: userId,
-    uiSettings
+    
   };
   try {
-    await new ImmutableAmStore(backend.store).updateUserProfile(userId, [command]);
+    await new ImmutableAmStore(backend.store).updateUiSettings(command);
     _logger.target(command).debug("stored ui settings");
   } catch(error) {
     _logger.target(command).warn("failed to store ui settings");
@@ -38,14 +35,14 @@ async function storeSettings(backend: Backend, userId: string, pref: ImmutablePr
 }
 
 export function initPreference(
-  init: PreferenceInit, initProfile: UserProfile
+  init: PreferenceInit, initProfile: UiSettings | undefined
 ): ImmutablePreference {
   const { id } = init;
   const fields = Object.freeze(init.fields);
   const sorting: Record<string, SortingRule> = {};
   const visibility: Record<string, VisibilityRule> = {};
   const config: Record<string, ConfigRule> = {};
-  const stored = initProfile.uiSettings?.find((settings) => settings.settingsId === id);
+  const stored = initProfile;
 
   // defaults first
   if(init.sorting) {
@@ -62,13 +59,13 @@ export function initPreference(
 }
 
 export function parsePreference(
-  settingsId: string, initProfile: UserProfile
+  settingsId: string, initProfile: UiSettings | undefined
 ): ImmutablePreference {
   const fields: string[] = [];
   const sorting: Record<string, SortingRule> = {};
   const visibility: Record<string, VisibilityRule> = {};
   const config: Record<string, ConfigRule> = {};
-  const stored = initProfile.uiSettings?.find((settings) => settings.settingsId === settingsId);
+  const stored = initProfile;
 
   // backend
   if(stored) {
