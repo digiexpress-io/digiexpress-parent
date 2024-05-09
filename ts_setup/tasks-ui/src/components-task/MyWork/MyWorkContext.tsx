@@ -56,12 +56,18 @@ export function useMyWork() {
     tabbing.withTabSelecion(activeTab.id, task.id);
   }
 
+  function setActiveTable(callback: (pagination: TaskPagination) => TaskPagination) {
+    tabbing.withTabBody(activeTab.id, callback);
+  }
+
+
   return { 
     activeTab, 
     activeTask,
     setActiveTab, getTabItemCount, 
     setTabPageNo, setTabRowsPerPage,
     setActiveTask,
+    setTable: setActiveTable,
     table: activeTab.body };
 }
 

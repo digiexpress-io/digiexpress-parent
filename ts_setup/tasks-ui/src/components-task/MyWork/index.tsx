@@ -1,31 +1,21 @@
 import React from 'react';
-import { TablePagination } from '@mui/material';
+import { Box } from '@mui/material';
 
 
-import { LayoutList, NavigationButton, LayoutListItem, LayoutListFiller  } from 'components-generic';
+import { NavigationButton, NavigationSticky  } from 'components-generic';
 import { moss, cyan } from 'components-colors';
-import { Palette, AssigneeGroupType } from 'descriptor-task';
+import { Palette, AssigneeGroupType, TaskDescriptor, ChangeTaskPriority, ChangeTaskStatus, ChangeTaskDueDate, AssignTask, useTasks } from 'descriptor-task';
+
+import { XPagination, XPaper, XPaperTitle, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
 
 import TaskCreateDialog from '../TaskCreate';
 import { MyWorkProvider, useMyWork } from './MyWorkContext';
-import TaskItemActive from './TaskItemActive';
-import TaskItem from './TaskItem';
-
-
-const MyWorkPagination: React.FC = () => {
-  const { setTabRowsPerPage, setTabPageNo, table } = useMyWork();
-  if(table.src.length === 0) {
-    return null;
-  }
-
-  return (<TablePagination component="div"
-    rowsPerPageOptions={table.rowsPerPageOptions}
-    count={table.src.length}
-    rowsPerPage={table.rowsPerPage}
-    page={table.page}
-    onPageChange={setTabPageNo}
-    onRowsPerPageChange={setTabRowsPerPage} />);
-}
+import { FormattedMessage } from 'react-intl';
+import { PrincipalId, useAm } from 'descriptor-access-mgmt';
+import { useAvatar } from 'descriptor-avatar';
+import { TaskRow, TaskRowMenu } from '../TaskTable';
+import TaskDueDate from '../TaskDueDate';
+import TaskPriority from '../TaskPriority';
 
 
 const MyWorkNavigation: React.FC = () => {
@@ -41,7 +31,7 @@ const MyWorkNavigation: React.FC = () => {
     return { count: getTabItemCount(id) };
   }
 
-  return (<>
+  return (<NavigationSticky>
     <NavigationButton id='core.myWork.tab.task.currentlyWorking' 
       values={getGroupCount('assigneeCurrentlyWorking')} 
       color={Palette.assigneeGroupType.assigneeCurrentlyWorking}
@@ -80,38 +70,72 @@ const MyWorkNavigation: React.FC = () => {
       values={undefined}
       active={createOpen}
       color={cyan}/>
-  </>);
+  </NavigationSticky>);
 }
 
 const MyWorkItems: React.FC = () => {
-  const { activeTab, setActiveTask, activeTask } = useMyWork();
+  const tasks = useTasks();
+  const { table: content, setTable: setContent } = useMyWork();
+  const { iam } = useAm();
+  const avatar = useAvatar(iam.id);
 
-  return (<>
-      {activeTab.body.entries.map((task, index) => (
-      <LayoutListItem key={task.id} index={index} active={activeTask?.id === task.id} onClick={() => setActiveTask(task)}>
-        <TaskItem key={task.id} task={task} />
-      </LayoutListItem>)
-    )}
-    <LayoutListFiller value={activeTab.body} />
-  </>);
-}
+  function handleSorting(key: string, _direction: string) {
+    const column: keyof TaskDescriptor = key as any;
+    setContent(prev => prev.withOrderBy(column));
+  }
+  async function handleAssignTask(task: TaskDescriptor, assigneeIds: PrincipalId[]) {
+    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
+    await tasks.updateActiveTask(task.id, [command]);
+  }
+  async function handleDueDateChange(task: TaskDescriptor, dueDate: string | undefined) {
+    const command: ChangeTaskDueDate = { commandType: 'ChangeTaskDueDate', dueDate, taskId: task.id };
+    await tasks.updateActiveTask(task.id, [command]);
+  }
+  async function handlePriorityChange(task: TaskDescriptor, command: ChangeTaskPriority) {
+    await tasks.updateActiveTask(task.id, [command]);
+  }
+  async function handleStatusChange(task: TaskDescriptor, command: ChangeTaskStatus) {
+    await tasks.updateActiveTask(task.id, [command]);
+  }
 
-const MyWorkActive: React.FC = () => {
-  const { activeTask } = useMyWork();
-  return (<TaskItemActive task={activeTask} />);
-}
+  return (
+    <XPaper uuid={`MyWork.all_tasks`} color={avatar?.colorCode ?? ""}>
+      <XPaperTitle>
+        <FormattedMessage id='mywork.table.header'/>
+      </XPaperTitle>
 
-const MyWorkLayout: React.FC = () => {
-  const navigation = <MyWorkNavigation />;
-  const pagination = <MyWorkPagination />;
-  const active = <MyWorkActive />;
-  const items = <MyWorkItems />;
-
-  return (<LayoutList slots={{ navigation, active, items, pagination }} />)
+      <XTable columns={6} rows={content.rowsPerPage}>
+        <XTableHead>
+          <XTableRow>
+            <XTableHeader onSort={handleSorting} sortable id='customerId'><FormattedMessage id='tasktable.header.customer' /></XTableHeader>
+            <XTableHeader onSort={handleSorting} sortable id='title'><FormattedMessage id='tasktable.header.title' /></XTableHeader>
+            <XTableHeader onSort={handleSorting} sortable id='dueDate' defaultSort='asc'><FormattedMessage id='tasktable.header.dueDate' /></XTableHeader>
+            <XTableHeader onSort={handleSorting} sortable id='priority'><FormattedMessage id='tasktable.header.priority' /></XTableHeader>
+            <XTableHeader id='menu'><></></XTableHeader>
+          </XTableRow>
+        </XTableHead>
+        <XTableBody padding={1}>
+          {content.entries.map((row, rowId) => (
+            <TaskRow key={row.id} rowId={rowId} row={row}>
+              <XTableBodyCell justifyContent='left' maxWidth={"200px"}>{row.title}</XTableBodyCell>
+              <XTableBodyCell justifyContent='left' maxWidth={"300px"}>sss</XTableBodyCell>
+              <XTableBodyCell><TaskDueDate task={row} onChange={(dueDate) => handleDueDateChange(row, dueDate)} /></XTableBodyCell>
+              <XTableBodyCell><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
+              <XTableBodyCell width="35px" justifyContent='right'><TaskRowMenu row={row} /></XTableBodyCell>
+            </TaskRow>))
+          }
+        </XTableBody>
+      </XTable>
+      <XPagination state={content} setState={setContent} />
+    </XPaper>
+  )
 }
 
 const MyWork: React.FC = () => {
-  return <MyWorkProvider><MyWorkLayout /></MyWorkProvider>;
+  return <MyWorkProvider>
+    <MyWorkNavigation />
+    <Box p={1}><MyWorkItems /></Box>
+  </MyWorkProvider>;
 }
 
 export default MyWork;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { cyan, grey, orange, wash_me } from 'components-colors';
+import { cyan, orange } from 'components-colors';
 import { NavigationButton, NavigationSticky } from 'components-generic';
 import { AssignTask, ChangeTaskDueDate, ChangeTaskPriority, ChangeTaskStatus, Palette, TaskDescriptor, TeamGroupType, useTasks } from 'descriptor-task';
 

@@ -520,7 +520,7 @@ const en = {
   'explorer.frontoffice.tenant.readaudit.menuOption': 'App read audit',
   'explorer.frontoffice.tenant.writeaudit.menuOption': 'App write audit',
 
-
+  'taskSearch.filter.priority.selected': 'Selected',
   'taskSearch.filter.groupedByTitle': 'Tasks grouped by: {type}',
   'taskSearch.filter.columns': 'Show/Hide columns',
   'taskSearch.filter.assignees': 'Filter by assignees',
@@ -731,6 +731,7 @@ const en = {
 
   'permissions.principals.title': 'Role members',
   'permissions.principals.selectedPrincipals': 'Selected members',
+  
   'permissions.principal.name': 'Member name',
   'permissions.principals.search.title': 'Search available members',
   'permissions.principals.select': 'Select members to add',
