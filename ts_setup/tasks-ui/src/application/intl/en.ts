@@ -552,6 +552,15 @@ const en = {
   'taskSearch.filter.status.subtitle.IN_PROGRESS': 'Include/exclude tasks that somebody is working on',
 
 
+  'taskSearch.filter.priority.LOW': 'Low',
+  'taskSearch.filter.priority.MEDIUM': 'Medium',
+  'taskSearch.filter.priority.HIGH': 'High',
+  'taskSearch.filter.priority.subtitle.LOW': 'Include/exclude tasks that have low priority',
+  'taskSearch.filter.priority.subtitle.MEDIUM': 'Include/exclude tasks that have medium priority',
+  'taskSearch.filter.priority.subtitle.HIGH': 'Include/exclude tasks that have high priority',
+
+
+
   
   'taskSearch.searchBar.groupBy': 'Group by {groupBy}',
   'taskSearch.searchBar.filterColumns': 'Columns',

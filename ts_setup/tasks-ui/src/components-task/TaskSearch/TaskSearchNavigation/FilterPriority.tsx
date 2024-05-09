@@ -1,13 +1,44 @@
-import * as React from 'react';
-import { Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+
+import { useIntl } from 'react-intl';
 
 
 import { FilterByPriority, FilterBy, TaskPriority } from 'descriptor-task';
-import { ButtonSearch } from 'components-generic';
+import { ButtonSearch, LetterIcon } from 'components-generic';
+import { FlyoutMenu, FlyoutMenuItem, FlyoutMenuTrigger } from 'components-flyout-menu';
 
 const prioritytypes: TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
+
+const Icon: React.FC<{ type: TaskPriority }> = ({ type }) => {
+  switch (type) {
+    case 'LOW': return <LetterIcon transparent>L</LetterIcon>
+    case 'MEDIUM': return <LetterIcon transparent>M</LetterIcon>
+    case 'HIGH': return <LetterIcon transparent>H</LetterIcon>
+  }
+}
+
+const FilterByMenuItem: React.FC<{
+  currentlySelected: readonly FilterBy[],
+  displaying: TaskPriority,
+  onClick: (value: TaskPriority[]) => void;
+}> = ({
+  currentlySelected, displaying, onClick
+}) => {
+
+    const found = currentlySelected.find(filter => filter.type === 'FilterByPriority');
+    const active = found ? found.type === 'FilterByPriority' && found.priority.includes(displaying) : false
+
+    const intl = useIntl();
+    const selected: string = intl.formatMessage({ id: `taskSearch.filter.priority.selected` });
+    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.priority.${displaying}` });
+    const subtitle: string = intl.formatMessage({ id: `taskSearch.filter.priority.subtitle.${displaying}` });
+
+    function handleOnClick() {
+      onClick([displaying]);
+    }
+
+    return (<FlyoutMenuItem active={active} onClick={handleOnClick} title={title} subtitle={subtitle}><Icon type={displaying} /></FlyoutMenuItem>);
+  }
 
 
 const FilterPriority: React.FC<{
@@ -15,54 +46,16 @@ const FilterPriority: React.FC<{
   value: readonly FilterBy[];
 }> = (props) => {
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   const filterByPriority = props.value.find(filter => filter.type === 'FilterByPriority') as FilterByPriority | undefined;
 
-  return (<>
-    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
-
-    <Menu sx={{ width: 320 }}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      <MenuList dense>
-        <MenuItem>
-          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.priority' /></Typography></ListItemText>
-        </MenuItem>
-        {prioritytypes.map(type => {
-          const found = props.value.find(filter => filter.type === 'FilterByPriority');
-          const selected = found ? found.type === 'FilterByPriority' && found.priority.includes(type) : false
-
-          if (selected) {
-            return <MenuItem key={type} onClick={() => {
-              handleClose();
-              props.onChange([type]);
-            }}><ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>
-          }
-          return <MenuItem key={type} onClick={() => {
-            handleClose();
-            props.onChange([type]);
-          }}><ListItemText inset><Typography>{type}</Typography></ListItemText></MenuItem>;
-        })}
-      </MenuList>
-    </Menu>
-  </>
+  return (
+    <FlyoutMenu>
+      <FlyoutMenuTrigger>
+        <ButtonSearch onClick={() => { }} id='taskSearch.searchBar.filterPriority' values={{ count: filterByPriority?.priority.length }} />
+      </FlyoutMenuTrigger>
+      {prioritytypes.map(displaying => <FilterByMenuItem key={displaying} currentlySelected={props.value} displaying={displaying} onClick={props.onChange} />)}
+    </FlyoutMenu>
   );
 }
 export { FilterPriority };
