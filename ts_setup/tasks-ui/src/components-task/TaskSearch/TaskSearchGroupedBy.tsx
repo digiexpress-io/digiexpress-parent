@@ -4,7 +4,7 @@ import { useGrouping, GroupByTypes, useTaskPrefs, TaskPagination, initTaskGroup 
 
 
 import LoggerFactory from 'logger';
-import { TaskTable } from './Table';
+import { TaskSearchTable } from './TaskSearchTable';
 
 const _logger = LoggerFactory.getLogger();
 
@@ -30,7 +30,7 @@ interface GroupByCacheProps {
 }
 
 const GroupByCache: React.FC<GroupByCacheProps> = React.memo(({ groupByType, groupId, content, setContent }) => {
-  return (<TaskTable groupByType={groupByType} groupId={groupId} content={content} setContent={setContent}/>);
+  return (<TaskSearchTable groupByType={groupByType} groupId={groupId} content={content} setContent={setContent}/>);
 }, isCached)
 
 export const TaskSearchGroupedBy: React.FC<{ groupByType: GroupByTypes, groupId: string }> = ({ groupByType, groupId }) => {

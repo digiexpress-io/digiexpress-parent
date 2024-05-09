@@ -275,6 +275,8 @@ const en = {
   'core.taskWork.menu.attachments': 'Attachments',
   'core.taskWork.menu.messages': 'Messages',
 
+  'core.teamSpace.title': 'Team space, all task accessible by my roles: {myRoles}',
+
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
   'core.teamSpace.summary.noneSelected': 'Nothing selected',

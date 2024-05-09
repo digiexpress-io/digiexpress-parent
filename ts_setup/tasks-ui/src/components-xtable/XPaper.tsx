@@ -4,7 +4,7 @@ import { XPaperProvider } from './XPaperContext';
 
 
 export interface XPaperProps {
-  color: string | undefined;
+  color?: string | undefined;
   uuid: string; 
   children: React.ReactNode
 }
