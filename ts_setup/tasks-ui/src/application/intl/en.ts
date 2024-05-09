@@ -277,6 +277,8 @@ const en = {
 
   'core.teamSpace.title': 'Team space, all task accessible by my roles: {myRoles}',
 
+  
+  'core.teamSpace.customerId': 'SSN: {customerId}',
   'core.teamSpace.taskCount': '{values} Tasks',
   'core.teamSpace.task.create': 'Create new task',
   'core.teamSpace.summary.noneSelected': 'Nothing selected',
@@ -606,6 +608,7 @@ const en = {
   'mywork.table.header.description': 'Description',
   'mywork.table.header.dueDate': 'Due date',
 
+  'tasktable.header.customer': 'Customer',
   'tasktable.header.title': 'Title',
   'tasktable.header.created': 'Created',
   'tasktable.header.subject': 'Subject',

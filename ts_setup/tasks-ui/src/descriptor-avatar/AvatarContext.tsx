@@ -43,12 +43,12 @@ export function useAvatars(entries: string[]): Avatar[] | undefined {
   return calculated;
 }
 
-export function useAvatar(entry: string, enabled?: boolean): Avatar | undefined {
+export function useAvatar(entry: string | undefined, enabled?: boolean): Avatar | undefined {
   const ctx: AvatarContextType = React.useContext(AvatarContext);
-  const calculated: Avatar | undefined = ctx.avatars[entry];
+  const calculated: Avatar | undefined = entry ? ctx.avatars[entry] : undefined;
 
   React.useEffect(() => {
-    if(enabled === false) {
+    if(enabled === false || !entry) {
       return;
     }
 

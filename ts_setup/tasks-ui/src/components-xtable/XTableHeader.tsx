@@ -27,7 +27,7 @@ const SortableHeader: React.FC<{
     onSort(dataId, sortDirection); 
   }
 
-  return (<XTableCell align='left' padding='none' sortDirection={direction}>
+  return (<XTableCell align='left'>
     <TableSortLabel active={active} direction={direction} onClick={createSortHandler}>
       <>
         <b>{children}</b>
@@ -55,7 +55,7 @@ export const XTableHeader: React.FC<{
   }
 
   if(!sortable) {
-    return (<XTableCell align='left' padding='none'>{children}</XTableCell>)
+    return (<XTableCell align='left'>{children}</XTableCell>)
   }
 
   if(!onSort) {

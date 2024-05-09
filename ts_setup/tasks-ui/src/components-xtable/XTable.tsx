@@ -13,7 +13,6 @@ interface XTableProps {
   children: React.ReactNode
 }
 
-
 export const XTable: React.FC<XTableProps> = ({ rows, columns, children, hiddenColumns }) => {
   const { uuid } = useXPaper();
   const init: PreferenceInit = React.useMemo(() => ({

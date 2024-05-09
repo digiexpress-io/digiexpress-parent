@@ -7,21 +7,21 @@ export interface XTableRowProps {
   children: React.ReactNode
 }
 
-function getRowBackgroundColor(index: number): SxProps {
+function getRowBackgroundColor(index: number): string {
   const isOdd = index % 2 === 1;
 
   if (isOdd) {
-    return { backgroundColor: cyan_mud };
+    return cyan_mud;
   }
-  return { backgroundColor: 'background.paper' };
+  return 'background.paper';
 }
 
 export const XTableRow: React.FC<XTableRowProps> = ({ children }) => {
   const { rowId, onStartHover, onEndHover } = useXTableRow();
-  const sx = getRowBackgroundColor(rowId);
-  
+  const backgroundColor = getRowBackgroundColor(rowId);
+
   return (
-    <TableRow sx={sx} hover onMouseEnter={onStartHover} onMouseLeave={onEndHover}>
+    <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor }}>
       {children}
     </TableRow>);
 }
