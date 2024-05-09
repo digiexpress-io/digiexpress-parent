@@ -103,7 +103,7 @@ const TeamSpaceLayout: React.FC = () => {
         <FormattedMessage id='core.teamSpace.title' values={{ myRoles }} />
       </XPaperTitle>
 
-      <XTable columns={7} rows={content.rowsPerPage}>
+      <XTable columns={6} rows={content.rowsPerPage}>
         <XTableHead>
           <XTableRow>
             <XTableHeader onSort={handleSorting} sortable id='customerId'><FormattedMessage id='tasktable.header.customer' /></XTableHeader>
