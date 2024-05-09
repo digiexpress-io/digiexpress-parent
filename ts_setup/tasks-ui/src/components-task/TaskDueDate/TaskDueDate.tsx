@@ -38,13 +38,8 @@ const TaskDueDate: React.FC<{
 
   return (
     <>
-      <Button onClick={handlePickerDialog} sx={{ justifyContent: 'left' }} disabled={disabled} startIcon={<DateRangeOutlinedIcon sx={{
-        cursor: 'pointer',
-        color: cyan,
-        fontSize: 'small'
-      }} />
-      }>
-        <Typography sx={{ color: 'text.primary' }}><Burger.DateTimeFormatter type='date' value={task.dueDate} /></Typography>
+      <Button onClick={handlePickerDialog} disabled={disabled} startIcon={<DateRangeOutlinedIcon/>} sx={{ color: 'text.primary' }}>
+        <Typography><Burger.DateTimeFormatter type='date' value={task.dueDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Dialog open={open} onClose={handlePickerDialog}>
