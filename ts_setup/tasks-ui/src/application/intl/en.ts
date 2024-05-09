@@ -538,6 +538,19 @@ const en = {
   'taskSearch.filter.groupBy.status': 'Status',
   'taskSearch.filter.groupBy.subtitle.status': 'For each status type(created|in progress|etc...) a separate table will be show',
 
+  'taskSearch.filter.roles.subtitle': 'AM role with id: {id}',
+  'taskSearch.filter.owner.subtitle': 'AM principal with id: {id}',
+
+  'taskSearch.filter.status.selected': 'Currently selected - ',
+  'taskSearch.filter.status.CREATED': 'Created',
+  'taskSearch.filter.status.REJECTED': 'Rejected',
+  'taskSearch.filter.status.COMPLETED': 'Completed',
+  'taskSearch.filter.status.IN_PROGRESS': 'In progress',
+  'taskSearch.filter.status.subtitle.CREATED': 'Include/exclude tasks that nobody is working on yet',
+  'taskSearch.filter.status.subtitle.REJECTED': 'Include/exclude tasks that have been failed but reached the end',
+  'taskSearch.filter.status.subtitle.COMPLETED': 'Include/exclude tasks that have been successfully reached the end',
+  'taskSearch.filter.status.subtitle.IN_PROGRESS': 'Include/exclude tasks that somebody is working on',
+
 
   
   'taskSearch.searchBar.groupBy': 'Group by {groupBy}',

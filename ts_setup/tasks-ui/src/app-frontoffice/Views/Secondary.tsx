@@ -36,6 +36,7 @@ import Burger from 'components-burger';
 import { blueberry_whip, green_teal, sambucus } from 'components-colors';
 import { useApp } from './useApp';
 import { useSecondaryMenuItem } from '../FrontofficePrefs';
+import { LetterIcon } from 'components-generic';
 
 
 
@@ -252,14 +253,7 @@ export const Secondary: React.FC<{}> = () => {
 
         {/** Release management */}
         <StyledExplorerTab value='explorer.deployments' label={<FormattedMessage id="explorer.frontoffice.ci.menuOption" />} onClick={undefined}
-          icon={<Avatar sx={{
-            width: '24px', height: '24px',
-            fontSize: '0.9rem',
-            color: sambucus,
-            fontWeight: 'bold'
-          }}>
-            <span>CI</span>
-          </Avatar>} />
+          icon={<LetterIcon>CI</LetterIcon>} />
         <StyledExplorerSubTab value='deployments' label={<FormattedMessage id="explorer.frontoffice.ci.deployments.menuOption" />} onClick={undefined}
           icon={<CloudUploadIcon fontSize='small' />} />
         <StyledExplorerSubTab value='releaseMgmt' label={<FormattedMessage id="explorer.frontoffice.ci.releaseMgmt.menuOption" />} onClick={callbacks.releaseMgmt}
