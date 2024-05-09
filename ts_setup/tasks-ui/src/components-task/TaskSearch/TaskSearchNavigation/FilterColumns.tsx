@@ -1,66 +1,49 @@
-import * as React from 'react';
-import { Menu, MenuItem, MenuList, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import Check from '@mui/icons-material/Check';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import { useIntl } from 'react-intl';
 import { TaskDescriptor } from 'descriptor-task';
-import { ButtonSearch } from 'components-generic';
+import { ButtonSearch, LetterIcon } from 'components-generic';
+import { FlyoutMenu, FlyoutMenuItem, FlyoutMenuTrigger } from 'components-flyout-menu';
+
+
+
+
+const FilterByMenuItem: React.FC<{
+  currentlySelected: readonly (keyof TaskDescriptor)[],
+  displaying: keyof TaskDescriptor,
+  onClick: (value: (keyof TaskDescriptor)[]) => void;
+}> = ({
+  currentlySelected, displaying, onClick
+}) => {
+    const active = currentlySelected.includes(displaying)
+
+    const intl = useIntl();
+    const selected: string = intl.formatMessage({ id: `taskSearch.filter.column.selected` });
+    const title: string = (active ? selected : "") + intl.formatMessage({ id: `taskSearch.filter.column.${displaying}` });
+    const subtitle: string = intl.formatMessage({ id: `taskSearch.filter.column.subtitle.${displaying}` });
+
+    function handleOnClick() {
+      onClick([displaying]);
+    }
+
+    return (
+    <FlyoutMenuItem active={active} onClick={handleOnClick} title={title} subtitle={subtitle}>
+      <LetterIcon transparent>{displaying.substring(0, 2).toUpperCase()}</LetterIcon>
+    </FlyoutMenuItem>);
+  }
+
 
 const FilterColumns: React.FC<{
   onChange: (value: (keyof TaskDescriptor)[]) => void;
   value: (keyof TaskDescriptor)[];
   types: (keyof TaskDescriptor)[];
 }> = (props) => {
-
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  }
-
-  return (<>
-    <ButtonSearch onClick={handleClick} id='taskSearch.searchBar.filterColumns' values={undefined} />
-
-    <Menu sx={{ width: 320 }}
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      <MenuList dense>
-        <MenuItem>
-          <ListItemText><Typography fontWeight='bold'><FormattedMessage id='taskSearch.filter.columns' /></Typography></ListItemText>
-        </MenuItem>
-        {props.types.map(type => {
-          const selected = props.value.includes(type)
-
-          if (selected) {
-            return (<MenuItem key={type} onClick={() => {
-              handleClose();
-              props.onChange(props.value.filter(sel => sel !== type));
-            }
-            }> <ListItemIcon><Check /></ListItemIcon><Typography fontWeight='bolder'>{type}</Typography></MenuItem>);
-          }
-          return <MenuItem key={type} onClick={() => {
-            handleClose();
-            props.onChange([...props.value, type]);
-          }}>
-            <ListItemText inset><Typography>{type}</Typography></ListItemText>
-          </MenuItem>;
-        })}
-
-      </MenuList>
-    </Menu >
-  </>
+  return (
+    <FlyoutMenu>
+      <FlyoutMenuTrigger>
+        <ButtonSearch onClick={() => { }} id='taskSearch.searchBar.filterColumns' values={undefined} />
+      </FlyoutMenuTrigger>
+      {props.types.map(displaying => <FilterByMenuItem key={displaying} currentlySelected={props.value} displaying={displaying} onClick={props.onChange} />)}
+    </FlyoutMenu>
   );
 }
 export { FilterColumns };

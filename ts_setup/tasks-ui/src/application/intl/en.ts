@@ -559,7 +559,19 @@ const en = {
   'taskSearch.filter.priority.subtitle.MEDIUM': 'Include/exclude tasks that have medium priority',
   'taskSearch.filter.priority.subtitle.HIGH': 'Include/exclude tasks that have high priority',
 
-
+  'taskSearch.filter.column.selected': 'Currently selected - ',
+  'taskSearch.filter.column.title': 'Title',
+  'taskSearch.filter.column.assignees': 'Assignees',
+  'taskSearch.filter.column.dueDate': 'Due date',
+  'taskSearch.filter.column.priority': 'Priority',
+  'taskSearch.filter.column.roles': 'Roles',
+  'taskSearch.filter.column.status': 'Status',
+  'taskSearch.filter.column.subtitle.title': 'Include/exclude column thats shows task title',
+  'taskSearch.filter.column.subtitle.assignees': 'Include/exclude column that shows to whom task is assigneed',
+  'taskSearch.filter.column.subtitle.dueDate': 'Include/exclude column that shows when the task needs to be completed',
+  'taskSearch.filter.column.subtitle.priority': 'Include/exclude column that shows the urgency of the task',
+  'taskSearch.filter.column.subtitle.roles': 'Include/exclude column that shows AM roles',
+  'taskSearch.filter.column.subtitle.status': 'Include/exclude column that that shows task progress',
 
   
   'taskSearch.searchBar.groupBy': 'Group by {groupBy}',
