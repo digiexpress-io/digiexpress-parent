@@ -13,8 +13,9 @@ const SortableHeader: React.FC<{
   dataId: string;
   defaultSort?: SortType;
   children: React.ReactNode;
+  colSpan?: number;
   onSort: (key: string, direction: SortType) => void;
-}> = ({ defaultSort, children, dataId, onSort }) => {
+}> = ({ defaultSort, children, dataId, onSort, colSpan }) => {
 
   const { pref, withSorting } = useXPref();
   const sorting = pref.getSorting();
@@ -27,7 +28,7 @@ const SortableHeader: React.FC<{
     onSort(dataId, sortDirection); 
   }
 
-  return (<XTableCell align='left'>
+  return (<XTableCell align='left' colSpan={colSpan}>
     <TableSortLabel active={active} direction={direction} onClick={createSortHandler}>
       <>
         <b>{children}</b>
@@ -39,11 +40,12 @@ const SortableHeader: React.FC<{
 
 export const XTableHeader: React.FC<{ 
   id: string;
+  colSpan?: number;
   sortable?: boolean;
   defaultSort?: SortType;
   children: React.ReactNode;
   onSort?: (key: string, direction: SortType) => void;
-}> = ({ sortable, children, id, defaultSort, onSort }) => {
+}> = ({ sortable, children, id, defaultSort, onSort, colSpan }) => {
 
   const { hiddenColumns } = useXTable();
   const { pref } = useXPref();
@@ -55,12 +57,12 @@ export const XTableHeader: React.FC<{
   }
 
   if(!sortable) {
-    return (<XTableCell align='left'>{children}</XTableCell>)
+    return (<XTableCell align='left' colSpan={colSpan}>{children}</XTableCell>)
   }
 
   if(!onSort) {
     throw new Error("onSort must be defined");
   }
 
-  return (<SortableHeader dataId={id} defaultSort={defaultSort} onSort={onSort}>{children}</SortableHeader>)
+  return (<SortableHeader dataId={id} defaultSort={defaultSort} colSpan={colSpan} onSort={onSort}>{children}</SortableHeader>)
 }

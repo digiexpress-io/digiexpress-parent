@@ -6,12 +6,10 @@ import { TaskDescriptor } from 'descriptor-task';
 import { CustomerDescriptor, ImmutableCustomerDescriptor, ImmutableCustomerStore } from 'descriptor-customer';
 import Backend from 'descriptor-backend';
 import { FormattedMessage } from 'react-intl';
-import { AvatarUser } from 'components-generic';
 import { useAvatar } from 'descriptor-avatar';
 
 
-export const TaskCustomer: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
-  const { customerId } = task;
+export function useCustomer(customerId: string | undefined) {
   const avatar = useAvatar(customerId!);
   const backend = Backend.useBackend();
   const [customer, setCustomer] = React.useState<CustomerDescriptor>();
@@ -23,6 +21,13 @@ export const TaskCustomer: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
     new ImmutableCustomerStore(backend.store).getCustomer(customerId)
       .then(customer => setCustomer(new ImmutableCustomerDescriptor(customer)));
   }, [customerId]);
+
+  return { avatar, customer }
+}
+
+export const TaskCustomer: React.FC<{ task: TaskDescriptor }> = ({ task }) => {
+  const { customerId } = task;
+  const { customer, avatar } = useCustomer(customerId);
 
   if (!customer) {
     return <>...</>;

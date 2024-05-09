@@ -1,11 +1,12 @@
 import React from 'react';
 import { TableRow } from '@mui/material';
-import { cyan_mud } from 'components-colors';
+import { cyan_mud, grey_light, grey_light_2 } from 'components-colors';
 import { useXTableRow } from './XTableRowContext';
 import { useXTableBody } from './XTableBodyContext';
 
 export interface XTableRowProps {
-  children: React.ReactNode
+  children: React.ReactNode;
+  variant?: 'secondary';
 }
 
 function getRowBackgroundColor(index: number): string {
@@ -17,13 +18,16 @@ function getRowBackgroundColor(index: number): string {
   return 'background.paper';
 }
 
-export const XTableRow: React.FC<XTableRowProps> = ({ children }) => {
+export const XTableRow: React.FC<XTableRowProps> = ({ children, variant }) => {
   const { alternate } = useXTableBody();
   const { rowId, onStartHover, onEndHover } = useXTableRow();
-  const backgroundColor = alternate ? getRowBackgroundColor(rowId) : undefined;
+  let backgroundColor: string | undefined = alternate ? getRowBackgroundColor(rowId) : undefined;
+  if(variant === 'secondary') {
+    backgroundColor = grey_light_2;
+  }
 
   return (
-    <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor }}>
+    <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor}}>
       {children}
     </TableRow>);
 }

@@ -81,13 +81,13 @@ export const TaskSearchTable: React.FC<DelegateProps> = ({ groupByType, groupId,
       <XTableBody>
         {content.entries.map((row, rowId) => (
           <TaskRow key={row.id} rowId={rowId} row={row} visibleColumns={columns}>
-            <XTableBodyCell justifyContent='left' maxWidth={"500px"}>{row.title}</XTableBodyCell>
-            <XTableBodyCell><TaskAssignees task={row} onChange={(assigneeIds) => handleAssignTask(row, assigneeIds)} /></XTableBodyCell>
-            <XTableBodyCell><TaskDueDate task={row} onChange={(dueDate) => handleDueDateChange(row, dueDate)} /></XTableBodyCell>
-            <XTableBodyCell><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
-            <XTableBodyCell><TaskRoles task={row} onChange={(roles) => handleAssignRolesChange(row, roles)} /></XTableBodyCell>
-            <XTableBodyCell width="100px"><TaskStatus task={row} onChange={(status) => handleStatusChange(row, status)} /></XTableBodyCell>
-            <XTableBodyCell width="35px" justifyContent='right'><TaskRowMenu row={row} /></XTableBodyCell>
+            <XTableBodyCell id="title" justifyContent='left' maxWidth={"500px"}>{row.title}</XTableBodyCell>
+            <XTableBodyCell id="assignees"><TaskAssignees task={row} onChange={(assigneeIds) => handleAssignTask(row, assigneeIds)} /></XTableBodyCell>
+            <XTableBodyCell id="dueDate"><TaskDueDate task={row} onChange={(dueDate) => handleDueDateChange(row, dueDate)} /></XTableBodyCell>
+            <XTableBodyCell id="priority"><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
+            <XTableBodyCell id="roles"><TaskRoles task={row} onChange={(roles) => handleAssignRolesChange(row, roles)} /></XTableBodyCell>
+            <XTableBodyCell id="status" width="100px"><TaskStatus task={row} onChange={(status) => handleStatusChange(row, status)} /></XTableBodyCell>
+            <XTableBodyCell id="menu" width="35px" justifyContent='right'><TaskRowMenu row={row} /></XTableBodyCell>
           </TaskRow>))
         }
       </XTableBody>

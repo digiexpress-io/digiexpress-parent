@@ -119,17 +119,17 @@ const TeamSpaceLayout: React.FC = () => {
         <XTableBody padding={1}>
           {content.entries.map((row, rowId) => (
             <TaskRow key={row.id} rowId={rowId} row={row}>
-              <XTableBodyCell justifyContent='left' maxWidth={"200px"} ><TaskCustomer task={row} /></XTableBodyCell>
-              <XTableBodyCell justifyContent='left' maxWidth={"300px"}><TaskTAndD task={row} /></XTableBodyCell>
-              <XTableBodyCell>
+              <XTableBodyCell id="customerId" justifyContent='left' maxWidth={"200px"} ><TaskCustomer task={row} /></XTableBodyCell>
+              <XTableBodyCell id="title" justifyContent='left' maxWidth={"300px"}><TaskTAndD task={row} /></XTableBodyCell>
+              <XTableBodyCell id="dueDate">
                 <Box display="flex" flexDirection="column">
                   <TaskStatus task={row} onChange={(status) => handleStatusChange(row, status)} />
                   <TaskDueDate task={row} onChange={(dueDate) => handleDueDateChange(row, dueDate)} />
                 </Box>
               </XTableBodyCell>
-              <XTableBodyCell><TaskAssignees task={row} onChange={(assigneeIds) => handleAssignTask(row, assigneeIds)} /></XTableBodyCell>
-              <XTableBodyCell><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
-              <XTableBodyCell width="35px" justifyContent='right'><TaskRowMenu row={row} /></XTableBodyCell>
+              <XTableBodyCell id="assignees"><TaskAssignees task={row} onChange={(assigneeIds) => handleAssignTask(row, assigneeIds)} /></XTableBodyCell>
+              <XTableBodyCell id="priority"><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
+              <XTableBodyCell id="menu" width="35px" justifyContent='right'><TaskRowMenu row={row} /></XTableBodyCell>
             </TaskRow>))
           }
         </XTableBody>

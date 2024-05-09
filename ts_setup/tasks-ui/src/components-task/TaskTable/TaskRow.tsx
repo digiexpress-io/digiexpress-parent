@@ -8,10 +8,11 @@ export interface TaskRowProps {
   row: TaskDescriptor;
   visibleColumns?: string[];
   children: React.ReactNode;
+  variant?: 'secondary'
 }
 
 export const TaskRow: React.FC<TaskRowProps> = React.memo((props) => {
-  return (<XTableRow>{props.children}</XTableRow>);
+  return (<XTableRow variant={props.variant}>{props.children}</XTableRow>);
 },
 (prevProps: Readonly<TaskRowProps>, nextProps: Readonly<TaskRowProps>) => {
   return (
