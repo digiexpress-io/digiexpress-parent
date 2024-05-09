@@ -8,9 +8,10 @@ import { XTableBodyProvider } from './XTableBodyContext';
 export interface XTableBodyProps {
   children: React.ReactNode;
   padding?: number;
+  alternate?: boolean | undefined;
 }
 
-export const XTableBody: React.FC<XTableBodyProps> = ({ children, padding }) => {
+export const XTableBody: React.FC<XTableBodyProps> = ({ children, padding, alternate }) => {
 
   const rows = React.Children.map(children, (child, _childIndex) => {
     if (!React.isValidElement(child)) {
@@ -20,7 +21,7 @@ export const XTableBody: React.FC<XTableBodyProps> = ({ children, padding }) => 
   }) ?? [];
 
   return (
-    <XTableBodyProvider padding={padding}>
+    <XTableBodyProvider padding={padding} alternate={alternate}>
       <TableBody>
         {rows.map((row, rowId) => <XTableRowProvider key={rowId} rowId={rowId}>{row}</XTableRowProvider>)}
         <XTableFillerRows rowsUsed={children} />

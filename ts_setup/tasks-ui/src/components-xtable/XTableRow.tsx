@@ -1,7 +1,8 @@
 import React from 'react';
-import { TableRow, SxProps } from '@mui/material';
+import { TableRow } from '@mui/material';
 import { cyan_mud } from 'components-colors';
 import { useXTableRow } from './XTableRowContext';
+import { useXTableBody } from './XTableBodyContext';
 
 export interface XTableRowProps {
   children: React.ReactNode
@@ -17,8 +18,9 @@ function getRowBackgroundColor(index: number): string {
 }
 
 export const XTableRow: React.FC<XTableRowProps> = ({ children }) => {
+  const { alternate } = useXTableBody();
   const { rowId, onStartHover, onEndHover } = useXTableRow();
-  const backgroundColor = getRowBackgroundColor(rowId);
+  const backgroundColor = alternate ? getRowBackgroundColor(rowId) : undefined;
 
   return (
     <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor }}>
