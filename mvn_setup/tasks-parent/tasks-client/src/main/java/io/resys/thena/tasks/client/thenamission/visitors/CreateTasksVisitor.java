@@ -41,10 +41,8 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
   public static final String ASSIGNMENT_TYPE_GOAL_USER = "goal_user";
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
   public static final String LABEL_TYPE_TASK = "task_label";
-  public static final String LINK_TYPE_TASK_EXTENSION = "task_extension";
+  public static final String LINK_TYPE_TASK_EXTENSION_BODY = null;
   
-  public static final String LINK_TYPE_TASK_EXTENSION_BODY = "body";
-  public static final String LINK_TYPE_TASK_EXTENSION_TYPE = "type";  
   
   public CreateTasksVisitor(List<? extends CreateTask> commands, TaskAccessEvaluator access) {
     super();
@@ -97,12 +95,9 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
     
     command.getExtensions().forEach(extension -> newMission.addLink(newLink -> 
       newLink
-      .linkType(LINK_TYPE_TASK_EXTENSION)
-      .linkValue(extension.getName())
-      .linkBody(JsonObject.of(
-          LINK_TYPE_TASK_EXTENSION_TYPE, extension.getType(),
-          LINK_TYPE_TASK_EXTENSION_BODY, extension.getBody()
-       ))
+      .linkType(extension.getType())
+      .linkValue(extension.getExternalId())
+      .linkBody(extension.getBody())
       .build()
     ));    
 
@@ -186,12 +181,11 @@ public class CreateTasksVisitor implements TaskStoreConfig.CreateManyTasksVisito
        .toList())
 
    .extensions(src.getLinks().values().stream()
-       .filter(e -> e.getLinkType().equals(LINK_TYPE_TASK_EXTENSION))
        .map(e -> ImmutableTaskExtension.builder()
            .id(e.getId())
-           .name(e.getExternalId())
-           .body(e.getLinkBody().getString(LINK_TYPE_TASK_EXTENSION_BODY))
-           .type(e.getLinkBody().getString(LINK_TYPE_TASK_EXTENSION_TYPE))
+           .externalId(e.getExternalId())
+           .type(e.getLinkType())
+           .body(e.getLinkBody())
            .created(e.getTransitives().getCreatedAt().toInstant())
            .updated(e.getTransitives().getUpdatedAt().toInstant())
            .build())

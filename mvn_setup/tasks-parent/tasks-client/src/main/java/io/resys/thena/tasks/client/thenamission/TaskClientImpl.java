@@ -31,19 +31,20 @@ import io.resys.thena.support.RepoAssert;
  */
 
 import io.resys.thena.tasks.client.api.TaskClient;
-import io.resys.thena.tasks.client.api.actions.TaskTenantsActions;
-import io.resys.thena.tasks.client.api.actions.TaskTenantQuery;
 import io.resys.thena.tasks.client.api.actions.TaskActions;
+import io.resys.thena.tasks.client.api.actions.TaskTenantQuery;
+import io.resys.thena.tasks.client.api.actions.TaskTenantsActions;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.TaskCommand.CreateTask;
 import io.resys.thena.tasks.client.api.model.TaskCommand.TaskUpdateCommand;
-import io.resys.thena.tasks.client.thenamission.visitors.GetArchivedTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.CreateTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.DeleteAllTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByAssigneesVisitor;
+import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByCustomerVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByIdVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksByRolesVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.FindAllTasksVisitor;
+import io.resys.thena.tasks.client.thenamission.visitors.GetArchivedTasksVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.GetOneTaskVisitor;
 import io.resys.thena.tasks.client.thenamission.visitors.UpdateTasksVisitor;
 import io.smallrye.mutiny.Uni;
@@ -97,6 +98,10 @@ public class TaskClientImpl implements TaskClient {
           @Override
           public Uni<List<Task>> findByRoles(Collection<String> roles) {
             return ctx.getConfig().accept(new FindAllTasksByRolesVisitor(roles, this.access));
+          }
+          @Override
+          public Uni<List<Task>> findByCustomer(String customerId) {
+            return ctx.getConfig().accept(new FindAllTasksByCustomerVisitor(customerId, this.access));
           }
           @Override
           public Uni<List<Task>> findByAssignee(Collection<String> assignees) {

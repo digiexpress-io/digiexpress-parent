@@ -55,9 +55,9 @@ export interface TaskTransaction {
 
 export interface TaskExtension {
   id: string;
-  type: 'dialob' | 'upload' | string;
-  name: string;
-  body: string;
+  type: 'dialob' | 'upload' | 'CUSTOMER' | string ;
+  externalId: string;
+  body?: {};
   created: string;
   updated: string;
 }

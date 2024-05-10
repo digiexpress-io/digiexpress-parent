@@ -16,6 +16,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.api.registry.grim.ImmutableGrimAssignmentFilter;
+import io.resys.thena.api.registry.grim.ImmutableGrimLinkFilter;
 import io.resys.thena.api.registry.grim.ImmutableGrimMissionFilter;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -62,6 +63,11 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   @Override
   public InternalMissionQuery addAssignment(String assignmentType, String assignmentValue) {
     builder.addAssignments(ImmutableGrimAssignmentFilter.builder().assignmentType(assignmentType).assignmentValue(assignmentValue).build());
+    return this;
+  }
+  @Override
+  public InternalMissionQuery addLink(String linkType, String extId) {
+    builder.addLinks(ImmutableGrimLinkFilter.builder().linkType(linkType).linkValue(extId).build());
     return this;
   }
   @Override

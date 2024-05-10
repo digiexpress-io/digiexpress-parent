@@ -1,3 +1,4 @@
+import { Task } from "descriptor-task";
 
 export type CustomerId = string;
 export type ExternalId = string; //ssn or business id
@@ -117,6 +118,7 @@ export interface ArchiveCustomer extends CustomerUpdateCommand<'ArchiveCustomer'
 
 export interface CustomerStore {
   findCustomers(searchString: string): Promise<Customer[]>
+  findCustomerTasks(id: CustomerId): Promise<Task[]>
   getCustomer(id: CustomerId): Promise<Customer>
 }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 
 import { moss, cyan } from 'components-colors';
-import { useAm } from 'descriptor-access-mgmt';
 import { CheckMarkButton, NavigationButton, NavigationSticky, useToggle } from 'components-generic';
 import { Palette, AssigneeGroupType, TaskDescriptor, ChangeTaskPriority, ChangeTaskDueDate, useTasks, ChangeChecklistItemDueDate, ChangeChecklistItemAssignees, ChangeChecklistItemCompleted } from 'descriptor-task';
 import { XPaper, XPaperTitle, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
@@ -17,8 +16,8 @@ import TaskDueDate from '../TaskDueDate';
 import TaskAssignees from '../TaskAssignees';
 import TaskPriority from '../TaskPriority';
 import { TaskCustomer } from './TaskCustomer';
-import { TaskTitle } from './TaskTitle';
-import TaskEditDialog from '../TaskEdit';
+
+import { TaskEditDialog } from '../TaskEdit';
 import { CustomerDetailsDialog } from 'components-customer';
 
 
@@ -82,7 +81,6 @@ const MyWorkNavigation: React.FC = () => {
 
 const MyTask: React.FC<{ task: TaskDescriptor, rowId: number }> = ({ task, rowId }) => {
   const tasks = useTasks();
-  const { iam } = useAm();
   const avatar = useAvatar(task.customerId);
   const editTask = useToggle();
   const editCustomer = useToggle();
@@ -136,7 +134,7 @@ const MyTask: React.FC<{ task: TaskDescriptor, rowId: number }> = ({ task, rowId
         </XTableHead>
         <XTableBody padding={1}>
           <TaskRow key={task.id + "main"} rowId={rowId} row={task}>
-            <XTableBodyCell id="title" colSpan={2} justifyContent='left' width="300px"><TaskTitle task={task} /></XTableBodyCell>
+            <XTableBodyCell id="title" colSpan={2} justifyContent='left' width="300px">{task.title}</XTableBodyCell>
             <XTableBodyCell id="description" justifyContent='left'>{task.description}</XTableBodyCell>
             <XTableBodyCell id="dueDate"><TaskDueDate task={task} onChange={handleDueDateChange} /></XTableBodyCell>
             <XTableBodyCell id="priority"><TaskPriority task={task} onChange={handlePriorityChange} /></XTableBodyCell>

@@ -21,6 +21,7 @@ public interface GrimQueryActions {
   
   interface MissionQuery {
     MissionQuery addAssignment(String assignementType, String assignmentId);
+    MissionQuery addLink(String linkType, String extId);
     MissionQuery viewer(String userBy, String usedFor);
     MissionQuery addMissionId(List<String> ids);
     MissionQuery archived(GrimArchiveQueryType includeArchived);

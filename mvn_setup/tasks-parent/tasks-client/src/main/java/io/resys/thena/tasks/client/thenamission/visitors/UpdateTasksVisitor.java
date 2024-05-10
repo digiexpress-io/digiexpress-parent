@@ -237,12 +237,9 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   private UpdateTasksVisitor visitCreateTaskExtension(CreateTaskExtension extension, MergeMission merge) {
     merge.addLink(newLink -> 
       newLink
-      .linkType(CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION)
-      .linkValue(extension.getName())
-      .linkBody(JsonObject.of(
-          CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION_TYPE, extension.getType(),
-          CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION_BODY, extension.getBody()
-       ))
+      .linkType(extension.getType())
+      .linkValue(extension.getExternalId())
+      .linkBody(extension.getBody())
       .build()
     );
     return this;
@@ -252,12 +249,9 @@ public class UpdateTasksVisitor implements MergeTasksVisitor<List<Task>> {
   
     merge.modifyLink(extension.getId(), newLink -> 
       newLink
-      .linkType(CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION)
-      .linkValue(extension.getName())
-      .linkBody(JsonObject.of(
-          CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION_TYPE, extension.getType(),
-          CreateTasksVisitor.LINK_TYPE_TASK_EXTENSION_BODY, extension.getBody()
-       ))
+      .linkType(extension.getType())
+      .linkValue(extension.getExternalId())
+      .linkBody(extension.getBody())
       .build()
     );
     return this;

@@ -5,7 +5,7 @@ import TestTask from './test_task_1.json';
 import DatePicker from '../DatePicker';
 import Checklist from '../Checklist';
 import { demoChecklist } from '../Checklist/checklist-demo';
-import TaskEditDialog from '../TaskEdit';
+import { TaskEditDialog } from '../TaskEdit';
 
 const Dev: React.FC = () => {
 

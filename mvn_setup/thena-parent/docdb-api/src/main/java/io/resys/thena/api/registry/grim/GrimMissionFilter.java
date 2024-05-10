@@ -13,6 +13,7 @@ import jakarta.annotation.Nullable;
 public interface GrimMissionFilter {
   Optional<List<String>> getMissionIds();
   List<GrimAssignmentFilter> getAssignments();
+  List<GrimLinkFilter> getLinks();
   @Nullable GrimArchiveQueryType getArchived();
 
   @Nullable String getReporterId();
@@ -26,5 +27,11 @@ public interface GrimMissionFilter {
   interface GrimAssignmentFilter {
     String getAssignmentType();
     String getAssignmentValue(); 
+  }
+  
+  @Value.Immutable
+  interface GrimLinkFilter {
+    String getLinkType();
+    String getLinkValue(); 
   }
 }

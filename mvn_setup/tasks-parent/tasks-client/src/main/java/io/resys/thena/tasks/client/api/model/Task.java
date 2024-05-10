@@ -32,6 +32,8 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.vertx.core.json.JsonObject;
+
 @Value.Immutable @JsonSerialize(as = ImmutableTask.class) @JsonDeserialize(as = ImmutableTask.class)
 public interface Task extends Serializable {
   String getId();
@@ -93,8 +95,8 @@ public interface Task extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableTaskExtension.class) @JsonDeserialize(as = ImmutableTaskExtension.class)
   interface TaskExtension extends Serializable, TaskItem {
     String getType(); //DIALOB, CUSTOMER
-    String getName();
-    String getBody();
+    String getExternalId();
+    @Nullable JsonObject getBody();
     Instant getCreated();
     Instant getUpdated();
   }

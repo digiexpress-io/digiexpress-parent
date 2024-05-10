@@ -23,7 +23,6 @@ public interface CrmRestApi {
   @GET @Path("customers") @Produces(MediaType.APPLICATION_JSON)
   Uni<List<Customer>> findAllCustomers();
   
-
   @GET @Path("customers/{customerId}") @Produces(MediaType.APPLICATION_JSON)
   Uni<Customer> getCustomerById(@PathParam("customerId") String customerId);
   
@@ -38,5 +37,4 @@ public interface CrmRestApi {
   
   @DELETE @Path("customers/{customerId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Customer> deleteCustomer(@PathParam("customerId") String customerId, CustomerUpdateCommand command);
-  
 }

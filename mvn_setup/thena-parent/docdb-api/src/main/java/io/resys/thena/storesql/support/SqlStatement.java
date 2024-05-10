@@ -48,6 +48,10 @@ public class SqlStatement {
     return this.result.toString();
   }
   
+  public boolean isEmpty() {
+    return this.result.isEmpty();
+  }
+  
   public static SqlStatement builder() {
     return new SqlStatement();
   } 

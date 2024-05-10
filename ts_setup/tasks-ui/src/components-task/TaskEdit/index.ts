@@ -1,4 +1,1 @@
-import { TaskEditDialog } from './TaskEditDialog';
-
-
-export default TaskEditDialog;
+export * from './TaskEditDialog';

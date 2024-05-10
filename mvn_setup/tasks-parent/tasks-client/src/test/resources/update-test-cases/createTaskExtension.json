@@ -36,8 +36,10 @@
       "targetDate" : "2023-01-02T02:01:00Z",
       "taskId" : "1_TASK",
       "type" : "attachment",
-      "name" : "attachment-1",
-      "body" : "attachment-body"
+      "externalId" : "attachment-1",
+      "body" : {
+        "x" : "attachment-body"
+      }
     } ]
   } ],
   "roles" : [ "admin-users", "view-only-users" ],
@@ -51,8 +53,10 @@
   "extensions" : [ {
     "id" : "3_TASK",
     "type" : "attachment",
-    "name" : "attachment-1",
-    "body" : "attachment-body",
+    "externalId" : "attachment-1",
+    "body" : {
+      "x" : "attachment-body"
+    },
     "created" : "2023-01-01T01:01:00Z",
     "updated" : "2023-01-01T01:01:00Z"
   } ],

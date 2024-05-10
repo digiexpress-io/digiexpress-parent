@@ -1,3 +1,4 @@
+import { Task } from 'descriptor-task';
 import type { CustomerStore, Customer, CustomerId } from './customer-types';
 
 export interface CustomerStoreConfig {
@@ -20,6 +21,9 @@ export class ImmutableCustomerStore implements CustomerStore {
 
   async getCustomer(id: CustomerId): Promise<Customer> {
     return await this._store.fetch<Customer>(`customers/${id}`, { repoType: 'CRM' });
+  }
+  async findCustomerTasks(id: CustomerId): Promise<Task[]> {
+    return await this._store.fetch<Task[]>(`customers/${id}/tasks`, { repoType: 'CRM' });
   }
   async findCustomers(searchString: string): Promise<Customer[]> {
     return await this._store.fetch<Customer[]>(`customers/search?name=${encodeURIComponent(searchString)}`, { repoType: 'CRM' });

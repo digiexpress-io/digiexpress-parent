@@ -31,6 +31,7 @@ public interface GrimQueries {
     InternalMissionQuery archived(GrimArchiveQueryType includeArchived); // true to exclude any tasks with archiveAt date present
     InternalMissionQuery missionId(String ...missionId); // multiple will be OR
     InternalMissionQuery addAssignment(String assignmentType, String assignmentValue); // multiple will be OR
+    InternalMissionQuery addLink(String linkType, String linkValue); // multiple will be OR
     
     InternalMissionQuery reporterId(String reporterId);
     InternalMissionQuery likeTitle(String likeTitle);

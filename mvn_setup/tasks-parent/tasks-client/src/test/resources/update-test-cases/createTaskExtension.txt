@@ -41,7 +41,7 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_MISSION_LINKS
-    {"id":"3_TASK","commitId":"6_TASK","createdWithCommitId":"6_TASK","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
+    {"id":"3_TASK","commitId":"6_TASK","createdWithCommitId":"6_TASK","missionId":"1_TASK","externalId":"attachment-1","linkType":"attachment","linkBody":{"x":"attachment-body"},"transitives":null,"relation":null}
 
  | deleted
   - deleted: 0 entries

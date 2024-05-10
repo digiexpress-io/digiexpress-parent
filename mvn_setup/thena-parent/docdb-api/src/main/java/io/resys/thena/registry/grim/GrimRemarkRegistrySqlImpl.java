@@ -92,7 +92,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
 
         .append("  LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
-        .append("  ON(remark.mission_id = mission.id)")
+        .append("  ON(remark.mission_id = mission.id)").ln()
         .append(where.getValue()) 
         .build())
         .props(where.getProps())

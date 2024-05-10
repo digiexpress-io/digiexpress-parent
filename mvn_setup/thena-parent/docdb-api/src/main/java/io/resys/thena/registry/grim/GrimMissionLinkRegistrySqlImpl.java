@@ -241,7 +241,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
         .append(" ON(created_commit.commit_id = links.created_commit_id)").ln()
         
         .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission")
-        .append(" ON(links.mission_id = mission.id)")
+        .append(" ON(links.mission_id = mission.id)").ln()
         .append(where.getValue()) 
         .build())
         .props(where.getProps())

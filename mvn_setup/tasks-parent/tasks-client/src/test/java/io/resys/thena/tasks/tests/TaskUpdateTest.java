@@ -42,7 +42,6 @@ import io.resys.thena.tasks.client.api.model.ImmutableChangeTaskStatus;
 import io.resys.thena.tasks.client.api.model.ImmutableCommentOnTask;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTask;
 import io.resys.thena.tasks.client.api.model.ImmutableCreateTaskExtension;
-import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.Task;
 import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.tests.config.TaskPgProfile;
@@ -374,8 +373,8 @@ public class TaskUpdateTest extends TaskTestCase {
                 .plus(1, java.time.temporal.ChronoUnit.HOURS)
             )
             .type("attachment")
-            .name("attachment-1")
-            .body("attachment-body")
+            .externalId("attachment-1")
+            .body(JsonObject.of("x", "attachment-body"))
             .build())
         .await().atMost(atMost);
 
@@ -398,8 +397,8 @@ public class TaskUpdateTest extends TaskTestCase {
                 .plus(1, java.time.temporal.ChronoUnit.HOURS)
             )
             .type("attachment")
-            .name("attachment-1")
-            .body("attachment-body")
+            .externalId("attachment-1")
+            .body(JsonObject.of("x", "attachment-body"))
             .build())
         .await().atMost(atMost)
         .getExtensions().stream().findFirst().get();
@@ -414,8 +413,8 @@ public class TaskUpdateTest extends TaskTestCase {
             )
             .id(createdExt.getId())
             .type("attachment")
-            .name("attachment-1")
-            .body("new-attachment-body")
+            .externalId("attachment-1")
+            .body(JsonObject.of("x", "attachment-body"))
             .build())
         .await().atMost(atMost);
 

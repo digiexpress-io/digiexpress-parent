@@ -42,6 +42,7 @@ import io.resys.thena.tasks.client.api.model.Task.Priority;
 import io.resys.thena.tasks.client.api.model.Task.Status;
 import io.resys.thena.tasks.client.api.model.Task.TaskComment;
 import io.resys.thena.tasks.client.api.model.Task.TaskExtension;
+import io.vertx.core.json.JsonObject;
 
 
 @JsonTypeInfo(
@@ -315,8 +316,8 @@ public interface TaskCommand extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableCreateTaskExtension.class) @JsonDeserialize(as = ImmutableCreateTaskExtension.class)
   interface CreateTaskExtension extends TaskUpdateCommand {
     String getType();
-    String getName();
-    String getBody();
+    String getExternalId();
+    @Nullable JsonObject getBody();
     @Override default TaskCommandType getCommandType() { return TaskCommandType.CreateTaskExtension; }
   }
 
@@ -324,8 +325,8 @@ public interface TaskCommand extends Serializable {
   interface ChangeTaskExtension extends TaskUpdateCommand {
     String getId();
     String getType();
-    String getName();
-    String getBody();
+    String getExternalId();
+    @Nullable JsonObject getBody();
     @Override default TaskCommandType getCommandType() { return TaskCommandType.ChangeTaskExtension; }
   }
 }

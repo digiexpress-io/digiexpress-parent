@@ -9,7 +9,7 @@ import { useTableCellPopover } from 'components-generic';
 import { CustomerDetailsDialog } from 'components-customer';
 
 
-import TaskEditDialog from '../TaskEdit';
+import { TaskEditDialog } from '../TaskEdit';
 import { cyan } from '@mui/material/colors';
 
 

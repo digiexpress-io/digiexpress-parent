@@ -14,7 +14,7 @@ interface Message {
   representerName?: string
   text: string
   date: Date
-  attachments: TaskExtension[]
+  attachments: any[]
   read: boolean
   replyToId?: string
 }

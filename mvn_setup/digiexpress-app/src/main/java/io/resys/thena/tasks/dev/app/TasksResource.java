@@ -29,11 +29,11 @@ import jakarta.ws.rs.Path;
 @Singleton
 public class TasksResource implements TaskRestApi {
 
-  @Inject private TaskClient tasks;
-  @Inject private CurrentTenant currentTenant;
-  @Inject private CurrentUser currentUser;
-  @Inject private ProjectClient tenantClient;
-  @Inject private SecurityPolicyData accessPolicy;
+  @Inject TaskClient tasks;
+  @Inject CurrentTenant currentTenant;
+  @Inject CurrentUser currentUser;
+  @Inject ProjectClient tenantClient;
+  @Inject SecurityPolicyData accessPolicy;
   
   @Override
   public Uni<List<Task>> findTasks() {

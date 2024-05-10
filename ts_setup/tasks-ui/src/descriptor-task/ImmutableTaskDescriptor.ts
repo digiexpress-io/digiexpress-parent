@@ -24,8 +24,8 @@ class ImmutableTaskDescriptor implements TaskDescriptor {
     this._startDate = entry.startDate ? new Date(entry.startDate) : undefined;
     this._dueDate = entry.dueDate ? new Date(entry.dueDate) : undefined;
     this._daysUntilDue = entry.dueDate ? getDaysUntilDue(entry, today) : undefined;
-    this._dialobId = entry.extensions.find(t => t.type === 'dialob')?.body;
-    this._customerId = entry.extensions.find(t => t.type === 'CUSTOMER')?.body;
+    this._dialobId = entry.extensions.find(t => t.type === 'DIALOB')?.externalId;
+    this._customerId = entry.extensions.find(t => t.type === 'CUSTOMER')?.externalId;
     this._uploads = entry.extensions.filter(t => t.type === 'upload');
     this._myWorkType = getMyWorkType(entry, profile, today);
     this._teamspaceType = getTeamspaceType(entry, profile, today);

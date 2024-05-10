@@ -175,8 +175,7 @@ public class RandomDataProvider {
     final var dialob = ImmutableTaskExtension.builder()
       .id(UUID.randomUUID().toString())
       .type("dialob")
-      .body("dialob-content")
-      .name("dialob-form")
+      .externalId("dialob-form")
       .created(Instant.now())
       .updated(Instant.now())
       .build();
@@ -184,8 +183,7 @@ public class RandomDataProvider {
       final var pdf = ImmutableTaskExtension.builder()
           .id(UUID.randomUUID().toString())
           .type("upload")
-          .body("")
-          .name(DOCS.get(nextInt(1, DOCS.size()) -1))
+          .externalId(DOCS.get(nextInt(1, DOCS.size()) -1))
           .created(Instant.now())
           .updated(Instant.now())
           .build();

@@ -21,7 +21,6 @@ import io.smallrye.mutiny.tuples.Tuple2;
 public class TaskGen {
 
   public List<UpsertSuomiFiPerson> generateCustomers(List<Integer> windows) {
-    final var targetDate = Instant.now();
     final var provider =  new RandomDataProvider();  
     return windows.stream().map(junk -> {
       final var person = provider.person();
@@ -75,8 +74,7 @@ public class TaskGen {
               .created(targetDate)
               .updated(targetDate)
               .type(TaskExtensionType.CUSTOMER.name())
-              .name("crm-link")
-              .body(customer.getId())
+              .externalId(customer.getId())
               .build())
           .build();
         bulkTasks.add(newTask);

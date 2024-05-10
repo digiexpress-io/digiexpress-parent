@@ -1,34 +1,34 @@
 
 Repo
-  - id: 11, rev: 12
-    name: TaskUpdateTestUpdateTaskExtension, prefix: 13, type: grim
+  - id: 10, rev: 11
+    name: TaskUpdateTestUpdateTaskExtension, prefix: 12, type: grim
 Mission: 1_TASK
   - 4_TASK::GRIM_COMMANDS
   - 5_TASK::GRIM_COMMANDS
   - 6_TASK::GRIM_COMMANDS
+  - 17::GRIM_ASSIGNMENT
   - 18::GRIM_ASSIGNMENT
   - 19::GRIM_ASSIGNMENT
   - 20::GRIM_ASSIGNMENT
-  - 21::GRIM_ASSIGNMENT
-  - 22::GRIM_MISSION_DATA
+  - 21::GRIM_MISSION_DATA
   - 3_TASK::GRIM_MISSION_LINKS
 
 commit: 2_TASK, tenant: TaskUpdateTestUpdateTaskExtension
 author: not-configured, message: Creating tasks by: CreateTasksVisitor
  | created
   + added new: 6 entries
-  + 20::GRIM_ASSIGNMENT
-    {"id":"20","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-1","assignmentType":"task_user","relation":null}
-  + 21::GRIM_ASSIGNMENT
-    {"id":"21","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-2","assignmentType":"task_user","relation":null}
-  + 18::GRIM_ASSIGNMENT
-    {"id":"18","commitId":"2_TASK","missionId":"1_TASK","assignee":"admin-users","assignmentType":"task_role","relation":null}
   + 19::GRIM_ASSIGNMENT
-    {"id":"19","commitId":"2_TASK","missionId":"1_TASK","assignee":"view-only-users","assignmentType":"task_role","relation":null}
+    {"id":"19","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-1","assignmentType":"task_user","relation":null}
+  + 20::GRIM_ASSIGNMENT
+    {"id":"20","commitId":"2_TASK","missionId":"1_TASK","assignee":"assignee-2","assignmentType":"task_user","relation":null}
+  + 17::GRIM_ASSIGNMENT
+    {"id":"17","commitId":"2_TASK","missionId":"1_TASK","assignee":"admin-users","assignmentType":"task_role","relation":null}
+  + 18::GRIM_ASSIGNMENT
+    {"id":"18","commitId":"2_TASK","missionId":"1_TASK","assignee":"view-only-users","assignmentType":"task_role","relation":null}
   + 1_TASK::GRIM_MISSION
     {"id":"1_TASK","commitId":"2_TASK","createdWithCommitId":"2_TASK","updatedTreeWithCommitId":"2_TASK","parentMissionId":null,"externalId":null,"missionStatus":"CREATED","missionPriority":"LOW","reporterId":"reporter-1","startDate":null,"dueDate":null,"archivedAt":null,"archivedStatus":null}
-  + 22::GRIM_MISSION_DATA
-    {"id":"22","commitId":"2_TASK","createdWithCommitId":"2_TASK","missionId":"1_TASK","createdAt":null,"updatedAt":null,"title":"very important title no: init","description":"first task ever no: init","dataExtension":null,"relation":null}
+  + 21::GRIM_MISSION_DATA
+    {"id":"21","commitId":"2_TASK","createdWithCommitId":"2_TASK","missionId":"1_TASK","createdAt":null,"updatedAt":null,"title":"very important title no: init","description":"first task ever no: init","dataExtension":null,"relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -37,12 +37,12 @@ author: not-configured, message: Creating tasks by: CreateTasksVisitor
   +- merged: 0 entries
 
 
-commit: 15, tenant: TaskUpdateTestUpdateTaskExtension
+commit: 14, tenant: TaskUpdateTestUpdateTaskExtension
 author: not-configured, message: merging tasks from: UpdateTasksVisitor
  | created
   + added new: 1 entries
   + 3_TASK::GRIM_MISSION_LINKS
-    {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"attachment-body"},"transitives":null,"relation":null}
+    {"id":"3_TASK","commitId":"14","createdWithCommitId":"14","missionId":"1_TASK","externalId":"attachment-1","linkType":"attachment","linkBody":{"x":"attachment-body"},"transitives":null,"relation":null}
 
  | deleted
   - deleted: 0 entries
@@ -60,10 +60,5 @@ author: not-configured, message: merging tasks from: UpdateTasksVisitor
   - deleted: 0 entries
 
  | merged
-  +- merged: 1 entries
-  +- 3_TASK::GRIM_MISSION_LINKS
-   -  {"id":"3_TASK","commitId":"15","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"body":"attachment-body","type":"attachment"},"transitives":null,"relation":null}
-   +  {"id":"3_TASK","commitId":"7_TASK","createdWithCommitId":"15","missionId":"1_TASK","externalId":"attachment-1","linkType":"task_extension","linkBody":{"type":"attachment","body":"new-attachment-body"},"transitives":null,"relation":null}
-   diff: commitId :: 15 -> 7_TASK
-   diff: linkBody :: {body=attachment-body, type=attachment} -> {"type":"attachment","body":"new-attachment-body"}
+  +- merged: 0 entries
 

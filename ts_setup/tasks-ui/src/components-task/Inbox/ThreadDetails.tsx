@@ -178,7 +178,7 @@ const AttachmentListItem: React.FC<{ attachment: TaskExtension }> = ({ attachmen
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {icon}
           <Box>
-            <PaddedTypography>{attachment.name}</PaddedTypography>
+            <PaddedTypography>{attachment.externalId}</PaddedTypography>
             <PaddedTypography>{attachment.created}</PaddedTypography>
           </Box>
         </Box>

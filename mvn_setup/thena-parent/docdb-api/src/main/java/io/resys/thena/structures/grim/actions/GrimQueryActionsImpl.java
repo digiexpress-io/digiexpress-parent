@@ -30,6 +30,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   @Override
   public MissionQuery missionQuery() {
     final var assignments = new ArrayList<Tuple2<String, String>>();
+    final var links = new ArrayList<Tuple2<String, String>>();
     return new MissionQuery() {
       private String usedBy, usedFor, reporterId, likeTitle, likeDescription;
       private List<String> ids;
@@ -46,6 +47,11 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       @Override
       public MissionQuery addAssignment(String assignementType, String assignmentId) {
         assignments.add(Tuple2.of(assignementType, assignmentId));
+        return this;
+      }
+      @Override
+      public MissionQuery addLink(String linkType, String extId) {
+        links.add(Tuple2.of(linkType, extId));
         return this;
       }
       @Override
@@ -88,6 +94,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           }
           
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
+          links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
           return query
               .reporterId(reporterId)
               .archived(includeArchived)
@@ -114,7 +121,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           if(this.ids != null) {
             query.missionId(this.ids.toArray(new String[] {}));
           }
-
+          links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
           return query
               .reporterId(reporterId)

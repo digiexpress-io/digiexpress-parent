@@ -7,7 +7,7 @@ Branches
     branch id: 3
     doc id: 2
     commit id: 4
-    {"id":"2","created":null,"details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"},"updated":null,"version":null,"uiSettings":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
+    {"id":"2","created":null,"details":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"},"updated":null,"version":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}
 
 Commands
   - commands for doc: 2
@@ -27,7 +27,7 @@ author: not-configured, message: creating user profile
   + 2::DOC
     {"id":"2","type":"USER_PROFILE","status":"IN_FORCE","externalId":"2","commitId":"4","createdWithCommitId":"4","ownerId":null,"parentId":null,"meta":null}
   + 3::DOC_BRANCH_PATCH
-    {"id":"3","patchValue":[{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"username":"jerryspringer","firstName":"Jerry","lastName":"Springer","email":"jerry@thejerryspringershow.com"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null},{"op":"add","path":"/uiSettings","value":null}],"docType":"DOC_BRANCH_PATCH"}
+    {"id":"3","patchValue":[{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"username":"jerryspringer","firstName":"Jerry","lastName":"Springer","email":"jerry@thejerryspringershow.com"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null}],"docType":"DOC_BRANCH_PATCH"}
   + 5::DOC_COMMANDS
     {"id":"5","commitId":"4","docId":"2","branchId":"3","createdBy":"not-configured","commands":[{"commandType":"CreateUserProfile","id":"2","username":"jerryspringer","firstName":"Jerry","lastName":"Springer","colorCode":null,"letterCode":null,"displayName":null,"email":"jerry@thejerryspringershow.com","notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}]}
 
@@ -45,6 +45,6 @@ Logs
   - id: 8::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"4","branchName":"main","createdWithCommitId":"4"}
   - id: 9::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null},{"op":"add","path":"/uiSettings","value":null}]    log before: null    log after: null
+    log patch: [{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/details","value":{"email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","firstName":"Jerry"}},{"op":"add","path":"/notificationSettings","value":[{"type":"TASK_ASSIGNED","enabled":true}]},{"op":"add","path":"/version","value":null},{"op":"add","path":"/created","value":null},{"op":"add","path":"/updated","value":null}]    log before: null    log after: null
   - id: 10::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"5","docId":"2","branchId":"3","commands":[{"id":"2","email":"jerry@thejerryspringershow.com","lastName":"Springer","username":"jerryspringer","colorCode":null,"firstName":"Jerry","letterCode":null,"commandType":"CreateUserProfile","displayName":null,"notificationSettings":[{"type":"TASK_ASSIGNED","enabled":true}]}],"commitId":"4","createdBy":"not-configured"}

@@ -55,6 +55,7 @@ public interface TaskActions {
   interface ActiveTasksQuery {
     ActiveTasksQuery evalAccess(TaskAccessEvaluator eval);
     Uni<List<Task>> findAll();
+    Uni<List<Task>> findByCustomer(String customerId);
     Uni<List<Task>> findByTaskIds(Collection<String> taskIds);
     Uni<List<Task>> findByRoles(Collection<String> roles);
     Uni<List<Task>> findByAssignee(Collection<String> assignees);

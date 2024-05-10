@@ -3,6 +3,7 @@ package io.resys.thena.registry.grim;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
@@ -22,19 +23,30 @@ public class GrimMissionSqlFilterBuilder {
     int index = 1;
     final var params = new ArrayList<Object>();
     final var builder = new SqlStatement();
+    final Supplier<Void> and = () -> {
+      if(!builder.isEmpty()) {
+        builder.ln().append(" AND ");
+      }
+      return null;
+    };
+    
+    
     // by id
     if(filter.getMissionIds().isPresent()) {
       builder.append(" mission.id = ANY($").append(index++).append(")").ln();
       params.add(filter.getMissionIds().get().toArray());
     }
     if(GrimArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
+      and.get();
       builder.append(" mission.archived_at is NOT NULL").ln();      
     } else if(GrimArchiveQueryType.ONLY_IN_FORCE.equals(filter.getArchived())) {
+      and.get();
       builder.append(" mission.archived_at is NULL").ln();
     }
     
     // created/updated
     if(filter.getFromCreatedOrUpdated() != null) {
+      and.get();
       builder
       .append(" (")
       .append("  exists(")
@@ -56,6 +68,7 @@ public class GrimMissionSqlFilterBuilder {
 
     // meta
     if(filter.getLikeTitle() != null || filter.getLikeDescription() != null) {
+      and.get();
       builder
       .append("  exists(")
       .append("    select id from ").append(options.getGrimMissionData()).append(" as meta_filter").ln()
@@ -82,6 +95,7 @@ public class GrimMissionSqlFilterBuilder {
     
     // assignments
     if(!filter.getAssignments().isEmpty()) {
+      and.get();
       builder
       .append("  exists(")
       .append("    select id from ").append(options.getGrimAssignment()).append(" as assignment_filter")
@@ -93,10 +107,33 @@ public class GrimMissionSqlFilterBuilder {
         builder
           .append(appendOr ? " OR" : "")
           .append(" (assignee = $").append(index++).ln()
-          .append(" and assignment_type = $)").append(index++).ln();
+          .append(" and assignment_type = $").append(index++).append(")").ln();
         
         params.add(assignment.getAssignmentValue());
         params.add(assignment.getAssignmentType());
+        appendOr = true;
+      }
+      builder.append("  ))");
+    }
+    
+    // link
+    if(!filter.getLinks().isEmpty()) {
+      and.get();
+      builder
+      .append("  exists(")
+      .append("    select id from ").append(options.getGrimMissionLink()).append(" as link_filter")
+      .append("    where link_filter.mission_id = mission.id")
+      .append("    and(");
+      
+      var appendOr = false;
+      for(final var link: filter.getLinks()) {       
+        builder
+          .append(appendOr ? " OR" : "")
+          .append(" (link_type = $").append(index++)
+          .append(" and external_id = $").append(index++).append(")").ln();
+        
+        params.add(link.getLinkType());
+        params.add(link.getLinkValue());
         appendOr = true;
       }
       builder.append("  ))");
