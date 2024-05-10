@@ -1,4 +1,2 @@
-import CustomerDetailsDialog from "./CustomerDetailsDialog";
-
-
-export { CustomerDetailsDialog };
+export * from "./CustomerDetailsDialog";
+export * from "./CustomerAvatar";

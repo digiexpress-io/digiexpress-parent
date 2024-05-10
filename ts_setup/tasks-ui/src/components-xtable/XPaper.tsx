@@ -6,7 +6,7 @@ import { XPaperProvider } from './XPaperContext';
 export interface XPaperProps {
   color?: string | undefined;
   uuid: string; 
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const XPaper: React.FC<XPaperProps> = ({ color, children, uuid }) => {

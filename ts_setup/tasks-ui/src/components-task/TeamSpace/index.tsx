@@ -1,24 +1,21 @@
 import React from 'react';
-
+import { Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { cyan, orange } from 'components-colors';
 import { NavigationButton, NavigationSticky } from 'components-generic';
 import { XPagination, XPaper, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
 import { AssignTask, ChangeTaskDueDate, ChangeTaskPriority, ChangeTaskStatus, Palette, TaskDescriptor, TeamGroupType, useTasks } from 'descriptor-task';
+import { PrincipalId, useAm } from 'descriptor-access-mgmt';
 
-import { TaskCustomer, TaskRow, TaskRowMenu, TaskTAndD } from '../TaskTable';
+import { TaskRow, TaskRowMenu, TaskTAndD } from '../TaskTable';
 import TaskCreateDialog from '../TaskCreate';
 import { TeamSpaceProvider, useTeamSpace } from './TeamSpaceContext';
 import TaskAssignees from '../TaskAssignees';
 import TaskDueDate from '../TaskDueDate';
 import TaskPriority from '../TaskPriority';
 import TaskStatus from '../TaskStatus';
-
-
-import { PrincipalId, useAm } from 'descriptor-access-mgmt';
-import { Box } from '@mui/material';
-
+import { CustomerAvatar } from 'components-customer';
 
 
 const TeamSpaceNavigation: React.FC = () => {
@@ -119,7 +116,7 @@ const TeamSpaceLayout: React.FC = () => {
         <XTableBody padding={1}>
           {content.entries.map((row, rowId) => (
             <TaskRow key={row.id} rowId={rowId} row={row}>
-              <XTableBodyCell id="customerId" justifyContent='left' maxWidth={"200px"} ><TaskCustomer task={row} /></XTableBodyCell>
+              <XTableBodyCell id="customerId" justifyContent='left' maxWidth={"200px"} ><CustomerAvatar customerId={row.customerId} /></XTableBodyCell>
               <XTableBodyCell id="title" justifyContent='left' maxWidth={"300px"}><TaskTAndD task={row} /></XTableBodyCell>
               <XTableBodyCell id="dueDate">
                 <Box display="flex" flexDirection="column">

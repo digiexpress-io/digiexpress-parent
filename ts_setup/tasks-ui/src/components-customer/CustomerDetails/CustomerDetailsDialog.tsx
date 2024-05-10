@@ -72,7 +72,7 @@ const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   )
 }
 
-const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, customer: string | undefined }> = (props) => {
+export const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, customer: string | undefined }> = (props) => {
   const tasks = useTasks();
   const backend = Backend.useBackend();
   const [customer, setCustomer] = React.useState<CustomerDescriptor>();
@@ -109,4 +109,3 @@ const CustomerDetailsDialog: React.FC<{ open: boolean, onClose: () => void, cust
   );
 }
 
-export default CustomerDetailsDialog;

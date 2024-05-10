@@ -1,11 +1,10 @@
 import React from 'react';
 
 
-import { Avatar, Box, Button, Typography } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import { TaskDescriptor } from 'descriptor-task';
 import { FormattedMessage } from 'react-intl';
-import { useCustomer } from '../TaskTable';
-import Customer from 'components-customer';
+import { useCustomer } from 'components-customer';
 
 
 

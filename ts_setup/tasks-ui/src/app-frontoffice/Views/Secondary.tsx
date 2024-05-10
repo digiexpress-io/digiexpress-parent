@@ -126,7 +126,7 @@ export function useSecondary() {
   const [active, setActive] = React.useState<string>(session.currentValue);
 
   const callbacks = {
-    crm: function () { session.setNextValue('customerSearch'); actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) },
+    customerSearch: function () { session.setNextValue('customerSearch'); actions.handleTabAdd({ id: 'customerSearch', label: <FormattedMessage id="activities.frontoffice.customerSearch.title" /> }) },
     stencil: function () { app.changeApp("stencil") },
     hdes: function () { app.changeApp("hdes") },
     dialob: function () { session.setNextValue('dialob'); actions.handleTabAdd({ id: 'dialob', label: <FormattedMessage id="activities.frontoffice.dialob.title" /> }) },
@@ -163,12 +163,15 @@ export const Secondary: React.FC<{}> = () => {
   const { callbacks, active, setActive } = useSecondary();
   function handleActive(_event: React.SyntheticEvent, newValue: string) { setActive(newValue) }
 
+  
 
   React.useEffect(() => {
     if (session.currentValue) {
       const key: string = session.currentValue;
       const init = Object.entries(callbacks).filter(([name]) => name === key);
+
       if (init.length) {
+
         handleActive({} as any, key)
       }
     }
@@ -211,7 +214,7 @@ export const Secondary: React.FC<{}> = () => {
         <StyledExplorerSubTab
           value='customerSearch'
           label={<FormattedMessage id="explorer.frontoffice.crm.customerSearch.menuOption" />}
-          onClick={callbacks.crm}
+          onClick={callbacks.customerSearch}
           icon={<SearchIcon fontSize='small' />} />
 
 

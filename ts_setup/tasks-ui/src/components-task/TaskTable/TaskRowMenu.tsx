@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { TaskDescriptor } from 'descriptor-task';
 import { useTableCellPopover } from 'components-generic';
-import Customer from 'components-customer';
+import { CustomerDetailsDialog } from 'components-customer';
 
 
 import TaskEditDialog from '../TaskEdit';
@@ -63,7 +63,7 @@ export const TaskRowMenu: React.FC<{
   return (
     <>
       <TaskEditDialog open={edit} onClose={handleEndEdit} task={row} />
-      <Customer.CustomerDetailsDialog open={crm} onClose={handleCrm} customer={row.customerId} />
+      <CustomerDetailsDialog open={crm} onClose={handleCrm} customer={row.customerId} />
 
       <Popover.Delegate>
         <MenuList dense>

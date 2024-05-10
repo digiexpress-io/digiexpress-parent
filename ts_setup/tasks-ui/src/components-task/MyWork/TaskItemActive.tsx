@@ -11,10 +11,11 @@ import TaskEditDialog from '../TaskEdit';
 
 
 import { TaskDescriptor, ChangeTaskStatus, AssignTaskRoles, AssignTask, useTasks } from 'descriptor-task';
-import Customer from 'components-customer';
+
 import Burger from 'components-burger';
 import { cyan } from 'components-colors';
 import { PrincipalId } from 'descriptor-access-mgmt';
+import { CustomerDetailsDialog } from 'components-customer';
 
 
 
@@ -100,7 +101,7 @@ const TaskItemActive: React.FC<{ task: TaskDescriptor | undefined }> = ({ task }
     const alert = getTaskAlert(task);
 
     return (<>
-      <Customer.CustomerDetailsDialog open={crmOpen} onClose={handleCrm} customer={task.customerId} />
+      <CustomerDetailsDialog open={crmOpen} onClose={handleCrm} customer={task.customerId} />
       <TaskEditDialog open={taskEditOpen} onClose={handleTaskEdit} task={task} />
 
       <StyledStack>

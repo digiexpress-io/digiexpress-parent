@@ -6,7 +6,7 @@ import Burger from 'components-burger';
 import { CurrentTenant, DialobList } from 'components-dialob';
 import SysConfig from 'components-release-mgmt';
 import Tasks from 'components-task';
-import Customer from 'components-customer';
+import { CustomerSearch } from 'components-customer';
 import OrgChart from 'components-org-chart';
 import { CurrentUserProfile, UserProfiles } from 'components-user-profile';
 import { RolesOverview, PermissionsOverview, PrincipalsOverview } from 'components-access-mgmt';
@@ -44,7 +44,7 @@ const Main: React.FC<{}> = () => {
     } else if (active.id === 'myoverview') {
       return (<Box sx={root}><Tasks.MyOverview /></Box>)
     } else if (active.id === 'customerSearch') {
-      return (<Box sx={root}><Customer.CustomerSearch /></Box>);
+      return (<Box sx={root}><CustomerSearch /></Box>);
     } else if (active.id === 'dialob') {
       return (<Box sx={root}><DialobList /></Box>);
     } else if (active.id === 'deployments') {

@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button, ButtonGroup } from '@mui/material';
 
 import { moss, cyan } from 'components-colors';
-import Customer from 'components-customer';
 import { useAm } from 'descriptor-access-mgmt';
 import { CheckMarkButton, NavigationButton, NavigationSticky, useToggle } from 'components-generic';
 import { Palette, AssigneeGroupType, TaskDescriptor, ChangeTaskPriority, ChangeTaskDueDate, useTasks, ChangeChecklistItemDueDate, ChangeChecklistItemAssignees, ChangeChecklistItemCompleted } from 'descriptor-task';
@@ -20,6 +19,7 @@ import TaskPriority from '../TaskPriority';
 import { TaskCustomer } from './TaskCustomer';
 import { TaskTitle } from './TaskTitle';
 import TaskEditDialog from '../TaskEdit';
+import { CustomerDetailsDialog } from 'components-customer';
 
 
 
@@ -110,7 +110,7 @@ const MyTask: React.FC<{ task: TaskDescriptor, rowId: number }> = ({ task, rowId
 
   return (<>
     <TaskEditDialog open={editTask.open} onClose={editTask.handleEnd} task={task} />
-    <Customer.CustomerDetailsDialog open={editCustomer.open} onClose={editCustomer.handleEnd} customer={task.customerId} />
+    <CustomerDetailsDialog open={editCustomer.open} onClose={editCustomer.handleEnd} customer={task.customerId} />
 
     <XPaper uuid={`MyWork.all_tasks`} color={avatar?.colorCode ?? ""}>
       <XPaperTitle variant='no-spacing'>

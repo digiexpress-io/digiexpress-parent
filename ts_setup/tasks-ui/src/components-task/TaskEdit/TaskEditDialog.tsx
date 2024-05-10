@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, List, Button, Typography, Stack } from '@mui/material';
-import CrmIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import { Box, List, Typography, Stack } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -95,7 +94,6 @@ const Header: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 const Footer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
-      <Button startIcon={<CrmIcon />} variant='contained' color='warning'><FormattedMessage id='core.taskEdit.clientData' /></Button>
       <Burger.PrimaryButton label='buttons.close' onClick={onClose} />
     </>
   )

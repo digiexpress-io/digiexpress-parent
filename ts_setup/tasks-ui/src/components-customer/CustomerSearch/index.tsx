@@ -1,1 +1,1 @@
-export * from './CustomerTable';
+export * from './CustomerSearch';

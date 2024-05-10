@@ -56,7 +56,7 @@ export const XTableHeader: React.FC<{
     return null;
   }
 
-  if(!sortable) {
+  if(!onSort) {
     return (<XTableCell align='left' colSpan={colSpan}>{children}</XTableCell>)
   }
 

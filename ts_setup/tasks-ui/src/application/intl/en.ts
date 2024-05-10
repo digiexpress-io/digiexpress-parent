@@ -50,7 +50,7 @@ const en = {
   'customertable.header.lastLogin': 'Last login',
   'customertable.header.tasks': 'Tasks',
   'customertable.search.customerCount': 'Count',
-
+  'customertable.header.displayName': 'Name',
 
   'dialob.form.created': 'Created',
   'dialob.form.lastSaved': 'Last saved',
