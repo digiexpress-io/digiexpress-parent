@@ -4,7 +4,6 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FormattedMessage } from 'react-intl';
 
-import Backend from 'descriptor-backend';
 import { 
   TaskUpdateCommand, ChangeChecklistItemCompleted, ChangeChecklistTitle,
   DeleteChecklistItem, ChangeChecklistItemTitle, ChangeChecklistItemDueDate,
@@ -18,8 +17,8 @@ import {
 import Burger from 'components-burger';
 import { cyan, cyan_mud } from 'components-colors';
 
-import TaskAssignees from '../TaskAssignees';
-import DueDate from '../TaskDueDate';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskDueDate } from '../TaskDueDate';
 
 
 
@@ -225,7 +224,7 @@ const TaskChecklist: React.FC<{ onChange: (commands: TaskUpdateCommand<any>[]) =
               <Typography fontWeight='bolder'><FormattedMessage id='task.checklist.item.dueDate' /></Typography>
             </Grid>
             <Grid item md={10} lg={10}>
-              <DueDate
+              <TaskDueDate
                 disabled={item.completed}
                 task={{ dueDate: item.dueDate ? new Date(item.dueDate) : undefined }}
                 onChange={(dueDate) => handleDueDateChange(dueDate, checklist.id, item.id)} />

@@ -3,25 +3,25 @@ import { Chip, MenuItem, List, Box, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 
-import { TaskDescriptor, Palette, TaskStatus, ChangeTaskStatus } from 'descriptor-task';
+import { TaskDescriptor, Palette, TaskStatus as TaskStatusType, ChangeTaskStatus } from 'descriptor-task';
 import { usePopover, TablePopover } from '../TablePopover';
 
 const statusColors = Palette.status;
-const statusOptions: TaskStatus[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
+const statusOptions: TaskStatusType[] = ['CREATED', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'];
 
-function getActiveColor(currentlyShowing: TaskStatus, status: TaskStatus): string {
-  const selectedTaskStatusColor = statusColors.IN_PROGRESS;
-  const color = status === currentlyShowing ? selectedTaskStatusColor : "unset";
+function getActiveColor(currentlyShowing: TaskStatusType, status: TaskStatusType): string {
+  const selectedTaskStatusTypeColor = statusColors.IN_PROGRESS;
+  const color = status === currentlyShowing ? selectedTaskStatusTypeColor : "unset";
   return color;
 }
 
-const TaskStatusChip: React.FC<{ task: TaskDescriptor, onChange: (command: ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
+export const TaskStatus: React.FC<{ task: TaskDescriptor, onChange: (command: ChangeTaskStatus) => Promise<void> }> = ({ task, onChange }) => {
   const status = task.status;
   const intl = useIntl();
   const Popover = usePopover();
   const statusLabel = intl.formatMessage({ id: `tasktable.header.spotlight.status.${status}` }).toUpperCase();
 
-  async function handleStatusChange(newStatus: TaskStatus) {
+  async function handleStatusChange(newStatus: TaskStatusType) {
     const command: ChangeTaskStatus = {
       commandType: 'ChangeTaskStatus',
       status: newStatus,
@@ -37,7 +37,7 @@ const TaskStatusChip: React.FC<{ task: TaskDescriptor, onChange: (command: Chang
       />
       <TablePopover onClose={Popover.onClose} anchorEl={Popover.anchorEl} open={Popover.open}>
         <List dense sx={{ py: 0 }}>
-          {statusOptions.map((option: TaskStatus) => (
+          {statusOptions.map((option: TaskStatusType) => (
             <MenuItem key={option} onClick={() => handleStatusChange(option)} sx={{ display: "flex", pl: 0, py: 0 }}>
               <Box sx={{ width: 8, height: 40, backgroundColor: statusColors[option] }} />
               <Box sx={{ width: 8, height: 8, borderRadius: "50%", mx: 2, backgroundColor: getActiveColor(option, status) }} />
@@ -49,5 +49,3 @@ const TaskStatusChip: React.FC<{ task: TaskDescriptor, onChange: (command: Chang
     </Box>
   );
 }
-
-export default TaskStatusChip;

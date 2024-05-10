@@ -11,10 +11,10 @@ import { PrincipalId, useAm } from 'descriptor-access-mgmt';
 import { TaskRow, TaskRowMenu, TaskTAndD } from '../TaskTable';
 import TaskCreateDialog from '../TaskCreate';
 import { TeamSpaceProvider, useTeamSpace } from './TeamSpaceContext';
-import TaskAssignees from '../TaskAssignees';
-import TaskDueDate from '../TaskDueDate';
-import TaskPriority from '../TaskPriority';
-import TaskStatus from '../TaskStatus';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskDueDate } from '../TaskDueDate';
+import { TaskPriority } from '../TaskPriority';
+import { TaskStatus } from '../TaskStatus';
 import { CustomerAvatar } from 'components-customer';
 
 

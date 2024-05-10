@@ -18,12 +18,12 @@ import {
 import { PrincipalId } from 'descriptor-access-mgmt';
 
 import TaskChecklist from '../TaskChecklist';
-import TaskAssignees from '../TaskAssignees';
-import TaskStatus from '../TaskStatus';
-import TaskPriority from '../TaskPriority';
-import TaskRoles from '../TaskRoles';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskStatus } from '../TaskStatus';
+import { TaskPriority } from '../TaskPriority';
+import { TaskRoles } from '../TaskRoles';
 import TaskStartDate from '../TaskStartDate';
-import TaskDueDate from '../TaskDueDate';
+import { TaskDueDate } from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
   const ctx = useTaskEdit();

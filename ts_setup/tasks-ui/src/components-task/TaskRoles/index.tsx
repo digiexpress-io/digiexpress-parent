@@ -10,7 +10,7 @@ import { DisplayTaskRoles } from './DisplayTaskRoles';
 
 
 
-const TaskRoles: React.FC<{
+export const TaskRoles: React.FC<{
   task: TaskDescriptor,
   onChange: (command: AssignTaskRoles) => Promise<void>,
   fullnames?: boolean
@@ -24,5 +24,3 @@ const TaskRoles: React.FC<{
     </>
   );
 }
-
-export default TaskRoles;

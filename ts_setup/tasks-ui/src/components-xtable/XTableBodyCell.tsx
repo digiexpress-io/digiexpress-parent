@@ -41,7 +41,7 @@ export const XTableBodyCell: React.FC<{
 
   const isString = typeof children === 'string';
   return (<XTableCell width={width} maxWidth={maxWidth} colSpan={colSpan}>
-      <Box display='flex' justifyContent={justifyContent} height="100%" alignItems="center">
+      <Box display='flex' justifyContent={justifyContent} height="100%" alignItems="center" width={width}>
         {isString ? <CellWithText children={children} /> : children }
       </Box>
   </XTableCell>);

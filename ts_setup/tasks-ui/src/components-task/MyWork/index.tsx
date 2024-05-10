@@ -12,9 +12,9 @@ import TaskCreateDialog from '../TaskCreate';
 import { MyWorkProvider, useMyWork } from './MyWorkContext';
 import { useAvatar } from 'descriptor-avatar';
 import { TaskRow } from '../TaskTable';
-import TaskDueDate from '../TaskDueDate';
-import TaskAssignees from '../TaskAssignees';
-import TaskPriority from '../TaskPriority';
+import { TaskDueDate } from '../TaskDueDate';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskPriority } from '../TaskPriority';
 import { TaskCustomer } from './TaskCustomer';
 
 import { TaskEditDialog } from '../TaskEdit';

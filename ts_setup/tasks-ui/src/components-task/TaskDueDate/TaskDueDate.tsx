@@ -8,7 +8,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import Burger from 'components-burger';
 
-const TaskDueDate: React.FC<{
+export const TaskDueDate: React.FC<{
   task: { dueDate: Date | undefined },
   onChange: (dueDate: string | undefined) => Promise<void>
   disabled?: boolean
@@ -54,5 +54,3 @@ const TaskDueDate: React.FC<{
     </>
   );
 }
-
-export default TaskDueDate;

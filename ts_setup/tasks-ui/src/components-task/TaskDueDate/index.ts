@@ -1,3 +1,2 @@
-import TaskDueDate from './TaskDueDate';
+export * from './TaskDueDate';
 
-export default TaskDueDate;

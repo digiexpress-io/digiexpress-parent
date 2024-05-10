@@ -25,5 +25,3 @@ export const TaskAssignees: React.FC<TaskAssigneesProps> = ({ task, onChange, fu
     </>
   );
 }
-
-export default TaskAssignees;

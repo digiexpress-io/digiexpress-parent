@@ -8,11 +8,11 @@ import { PrincipalId } from 'descriptor-access-mgmt';
 import { GroupByTypes, useTaskPrefs, ColumnName, TaskPagination } from './TableContext';
 import { useTitle } from './TableTitle';
 import { TaskRow, TaskRowMenu } from '../TaskTable';
-import TaskAssignees from '../TaskAssignees';
-import TaskDueDate from '../TaskDueDate';
-import TaskPriority from '../TaskPriority';
-import TaskRoles from '../TaskRoles';
-import TaskStatus from '../TaskStatus';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskDueDate } from '../TaskDueDate';
+import { TaskPriority } from '../TaskPriority';
+import { TaskRoles } from '../TaskRoles';
+import { TaskStatus } from '../TaskStatus';
 
 
 export interface DelegateProps {

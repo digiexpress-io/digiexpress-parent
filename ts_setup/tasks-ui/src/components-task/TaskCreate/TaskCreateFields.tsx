@@ -1,20 +1,18 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-import Backend from 'descriptor-backend';
-
 import { 
   ChangeTaskPriority, ChangeTaskStatus, AssignTask, ChangeTaskDueDate,
   AssignTaskRoles, ChangeTaskStartDate, useTaskEdit
 } from 'descriptor-task'
 import { PrincipalId } from 'descriptor-access-mgmt';
 
-import TaskAssignees from '../TaskAssignees';
-import TaskStatus from '../TaskStatus';
-import TaskPriority from '../TaskPriority';
-import TaskRoles from '../TaskRoles';
+import { TaskAssignees } from '../TaskAssignees';
+import { TaskStatus } from '../TaskStatus';
+import { TaskPriority } from '../TaskPriority';
+import { TaskRoles } from '../TaskRoles';
 import TaskStartDate from '../TaskStartDate';
-import TaskDueDate from '../TaskDueDate';
+import { TaskDueDate } from '../TaskDueDate';
 
 const Title: React.FC<{}> = () => {
   const ctx = useTaskEdit();

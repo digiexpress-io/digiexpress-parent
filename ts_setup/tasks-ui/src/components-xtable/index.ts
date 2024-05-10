@@ -9,3 +9,4 @@ export * from './XTableHeader';
 export * from './XTableHead';
 export * from './XTableBodyCell';
 export * from './XTableRowContext';
+export * from './XPander';
