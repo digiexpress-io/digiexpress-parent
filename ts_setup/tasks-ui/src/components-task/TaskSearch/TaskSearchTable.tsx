@@ -1,19 +1,12 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-
-import { GroupByTypes, useTaskPrefs, ColumnName, TaskPagination } from './TableContext';
-import { useTitle } from './TableTitle';
-
-
-import { XPagination, XPaper, XPaperTitle, XTable, XTableBody, XTableBodyCell, XTableHeader, XTableRow } from 'components-xtable';
-import { XTableHead } from 'components-xtable';
-
-
+import { XTableHead, XPagination, XPaper, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHeader, XTableRow } from 'components-xtable';
 import { AssignTask, AssignTaskRoles, ChangeTaskDueDate, ChangeTaskPriority, ChangeTaskStatus, TaskDescriptor, useTasks } from 'descriptor-task';
 import { PrincipalId } from 'descriptor-access-mgmt';
 
-
+import { GroupByTypes, useTaskPrefs, ColumnName, TaskPagination } from './TableContext';
+import { useTitle } from './TableTitle';
 import { TaskRow, TaskRowMenu } from '../TaskTable';
 import TaskAssignees from '../TaskAssignees';
 import TaskDueDate from '../TaskDueDate';
@@ -62,9 +55,9 @@ export const TaskSearchTable: React.FC<DelegateProps> = ({ groupByType, groupId,
   }
 
   return (<XPaper color={title.color} uuid={`TaskSearch.${groupId}`}>
-    <XPaperTitle>
+    <XPaperTitleTypography>
       <FormattedMessage id={'taskSearch.filter.groupedByTitle'} values={{ type: title.title }} />
-    </XPaperTitle>
+    </XPaperTitleTypography>
 
     <XTable columns={7} rows={content.rowsPerPage} hiddenColumns={columns}>
       <XTableHead>

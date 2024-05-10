@@ -27,7 +27,7 @@ export const XTableRow: React.FC<XTableRowProps> = ({ children, variant }) => {
   }
 
   return (
-    <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor}}>
+    <TableRow hover onMouseEnter={onStartHover} onMouseLeave={onEndHover} sx={{ backgroundColor }}>
       {children}
     </TableRow>);
 }

@@ -1,15 +1,15 @@
 import React from 'react';
 
+import { FormattedMessage } from 'react-intl';
+
 import { cyan, orange } from 'components-colors';
 import { NavigationButton, NavigationSticky } from 'components-generic';
+import { XPagination, XPaper, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
 import { AssignTask, ChangeTaskDueDate, ChangeTaskPriority, ChangeTaskStatus, Palette, TaskDescriptor, TeamGroupType, useTasks } from 'descriptor-task';
 
+import { TaskCustomer, TaskRow, TaskRowMenu, TaskTAndD } from '../TaskTable';
 import TaskCreateDialog from '../TaskCreate';
 import { TeamSpaceProvider, useTeamSpace } from './TeamSpaceContext';
-import { XPagination, XPaper, XPaperTitle, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
-import { FormattedMessage } from 'react-intl';
-import { TaskCustomer, TaskRow, TaskRowMenu, TaskTAndD } from '../TaskTable';
-
 import TaskAssignees from '../TaskAssignees';
 import TaskDueDate from '../TaskDueDate';
 import TaskPriority from '../TaskPriority';
@@ -99,9 +99,9 @@ const TeamSpaceLayout: React.FC = () => {
 
   return (
     <XPaper uuid={`Teamspace.all_tasks`} color={orange}>
-      <XPaperTitle>
+      <XPaperTitleTypography>
         <FormattedMessage id='core.teamSpace.title' values={{ myRoles }} />
-      </XPaperTitle>
+      </XPaperTitleTypography>
 
       <XTable columns={6} rows={content.rowsPerPage}>
         <XTableHead>

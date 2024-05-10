@@ -1,23 +1,29 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import { NavigationButton, NavigationSticky } from 'components-generic';
-import { moss, cyan } from 'components-colors';
-import { Palette, AssigneeGroupType, TaskDescriptor, ChangeTaskPriority, ChangeTaskStatus, ChangeTaskDueDate, AssignTask, useTasks } from 'descriptor-task';
+import { Box, Button, ButtonGroup } from '@mui/material';
 
-import { XPagination, XPaper, XPaperTitle, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
+import { moss, cyan } from 'components-colors';
+import Customer from 'components-customer';
+import { useAm } from 'descriptor-access-mgmt';
+import { CheckMarkButton, NavigationButton, NavigationSticky, useToggle } from 'components-generic';
+import { Palette, AssigneeGroupType, TaskDescriptor, ChangeTaskPriority, ChangeTaskDueDate, useTasks, ChangeChecklistItemDueDate, ChangeChecklistItemAssignees, ChangeChecklistItemCompleted } from 'descriptor-task';
+import { XPaper, XPaperTitle, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHead, XTableHeader, XTableRow } from 'components-xtable';
+
+import { FormattedMessage } from 'react-intl';
 
 import TaskCreateDialog from '../TaskCreate';
 import { MyWorkProvider, useMyWork } from './MyWorkContext';
-import { FormattedMessage } from 'react-intl';
-import { PrincipalId, useAm } from 'descriptor-access-mgmt';
 import { useAvatar } from 'descriptor-avatar';
-import { TaskRow, TaskRowMenu } from '../TaskTable';
+import { TaskRow } from '../TaskTable';
 import TaskDueDate from '../TaskDueDate';
+import TaskAssignees from '../TaskAssignees';
 import TaskPriority from '../TaskPriority';
 import { TaskCustomer } from './TaskCustomer';
 import { TaskTitle } from './TaskTitle';
+import TaskEditDialog from '../TaskEdit';
+
+
+
+
 
 const MyWorkNavigation: React.FC = () => {
   const { setActiveTab, activeTab, getTabItemCount } = useMyWork();
@@ -74,82 +80,107 @@ const MyWorkNavigation: React.FC = () => {
   </NavigationSticky>);
 }
 
-const MyWorkItems: React.FC = () => {
+const MyTask: React.FC<{ task: TaskDescriptor, rowId: number }> = ({ task, rowId }) => {
   const tasks = useTasks();
-  const { table: content, setTable: setContent } = useMyWork();
   const { iam } = useAm();
-  const avatar = useAvatar(iam.id);
+  const avatar = useAvatar(task.customerId);
+  const editTask = useToggle();
+  const editCustomer = useToggle();
 
-  function handleSorting(key: string, _direction: string) {
-    const column: keyof TaskDescriptor = key as any;
-    setContent(prev => prev.withOrderBy(column));
-  }
-  async function handleAssignTask(task: TaskDescriptor, assigneeIds: PrincipalId[]) {
-    const command: AssignTask = { assigneeIds, commandType: 'AssignTask', taskId: task.id };
-    await tasks.updateActiveTask(task.id, [command]);
-  }
-  async function handleDueDateChange(task: TaskDescriptor, dueDate: string | undefined) {
+  async function handleDueDateChange(dueDate: string | undefined) {
     const command: ChangeTaskDueDate = { commandType: 'ChangeTaskDueDate', dueDate, taskId: task.id };
     await tasks.updateActiveTask(task.id, [command]);
   }
-  async function handlePriorityChange(task: TaskDescriptor, command: ChangeTaskPriority) {
+  async function handlePriorityChange(command: ChangeTaskPriority) {
     await tasks.updateActiveTask(task.id, [command]);
   }
-  async function handleStatusChange(task: TaskDescriptor, command: ChangeTaskStatus) {
+  async function handleChecklistDueDateChange(dueDate: string | undefined, checklistId: string, checklistItemId: string) {
+    const command: ChangeChecklistItemDueDate = { commandType: 'ChangeChecklistItemDueDate', checklistId, checklistItemId, dueDate, taskId: task.id };
+    await tasks.updateActiveTask(task.id, [command]);
+  }
+  async function handleChecklistAssigneesChange(assigneeIds: string[], checklistId: string, checklistItemId: string) {
+    const command: ChangeChecklistItemAssignees = { commandType: 'ChangeChecklistItemAssignees', assigneeIds, checklistId, checklistItemId, taskId: task.id };
+    await tasks.updateActiveTask(task.id, [command]);
+  }
+  async function handleChecklistItemCompleted(completed: boolean, checklistId: string, checklistItemId: string) {
+    const command: ChangeChecklistItemCompleted = { commandType: 'ChangeChecklistItemCompleted', checklistId, checklistItemId, taskId: task.id, completed };
     await tasks.updateActiveTask(task.id, [command]);
   }
 
-  return (
+
+  return (<>
+    <TaskEditDialog open={editTask.open} onClose={editTask.handleEnd} task={task} />
+    <Customer.CustomerDetailsDialog open={editCustomer.open} onClose={editCustomer.handleEnd} customer={task.customerId} />
+
     <XPaper uuid={`MyWork.all_tasks`} color={avatar?.colorCode ?? ""}>
-      <XPaperTitle>
-        <FormattedMessage id='mywork.table.header' />
+      <XPaperTitle variant='no-spacing'>
+        <ButtonGroup>
+          <Button variant='text' onClick={editCustomer.handleStart}>
+            <XPaperTitleTypography variant='text-only'>
+              <TaskCustomer task={task} />
+            </XPaperTitleTypography>
+          </Button>
+          <Button variant='text' onClick={editTask.handleStart}>
+            <XPaperTitleTypography variant='text-only'>{task.title}</XPaperTitleTypography>
+          </Button>
+        </ButtonGroup>
       </XPaperTitle>
-
-      <XTable columns={6} rows={content.rowsPerPage}>
+      <XTable columns={6} rows={1}>
         <XTableHead>
           <XTableRow>
-            <XTableHeader onSort={handleSorting} sortable id='title' colSpan={2}><FormattedMessage id='tasktable.header.title' /></XTableHeader>
-            <XTableHeader onSort={handleSorting} sortable id='description'><FormattedMessage id='mywork.table.header.description' /></XTableHeader>
-            <XTableHeader onSort={handleSorting} sortable id='dueDate' defaultSort='asc'><FormattedMessage id='tasktable.header.dueDate' /></XTableHeader>
-            <XTableHeader onSort={handleSorting} sortable id='priority'><FormattedMessage id='tasktable.header.priority' /></XTableHeader>
+            <XTableHeader id='title' colSpan={2}><FormattedMessage id='tasktable.header.title' /></XTableHeader>
+            <XTableHeader id='description'><FormattedMessage id='mywork.table.header.description' /></XTableHeader>
+            <XTableHeader id='dueDate'><FormattedMessage id='tasktable.header.dueDate' /></XTableHeader>
+            <XTableHeader id='priority'><FormattedMessage id='tasktable.header.priority' /></XTableHeader>
           </XTableRow>
         </XTableHead>
         <XTableBody padding={1}>
-          {content.entries.map((row, rowId) => (
-            <>
-              <TaskRow key={row.id + "main"} rowId={rowId} row={row} variant='secondary'>
-                <XTableBodyCell id="title" justifyContent='left' maxWidth={"200px"} colSpan={2}><TaskTitle task={row} /></XTableBodyCell>
-                <XTableBodyCell id="description" justifyContent='left'>{row.description}</XTableBodyCell>
-                <XTableBodyCell id="dueDate"><TaskDueDate task={row} onChange={(dueDate) => handleDueDateChange(row, dueDate)} /></XTableBodyCell>
-                <XTableBodyCell id="priority"><TaskPriority task={row} onChange={(priority) => handlePriorityChange(row, priority)} /></XTableBodyCell>
-              </TaskRow>
-              {row.checklist
-                .flatMap(checklist => checklist.items.map(item => ({ checklist, item })))
-                .map(({ item, checklist }) => (
-                  <TaskRow key={item.id} rowId={rowId} row={row}>
-                    <XTableBodyCell id="directory" justifyContent='right' width='50px'><RadioButtonUncheckedIcon /></XTableBodyCell>
-                    <XTableBodyCell id="checkListItemTitle" justifyContent='left' colSpan={4}>{item.title}</XTableBodyCell>
-                  </TaskRow>
-                ))
-              }
-              <TaskRow key={row.id + "customerId"} rowId={rowId} row={row}>
-                <XTableBodyCell id="directory" justifyContent='right' width='50px'><SubdirectoryArrowRightIcon /></XTableBodyCell>
-                <XTableBodyCell id="customerId" justifyContent='left' colSpan={4}><TaskCustomer task={row} /></XTableBodyCell>
-              </TaskRow>
+          <TaskRow key={task.id + "main"} rowId={rowId} row={task}>
+            <XTableBodyCell id="title" colSpan={2} justifyContent='left' width="300px"><TaskTitle task={task} /></XTableBodyCell>
+            <XTableBodyCell id="description" justifyContent='left'>{task.description}</XTableBodyCell>
+            <XTableBodyCell id="dueDate"><TaskDueDate task={task} onChange={handleDueDateChange} /></XTableBodyCell>
+            <XTableBodyCell id="priority"><TaskPriority task={task} onChange={handlePriorityChange} /></XTableBodyCell>
+          </TaskRow>
 
-            </>))
+          {task.checklist
+            .flatMap(checklist => checklist.items.map(item => ({ checklist, item })))
+            .map(({ item, checklist }) => (
+              <TaskRow key={item.id} rowId={rowId} row={task}>
+                <XTableBodyCell id="checklist" width='60px'>
+                  <CheckMarkButton onClick={() => handleChecklistItemCompleted(!item.completed, checklist.id, item.id)}>{item.completed}</CheckMarkButton>
+                </XTableBodyCell>
+                <XTableBodyCell id="checkListItemTitle" justifyContent='left'>{checklist.title}</XTableBodyCell>
+                <XTableBodyCell id="checkListItemTitle" justifyContent='left'>{item.title}</XTableBodyCell>
+                <XTableBodyCell id="dueDate" justifyContent='left'>
+                  <TaskDueDate disabled={item.completed} task={{ dueDate: item.dueDate ? new Date(item.dueDate) : undefined }}
+                    onChange={(dueDate) => handleChecklistDueDateChange(dueDate, checklist.id, item.id)}
+                  />
+                </XTableBodyCell>
+                <XTableBodyCell id="assignees" justifyContent='left'>
+                  <TaskAssignees disabled={item.completed} task={{ assignees: item.assigneeIds }}
+                    onChange={(users) => handleChecklistAssigneesChange(users, checklist.id, item.id)}
+                  />
+                </XTableBodyCell>
+              </TaskRow>
+            ))
           }
         </XTableBody>
       </XTable>
-      <XPagination state={content} setState={setContent} />
     </XPaper>
+  </>
   )
 }
+
+const MyTasks: React.FC = () => {
+  const { table: content } = useMyWork();
+  return (<>{content.entries.map((task, rowId) => <Box key={rowId} p={1}><MyTask rowId={rowId} task={task} /></Box>)}</>);
+}
+
 
 const MyWork: React.FC = () => {
   return <MyWorkProvider>
     <MyWorkNavigation />
-    <Box p={1}><MyWorkItems /></Box>
+    <MyTasks />
   </MyWorkProvider>;
 }
 

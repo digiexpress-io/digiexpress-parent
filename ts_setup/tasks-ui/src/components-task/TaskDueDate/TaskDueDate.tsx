@@ -7,8 +7,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import Burger from 'components-burger';
-import { cyan } from 'components-colors';
-
 
 const TaskDueDate: React.FC<{
   task: { dueDate: Date | undefined },
@@ -38,7 +36,7 @@ const TaskDueDate: React.FC<{
 
   return (
     <>
-      <Button onClick={handlePickerDialog} disabled={disabled} startIcon={<DateRangeOutlinedIcon/>} sx={{ color: 'text.primary' }}>
+      <Button onClick={handlePickerDialog} disabled={disabled} startIcon={<DateRangeOutlinedIcon/>} sx={{ color: 'text.primary', justifyContent: 'left' }}>
         <Typography><Burger.DateTimeFormatter type='date' value={task.dueDate} /></Typography>
       </Button>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

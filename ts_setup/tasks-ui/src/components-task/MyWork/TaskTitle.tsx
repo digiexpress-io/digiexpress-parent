@@ -19,7 +19,7 @@ export const TaskTitle: React.FC<{
   return (
     <>
       <TaskEditDialog open={edit} onClose={handleEndEdit} task={task} />
-      <Button onClick={handleStartEdit} variant="text"><b>{task.title}</b></Button>
+      {task.title}
     </>
   );
 }

@@ -1,11 +1,7 @@
 import React from 'react';
 import { ListItem, Typography, alpha, ListItemProps, styled, ListItemAvatar, Avatar, Box } from '@mui/material';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { cyan, grey_light_2, orange, grey_light } from 'components-colors';
-
-import { useFlyoutMenu } from './FlyoutMenuContext';
+import { cyan, grey_light_2 } from 'components-colors';
+import { FlyoutMenuItemIcon } from './FlyoutMenuItemIcon';
 
 
 
@@ -38,7 +34,7 @@ export const FlyoutMenuItem: React.FC<{
       </Box>
 
       <Box flexGrow={1} textAlign='right' ml={1}>
-        {active ? <CheckCircleIcon sx={{color: cyan}}/> : <PanoramaFishEyeIcon sx={{color: grey_light}} />}
+        <FlyoutMenuItemIcon>{active}</FlyoutMenuItemIcon>
       </Box>
     </StyledListItem>
 

@@ -13,5 +13,7 @@ export * from './AvatarIndicator';
 export * from './SectionLayout';
 export * from './StyledFullScreenDialog';
 export * from './LetterIcon';
+export * from './useToggle';
+export * from './CheckMarkButton';
 
 export { FilterByString, TableFillerRows, StyledTableCell, lineHeight, lineHeightLarge, useTableCellPopover };
