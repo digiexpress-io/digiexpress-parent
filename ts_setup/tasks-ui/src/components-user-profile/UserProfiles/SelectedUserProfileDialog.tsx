@@ -24,11 +24,16 @@ const SectionLayout: React.FC<{ label: string, value: string | React.ReactNode |
   )
 }
 
-const SelectedUserProfileDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
+const SelectedUserProfileDialog: React.FC<{
+  open: boolean, 
+  onClose: () => void, 
+  profile: UserProfileDescriptor | undefined }> = 
+  ({ profile, open, onClose }) => {
+
   const backend = Backend.useBackend();
 
-  const [state, setState] = React.useState<UserProfileDescriptor>();
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [state, setState] = React.useState<UserProfileDescriptor | undefined>(profile);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     new ImmutableAmStore(backend.store).currentUserProfile().then(userProfile => {

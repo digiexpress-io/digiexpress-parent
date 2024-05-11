@@ -1,119 +1,93 @@
 import React from 'react';
-import { TableHead, TableCell, TableRow, Box, TableBody } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 
+import Burger from 'components-burger';
 import Backend from 'descriptor-backend';
-import { UserProfileDescriptor, ImmutableAmStore } from 'descriptor-access-mgmt';
-import { NavigationSticky, FilterByString, TableFillerRows } from 'components-generic';
-import { wash_me } from 'components-colors';
+import { NavigationSticky, FilterByString, useToggle } from 'components-generic';
+import { UserProfileDescriptor, ImmutableAmStore, ImmutableUserProfileDescriptor } from 'descriptor-access-mgmt';
 
-import { UserProfileSearchState, CustomerTable, initUserProfileSearchState, TableConfigProps } from './table-ctx';
-import { TableTitle } from './TableTitle';
-import { SortableHeaders } from './TableHeaders';
+import { XTableHead, XPagination, XPaper, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHeader, XTableRow } from 'components-xtable';
 
-import CellMenu from './CellMenu';
-import CellDisplayName from './CellDisplayName';
-import CellCreated from './CellCreated';
-import CellEmail from './CellEmail';
+import Pagination from 'table';
 
+import SelectedUserProfileDialog from './SelectedUserProfileDialog';
 
+export type UserProfilePagination = Pagination.TablePagination<UserProfileDescriptor>;
 
-function getRowBackgroundColor(index: number): string {
-  const isOdd = index % 2 === 1;
-
-  if (isOdd) {
-    return wash_me;
-  }
-  return 'background.paper';
-}
-
-const Header: React.FC<TableConfigProps & { columns: (keyof UserProfileDescriptor)[] }> = ({ content, setContent, group, columns }) => {
-
-  const includesTitle = columns.includes("displayName");
-
-  const headersToShow = includesTitle ?
-    columns.filter(c => c !== 'displayName') :
-    columns.slice(1);
-
-  return (
-    <TableHead>
-      <TableRow>
-
-        { /* reserved title column */}
-        <TableCell align='left' padding='none'>
-          <TableTitle group={group} />
-        </TableCell>
-
-        { /* without title */}
-        <SortableHeaders columns={headersToShow} content={content} setContent={setContent} />
-
-        {/* menu column */}
-        {columns.length > 0 && <TableCell></TableCell>}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-const Row: React.FC<{
-  rowId: number,
-  row: UserProfileDescriptor,
-  def: UserProfileSearchState,
-  columns: (keyof UserProfileDescriptor)[]
-}> = (props) => {
-
-  const [hoverItemsActive, setHoverItemsActive] = React.useState(false);
-  function handleEndHover() {
-    setHoverItemsActive(false);
-  }
-  return (<TableRow sx={{ backgroundColor: getRowBackgroundColor(props.rowId) }} hover tabIndex={-1} key={props.row.id}
-    onMouseEnter={() => setHoverItemsActive(true)} onMouseLeave={handleEndHover}>
-    {props.columns.includes("displayName") && <CellDisplayName {...props} children={hoverItemsActive} />}
-    {props.columns.includes("email") && <CellEmail {...props} />}
-    {props.columns.includes("created") && <CellCreated {...props} />}
-
-    <CellMenu {...props} active={hoverItemsActive} setDisabled={handleEndHover} />
-  </TableRow>);
-}
-
-const columnTypes: (keyof UserProfileDescriptor)[] = [
-  'displayName',
-  'email',
-  'created',
-]
 
 const UserProfiles: React.FC<{}> = () => {
   const backend = Backend.useBackend();
-  const [columns, setColumns] = React.useState([...columnTypes]);
-  const [state, setState] = React.useState<UserProfileSearchState>(initUserProfileSearchState());
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const { searchString, isSearchStringValid } = state;
+  const toggle = useToggle<UserProfileDescriptor>();
+  const [searchString, setSearchString] = React.useState('');
+  const [content, setContent] = React.useState<UserProfilePagination>(new Pagination.TablePaginationImpl<UserProfileDescriptor>({
+    src: [],
+    orderBy: 'displayName',
+    sorted: false
+  }));
+
+  console.log(content);
 
   React.useEffect(() => {
-    if (isSearchStringValid) {
-      setLoading(true);
-      new ImmutableAmStore(backend.store).findAllUserProfiles().then(newRecords => {
-        setState(prev => prev.withRecords(newRecords));
-        setLoading(false);
-      });
-    }
-  }, [searchString, isSearchStringValid]);
+    const isSearchStringValid: boolean = searchString.trim().length > 2;
 
-  return (<Box>
+    new ImmutableAmStore(backend.store).findAllUserProfiles().then(newRecords => {
+      const src = newRecords
+        .map(profile => new ImmutableUserProfileDescriptor(profile))
+        .filter(profile => {
+          if (!isSearchStringValid) {
+            return true;
+          }
+          return profile.displayName.toLowerCase().indexOf(searchString.toLowerCase()) > -1
+        });
+      setContent((c: UserProfilePagination) => c.withSrc(src));
+    });
+  }, [searchString]);
+
+  function setStoring(key: string, _direction: string) {
+    setContent(prev => prev.withOrderBy(key as (keyof UserProfileDescriptor)));
+  }
+
+  return (<>
+    <SelectedUserProfileDialog open={toggle.open} profile={toggle.entity} onClose={toggle.handleEnd} />
     <NavigationSticky>
-      <FilterByString onChange={({ target }) => setState(prev => prev.withSearchString(target.value))} />
+      <FilterByString onChange={({ target }) => setSearchString(target.value)} />
     </NavigationSticky>
-    <Box mt={1} />
-    <CustomerTable group={state} defaultOrderBy='displayName' loading={loading}>
-      {{
-        Header: (props) => <Header columns={columns} {...props} />,
-        Rows: ({ content, group, loading }) => (
-          <TableBody>
-            {content.entries.map((row, rowId) => (<Row key={row.id} rowId={rowId} row={row} def={group} columns={columns} />))}
-            <TableFillerRows content={content} loading={loading} plusColSpan={5} />
-          </TableBody>
-        )
-      }}
-    </CustomerTable>
-  </Box>
+
+    <Box p={1}>
+      <XPaper color={""} uuid={`UserProfileSearch.Table`}>
+        <XPaperTitleTypography>
+          <FormattedMessage id='userprofileTable.header.spotlight.results' />
+        </XPaperTitleTypography>
+
+        <XTable columns={3} rows={content.rowsPerPage}>
+          <XTableHead>
+            <XTableRow>
+              <XTableHeader onSort={setStoring} id='displayName' defaultSort='asc'><FormattedMessage id='userprofileTable.header.displayName' /></XTableHeader>
+              <XTableHeader onSort={setStoring} id='email'><FormattedMessage id='userprofileTable.header.email' /></XTableHeader>
+              <XTableHeader onSort={setStoring} id='created'><FormattedMessage id='userprofileTable.header.created' /></XTableHeader>
+            </XTableRow>
+          </XTableHead>
+          <XTableBody padding={1}>
+            {content.entries.map((row) => (
+              <XTableRow key={row.id}>
+                <XTableBodyCell id="displayName" justifyContent='left' maxWidth={"200px"}>
+                  <Button variant='text' onClick={() => toggle.handleStart(row)}>{row.displayName}</Button>
+                </XTableBodyCell>
+                <XTableBodyCell id="email">
+                  {row.email}
+                </XTableBodyCell>
+                <XTableBodyCell id="created">
+                  <Burger.DateTimeFormatter value={row.created} type='dateTime' />
+                </XTableBodyCell>
+              </XTableRow>))
+            }
+          </XTableBody>
+        </XTable>
+        <XPagination state={content} setState={setContent} />
+      </XPaper>
+    </Box>
+  </>
   );
 }
 

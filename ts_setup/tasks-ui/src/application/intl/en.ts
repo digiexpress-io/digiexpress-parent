@@ -429,7 +429,7 @@ const en = {
   'userprofileTable.header.spotlight.results': 'All users',
   'userprofileTable.header.email': 'Email',
   'userprofileTable.header.created': 'Created',
-  'userprofileTable.menu.viewUser': 'View user',
+  'userprofileTable.header.displayName': 'User name',
 
   'activities.deployments.title': 'Deployments',
   'activities.releaseMgmt.title': 'Release management',

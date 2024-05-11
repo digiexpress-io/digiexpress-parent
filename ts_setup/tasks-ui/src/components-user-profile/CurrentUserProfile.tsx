@@ -6,7 +6,7 @@ import { UserProfileDescriptor, ImmutableUserProfileDescriptor, ImmutableAmStore
 import { UserAvatar } from './UserAvatar';
 import Backend from 'descriptor-backend';
 
-import { SectionLayout } from 'components-generic';
+import { NavigationSticky, SectionLayout } from 'components-generic';
 import Burger from 'components-burger';
 
 
@@ -17,20 +17,23 @@ const CurrentUserProfile: React.FC<{}> = () => {
 
   React.useEffect(() => {
     new ImmutableAmStore(backend.store).currentUserProfile()
-    .then(userProfile => {
-      setState(new ImmutableUserProfileDescriptor(userProfile.user));
-      setLoading(false);
-    });
+      .then(userProfile => {
+        setState(new ImmutableUserProfileDescriptor(userProfile.user));
+        setLoading(false);
+      });
   }, []);
 
   if (loading || !state) {
     return <CircularProgress />;
   }
 
-  return (
+  return (<>
+    <NavigationSticky>
+      <UserAvatar user={state} />
+    </NavigationSticky>
     <Paper sx={{ p: 1, height: '100%' }}>
       <Stack spacing={1}>
-        <UserAvatar user={state} />
+
         <Burger.Section>
           <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
           <>
@@ -59,6 +62,7 @@ const CurrentUserProfile: React.FC<{}> = () => {
         </Burger.Section>
       </Stack >
     </Paper >
+  </>
   );
 }
 

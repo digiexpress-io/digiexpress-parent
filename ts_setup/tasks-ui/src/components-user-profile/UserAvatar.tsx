@@ -32,7 +32,7 @@ const UserAvatar: React.FC<{ user: UserProfileDescriptor }> = ({ user }) => {
   }
 
   return (<Box display='flex' justifyContent='start'>
-    <Paper variant="outlined" sx={{ p: 1, borderRadius: 6, width: 'fit-content' }}>
+    <Paper variant="outlined" sx={{ p: 0.5, borderRadius: 6, width: 'fit-content' }}>
       <Box display="flex" alignItems="center">
         <Avatar sx={{ backgroundColor: stringToColor(user.entry.details.firstName), mr: 1 }}>{twoLetters}</Avatar>
         <Box display='flex' flexDirection='column'>
