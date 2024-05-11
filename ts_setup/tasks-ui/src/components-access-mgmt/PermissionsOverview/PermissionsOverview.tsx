@@ -1,19 +1,21 @@
 import React from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 import * as colors from 'components-colors';
-import { LayoutList, NavigationButton, LayoutListItem, FilterByString } from 'components-generic';
-import { useAm } from 'descriptor-access-mgmt';
-import PermissionItemActive from './PermissionItemActive';
+import { NavigationButton, FilterByString, NavigationSticky, useToggle } from 'components-generic';
+import { Permission, useAm } from 'descriptor-access-mgmt';
+import { XTableHead, XPaper, XPaperTitleTypography, XTable, XTableBody, XTableBodyCell, XTableHeader, XTableRow } from 'components-xtable';
+import Table from 'table';
 
-import { PermissionsOverviewProvider, useActivePermission } from './PermissionsOverviewContext';
+import { FormattedMessage } from 'react-intl';
+import { PermissionEditDialog } from '../PermissionEdit';
 
 const color_create_permission = colors.steelblue;
 
 const PermissionsNavigation: React.FC<{}> = () => {
   function handleSearch(value: React.ChangeEvent<HTMLInputElement>) { }
 
-  return (<>
+  return (<NavigationSticky>
     <FilterByString onChange={handleSearch} />
 
     <NavigationButton id='permissions.navButton.permission.create'
@@ -21,53 +23,76 @@ const PermissionsNavigation: React.FC<{}> = () => {
       color={color_create_permission}
       active={false}
       onClick={() => { }} />
-  </>);
+  </NavigationSticky>);
 }
 
 const PermissionItems: React.FC = () => {
   const { permissions } = useAm();
-  const { setActivePermission, permissionId } = useActivePermission();
+  const editPermission = useToggle<Permission>();
+  
+  const [content, setContent] = React.useState(new Table.TablePaginationImpl<Permission>({
+    src: [],
+    orderBy: 'name',
+    sorted: false
+  }).withRowsPerPage(permissions.length));
+
+  React.useEffect(() => setContent((c) => c.withSrc(permissions)), [permissions]);
 
   if (!permissions) {
     return (<>no permissions defined</>);
   }
-
+  function setStoring(key: string, _direction: string) {
+    setContent(prev => prev
+      .withOrderBy(key as (keyof Permission))
+      .withRowsPerPage(permissions.length));
+  }
 
   return (<>
-    {permissions.map((permission, index) => (
-      <LayoutListItem active={permissionId === permission.id} index={index} key={permission.id} onClick={() => setActivePermission(permission.id)}>
-        <Grid item sm={4} md={4} lg={4}>
-          <Typography noWrap>{permission.name}</Typography>
-        </Grid>
+    {editPermission.entity && <PermissionEditDialog open={editPermission.open} onClose={editPermission.handleEnd} permission={editPermission.entity} /> }
+    <Box p={1}>
+      <XPaper color={""} uuid={`PermissionsSearch.Table`}>
+        <XPaperTitleTypography>
+          <FormattedMessage id='permissions.search.title' />
+        </XPaperTitleTypography>
 
-        <Grid item sm={4} md={4} lg={6}>
-          <Typography noWrap>{permission.description}</Typography>
-        </Grid>
-
-        <Grid item sm={4} md={4} lg={2}>
-          <Typography noWrap>{permission.status}</Typography>
-        </Grid>
-      </LayoutListItem>
-    ))
-    }
+        <XTable columns={3} rows={permissions.length}>
+          <XTableHead>
+            <XTableRow>
+              <XTableHeader onSort={setStoring} id='name' defaultSort='asc'><FormattedMessage id='permissions.permission.name' /></XTableHeader>
+              <XTableHeader onSort={setStoring} id='description'><FormattedMessage id='permissions.permission.description' /></XTableHeader>
+              <XTableHeader onSort={setStoring} id='status'><FormattedMessage id='permissions.permission.status' /></XTableHeader>
+            </XTableRow>
+          </XTableHead>
+          <XTableBody padding={1}>
+            {content.entries.map((row) => (
+              <XTableRow key={row.id}>
+                <XTableBodyCell id="name" justifyContent='left' maxWidth={"200px"}>
+                  <Button variant='text' onClick={() => editPermission.handleStart(row) }>{row.name}</Button>
+                </XTableBodyCell>
+                <XTableBodyCell id="description">
+                  {row.description}
+                </XTableBodyCell>
+                <XTableBodyCell id="status">
+                  {row.status}
+                </XTableBodyCell>
+              </XTableRow>))
+            }
+          </XTableBody>
+        </XTable>
+      </XPaper>
+    </Box>
   </>
   )
 }
 
-const PermissionsOverviewLayout: React.FC = () => {
-  const navigation = <PermissionsNavigation />;
-  const pagination = <></>;
-  const active = <PermissionItemActive />;
-  const items = <PermissionItems />;
 
-  return (<LayoutList slots={{ navigation, active, items, pagination }} />)
-}
 
 const PermissionsOverview: React.FC<{}> = () => {
   return (
-    <PermissionsOverviewProvider>
-      <PermissionsOverviewLayout />
-    </PermissionsOverviewProvider>
+    <>
+      <PermissionsNavigation />
+      <PermissionItems />
+    </>
   );
 }
 

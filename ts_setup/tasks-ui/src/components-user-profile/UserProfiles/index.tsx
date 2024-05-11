@@ -26,8 +26,6 @@ const UserProfiles: React.FC<{}> = () => {
     sorted: false
   }));
 
-  console.log(content);
-
   React.useEffect(() => {
     const isSearchStringValid: boolean = searchString.trim().length > 2;
 
