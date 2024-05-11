@@ -81,8 +81,7 @@ const PermissionItems: React.FC = () => {
         </XTable>
       </XPaper>
     </Box>
-  </>
-  )
+  </>)
 }
 
 
