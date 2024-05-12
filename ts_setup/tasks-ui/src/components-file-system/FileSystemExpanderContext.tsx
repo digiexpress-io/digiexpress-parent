@@ -21,7 +21,9 @@ export const FileSystemExpanderProvider: React.FC<{ children: React.ReactNode; }
     function toggleExpanded(id: HdesFileId) {
       setExpanded(prev => {
         if(prev.includes(id)){
-          return Object.freeze([...prev].splice(prev.indexOf(id)));
+          const position = prev.indexOf(id);
+          const next = prev.filter((p, index) => position !== index);
+          return Object.freeze(next);
         }
         return Object.freeze([...prev, id]);
       });

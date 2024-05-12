@@ -26,7 +26,7 @@ export interface HdesFile {
   id: HdesFileId;
   absolutePath: string; // path to file
   mountTo: string | undefined; // technical asset GID
-  fileName: string | undefined;
+  fileName: string;
   fileType: HdesFileType;
 }
 
@@ -109,8 +109,9 @@ const test_data: HdesFileSystem = {
       { absolutePath: "cities", fileType: "FOLDER", id: uuid(), mountTo: uuid(), fileName: "" },
       { absolutePath: ROOT, fileType: "FOLDER", id: uuid(), mountTo: uuid(), fileName: "" },
       { absolutePath: ROOT + "/topics", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
-      { absolutePath: ROOT + "/topics/index", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
-      { absolutePath: ROOT + "/topics/general-message", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
+      { absolutePath: ROOT + "/topics/index", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), }, 
+      { absolutePath: ROOT + "/topics/index/general-message", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
+      { absolutePath: ROOT + "/localizations", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
       { absolutePath: ROOT + "/localizations/forms-translations", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
       { absolutePath: ROOT + "/localizations/wrench-translations", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
       { absolutePath: ROOT + "/localizations/topic-translations", fileName: "", fileType: "FOLDER", id: uuid(), mountTo: uuid(), },
