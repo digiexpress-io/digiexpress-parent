@@ -13,6 +13,10 @@ export const FileSystemProvider: React.FC<{ children: React.ReactNode; }> = ({ch
   const backend = useBackend();
   const store = React.useMemo(() => new HdesFileSystemStore(backend.store), [backend]);
   const [fs, setFs] = React.useState<HdesFileSystem>();
+
+  React.useEffect(() => {
+    store.get().then(setFs)
+  }, []);
   
   const handleUpdate = React.useCallback(async (update: HdesFileSystemCommand<any>) => {
     const next = await store.update(update.id, [update]);

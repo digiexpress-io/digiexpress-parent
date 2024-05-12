@@ -5,3 +5,6 @@ export * from './FileSystemExpanderContext';
 export * from './FileSystemFolderFocus'; 
 export * from './FileSystemTreeFocus'; 
 export * from './FileSystemTypes';
+export * from './FileSystemTree';
+export * from './FileSystemFolder';
+export * from './FileSystemBreadcrumbs';

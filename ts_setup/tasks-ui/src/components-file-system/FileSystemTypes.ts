@@ -85,8 +85,8 @@ export class HdesFileSystemStore implements HdesFileSystemStoreType {
   }
 
   async get(): Promise<HdesFileSystem> {
-    const fs = await this._store.fetch<HdesFileSystem>(`file-system`, { repoType: 'HDES' });
-    return fs;
+    //const fs = await this._store.fetch<HdesFileSystem>(`file-system`, { repoType: 'HDES' });
+    return test_data;
   }
 }
 
