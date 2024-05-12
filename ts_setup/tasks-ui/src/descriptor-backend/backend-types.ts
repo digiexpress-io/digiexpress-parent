@@ -17,6 +17,7 @@ export type RepoType = (
   'DIALOB' |
   'CONFIG' |
   'HEALTH' |
+  'HDES' |
   'USER_PROFILE' |
   'TENANT' |
   'SYS_CONFIG' |

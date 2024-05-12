@@ -23,6 +23,8 @@ const modules: string[] = [
   'components-libra',
   'components-xtable',
   'components-flyout-menu',
+  'components-file-system',
+
 
   'descriptor-events',
   'descriptor-customer',

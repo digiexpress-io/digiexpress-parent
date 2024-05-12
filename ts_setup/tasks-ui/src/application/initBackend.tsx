@@ -45,6 +45,7 @@ const baseWs = getWs();
 const store: Backend.Store = new Backend.BackendStoreImpl({
   urls: {
     'TASKS': baseUrl + "/q/digiexpress/api/",
+    'HDES': baseUrl + "/q/digiexpress/api/",
     'TENANT': baseUrl + "/q/digiexpress/api/",
     'CRM': baseUrl + "/q/digiexpress/api/",
     'STENCIL': baseUrl + "/q/digiexpress/api/",
