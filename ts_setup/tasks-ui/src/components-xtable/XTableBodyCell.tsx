@@ -24,15 +24,16 @@ export const XTableBodyCell: React.FC<{
   justifyContent?: 'left' | 'right',
   children: React.ReactNode;
   colSpan?: number | 'all';
-}> = ({ id, width: initWidth, maxWidth, justifyContent, children, colSpan: initColSpan }) => {
+  padding?: 'none' | undefined 
+}> = ({ id, width: userWidth, maxWidth, justifyContent, children, colSpan: userColSpan, padding }) => {
 
   const { pref } = useXPref();
   const { columns, hiddenColumns } = useXTable();
 
   const vis = pref.getVisibility(id);
   const hidden = vis?.enabled === false || (hiddenColumns && hiddenColumns.includes(id));
-  const colSpan = initColSpan === 'all' ? columns : initColSpan;
-  const width = initColSpan === 'all' ? '100%': initWidth;
+  const colSpan = userColSpan === 'all' ? columns : userColSpan;
+  const width = userColSpan === 'all' ? '100%': userWidth;
 
   if(hidden) {
     return null;
@@ -40,8 +41,8 @@ export const XTableBodyCell: React.FC<{
 
 
   const isString = typeof children === 'string';
-  return (<XTableCell width={width} maxWidth={maxWidth} colSpan={colSpan}>
-      <Box display='flex' justifyContent={justifyContent} height="100%" alignItems="center" width={width}>
+  return (<XTableCell colSpan={colSpan} padding={padding}>
+      <Box display='flex' justifyContent={justifyContent} height="100%" alignItems="center" width={width} maxWidth={maxWidth} >
         {isString ? <CellWithText children={children} /> : children }
       </Box>
   </XTableCell>);

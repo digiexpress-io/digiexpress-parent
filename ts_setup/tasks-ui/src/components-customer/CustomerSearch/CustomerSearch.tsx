@@ -39,7 +39,7 @@ export const CustomerSearch: React.FC<{}> = () => {
               {content.entries.map((row) => (
                 <XPanderProvider key={row.id}>
                   <XTableRow>
-                    <XTableBodyCell id="tasks" justifyContent='left' width='50px' maxWidth='70px'><XPanderButton /></XTableBodyCell>
+                    <XTableBodyCell id="tasks" justifyContent='left' maxWidth='30px' padding='none'><XPanderButton /></XTableBodyCell>
                     <XTableBodyCell id="displayName" justifyContent='left' maxWidth={"500px"}><CustomerAvatar customerId={row.id} /></XTableBodyCell>
                     <XTableBodyCell id="customerType">{row.customerType}</XTableBodyCell>
                     <XTableBodyCell id="created"><Burger.DateTimeFormatter value={row.created} type='dateTime' /></XTableBodyCell>

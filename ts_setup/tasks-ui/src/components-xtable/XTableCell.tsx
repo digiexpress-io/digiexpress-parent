@@ -25,11 +25,12 @@ export const XTableCell: React.FC<{
   colSpan?: number | undefined;
   align?: 'left' | undefined;
   sortDirection?: SortType | undefined;
-}> = ({ children, width, maxWidth, colSpan, sortDirection }) => {
+  padding?: 'none' | undefined 
+}> = ({ children, width, maxWidth, colSpan, sortDirection, padding: userPadding }) => {
   const { padding } = useXTableBody();
 
   return (<XTableCellBase sortDirection={sortDirection} 
     width={width} 
     colSpan={colSpan} 
-    sx={{p: padding, maxWidth }}>{children}</XTableCellBase>);
+    sx={{p: userPadding === 'none' ? 0 : padding, maxWidth }}>{children}</XTableCellBase>);
 }
