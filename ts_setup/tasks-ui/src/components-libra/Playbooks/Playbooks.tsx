@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileSystemBreadcrumbs, FileSystemFolder, FileSystemProvider, FileSystemTree } from 'components-file-system';
+import { XFsBreadcrumbs, XFsFolder, XFsProvider, XFsTree } from 'components-xfile-system';
 import { NavigationSticky } from 'components-generic';
 import { Box } from '@mui/system';
 

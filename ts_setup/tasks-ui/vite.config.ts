@@ -21,9 +21,9 @@ const modules: string[] = [
   'components-org-chart',
   'components-user-profile',
   'components-libra',
-  'components-xtable',
   'components-flyout-menu',
-  'components-file-system',
+  'components-xtable',
+  'components-xfile-system',
 
 
   'descriptor-events',
