@@ -18,7 +18,7 @@ const Playbooks: React.FC = () => {
             <XfsTree />
           </Box>
           <Box>
-            <XfsTree />
+            <XfsFolder />
           </Box>
         </Box>
     </XfsProvider>
