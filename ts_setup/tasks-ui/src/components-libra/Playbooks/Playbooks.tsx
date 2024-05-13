@@ -1,5 +1,5 @@
 import React from 'react';
-import { XFsBreadcrumbs, XFsFolder, XFsProvider, XFsTree } from 'components-xfile-system';
+import { XfsBreadcrumbs, XfsFolder, XfsProvider, XfsTree } from 'components-xfile-system';
 import { NavigationSticky } from 'components-generic';
 import { Box } from '@mui/system';
 
@@ -8,20 +8,20 @@ import { Box } from '@mui/system';
 const Playbooks: React.FC = () => {
   
   return (<>
-    <FileSystemProvider>
+    <XfsProvider>
       <NavigationSticky>
-        <FileSystemBreadcrumbs />
+        <XfsBreadcrumbs />
       </NavigationSticky>
 
         <Box display='flex'>
           <Box width="50%">
-            <FileSystemTree />
+            <XfsTree />
           </Box>
           <Box>
-            <FileSystemFolder />
+            <XfsTree />
           </Box>
         </Box>
-    </FileSystemProvider>
+    </XfsProvider>
   </>)
 }
 
