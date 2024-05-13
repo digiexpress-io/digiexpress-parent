@@ -1,8 +1,9 @@
 import React from 'react';
 import { IconButton, Collapse, Box, Typography } from '@mui/material';
 
+import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 
 import { XfsNode } from './XfsTypes';
 import { XfsTreeItem } from './XfsTreeItem';
@@ -18,7 +19,7 @@ function getPadding(currentNode: XfsNode) {
 }
 
 const ExpanderIcon: React.FC<{ children: boolean }> = React.memo(({ children: open }) => {
-  return open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />;
+  return open ? <KeyboardArrowDownIcon /> : <ArrowRightOutlinedIcon />;
 })
 
 
