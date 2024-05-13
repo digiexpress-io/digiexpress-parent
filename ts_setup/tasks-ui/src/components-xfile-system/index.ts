@@ -1,7 +1,7 @@
 export * from './XfsProvider'; 
 export type { XfsContextType } from './XfsContext'; 
 export { useXfs } from './XfsContext'; 
-export * from './XfsExpanderContext'; 
+
 export * from './XfsFolderFocus'; 
 export * from './XfsTreeFocus'; 
 export * from './XfsTypes';
