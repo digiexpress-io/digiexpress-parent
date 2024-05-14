@@ -20,6 +20,7 @@
     <module>sysconfig-client</module>
     <module>permissions-client</module>
     <module>user-profile-client</module>
+    <module>iam-client</module>
   </modules>
 
 </project>
