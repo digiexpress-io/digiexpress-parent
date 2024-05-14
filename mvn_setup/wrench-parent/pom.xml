@@ -11,12 +11,13 @@
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>hdes-parent</artifactId>
+  <artifactId>wrench-parent</artifactId>
   <packaging>pom</packaging>
-  <name>hdes</name>
+  <name>wrench</name>
 
   <modules>
-    <module>sysconfig-client</module>
+    <module>hdes-dialect</module>
+    <module>hdes-core</module>
   </modules>
 
 </project>

@@ -123,6 +123,7 @@
     <module>stencil-parent</module>
     <module>thena-parent</module>
     <module>portal-parent</module>
+    <module>wrench-parent</module>
     <module>digiexpress-app</module>
   </modules>
 

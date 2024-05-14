@@ -3,20 +3,18 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>hdes-parent</artifactId>
+    <artifactId>wrench-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
 
-  <artifactId>hdes-dialect</artifactId>
+  <artifactId>hdes-core</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>hdes-ast</module>
-    <module>hdes-compiler</module>
-    <module>hdes-executor</module>
-    <module>hdes-interpreter</module>
-    <module>hdes-runtime</module>
-    <module>hdes-runtime-test</module>
+    <module>hdes-client-api</module> 
+    <module>hdes-client</module>
+    <module>hdes-store-git</module>
+    <module>hdes-store-thena</module>
   </modules>
 
 </project>
