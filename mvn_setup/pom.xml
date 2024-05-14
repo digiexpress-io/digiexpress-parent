@@ -122,7 +122,7 @@
     <module>hdes-parent</module>
     <module>stencil-parent</module>
     <module>thena-parent</module>
-    <module>tasks-parent</module>
+    <module>portal-parent</module>
     <module>digiexpress-app</module>
   </modules>
 

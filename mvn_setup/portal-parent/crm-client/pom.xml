@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>tasks-parent</artifactId>
+    <artifactId>portal-parent</artifactId>
     <version>999-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>thena-userprofile-client</artifactId>
+  <artifactId>thena-crm-client</artifactId>
 
   <dependencies>
     <dependency>

@@ -9,7 +9,7 @@
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
   
-  <artifactId>tasks-parent</artifactId>
+  <artifactId>portal-parent</artifactId>
   <packaging>pom</packaging>
 
   <modules>
