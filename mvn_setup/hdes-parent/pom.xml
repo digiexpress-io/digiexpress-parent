@@ -18,6 +18,7 @@
   <modules>
     <module>hdes-dialect</module>
     <module>hdes-core</module>
+    <module>sysconfig-client</module>
   </modules>
 
 </project>

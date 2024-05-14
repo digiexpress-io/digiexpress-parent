@@ -17,7 +17,6 @@
     <module>projects-client</module>
     <module>avatar-client</module>
     <module>crm-client</module>
-    <module>sysconfig-client</module>
     <module>permissions-client</module>
     <module>user-profile-client</module>
     <module>iam-client</module>
