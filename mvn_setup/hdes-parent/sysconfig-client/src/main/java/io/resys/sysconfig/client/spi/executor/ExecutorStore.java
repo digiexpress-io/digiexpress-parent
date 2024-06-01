@@ -1,7 +1,5 @@
 package io.resys.sysconfig.client.spi.executor;
 
-import java.util.List;
-
 import org.immutables.value.Value;
 
 import io.dialob.client.api.DialobClient;
@@ -10,7 +8,6 @@ import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorStore {
@@ -22,8 +19,8 @@ public interface ExecutorStore {
   WrenchFlowQuery queryFlows();
   
   Uni<SysConfigSession> save(SysConfigSession session);
-  Uni<ExecutorStore> withTenantConfig(String tenantConfigId);
-  ExecutorStore withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
+  
+  ExecutorStore withTenantId(String tenantId);
 
   interface SysConfigSessionQuery {
     Uni<SysConfigSession> get(String instanceId);

@@ -16,7 +16,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.client.api.DialobClient;
-import io.dialob.client.pgsql.PgSqlDialobStore;
 import io.dialob.client.spi.DialobClientImpl;
 import io.dialob.client.spi.event.EventPublisher;
 import io.dialob.client.spi.event.QuestionnaireEventPublisher;
@@ -24,6 +23,7 @@ import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.function.FunctionRegistryImpl;
 import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.OidUtils;
+import io.dialob.client.tests.migration.PgSqlDialobStore;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;

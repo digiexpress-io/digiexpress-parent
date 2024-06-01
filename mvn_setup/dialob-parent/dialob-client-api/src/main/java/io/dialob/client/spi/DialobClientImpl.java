@@ -1,26 +1,20 @@
 package io.dialob.client.spi;
 
 import java.time.Clock;
-import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.client.api.DialobCache;
 import io.dialob.client.api.DialobClient;
 import io.dialob.client.api.DialobClientConfig;
 import io.dialob.client.api.DialobErrorHandler;
-import io.dialob.client.api.DialobStore;
 import io.dialob.client.api.ImmutableDialobClientConfig;
 import io.dialob.client.spi.event.QuestionnaireEventPublisher;
 import io.dialob.client.spi.executor.QuestionnaireExecutorBuilderImpl;
 import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.program.ProgramBuilderImpl;
-import io.dialob.client.spi.store.DialobMemoryStore;
 import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.compiler.DialobProgramFromFormCompiler;
 import io.dialob.compiler.DialobSessionUpdateHook;
@@ -32,8 +26,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 public class DialobClientImpl implements DialobClient {
-  private final DialobClientConfig config; 
-  
+  private final DialobClientConfig config;
   @Override
   public ProgramBuilder program() {
     return new ProgramBuilderImpl(config.getCompiler());
@@ -50,15 +43,6 @@ public class DialobClientImpl implements DialobClient {
   public DialobClientConfig getConfig() {
     return config;
   }
-  @Override
-  public DialobStore store() {
-    return config.getStore();
-  }
-  
-  @Override
-  public RepoBuilder repo() {
-    return new DialobRepoBuilderImpl(config);
-  }
   
   public static Builder builder() {
     return new Builder();
@@ -70,8 +54,7 @@ public class DialobClientImpl implements DialobClient {
     private FunctionRegistry functionRegistry;
     private AsyncFunctionInvoker asyncFunctionInvoker;
     private QuestionnaireEventPublisher eventPublisher;
-
-    private DialobStore store;
+    
     private @Nullable ObjectMapper objectMapper;
     private @Nullable DialobSessionUpdateHook dialobSessionUpdateHook;
     private @Nullable DialobCache cache;
@@ -80,14 +63,12 @@ public class DialobClientImpl implements DialobClient {
     
     
     public DialobClientImpl build() {
-      //DialobAssert.notNull(store, () -> "store must be defined!");
       DialobAssert.notNull(functionRegistry, () -> "functionRegistry must be defined!");
       DialobAssert.notNull(eventPublisher, () -> "eventPublisher must be defined!");
       DialobAssert.notNull(asyncFunctionInvoker, () -> "asyncFunctionInvoker must be defined!");      
 
       DialobCache cache = this.cache;
       if(cache == null) {
-        //cache = DialobEhCache.builder().build(store.getRepoName());
         cache = DialobEhCache.builder().build("inmem");
       }
       
@@ -95,17 +76,6 @@ public class DialobClientImpl implements DialobClient {
       if(clock == null) {
         clock = Clock.systemDefaultZone();
       }
-
-      ObjectMapper objectMapper = this.objectMapper;
-      if(objectMapper == null) {
-        objectMapper = new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module(), new GuavaModule());
-      }
-      
-      DialobStore store = this.store;
-      if(store == null) {
-        store = new DialobMemoryStore(new HashMap<>());
-      }
-      
       DialobErrorHandler errorHandler = this.errorHandler;
       if(errorHandler == null) {
         errorHandler = new DialobErrorHandlerImpl(true);
@@ -114,23 +84,12 @@ public class DialobClientImpl implements DialobClient {
       final var config = ImmutableDialobClientConfig.builder()
           .asyncFunctionInvoker(asyncFunctionInvoker)
           .factory(new DialobSessionEvalContextFactory(functionRegistry, clock, dialobSessionUpdateHook))
-          .store(store)
           .cache(cache)
           .errorHandler(errorHandler)
           .eventPublisher(eventPublisher)
-          .mapper(new DialobTypesMapperImpl(objectMapper))
           .compiler(new DialobProgramFromFormCompiler(functionRegistry))
           .build();
-      
-
       return new DialobClientImpl(config);
     }
-  }
-
-  @Override
-  public DialobClient withRepo(String repoName, String headName) {
-    return new DialobClientImpl(ImmutableDialobClientConfig.builder().from(config)
-        .store(config.getStore().withRepo(repoName, headName))
-        .build());
   }
 }

@@ -9,13 +9,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.dialob.client.api.DialobClient.ProgramEnvir;
-import io.dialob.client.api.DialobClient.ProgramEnvirValue;
 import io.dialob.client.api.DialobClient.ProgramWrapper;
-import io.dialob.client.api.DialobClient.ReleaseWrapper;
-import io.dialob.client.api.DialobClient.RevisionWrapper;
 import io.dialob.client.api.DialobErrorHandler.DialobClientException;
 import io.dialob.client.api.DialobErrorHandler.DocumentNotFoundException;
-import io.dialob.client.spi.support.DialobAssert;
 import io.dialob.spi.Constants;
 import lombok.RequiredArgsConstructor;
 
@@ -23,11 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class ImmutableProgramEnvir implements ProgramEnvir {
   
   private final Map<String, List<ProgramWrapper>> byFormId;
-  private final Map<String, RevisionWrapper> byId;
   
   @Override
-  public Map<String, ProgramEnvirValue<?>> getValues() {
-    final var result = new HashMap<String, ProgramEnvirValue<?>>(byId);
+  public Map<String, ProgramWrapper> getValues() {
+    final var result = new HashMap<String, ProgramWrapper>();
     byFormId.values().stream().flatMap(e -> e.stream()).forEach(e -> result.put(e.getDocument().getId(), e));
     return result;
   }
@@ -40,7 +35,7 @@ public class ImmutableProgramEnvir implements ProgramEnvir {
     }
     final var values = byFormId.get(formId);
     if(values.size() > 1) {
-      final var revs = String.join(",", values.stream().map(e -> e.getDocument().getData().getRev()).collect(Collectors.toList()));
+      final var revs = String.join(",", values.stream().map(e -> e.getDocument().getRev()).collect(Collectors.toList()));
       throw new ProgramHasMultipleRevs("Program by formId: '" + formId + "' requires rev because of multpile revisions in use: '" + revs + "'!"); 
     }
     return values.get(0);
@@ -60,10 +55,10 @@ public class ImmutableProgramEnvir implements ProgramEnvir {
     final var values = byFormId.get(formId);
     final Optional<ProgramWrapper> result;
     if(Constants.LATEST_REV.equals(formRev)) {
-      final var fallback1 = values.stream().filter(r -> formRev.equals(r.getDocument().getData().getRev())).findFirst();
+      final var fallback1 = values.stream().filter(r -> formRev.equals(r.getDocument().getRev())).findFirst();
       if(fallback1.isEmpty()) {
         final var byCreated = values.stream().sorted((b, a) -> 
-          a.getDocument().getData().getMetadata().getCreated().compareTo(b.getDocument().getData().getMetadata().getCreated())
+          a.getDocument().getMetadata().getCreated().compareTo(b.getDocument().getMetadata().getCreated())
         ).collect(Collectors.toList());
         
         result = Optional.ofNullable(byCreated.isEmpty() ? null : byCreated.get(0));
@@ -72,11 +67,11 @@ public class ImmutableProgramEnvir implements ProgramEnvir {
         result = fallback1;        
       }
     } else {
-      result = values.stream().filter(r -> formRev.equals(r.getDocument().getData().getRev())).findFirst();  
+      result = values.stream().filter(r -> formRev.equals(r.getDocument().getRev())).findFirst();  
     }
     
     if(result.isEmpty()) {
-      final var revs = String.join(",", values.stream().map(e -> e.getDocument().getData().getRev()).collect(Collectors.toList()));      
+      final var revs = String.join(",", values.stream().map(e -> e.getDocument().getRev()).collect(Collectors.toList()));      
       throw new ProgramRevNotFound("Program by formId: '" + formId + "' revision: '" + formRev + "' not found, revisions in use: '" + revs + "'!");
     }
 
@@ -95,33 +90,26 @@ public class ImmutableProgramEnvir implements ProgramEnvir {
   public static class Builder {
     
     private final Map<String, List<ProgramWrapper>> byFormId = new HashMap<>();
-    private final Map<String, RevisionWrapper> revsById = new HashMap<>();
-    private final Map<String, ReleaseWrapper> relsById = new HashMap<>();
 
-    public Builder add(ProgramEnvirValue<?> wrapper) {
-      if(wrapper instanceof RevisionWrapper) {
-        DialobAssert.isTrue(!revsById.containsKey(wrapper.getDocument().getId()), () -> "Can't redfined revision document with id: '" + wrapper.getDocument().getId() + "'");
-        revsById.put(wrapper.getDocument().getId(), (RevisionWrapper) wrapper);
-      } else if(wrapper instanceof ProgramWrapper) {
-        
-        final var program = (ProgramWrapper) wrapper;
-        final var form = program.getDocument();
-        
-        final var revs = Optional.ofNullable(byFormId.get(form.getData().getId())).orElseGet(() -> {
-          final var values = new ArrayList<ProgramWrapper>();
-          byFormId.put(form.getData().getId(), values);
-          return values;
-        });
-        revs.add(program);
-      } else {
-        relsById.put(wrapper.getDocument().getId(), (ReleaseWrapper) wrapper); 
-      }
+
+    public Builder add(ProgramWrapper wrapper) {
+    
+      final var program = (ProgramWrapper) wrapper;
+      final var form = program.getDocument();
       
+      final var revs = Optional.ofNullable(byFormId.get(form.getId())).orElseGet(() -> {
+        final var values = new ArrayList<ProgramWrapper>();
+        byFormId.put(form.getId(), values);
+        return values;
+      });
+      revs.add(program);
+    
+    
       return this;
     }   
     
     public ProgramEnvir build() {
-      return new ImmutableProgramEnvir(Collections.unmodifiableMap(byFormId), Collections.unmodifiableMap(revsById));
+      return new ImmutableProgramEnvir(Collections.unmodifiableMap(byFormId));
     }
   }
   

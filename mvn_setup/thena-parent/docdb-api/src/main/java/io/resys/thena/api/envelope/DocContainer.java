@@ -17,6 +17,7 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 
 public interface DocContainer extends ThenaContainer {
 
+  @FunctionalInterface
   interface DocContainerVisitor<T> {
     T visit(
         Doc doc, 

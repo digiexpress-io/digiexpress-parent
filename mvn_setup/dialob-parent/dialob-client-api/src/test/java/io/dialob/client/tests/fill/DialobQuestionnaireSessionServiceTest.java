@@ -77,6 +77,7 @@ import io.dialob.client.api.ImmutableFormDocument;
 import io.dialob.client.spi.executor.questionnaire.QuestionnaireSessionImpl;
 import io.dialob.client.tests.client.DialobClientTestImpl;
 import io.dialob.executor.model.DialobSession;
+import io.vertx.core.json.JsonObject;
 
 
 @Slf4j
@@ -96,24 +97,22 @@ public class DialobQuestionnaireSessionServiceTest {
           .version("")
           .form(Thread.currentThread().getContextClassLoader().getResourceAsStream(formFile)).build()
         .build();
-    final var formId = envir.findAll().stream().findFirst().get().getDocument().getData().getId();
+    final var formId = envir.findAll().stream().findFirst().get().getDocument().getId();
     return new FillAssertionBuilder(formId, client, envir);
   }
 
   public static FillAssertionBuilder fillForm(String formFile, String questionnaireState) throws java.io.IOException {
-    final var client = get();
     final var bytes = new String(Thread.currentThread().getContextClassLoader().getResourceAsStream(formFile).readAllBytes(), StandardCharsets.UTF_8);
-    final var form = client.getConfig().getMapper().readForm(bytes);
+    final var form = new JsonObject(bytes).mapTo(Form.class);
     final var formDocument = ImmutableFormDocument.builder()
         .name(formFile)
         .id(formFile)
-
         .data(form)
         .created(LocalDateTime.now())
         .updated(LocalDateTime.now())
         .build();
-
-    final var questionnaire = client.getConfig().getMapper().readQuestionnaire(Thread.currentThread().getContextClassLoader().getResourceAsStream(questionnaireState));
+    final var questionnaire = new JsonObject(new String(Thread.currentThread().getContextClassLoader().getResourceAsStream(questionnaireState).readAllBytes(), StandardCharsets.UTF_8))
+        .mapTo(Questionnaire.class);
     return fillForm(formDocument.getData(), questionnaire);
   }
 
@@ -125,7 +124,10 @@ public class DialobQuestionnaireSessionServiceTest {
 
     final var client = get();
     final var envir = client.envir()
-        .addCommand().cachless().id(formId).version("1").form(client.getConfig().getMapper().toJson(formDocument)).build()
+        .addCommand().cachless()
+          .form(formDocument)
+          .id(formId).version("1")
+          .build()
         .build();
     return new FillAssertionBuilder(questionnaire, client, envir);
   }
@@ -1791,8 +1793,9 @@ public class DialobQuestionnaireSessionServiceTest {
     return assertion.extracting("item").filteredOn(instance -> instance != null && "questionnaire".equals(((ActionItem) instance).getType()));
   }
 
+  @SuppressWarnings("unchecked")
   private <T> Set<T> asSet(T... items) {
-    HashSet hashSet = new HashSet<T>();
+    HashSet<T> hashSet = new HashSet<T>();
     hashSet.addAll(asList(items));
     return hashSet;
   }

@@ -43,25 +43,16 @@ public interface HdesStore {
   Uni<StoreEntity> delete(DeleteAstType deleteType);
   Uni<List<StoreEntity>> batch(ImportStoreEntity batchType);
   
-  BranchQuery queryBranches();
-  QueryBuilder query();
+  String getTenantId();
+  
+  QueryBuilder assetQuery();
   HistoryQuery history();
-  String getRepoName();
-  String getHeadName();
-  StoreRepoBuilder repo();
   HdesStore withRepo(String repoName, String headName);
   
   interface BranchQuery {
     Uni<List<Branch>> findAll();
   }
   
-  interface StoreRepoBuilder {
-    StoreRepoBuilder repoName(String repoName);
-    StoreRepoBuilder headName(String headName);
-    Uni<HdesStore> create();    
-    HdesStore build();
-    Uni<Boolean> createIfNot();
-  }
   
   interface HistoryQuery {
     Uni<HistoryEntity> get(String id);

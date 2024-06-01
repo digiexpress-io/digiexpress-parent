@@ -18,7 +18,6 @@ import io.dialob.client.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.sysconfig.client.api.model.SysConfigRelease.AssetType;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
@@ -27,10 +26,8 @@ public interface AssetClient {
 
   AssetSourceQuery assetSourceQuery();
   AssetQuery assetQuery();
-  AssetClient withRepoId(String repoId);
+  AssetClient withTenantId(String repoId);
   
-  Uni<AssetClient> withTenantConfig(String tenantConfigId);
-  AssetClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
   AssetClientConfig getConfig();
   
   interface AssetSourceQuery {
@@ -38,19 +35,21 @@ public interface AssetClient {
   }
   
   interface AssetQuery {
-    Uni<WrenchAssets> getWrenchAsset(String releaseId);
-    Uni<StencilClient.Release> getStencilState(String releaseId);
-    Uni<HdesStore.StoreState> getWrenchState(String releaseId);
-    Uni<StencilAssets> getStencilAsset(String releaseId);
+    Uni<WrenchAssets> getWrenchAsset();
+    Uni<HdesStore.StoreState> getWrenchState();
+    
+    Uni<StencilClient.Release> getStencilState();
+    Uni<StencilAssets> getStencilAsset();
+    
     Uni<List<DialobAsset>> getDialobAssets(List<String> formId);
+    
     Multi<Asset> findAll();
   }
   
   
   @Value.Immutable
   interface AssetClientConfig {
-    String getTenantConfigId();
-    List<TenantRepoConfig> getRepoConfigs();
+    String getTenantId();
     DialobClient getDialob();
     HdesClient getHdes();
     StencilClient getStencil();

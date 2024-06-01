@@ -29,12 +29,6 @@ import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
 import io.resys.sysconfig.client.api.SysConfigClient;
-import io.resys.thena.projects.client.api.ImmutableCreateTenantConfig;
-import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.TenantConfig;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -89,37 +83,10 @@ public class TestCase {
   
   public Uni<AssetClient> createRepo(String repoId, String testcases) {
     this.builder = new TestCaseBuilder(pgPool, repoId).testcases(testcases);
-    final var tenantClient = this.builder.getTenantClient();
-    final var tenantId = "test-tenant"; //hardcoded tenant
-    
-    return tenantClient.query().deleteAll()
-        .onItem().transformToUni(junk -> init(tenantClient, repoId, tenantId))
-        .onItem().transformToUni(created -> builder.withTenant(created))
-        .onItem().transform(_junk -> builder.getClient());
-  }
-  
-  private Uni<TenantConfig> init(ProjectClient tenantClient, String repoId, String tenantId) {
-    return tenantClient.query().repoName(repoId, TenantRepoConfigType.TENANT).createIfNot()
-        .onItem().transformToUni(created -> {
-          return tenantClient.createTenantConfig().createOne(ImmutableCreateTenantConfig.builder()
-              .name(tenantId)
-              .repoId(repoId)
-              .build())
-              .onItem().transformToUni(this::createNested);
-        });
-  }
-
-  private Uni<TenantConfig> createNested(TenantConfig tenant) {
-    return Multi.createFrom().items(tenant.getRepoConfigs().stream())
-      .onItem().transformToUni(this::createRepo)
-      .concatenate().collect().asList().onItem().transform(junk -> tenant);
-  }
-  
-  private Uni<TenantRepoConfig> createRepo(TenantRepoConfig config) {
-    final var tenantClient = builder.getTenantClient();
-    return tenantClient.query()
-    .repoName(config.getRepoId(), config.getRepoType())
-    .createIfNot().onItem().transform(created -> config);
+    return this.builder.getStore().query().deleteAll().onItem()
+        .transformToUni(junk -> this.builder.getStore().query().createIfNot())
+        .onItem().transform(newStore -> this.builder.withTenant(newStore.getConfig().getRepoId()).getClient()); 
+        
   }
   
   

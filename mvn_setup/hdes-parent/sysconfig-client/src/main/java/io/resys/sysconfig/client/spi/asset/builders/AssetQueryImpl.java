@@ -37,44 +37,33 @@ public class AssetQueryImpl implements AssetQuery {
 
 
   @Override
-  public Uni<WrenchAssets> getWrenchAsset(String releaseId) {
+  public Uni<WrenchAssets> getWrenchAsset() {
     return this.clients.onItem().transformToUni(configs -> {
       final HdesClient client = configs.getHdes();
       final HdesStore store = client.store();
       final Uni<HdesStore.StoreState> state = store.query().get();
       
-      if(isReleaseId(releaseId)) {
-        return state.onItem().transform(loaded -> new FindHdesRelease(client, store, loaded).toWrenchAssets(releaseId));
-      }
-      return state.onItem().transform(loaded -> new CreateHdesTransientRelease(client, store, loaded).toWrenchAssets(releaseId));
+      return state.onItem().transform(loaded -> new CreateHdesTransientRelease(client, store, loaded).toWrenchAssets());
     });
   }
   
   @Override
-  public Uni<io.resys.hdes.client.api.HdesStore.StoreState> getWrenchState(String releaseId) {
+  public Uni<io.resys.hdes.client.api.HdesStore.StoreState> getWrenchState() {
     return this.clients.onItem().transformToUni(configs -> {
       final HdesClient client = configs.getHdes();
       final HdesStore store = client.store();
-      
-      if(isReleaseId(releaseId)) {
-        final Uni<HdesStore.StoreState> state = store.query().get();
-        return state.onItem().transformToUni(loaded -> new FindHdesRelease(client, store, loaded).toWrenchState(releaseId).query().get());
-      }
       return store.query().get();
     });
   }
 
   @Override
-  public Uni<StencilAssets> getStencilAsset(String releaseId) {
+  public Uni<StencilAssets> getStencilAsset() {
     return this.clients.onItem().transformToUni(configs -> {
       final StencilClient client = configs.getStencil();
       final StencilStore store = client.getStore();
       final Uni<SiteState> state = store.query().head();
       
-      if(isReleaseId(releaseId)) {
-        return state.onItem().transform(loaded -> new FindStencilRelease(client, store, loaded).toStencilAssets(releaseId));
-      }
-      return state.onItem().transform(loaded -> new CreateStencilTransientRelease(client, store, loaded).toStencilAssets(releaseId));
+      return state.onItem().transform(loaded -> new CreateStencilTransientRelease(client, store, loaded).toStencilAssets());
     });
   }
 
@@ -87,34 +76,16 @@ public class AssetQueryImpl implements AssetQuery {
       return state.onItem().transform(loaded -> new FindDialobFormsVisitor(client, store, loaded).visit(formId));
     });
   }
-  
-  private boolean isReleaseId(String id) {
-    final var criteria = id == null ? "": id.toLowerCase().trim();
-    if(criteria.isEmpty()) {
-      return false;
-    }
-    if(id.equals("main")) {
-      return false;
-    } else if(id.equals("latest")) {
-      return false;
-    } else if(id.equals("dev")) {
-      return false;
-    }
-    return true;
-  }
 
 
   @Override
-  public Uni<StencilClient.Release> getStencilState(String releaseId) {
+  public Uni<StencilClient.Release> getStencilState() {
     return this.clients.onItem().transformToUni(configs -> {
       final StencilClient client = configs.getStencil();
       final StencilStore store = client.getStore();
       final Uni<SiteState> state = store.query().head();
       
-      if(isReleaseId(releaseId)) {
-        return state.onItem().transform(loaded -> new FindStencilRelease(client, store, loaded).toStencilState(releaseId));
-      }
-      return state.onItem().transform(loaded -> new CreateStencilTransientRelease(client, store, loaded).toStencilState(releaseId));
+      return state.onItem().transform(loaded -> new CreateStencilTransientRelease(client, store, loaded).toStencilState());
     });
   }
 }

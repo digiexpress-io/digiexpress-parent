@@ -2,7 +2,6 @@ package io.resys.sysconfig.client.api;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 
 import org.immutables.value.Value;
@@ -11,7 +10,6 @@ import io.dialob.client.api.DialobClient;
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigReleaseQuery;
 import io.resys.sysconfig.client.api.model.SysConfigInstance;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 
 public interface ExecutorClient {
@@ -24,8 +22,7 @@ public interface ExecutorClient {
   Uni<SysConfigSession> save(SysConfigSession session);
   Uni<SysConfigRelease> save(SysConfigRelease release);
   
-  Uni<ExecutorClient> withTenantConfig(String tenantConfigId);
-  ExecutorClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig);
+  ExecutorClient withTenantId(String tenantConfigId);
   
   
   interface SysConfigSessionQuery {
@@ -66,11 +63,5 @@ public interface ExecutorClient {
     
     default io.dialob.api.questionnaire.Questionnaire getQuestionnaire() { return getSession().getQuestionnaire(); }
   }
-  
-
-  @Value.Immutable
-  interface ExecutorClientConfig {
-    String getTenantConfigId();
-    List<TenantRepoConfig> getRepoConfigs();
-  }
+ 
 }

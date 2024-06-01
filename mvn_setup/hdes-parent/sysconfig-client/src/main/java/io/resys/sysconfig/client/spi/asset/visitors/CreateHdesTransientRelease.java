@@ -27,9 +27,9 @@ public class CreateHdesTransientRelease {
   private final HdesStore store;
   private final HdesStore.StoreState state;
   
-  public WrenchAssets toWrenchAssets(String releaseId) {
+  public WrenchAssets toWrenchAssets() {
     final var command = ImmutableCreateEntity.builder()
-        .name("transient-release: " + releaseId + " at: " + Instant.now().toString())
+        .name("transient-release at: " + Instant.now().toString())
         .desc("created on the fly")
         .type(AstBody.AstBodyType.TAG)
         .build();

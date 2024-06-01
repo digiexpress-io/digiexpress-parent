@@ -91,7 +91,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
         List<DocCommitTree> trees
    ) -> docBranch.getValue().mapTo(ImmutableSysConfig.class)).stream().findFirst().get();
   
-    return assetClient.withTenantConfig(sysConfig.getTenantId())
+    return Uni.createFrom().item(assetClient)
         .onItem().transformToUni(client -> doInAssetClient(client, sysConfig))
         .onItem().transformToUni(entity -> {
           final var json = JsonObject.mapFrom(entity);
@@ -110,8 +110,8 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
 
     return Uni.combine().all().unis(
         client.assetQuery().getDialobAssets(dialobs),
-        client.assetQuery().getStencilAsset(config.getStencilHead()),
-        client.assetQuery().getWrenchAsset(config.getWrenchHead())
+        client.assetQuery().getStencilAsset(),
+        client.assetQuery().getWrenchAsset()
     ).asTuple().onItem().transform(tuple -> {
       
       
@@ -122,7 +122,7 @@ public class CreateSysConfigReleaseVisitor implements DocObjectVisitor<Uni<SysCo
           .author(command.getUserId())
           .created(command.getTargetDate())
           .scheduledAt(command.getScheduledAt())
-          .tenantId(config.getTenantId())
+          .tenantId(ctx.getConfig().getRepoId())
           
           .services(config.getServices())
           

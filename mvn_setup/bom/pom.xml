@@ -32,26 +32,11 @@ permissions and limitations under the
       <!-- HDES -->
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- store -->
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-store-git</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-thena</artifactId>
@@ -90,88 +75,15 @@ permissions and limitations under the
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-spring-env</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-spring-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-composer-pg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-
-      <!-- Process -->
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>digiexpress-client-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>digiexpress-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>digiexpress-composer-spring</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
 
       <!-- Stencil -->
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>stencil-composer-integration</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
         <artifactId>stencil-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>stencil-iam-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-composer-pg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-site-pg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-sc</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-user-actions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-iam</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
+ 
 
       <!-- Thena -->
       <dependency>
@@ -214,26 +126,6 @@ permissions and limitations under the
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>dialob-rule-parser</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>dialob-form-store-pgsql</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>dialob-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>dialob-composer-ui</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>dialob-composer-spring</artifactId>
         <version>${project.version}</version>
       </dependency>
 

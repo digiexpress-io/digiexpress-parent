@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -62,7 +63,7 @@ public class QuestionnaireExecutorBuilderImpl implements DialobClient.Questionna
     DialobAssert.notEmpty(init.rev(), () -> "questionnaire.rev must be defined!");
     
     
-    final var questionnaire = this.createNewQuestionnaire(formDocument.getData(), init);
+    final var questionnaire = this.createNewQuestionnaire(formDocument, init);
     final var dialobSession = this.createSession(questionnaire, formAndProgram);    
     return new QuestionnaireExecutorImpl(questionnaire, formAndProgram, dialobSession, config, true);
   }
@@ -82,7 +83,7 @@ public class QuestionnaireExecutorBuilderImpl implements DialobClient.Questionna
     final var dialobProgram = formAndProgram.getProgram().get();
     return dialobProgram.createSession(
         config.getFactory(),
-        formAndProgram.getDocument().getData().getMetadata().getTenantId(),
+        formAndProgram.getDocument().getMetadata().getTenantId(),
         questionnaire.getId(),
         questionnaire.getMetadata().getLanguage(),
         questionnaire.getActiveItem(), 
@@ -107,7 +108,7 @@ public class QuestionnaireExecutorBuilderImpl implements DialobClient.Questionna
     metadata.formName(formDocument.getName());
     metadata.label(formDocument.getMetadata().getLabel());
     metadata.creator(init.creator());
-    metadata.owner(StringUtils.defaultString(init.owner(), init.creator()));
+    metadata.owner(Objects.toString(init.owner(), init.creator()));
     metadata.status(init.status() != null ? init.status() : Questionnaire.Metadata.Status.NEW );
     
     

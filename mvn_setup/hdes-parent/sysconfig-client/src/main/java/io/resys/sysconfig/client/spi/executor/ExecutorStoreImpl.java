@@ -1,30 +1,21 @@
 package io.resys.sysconfig.client.spi.executor;
 
-import java.util.List;
-
 import io.dialob.client.api.DialobClient.ProgramWrapper;
 import io.resys.sysconfig.client.api.AssetClient;
-import io.resys.sysconfig.client.api.ExecutorClient.ExecutorClientConfig;
 import io.resys.sysconfig.client.api.ExecutorClient.SysConfigSession;
-import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.SysConfigStore;
 import io.resys.sysconfig.client.spi.executor.visitors.GetDialobProgramFromReleaseVisitor;
 import io.resys.sysconfig.client.spi.executor.visitors.GetFlowProgramFromReleaseVisitor;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
 import io.resys.sysconfig.client.spi.visitors.GetSysConfigReleaseByIdVisitor;
-import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ExecutorStoreImpl implements ExecutorStore {
   
-  private final ProjectClient tenantClient;
   private final AssetClient assetClient;
-  private final ExecutorClientConfig config;
   private final SysConfigStore ctx;
   
   @Override
@@ -82,18 +73,9 @@ public class ExecutorStoreImpl implements ExecutorStore {
     return null;
   }
 
-  
   @Override
-  public Uni<ExecutorStore> withTenantConfig(String tenantConfigId) {
-    return tenantClient.queryActiveTenantConfig().get(tenantConfigId)
-        .onItem().transform(tenant -> withTenantConfig(tenantConfigId, tenant.getRepoConfigs()));
-  }
-
-  @Override
-  public ExecutorStore withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
-    final var sysConfig = tenantConfig.stream().filter(entry -> entry.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst();
-    final var config = ImmutableExecutorClientConfig.builder().tenantConfigId(tenantConfigId).repoConfigs(tenantConfig).build();
-    final var ctx = this.ctx.withTenantId(sysConfig.get().getRepoId());
-    return new ExecutorStoreImpl(tenantClient, assetClient.withTenantConfig(tenantConfigId, tenantConfig), config, ctx);
+  public ExecutorStore withTenantId(String tenantId) {
+    final var ctx = this.ctx.withTenantId(tenantId);
+    return new ExecutorStoreImpl(assetClient.withTenantId(tenantId), ctx);
   }
 }

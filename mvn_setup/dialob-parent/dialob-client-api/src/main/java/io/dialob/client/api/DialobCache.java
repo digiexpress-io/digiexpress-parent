@@ -5,18 +5,18 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.dialob.client.api.DialobStore.StoreEntity;
+import io.dialob.api.form.Form;
 import io.dialob.program.DialobProgram;
 
 public interface DialobCache {
 
   DialobCache withName(String name);
   
-  Optional<DialobProgram> getProgram(StoreEntity src);
-  Optional<DialobDocument> getAst(StoreEntity src);
+  Optional<DialobProgram> getProgram(String id, String version);  
+  Optional<Form> getAst(String id, String version);
   
-  DialobProgram setProgram(DialobProgram program, StoreEntity src);
-  DialobDocument setAst(DialobDocument ast, StoreEntity src);
+  DialobProgram setProgram(DialobProgram program, Form src);
+  Form setAst(Form src);
   
   void flush(String id);
   
@@ -24,8 +24,7 @@ public interface DialobCache {
   interface CacheEntry extends Serializable {
     String getId();
     String getRev();
-    StoreEntity getSource();
-    DialobDocument getAst();
+    Form getAst();
     Optional<DialobProgram> getProgram();
   }
 

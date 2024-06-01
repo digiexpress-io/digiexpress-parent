@@ -53,7 +53,7 @@ public class HdesComposerImpl implements HdesComposer {
 
   @Override
   public Uni<ComposerState> get() {
-    return client.store().query().get().onItem().transform(this::state);
+    return client.store().assetQuery().get().onItem().transform(this::state);
   }
   @Override
   public Uni<ComposerState> update(UpdateEntity asset) {
@@ -67,29 +67,29 @@ public class HdesComposerImpl implements HdesComposer {
           // flush cache
           client.config().getCache().flush(asset.getId());
         
-          return client.store().query().get().onItem().transform(this::state);
+          return client.store().assetQuery().get().onItem().transform(this::state);
         });
   }
   @Override
   public Uni<ComposerState> create(CreateEntity asset) {
-    return client.store().query().get().onItem().transform(this::state)
+    return client.store().assetQuery().get().onItem().transform(this::state)
         .onItem().transformToUni(state -> client.store().create(new CreateEntityVisitor(state, asset, client).visit()))
-        .onItem().transformToUni(savedEntity -> client.store().query().get().onItem().transform(this::state));
+        .onItem().transformToUni(savedEntity -> client.store().assetQuery().get().onItem().transform(this::state));
   }
   @Override
   public Uni<ComposerState> delete(String id) {
-    return client.store().query().get().onItem().transform(this::state)
+    return client.store().assetQuery().get().onItem().transform(this::state)
         .onItem().transformToUni(state -> client.store().delete(new DeleteEntityVisitor(state, id).visit()))
         .onItem().transformToUni(savedEntity -> {
           // flush cache
           client.config().getCache().flush(id);
         
-          return client.store().query().get().onItem().transform(this::state);
+          return client.store().assetQuery().get().onItem().transform(this::state);
         });
   }
   @Override
   public Uni<ComposerEntity<?>> get(String idOrName) {
-    return client.store().query().get().onItem().transform(this::state)
+    return client.store().assetQuery().get().onItem().transform(this::state)
       .onItem().transform(state -> {
         List<ComposerEntity<?>> entities = new ArrayList<>();
         entities.addAll(state.getDecisions().values());
@@ -107,23 +107,23 @@ public class HdesComposerImpl implements HdesComposer {
   }
   @Override
   public Uni<ComposerState> copyAs(CopyAs copyAs) {
-    return client.store().query().get().onItem().transform(this::state)
+    return client.store().assetQuery().get().onItem().transform(this::state)
         .onItem().transform(state -> new CopyAsEntityVisitor(state, copyAs, client).visit())
         .onItem().transformToUni(newEntity -> client.store().create(newEntity))
-        .onItem().transformToUni(savedEntity -> client.store().query().get().onItem().transform(this::state));
+        .onItem().transformToUni(savedEntity -> client.store().assetQuery().get().onItem().transform(this::state));
   }
   @Override
   public Uni<DebugResponse> debug(DebugRequest entity) {
-    return client.store().query().get().onItem()
+    return client.store().assetQuery().get().onItem()
         .transform(state -> new DebugVisitor(client).visit(entity, state));
   }
   @Override
   public Uni<ComposerEntity<?>> dryRun(UpdateEntity entity) {
-    return client.store().query().get().onItem().transform(state -> new DryRunVisitor(client).visit(state, entity));
+    return client.store().assetQuery().get().onItem().transform(state -> new DryRunVisitor(client).visit(state, entity));
   }
   @Override
   public Uni<StoreDump> getStoreDump() {
-    return client.store().query().get().onItem().transform(state -> new DataDumpVisitor(client).visit(state));
+    return client.store().assetQuery().get().onItem().transform(state -> new DataDumpVisitor(client).visit(state));
   }
   
   public ComposerState state(StoreState source) {
@@ -138,9 +138,9 @@ public class HdesComposerImpl implements HdesComposer {
 
   @Override
   public Uni<ComposerState> importTag(AstTag asset) {
-    return client.store().query().get().onItem().transform(this::state)
+    return client.store().assetQuery().get().onItem().transform(this::state)
         .onItem().transform(state -> new ImportEntityVisitor(state, asset, client).visit())
         .onItem().transformToUni(newEntity -> client.store().batch(newEntity))
-        .onItem().transformToUni(savedEntity -> client.store().query().get().onItem().transform(this::state));
+        .onItem().transformToUni(savedEntity -> client.store().assetQuery().get().onItem().transform(this::state));
   }
 }

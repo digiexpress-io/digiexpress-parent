@@ -25,19 +25,19 @@ public class CreateStencilTransientRelease {
   private final SiteState state;
   
   
-  public Release toStencilState(String releaseId) {
+  public Release toStencilState() {
     final var init = ImmutableCreateRelease.builder()
         .id(OidUtils.gen())
-        .name("transient-release: " + releaseId + " at: " + Instant.now().toString())
+        .name("content at: " + Instant.now().toString())
         .build();
     
     final var transientEntity = io.thestencil.client.spi.builders.CreateBuilderImpl.release(init, state, client);
     return transientEntity.getBody();
   }  
-  public StencilAssets toStencilAssets(String releaseId) {
+  public StencilAssets toStencilAssets() {
     final var init = ImmutableCreateRelease.builder()
         .id(OidUtils.gen())
-        .name("transient-release: " + releaseId + " at: " + Instant.now().toString())
+        .name("content at: " + Instant.now().toString())
         .build();
     
     final var transientEntity = io.thestencil.client.spi.builders.CreateBuilderImpl.release(init, state, client);

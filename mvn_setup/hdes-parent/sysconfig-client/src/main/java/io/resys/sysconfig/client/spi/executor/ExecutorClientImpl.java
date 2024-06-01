@@ -1,7 +1,5 @@
 package io.resys.sysconfig.client.spi.executor;
 
-import java.util.List;
-
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.SysConfigClient.SysConfigReleaseQuery;
@@ -9,7 +7,6 @@ import io.resys.sysconfig.client.api.model.SysConfigRelease;
 import io.resys.sysconfig.client.spi.executor.builder.SysConfigFillBuilderImpl;
 import io.resys.sysconfig.client.spi.executor.builder.SysConfigInstanceBuilderImpl;
 import io.resys.sysconfig.client.spi.executor.builder.SysConfigProcesssFillBuilderImpl;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -59,18 +56,9 @@ public class ExecutorClientImpl implements ExecutorClient {
   }
 
   @Override
-  public Uni<ExecutorClient> withTenantConfig(String tenantConfigId) {
-    return this.assets.withTenantConfig(tenantConfigId)
-        .onItem().transform(tenantAssets -> {
-          final var store = this.store.withTenantConfig(tenantAssets.getConfig().getTenantConfigId(), tenantAssets.getConfig().getRepoConfigs());
-          return new ExecutorClientImpl(store, tenantAssets);
-        });
-  }
-
-  @Override
-  public ExecutorClient withTenantConfig(String tenantConfigId, List<TenantRepoConfig> tenantConfig) {
-    final var store = this.store.withTenantConfig(tenantConfigId, tenantConfig);
-    final var tenantAssets = this.assets.withTenantConfig(tenantConfigId, tenantConfig);
+  public ExecutorClient withTenantId(String tenantId) {
+    final var store = this.store.withTenantId(tenantId);
+    final var tenantAssets = this.assets.withTenantId(tenantId);
     return new ExecutorClientImpl(store, tenantAssets);
   }
 

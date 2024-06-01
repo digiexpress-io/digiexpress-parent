@@ -13,10 +13,6 @@
   <dependencies>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-projects-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
       <artifactId>thena-docdb-api</artifactId>
     </dependency>
     <dependency>
@@ -38,10 +34,6 @@
       		<artifactId>commons-logging</artifactId>
       	</exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>dialob-form-store-pgsql</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>

@@ -1,21 +1,21 @@
 package io.dialob.client.spi;
 
 
-import io.dialob.client.api.DialobCache;
-import io.dialob.client.api.DialobDocument;
-import io.dialob.client.api.DialobStore.StoreEntity;
-import io.dialob.client.api.ImmutableCacheEntry;
-import io.dialob.program.DialobProgram;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import io.dialob.api.form.Form;
+import io.dialob.client.api.DialobCache;
+import io.dialob.client.api.ImmutableCacheEntry;
+import io.dialob.program.DialobProgram;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -30,24 +30,24 @@ public class DialobEhCache implements DialobCache {
     return cacheManager.getCache(cacheName, String.class, CacheEntry.class);
   }
   @Override
-  public Optional<DialobProgram> getProgram(StoreEntity src) {
-    final var id = toCacheId(src);
+  public Optional<DialobProgram> getProgram(String docId, String docVersion) {
+    final var id = toCacheId(docId, docVersion);
     final var cache = getCache();
     final var result = Optional.ofNullable(cache.get(id)).map(e -> e.getProgram().orElse(null));
     log.debug("Dialob, caching, program resolved: " + result.isPresent() + ", id: " + id);
     return result;
   }
   @Override
-  public Optional<DialobDocument> getAst(StoreEntity src) {
-    final var id = toCacheId(src);
+  public Optional<Form> getAst(String docId, String docVersion) {
+    final var id = toCacheId(docId, docVersion);
     log.debug("Dialob, caching, document resolved: " + id);
     final var cache = getCache();
     final var result = Optional.ofNullable(cache.get(id)).map(e -> e.getAst());
     return result;
   }
   @Override
-  public DialobProgram setProgram(DialobProgram program, StoreEntity src) {
-    final var id = toCacheId(src);
+  public DialobProgram setProgram(DialobProgram program, Form ast) {
+    final var id = toCacheId(ast.getId(), ast.getRev());
     log.debug("Dialob, caching a program, id: " + id);
     final var cache = getCache();
     final var previous = cache.get(id);
@@ -56,16 +56,16 @@ public class DialobEhCache implements DialobCache {
     return program;
   }
   @Override
-  public DialobDocument setAst(DialobDocument ast, StoreEntity src) {
-    final var id = toCacheId(src);
+  public Form setAst(Form ast) {
+    final var id = toCacheId(ast.getId(), ast.getRev());
     log.debug("Dialob, caching a document, id: " + id);
-    final var entry = ImmutableCacheEntry.builder().id(id).rev(ast.getVersion()).source(src).ast(ast).build();
+    final var entry = ImmutableCacheEntry.builder().id(id).rev(ast.getRev()).ast(ast).build();
     final var cache = getCache();
     cache.put(id, entry);
     return ast;
   }
-  private String toCacheId(StoreEntity src) {
-    return src.getId() + "/" + src.getVersion();
+  private String toCacheId(String id, String version) {
+    return id + "/" + version;
   }
 
   @Override

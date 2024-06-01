@@ -18,7 +18,6 @@ import io.resys.sysconfig.client.api.model.SysConfigCommand.CreateSysConfig;
 import io.resys.sysconfig.client.mig.visitors.DialobMigration.FormsAndRevs;
 import io.resys.sysconfig.client.mig.visitors.HdesMigration.HdesState;
 import io.resys.sysconfig.client.spi.support.SysConfigAssert;
-import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
@@ -132,12 +131,9 @@ public class WorkflowMigration {
 
     
     final var command = ImmutableCreateSysConfig.builder()
-        .tenantId("migration-test-tenant-id")
         .userId("migration-test-user-id")
         .name("migration")
         .targetDate(Instant.now())
-        .wrenchHead(DocObjectsQueryImpl.BRANCH_MAIN)
-        .stencilHead(DocObjectsQueryImpl.BRANCH_MAIN)
         .services(processes)
         .build();
     

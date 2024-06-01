@@ -47,7 +47,7 @@ public class GetComposerDocumentState {
     }
     
     for(final var entry : rev.getEntries()) {
-      if(entry.getId().equals(this.version)) {
+      if(entry.getFormId().equals(this.version)) {
         final var form = state.getForms().get(entry.getFormId());
         return ImmutableComposerDocumentState.builder().revision(rev).form(form).build();
       }
@@ -66,7 +66,7 @@ public class GetComposerDocumentState {
   
   private FormRevisionEntryDocument findFromDocument(FormRevisionDocument rev) {
     for(final var entry : rev.getEntries()) {
-      if(entry.getId().equals(this.idOrName)) {
+      if(entry.getFormId().equals(this.idOrName)) {
         return entry;
       }
       

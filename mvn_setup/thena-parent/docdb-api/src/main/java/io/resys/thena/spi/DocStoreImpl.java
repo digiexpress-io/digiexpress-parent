@@ -33,9 +33,9 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     final var next = ImmutableThenaDocConfig.builder().from(config).repoId(repoId).build();
     return factory.getInstance(next, factory);
   }
-  protected T withRepo(String repoName, String headName) {
+  public T withRepo(String repoName, String headName) {
     RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    final var next = ImmutableThenaDocConfig.builder().from(config).repoId(repoName).build();
+    final var next = ImmutableThenaDocConfig.builder().from(config).repoId(repoName).headId(headName).build();
     return factory.getInstance(next, factory);
   }
   @Override

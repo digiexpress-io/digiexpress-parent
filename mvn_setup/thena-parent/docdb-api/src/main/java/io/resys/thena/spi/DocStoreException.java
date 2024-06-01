@@ -30,6 +30,7 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
@@ -116,6 +117,10 @@ public class DocStoreException extends RuntimeException {
     }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {
       callback.accept(msg);
+      return this;
+    }
+    public Builder add(List<Message> messages) {
+      msg.addAllArgs(messages.stream().map(message->message.getText()).collect(Collectors.toList()));
       return this;
     }
     

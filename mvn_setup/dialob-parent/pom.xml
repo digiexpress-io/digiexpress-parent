@@ -24,7 +24,6 @@
     <module>dialob-api-client</module>
     <module>dialob-client-api</module>
     <module>dialob-compiler</module>
-    <module>dialob-form-store-pgsql</module>
     <module>dialob-rule-parser</module>
   </modules>
 </project>

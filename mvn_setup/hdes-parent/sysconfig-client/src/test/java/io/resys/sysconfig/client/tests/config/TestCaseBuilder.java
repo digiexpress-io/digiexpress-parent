@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.client.api.DialobClient;
-import io.dialob.client.pgsql.PgSqlDialobStore;
 import io.dialob.client.spi.DialobClientImpl;
 import io.dialob.client.spi.event.EventPublisher;
 import io.dialob.client.spi.event.QuestionnaireEventPublisher;
@@ -17,6 +16,7 @@ import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.function.FunctionRegistryImpl;
 import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
 import io.dialob.client.spi.support.OidUtils;
+import io.dialob.client.tests.migration.PgSqlDialobStore;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
@@ -27,7 +27,6 @@ import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.sysconfig.client.api.AssetClient;
 import io.resys.sysconfig.client.api.ExecutorClient;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
-import io.resys.sysconfig.client.api.ImmutableExecutorClientConfig;
 import io.resys.sysconfig.client.api.SysConfigClient;
 import io.resys.sysconfig.client.spi.SysConfigClientImpl;
 import io.resys.sysconfig.client.spi.SysConfigStore;
@@ -37,15 +36,9 @@ import io.resys.sysconfig.client.spi.executor.ExecutorStoreImpl;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.jackson.VertexExtModule;
-import io.resys.thena.projects.client.api.ProjectClient;
-import io.resys.thena.projects.client.api.TenantConfig;
-import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.projects.client.spi.ProjectStore;
-import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
-import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
@@ -61,23 +54,26 @@ public class TestCaseBuilder {
   public final ObjectMapper objectMapper;
   
   private SysConfigClient sysConfig;
-  private TenantConfig tenant;
   private AssetClient assetClient;
   private ExecutorClient executorClient;
-  private ProjectClient tenantClient;
   private final ThenaClient doc;
   private final DbState docState;
   private final String author = "jane.doe@morgue.com";
-  private final String repoId;
+  private String repoId;
   private TestCaseReader testCaseReader;
+  private final SysConfigStore store;
   
+  
+  public SysConfigStore getStore() {
+    return store;
+  }
+
   public TestCaseBuilder(io.vertx.mutiny.pgclient.PgPool pgPool, String repoId) {
     this.objectMapper = objectMapper();
-    
-    
     this.doc = getClient(pgPool, "junit");
     this.docState = DbStateSqlImpl.create(TenantTableNames.defaults("junit"), pgPool);
     this.repoId = repoId;
+    this.store = SysConfigStore.builder().repoName("").pgPool(pgPool).build();
     
     final var stencil = createStencilInit(pgPool, objectMapper);
     final var wrench = createWrenchInit(pgPool, objectMapper);
@@ -86,34 +82,20 @@ public class TestCaseBuilder {
         .dialob(dialob)
         .hdes(wrench)
         .stencil(stencil)
-        .tenantConfigId("")
+        .tenantId("")
         .build();
     
-    final var tenantStore = ProjectStore.builder()
-        .repoName(repoId)
-        .pgPool(pgPool)
-        .objectMapper(objectMapper)
-        .build();
-    this.tenantClient = new ProjectsClientImpl(tenantStore);
-    this.assetClient = new AssetClientImpl(tenantClient, assetConfig);
-    this.sysConfig = createSysConfigInit(pgPool, objectMapper, assetClient);
-    this.executorClient = createExecutorInit(pgPool, objectMapper, assetClient);
+    this.assetClient = new AssetClientImpl(assetConfig);
+    this.sysConfig = createSysConfigInit(objectMapper, assetClient);
+    this.executorClient = createExecutorInit(objectMapper, assetClient);
   }
   
-  public Uni<TestCaseBuilder> withTenant(TenantConfig tenant) {
-    this.tenant = tenant;
-    this.sysConfig = this.sysConfig.withRepoId(tenant.getRepoConfigs().stream().filter(c -> c.getRepoType() == TenantRepoConfigType.SYS_CONFIG).findFirst().get().getRepoId());
-    return this.assetClient.withTenantConfig(tenant.getId())
-    .onItem().transform(newClient -> {
-      this.assetClient = newClient;
-      return this;
-    })
-    .onItem().transformToUni(_junk -> this.executorClient.withTenantConfig(tenant.getId())
-    .onItem().transform(newClient -> {
-        this.executorClient = newClient;
-        return this;
-      })
-    );
+  public TestCaseBuilder withTenant(String tenantId) {
+    this.repoId = tenantId;
+    this.sysConfig = this.sysConfig.withTenantId(tenantId);
+    this.assetClient = this.assetClient.withTenantId(tenantId);
+    this.executorClient = this.executorClient.withTenantId(tenantId);
+    return this;
   }
   public String getRepoId() {
     return repoId;
@@ -130,12 +112,6 @@ public class TestCaseBuilder {
   public AssetClient getClient() {
     return assetClient;
   }
-  public ProjectClient getTenantClient() {
-    return tenantClient;
-  }
-  public TenantConfig getTenant() {
-    return tenant;
-  }
   public SysConfigClient getSysConfig() {
     return this.sysConfig;
   }
@@ -144,21 +120,12 @@ public class TestCaseBuilder {
     return this.executorClient;
   }
   
-  private ExecutorClient createExecutorInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {
-    final var config = ImmutableExecutorClientConfig.builder()
-        .tenantConfigId("")
-        .build();
-    final var store = SysConfigStore.builder()
-        .repoName("").pgPool(pgPool)
-        .build();
-    return new ExecutorClientImpl(new ExecutorStoreImpl(tenantClient, assetClient, config, store), assetClient);
+  private ExecutorClient createExecutorInit(ObjectMapper objectMapper, AssetClient assetClient) {
+    return new ExecutorClientImpl(new ExecutorStoreImpl(assetClient, store), assetClient);
   }
   
-  private SysConfigClient createSysConfigInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper, AssetClient assetClient) {
-    final var store = SysConfigStore.builder()
-        .repoName("").pgPool(pgPool)
-        .build();
-    return new SysConfigClientImpl(store, assetClient, tenantClient);
+  private SysConfigClient createSysConfigInit(ObjectMapper objectMapper, AssetClient assetClient) {
+    return new SysConfigClientImpl(store, assetClient);
   }
 
   private DialobClient createDialobInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper) {

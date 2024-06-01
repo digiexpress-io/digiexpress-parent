@@ -1,7 +1,6 @@
 package io.dialob.client.api;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,15 +19,8 @@ import io.dialob.api.proto.ValueSet;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.ContextValue;
 import io.dialob.api.questionnaire.Questionnaire;
-import io.dialob.client.api.DialobDocument.FormDocument;
-import io.dialob.client.api.DialobDocument.FormReleaseDocument;
-import io.dialob.client.api.DialobDocument.FormRevisionDocument;
 import io.dialob.client.api.DialobErrorHandler.DocumentNotFoundException;
-import io.dialob.client.api.DialobStore.StoreEntity;
-import io.dialob.client.api.DialobStore.StoreState;
-import io.dialob.program.DialobFormValidator;
 import io.dialob.program.DialobProgram;
-import io.smallrye.mutiny.Uni;
 
 public interface DialobClient {
   
@@ -37,10 +29,7 @@ public interface DialobClient {
   QuestionnaireExecutorBuilder executor(ProgramEnvir envir);   
   EnvirBuilder envir();
 
-  DialobClientConfig getConfig();
-  DialobStore store();
-  RepoBuilder repo();
-  DialobClient withRepo(String repoName, String headName);
+  DialobClientConfig getConfig();  
   
   
   interface QuestionnaireExecutorBuilder {
@@ -83,13 +72,12 @@ public interface DialobClient {
   }
   
   interface ProgramBuilder {
-    ProgramBuilder form(FormDocument form);
+    ProgramBuilder form(Form form);
     DialobProgram build();
   }
   
   interface EnvirBuilder {
     EnvirBuilder from(ProgramEnvir envir);
-    EnvirBuilder from(StoreState envir);
     EnvirCommandFormatBuilder addCommand();
     ProgramEnvir build();
   }
@@ -98,27 +86,15 @@ public interface DialobClient {
   interface EnvirCommandFormatBuilder {
     EnvirCommandFormatBuilder id(String externalId);
     EnvirCommandFormatBuilder version(String version);
+    
     EnvirCommandFormatBuilder cachless();
-
-    EnvirCommandFormatBuilder rev(String json);
     EnvirCommandFormatBuilder form(String json);
     EnvirCommandFormatBuilder form(InputStream json);
-    
-    EnvirCommandFormatBuilder rev(StoreEntity entity);
-    EnvirCommandFormatBuilder form(StoreEntity entity);
-    EnvirCommandFormatBuilder release(StoreEntity entity);
-    
     EnvirCommandFormatBuilder form(Form entity);    
     
     EnvirBuilder build();
   }
 
-  interface RepoBuilder {
-    RepoBuilder repoName(String repoName);
-    RepoBuilder headName(String headName);
-    Uni<DialobClient> create();
-    DialobClient build();
-  }
   
   
   interface ProgramEnvir {
@@ -126,25 +102,17 @@ public interface DialobClient {
     ProgramWrapper findByFormIdAndRev(String formId, String formRev)  throws DocumentNotFoundException;
     List<ProgramWrapper> findAll();
     
-    Map<String, ProgramEnvirValue<?>> getValues();
+    Map<String, ProgramWrapper> getValues();
   }
   
-  interface ProgramEnvirValue<T extends DialobDocument> extends Serializable {
-    StoreEntity getSource();
-    @JsonIgnore
-    T getDocument();
-  }
   
-  @Value.Immutable  
-  interface RevisionWrapper extends ProgramEnvirValue<FormRevisionDocument> { }
-  
-  @Value.Immutable  
-  interface ReleaseWrapper extends ProgramEnvirValue<FormReleaseDocument> { }
+
   
   @Value.Immutable
-  interface ProgramWrapper extends ProgramEnvirValue<FormDocument> {
+  interface ProgramWrapper {
     String getId();
     ProgramStatus getStatus();
+    Form getDocument();
     
     List<ProgramMessage> getErrors();
     @JsonIgnore
@@ -170,24 +138,4 @@ public interface DialobClient {
     AST_ERROR, 
     PROGRAM_ERROR, 
     DEPENDENCY_ERROR }
-
-  interface TypesMapper {
-    String toString(InputStream entity);                 // just read the data
-    Questionnaire readQuestionnaire(InputStream entity); // just read the data
-    Form readForm(String entity);                        // just read the data
-    FormReleaseDocument readReleaseDoc(String entity);   // just read the data
-    FormDocument readFormDoc(String entity);             // just read the data
-    FormRevisionDocument readFormRevDoc(String entity);  // just read the data
-
-    String toJson(Object anyObject); // writes object as a json string
-    
-    
-    FormReleaseDocument toFormReleaseDoc(StoreEntity store);
-    FormRevisionDocument toFormRevDoc(StoreEntity store);
-    FormDocument toFormDoc(StoreEntity store);
-    
-    String toStoreBody(FormReleaseDocument anyObject);    
-    String toStoreBody(FormRevisionDocument anyObject);
-    String toStoreBody(FormDocument anyObject);
-  }
 }

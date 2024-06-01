@@ -1,5 +1,18 @@
 package io.resys.hdes.client.spi;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
 /*-
  * #%L
  * hdes-client-api
@@ -22,10 +35,9 @@ package io.resys.hdes.client.spi;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
-import io.resys.hdes.client.api.HdesStore.Branch;
 import io.resys.hdes.client.api.HdesStore;
-import io.resys.hdes.client.api.ImmutableBranch;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreState;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -38,14 +50,6 @@ import io.resys.hdes.client.spi.staticresources.StoreEntityLocation;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 @Slf4j
 public class HdesInMemoryStore implements HdesStore {
@@ -324,25 +328,11 @@ public class HdesInMemoryStore implements HdesStore {
     throw new IllegalArgumentException("not implemented");
   }
   @Override
-  public String getRepoName() {
-    return "in-memory";
-  }
-  @Override
-  public String getHeadName() {
-    return "in-memory";
-  }
-  @Override
   public HdesStore withRepo(String repoName, String headName) {
     return this;
   }
   @Override
-  public BranchQuery queryBranches() {
-    return new BranchQuery() {
-      
-      @Override
-      public Uni<List<Branch>> findAll() {
-        return Uni.createFrom().item(Arrays.asList(ImmutableBranch.builder().name(getHeadName()).commitId("in-memory").build()));
-      }
-    };
+  public String getTenantId() {
+    return "in-memory-store";
   }
 }

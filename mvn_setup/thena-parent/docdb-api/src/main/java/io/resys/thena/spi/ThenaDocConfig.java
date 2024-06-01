@@ -22,6 +22,7 @@ public interface ThenaDocConfig {
   
   ThenaClient getClient();
   String getRepoId();
+  @Nullable String getHeadId();
   AuthorProvider getAuthor();
   
   @FunctionalInterface

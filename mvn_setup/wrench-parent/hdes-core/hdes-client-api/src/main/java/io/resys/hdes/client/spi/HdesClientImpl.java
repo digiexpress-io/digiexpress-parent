@@ -167,7 +167,7 @@ public class HdesClientImpl implements HdesClient {
       
       HdesCache cache = this.cache;
       if(cache == null) {
-        cache = HdesClientEhCache.builder().build(store.getRepoName());
+        cache = HdesClientEhCache.builder().build(store.getTenantId());
       }
       
       final var config = new HdesClientConfigImpl(flowVisitors, cache, serviceInit, dependencyInjectionContext);

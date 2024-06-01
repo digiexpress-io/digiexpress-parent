@@ -17,10 +17,6 @@ public interface SysConfig extends Document {
   Instant getCreated();
   Instant getUpdated();
   
-  String getTenantId();
-  String getWrenchHead();
-  String getStencilHead();  
-  
   List<SysConfigService> getServices();
   List<SysConfigTransaction> getTransactions();
   
