@@ -28,8 +28,8 @@ import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.ImmutableAstSource;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
-import io.resys.hdes.client.spi.staticresources.Sha2;
 import io.resys.hdes.client.spi.util.HdesAssert;
+import io.resys.hdes.client.spi.util.Sha2;
 
 public class HdesClientEnvirBuilder implements EnvirBuilder {
   private final ProgramEnvirFactory factory;
@@ -72,18 +72,6 @@ public class HdesClientEnvirBuilder implements EnvirBuilder {
       public EnvirCommandFormatBuilder decision(String commandJson) {
         this.type = AstBodyType.DT;
         this.commandJson = commandJson;
-        return this;
-      }
-      @Override
-      public EnvirCommandFormatBuilder tag(String commandJson) {
-        this.type = AstBodyType.TAG;
-        this.commandJson = commandJson;
-        return this;
-      }
-      @Override
-      public EnvirCommandFormatBuilder tag(StoreEntity entity) {
-        this.type = AstBodyType.TAG;
-        this.entity = entity;
         return this;
       }
       @Override

@@ -37,7 +37,6 @@ import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.ImmutableAstCommand;
 
 public class HdesClientAstBuilder implements AstBuilder {
@@ -65,10 +64,6 @@ public class HdesClientAstBuilder implements AstBuilder {
   @Override
   public AstDecision decision() {
     return ast.decision().src(json).src(commands).rev(version).build();
-  }
-  @Override
-  public AstTag tag() {
-    return ast.tag().src(json).src(commands).build();
   }
   @Override
   public AstBuilder commands(String src) {

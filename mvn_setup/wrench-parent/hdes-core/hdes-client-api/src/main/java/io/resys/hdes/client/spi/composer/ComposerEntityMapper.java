@@ -27,7 +27,6 @@ import io.resys.hdes.client.api.ImmutableComposerState;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 
 public class ComposerEntityMapper {
@@ -37,8 +36,6 @@ public class ComposerEntityMapper {
     source.getDecisions().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).decision(v).build());
     source.getServices().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).service(v).build());
     source.getFlows().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).flow(v).build());
-    source.getTags().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).tag(v).build());
-    
     return envirBuilder;
   }
   
@@ -79,18 +76,6 @@ public class ComposerEntityMapper {
         .source(wrapper.getSource())
         .build();
       builder.putServices(service.getId(), service);
-      break;
-    case TAG:
-      final var tag = ImmutableComposerEntity.<AstTag>builder()
-        .id(wrapper.getId())
-        .ast((AstTag) wrapper.getAst().orElse(null))
-        .status(wrapper.getStatus())
-        .errors(wrapper.getErrors())
-        .warnings(wrapper.getWarnings())
-        .associations(wrapper.getAssociations())
-        .source(wrapper.getSource())
-        .build();
-      builder.putTags(tag.getId(), tag);
       break;
     
     default:

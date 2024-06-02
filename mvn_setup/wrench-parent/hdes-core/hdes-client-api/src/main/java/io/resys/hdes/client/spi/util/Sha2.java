@@ -1,4 +1,4 @@
-package io.resys.hdes.client.spi.staticresources;
+package io.resys.hdes.client.spi.util;
 
 /*-
  * #%L

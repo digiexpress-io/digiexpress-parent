@@ -32,9 +32,6 @@ import io.resys.hdes.client.api.ImmutableCreateStoreEntity;
 import io.resys.hdes.client.api.ImmutableDebugRequest;
 import io.resys.hdes.client.api.ImmutableDebugResponse;
 import io.resys.hdes.client.api.ImmutableDeleteAstType;
-import io.resys.hdes.client.api.ImmutableDetachedEntity;
-import io.resys.hdes.client.api.ImmutableHdesCreds;
-import io.resys.hdes.client.api.ImmutableHistoryEntity;
 import io.resys.hdes.client.api.ImmutableImportStoreEntity;
 import io.resys.hdes.client.api.ImmutableStoreDump;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
@@ -54,8 +51,6 @@ import io.resys.hdes.client.api.ast.ImmutableAstFlowInputType;
 import io.resys.hdes.client.api.ast.ImmutableAstService;
 import io.resys.hdes.client.api.ast.ImmutableAstServiceRef;
 import io.resys.hdes.client.api.ast.ImmutableAstSource;
-import io.resys.hdes.client.api.ast.ImmutableAstTag;
-import io.resys.hdes.client.api.ast.ImmutableAstTagValue;
 import io.resys.hdes.client.api.ast.ImmutableCommandsAndChanges;
 import io.resys.hdes.client.api.ast.ImmutableFlowAstAutocomplete;
 import io.resys.hdes.client.api.ast.ImmutableHeaders;
@@ -129,8 +124,6 @@ public class Serializers {
     ImmutableAstService.class,
     ImmutableAstServiceRef.class,
     ImmutableAstSource.class,
-    ImmutableAstTag.class,
-    ImmutableAstTagValue.class,
     ImmutableCommandsAndChanges.class,
     ImmutableFlowAstAutocomplete.class,
     ImmutableHeaders.class,
@@ -146,9 +139,6 @@ public class Serializers {
     ImmutableDebugRequest.class,
     ImmutableDebugResponse.class,
     ImmutableDeleteAstType.class,
-    ImmutableDetachedEntity.class,
-    ImmutableHdesCreds.class,
-    ImmutableHistoryEntity.class,
     ImmutableImportStoreEntity.class,
     ImmutableStoreDump.class,
     ImmutableStoreEntity.class,

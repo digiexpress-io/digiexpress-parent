@@ -36,13 +36,11 @@ import io.resys.hdes.client.api.ast.AstBody.AstSource;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.TypeDef;
 
 @Value.Immutable
 public interface ProgramEnvir {  
   Map<String, ProgramWrapper<?, ?>> getValues();
-  Map<String, ProgramWrapper<AstTag, TagProgram>> getTagsByName();
   Map<String, ProgramWrapper<AstFlow, FlowProgram>> getFlowsByName();
   Map<String, ProgramWrapper<AstDecision, DecisionProgram>> getDecisionsByName();
   Map<String, ProgramWrapper<AstService, ServiceProgram>> getServicesByName();

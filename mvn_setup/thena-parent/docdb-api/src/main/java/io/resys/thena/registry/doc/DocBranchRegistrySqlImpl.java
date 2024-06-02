@@ -125,10 +125,10 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
       params.add(filter.getOwnerId());
     }    
     
-    if(filter.getDocType() != null) {
+    if(filter.getDocTypes() != null && !filter.getDocTypes().isEmpty()) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.doc_type = $" + index + " ) ");
-      params.add(filter.getDocType());
+      filters.add(" ( docs.doc_type = ANY($" + index + " ) ) ");
+      params.add(filter.getDocTypes().toArray());
     }
     
 

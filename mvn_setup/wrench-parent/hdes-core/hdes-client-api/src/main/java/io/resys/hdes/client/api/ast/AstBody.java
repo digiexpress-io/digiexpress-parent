@@ -47,7 +47,7 @@ public interface AstBody extends Serializable {
   }
 
   enum AstBodyType { 
-    FLOW, FLOW_TASK, DT, TAG, TYPE_DEF
+    FLOW, FLOW_TASK, DT,
   }
   
   

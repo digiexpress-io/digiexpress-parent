@@ -39,8 +39,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final DbState state;
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();
+  private final List<String> docType = new ArrayList<>();
   private String branchName;
-  private String docType;
   private String parentId;
   private String ownerId;
  
@@ -48,8 +48,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   @Override public DocObjectsQuery parentId(String parentId) { this.parentId = parentId; return this; }
   @Override public DocObjectsQuery branchName(String branchName) { this.branchName = branchName; return this; }
   @Override public DocObjectsQuery include(IncludeInQuery ... children) { this.include.addAll(Arrays.asList(children)); return this; }
-  @Override public DocObjectsQuery docType(String docType) {
-    this.docType = docType;
+  @Override public DocObjectsQuery docType(String ...docType) {
+    this.docType.addAll(Arrays.asList(docType));
     return this;
   }
 
@@ -71,7 +71,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   
   public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
     final var filterBuilder = ImmutableDocFilter.builder()
-        .docType(docType)
+        .docTypes(docType)
         .parentId(parentId)
         .ownerId(ownerId)
         .branch(branchName);
@@ -135,7 +135,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   public Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> docs) {
     final DocFilter filter = ImmutableDocFilter.builder()
         .docIds(docs)
-        .docType(docType)
+        .docTypes(docType)
         .branch(branchName)
         .parentId(parentId)
         .ownerId(ownerId)

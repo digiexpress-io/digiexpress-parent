@@ -38,7 +38,6 @@ import io.resys.hdes.client.api.ast.AstCommand;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.TypeDef;
 import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.programs.DecisionProgram;
@@ -51,7 +50,6 @@ import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.api.programs.ServiceProgram;
 import io.resys.hdes.client.api.programs.ServiceProgram.ServiceResult;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
-import io.smallrye.mutiny.Uni;
 
 public interface HdesClient {
   AstBuilder ast();
@@ -61,20 +59,9 @@ public interface HdesClient {
   
   HdesTypesMapper mapper();
   HdesAstTypes types();
-  HdesStore store();
   CSVBuilder csv();
-  ClientRepoBuilder repo();
   HdesClientConfig config();
   
-  HdesClient withRepo(String repoName, String headName);
-  
-  
-  interface ClientRepoBuilder {
-    ClientRepoBuilder repoName(String repoName);
-    ClientRepoBuilder headName(String headName);
-    Uni<HdesClient> create();
-    HdesClient build();
-  }
   
   interface HdesTypesMapper {
     DataTypeAstBuilder dataType();
@@ -101,12 +88,10 @@ public interface HdesClient {
     EnvirCommandFormatBuilder id(String externalId);
     EnvirCommandFormatBuilder cachless();
     
-    EnvirCommandFormatBuilder tag(String commandJson);
     EnvirCommandFormatBuilder flow(String commandJson);
     EnvirCommandFormatBuilder decision(String commandJson);
     EnvirCommandFormatBuilder service(String commandJson);
     
-    EnvirCommandFormatBuilder tag(StoreEntity entity);
     EnvirCommandFormatBuilder flow(StoreEntity entity);
     EnvirCommandFormatBuilder decision(StoreEntity entity);
     EnvirCommandFormatBuilder service(StoreEntity entity);
@@ -167,6 +152,5 @@ public interface HdesClient {
     AstFlow flow();
     AstDecision decision();
     AstService service();
-    AstTag tag();
   }
 }

@@ -16,14 +16,15 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.client.api.DialobClient;
+import io.dialob.client.api.DialobComposer;
 import io.dialob.client.spi.DialobClientImpl;
+import io.dialob.client.spi.DialobComposerImpl;
 import io.dialob.client.spi.event.EventPublisher;
 import io.dialob.client.spi.event.QuestionnaireEventPublisher;
 import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.function.FunctionRegistryImpl;
-import io.dialob.client.spi.store.ImmutableDialobStoreConfig;
+import io.dialob.client.spi.store.DialobDocumentStore;
 import io.dialob.client.spi.support.OidUtils;
-import io.dialob.client.tests.migration.PgSqlDialobStore;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -37,7 +38,6 @@ import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.hdes.client.spi.store.ImmutableThenaConfig;
 import io.resys.permission.client.api.PermissionClient;
 import io.resys.permission.client.spi.PermissionClientImpl;
 import io.resys.sysconfig.client.api.ImmutableAssetClientConfig;
@@ -231,32 +231,27 @@ public class BeanFactory {
   }
   @Singleton
   @Produces
-  public DialobClient dialobClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public DialobClient dialobClient(ObjectMapper om) {
     final var dialobFr = defaultDialobFr();
-    final var asyncFunctionInvoker = new AsyncFunctionInvoker(dialobFr);
-    final var config = ImmutableDialobStoreConfig.builder()
-        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
-        .repoName("")
-        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
-        .gidProvider((type) -> OidUtils.gen())
-        .serializer((entity) -> {
-          try {
-            return new JsonObject(om.writeValueAsString(io.dialob.client.api.ImmutableStoreEntity.builder().from(entity).build()));
-          } catch(IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-          }
-        })
-        .deserializer(new io.dialob.client.spi.store.BlobDeserializer(om))
-        .authorProvider(() -> "no-author")
-        .build();
+    final var asyncFunctionInvoker = new AsyncFunctionInvoker(dialobFr);    
     return DialobClientImpl.builder()
-        .store(new PgSqlDialobStore(config))
         .objectMapper(om)
         .eventPublisher(defaultDialobEventPub())
         .asyncFunctionInvoker(asyncFunctionInvoker)
         .functionRegistry(dialobFr)
         .build();
   }
+  @Singleton
+  @Produces
+  public DialobComposer dialobComposer(CurrentPgPool currentPgPool, DialobClient client, ObjectMapper om) {
+    final var store = DialobDocumentStore.builder()
+        .repoName(tenantsStoreId)
+        .pgPool(currentPgPool.pgPool)
+        .objectMapper(om)
+        .build();
+    return new DialobComposerImpl(client, store);
+  }
+  
   @Singleton
   @Produces
   public SysConfigClient sysConfigClient(
@@ -299,6 +294,7 @@ public class BeanFactory {
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
       .objectMapper(om)
+      .authorProvider(null)
       .build();
     return new AvatarClientImpl(store);
   }

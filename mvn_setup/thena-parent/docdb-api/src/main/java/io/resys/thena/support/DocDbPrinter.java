@@ -28,9 +28,12 @@ public class DocDbPrinter {
     
     return proc;
   }
-  
   public String printWithStaticIds(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
+    return printWithStaticIds(repo, replacements);
+  }
+  public String printWithStaticIds(Tenant repo, Map<String, String> init) {
+    final Map<String, String> replacements = new HashMap<>(init);
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {
         return replacements.get(id);

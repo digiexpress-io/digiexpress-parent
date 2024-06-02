@@ -21,10 +21,9 @@ package io.resys.hdes.client.api;
  */
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -32,6 +31,7 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.ImmutableList;
 
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -42,22 +42,11 @@ public interface HdesStore {
   Uni<StoreEntity> update(UpdateStoreEntity updateType);
   Uni<StoreEntity> delete(DeleteAstType deleteType);
   Uni<List<StoreEntity>> batch(ImportStoreEntity batchType);
+  QueryBuilder assetQuery();
   
   String getTenantId();
+  HdesStore withTenantId(String tenantId);
   
-  QueryBuilder assetQuery();
-  HistoryQuery history();
-  HdesStore withRepo(String repoName, String headName);
-  
-  interface BranchQuery {
-    Uni<List<Branch>> findAll();
-  }
-  
-  
-  interface HistoryQuery {
-    Uni<HistoryEntity> get(String id);
-  }
-   
   interface QueryBuilder {
     Uni<StoreState> get();
     Uni<StoreEntity> get(String id);
@@ -108,10 +97,20 @@ public interface HdesStore {
   @JsonDeserialize(as = ImmutableStoreState.class)
   @Value.Immutable
   interface StoreState {
-    Map<String, StoreEntity> getTags();
     Map<String, StoreEntity> getFlows();
     Map<String, StoreEntity> getServices();
     Map<String, StoreEntity> getDecisions();
+    
+    default List<StoreEntity> findAll(Collection<String> ids) {
+      
+      return ImmutableList.<HdesStore.StoreEntity>builder()
+          .addAll(getFlows().values())
+          .addAll(getServices().values())
+          .addAll(getDecisions().values())
+          .build()
+          .stream().filter(entity -> ids.contains(entity.getId()))
+          .toList();
+    }
   }
   
   @JsonSerialize(as = ImmutableStoreEntity.class)
@@ -124,23 +123,6 @@ public interface HdesStore {
     List<AstCommand> getBody();
   }
   
-  @JsonSerialize(as = ImmutableHistoryEntity.class)
-  @JsonDeserialize(as = ImmutableHistoryEntity.class)
-  @Value.Immutable
-  interface HistoryEntity {
-    String getId();
-    AstBodyType getBodyType();
-    List<DetachedEntity> getBody();
-  }
-  
-  @JsonSerialize(as = ImmutableDetachedEntity.class)
-  @JsonDeserialize(as = ImmutableDetachedEntity.class)
-  @Value.Immutable
-  interface DetachedEntity {
-    String getHash();
-    LocalDateTime getCreated();
-    List<AstCommand> getBody();
-  }
   
   @JsonSerialize(as = ImmutableStoreExceptionMsg.class)
   @Value.Immutable
@@ -149,23 +131,4 @@ public interface HdesStore {
     String getValue();
     List<String> getArgs();
   }
-  
-  
-  @JsonSerialize(as = ImmutableBranch.class)
-  @JsonDeserialize(as = ImmutableBranch.class)
-  @Value.Immutable
-  interface Branch {
-    String getCommitId();
-    String getName();
-  }
-  
-
-  @FunctionalInterface
-  interface HdesCredsSupplier extends Supplier<HdesCreds> {}
-  
-  @Value.Immutable
-  interface HdesCreds {
-    String getUser();
-    String getEmail();
-  } 
 }

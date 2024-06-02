@@ -39,7 +39,7 @@ public interface Doc extends DocEntity, IsDocObject, ThenaTable {
     @Nullable List<String> getDocIds();
     @Nullable String getParentId();
     @Nullable String getOwnerId();
-    @Nullable String getDocType();
+    @Nullable List<String> getDocTypes();
     
     @Nullable String getBranch();
   }

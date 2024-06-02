@@ -114,15 +114,6 @@ public class CopyAsEntityVisitor {
     if(flowtask.isPresent()) {
       throw new ComposerException(flow.get().getSource().getBodyType() + " asset with name: '" + asset.getName() + "' exists already!");
     }
-    
-    // Tag validations
-    final var tag = state.getTags().values().stream()
-        .filter(e -> e.getAst() != null)
-        .filter(e -> e.getAst().getName().equals(asset.getName()))
-        .findFirst();
-    if(tag.isPresent()) {
-      throw new ComposerException(flow.get().getSource().getBodyType() + " asset with name: '" + asset.getName() + "' exists already!");
-    }
   }
   
 

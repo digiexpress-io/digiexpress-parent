@@ -1,47 +1,43 @@
 package io.resys.hdes.client.test.config;
 
 import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesComposer;
-import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.ThenaStore;
-import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
-import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
-import io.resys.hdes.client.spi.store.ThenaStoreTemplate;
-import io.resys.hdes.client.spi.util.RepositoryToStaticData;
-import io.resys.thena.api.ThenaClient;
+import io.resys.hdes.client.spi.HdesStoreImpl;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.TenantTableNames;
-import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.structures.git.GitPrinter;
+import io.resys.thena.support.DocDbPrinter;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PgTestTemplate {
-  private ThenaStore store;
+  private HdesStoreImpl store;
   
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
+  
+  private final Map<String, String> static_ids = new HashedMap<>();
 
   @BeforeEach
   public void setUp(TestInfo testInfo) {
-    final AtomicInteger gid = new AtomicInteger(0);
+    
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.store = ThenaStoreTemplate.builder()
+    this.store = HdesStoreImpl.builder()
         .repoName("")
         .pgPool(pgPool)
         .objectMapper(TestUtils.objectMapper)
-        .gidProvider((type) -> type + "-" + gid.incrementAndGet())
         .build();
   }
   
@@ -58,51 +54,34 @@ public class PgTestTemplate {
       .await().atMost(Duration.ofSeconds(60));
     connection.closeAndForget();
   }
-
-  private DbState createState(String repoName) {
-    final var ctx = TenantTableNames.defaults(repoName);
-    return DbStateSqlImpl.create(ctx, pgPool);
+  
+  public void addId(StoreEntity entity) {
+    final String id = entity.getId();
+    static_ids.put(id, String.valueOf("_" + static_ids.size() + 1));
   }
   
-  public void printRepo(Tenant repo) {
-    final String result = new GitPrinter(createState(repo.getName())).print(repo);
+  public void printRepo(Tenant tenant) {
+    final var ctx = TenantTableNames.defaults("").toRepo(tenant);
+    final var result = new DocDbPrinter(DbStateSqlImpl.create(ctx, pgPool)).printWithStaticIds(tenant, static_ids);
     log.debug(result);
   }
 
   public String toRepoExport(String repoName) {
-    final var repo = getThena().git(repoName).tenants().get()
-        .await().atMost(Duration.ofMinutes(1)).getRepo();
-    final String result = new RepositoryToStaticData(createState(repoName)).print(repo);
-    return result;
+    final var client = getStore().getConfig().getClient();
+    final var tenant = client.tenants().find().id(repoName).get().await().atMost(Duration.ofSeconds(10));
+    final var ctx = TenantTableNames.defaults("").toRepo(tenant);
+    return new DocDbPrinter(DbStateSqlImpl.create(ctx, pgPool)).printWithStaticIds(tenant, static_ids);
   }
 
-  public ThenaClient getThena() {
-    return store.getConfig().getClient();
+  public HdesStoreImpl getStore() {
+    return store;
   }
   
   public HdesClient getClient() {
-    return HdesClientImpl.builder().objectMapper(TestUtils.objectMapper).store(store)
-        .dependencyInjectionContext(new DependencyInjectionContext() {
-          @Override
-          public <T> T get(Class<T> type) {
-            return null;
-          }
-        })
-        .serviceInit(new ServiceInit() {
-            @Override
-            public <T> T get(Class<T> type) {
-              try {
-                return type.getDeclaredConstructor().newInstance();
-              } catch(Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-              }
-            }
-          })
-        .build();
+    return TestUtils.client;
   }
   
   public HdesComposer getComposer() {
-    return new HdesComposerImpl(getClient());
+    return new HdesComposerImpl(getClient(), store);
   }
-  
 }

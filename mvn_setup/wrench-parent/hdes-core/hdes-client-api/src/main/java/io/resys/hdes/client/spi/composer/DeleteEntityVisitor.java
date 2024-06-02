@@ -51,7 +51,6 @@ public class DeleteEntityVisitor {
     case DT: return visitDecision(asset);
     case FLOW: return visitFlow(asset);
     case FLOW_TASK: return visitFlowTask(asset);
-    case TAG: return visitTag(asset);
     default: throw new ComposerException("Unknown asset of type: '" + bodyType + "'!"); 
     }
   }
@@ -66,10 +65,7 @@ public class DeleteEntityVisitor {
     } else if(state.getServices().containsKey(assetId)) {
       return state.getServices().get(assetId);
       
-    } else if(state.getTags().containsKey(assetId)) {
-      return state.getTags().get(assetId);
     }
-    
     throw new ComposerException("No entity with id: '" + assetId + "'");
   }
   
@@ -94,10 +90,6 @@ public class DeleteEntityVisitor {
       throw new ComposerException("Can't delete SERVICE with id: '" + assetId + "', because it's connected to SERVICE: '" + link2.get().getAst().getName() + "'");
     }
     return flowTask.getSource().getBodyType();
-  }
-
-  private AstBodyType visitTag(ComposerEntity<?> tag) {
-    return tag.getSource().getBodyType();
   }
   
   private AstBodyType visitDecision(ComposerEntity<?> decision) {

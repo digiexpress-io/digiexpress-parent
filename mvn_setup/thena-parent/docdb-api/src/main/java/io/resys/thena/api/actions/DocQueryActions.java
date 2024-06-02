@@ -20,7 +20,7 @@ public interface DocQueryActions {
   
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
-    DocObjectsQuery docType(String docType);
+    DocObjectsQuery docType(String ...docType);
     DocObjectsQuery parentId(String parentId);
     DocObjectsQuery ownerId(String ownerId);
     DocObjectsQuery include(IncludeInQuery ... includeChildren);

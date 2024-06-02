@@ -34,7 +34,6 @@ import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstDecision.HitPolicy;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
-import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.FlowProgram;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowProgramStep;
@@ -47,7 +46,6 @@ import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramMessage;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 import io.resys.hdes.client.api.programs.ServiceProgram;
-import io.resys.hdes.client.api.programs.TagProgram;
 import io.resys.hdes.client.spi.flow.validators.FlowAssociationValidator;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +56,7 @@ public class AssociationVisitor {
   private final Map<AstBodyType, List<String>> typeToExternalId = new HashMap<>(Map.of(
         AstBodyType.DT, new ArrayList<String>(),
         AstBodyType.FLOW_TASK, new ArrayList<String>(),
-        AstBodyType.FLOW, new ArrayList<String>(),
-        AstBodyType.TAG, new ArrayList<String>()
+        AstBodyType.FLOW, new ArrayList<String>()
       ));
   private final Map<String, List<ProgramMessage>> externalIdToDependencyErrors = new HashMap<>();
   private final Map<String, List<ProgramMessage>> externalIdToDependencyWarnings = new HashMap<>();
@@ -360,20 +357,6 @@ public class AssociationVisitor {
       
       return builder
           .from((ProgramWrapper<AstFlow, FlowProgram>) wrapper)
-          .associations(assoc == null ? Collections.emptyList() : assoc)
-          .status(errors.isEmpty() ? wrapper.getStatus() : ProgramStatus.DEPENDENCY_ERROR)
-          .addAllErrors(externalIdToDependencyErrors.get(wrapper.getId()))
-          .addAllErrors(errors)
-          .addAllWarnings(externalIdToDependencyWarnings.get(wrapper.getId()))
-          .build();
-    }
-    case TAG: {
-      final ImmutableProgramWrapper.Builder<AstTag, TagProgram> builder = ImmutableProgramWrapper.builder();
-      final var assoc = externalIdToAssoc.get(wrapper.getId());
-      final var errors = externalIdToDependencyErrors.get(wrapper.getId());
-      
-      return builder
-          .from((ProgramWrapper<AstTag, TagProgram>) wrapper)
           .associations(assoc == null ? Collections.emptyList() : assoc)
           .status(errors.isEmpty() ? wrapper.getStatus() : ProgramStatus.DEPENDENCY_ERROR)
           .addAllErrors(externalIdToDependencyErrors.get(wrapper.getId()))

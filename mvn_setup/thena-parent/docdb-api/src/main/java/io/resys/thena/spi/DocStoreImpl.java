@@ -27,6 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   protected final ThenaDocConfig config;
   protected final DocStoreFactory<T> factory;
+  protected final StructureType defaultRepoType = getRepoType();
+  
+  
+  protected StructureType getRepoType() {
+    return null;
+  }
+  
   
   @Override
   public T withTenantId(String repoId) {
@@ -43,11 +50,12 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
     final var client = config.getClient();
     return client.tenants().find().id(config.getRepoId()).get();
   }
+
   
   @Override public ThenaDocConfig getConfig() { return config; }
   @Override public StoreTenantQuery<T> query() {
     return new StoreTenantQuery<T>() {
-      protected StructureType repoType;
+      protected StructureType repoType = defaultRepoType;
       protected String repoName, headName, externalId;
       @Override public StoreTenantQuery<T> externalId(String externalId) { this.externalId = externalId; return this; }
       @Override public StoreTenantQuery<T> repoType(StructureType repoType) { this.repoType = repoType; return this; }
