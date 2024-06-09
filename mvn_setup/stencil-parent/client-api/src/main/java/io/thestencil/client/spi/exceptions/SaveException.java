@@ -24,36 +24,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.envelope.Message;
 import io.thestencil.client.api.StencilClient.Entity;
 
 public class SaveException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final List<Entity<?>> entity = new ArrayList<>();
-  private final CommitResultEnvelope commit;
   
-  public SaveException(Entity<?> entity, CommitResultEnvelope commit) {
-    super(msg(Arrays.asList(entity), commit));
+  public SaveException(Entity<?> entity, OneDocEnvelope commit) {
+    super(msg(Arrays.asList(entity), commit.getMessages()));
     this.entity.add(entity);
-    this.commit = commit;
   }
-  public SaveException(List<Entity<?>> entity, CommitResultEnvelope commit) {
-    super(msg(entity, commit));
+  public SaveException(List<Entity<?>> entity, ManyDocsEnvelope commit) {
+    super(msg(entity, commit.getMessages()));
     this.entity.addAll(entity);
-    this.commit = commit;
   }
   
   public List<Entity<?>> getEntity() {
     return entity;
   }
-  public CommitResultEnvelope getCommit() {
-    return commit;
-  }
+
   
-  private static String msg(List<Entity<?>> entity, CommitResultEnvelope commit) {
+  private static String msg(List<Entity<?>> entity, List<Message> commit) {
     StringBuilder messages = new StringBuilder();
-    for(var msg : commit.getMessages()) {
+    for(var msg : commit) {
       messages
       .append(System.lineSeparator())
       .append("  - ").append(msg.getText());

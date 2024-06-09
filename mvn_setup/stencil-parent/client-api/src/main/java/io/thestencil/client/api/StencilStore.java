@@ -24,15 +24,14 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import io.resys.thena.api.envelope.DocContainer.DocObject;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.spi.DocStore.StoreTenantQuery;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
 import io.thestencil.client.api.StencilClient.EntityType;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.api.StencilConfig.EntityState;
 
 public interface StencilStore {
   <T extends EntityBody> Uni<Entity<T>> delete(Entity<T> toBeDeleted);
@@ -41,16 +40,22 @@ public interface StencilStore {
   <T extends EntityBody> Uni<Entity<T>> create(Entity<T> toBeSaved);
   Uni<List<Entity<?>>> saveAll(List<Entity<?>> toBeSaved);
   Uni<List<Entity<?>>> batch(BatchCommand batch);
-  StencilConfig getConfig();
-  
-  StencilStore withRepo(String repoId, String headName);
-  BranchQuery queryBranches();
+  StencilStore withTenantId(String tenantId);
+  StencilQuery stencilQuery();
+  StoreTenantQuery<? extends StencilStore> tenantQuery();
 
-  interface BranchQuery {
-    Uni<List<Branch>> findAll();
+  @Value.Immutable
+  interface EntityState<T extends EntityBody> {
+    QueryEnvelope<DocObject> getSrc();
+    Entity<T> getEntity();
   }
   
+  interface StencilQuery {
+    Uni<SiteState> head();
+    <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type);
+  }
   
+
   @Value.Immutable
   @SuppressWarnings("rawtypes")
   interface BatchCommand {
@@ -58,36 +63,4 @@ public interface StencilStore {
     List<Entity> getToBeSaved();
     List<Entity> getToBeDeleted();
   }
-  
-  @JsonSerialize(as = ImmutableBranch.class)
-  @JsonDeserialize(as = ImmutableBranch.class)
-  @Value.Immutable
-  interface Branch {
-    String getCommitId();
-    String getName();
-  }
-  
-  
-  QueryBuilder query();
-  StoreRepoBuilder repo();
-  
-  String getRepoName();
-  String getHeadName();
-
-  String gid(EntityType type);
-  
-  interface QueryBuilder {
-    Uni<SiteState> head();
-    Uni<SiteState> release(String releaseId);
-    <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type);
-  }
-  
-  interface StoreRepoBuilder {
-    StoreRepoBuilder repoName(String repoName);
-    StoreRepoBuilder headName(String headName);
-    Uni<StencilStore> create();    
-    StencilStore build();
-    Uni<Boolean> createIfNot();
-  }
-  
 }

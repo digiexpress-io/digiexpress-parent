@@ -16,7 +16,11 @@ import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 
 public interface DocContainer extends ThenaContainer {
-
+  @FunctionalInterface
+  interface DocOneBranchVisitor<T> {
+    T visit(DocBranch docBranch);
+  }
+  
   @FunctionalInterface
   interface DocContainerVisitor<T> {
     T visit(
@@ -89,6 +93,13 @@ public interface DocContainer extends ThenaContainer {
     Map<String, DocCommands> getCommands();
     Map<String, DocCommit> getCommits();
     Map<String, DocCommitTree> getCommitTrees();
+    
+    default <T> T accept(DocOneBranchVisitor<T> visitor) {
+      if(getBranches().size() == 1) {
+        return visitor.visit(getBranches().values().iterator().next());  
+      }
+      return null;
+    }
     
     default <T> List<T> accept(DocContainerVisitor<T> visitor) {
       final var result = new ArrayList<T>();

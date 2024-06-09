@@ -60,7 +60,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     final var item = ItemModData.builder().branchName(branchName);
     lastItem = new AddItemToModifyDocBranch() {
       @Override public AddItemToModifyDocBranch docId(String docId) { item.docId(docId); return this; }
-      @Override public AddItemToModifyDocBranch remove() { item.remove(true); return this; }
+      @Override public AddItemToModifyDocBranch removeBranch() { item.remove(true); return this; }
       @Override public AddItemToModifyDocBranch parentIsLatest() { item.parentIsLatest(true); return this; }
       @Override public AddItemToModifyDocBranch commit(String versionToModify) { item.versionToModify(versionToModify); return this; }
       @Override public AddItemToModifyDocBranch merge(JsonObjectMerge merge) { item.merge(merge); return this; }

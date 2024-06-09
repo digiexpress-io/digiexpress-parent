@@ -30,7 +30,6 @@ import io.thestencil.client.api.CreateBuilder.CreatePage;
 import io.thestencil.client.api.CreateBuilder.CreateWorkflow;
 import io.thestencil.client.api.ImmutableBatchCommand;
 import io.thestencil.client.api.ImmutableSiteState;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Link;
@@ -38,13 +37,14 @@ import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.api.StencilStore;
 import io.thestencil.client.api.StencilStore.BatchCommand;
 
 public class BatchSiteCommandVisitor {
-  private final StencilClient client;
+  private final StencilStore client;
   private final ImmutableSiteState.Builder next;
   
-  public BatchSiteCommandVisitor(SiteState start, StencilClient client) {
+  public BatchSiteCommandVisitor(SiteState start, StencilStore client) {
     super();
     this.client = client;
     this.next = ImmutableSiteState.builder().from(start);

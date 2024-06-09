@@ -34,7 +34,6 @@ import io.thestencil.client.api.ImmutableLocale;
 import io.thestencil.client.api.ImmutablePage;
 import io.thestencil.client.api.ImmutableTemplate;
 import io.thestencil.client.api.ImmutableWorkflow;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
@@ -44,7 +43,8 @@ import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.api.StencilConfig.EntityState;
+import io.thestencil.client.api.StencilStore;
+import io.thestencil.client.api.StencilStore.EntityState;
 import io.thestencil.client.api.UpdateBuilder;
 import io.thestencil.client.spi.exceptions.ConstraintException;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +53,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UpdateBuilderImpl implements UpdateBuilder {
 
-  private final StencilClient client;
+  private final StencilStore client;
   
 
   @Override
   public Uni<Entity<Article>> article(ArticleMutator changes) {
     // Get the article
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = client.stencilQuery().head();
     
     // Change the article
     return query.onItem().transformToUni(state -> changeArticle(state, changes));
@@ -177,15 +177,15 @@ public class UpdateBuilderImpl implements UpdateBuilder {
     allChanges.add(result);
     allChanges.addAll(additionalChanges);
     
-    return client.getStore().saveAll(allChanges).onItem().transform(e -> result); 
+    return client.saveAll(allChanges).onItem().transform(e -> result); 
   }
   
   @Override
   public Uni<Entity<Locale>> locale(LocaleMutator changes) {
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = client.stencilQuery().head();
   
     // Change the locale
-    return query.onItem().transformToUni(state -> client.getStore().save(changeLocale(state, changes)));
+    return query.onItem().transformToUni(state -> client.save(changeLocale(state, changes)));
   }
   
   private Entity<Locale> changeLocale(SiteState site, LocaleMutator changes) {
@@ -212,10 +212,10 @@ public class UpdateBuilderImpl implements UpdateBuilder {
 
   @Override
   public Uni<Entity<Template>> template(TemplateMutator changes) {
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = client.stencilQuery().head();
   
     // Change the template
-    return query.onItem().transformToUni(state -> client.getStore().save(changeTemplate(state, changes)));
+    return query.onItem().transformToUni(state -> client.save(changeTemplate(state, changes)));
   }
   
   private Entity<Template> changeTemplate(SiteState site, TemplateMutator changes) {
@@ -245,10 +245,10 @@ public class UpdateBuilderImpl implements UpdateBuilder {
   @Override
   public Uni<Entity<Page>> page(PageMutator changes) {
     // Get the page
-    final Uni<EntityState<Page>> query = client.getStore().get(changes.getPageId(), EntityType.PAGE);
+    final Uni<EntityState<Page>> query = client.get(changes.getPageId(), EntityType.PAGE);
     
     // Change the page
-    return query.onItem().transformToUni(state -> client.getStore().save(changePage(state, changes)));
+    return query.onItem().transformToUni(state -> client.save(changePage(state, changes)));
   }
 
   @Override
@@ -262,7 +262,7 @@ public class UpdateBuilderImpl implements UpdateBuilder {
       ids.add(m.getPageId());
     }
     
-    final Uni<List<Entity<Page>>> query = client.getStore().query().head(ids, EntityType.PAGE);
+    final Uni<List<Entity<Page>>> query = client.stencilQuery().head(ids, EntityType.PAGE);
 
     return query.onItem().transformToUni(state -> {
           
@@ -280,7 +280,7 @@ public class UpdateBuilderImpl implements UpdateBuilder {
             return end;
           }).collect(Collectors.toList());
 
-          return client.getStore()
+          return client
               .saveAll(new ArrayList<>(toBeSaved))
               .onItem().transform(e -> new ArrayList<>(toBeSaved));
         });
@@ -302,10 +302,10 @@ public class UpdateBuilderImpl implements UpdateBuilder {
   public Uni<Entity<Link>> link(LinkMutator changes) {
     // Get the link
     
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = client.stencilQuery().head();
     
     // Change the link
-    return query.onItem().transformToUni(state -> client.getStore().save(changeLink(state, changes)));
+    return query.onItem().transformToUni(state -> client.save(changeLink(state, changes)));
   }
   
   private Entity<Link> changeLink(SiteState site, LinkMutator changes) {
@@ -334,10 +334,10 @@ public class UpdateBuilderImpl implements UpdateBuilder {
   @Override
   public Uni<Entity<Workflow>> workflow(WorkflowMutator changes) {
     // Get the Workflow
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = client.stencilQuery().head();
     
     // Change the Workflow
-    return query.onItem().transformToUni(state -> client.getStore().save(changeWorkflow(state, changes)));
+    return query.onItem().transformToUni(state -> client.save(changeWorkflow(state, changes)));
   }
   
   private Entity<Workflow> changeWorkflow(SiteState site, WorkflowMutator changes) {

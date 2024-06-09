@@ -50,7 +50,10 @@ public class HdesComposerImpl implements HdesComposer {
     this.store = store;
     this.opt = new AstCommandOptimiser(client);
   }
-
+  @Override
+  public HdesComposer withTenantId(String tenantId) {
+    return new HdesComposerImpl(client, store.withTenantId(tenantId));
+  }
   @Override
   public Uni<ComposerState> get() {
     return store.assetQuery().get().onItem().transform(this::state);

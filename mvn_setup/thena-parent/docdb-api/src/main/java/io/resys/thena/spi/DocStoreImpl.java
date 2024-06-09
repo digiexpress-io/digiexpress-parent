@@ -147,7 +147,7 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
   public static class Builder<T extends DocStore<T>> {
     protected final DocStoreFactory<T> factory;
     protected String repoName;
-    protected ObjectMapper objectMapper;
+
     protected ThenaDocConfig.AuthorProvider authorProvider;
     
     protected io.vertx.mutiny.pgclient.PgPool pgPool;
@@ -183,7 +183,6 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
             pgPass: {}
           """,
           this.repoName,
-          this.objectMapper == null ? "configuring" : "provided",
           this.authorProvider == null ? "configuring" : "provided",
           this.pgPool == null ? "configuring" : "provided",
           this.pgPoolSize,

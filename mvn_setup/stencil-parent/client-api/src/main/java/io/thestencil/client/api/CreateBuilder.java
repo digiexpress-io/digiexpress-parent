@@ -38,7 +38,6 @@ import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.LocaleLabel;
 import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -47,7 +46,6 @@ public interface CreateBuilder {
   
   Uni<SiteState> repo();
   Uni<Entity<Article>> article(CreateArticle init);
-  Uni<Entity<Release>> release(CreateRelease init);
   Uni<Entity<Locale>> locale(CreateLocale init);
   Uni<Entity<Page>> page(CreatePage init);
   Uni<Entity<Link>> link(CreateLink init);
@@ -93,18 +91,6 @@ public interface CreateBuilder {
     String getDescription();
 	  String getContent();
 	  String getType();
-  }
-  
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCreateRelease.class)
-  @JsonDeserialize(as = ImmutableCreateRelease.class)
-  interface CreateRelease extends Command {
-    @Nullable
-    String getId();
-    String getName();
-    @Nullable
-    String getNote();
   }
   
   @Value.Immutable

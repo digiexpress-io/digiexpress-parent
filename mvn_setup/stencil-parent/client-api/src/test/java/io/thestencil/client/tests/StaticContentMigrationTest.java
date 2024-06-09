@@ -1,5 +1,14 @@
 package io.thestencil.client.tests;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * stencil-static-content
@@ -23,17 +32,9 @@ package io.thestencil.client.tests;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.tests.util.TestUtils;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class StaticContentMigrationTest {  
-  final StencilClient client = StencilClientImpl.builder().config(c -> c.objectMapper(TestUtils.objectMapper)).inmemory().build();
+  final StencilClient client = new StencilClientImpl();
   
   @Test
   public void buildSite() throws IOException {

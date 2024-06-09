@@ -16,13 +16,9 @@ import io.resys.hdes.client.api.HdesComposer.DebugRequest;
 import io.resys.hdes.client.api.HdesComposer.DebugResponse;
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
-import io.resys.hdes.client.api.HdesStore.HistoryEntity;
-import io.resys.hdes.client.api.ast.AstTag;
-import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfig;
 import io.resys.thena.projects.client.api.TenantConfig.TenantRepoConfigType;
-import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.tasks.dev.app.user.CurrentTenant;
 import io.resys.thena.tasks.dev.app.user.CurrentUser;
 import io.smallrye.mutiny.Uni;
@@ -49,6 +45,7 @@ public class HdesResource {
   @Inject CurrentUser currentUser;
   @Inject ProjectClient tenantClient;
   @Inject HdesClient hdesClient;
+  @Inject HdesComposer hdesComposer;
   @Inject ObjectMapper objectMapper;
 
 
@@ -71,11 +68,6 @@ public class HdesResource {
   @POST @Path("debugs") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   public Uni<DebugResponse> debug(DebugRequest debug) {
     return getComposer().onItem().transformToUni(composer -> composer.debug(debug));
-  }
-
-  @POST @Path("importTag") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  public Uni<ComposerState> importTag(AstTag entity) {
-    return getComposer().onItem().transformToUni(composer -> composer.importTag(entity));
   }
 
   @POST @Path("resources") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
@@ -103,20 +95,13 @@ public class HdesResource {
     return getComposer().onItem().transformToUni(composer -> composer.copyAs(entity));
   }
 
-  @GET @Path("history/{id}") @Produces(MediaType.APPLICATION_JSON)
-  public Uni<HistoryEntity> history(@PathParam("id") String id) {
-    return getComposer().onItem().transformToUni(composer -> composer.getHistory(id));
-  }
-
   @GET @Path("version") @Produces(MediaType.APPLICATION_JSON)
   public VersionEntity version() {
     return new VersionEntity("", Instant.now().toString());
   }
   
   private Uni<HdesComposer> getComposer() {
-    return getConfig().onItem().transform(config -> 
-      new HdesComposerImpl(hdesClient.withRepo(config.getRepoId(), DocObjectsQueryImpl.BRANCH_MAIN))
-    );
+    return getConfig().onItem().transform(config -> hdesComposer.withTenantId(config.getRepoId()));
   }
   private Uni<TenantRepoConfig> getConfig() {
     return tenantClient.queryActiveTenantConfig().get(currentTenant.tenantId())

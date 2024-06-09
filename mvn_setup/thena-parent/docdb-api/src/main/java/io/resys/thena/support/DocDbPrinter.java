@@ -33,6 +33,9 @@ public class DocDbPrinter {
     return printWithStaticIds(repo, replacements);
   }
   public String printWithStaticIds(Tenant repo, Map<String, String> init) {
+    return printWithStaticIds(repo, init, false);
+  }
+  public String printWithStaticIds(Tenant repo, Map<String, String> init, boolean extId) {
     final Map<String, String> replacements = new HashMap<>(init);
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {
@@ -57,7 +60,7 @@ public class DocDbPrinter {
     .transform(item -> {
       result
         .append("  - ")
-        .append(ID.apply(item.getId())).append(": ").append(item.getExternalId())
+        .append(ID.apply(item.getId())).append(": ").append(extId ? ID.apply(item.getExternalId()) : item.getExternalId())
         .append(System.lineSeparator());      
       return item;
     }).collect().asList().await().indefinitely();

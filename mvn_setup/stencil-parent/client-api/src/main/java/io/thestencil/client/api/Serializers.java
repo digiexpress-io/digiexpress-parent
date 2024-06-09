@@ -47,7 +47,6 @@ public class Serializers {
     ImmutableCreateLink.class,
     ImmutableCreateLocale.class,
     ImmutableCreatePage.class,
-    ImmutableCreateRelease.class,
     ImmutableCreateWorkflow.class,
     ImmutableEntity.class,
     ImmutableLocaleLabel.class,

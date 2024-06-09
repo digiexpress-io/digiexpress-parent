@@ -49,7 +49,7 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
-import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.thestencil.client.spi.serializers.StencilDeserializer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.core.json.jackson.VertxModule;
@@ -200,7 +200,7 @@ public class TestCaseBuilder {
   
   private StencilClient createStencilInit(io.vertx.mutiny.pgclient.PgPool pgPool, ObjectMapper objectMapper) {
     final var docDb = DbStateSqlImpl.create().client(pgPool).build();
-    final var deserializer = new ZoeDeserializer(objectMapper);
+    final var deserializer = new StencilDeserializer(objectMapper);
     final var store = StencilStoreImpl.builder()
         .config((builder) -> builder
         .client(docDb)

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.resys.thena.support.OidUtils;
 import io.thestencil.client.api.ImmutableArticle;
 import io.thestencil.client.api.ImmutableBatchCommand;
 import io.thestencil.client.api.ImmutableEntity;
@@ -40,7 +41,6 @@ import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.MigrationBuilder.Topic;
 import io.thestencil.client.api.MigrationBuilder.TopicBlob;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
@@ -51,8 +51,6 @@ import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
 
 public class MigrationImportVisitorForStaticContent {
-
-  private final StencilClient client;
   private final SiteState current;
   private final ImmutableBatchCommand.Builder batch;
   
@@ -64,11 +62,10 @@ public class MigrationImportVisitorForStaticContent {
 
   private final List<String> commitedIds = new ArrayList<>();
   
-  public MigrationImportVisitorForStaticContent(SiteState current, StencilClient client) {
+  public MigrationImportVisitorForStaticContent(SiteState current) {
     super();
     this.batch = ImmutableBatchCommand.builder();
     this.current = current;
-    this.client = client;
   }
   
   public ImmutableBatchCommand visit(Sites sites) {
@@ -418,7 +415,6 @@ public class MigrationImportVisitorForStaticContent {
   }
   
   private String gid(EntityType type) {
-    return client.getStore().gid(type);
+    return OidUtils.gen();
   }
-
 }

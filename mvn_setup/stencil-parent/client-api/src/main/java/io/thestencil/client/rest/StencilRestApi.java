@@ -8,7 +8,6 @@ import io.thestencil.client.api.ImmutableCreateArticle;
 import io.thestencil.client.api.ImmutableCreateLink;
 import io.thestencil.client.api.ImmutableCreateLocale;
 import io.thestencil.client.api.ImmutableCreatePage;
-import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.ImmutableCreateTemplate;
 import io.thestencil.client.api.ImmutableCreateWorkflow;
 import io.thestencil.client.api.ImmutableLinkMutator;
@@ -21,7 +20,6 @@ import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -111,14 +109,4 @@ public interface StencilRestApi {
   
   @DELETE @Path("templates/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
   Uni<Entity<Template>> deleteTemplate( @PathParam("id") String id);
-  
-  
-  @POST @Path("releases") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Entity<Release>> createRelease( ImmutableCreateRelease body);
-  
-  @GET @Path("releases/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<SiteState> getRelease( @PathParam("id") String id);
-  
-  @DELETE @Path("releases/{id}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
-  Uni<Entity<Release>> deleteRelease( @PathParam("id") String id);
 }

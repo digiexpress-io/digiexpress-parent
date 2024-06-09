@@ -31,7 +31,7 @@ public interface DocStore<T extends DocStore<T>> {
   Uni<Tenant> getTenant();
   T withTenantId(String repoId);
   
-  interface StoreTenantQuery<T extends DocStore<T>> {
+  interface StoreTenantQuery<T> {
     StoreTenantQuery<T> repoName(String repoName);
     StoreTenantQuery<T> headName(String headName);
     StoreTenantQuery<T> externalId(String externalId);

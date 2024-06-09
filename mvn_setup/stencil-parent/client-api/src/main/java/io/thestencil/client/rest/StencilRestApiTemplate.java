@@ -13,7 +13,6 @@ import io.thestencil.client.api.ImmutableCreateArticle;
 import io.thestencil.client.api.ImmutableCreateLink;
 import io.thestencil.client.api.ImmutableCreateLocale;
 import io.thestencil.client.api.ImmutableCreatePage;
-import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.ImmutableCreateTemplate;
 import io.thestencil.client.api.ImmutableCreateWorkflow;
 import io.thestencil.client.api.ImmutableLinkArticlePage;
@@ -30,7 +29,6 @@ import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer;
@@ -154,19 +152,6 @@ public class StencilRestApiTemplate implements StencilRestApi {
   public Uni<Entity<Template>> deleteTemplate(String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().template(id));
   }
-  @Override
-  public Uni<Entity<Release>> createRelease(ImmutableCreateRelease body) {
-    return getClient().onItem().transformToUni(composer -> composer.create().release(body));
-  }
-  @Override
-  public Uni<SiteState> getRelease(String id) {
-    return getClient().onItem().transformToUni(composer -> composer.query().release(id));
-  }
-  @Override
-  public Uni<Entity<Release>> deleteRelease(String id) {
-    return getClient().onItem().transformToUni(composer -> composer.delete().release(id));
-  }
-
   protected Uni<StencilComposer> getClient() {
     return Uni.createFrom().item(this.client);
   }

@@ -1,5 +1,8 @@
 package io.thestencil.client.tests;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /*-
  * #%L
  * stencil-static-content
@@ -23,11 +26,9 @@ package io.thestencil.client.tests;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.tests.util.TestUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class StaticContentSiteTest {  
-  final StencilClient client = StencilClientImpl.builder().config(c -> c.objectMapper(TestUtils.objectMapper)).inmemory().build();
+  final StencilClient client = new StencilClientImpl();
   
   @Test
   public void buildSiteForProd() {

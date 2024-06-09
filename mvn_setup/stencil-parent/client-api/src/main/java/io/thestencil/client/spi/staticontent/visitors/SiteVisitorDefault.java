@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
@@ -41,6 +40,7 @@ import io.thestencil.client.spi.beans.TopicHeadingBean;
 import io.thestencil.client.spi.beans.TopicLinkBean;
 import io.thestencil.client.spi.staticontent.support.ParserAssert;
 import io.thestencil.client.spi.staticontent.support.Sha2;
+import io.vertx.core.json.JsonObject;
 
 public class SiteVisitorDefault implements SiteVisitor {
   private final List<Message> messages = new ArrayList<>();
@@ -50,13 +50,8 @@ public class SiteVisitorDefault implements SiteVisitor {
   private final Map<String, ImageData> images = new HashMap<>();
   private final Map<String, TopicBlob> blobs = new HashMap<>();
   private final Map<String, TopicLink> links = new HashMap<>();
-  
-  private final Function<Object, String> serializer;
   private String imageUrl;
   
-  public SiteVisitorDefault(Function<Object, String> serializer) {
-    this.serializer = serializer;
-  }
   
   @Override
   public void visitTopicData(TopicData topic) {
@@ -160,7 +155,7 @@ public class SiteVisitorDefault implements SiteVisitor {
         .blobs(sort(siteBlobs))
         .links(sort(siteLinks))
         .build();
-    final var id = Sha2.blobId(serializer.apply(result));
+    final var id = Sha2.blobId(JsonObject.mapFrom(result).encode());
     return LocalizedSiteBean.builder().from(result).id(id).build();
   }
   

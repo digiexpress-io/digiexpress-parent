@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.actions.DocQueryActions.Branches;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
@@ -23,6 +24,8 @@ public interface DocCommitActions {
   CreateOneDoc createOneDoc();
   CreateManyDocs createManyDocs();
   
+  DeleteOneDoc deleteOneDoc();
+  
   CreateOneDocBranch branchOneDoc();
 
   ModifyOneDoc modifyOneDoc();
@@ -30,6 +33,14 @@ public interface DocCommitActions {
   
   ModifyOneDocBranch modifyOneBranch();
   ModifyManyDocBranches modifyManyBranches();
+  
+  
+  interface DeleteOneDoc {
+    DeleteOneDoc docId(String docId);
+    DeleteOneDoc commitAuthor(String author);
+    DeleteOneDoc commitMessage(String message);
+    Uni<OneDocEnvelope> build();
+  }
 
   /*
    * Create doc and doc by: One/Many
@@ -50,6 +61,11 @@ public interface DocCommitActions {
     CreateOneDoc commands(List<JsonObject> commands);
     
     Uni<OneDocEnvelope> build();
+    
+    default CreateOneDoc branchMain() {
+      return branchName(Branches.main.name());
+    }
+   
   }
   interface CreateManyDocs { 
     CreateManyDocs commitAuthor(String author);
@@ -139,6 +155,11 @@ public interface DocCommitActions {
     ModifyOneDocBranch remove(); // deletes the branch
     
     Uni<OneDocEnvelope> build();
+    
+    default ModifyOneDocBranch branchMain() {
+      return branchName(Branches.main.name());
+    }
+    
   }
   
   interface ModifyManyDocBranches {
@@ -158,7 +179,14 @@ public interface DocCommitActions {
     AddItemToModifyDocBranch commands(List<JsonObject> commands);
     AddItemToModifyDocBranch replace(JsonObject newContent); 
     AddItemToModifyDocBranch merge(JsonObjectMerge doc);
-    AddItemToModifyDocBranch remove(); // deletes the branch
+    
+    AddItemToModifyDocBranch createDoc(); // deletes the branch
+    AddItemToModifyDocBranch removeBranch(); // deletes the branch
+    AddItemToModifyDocBranch removeDoc(); // deletes the branch
+    
+    default AddItemToModifyDocBranch branchMain() {
+      return branchName(Branches.main.name());
+    }
     ModifyManyDocBranches next();
   }
   

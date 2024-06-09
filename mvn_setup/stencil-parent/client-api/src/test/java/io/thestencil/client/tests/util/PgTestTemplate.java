@@ -1,7 +1,8 @@
 package io.thestencil.client.tests.util;
 
-import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterEach;
@@ -14,13 +15,11 @@ import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.resys.thena.structures.git.GitPrinter;
+import io.resys.thena.support.DocDbPrinter;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
-import io.thestencil.client.spi.serializers.ZoeDeserializer;
-import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PgTestTemplate {
   private ThenaClient client;
-  @Inject
-  io.vertx.mutiny.pgclient.PgPool pgPool;
-  
+  @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
+  private final Map<String, String> init = new HashMap<>();
 
   @BeforeEach
   public void setUp() {
+    init.clear();
     waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
         .build();
-    this.client.tenants().commit().name("junit", StructureType.git).build();
+    this.client.tenants().commit().name("junit", StructureType.doc).build().await().atMost(Duration.ofSeconds(2));
   }
   
   @AfterEach
@@ -66,21 +65,21 @@ public class PgTestTemplate {
   }
   
   public void printRepo(Tenant repo) {
-    final String result = new GitPrinter(createState()).print(repo);
+    final String result = new DocDbPrinter(createState()).print(repo);
     log.debug(result);
   }
   
   public void prettyPrint(String repoId) {
-    Tenant repo = getClient().git(repoId).tenants().get()
-        .await().atMost(Duration.ofMinutes(1)).getRepo();
+    Tenant repo = getClient().tenants().find().id(repoId).get()
+        .await().atMost(Duration.ofMinutes(1));
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Tenant repo = getClient().git(repoId).tenants().get()
-        .await().atMost(Duration.ofMinutes(1)).getRepo();
-    final String result = new TestExporter(createState()).print(repo);
+    Tenant repo = getClient().tenants().find().id(repoId).get()
+        .await().atMost(Duration.ofMinutes(1));
+    final String result = new DocDbPrinter(createState()).printWithStaticIds(repo, init, true);
     return result;
   }
 
@@ -91,37 +90,20 @@ public class PgTestTemplate {
     
     // create project
     TenantCommitResult repo = getClient().tenants().commit()
-        .name(repoId, StructureType.git)
+        .name(repoId, StructureType.doc)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     
     final AtomicInteger gid = new AtomicInteger(0);
     
-    ZoeDeserializer deserializer = new ZoeDeserializer(TestUtils.objectMapper);
-    
     final var store = StencilStoreImpl.builder()
-        .config((builder) -> builder
-            .client(client)
-            .repoName(repoId)
-            .headName("stencil-main")
-            .deserializer(deserializer)
-            .objectMapper(TestUtils.objectMapper)
-            .serializer((entity) -> {
-              try {
-                return new JsonObject(TestUtils.objectMapper.writeValueAsString(entity));
-              } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-              }
-            })
-            .gidProvider(type -> {
-               return type + "-" + gid.incrementAndGet();
-            })
-            .authorProvider(() -> "junit-test"))
-            
+        .authorProvider(() -> "junit-test")
+        .repoName(repoId)
+        .pgPool(pgPool)
         .build();
     
     
-    return new StencilComposerImpl(new StencilClientImpl(store));
+    return new StencilComposerImpl(new StencilClientImpl(), store);
   }
   
 }

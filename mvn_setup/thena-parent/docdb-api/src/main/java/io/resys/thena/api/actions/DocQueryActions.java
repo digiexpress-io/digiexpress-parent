@@ -17,6 +17,9 @@ public interface DocQueryActions {
     COMMITS,
     COMMIT_TREE
   } 
+  enum Branches {
+    main
+  }
   
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
@@ -30,5 +33,11 @@ public interface DocQueryActions {
     Uni<QueryEnvelope<DocObject>> get(String matchId);
     Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> matchId);
     Uni<QueryEnvelope<DocTenantObjects>> findAll();
+    
+    default DocObjectsQuery branchMain() {
+      return branchName(Branches.main.name());
+    }
+    
+
   }
 }

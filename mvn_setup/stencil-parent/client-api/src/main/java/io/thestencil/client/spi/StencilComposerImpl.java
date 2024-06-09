@@ -19,37 +19,48 @@ package io.thestencil.client.spi;
  * limitations under the License.
  * #L%
  */
-
-import io.thestencil.client.api.*;
+import io.thestencil.client.api.CreateBuilder;
+import io.thestencil.client.api.DeleteBuilder;
+import io.thestencil.client.api.MigrationBuilder;
+import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.MarkdownBuilder;
 import io.thestencil.client.api.StencilClient.SitesBuilder;
-import io.thestencil.client.api.StencilStore.QueryBuilder;
-import io.thestencil.client.spi.builders.*;
+import io.thestencil.client.api.StencilComposer;
+import io.thestencil.client.api.StencilStore;
+import io.thestencil.client.api.StencilStore.StencilQuery;
+import io.thestencil.client.api.UpdateBuilder;
+import io.thestencil.client.api.VersionBuilder;
+import io.thestencil.client.spi.builders.CreateBuilderImpl;
+import io.thestencil.client.spi.builders.DeleteBuilderImpl;
+import io.thestencil.client.spi.builders.MigrationBuilderImpl;
+import io.thestencil.client.spi.builders.UpdateBuilderImpl;
+import io.thestencil.client.spi.builders.VersionBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class StencilComposerImpl implements StencilComposer {
   private final StencilClient client;
+  private final StencilStore store;
   
   @Override
   public CreateBuilder create() {
-    return new CreateBuilderImpl(client);
+    return new CreateBuilderImpl(store);
   }
   @Override
   public UpdateBuilder update() {
-    return new UpdateBuilderImpl(client);
+    return new UpdateBuilderImpl(store);
   }
   @Override
   public DeleteBuilder delete() {
-    return new DeleteBuilderImpl(client);
+    return new DeleteBuilderImpl(store);
   }
   @Override
-  public QueryBuilder query() {
-    return client.getStore().query();
+  public StencilQuery query() {
+    return store.stencilQuery();
   }
   @Override
   public MigrationBuilder migration() {
-    return new MigrationBuilderImpl(client);
+    return new MigrationBuilderImpl(store);
   }
   @Override
   public VersionBuilder version() {
@@ -64,12 +75,8 @@ public class StencilComposerImpl implements StencilComposer {
     return client.sites();
   }
   @Override
-  public StencilComposer withRepo(String repoId, String headName) {
-    return new StencilComposerImpl(client.withRepo(repoId, headName));
-  }
-  @Override
-  public StencilComposer withRepo(String repoId) {
-    return new StencilComposerImpl(client.withRepo(repoId));
+  public StencilComposer withTenantId(String repoId) {
+    return new StencilComposerImpl(client, store.withTenantId(repoId));
   }
   public StencilClient getClient() {
     return client;

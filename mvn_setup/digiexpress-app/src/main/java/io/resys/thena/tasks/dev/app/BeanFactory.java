@@ -1,7 +1,6 @@
 package io.resys.thena.tasks.dev.app;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -24,7 +23,6 @@ import io.dialob.client.spi.event.QuestionnaireEventPublisher;
 import io.dialob.client.spi.function.AsyncFunctionInvoker;
 import io.dialob.client.spi.function.FunctionRegistryImpl;
 import io.dialob.client.spi.store.DialobDocumentStore;
-import io.dialob.client.spi.support.OidUtils;
 import io.dialob.rule.parser.function.DefaultFunctions;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -34,8 +32,10 @@ import io.resys.avatar.client.spi.AvatarStore;
 import io.resys.crm.client.api.CrmClient;
 import io.resys.crm.client.spi.CrmClientImpl;
 import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.ThenaStore;
+import io.resys.hdes.client.spi.HdesComposerImpl;
+import io.resys.hdes.client.spi.HdesStoreImpl;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.permission.client.api.PermissionClient;
@@ -50,6 +50,7 @@ import io.resys.thena.projects.client.api.ProjectClient;
 import io.resys.thena.projects.client.spi.ProjectsClientImpl;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
+import io.resys.thena.support.OidUtils;
 import io.resys.thena.tasks.client.api.TaskClient;
 import io.resys.thena.tasks.client.api.model.ImmutableTask;
 import io.resys.thena.tasks.client.api.model.ImmutableTaskComment;
@@ -65,7 +66,6 @@ import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
-import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.core.Vertx;
@@ -136,98 +136,78 @@ public class BeanFactory {
   
   @Produces
   @Singleton
-  public PermissionClient permissionClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public PermissionClient permissionClient(CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = io.resys.permission.client.spi.PermissionStoreImpl.builder()
       .repoName("")
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new PermissionClientImpl(store);
   }
 
   @Produces
   @Singleton
-  public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public TaskClient taskClient(CurrentPgPool currentPgPool, ObjectMapper om, CurrentUser user) {
     final var store = TaskStoreImpl.builder()
       .repoName("")
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new TaskClientImpl(store);
   }
   @Singleton
   @Produces
-  public ProjectClient tenantClient(ObjectMapper om, CurrentPgPool currentPgPool) {
+  public ProjectClient tenantClient(CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = io.resys.thena.projects.client.spi.ProjectStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new ProjectsClientImpl(store);
   }
   @Singleton
   @Produces
-  public StencilClient stencilClient(Vertx vertx, ObjectMapper om, CurrentTenant currentProject, CurrentPgPool currentPgPool) {
-    final var docDb = DbStateSqlImpl.create().client(currentPgPool.pgPool).build();
-    final var deserializer = new ZoeDeserializer(om);
+  public StencilClient stencilClient() {
+    return new StencilClientImpl();
+  }
+  @Singleton
+  @Produces
+  public StencilComposer stencilComposer(StencilClient client, CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = StencilStoreImpl.builder()
-      .config((builder) -> builder
-        .client(docDb)
-        .objectMapper(om)
+        .pgPool(currentPgPool.pgPool)
         .repoName("")
-        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
-        .deserializer(deserializer)
-        .serializer((entity) -> {
-          try {
-            return new JsonObject(om.writeValueAsString(entity));
-          } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-          }
-        })
-        .gidProvider(type -> UUID.randomUUID().toString())
-        .authorProvider(() -> "no-author"))
+        .authorProvider(() -> user.getUserId())
       .build();
-    return new StencilClientImpl(store);
+    return new StencilComposerImpl(client, store);
   }
   @Singleton
   @Produces
-  public StencilComposer stencilComposer(StencilClient client) {
-    return new StencilComposerImpl(client);
-  }
-  @Singleton
-  @Produces
-  public CrmClient crmClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public CrmClient crmClient(CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = io.resys.crm.client.spi.CrmStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new CrmClientImpl(store);
   }
   @Singleton
   @Produces
-  public HdesClient hdesClient(CurrentPgPool currentPgPool, ObjectMapper om) {
-    final var config = ImmutableThenaConfig.builder()
-        .client(DbStateSqlImpl.create().client(currentPgPool.pgPool).db("").build())
-        .repoName("")
-        .headName(DocObjectsQueryImpl.BRANCH_MAIN)
-        .gidProvider((type) -> OidUtils.gen())
-        .serializer((entity) -> {
-          try {
-            return new JsonObject(om.writeValueAsString(io.resys.hdes.client.api.ImmutableStoreEntity.builder().from(entity).hash("").build()));
-          } catch(IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-          }
-        })
-        .deserializer(new io.resys.hdes.client.spi.store.BlobDeserializer(om))
-        .authorProvider(() -> "no-author")
-        .build();
+  public HdesClient hdesClient(ObjectMapper om) {
       return HdesClientImpl.builder()
         .objectMapper(om)
-        .store(new ThenaStore(config))
         .dependencyInjectionContext(defaultHdesDjc())
         .serviceInit(defaultHdesServiceInit())
         .build();    
+  }
+  @Singleton
+  @Produces
+  public HdesComposer hdesComposer(CurrentPgPool currentPgPool, HdesClient hdesClient, CurrentUser user) {
+    final var store = HdesStoreImpl.builder()
+        .repoName("")
+        .pgPool(currentPgPool.pgPool)
+        .authorProvider(() -> user.getUserId())
+        .build();
+    return new HdesComposerImpl(hdesClient, store);    
   }
   @Singleton
   @Produces
@@ -243,11 +223,11 @@ public class BeanFactory {
   }
   @Singleton
   @Produces
-  public DialobComposer dialobComposer(CurrentPgPool currentPgPool, DialobClient client, ObjectMapper om) {
+  public DialobComposer dialobComposer(CurrentPgPool currentPgPool, DialobClient client, CurrentUser user) {
     final var store = DialobDocumentStore.builder()
         .repoName(tenantsStoreId)
         .pgPool(currentPgPool.pgPool)
-        .objectMapper(om)
+        .authorProvider(() -> user.getUserId())
         .build();
     return new DialobComposerImpl(client, store);
   }
@@ -279,22 +259,21 @@ public class BeanFactory {
 
   @Singleton
   @Produces
-  public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public UserProfileClient userProfileClient(CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = io.resys.userprofile.client.spi.UserProfileStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new UserProfileClientImpl(store);
   }
   @Singleton
   @Produces
-  public AvatarClient avatarClient(CurrentPgPool currentPgPool, ObjectMapper om) {
+  public AvatarClient avatarClient(CurrentPgPool currentPgPool, CurrentUser user) {
     final var store = AvatarStore.builder()
       .repoName(tenantsStoreId)
       .pgPool(currentPgPool.pgPool)
-      .objectMapper(om)
-      .authorProvider(null)
+      .authorProvider(() -> user.getUserId())
       .build();
     return new AvatarClientImpl(store);
   }
@@ -336,7 +315,7 @@ public class BeanFactory {
   private QuestionnaireEventPublisher defaultDialobEventPub() {
     final var  publisher = new EventPublisher() {
       @Override
-      public void publish(Event event) {
+      public void publish(io.dialob.client.spi.event.EventPublisher.Event event) {
         log.debug("dialob event publisher: " + event);
       }
     };

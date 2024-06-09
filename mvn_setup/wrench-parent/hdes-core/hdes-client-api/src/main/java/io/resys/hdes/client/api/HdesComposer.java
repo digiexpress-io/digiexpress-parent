@@ -59,6 +59,8 @@ public interface HdesComposer {
   Uni<DebugResponse> debug(DebugRequest entity);
   Uni<ComposerEntity<?>> dryRun(UpdateEntity entity);
   Uni<StoreDump> getStoreDump();
+  HdesComposer withTenantId(String tenantId);
+  
   
 
   @JsonSerialize(as = ImmutableDebugResponse.class)

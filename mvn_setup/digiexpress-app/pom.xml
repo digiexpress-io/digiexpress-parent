@@ -18,7 +18,11 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>hdes-store-thena</artifactId>
+      <artifactId>hdes-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>dialob-client-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>

@@ -22,32 +22,31 @@ package io.thestencil.client.spi.builders;
 
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.api.StencilStore;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MigrationBuilderImpl implements MigrationBuilder {
-
-  private final StencilClient client;
+  private final StencilStore store;
 
   @Override
   public Uni<SiteState> importData(Sites sites) {
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = store.stencilQuery().head();
     
     return query.onItem().transformToUni(site -> {
-      final var builder = new MigrationImportVisitorForStaticContent(site, client).visit(sites);
-      return client.getStore().batch(builder).onItem().transformToUni(s -> client.getStore().query().head());
+      final var builder = new MigrationImportVisitorForStaticContent(site).visit(sites);
+      return store.batch(builder).onItem().transformToUni(s -> store.stencilQuery().head());
     });
   }
 
   @Override
   public Uni<SiteState> importData(SiteState sites) {
-    final Uni<SiteState> query = client.getStore().query().head();
+    final Uni<SiteState> query = store.stencilQuery().head();
     
     return query.onItem().transformToUni(site -> {
       final var builder = new MigrationImportVisitorForSiteState(site).visit(sites);
-      return client.getStore().batch(builder).onItem().transformToUni(s -> client.getStore().query().head());
+      return store.batch(builder).onItem().transformToUni(s -> store.stencilQuery().head());
     })
     ;
   }

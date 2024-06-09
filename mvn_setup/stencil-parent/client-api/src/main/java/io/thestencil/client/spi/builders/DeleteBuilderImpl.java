@@ -27,7 +27,6 @@ import io.thestencil.client.api.DeleteBuilder;
 import io.thestencil.client.api.ImmutableEntity;
 import io.thestencil.client.api.ImmutableLink;
 import io.thestencil.client.api.ImmutableWorkflow;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityType;
@@ -37,69 +36,70 @@ import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilConfig.EntityState;
+import io.thestencil.client.api.StencilStore;
+import io.thestencil.client.api.StencilStore.EntityState;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DeleteBuilderImpl implements DeleteBuilder {
-  private final StencilClient client;
+  private final StencilStore store;
 
   @Override
   public Uni<Entity<Article>> article(String articleId) {
     // Delete the article
-    return new ArticleDeleteVisitor(client, articleId).visit();
+    return new ArticleDeleteVisitor(store, articleId).visit();
   
   }
   @Override
   public Uni<Entity<Locale>> locale(String localeId) {
     // Get the locale
-    final Uni<EntityState<Locale>> query = client.getStore().get(localeId, EntityType.LOCALE);
+    final Uni<EntityState<Locale>> query = store.get(localeId, EntityType.LOCALE);
     
     // Delete the locale
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
   
   @Override
   public Uni<Entity<Template>> template(String templateId) {
     // Get the page
-    final Uni<EntityState<Template>> query = client.getStore().get(templateId, EntityType.TEMPLATE);
+    final Uni<EntityState<Template>> query = store.get(templateId, EntityType.TEMPLATE);
     
     // Delete the template
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
 
   @Override
   public Uni<Entity<Page>> page(String pageId) {
     // Get the page
-    final Uni<EntityState<Page>> query = client.getStore().get(pageId, EntityType.PAGE);
+    final Uni<EntityState<Page>> query = store.get(pageId, EntityType.PAGE);
     
     // Delete the page
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
 
   @Override
   public Uni<Entity<Link>> link(String linkId) {
     // Get the link
-    final Uni<EntityState<Link>> query = client.getStore().get(linkId, EntityType.LINK);
+    final Uni<EntityState<Link>> query = store.get(linkId, EntityType.LINK);
     
     // Delete the link
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
   
   @Override
   public Uni<Entity<Workflow>> workflow(String workflowId) {
     // Get the workflow
-    final Uni<EntityState<Workflow>> query = client.getStore().get(workflowId, EntityType.WORKFLOW);
+    final Uni<EntityState<Workflow>> query = store.get(workflowId, EntityType.WORKFLOW);
     
     // Delete the workflow
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
 
   @Override
   public Uni<Entity<Link>> linkArticlePage(LinkArticlePage linkArticlePage) {
     
     // Get the link
-    final Uni<EntityState<Link>> query = client.getStore().get(linkArticlePage.getLinkId(), EntityType.LINK);
+    final Uni<EntityState<Link>> query = store.get(linkArticlePage.getLinkId(), EntityType.LINK);
     
     return query.onItem().transformToUni(state -> {
       final Entity<Link> start = state.getEntity();
@@ -119,14 +119,14 @@ public class DeleteBuilderImpl implements DeleteBuilder {
             .build())
         .build();
       
-      return client.getStore().save(end);
+      return store.save(end);
     });
   }
 
   @Override
   public Uni<Entity<Workflow>> workflowArticlePage(WorkflowArticlePage workflowArticlePage) {
     // Get the workflow
-    final Uni<EntityState<Workflow>> query = client.getStore().get(workflowArticlePage.getWorkflowId(), EntityType.WORKFLOW);
+    final Uni<EntityState<Workflow>> query = store.get(workflowArticlePage.getWorkflowId(), EntityType.WORKFLOW);
     
     return query.onItem().transformToUni(state -> {
       final Entity<Workflow> start = state.getEntity();
@@ -145,16 +145,16 @@ public class DeleteBuilderImpl implements DeleteBuilder {
             .articles(newArticles)
             .build())
         .build();
-      return client.getStore().save(end);
+      return store.save(end);
     });
   }
 
   @Override
   public Uni<Entity<Release>> release(String releaseId) {
     // Get the release
-    final Uni<EntityState<Release>> query = client.getStore().get(releaseId, EntityType.RELEASE);
+    final Uni<EntityState<Release>> query = store.get(releaseId, EntityType.RELEASE);
     
     // Delete the release
-    return query.onItem().transformToUni(state -> client.getStore().delete(state.getEntity()));
+    return query.onItem().transformToUni(state -> store.delete(state.getEntity()));
   }
 }

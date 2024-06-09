@@ -37,7 +37,6 @@ public class PgTestTemplate {
     this.store = HdesStoreImpl.builder()
         .repoName("")
         .pgPool(pgPool)
-        .objectMapper(TestUtils.objectMapper)
         .build();
   }
   

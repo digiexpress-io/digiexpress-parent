@@ -1,6 +1,5 @@
 package io.thestencil.client.spi.builders;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import java.util.List;
 
 import java.util.Optional;
 
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.CreateBuilder;
 import io.thestencil.client.api.ImmutableArticle;
@@ -34,10 +34,8 @@ import io.thestencil.client.api.ImmutableLink;
 import io.thestencil.client.api.ImmutableLocale;
 import io.thestencil.client.api.ImmutableLocaleLabel;
 import io.thestencil.client.api.ImmutablePage;
-import io.thestencil.client.api.ImmutableRelease;
 import io.thestencil.client.api.ImmutableTemplate;
 import io.thestencil.client.api.ImmutableWorkflow;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -45,82 +43,57 @@ import io.thestencil.client.api.StencilClient.EntityType;
 import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilComposer.SiteContentType;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.StencilAssert;
+import io.thestencil.client.api.StencilStore;
 import io.thestencil.client.spi.exceptions.ConstraintException;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class CreateBuilderImpl implements CreateBuilder {
-  private final StencilClient client;
+  private final StencilStore client;
 
   @Override
   public Uni<List<Entity<?>>> batch(BatchSite batch) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().batch(new BatchSiteCommandVisitor(state, client).visit(batch)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.batch(new BatchSiteCommandVisitor(state, client).visit(batch)));
   }
   @Override
   public Uni<Entity<Article>> article(CreateArticle init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(article(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(article(init, state, client)));
   }
   @Override
   public Uni<Entity<Template>> template(CreateTemplate init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(template(init, state, client)));
-  }
-  @Override
-  public Uni<Entity<Release>> release(CreateRelease init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(release(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(template(init, state, client)));
   }
   @Override
   public Uni<Entity<Locale>> locale(CreateLocale init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(locale(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(locale(init, state, client)));
   }
   @Override
   public Uni<Entity<Page>> page(CreatePage init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(page(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(page(init, state, client)));
   }
   @Override
   public Uni<Entity<Link>> link(CreateLink init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(link(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(link(init, state, client)));
   }
   @Override
   public Uni<Entity<Workflow>> workflow(CreateWorkflow init) {
-    final Uni<SiteState> query = client.getStore().query().head();
-    return query.onItem().transformToUni(state -> client.getStore().create(workflow(init, state, client)));
+    final Uni<SiteState> query = client.stencilQuery().head();
+    return query.onItem().transformToUni(state -> client.create(workflow(init, state, client)));
   }
 
-  public static Entity<Release> release(CreateRelease init, SiteState state, StencilClient client) {
-    StencilAssert.isTrue(state.getContentType() != SiteContentType.NOT_CREATED, () -> "Can't create release because ref state query failed!");
-    final var gid = client.getStore().gid(EntityType.RELEASE);
-    final var release = new CreateReleaseVisitor(state)
-        .visit(ImmutableRelease.builder()
-          .name(init.getName())
-          .created(LocalDateTime.now())
-          .note(Optional.ofNullable(init.getNote()).orElse(""))
-          .parentCommit(state.getCommit())
-        ).build();
   
-    final Entity<Release> entity = ImmutableEntity.<Release>builder()
-        .id(gid)
-        .type(EntityType.RELEASE)
-        .body(release)
-        .build();
-    return assertUniqueId(entity, state);
-  }
-  
-  public static Entity<Template> template(CreateTemplate init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.TEMPLATE);
+  public static Entity<Template> template(CreateTemplate init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var template = ImmutableTemplate.builder()
         .name(init.getName())
         .description(init.getDescription())
@@ -143,8 +116,8 @@ public class CreateBuilderImpl implements CreateBuilder {
     return assertUniqueId(entity, state);
   }
   
-  public static Entity<Article> article(CreateArticle init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.ARTICLE);
+  public static Entity<Article> article(CreateArticle init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var article = ImmutableArticle.builder()
         .devMode(init.getDevMode())
         .name(init.getName())
@@ -171,8 +144,8 @@ public class CreateBuilderImpl implements CreateBuilder {
     return assertUniqueId(entity, state);
   }
   
-  public static Entity<Locale> locale(CreateLocale init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.LOCALE);
+  public static Entity<Locale> locale(CreateLocale init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var locale = ImmutableLocale.builder()
         .value(init.getLocale())
         .enabled(true)
@@ -194,8 +167,8 @@ public class CreateBuilderImpl implements CreateBuilder {
     return assertUniqueId(entity, state);
   }
   
-  public static Entity<Page> page(CreatePage init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.PAGE);
+  public static Entity<Page> page(CreatePage init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var localeRef = init.getLocale();
     final var locale = resolveLocale(localeRef, state);
     
@@ -235,8 +208,8 @@ public class CreateBuilderImpl implements CreateBuilder {
     return assertUniqueId(entity, state);
   }
   
-  public static Entity<Link> link(CreateLink init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.LINK);
+  public static Entity<Link> link(CreateLink init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var link = ImmutableLink.builder()
       .devMode(init.getDevMode())
       .contentType(init.getType())
@@ -276,8 +249,8 @@ public class CreateBuilderImpl implements CreateBuilder {
     return assertUniqueId(ImmutableEntity.<Link>builder().id(gid).type(EntityType.LINK).body(link.build()).build(), state);
   }
   
-  public static Entity<Workflow> workflow(CreateWorkflow init, SiteState state, StencilClient client) {
-    final var gid = client.getStore().gid(EntityType.WORKFLOW);
+  public static Entity<Workflow> workflow(CreateWorkflow init, SiteState state, StencilStore client) {
+    final var gid = OidUtils.gen();
     final var workflow = ImmutableWorkflow.builder().devMode(init.getDevMode())
         .value(init.getValue());
 
@@ -325,12 +298,11 @@ public class CreateBuilderImpl implements CreateBuilder {
   
   @Override
   public Uni<SiteState> repo() {
-    return client.getStore().repo().create().onItem().transformToUni(e -> e.query().head());
+    return client.tenantQuery().create().onItem().transformToUni(e -> e.stencilQuery().head());
   }
   
   private static <T extends EntityBody> Entity<T> assertUniqueId(Entity<T> entity, SiteState state) {
-    if( state.getReleases().containsKey(entity.getId()) ||
-        state.getLocales().containsKey(entity.getId()) ||
+    if( state.getLocales().containsKey(entity.getId()) ||
         state.getPages().containsKey(entity.getId()) ||
         state.getLinks().containsKey(entity.getId()) ||
         state.getArticles().containsKey(entity.getId()) ||

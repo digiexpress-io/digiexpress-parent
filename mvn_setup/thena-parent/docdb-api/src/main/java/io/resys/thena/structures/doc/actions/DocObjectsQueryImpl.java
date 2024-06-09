@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.actions.DocQueryActions.Branches;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.actions.DocQueryActions.IncludeInQuery;
 import io.resys.thena.api.entities.Tenant;
@@ -35,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class DocObjectsQueryImpl implements DocObjectsQuery {
-  public static String BRANCH_MAIN = "main";
+  public static String BRANCH_MAIN = Branches.main.name();
   private final DbState state;
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();

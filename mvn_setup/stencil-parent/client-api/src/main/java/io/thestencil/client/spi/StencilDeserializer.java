@@ -1,4 +1,4 @@
-package io.thestencil.client.spi.serializers;
+package io.thestencil.client.spi;
 
 /*-
  * #%L
@@ -27,8 +27,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.thestencil.client.api.StencilConfig;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
@@ -41,17 +43,24 @@ import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.vertx.core.json.JsonObject;
 
-public class ZoeDeserializer implements StencilConfig.Deserializer {
+public class StencilDeserializer {
 
   private ObjectMapper objectMapper;
   
-  public ZoeDeserializer(ObjectMapper objectMapper) {
+  public StencilDeserializer(ObjectMapper objectMapper) {
     super();
     this.objectMapper = objectMapper;
   }
+  
+  public StencilDeserializer() {  
+    this.objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new GuavaModule());
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.registerModule(new Jdk8Module());
+  
+  }
 
   @SuppressWarnings("unchecked")
-  @Override
   public <T extends EntityBody> Entity<T> fromString(EntityType entityType, JsonObject json) {
     final var value = json.toString();
     try {
@@ -90,11 +99,10 @@ public class ZoeDeserializer implements StencilConfig.Deserializer {
     }
   }
 
-  @Override
   public Entity<?> fromString(JsonObject value) {
     try {
-      ObjectNode node = objectMapper.readValue(value.toString(), ObjectNode.class);
-      final EntityType type = EntityType.valueOf(node.get("type").textValue());
+      ObjectNode node = objectMapper.readValue(value.encode(), ObjectNode.class);
+      final EntityType type = EntityType.valueOf(value.getString("type"));
 
       switch (type) {
       case ARTICLE: {

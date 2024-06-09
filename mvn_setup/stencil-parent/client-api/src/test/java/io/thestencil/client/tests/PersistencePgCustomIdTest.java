@@ -33,7 +33,6 @@ import io.thestencil.client.api.ImmutableCreateArticle;
 import io.thestencil.client.api.ImmutableCreateLink;
 import io.thestencil.client.api.ImmutableCreateLocale;
 import io.thestencil.client.api.ImmutableCreatePage;
-import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.ImmutableCreateTemplate;
 import io.thestencil.client.api.ImmutableCreateWorkflow;
 import io.thestencil.client.api.ImmutableLinkMutator;
@@ -74,13 +73,6 @@ public class PersistencePgCustomIdTest extends PgTestTemplate {
         ImmutableCreateArticle.builder().id("3").name("My second article").order(100).build()
     )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
     
-   repo.create().release(
-       ImmutableCreateRelease.builder().id("4").name("v1.5").note("test release").build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
-   
-   repo.create().release(
-       ImmutableCreateRelease.builder().id("5").name("v2.4").note("new content").build()
-    )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
    
     Entity<Locale> locale1 = repo.create().locale(
         ImmutableCreateLocale.builder().id("6").locale("en").build()

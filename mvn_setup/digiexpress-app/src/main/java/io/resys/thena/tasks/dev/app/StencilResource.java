@@ -30,7 +30,7 @@ public class StencilResource extends StencilRestApiTemplate implements StencilRe
   
   @Override
   protected Uni<StencilComposer> getClient() {
-    return getStencilConfig().onItem().transform(config -> super.client.withRepo(config.getRepoId()));
+    return getStencilConfig().onItem().transform(config -> super.client.withTenantId(config.getRepoId()));
   }
   
   private Uni<TenantRepoConfig> getStencilConfig() {

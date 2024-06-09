@@ -31,24 +31,24 @@ import io.thestencil.client.api.ImmutableBatchCommand;
 import io.thestencil.client.api.ImmutableEntity;
 import io.thestencil.client.api.ImmutableLink;
 import io.thestencil.client.api.ImmutableWorkflow;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilClient.Article;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.api.StencilStore;
 import io.thestencil.client.spi.StencilAssert;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ArticleDeleteVisitor {
-  private final StencilClient client;
+  private final StencilStore client;
   private final String articleId;
   
   
   public Uni<Entity<Article>> visit() {
-    return client.getStore().query().head().onItem()
+    return client.stencilQuery().head().onItem()
         .transformToUni(state -> visitObjects(state));
   }
   
@@ -84,7 +84,7 @@ public class ArticleDeleteVisitor {
     
     
     
-    return client.getStore()
+    return client
         .batch(updateCommand.build())
         .onItem().transform(updated -> start);
   }

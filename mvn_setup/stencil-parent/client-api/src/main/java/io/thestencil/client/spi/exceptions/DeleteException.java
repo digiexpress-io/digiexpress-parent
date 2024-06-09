@@ -22,9 +22,9 @@ package io.thestencil.client.spi.exceptions;
 
 import java.util.List;
 
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObjects;
 import io.resys.thena.api.envelope.Message;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.thestencil.client.api.StencilClient.Entity;
@@ -44,6 +44,13 @@ public class DeleteException extends RuntimeException {
     this.commit = commit.getMessages();
   }
   public DeleteException(Entity<?> entity, CommitResultEnvelope commit) {
+    super(msg(entity.getId(), entity.getType(), commit.getMessages()));
+    this.entityId = entity.getId();
+    this.type = entity.getType();
+    this.commit = commit.getMessages();
+  }
+  
+  public DeleteException(Entity<?> entity, OneDocEnvelope commit) {
     super(msg(entity.getId(), entity.getType(), commit.getMessages()));
     this.entityId = entity.getId();
     this.type = entity.getType();

@@ -22,8 +22,6 @@ package io.thestencil.client.api;
 
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -35,11 +33,10 @@ import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.MarkdownBuilder;
 import io.thestencil.client.api.StencilClient.Page;
-import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilClient.SitesBuilder;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
-import io.thestencil.client.api.StencilStore.QueryBuilder;
+import io.thestencil.client.api.StencilStore.StencilQuery;
 
 
 public interface StencilComposer {
@@ -47,13 +44,12 @@ public interface StencilComposer {
   UpdateBuilder update();
   DeleteBuilder delete();
   MigrationBuilder migration();
-  QueryBuilder query();
+  StencilQuery query();
   MarkdownBuilder markdown();
   SitesBuilder sites();
   VersionBuilder version();
   
-  StencilComposer withRepo(String repoId);
-  StencilComposer withRepo(String repoId, String headName);
+  StencilComposer withTenantId(String tenantId);
   
 
   @Value.Immutable
@@ -61,10 +57,7 @@ public interface StencilComposer {
   @JsonDeserialize(as = ImmutableSiteState.class)
   interface SiteState {
     String getName();
-    @Nullable
-    String getCommit();
     SiteContentType getContentType();
-    Map<String, Entity<Release>> getReleases();
     Map<String, Entity<Locale>> getLocales();
     Map<String, Entity<Page>> getPages();
     Map<String, Entity<Link>> getLinks();
