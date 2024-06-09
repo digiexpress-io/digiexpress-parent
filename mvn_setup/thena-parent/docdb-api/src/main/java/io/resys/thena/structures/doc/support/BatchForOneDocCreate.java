@@ -13,6 +13,7 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOneType;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
 import io.resys.thena.support.OidUtils;
@@ -43,6 +44,7 @@ public class BatchForOneDocCreate {
   public BatchForOneDocCreate docId(String docId) {           this.docId = docId; return this; }
   public BatchForOneDocCreate externalId(String externalId) { this.externalId = externalId; return this; }
   public BatchForOneDocCreate ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
+  
   public BatchForOneDocCreate commands(List<JsonObject> log) {this.commands = log; return this; }
   public BatchForOneDocCreate meta(JsonObject meta) {         this.docMeta = meta; return this; }
   public BatchForOneDocCreate branchContent(JsonObject blob) {this.branchContent = RepoAssert.notNull(blob, () -> "branchContent can't be empty!"); return this; }
@@ -116,6 +118,7 @@ public class BatchForOneDocCreate {
     final var commit = commitBuilder.close();
     final var batch = ImmutableDocBatchForOne.builder()
       .doc(doc)
+      .type(DocBatchForOneType.CREATE)
       .addDocBranch(docBranch)
       .addDocCommit(commit.getItem1())
       .addAllDocCommitTree(commit.getItem2())

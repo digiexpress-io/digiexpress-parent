@@ -122,7 +122,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
       .replace(replace)
       .merge(merge)
       .commands(commands)
-      .remove(remove)
+      .removeBranch(remove)
       .create();
 
     return tx.insert().batchMany(ImmutableDocBatchForMany.builder().addItems(batch).repo(repoId).status(BatchStatus.OK).log("").build())

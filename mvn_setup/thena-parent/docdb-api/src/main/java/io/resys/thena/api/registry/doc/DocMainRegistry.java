@@ -18,7 +18,7 @@ public interface DocMainRegistry extends ThenaRegistryService<Doc, io.vertx.muti
   ThenaSqlClient.SqlTuple findAll(DocFilter filter);
   
   ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
-  ThenaSqlClient.SqlTuple deleteById(String id);
+  ThenaSqlClient.SqlTuple deleteMany(List<String> id);
   ThenaSqlClient.Sql findAll();
   
   ThenaSqlClient.SqlTupleList insertMany(List<Doc> docs);

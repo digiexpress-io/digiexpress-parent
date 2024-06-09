@@ -3,6 +3,7 @@ package io.resys.thena.structures.doc.commitmany;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDocBranch;
@@ -16,12 +17,15 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
-import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.support.BatchForOneBranchModify;
+import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
+import io.resys.thena.structures.doc.support.BatchForOneDocDelete;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -44,10 +48,16 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
   @Data @Builder
   private static class ItemModData {
     private Boolean parentIsLatest;
-    private Boolean remove;
+    private Boolean removeBranch;
+    private Boolean removeDoc;
+    private Boolean createDoc;
     private String versionToModify;
     private String branchName;
     private String docId;
+    private Optional<String> ownerId;
+    private Optional<String> docType;
+    private Optional<String> parentDocId;
+    private Optional<String> externalId;
     private JsonObject replace;
     private List<JsonObject> commands;
     private JsonObjectMerge merge;
@@ -60,13 +70,19 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     final var item = ItemModData.builder().branchName(branchName);
     lastItem = new AddItemToModifyDocBranch() {
       @Override public AddItemToModifyDocBranch docId(String docId) { item.docId(docId); return this; }
-      @Override public AddItemToModifyDocBranch removeBranch() { item.remove(true); return this; }
+      @Override public AddItemToModifyDocBranch docType(String docType) { item.docType(Optional.ofNullable(docType)); return this; }
+      @Override public AddItemToModifyDocBranch externalId(String externalId) { item.externalId(Optional.ofNullable(externalId)); return this; }
+      @Override public AddItemToModifyDocBranch parentDocId(String parentDocId) { item.parentDocId(Optional.ofNullable(parentDocId)); return this; }
+      @Override public AddItemToModifyDocBranch ownerId(String ownerId) { item.ownerId(Optional.ofNullable(ownerId)); return this; }
+      @Override public AddItemToModifyDocBranch removeBranch() { item.removeBranch(true); return this; }
       @Override public AddItemToModifyDocBranch parentIsLatest() { item.parentIsLatest(true); return this; }
       @Override public AddItemToModifyDocBranch commit(String versionToModify) { item.versionToModify(versionToModify); return this; }
       @Override public AddItemToModifyDocBranch merge(JsonObjectMerge merge) { item.merge(merge); return this; }
       @Override public AddItemToModifyDocBranch commands(List<JsonObject> doc) { item.commands(doc); return this; }
       @Override public AddItemToModifyDocBranch branchName(String branchName) { item.branchName(branchName); return this; }
       @Override public AddItemToModifyDocBranch replace(JsonObject doc) { item.replace(doc); return this; }
+      @Override public AddItemToModifyDocBranch createDoc() { item.createDoc(true); return this; }
+      @Override public AddItemToModifyDocBranch removeDoc() { item.removeDoc(true); return this; }
       @Override
       public ModifyManyDocBranches next() {
         final var result = item.build();
@@ -184,12 +200,32 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
       }
       
-      final var batch = new BatchForOneBranchModify(lock, tx, author, message)
-        .replace(item.getReplace())
-        .merge(item.getMerge())
-        .commands(item.getCommands())
-        .remove(item.getRemove() == null ? false : item.getRemove())
-        .create();
+      final DocBatchForOne batch;
+      if(Boolean.TRUE.equals(item.getCreateDoc())) {
+        batch = new BatchForOneDocCreate(repoId, author, message)
+          .branchName(branchName)
+          .docType(item.getDocType() == null ? null : item.getDocType().orElse(null))
+          .parentDocId(item.getParentDocId() == null ? null : item.getParentDocId().orElse(null))
+          .externalId(item.getExternalId() == null ? null : item.getExternalId().orElse(null))
+          .ownerId(item.getOwnerId() == null ? null : item.getOwnerId().orElse(null))
+          .commands(item.getCommands())
+          .branchContent(item.getMerge().apply(null))
+          .docId(item.getDocId())
+          .create();
+      } else if(Boolean.TRUE.equals(item.getRemoveDoc())) {
+        batch = new BatchForOneDocDelete(lock, tx, author, message).create();
+      } else {
+        batch = new BatchForOneBranchModify(lock, tx, author, message)
+            .replace(item.getReplace())
+            .merge(item.getMerge())
+            .docType(item.getDocType())
+            .ownerId(item.getOwnerId())
+            .parentDocId(item.getParentDocId())
+            .externalId(item.getExternalId())
+            .commands(item.getCommands())
+            .removeBranch(item.getRemoveBranch() == null ? false : item.getRemoveBranch())
+            .create();
+      }
       
       logs.add(batch.getLog());
       many.addItems(batch);

@@ -180,9 +180,14 @@ public interface DocCommitActions {
     AddItemToModifyDocBranch replace(JsonObject newContent); 
     AddItemToModifyDocBranch merge(JsonObjectMerge doc);
     
-    AddItemToModifyDocBranch createDoc(); // deletes the branch
+    AddItemToModifyDocBranch docType(String docType); 
+    AddItemToModifyDocBranch externalId(String externalId);
+    AddItemToModifyDocBranch parentDocId(String parentDocId);
+    AddItemToModifyDocBranch ownerId(String ownerId) ;
+    
+    AddItemToModifyDocBranch createDoc(); // create doc and branch both
     AddItemToModifyDocBranch removeBranch(); // deletes the branch
-    AddItemToModifyDocBranch removeDoc(); // deletes the branch
+    AddItemToModifyDocBranch removeDoc(); // deletes the doc
     
     default AddItemToModifyDocBranch branchMain() {
       return branchName(Branches.main.name());

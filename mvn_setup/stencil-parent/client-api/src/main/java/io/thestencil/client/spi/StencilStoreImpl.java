@@ -179,6 +179,7 @@ public class StencilStoreImpl extends DocStoreImpl<StencilStoreImpl> implements 
         .branchMain()
         .docId(target.getId())
         .replace(JsonObject.mapFrom(target))
+        .docType(target.getType().name())
         .createDoc()
       .next();
       

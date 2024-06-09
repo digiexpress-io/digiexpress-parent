@@ -14,6 +14,7 @@ import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOneType;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
@@ -113,6 +114,7 @@ public class BatchForOneDocModify {
         .addAllDocCommands(docLogs)
         .log(commit.getItem1().getCommitLog())
         .addAllDocLock(docLock.getBranches())
+        .type(DocBatchForOneType.UPDATE)
         .build();
   }
   

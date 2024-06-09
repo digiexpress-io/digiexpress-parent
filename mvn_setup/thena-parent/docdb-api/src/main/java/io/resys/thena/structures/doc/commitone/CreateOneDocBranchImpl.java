@@ -22,6 +22,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOneType;
 import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
@@ -159,6 +160,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .log(commit.getItem1().getCommitLog())
       .addDocCommit(commit.getItem1())
       .addAllDocCommitTree(commit.getItem2())
+      .type(DocBatchForOneType.CREATE)
       .build();
 
     return tx.insert()

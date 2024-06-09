@@ -7,6 +7,7 @@ import io.resys.thena.structures.doc.commitmany.ModifyManyDocBranchesImpl;
 import io.resys.thena.structures.doc.commitmany.ModifyManyDocsImpl;
 import io.resys.thena.structures.doc.commitone.CreateOneDocBranchImpl;
 import io.resys.thena.structures.doc.commitone.CreateOneDocImpl;
+import io.resys.thena.structures.doc.commitone.DeleteOneDocImpl;
 import io.resys.thena.structures.doc.commitone.ModifyOneDocBranchImpl;
 import io.resys.thena.structures.doc.commitone.ModifyOneDocImpl;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,9 @@ public class DocAppendActionsImpl implements DocCommitActions {
   @Override
   public ModifyManyDocs modifyManyDocs() {
     return new ModifyManyDocsImpl(state, repoId);
+  }
+  @Override
+  public DeleteOneDoc deleteOneDoc() {
+    return new DeleteOneDocImpl(state, repoId);
   }
 }

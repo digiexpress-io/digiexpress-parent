@@ -120,16 +120,17 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   }
 
   @Override
-  public ThenaSqlClient.SqlTuple deleteById(String id) {
+  public ThenaSqlClient.SqlTuple deleteMany(List<String> id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getDoc())
         .append(" WHERE ").ln()
-        .append(" (id = $1 OR external_id = $1)")
-        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1))").ln()
-        .append(" OR doc_parent_id = $1")
+        .append(" (id = ANY($1) OR external_id = ANY($1))") // document itself
+        .append(" OR doc_parent_id = ANY($1)")              // child documents
+        .append(" OR doc_parent_id IN(select id from ").append(options.getDoc()).append(" WHERE external_id = ANY($1) )").ln()  // child documents
+        
         .build())
-        .props(Tuple.of(id))
+        .props(Tuple.of(id.toArray()))
         .build();
   }
   @Override

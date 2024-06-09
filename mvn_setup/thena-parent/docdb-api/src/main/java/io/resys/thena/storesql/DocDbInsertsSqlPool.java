@@ -31,6 +31,12 @@ public class DocDbInsertsSqlPool implements DocInserts {
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
     final var tx = wrapper.getClient();
     
+    final var docDeletes = registry.docs().deleteMany(output.stream()
+        .filter(item -> item.getType() == DocBatchForOneType.DELETE)
+        .filter(item -> !item.getDocLock().isEmpty())
+        .filter(item -> !item.getDoc().isEmpty())
+        .map(item -> item.getDoc().get().getId())
+        .collect(Collectors.toList()));
     
     final var docInserts = registry.docs().insertMany(output.stream()
         .filter(item -> item.getDocLock().isEmpty())
@@ -69,6 +75,9 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .collect(Collectors.toList()));
     
     
+    final Uni<DocBatchForMany> docsDelUni = Execute.apply(tx, docDeletes).onItem()
+      .transform(row -> successOutput(many, "Docs deleted, number of new entries: " + (row == null ? 0 : row.rowCount())))
+      .onFailure().transform(e -> failOutput(many, "Failed to delete docs", e));
     
     final Uni<DocBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
         .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + (row == null ? 0 : row.rowCount())))
@@ -99,7 +108,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .onFailure().transform(e -> failOutput(many, "Failed to save commands", e));
     
     
-    return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni, commandsUni).asTuple()
+    return Uni.combine().all().unis(docsDelUni, docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni, commandsUni).asTuple()
         .onItem().transform(tuple -> merge(many,
                 tuple.getItem1(), 
                 tuple.getItem2(), 
@@ -107,7 +116,8 @@ public class DocDbInsertsSqlPool implements DocInserts {
                 tuple.getItem4(),
                 tuple.getItem5(),
                 tuple.getItem6(),
-                tuple.getItem7()
+                tuple.getItem7(),
+                tuple.getItem8()
         ))
         .onFailure(DocBatchManyException.class)
         .recoverWithUni((ex) -> {

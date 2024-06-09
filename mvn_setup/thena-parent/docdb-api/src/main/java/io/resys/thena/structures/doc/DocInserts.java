@@ -39,6 +39,7 @@ public interface DocInserts {
   
   @Value.Immutable
   interface DocBatchForOne {
+    DocBatchForOneType getType();
     Optional<Doc> getDoc();
     List<DocBranchLock> getDocLock();
     List<DocBranch> getDocBranch();
@@ -50,6 +51,10 @@ public interface DocInserts {
   }
   
   Uni<DocBatchForMany> batchMany(DocBatchForMany output);
+  
+  enum DocBatchForOneType {
+    UPDATE, CREATE, DELETE
+  }
   
   @Value.Immutable
   interface DocBatchForMany {
