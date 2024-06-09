@@ -3,6 +3,8 @@ package io.thestencil.client.tests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.test.junit.QuarkusTest;
+
 /*-
  * #%L
  * stencil-static-content
@@ -27,6 +29,7 @@ import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.tests.util.TestUtils;
 
+@QuarkusTest
 public class StaticContentSiteTest {  
   final StencilClient client = new StencilClientImpl();
   

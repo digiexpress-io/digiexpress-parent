@@ -9,6 +9,8 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.test.junit.QuarkusTest;
+
 /*-
  * #%L
  * stencil-static-content
@@ -33,6 +35,7 @@ import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.tests.util.TestUtils;
 
+@QuarkusTest
 public class StaticContentMigrationTest {  
   final StencilClient client = new StencilClientImpl();
   

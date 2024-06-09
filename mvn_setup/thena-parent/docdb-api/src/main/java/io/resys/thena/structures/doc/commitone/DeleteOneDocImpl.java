@@ -99,16 +99,12 @@ public class DeleteOneDocImpl implements DeleteOneDoc {
     return tx.insert().batchMany(many)
         .onItem().transform(rsp -> {
           if(rsp.getStatus() == BatchStatus.CONFLICT || rsp.getStatus() == BatchStatus.ERROR) {
-            throw new DeleteOneDocException("Failed to create document!", rsp);
+            throw new DeleteOneDocException("Failed to delete document!", rsp);
           }
 
           return ImmutableOneDocEnvelope.builder()
             .repoId(repoId)
             .doc(batch.getDoc().get())
-            .commit(batch.getDocCommit().iterator().next())
-            .branch(batch.getDocBranch().iterator().next())
-            .commands(batch.getDocCommands())
-            .commitTree(batch.getDocCommitTree())
             .addMessages(ImmutableMessage.builder().text(rsp.getLog()).build())
             .addAllMessages(rsp.getMessages())
             .status(BatchStatus.mapStatus(rsp.getStatus()))

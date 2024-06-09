@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
+import io.resys.thena.api.actions.DocQueryActions.Branches;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
@@ -90,8 +91,12 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
         RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
         RepoAssert.notEmpty(author, () -> "author can't be empty!");
-        RepoAssert.isTrue(result.replace != null || result.merge != null, () -> "Nothing to commit, no content!");
-        
+        if(!(Boolean.TRUE.equals(result.removeDoc) || Boolean.TRUE.equals(result.removeBranch))) {
+          RepoAssert.isTrue(result.replace != null || result.merge != null, () -> "Nothing to commit, no content!");
+        }
+        if(Boolean.TRUE.equals(result.createDoc)) {
+          RepoAssert.isTrue(result.replace != null, () -> "Nothing to commit, no content!");
+        }
         lastItem = null;
         items.add(result);
         return parent;
@@ -111,6 +116,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     RepoAssert.isTrue(!items.isEmpty(), () -> "Nothing to commit, no content!");
     
     final var crit = this.items.stream()
+      .filter(e -> !Boolean.TRUE.equals(e.getCreateDoc()))
       .map(item -> (DocBranchLockCriteria) ImmutableDocBranchLockCriteria.builder()
           .branchName(item.getBranchName())
           .docId(item.getDocId())
@@ -137,7 +143,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         .filter(i -> i.getDoc().isPresent() && i.getBranch().isPresent())
         .map(i -> i.getDoc().get().getId() + "/" + i.getBranch().get().getBranchName())
         .toList();
-    final var source = items.stream().map(i -> i.getDocId() + "/" + i.getBranchName()).toList();
+    final var source = items.stream().filter(e -> !Boolean.TRUE.equals(e.getCreateDoc())).map(i -> i.getDocId() + "/" + i.getBranchName()).toList();
     final var notFound = new ArrayList<>(source);
     notFound.removeAll(found);
     
@@ -195,21 +201,24 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         .status(BatchStatus.OK);
     for(ItemModData item : items) {
       final var lock = lockByName.get(item.getDocId() + "/" + item.getBranchName());
-      final var valid = validateRepoLock(lock, item);;
-      if(valid != null) {
-        many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
+      
+      if(!Boolean.TRUE.equals(item.getCreateDoc())) {
+        final var valid = validateRepoLock(lock, item);
+        if(valid != null) {
+          many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
+        }
       }
       
       final DocBatchForOne batch;
       if(Boolean.TRUE.equals(item.getCreateDoc())) {
         batch = new BatchForOneDocCreate(repoId, author, message)
-          .branchName(branchName)
+          .branchName(branchName == null ? Branches.main.name() : branchName)
           .docType(item.getDocType() == null ? null : item.getDocType().orElse(null))
           .parentDocId(item.getParentDocId() == null ? null : item.getParentDocId().orElse(null))
           .externalId(item.getExternalId() == null ? null : item.getExternalId().orElse(null))
           .ownerId(item.getOwnerId() == null ? null : item.getOwnerId().orElse(null))
           .commands(item.getCommands())
-          .branchContent(item.getMerge().apply(null))
+          .branchContent(item.getReplace())
           .docId(item.getDocId())
           .create();
       } else if(Boolean.TRUE.equals(item.getRemoveDoc())) {

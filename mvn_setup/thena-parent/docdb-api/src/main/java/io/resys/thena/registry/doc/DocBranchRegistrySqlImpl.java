@@ -316,7 +316,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  commits.parent as commit_parent,").ln()
         .append("  commits.id as commit_id").ln()
         
-        .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(" WHERE ").append(where.toString()).append(" FOR UPDATE NOWAIT) as branch").ln()
+        .append(" FROM (SELECT * FROM ").append(options.getDocBranch()).append(where.length() > 0 ? " WHERE " : "").append(where.toString()).append(" FOR UPDATE NOWAIT) as branch").ln()
         .append(" JOIN ").append(options.getDocCommits()).append(" as commits ON(commits.branch_id = branch.branch_id and commits.id = branch.commit_id)").ln()
         .append(" JOIN ").append(options.getDoc()).append(" as doc ON(doc.id = branch.doc_id)").ln()
         
@@ -437,7 +437,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("ALTER TABLE ").append(options.getDocBranch()).ln()
         .append("  ADD CONSTRAINT ").append(options.getDocBranch()).append("_DOC_ID_FK").ln()
         .append("  FOREIGN KEY (doc_id)").ln()
-        .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+        .append("  REFERENCES ").append(options.getDoc()).append(" (id) ON DELETE CASCADE;").ln().ln()
         .build())
         .build();
   }

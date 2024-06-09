@@ -45,7 +45,7 @@ import io.vertx.core.json.JsonObject;
 
 public class StencilDeserializer {
 
-  private ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
   
   public StencilDeserializer(ObjectMapper objectMapper) {
     super();

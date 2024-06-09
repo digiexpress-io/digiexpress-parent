@@ -182,16 +182,12 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
   public ThenaSqlClient.Sql createConstraints() {
     return ImmutableSql.builder()
         .value(new SqlStatement().ln()
+/* no foreign key, because we want to maintain log after main entries are deleted            
         .append("ALTER TABLE ").append(options.getDocCommits()).ln()
         .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_DOC_COMMIT_FK").ln()
         .append("  FOREIGN KEY (doc_id)").ln()
         .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
-        
-//        .append("ALTER TABLE ").append(options.getDocCommits()).ln()
-//        .append("  ADD CONSTRAINT ").append(options.getDocCommits()).append("_BRANCH_ID_FK").ln()
-//        .append("  FOREIGN KEY (branch_id)").ln()
-//        .append("  REFERENCES ").append(options.getDocBranch()).append(" (branch_id);").ln().ln()
-            
+ */      
         .build())
         .build();
   }

@@ -125,7 +125,7 @@ CREATE INDEX doc_branch_DOC_COMMIT_ID_INDEX ON doc_branch (commit_id);
 ALTER TABLE doc_branch
   ADD CONSTRAINT doc_branch_DOC_ID_FK
   FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
+  REFERENCES doc (id) ON DELETE CASCADE;
 
 
 CREATE TABLE doc_commits
@@ -147,11 +147,6 @@ ALTER TABLE doc_commits
   FOREIGN KEY (parent)
   REFERENCES doc_commits (id);
 
-
-ALTER TABLE doc_commits
-  ADD CONSTRAINT doc_commits_DOC_COMMIT_FK
-  FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
 
 
 CREATE TABLE doc_log
@@ -190,12 +185,12 @@ CREATE INDEX doc_commands_DOC_INDEX ON doc_commands (doc_id);
 ALTER TABLE doc_commands
   ADD CONSTRAINT doc_commands_DOC_FK
   FOREIGN KEY (doc_id)
-  REFERENCES doc (id);
+  REFERENCES doc (id) ON DELETE CASCADE;
 
 ALTER TABLE doc_commands
   ADD CONSTRAINT doc_commands_BRANCH_FK
   FOREIGN KEY (branch_id)
-  REFERENCES doc_branch (branch_id);
+  REFERENCES doc_branch (branch_id) ON DELETE CASCADE;
 
 
 CREATE TABLE org_rights

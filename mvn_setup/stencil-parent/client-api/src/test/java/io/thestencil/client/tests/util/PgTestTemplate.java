@@ -1,6 +1,7 @@
 package io.thestencil.client.tests.util;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -79,7 +80,7 @@ public class PgTestTemplate {
   public String toRepoExport(String repoId) {
     Tenant repo = getClient().tenants().find().id(repoId).get()
         .await().atMost(Duration.ofMinutes(1));
-    final String result = new DocDbPrinter(createState()).printWithStaticIds(repo, init, true);
+    final String result = new DocDbPrinter(createState(), Arrays.asList("externalId")).printWithStaticIds(repo, init, true);
     return result;
   }
 

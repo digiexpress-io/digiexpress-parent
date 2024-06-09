@@ -1,281 +1,388 @@
 
-Repo
-  - id: 1, rev: 2
-    name: test1
+Docs
+  - 2: 3
 
-Refs
-  - 3: stencil-main
+Branches
+  - branch name: main
+    branch id: 4
+    doc id: 2
+    commit id: 5
+    {"id":"2","body":{"value":"fi","enabled":true},"type":"LOCALE"}
 
-Tags
+Commands
 
 Commits
-  - id: 4
-    tree: 5, parent: , message: create type: 'TEMPLATE', with id: 'TEMPLATE-1'
   - id: 6
-    tree: 7, parent: 4, message: create type: 'ARTICLE', with id: 'ARTICLE-2'
-  - id: 8
-    tree: 9, parent: 6, message: create type: 'ARTICLE', with id: 'ARTICLE-3'
+    doc id: 7, branch id: 8, parent: 9, message: create type: 'TEMPLATE', with id: '7', author: junit-test
+  - commit log:
+commit: 6, tenant: 1
+author: junit-test, message: create type: 'TEMPLATE', with id: '7'
+ | created
+  + added new: 2 entries
+  + 7::DOC
+    {"id":"7","type":"TEMPLATE","status":"IN_FORCE","commitId":"6","createdWithCommitId":"6","ownerId":null,"parentId":null,"meta":null}
+  + 8::DOC_BRANCH_PATCH
+    {"id":"8","patchValue":[{"op":"add","path":"/id","value":"7"},{"op":"add","path":"/type","value":"TEMPLATE"},{"op":"add","path":"/body","value":{"name":"Nice page template","description":"Generic page structure","content":"# Header 1","type":"Page"}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
   - id: 10
-    tree: 11, parent: 8, message: create type: 'RELEASE', with id: 'RELEASE-4'
-  - id: 12
-    tree: 13, parent: 10, message: create type: 'RELEASE', with id: 'RELEASE-5'
-  - id: 14
-    tree: 15, parent: 12, message: create type: 'LOCALE', with id: 'LOCALE-6'
-  - id: 16
-    tree: 17, parent: 14, message: create type: 'LOCALE', with id: 'LOCALE-7'
-  - id: 18
-    tree: 19, parent: 16, message: create type: 'PAGE', with id: 'PAGE-8'
-  - id: 20
-    tree: 21, parent: 18, message: create type: 'PAGE', with id: 'PAGE-9'
-  - id: 22
-    tree: 23, parent: 20, message: create type: 'LINK', with id: 'LINK-10'
-  - id: 24
-    tree: 25, parent: 22, message: create type: 'WORKFLOW', with id: 'WORKFLOW-11'
-  - id: 26
-    tree: 27, parent: 24, message: update type: 'TEMPLATE', with id: 'TEMPLATE-1'
-  - id: 28
-    tree: 29, parent: 26, message: update type: 'ARTICLE', with id: 'ARTICLE-2'
-  - id: 30
-    tree: 31, parent: 28, message: update type: 'LOCALE', with id: 'LOCALE-6'
-  - id: 32
-    tree: 33, parent: 30, message: update type: 'PAGE', with id: 'PAGE-8'
-  - id: 34
-    tree: 35, parent: 32, message: update type: 'LINK', with id: 'LINK-10'
-  - id: 36
-    tree: 37, parent: 34, message: update type: 'WORKFLOW', with id: 'WORKFLOW-11'
-  - id: 38
-    tree: 39, parent: 36, message: delete type: 'TEMPLATE', with id: 'TEMPLATE-1'
-  - id: 40
-    tree: 41, parent: 38, message: delete type: 'PAGE', with id: 'PAGE-8'
-  - id: 42
-    tree: 43, parent: 40, message: batch created: '0', updated: '1', deleted: '2'
-  - id: 44
-    tree: 45, parent: 42, message: batch created: '0', updated: '0', deleted: '1'
-  - id: 46
-    tree: 47, parent: 44, message: delete type: 'LOCALE', with id: 'LOCALE-6'
-  - id: 48
-    tree: 49, parent: 46, message: delete type: 'LINK', with id: 'LINK-10'
-  - id: 3
-    tree: 50, parent: 48, message: delete type: 'WORKFLOW', with id: 'WORKFLOW-11'
+    doc id: 11, branch id: 12, parent: 9, message: create type: 'ARTICLE', with id: '11', author: junit-test
+  - commit log:
+commit: 10, tenant: 1
+author: junit-test, message: create type: 'ARTICLE', with id: '11'
+ | created
+  + added new: 2 entries
+  + 11::DOC
+    {"id":"11","type":"ARTICLE","status":"IN_FORCE","commitId":"10","createdWithCommitId":"10","ownerId":null,"parentId":null,"meta":null}
+  + 12::DOC_BRANCH_PATCH
+    {"id":"12","patchValue":[{"op":"add","path":"/id","value":"11"},{"op":"add","path":"/type","value":"ARTICLE"},{"op":"add","path":"/body","value":{"parentId":null,"name":"My first article","order":100}}],"docType":"DOC_BRANCH_PATCH"}
 
-Trees
-  - id: 5
-    51: TEMPLATE-1
-  - id: 7
-    52: ARTICLE-2
-    51: TEMPLATE-1
-  - id: 9
-    52: ARTICLE-2
-    53: ARTICLE-3
-    51: TEMPLATE-1
-  - id: 11
-    52: ARTICLE-2
-    53: ARTICLE-3
-    54: RELEASE-4
-    51: TEMPLATE-1
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
   - id: 13
-    52: ARTICLE-2
-    53: ARTICLE-3
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 15
-    52: ARTICLE-2
-    53: ARTICLE-3
-    56: LOCALE-6
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 17
-    52: ARTICLE-2
-    53: ARTICLE-3
-    56: LOCALE-6
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 19
-    52: ARTICLE-2
-    53: ARTICLE-3
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 21
-    52: ARTICLE-2
-    53: ARTICLE-3
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 23
-    52: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-  - id: 25
-    52: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    51: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 27
-    52: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 29
-    63: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    56: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 31
-    63: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    58: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 33
-    63: ARTICLE-2
-    53: ARTICLE-3
-    60: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    65: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 35
-    63: ARTICLE-2
-    53: ARTICLE-3
-    66: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    65: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    61: WORKFLOW-11
-  - id: 37
-    63: ARTICLE-2
-    53: ARTICLE-3
-    66: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    65: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    62: TEMPLATE-1
-    67: WORKFLOW-11
-  - id: 39
-    63: ARTICLE-2
-    53: ARTICLE-3
-    66: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    65: PAGE-8
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 41
-    63: ARTICLE-2
-    53: ARTICLE-3
-    66: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    59: PAGE-9
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 43
-    53: ARTICLE-3
-    68: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 45
-    68: LINK-10
-    64: LOCALE-6
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 47
-    68: LINK-10
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 49
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
-    67: WORKFLOW-11
-  - id: 50
-    57: LOCALE-7
-    54: RELEASE-4
-    55: RELEASE-5
+    doc id: 14, branch id: 15, parent: 9, message: create type: 'ARTICLE', with id: '14', author: junit-test
+  - commit log:
+commit: 13, tenant: 1
+author: junit-test, message: create type: 'ARTICLE', with id: '14'
+ | created
+  + added new: 2 entries
+  + 14::DOC
+    {"id":"14","type":"ARTICLE","status":"IN_FORCE","commitId":"13","createdWithCommitId":"13","ownerId":null,"parentId":null,"meta":null}
+  + 15::DOC_BRANCH_PATCH
+    {"id":"15","patchValue":[{"op":"add","path":"/id","value":"14"},{"op":"add","path":"/type","value":"ARTICLE"},{"op":"add","path":"/body","value":{"parentId":null,"name":"My second article","order":100}}],"docType":"DOC_BRANCH_PATCH"}
 
-Blobs
-  - 51: {"id":"TEMPLATE-1","body":{"name":"Nice page template","type":"Page","content":"# Header 1","description":"Generic page structure"},"type":"TEMPLATE"}
-  - 52: {"id":"ARTICLE-2","body":{"name":"My first article","order":100,"parentId":null},"type":"ARTICLE"}
-  - 53: {"id":"ARTICLE-3","body":{"name":"My second article","order":100,"parentId":null},"type":"ARTICLE"}
-  - 54: {"id":"RELEASE-4","body":{"name":"v1.5","note":"test release","links":[],"pages":[],"created":"","locales":[],"articles":[],"templates":[],"workflows":[],"parentCommit":"8"},"type":"RELEASE"}
-  - 55: {"id":"RELEASE-5","body":{"name":"v2.4","note":"new content","links":[],"pages":[],"created":"","locales":[],"articles":[],"templates":[],"workflows":[],"parentCommit":"10"},"type":"RELEASE"}
-  - 56: {"id":"LOCALE-6","body":{"value":"en","enabled":true},"type":"LOCALE"}
-  - 57: {"id":"LOCALE-7","body":{"value":"fi","enabled":true},"type":"LOCALE"}
-  - 58: {"id":"PAGE-8","body":{"locale":"LOCALE-6","article":"ARTICLE-2","content":"# English content"},"type":"PAGE"}
-  - 59: {"id":"PAGE-9","body":{"locale":"LOCALE-7","article":"ARTICLE-2","content":"# Finnish content"},"type":"PAGE"}
-  - 60: {"id":"LINK-10","body":{"value":"www.example.com","labels":[{"locale":"LOCALE-6","labelValue":"click me"}],"articles":[],"contentType":"internal"},"type":"LINK"}
-  - 61: {"id":"WORKFLOW-11","body":{"value":"Form1","labels":[{"locale":"LOCALE-6","labelValue":"firstForm"}],"articles":[]},"type":"WORKFLOW"}
-  - 62: {"id":"TEMPLATE-1","body":{"name":"new name","type":"PAGE","content":"cool content","description":"description"},"type":"TEMPLATE"}
-  - 63: {"id":"ARTICLE-2","body":{"name":"Revised Article1","order":300,"parentId":null},"type":"ARTICLE"}
-  - 64: {"id":"LOCALE-6","body":{"value":"gb","enabled":false},"type":"LOCALE"}
-  - 65: {"id":"PAGE-8","body":{"locale":"LOCALE-6","article":"ARTICLE-2","content":"new content for page1"},"type":"PAGE"}
-  - 66: {"id":"LINK-10","body":{"value":"www.wikipedia.com","labels":[{"locale":"LOCALE-7","labelValue":"Don't click me"}],"articles":["ARTICLE-2"],"contentType":"external"},"type":"LINK"}
-  - 67: {"id":"WORKFLOW-11","body":{"value":"revision of firstForm","labels":[{"locale":"LOCALE-7","labelValue":"First form part 2"}],"articles":[]},"type":"WORKFLOW"}
-  - 68: {"id":"LINK-10","body":{"value":"www.wikipedia.com","labels":[{"locale":"LOCALE-7","labelValue":"Don't click me"}],"articles":[],"contentType":"external"},"type":"LINK"}
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 16
+    doc id: 17, branch id: 18, parent: 9, message: create type: 'LOCALE', with id: '17', author: junit-test
+  - commit log:
+commit: 16, tenant: 1
+author: junit-test, message: create type: 'LOCALE', with id: '17'
+ | created
+  + added new: 2 entries
+  + 17::DOC
+    {"id":"17","type":"LOCALE","status":"IN_FORCE","commitId":"16","createdWithCommitId":"16","ownerId":null,"parentId":null,"meta":null}
+  + 18::DOC_BRANCH_PATCH
+    {"id":"18","patchValue":[{"op":"add","path":"/id","value":"17"},{"op":"add","path":"/type","value":"LOCALE"},{"op":"add","path":"/body","value":{"value":"en","enabled":true}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 5
+    doc id: 2, branch id: 4, parent: 9, message: create type: 'LOCALE', with id: '2', author: junit-test
+  - commit log:
+commit: 5, tenant: 1
+author: junit-test, message: create type: 'LOCALE', with id: '2'
+ | created
+  + added new: 2 entries
+  + 2::DOC
+    {"id":"2","type":"LOCALE","status":"IN_FORCE","commitId":"5","createdWithCommitId":"5","ownerId":null,"parentId":null,"meta":null}
+  + 4::DOC_BRANCH_PATCH
+    {"id":"4","patchValue":[{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/type","value":"LOCALE"},{"op":"add","path":"/body","value":{"value":"fi","enabled":true}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 19
+    doc id: 20, branch id: 21, parent: 9, message: create type: 'PAGE', with id: '20', author: junit-test
+  - commit log:
+commit: 19, tenant: 1
+author: junit-test, message: create type: 'PAGE', with id: '20'
+ | created
+  + added new: 2 entries
+  + 20::DOC
+    {"id":"20","type":"PAGE","status":"IN_FORCE","commitId":"19","createdWithCommitId":"19","ownerId":null,"parentId":null,"meta":null}
+  + 21::DOC_BRANCH_PATCH
+    {"id":"21","patchValue":[{"op":"add","path":"/id","value":"20"},{"op":"add","path":"/type","value":"PAGE"},{"op":"add","path":"/body","value":{"article":"11","locale":"17","content":"# English content"}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 22
+    doc id: 23, branch id: 24, parent: 9, message: create type: 'PAGE', with id: '23', author: junit-test
+  - commit log:
+commit: 22, tenant: 1
+author: junit-test, message: create type: 'PAGE', with id: '23'
+ | created
+  + added new: 2 entries
+  + 23::DOC
+    {"id":"23","type":"PAGE","status":"IN_FORCE","commitId":"22","createdWithCommitId":"22","ownerId":null,"parentId":null,"meta":null}
+  + 24::DOC_BRANCH_PATCH
+    {"id":"24","patchValue":[{"op":"add","path":"/id","value":"23"},{"op":"add","path":"/type","value":"PAGE"},{"op":"add","path":"/body","value":{"article":"11","locale":"2","content":"# Finnish content"}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 25
+    doc id: 26, branch id: 27, parent: 9, message: create type: 'LINK', with id: '26', author: junit-test
+  - commit log:
+commit: 25, tenant: 1
+author: junit-test, message: create type: 'LINK', with id: '26'
+ | created
+  + added new: 2 entries
+  + 26::DOC
+    {"id":"26","type":"LINK","status":"IN_FORCE","commitId":"25","createdWithCommitId":"25","ownerId":null,"parentId":null,"meta":null}
+  + 27::DOC_BRANCH_PATCH
+    {"id":"27","patchValue":[{"op":"add","path":"/id","value":"26"},{"op":"add","path":"/type","value":"LINK"},{"op":"add","path":"/body","value":{"value":"www.example.com","contentType":"internal","articles":[],"labels":[{"locale":"17","labelValue":"click me"}]}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 28
+    doc id: 29, branch id: 30, parent: 9, message: create type: 'WORKFLOW', with id: '29', author: junit-test
+  - commit log:
+commit: 28, tenant: 1
+author: junit-test, message: create type: 'WORKFLOW', with id: '29'
+ | created
+  + added new: 2 entries
+  + 29::DOC
+    {"id":"29","type":"WORKFLOW","status":"IN_FORCE","commitId":"28","createdWithCommitId":"28","ownerId":null,"parentId":null,"meta":null}
+  + 30::DOC_BRANCH_PATCH
+    {"id":"30","patchValue":[{"op":"add","path":"/id","value":"29"},{"op":"add","path":"/type","value":"WORKFLOW"},{"op":"add","path":"/body","value":{"value":"Form1","articles":[],"labels":[{"locale":"17","labelValue":"firstForm"}]}}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 31
+    doc id: 7, branch id: 8, parent: 6, message: update type: 'TEMPLATE', with id: '7', author: junit-test
+  - commit log:
+commit: 31, tenant: 1
+author: junit-test, message: update type: 'TEMPLATE', with id: '7'
+ | created
+  + added new: 1 entries
+  + 8::DOC_BRANCH_PATCH
+    {"id":"8","patchValue":[{"op":"replace","path":"/body/name","value":"new name"},{"op":"replace","path":"/body/type","value":"PAGE"},{"op":"replace","path":"/body/content","value":"cool content"},{"op":"replace","path":"/body/description","value":"description"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 32
+    doc id: 11, branch id: 12, parent: 10, message: update type: 'ARTICLE', with id: '11', author: junit-test
+  - commit log:
+commit: 32, tenant: 1
+author: junit-test, message: update type: 'ARTICLE', with id: '11'
+ | created
+  + added new: 1 entries
+  + 12::DOC_BRANCH_PATCH
+    {"id":"12","patchValue":[{"op":"replace","path":"/body/name","value":"Revised Article1"},{"op":"replace","path":"/body/order","value":300}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 33
+    doc id: 17, branch id: 18, parent: 16, message: update type: 'LOCALE', with id: '17', author: junit-test
+  - commit log:
+commit: 33, tenant: 1
+author: junit-test, message: update type: 'LOCALE', with id: '17'
+ | created
+  + added new: 1 entries
+  + 18::DOC_BRANCH_PATCH
+    {"id":"18","patchValue":[{"op":"replace","path":"/body/value","value":"gb"},{"op":"replace","path":"/body/enabled","value":false}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 34
+    doc id: 20, branch id: 21, parent: 19, message: update type: 'PAGE', with id: '20', author: junit-test
+  - commit log:
+commit: 34, tenant: 1
+author: junit-test, message: update type: 'PAGE', with id: '20'
+ | created
+  + added new: 1 entries
+  + 21::DOC_BRANCH_PATCH
+    {"id":"21","patchValue":[{"op":"replace","path":"/body/content","value":"new content for page1"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 35
+    doc id: 26, branch id: 27, parent: 25, message: update type: 'LINK', with id: '26', author: junit-test
+  - commit log:
+commit: 35, tenant: 1
+author: junit-test, message: update type: 'LINK', with id: '26'
+ | created
+  + added new: 1 entries
+  + 27::DOC_BRANCH_PATCH
+    {"id":"27","patchValue":[{"op":"replace","path":"/body/value","value":"www.wikipedia.com"},{"op":"replace","path":"/body/labels/0/locale","value":"2"},{"op":"replace","path":"/body/labels/0/labelValue","value":"Don't click me"},{"op":"add","path":"/body/articles/0","value":"11"},{"op":"replace","path":"/body/contentType","value":"external"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 36
+    doc id: 29, branch id: 30, parent: 28, message: update type: 'WORKFLOW', with id: '29', author: junit-test
+  - commit log:
+commit: 36, tenant: 1
+author: junit-test, message: update type: 'WORKFLOW', with id: '29'
+ | created
+  + added new: 1 entries
+  + 30::DOC_BRANCH_PATCH
+    {"id":"30","patchValue":[{"op":"replace","path":"/body/value","value":"revision of firstForm"},{"op":"replace","path":"/body/labels/0/locale","value":"2"},{"op":"replace","path":"/body/labels/0/labelValue","value":"First form part 2"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 37
+    doc id: 26, branch id: 27, parent: 35, message: batch created: '0', updated: '1', deleted: '2', author: junit-test
+  - commit log:
+commit: 37, tenant: 1
+author: junit-test, message: batch created: '0', updated: '1', deleted: '2'
+ | created
+  + added new: 1 entries
+  + 27::DOC_BRANCH_PATCH
+    {"id":"27","patchValue":[{"op":"remove","path":"/body/articles/0"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+
+Logs
+  - id: 38::DOC
+    log patch: null    log before: null    log after: {"id":"7","meta":null,"type":"TEMPLATE","status":"IN_FORCE","ownerId":null,"commitId":"6","parentId":null,"createdWithCommitId":"6"}
+  - id: 39::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"8","docId":"7","value":{},"status":"IN_FORCE","commitId":"6","branchName":"main","createdWithCommitId":"6"}
+  - id: 40::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"7"},{"op":"add","path":"/type","value":"TEMPLATE"},{"op":"add","path":"/body","value":{"name":"Nice page template","type":"Page","content":"# Header 1","description":"Generic page structure"}}]    log before: null    log after: null
+  - id: 41::DOC
+    log patch: null    log before: null    log after: {"id":"11","meta":null,"type":"ARTICLE","status":"IN_FORCE","ownerId":null,"commitId":"10","parentId":null,"createdWithCommitId":"10"}
+  - id: 42::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"12","docId":"11","value":{},"status":"IN_FORCE","commitId":"10","branchName":"main","createdWithCommitId":"10"}
+  - id: 43::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"11"},{"op":"add","path":"/type","value":"ARTICLE"},{"op":"add","path":"/body","value":{"name":"My first article","order":100,"parentId":null}}]    log before: null    log after: null
+  - id: 44::DOC
+    log patch: null    log before: null    log after: {"id":"14","meta":null,"type":"ARTICLE","status":"IN_FORCE","ownerId":null,"commitId":"13","parentId":null,"createdWithCommitId":"13"}
+  - id: 45::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"15","docId":"14","value":{},"status":"IN_FORCE","commitId":"13","branchName":"main","createdWithCommitId":"13"}
+  - id: 46::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"14"},{"op":"add","path":"/type","value":"ARTICLE"},{"op":"add","path":"/body","value":{"name":"My second article","order":100,"parentId":null}}]    log before: null    log after: null
+  - id: 47::DOC
+    log patch: null    log before: null    log after: {"id":"17","meta":null,"type":"LOCALE","status":"IN_FORCE","ownerId":null,"commitId":"16","parentId":null,"createdWithCommitId":"16"}
+  - id: 48::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"18","docId":"17","value":{},"status":"IN_FORCE","commitId":"16","branchName":"main","createdWithCommitId":"16"}
+  - id: 49::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"17"},{"op":"add","path":"/type","value":"LOCALE"},{"op":"add","path":"/body","value":{"value":"en","enabled":true}}]    log before: null    log after: null
+  - id: 50::DOC
+    log patch: null    log before: null    log after: {"id":"2","meta":null,"type":"LOCALE","status":"IN_FORCE","ownerId":null,"commitId":"5","parentId":null,"createdWithCommitId":"5"}
+  - id: 51::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"4","docId":"2","value":{},"status":"IN_FORCE","commitId":"5","branchName":"main","createdWithCommitId":"5"}
+  - id: 52::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/type","value":"LOCALE"},{"op":"add","path":"/body","value":{"value":"fi","enabled":true}}]    log before: null    log after: null
+  - id: 53::DOC
+    log patch: null    log before: null    log after: {"id":"20","meta":null,"type":"PAGE","status":"IN_FORCE","ownerId":null,"commitId":"19","parentId":null,"createdWithCommitId":"19"}
+  - id: 54::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"21","docId":"20","value":{},"status":"IN_FORCE","commitId":"19","branchName":"main","createdWithCommitId":"19"}
+  - id: 55::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"20"},{"op":"add","path":"/type","value":"PAGE"},{"op":"add","path":"/body","value":{"locale":"17","article":"11","content":"# English content"}}]    log before: null    log after: null
+  - id: 56::DOC
+    log patch: null    log before: null    log after: {"id":"23","meta":null,"type":"PAGE","status":"IN_FORCE","ownerId":null,"commitId":"22","parentId":null,"createdWithCommitId":"22"}
+  - id: 57::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"24","docId":"23","value":{},"status":"IN_FORCE","commitId":"22","branchName":"main","createdWithCommitId":"22"}
+  - id: 58::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"23"},{"op":"add","path":"/type","value":"PAGE"},{"op":"add","path":"/body","value":{"locale":"2","article":"11","content":"# Finnish content"}}]    log before: null    log after: null
+  - id: 59::DOC
+    log patch: null    log before: null    log after: {"id":"26","meta":null,"type":"LINK","status":"IN_FORCE","ownerId":null,"commitId":"25","parentId":null,"createdWithCommitId":"25"}
+  - id: 60::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"27","docId":"26","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"25"}
+  - id: 61::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"26"},{"op":"add","path":"/type","value":"LINK"},{"op":"add","path":"/body","value":{"value":"www.example.com","labels":[{"locale":"17","labelValue":"click me"}],"articles":[],"contentType":"internal"}}]    log before: null    log after: null
+  - id: 62::DOC
+    log patch: null    log before: null    log after: {"id":"29","meta":null,"type":"WORKFLOW","status":"IN_FORCE","ownerId":null,"commitId":"28","parentId":null,"createdWithCommitId":"28"}
+  - id: 63::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"30","docId":"29","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"28"}
+  - id: 64::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"29"},{"op":"add","path":"/type","value":"WORKFLOW"},{"op":"add","path":"/body","value":{"value":"Form1","labels":[{"locale":"17","labelValue":"firstForm"}],"articles":[]}}]    log before: null    log after: null
+  - id: 65::DOC_BRANCH
+    log patch: null    log before: {"id":"8","docId":"7","value":{},"status":"IN_FORCE","commitId":"6","branchName":"main","createdWithCommitId":"6"}    log after: {"id":"8","docId":"7","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"6"}
+  - id: 66::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/name","value":"new name"},{"op":"replace","path":"/body/type","value":"PAGE"},{"op":"replace","path":"/body/content","value":"cool content"},{"op":"replace","path":"/body/description","value":"description"}]    log before: null    log after: null
+  - id: 67::DOC_BRANCH
+    log patch: null    log before: {"id":"12","docId":"11","value":{},"status":"IN_FORCE","commitId":"10","branchName":"main","createdWithCommitId":"10"}    log after: {"id":"12","docId":"11","value":{},"status":"IN_FORCE","commitId":"32","branchName":"main","createdWithCommitId":"10"}
+  - id: 68::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/name","value":"Revised Article1"},{"op":"replace","path":"/body/order","value":300}]    log before: null    log after: null
+  - id: 69::DOC_BRANCH
+    log patch: null    log before: {"id":"18","docId":"17","value":{},"status":"IN_FORCE","commitId":"16","branchName":"main","createdWithCommitId":"16"}    log after: {"id":"18","docId":"17","value":{},"status":"IN_FORCE","commitId":"33","branchName":"main","createdWithCommitId":"16"}
+  - id: 70::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/value","value":"gb"},{"op":"replace","path":"/body/enabled","value":false}]    log before: null    log after: null
+  - id: 71::DOC_BRANCH
+    log patch: null    log before: {"id":"21","docId":"20","value":{},"status":"IN_FORCE","commitId":"19","branchName":"main","createdWithCommitId":"19"}    log after: {"id":"21","docId":"20","value":{},"status":"IN_FORCE","commitId":"34","branchName":"main","createdWithCommitId":"19"}
+  - id: 72::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/content","value":"new content for page1"}]    log before: null    log after: null
+  - id: 73::DOC_BRANCH
+    log patch: null    log before: {"id":"27","docId":"26","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"25"}    log after: {"id":"27","docId":"26","value":{},"status":"IN_FORCE","commitId":"35","branchName":"main","createdWithCommitId":"25"}
+  - id: 74::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/value","value":"www.wikipedia.com"},{"op":"replace","path":"/body/labels/0/locale","value":"2"},{"op":"replace","path":"/body/labels/0/labelValue","value":"Don't click me"},{"op":"add","path":"/body/articles/0","value":"11"},{"op":"replace","path":"/body/contentType","value":"external"}]    log before: null    log after: null
+  - id: 75::DOC_BRANCH
+    log patch: null    log before: {"id":"30","docId":"29","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"28"}    log after: {"id":"30","docId":"29","value":{},"status":"IN_FORCE","commitId":"36","branchName":"main","createdWithCommitId":"28"}
+  - id: 76::DOC_BRANCH_PATCH
+    log patch: [{"op":"replace","path":"/body/value","value":"revision of firstForm"},{"op":"replace","path":"/body/labels/0/locale","value":"2"},{"op":"replace","path":"/body/labels/0/labelValue","value":"First form part 2"}]    log before: null    log after: null
+  - id: 77::DOC_BRANCH
+    log patch: null    log before: {"id":"27","docId":"26","value":{},"status":"IN_FORCE","commitId":"35","branchName":"main","createdWithCommitId":"25"}    log after: {"id":"27","docId":"26","value":{},"status":"IN_FORCE","commitId":"37","branchName":"main","createdWithCommitId":"25"}
+  - id: 78::DOC_BRANCH_PATCH
+    log patch: [{"op":"remove","path":"/body/articles/0"}]    log before: null    log after: null

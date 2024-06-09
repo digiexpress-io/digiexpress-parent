@@ -166,12 +166,12 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
       .append("ALTER TABLE ").append(options.getDocCommands()).ln()
       .append("  ADD CONSTRAINT ").append(options.getDocCommands()).append("_DOC_FK").ln()
       .append("  FOREIGN KEY (doc_id)").ln()
-      .append("  REFERENCES ").append(options.getDoc()).append(" (id);").ln().ln()
+      .append("  REFERENCES ").append(options.getDoc()).append(" (id) ON DELETE CASCADE;").ln().ln()
       
       .append("ALTER TABLE ").append(options.getDocCommands()).ln()
       .append("  ADD CONSTRAINT ").append(options.getDocCommands()).append("_BRANCH_FK").ln()
       .append("  FOREIGN KEY (branch_id)").ln()
-      .append("  REFERENCES ").append(options.getDocBranch()).append(" (branch_id);").ln().ln()
+      .append("  REFERENCES ").append(options.getDocBranch()).append(" (branch_id) ON DELETE CASCADE;").ln().ln()
       
       
     .build()).build();

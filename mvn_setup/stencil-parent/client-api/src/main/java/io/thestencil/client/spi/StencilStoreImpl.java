@@ -158,7 +158,9 @@ public class StencilStoreImpl extends DocStoreImpl<StencilStoreImpl> implements 
     final List<Entity<?>> all = new ArrayList<Entity<?>>();
     final var commitBuilder = config.getClient().doc(config.getRepoId())
         .commit()
-        .modifyManyBranches();
+        .modifyManyBranches()
+        .commitMessage("Saving batch")
+        .commitAuthor(config.getAuthor().get());
 
     for(final var target : batch.getToBeDeleted()) {
       commitBuilder.item().docId(target.getId()).removeDoc().next();

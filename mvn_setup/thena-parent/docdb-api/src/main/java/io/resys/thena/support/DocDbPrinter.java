@@ -1,6 +1,9 @@
 package io.resys.thena.support;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -9,12 +12,16 @@ import io.resys.thena.spi.DbState;
 
 public class DocDbPrinter {
   private final DbState state;
-
+  private final List<String> removeAttributes = new ArrayList<>(Arrays.asList("createdAt", "updatedAt"));
   public DocDbPrinter(DbState state) {
     super();
     this.state = state;
   }
-  
+  public DocDbPrinter(DbState state, List<String> removeAttributes) {
+    super();
+    this.state = state;
+    this.removeAttributes.addAll(removeAttributes);
+  }
   private String removeAttr(String target, String attr) {
     
     var proc = target;
@@ -160,8 +167,9 @@ public class DocDbPrinter {
       log = log.replace(entry.getKey(), entry.getValue());
     } 
     
-    log = removeAttr(log, "createdAt");
-    log = removeAttr(log, "updatedAt");
+    for(final var attr : removeAttributes) {
+      log = removeAttr(log, attr);  
+    }
     
     return log;
   }
