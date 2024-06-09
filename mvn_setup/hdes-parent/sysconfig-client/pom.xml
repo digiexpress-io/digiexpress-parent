@@ -39,11 +39,6 @@
       <groupId>io.digiexpress</groupId>
       <artifactId>hdes-client-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>hdes-store-thena</artifactId>
-    </dependency>
-
 
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
