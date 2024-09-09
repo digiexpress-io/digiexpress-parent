@@ -1,3 +1,8 @@
+![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License&style=for-the-badge)
+[![Maven Central](https://img.shields.io/maven-central/v/io.digiexpress/digiexpress-parent.svg?label=Maven%20Central&style=for-the-badge)](https://search.maven.org/artifact/io.digiexpress/digiexpress-parent)
+![Backend Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/cicd-build.yml?style=for-the-badge)
+![UI Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/build-ui.yml?style=for-the-badge)
+
 # DigiExpress-parent
 
 ## Overview
