@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/gamut",
-  "version": "0.0.28",
+  "version": "1.0.0",
   "homepage": "/portal",
   "main": "build/index.js",
   "types": "build/index.d.ts",
