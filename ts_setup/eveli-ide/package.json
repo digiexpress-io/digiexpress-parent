@@ -1,0 +1,74 @@
+{
+  "name": "@dxs-ts/eveli-ide",
+  "version": "1.0.1",
+  "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "type": "module",
+  "files": [
+    "build"
+  ],
+  "repository": "git@github.com:digiexpress-io/digiexpress-parent.git",
+  "scripts": {
+    "start-wrench": "vite",
+    "start-stencil": "vite",
+    "build": "NODE_ENV=production vite build --mode production",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "^5.0.0-alpha.53",
+    "@mui/material": "^5.0.1",
+    "@mui/styles": "^5.0.1",
+    "@mui/system": "^5.0.1",
+    "@uiw/react-md-editor": "^3.4.7",
+    "codemirror": "^5.40.0",
+    "d3": "^7.1.1",
+    "diff2html": "^3.4.44",
+    "js-file-download": "^0.4.12",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "notistack": "^2.0.3",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intl": "^5.20.2",
+    "vis-react": "^0.5.1"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.1.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^12.20.15",
+    "@types/react": "^17.0.10",
+    "@types/react-dom": "^17.0.7",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "typescript": "^5.5.2",
+    "vite": "^5.0.8",
+    "vite-plugin-checker": "^0.6.2",
+    "vite-plugin-dts": "^4.2.3",
+    "vite-plugin-svgr": "^4.2.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+}
