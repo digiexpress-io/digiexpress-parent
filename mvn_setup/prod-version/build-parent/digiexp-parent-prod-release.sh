@@ -18,7 +18,6 @@ if [[ "${last_release_commit_hash}" = "${GITHUB_SHA}" ]]; then
      #exit 0
 fi
 
-
 # Config GIT
 echo "Setup git user name to '$BOT_NAME' and email to '$BOT_EMAIL' GPG key ID $GPG_KEY_ID"
 git config --global user.name "$BOT_NAME";
