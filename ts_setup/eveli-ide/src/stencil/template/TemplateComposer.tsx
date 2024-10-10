@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer, StencilClient } from '../context';
 
 

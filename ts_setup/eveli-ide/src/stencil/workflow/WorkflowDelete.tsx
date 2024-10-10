@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 
 import { Composer, StencilClient } from '../context';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 interface WorkflowDeleteProps {
   workflow: StencilClient.Workflow,

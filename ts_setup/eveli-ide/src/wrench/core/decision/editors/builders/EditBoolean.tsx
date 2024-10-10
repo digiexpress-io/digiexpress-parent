@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListItemText } from '@mui/material';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { BooleanBuilder } from './'
 
 

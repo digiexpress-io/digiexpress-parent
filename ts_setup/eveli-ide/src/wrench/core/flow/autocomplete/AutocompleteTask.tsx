@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, List, ListItem, ListItemText, Typography, Divider } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 import { Client, Composer } from '../../context';
 import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';

@@ -14,7 +14,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import { useSnackbar } from 'notistack';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer } from './context';
 
 

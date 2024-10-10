@@ -11,7 +11,7 @@ import CheckIcon from '@mui/icons-material/Check';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer, StencilClient } from '../context';
 
 

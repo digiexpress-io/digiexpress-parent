@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/ModeEdit';
 import { FormattedMessage } from 'react-intl';
 
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 import { Composer, Client } from '../../context';
 import DecisionOptions from './DecisionOptions';

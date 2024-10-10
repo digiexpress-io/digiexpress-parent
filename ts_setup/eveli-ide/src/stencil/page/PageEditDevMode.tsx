@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { Composer, StencilClient } from '../context';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Box } from '@mui/material';
 
 

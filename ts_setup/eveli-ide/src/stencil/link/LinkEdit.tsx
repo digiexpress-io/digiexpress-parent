@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer, StencilClient } from '../context';
 import { LocaleLabels } from '../locale';
 

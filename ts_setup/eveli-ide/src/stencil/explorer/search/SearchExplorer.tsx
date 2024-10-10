@@ -17,7 +17,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { ArticleEdit } from '../../article';
 import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer, StencilClient } from '../../context';
 
 

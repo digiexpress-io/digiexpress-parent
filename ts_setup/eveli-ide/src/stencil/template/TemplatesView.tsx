@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { TemplateComposer, TemplateDelete, TemplateEdit } from './';
 import { Composer, StencilClient } from '../context';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 
 

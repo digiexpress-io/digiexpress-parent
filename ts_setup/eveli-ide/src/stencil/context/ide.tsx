@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useTheme } from '@mui/material';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { StencilClient } from '../';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';

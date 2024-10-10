@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer, StencilClient } from '../../context';
 
 import { WorkflowOptions } from './WorkflowOptions';

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 import { DateBuilder } from './'
 

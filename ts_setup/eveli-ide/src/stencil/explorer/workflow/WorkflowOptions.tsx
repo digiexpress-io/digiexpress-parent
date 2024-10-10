@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/ModeEdit';
 import { WorkflowDelete } from '../../workflow/WorkflowDelete';
 import { WorkflowEdit } from '../../workflow';
 import { StencilClient } from '../../context';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 const WorkflowOptions: React.FC<{workflow: StencilClient.Workflow}> = ({ workflow }) => {
 

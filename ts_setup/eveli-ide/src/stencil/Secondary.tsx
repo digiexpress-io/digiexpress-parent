@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, Tab, Box, TabProps, TabsProps, TextFieldProps, TextField, alpha } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { useIntl } from 'react-intl';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { ArticleExplorer, WorkflowExplorer, LinkExplorer, SearchExplorer } from './explorer';
 
 

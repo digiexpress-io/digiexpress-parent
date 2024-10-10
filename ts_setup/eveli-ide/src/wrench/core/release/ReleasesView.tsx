@@ -19,7 +19,7 @@ import ReleasesTable from './ReleasesTable';
 import type { Release } from './release-types';
 import { ReleaseBranch } from './release-types';
 import { Composer, Client } from '../context';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { AssetMapper } from '../compare/CompareView';
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.explorer.main, .05),

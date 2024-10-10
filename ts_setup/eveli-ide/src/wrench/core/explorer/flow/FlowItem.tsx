@@ -13,7 +13,7 @@ import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import { FormattedMessage } from 'react-intl';
 
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 import { Composer, Client } from '../../context';
 import FlowOptions from './FlowOptions';

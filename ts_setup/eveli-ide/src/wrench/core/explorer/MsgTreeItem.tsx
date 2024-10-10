@@ -1,7 +1,7 @@
 import React from 'react';
 import { DialogContentText } from '@mui/material';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Client } from '../context';
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Composer } from '../context';
 
 const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {

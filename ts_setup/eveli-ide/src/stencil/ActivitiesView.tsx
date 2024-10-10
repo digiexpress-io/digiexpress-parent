@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 
 import { ArticleComposer } from './article';
 import { LinkComposer } from './link';

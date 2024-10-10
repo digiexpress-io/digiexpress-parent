@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import Burger from 'import Burger from '@/burger'';
+import Burger from '@/burger';
 import { Client, Composer } from '../context';
 
 import { DebugDrawer } from './drawer/DebugDrawer';
