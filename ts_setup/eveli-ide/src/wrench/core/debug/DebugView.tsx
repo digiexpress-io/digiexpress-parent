@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel } from '@mui/material';
 
 import Burger from '@/burger';
 import { Client, Composer } from '../context';
@@ -30,7 +29,7 @@ const getData = (session: Composer.Session): {
   const debug: Composer.DebugSession | undefined = session.debug.selected ? session.debug.values[session.debug.selected] : undefined;
 
   const elements = ast ? ast.headers.acceptDefs : [];
-  const data = {};
+  const data: any = {};
   for (const parameter of elements) {
     if (parameter.values !== undefined) {
       data[parameter.name] = parameter.values ? parameter.values : "";

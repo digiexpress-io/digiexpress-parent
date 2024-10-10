@@ -50,7 +50,7 @@ const createMatches = (debug: Client.DecisionResult): RuleRow[] => {
   }
   const result: RuleRow[] = [];
   for (const match of debug.matches) {
-    const outputs = {};
+    const outputs: Record<string, string> = {};
     const ruleRow: RuleRow = { order: match.order, rules: [], outputs };
     result.push(ruleRow);
     for (const accepts of match.accepts) {

@@ -60,9 +60,11 @@ namespace HdesClient {
           this._headers = {};
         } else {
           this._branch = branchName;
+          // @ts-ignore
           this._headers["Branch-Name"] = branchName;
         }
       }
+      // @ts-ignore
       this._headers["Content-Type"] = "application/json;charset=UTF-8";
     }
     withBranch(branchName?: string): HdesClient.ServiceImpl {

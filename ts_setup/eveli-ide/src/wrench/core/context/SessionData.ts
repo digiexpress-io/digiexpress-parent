@@ -126,7 +126,7 @@ class SessionData implements Composer.Session {
     return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, branchName });
   }
   withoutPages(pageIds: Client.EntityId[]): Composer.Session {
-    const pages = {};
+    const pages: Record<string, Composer.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
         continue;

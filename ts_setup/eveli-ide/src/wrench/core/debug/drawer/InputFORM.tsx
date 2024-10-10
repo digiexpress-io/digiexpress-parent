@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Typography, Grid, ListItemText } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import Burger from '@/burger';
@@ -33,7 +33,7 @@ const parseInput = (json: string) => {
   }
 }
 
-const getValueFromJson = (parameter: Client.TypeDef, json: object) => {
+const getValueFromJson = (parameter: Client.TypeDef, json: Record<string, any>) => {
   const init = json[parameter.name];
   if (init === undefined) {
     return parameter.values ? parameter.values : "";
@@ -68,7 +68,7 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
 
 
   const handleChange = (newValue: string, typeDef: Client.TypeDef) => {
-    const newObject = {};
+    const newObject: Record<string, any> = {};
     newObject[typeDef.name] = newValue;
     setJson(Object.assign({}, json, newObject))
   }

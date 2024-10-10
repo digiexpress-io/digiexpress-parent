@@ -209,7 +209,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
         value: (<ListItemText primary={type} />)
       }))}
     />
-    {operation ? operations[operation] : null}
+    {operation ? operations[operation as OperationType] : null}
   </>);
 
 
