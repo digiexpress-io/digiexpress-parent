@@ -41,7 +41,7 @@ import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
-import io.quarkus.deployment.configuration.ConfigurationError;
+import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.deployment.pkg.builditem.CurateOutcomeBuildItem;
 import io.quarkus.deployment.util.WebJarUtil;
 import io.quarkus.vertx.http.deployment.BodyHandlerBuildItem;
@@ -176,7 +176,7 @@ public class FrontendProcessor {
       }
       
       if(!indexReplaced) {
-        throw new ConfigurationError(new StringBuilder("Failed to create stencil-ide index.html, ")
+        throw new ConfigurationException(new StringBuilder("Failed to create stencil-ide index.html, ")
             .append("artifact = ").append(artifact).append(System.lineSeparator()).append(",")
             .append("path = ").append(frontendPath).append("!")
             .append("final destination = ").append(FINAL_DESTINATION).append("!")

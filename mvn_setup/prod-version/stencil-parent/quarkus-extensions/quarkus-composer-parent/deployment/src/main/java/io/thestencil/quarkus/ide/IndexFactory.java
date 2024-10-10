@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
-import io.quarkus.deployment.configuration.ConfigurationError;
+import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.deployment.util.FileUtil;
 
 public class IndexFactory {
@@ -70,7 +70,7 @@ public class IndexFactory {
         byte[] bytes = FileUtil.readFileContents(stream);
         this.indexFileContent = new String(bytes, StandardCharsets.UTF_8);
       } catch (Exception e) {
-        throw new ConfigurationError(new StringBuilder("Failed to create frontend index.html, ")
+        throw new ConfigurationException(new StringBuilder("Failed to create frontend index.html, ")
             .append("msg = ").append(e.getMessage()).append(System.lineSeparator()).append(",")
             .append("path = ").append(path).append("!")
             .toString());

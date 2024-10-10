@@ -4,7 +4,7 @@ package io.thestencil.quarkus.ide;
  * #%L
  * quarkus-stencil-composer
  * %%
- * Copyright (C) 2021 - 2022 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ package io.thestencil.quarkus.ide;
  * #L%
  */
 
-import java.util.Optional;
-
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 

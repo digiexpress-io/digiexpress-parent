@@ -46,7 +46,7 @@ import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
-import io.quarkus.deployment.configuration.ConfigurationError;
+import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.deployment.pkg.builditem.CurateOutcomeBuildItem;
 import io.quarkus.deployment.util.FileUtil;
 import io.quarkus.deployment.util.WebJarUtil;
@@ -86,11 +86,11 @@ public class StaticContentProcessor {
 
     
     if(config.siteJson.isPresent() && config.webjar.isPresent()) {
-      throw new ConfigurationError("siteJson and webjar both can't be defined, define only one of them!"); 
+      throw new ConfigurationException("siteJson and webjar both can't be defined, define only one of them!"); 
     }
 
     if(config.siteJson.isEmpty() && config.webjar.isEmpty()) {
-      throw new ConfigurationError("siteJson and webjar both are empty, define one of them!"); 
+      throw new ConfigurationException("siteJson and webjar both are empty, define one of them!"); 
     }
     
     
@@ -103,7 +103,7 @@ public class StaticContentProcessor {
         .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
     
     if(!contentValues.containsKey(config.defaultLocale)) {
-      throw new ConfigurationError("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
+      throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
     }
     
     if(LOGGER.isDebugEnabled()) {
@@ -200,7 +200,7 @@ public class StaticContentProcessor {
           byte[] bytes = FileUtil.readFileContents(new FileInputStream(file.toFile()));
           builder.md(path, bytes);
         } catch(IOException e) {
-          throw new ConfigurationError("Failed to read file: '" + file + "'!");
+          throw new ConfigurationException("Failed to read file: '" + file + "'!");
         }
       });
 
@@ -265,7 +265,7 @@ public class StaticContentProcessor {
         final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString());
         site = IOUtils.toString(stream, StandardCharsets.UTF_8);        
       } catch(IOException e) {
-        throw new ConfigurationError("Failed to read file: '" + tempPath + "'!");
+        throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
       }
       
       final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().json(site, false).build();
@@ -284,7 +284,7 @@ public class StaticContentProcessor {
       final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString());
       site = IOUtils.toString(stream, StandardCharsets.UTF_8);
     } catch(IOException e) {
-      throw new ConfigurationError("Failed to read file: '" + tempPath + "'!");
+      throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
     }
 
     String fileName = tempPath.toFile().getName().toString();
