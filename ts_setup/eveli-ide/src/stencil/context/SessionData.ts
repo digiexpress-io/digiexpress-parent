@@ -299,7 +299,7 @@ class SessionData implements Composer.Session {
   getArticleName(articleId: StencilClient.ArticleId) {
     return this.getArticleNameInternal(articleId, []);
   }
-  getArticleNameInternal(articleId: StencilClient.ArticleId, visited: StencilClient.ArticleId[]) {
+  getArticleNameInternal(articleId: StencilClient.ArticleId, visited: StencilClient.ArticleId[]): { missing: boolean, name: string } {
     if(visited.includes(articleId)) {
       return { missing: true, name: 'parent-child-cycle-for-article-' + articleId };
     }
@@ -388,7 +388,7 @@ class SessionData implements Composer.Session {
     return new SessionData({ site: site, pages: this._pages, filter: this._filter });
   }
   withoutPages(pageIds: StencilClient.PageId[]): Composer.Session {
-    const pages = {};
+    const pages: Record<string, Composer.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
         continue;
