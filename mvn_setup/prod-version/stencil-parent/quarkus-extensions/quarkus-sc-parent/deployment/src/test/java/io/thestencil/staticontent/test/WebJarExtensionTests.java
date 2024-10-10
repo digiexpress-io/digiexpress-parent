@@ -36,7 +36,7 @@ public class WebJarExtensionTests {
   final static QuarkusUnitTest config = new QuarkusUnitTest()
     .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
       .addAsResource(new StringAsset(
-          "quarkus.stencil-sc.webjar=io.thestencil:quarkus-stencil-sc-testcontent\r\n" +
+          "quarkus.stencil-sc.webjar=io.digiexpress:quarkus-stencil-sc-testcontent\r\n" +
           "quarkus.stencil-sc.service-path=portal/site\r\n" +
           ""), "application.properties")
     );
