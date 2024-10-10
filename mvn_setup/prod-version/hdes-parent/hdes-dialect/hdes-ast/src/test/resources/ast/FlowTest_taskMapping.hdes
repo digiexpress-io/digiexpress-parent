@@ -1,6 +1,0 @@
- flow x ({ arg1: integer, arg2: integer }): {} {
-    firstTask() {
-      bestDtTask({ input1: arg1.x1, input2: arg2.x1 })
-      return { input1: arg1.x1, input2: arg2.x1 }
-    }
-  }
