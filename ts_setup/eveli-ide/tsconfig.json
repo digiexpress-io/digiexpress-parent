@@ -31,7 +31,6 @@
   },
   "include": [
     "src",
-    "demo-app-stencil",
-    "demo-app-wrench"
+    "demo-app"
   ]
 }

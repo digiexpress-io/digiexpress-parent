@@ -1,10 +1,18 @@
+
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
-import { siteTheme } from 'import Burger from '@/burger'';
+import { WrenchComposer, WrenchClient, wrenchIntl, siteTheme } from '@dxs-ts/eveli-ide';
 
-import { StencilComposer, StencilClient, messages } from './core';
+
+const init = {
+  locale: 'en',
+  url: "http://localhost:8081/assets", //spring-app
+};
+
+console.log("INIT", init);
+
+const store: WrenchClient.Store = new WrenchClient.StoreImpl(init);
 
 const getLocale = () => {
   let locale = (navigator.languages && navigator.languages[0]) || navigator.language || (navigator as any).userLanguage || 'en-US';
@@ -17,22 +25,18 @@ const getLocale = () => {
   return 'en';
 }
 
-const locale = getLocale();
-console.log("used locale", locale);
+export const WrenchApp: React.FC = () => {
 
-const service = StencilClient.mock();
-//const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" }});
-
-
-ReactDOM.render(
-  <React.StrictMode>
-    <IntlProvider locale={locale} messages={messages[locale]}>
+  const locale = getLocale();
+  const service = React.useMemo(() => new WrenchClient.ServiceImpl(store), [store]);
+  
+  return (
+    <IntlProvider locale={locale} messages={wrenchIntl[locale]}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={siteTheme}>
-          <StencilComposer service={service} />
+          <WrenchComposer service={service} />
         </ThemeProvider>
       </StyledEngineProvider>
     </IntlProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+  );
+}
