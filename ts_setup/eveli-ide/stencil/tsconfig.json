@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es6",
+      "es2021",
+      "dom"
+    ],
+    "outDir": "build",
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "rootDirs": [
+      "src",
+      "stories"
+    ],
+    "noImplicitAny": false,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "jsx": "react-jsx",
+    "typeRoots": [
+      "index.d.ts",
+      "node_modules/@types"
+    ],
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "src",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "src/setupTests.ts",
+    "**/*.test.tsx",
+    "**/*.test.ts"
+  ]
+}
