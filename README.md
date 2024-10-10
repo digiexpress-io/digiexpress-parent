@@ -3,6 +3,8 @@
 ![Backend Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/cicd-build.yml)
 ![UI Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/build-ui.yml)
 [![Gamut](https://img.shields.io/npm/v/@dxs-ts/gamut?label=gamut@latest)](https://www.npmjs.com/package/@dxs-ts/gamut)
+[![Eveli IDE](https://img.shields.io/npm/v/@dxs-ts/eveli-ide?label=eveli-ide@latest)](https://www.npmjs.com/package/@dxs-ts/eveli-ide)
+
 
 # DigiExpress-parent
 
