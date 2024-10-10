@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import serveDev from './vite.dev.config';
 import buildProd from './vite.prod.config';
 
@@ -6,17 +6,9 @@ import buildProd from './vite.prod.config';
 export default defineConfig((props) => {
   const { command } = props;
 
-  const serve = command === 'serve';
-  const wrenchMode = serve && process.env.START_MODE === 'wrench';
-  const stencilMode = serve && process.env.START_MODE === 'stencil';
-
-  if (wrenchMode) {
-    console.log('Wrench mode');
-  } else if (stencilMode) {
-    console.log('Stencil mode');
-  } else if (serve) {
+  if (command === 'serve') {
     return serveDev(props);
-  } 
+  }
 
   return buildProd(props);
 });
