@@ -16,7 +16,7 @@ const OrderNumberTooltip: React.FC<{}> = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
 
-  const handlePopover = (event) => {
+  const handlePopover = (event: React.MouseEvent<any>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -28,7 +28,7 @@ const OrderNumberTooltip: React.FC<{}> = () => {
 
   return (<>
     <Tooltip title={<FormattedMessage id="article.order.view" />}>
-      <IconButton sx={{ ml: 2, color: 'uiElements.main' }}  onClick={handlePopover}>
+      <IconButton sx={{ ml: 2, color: 'uiElements.main' }} onClick={handlePopover}>
         <PageviewOutlinedIcon fontSize="large" />
       </IconButton>
     </Tooltip>

@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 
 import { StencilClient } from '../context';
 
+
 const width = 600;
 const radius = width / 2;
 //viewBox="the points "seen" in this SVG drawing area. 4 values separated by white space or commas. (min x, min y, width, height)"
@@ -13,16 +14,16 @@ const colorin = "#00f";
 const colorout = "#f00";
 
 
-function bilink(root) {
+function bilink(root: any) {
 
 
-  const map = new Map(root.leaves().map(d => [id(d), d]));
+  const map = new Map((root.leaves() as any[]).map(d => [id(d), d]));
   console.log(map);
 
 
   for (const d of root.leaves()) {
     d.incoming = [];
-    d.outgoing = d.data.imports.map(i => [d, map.get(i)]);
+    d.outgoing = (d.data.imports as any[]).map(i => [d, map.get(i)]);
 
   };
 
@@ -34,7 +35,7 @@ function bilink(root) {
   return root;
 }
 
-function id(node) {
+function id(node: any): any {
   return `${node.parent ? id(node.parent) + "." : ""}${node.data.name}`;
 }
 
@@ -190,7 +191,7 @@ class ReleaseGraphVisitor {
       }));
 
 
-    const outgoing = (root.leaves() as any).flatMap(leaf => (leaf as any).outgoing) as any;
+    const outgoing = (root.leaves() as any).flatMap((leaf: any) => leaf.outgoing) as any;
     const link = svg.append("g")
       .attr("stroke", colornone)
       .attr("fill", "none")
@@ -211,22 +212,22 @@ class ReleaseGraphVisitor {
 
     const that = this;
 
-    function overed(event, d) {
+    function overed(event: any, d: any) {
       link.style("mix-blend-mode", null);
       //d3.select(that._svgNode).attr("font-weight", "bold");
-      d3.selectAll(d.incoming.map(d => d.path)).attr("stroke", colorin).raise();
-      d3.selectAll(d.incoming.map(([d]) => d.text)).attr("fill", colorin).attr("font-weight", "bold");
-      d3.selectAll(d.outgoing.map(d => d.path)).attr("stroke", colorout).raise();
-      d3.selectAll(d.outgoing.map(([, d]) => d.text)).attr("fill", colorout).attr("font-weight", "bold");
+      d3.selectAll((d.incoming as any[]).map(d => d.path)).attr("stroke", colorin).raise();
+      d3.selectAll((d.incoming as any[]).map(([d]) => d.text)).attr("fill", colorin).attr("font-weight", "bold");
+      d3.selectAll((d.outgoing as any[]).map(d => d.path)).attr("stroke", colorout).raise();
+      d3.selectAll((d.outgoing as any[]).map(([, d]) => d.text)).attr("fill", colorout).attr("font-weight", "bold");
     }
 
-    function outed(event, d) {
+    function outed(event: any, d: any) {
       link.style("mix-blend-mode", "multiply");
       //d3.select(that._svgNode).attr("font-weight", null);
-      d3.selectAll(d.incoming.map(d => d.path)).attr("stroke", null);
-      d3.selectAll(d.incoming.map(([d]) => d.text)).attr("fill", null).attr("font-weight", null);
-      d3.selectAll(d.outgoing.map(d => d.path)).attr("stroke", null);
-      d3.selectAll(d.outgoing.map(([, d]) => d.text)).attr("fill", null).attr("font-weight", null);
+      d3.selectAll((d.incoming as any[]).map(d => d.path)).attr("stroke", null);
+      d3.selectAll((d.incoming as any[]).map(([d]) => d.text)).attr("fill", null).attr("font-weight", null);
+      d3.selectAll((d.outgoing as any[]).map(d => d.path)).attr("stroke", null);
+      d3.selectAll((d.outgoing as any[]).map(([, d]) => d.text)).attr("fill", null).attr("font-weight", null);
     }
     const oldNodes = this._ref.current?.childNodes;
     if (oldNodes) {
