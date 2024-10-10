@@ -12,7 +12,7 @@ export default defineConfig((props) => {
     return serveWrench(props);
   } else if(command === 'serve' && app === 'stencil') {
     return serveStencil(props);
-  } else {
+  } else if(command === 'serve') {
     throw new Error("unknown app: " + app + " in command: 'serve'!");
   }
 
