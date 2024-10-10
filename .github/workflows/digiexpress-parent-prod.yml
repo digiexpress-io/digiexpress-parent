@@ -2,12 +2,20 @@ on:
   push:
     branches:
       - dev
+    paths:
+      - 'mvn_setup/prod-version/**'
+
 
 name: Release digiexpress-parent
 jobs:
   build:
     name: release digiexpress-parent branch dev
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mvn_setup/prod-version
+    
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -26,7 +34,7 @@ jobs:
         server-password: OSSRH_PASS
     
     - name: maven digiexpress-parent release
-      run: ./mvn_setup/prod-version/build-parent/release.sh
+      run: ./build-parent/release.sh
       env:
         BOT_EMAIL: jocelyn.mutso@resys.io 
         BOT_NAME: jocelyn.mutso
