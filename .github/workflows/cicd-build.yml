@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - 'mvn_setup/**'
+      - 'mvn_setup/alpha-version/**'
     branches:
       - dev
 
@@ -26,7 +26,7 @@ jobs:
         cache: 'maven'
     - name: Maven build
       run: |
-        cd ./mvn_setup
+        cd ./mvn_setup/alpha-version
         ./mvnw -B clean install
       env:
         CI: true
