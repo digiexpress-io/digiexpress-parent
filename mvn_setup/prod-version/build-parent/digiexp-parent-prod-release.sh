@@ -50,7 +50,7 @@ git commit -am "Release ${RELEASE_VERSION}"
 git tag -a ${RELEASE_VERSION} -m "release ${RELEASE_VERSION}"
 
 run_build
-
+ 
 ./mvnw versions:set -DnewVersion=${PROJECT_VERSION}
 git commit -am "Prepare ${NEXT_RELEASE_VERSION} development"
 git push
