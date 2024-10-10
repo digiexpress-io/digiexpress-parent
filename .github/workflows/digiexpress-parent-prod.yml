@@ -27,7 +27,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-        gpg-private-key: GPG_KEY 
+        gpg-private-key: ${{ secrets.GPG_KEY }}
         gpg-passphrase: GPG_KEY_SEC
         server-id: s01.oss.sonatype.org
         server-username: OSSRH_USER
