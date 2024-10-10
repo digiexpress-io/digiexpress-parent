@@ -6,6 +6,8 @@ run_build () {
     clean deploy
 }
 
+cd mvn_setup/prod-version
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 
@@ -42,7 +44,8 @@ fi
 
 echo -n ${NEXT_RELEASE_VERSION} > $SCRIPT_DIR/next-release.version
 
-PROJECT_VERSION=$(./mvn_setup/prod-version/mvnw -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+
+PROJECT_VERSION=$(./mvnw -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
 echo "Dev version: '${PROJECT_VERSION}'"
 
 ./mvnw versions:set -DnewVersion=${RELEASE_VERSION}
