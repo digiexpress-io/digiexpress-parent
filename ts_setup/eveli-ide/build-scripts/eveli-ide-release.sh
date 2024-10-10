@@ -27,8 +27,6 @@ readonly local PROJECT_VERSION_NEXT=$(node -e "console.log(require('./package.js
 NEWLINE=$'\n'
 NOW=$(date +"%d/%m/%Y")
 echo "const version = {tag: 'eveli-ide-${PROJECT_VERSION_NEXT}', built: '${NOW}'};${NEWLINE}export default version;" > ./src/version.ts
-git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
-
 
 # Log
 echo "Git checkout refname: '${refname}' commit: '${GITHUB_SHA}'"
