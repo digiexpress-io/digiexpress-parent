@@ -7,6 +7,12 @@
   "files": [
     "build"
   ],
+  "dependencies": {
+    "@the-wrench-io/react-burger": "^1.0.40",
+    "d3": "^7.1.1",
+    "js-file-download": "^0.4.12",
+    "notistack": "2.0.3"
+  },
   "peerDependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
@@ -63,12 +69,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "dependencies": {
-    "@the-wrench-io/react-burger": "^1.0.40",
-    "d3": "^7.1.1",
-    "js-file-download": "^0.4.12",
-    "notistack": "2.0.3"
   },
   "packageManager": "yarn@3.1.1"
 }
