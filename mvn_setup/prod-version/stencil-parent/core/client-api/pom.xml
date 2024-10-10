@@ -29,6 +29,8 @@
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>mutiny</artifactId>
     </dependency>
+    
+    
     <dependency>
       <groupId>io.resys.hdes</groupId>
       <artifactId>thena-docdb-api</artifactId>
@@ -48,6 +50,11 @@
     <dependency>
       <groupId>com.vladsch.flexmark</groupId>
       <artifactId>flexmark-all</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Tests -->
@@ -73,6 +80,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.reactivestreams</groupId>
+      <artifactId>reactive-streams</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>

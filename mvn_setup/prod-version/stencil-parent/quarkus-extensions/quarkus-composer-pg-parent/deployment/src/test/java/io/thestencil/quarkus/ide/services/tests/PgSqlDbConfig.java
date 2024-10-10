@@ -20,7 +20,7 @@ package io.thestencil.quarkus.ide.services.tests;
  * #L%
  */
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

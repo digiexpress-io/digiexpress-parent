@@ -23,7 +23,7 @@ package io.thestencil.site.pg.test;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

@@ -22,7 +22,7 @@ package io.thestencil.quarkus.useractions;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
