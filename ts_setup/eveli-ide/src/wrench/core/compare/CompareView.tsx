@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl";
 import { Composer, Client } from "../context";
 import { Box, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Burger from "import Burger from '@/burger'";
+import Burger from '@/burger';
 
 import * as Diff2Html from "diff2html";
 import "diff2html/bundles/css/diff2html.min.css";
