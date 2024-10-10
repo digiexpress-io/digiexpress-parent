@@ -36,7 +36,7 @@ public class FrontendRecorder {
 
   public BeanContainerListener listener() {
     return beanContainer -> {
-      FrontendBeanFactory producer = beanContainer.instance(FrontendBeanFactory.class);
+      FrontendBeanFactory producer = beanContainer.beanInstance(FrontendBeanFactory.class);
     };
   }
 

@@ -20,8 +20,8 @@ package io.thestencil.quarkus.useractions;
  * #L%
  */
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;

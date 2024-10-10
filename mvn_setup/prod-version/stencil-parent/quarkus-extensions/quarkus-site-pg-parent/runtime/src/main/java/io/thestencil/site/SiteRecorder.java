@@ -23,7 +23,7 @@ package io.thestencil.site;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import io.quarkus.arc.runtime.BeanContainerListener;
 import io.quarkus.runtime.annotations.Recorder;
@@ -44,7 +44,7 @@ public class SiteRecorder {
       String servicePath) {
     
     return beanContainer -> {
-      SiteProducer producer = beanContainer.instance(SiteProducer.class);
+      SiteProducer producer = beanContainer.beanInstance(SiteProducer.class);
       producer.setServicePath(servicePath);
     };
   }

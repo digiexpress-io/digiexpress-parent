@@ -23,7 +23,7 @@ package io.thestencil.staticontent;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import io.quarkus.arc.runtime.BeanContainerListener;
 import io.quarkus.runtime.annotations.Recorder;
@@ -48,7 +48,7 @@ public class StaticContentRecorder {
         .collect(Collectors.toMap(e -> e.getKey(), e -> Json.encode(e.getValue())));
     
     return beanContainer -> {
-      StaticContentBeanFactory producer = beanContainer.instance(StaticContentBeanFactory.class);
+      StaticContentBeanFactory producer = beanContainer.beanInstance(StaticContentBeanFactory.class);
       producer
         .setDefaultLocale(defaultLocale)
         .setStaticContent(staticContent)
