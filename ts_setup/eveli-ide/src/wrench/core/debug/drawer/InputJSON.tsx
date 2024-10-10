@@ -3,7 +3,7 @@ import React from 'react'
 import { TextareaAutosize, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 
 
 interface InputJSONProps {

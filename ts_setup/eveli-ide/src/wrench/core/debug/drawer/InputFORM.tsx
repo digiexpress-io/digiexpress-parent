@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, Typography, Grid, ListItemText } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 import { Client, Composer } from '../../context';
 import { InputFORMField } from './InputFORMField';
 

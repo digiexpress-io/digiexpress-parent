@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 
 import Activities from './activities';
 import { Composer } from './context';

@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
-
+import { alias } from './vite.paths.config';
 
 // https://vitejs.dev/config/
 export default function defineConfig(props: ConfigEnv): UserConfig {
@@ -15,12 +15,14 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
     mode: 'production',
     base: process.env.PUBLIC_URL || '',
+    resolve: { alias },
     plugins: [
       react({ }),
       dts({ rollupTypes: true }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
     ],
+    
     build: {
       outDir: 'build',
       lib: {

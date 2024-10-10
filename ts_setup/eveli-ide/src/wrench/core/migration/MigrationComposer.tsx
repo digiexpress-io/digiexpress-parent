@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 import { Composer } from '../context';
 
 const MigrationComposer: React.FC<{ onClose: () => void}> = ({onClose}) => {

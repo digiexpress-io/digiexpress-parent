@@ -17,8 +17,6 @@ export default defineConfig((props) => {
   } else if (stencilMode) {
     console.log('Stencil mode');
     return serveStencil(props);
-  } else if(command === 'serve') {
-    throw new Error("unknown START_MODE: " + process.env.START_MODE + " in command: 'serve'!");
   }
 
   return buildProd(props);

@@ -25,12 +25,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "src",
     "paths": {
-      "@dxs-ts/eveli-ide": [
-        "../src/index.ts"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
+      "@dxs-ts/eveli-ide": ["../src/index.ts"],
+      "@/burger": ["../src/burger/index.ts" ]
     }
   },
   "include": [

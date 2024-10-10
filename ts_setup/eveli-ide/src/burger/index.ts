@@ -4,6 +4,8 @@ import { useTabs as useTabsAlias } from './context/tabs/TabsContext';
 import { useSecondary as useSecondaryAlias } from './context/secondary/SecondaryContext';
 import { siteTheme } from './theme/siteTheme';
 
+import { } from '@/burger';
+
 import {
   AppContextType, AppSession, AppActions, 
   App, AppId, AppState, AppStateCreate, AppStateRestore

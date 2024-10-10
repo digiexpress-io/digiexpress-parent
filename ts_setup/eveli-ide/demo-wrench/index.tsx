@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
-import Burger, { siteTheme } from '@the-wrench-io/react-burger';
+import Burger, { siteTheme } from 'import Burger from '@/burger'';
 import Client, { messages, Main, Secondary, Toolbar, Composer } from './core';
 
 

@@ -20,7 +20,7 @@
 import React from 'react'
 
 import { Button, Box, Grid, ListItemText } from '@mui/material';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 import { FormattedMessage } from 'react-intl'
 import { NumberBuilder } from './'
 

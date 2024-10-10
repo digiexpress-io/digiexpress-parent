@@ -84,6 +84,9 @@ importers:
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.25
+      '@types/react-vis':
+        specifier: ^1.11.15
+        version: 1.11.15
       '@vitejs/plugin-react':
         specifier: ^4.3.2
         version: 4.3.2(vite@5.4.8(@types/node@12.20.55))
@@ -993,6 +996,9 @@ packages:
 
   '@types/react-transition-group@4.4.11':
     resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
+
+  '@types/react-vis@1.11.15':
+    resolution: {integrity: sha512-0feNthHy/GnkCRPagPKkAnZmKQY1rI+OelD/ASdI7z+PMCfcmPLTi7nLrduIojxGAOWBiIgyH3YX1Ix7GWpAag==}
 
   '@types/react@17.0.83':
     resolution: {integrity: sha512-l0m4ArKJvmFtR4e8UmKrj1pB4tUgOhJITf+mADyF/p69Ts1YAR/E+G9XEM0mHXKVRa1dQNHseyyDNzeuAXfXQw==}
@@ -3657,6 +3663,10 @@ snapshots:
       '@types/react': 17.0.83
 
   '@types/react-transition-group@4.4.11':
+    dependencies:
+      '@types/react': 17.0.83
+
+  '@types/react-vis@1.11.15':
     dependencies:
       '@types/react': 17.0.83
 

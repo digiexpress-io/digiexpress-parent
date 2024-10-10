@@ -6,7 +6,7 @@ import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import { Typography, Box } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 
 import { Composer, Client } from '../../context';
 import {ErrorView} from '../../styles';

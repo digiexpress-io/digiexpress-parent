@@ -18,7 +18,7 @@
  * #L%
  */
 import React from 'react'
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 
 import { NumberBuilder } from './'
 

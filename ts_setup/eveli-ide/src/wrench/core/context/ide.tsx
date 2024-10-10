@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 
 //import { StencilClient, Layout } from '../';
 import HdesClient from '../client';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
 

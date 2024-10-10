@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
-import { siteTheme } from '@the-wrench-io/react-burger';
+import { siteTheme } from 'import Burger from '@/burger'';
 
 import { StencilComposer, StencilClient, messages } from './core';
 

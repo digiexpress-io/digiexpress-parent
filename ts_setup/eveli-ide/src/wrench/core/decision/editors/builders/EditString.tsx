@@ -3,7 +3,7 @@ import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon,
 import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from 'import Burger from '@/burger'';
 import { StringBuilder } from './'
 
 
