@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
-    <artifactId>hdes-parent</artifactId>
-    <version>3.y-SNAPSHOT</version>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>digiexpress-parent</artifactId>
+    <version>0.y-SNAPSHOT</version>
   </parent>
 
-  <artifactId>hdes-build-parent</artifactId>
+  <artifactId>digiexpress-build-parent</artifactId>
   <packaging>pom</packaging>
 
   <properties>
@@ -23,16 +23,11 @@
     <spring.security.version>5.5.1</spring.security.version>
     <spring.boot.version>2.5.12</spring.boot.version>
     <spring.version>5.3.18</spring.version>
-
-    <googlejavaformat.version>1.23.0</googlejavaformat.version>
-    <javapoet.version>1.12.1</javapoet.version>
-    <antlr.version>4.13.2</antlr.version>
-
     <jackson.version>2.17.2</jackson.version>
 
     <jandex.version>3.1.5</jandex.version>
     <quarkus.version>3.8.6</quarkus.version>
-    <thena.version>1.1.24</thena.version>
+    <thena.version>1.1.26</thena.version>
     <lombok.version>1.18.34</lombok.version>
 
     <hbvalidator.version>6.0.23.Final</hbvalidator.version>
@@ -54,6 +49,7 @@
     <commons-codec.version>1.17.1</commons-codec.version>
     <commons-lang.version>3.17.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
+    <flexmark.version>0.62.2</flexmark.version>
 
     <java-diff-utils.version>4.12</java-diff-utils.version>
   </properties>
@@ -165,18 +161,7 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr4-maven-plugin</artifactId>
-          <version>${antlr.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>antlr4</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+
         <plugin>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-extension-maven-plugin</artifactId>
@@ -271,11 +256,7 @@
         <artifactId>ehcache</artifactId>
         <version>${ehcache.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.squareup</groupId>
-        <artifactId>javapoet</artifactId>
-        <version>${javapoet.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>io.github.java-diff-utils</groupId>
         <artifactId>java-diff-utils</artifactId>
@@ -293,12 +274,6 @@
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.google.googlejavaformat</groupId>
-        <artifactId>google-java-format</artifactId>
-        <version>${googlejavaformat.version}</version>
-      </dependency>
-
 
       <!-- jackson -->
       <dependency>
@@ -346,6 +321,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-collections4</artifactId>
         <version>${commons-collections.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vladsch.flexmark</groupId>
+        <artifactId>flexmark-all</artifactId>
+        <version>${flexmark.version}</version>
       </dependency>
 
 

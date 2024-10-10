@@ -3,10 +3,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
-    <artifactId>hdes-build-parent</artifactId>
-    <version>3.y-SNAPSHOT</version>
-    <relativePath>../hdes-build-parent/pom.xml</relativePath>
+    <groupId>io.digiexpress</groupId>
+    <artifactId>hdes-parent</artifactId>
+    <version>0.y-SNAPSHOT</version>
   </parent>
 
   <artifactId>hdes-dev</artifactId>
@@ -15,7 +14,6 @@
 
   <modules>
     <module>spring-app</module>
-    <module>quarkus-app</module>
     <module>hdes-migration</module>    
   </modules>
 
