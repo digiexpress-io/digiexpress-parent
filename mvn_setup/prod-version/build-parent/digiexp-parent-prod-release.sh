@@ -17,7 +17,7 @@ if [[ "${last_release_commit_hash}" = "${GITHUB_SHA}" ]]; then
      echo "No changes, skipping release"
      #exit 0
 fi
- 
+
 
 # Config GIT
 echo "Setup git user name to '$BOT_NAME' and email to '$BOT_EMAIL' GPG key ID $GPG_KEY_ID"
