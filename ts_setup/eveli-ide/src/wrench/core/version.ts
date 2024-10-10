@@ -1,2 +1,2 @@
-import masterVersion from 'version';
+import masterVersion from '../../version';
 export default masterVersion;
