@@ -1,0 +1,51 @@
+on:
+  push:
+    paths:
+      - 'ts_setup/eveli-ide/**'
+
+    branches:
+      - dev
+  workflow_call: # Enables manual triggering
+permissions:
+  contents: write
+  id-token: write
+    
+name: Release eveli-ide
+jobs:
+    build:
+      runs-on: ubuntu-latest  # windows-latest || macos-latest
+      defaults:
+        run:
+          working-directory: ts_setup/eveli-ide
+      env:
+        NODE_ENV: test
+        CI: true
+        
+      name: Release eveli-ide into NPMJS 
+      steps:
+        - uses: actions/checkout@v4
+
+        - uses: pnpm/action-setup@v2
+          name: install pnpm
+          with:
+            version: 8
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: 'pnpm'
+            cache-dependency-path: ts_setup/eveli-ide/pnpm-lock.yaml
+            registry-url: 'https://registry.npmjs.org'
+
+        - name: Install dependencies 📦
+          run: pnpm install -r --prefer-frozen-lockfile
+#        - name: Test
+#          run: pnpm test -r
+
+        - name: Run 'eveli-ide-release.sh'  
+          run: ./build-scripts/eveli-ide-release.sh
+          env:
+            CI: false # 
+            BOT_EMAIL: jocelyn.mutso@resys.io 
+            BOT_NAME: jocelyn.mutso
+            NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
