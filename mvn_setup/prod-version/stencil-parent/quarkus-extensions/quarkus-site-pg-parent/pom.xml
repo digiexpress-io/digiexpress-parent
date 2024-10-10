@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>stencil-quarkus-extensions</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>0.y-SNAPSHOT</version>
   </parent>
 
   <artifactId>quarkus-stencil-site-pg-parent</artifactId>

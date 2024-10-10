@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>stencil-core</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>0.y-SNAPSHOT</version>
   </parent>
   <artifactId>stencil-composer-integration</artifactId>
   <build>

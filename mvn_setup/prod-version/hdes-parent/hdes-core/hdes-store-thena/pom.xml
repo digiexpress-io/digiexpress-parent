@@ -12,7 +12,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>hdes-client-api</artifactId>
     </dependency>
     <dependency>

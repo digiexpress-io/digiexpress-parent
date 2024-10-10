@@ -2,9 +2,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>hdes-dev</artifactId>
-    <version>3.y-SNAPSHOT</version>
+    <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
   <artifactId>spring-app</artifactId>
@@ -37,7 +37,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>hdes-spring-composer</artifactId>
       <exclusions>
         <exclusion>

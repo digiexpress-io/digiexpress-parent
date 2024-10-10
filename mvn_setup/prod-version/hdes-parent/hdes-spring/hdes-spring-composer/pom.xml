@@ -2,24 +2,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-spring</artifactId>
-        <version>3.y-SNAPSHOT</version>
+        <version>0.y-SNAPSHOT</version>
     </parent>
     <packaging>jar</packaging>
     <artifactId>hdes-spring-composer</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>io.resys.hdes</groupId>
+            <groupId>io.digiexpress</groupId>
             <artifactId>hdes-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.resys.hdes</groupId>
+            <groupId>io.digiexpress</groupId>
             <artifactId>hdes-store-git</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.resys.hdes</groupId>
+            <groupId>io.digiexpress</groupId>
             <artifactId>hdes-store-thena</artifactId>
         </dependency>
         <dependency>
@@ -35,7 +35,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.resys.hdes</groupId>
+            <groupId>io.digiexpress</groupId>
             <artifactId>hdes-composer-ui</artifactId>
         </dependency>
 

@@ -2,12 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
+    <groupId>io.digiexpress</groupId>
     <artifactId>digiexpress-build-parent</artifactId>
-    <packaging>pom</packaging>
     <relativePath>../build-parent/pom.xml</relativePath>
     <version>0.y-SNAPSHOT</version>
   </parent>
 
   <artifactId>stencil-parent</artifactId>
-
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>core</module>
+    <module>dev-tools</module>
+    <module>quarkus-extensions</module>
+  </modules>
 </project>
