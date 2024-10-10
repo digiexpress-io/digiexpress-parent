@@ -1,4 +1,5 @@
 import React from 'react';
+// @ts-ignore
 import Graph from 'vis-react';
 
 
