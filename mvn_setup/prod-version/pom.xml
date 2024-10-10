@@ -273,7 +273,7 @@
     </profile>
     <profile>
       <id>digiexpress-release</id>
-  <build>
+      <build>
         <plugins>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>

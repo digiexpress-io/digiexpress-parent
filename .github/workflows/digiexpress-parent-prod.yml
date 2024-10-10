@@ -38,4 +38,5 @@ jobs:
       env:
         BOT_EMAIL: jocelyn.mutso@resys.io 
         BOT_NAME: jocelyn.mutso
+        GPG_KEY_SEC: ${{ secrets.GPG_KEY_SEC }}
         
