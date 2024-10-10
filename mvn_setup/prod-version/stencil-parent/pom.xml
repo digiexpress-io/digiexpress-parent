@@ -13,7 +13,7 @@
   
   <modules>
     <module>core</module>
-    <module>dev-tools</module>
     <module>quarkus-extensions</module>
+    <module>dev-tools</module>
   </modules>
 </project>

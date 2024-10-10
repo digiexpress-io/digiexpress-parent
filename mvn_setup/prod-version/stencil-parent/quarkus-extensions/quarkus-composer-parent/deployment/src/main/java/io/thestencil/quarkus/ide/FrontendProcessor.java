@@ -53,7 +53,7 @@ import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 public class FrontendProcessor {
-  private static final String WEBJAR_GROUP_ID = "io.thestencil";
+  private static final String WEBJAR_GROUP_ID = "io.digiexpress";
   private static final String WEBJAR_ARTIFACT_ID = "stencil-composer-integration";
   private static final String WEBJAR_PREFIX = "META-INF/resources/webjars/" + WEBJAR_ARTIFACT_ID + "/";
   private static final String FINAL_DESTINATION = "META-INF/portal-files";
