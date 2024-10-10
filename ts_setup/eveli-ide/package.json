@@ -45,7 +45,6 @@
     "@types/node": "^12.20.15",
     "@types/react": "^17.0.10",
     "@types/react-dom": "^17.0.7",
-    "@types/react-vis": "^1.11.15",
     "@vitejs/plugin-react": "^4.3.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
