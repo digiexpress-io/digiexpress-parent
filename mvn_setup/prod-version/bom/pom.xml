@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.digiexpress</groupId>
-    <artifactId>hdes-parent</artifactId>
-    <version>3.y-SNAPSHOT</version>
+    <artifactId>digiexpress-parent</artifactId>
+    <version>0.y-SNAPSHOT</version>
   </parent>
 
-  <artifactId>hdes-bom</artifactId>
+  <artifactId>digiexpress-bom</artifactId>
   <packaging>pom</packaging>
 
   <dependencyManagement>
