@@ -1,9 +1,9 @@
 ![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)
 [![Maven Central](https://img.shields.io/maven-central/v/io.digiexpress/digiexpress-parent.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.digiexpress/digiexpress-parent)
-![Backend Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/cicd-build.yml)
-![UI Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/build-ui.yml)
-[![Gamut](https://img.shields.io/npm/v/@dxs-ts/gamut?label=gamut@latest)](https://www.npmjs.com/package/@dxs-ts/gamut)
-[![Eveli IDE](https://img.shields.io/npm/v/@dxs-ts/eveli-ide?label=eveli-ide@latest)](https://www.npmjs.com/package/@dxs-ts/eveli-ide)
+![Backend Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/cicd-build.yml?label=Backend%20build%20status)
+![UI Build Status](https://img.shields.io/github/actions/workflow/status/digiexpress-io/digiexpress-parent/build-ui.yml?label=UI%20build%20status)
+[![Gamut](https://img.shields.io/npm/v/@dxs-ts/gamut?label=Gamut@latest)](https://www.npmjs.com/package/@dxs-ts/gamut)
+[![Eveli IDE](https://img.shields.io/npm/v/@dxs-ts/eveli-ide?label=Eveli%20IDE@latest)](https://www.npmjs.com/package/@dxs-ts/eveli-ide)
 
 
 # DigiExpress-parent
