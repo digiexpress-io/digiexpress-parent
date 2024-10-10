@@ -1,12 +1,11 @@
 import React from 'react';
 import {
   TextField, TextFieldProps, FormControl,
-  FormControlProps, InputLabel, Typography, Button
+  FormControlProps, InputLabel, Typography, Button, styled
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import UploadIcon from '@mui/icons-material/Upload';
 
-import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
 
 interface StyledInputFieldProps<T> {

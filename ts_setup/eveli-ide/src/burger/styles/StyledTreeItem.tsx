@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import { Typography, Box, useTheme} from "@mui/material";
+import { Typography, Box, useTheme, styled } from "@mui/material";
+//@ts-ignore
 import TreeItem, { TreeItemProps, treeItemClasses } from "@mui/lab/TreeItem";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 
@@ -65,9 +65,11 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
 
   let resolvedLabelcolor = "inherit";
   if(labelcolor) {
+    //@ts-ignore
     resolvedLabelcolor = theme.palette[labelcolor]?.main;
     if(!resolvedLabelcolor && labelcolor.indexOf(".") > -1) {
       const coolors = labelcolor.split(".");
+      //@ts-ignore
       resolvedLabelcolor = theme.palette[coolors[0]][coolors[1]];
     }
   }
@@ -96,9 +98,13 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
 
       {...other}
       style={{
+        //@ts-ignore
         '--tree-view-text-color': textcolor ? theme.palette[textcolor].main : textcolor,
+        //@ts-ignore
         '--tree-view-color': color ? theme.palette[color].main : color,
+        //@ts-ignore
         '--tree-view-bg-color': bgcolor ? theme.palette[bgcolor].main : bgcolor,
+        //@ts-ignore
         '--tree-view-hover-color': hovercolor ? theme.palette[hovercolor].main : hovercolor,
       }}
     />
@@ -121,6 +127,7 @@ const StyledTreeItemOption: React.FC<{
 
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0}} >
+          { /*/@ts-ignore */}
           <Box component={props.icon}  color={theme.palette[props.color].main} sx={{ pl: 1, mr: 1}} />
           <Typography 
             variant="body2"

@@ -1,7 +1,5 @@
 import React from 'react';
-import { SxProps } from '@mui/system';
-import { styled } from "@mui/material/styles";
-import { InputLabel, FormControl, MenuItem, Select, FormControlProps, FormHelperText, Theme } from '@mui/material';
+import { InputLabel, FormControl, MenuItem, Select, FormControlProps, FormHelperText, Theme, SxProps, styled } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 

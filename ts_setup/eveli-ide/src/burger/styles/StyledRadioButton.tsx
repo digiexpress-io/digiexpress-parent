@@ -1,5 +1,4 @@
-import { Radio } from '@mui/material';
-import { styled } from "@mui/material/styles";
+import { Radio, styled } from '@mui/material';
 
 const StyledRadioButton = styled(Radio)(({ theme }) => ({
     marginLeft: theme.spacing(1.5),
