@@ -35,7 +35,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
-    "vis-react": "^0.5.1"
+    "vis-react": "^0.5.1",
+    "yaml": "^2.5.1"
   },
   "devDependencies": {
     "@types/codemirror": "^5.60.15",
