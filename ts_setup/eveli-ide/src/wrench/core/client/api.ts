@@ -157,7 +157,7 @@ export interface AstFlowRoot extends AstFlowNode {
   inputs: Record<string, AstFlowInputNode>;
   tasks: Record<string, AstFlowTaskNode>;
 }
-export interface AstFlowTaskNode extends AstFlowNode {
+export interface AstFlowTaskNode extends Omit<AstFlowNode, "switch"> {
   id: AstFlowNode;
   order: number;
   then: AstFlowNode;
@@ -191,6 +191,12 @@ export interface AstFlowNode {
   source: AstChangeset;
   start: number;
   end: number;
+
+  service?: AstFlowNode | undefined;
+  decisionTable?: AstFlowNode | undefined;
+  then?: AstFlowNode | undefined;
+  id?: AstFlowNode | undefined;
+  switch?: AstFlowNode | undefined;
 }
 
 
