@@ -14,9 +14,7 @@ name: Release digiexpress-parent
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: mvn_setup/prod-version
+
     
     name: release digiexpress-parent branch dev
     steps:
@@ -34,7 +32,7 @@ jobs:
         server-password: OSSRH_PASS
     
     - name: maven digiexpress-parent release
-      run: ./build-parent/digiexp-parent-prod-release.sh
+      run: ./mvn_setup/prod-version/build-parent/digiexp-parent-prod-release.sh
       env:
         BOT_EMAIL: jocelyn.mutso@resys.io 
         BOT_NAME: jocelyn.mutso
