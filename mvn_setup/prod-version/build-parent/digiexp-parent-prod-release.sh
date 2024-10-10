@@ -6,7 +6,7 @@ run_build () {
     clean deploy
 }
 
-cd mvn_setup/prod-version
+cd ./mvn_setup/prod-version
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
