@@ -3,13 +3,9 @@ import { ConfigEnv, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
-import { fileURLToPath, URL } from 'url';
 
-// rollup module delegate
-const alias: { find: string, replacement: string }[] = [
-  { find: '@dxs-ts/eveli-ide', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+import { alias } from './vite.paths.config';
 
-];
 
 // https://vitejs.dev/config/
 export default function defineConfig(props: ConfigEnv): UserConfig {

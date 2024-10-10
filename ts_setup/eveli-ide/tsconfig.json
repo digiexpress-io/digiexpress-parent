@@ -27,6 +27,9 @@
     "paths": {
       "@dxs-ts/eveli-ide": [
         "../src/index.ts"
+      ],
+      "@/*": [
+        "./src/*"
       ]
     }
   },

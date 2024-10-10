@@ -8,7 +8,7 @@ import { Composer } from './context';
 import messages from '../intl';
 
 import { SnackbarProvider } from 'notistack';
-import Burger from '@the-wrench-io/react-burger';
+import Burger from '@/burger';
 
 interface StencilComposerProps {
   service: StencilClient.Service,
