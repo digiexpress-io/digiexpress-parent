@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+      - dev
+
+name: Release digiexpress-parent
+jobs:
+  build:
+    name: release digiexpress-parent branch dev
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: dev
+        token: ${{ secrets.REPO_TOKEN }}
+
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        gpg-private-key: ${{ secrets.GPG_KEY }}
+        server-id: oss.sonatype.org
+        gpg-passphrase: GPG_KEY_SEC
+        server-username: OSSRH_USER
+        server-password: OSSRH_PASS
+    
+    - name: maven digiexpress-parent release
+      run: ./mvn_setup/prod-version/build-parent/release.sh
+      env:
+        BOT_EMAIL: jocelyn.mutso@resys.io 
+        BOT_NAME: jocelyn.mutso
+        GPG_KEY_SEC:  ${{ secrets.GPG_SEC }}
+        
