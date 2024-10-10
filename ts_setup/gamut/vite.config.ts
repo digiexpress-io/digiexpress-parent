@@ -6,9 +6,17 @@ import buildProd from './vite.prod.config';
 export default defineConfig((props) => {
   const { command } = props;
 
-  if(command === 'serve') {
+  const serve = command === 'serve';
+  const wrenchMode = serve && process.env.START_MODE === 'wrench';
+  const stencilMode = serve && process.env.START_MODE === 'stencil';
+
+  if (wrenchMode) {
+    console.log('Wrench mode');
+  } else if (stencilMode) {
+    console.log('Stencil mode');
+  } else if (serve) {
     return serveDev(props);
-  }
+  } 
 
   return buildProd(props);
 });
