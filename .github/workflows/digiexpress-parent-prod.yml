@@ -34,7 +34,7 @@ jobs:
         server-password: OSSRH_PASS
     
     - name: maven digiexpress-parent release
-      run: ./build-parent/release.sh
+      run: ./build-parent/digiexp-parent-prod-release.sh
       env:
         BOT_EMAIL: jocelyn.mutso@resys.io 
         BOT_NAME: jocelyn.mutso
