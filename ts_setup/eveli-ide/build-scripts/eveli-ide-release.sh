@@ -32,13 +32,15 @@ echo "const version = {tag: 'eveli-ide-${PROJECT_VERSION_NEXT}', built: '${NOW}'
 echo "Git checkout refname: '${refname}' commit: '${GITHUB_SHA}'"
 echo "Project version: '${PROJECT_VERSION}' next: '${PROJECT_VERSION_NEXT}'"
 
+
+git commit -am "eveli ide release ${PROJECT_VERSION_NEXT}"
+git tag -a "eveli_ide_release_${PROJECT_VERSION_NEXT}" -m "eveli_ide_release_${PROJECT_VERSION_NEXT}"
+git push origin dev
+git push origin --tags
+
 # Tag and publish
 pnpm install
 pnpm build
 pnpm publish --access public --no-git-checks --publish-branch dev
 
-git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
-git tag -a "gamut_release_${PROJECT_VERSION_NEXT}" -m "gamut release ${PROJECT_VERSION_NEXT}"
-git push origin dev
-git push origin --tags
 
