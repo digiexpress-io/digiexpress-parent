@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>hdes-parent</artifactId>
     <version>3.y-SNAPSHOT</version>
   </parent>
@@ -14,34 +14,34 @@
     <dependencies>
       <!-- client -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-composer-ui</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- store -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-git</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-thena</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -49,12 +49,12 @@
 
       <!-- spring -->
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-spring-env</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-spring-composer</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -63,53 +63,53 @@
 
 
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>stencil-composer-integration</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>stencil-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>stencil-iam-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-composer</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-composer-pg</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-site-pg</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-sc</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-user-actions</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-feedback</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.thestencil</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>quarkus-stencil-iam</artifactId>
         <version>${project.version}</version>
       </dependency>
