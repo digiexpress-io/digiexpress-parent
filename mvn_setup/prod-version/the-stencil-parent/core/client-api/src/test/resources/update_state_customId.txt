@@ -1,0 +1,215 @@
+
+Repo
+  - id: 1, rev: 2
+    name: test2-customId
+
+Refs
+  - 3: stencil-main
+
+Tags
+
+Commits
+  - id: 4
+    tree: 5, parent: , message: create type: 'TEMPLATE', with id: 'TEMPLATE-1'
+  - id: 6
+    tree: 7, parent: 4, message: create type: 'ARTICLE', with id: 'ARTICLE-2'
+  - id: 8
+    tree: 9, parent: 6, message: create type: 'ARTICLE', with id: 'ARTICLE-3'
+  - id: 10
+    tree: 11, parent: 8, message: create type: 'RELEASE', with id: 'RELEASE-4'
+  - id: 12
+    tree: 13, parent: 10, message: create type: 'RELEASE', with id: 'RELEASE-5'
+  - id: 14
+    tree: 15, parent: 12, message: create type: 'LOCALE', with id: 'LOCALE-6'
+  - id: 16
+    tree: 17, parent: 14, message: create type: 'LOCALE', with id: 'LOCALE-7'
+  - id: 18
+    tree: 19, parent: 16, message: create type: 'PAGE', with id: 'PAGE-8'
+  - id: 20
+    tree: 21, parent: 18, message: create type: 'PAGE', with id: 'PAGE-9'
+  - id: 22
+    tree: 23, parent: 20, message: create type: 'LINK', with id: 'LINK-10'
+  - id: 24
+    tree: 25, parent: 22, message: create type: 'WORKFLOW', with id: 'WORKFLOW-11'
+  - id: 26
+    tree: 27, parent: 24, message: update type: 'TEMPLATE', with id: 'TEMPLATE-1'
+  - id: 28
+    tree: 29, parent: 26, message: update type: 'ARTICLE', with id: 'ARTICLE-2'
+  - id: 30
+    tree: 31, parent: 28, message: update type: 'LOCALE', with id: 'LOCALE-6'
+  - id: 32
+    tree: 33, parent: 30, message: update type: 'PAGE', with id: 'PAGE-8'
+  - id: 34
+    tree: 35, parent: 32, message: update type: 'LINK', with id: 'LINK-10'
+  - id: 3
+    tree: 36, parent: 34, message: update type: 'WORKFLOW', with id: 'WORKFLOW-11'
+
+Trees
+  - id: 5
+    37: TEMPLATE-1
+  - id: 7
+    38: ARTICLE-2
+    37: TEMPLATE-1
+  - id: 9
+    38: ARTICLE-2
+    39: ARTICLE-3
+    37: TEMPLATE-1
+  - id: 11
+    38: ARTICLE-2
+    39: ARTICLE-3
+    40: RELEASE-4
+    37: TEMPLATE-1
+  - id: 13
+    38: ARTICLE-2
+    39: ARTICLE-3
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 15
+    38: ARTICLE-2
+    39: ARTICLE-3
+    42: LOCALE-6
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 17
+    38: ARTICLE-2
+    39: ARTICLE-3
+    42: LOCALE-6
+    43: LOCALE-7
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 19
+    38: ARTICLE-2
+    39: ARTICLE-3
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 21
+    38: ARTICLE-2
+    39: ARTICLE-3
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 23
+    38: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+  - id: 25
+    38: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    37: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 27
+    38: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 29
+    49: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    42: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 31
+    49: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    50: LOCALE-6
+    43: LOCALE-7
+    44: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 33
+    49: ARTICLE-2
+    39: ARTICLE-3
+    46: LINK-10
+    50: LOCALE-6
+    43: LOCALE-7
+    51: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 35
+    49: ARTICLE-2
+    39: ARTICLE-3
+    52: LINK-10
+    50: LOCALE-6
+    43: LOCALE-7
+    51: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    47: WORKFLOW-11
+  - id: 36
+    49: ARTICLE-2
+    39: ARTICLE-3
+    52: LINK-10
+    50: LOCALE-6
+    43: LOCALE-7
+    51: PAGE-8
+    45: PAGE-9
+    40: RELEASE-4
+    41: RELEASE-5
+    48: TEMPLATE-1
+    53: WORKFLOW-11
+
+Blobs
+  - 37: {"id":"TEMPLATE-1","type":"TEMPLATE","body":{"name":"Nice page template","description":"Generic page structure","content":"# Header 1","type":"Page"}}
+  - 38: {"id":"ARTICLE-2","type":"ARTICLE","body":{"parentId":null,"name":"My first article","order":100}}
+  - 39: {"id":"ARTICLE-3","type":"ARTICLE","body":{"parentId":null,"name":"My second article","order":100}}
+  - 40: {"id":"RELEASE-4","type":"RELEASE","body":{"parentCommit":"8","name":"v1.5","note":"test release","created":"","locales":[],"articles":[],"links":[],"workflows":[],"pages":[],"templates":[]}}
+  - 41: {"id":"RELEASE-5","type":"RELEASE","body":{"parentCommit":"10","name":"v2.4","note":"new content","created":"","locales":[],"articles":[],"links":[],"workflows":[],"pages":[],"templates":[]}}
+  - 42: {"id":"LOCALE-6","type":"LOCALE","body":{"value":"en","enabled":true}}
+  - 43: {"id":"LOCALE-7","type":"LOCALE","body":{"value":"fi","enabled":true}}
+  - 44: {"id":"PAGE-8","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-6","content":"# English content"}}
+  - 45: {"id":"PAGE-9","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-7","content":"# Finnish content"}}
+  - 46: {"id":"LINK-10","type":"LINK","body":{"value":"www.example.com","contentType":"internal","articles":[],"labels":[{"locale":"LOCALE-6","labelValue":"click me"}]}}
+  - 47: {"id":"WORKFLOW-11","type":"WORKFLOW","body":{"value":"Form1","articles":[],"labels":[{"locale":"LOCALE-6","labelValue":"firstForm"}]}}
+  - 48: {"id":"TEMPLATE-1","type":"TEMPLATE","body":{"name":"new name","description":"description","content":"cool content","type":"PAGE"}}
+  - 49: {"id":"ARTICLE-2","type":"ARTICLE","body":{"parentId":null,"name":"Revised Article1","order":300}}
+  - 50: {"id":"LOCALE-6","type":"LOCALE","body":{"value":"gb","enabled":false}}
+  - 51: {"id":"PAGE-8","type":"PAGE","body":{"article":"ARTICLE-2","locale":"LOCALE-6","content":"new content for page1"}}
+  - 52: {"id":"LINK-10","type":"LINK","body":{"value":"www.wikipedia.com","contentType":"external","articles":["ARTICLE-2"],"labels":[{"locale":"LOCALE-7","labelValue":"Don't click me"}]}}
+  - 53: {"id":"WORKFLOW-11","type":"WORKFLOW","body":{"value":"revision of firstForm","articles":[],"labels":[{"locale":"LOCALE-7","labelValue":"First form part 2"}]}}

@@ -1,0 +1,9 @@
+path,type,value,locale,description
+,workflow,General message,fi,workflow LINK IN FI
+,workflow,General message,en,workflow LINK IN EN
+,workflow,General message,sv,workflow LINK IN SV
+index,phone,+357 786767,fi,TEXT IN FI for INDEX
+index,phone,+357 786767,sv,TEXT IN SV for INDEX
+index,phone,+357 786767,en,TEXT IN EN for INDEX
+democracy,internal,https://www.some.site.com/,fi,TEXT IN FIN for DEM
+democracy,internal,https://www.some.site.com/,sv,TEXT IN SV for DEM

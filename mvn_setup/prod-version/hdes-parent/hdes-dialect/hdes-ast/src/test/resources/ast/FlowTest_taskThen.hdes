@@ -1,0 +1,5 @@
+flow x({ arg1: integer arg2: integer }): {}
+{
+    firstTask() { XXX({ }) return nextTask() }
+    nextTask() { return {} } 
+}   

@@ -1,0 +1,30 @@
+Trace for: SimpleFlow
+
+2020-11-04T11:45:55.947,input
+accepts: ImmutableSimpleFlowAccepts
+,,arg2,2
+,,arg1,11
+
+2020-11-04T11:45:55.953,InitialScoring
+Makes calls to
+,Calling: Scoring
+
+2020-11-04T11:45:55.951,input
+,accepts: ImmutableScoringAccepts
+,,,arg,11
+
+2020-11-04T11:45:55.952,when
+,Matched found: 1
+,matched 0: when{_between1and30}then{10}
+,,,score,10
+
+2020-11-04T11:45:55.953,Scoring
+,returns: ImmutableScoringReturns
+,,,score,10
+
+2020-11-04T11:45:55.953,Decision
+Makes no calls
+
+2020-11-04T11:45:55.954,SimpleFlow - end as
+returns: ImmutableSimpleFlowReturns
+,,score,10

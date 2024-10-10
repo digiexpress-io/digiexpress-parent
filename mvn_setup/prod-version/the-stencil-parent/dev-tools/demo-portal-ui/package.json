@@ -1,0 +1,66 @@
+{
+  "name": "the-stencil-client-portal",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "/portal",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "^5.0.0-alpha.53",
+    "@mui/material": "^5.0.1",
+    "@mui/styles": "^5.0.1",
+    "@the-stencil-io/portal": "^1.0.8",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intl": "^5.20.2",
+    "react-markdown": "^6.0.1",
+    "remark-gfm": "^1.0.0"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "^5.0.0-alpha.53",
+    "@mui/material": "^5.0.1",
+    "@mui/styles": "^5.0.1",
+    "@types/react": "^17.0.10",
+    "@types/react-dom": "^17.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intl": "^5.20.2",
+    "react-markdown": "^6.0.1",
+    "react-scripts": "5.0.0",
+    "remark-gfm": "^1.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "rm -rf ./build && tsc",
+    "clean": "rm -rf ./build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

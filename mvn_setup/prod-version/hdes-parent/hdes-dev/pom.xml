@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.resys.hdes</groupId>
+    <artifactId>hdes-build-parent</artifactId>
+    <version>3.y-SNAPSHOT</version>
+    <relativePath>../hdes-build-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>hdes-dev</artifactId>
+  <packaging>pom</packaging>
+
+
+  <modules>
+    <module>spring-app</module>
+    <module>quarkus-app</module>
+    <module>hdes-migration</module>    
+  </modules>
+
+
+</project>

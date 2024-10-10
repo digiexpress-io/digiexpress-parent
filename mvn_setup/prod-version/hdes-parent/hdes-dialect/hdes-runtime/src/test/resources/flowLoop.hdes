@@ -1,0 +1,27 @@
+
+decision-table ScoringDT { 
+  accepts { arg1 INTEGER } 
+  returns { score INTEGER } 
+  matches FIRST {
+    when { _ between 1 and 10 } then { 10 } 
+    when { ? } then { 20 }
+  } 
+} 
+
+flow SimpleFlow {
+  accepts { classifiers ARRAY of INTEGER }                        // define flow input fields
+  returns { total INTEGER }                                       // define the flow end object fields
+  steps {
+    InitialScoringStep {                                          // first and only step in the flow
+      
+      maps classifiers to {                                       // loop over classifiers and map them into "intermediate" object, that is defined in 'end-as'
+        ScoreClassifierStep { call ScoringDT { arg1: $ }            // 1 step in iteration, that is named ScoreClassifier, step will invoke DT "ScoringDT"
+        then end-as { _score } }                                  // maps DT 'Scoring'
+      }
+      
+      then end-as { 
+        total: sum(_.map(element -> element.score)) 
+      } // This ends the flow and creates end object that is described in the returns section
+    }
+  }
+}

@@ -1,0 +1,8 @@
+decision-table SimpleHitPolicyFirstDt ({ name: STRING, lastName: STRING }) :{ value: INTEGER }
+{
+  findFirst({
+    when( _ = 'sam', ?           )  add({ 20 })
+    when( _ = 'bob',  _ = 'woman')  add({ 4570 })
+    when( !(_ IN('bob','same', 'professor')), !(_ IN('woman', 'man'))) add({ 4570 })
+  }) 
+}

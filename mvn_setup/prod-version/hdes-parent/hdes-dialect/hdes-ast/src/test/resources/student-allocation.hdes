@@ -1,0 +1,76 @@
+
+/**
+ * Example of a java specific service task
+ */
+service-task SchoolService (
+  { importId: integer }): 
+  { schools: { schoolId: string, zipcode: string }[] } {
+  x.y.io.MySuperService {}
+}
+
+service-task CreateFormService (
+  { schoolId: string, formName: string }):
+  { confirmed: boolean } {
+  
+  promise { timeout: 500 }
+  
+  x.y.io.MySuperService {}
+}
+
+
+/**
+ * Flow for allocating students into school
+ */
+flow StudentAllocation (
+  { importId: integer }): 
+  { importId: string } {
+    
+    GetSchools() {
+      SchoolService ({ importId }) // shorter version then 'importId: importId', school service uses import id as parameter
+      StudentService ({ importId })
+      
+      return AllocateStudents()
+    }
+    
+    
+    AllocateStudents() {
+      map(GetStudents.students).to({
+      
+        SelectSchool() {
+          map(GetSchools.schools).to({ 
+            CalculateSchoolScore() {
+              DistanceService ({ zip1: GetStudents._zipcode, zip2: SelectSchool._zipcode }) // place holder accesses iterable element of the step
+              return { distance: _value, schoolId: SelectSchool._schoolId } // end of one school element in the iteration
+            }
+          })
+          continue
+        }
+      
+        ParentalInquiry() {
+          /**
+           * This is a step that suspends the flow. 
+           * 1. 'publish call' refers to: service task(developer created) that is responsible for sending data to: message queue/task manager/dialob session manager.
+           * 2. 'complete call' refers to: service task(developer created) thats is responsible for mapping data back to flow from completed task/event.
+           */
+          await CreateFormService ({ SelectSchool.schoolId, formName: 'parentalForm' })
+          if ( _confirmed = true ) return AddStudentToSchool() // placeholder to access data from 'complete call' inside the current step
+          else return ChangeSchool()
+        }
+        
+        AddStudentToSchool() {
+          // end of one student element in the iteration
+          AllocationService ({ SelectSchool.schoolId })
+          return {}
+        }
+        
+        ChangeSchool() {
+          // end of one student iteration
+          AllocationService ({ ParentalInquiry.schoolId })
+          return {}
+        }
+      })
+      
+      
+      return { importId } // ends the whole flow once all tasks are completed
+    }
+}

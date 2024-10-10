@@ -1,0 +1,140 @@
+[
+  {
+    "id": 0,
+    "type": "ADD",
+    "value": "id: sumFlow",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 1,
+    "type": "ADD",
+    "value": "description: sum task test",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 2,
+    "type": "ADD",
+    "value": "",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 3,
+    "type": "ADD",
+    "value": "inputs: ",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 4,
+    "type": "ADD",
+    "value": "  val1:",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 5,
+    "type": "ADD",
+    "value": "    required: true",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 6,
+    "type": "ADD",
+    "value": "    type: DECIMAL",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 7,
+    "type": "ADD",
+    "value": "  val2:",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 8,
+    "type": "ADD",
+    "value": "    required: true",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 9,
+    "type": "ADD",
+    "value": "    type: DECIMAL",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 10,
+    "type": "ADD",
+    "value": "   ",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 11,
+    "type": "ADD",
+    "value": "    ",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 12,
+    "type": "ADD",
+    "value": "tasks:",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 13,
+    "type": "ADD",
+    "value": "  - sum task:",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 14,
+    "type": "ADD",
+    "value": "      id: \"SumTask\"",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 15,
+    "type": "ADD",
+    "value": "      then: end",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 16,
+    "type": "ADD",
+    "value": "      service: ",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 17,
+    "type": "ADD",
+    "value": "        ref: SumTask",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 18,
+    "type": "ADD",
+    "value": "        restful: true",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 19,
+    "type": "ADD",
+    "value": "        collection: false",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 20,
+    "type": "ADD",
+    "value": "        inputs: ",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 21,
+    "type": "ADD",
+    "value": "          val1: val1",
+    "origin": "SOURCE"
+  },
+  {
+    "id": 22,
+    "type": "ADD",
+    "value": "          val2: val2",
+    "origin": "SOURCE"
+  }
+]

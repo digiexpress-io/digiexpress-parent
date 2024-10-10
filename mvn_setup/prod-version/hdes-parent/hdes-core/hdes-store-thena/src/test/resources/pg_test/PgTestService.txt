@@ -1,0 +1,25 @@
+package io.resys.wrench.assets.bundle.groovy;
+
+import io.resys.hdes.client.api.programs.ServiceData;
+import java.io.Serializable;
+
+public class PgTestService {
+
+  public Output execute(Input input) {
+    Output output = new Output();
+    output.sum = input.a + input.b;
+    return output;
+  }
+  
+  
+  @ServiceData
+  public static class Input implements Serializable {
+    Integer a;
+    Integer b;
+  }
+  
+  @ServiceData
+  public static class Output implements Serializable {
+    Integer sum;
+  }
+}

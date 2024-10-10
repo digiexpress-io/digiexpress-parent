@@ -1,0 +1,43 @@
+quarkus:
+  http:
+    cors: true
+
+  log:
+    level: DEBUG
+    category: 
+      io.resys:
+        level: DEBUG
+
+  stencil-composer:
+    server-path: /q/ide-services
+
+  stencil-composer-pg:
+    service-path: /q/ide-services
+    repo:
+      repo-name: test-assets
+
+  stencil-site-pg:
+    service-path: /q/portal/site
+    repo:
+      repo-name: test-assets
+
+  datasource:
+    db-kind: postgresql 
+    username: my_stencil
+    password: joo4XooHllK2thei
+    reactive:
+      max-size: 3
+      url: postgresql://localhost:5432/my_stencil
+
+"%prod":
+  quarkus:
+
+"%dev":
+  quarkus:
+    log:
+      level: DEBUG
+      category: 
+        io.thestencil:
+          level: DEBUG
+        io.resys:
+          level: DEBUG

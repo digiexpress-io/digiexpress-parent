@@ -1,0 +1,43 @@
+spring:
+
+server:
+  port: 8081
+  use-forward-headers: true
+  servlet:
+    context-path: "/"
+    session.timeout: 7200
+  error:
+    include-stacktrace: never
+    
+
+host: "http://localhost:${server.port}"
+
+management:
+  server:
+    servlet.context-path: "/manage"
+    add-application-context-header: false
+
+wrench:
+  assets:
+    ide: true
+    ide-redirect: true
+    rest: true
+    
+    inmemory: 
+      enabled: false 
+    git:
+      enabled: false
+      privateKey: "path-to-git-private-key-related-files: .known_hosts; id_rsa; id_rsa.known_hosts"
+      repositoryUrl: "ssh-git-url" 
+      branchSpecifier: "main"
+      repositoryPath: "~/clone-git-repo-to"
+      path: src/main/resources
+    pg:
+      enabled: true
+      autoCreate: true
+      repositoryName: "test-repo-1" 
+      branchSpecifier: "main"
+      pgHost: "localhost"
+      pgDb: "postgres"
+      pgUser: "postgres"
+      pgPass: "example"

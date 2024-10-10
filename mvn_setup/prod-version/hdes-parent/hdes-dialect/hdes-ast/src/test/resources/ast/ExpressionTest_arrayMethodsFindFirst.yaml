@@ -1,0 +1,271 @@
+---
+token:
+  text: "expression{users.map(e->e.firstName).findFirst()}expression{users.map(e->e.firstName).filter(e->e='SAM').sort(e->e,ASC).findFirst()}<EOF>"
+  start:
+    line: 1
+    col: 1
+  end:
+    line: 3
+    col: 1
+values:
+- token:
+    text: "users.map(e->e.firstName).findFirst()"
+    start:
+      line: 1
+      col: 13
+    end:
+      line: 1
+      col: 52
+  id:
+    token:
+      text: "users.map(e->e.firstName).findFirst()"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 52
+    value: ""
+  headers:
+    token:
+      text: "users.map(e->e.firstName).findFirst()"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 52
+    acceptDefs: []
+    returnDefs: []
+  src: "users.map(e -> e.firstName).findFirst()"
+  value:
+    token:
+      text: "users.map(e->e.firstName).findFirst()"
+      start:
+        line: 1
+        col: 13
+      end:
+        line: 1
+        col: 52
+    type:
+      token:
+        text: "users"
+        start:
+          line: 1
+          col: 13
+        end:
+          line: 1
+          col: 18
+      value: "users"
+    param:
+      token:
+        text: "e"
+        start:
+          line: 1
+          col: 23
+        end:
+          line: 1
+          col: 24
+      value: "e"
+    body:
+      token:
+        text: "e.firstName"
+        start:
+          line: 1
+          col: 28
+        end:
+          line: 1
+          col: 39
+      path:
+        token:
+          text: "e"
+          start:
+            line: 1
+            col: 28
+          end:
+            line: 1
+            col: 29
+        value: "e"
+      value:
+        token:
+          text: "firstName"
+          start:
+            line: 1
+            col: 30
+          end:
+            line: 1
+            col: 39
+        value: "firstName"
+    findFirst: true
+    sort: []
+    filter: []
+    next: null
+- token:
+    text: "users.map(e->e.firstName).filter(e->e='SAM').sort(e->e,ASC).findFirst()"
+    start:
+      line: 2
+      col: 13
+    end:
+      line: 2
+      col: 93
+  id:
+    token:
+      text: "users.map(e->e.firstName).filter(e->e='SAM').sort(e->e,ASC).findFirst()"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 93
+    value: ""
+  headers:
+    token:
+      text: "users.map(e->e.firstName).filter(e->e='SAM').sort(e->e,ASC).findFirst()"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 93
+    acceptDefs: []
+    returnDefs: []
+  src: "users.map(e -> e.firstName).filter(e -> e = 'SAM').sort(e -> e, ASC).findFirst()"
+  value:
+    token:
+      text: "users.map(e->e.firstName).filter(e->e='SAM').sort(e->e,ASC).findFirst()"
+      start:
+        line: 2
+        col: 13
+      end:
+        line: 2
+        col: 93
+    type:
+      token:
+        text: "users"
+        start:
+          line: 2
+          col: 13
+        end:
+          line: 2
+          col: 18
+      value: "users"
+    param:
+      token:
+        text: "e"
+        start:
+          line: 2
+          col: 23
+        end:
+          line: 2
+          col: 24
+      value: "e"
+    body:
+      token:
+        text: "e.firstName"
+        start:
+          line: 2
+          col: 28
+        end:
+          line: 2
+          col: 39
+      path:
+        token:
+          text: "e"
+          start:
+            line: 2
+            col: 28
+          end:
+            line: 2
+            col: 29
+        value: "e"
+      value:
+        token:
+          text: "firstName"
+          start:
+            line: 2
+            col: 30
+          end:
+            line: 2
+            col: 39
+        value: "firstName"
+    findFirst: true
+    sort:
+    - token:
+        text: "sort(e->e,ASC)"
+        start:
+          line: 2
+          col: 64
+        end:
+          line: 2
+          col: 81
+      param:
+        token:
+          text: "e"
+          start:
+            line: 2
+            col: 69
+          end:
+            line: 2
+            col: 70
+        value: "e"
+      body:
+        token:
+          text: "e"
+          start:
+            line: 2
+            col: 74
+          end:
+            line: 2
+            col: 75
+        value: "e"
+    filter:
+    - token:
+        text: "filter(e->e='SAM')"
+        start:
+          line: 2
+          col: 41
+        end:
+          line: 2
+          col: 63
+      param:
+        token:
+          text: "e"
+          start:
+            line: 2
+            col: 48
+          end:
+            line: 2
+            col: 49
+        value: "e"
+      body:
+        token:
+          text: "e='SAM'"
+          start:
+            line: 2
+            col: 53
+          end:
+            line: 2
+            col: 62
+        type: "EQUAL"
+        left:
+          token:
+            text: "e"
+            start:
+              line: 2
+              col: 53
+            end:
+              line: 2
+              col: 54
+          value: "e"
+        right:
+          token:
+            text: "'SAM'"
+            start:
+              line: 2
+              col: 57
+            end:
+              line: 2
+              col: 62
+          type: "STRING"
+          value: "SAM"
+    next: null

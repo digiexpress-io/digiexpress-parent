@@ -1,0 +1,23 @@
+        decision-table Scoring({ arg: integer }) : { score: integer } {
+          findFirst({
+            when( _ between 1 and 30) add({ 10 })
+            when( ? ) add({ 20 })
+          })
+        }
+
+        flow SimpleFlow ({ arg1: INTEGER, arg2: INTEGER }) : { score: INTEGER }
+        {
+            
+          InitialScoring() {
+            Scoring({ arg: arg1 }) return Decision()
+          }
+          
+          Decision() {
+            if( InitialScoring.score > 10 ) return ExtraScoring()
+            else return { InitialScoring.score } 
+          }
+        
+          ExtraScoring() {
+            Scoring({ arg: arg2 }) return { _score }
+          }
+        }

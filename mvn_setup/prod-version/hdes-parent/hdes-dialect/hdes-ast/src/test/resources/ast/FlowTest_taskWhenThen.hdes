@@ -1,0 +1,17 @@
+flow AgeProductSelection( { age: integer, office: string } ):
+                          { products: { name: string }[], log: string } {
+  GetAgeScore() {
+    if (age > 80) return NoProductAvailable()
+    else continue
+  }
+  
+  SelectProducts() {
+    ProductDecisionTable({ inputAge: age })
+    
+    return { products: $call, log: 'found some products from dt' }
+  }
+  
+  NoProductAvailable() {
+    return { products: [], log: 'sorry nothing to sell' }
+  }
+}

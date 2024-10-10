@@ -1,0 +1,27 @@
+{
+  "id": "2eeb259a-d15e-4c7a-b1cb-ce18a3ef384b",
+  "bodyType": "TAG",
+  "hash": "6ea28041a32a26991b4e1551c57e8e88",
+  "body": [
+    {
+      "id": null,
+      "value": "2023-01-04T09:37:22.804810500",
+      "type": "SET_TAG_CREATED"
+    },
+    {
+      "id": null,
+      "value": "v1",
+      "type": "SET_TAG_NAME"
+    },
+    {
+      "id": null,
+      "value": "",
+      "type": "SET_TAG_DESC"
+    },
+    {
+      "id": "e5c07603-af9c-4d11-ba23-b47ece25356b",
+      "value": "id: test\r\n\r\ninputs:\r\n  stringValueSet:\r\n    required: true\r\n    type: STRING\r\n    debugValue: \"S, M, L\"\r\n  string:\r\n    required: false\r\n    type: STRING\r\n    debugValue: \"A\"\r\n  number:\r\n    required: false\r\n    type: INTEGER\r\n    debugValue: \"5\"\r\n  numberRange:\r\n    required: true\r\n    type: INTEGER\r\n    debugValue: \"5 - 10\"\r\n\r\ntasks:\r\n  - numberCode:\r\n      id: numberCode\r\n      then: end\r\n      decisionTable:\r\n        ref: numberCode\r\n        collection: false\r\n        inputs:\r\n          inputColumn: stringValueSet\r\n",
+      "type": "SET_TAG_FL"
+    }
+  ]
+}
