@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 run_build () {
-  ./mvnw -B -Phdes-release \
+  ./mvnw -B -Pdigiexpress-release \
     -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
     clean deploy
 }
