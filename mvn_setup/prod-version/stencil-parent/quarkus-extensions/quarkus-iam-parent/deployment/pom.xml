@@ -19,6 +19,7 @@
       <artifactId>stencil-iam-api</artifactId>
     </dependency>
 
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-core-deployment</artifactId>
@@ -39,6 +40,7 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-mutiny-deployment</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-context-propagation-deployment</artifactId>
@@ -49,12 +51,16 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-jwt-deployment</artifactId>
+      <artifactId>quarkus-smallrye-openapi-spi</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-jwt-build-deployment</artifactId>
+      <artifactId>quarkus-smallrye-jwt-deployment</artifactId>
     </dependency>
+
+
+
+
 
     <dependency>
       <groupId>io.quarkus</groupId>
