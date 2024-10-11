@@ -3,7 +3,7 @@ import React from 'react';
 import { useTheme } from '@mui/material';
 import * as Burger from '@/burger';
 import { BurgerApi } from '@/burger';
-import { StencilClient } from '../';
+import { StencilApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
 
@@ -55,91 +55,91 @@ declare namespace StencilComposerApi {
 
   interface PageUpdate {
     saved: boolean;
-    origin: StencilClient.Page;
-    value: StencilClient.LocalisedContent;
-    withValue(value: StencilClient.LocalisedContent): PageUpdate;
+    origin: StencilApi.Page;
+    value: StencilApi.LocalisedContent;
+    withValue(value: StencilApi.LocalisedContent): PageUpdate;
   }
 
   interface SessionFilter {
-    locale?: StencilClient.LocaleId;
-    withLocale(locale?: StencilClient.LocaleId): SessionFilter;
+    locale?: StencilApi.LocaleId;
+    withLocale(locale?: StencilApi.LocaleId): SessionFilter;
   }
 
   interface Session {
-    site: StencilClient.Site,
-    pages: Record<StencilClient.PageId, PageUpdate>;
+    site: StencilApi.Site,
+    pages: Record<StencilApi.PageId, PageUpdate>;
     articles: ArticleView[];
     workflows: WorkflowView[];
     links: LinkView[];
     search: SearchData;
     filter: SessionFilter;
 
-    getArticleName(articleId: StencilClient.ArticleId): { missing: boolean, name: string };
-    getArticleView(articleId: StencilClient.ArticleId): ArticleView;
+    getArticleName(articleId: StencilApi.ArticleId): { missing: boolean, name: string };
+    getArticleView(articleId: StencilApi.ArticleId): ArticleView;
 
-    getLinkView(linkId: StencilClient.LinkId): LinkView;
-    getLinkName(linkId: StencilClient.LinkId): { missing: boolean, name: string };
+    getLinkView(linkId: StencilApi.LinkId): LinkView;
+    getLinkName(linkId: StencilApi.LinkId): { missing: boolean, name: string };
 
-    getWorkflowView(workflowId: StencilClient.WorkflowId): WorkflowView;
-    getWorkflowName(workflowId: StencilClient.WorkflowId): { missing: boolean, name: string };
+    getWorkflowView(workflowId: StencilApi.WorkflowId): WorkflowView;
+    getWorkflowName(workflowId: StencilApi.WorkflowId): { missing: boolean, name: string };
 
-    getArticlesForLocale(locale: StencilClient.LocaleId): StencilClient.Article[];
-    getArticlesForLocales(locales: StencilClient.LocaleId[]): StencilClient.Article[];
+    getArticlesForLocale(locale: StencilApi.LocaleId): StencilApi.Article[];
+    getArticlesForLocales(locales: StencilApi.LocaleId[]): StencilApi.Article[];
 
-    withPage(page: StencilClient.PageId): Session;
-    withPageValue(page: StencilClient.PageId, value: StencilClient.LocalisedContent): Session;
-    withoutPages(pages: StencilClient.PageId[]): Session;
+    withPage(page: StencilApi.PageId): Session;
+    withPageValue(page: StencilApi.PageId, value: StencilApi.LocalisedContent): Session;
+    withoutPages(pages: StencilApi.PageId[]): Session;
 
-    withLocaleFilter(locale?: StencilClient.LocaleId): Session;
-    withSite(site: StencilClient.Site): Session;
+    withLocaleFilter(locale?: StencilApi.LocaleId): Session;
+    withSite(site: StencilApi.Site): Session;
   }
 
   interface Actions {
     handleLoad(): Promise<void>;
     handleLoadSite(): Promise<void>;
-    handlePageUpdate(page: StencilClient.PageId, value: StencilClient.LocalisedContent): void;
-    handlePageUpdateRemove(pages: StencilClient.PageId[]): void;
-    handleLocaleFilter(locale?: StencilClient.LocaleId): void;
+    handlePageUpdate(page: StencilApi.PageId, value: StencilApi.LocalisedContent): void;
+    handlePageUpdateRemove(pages: StencilApi.PageId[]): void;
+    handleLocaleFilter(locale?: StencilApi.LocaleId): void;
   }
 
   interface ContextType {
     session: Session;
     actions: Actions;
-    service: StencilClient.Service;
+    service: StencilApi.Service;
   }
 
   interface ArticleView {
-    article: StencilClient.Article;
+    article: StencilApi.Article;
     pages: PageView[];
-    canCreate: StencilClient.SiteLocale[];
+    canCreate: StencilApi.SiteLocale[];
     links: LinkView[];
     workflows: WorkflowView[];
     children: ArticleView[];
     displayOrder: number;
-    getPageById(pageId: StencilClient.PageId): PageView;
-    getPageByLocaleId(localeId: StencilClient.LocaleId): PageView;
-    findPageByLocaleId(localeId: StencilClient.LocaleId): PageView | undefined;
+    getPageById(pageId: StencilApi.PageId): PageView;
+    getPageByLocaleId(localeId: StencilApi.LocaleId): PageView;
+    findPageByLocaleId(localeId: StencilApi.LocaleId): PageView | undefined;
   }
 
   interface PageView {
     title: string;
-    page: StencilClient.Page;
-    locale: StencilClient.SiteLocale;
+    page: StencilApi.Page;
+    locale: StencilApi.SiteLocale;
   }
 
   interface LinkView {
-    link: StencilClient.Link;
+    link: StencilApi.Link;
     labels: LabelView[];
   }
 
   interface WorkflowView {
-    workflow: StencilClient.Workflow;
+    workflow: StencilApi.Workflow;
     labels: LabelView[];
   }
 
   interface LabelView {
-    label: StencilClient.LocaleLabel;
-    locale: StencilClient.SiteLocale;
+    label: StencilApi.LocaleLabel;
+    locale: StencilApi.SiteLocale;
   }
 }
 
@@ -165,27 +165,27 @@ namespace StencilComposerApi {
     }
   }
 
-  export const createTab = (props: { nav: Nav, page?: StencilClient.Page }) => new ImmutableTabData(props);
+  export const createTab = (props: { nav: Nav, page?: StencilApi.Page }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
     actions: {} as Actions,
-    service: {} as StencilClient.Service
+    service: {} as StencilApi.Service
   });
 
-  export const useUnsaved = (article: StencilClient.Article) => {
+  export const useUnsaved = (article: StencilApi.Article) => {
     const ide: ContextType = React.useContext(ComposerContext);
     return !isSaved(article, ide);
   }
 
-  const isSaved = (article: StencilClient.Article, ide: ContextType): boolean => {
+  const isSaved = (article: StencilApi.Article, ide: ContextType): boolean => {
     const unsaved = Object.values(ide.session.pages).filter(p => !p.saved).filter(p => p.origin.body.article === article.id);
     return unsaved.length === 0
   }
 
   export const useComposer = () => {
     const result: ContextType = React.useContext(ComposerContext);
-    const isArticleSaved = (article: StencilClient.Article): boolean => isSaved(article, result);
+    const isArticleSaved = (article: StencilApi.Article): boolean => isSaved(article, result);
 
     return {
       session: result.session, service: result.service, actions: result.actions, site: result.session.site,
@@ -207,7 +207,7 @@ namespace StencilComposerApi {
     const layout = Burger.useTabs();
 
 
-    const handleInTab = (props: { article: StencilClient.Article, type: NavType, locale?: string | null, secondary?: boolean }) => {
+    const handleInTab = (props: { article: StencilApi.Article, type: NavType, locale?: string | null, secondary?: boolean }) => {
       const nav = {
         type: props.type,
         value: props.secondary ? undefined : props.locale,
@@ -235,7 +235,7 @@ namespace StencilComposerApi {
 
     }
 
-    const findTab = (article: StencilClient.Article): Tab | undefined => {
+    const findTab = (article: StencilApi.Article): Tab | undefined => {
       const oldTab = layout.session.findTab(article.id);
       if (oldTab !== undefined) {
         const tabs = layout.session.tabs;
@@ -250,7 +250,7 @@ namespace StencilComposerApi {
     return { handleInTab, findTab };
   }
 
-  export const Provider: React.FC<{ children: React.ReactNode, service: StencilClient.Service }> = ({ children, service }) => {
+  export const Provider: React.FC<{ children: React.ReactNode, service: StencilApi.Service }> = ({ children, service }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
       console.log("init ide dispatch");
@@ -266,7 +266,7 @@ namespace StencilComposerApi {
   };
 }
 
-const ArticleTabIndicator: React.FC<{ article: StencilClient.Article, type: StencilComposerApi.NavType }> = ({ article }) => {
+const ArticleTabIndicator: React.FC<{ article: StencilApi.Article, type: StencilComposerApi.NavType }> = ({ article }) => {
   const theme = useTheme();
   const { isArticleSaved } = StencilComposerApi.useComposer();
   const saved = isArticleSaved(article);

@@ -1,4 +1,4 @@
-import StencilClient from './StencilClient';
+import { StencilApi } from './StencilApi';
 
 const getErrorMsg = (error: any) => {
   if (error.msg) {
@@ -20,43 +20,15 @@ const getErrorId = (error: any) => {
   }
   return "";
 }
-const parseErrors = (props: any[]): StencilClient.ErrorMsg[] => {
+export const parseErrors = (props: any[]): StencilApi.ErrorMsg[] => {
   if (!props) {
     return []
   }
 
-  const result: StencilClient.ErrorMsg[] = props.map(error => ({
+  const result: StencilApi.ErrorMsg[] = props.map(error => ({
     id: getErrorId(error),
     value: getErrorMsg(error)
   }));
 
   return result;
-}
-
-export interface StoreError extends Error {
-  text: string;
-  status: number;
-  errors: StencilClient.ErrorMsg[];
-}
-
-
-export class StoreErrorImpl extends Error {
-  private _props: StencilClient.ErrorProps;
-  constructor(props: StencilClient.ErrorProps) {
-    super(props.text);
-    this._props = {
-      text: props.text,
-      status: props.status,
-      errors: parseErrors(props.errors)
-    };
-  }
-  get name() {
-    return this._props.text;
-  }
-  get status() {
-    return this._props.status;
-  }
-  get errors() {
-    return this._props.errors;
-  }
 }

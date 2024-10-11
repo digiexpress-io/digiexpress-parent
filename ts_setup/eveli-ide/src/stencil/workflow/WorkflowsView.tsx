@@ -15,7 +15,7 @@ import EditOutlined from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import { WorkflowDelete } from './WorkflowDelete';
 import { WorkflowEdit } from './WorkflowEdit';
 
@@ -114,8 +114,8 @@ const WorkflowsView: React.FC<{}> = () => {
 }
 
 interface RowProps {
-  site: StencilClient.Site,
-  workflow: StencilClient.Workflow,
+  site: StencilApi.Site,
+  workflow: StencilApi.Workflow,
 
 }
 

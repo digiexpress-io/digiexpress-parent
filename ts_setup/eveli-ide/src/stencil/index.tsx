@@ -2,7 +2,7 @@
 import React from 'react';
 import { Main } from './Main';
 import { Secondary } from './Secondary';
-import StencilClient from './client';
+import {StencilClient, StencilApi} from './client';
 import Toolbar from './Toolbar';
 import { Composer } from './context';
 import stencilIntl from './intl';
@@ -12,7 +12,7 @@ import * as Burger from '@/burger';
 import { BurgerApi } from '@/burger';
 
 interface StencilComposerProps {
-  service: StencilClient.Service,
+  service: StencilApi.Service,
   locked?: boolean;
 };
 
@@ -41,8 +41,8 @@ const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) =>
   );
 }
 
-export type { StencilComposerProps };
-export { StencilComposer, StencilClient, stencilIntl };
+export type { StencilComposerProps, StencilApi };
+export { StencilComposer, StencilClient,  stencilIntl };
 export { SiteCache, SessionData } from './context'
 export * from './client/store';
 export * from './Main';

@@ -17,7 +17,7 @@ import { NewPage } from './page';
 import { MigrationComposer } from './migration';
 import { TemplateComposer } from './template';
 
-import { Composer, StencilClient } from './context';
+import { Composer, StencilApi } from './context';
 
 import composerVersion from './version';
 
@@ -36,7 +36,7 @@ interface CardData {
 
 type CardType = "release" | "article" | "page" | "link" | "workflow" | "locale" | "migration" | "templates";
 
-const createCards: (site: StencilClient.Site, theme: Theme, tabs: BurgerApi.TabsActions) => CardData[] = (_site, theme, tabs) => ([
+const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsActions) => CardData[] = (_site, theme, tabs) => ([
   {
     composer: (handleClose) => (<ArticleComposer onClose={handleClose} />),
     onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),

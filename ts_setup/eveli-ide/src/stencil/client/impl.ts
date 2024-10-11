@@ -1,4 +1,4 @@
-import StencilClient from './StencilClient';
+import StencilClient from './StencilApi';
 import { DefaultStore } from './store';
 
 const createService = (init: { store?: StencilClient.Store, config?: StencilClient.StoreConfig }): StencilClient.Service => {

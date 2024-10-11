@@ -1,5 +1,5 @@
 import StencilComposerApi from './ide';
-import StencilClient from '../client';
+import { StencilApi } from '../client';
 
 class ImmutableSearchData implements StencilComposerApi.SearchData {
   private _articles: ImmutableArticleSearchEntry[];
@@ -69,21 +69,21 @@ class ImmutableSearchData implements StencilComposerApi.SearchData {
 }
 
 class SiteCache {
-  private _articleSearchData: Record<StencilClient.ArticleId, ImmutableArticleSearchEntry> = {};
-  private _linkSearchData: Record<StencilClient.ArticleId, ImmutableLinkSearchEntry> = {};
-  private _workflowSearchData: Record<StencilClient.ArticleId, ImmutableWorkflowSearchEntry> = {};
+  private _articleSearchData: Record<StencilApi.ArticleId, ImmutableArticleSearchEntry> = {};
+  private _linkSearchData: Record<StencilApi.ArticleId, ImmutableLinkSearchEntry> = {};
+  private _workflowSearchData: Record<StencilApi.ArticleId, ImmutableWorkflowSearchEntry> = {};
   private _searchData: StencilComposerApi.SearchData;
 
-  private _site: StencilClient.Site;
-  private _articles: Record<StencilClient.ArticleId, StencilComposerApi.ArticleView> = {};
-  private _workflows: Record<StencilClient.WorkflowId, StencilComposerApi.WorkflowView> = {};
-  private _links: Record<StencilClient.LinkId, StencilComposerApi.LinkView> = {};
+  private _site: StencilApi.Site;
+  private _articles: Record<StencilApi.ArticleId, StencilComposerApi.ArticleView> = {};
+  private _workflows: Record<StencilApi.WorkflowId, StencilComposerApi.WorkflowView> = {};
+  private _links: Record<StencilApi.LinkId, StencilComposerApi.LinkView> = {};
 
-  private _pagesByArticle: Record<StencilClient.ArticleId, StencilComposerApi.PageView[]> = {};
-  private _linksByArticle: Record<StencilClient.ArticleId, StencilComposerApi.LinkView[]> = {};
-  private _workflowsByArticle: Record<StencilClient.ArticleId, StencilComposerApi.WorkflowView[]> = {};
+  private _pagesByArticle: Record<StencilApi.ArticleId, StencilComposerApi.PageView[]> = {};
+  private _linksByArticle: Record<StencilApi.ArticleId, StencilComposerApi.LinkView[]> = {};
+  private _workflowsByArticle: Record<StencilApi.ArticleId, StencilComposerApi.WorkflowView[]> = {};
 
-  constructor(site: StencilClient.Site) {
+  constructor(site: StencilApi.Site) {
     this._site = site;
     Object.values(site.pages).sort((l0, l1) => l0.body.locale.localeCompare(l1.body.locale)).forEach(page => this.visitPage(page))
     Object.values(site.links).sort((l0, l1) => l0.body.contentType.localeCompare(l1.body.contentType)).forEach(link => this.visitLink(link))
@@ -122,7 +122,7 @@ class SiteCache {
   getLinks() {
     return this._links;
   }
-  private visitPage(page: StencilClient.Page) {
+  private visitPage(page: StencilApi.Page) {
     const site = this._site;
     const view = new ImmutablePageView({ page, locale: site.locales[page.body.locale] });
     const articleId = page.body.article;
@@ -141,7 +141,7 @@ class SiteCache {
     this._articleSearchData[articleId] = searchData.withPage(view);
   }
 
-  private visitLink(link: StencilClient.Link) {
+  private visitLink(link: StencilApi.Link) {
     const site = this._site;
     const view = new ImmutableLinkView({
       link,
@@ -165,7 +165,7 @@ class SiteCache {
     }
     this._linkSearchData[link.id] = searchData.withLink(view);
   }
-  private visitWorkflow(workflow: StencilClient.Workflow) {
+  private visitWorkflow(workflow: StencilApi.Workflow) {
     const site = this._site;
     const view = new ImmutableWorkflowView({
       workflow,
@@ -189,7 +189,7 @@ class SiteCache {
     }
     this._workflowSearchData[workflow.id] = searchData.withWorkflow(view);
   }
-  private visitArticle(article: StencilClient.Article) {
+  private visitArticle(article: StencilApi.Article) {
     const articleId = article.id;
     const site = this._site;
     const pages: StencilComposerApi.PageView[] = Object.values(site.pages)
@@ -199,7 +199,7 @@ class SiteCache {
     const links: StencilComposerApi.LinkView[] = this.empty(this._linksByArticle[articleId]);
     const workflows: StencilComposerApi.WorkflowView[] = this.empty(this._workflowsByArticle[articleId]);
 
-    const canCreate: StencilClient.SiteLocale[] = Object.values(site.locales).filter(locale => pages.filter(p => p.page.body.locale === locale.id).length === 0);
+    const canCreate: StencilApi.SiteLocale[] = Object.values(site.locales).filter(locale => pages.filter(p => p.page.body.locale === locale.id).length === 0);
     const view = new ImmutableArticleView({
       article, pages, canCreate,
       links,
@@ -253,20 +253,20 @@ class ImmutableSessionFilter implements StencilComposerApi.SessionFilter {
   get locale() {
     return this._locale;
   }
-  withLocale(locale?: StencilClient.LocaleId) {
+  withLocale(locale?: StencilApi.LocaleId) {
     return new ImmutableSessionFilter({ locale });
   }
 }
 
 class SessionData implements StencilComposerApi.Session {
-  private _site: StencilClient.Site;
-  private _pages: Record<StencilClient.PageId, StencilComposerApi.PageUpdate>;
+  private _site: StencilApi.Site;
+  private _pages: Record<StencilApi.PageId, StencilComposerApi.PageUpdate>;
   private _cache: SiteCache;
   private _filter: StencilComposerApi.SessionFilter;
 
   constructor(props: {
-    site?: StencilClient.Site,
-    pages?: Record<StencilClient.PageId, StencilComposerApi.PageUpdate>,
+    site?: StencilApi.Site,
+    pages?: Record<StencilApi.PageId, StencilComposerApi.PageUpdate>,
     cache?: SiteCache;
     filter?: StencilComposerApi.SessionFilter;
   }) {
@@ -296,10 +296,10 @@ class SessionData implements StencilComposerApi.Session {
   get pages() {
     return this._pages;
   }
-  getArticleName(articleId: StencilClient.ArticleId) {
+  getArticleName(articleId: StencilApi.ArticleId) {
     return this.getArticleNameInternal(articleId, []);
   }
-  getArticleNameInternal(articleId: StencilClient.ArticleId, visited: StencilClient.ArticleId[]): { missing: boolean, name: string } {
+  getArticleNameInternal(articleId: StencilApi.ArticleId, visited: StencilApi.ArticleId[]): { missing: boolean, name: string } {
     if(visited.includes(articleId)) {
       return { missing: true, name: 'parent-child-cycle-for-article-' + articleId };
     }
@@ -321,7 +321,7 @@ class SessionData implements StencilComposerApi.Session {
 
     return { missing: false, name: parent + articleName };
   }
-  getWorkflowName(workflowId: StencilClient.WorkflowId) {
+  getWorkflowName(workflowId: StencilApi.WorkflowId) {
     const view = this.getWorkflowView(workflowId);
     const workflowName: string = view.workflow.body.value;
     const locale = this._filter.locale;
@@ -336,7 +336,7 @@ class SessionData implements StencilComposerApi.Session {
     }
     return { missing: false, name: workflowName };
   }
-  getLinkName(workflowId: StencilClient.WorkflowId) {
+  getLinkName(workflowId: StencilApi.WorkflowId) {
     const view = this.getLinkView(workflowId);
     const linkName = view.link.body.value;
     const locale = this._filter.locale;
@@ -351,17 +351,17 @@ class SessionData implements StencilComposerApi.Session {
     }
     return { missing: false, name: linkName };
   }
-  getArticleView(articleId: StencilClient.ArticleId): StencilComposerApi.ArticleView {
+  getArticleView(articleId: StencilApi.ArticleId): StencilComposerApi.ArticleView {
     return this._cache.getArticles()[articleId];
   }
-  getWorkflowView(workflowId: StencilClient.WorkflowId): StencilComposerApi.WorkflowView {
+  getWorkflowView(workflowId: StencilApi.WorkflowId): StencilComposerApi.WorkflowView {
     return this._cache.getWorkflows()[workflowId];
   }
-  getLinkView(linkId: StencilClient.LinkId): StencilComposerApi.LinkView {
+  getLinkView(linkId: StencilApi.LinkId): StencilComposerApi.LinkView {
     return this._cache.getLinks()[linkId];
   }
 
-  getArticlesForLocale(locale: StencilClient.LocaleId): StencilClient.Article[] {
+  getArticlesForLocale(locale: StencilApi.LocaleId): StencilApi.Article[] {
     const pages = Object.values(this._site.pages)
     return locale ? Object.values(this._site.articles).filter(article => {
       for (const page of pages) {
@@ -372,7 +372,7 @@ class SessionData implements StencilComposerApi.Session {
       return false;
     }) : []
   }
-  getArticlesForLocales(locales: StencilClient.LocaleId[]): StencilClient.Article[] {
+  getArticlesForLocales(locales: StencilApi.LocaleId[]): StencilApi.Article[] {
     const pages = Object.values(this._site.pages)
     return locales && locales.length > 0 ? Object.values(this._site.articles).filter(article => {
       for (const page of pages) {
@@ -384,10 +384,10 @@ class SessionData implements StencilComposerApi.Session {
     }) : []
   }
 
-  withSite(site: StencilClient.Site) {
+  withSite(site: StencilApi.Site) {
     return new SessionData({ site: site, pages: this._pages, filter: this._filter });
   }
-  withoutPages(pageIds: StencilClient.PageId[]): StencilComposerApi.Session {
+  withoutPages(pageIds: StencilApi.PageId[]): StencilComposerApi.Session {
     const pages: Record<string, StencilComposerApi.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
@@ -397,7 +397,7 @@ class SessionData implements StencilComposerApi.Session {
     }
     return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
   }
-  withPage(page: StencilClient.PageId): StencilComposerApi.Session {
+  withPage(page: StencilApi.PageId): StencilComposerApi.Session {
     if (this._pages[page]) {
       return this;
     }
@@ -406,7 +406,7 @@ class SessionData implements StencilComposerApi.Session {
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: origin.body.content });
     return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
   }
-  withPageValue(page: StencilClient.PageId, value: StencilClient.LocalisedContent): StencilComposerApi.Session {
+  withPageValue(page: StencilApi.PageId, value: StencilApi.LocalisedContent): StencilComposerApi.Session {
     const session = this.withPage(page);
     const pageUpdate = session.pages[page];
 
@@ -416,20 +416,20 @@ class SessionData implements StencilComposerApi.Session {
     return new SessionData({ site: session.site, pages, cache: this._cache, filter: this._filter });
   }
 
-  withLocaleFilter(locale?: StencilClient.LocaleId) {
+  withLocaleFilter(locale?: StencilApi.LocaleId) {
     return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, filter: this._filter.withLocale(locale) });
   }
 }
 
 class ImmutablePageUpdate implements StencilComposerApi.PageUpdate {
   private _saved: boolean;
-  private _origin: StencilClient.Page;
-  private _value: StencilClient.LocalisedContent;
+  private _origin: StencilApi.Page;
+  private _value: StencilApi.LocalisedContent;
 
   constructor(props: {
     saved: boolean;
-    origin: StencilClient.Page;
-    value: StencilClient.LocalisedContent;
+    origin: StencilApi.Page;
+    value: StencilApi.LocalisedContent;
   }) {
     this._saved = props.saved;
     this._origin = props.origin;
@@ -445,24 +445,24 @@ class ImmutablePageUpdate implements StencilComposerApi.PageUpdate {
   get value() {
     return this._value;
   }
-  withValue(value: StencilClient.LocalisedContent): StencilComposerApi.PageUpdate {
+  withValue(value: StencilApi.LocalisedContent): StencilComposerApi.PageUpdate {
     return new ImmutablePageUpdate({ saved: false, origin: this._origin, value });
   }
 }
 
 
 class ImmutableArticleView implements StencilComposerApi.ArticleView {
-  private _article: StencilClient.Article;
+  private _article: StencilApi.Article;
   private _pages: StencilComposerApi.PageView[];
-  private _canCreate: StencilClient.SiteLocale[];
+  private _canCreate: StencilApi.SiteLocale[];
   private _links: StencilComposerApi.LinkView[];
   private _workflows: StencilComposerApi.WorkflowView[];
   private _children: StencilComposerApi.ArticleView[];
   private _displayOrder: number;
   constructor(props: {
-    article: StencilClient.Article;
+    article: StencilApi.Article;
     pages: StencilComposerApi.PageView[];
-    canCreate: StencilClient.SiteLocale[];
+    canCreate: StencilApi.SiteLocale[];
     links: StencilComposerApi.LinkView[];
     workflows: StencilComposerApi.WorkflowView[];
     children: StencilComposerApi.ArticleView[];
@@ -478,45 +478,45 @@ class ImmutableArticleView implements StencilComposerApi.ArticleView {
   }
   get displayOrder(): number { return this._displayOrder };
   get children(): StencilComposerApi.ArticleView[] { return this._children };
-  get article(): StencilClient.Article { return this._article };
+  get article(): StencilApi.Article { return this._article };
   get pages(): StencilComposerApi.PageView[] { return this._pages };
-  get canCreate(): StencilClient.SiteLocale[] { return this._canCreate };
+  get canCreate(): StencilApi.SiteLocale[] { return this._canCreate };
   get links(): StencilComposerApi.LinkView[] { return this._links };
   get workflows(): StencilComposerApi.WorkflowView[] { return this._workflows };
-  getPageById(id: StencilClient.PageId): StencilComposerApi.PageView {
+  getPageById(id: StencilApi.PageId): StencilComposerApi.PageView {
     const found = this._pages.find(p => p.page.id === id);
     if(!found) {
       throw new Error(`No page with page id: {id}!`);
     }
     return found;
   }
-  getPageByLocaleId(id: StencilClient.LocaleId): StencilComposerApi.PageView {
+  getPageByLocaleId(id: StencilApi.LocaleId): StencilComposerApi.PageView {
     const found = this.findPageByLocaleId(id);
     if(!found) {
       throw new Error(`No page with locale id: {id}!`);
     }
     return found;
   }
-  findPageByLocaleId(id: StencilClient.LocaleId): StencilComposerApi.PageView | undefined {
+  findPageByLocaleId(id: StencilApi.LocaleId): StencilComposerApi.PageView | undefined {
     return this._pages.find(p => p.page.body.locale === id);
   }
 }
 
 class ImmutablePageView implements StencilComposerApi.PageView {
-  private _page: StencilClient.Page;
-  private _locale: StencilClient.SiteLocale;
+  private _page: StencilApi.Page;
+  private _locale: StencilApi.SiteLocale;
   private _title: string;
 
   constructor(props: {
-    page: StencilClient.Page;
-    locale: StencilClient.SiteLocale;
+    page: StencilApi.Page;
+    locale: StencilApi.SiteLocale;
   }) {
     this._page = props.page;
     this._locale = props.locale;
     this._title = this.getTitle(props.page);
   }
 
-  private getTitle(page: StencilClient.Page) {
+  private getTitle(page: StencilApi.Page) {
     const heading1 = page.body.content.indexOf("# ");
 
     if (heading1 === -1) {
@@ -537,57 +537,57 @@ class ImmutablePageView implements StencilComposerApi.PageView {
   }
 
   get title(): string { return this._title };
-  get page(): StencilClient.Page { return this._page };
-  get locale(): StencilClient.SiteLocale { return this._locale };
+  get page(): StencilApi.Page { return this._page };
+  get locale(): StencilApi.SiteLocale { return this._locale };
 }
 
 
 class ImmutableLinkView implements StencilComposerApi.LinkView {
-  private _link: StencilClient.Link;
+  private _link: StencilApi.Link;
   private _labels: StencilComposerApi.LabelView[];
 
   constructor(props: {
-    link: StencilClient.Link;
+    link: StencilApi.Link;
     labels: StencilComposerApi.LabelView[];
   }) {
     this._link = props.link;
     this._labels = props.labels;
   }
 
-  get link(): StencilClient.Link { return this._link };
+  get link(): StencilApi.Link { return this._link };
   get labels(): StencilComposerApi.LabelView[] { return this._labels };
 }
 
 class ImmutableWorkflowView implements StencilComposerApi.WorkflowView {
-  private _workflow: StencilClient.Workflow;
+  private _workflow: StencilApi.Workflow;
   private _labels: StencilComposerApi.LabelView[];
 
   constructor(props: {
-    workflow: StencilClient.Workflow;
+    workflow: StencilApi.Workflow;
     labels: StencilComposerApi.LabelView[];
   }) {
     this._workflow = props.workflow;
     this._labels = props.labels;
   }
 
-  get workflow(): StencilClient.Workflow { return this._workflow };
+  get workflow(): StencilApi.Workflow { return this._workflow };
   get labels(): StencilComposerApi.LabelView[] { return this._labels };
 }
 
 class ImmutableLabelView implements StencilComposerApi.LabelView {
-  private _label: StencilClient.LocaleLabel;
-  private _locale: StencilClient.SiteLocale;
+  private _label: StencilApi.LocaleLabel;
+  private _locale: StencilApi.SiteLocale;
 
   constructor(props: {
-    label: StencilClient.LocaleLabel;
-    locale: StencilClient.SiteLocale;
+    label: StencilApi.LocaleLabel;
+    locale: StencilApi.SiteLocale;
   }) {
     this._label = props.label;
     this._locale = props.locale;
   }
 
-  get locale(): StencilClient.SiteLocale { return this._locale };
-  get label(): StencilClient.LocaleLabel { return this._label };
+  get locale(): StencilApi.SiteLocale { return this._locale };
+  get label(): StencilApi.LocaleLabel { return this._label };
 }
 
 
@@ -598,7 +598,7 @@ class ImmutableArticleSearchEntry implements StencilComposerApi.SearchDataEntry 
 
 
   constructor(props: {
-    id: StencilClient.ArticleId;
+    id: StencilApi.ArticleId;
     values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
@@ -628,7 +628,7 @@ class ImmutableLinkSearchEntry implements StencilComposerApi.SearchDataEntry {
 
 
   constructor(props: {
-    id: StencilClient.LinkId;
+    id: StencilApi.LinkId;
     values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
@@ -656,7 +656,7 @@ class ImmutableWorkflowSearchEntry implements StencilComposerApi.SearchDataEntry
   private _values: StencilComposerApi.SearchableValue[];
 
   constructor(props: {
-    id: StencilClient.WorkflowId;
+    id: StencilApi.WorkflowId;
     values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
