@@ -1,7 +1,7 @@
-import Composer from './ide';
+import StencilComposerApi from './ide';
 import StencilClient from '../client';
 
-class ImmutableSearchData implements Composer.SearchData {
+class ImmutableSearchData implements StencilComposerApi.SearchData {
   private _articles: ImmutableArticleSearchEntry[];
   private _links: ImmutableLinkSearchEntry[];
   private _workflows: ImmutableWorkflowSearchEntry[];
@@ -16,12 +16,12 @@ class ImmutableSearchData implements Composer.SearchData {
     this._workflows = workflows;
   }
 
-  get values(): Composer.SearchDataEntry[] {
+  get values(): StencilComposerApi.SearchDataEntry[] {
     return [...this._articles, ...this._links, ...this._workflows];
   }
 
-  filterArticles(keyword: string): Composer.SearchResult[] {
-    const results: Composer.SearchResult[] = [];
+  filterArticles(keyword: string): StencilComposerApi.SearchResult[] {
+    const results: StencilComposerApi.SearchResult[] = [];
     const keywordLowerCase = keyword.toLowerCase();
     for (const article of this._articles) {
       const match = this.findMatch(article, keywordLowerCase);
@@ -31,8 +31,8 @@ class ImmutableSearchData implements Composer.SearchData {
     }
     return results;
   }
-  filterWorkflows(keyword: string): Composer.SearchResult[] {
-    const results: Composer.SearchResult[] = [];
+  filterWorkflows(keyword: string): StencilComposerApi.SearchResult[] {
+    const results: StencilComposerApi.SearchResult[] = [];
     const keywordLowerCase = keyword.toLowerCase();
     for (const workflow of this._workflows) {
       const match = this.findMatch(workflow, keywordLowerCase);
@@ -42,8 +42,8 @@ class ImmutableSearchData implements Composer.SearchData {
     }
     return results;
   }
-  filterLinks(keyword: string): Composer.SearchResult[] {
-    const results: Composer.SearchResult[] = [];
+  filterLinks(keyword: string): StencilComposerApi.SearchResult[] {
+    const results: StencilComposerApi.SearchResult[] = [];
     const keywordLowerCase = keyword.toLowerCase();
     for (const link of this._links) {
       const match = this.findMatch(link, keywordLowerCase);
@@ -54,9 +54,9 @@ class ImmutableSearchData implements Composer.SearchData {
     return results;
   }
 
-  findMatch(source: Composer.SearchDataEntry, keyword: string): Composer.SearchResult | undefined {
+  findMatch(source: StencilComposerApi.SearchDataEntry, keyword: string): StencilComposerApi.SearchResult | undefined {
 
-    let matches: Composer.SearchableValue[] = []
+    let matches: StencilComposerApi.SearchableValue[] = []
     for (const searchableValue of source.values) {
       if (searchableValue.value.toLowerCase().indexOf(keyword) > -1) {
         matches.push(searchableValue);
@@ -72,16 +72,16 @@ class SiteCache {
   private _articleSearchData: Record<StencilClient.ArticleId, ImmutableArticleSearchEntry> = {};
   private _linkSearchData: Record<StencilClient.ArticleId, ImmutableLinkSearchEntry> = {};
   private _workflowSearchData: Record<StencilClient.ArticleId, ImmutableWorkflowSearchEntry> = {};
-  private _searchData: Composer.SearchData;
+  private _searchData: StencilComposerApi.SearchData;
 
   private _site: StencilClient.Site;
-  private _articles: Record<StencilClient.ArticleId, Composer.ArticleView> = {};
-  private _workflows: Record<StencilClient.WorkflowId, Composer.WorkflowView> = {};
-  private _links: Record<StencilClient.LinkId, Composer.LinkView> = {};
+  private _articles: Record<StencilClient.ArticleId, StencilComposerApi.ArticleView> = {};
+  private _workflows: Record<StencilClient.WorkflowId, StencilComposerApi.WorkflowView> = {};
+  private _links: Record<StencilClient.LinkId, StencilComposerApi.LinkView> = {};
 
-  private _pagesByArticle: Record<StencilClient.ArticleId, Composer.PageView[]> = {};
-  private _linksByArticle: Record<StencilClient.ArticleId, Composer.LinkView[]> = {};
-  private _workflowsByArticle: Record<StencilClient.ArticleId, Composer.WorkflowView[]> = {};
+  private _pagesByArticle: Record<StencilClient.ArticleId, StencilComposerApi.PageView[]> = {};
+  private _linksByArticle: Record<StencilClient.ArticleId, StencilComposerApi.LinkView[]> = {};
+  private _workflowsByArticle: Record<StencilClient.ArticleId, StencilComposerApi.WorkflowView[]> = {};
 
   constructor(site: StencilClient.Site) {
     this._site = site;
@@ -192,12 +192,12 @@ class SiteCache {
   private visitArticle(article: StencilClient.Article) {
     const articleId = article.id;
     const site = this._site;
-    const pages: Composer.PageView[] = Object.values(site.pages)
+    const pages: StencilComposerApi.PageView[] = Object.values(site.pages)
       .filter(page => articleId === page.body.article)
       .map(page => new ImmutablePageView({ page, locale: site.locales[page.body.locale] }));
 
-    const links: Composer.LinkView[] = this.empty(this._linksByArticle[articleId]);
-    const workflows: Composer.WorkflowView[] = this.empty(this._workflowsByArticle[articleId]);
+    const links: StencilComposerApi.LinkView[] = this.empty(this._linksByArticle[articleId]);
+    const workflows: StencilComposerApi.WorkflowView[] = this.empty(this._workflowsByArticle[articleId]);
 
     const canCreate: StencilClient.SiteLocale[] = Object.values(site.locales).filter(locale => pages.filter(p => p.page.body.locale === locale.id).length === 0);
     const view = new ImmutableArticleView({
@@ -241,7 +241,7 @@ class SiteCache {
 }
 
 
-class ImmutableSessionFilter implements Composer.SessionFilter {
+class ImmutableSessionFilter implements StencilComposerApi.SessionFilter {
   private _locale?: string;
 
   constructor(props: {
@@ -258,17 +258,17 @@ class ImmutableSessionFilter implements Composer.SessionFilter {
   }
 }
 
-class SessionData implements Composer.Session {
+class SessionData implements StencilComposerApi.Session {
   private _site: StencilClient.Site;
-  private _pages: Record<StencilClient.PageId, Composer.PageUpdate>;
+  private _pages: Record<StencilClient.PageId, StencilComposerApi.PageUpdate>;
   private _cache: SiteCache;
-  private _filter: Composer.SessionFilter;
+  private _filter: StencilComposerApi.SessionFilter;
 
   constructor(props: {
     site?: StencilClient.Site,
-    pages?: Record<StencilClient.PageId, Composer.PageUpdate>,
+    pages?: Record<StencilClient.PageId, StencilComposerApi.PageUpdate>,
     cache?: SiteCache;
-    filter?: Composer.SessionFilter;
+    filter?: StencilComposerApi.SessionFilter;
   }) {
     this._filter = props.filter ? props.filter : new ImmutableSessionFilter({});
     this._site = props.site ? props.site : { name: "", contentType: "OK", releases: {}, articles: {}, links: {}, locales: {}, pages: {}, workflows: {}, templates: {} };
@@ -351,13 +351,13 @@ class SessionData implements Composer.Session {
     }
     return { missing: false, name: linkName };
   }
-  getArticleView(articleId: StencilClient.ArticleId): Composer.ArticleView {
+  getArticleView(articleId: StencilClient.ArticleId): StencilComposerApi.ArticleView {
     return this._cache.getArticles()[articleId];
   }
-  getWorkflowView(workflowId: StencilClient.WorkflowId): Composer.WorkflowView {
+  getWorkflowView(workflowId: StencilClient.WorkflowId): StencilComposerApi.WorkflowView {
     return this._cache.getWorkflows()[workflowId];
   }
-  getLinkView(linkId: StencilClient.LinkId): Composer.LinkView {
+  getLinkView(linkId: StencilClient.LinkId): StencilComposerApi.LinkView {
     return this._cache.getLinks()[linkId];
   }
 
@@ -387,8 +387,8 @@ class SessionData implements Composer.Session {
   withSite(site: StencilClient.Site) {
     return new SessionData({ site: site, pages: this._pages, filter: this._filter });
   }
-  withoutPages(pageIds: StencilClient.PageId[]): Composer.Session {
-    const pages: Record<string, Composer.PageUpdate> = {};
+  withoutPages(pageIds: StencilClient.PageId[]): StencilComposerApi.Session {
+    const pages: Record<string, StencilComposerApi.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
         continue;
@@ -397,7 +397,7 @@ class SessionData implements Composer.Session {
     }
     return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
   }
-  withPage(page: StencilClient.PageId): Composer.Session {
+  withPage(page: StencilClient.PageId): StencilComposerApi.Session {
     if (this._pages[page]) {
       return this;
     }
@@ -406,7 +406,7 @@ class SessionData implements Composer.Session {
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: origin.body.content });
     return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
   }
-  withPageValue(page: StencilClient.PageId, value: StencilClient.LocalisedContent): Composer.Session {
+  withPageValue(page: StencilClient.PageId, value: StencilClient.LocalisedContent): StencilComposerApi.Session {
     const session = this.withPage(page);
     const pageUpdate = session.pages[page];
 
@@ -421,7 +421,7 @@ class SessionData implements Composer.Session {
   }
 }
 
-class ImmutablePageUpdate implements Composer.PageUpdate {
+class ImmutablePageUpdate implements StencilComposerApi.PageUpdate {
   private _saved: boolean;
   private _origin: StencilClient.Page;
   private _value: StencilClient.LocalisedContent;
@@ -445,46 +445,27 @@ class ImmutablePageUpdate implements Composer.PageUpdate {
   get value() {
     return this._value;
   }
-  withValue(value: StencilClient.LocalisedContent): Composer.PageUpdate {
+  withValue(value: StencilClient.LocalisedContent): StencilComposerApi.PageUpdate {
     return new ImmutablePageUpdate({ saved: false, origin: this._origin, value });
   }
 }
 
-class ImmutableTabData implements Composer.TabData {
-  private _nav: Composer.Nav;
 
-  constructor(props: { nav: Composer.Nav }) {
-    this._nav = props.nav;
-  }
-  get nav() {
-    return this._nav;
-  }
-  withNav(nav: Composer.Nav) {
-    return new ImmutableTabData({
-      nav: {
-        type: nav.type,
-        value: nav.value === undefined ? this._nav.value : nav.value,
-        value2: nav.value2 === undefined ? this._nav.value2 : nav.value2
-      }
-    });
-  }
-}
-
-class ImmutableArticleView implements Composer.ArticleView {
+class ImmutableArticleView implements StencilComposerApi.ArticleView {
   private _article: StencilClient.Article;
-  private _pages: Composer.PageView[];
+  private _pages: StencilComposerApi.PageView[];
   private _canCreate: StencilClient.SiteLocale[];
-  private _links: Composer.LinkView[];
-  private _workflows: Composer.WorkflowView[];
-  private _children: Composer.ArticleView[];
+  private _links: StencilComposerApi.LinkView[];
+  private _workflows: StencilComposerApi.WorkflowView[];
+  private _children: StencilComposerApi.ArticleView[];
   private _displayOrder: number;
   constructor(props: {
     article: StencilClient.Article;
-    pages: Composer.PageView[];
+    pages: StencilComposerApi.PageView[];
     canCreate: StencilClient.SiteLocale[];
-    links: Composer.LinkView[];
-    workflows: Composer.WorkflowView[];
-    children: Composer.ArticleView[];
+    links: StencilComposerApi.LinkView[];
+    workflows: StencilComposerApi.WorkflowView[];
+    children: StencilComposerApi.ArticleView[];
     displayOrder: number;
   }) {
     this._article = props.article;
@@ -496,32 +477,32 @@ class ImmutableArticleView implements Composer.ArticleView {
     this._displayOrder = props.displayOrder;
   }
   get displayOrder(): number { return this._displayOrder };
-  get children(): Composer.ArticleView[] { return this._children };
+  get children(): StencilComposerApi.ArticleView[] { return this._children };
   get article(): StencilClient.Article { return this._article };
-  get pages(): Composer.PageView[] { return this._pages };
+  get pages(): StencilComposerApi.PageView[] { return this._pages };
   get canCreate(): StencilClient.SiteLocale[] { return this._canCreate };
-  get links(): Composer.LinkView[] { return this._links };
-  get workflows(): Composer.WorkflowView[] { return this._workflows };
-  getPageById(id: StencilClient.PageId): Composer.PageView {
+  get links(): StencilComposerApi.LinkView[] { return this._links };
+  get workflows(): StencilComposerApi.WorkflowView[] { return this._workflows };
+  getPageById(id: StencilClient.PageId): StencilComposerApi.PageView {
     const found = this._pages.find(p => p.page.id === id);
     if(!found) {
       throw new Error(`No page with page id: {id}!`);
     }
     return found;
   }
-  getPageByLocaleId(id: StencilClient.LocaleId): Composer.PageView {
+  getPageByLocaleId(id: StencilClient.LocaleId): StencilComposerApi.PageView {
     const found = this.findPageByLocaleId(id);
     if(!found) {
       throw new Error(`No page with locale id: {id}!`);
     }
     return found;
   }
-  findPageByLocaleId(id: StencilClient.LocaleId): Composer.PageView | undefined {
+  findPageByLocaleId(id: StencilClient.LocaleId): StencilComposerApi.PageView | undefined {
     return this._pages.find(p => p.page.body.locale === id);
   }
 }
 
-class ImmutablePageView implements Composer.PageView {
+class ImmutablePageView implements StencilComposerApi.PageView {
   private _page: StencilClient.Page;
   private _locale: StencilClient.SiteLocale;
   private _title: string;
@@ -561,39 +542,39 @@ class ImmutablePageView implements Composer.PageView {
 }
 
 
-class ImmutableLinkView implements Composer.LinkView {
+class ImmutableLinkView implements StencilComposerApi.LinkView {
   private _link: StencilClient.Link;
-  private _labels: Composer.LabelView[];
+  private _labels: StencilComposerApi.LabelView[];
 
   constructor(props: {
     link: StencilClient.Link;
-    labels: Composer.LabelView[];
+    labels: StencilComposerApi.LabelView[];
   }) {
     this._link = props.link;
     this._labels = props.labels;
   }
 
   get link(): StencilClient.Link { return this._link };
-  get labels(): Composer.LabelView[] { return this._labels };
+  get labels(): StencilComposerApi.LabelView[] { return this._labels };
 }
 
-class ImmutableWorkflowView implements Composer.WorkflowView {
+class ImmutableWorkflowView implements StencilComposerApi.WorkflowView {
   private _workflow: StencilClient.Workflow;
-  private _labels: Composer.LabelView[];
+  private _labels: StencilComposerApi.LabelView[];
 
   constructor(props: {
     workflow: StencilClient.Workflow;
-    labels: Composer.LabelView[];
+    labels: StencilComposerApi.LabelView[];
   }) {
     this._workflow = props.workflow;
     this._labels = props.labels;
   }
 
   get workflow(): StencilClient.Workflow { return this._workflow };
-  get labels(): Composer.LabelView[] { return this._labels };
+  get labels(): StencilComposerApi.LabelView[] { return this._labels };
 }
 
-class ImmutableLabelView implements Composer.LabelView {
+class ImmutableLabelView implements StencilComposerApi.LabelView {
   private _label: StencilClient.LocaleLabel;
   private _locale: StencilClient.SiteLocale;
 
@@ -611,14 +592,14 @@ class ImmutableLabelView implements Composer.LabelView {
 
 
 
-class ImmutableArticleSearchEntry implements Composer.SearchDataEntry {
+class ImmutableArticleSearchEntry implements StencilComposerApi.SearchDataEntry {
   private _id: string;
-  private _values: Composer.SearchableValue[];
+  private _values: StencilComposerApi.SearchableValue[];
 
 
   constructor(props: {
     id: StencilClient.ArticleId;
-    values: Composer.SearchableValue[];
+    values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
     this._values = props.values;
@@ -628,27 +609,27 @@ class ImmutableArticleSearchEntry implements Composer.SearchDataEntry {
   get values() { return this._values }
   get type(): "ARTICLE" { return "ARTICLE" };
 
-  withPage(view: Composer.PageView): ImmutableArticleSearchEntry {
-    const values: Composer.SearchableValue[] = [...this.values];
+  withPage(view: StencilComposerApi.PageView): ImmutableArticleSearchEntry {
+    const values: StencilComposerApi.SearchableValue[] = [...this.values];
     values.push({ type: "ARTICLE_PAGE", value: view.page.body.content, id: view.page.id });
     return new ImmutableArticleSearchEntry({ id: this._id, values });
   }
 
-  withArticle(view: Composer.ArticleView): ImmutableArticleSearchEntry {
-    const values: Composer.SearchableValue[] = [...this.values];
+  withArticle(view: StencilComposerApi.ArticleView): ImmutableArticleSearchEntry {
+    const values: StencilComposerApi.SearchableValue[] = [...this.values];
     values.push({ type: "ARTICLE_NAME", value: view.article.body.name, id: view.article.id });
     return new ImmutableArticleSearchEntry({ id: this._id, values });
   }
 }
 
-class ImmutableLinkSearchEntry implements Composer.SearchDataEntry {
+class ImmutableLinkSearchEntry implements StencilComposerApi.SearchDataEntry {
   private _id: string;
-  private _values: Composer.SearchableValue[];
+  private _values: StencilComposerApi.SearchableValue[];
 
 
   constructor(props: {
     id: StencilClient.LinkId;
-    values: Composer.SearchableValue[];
+    values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
     this._values = props.values;
@@ -657,8 +638,8 @@ class ImmutableLinkSearchEntry implements Composer.SearchDataEntry {
   get values() { return this._values }
   get type(): "LINK" { return "LINK" };
 
-  withLink(view: Composer.LinkView): ImmutableLinkSearchEntry {
-    const values: Composer.SearchableValue[] = [...this.values];
+  withLink(view: StencilComposerApi.LinkView): ImmutableLinkSearchEntry {
+    const values: StencilComposerApi.SearchableValue[] = [...this.values];
     values.push({ type: "LINK_VALUE", value: view.link.body.value, id: view.link.id });
 
     for (const label of view.labels) {
@@ -670,13 +651,13 @@ class ImmutableLinkSearchEntry implements Composer.SearchDataEntry {
 
 
 
-class ImmutableWorkflowSearchEntry implements Composer.SearchDataEntry {
+class ImmutableWorkflowSearchEntry implements StencilComposerApi.SearchDataEntry {
   private _id: string;
-  private _values: Composer.SearchableValue[];
+  private _values: StencilComposerApi.SearchableValue[];
 
   constructor(props: {
     id: StencilClient.WorkflowId;
-    values: Composer.SearchableValue[];
+    values: StencilComposerApi.SearchableValue[];
   }) {
     this._id = props.id;
     this._values = props.values;
@@ -685,8 +666,8 @@ class ImmutableWorkflowSearchEntry implements Composer.SearchDataEntry {
   get values() { return this._values }
   get type(): "WORKFLOW" { return "WORKFLOW" };
 
-  withWorkflow(view: Composer.WorkflowView): ImmutableWorkflowSearchEntry {
-    const values: Composer.SearchableValue[] = [...this.values];
+  withWorkflow(view: StencilComposerApi.WorkflowView): ImmutableWorkflowSearchEntry {
+    const values: StencilComposerApi.SearchableValue[] = [...this.values];
     values.push({ type: "WORKFLOW_NAME", value: view.workflow.body.value, id: view.workflow.id });
 
     for (const label of view.labels) {
@@ -700,4 +681,4 @@ class ImmutableWorkflowSearchEntry implements Composer.SearchDataEntry {
 }
 
 
-export { SessionData, ImmutableTabData, SiteCache };
+export { SessionData, SiteCache };

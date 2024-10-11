@@ -5,7 +5,7 @@ import * as Burger from '@/burger';
 import { BurgerApi } from '@/burger';
 import { StencilClient } from '../';
 import { ReducerDispatch, Reducer } from './Reducer';
-import { SessionData, ImmutableTabData } from './SessionData';
+import { SessionData } from './SessionData';
 
 declare namespace StencilComposerApi {
 
@@ -145,6 +145,25 @@ declare namespace StencilComposerApi {
 
 namespace StencilComposerApi {
   const sessionData = new SessionData({});
+  export class ImmutableTabData implements TabData {
+    private _nav: Nav;
+  
+    constructor(props: { nav: Nav }) {
+      this._nav = props.nav;
+    }
+    get nav() {
+      return this._nav;
+    }
+    withNav(nav: Nav) {
+      return new ImmutableTabData({
+        nav: {
+          type: nav.type,
+          value: nav.value === undefined ? this._nav.value : nav.value,
+          value2: nav.value2 === undefined ? this._nav.value2 : nav.value2
+        }
+      });
+    }
+  }
 
   export const createTab = (props: { nav: Nav, page?: StencilClient.Page }) => new ImmutableTabData(props);
 
