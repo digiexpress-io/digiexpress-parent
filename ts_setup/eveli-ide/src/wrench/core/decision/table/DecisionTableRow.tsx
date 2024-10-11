@@ -2,7 +2,7 @@ import React from 'react';
 
 import { TableCell, TableRow } from '@mui/material';
 
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 const DecisionTableRow: React.FC<{

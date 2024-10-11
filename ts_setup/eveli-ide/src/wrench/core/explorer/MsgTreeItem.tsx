@@ -2,13 +2,13 @@ import React from 'react';
 import { DialogContentText } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { Client } from '../context';
+import { HdesApi } from '../client';
 
 
 
 const MsgTreeItem: React.FC<{
   nodeId: string;
-  msg: Client.ProgramMessage;
+  msg: HdesApi.ProgramMessage;
   error?: boolean;
   children: React.ReactNode
 }> = (props) => {

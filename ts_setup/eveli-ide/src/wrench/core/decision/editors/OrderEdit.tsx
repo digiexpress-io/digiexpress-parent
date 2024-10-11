@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { ListItemText, InputLabel } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN";

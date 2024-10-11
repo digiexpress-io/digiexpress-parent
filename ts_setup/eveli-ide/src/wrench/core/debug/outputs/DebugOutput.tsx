@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 import { DebugOutputCsv } from './DebugOutputCsv';
 import { DebugOutputsDt } from './DebugOutputsDt';
 import { DebugOutputsFl } from './DebugOutputsFl';

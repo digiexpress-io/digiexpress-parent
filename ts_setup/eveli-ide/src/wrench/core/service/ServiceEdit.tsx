@@ -2,10 +2,10 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import CodeEditor from '../../code-editor';
-import { Client, Composer } from '../context';
+import { Composer } from '../context';
+import { HdesApi } from '../client';
 
-
-const ServiceEdit: React.FC<{service: Client.Entity<Client.AstService>}> = ({service}) => {
+const ServiceEdit: React.FC<{service: HdesApi.Entity<HdesApi.AstService>}> = ({service}) => {
   const { actions, session } = Composer.useComposer();
 
   const handleChange = (value: string | undefined) => {

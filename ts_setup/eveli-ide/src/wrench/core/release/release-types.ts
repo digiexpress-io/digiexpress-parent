@@ -1,4 +1,4 @@
-import { Client } from "../context";
+import { HdesApi } from '../client';
 
 export interface Release {
   id: string;
@@ -13,5 +13,5 @@ export interface Release {
 
 export interface ReleaseBranch {
   id: string;
-  branch: Client.AstBranch;
+  branch: HdesApi.AstBranch;
 }

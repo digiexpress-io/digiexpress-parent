@@ -11,7 +11,8 @@ import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
 
-import { Composer, Client } from '../../context';
+import { Composer,  } from '../../context';
+import { HdesApi } from '../../client';
 import DecisionOptions from './DecisionOptions';
 
 
@@ -40,7 +41,7 @@ function FlowItem(props: {
   );
 }
 
-const DecisionItem: React.FC<{ decisionId: Client.DecisionId }> = ({ decisionId }) => {
+const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId }) => {
 
   const { session, isArticleSaved } = Composer.useComposer();
   const nav = Composer.useNav();
@@ -51,7 +52,7 @@ const DecisionItem: React.FC<{ decisionId: Client.DecisionId }> = ({ decisionId 
   const saved = isArticleSaved(decision);
   const decisionName = decision.ast ? decision.ast.name : decision.id;
 
-  const flows: Client.Entity<Client.AstFlow>[] = [];
+  const flows: HdesApi.Entity<HdesApi.AstFlow>[] = [];
 
   return (
     <Burger.TreeItem nodeId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>

@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 import CodeEditor from '../../../code-editor';
 import { toYaml } from './utils'

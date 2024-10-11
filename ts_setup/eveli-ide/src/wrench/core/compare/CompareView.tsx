@@ -1,7 +1,8 @@
 import React from "react";
 
 import { FormattedMessage } from "react-intl";
-import { Composer, Client } from "../context";
+import { Composer } from "../context";
+import { HdesApi } from "../client";
 import { Box, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as Burger from '@/burger';
@@ -13,10 +14,10 @@ import { OutputFormatType } from "diff2html/lib/types";
 interface CompareDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  diff?: Client.DiffResponse;
+  diff?: HdesApi.DiffResponse;
 }
 
-const AssetMapper: React.FC<{ assets?: Client.AstTagSummary }> = ({ assets }) => {
+const AssetMapper: React.FC<{ assets?: HdesApi.AstTagSummary }> = ({ assets }) => {
   if (!assets) {
     return null;
   }
@@ -111,11 +112,11 @@ const CompareView: React.FC = () => {
   const layout = Burger.useTabs();
   const [base, setBase] = React.useState<string>("");
   const [target, setTarget] = React.useState<string>("");
-  const [baseSummary, setBaseSummary] = React.useState<Client.AstTagSummary>();
-  const [targetSummary, setTargetSummary] = React.useState<Client.AstTagSummary>();
+  const [baseSummary, setBaseSummary] = React.useState<HdesApi.AstTagSummary>();
+  const [targetSummary, setTargetSummary] = React.useState<HdesApi.AstTagSummary>();
   const [disabled, setDisabled] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState<boolean>(false);
-  const [diff, setDiff] = React.useState<Client.DiffResponse>();
+  const [diff, setDiff] = React.useState<HdesApi.DiffResponse>();
 
   React.useEffect(() => {
     if (base) {

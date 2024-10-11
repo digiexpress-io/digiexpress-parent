@@ -14,7 +14,8 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import MsgTreeItem from '../MsgTreeItem';
-import { Composer, Client } from '../../context';
+import { Composer } from '../../context';
+import { HdesApi as Client } from '../../client';
 import ServiceOptions from './ServiceOptions';
 
 

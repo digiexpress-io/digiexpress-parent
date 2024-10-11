@@ -1,6 +1,6 @@
 import React from 'react';
 import { DebugOutputCsvRow } from './DebugOutputCsvRow';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 const mapCsvRows = (debug: string): Client.CsvRow[] => {
     if (!debug) {

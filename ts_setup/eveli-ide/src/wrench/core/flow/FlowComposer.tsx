@@ -6,7 +6,8 @@ import * as Burger from '@/burger';
 
 import { useSnackbar } from 'notistack';
 
-import { Composer, Client } from '../context';
+import { Composer } from '../context';
+import { HdesApi as Client } from '../client';
 import { ErrorView } from '../styles';
 
 

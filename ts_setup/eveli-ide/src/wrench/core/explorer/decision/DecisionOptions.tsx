@@ -9,16 +9,17 @@ import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
 
-import { Composer, Client } from '../../context';
+import { Composer } from '../../context';
+import { HdesApi } from '../../client';
 import { ErrorView } from '../../styles';
 
 
-const DecisionDelete: React.FC<{ decisionId: Client.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
+const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
   const { decisions } = Composer.useSite();
   const { service, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
   const tabs = Burger.useTabs();
 
   const decision = decisions[decisionId];
@@ -58,7 +59,7 @@ const DecisionDelete: React.FC<{ decisionId: Client.DecisionId, onClose: () => v
             actions.handleLoadSite(data);
             onClose();
           })
-          .catch((error: Client.StoreError) => {
+          .catch((error: HdesApi.StoreError) => {
             setErrors(error);
           });
       }
@@ -67,7 +68,7 @@ const DecisionDelete: React.FC<{ decisionId: Client.DecisionId, onClose: () => v
 }
 
 
-const DecisionOptions: React.FC<{ decision: Client.Entity<Client.AstDecision> }> = ({ decision }) => {
+const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'DecisionDelete' | 'DecisionCopy'>(undefined);
   const nav = Composer.useNav();
   const {handleDebugInit} = Composer.useDebug();
@@ -76,7 +77,7 @@ const DecisionOptions: React.FC<{ decision: Client.Entity<Client.AstDecision> }>
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState(decision.ast?.name + "_copy");
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   const handleCopy = () => {
     setErrors(undefined);
@@ -90,7 +91,7 @@ const DecisionOptions: React.FC<{ decision: Client.Entity<Client.AstDecision> }>
           nav.handleInTab({ article })
         });
         handleDialogClose();
-      }).catch((error: Client.StoreError) => {
+      }).catch((error: HdesApi.StoreError) => {
         setErrors(error);
       });
   }

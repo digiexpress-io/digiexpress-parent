@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, TableCell, Typography, useTheme, lighten, alpha, darken } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 const DecisionTableCell: React.FC<{

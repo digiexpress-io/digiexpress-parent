@@ -1,7 +1,7 @@
 import React from 'react';
 
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 import Builder, { 
   EditBoolean,

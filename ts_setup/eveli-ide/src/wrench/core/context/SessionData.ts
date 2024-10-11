@@ -1,5 +1,5 @@
 import Composer from './ide';
-import Client, {HdesApi} from '../client';
+import { HdesApi } from '../client';
 
 class SiteCache {
   private _site: HdesApi.Site;

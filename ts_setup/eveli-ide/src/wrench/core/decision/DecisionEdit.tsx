@@ -12,7 +12,8 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Client, Composer } from '../context';
+import { Composer } from '../context';
+import { HdesApi } from '../client';
 import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
 import fileDownload from 'js-file-download'
 
@@ -21,23 +22,23 @@ import Decision from './table';
 
 
 interface EditMode {
-  cell?: Client.AstDecisionCell,
-  header?: Client.TypeDef,
+  cell?: HdesApi.AstDecisionCell,
+  header?: HdesApi.TypeDef,
   meta?: boolean,
   upload?: boolean,
   rowsColumns?: boolean,
   options?: boolean
 }
 
-const saveCsv = (decision: Client.AstDecision) => {
-  const accepts: Client.TypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
-  const returns: Client.TypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
+const saveCsv = (decision: HdesApi.AstDecision) => {
+  const accepts: HdesApi.TypeDef[] = [...decision.headers.acceptDefs].sort((a, b) => a.order - b.order);
+  const returns: HdesApi.TypeDef[] = [...decision.headers.returnDefs].sort((a, b) => a.order - b.order);
   const rows = decision.rows.sort((a, b) => a.order - b.order);
-  const headers: Client.TypeDef[] = [...accepts, ...returns];
+  const headers: HdesApi.TypeDef[] = [...accepts, ...returns];
 
   const line0 = headers.map(h => h.name).join(";");
   const lines = rows.map(row => {
-    const cells: Record<string, Client.AstDecisionCell> = {};
+    const cells: Record<string, HdesApi.AstDecisionCell> = {};
     row.cells.forEach(e => cells[e.header] = e);
     return headers
       .map(header => cells[header.id])
@@ -72,17 +73,17 @@ const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   </>
 }
 
-const DecisionEdit: React.FC<{ decision: Client.Entity<Client.AstDecision> }> = ({ decision }) => {
+const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const { service, actions, session } = Composer.useComposer();
   const update = session.pages[decision.id];
 
   const commands = React.useMemo(() => update ? update.value : decision.source.commands, [decision, update]);
-  const [ast, setAst] = React.useState<Client.AstDecision | undefined>();
+  const [ast, setAst] = React.useState<HdesApi.AstDecision | undefined>();
   const [edit, setEdit] = React.useState<EditMode | undefined>();
   const intl = useIntl(); 
 
 
-  const onChange = (newCommands: Client.AstCommand[]) => {
+  const onChange = (newCommands: HdesApi.AstCommand[]) => {
     actions.handlePageUpdate(decision.id, [...commands, ...newCommands])
   }
 

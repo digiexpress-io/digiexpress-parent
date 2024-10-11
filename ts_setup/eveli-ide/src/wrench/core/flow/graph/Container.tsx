@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 
 import Vis from '../../../vis';
 import GraphAPI from './GraphAPI';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 const options = {

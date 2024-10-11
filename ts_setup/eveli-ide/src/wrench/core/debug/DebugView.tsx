@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { Client, Composer } from '../context';
-
+import { Composer } from '../context';
+import { HdesApi } from '../client';
 import { DebugDrawer } from './drawer/DebugDrawer';
 import { SelectAsset } from './drawer/SelectAsset';
 import { InputCSV } from './drawer/InputCSV';
@@ -19,8 +19,8 @@ import { useIntl } from 'react-intl';
 
 
 const getData = (session: Composer.Session): {
-  ast?: Client.AstBody;
-  entity?: Client.Entity<Client.AstBody>
+  ast?: HdesApi.AstBody;
+  entity?: HdesApi.Entity<HdesApi.AstBody>
   debug?: Composer.DebugSession;
   debugValues: string
 } => {
@@ -63,7 +63,7 @@ const DebugView: React.FC<{}> = ({ }) => {
   const handleJson = (input: object) => {
     actions.handleDebugUpdate({ inputType: "JSON", csv, selected, debug: response, error, json: JSON.stringify(input) })
   }
-  const handleSelectAsset = (selected: Client.Entity<Client.AstBody>) => {
+  const handleSelectAsset = (selected: HdesApi.Entity<HdesApi.AstBody>) => {
     if (session.debug.selected && session.debug.selected !== selected.id) {
       const previous = session.debug.values[selected.id];
       if (previous) {

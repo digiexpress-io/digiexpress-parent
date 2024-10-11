@@ -6,9 +6,9 @@ import * as Burger from '@/burger';
 
 import { useSnackbar } from 'notistack';
 
-import { Composer, Client } from '../context';
+import { Composer } from '../context';
 import { ErrorView } from '../styles';
-
+import { HdesApi } from '../client';
 
 
 const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -19,7 +19,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [name, setName] = React.useState("");
   const [desc, setDesc] = React.useState("");
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   const handleCreate = () => {
     setErrors(undefined);
@@ -35,7 +35,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         onClose();
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: HdesApi.StoreError) => {
         setErrors(error);
       });
   }

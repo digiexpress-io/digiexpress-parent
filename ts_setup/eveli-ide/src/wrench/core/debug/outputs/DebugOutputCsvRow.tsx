@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 import CodeEditor from '../../../code-editor';
 import { toYaml } from './utils';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 const DebugOutputCsvRow: React.FC<{ csvRow: Client.CsvRow, index: string }> = ({ csvRow, index }) => {
     const [open, setOpen] = React.useState(false);

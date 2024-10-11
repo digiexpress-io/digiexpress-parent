@@ -3,7 +3,7 @@ import React from 'react'
 import { ListItemText } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 const hitPolicyOptions = [
   { key: 'ALL', value: 'ALL', text: 'ALL' },

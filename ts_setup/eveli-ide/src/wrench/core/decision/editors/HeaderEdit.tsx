@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Grid, ListItemText } from '@mui/material';
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 import { useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';
 

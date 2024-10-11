@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
 
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 interface RenderCellProps {

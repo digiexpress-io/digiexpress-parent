@@ -6,9 +6,9 @@ import * as Burger from '@/burger';
 
 import { useSnackbar } from 'notistack';
 
-import { Composer, Client } from '../context';
+import { Composer } from '../context';
 import { ErrorView } from '../styles';
-
+import { HdesApi} from '../client';
 
 const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { service, actions } = Composer.useComposer();
@@ -17,7 +17,7 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState("");
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   const handleCreate = () => {
     setErrors(undefined);
@@ -33,7 +33,7 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         onClose();
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: HdesApi.StoreError) => {
         setErrors(error);
       });
   }

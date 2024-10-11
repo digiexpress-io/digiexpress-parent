@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Divider, IconButton, Tooltip } from '@mui/material';
 
 import CodeEditor, { HintProps } from '../../code-editor';
-import { Client, Composer } from '../context';
+import { Composer } from '../context';
+import { HdesApi as Client } from '../client';
 import Graph from './graph';
 import { AutocompleteVisitor, FlowAstAutocomplete, AutocompleteTask } from './autocomplete';
 import { Visibility, VisibilityOff } from '@mui/icons-material';

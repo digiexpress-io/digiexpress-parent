@@ -5,12 +5,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 
-import { Client } from '../context';
+import { HdesApi } from '../client';
 
 import CodeEditor from '../../code-editor';
 import { toYaml } from './outputs/utils'
 
-const DebugError: React.FC<{ error: Client.StoreError }> = ({ error }) => {
+const DebugError: React.FC<{ error: HdesApi.StoreError }> = ({ error }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   return (<>

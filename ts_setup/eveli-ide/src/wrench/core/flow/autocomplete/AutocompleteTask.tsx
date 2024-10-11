@@ -5,7 +5,8 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
 
-import { Client, Composer } from '../../context';
+import { Composer } from '../../context';
+import { HdesApi as Client } from '../../client';
 import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';
 
 

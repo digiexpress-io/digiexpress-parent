@@ -1,16 +1,16 @@
 import React from "react";
 import { ListItemText } from "@mui/material";
 import * as Burger from '@/burger';
-import { Client } from "../../context";
+import { HdesApi } from '../../client';
 import { FormattedMessage } from "react-intl";
 
 interface InputFORMFieldProps {
-  typeDef: Client.TypeDef;
+  typeDef: HdesApi.TypeDef;
   value: string;
-  onChange: (newValue: string, typeDef: Client.TypeDef) => void;
+  onChange: (newValue: string, typeDef: HdesApi.TypeDef) => void;
 }
 
-const validateNumberRange = (typeDef: Client.TypeDef, value: string) => {
+const validateNumberRange = (typeDef: HdesApi.TypeDef, value: string) => {
   if (typeDef.values) {
     const [min, max] = typeDef.values.split(" - ");
     if (Number(value) < Number(min) || Number(value) > Number(max)) {
@@ -21,7 +21,7 @@ const validateNumberRange = (typeDef: Client.TypeDef, value: string) => {
   }
 }
 
-const validateNumberType = (typeDef: Client.TypeDef, value: string) => {
+const validateNumberType = (typeDef: HdesApi.TypeDef, value: string) => {
   if (typeDef.valueType === "INTEGER") {
     if (!Number.isInteger(Number(value))) {
       return "debug.input.form.invalid.integer";

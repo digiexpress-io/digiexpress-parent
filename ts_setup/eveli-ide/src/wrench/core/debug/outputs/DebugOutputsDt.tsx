@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { FormattedMessage } from 'react-intl';
 import CodeEditor from '../../../code-editor';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 import { toYaml } from './utils'
 
 type Rule = {

@@ -4,18 +4,18 @@ import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import * as Burger from '@/burger';
-import { Client } from '../../../context';
+import { HdesApi } from '../../../client';
 
 interface EditValueSetProps {
   valueSet: string[];
   setValueSet: (valueSet: string[]) => void;
-  commands: Client.AstCommand[];
-  setCommands: (commands: Client.AstCommand[]) => void;
+  commands: HdesApi.AstCommand[];
+  setCommands: (commands: HdesApi.AstCommand[]) => void;
   headerId: string;
 }
 
-const addCommand = (command: Client.AstCommand, commands: Client.AstCommand[]) => {
-  const result: Client.AstCommand[] = [];
+const addCommand = (command: HdesApi.AstCommand, commands: HdesApi.AstCommand[]) => {
+  const result: HdesApi.AstCommand[] = [];
   for (const previous of commands) {
     if (command.type === previous.type) {
       

@@ -4,7 +4,7 @@ import React from 'react'
 import { TextareaAutosize } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 interface UploadCSVProps {

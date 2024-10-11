@@ -12,14 +12,14 @@ import { ServiceEdit } from './service';
 import { DebugView } from './debug';
 import { ReleasesView } from './release';
 
-import { Client } from './context';
+import { HdesApi } from './client';
 import { CompareView } from './compare';
 
 
 
 const root: SxProps = { height: `100%`, backgroundColor: "mainContent.main" };
 
-const EntityEditor: React.FC<{ entity: Client.Entity<any> }> = ({ entity }) => {
+const EntityEditor: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
   if (entity.source.bodyType === 'DT') {
     return (<DecisionEdit decision={entity} />);
   } else if (entity.source.bodyType === 'FLOW') {

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Typography, Divider } from '@mui/material';
 
-import { Client } from '../context';
+import { HdesApi } from '../client';
 
 
 
-const ErrorView: React.FC<{ error: Client.StoreError }> = ({ error }) => {
+const ErrorView: React.FC<{ error: HdesApi.StoreError }> = ({ error }) => {
   const items: React.ReactNode[] = [];
   for (let index = 0; index < error.errors.length; index++) {
     const v = error.errors[index];

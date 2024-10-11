@@ -4,7 +4,7 @@ import { TextareaAutosize, Box, Divider, Chip, Typography } from '@mui/material'
 import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/burger';
-import { Client } from '../../context';
+import { HdesApi as Client } from '../../client';
 
 
 interface InputCSVProps {
