@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { LocaleLabels } from '../locale';
 
@@ -17,14 +17,14 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const [type, setType] = React.useState<'internal' | 'external' | 'phone' | string>('internal');
   const [value, setValue] = React.useState('');
-  const [labels, setLabels] = React.useState<StencilClient.LocaleLabel[]>([]);
+  const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
-  const [articleId, setArticleId] = React.useState<StencilClient.ArticleId[]>([]);
-  //const articles: StencilClient.Article[] = Object.values(site.articles);
+  const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>([]);
+  //const articles: StencilApi.Article[] = Object.values(site.articles);
   const [devMode, setDevMode] = React.useState<boolean>(false);
 
   const handleCreate = () => {
-    const entity: StencilClient.CreateLink = { type, value, articles: articleId, labels, devMode };
+    const entity: StencilApi.CreateLink = { type, value, articles: articleId, labels, devMode };
     service.create().link(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -92,7 +92,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onChange={setArticleId}
           selected={articleId}
 
-          renderValue={(selected: StencilClient.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
+          renderValue={(selected: StencilApi.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
           items={articles.map(article => ({
             id: article.id,
             value: (<>

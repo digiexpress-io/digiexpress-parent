@@ -2,12 +2,12 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import { ReleaseGraphVisitor } from './ReleaseGraphVisitor';
 
 
 
-const ReleaseGraphRef: React.FC<{ site: StencilClient.Site }> = ({ site }) => {
+const ReleaseGraphRef: React.FC<{ site: StencilApi.Site }> = ({ site }) => {
   const ref = React.createRef<HTMLDivElement>();
 
   React.useLayoutEffect(() => {

@@ -1,6 +1,6 @@
-import StencilClient from './';
+import {StencilApi} from './';
 
-const articles: StencilClient.Article[] = [
+const articles: StencilApi.Article[] = [
   { id: "a1", body: { order: 100, name: "residence", } },
   { id: "a1.1", body: { order: 100, parentId: "a1", name: "utilities" } },
   { id: "a1.2", body: { order: 200, parentId: "a1", name: "new_address" } },
@@ -17,7 +17,7 @@ const articles: StencilClient.Article[] = [
   { id: "a2.5", body: { order: 500, parentId: "a2", name: "mental_health" } },
 ];
 
-const pages: StencilClient.Page[] = [
+const pages: StencilApi.Page[] = [
   { id: "p1", body: { article: "a1", content: "# Residence topic\n\n", locale: "l3" }, created: "04-11-2020", modified: "05-11-2020" },
   { id: "p2", body: { article: "a1", content: "# Asuinpaikka", locale: "l1" }, created: "04-11-2020", modified: "06-11-2020" },
   { id: "p3", body: { article: "a1.1", content: "# Utilities", locale: "l3" }, created: "09-10-2020", modified: "09-11-2020" },
@@ -40,7 +40,7 @@ const pages: StencilClient.Page[] = [
   { id: "p18", body: { article: "a2.5", content: "# Mielenterveys", locale: "l1" }, created: "01-01-2020", modified: "16-02-2020" },
 ];
 
-const links: StencilClient.Link[] = [
+const links: StencilApi.Link[] = [
   { id: "l1", body: { articles: ["a1", "a2", "a2.4"], contentType: "internal", value: "http://www.housing-good-municipality.fi/fi", labels: [{ locale: "l1", labelValue: "new housing developments" }] } },
   { id: "l2", body: { articles: ["a1"], contentType: "internal", value: "http://www.housing-good-municipality.fi/en", labels: [{ locale: "l3", labelValue: "new housing developments" }] } },
   { id: "l3", body: { articles: ["a1"], contentType: "external", value: "http://www.finland.fi", labels: [{ locale: "l1", labelValue: "move to finland" }] } },
@@ -61,7 +61,7 @@ const links: StencilClient.Link[] = [
 
 ];
 
-const workflows: StencilClient.Workflow[] = [
+const workflows: StencilApi.Workflow[] = [
   { id: "w1", body: { articles: ["a1"], value: "generalProcess1", labels: [{ locale: "l1", labelValue: "General Inquiry" }] } },
   { id: "w2", body: { articles: ["a1"], value: "greatFlow", labels: [{ locale: "l3", labelValue: "Default Form" }] } },
   { id: "w3", body: { articles: ["a1"], value: "inquiryMgr", labels: [{ locale: "l3", labelValue: "Super good question" }] } },
@@ -70,19 +70,19 @@ const workflows: StencilClient.Workflow[] = [
   { id: "w6", body: { articles: ["a1.3"], value: "inquiryMgr", labels: [{ locale: "l1", labelValue: "General Question" }] } },
 ];
 
-const locales: StencilClient.SiteLocale[] = [
+const locales: StencilApi.SiteLocale[] = [
   { id: "l1", body: { enabled: true, value: "fi" } },
   { id: "l2", body: { enabled: true, value: "sv" } },
   { id: "l3", body: { enabled: false, value: "en" } }
 ]
-const releases: StencilClient.Release[] = [
+const releases: StencilApi.Release[] = [
   { id: "r3", body: { name: "LATEST", note: "", articles: [], links: [], workflows: [], locales: [], pages: [], created: "03/10/2021" } },
   { id: "r1", body: { name: "v1.5", note: "super note here", articles: [], links: [], workflows: [], locales: [], pages: [], created: "04/02/2021" } },
   { id: "r2", body: { name: "v1.6", note: "Even better note here", articles: [], links: [], workflows: [], locales: [], pages: [], created: "12/02/2021" } },
 
 ];
 
-const templates: StencilClient.Template[] = [
+const templates: StencilApi.Template[] = [
   {
     id: 't1',
     body: {
@@ -93,7 +93,7 @@ const templates: StencilClient.Template[] = [
     },
   }
 ]
-const getSite = async (): Promise<StencilClient.Site> => {
+const getSite = async (): Promise<StencilApi.Site> => {
   return {
     name: "mock", contentType: "OK",
     releases: toRecord(releases),
@@ -106,16 +106,16 @@ const getSite = async (): Promise<StencilClient.Site> => {
   };
 }
 
-const version = async (): Promise<StencilClient.VersionEntity> => {
+const version = async (): Promise<StencilApi.VersionEntity> => {
   const date = new Date().toLocaleDateString("en-GB");
   return { version: "mock", built: date.toString() };
 }
 
-const createMock = (): StencilClient.Service => {
+const createMock = (): StencilApi.Service => {
 
   return {
     getSite,
-    async getReleaseContent(_release: StencilClient.Release): Promise<{}> {
+    async getReleaseContent(_release: StencilApi.Release): Promise<{}> {
       return {};
     },
     create: () => new MockCreateBuilder(),
@@ -125,85 +125,85 @@ const createMock = (): StencilClient.Service => {
   } as any;
 }
 
-class MockCreateBuilder implements StencilClient.CreateBuilder {
-  async site(): Promise<StencilClient.Site> {
+class MockCreateBuilder implements StencilApi.CreateBuilder {
+  async site(): Promise<StencilApi.Site> {
     return getSite();
   }
   async importData(init: string): Promise<void> {
     return init as any;
   }
-  async release(init: StencilClient.CreateRelease): Promise<StencilClient.Release> {
+  async release(init: StencilApi.CreateRelease): Promise<StencilApi.Release> {
     return init as any;
   }
-  async locale(init: StencilClient.CreateLocale): Promise<StencilClient.SiteLocale> {
+  async locale(init: StencilApi.CreateLocale): Promise<StencilApi.SiteLocale> {
     return init as any;
   }
-  async article(init: StencilClient.CreateArticle): Promise<StencilClient.Article> {
+  async article(init: StencilApi.CreateArticle): Promise<StencilApi.Article> {
     return init as any;
   }
-  async page(init: StencilClient.CreatePage): Promise<StencilClient.Page> {
+  async page(init: StencilApi.CreatePage): Promise<StencilApi.Page> {
     return init as any;
   }
-  async link(init: StencilClient.CreateLink): Promise<StencilClient.Link> {
+  async link(init: StencilApi.CreateLink): Promise<StencilApi.Link> {
     return init as any;
   }
-  async workflow(init: StencilClient.CreateWorkflow): Promise<StencilClient.Workflow> {
+  async workflow(init: StencilApi.CreateWorkflow): Promise<StencilApi.Workflow> {
     return init as any;
   }
-  async template(init: StencilClient.CreateTemplate): Promise<StencilClient.Template> {
+  async template(init: StencilApi.CreateTemplate): Promise<StencilApi.Template> {
     return init as any;
   }
 }
 
-class MockUpdateBuilder implements StencilClient.UpdateBuilder {
-  async locale(init: StencilClient.LocaleMutator): Promise<StencilClient.SiteLocale> {
+class MockUpdateBuilder implements StencilApi.UpdateBuilder {
+  async locale(init: StencilApi.LocaleMutator): Promise<StencilApi.SiteLocale> {
     return init as any;
   }
-  async article(init: StencilClient.ArticleMutator): Promise<StencilClient.Article> {
+  async article(init: StencilApi.ArticleMutator): Promise<StencilApi.Article> {
     return init as any;
   }
-  async pages(init: StencilClient.PageMutator[]): Promise<StencilClient.Page[]> {
+  async pages(init: StencilApi.PageMutator[]): Promise<StencilApi.Page[]> {
     console.log("saving pages", init);
     return init as any;
   }
-  async link(init: StencilClient.LinkMutator): Promise<StencilClient.Link> {
+  async link(init: StencilApi.LinkMutator): Promise<StencilApi.Link> {
     return init as any;
   }
-  async workflow(init: StencilClient.WorkflowMutator): Promise<StencilClient.Workflow> {
+  async workflow(init: StencilApi.WorkflowMutator): Promise<StencilApi.Workflow> {
     return init as any;
   }
-  async template(init: StencilClient.TemplateMutator): Promise<StencilClient.Template> {
+  async template(init: StencilApi.TemplateMutator): Promise<StencilApi.Template> {
     return init as any;
   }
 }
 
-class MockDeleteBuilder implements StencilClient.DeleteBuilder {
-  async locale(init: StencilClient.LocaleId): Promise<void> {
+class MockDeleteBuilder implements StencilApi.DeleteBuilder {
+  async locale(init: StencilApi.LocaleId): Promise<void> {
     return init as any;
   }
-  async release(init: StencilClient.ReleaseId): Promise<void> {
+  async release(init: StencilApi.ReleaseId): Promise<void> {
     return init as any;
   }
-  async article(init: StencilClient.ArticleId): Promise<void> {
+  async article(init: StencilApi.ArticleId): Promise<void> {
     return init as any;
   }
-  async page(init: StencilClient.PageId): Promise<void> {
+  async page(init: StencilApi.PageId): Promise<void> {
     return init as any;
   }
-  async link(init: StencilClient.LinkId): Promise<void> {
+  async link(init: StencilApi.LinkId): Promise<void> {
     return init as any;
   }
-  async workflow(init: StencilClient.WorkflowId): Promise<void> {
+  async workflow(init: StencilApi.WorkflowId): Promise<void> {
     return init as any;
   }
-  async template(init: StencilClient.TemplateId): Promise<void> {
+  async template(init: StencilApi.TemplateId): Promise<void> {
     return init as any;
   }
-  async workflowArticlePage(workflow: StencilClient.WorkflowId, article: StencilClient.ArticleId, locale: StencilClient.Locale): Promise<void> {
+  async workflowArticlePage(workflow: StencilApi.WorkflowId, article: StencilApi.ArticleId, locale: StencilApi.Locale): Promise<void> {
     const body = { workflow, article, locale };
     console.log("delete workflow article", body);
   }
-  async linkArticlePage(link: StencilClient.LinkId, article: StencilClient.ArticleId, locale: StencilClient.Locale): Promise<void> {
+  async linkArticlePage(link: StencilApi.LinkId, article: StencilApi.ArticleId, locale: StencilApi.Locale): Promise<void> {
     const body = { link, article, locale };
     console.log("delete link article", body);
   }

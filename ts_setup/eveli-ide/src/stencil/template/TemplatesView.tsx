@@ -8,7 +8,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { FormattedMessage } from 'react-intl';
 
 import { TemplateComposer, TemplateDelete, TemplateEdit } from './';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
@@ -20,8 +20,8 @@ const TemplatesView: React.FC<{}> = () => {
 
 
   const [templateComposer, setTemplateComposer] = React.useState(false);
-  const [templateDelete, setTemplateDelete] = React.useState<StencilClient.TemplateId>();
-  const [templateEdit, setTemplateEdit] = React.useState<StencilClient.TemplateId>();
+  const [templateDelete, setTemplateDelete] = React.useState<StencilApi.TemplateId>();
+  const [templateEdit, setTemplateEdit] = React.useState<StencilApi.TemplateId>();
 
   return (
     <>

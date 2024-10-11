@@ -4,12 +4,12 @@ import { useSnackbar } from 'notistack';
 import { DialogContentText } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
 interface LinkDeleteProps {
-  linkId: StencilClient.LinkId,
+  linkId: StencilApi.LinkId,
   onClose: () => void,
 }
 

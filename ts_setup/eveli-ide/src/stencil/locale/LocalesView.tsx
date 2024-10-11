@@ -15,7 +15,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { LocalesOverview } from './LocalesOverview';
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 
 const Header: React.FC<{ label: string }> = ({ label }) => {
@@ -29,12 +29,12 @@ const Header: React.FC<{ label: string }> = ({ label }) => {
 const LocalesView: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { site, service, actions } = Composer.useComposer();
-  const [editLocale, setEditLocale] = React.useState<StencilClient.SiteLocale | undefined>();
+  const [editLocale, setEditLocale] = React.useState<StencilApi.SiteLocale | undefined>();
   const locales = Object.values(site.locales);
   const title = useIntl().formatMessage({ id: "locales" });
 
-  const handleEnable = (locale: StencilClient.SiteLocale, enabled: boolean) => {
-    const entity: StencilClient.LocaleMutator = { localeId: locale.id, value: locale.body.value, enabled: enabled };
+  const handleEnable = (locale: StencilApi.SiteLocale, enabled: boolean) => {
+    const entity: StencilApi.LocaleMutator = { localeId: locale.id, value: locale.body.value, enabled: enabled };
     console.log("entity", entity)
     service.update().locale(entity).then(success => {
 

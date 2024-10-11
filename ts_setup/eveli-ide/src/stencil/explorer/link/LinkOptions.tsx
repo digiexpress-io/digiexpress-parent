@@ -5,10 +5,10 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 
 import { LinkDelete } from '../../link/LinkDelete';
 import { LinkEdit } from '../../link';
-import { StencilClient } from '../../context';
+import { StencilApi } from '../../context';
 import * as Burger from '@/burger';
 
-const LinkOptions: React.FC<{ link: StencilClient.Link }> = ({ link }) => {
+const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'LinkEdit' | 'LinkDelete'>(undefined);
   const handleDialogClose = () => setDialogOpen(undefined);

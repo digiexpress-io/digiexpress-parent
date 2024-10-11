@@ -2,11 +2,11 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
-const PageEdit: React.FC<{ onClose: () => void, articleId: StencilClient.ArticleId }> = (props) => {
+const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const articleId = props.articleId;
@@ -15,7 +15,7 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilClient.Article
   const [newLocale, setNewLocale] = React.useState('');
 
   const handleUpdate = () => {
-    const entity: StencilClient.PageMutator = { locale: newLocale, pageId, content: site.pages[pageId].body.content, devMode: site.pages[pageId].body.devMode };
+    const entity: StencilApi.PageMutator = { locale: newLocale, pageId, content: site.pages[pageId].body.content, devMode: site.pages[pageId].body.devMode };
     service.update().pages([entity]).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
       props.onClose();
@@ -23,9 +23,9 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilClient.Article
     })
   }
   const message = <FormattedMessage id="snack.page.savedMessage" />
-  const articlePages: StencilClient.Page[] = Object.values(site.pages).filter(p => p.body.article === articleId);
-  const usedLocales: StencilClient.LocaleId[] = articlePages.map(articlePage => articlePage.body.locale)
-  const unusedLocales: StencilClient.SiteLocale[] = Object.values(site.locales).filter(siteLocale => !usedLocales.includes(siteLocale.id));
+  const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === articleId);
+  const usedLocales: StencilApi.LocaleId[] = articlePages.map(articlePage => articlePage.body.locale)
+  const unusedLocales: StencilApi.SiteLocale[] = Object.values(site.locales).filter(siteLocale => !usedLocales.includes(siteLocale.id));
 
   const valid = pageId && articleId && newLocale;
   return (

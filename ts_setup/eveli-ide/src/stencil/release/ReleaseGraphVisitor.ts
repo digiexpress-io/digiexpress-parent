@@ -2,7 +2,7 @@ import React from 'react'
 
 import * as d3 from 'd3';
 
-import { StencilClient } from '../context';
+import { StencilApi } from '../context';
 
 
 const width = 600;
@@ -45,17 +45,17 @@ interface ReleaseNode {
   "root" | "workflows" | "links" | "articles" | "locales" | "releases";
 
   imports: string[];
-  release?: StencilClient.Release;
-  article?: StencilClient.ArticleReleaseItem;
-  locale?: StencilClient.LocaleReleaseItem;
-  link?: StencilClient.LinkReleaseItem;
-  workflow?: StencilClient.WorkflowReleaseItem;
+  release?: StencilApi.Release;
+  article?: StencilApi.ArticleReleaseItem;
+  locale?: StencilApi.LocaleReleaseItem;
+  link?: StencilApi.LinkReleaseItem;
+  workflow?: StencilApi.WorkflowReleaseItem;
   children: ReleaseNode[];
 }
 
 class ReleaseGraphVisitor {
   private _ref: React.RefObject<HTMLDivElement>;
-  private _site: StencilClient.Site;
+  private _site: StencilApi.Site;
 
   private _workflows: ReleaseNode = { type: "workflows", name: "workflows", children: [], imports: [] };
   private _links: ReleaseNode = { type: "links", name: "links", children: [], imports: [] };
@@ -78,13 +78,13 @@ class ReleaseGraphVisitor {
   private _visited: string[] = []
   constructor(props: {
     ref: React.RefObject<HTMLDivElement>;
-    site: StencilClient.Site;
+    site: StencilApi.Site;
   }) {
     this._ref = props.ref;
     this._site = props.site;
   }
 
-  visitRelease(release: StencilClient.Release) {
+  visitRelease(release: StencilApi.Release) {
     if (this._visited.includes(release.id)) {
       return;
     }
@@ -98,7 +98,7 @@ class ReleaseGraphVisitor {
 
     this._data.children.push(releaseNode);
   }
-  visitArticle(article: StencilClient.ArticleReleaseItem, release: StencilClient.Release, parent: ReleaseNode) {
+  visitArticle(article: StencilApi.ArticleReleaseItem, release: StencilApi.Release, parent: ReleaseNode) {
     const name = article.name;
     parent.imports.push(this._data.name + "." + this._articles.name + "." + name);
     if (this._visited.includes(article.id)) {
@@ -108,7 +108,7 @@ class ReleaseGraphVisitor {
     this._articles.children.push({ name, children: [], type: "article", article, imports: [] })
 
   }
-  visitLocale(locale: StencilClient.LocaleReleaseItem, release: StencilClient.Release, parent: ReleaseNode) {
+  visitLocale(locale: StencilApi.LocaleReleaseItem, release: StencilApi.Release, parent: ReleaseNode) {
     const name = locale.value;
     parent.imports.push(this._data.name + "." + this._locales.name + "." + name);
     if (this._visited.includes(locale.id)) {
@@ -118,7 +118,7 @@ class ReleaseGraphVisitor {
     this._locales.children.push({ name, children: [], type: "locale", locale, imports: [] })
 
   }
-  visitLink(link: StencilClient.LinkReleaseItem, release: StencilClient.Release, parent: ReleaseNode) {
+  visitLink(link: StencilApi.LinkReleaseItem, release: StencilApi.Release, parent: ReleaseNode) {
     const name = link.value;
     //parent.imports.push(this._data.name + "." + this._links.name + "." + name);
     if (this._visited.includes(link.id)) {
@@ -128,7 +128,7 @@ class ReleaseGraphVisitor {
     this._links.children.push({ name, children: [], type: "link", link, imports: [] })
 
   }
-  visitWorkflow(workflow: StencilClient.WorkflowReleaseItem, release: StencilClient.Release, parent: ReleaseNode) {
+  visitWorkflow(workflow: StencilApi.WorkflowReleaseItem, release: StencilApi.Release, parent: ReleaseNode) {
     const name = workflow.value;
     parent.imports.push(this._data.name + "." + this._workflows.name + "." + name);
     if (this._visited.includes(workflow.id)) {

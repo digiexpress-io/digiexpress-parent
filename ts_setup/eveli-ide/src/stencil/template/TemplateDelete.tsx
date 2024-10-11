@@ -3,12 +3,12 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
 interface TemplateDeleteProps {
-  templateId: StencilClient.TemplateId;
+  templateId: StencilApi.TemplateId;
   onClose: () => void;
 }
 

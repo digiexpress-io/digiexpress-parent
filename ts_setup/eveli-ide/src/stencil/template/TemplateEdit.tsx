@@ -6,11 +6,11 @@ import { FormattedMessage } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 
 interface TemplateEditProps {
-  templateId: StencilClient.TemplateId;
+  templateId: StencilApi.TemplateId;
   onClose: () => void;
 }
 
@@ -26,7 +26,7 @@ const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   const { service, actions} = Composer.useComposer();
 
   const handleUpdate = () => {
-    const entity: StencilClient.TemplateMutator = {
+    const entity: StencilApi.TemplateMutator = {
       content, description, name, type: templateType, id: templateId
     };
     service.update().template(entity).then(success => {
@@ -41,7 +41,7 @@ const TemplateEdit: React.FC<TemplateEditProps> = ({ onClose, templateId }) => {
   }
   
   const message = <FormattedMessage id="snack.template.editedMessage" />
-  //const templates: StencilClient.Template[] = Object.values(site.templates);
+  //const templates: StencilApi.Template[] = Object.values(site.templates);
 
   return (
     <Burger.Dialog open={true} onClose={onClose}

@@ -3,12 +3,12 @@ import { DialogContentText } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
 interface ArticleDeleteProps {
-  articleId: StencilClient.ArticleId;
+  articleId: StencilApi.ArticleId;
   onClose: () => void;
 }
 

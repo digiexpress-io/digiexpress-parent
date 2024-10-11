@@ -5,7 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 
@@ -21,7 +21,7 @@ const findMainId = (values: string[]) => {
 const WorkflowExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
   const { session } = Composer.useComposer();
   const [expanded, setExpanded] = React.useState<string[]>([]);
-  const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilClient.WorkflowId>(undefined);
+  const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);
 
   const workflows: Composer.WorkflowView[] = React.useMemo(() => {
     if (searchString) {

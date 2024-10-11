@@ -7,19 +7,19 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { FormattedMessage } from 'react-intl';
 
-import { StencilClient } from '../context';
+import { StencilApi } from '../context';
 
 
 
-const LocalesOverview: React.FC<{site: StencilClient.Site}> = ({ site }) => {
+const LocalesOverview: React.FC<{site: StencilApi.Site}> = ({ site }) => {
 
-  const locales: StencilClient.SiteLocale[] = Object.values(site.locales);
-  const articles: StencilClient.Article[] = Object.values(site.articles);
-  const pages: StencilClient.Page[] = Object.values(site.pages);
+  const locales: StencilApi.SiteLocale[] = Object.values(site.locales);
+  const articles: StencilApi.Article[] = Object.values(site.articles);
+  const pages: StencilApi.Page[] = Object.values(site.pages);
 
 
   //check if page has content
-  const isContent = (locale: StencilClient.SiteLocale, article: StencilClient.Article) => {
+  const isContent = (locale: StencilApi.SiteLocale, article: StencilApi.Article) => {
     const contents = pages
       .filter(p => p.body.article === article.id)
       .filter(p => p.body.locale === locale.id)
@@ -28,7 +28,7 @@ const LocalesOverview: React.FC<{site: StencilClient.Site}> = ({ site }) => {
   }
 
   // check if locale exists on article
-  const isLocale = (locale: StencilClient.SiteLocale, article: StencilClient.Article): boolean => {
+  const isLocale = (locale: StencilApi.SiteLocale, article: StencilApi.Article): boolean => {
     const articlePages = pages
       .filter(p => p.body.article === article.id)
       .filter(p => p.body.locale === locale.id);

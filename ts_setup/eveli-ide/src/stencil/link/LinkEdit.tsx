@@ -6,15 +6,15 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import { LocaleLabels } from '../locale';
 
 const selectSub = { ml: 2, color: "article.dark" }
 
-const linkTypes: StencilClient.LinkType[] = ["internal", "external", "phone"];
+const linkTypes: StencilApi.LinkType[] = ["internal", "external", "phone"];
 
 interface LinkEditProps {
-  linkId: StencilClient.LinkId,
+  linkId: StencilApi.LinkId,
   onClose: () => void,
 }
 
@@ -28,15 +28,15 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
   const [changeInProgress, setChangeInProgress] = React.useState(false);
   const [contentType, setContentType] = React.useState(link.body.contentType);
 
-  const [articleId, setArticleId] = React.useState<StencilClient.ArticleId[]>(link.body.articles);
+  const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>(link.body.articles);
   //const locales = labels.map(l => l.locale);
-  //const articles: StencilClient.Article[] = locales ? session.getArticlesForLocales(locales) : Object.values(site.articles);
+  //const articles: StencilApi.Article[] = locales ? session.getArticlesForLocales(locales) : Object.values(site.articles);
 
   const [devMode, setDevMode] = React.useState(link.body.devMode);
 
 
   const handleUpdate = () => {
-    const entity: StencilClient.LinkMutator = { linkId: link.id, type: contentType, articles: articleId, labels, value, devMode };
+    const entity: StencilApi.LinkMutator = { linkId: link.id, type: contentType, articles: articleId, labels, value, devMode };
     console.log("entity", entity)
     service.update().link(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -96,7 +96,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
       <Burger.SelectMultiple label='link.article.select' multiline
         selected={articleId}
         onChange={setArticleId}
-        renderValue={(selected: StencilClient.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
+        renderValue={(selected: StencilApi.ArticleId[]) => selected.map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
         items={articles.map((article) => ({
           id: article.id,
           value: (<>

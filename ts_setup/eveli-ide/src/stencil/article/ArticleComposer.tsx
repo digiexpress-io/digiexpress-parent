@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import PageviewOutlinedIcon from '@mui/icons-material/PageviewOutlined';
 import { FormattedMessage } from 'react-intl';
 
@@ -73,7 +73,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [devMode, setDevMode] = React.useState<boolean>(false);
     
   const handleCreate = () => {
-    const entity: StencilClient.CreateArticle = { name, parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
+    const entity: StencilApi.CreateArticle = { name, parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
 
     service.create().article(entity).then(success => {
       console.log(success)

@@ -2,11 +2,11 @@ import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
-const PageDelete: React.FC<{ onClose: () => void, articleId: StencilClient.ArticleId }> = (props) => {
+const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const [pageId, setPageId] = React.useState('');
@@ -25,7 +25,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilClient.Artic
   }
 
   const message = <FormattedMessage id="snack.page.deletedMessage" />
-  const articlePages: StencilClient.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
+  const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
   return (
     <Burger.Dialog open={true} onClose={props.onClose}
       backgroundColor="uiElements.main"

@@ -18,7 +18,7 @@ import { ArticleEdit } from '../../article';
 import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 
 
 //color: theme.palette.explorerItem.dark,
@@ -149,7 +149,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
 
   const { article } = view;
   const { handleInTab } = Composer.useNav();
-  const onLeftEdit = (page: StencilClient.Page) => handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale })
+  const onLeftEdit = (page: StencilApi.Page) => handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale })
 
   const [articleEditOpen, setArticleEditOpen] = React.useState<boolean>(false);
   const [noCollapseIcon, setNoCollapseIcon] = React.useState<boolean>(false)

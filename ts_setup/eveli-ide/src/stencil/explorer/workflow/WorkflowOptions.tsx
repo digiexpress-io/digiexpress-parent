@@ -4,10 +4,10 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditIcon from '@mui/icons-material/ModeEdit';
 import { WorkflowDelete } from '../../workflow/WorkflowDelete';
 import { WorkflowEdit } from '../../workflow';
-import { StencilClient } from '../../context';
+import { StencilApi } from '../../context';
 import * as Burger from '@/burger';
 
-const WorkflowOptions: React.FC<{workflow: StencilClient.Workflow}> = ({ workflow }) => {
+const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }) => {
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'WorkflowEdit' | 'WorkflowDelete'>(undefined);
   const handleDialogClose = () => setDialogOpen(undefined);

@@ -4,7 +4,7 @@ import TreeView from "@mui/lab/TreeView";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 import ArticleItem, { ArticleItemOptions } from './ArticleItem';
 import { LinkEdit } from '../../link/LinkEdit';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
@@ -22,8 +22,8 @@ const ArticleExplorer: React.FC<{ searchString: string }> = ({searchString}) => 
   const { session } = Composer.useComposer();
   const [expanded, setExpanded] = React.useState<string[]>([]);
 
-  const [editLink, setEditLink] = React.useState<undefined | StencilClient.LinkId>(undefined);
-  const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilClient.WorkflowId>(undefined);
+  const [editLink, setEditLink] = React.useState<undefined | StencilApi.LinkId>(undefined);
+  const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);
   const articleOptions: ArticleItemOptions = { setEditLink, setEditWorkflow }
     
   const treeItems: Composer.ArticleView[] = React.useMemo(() => {

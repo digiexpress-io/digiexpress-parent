@@ -3,24 +3,24 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 
 
-const ArticleLinksComposer: React.FC<{ articleId: StencilClient.ArticleId }> = (props) => {
+const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
   const tabs = Burger.useTabs();
   const view = session.getArticleView(props.articleId);
 
-  const links: StencilClient.Link[] = Object.values(site.links)
+  const links: StencilApi.Link[] = Object.values(site.links)
     .map((w) => ({ w, name: session.getLinkName(w.id)?.name }))
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((w) => w.w);
 
   const handleSave = (selectedLinks: string[]) => {
     const article = site.articles[props.articleId]
-    const entity: StencilClient.ArticleMutator = {
+    const entity: StencilApi.ArticleMutator = {
       articleId: article.id,
       name: article.body.name,
       parentId: article.body.parentId,

@@ -10,7 +10,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
 
@@ -71,12 +71,12 @@ const LinkItem: React.FC<LinkItemProps> = (props) => {
 
 
 interface ArticleItemOptions {
-  setEditWorkflow: (workflowId: StencilClient.WorkflowId) => void,
-  setEditLink: (linkId: StencilClient.LinkId) => void
+  setEditWorkflow: (workflowId: StencilApi.WorkflowId) => void,
+  setEditLink: (linkId: StencilApi.LinkId) => void
 }
 
 const ArticleItem: React.FC<{
-  articleId: StencilClient.ArticleId,
+  articleId: StencilApi.ArticleId,
   nodeId?: string,
   options?: ArticleItemOptions
 }> = ({ articleId, nodeId, options }) => {

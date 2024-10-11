@@ -8,12 +8,12 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 
 import { WorkflowOptions } from './WorkflowOptions';
 import ArticleItem from '../article/ArticleItem';
 
-const WorkflowItem: React.FC<{ workflowId: StencilClient.WorkflowId }> = ({ workflowId }) => {
+const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflowId }) => {
   const { session } = Composer.useComposer();
   const view = session.getWorkflowView(workflowId);
   const { workflow } = view;

@@ -3,27 +3,27 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 /*
-const comparator = (o1: StencilClient.Workflow, o2: StencilClient.Workflow) => ((o1.body.devMode ? "a-" : "b-") + o1.body.value)
+const comparator = (o1: StencilApi.Workflow, o2: StencilApi.Workflow) => ((o1.body.devMode ? "a-" : "b-") + o1.body.value)
   .localeCompare(((o2.body.devMode ? "a-" : "b-") + o2.body.value));
 */
 
-const ArticleWorkflowsComposer: React.FC<{ articleId: StencilClient.ArticleId }> = (props) => {
+const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
   const layout = Burger.useTabs();
 
   const view = session.getArticleView(props.articleId);
-  const workflows: StencilClient.Workflow[] = Object.values(site.workflows)
+  const workflows: StencilApi.Workflow[] = Object.values(site.workflows)
     .map((w) => ({ w, name: session.getWorkflowName(w.id)?.name }))
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((w) => w.w);
 
   const handleSave = (selectedWorkflows: string[]) => {
     const article = site.articles[props.articleId]
-    const entity: StencilClient.ArticleMutator = {
+    const entity: StencilApi.ArticleMutator = {
       articleId: article.id,
       name: article.body.name,
       parentId: article.body.parentId,

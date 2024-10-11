@@ -13,7 +13,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
-import { Composer, StencilClient } from './context';
+import { Composer, StencilApi } from './context';
 import { LocaleFilter } from './explorer/filter';
 
 
@@ -64,7 +64,7 @@ const Toolbar: React.FC<{}> = () => {
       if (unsavedArticlePages.length === 0) {
         return;
       }
-      const update: StencilClient.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      const update: StencilApi.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
       composer.service.update().pages(update).then(success => {
         enqueueSnackbar(message, {variant: 'success'});
         composer.actions.handlePageUpdateRemove(success.map(p => p.id));

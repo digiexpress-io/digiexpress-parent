@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 
@@ -28,7 +28,7 @@ const isValidTitle = (value?: string) => {
   return regexp_starts_with.test(cleaned); 
 }
 
-const templateCommand = (template: StencilClient.Template): ICommand => ({
+const templateCommand = (template: StencilApi.Template): ICommand => ({
   name: 'templates' + template.id,
   keyCommand: 'templates' + template.id,
   buttonProps: { 'aria-label': template.body.name, title: template.body.name },
@@ -38,7 +38,7 @@ const templateCommand = (template: StencilClient.Template): ICommand => ({
   },
 });
 
-const getMdCommands = (locale: StencilClient.SiteLocale, color: string, site: StencilClient.Site) => {
+const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site) => {
   const localeTitle: ICommand = {
     name: locale?.body.value,
     groupName: 'title',
@@ -80,16 +80,16 @@ const getMdCommands = (locale: StencilClient.SiteLocale, color: string, site: St
 }
 
 type PageComposerProps = {
-  articleId: StencilClient.ArticleId,
-  locale1: StencilClient.LocaleId,
-  locale2?: StencilClient.LocaleId,
+  articleId: StencilApi.ArticleId,
+  locale1: StencilApi.LocaleId,
+  locale2?: StencilApi.LocaleId,
 }
 
 const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, locale2 }) => {
   const theme = useTheme();
   const { actions, session } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [errors, setErrors] = React.useState(new Set<StencilClient.PageId>());
+  const [errors, setErrors] = React.useState(new Set<StencilApi.PageId>());
 
   const { site } = session;
   const view = session.getArticleView(articleId);
@@ -100,7 +100,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
   const value2 = page2 ? (session.pages[page2.id] ? session.pages[page2.id].value : page2.body.content) : undefined;
   const articleName = session.getArticleName(articleId);
 
-  const handleChange = (props: {page?: StencilClient.Page, value?: string}) => {
+  const handleChange = (props: {page?: StencilApi.Page, value?: string}) => {
     const {page, value} = props;
     if(!page) {
       return;
@@ -113,7 +113,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
     // everything ok
     if(containsTitle) {
       closeSnackbar(page.id);
-      const next = new Set<StencilClient.PageId>(errors);
+      const next = new Set<StencilApi.PageId>(errors);
       next.delete(page.id)
       setErrors(next);
       return;
@@ -127,7 +127,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
     //there is an error
     const locale = view.getPageById(page.id).locale.body.value;
     const error = <FormattedMessage id={'snack.page.missingTitle'} values={{locale, articleName: articleName.name}}/>;
-    setErrors(new Set<StencilClient.PageId>(errors).add(page.id));
+    setErrors(new Set<StencilApi.PageId>(errors).add(page.id));
     enqueueSnackbar(error, { variant: 'warning', persist: true, key: page.id });
     
   }

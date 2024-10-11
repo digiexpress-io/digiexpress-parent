@@ -12,11 +12,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 
 interface SelectedValue {
-  locale: StencilClient.LocaleId;
+  locale: StencilApi.LocaleId;
   value: string;
 }
 
@@ -48,7 +48,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
   const alreadyDefinedLabel = intl.formatMessage({ id: "sitelocale.label.select.alreadyDefined" });
   const [edit, setEdit] = React.useState<SelectedValue | null>(null);
 
-  const selection: { id: StencilClient.LocaleId; value: string, added: boolean }[] = Object.values(site.locales)
+  const selection: { id: StencilApi.LocaleId; value: string, added: boolean }[] = Object.values(site.locales)
     .map(locale => ({
       id: locale.id,
       value: locale.body.value,
@@ -70,7 +70,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
     setEdit(null);
   }
 
-  const handleAddLabel = (id: StencilClient.LocaleId) => {
+  const handleAddLabel = (id: StencilApi.LocaleId) => {
     const newLabel: SelectedValue = { locale: id, value: 'new-text-here' };
     const newSelection: Record<string, SelectedValue> = {};
     Object.values(selected).forEach(s => newSelection[s.locale] = s);
@@ -79,7 +79,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
     props.onChange(Object.values(newSelection));
   }
 
-  const handleRemoveLabel = (id: StencilClient.LocaleId) => {
+  const handleRemoveLabel = (id: StencilApi.LocaleId) => {
     const newSelection: Record<string, SelectedValue> = {};
     Object.values(selected).filter(s => s.locale !== id).forEach(s => newSelection[s.locale] = s);
     setSelected(newSelection);

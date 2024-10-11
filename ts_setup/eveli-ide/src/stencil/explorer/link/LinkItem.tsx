@@ -8,12 +8,12 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 
 import { LinkOptions } from './LinkOptions';
 import ArticleItem from '../article/ArticleItem';
 
-const LinkItem: React.FC<{ linkId: StencilClient.LinkId }> = ({ linkId }) => {
+const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
   const { session } = Composer.useComposer();
   const view = session.getLinkView(linkId);
   const { link } = view;

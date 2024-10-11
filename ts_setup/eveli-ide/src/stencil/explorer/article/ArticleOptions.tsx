@@ -8,11 +8,11 @@ import { LinkComposer } from '../../link';
 import { WorkflowComposer } from '../../workflow';
 import { ArticleEdit, ArticleDelete } from '../../article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../page';
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 import * as Burger from '@/burger';
 
 interface ArticleOptionsProps {
-  article: StencilClient.Article,
+  article: StencilApi.Article,
 
 }
 const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {

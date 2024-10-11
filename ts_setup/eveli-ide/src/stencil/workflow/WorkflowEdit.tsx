@@ -6,14 +6,14 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { LocaleLabels } from '../locale';
 
 
 
 interface WorkflowEditProps {
-  workflowId: StencilClient.WorkflowId,
+  workflowId: StencilApi.WorkflowId,
   onClose: () => void,
 }
 
@@ -23,14 +23,14 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const workflow = site.workflows[workflowId];
 
   const [devMode, setDevMode] = React.useState(workflow.body.devMode);
-  const [articleId, setArticleId] = React.useState<StencilClient.ArticleId[]>(workflow.body.articles);
+  const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>(workflow.body.articles);
   const [technicalname, setTechnicalname] = React.useState(workflow.body.value);
-  //const articles: StencilClient.Article[] = session.getArticlesForLocales(workflow.body.labels.map(l => l.locale));
-  const [labels, setLabels] = React.useState<StencilClient.LocaleLabel[]>(workflow.body.labels);
+  //const articles: StencilApi.Article[] = session.getArticlesForLocales(workflow.body.labels.map(l => l.locale));
+  const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>(workflow.body.labels);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
   const handleCreate = () => {
-    const entity: StencilClient.WorkflowMutator = { workflowId: workflow.id, value: technicalname, articles: articleId, labels, devMode };
+    const entity: StencilApi.WorkflowMutator = { workflowId: workflow.id, value: technicalname, articles: articleId, labels, devMode };
     service.update().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -93,7 +93,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
             multiline
             onChange={setArticleId}
             selected={articleId}
-            renderValue={(selected) => (selected as StencilClient.ArticleId[]).map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
+            renderValue={(selected) => (selected as StencilApi.ArticleId[]).map((articleId, index) => <div key={index}>{site.articles[articleId].body.name}</div>)}
 
             items={articles.map((article) => ({
               id: article.id,

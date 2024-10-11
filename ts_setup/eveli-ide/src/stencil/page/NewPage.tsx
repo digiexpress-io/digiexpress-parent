@@ -3,17 +3,17 @@ import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { Box } from '@mui/material';
 
 
 
-const NewPage: React.FC<{ onClose: () => void, articleId?: StencilClient.ArticleId }> = (props) => {
+const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
   const [locale, setLocale] = React.useState('');
-  const [template, setTemplate] = React.useState<StencilClient.TemplateId | ''>('');
+  const [template, setTemplate] = React.useState<StencilApi.TemplateId | ''>('');
   const [articleId, setArticleId] = React.useState(props.articleId ? props.articleId : '');
   const [devMode, setDevMode] = React.useState<boolean>(false);
   const { handleInTab } = Composer.useNav();
@@ -21,7 +21,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilClient.Article
   const handleCreate = () => {
 
     const content = template ? site.templates[template].body.content : undefined;
-    const entity: StencilClient.CreatePage = { articleId, locale, content, devMode };
+    const entity: StencilApi.CreatePage = { articleId, locale, content, devMode };
     service.create().page(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -34,12 +34,12 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilClient.Article
     })
   }
   const message = <FormattedMessage id="snack.page.createdMessage" />
-  const definedLocales: StencilClient.LocaleId[] = Object.values(site.pages)
+  const definedLocales: StencilApi.LocaleId[] = Object.values(site.pages)
     .filter(p => p.body.article === articleId).map(p => p.body.locale);
 
-  const articles: StencilClient.Article[] = session.articles.map(w => w.article);
-  const locales: StencilClient.SiteLocale[] = Object.values(site.locales).filter(l => !definedLocales.includes(l.id));
-  const templates: StencilClient.Template[] = Object.values(site.templates);
+  const articles: StencilApi.Article[] = session.articles.map(w => w.article);
+  const locales: StencilApi.SiteLocale[] = Object.values(site.locales).filter(l => !definedLocales.includes(l.id));
+  const templates: StencilApi.Template[] = Object.values(site.templates);
 
   return (
     <Burger.Dialog open={true} onClose={props.onClose}

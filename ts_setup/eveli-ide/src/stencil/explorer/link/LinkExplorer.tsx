@@ -5,7 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
-import { Composer, StencilClient } from '../../context';
+import { Composer, StencilApi } from '../../context';
 import { LinkEdit } from '../../link/LinkEdit';
 import LinkItem from './LinkItem';
 
@@ -22,7 +22,7 @@ const findMainId = (values: string[]) => {
 const LinkExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
   const { session } = Composer.useComposer();
   const [expanded, setExpanded] = React.useState<string[]>([]);
-  const [editLink, setEditLink] = React.useState<undefined | StencilClient.LinkId>(undefined);
+  const [editLink, setEditLink] = React.useState<undefined | StencilApi.LinkId>(undefined);
 
   const links: Composer.LinkView[] = React.useMemo(() => {
     if (searchString) {

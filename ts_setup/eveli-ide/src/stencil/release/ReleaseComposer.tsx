@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 
 import { Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
@@ -19,7 +19,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const created = new Date().toISOString();
 
   const handleCreate = () => {
-    const entity: StencilClient.CreateRelease = { name, note, created };
+    const entity: StencilApi.CreateRelease = { name, note, created };
     service.create().release(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)

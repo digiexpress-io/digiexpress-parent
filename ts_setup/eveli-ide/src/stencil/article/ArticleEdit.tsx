@@ -3,13 +3,13 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import { Box } from '@mui/material';
 
 
 const selectSub = { ml: 2, color: "article.dark" }
 
-const ArticleEdit: React.FC<{ articleId: StencilClient.ArticleId, onClose: () => void }> = ({ articleId, onClose }) => {
+const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => void }> = ({ articleId, onClose }) => {
   const { service, actions, session } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -23,7 +23,7 @@ const ArticleEdit: React.FC<{ articleId: StencilClient.ArticleId, onClose: () =>
   const message = <FormattedMessage id="snack.article.editedMessage" />
 
   const handleUpdate = () => {
-    const entity: StencilClient.ArticleMutator = { articleId: article.id, name, parentId, order, links: undefined, workflows: undefined, devMode };
+    const entity: StencilApi.ArticleMutator = { articleId: article.id, name, parentId, order, links: undefined, workflows: undefined, devMode };
     service.update().article(entity).then(_success => {
       enqueueSnackbar(message, {variant: 'success'});
       onClose();

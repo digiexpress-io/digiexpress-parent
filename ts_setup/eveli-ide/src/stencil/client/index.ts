@@ -1,6 +1,5 @@
 import { StencilApi } from './StencilApi';
 import createMock from './mock';
-import createService from './impl';
 import {parseErrors} from './error'
 
 export type {StencilApi};
@@ -13,8 +12,136 @@ export namespace StencilClient {
     return createService(init);
   };
 
-
-
+   const createService = (init: { store?: StencilApi.Store, config?: StencilApi.StoreConfig }): StencilApi.Service => {
+    const backend: StencilApi.Store = init.config ? new DefaultStore(init.config) : init.store as any;
+  
+    const getSite: () => Promise<StencilApi.Site> = async () => backend.fetch("/").then((data) => data as any)
+      .catch(resp => {
+  
+        // finish error handling
+  
+        const result: StencilApi.Site = {
+          contentType: 'NO_CONNECTION',
+          name: "not-connected",
+          articles: {},
+          links: {},
+          locales: {},
+          pages: {},
+          releases: {},
+          workflows: {},
+          templates: {},
+        };
+  
+        return result;
+      })
+  
+    const version: () => Promise<StencilApi.VersionEntity> = async () => backend.fetch(`/version`, { method: "GET" })
+      .then((data) => data as any);
+  
+    return {
+      getSite,
+      async getReleaseContent(releaseId: StencilApi.ReleaseId): Promise<{}> {
+        return backend.fetch(`/releases/${releaseId}`, { method: "GET" }).then((data) => data as any);
+      },
+      create: () => new CreateBuilderImpl(backend),
+      update: () => new UpdateBuilderImpl(backend),
+      delete: () => new DeleteBuilderImpl(backend),
+      version
+    };
+  }
+  
+  export class CreateBuilderImpl implements StencilApi.CreateBuilder {
+    private _backend: StencilApi.Store;
+    constructor(backend: StencilApi.Store) {
+      this._backend = backend;
+    }
+    async site(): Promise<StencilApi.Site> {
+      return this._backend.fetch(`/`, { method: "POST" }).then((data) => data as any)
+    }
+    async importData(init: string): Promise<void> {
+      return this._backend.fetch(`/migrations`, { method: "POST", body: init }).then((data) => data as any)
+    }
+    async release(init: StencilApi.CreateRelease): Promise<StencilApi.Release> {
+      return this._backend.fetch(`/releases`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async locale(init: StencilApi.CreateLocale): Promise<StencilApi.SiteLocale> {
+      return this._backend.fetch(`/locales`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async article(init: StencilApi.CreateArticle): Promise<StencilApi.Article> {
+      return this._backend.fetch(`/articles`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async page(init: StencilApi.CreatePage): Promise<StencilApi.Page> {
+      return this._backend.fetch(`/pages`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async link(init: StencilApi.CreateLink): Promise<StencilApi.Link> {
+      return this._backend.fetch(`/links`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async workflow(init: StencilApi.CreateWorkflow): Promise<StencilApi.Workflow> {
+      return this._backend.fetch(`/workflows`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async template(init: StencilApi.CreateTemplate): Promise<StencilApi.Template> {
+      return this._backend.fetch(`/templates`, { method: "POST", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+  }
+  
+  export class UpdateBuilderImpl implements StencilApi.UpdateBuilder {
+    private _backend: StencilApi.Store;
+    constructor(backend: StencilApi.Store) {
+      this._backend = backend;
+    }
+    async locale(init: StencilApi.LocaleMutator): Promise<StencilApi.SiteLocale> {
+      return this._backend.fetch(`/locales`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async article(init: StencilApi.ArticleMutator): Promise<StencilApi.Article> {
+      return this._backend.fetch(`/articles`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async pages(init: StencilApi.PageMutator[]): Promise<StencilApi.Page[]> {
+      return this._backend.fetch(`/pages`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async link(init: StencilApi.LinkMutator): Promise<StencilApi.Link> {
+      return this._backend.fetch(`/links`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async workflow(init: StencilApi.WorkflowMutator): Promise<StencilApi.Workflow> {
+      return this._backend.fetch(`/workflows`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+    async template(init: StencilApi.TemplateMutator): Promise<StencilApi.Template> {
+      return this._backend.fetch(`/templates`, { method: "PUT", body: JSON.stringify(init) }).then((data) => data as any)
+    }
+  }
+  
+  export class DeleteBuilderImpl implements StencilApi.DeleteBuilder {
+    private _backend: StencilApi.Store;
+    constructor(backend: StencilApi.Store) {
+      this._backend = backend;
+    }
+    async locale(init: StencilApi.LocaleId): Promise<void> {
+      return this._backend.fetch(`/locales/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async release(init: StencilApi.ReleaseId): Promise<void> {
+      return this._backend.fetch(`/releases/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async article(init: StencilApi.ArticleId): Promise<void> {
+      return this._backend.fetch(`/articles/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async page(init: StencilApi.PageId): Promise<void> {
+      return this._backend.fetch(`/pages/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async link(init: StencilApi.LinkId): Promise<void> {
+      return this._backend.fetch(`/links/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async workflow(init: StencilApi.WorkflowId): Promise<void> {
+      return this._backend.fetch(`/workflows/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async workflowArticlePage(workflow: StencilApi.WorkflowId, article: StencilApi.ArticleId, _locale: StencilApi.Locale): Promise<void> {
+      return this._backend.fetch(`/workflows/${workflow}?articleId=${article}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async linkArticlePage(link: StencilApi.LinkId, article: StencilApi.ArticleId, _locale: StencilApi.Locale): Promise<void> {
+      return this._backend.fetch(`/links/${link}?articleId=${article}`, { method: "DELETE" }).then((data) => data as any)
+    }
+    async template(init: StencilApi.TemplateId): Promise<void> {
+      return this._backend.fetch(`/templates/${init}`, { method: "DELETE" }).then((data) => data as any)
+    }
+  }
   export interface StoreError extends Error {
     text: string;
     status: number;

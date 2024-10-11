@@ -4,22 +4,22 @@ import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 
 
 interface NewArticlePageProps {
-  article: StencilClient.Article,
-  open?: StencilClient.SiteLocale,
+  article: StencilApi.Article,
+  open?: StencilApi.SiteLocale,
 
   onClose: () => void,
-  onCreate: (page: StencilClient.Page) => void
+  onCreate: (page: StencilApi.Page) => void
 }
 
 const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose, onCreate }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
-  const [template, setTemplate] = React.useState<StencilClient.TemplateId | ''>('');
+  const [template, setTemplate] = React.useState<StencilApi.TemplateId | ''>('');
   const [devMode, setDevMode] = React.useState<boolean>(true);
 
   if (!open) {
@@ -28,7 +28,7 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
 
   const handleCreate = () => {
     // const content = template ? site.templates[template].body.content : undefined;
-    const entity: StencilClient.CreatePage = { articleId: article.id, locale: open.id, devMode };
+    const entity: StencilApi.CreatePage = { articleId: article.id, locale: open.id, devMode };
     service.create().page(entity)
       .then(success => actions.handleLoadSite().then(() => success))
       .then(success => {
@@ -42,7 +42,7 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
 
 
   const articleName = site.articles[article.id].body.name;
-  const templates: StencilClient.Template[] = Object.values(site.templates);
+  const templates: StencilApi.Template[] = Object.values(site.templates);
 
   return (
     <Burger.Dialog open={open ? true : false} onClose={onClose}

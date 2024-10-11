@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
 import * as Burger from '@/burger';
-import { Composer, StencilClient } from '../context';
+import { Composer, StencilApi } from '../context';
 
 
 interface TemplateComposerProps {
@@ -22,7 +22,7 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
   const { service, actions } = Composer.useComposer();
 
   const handleCreate = () => {
-    const entity: StencilClient.CreateTemplate = {
+    const entity: StencilApi.CreateTemplate = {
       content, description, name, type: templateType
     };
     service.create().template(entity).then(success => {
