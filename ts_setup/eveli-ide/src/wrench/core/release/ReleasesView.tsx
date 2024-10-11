@@ -18,15 +18,18 @@ import { ErrorView } from '../styles';
 import ReleasesTable from './ReleasesTable';
 import type { Release } from './release-types';
 import { ReleaseBranch } from './release-types';
-import { Composer, Client } from '../context';
-import Burger from '@/burger';
+import { Composer } from '../context';
+import Burger, { BurgerApi } from '@/burger';
+
 import { AssetMapper } from '../compare/CompareView';
+import { HdesApi } from '../client';
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.explorer.main, .05),
 }));
 
-const resolveNewBranchName = (releaseName: string, branches: Client.AstBranch[]): string => {
-  const matches: Client.AstBranch[] = branches.filter((branch) => branch.name.includes(releaseName));
+const resolveNewBranchName = (releaseName: string, branches: HdesApi.AstBranch[]): string => {
+  const matches: HdesApi.AstBranch[] = branches.filter((branch) => branch.name.includes(releaseName));
   if (matches.length === 0) {
     return releaseName + "_dev";
   }
@@ -34,7 +37,7 @@ const resolveNewBranchName = (releaseName: string, branches: Client.AstBranch[])
   return releaseName + "_dev_" + branchNo;
 }
 
-const handleTabs = (actions: Burger.TabsActions) => {
+const handleTabs = (actions: BurgerApi.TabsActions) => {
   actions.handleTabCloseAll();
   actions.handleTabAdd({ id: 'activities', label: "Activities" });
   actions.handleTabAdd({ id: 'releases', label: "Releases" });
@@ -107,7 +110,7 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
   const tabs = Burger.useTabs();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   if (asset === undefined) {
     return <></>;
@@ -155,7 +158,7 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
               closeSnackbar(key);
               enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
             })
-            .catch((error: Client.StoreError) => {
+            .catch((error: HdesApi.StoreError) => {
               setErrors(error);
             })
         } else {
@@ -165,7 +168,7 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
               actions.handleLoadSite(data);
               onClose();
             })
-            .catch((error: Client.StoreError) => {
+            .catch((error: HdesApi.StoreError) => {
               setErrors(error);
             });
         }
@@ -178,7 +181,7 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
   const { service, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   let editor = (<></>);
   if (errors) {
@@ -213,7 +216,7 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
             actions.handleLoadSite(data);
             onClose();
           })
-          .catch((error: Client.StoreError) => {
+          .catch((error: HdesApi.StoreError) => {
             setErrors(error);
           });
       }
@@ -231,7 +234,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
   //const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
   //const [deleteBranchDialogOpen, setDeleteBranchDialogOpen] = React.useState<boolean>(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState<boolean>(false);
-  const [details, setDetails] = React.useState<Client.AstTagSummary>();
+  const [details, setDetails] = React.useState<HdesApi.AstTagSummary>();
   const [expanded, setExpanded] = React.useState<boolean>(false);
   const [releaseComposer, setReleaseComposer] = React.useState(false);
   const isLatest = release.id === 'latest';
@@ -256,7 +259,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
 
   const handleCreateBranch = (releaseName: string, releaseId: string) => {
     const branchName = resolveNewBranchName(releaseName, branches);
-    const command: Client.AstCommand = {
+    const command: HdesApi.AstCommand = {
       type: 'CREATE_BRANCH',
       value: branchName,
       id: releaseId
@@ -270,7 +273,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
         closeSnackbar(key);
         enqueueSnackbar(<FormattedMessage id="release.branch.created" values={{ name: branchName }} />);
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: HdesApi.StoreError) => {
         console.error(error)
       });
   }
@@ -283,7 +286,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
         handleTabs(tabs.actions);
         enqueueSnackbar(<FormattedMessage id="release.branch.checkout" values={{ name: branchName }} />);
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error: HdesApi.StoreError) => {
         console.error(error)
       });
   }

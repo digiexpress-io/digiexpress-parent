@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 
 import { FlowComposer } from '../flow';
 import { DecisionComposer } from '../decision';
@@ -23,7 +23,7 @@ interface ActivityType {
   onCreate?: () => void;
 }
 
-const createCards: (tabs: Burger.TabsActions) => (ActivityData & ActivityType)[] = (tabs) => ([
+const createCards: (tabs: BurgerApi.TabsActions) => (ActivityData & ActivityType)[] = (tabs) => ([
   {
     composer: (handleClose) => (<FlowComposer onClose={handleClose} />),
     onView: undefined,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
@@ -16,7 +16,7 @@ declare namespace Composer {
     nav?: Nav
     withNav(nav: Nav): TabData;
   }
-  interface Tab extends Burger.TabSession<TabData> {
+  interface Tab extends BurgerApi.TabSession<TabData> {
 
   }
 

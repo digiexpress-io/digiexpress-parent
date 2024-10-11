@@ -10,7 +10,7 @@ import Toolbar from './core/Toolbar';
 import wrenchIntl from './core/intl';
 
 import { SnackbarProvider } from 'notistack';
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 
 interface WrenchComposerProps {
   service: HdesApi.Service,
@@ -23,11 +23,11 @@ const WrenchComposer: React.FC<WrenchComposerProps> = ({ service, locked }) => {
     return (<div>Content editing locked by deployment.</div>)
   }
 
-  const composer: Burger.App<Composer.ContextType> = {
+  const composer: BurgerApi.App<Composer.ContextType> = {
     id: "wrench-composer",
     components: { primary: Main, secondary: Secondary, toolbar: Toolbar },
     state: [
-      (children: React.ReactNode, restorePoint?: Burger.AppState<Composer.ContextType>) => (<>{children}</>),
+      (children: React.ReactNode, restorePoint?: BurgerApi.AppState<Composer.ContextType>) => (<>{children}</>),
       () => ({})
     ]
   };
