@@ -5,7 +5,7 @@ import { BurgerApi } from '@/burger';
 
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
-import { SessionData, ImmutableTabData } from './SessionData';
+import { SessionData } from './SessionData';
 
 declare namespace WrenchComposerApi {
 
@@ -83,6 +83,23 @@ declare namespace WrenchComposerApi {
 namespace WrenchComposerApi {
   const sessionData = new SessionData({});
 
+  export class ImmutableTabData implements TabData {
+    private _nav: Nav;
+  
+    constructor(props: { nav: Nav }) {
+      this._nav = props.nav;
+    }
+    get nav() {
+      return this._nav;
+    }
+    withNav(nav: Nav) {
+      return new ImmutableTabData({
+        nav: {
+          value: nav.value === undefined ? this._nav.value : nav.value
+        }
+      });
+    }
+  }
   export const createTab = (props: { nav: Nav, page?: HdesApi.Entity<any> }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({

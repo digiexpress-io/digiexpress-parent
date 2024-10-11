@@ -1,4 +1,4 @@
-import Composer from './ide';
+import WrenchComposerApi from './ide';
 import { HdesApi } from '../client';
 
 class SiteCache {
@@ -66,18 +66,18 @@ class SiteCache {
   }
 }
 
-class SessionData implements Composer.Session {
+class SessionData implements WrenchComposerApi.Session {
   private _site: HdesApi.Site;
-  private _pages: Record<HdesApi.EntityId, Composer.PageUpdate>;
+  private _pages: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
   private _cache: SiteCache;
-  private _debug: Composer.DebugSessions;
+  private _debug: WrenchComposerApi.DebugSessions;
   private _branchName?: string;
   
   constructor(props: {
     site?: HdesApi.Site;
-    pages?: Record<HdesApi.EntityId, Composer.PageUpdate>;
+    pages?: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
     cache?: SiteCache;
-    debug?: Composer.DebugSessions;
+    debug?: WrenchComposerApi.DebugSessions;
     branchName?: string;
   }) {
     this._site = props.site ? props.site : { name: "", contentType: "OK", tags: {}, flows: {}, decisions: {}, services: {}, branches: {} };
@@ -113,20 +113,20 @@ class SessionData implements Composer.Session {
   withSite(site: HdesApi.Site) {
     return new SessionData({ site: site, pages: this._pages, debug: this._debug, branchName: this._branchName });
   }
-  withDebug(debugSession: Composer.DebugSession) {
-    const newDebug: Record<HdesApi.EntityId, Composer.DebugSession> = {};
+  withDebug(debugSession: WrenchComposerApi.DebugSession) {
+    const newDebug: Record<HdesApi.EntityId, WrenchComposerApi.DebugSession> = {};
     newDebug[debugSession.selected] = Object.assign({}, debugSession);
-    const debug: Composer.DebugSessions = {
+    const debug: WrenchComposerApi.DebugSessions = {
       selected: debugSession.selected,
       values: Object.assign({}, this._debug.values, newDebug)
     }
     return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug, branchName: this._branchName });
   }
-  withBranch(branchName: string): Composer.Session {
+  withBranch(branchName: string): WrenchComposerApi.Session {
     return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, branchName });
   }
-  withoutPages(pageIds: HdesApi.EntityId[]): Composer.Session {
-    const pages: Record<string, Composer.PageUpdate> = {};
+  withoutPages(pageIds: HdesApi.EntityId[]): WrenchComposerApi.Session {
+    const pages: Record<string, WrenchComposerApi.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
         continue;
@@ -135,7 +135,7 @@ class SessionData implements Composer.Session {
     }
     return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
   }
-  withPage(page: HdesApi.EntityId): Composer.Session {
+  withPage(page: HdesApi.EntityId): WrenchComposerApi.Session {
     if (this._pages[page]) {
       return this;
     }
@@ -150,7 +150,7 @@ class SessionData implements Composer.Session {
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: [] });
     return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
   }
-  withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): Composer.Session {
+  withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): WrenchComposerApi.Session {
     const session = this.withPage(page);
     const pageUpdate = session.pages[page];
 
@@ -161,7 +161,7 @@ class SessionData implements Composer.Session {
   }
 }
 
-class ImmutablePageUpdate implements Composer.PageUpdate {
+class ImmutablePageUpdate implements WrenchComposerApi.PageUpdate {
   private _saved: boolean;
   private _origin: HdesApi.Entity<any>;
   private _value: HdesApi.AstCommand[];
@@ -185,27 +185,10 @@ class ImmutablePageUpdate implements Composer.PageUpdate {
   get value() {
     return this._value;
   }
-  withValue(value: HdesApi.AstCommand[]): Composer.PageUpdate {
+  withValue(value: HdesApi.AstCommand[]): WrenchComposerApi.PageUpdate {
     return new ImmutablePageUpdate({ saved: false, origin: this._origin, value });
   }
 }
 
-class ImmutableTabData implements Composer.TabData {
-  private _nav: Composer.Nav;
 
-  constructor(props: { nav: Composer.Nav }) {
-    this._nav = props.nav;
-  }
-  get nav() {
-    return this._nav;
-  }
-  withNav(nav: Composer.Nav) {
-    return new ImmutableTabData({
-      nav: {
-        value: nav.value === undefined ? this._nav.value : nav.value
-      }
-    });
-  }
-}
-
-export { SessionData, ImmutableTabData };
+export { SessionData };
