@@ -11,6 +11,11 @@ grant all privileges on database "my_stencil" to my_stencil;
 password: my_stencil_password
 
 
+GRANT ALL ON SCHEMA public TO my_stencil;
+ALTER DATABASE my_database OWNER TO my_stencil;
+ALTER DATABASE my_stencil OWNER TO my_stencil;
+
+
 ## Extensions
 
 * quarkus-stencil-sc: Static content: Release can be compiled. One service that enables a "GET" and returns "Site".

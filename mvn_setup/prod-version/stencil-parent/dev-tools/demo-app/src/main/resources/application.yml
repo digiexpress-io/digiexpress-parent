@@ -24,10 +24,10 @@ quarkus:
   datasource:
     db-kind: postgresql 
     username: my_stencil
-    password: joo4XooHllK2thei
+    password: password123
     reactive:
       max-size: 3
-      url: postgresql://localhost:5432/my_stencil
+      url: postgresql://localhost:5433/my_stencil
 
 "%prod":
   quarkus:
@@ -35,7 +35,7 @@ quarkus:
 "%dev":
   quarkus:
     log:
-      level: DEBUG
+      level: INFO
       category: 
         io.thestencil:
           level: DEBUG
