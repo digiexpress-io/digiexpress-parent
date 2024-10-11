@@ -52,9 +52,11 @@
     <commons-collections.version>4.4</commons-collections.version>
     <flexmark.version>0.62.2</flexmark.version>
 
+
+    <flapdoodle.version>3.0.0</flapdoodle.version>
     <nodeVersion>v16.20.2</nodeVersion>
     <yarnVersion>v1.22.5</yarnVersion>
-
+    <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
   </properties>
 
@@ -112,6 +114,7 @@
           <excludes>
             <exclude>**/*.json</exclude>
             <exclude>**/*.yaml</exclude>
+            <exclude>src/test/resources/**</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -215,6 +218,31 @@
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -344,8 +372,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      
-      
       <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-bom-test</artifactId>
@@ -357,6 +383,13 @@
         <groupId>io.resys.hdes</groupId>
         <artifactId>thena-bom</artifactId>
         <version>${thena.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.jupiter.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -411,6 +444,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
         <version>${spring.boot.version}</version>
+        <scope>test</scope>
       </dependency>
 
 
@@ -433,9 +467,14 @@
         <scope>test</scope>
         <version>${jsonassert.version}</version>
       </dependency>
+      <dependency>
+        <groupId>de.flapdoodle.embed</groupId>
+        <artifactId>de.flapdoodle.embed.mongo</artifactId>
+        <scope>test</scope>
+        <version>${flapdoodle.version}</version>
+      </dependency>
 
 
     </dependencies>
   </dependencyManagement>
-
 </project>

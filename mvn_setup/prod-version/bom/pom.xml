@@ -114,6 +114,18 @@
         <version>${project.version}</version>
       </dependency>
 
+
+      <dependency>
+        <groupId>io.digiexpres</groupId>
+        <artifactId>thena-docdb-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpres</groupId>
+        <artifactId>thena-docdb-pgsql</artifactId>
+        <version>${project.version}</version>
+      </dependency>      
+
     </dependencies>
   </dependencyManagement>
 </project>
