@@ -114,7 +114,7 @@
           <excludes>
             <exclude>**/*.json</exclude>
             <exclude>**/*.yaml</exclude>
-            <exclude>src/test/resources/**</exclude>
+            <exclude>**/test/resources/**</exclude>
           </excludes>
         </configuration>
         <executions>

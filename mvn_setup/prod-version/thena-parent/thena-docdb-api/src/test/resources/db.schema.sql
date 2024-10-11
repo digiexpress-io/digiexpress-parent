@@ -1,3 +1,4 @@
+
 CREATE TABLE blobs
 (
   id VARCHAR(40) PRIMARY KEY,
