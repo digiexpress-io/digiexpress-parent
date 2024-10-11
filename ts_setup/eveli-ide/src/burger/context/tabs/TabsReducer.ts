@@ -1,4 +1,4 @@
-import * as API from './TabsAPI';
+import { BurgerApi } from '../../BurgerApi';
 
 enum ReducerActionType {
   addTab = "addTab",
@@ -11,26 +11,26 @@ enum ReducerActionType {
 
 interface ReducerAction {
   type: ReducerActionType;
-  addTab?: API.TabSession<any>;
+  addTab?: BurgerApi.TabSession<any>;
   removeTab?: string;
   changeTab?: number;
   setTabData?: { id: string, updateCommand: (oldData: any) => any };
 }
 
-class TabsReducerDispatch implements API.TabsActions {
+class TabsReducerDispatch implements BurgerApi.TabsActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
     console.log("burger: init tabs dispatch");
     this._sessionDispatch = session;
   }
-  handleTabAdd(newItem: API.TabSession<any>) {
+  handleTabAdd(newItem: BurgerApi.TabSession<any>) {
     this._sessionDispatch({ type: ReducerActionType.addTab, addTab: newItem });
   }
   handleTabChange(tabIndex: number) {
     this._sessionDispatch({ type: ReducerActionType.changeTab, changeTab: tabIndex })
   }
-  handleTabClose(tab: API.TabSession<any>) {
+  handleTabClose(tab: BurgerApi.TabSession<any>) {
     this._sessionDispatch({ type: ReducerActionType.removeTab, removeTab: tab.id });
   }
   handleTabCloseAll() {
@@ -47,7 +47,7 @@ class TabsReducerDispatch implements API.TabsActions {
   }
 }
 
-const TabsReducer = (state: API.TabsSession, action: ReducerAction): API.TabsSession => {
+const TabsReducer = (state: BurgerApi.TabsSession, action: ReducerAction): BurgerApi.TabsSession => {
   switch (action.type) {
     case ReducerActionType.addTab: {
       if (action.addTab) {

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import * as API from './TabsAPI';
+import { BurgerApi } from '../../BurgerApi';
 import TabsSessionData from './TabsSessionData';
 import { TabsReducer, TabsReducerDispatch } from './TabsReducer';
 
 
-const TabsContext = React.createContext<API.TabsContextType>({
-  session: {} as API.TabsSession,
-  actions: {} as API.TabsActions,
+const TabsContext = React.createContext<BurgerApi.TabsContextType>({
+  session: {} as BurgerApi.TabsSession,
+  actions: {} as BurgerApi.TabsActions,
 })
 
 const sessionInit: TabsSessionData = new TabsSessionData({appId: ""})
@@ -23,7 +23,7 @@ const TabsProvider: React.FC<{appId: string, children: React.ReactNode}> = ({app
 }
 
 const useTabs = () => {
-  const result: API.TabsContextType = React.useContext(TabsContext);
+  const result: BurgerApi.TabsContextType = React.useContext(TabsContext);
   return result;
 }
 

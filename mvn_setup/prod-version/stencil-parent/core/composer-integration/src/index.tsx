@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
 
-import { siteTheme } from '@the-wrench-io/react-burger';
-import { StencilComposer, StencilClient, messages } from '@the-stencil-io/composer';
+import { siteTheme, StencilComposer, StencilClient, stencilIntl } from '@dxs-ts/eveli-ide';
+
 
 const locale = "en";
 
@@ -33,7 +33,7 @@ console.log("Stencil config", config);
 
 
 ReactDOM.render(
-  <IntlProvider locale={locale} messages={messages[locale]}>
+  <IntlProvider locale={locale} messages={stencilIntl[locale]}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={siteTheme}>
         <StencilComposer 

@@ -1,4 +1,4 @@
-import * as API from './AppAPI';
+import { BurgerApi } from '../BurgerApi';
 
 enum ReducerActionType {
   setActive = "setDrawer",
@@ -6,25 +6,25 @@ enum ReducerActionType {
 
 interface ReducerAction {
   type: ReducerActionType;
-  setActive?: API.AppId;
+  setActive?: BurgerApi.AppId;
 }
 
-class AppReducerDispatch implements API.AppActions {
+class AppReducerDispatch implements BurgerApi.AppActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
-  private _children: API.App<any>[];
+  private _children: BurgerApi.App<any>[];
   
-  constructor(session: React.Dispatch<ReducerAction>, children: API.App<any>[]) {
+  constructor(session: React.Dispatch<ReducerAction>, children: BurgerApi.App<any>[]) {
     console.log("burger: init app dispatch");
     this._sessionDispatch = session;
     this._children = children;
   }
-  handleActive(active: API.AppId) {
+  handleActive(active: BurgerApi.AppId) {
     this._sessionDispatch({ type: ReducerActionType.setActive, setActive: active });
   }
 }
 
-const AppReducer = (state: API.AppSession, action: ReducerAction): API.AppSession => {
+const AppReducer = (state: BurgerApi.AppSession, action: ReducerAction): BurgerApi.AppSession => {
   switch (action.type) {
     case ReducerActionType.setActive: {
       if (action.setActive === undefined) {

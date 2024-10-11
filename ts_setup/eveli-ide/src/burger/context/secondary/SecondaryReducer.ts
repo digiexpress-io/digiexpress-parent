@@ -1,4 +1,4 @@
-import * as API from './SecondaryAPI';
+import { BurgerApi } from '../../BurgerApi';
 
 enum ReducerActionType {
   setSecondary = "setSecondary"
@@ -9,7 +9,7 @@ interface ReducerAction {
   setSecondary?: string;
 }
 
-class SecondaryReducerDispatch implements API.SecondaryActions {
+class SecondaryReducerDispatch implements BurgerApi.SecondaryActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
@@ -21,7 +21,7 @@ class SecondaryReducerDispatch implements API.SecondaryActions {
   }
 }
 
-const SecondaryReducer = (state: API.SecondarySession, action: ReducerAction): API.SecondarySession => {
+const SecondaryReducer = (state: BurgerApi.SecondarySession, action: ReducerAction): BurgerApi.SecondarySession => {
   switch (action.type) {
     case ReducerActionType.setSecondary: {
       if (!action.setSecondary) {

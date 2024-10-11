@@ -1,21 +1,13 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from "@mui/material";
+import { BurgerApi } from "../BurgerApi";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-interface Release {
-  id: string;
-  body: {
-    name: string;
-    note?: string;
-    created: string;
-    data?: string;
-  };
-}
 
 interface ReleaseTableProps {
-  releases: Release[];
+  releases: BurgerApi.Release[];
   tableRowComponent: React.FC<{
-    release: Release;
+    release: BurgerApi.Release;
   }>;
 }
 
@@ -84,5 +76,5 @@ const ReleaseTable: React.FC<ReleaseTableProps> = ({ releases, tableRowComponent
   )
 }
 
-export type { Release, ReleaseTableProps };
+export type { ReleaseTableProps };
 export { ReleaseTable }

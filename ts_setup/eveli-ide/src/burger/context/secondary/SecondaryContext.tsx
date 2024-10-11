@@ -1,13 +1,13 @@
 import React from 'react';
 
-import * as API from './SecondaryAPI';
+import { BurgerApi } from '../../BurgerApi';
 import SecondarySessionData from './SecondaryData';
 import { SecondaryReducer, SecondaryReducerDispatch } from './SecondaryReducer';
 
 
-const SecondaryContext = React.createContext<API.SecondaryContextType>({
-  session: {} as API.SecondarySession,
-  actions: {} as API.SecondaryActions,
+const SecondaryContext = React.createContext<BurgerApi.SecondaryContextType>({
+  session: {} as BurgerApi.SecondarySession,
+  actions: {} as BurgerApi.SecondaryActions,
 })
 
 const sessionInit: SecondarySessionData = new SecondarySessionData({appId: ""})
@@ -22,7 +22,7 @@ const SecondaryProvider: React.FC<{appId: string, secondary?: string, children: 
 }
 
 const useSecondary = () => {
-  const result: API.SecondaryContextType = React.useContext(SecondaryContext);
+  const result: BurgerApi.SecondaryContextType = React.useContext(SecondaryContext);
   return result;
 }
 

@@ -1,4 +1,4 @@
-import * as API from './DrawerAPI';
+import { BurgerApi } from '../../BurgerApi';
 
 enum ReducerActionType {
   setDrawer = "setDrawer",
@@ -9,7 +9,7 @@ interface ReducerAction {
   setDrawer?: boolean;
 }
 
-class DrawerReducerDispatch implements API.DrawerActions {
+class DrawerReducerDispatch implements BurgerApi.DrawerActions {
 
   private _sessionDispatch: React.Dispatch<ReducerAction>;
   constructor(session: React.Dispatch<ReducerAction>) {
@@ -21,7 +21,7 @@ class DrawerReducerDispatch implements API.DrawerActions {
   }
 }
 
-const DrawerReducer = (state: API.DrawerSession, action: ReducerAction): API.DrawerSession => {
+const DrawerReducer = (state: BurgerApi.DrawerSession, action: ReducerAction): BurgerApi.DrawerSession => {
   switch (action.type) {
     case ReducerActionType.setDrawer: {
       if (action.setDrawer === undefined) {

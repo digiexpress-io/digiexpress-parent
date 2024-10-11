@@ -1,5 +1,4 @@
-import * as API from './TabsAPI';
-
+import { BurgerApi } from '../../BurgerApi';
 
 interface TabProps<T> {
   id: string;
@@ -9,7 +8,7 @@ interface TabProps<T> {
   edit?: boolean;
 }
 
-class ImmutableTab<T> implements API.TabSession<T> {
+class ImmutableTab<T> implements BurgerApi.TabSession<T> {
   private _id: string;
   private _label: string | React.ReactElement;
   private _icon?: string | React.ReactElement;
@@ -70,17 +69,17 @@ class ImmutableTab<T> implements API.TabSession<T> {
 }
 
 
-class TabsSessionData implements API.TabsSession {
+class TabsSessionData implements BurgerApi.TabsSession {
   private _appId: string;
   private _tabs: ImmutableTab<any>[];
-  private _history: API.TabsHistory;
+  private _history: BurgerApi.TabsHistory;
   private _secondary?: string;
   private _drawer: boolean;
 
   constructor(props: {
     appId: string,
     tabs?: ImmutableTab<any>[],
-    history?: API.TabsHistory,
+    history?: BurgerApi.TabsHistory,
     secondary?: string,
     drawer?: boolean
   }) {
@@ -91,7 +90,7 @@ class TabsSessionData implements API.TabsSession {
     this._tabs = props.tabs ? props.tabs : [];
     this._history = props.history ? props.history : { open: 0 };
   }
-  get tabs(): readonly API.TabSession<any>[] {
+  get tabs(): readonly BurgerApi.TabSession<any>[] {
     return this._tabs as any;
   }
   get appId() {
@@ -106,7 +105,7 @@ class TabsSessionData implements API.TabsSession {
   get drawer() {
     return this._drawer;
   }
-  private next(history: API.TabsHistory, tabs?: ImmutableTab<any>[]): API.TabsSession {
+  private next(history: BurgerApi.TabsHistory, tabs?: ImmutableTab<any>[]): BurgerApi.TabsSession {
     const newTabs: ImmutableTab<any>[] = tabs ? tabs : this._tabs;
     return new TabsSessionData({ 
       appId: this._appId,
@@ -114,7 +113,7 @@ class TabsSessionData implements API.TabsSession {
       drawer: this._drawer,
       tabs: [...newTabs], history});
   }
-  withTabData(tabId: string, updateCommand: (oldData: any) => any): API.TabsSession {
+  withTabData(tabId: string, updateCommand: (oldData: any) => any): BurgerApi.TabsSession {
     const tabs: ImmutableTab<any>[] = [];
     for (const tab of this._tabs) {
       if (tabId === tab.id) {
@@ -126,12 +125,12 @@ class TabsSessionData implements API.TabsSession {
     }
     return this.next(this.history, tabs);
   }
-  withTab(newTabOrTabIndex: API.TabSession<any> | number): API.TabsSession {
+  withTab(newTabOrTabIndex: BurgerApi.TabSession<any> | number): BurgerApi.TabsSession {
     if (typeof newTabOrTabIndex === 'number') {
       const tabIndex = newTabOrTabIndex as number;
       return this.next({ previous: this.history, open: tabIndex });
     }
-    const newTab = new ImmutableTab<any>(newTabOrTabIndex as API.TabSession<any>);
+    const newTab = new ImmutableTab<any>(newTabOrTabIndex as BurgerApi.TabSession<any>);
     const alreadyOpen = this.findTab(newTab.id);
     if (alreadyOpen !== undefined) {
       const editModeChange = this.tabs[alreadyOpen].edit !== newTab.edit;
@@ -156,7 +155,7 @@ class TabsSessionData implements API.TabsSession {
     }
     return undefined;
   }
-  withSecondary(newItemId?: string): API.TabsSession {
+  withSecondary(newItemId?: string): BurgerApi.TabsSession {
     return new TabsSessionData({ 
       secondary: newItemId, 
       tabs: this._tabs, 
@@ -164,7 +163,7 @@ class TabsSessionData implements API.TabsSession {
       drawer: this._drawer, 
       appId: this._appId, });
   }
-  withDrawer(open: boolean): API.TabsSession {
+  withDrawer(open: boolean): BurgerApi.TabsSession {
     return new TabsSessionData({ 
       secondary: this._secondary, 
       tabs: this._tabs, 
@@ -172,7 +171,7 @@ class TabsSessionData implements API.TabsSession {
       drawer: open, 
       appId: this._appId, });
   }
-  withAppId(appId: string): API.TabsSession {
+  withAppId(appId: string): BurgerApi.TabsSession {
     return new TabsSessionData({ 
       secondary: this._secondary, 
       tabs: this._tabs, 
@@ -188,7 +187,7 @@ class TabsSessionData implements API.TabsSession {
     console.error(this);
     throw new Error(`cant find tab: '${tabId}'`);
   }
-  deleteTab(tabId: string): API.TabsSession {
+  deleteTab(tabId: string): BurgerApi.TabsSession {
     const tabs: ImmutableTab<any>[] = [];
     for (const tab of this._tabs) {
       if (tabId !== tab.id) {
@@ -198,7 +197,7 @@ class TabsSessionData implements API.TabsSession {
     return this.next(this.history, tabs).withTab(tabs.length - 1);
   }
 
-  deleteTabs(): API.TabsSession {
+  deleteTabs(): BurgerApi.TabsSession {
     const tabs: ImmutableTab<any>[] = [];
     return this.next({ previous: this.history, open: 0 }, tabs);
   }

@@ -1,12 +1,12 @@
-import * as API from './AppAPI';
+import { BurgerApi } from '../BurgerApi';
 
-class AppSessionData implements API.AppSession {
-  private _active: API.AppId;
-  private _history: API.AppState<any>[];
+class AppSessionData implements BurgerApi.AppSession {
+  private _active: BurgerApi.AppId;
+  private _history: BurgerApi.AppState<any>[];
 
   constructor(props: {
-    active: API.AppId;
-    history?: API.AppState<any>[];
+    active: BurgerApi.AppId;
+    history?: BurgerApi.AppState<any>[];
   }) {
     this._active = props.active;
     this._history = props.history ? [...props.history] : [];
@@ -17,8 +17,8 @@ class AppSessionData implements API.AppSession {
   get active() {
     return this._active;
   }
-  withAppState(newState: API.AppState<any>): API.AppSession {
-    const history: API.AppState<any>[] = [];
+  withAppState(newState: BurgerApi.AppState<any>): BurgerApi.AppSession {
+    const history: BurgerApi.AppState<any>[] = [];
     for (const value of this._history) {
       if (newState.id === value.id) {
         history.push(newState);
@@ -28,7 +28,7 @@ class AppSessionData implements API.AppSession {
     }
     return new AppSessionData({ active: this._active, history });
   }
-  withActive(active: API.AppId): API.AppSession {
+  withActive(active: BurgerApi.AppId): BurgerApi.AppSession {
     return new AppSessionData({ active, history: this._history });
   }
 }

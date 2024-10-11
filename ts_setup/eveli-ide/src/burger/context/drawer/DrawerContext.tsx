@@ -1,12 +1,12 @@
 import React from 'react';
 
-import * as API from './DrawerAPI';
+import { BurgerApi } from '../../BurgerApi';
 import DrawerSessionData from './DrawerSessionData';
 import { DrawerReducer, DrawerReducerDispatch } from './DrawerSessionReducer';
 
-const DrawerContext = React.createContext<API.DrawerContextType>({
-  session: {} as API.DrawerSession,
-  actions: {} as API.DrawerActions,
+const DrawerContext = React.createContext<BurgerApi.DrawerContextType>({
+  session: {} as BurgerApi.DrawerSession,
+  actions: {} as BurgerApi.DrawerActions,
 })
 
 const sessionInit: DrawerSessionData = new DrawerSessionData({})
@@ -21,7 +21,7 @@ const DrawerProvider: React.FC<{drawerOpen?: boolean, children: React.ReactNode}
 }
 
 const useDrawer = () => {
-  const result: API.DrawerContextType = React.useContext(DrawerContext);
+  const result: BurgerApi.DrawerContextType = React.useContext(DrawerContext);
   return result;
 }
 

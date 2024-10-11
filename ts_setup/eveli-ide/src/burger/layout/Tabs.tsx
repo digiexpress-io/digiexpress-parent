@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs as MuiTabs, Tab as MuiTab, useTheme, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import * as API from '../context/tabs/TabsAPI';
+import { BurgerApi } from '../BurgerApi';
 import { useTabs } from '../context/tabs/TabsContext';
 
 
@@ -19,7 +19,7 @@ const Tabs: React.FC<{}> = () => {
     const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
       actions.handleTabChange(newValue);
     };
-    const handleTabClose = (_event: React.ChangeEvent<{}>, newValue: API.TabSession<any>) => {
+    const handleTabClose = (_event: React.ChangeEvent<{}>, newValue: BurgerApi.TabSession<any>) => {
       _event.stopPropagation();
       actions.handleTabClose(newValue);
     };

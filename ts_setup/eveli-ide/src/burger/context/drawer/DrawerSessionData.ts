@@ -1,6 +1,6 @@
-import * as API from './DrawerAPI';
+import { BurgerApi } from '../../BurgerApi';
 
-class DrawerSessionData implements API.DrawerSession {
+class DrawerSessionData implements BurgerApi.DrawerSession {
   private _drawer: boolean;
 
   constructor(props: { drawer?: boolean }) {
@@ -9,7 +9,7 @@ class DrawerSessionData implements API.DrawerSession {
   get drawer() {
     return this._drawer;
   }
-  withDrawer(open: boolean): API.DrawerSession {
+  withDrawer(open: boolean): BurgerApi.DrawerSession {
     return new DrawerSessionData({drawer: open});
   }
 }

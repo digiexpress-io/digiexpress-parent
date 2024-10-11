@@ -1,8 +1,8 @@
-import * as API from './SecondaryAPI';
+import { BurgerApi } from '../../BurgerApi';
 
 
 
-class SecondarySessionData implements API.SecondarySession {
+class SecondarySessionData implements BurgerApi.SecondarySession {
   private _appId: string;
   private _secondary?: string;
 
@@ -16,10 +16,10 @@ class SecondarySessionData implements API.SecondarySession {
   get secondary() {
     return this._secondary;
   }
-  withSecondary(newItemId?: string): API.SecondarySession {
+  withSecondary(newItemId?: string): BurgerApi.SecondarySession {
     return new SecondarySessionData({ appId: this._appId, secondary: newItemId });
   }
-  withAppId(appId: string): API.SecondarySession {
+  withAppId(appId: string): BurgerApi.SecondarySession {
     return new SecondarySessionData({ appId, secondary: this._secondary });
   }
 }
