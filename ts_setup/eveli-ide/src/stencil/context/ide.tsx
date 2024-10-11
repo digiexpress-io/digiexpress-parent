@@ -7,7 +7,7 @@ import { StencilClient } from '../';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
 
-declare namespace Composer {
+declare namespace StencilComposerApi {
 
   interface SearchData {
     values: readonly SearchDataEntry[];
@@ -114,7 +114,7 @@ declare namespace Composer {
     canCreate: StencilClient.SiteLocale[];
     links: LinkView[];
     workflows: WorkflowView[];
-    children: Composer.ArticleView[];
+    children: ArticleView[];
     displayOrder: number;
     getPageById(pageId: StencilClient.PageId): PageView;
     getPageByLocaleId(localeId: StencilClient.LocaleId): PageView;
@@ -143,10 +143,10 @@ declare namespace Composer {
   }
 }
 
-namespace Composer {
+namespace StencilComposerApi {
   const sessionData = new SessionData({});
 
-  export const createTab = (props: { nav: Composer.Nav, page?: StencilClient.Page }) => new ImmutableTabData(props);
+  export const createTab = (props: { nav: Nav, page?: StencilClient.Page }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
@@ -188,7 +188,7 @@ namespace Composer {
     const layout = Burger.useTabs();
 
 
-    const handleInTab = (props: { article: StencilClient.Article, type: Composer.NavType, locale?: string | null, secondary?: boolean }) => {
+    const handleInTab = (props: { article: StencilClient.Article, type: NavType, locale?: string | null, secondary?: boolean }) => {
       const nav = {
         type: props.type,
         value: props.secondary ? undefined : props.locale,
@@ -199,16 +199,16 @@ namespace Composer {
       if (props.type === "ARTICLE_PAGES") {
         icon = <ArticleTabIndicator article={props.article} type={props.type} />;
       }
-      const tab: Composer.Tab = {
+      const tab: Tab = {
         id: props.article.id,
         label: props.article.body.name,
         icon,
-        data: Composer.createTab({ nav })
+        data: createTab({ nav })
       };
 
       const oldTab = layout.session.findTab(props.article.id);
       if (oldTab !== undefined) {
-        layout.actions.handleTabData(props.article.id, (oldData: Composer.TabData) => oldData.withNav(nav));
+        layout.actions.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
       } else {
         // open or add the tab
         layout.actions.handleTabAdd(tab);
@@ -216,12 +216,12 @@ namespace Composer {
 
     }
 
-    const findTab = (article: StencilClient.Article): Composer.Tab | undefined => {
+    const findTab = (article: StencilClient.Article): Tab | undefined => {
       const oldTab = layout.session.findTab(article.id);
       if (oldTab !== undefined) {
         const tabs = layout.session.tabs;
         const active = tabs[layout.session.history.open];
-        const tab: Composer.Tab = active;
+        const tab: Tab = active;
         return tab;
       }
       return undefined;
@@ -247,9 +247,9 @@ namespace Composer {
   };
 }
 
-const ArticleTabIndicator: React.FC<{ article: StencilClient.Article, type: Composer.NavType }> = ({ article }) => {
+const ArticleTabIndicator: React.FC<{ article: StencilClient.Article, type: StencilComposerApi.NavType }> = ({ article }) => {
   const theme = useTheme();
-  const { isArticleSaved } = Composer.useComposer();
+  const { isArticleSaved } = StencilComposerApi.useComposer();
   const saved = isArticleSaved(article);
   return <span style={{
     paddingLeft: "5px",
@@ -261,5 +261,5 @@ const ArticleTabIndicator: React.FC<{ article: StencilClient.Article, type: Comp
 
 
 
-export default Composer;
+export default StencilComposerApi;
 

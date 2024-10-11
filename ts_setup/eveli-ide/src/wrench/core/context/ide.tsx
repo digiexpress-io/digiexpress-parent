@@ -7,7 +7,7 @@ import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
 
-declare namespace Composer {
+declare namespace WrenchComposerApi {
 
   interface Nav {
     value?: string | null;
@@ -80,10 +80,10 @@ declare namespace Composer {
   }
 }
 
-namespace Composer {
+namespace WrenchComposerApi {
   const sessionData = new SessionData({});
 
-  export const createTab = (props: { nav: Composer.Nav, page?: HdesApi.Entity<any> }) => new ImmutableTabData(props);
+  export const createTab = (props: { nav: Nav, page?: HdesApi.Entity<any> }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
@@ -133,28 +133,28 @@ namespace Composer {
       const nav = { value: props.article.id };
 
       const icon = <ArticleTabIndicator entity={props.article} />;
-      const tab: Composer.Tab = {
+      const tab: Tab = {
         id: props.article.id,
         label: props.article.ast ? props.article.ast?.name : props.article.id,
         icon,
-        data: Composer.createTab({ nav })
+        data: createTab({ nav })
       };
 
       const oldTab = layout.session.findTab(props.article.id);
       if (oldTab !== undefined) {
-        layout.actions.handleTabData(props.article.id, (oldData: Composer.TabData) => oldData.withNav(nav));
+        layout.actions.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
       } else {
         // open or add the tab
         layout.actions.handleTabAdd(tab);
       }
 
     }
-    const findTab = (article: HdesApi.Entity<any>): Composer.Tab | undefined => {
+    const findTab = (article: HdesApi.Entity<any>): Tab | undefined => {
       const oldTab = layout.session.findTab(article.id);
       if (oldTab !== undefined) {
         const tabs = layout.session.tabs;
         const active = tabs[layout.session.history.open];
-        const tab: Composer.Tab = active;
+        const tab: Tab = active;
         return tab;
       }
       return undefined;
@@ -211,7 +211,7 @@ namespace Composer {
 
 const ArticleTabIndicator: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
   const theme = useTheme();
-  const { isArticleSaved } = Composer.useComposer();
+  const { isArticleSaved } = WrenchComposerApi.useComposer();
   const saved = isArticleSaved(entity);
   return <span style={{
     paddingLeft: "5px",
@@ -223,5 +223,5 @@ const ArticleTabIndicator: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity
 
 
 
-export default Composer;
+export default WrenchComposerApi;
 
