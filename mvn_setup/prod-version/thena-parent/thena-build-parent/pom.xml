@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.resys.hdes</groupId>
+    <groupId>io.digiexpress</groupId>
     <artifactId>thena</artifactId>
     <version>1.1.26</version>
   </parent>
@@ -260,7 +260,7 @@
     <dependencies>
 
       <dependency>
-        <groupId>io.resys.hdes</groupId>
+        <groupId>io.digiexpress</groupId>
         <artifactId>thena-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>

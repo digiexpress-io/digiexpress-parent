@@ -32,7 +32,7 @@
     
     
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-docdb-api</artifactId>
     </dependency>
     <dependency>
@@ -59,7 +59,7 @@
 
     <!-- Tests -->
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-docdb-pgsql</artifactId>
       <scope>test</scope>
     </dependency>

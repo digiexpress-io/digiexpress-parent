@@ -11,7 +11,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.resys.hdes</groupId>
+      <groupId>io.digiexpress</groupId>
       <artifactId>thena-docdb-api</artifactId>
     </dependency>
 
