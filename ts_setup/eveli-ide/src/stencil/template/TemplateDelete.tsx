@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { Composer, StencilClient } from '../context';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 
 interface TemplateDeleteProps {

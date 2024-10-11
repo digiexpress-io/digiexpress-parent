@@ -19,7 +19,8 @@ import ReleasesTable from './ReleasesTable';
 import type { Release } from './release-types';
 import { ReleaseBranch } from './release-types';
 import { Composer } from '../context';
-import Burger, { BurgerApi } from '@/burger';
+import * as Burger from '@/burger';
+import { BurgerApi } from '@/burger';
 
 import { AssetMapper } from '../compare/CompareView';
 import { HdesApi } from '../client';

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, IconButton, Popover, Typography, Tooltip, ListItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 import { Composer, StencilClient } from '../context';
 import PageviewOutlinedIcon from '@mui/icons-material/PageviewOutlined';

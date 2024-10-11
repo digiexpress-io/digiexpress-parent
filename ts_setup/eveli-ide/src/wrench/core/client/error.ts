@@ -20,7 +20,7 @@ const getErrorId = (error: any) => {
   }
   return "";
 }
-const parseErrors = (props: any[]): HdesApi.ServiceErrorMsg[] => {
+export const parseErrors = (props: any[]): HdesApi.ServiceErrorMsg[] => {
   if (!props) {
     return []
   }
@@ -31,25 +31,4 @@ const parseErrors = (props: any[]): HdesApi.ServiceErrorMsg[] => {
   }));
 
   return result;
-}
-
-export class StoreErrorImpl extends Error {
-  private _props: HdesApi.ServiceErrorProps;
-  constructor(props: HdesApi.ServiceErrorProps) {
-    super(props.text);
-    this._props = {
-      text: props.text,
-      status: props.status,
-      errors: parseErrors(props.errors)
-    };
-  }
-  get name() {
-    return this._props.text;
-  }
-  get status() {
-    return this._props.status;
-  }
-  get errors() {
-    return this._props.errors;
-  }
 }

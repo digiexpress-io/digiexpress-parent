@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 import { Composer, StencilClient } from '../context';
 

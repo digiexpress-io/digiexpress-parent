@@ -10,7 +10,9 @@ import Toolbar from './core/Toolbar';
 import wrenchIntl from './core/intl';
 
 import { SnackbarProvider } from 'notistack';
-import Burger, { BurgerApi } from '@/burger';
+import * as Burger from '@/burger';
+import { BurgerApi } from '@/burger';
+
 
 interface WrenchComposerProps {
   service: HdesApi.Service,

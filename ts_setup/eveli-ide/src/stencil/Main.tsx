@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import {
   ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
   ReleasesView, LocalesView, ReleaseGraph,

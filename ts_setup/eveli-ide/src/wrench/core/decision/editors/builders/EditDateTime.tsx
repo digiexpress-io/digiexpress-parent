@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListItemText, Grid } from '@mui/material';
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import { DateBuilder } from './'
 
 

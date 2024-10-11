@@ -8,7 +8,8 @@ import { Composer } from './context';
 import stencilIntl from './intl';
 
 import { SnackbarProvider } from 'notistack';
-import Burger, { BurgerApi } from '@/burger';
+import * as Burger from '@/burger';
+import { BurgerApi } from '@/burger';
 
 interface StencilComposerProps {
   service: StencilClient.Service,

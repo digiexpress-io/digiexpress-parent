@@ -6,7 +6,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { LinkDelete } from '../../link/LinkDelete';
 import { LinkEdit } from '../../link';
 import { StencilClient } from '../../context';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 const LinkOptions: React.FC<{ link: StencilClient.Link }> = ({ link }) => {
 

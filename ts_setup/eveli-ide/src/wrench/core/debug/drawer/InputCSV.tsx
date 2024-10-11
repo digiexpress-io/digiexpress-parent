@@ -3,7 +3,7 @@ import React from 'react'
 import { TextareaAutosize, Box, Divider, Chip, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import { Client } from '../../context';
 
 

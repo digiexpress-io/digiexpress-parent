@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { Card, CardHeader, CardActions, CardContent, Typography, Box, Divider } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 
 interface ActivityData {

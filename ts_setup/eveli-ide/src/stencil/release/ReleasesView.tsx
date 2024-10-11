@@ -9,7 +9,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { FormattedMessage } from 'react-intl';
 import fileDownload from 'js-file-download'
 
-import Burger, { BurgerApi } from '@/burger';
+import * as Burger from '@/burger';
+import { BurgerApi } from '@/burger';
 import { Composer } from '../context';
 import { ReleaseComposer, ReleaseDelete } from './';
 

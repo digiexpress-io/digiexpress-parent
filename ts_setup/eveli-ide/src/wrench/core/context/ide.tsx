@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import Burger, { BurgerApi } from '@/burger';
+import * as Burger from '@/burger';
+import { BurgerApi } from '@/burger';
 
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';

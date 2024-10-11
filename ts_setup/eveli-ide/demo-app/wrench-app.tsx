@@ -12,7 +12,7 @@ const init = {
 
 console.log("INIT", init);
 
-const store = new WrenchClient.StoreImpl(init);
+const store = new WrenchClient.DefaultStore(init);
 
 const getLocale = () => {
   let locale = (navigator.languages && navigator.languages[0]) || navigator.language || (navigator as any).userLanguage || 'en-US';

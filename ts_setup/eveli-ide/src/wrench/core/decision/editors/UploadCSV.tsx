@@ -3,7 +3,7 @@ import React from 'react'
 
 import { TextareaAutosize } from '@mui/material';
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import { Client } from '../../context';
 
 

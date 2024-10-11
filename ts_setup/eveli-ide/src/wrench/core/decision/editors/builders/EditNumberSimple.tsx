@@ -18,7 +18,7 @@
  * #L%
  */
 import React from 'react'
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 
 import { NumberBuilder } from './'
 

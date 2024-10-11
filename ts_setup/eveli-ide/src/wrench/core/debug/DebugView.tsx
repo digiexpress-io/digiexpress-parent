@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel } from '@mui/material';
 
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import { Client, Composer } from '../context';
 
 import { DebugDrawer } from './drawer/DebugDrawer';

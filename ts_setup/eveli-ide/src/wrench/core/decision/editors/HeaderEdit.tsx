@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Box, Grid, ListItemText } from '@mui/material';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import { Client } from '../../context';
 import { useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';

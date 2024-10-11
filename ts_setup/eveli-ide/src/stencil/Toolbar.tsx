@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
-import Burger from '@/burger';
+import * as Burger from '@/burger';
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
