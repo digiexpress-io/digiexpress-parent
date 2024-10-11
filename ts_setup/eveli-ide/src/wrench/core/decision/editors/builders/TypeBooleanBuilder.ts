@@ -1,4 +1,4 @@
-import API from '../../../client';
+import {HdesApi} from '../../../client';
 
 const dataTypes = [
   { key: 'true', value: 'true', text: 'true' },
@@ -6,9 +6,9 @@ const dataTypes = [
 ];
 
 class BooleanBuilder {
-  private _props: { header: API.TypeDef, value: string };
+  private _props: { header: HdesApi.TypeDef, value: string };
   private _valid: boolean;
-  constructor(props: { header: API.TypeDef, value: string }) {
+  constructor(props: { header: HdesApi.TypeDef, value: string }) {
     this._props = props;
     this._valid = !props.value || this.validate();
   }

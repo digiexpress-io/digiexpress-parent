@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-import Client from '../../../client';
+import { HdesApi } from '../../../client';
 
 import NumberBuilder from './TypeNumberBuilder';
 import StringBuilder from './TypeStringBuilder';
@@ -25,7 +25,7 @@ import DateBuilder from './TypeDateBuilder';
 import BooleanBuilder from './TypeBooleanBuilder';
 import ValueSetBuilder from './TypeValueSetBuilder';
 
-const Builder = (props: {header: Client.TypeDef, value?: string, values?: string[]}) => {
+const Builder = (props: {header: HdesApi.TypeDef, value?: string, values?: string[]}) => {
   const value = props.value ? props.value : '';
   const header = props.header;
   const type = header.valueType;

@@ -1,4 +1,4 @@
-import { ServiceErrorMsg, ServiceErrorProps } from './api';
+import { HdesApi } from './api';
 
 const getErrorMsg = (error: any) => {
   if (error.msg) {
@@ -20,12 +20,12 @@ const getErrorId = (error: any) => {
   }
   return "";
 }
-const parseErrors = (props: any[]): ServiceErrorMsg[] => {
+const parseErrors = (props: any[]): HdesApi.ServiceErrorMsg[] => {
   if (!props) {
     return []
   }
 
-  const result: ServiceErrorMsg[] = props.map(error => ({
+  const result: HdesApi.ServiceErrorMsg[] = props.map(error => ({
     id: getErrorId(error),
     value: getErrorMsg(error)
   }));
@@ -33,16 +33,9 @@ const parseErrors = (props: any[]): ServiceErrorMsg[] => {
   return result;
 }
 
-export interface StoreError extends Error {
-  text: string;
-  status: number;
-  errors: ServiceErrorMsg[];
-}
-
-
 export class StoreErrorImpl extends Error {
-  private _props: ServiceErrorProps;
-  constructor(props: ServiceErrorProps) {
+  private _props: HdesApi.ServiceErrorProps;
+  constructor(props: HdesApi.ServiceErrorProps) {
     super(props.text);
     this._props = {
       text: props.text,

@@ -1,10 +1,10 @@
-import API from '../../../client';
+import {HdesApi} from '../../../client';
 
 class ValueSetBuilder {
   private _values: string[];
-  private _header: API.TypeDef;
+  private _header: HdesApi.TypeDef;
 
-  constructor(props: { header: API.TypeDef, values: string[] }) {
+  constructor(props: { header: HdesApi.TypeDef, values: string[] }) {
     this._values = props.values;
     this._header = props.header;
   }

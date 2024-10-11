@@ -1,4 +1,4 @@
-import API from '../../../client';
+import {HdesApi} from '../../../client';
 
 
 type Operator = { key: string, value: string, text: string }
@@ -25,7 +25,7 @@ function toISODate(value: string, time: boolean) {
   return time ? value + ':00Z' : value;
 }
 
-function isValidDate(value: string, type: API.TypeDef) {
+function isValidDate(value: string, type: HdesApi.TypeDef) {
   if (!value) {
     return false;
   }
@@ -63,10 +63,10 @@ function isValidOperator(possibleOperator: string) {
 class DateBuilder {
   private _value: string;
   private _time: boolean;
-  private _type: API.TypeDef;
+  private _type: HdesApi.TypeDef;
   private _valid: boolean;
 
-  constructor(props: { header: API.TypeDef, value: string }) {
+  constructor(props: { header: HdesApi.TypeDef, value: string }) {
     this._value = props.value;
     this._time = props.header.valueType === "DATE_TIME";
     this._type = props.header;

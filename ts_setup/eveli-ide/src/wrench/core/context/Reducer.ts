@@ -1,5 +1,5 @@
 import Ide from './ide';
-import Client from '../client';
+import { HdesApi } from '../client';
 
 
 enum ActionType {
@@ -12,17 +12,17 @@ enum ActionType {
 
 interface Action {
   type: ActionType;
-  setPageUpdateRemove?: {pages: Client.EntityId[]}
-  setPageUpdate?: { page: Client.EntityId, value: Client.AstCommand[] };
-  setSite?: { site: Client.Site };
+  setPageUpdateRemove?: {pages: HdesApi.EntityId[]}
+  setPageUpdate?: { page: HdesApi.EntityId, value: HdesApi.AstCommand[] };
+  setSite?: { site: HdesApi.Site };
   setDebugUpdate?: Ide.DebugSession;
   setBranchUpdate?: string;
 }
 
 const ActionBuilder = {
-  setPageUpdateRemove: (setPageUpdateRemove: { pages: Client.EntityId[] } ) => ({type: ActionType.setPageUpdateRemove, setPageUpdateRemove }),
-  setPageUpdate: (setPageUpdate: { page: Client.EntityId, value: Client.AstCommand[] }) => ({ type: ActionType.setPageUpdate, setPageUpdate }),
-  setSite: (setSite: { site: Client.Site }) => ({ type: ActionType.setSite, setSite }),
+  setPageUpdateRemove: (setPageUpdateRemove: { pages: HdesApi.EntityId[] } ) => ({type: ActionType.setPageUpdateRemove, setPageUpdateRemove }),
+  setPageUpdate: (setPageUpdate: { page: HdesApi.EntityId, value: HdesApi.AstCommand[] }) => ({ type: ActionType.setPageUpdate, setPageUpdate }),
+  setSite: (setSite: { site: HdesApi.Site }) => ({ type: ActionType.setSite, setSite }),
   setDebugUpdate: (setDebugUpdate: Ide.DebugSession) => ({ type: ActionType.setDebugUpdate, setDebugUpdate }),
   setBranchUpdate: (setBranchUpdate?: string) => ({ type: ActionType.setBranchUpdate, setBranchUpdate })
 }
@@ -30,9 +30,9 @@ const ActionBuilder = {
 class ReducerDispatch implements Ide.Actions {
 
   private _sessionDispatch: React.Dispatch<Action>;
-  private _service: Client.Service;
+  private _service: HdesApi.Service;
   
-  constructor(session: React.Dispatch<Action>, service: Client.Service) {
+  constructor(session: React.Dispatch<Action>, service: HdesApi.Service) {
     this._sessionDispatch = session;
     this._service = service;
   }
@@ -46,7 +46,7 @@ class ReducerDispatch implements Ide.Actions {
         }
       });
   }
-  async handleLoadSite(site?: Client.Site): Promise<void> {
+  async handleLoadSite(site?: HdesApi.Site): Promise<void> {
     if(site) {
       return this._sessionDispatch(ActionBuilder.setSite({site}));  
     } else {
@@ -59,10 +59,10 @@ class ReducerDispatch implements Ide.Actions {
   handleDebugUpdate(debug: Ide.DebugSession): void {
     this._sessionDispatch(ActionBuilder.setDebugUpdate(debug));
   }
-  handlePageUpdate(page: Client.EntityId, value: Client.AstCommand[]): void {
+  handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): void {
     this._sessionDispatch(ActionBuilder.setPageUpdate({page, value}));
   }
-  handlePageUpdateRemove(pages: Client.EntityId[]): void {
+  handlePageUpdateRemove(pages: HdesApi.EntityId[]): void {
     this._sessionDispatch(ActionBuilder.setPageUpdateRemove({pages}));
   }
 }

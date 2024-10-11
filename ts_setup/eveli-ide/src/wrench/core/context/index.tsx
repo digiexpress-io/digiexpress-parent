@@ -1,4 +1,5 @@
 import Composer from './ide';
-import Client from '../client';
+import { HdesApi as Client} from '../client';
 
-export { Composer, Client };
+export type {Client}
+export { Composer };

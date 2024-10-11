@@ -1,4 +1,4 @@
-import API from '../../../client';
+import {HdesApi} from '../../../client';
 
 
 
@@ -37,7 +37,7 @@ function isValidOperator(possibleOperator: string) {
   return operator;
 }
 
-function isValidNumber(value: string | null, type: API.TypeDef) {
+function isValidNumber(value: string | null, type: HdesApi.TypeDef) {
   if(!value) {
     return false;
   }
@@ -56,11 +56,11 @@ function isValidNumber(value: string | null, type: API.TypeDef) {
 
 class NumberBuilder {
   private _value: string;
-  private _type: API.TypeDef; 
+  private _type: HdesApi.TypeDef; 
   private _valid: boolean;
   private _comparisonOperators: Operator[];
   
-  constructor(props: {header: API.TypeDef, value: string}) {
+  constructor(props: {header: HdesApi.TypeDef, value: string}) {
     this._value = props.value;
     this._type = props.header;
     this._comparisonOperators = comparisonOperators;

@@ -1,4 +1,4 @@
-import API from '../../../client';
+import {HdesApi} from '../../../client';
 
 
 type Operator = { key: string, value: string, text: string }
@@ -27,11 +27,11 @@ function validate(builder: StringBuilder) {
 
 class StringBuilder {
   private _value: string;
-  private _type: API.TypeDef;
+  private _type: HdesApi.TypeDef;
   private _valid: boolean;
   private _operators: Operator[];
 
-  constructor(props: { header: API.TypeDef, value: string }) {
+  constructor(props: { header: HdesApi.TypeDef, value: string }) {
     this._value = props.value
     this._type = props.header
     this._valid = !props.value || validate(this);

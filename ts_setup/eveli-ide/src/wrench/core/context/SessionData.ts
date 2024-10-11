@@ -1,13 +1,13 @@
 import Composer from './ide';
-import Client from '../client';
+import Client, {HdesApi} from '../client';
 
 class SiteCache {
-  private _site: Client.Site;
-  private _decisions: Record<string, Client.Entity<Client.AstDecision>> = {};
-  private _flows: Record<string, Client.Entity<Client.AstFlow>> = {};
-  private _services: Record<string, Client.Entity<Client.AstService>> = {};
+  private _site: HdesApi.Site;
+  private _decisions: Record<string, HdesApi.Entity<HdesApi.AstDecision>> = {};
+  private _flows: Record<string, HdesApi.Entity<HdesApi.AstFlow>> = {};
+  private _services: Record<string, HdesApi.Entity<HdesApi.AstService>> = {};
 
-  constructor(site: Client.Site) {
+  constructor(site: HdesApi.Site) {
     this._site = site;
     
     Object.values(site.decisions).forEach(d => this.visitDecision(d))
@@ -15,7 +15,7 @@ class SiteCache {
     Object.values(site.flows).forEach(d => this.visitFlow(d))
   }
 
-  private visitFlow(flow: Client.Entity<Client.AstFlow>) {
+  private visitFlow(flow: HdesApi.Entity<HdesApi.AstFlow>) {
     const { ast } = flow;
     if (!ast) {
       return;
@@ -23,7 +23,7 @@ class SiteCache {
     this._flows[ast.name] = flow;
   }
 
-  private visitDecision(decision: Client.Entity<Client.AstDecision>) {
+  private visitDecision(decision: HdesApi.Entity<HdesApi.AstDecision>) {
     const { ast } = decision;
     if (!ast) {
       return;
@@ -31,7 +31,7 @@ class SiteCache {
     this._decisions[ast.name] = decision;
   }
 
-  private visitService(service: Client.Entity<Client.AstService>) {
+  private visitService(service: HdesApi.Entity<HdesApi.AstService>) {
     const { ast } = service;
     if (!ast) {
       return;
@@ -39,8 +39,8 @@ class SiteCache {
     this._services[ast.name] = service;
   }
 
-  getEntity(entityId: Client.EntityId): Client.Entity<any> {
-    let entity: Client.Entity<any> = this._site.decisions[entityId];
+  getEntity(entityId: HdesApi.EntityId): HdesApi.Entity<any> {
+    let entity: HdesApi.Entity<any> = this._site.decisions[entityId];
     if (!entity) {
       entity = this._site.flows[entityId];
     }
@@ -55,27 +55,27 @@ class SiteCache {
     }
     return entity;
   }
-  getDecision(decisionName: string): undefined | Client.Entity<Client.AstDecision> {
+  getDecision(decisionName: string): undefined | HdesApi.Entity<HdesApi.AstDecision> {
     return this._decisions[decisionName];
   }
-  getFlow(flowName: string): undefined | Client.Entity<Client.AstFlow> {
+  getFlow(flowName: string): undefined | HdesApi.Entity<HdesApi.AstFlow> {
     return this._flows[flowName];
   }
-  getService(serviceName: string): undefined | Client.Entity<Client.AstService> {
+  getService(serviceName: string): undefined | HdesApi.Entity<HdesApi.AstService> {
     return this._services[serviceName];
   }
 }
 
 class SessionData implements Composer.Session {
-  private _site: Client.Site;
-  private _pages: Record<Client.EntityId, Composer.PageUpdate>;
+  private _site: HdesApi.Site;
+  private _pages: Record<HdesApi.EntityId, Composer.PageUpdate>;
   private _cache: SiteCache;
   private _debug: Composer.DebugSessions;
   private _branchName?: string;
   
   constructor(props: {
-    site?: Client.Site;
-    pages?: Record<Client.EntityId, Composer.PageUpdate>;
+    site?: HdesApi.Site;
+    pages?: Record<HdesApi.EntityId, Composer.PageUpdate>;
     cache?: SiteCache;
     debug?: Composer.DebugSessions;
     branchName?: string;
@@ -98,23 +98,23 @@ class SessionData implements Composer.Session {
   get branchName() {
     return this._branchName;
   }
-  getDecision(decisionName: string): undefined | Client.Entity<Client.AstDecision> {
+  getDecision(decisionName: string): undefined | HdesApi.Entity<HdesApi.AstDecision> {
     return this._cache.getDecision(decisionName);
   }
-  getFlow(flowName: string): undefined | Client.Entity<Client.AstFlow> {
+  getFlow(flowName: string): undefined | HdesApi.Entity<HdesApi.AstFlow> {
     return this._cache.getFlow(flowName);
   }
-  getService(serviceName: string): undefined | Client.Entity<Client.AstService> {
+  getService(serviceName: string): undefined | HdesApi.Entity<HdesApi.AstService> {
     return this._cache.getService(serviceName);
   }
-  getEntity(entityId: Client.EntityId): Client.Entity<any> | undefined {
+  getEntity(entityId: HdesApi.EntityId): HdesApi.Entity<any> | undefined {
     return this._cache.getEntity(entityId);
   }
-  withSite(site: Client.Site) {
+  withSite(site: HdesApi.Site) {
     return new SessionData({ site: site, pages: this._pages, debug: this._debug, branchName: this._branchName });
   }
   withDebug(debugSession: Composer.DebugSession) {
-    const newDebug: Record<Client.EntityId, Composer.DebugSession> = {};
+    const newDebug: Record<HdesApi.EntityId, Composer.DebugSession> = {};
     newDebug[debugSession.selected] = Object.assign({}, debugSession);
     const debug: Composer.DebugSessions = {
       selected: debugSession.selected,
@@ -125,7 +125,7 @@ class SessionData implements Composer.Session {
   withBranch(branchName: string): Composer.Session {
     return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, branchName });
   }
-  withoutPages(pageIds: Client.EntityId[]): Composer.Session {
+  withoutPages(pageIds: HdesApi.EntityId[]): Composer.Session {
     const pages: Record<string, Composer.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
@@ -135,7 +135,7 @@ class SessionData implements Composer.Session {
     }
     return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
   }
-  withPage(page: Client.EntityId): Composer.Session {
+  withPage(page: HdesApi.EntityId): Composer.Session {
     if (this._pages[page]) {
       return this;
     }
@@ -150,7 +150,7 @@ class SessionData implements Composer.Session {
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: [] });
     return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
   }
-  withPageValue(page: Client.EntityId, value: Client.AstCommand[]): Composer.Session {
+  withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): Composer.Session {
     const session = this.withPage(page);
     const pageUpdate = session.pages[page];
 
@@ -163,13 +163,13 @@ class SessionData implements Composer.Session {
 
 class ImmutablePageUpdate implements Composer.PageUpdate {
   private _saved: boolean;
-  private _origin: Client.Entity<any>;
-  private _value: Client.AstCommand[];
+  private _origin: HdesApi.Entity<any>;
+  private _value: HdesApi.AstCommand[];
 
   constructor(props: {
     saved: boolean;
-    origin: Client.Entity<any>;
-    value: Client.AstCommand[];
+    origin: HdesApi.Entity<any>;
+    value: HdesApi.AstCommand[];
   }) {
     this._saved = props.saved;
     this._origin = props.origin;
@@ -185,7 +185,7 @@ class ImmutablePageUpdate implements Composer.PageUpdate {
   get value() {
     return this._value;
   }
-  withValue(value: Client.AstCommand[]): Composer.PageUpdate {
+  withValue(value: HdesApi.AstCommand[]): Composer.PageUpdate {
     return new ImmutablePageUpdate({ saved: false, origin: this._origin, value });
   }
 }

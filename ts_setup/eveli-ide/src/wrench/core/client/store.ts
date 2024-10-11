@@ -1,22 +1,15 @@
 import { StoreErrorImpl } from './error';
-import { Store } from './api';
-
-interface StoreConfig {
-  url: string;
-  oidc?: string;
-  status?: string;
-  csrf?: { key: string, value: string }
-}
+import { HdesApi } from './api';
 
 
 
-class DefaultStore implements Store {
-  private _config: StoreConfig;
+class DefaultStore implements HdesApi.Store {
+  private _config: HdesApi.StoreConfig;
   private _updateStarted: boolean = false;
   private _iapSessionRefreshWindow: Window | null = null;
   private _defRef: RequestInit;
 
-  constructor(config: StoreConfig) {
+  constructor(config: HdesApi.StoreConfig) {
     this._config = config;
     this._defRef = {
       method: "GET",
@@ -123,5 +116,4 @@ class DefaultStore implements Store {
   }
 };
 
-export type { StoreConfig };
 export { DefaultStore };

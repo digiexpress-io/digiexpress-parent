@@ -2,16 +2,18 @@
 import React from 'react';
 import { Main } from './core/Main';
 import { Secondary } from './core/Secondary';
-import WrenchClient from './core/client';
-import Toolbar from './core/Toolbar';
 import { Composer } from './core/context';
+
+
+import WrenchClient, { HdesApi } from './core/client';
+import Toolbar from './core/Toolbar';
 import wrenchIntl from './core/intl';
 
 import { SnackbarProvider } from 'notistack';
 import Burger from '@/burger';
 
 interface WrenchComposerProps {
-  service: WrenchClient.Service,
+  service: HdesApi.Service,
   locked?: boolean;
 };
 
@@ -41,5 +43,5 @@ const WrenchComposer: React.FC<WrenchComposerProps> = ({ service, locked }) => {
 
 
 
-export type { WrenchComposerProps };
+export type { WrenchComposerProps, HdesApi };
 export { WrenchComposer, WrenchClient, wrenchIntl };
