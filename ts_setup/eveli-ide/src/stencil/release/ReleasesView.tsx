@@ -9,7 +9,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { FormattedMessage } from 'react-intl';
 import fileDownload from 'js-file-download'
 
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 import { Composer } from '../context';
 import { ReleaseComposer, ReleaseDelete } from './';
 
@@ -55,7 +55,7 @@ const ReleasesView: React.FC<{}> = () => {
 }
 
 
-const Row: React.FC<{ release: Burger.Release }> = ({ release }) => {
+const Row: React.FC<{ release: BurgerApi.Release }> = ({ release }) => {
   const [releaseDeleteOpen, setReleaseDeleteOpen] = React.useState(false);
   const { service } = Composer.useComposer();
 

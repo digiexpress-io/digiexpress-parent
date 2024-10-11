@@ -8,7 +8,7 @@ import { Composer } from './context';
 import stencilIntl from './intl';
 
 import { SnackbarProvider } from 'notistack';
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 
 interface StencilComposerProps {
   service: StencilClient.Service,
@@ -22,11 +22,11 @@ const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) =>
     return (<div>Content editing locked by deployment.</div>)
   }
 
-  const composer: Burger.App<Composer.ContextType> = {
+  const composer: BurgerApi.App<Composer.ContextType> = {
     id: "stencil-composer",
     components: { primary: Main, secondary: Secondary, toolbar: Toolbar },
     state: [
-      (children: React.ReactNode, restorePoint?: Burger.AppState<Composer.ContextType>) => (<>{children}</>),
+      (children: React.ReactNode, restorePoint?: BurgerApi.AppState<Composer.ContextType>) => (<>{children}</>),
       () => ({})
     ]
   };

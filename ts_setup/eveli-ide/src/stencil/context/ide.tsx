@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useTheme } from '@mui/material';
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 import { StencilClient } from '../';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData, ImmutableTabData } from './SessionData';
@@ -48,7 +48,7 @@ declare namespace Composer {
     withNav(nav: Nav): TabData;
   }
 
-  interface Tab extends Burger.TabSession<TabData> {
+  interface Tab extends BurgerApi.TabSession<TabData> {
 
   }
 

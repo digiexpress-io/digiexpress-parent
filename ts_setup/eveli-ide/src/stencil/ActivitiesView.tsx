@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import Burger from '@/burger';
+import Burger, { BurgerApi } from '@/burger';
 
 import { ArticleComposer } from './article';
 import { LinkComposer } from './link';
@@ -36,7 +36,7 @@ interface CardData {
 
 type CardType = "release" | "article" | "page" | "link" | "workflow" | "locale" | "migration" | "templates";
 
-const createCards: (site: StencilClient.Site, theme: Theme, tabs: Burger.TabsActions) => CardData[] = (_site, theme, tabs) => ([
+const createCards: (site: StencilClient.Site, theme: Theme, tabs: BurgerApi.TabsActions) => CardData[] = (_site, theme, tabs) => ([
   {
     composer: (handleClose) => (<ArticleComposer onClose={handleClose} />),
     onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),

@@ -18,6 +18,7 @@ import { StyledRadioButton } from './styles/StyledRadioButton';
 
 import { DateTimeFormat } from './utils/DateTimeFormatter';
 import { ReleaseTable as ReleaseTableAs } from './releases/ReleaseTable';
+export type { BurgerApi } from './BurgerApi';
 
 
 namespace Burger {
@@ -53,6 +54,6 @@ namespace Burger {
   export const ReleaseTable = ReleaseTableAs;
 
 }
-export * from './BurgerApi';
+
 export { siteTheme };
 export default Burger;
