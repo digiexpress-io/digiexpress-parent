@@ -8,7 +8,11 @@ server:
     session.timeout: 7200
   error:
     include-stacktrace: never
-    
+
+logging.level.org.springframework.web: DEBUG
+logging.level.org.springframework.boot: DEBUG
+
+
 
 host: "http://localhost:${server.port}"
 
@@ -21,6 +25,7 @@ wrench:
   assets:
     ide: true
     ide-redirect: true
+    ide-context-path: ide
     rest: true
     
     inmemory: 
@@ -35,9 +40,10 @@ wrench:
     pg:
       enabled: true
       autoCreate: true
-      repositoryName: "test-repo-1" 
+      repositoryName: "wrench-assets" 
       branchSpecifier: "main"
       pgHost: "localhost"
-      pgDb: "postgres"
-      pgUser: "postgres"
-      pgPass: "example"
+      pgPort: 5433
+      pgDb: "my_stencil"
+      pgUser: "my_stencil"
+      pgPass: "password123"

@@ -1,5 +1,24 @@
 package io.resys.wrench.assets.bundle.spi;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.Duration;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 /*-
  * #%L
  * wrench-component-assets-integrations
@@ -21,30 +40,18 @@ package io.resys.wrench.assets.bundle.spi;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
+import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.Duration;
+import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
+import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.hdes.client.spi.flow.validators.IdValidator;
+import io.resys.hdes.spring.composer.controllers.exception.AssetExceptionMapping;
 
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
@@ -60,6 +67,40 @@ public class AssetIntegrationTest {
 
   @Configuration
   public static class ServiceTestConfig {
+    @Bean
+    public AssetExceptionMapping assetExceptionMapping() {
+      return new AssetExceptionMapping();
+    }
+    @Bean
+    public HdesClient hdesClient(
+        ApplicationContext context, 
+        ObjectMapper objectMapper, 
+        HdesStore store) {
+      
+      final ServiceInit init = new ServiceInit() {
+        @Override
+        public <T> T get(Class<T> type) {
+          return context.getAutowireCapableBeanFactory().createBean(type);
+        }
+      };
+
+      final HdesClientImpl hdesClient = HdesClientImpl.builder()
+          .store(store)
+          .objectMapper(objectMapper)
+          .serviceInit(init)
+          .dependencyInjectionContext(new DependencyInjectionContext() {
+            @Override
+            public <T> T get(Class<T> type) {
+              return context.getBean(type);
+            }
+          })
+          .flowVisitors(new IdValidator())
+          .build();
+      
+      return hdesClient;
+    }
+    
+    
     @Bean
     public ObjectMapper objectMapper() {
       return new ObjectMapper();

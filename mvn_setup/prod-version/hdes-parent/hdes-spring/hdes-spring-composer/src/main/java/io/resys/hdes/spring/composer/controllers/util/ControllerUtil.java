@@ -54,13 +54,13 @@ public class ControllerUtil {
       final String hash = js.substring(0, js.length() - 3);
       final String manifest = resolveRuntimeScript("classpath*:**/hdes-composer-ui/**/manifest.json");
 
-      final List<String> css = Arrays.asList(contextPath + path + "static/css/"
-          + resolveRuntimeScript("classpath*:**/hdes-composer-ui/**/static/css/main*.css"));
+      final List<String> css = Arrays.asList(contextPath + path + "static/"
+          + resolveRuntimeScript("classpath*:**/hdes-composer-ui/**/index*.css"));
 
       final IdeOnClasspath config = new IdeOnClasspath(
           hash, css, 
           contextPath + path + manifest,
-          contextPath + path + "static/js/" + js);
+          contextPath + path + "static/" + js);
 
       if (LOGGER.isDebugEnabled()) {
         LOGGER.debug("Hdes IDE is enabled." + System.lineSeparator() + config);
@@ -92,7 +92,7 @@ public class ControllerUtil {
   }
 
   private static String chunkJs() throws IOException {
-    Resource[] resources = resolver.getResources("classpath*:**/hdes-composer-ui/**/main*.js");
+    Resource[] resources = resolver.getResources("classpath*:**/hdes-composer-ui/**/index*.js");
     for (Resource resource : resources) {
       return resource.getFilename();
     }

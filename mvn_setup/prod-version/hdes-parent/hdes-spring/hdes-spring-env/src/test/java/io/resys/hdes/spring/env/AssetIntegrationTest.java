@@ -22,8 +22,8 @@ package io.resys.hdes.spring.env;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -39,15 +39,24 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
+import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
+import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.spi.HdesInMemoryStore;
+import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
+import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
+import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.resys.hdes.client.spi.flow.validators.IdValidator;
 
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @EnableAutoConfiguration
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {AssetIntegrationTest.ServiceTestConfig.class})
+@ContextConfiguration(classes = {AssetIntegrationTest.ServiceTestConfig.class })
 public class AssetIntegrationTest {
 
   @Autowired
@@ -61,6 +70,44 @@ public class AssetIntegrationTest {
     public ObjectMapper objectMapper() {
       return new ObjectMapper()
               .registerModule(new Jdk8Module());
+    }
+    
+    @Bean
+    public HdesClient hdesClient(
+        ApplicationContext context, 
+        ObjectMapper objectMapper, 
+        HdesStore store) {
+      
+      final ServiceInit init = new ServiceInit() {
+        @Override
+        public <T> T get(Class<T> type) {
+          return context.getAutowireCapableBeanFactory().createBean(type);
+        }
+      };
+
+      final HdesClientImpl hdesClient = HdesClientImpl.builder()
+          .store(store)
+          .objectMapper(objectMapper)
+          .serviceInit(init)
+          .dependencyInjectionContext(new DependencyInjectionContext() {
+            @Override
+            public <T> T get(Class<T> type) {
+              return context.getBean(type);
+            }
+          })
+          .flowVisitors(new IdValidator())
+          .build();
+      
+      return hdesClient;
+    }
+    @Bean
+    public HdesStore hdesStore(ObjectMapper objectMapper) {
+      return HdesInMemoryStore.builder().objectMapper(objectMapper).build();
+    }
+    @Bean
+    public ProgramEnvir staticAssets(HdesClient client) {
+      final var source = client.store().query().get().await().atMost(Duration.ofMinutes(1));
+      return ComposerEntityMapper.toEnvir(client.envir(), source).build();
     }
   }
 

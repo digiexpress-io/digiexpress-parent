@@ -21,9 +21,9 @@
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
     <surefire.plugin.version>3.3.1</surefire.plugin.version>
 
-    <spring.security.version>5.5.1</spring.security.version>
-    <spring.boot.version>2.5.12</spring.boot.version>
-    <spring.version>5.3.18</spring.version>
+    <spring.security.version>6.3.3</spring.security.version>
+    <spring.boot.version>3.3.4</spring.boot.version>
+    <spring.version>6.1.13</spring.version>
     <jackson.version>2.17.2</jackson.version>
 
     <jandex.version>3.1.5</jandex.version>
@@ -31,7 +31,7 @@
     <lombok.version>1.18.34</lombok.version>
 
     <hbvalidator.version>6.0.23.Final</hbvalidator.version>
-    <logback.version>1.2.13</logback.version>
+    <logback.version>1.5.8</logback.version>
     <slf4j.version>1.7.36</slf4j.version>
 
     <eirslett.version>1.12.0</eirslett.version>
@@ -53,10 +53,6 @@
 
 
     <flapdoodle.version>3.0.0</flapdoodle.version>
-    
-    <!-- Temp. remove after vite mogration-->
-    <nodeVersion>v16.20.2</nodeVersion>
-    <yarnVersion>v1.22.5</yarnVersion>
     
     <pnpm.version>v8.6.12</pnpm.version>
     <node.version>v18.18.2</node.version>

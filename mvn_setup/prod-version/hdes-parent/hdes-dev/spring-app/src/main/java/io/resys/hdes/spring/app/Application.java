@@ -23,13 +23,19 @@ import java.util.Arrays;
  */
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import io.resys.hdes.spring.composer.ComposerAutoConfiguration;
+
 @SpringBootApplication
+@EnableAutoConfiguration
+@Import(ComposerAutoConfiguration.class)
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[]{Application.class}, args);

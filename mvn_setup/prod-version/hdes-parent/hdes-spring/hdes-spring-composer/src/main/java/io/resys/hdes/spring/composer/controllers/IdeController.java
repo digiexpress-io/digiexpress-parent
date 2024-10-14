@@ -22,8 +22,6 @@ package io.resys.hdes.spring.composer.controllers;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -37,6 +35,7 @@ import io.resys.hdes.spring.composer.ComposerConfigBean;
 import io.resys.hdes.spring.composer.controllers.util.ControllerUtil;
 import io.resys.hdes.spring.composer.controllers.util.IdeOnClasspath;
 import io.resys.hdes.spring.composer.controllers.util.ThymeleafConfig;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class IdeController {

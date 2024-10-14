@@ -23,8 +23,6 @@ package io.resys.hdes.spring.composer;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.immutables.value.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -42,6 +40,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.spring.composer.controllers.exception.AssetExceptionMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @ConditionalOnProperty(name = "wrench.assets.enabled", havingValue = "true", matchIfMissing = true)
@@ -64,7 +63,6 @@ public class ComposerAutoConfiguration {
   public HdesClient hdesClient(
       ApplicationContext context, 
       ObjectMapper objectMapper, 
-      ComposerConfigBean assetConfigBean, 
       HdesStore store) {
     
     final ServiceInit init = new ServiceInit() {
