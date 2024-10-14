@@ -4,15 +4,17 @@
   "private": true,
   "homepage": "/portal",
   "dependencies": {
-    "@dxs-ts/eveli-ide": "^0.0.21",
+    "@dxs-ts/eveli-ide": "^0.0.22",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intl": "^5.20.2",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "5.0.0-alpha.151",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-intl": "^5.20.2"
+    "@mui/system": "^5.0.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",

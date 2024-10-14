@@ -53,8 +53,14 @@
 
 
     <flapdoodle.version>3.0.0</flapdoodle.version>
+    
+    <!-- Temp. remove after vite mogration-->
     <nodeVersion>v16.20.2</nodeVersion>
     <yarnVersion>v1.22.5</yarnVersion>
+    
+    <pnpm.version>v8.6.12</pnpm.version>
+    <node.version>v18.18.2</node.version>
+    
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
   </properties>

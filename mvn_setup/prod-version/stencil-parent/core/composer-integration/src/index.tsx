@@ -23,13 +23,12 @@ declare global {
 
 const { portalconfig } = window;
 
-const config: StencilClient.StoreConfig = { 
+const config: StencilApi.StoreConfig = { 
   url: portalconfig?.server.url ? portalconfig.server.url : "",
   status: portalconfig?.server.status,
   oidc: portalconfig?.server.oidc,
 };
 console.log("Stencil config", config);
-
 
 ReactDOM.render(
   <IntlProvider locale={locale} messages={stencilIntl[locale]}>
