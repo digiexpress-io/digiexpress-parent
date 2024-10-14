@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
 
-import { siteTheme, StencilComposer, StencilClient, stencilIntl } from '@dxs-ts/eveli-ide';
+import { siteTheme, StencilComposer, StencilClient, stencilIntl, StencilApi } from '@dxs-ts/eveli-ide';
 
 
 const locale = "en";

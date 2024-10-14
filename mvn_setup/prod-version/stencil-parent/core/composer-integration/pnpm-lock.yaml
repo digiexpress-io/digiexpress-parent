@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@dxs-ts/eveli-ide':
-        specifier: ^0.0.20
-        version: 0.0.20(@babel/core@7.0.0)(@types/react@17.0.10)(typescript@4.3.2)
+        specifier: ^0.0.21
+        version: 0.0.21(vfsvaegpekoa7z7xy6ffc77ptq)
       '@emotion/react':
         specifier: ^11.4.1
         version: 11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2)
@@ -822,8 +822,19 @@ packages:
   '@csstools/normalize.css@10.1.0':
     resolution: {integrity: sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==}
 
-  '@dxs-ts/eveli-ide@0.0.20':
-    resolution: {integrity: sha512-4qG7KXXS6Paj+LvjwJ+fvnEknj+FMWTE+/TKUlRCWkyt1wUeuR4y+v2FDbkyJuVMUlScKvQ34m6NmAW7eT1i6Q==}
+  '@dxs-ts/eveli-ide@0.0.21':
+    resolution: {integrity: sha512-e3z+f8sZQyAf1OYW3zRxJ9GjlMe0Z2QpvxsUvp5ssQl/32Y85F8Vh5FYfWSIjbKIUq4Jf/FMTQxY1pk18rIWqQ==}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      '@mui/icons-material': ^5.0.1
+      '@mui/lab': 5.0.0-alpha.151
+      '@mui/material': ^5.0.1
+      '@mui/styles': ^5.0.1
+      '@mui/system': ^5.0.1
+      react: ^17.0.2
+      react-dom: ^17.0.2
+      react-intl: ^5.20.2
 
   '@emotion/babel-plugin@11.12.0':
     resolution: {integrity: sha512-y2WQb+oP8Jqvvclh8Q55gLUyb7UFvgv7eJfsj7td5TToBrIUtPay2kMrZi4xjq9qw2vD0ZR5fSho0yqoFgX7Rw==}
@@ -9239,7 +9250,7 @@ snapshots:
 
   '@csstools/normalize.css@10.1.0': {}
 
-  '@dxs-ts/eveli-ide@0.0.20(@babel/core@7.0.0)(@types/react@17.0.10)(typescript@4.3.2)':
+  '@dxs-ts/eveli-ide@0.0.21(vfsvaegpekoa7z7xy6ffc77ptq)':
     dependencies:
       '@emotion/react': 11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2)
       '@emotion/styled': 11.3.0(@babel/core@7.0.0)(@emotion/react@11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2))(@types/react@17.0.10)(react@17.0.2)
@@ -9256,17 +9267,14 @@ snapshots:
       moment: 2.30.1
       moment-timezone: 0.5.46
       notistack: 2.0.8(@emotion/react@11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2))(@emotion/styled@11.3.0(@babel/core@7.0.0)(@emotion/react@11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2))(@types/react@17.0.10)(react@17.0.2))(@mui/material@5.0.1(@emotion/react@11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2))(@emotion/styled@11.3.0(@babel/core@7.0.0)(@emotion/react@11.4.1(@babel/core@7.0.0)(@types/react@17.0.10)(react@17.0.2))(@types/react@17.0.10)(react@17.0.2))(@types/react@17.0.10)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       react-intl: 5.20.2(react@17.0.2)(typescript@4.3.2)
       vis-react: 0.5.1(react@17.0.2)
       yaml: 2.5.1
     transitivePeerDependencies:
-      - '@babel/core'
       - '@types/react'
       - supports-color
-      - typescript
 
   '@emotion/babel-plugin@11.12.0':
     dependencies:
