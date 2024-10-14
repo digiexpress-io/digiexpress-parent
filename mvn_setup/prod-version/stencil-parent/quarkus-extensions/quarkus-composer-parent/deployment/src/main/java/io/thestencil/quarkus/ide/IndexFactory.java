@@ -109,7 +109,7 @@ public class IndexFactory {
           .replaceAll("/portal/", newPath)
           .replaceAll("https://portalconfig/", newHref.toString())
           .replaceFirst("const portalconfig=\\{\\}", newConfig.toString())
-          + "<!-- NEW - PATH: " + newPath + "-->")
+          + "<!-- NEW - PATH: " + newPath + newConfig + "-->")
           .getBytes(StandardCharsets.UTF_8);
     }
   }
