@@ -4,13 +4,12 @@
   "private": true,
   "homepage": "/portal",
   "dependencies": {
-    "@dxs-ts/eveli-ide": "^0.0.8",
+    "@dxs-ts/eveli-ide": "^0.0.20",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
-    "@uiw/react-md-editor": "^3.4.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2"
@@ -52,5 +51,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }

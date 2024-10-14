@@ -15,11 +15,10 @@ const getLocale = () => {
 }
 
 
-//const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" }});
-
 export const StencilApp: React.FC = () => {
   const locale = getLocale();
-  const service = StencilClient.mock();
+  //const service = StencilClient.mock();
+  const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" }});
 
   return (
     <IntlProvider locale={locale} messages={stencilIntl[locale]}>
