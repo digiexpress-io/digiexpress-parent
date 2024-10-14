@@ -22,7 +22,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>digiexpress-parent</artifactId>
   <groupId>io.digiexpress</groupId>
-  <version>0.y-SNAPSHOT</version>
+  <version>4.278.120</version>
   <packaging>pom</packaging>
   <inceptionYear>2015</inceptionYear>
 
