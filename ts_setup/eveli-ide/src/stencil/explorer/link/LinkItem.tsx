@@ -24,19 +24,19 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
   return (
     <>
       <Burger.TreeItem
-        nodeId={link.id}
+        itemId={link.id}
         labelText={workflowName.name}
         labelcolor="explorerItem"
         labelIcon={link.body.devMode ? ConstructionIcon : LinkIcon}
         >
 
-        <Burger.TreeItem nodeId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
+        <Burger.TreeItem itemId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
           <LinkOptions link={link} />
         </Burger.TreeItem>
 
 
         {/** Article options */}
-        <Burger.TreeItem nodeId={link.id + 'articles-nested'}
+        <Burger.TreeItem itemId={link.id + 'articles-nested'}
           labelText={<FormattedMessage id="articles" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${link.body.articles.length}`}

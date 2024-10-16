@@ -24,18 +24,18 @@ const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflo
   return (
     <>
       <Burger.TreeItem
-        nodeId={workflow.id}
+        itemId={workflow.id}
         labelText={workflowName.name}
         labelcolor="explorerItem"
         labelIcon={workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
 
-        <Burger.TreeItem nodeId={workflow.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
+        <Burger.TreeItem itemId={workflow.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
           <WorkflowOptions workflow={workflow} />
         </Burger.TreeItem>
 
 
         {/** Article options */}
-        <Burger.TreeItem nodeId={workflow.id + 'articles-nested'}
+        <Burger.TreeItem itemId={workflow.id + 'articles-nested'}
           labelText={<FormattedMessage id="articles" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${workflow.body.articles.length}`}

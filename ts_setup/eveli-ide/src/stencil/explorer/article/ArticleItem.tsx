@@ -26,7 +26,7 @@ function WorkflowItem(props: {
 
   return (
     <Burger.TreeItemRoot
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -53,7 +53,7 @@ interface LinkItemProps {
 const LinkItem: React.FC<LinkItemProps> = (props) => {
   return (
     <Burger.TreeItemRoot
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -98,10 +98,10 @@ const ArticleItem: React.FC<{
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
-      <Burger.TreeItem nodeId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+      <Burger.TreeItem itemId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
 
         {/** Article options */
-          options ? (<Burger.TreeItem nodeId={article.id + 'article-options-nested'}
+          options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
             labelText={<FormattedMessage id="options" />}
             labelIcon={EditIcon}>
             <ArticleOptions article={article} />
@@ -109,7 +109,7 @@ const ArticleItem: React.FC<{
         }
 
         {/** Pages */}
-        <Burger.TreeItem nodeId={article.id + 'pages-nested'}
+        <Burger.TreeItem itemId={article.id + 'pages-nested'}
           labelText={<FormattedMessage id="pages" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${pages.length}`}
@@ -122,7 +122,7 @@ const ArticleItem: React.FC<{
 
 
         {/** Workflows options */
-          options ? (<Burger.TreeItem nodeId={article.id + 'workflows-nested'}
+          options ? (<Burger.TreeItem itemId={article.id + 'workflows-nested'}
             labelText={<FormattedMessage id="services" />}
             labelIcon={FolderOutlinedIcon}
             labelInfo={`${workflows.length}`}
@@ -143,7 +143,7 @@ const ArticleItem: React.FC<{
         }
 
         {/** Links options */
-          options ? (<Burger.TreeItem nodeId={article.id + 'links-nested'}
+          options ? (<Burger.TreeItem itemId={article.id + 'links-nested'}
             labelText={<FormattedMessage id="links" />}
             labelIcon={FolderOutlinedIcon}
             labelInfo={`${links.length}`}

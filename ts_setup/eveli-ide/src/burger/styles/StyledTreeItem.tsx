@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Typography, Box, useTheme, styled } from "@mui/material";
-//@ts-ignore
-import TreeItem, { TreeItemProps, treeItemClasses } from "@mui/lab/TreeItem";
+
+import { TreeItem2, TreeItemProps, treeItemClasses } from "@mui/x-tree-view";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 
 
-const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
   color: `var(--tree-view-text-color, ${theme.palette.text.secondary})`,
   [`& .${treeItemClasses.content}`]: {
     color: `var(--tree-view-text-color, ${theme.palette.explorerItem.main})`,
@@ -28,7 +28,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       color: "inherit"
     }
   },
-  [`& .${treeItemClasses.group}`]: {
+  [`& .${treeItemClasses.groupTransition}`]: {
     marginLeft: 0,
     [`& .${treeItemClasses.content}`]: {
       paddingLeft: theme.spacing(2)
@@ -123,7 +123,7 @@ const StyledTreeItemOption: React.FC<{
   return (
     <StyledTreeItemRoot
       onClick={props.onClick}
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
 
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0}} >

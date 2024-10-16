@@ -1,9 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import TreeView from "@mui/lab/TreeView";
+import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-
 
 import { Composer, StencilApi } from '../../context';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
@@ -17,6 +15,9 @@ const findMainId = (values: string[]) => {
   return undefined;
 }
 
+const EndIcon: React.FC = () => {
+  return <Box style={{ width: 24 }} />;
+}
 
 const WorkflowExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
   const { session } = Composer.useComposer();
@@ -44,11 +45,10 @@ const WorkflowExplorer: React.FC<{ searchString: string }> = ({ searchString }) 
         }}>
       </Typography>
 
-      <TreeView expanded={expanded}
-        defaultCollapseIcon={<ArrowDropDownIcon />}
-        defaultExpandIcon={<ArrowRightIcon />}
-        defaultEndIcon={<div style={{ width: 24 }} />}
-        onNodeToggle={(_event: React.SyntheticEvent, nodeIds: string[]) => {
+      <SimpleTreeView expandedItems={expanded}
+        slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
+
+        onExpandedItemsChange={(_event: React.SyntheticEvent, nodeIds: string[]) => {
           const active = findMainId(expanded);
           const newId = findMainId(nodeIds.filter(n => n !== active));
           if (active !== newId && active && newId) {
@@ -63,7 +63,7 @@ const WorkflowExplorer: React.FC<{ searchString: string }> = ({ searchString }) 
           .map((view, index) => (
           <WorkflowItem key={index} workflowId={view.workflow.id} />
         ))}
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

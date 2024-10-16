@@ -25,7 +25,7 @@ function FlowItem(props: {
 }) {
   return (
     <Burger.TreeItemRoot
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -55,10 +55,10 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
   const flows: HdesApi.Entity<HdesApi.AstFlow>[] = [];
 
   return (
-    <Burger.TreeItem nodeId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+    <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
 
       {/** Decision options */}
-      <Burger.TreeItem nodeId={decision.id + 'options-nested'}
+      <Burger.TreeItem itemId={decision.id + 'options-nested'}
         labelText={<FormattedMessage id="options" />}
         labelIcon={EditIcon}>
         <DecisionOptions decision={decision} />
@@ -66,7 +66,7 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
 
 
       {/** Decision options */}
-      <Burger.TreeItem nodeId={decision.id + 'flows-nested'}
+      <Burger.TreeItem itemId={decision.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}

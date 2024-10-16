@@ -30,7 +30,7 @@ function DecisionItem(props: {
 }) {
   return (
     <Burger.TreeItemRoot
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -55,7 +55,7 @@ const ServiceItem: React.FC<{
 }> = (props) => {
   return (
     <Burger.TreeItemRoot
-      nodeId={props.nodeId}
+      itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -134,21 +134,21 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
     .map(a => ({ entity: session.getService(a.ref), ref: a }));
 
   return (
-    <Burger.TreeItem nodeId={flow.id}
+    <Burger.TreeItem itemId={flow.id}
       labelText={flowName}
       labelIcon={ArticleOutlinedIcon}
       labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}
       labelInfo={flow.status === "UP" ? undefined : <ConstructionIcon color="error" />}>
 
       {/** Flow options */}
-      <Burger.TreeItem nodeId={flow.id + 'options-nested'}
+      <Burger.TreeItem itemId={flow.id + 'options-nested'}
         labelText={<FormattedMessage id="options" />}
         labelIcon={EditIcon} >
         <FlowOptions flow={flow} />
       </Burger.TreeItem>
 
       {/** Flow status */}
-      <Burger.TreeItem nodeId={flow.id + 'status-nested'}
+      <Burger.TreeItem itemId={flow.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
@@ -159,7 +159,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       </Burger.TreeItem>
 
       {/** Decision options */}
-      <Burger.TreeItem nodeId={flow.id + 'decisions-nested'}
+      <Burger.TreeItem itemId={flow.id + 'decisions-nested'}
         labelText={<FormattedMessage id="decisions" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
@@ -173,7 +173,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
 
 
       {/** Service options */}
-      <Burger.TreeItem nodeId={flow.id + 'services-nested'}
+      <Burger.TreeItem itemId={flow.id + 'services-nested'}
         labelText={<FormattedMessage id="services" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${services.length}`}

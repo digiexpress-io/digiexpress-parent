@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import TreeView from "@mui/lab/TreeView";
+import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
 import { Composer, StencilApi } from '../../context';
@@ -18,6 +17,9 @@ const findMainId = (values: string[]) => {
   return undefined;
 }
 
+const EndIcon: React.FC = () => {
+  return <Box style={{ width: 24 }} />;
+}
 
 const LinkExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
   const { session } = Composer.useComposer();
@@ -46,11 +48,9 @@ const LinkExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
         }}>
       </Typography>
 
-      <TreeView expanded={expanded}
-        defaultCollapseIcon={<ArrowDropDownIcon />}
-        defaultExpandIcon={<ArrowRightIcon />}
-        defaultEndIcon={<div style={{ width: 24 }} />}
-        onNodeToggle={(_event: React.SyntheticEvent, nodeIds: string[]) => {
+      <SimpleTreeView expandedItems={expanded}
+        slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
+        onExpandedItemsChange={(_event: React.SyntheticEvent, nodeIds: string[]) => {
           const active = findMainId(expanded);
           const newId = findMainId(nodeIds.filter(n => n !== active));
           if (active !== newId && active && newId) {
@@ -65,7 +65,7 @@ const LinkExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
           .map((view) => (
             <LinkItem key={view.link.id} linkId={view.link.id} />
           ))}
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

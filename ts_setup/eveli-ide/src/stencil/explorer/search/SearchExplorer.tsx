@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, TextField, TextFieldProps, InputAdornment } from '@mui/material';
 import { styled } from "@mui/material/styles";
-import TreeView from "@mui/lab/TreeView";
+import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SearchIcon from '@mui/icons-material/Search';
@@ -88,7 +88,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
     items.push(<Burger.TreeItem
       onClick={() => setLinkEditOpen(true)}
       key={items.length}
-      nodeId={`${view.link.id}-${items.length}-nested`}
+      itemId={`${view.link.id}-${items.length}-nested`}
       labelText={<span>{label.locale.body.value} - {match}</span>}
       labelcolor="page"
     >
@@ -99,7 +99,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
       { linkEditOpen ? <LinkEdit linkId={view.link.id} onClose={() => setLinkEditOpen(false)} /> : null}
 
       <Burger.TreeItem
-        nodeId={view.link.id}
+        itemId={view.link.id}
         labelText={view.link.body.value}
         labelcolor="link"
         labelIcon={view.link.body.devMode ? ConstructionIcon : LinkIcon}>
@@ -124,7 +124,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
         <Burger.TreeItem
           onClick={() => setWorkflowEditOpen(true)}
           key={items.length}
-          nodeId={`${view.workflow.id}-${items.length}-nested`}
+          itemId={`${view.workflow.id}-${items.length}-nested`}
           labelText={<span>{label.locale.body.value} - {match}</span>}
           labelcolor="page"
         >
@@ -136,7 +136,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
       {workflowEditOpen ? <WorkflowEdit workflowId={view.workflow.id} onClose={() => setWorkflowEditOpen(false)} /> : null}
 
       <Burger.TreeItem
-        nodeId={view.workflow.id}
+        itemId={view.workflow.id}
         labelText={<span>{findMatch(view.workflow.body.value, keyword, true)}</span>}
         labelcolor="workflow"
         labelIcon={view.workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
@@ -173,7 +173,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
           <Burger.TreeItem
             onClick={() => onLeftEdit(pageView.page)}
             key={index++}
-            nodeId={`${pageView.page.id}-${lineIndex}-nested`}
+            itemId={`${pageView.page.id}-${lineIndex}-nested`}
             labelText={<span>{pageView.locale.body.value}.md ({lineIndex}) - {match}</span>}
             labelcolor="page"
           >
@@ -203,7 +203,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
 
       <Burger.TreeItem
         key={index++}
-        nodeId={view.article.id}
+        itemId={view.article.id}
         labelText={<span>{findMatch(`${view.article.body.name}`, keyword, true)}</span>}
         labelcolor="page"
         labelIcon={view.article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon}
@@ -219,7 +219,9 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
   )
 }
 
-
+const EndIcon: React.FC = () => {
+  return <Box style={{ width: 24 }} />;
+}
 
 const SearchExplorer: React.FC<{}> = () => {
   const { session } = Composer.useComposer();
@@ -268,24 +270,21 @@ const SearchExplorer: React.FC<{}> = () => {
         <FormattedMessage id="search.results.title" />
       </Typography>
 
-      <TreeView expanded={expanded}
-        //noCollapseIcon ? undefined : <ArrowDropDownIcon />
-        defaultCollapseIcon={<ArrowDropDownIcon />}
-        defaultExpandIcon={<ArrowRightIcon />}
-        defaultEndIcon={<div style={{ width: 24 }} />}
-        onNodeToggle={(_event: React.SyntheticEvent, nodeIds: string[]) => {
+      <SimpleTreeView expandedItems={expanded}
+        slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
+        onExpandedItemsChange={(_event: React.SyntheticEvent, itemIds: string[]) => {
           const active = findMainId(expanded);
-          const newId = findMainId(nodeIds.filter(n => n !== active));
+          const newId = findMainId(itemIds.filter(n => n !== active));
           if (active !== newId && active && newId) {
-            nodeIds.splice(nodeIds.indexOf(active), 1);
+            itemIds.splice(itemIds.indexOf(active), 1);
           }
-          setExpanded(nodeIds);
+          setExpanded(itemIds);
         }}>
 
         {articles}
         {workflows}
         {links}
-      </TreeView>
+      </SimpleTreeView>
     </Box>
   );
 }

@@ -16,6 +16,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@mui/x-tree-view": "^7.20.0",
     "@uiw/react-md-editor": "^3.25.6",
     "codemirror": "^5.65.18",
     "d3": "^7.9.0",
@@ -30,7 +31,6 @@
   "peerDependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@mui/lab": "5.0.0-alpha.151",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@mui/styles": "^5.16.7",

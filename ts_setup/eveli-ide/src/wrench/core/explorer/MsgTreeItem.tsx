@@ -26,7 +26,7 @@ const MsgTreeItem: React.FC<{
       </Burger.Dialog>) : undefined}
 
       <Burger.TreeItemRoot
-        nodeId={props.nodeId}
+        itemId={props.nodeId}
         label={props.children}
         onClick={() => setOpen(true)}
       />

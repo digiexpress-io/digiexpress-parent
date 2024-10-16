@@ -34,6 +34,10 @@ quarkus:
 
 "%dev":
   quarkus:
+    http:
+      cors:
+        origins: /.*/
+        methods: GET, OPTIONS, HEAD, PUT, POST
     log:
       level: INFO
       category: 

@@ -19,7 +19,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
   const { handleInTab, findTab } = Composer.useNav();
   const page = props.page.page;
   const article = props.article.article;
-  const nodeId = props.page.page.id
+  const itemId = props.page.page.id
   const oldTab = findTab(article);
   const nav = oldTab?.data?.nav;
 
@@ -51,7 +51,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
 
   return (
     <Burger.TreeItemRoot
-      nodeId={nodeId}
+      itemId={itemId}
       onClick={onLeftEdit}
       style={{
         "--tree-view-color": theme.palette.explorerItem.main
