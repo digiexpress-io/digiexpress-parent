@@ -1,8 +1,12 @@
 on:
+  pull_request:
+    paths:
+      - 'mvn_setup/alpha-version/**'
+    branches:
+      - dev
   push:
     paths:
       - 'ts_setup/tasks-ui/**'
-
     branches:
       - dev
   workflow_call: # Enables manual triggering
@@ -47,11 +51,14 @@ jobs:
             PUBLIC_URL: //${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}
 
         - name: Configure AWS Credentials
+          if: github.event_name != 'pull_request'
           uses: aws-actions/configure-aws-credentials@v3
           with:
             role-to-assume: ${{ secrets.ASSUME_ROLE }}
             aws-region: ${{ secrets.AWS_REGION }}
+
         - name: Publish assets
+          if: github.event_name != 'pull_request'
           run: |
             aws s3 sync --exclude '*.html' --delete --cache-control public,max-age=3600 --acl public-read dist/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
             aws s3 sync --include '*.html' --cache-control no-cache --acl public-read dist/ s3://${{ secrets.CDN_S3_BUCKET }}/digiexpress-io/tasks-ui/${{ github.ref_name }}/
