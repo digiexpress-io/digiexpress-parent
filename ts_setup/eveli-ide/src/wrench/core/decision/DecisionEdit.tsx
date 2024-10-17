@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, List, Drawer, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
+import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton } from '@mui/material';
 import { SxProps } from '@mui/system';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,14 +55,14 @@ const DrawerOption: React.FC<{
   icon: React.ReactElement;
 }> = ({ icon, onClick, label }) => {
   const itemSx: SxProps = { color: "explorerItem.main" }
-  return (<ListItem button onClick={onClick}>
+  return (<ListItemButton onClick={onClick}>
     <ListItemIcon sx={itemSx}>{icon}</ListItemIcon>
     <ListItemText sx={itemSx}>
       <Box component="span" sx={itemSx}>
         <FormattedMessage id={label} />
       </Box>
     </ListItemText>
-  </ListItem>);
+  </ListItemButton>);
 }
 
 

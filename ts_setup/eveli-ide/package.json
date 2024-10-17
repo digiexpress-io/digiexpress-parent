@@ -16,43 +16,44 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@mui/x-tree-view": "^7.20.0",
-    "@uiw/react-md-editor": "^3.25.6",
+    "@uiw/react-md-editor": "^4.0.4",
     "codemirror": "^5.65.18",
     "d3": "^7.9.0",
     "diff2html": "^3.4.48",
     "js-file-download": "^0.4.12",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.46",
-    "notistack": "^2.0.8",
+    "jshint": "^2.13.6",
     "vis-react": "^0.5.1",
     "yaml": "^2.6.0"
   },
   "peerDependencies": {
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.7",
-    "@mui/styles": "^5.16.7",
-    "@mui/system": "^5.16.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-intl": "^5.20.2"
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.4",
+    "@mui/material": "^6.1.4",
+    "@mui/styles": "^6.1.4",
+    "@mui/system": "^6.1.4",
+    "@mui/x-tree-view": "^7.20.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.46",
+    "notistack": "^3.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-intl": "^6.8.0"
   },
   "devDependencies": {
     "@types/codemirror": "^5.60.15",
     "@types/d3": "^7.4.3",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^12.20.55",
-    "@types/react": "^17.0.83",
-    "@types/react-dom": "^17.0.25",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.6",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "typescript": "^5.6.3",
     "vite": "^5.4.9",
-    "vite-plugin-checker": "^0.6.4",
+    "vite-plugin-checker": "^0.8.0",
     "vite-plugin-dts": "^4.2.4",
     "vite-plugin-svgr": "^4.2.0"
   },
@@ -74,5 +75,5 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }

@@ -43,9 +43,9 @@ type StyledTreeItemProps = TreeItemProps & {
   hovercolor?: string;
   textcolor?: string;
   labelIcon?: React.ElementType<SvgIconProps>;
-  labelButton?: React.ReactChild;
-  labelInfo?: string | React.ReactChild;
-  labelText: string | React.ReactChild;
+  labelButton?: React.ReactNode;
+  labelInfo?: string | React.ReactNode;
+  labelText: string | React.ReactNode;
 };
 
 const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
@@ -79,11 +79,14 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
       sx={{ backgroundColor: "explorer.main" }}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          {labelButton ? labelButton : <Box component={LabelIcon}
-            sx={{
+          {labelButton ? labelButton : (
+            LabelIcon ? (<Box component={LabelIcon}
+              sx={{
               mr: 1,
               color: resolvedLabelcolor,
-            }} />}
+              }}
+            />) : null
+          )}
           <Typography noWrap={true} maxWidth="300px"
             variant="body2"
             sx={{ flexGrow: 1 }}

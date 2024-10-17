@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Box, List, Drawer, ListItem, ListItemIcon, ListItemText, Divider
-} from '@mui/material';
+import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton } from '@mui/material';
 import { SxProps } from '@mui/system';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,7 +18,7 @@ const DrawerOption: React.FC<{
   disabled: boolean;
 }> = ({ icon, onClick, label, disabled }) => {
   const itemSx: SxProps = { color: "explorerItem.main" }
-  return (<ListItem disabled={disabled} button onClick={onClick}><ListItemIcon sx={itemSx}>{icon}</ListItemIcon><ListItemText sx={itemSx}><Box component="span" sx={itemSx}><FormattedMessage id={label} /></Box></ListItemText></ListItem>);
+  return (<ListItemButton disabled={disabled} onClick={onClick}><ListItemIcon sx={itemSx}>{icon}</ListItemIcon><ListItemText sx={itemSx}><Box component="span" sx={itemSx}><FormattedMessage id={label} /></Box></ListItemText></ListItemButton>);
 }
 const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<><Box sx={{ width: "350px" }}><List>{children}</List></Box><Divider orientation="vertical" flexItem color="explorerItem.contrastColor" /></>)
