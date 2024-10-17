@@ -1,4 +1,10 @@
 on:
+  pull_request:
+    paths:
+      - 'mvn_setup/alpha-version/**'
+    branches:
+      - dev
+
   push:
     paths:
       - 'mvn_setup/alpha-version/**'
@@ -10,11 +16,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64        
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -30,9 +31,9 @@ jobs:
         ./mvnw -B clean install
       env:
         CI: true
-        QUARKUS_CONTAINER_IMAGE: 
-        QUARKUS_CONTAINER_IMAGE_BUILD: "true"
-        QUARKUS_CONTAINER_IMAGE_PUSH: "true"
+        QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
+        QUARKUS_CONTAINER_IMAGE_BUILD: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+        QUARKUS_CONTAINER_IMAGE_PUSH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
         QUARKUS_CONTAINER_IMAGE_GROUP: ${{ github.repository_owner }}
         QUARKUS_CONTAINER_IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
         QUARKUS_CONTAINER_IMAGE_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
