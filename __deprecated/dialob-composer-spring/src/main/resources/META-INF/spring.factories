@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.dialob.spring.composer.ComposerAutoConfiguration
