@@ -1,7 +1,7 @@
 on:
   pull_request:
     paths:
-      - 'mvn_setup/alpha-version/**'
+      - 'ts_setup/tasks-ui/**'
     branches:
       - dev
   push:
