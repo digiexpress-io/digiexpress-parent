@@ -38,5 +38,5 @@ jobs:
         QUARKUS_CONTAINER_IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
         QUARKUS_CONTAINER_IMAGE_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
         QUARKUS_CONTAINER_IMAGE_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-        QUARKUS_CONTAINER_IMAGE_ADDITIONAL_TAGS: "${{ github.ref_name }},latest"
+        QUARKUS_CONTAINER_IMAGE_ADDITIONAL_TAGS: "${{ github.event_name != 'pull_request' && github.ref_name || 'pull_request' }},latest"
         
