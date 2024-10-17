@@ -40,7 +40,7 @@
     <ehcache.version>3.10.8</ehcache.version>
     <guava.version>33.3.0-jre</guava.version>
     <groovy.version>3.0.22</groovy.version>
-    <jgit.version>5.9.0.202009080501-r</jgit.version>
+    <jgit.version>5.13.3.202401111512-r</jgit.version>
 
     <jsonassert.version>1.5.3</jsonassert.version>
 
