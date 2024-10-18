@@ -1,9 +1,9 @@
 on:
-  push:
-    paths:
-      - 'mvn_setup/prod-version/**'
-    branches:
-      - dev
+  # push:
+  #   paths:
+  #     - 'mvn_setup/prod-version/**'
+  #   branches:
+  #     - dev
   workflow_call: # Enables manual triggering
 
 permissions:
