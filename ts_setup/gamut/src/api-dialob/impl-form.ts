@@ -77,8 +77,8 @@ export class FormImpl implements DialobApi.Form {
     if (!sessionItem.description || sessionItem.description?.trim().length === 0) {
       return undefined;
     }
-    // \r\n = windows line break, \n' = unix line break, \u200B unicode zero-width space
-    if (sessionItem.description.replace('\r\n', '').replace('\n', '').replace('\u200B', '').trim().length === 0) {
+    // \r\n = windows line break, \n = unix line break, \u200B = unicode zero-width space
+    if (sessionItem.description.replace(/\r\n/g, '').replace(/\n/g, '').replace(/\u200B/g, '').trim().length === 0) {
       return undefined;
     }
     return sessionItem.description;
