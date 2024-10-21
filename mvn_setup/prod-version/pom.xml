@@ -121,6 +121,10 @@
     <module>thena-parent</module>
     <module>hdes-parent</module>
     <module>stencil-parent</module>
+    
+    <!--
+    <module>eveli-parent</module>
+    -->
   </modules>
 
   <build>

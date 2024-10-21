@@ -49,13 +49,17 @@
     <commons-codec.version>1.17.1</commons-codec.version>
     <commons-lang.version>3.17.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
+    <commons-validator.version>1.7</commons-validator.version>
+    <dialob.version>2.2.4</dialob.version>
     <flexmark.version>0.62.2</flexmark.version>
 
-
+  
     <flapdoodle.version>3.0.0</flapdoodle.version>
     
     <pnpm.version>v8.6.12</pnpm.version>
     <node.version>v18.18.2</node.version>
+    
+    <modelmapper.version>3.0.0</modelmapper.version>
     
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
@@ -250,24 +254,23 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>${modelmapper.version}</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>io.dialob</groupId>
+        <artifactId>dialob-api</artifactId>
+        <version>${dialob.version}</version>
+      </dependency>
+    
+      <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>digiexpress-bom</artifactId>
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <!-- LOGGING -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
       </dependency>
 
       <!-- Utils -->
@@ -277,22 +280,11 @@
         <version>${groovy.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${hbvalidator.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
         <version>${immutables.version}</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>org.ehcache</groupId>
-        <artifactId>ehcache</artifactId>
-        <version>${ehcache.version}</version>
-      </dependency>
-
       <dependency>
         <groupId>io.github.java-diff-utils</groupId>
         <artifactId>java-diff-utils</artifactId>
@@ -359,6 +351,11 @@
         <version>${commons-collections.version}</version>
       </dependency>
       <dependency>
+        <groupId>commons-validator</groupId>
+        <artifactId>commons-validator</artifactId>
+        <version>${commons-validator.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.vladsch.flexmark</groupId>
         <artifactId>flexmark-all</artifactId>
         <version>${flexmark.version}</version>
@@ -380,6 +377,30 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <!-- spring -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <type>pom</type>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <type>pom</type>
+        <scope>import</scope>
+        <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-bom</artifactId>
+        <type>pom</type>
+        <scope>import</scope>
+        <version>${spring.security.version}</version>
+      </dependency>
+
+
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -388,73 +409,6 @@
         <scope>import</scope>
       </dependency>
 
-      <!-- spring -->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-oauth2-client</artifactId>
-        <version>${spring.security.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-autoconfigure</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-jetty</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-actuator</artifactId>
-        <version>${spring.boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <version>${spring.boot.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-
-      <!-- Test dependencies -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-test</artifactId>
-        <version>${spring.boot.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>org.skyscreamer</groupId>
         <artifactId>jsonassert</artifactId>
