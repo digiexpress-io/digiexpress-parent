@@ -74,8 +74,8 @@ public class AttachmentApiController {
       return ResponseEntity.notFound().build();
     }
     final var processId = getProcessIdFromTask(taskId);
-    List<Attachment> result = processId != null ?
-        client.attachments().query().processId(processId) : client.attachments().query().taskId(taskId);
+    final var result = processId != null ? client.attachments().query().processId(processId) : client.attachments().query().taskId(taskId);
+    
     return ResponseEntity.ok(result);
   }
   
@@ -101,7 +101,7 @@ public class AttachmentApiController {
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
     }
-    String processId = getProcessIdFromTask(taskId);
+    final var processId = getProcessIdFromTask(taskId);
     final var attachmentUrl = processId != null ?
         client.attachments().url().encodePath(filename).processId(processId) : 
         client.attachments().url().encodePath(filename).taskId(taskId);
