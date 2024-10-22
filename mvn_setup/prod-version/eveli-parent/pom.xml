@@ -13,7 +13,9 @@
   
   <modules>
     <module>eveli-client</module>
-    <module>eveli-web</module>
+    <!--
+    <module>eveli-integration-suomifi</module>
+    -->
     <module>eveli-app</module>
   </modules>
 </project>
