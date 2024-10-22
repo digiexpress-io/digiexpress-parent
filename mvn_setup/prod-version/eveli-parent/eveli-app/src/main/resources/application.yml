@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/eveli-app"
+    username: "eveli-app"
+    password: "password123"
+  jpa:
+    showSql: false
+    generateDdl: false
+    hibernate:
+      ddlAuto: "validate"
+      autoQuoteKeyword: true
+      connection:
+        useUnicode: true
+        characterEncoding: 'UTF-8'
+        charSet: 'UTF-8'
+  flyway:
+    enabled: true
+    locations: classpath:db/postgresql
+    validate-on-migrate: true
+
+management:
+  server:
+    servlet.context-path: "/manage"
+    add-application-context-header: false
+  endpoints:
+    web:
+      exposure:
+        include: "health,mappings"
+
+#logging.level.org.springframework.web: DEBUG
+#logging.level.org.springframework.boot: DEBUG
+
+
+
+
+
