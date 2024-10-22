@@ -53,10 +53,10 @@ const palette = {
   mode: 'light',
 
   primary: {
-    main: '#607196',
+    main: 'rgb(80, 72, 229)',
     contrastText: '#fff',
-    dark: '#404c64',
-    light: '#7686a7',
+    dark: 'rgb(50, 41, 224)',
+    light: 'rgb(84, 76, 230)',
   },
   secondary: {
     main: '#3E668E',
@@ -68,16 +68,12 @@ const palette = {
     main: '#e53935',
   },
   info: {
-    main: '#554971',
-    light: '#796AA0',
-    dark: '#413857',
-    contrastText: 'rgba(0, 0, 0, 0.23)',
+    main: '##03045E',
+    contrastText: '#FFFFFF',
   },
   warning: {
     main: '#ff9800',
-    light: '#ffac33',
-    dark: '#b26a00',
-    contrastText: '#000001',
+    contrastText: '#000000',
   },
   success: {
     main: '#4caf50',

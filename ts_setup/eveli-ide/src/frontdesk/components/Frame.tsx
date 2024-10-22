@@ -204,9 +204,11 @@ export const Frame: React.FC<FrameProps> = ({ setLocale }) => {
           <Box sx={toolbarStyle} />
           <div />
           <AppMenu open={isOpen} />
-          <IconButton onClick={handleMuiDrawerClick} >
-            {isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
+            <Box sx={{ display: 'flex', backgroundColor: theme.palette.explorerItem.dark, justifyContent: 'center' }}>
+              <IconButton onClick={handleMuiDrawerClick} sx={{ color: theme.palette.text.primary }} >
+                {isOpen ? <ChevronLeftIcon fontSize='large' /> : <ChevronRightIcon fontSize='large' />}
+              </IconButton>
+            </Box>
         </Drawer>
       }
       <main style={{ width: '100%' }}>

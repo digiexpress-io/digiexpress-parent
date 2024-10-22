@@ -1,4 +1,4 @@
-import { Divider, List, Collapse, ListItem, ListItemText, ListItemButton } from '@mui/material';
+import { List, Collapse, ListItemButton, useTheme, ListItem, Typography } from '@mui/material';
 import ListIcon from '@mui/icons-material/ListAlt';
 import BuildIcon from '@mui/icons-material/Build';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -35,11 +35,15 @@ export const AppMenu: React.FC<AppMenuProps> = ({ open }) => {
   const isTestEnv = ENV_TYPE !== 'prod';
   const intl = useIntl();
   const config = useConfig();
+  const theme = useTheme();
   const userInfo = useUserInfo();
   const [isServicesOpen, setServicesOpen] = useState(false);
   const [isToolsOpen, setToolsOpen] = useState(false);
 
-  const nestedStyle = open ? { pl: 4 } : {};
+  const nestedStyle = open ? { pl: theme.spacing(1), pb: theme.spacing(1) } : {};
+
+  const explorerItemColor = theme.palette.explorerItem.main;
+
 
   const handleServiceClick = () => {
     setServicesOpen(!isServicesOpen);
@@ -60,112 +64,112 @@ export const AppMenu: React.FC<AppMenuProps> = ({ open }) => {
   }
   const showDashboard = isTestEnv || isTaskAdmin();
   return (
-    <List sx={{ pt: 2 }}>
-      <Tooltip title={intl.formatMessage({ id: 'menu.tasks' })} disableHoverListener={open} >
-        <div>
-          <ListItemLink button primary={intl.formatMessage({ id: 'menu.tasks' })} to='/ui/tasks' icon={<ListIcon />} />
-        </div>
-      </Tooltip>
+    <List sx={{ backgroundColor: theme.palette.explorer.main, height: '100%' }}>
+      <ListItem disableGutters disablePadding>
+        <Tooltip title={intl.formatMessage({ id: 'menu.tasks' })} disableHoverListener={open} >
+          <ListItemLink to='/ui/tasks' icon={<ListIcon />} >{intl.formatMessage({ id: 'menu.tasks' })}</ListItemLink>
+        </Tooltip>
+      </ListItem>
 
       {showDashboard &&
-        <Tooltip title={intl.formatMessage({ id: 'menu.dashboard' })} disableHoverListener={open} >
-          <div>
-            <ListItemLink button primary={intl.formatMessage({ id: 'menu.dashboard' })} to='/ui/dashboard' icon={<DashboardIcon />} />
-          </div>
-        </Tooltip>
+        <ListItem disableGutters disablePadding>
+          <Tooltip title={intl.formatMessage({ id: 'menu.dashboard' })} disableHoverListener={open} >
+            <ListItemLink to='/ui/dashboard' icon={<DashboardIcon />}>{intl.formatMessage({ id: 'menu.dashboard' })}</ListItemLink>
+          </Tooltip>
+        </ListItem>
       }
 
       {isTestEnv &&
-        <Tooltip title={intl.formatMessage({ id: 'menu.processes' })} disableHoverListener={open} >
-          <div>
-            <ListItemLink button primary={intl.formatMessage({ id: 'menu.processes' })} to='/ui/processes' icon={<NetworkCheckIcon />} />
-          </div>
-        </Tooltip>
+        <ListItem disableGutters disablePadding>
+          <Tooltip title={intl.formatMessage({ id: 'menu.processes' })} disableHoverListener={open} >
+            <ListItemLink to='/ui/processes' icon={<NetworkCheckIcon />}>{intl.formatMessage({ id: 'menu.processes' })} </ListItemLink>
+          </Tooltip>
+        </ListItem>
       }
-      <Divider />
+
       {ENV_TYPE !== 'prod' &&
         <React.Fragment>
-          <Tooltip title={intl.formatMessage({ id: 'menu.tools' })} disableHoverListener={open} >
-            <ListItemButton onClick={handleToolsClick}>
-              <ListItemIcon>
-                <BusinessCenterIcon />
-              </ListItemIcon>
-              <ListItemText primary={intl.formatMessage({ id: 'menu.tools' })} />
-              {isToolsOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </Tooltip>
+          <ListItem disableGutters disablePadding>
+            <Tooltip title={intl.formatMessage({ id: 'menu.tools' })} disableHoverListener={open} >
+              <ListItemButton onClick={handleToolsClick}>
+                <ListItemIcon sx={{ color: explorerItemColor }}><BusinessCenterIcon /></ListItemIcon>
+                <Typography sx={{ color: explorerItemColor }}>{intl.formatMessage({ id: 'menu.tools' })}</Typography>
+                <div style={{ flexGrow: 1 }} />
+                {isToolsOpen ? <ExpandLess sx={{ color: explorerItemColor }} /> : <ExpandMore sx={{ color: explorerItemColor }} />}
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+
           <Collapse in={isToolsOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding sx={nestedStyle}>
-              <Tooltip title={intl.formatMessage({ id: 'menu.forms' })} disableHoverListener={open} >
-                <div>
-                  <ListItemLink button primary={intl.formatMessage({ id: 'menu.forms' })}
-                    to='/ui/forms' icon={<ViewListIcon />} />
-                </div>
-              </Tooltip>
-              <Tooltip title={intl.formatMessage({ id: 'menu.flow' })} disableHoverListener={open} >
-                <div>
-                  <ExternalLink showEndIcon={open} button primary={intl.formatMessage({ id: 'menu.flow' })}
-                    to={config.wrenchIdeUrl || '/wrench/ide'} icon={<BuildIcon />} />
-                </div>
-              </Tooltip>
+              <ListItem disableGutters disablePadding>
+                <Tooltip title={intl.formatMessage({ id: 'menu.forms' })} disableHoverListener={open} >
+                  <ListItemLink to='/ui/forms' icon={<ViewListIcon />}>{intl.formatMessage({ id: 'menu.forms' })}</ListItemLink>
+                </Tooltip>
+              </ListItem>
+
+              <ListItem disableGutters disablePadding>
+                <Tooltip title={intl.formatMessage({ id: 'menu.flow' })} disableHoverListener={open} >
+                  <ExternalLink showEndIcon={open} to={config.wrenchIdeUrl || '/wrench/ide'} icon={<BuildIcon />}>{intl.formatMessage({ id: 'menu.flow' })}</ExternalLink>
+                </Tooltip>
+              </ListItem>
 
               {config.contentRepositoryUrl &&
-                <Tooltip title={intl.formatMessage({ id: 'menu.content' })} disableHoverListener={open} >
-                  <div>
-                    <ExternalLink showEndIcon={open} button primary={intl.formatMessage({ id: 'menu.content' })}
-                      to={config.contentRepositoryUrl} icon={<SubjectIcon />} />
-                  </div>
-                </Tooltip>
+                <ListItem disableGutters disablePadding>
+                  <Tooltip title={intl.formatMessage({ id: 'menu.content' })} disableHoverListener={open}>
+                    <ExternalLink showEndIcon={open} to={config.contentRepositoryUrl} icon={<SubjectIcon />}>{intl.formatMessage({ id: 'menu.content' })}</ExternalLink>
+                  </Tooltip>
+                </ListItem>
               }
               {config.calendarUrl &&
-                <Tooltip title={intl.formatMessage({ id: 'menu.calendar' })} disableHoverListener={open} >
-                  <div>
-                    <ExternalLink showEndIcon={open} button primary={intl.formatMessage({ id: 'menu.calendar' })}
-                      to={config.calendarUrl} icon={<CalendarMonthIcon />} />
-                  </div>
-                </Tooltip>
+                <ListItem disableGutters disablePadding>
+                  <Tooltip title={intl.formatMessage({ id: 'menu.calendar' })} disableHoverListener={open}>
+                    <ExternalLink showEndIcon={open} to={config.calendarUrl} icon={<CalendarMonthIcon />}>{intl.formatMessage({ id: 'menu.calendar' })}</ExternalLink>
+                  </Tooltip>
+                </ListItem>
               }
-              <Divider />
             </List>
           </Collapse>
+
           <Tooltip title={intl.formatMessage({ id: 'menu.services' })} disableHoverListener={open} >
             <ListItemButton onClick={handleServiceClick}>
-              <ListItemIcon>
-                <VisibilityIcon />
-              </ListItemIcon>
-              <ListItemText primary={intl.formatMessage({ id: 'menu.services' })} />
-              {isServicesOpen ? <ExpandLess /> : <ExpandMore />}
+              <ListItemIcon sx={{ color: explorerItemColor }}><VisibilityIcon /></ListItemIcon>
+              <Typography sx={{ color: explorerItemColor }}>{intl.formatMessage({ id: 'menu.services' })}</Typography>
+              <div style={{ flexGrow: 1 }} />
+              {isServicesOpen ? <ExpandLess sx={{ color: explorerItemColor }} /> : <ExpandMore sx={{ color: explorerItemColor }} />}
             </ListItemButton>
           </Tooltip>
 
           <Collapse in={isServicesOpen} timeout="auto" unmountOnExit>
-            <Tooltip title={intl.formatMessage({ id: 'menu.workflows' })} disableHoverListener={open} >
-              <List component="div" disablePadding sx={nestedStyle}>
-                <ListItemLink button primary={intl.formatMessage({ id: 'menu.workflows' })}
-                  to='/ui/workflows' icon={<SettingsIcon />} />
-              </List>
-            </Tooltip>
-            <Tooltip title={intl.formatMessage({ id: 'menu.workflowReleases' })} disableHoverListener={open} >
-              <List component="div" disablePadding sx={nestedStyle}>
-                <ListItemLink button primary={intl.formatMessage({ id: 'menu.workflowReleases' })}
-                  to='/ui/workflowReleases' icon={<InventoryIcon />} />
-              </List>
-            </Tooltip>
-            <Tooltip title={intl.formatMessage({ id: 'menu.releases' })} disableHoverListener={open} >
-              <List component="div" disablePadding sx={nestedStyle}>
-                <ListItemLink button primary={intl.formatMessage({ id: 'menu.releases' })} to='/ui/releases' icon={<AllInbox />} />
-              </List>
-            </Tooltip>
-            <Divider />
+            <ListItem disableGutters disablePadding>
+              <Tooltip title={intl.formatMessage({ id: 'menu.workflows' })} disableHoverListener={open} >
+                <List component="div" disablePadding sx={nestedStyle}>
+                  <ListItemLink to='/ui/workflows' icon={<SettingsIcon />}>{intl.formatMessage({ id: 'menu.workflows' })}</ListItemLink>
+                </List>
+              </Tooltip>
+            </ListItem>
+
+            <ListItem disableGutters disablePadding>
+              <Tooltip title={intl.formatMessage({ id: 'menu.workflowReleases' })} disableHoverListener={open} >
+                <List component="div" disablePadding sx={nestedStyle}>
+                  <ListItemLink to='/ui/workflowReleases' icon={<InventoryIcon />}>{intl.formatMessage({ id: 'menu.workflowReleases' })}</ListItemLink>
+                </List>
+              </Tooltip>
+            </ListItem>
+
+            <ListItem disableGutters disablePadding>
+              <Tooltip title={intl.formatMessage({ id: 'menu.releases' })} disableHoverListener={open} >
+                <List component="div" disablePadding sx={nestedStyle}>
+                  <ListItemLink to='/ui/releases' icon={<AllInbox />}>{intl.formatMessage({ id: 'menu.releases' })}</ListItemLink>
+                </List>
+              </Tooltip>
+            </ListItem>
           </Collapse>
-          <Divider />
         </React.Fragment>
       }
       {isTestEnv &&
         <Tooltip title={intl.formatMessage({ id: 'menu.help' })} disableHoverListener={open} >
-          <div>
-            <ListItemLink button primary={intl.formatMessage({ id: 'menu.help' })} to='/ui/help' icon={<HelpIcon />} />
-          </div>
+          <ListItemLink to='/ui/help' icon={<HelpIcon />}>{intl.formatMessage({ id: 'menu.help' })} </ListItemLink>
         </Tooltip>
       }
     </List>
