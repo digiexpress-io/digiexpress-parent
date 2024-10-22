@@ -1,5 +1,5 @@
 import { ConfigEnv, UserConfig } from 'vite';
-
+import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
@@ -23,7 +23,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         svgrOptions: {
           // svgr options
         },
-      }),
+      }), 
+      mockDevServerPlugin()
     ],
     build: {
       chunkSizeWarningLimit: 5000,
@@ -34,6 +35,59 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     server: {
       open: true,
       port: 3000,
+
+
+
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+        '/config': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+
+        '/userInfo': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/wrench': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/groupsList': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/status': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/priority': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/spo-task': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/dialob': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        }
+      }
     },
     optimizeDeps: {
       //https://github.com/vitejs/vite/issues/12423
@@ -52,7 +106,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       'process.env.REACT_APP_START_MODE': '"frontdesk"',
 
       'process.env.VITE_IAP_REFRESH': true + '',
-      'process.env.VITE_HOST_URL': 'http://localhost:3000'
+      'process.env.VITE_HOST_URL': '"http://localhost:3000"',
+      'process.env.VITE_ENV_TYPE': '"test"'
     },
   }
 }

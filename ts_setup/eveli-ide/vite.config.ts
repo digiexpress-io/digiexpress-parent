@@ -16,7 +16,7 @@ export default defineConfig((props) => {
   if (wrenchMode) {
     console.log('Wrench mode');
     return serveWrench(props);
-  } else if (stencilMode || frontdeskMode) {
+  } else if (stencilMode) {
     console.log('Stencil mode');
     return serveStencil(props);
   } else if (frontdeskMode) {

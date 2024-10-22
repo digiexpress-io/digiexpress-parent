@@ -30,7 +30,7 @@ interface AppMenuProps {
 }
 
 export const AppMenu: React.FC<AppMenuProps> = ({ open }) => {
-  const ENV_TYPE = (window as any).env.VITE_ENV_TYPE || 'test';
+  const ENV_TYPE = process.env.VITE_ENV_TYPE || 'test';
   /* TODO: need admin role here*/
   const isTestEnv = ENV_TYPE !== 'prod';
   const intl = useIntl();

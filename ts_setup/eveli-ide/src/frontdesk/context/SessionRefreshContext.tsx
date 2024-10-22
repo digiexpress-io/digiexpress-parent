@@ -17,9 +17,8 @@ export interface SessionRefresh {
 }
 
 
-const IAP_REFRESH = (window as any).env.VITE_IAP_REFRESH;
-const HOST_URL = (window as any).env.VITE_HOST_URL || 'http://localhost:3000';
-
+const IAP_REFRESH: boolean | undefined = process.env.VITE_IAP_REFRESH as any;
+const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
 
 var iapSessionRefreshWindow: Window | null = null;
 var updateStarted = false;
@@ -124,7 +123,7 @@ export const IAPSessionRefreshContext: React.FC<PropsWithChildren> = ({ children
   const dataLinkFetchBound = dataLinkFetchReauth.bind(null, userRefreshIAPSession);
   const dataLinkDeleteBound = dataLinkDeleteReauth.bind(null, userRefreshIAPSession);
 
-  if (IAP_REFRESH) {
+  if (IAP_REFRESH === true) {
     return (
       <SessionRefreshContext.Provider value={{
         cFetch: cFetchBound,

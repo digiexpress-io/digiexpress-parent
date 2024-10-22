@@ -23,8 +23,8 @@ import MuiDrawer from '@mui/material/Drawer';
 const drawerWidth = 240;
 const UI_LANGUAGES = ['en', 'fi', 'sv'];
 
-const HOST_URL = (window as any).env.VITE_HOST_URL || 'http://localhost:3000';
-const ENV_TYPE: 'prod' | 'test' = (window as any).env.VITE_ENV_TYPE || 'test';
+const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
+const ENV_TYPE: 'prod' | 'test' = (process.env.VITE_ENV_TYPE || 'test') as any;
 
 
 const toolbarItemStyle = {
