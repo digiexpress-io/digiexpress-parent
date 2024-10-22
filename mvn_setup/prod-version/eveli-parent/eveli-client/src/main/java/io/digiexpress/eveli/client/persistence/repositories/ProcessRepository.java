@@ -39,8 +39,8 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
   
   @Query(value=
       "select p from ProcessEntity p where " +
-      " lower(workflow_name) like :name" +
-      " and (:userId='' or user_id = :userId)" +
+      " lower(workflowName) like :name" +
+      " and (:userId='' or userId = :userId)" +
       " and status in :status")
   Page<ProcessEntity> searchProcesses(
       @Param("name") String name,

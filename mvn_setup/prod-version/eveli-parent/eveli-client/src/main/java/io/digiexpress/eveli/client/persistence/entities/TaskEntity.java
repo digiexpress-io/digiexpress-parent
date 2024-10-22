@@ -27,8 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -69,8 +68,8 @@ public class TaskEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  
-  @GeneratorType(type = TaskRefGenerator.class, when = GenerationTime.INSERT)
+
+  @GenericGenerator(name = "task_ref_gen", type = TaskRefGenerator.class)
   @Column(name = "task_ref", unique = true, nullable = false, updatable = false)
   private String taskRef;
 

@@ -33,10 +33,12 @@ import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 
 @Repository
 public interface CommentRepository extends CrudRepository<TaskCommentEntity, Long> {
-	Optional<TaskCommentEntity> findById(Long id);
 	
-	@Query("select c from Comment c where id = (select c2.replyTo from Comment c2 where c2.id = :id)")
-	Optional<TaskCommentEntity> findByReplyTo(@Param("id") Long id);
+  
+  Optional<TaskCommentEntity> findOneById(Long id);
+	
+	@Query("select c from TaskCommentEntity c where id = (select c2.replyTo.id from TaskCommentEntity c2 where c2.id = :id)")
+	Optional<TaskCommentEntity> findOneByReplyTo(@Param("id") Long id);
 	
 	Collection<TaskCommentEntity> findByTaskId(Long id);
 	Collection<TaskCommentEntity> findByTaskIdAndExternalTrue(Long id);

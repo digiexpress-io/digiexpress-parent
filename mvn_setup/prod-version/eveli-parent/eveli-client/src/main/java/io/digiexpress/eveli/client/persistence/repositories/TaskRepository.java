@@ -44,10 +44,10 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
 	Optional<TaskEntity> findByIdAndAssignedRolesIn(@Param("id")Long id,@Param("assignedRoles") List<String> roles);
 	
   @Query(value=
-      "select distinct t from Task t join t.assignedRoles r left join t.assignedRoles r2 where " +
-      " (lower(subject) like :subject or lower(task_ref) like :subject)" +
-      " and lower(coalesce(client_identificator, '')) like :clientIdentificator" +
-      " and lower(coalesce(assigned_user, '')) like :assignedUser" +
+      "select distinct t from TaskEntity t join t.assignedRoles r left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
       " and priority in :priority" +
       " and status in :status" +
       " and lower(coalesce(r2, '')) like :searchRole" +
@@ -65,10 +65,10 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
       Pageable page);
   
   @Query(value=
-      "select distinct t from Task t left join t.assignedRoles r2 where " +
-      " (lower(subject) like :subject or lower(task_ref) like :subject)" +
-      " and lower(coalesce(client_identificator, '')) like :clientIdentificator" +
-      " and lower(coalesce(assigned_user, '')) like :assignedUser" +
+      "select distinct t from TaskEntity t left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
       " and priority in :priority" +
       " and status in :status" +
       " and lower(coalesce(r2, '')) like :searchRole" +
@@ -84,13 +84,13 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
       Pageable page);
 
   
-  @Query(value="select distinct t.id from task t join comment c on c.task_id = t.id left join task_access ta on t.id = ta.task_id and ta.user_id=:userId where (ta.task_id is null or c.created > ta.updated) and c.external=TRUE", nativeQuery = true)
+  @Query(value="select distinct t.id from TaskEntity t join comment c on c.task_id = t.id left join task_access ta on t.id = ta.task_id and ta.userId=:userId where (ta.task_id is null or c.created > ta.updated) and c.external=TRUE", nativeQuery = true)
   List<Long> findUnreadExternalTasks(@Param("userId") String userName);
   
-  @Query(value="select distinct t.id from task t left join task_access ta on t.id = ta.task_id and ta.user_id=:userId left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated)", nativeQuery = true)
+  @Query(value="select distinct t.id from TaskEntity t left join task_access ta on t.id = ta.task_id and ta.userId=:userId left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated)", nativeQuery = true)
   List<Long> findUnreadTasks(@Param("userId") String userName);
   
-  @Query(value="select distinct t.id from task t inner join task_roles ar on t.id =ar.task_id left join task_access ta on t.id = ta.task_id and ta.user_id=:userId left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated) and ar.assigned_roles in :roles", nativeQuery = true)
+  @Query(value="select distinct t.id from TaskEntity t inner join task_roles ar on t.id =ar.task_id left join task_access ta on t.id = ta.task_id and ta.userId=:userId left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated) and ar.assigned_roles in :roles", nativeQuery = true)
   List<Long> findUnreadTasksByRole(@Param("userId") String userName, @Param("roles") List<String> roles);
   
   
