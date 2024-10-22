@@ -49,7 +49,9 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       // react redux error
       'process.env.IS_SSR': undefined,
       'process.env.REACT_APP_LOCAL_DEV_MODE': true + '',
-      'process.env.REACT_APP_START_MODE': '"stencil"'
+      'process.env.REACT_APP_START_MODE': '"stencil"',
+      'process.env.VITE_IAP_REFRESH': true + '',
+      'process.env.VITE_HOST_URL': 'http://localhost:3000'
     },
   }
 }
