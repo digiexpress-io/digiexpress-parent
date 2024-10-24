@@ -1,16 +1,8 @@
 import React from 'react';
-import { useSnackbar } from 'notistack';
-
-import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
-import { styled } from "@mui/material/styles";
-import { FormattedMessage } from 'react-intl';
-import * as Burger from '@/burger';
+import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ListIcon from '@mui/icons-material/ListAlt';
 import BuildIcon from '@mui/icons-material/Build';
@@ -21,6 +13,10 @@ import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 import SubjectIcon from '@mui/icons-material/Subject';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { FormattedMessage } from 'react-intl';
+
+import * as Burger from '@/burger';
+
 
 
 
@@ -56,9 +52,11 @@ export const Toolbar: React.FC<{}> = () => {
   const secondaryActions = secondaryCtx.actions;
 
 
+  //TODO active tab
 
   const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
 
+  //TODO
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
 
@@ -79,7 +77,7 @@ export const Toolbar: React.FC<{}> = () => {
     }
   };
 
-
+  //TODO
   // open dashboard
   React.useLayoutEffect(() => {
     console.log("init toolbar");
