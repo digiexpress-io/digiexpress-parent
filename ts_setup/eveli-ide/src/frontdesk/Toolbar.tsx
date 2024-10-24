@@ -82,7 +82,7 @@ export const Toolbar: React.FC<{}> = () => {
   React.useLayoutEffect(() => {
     console.log("init toolbar");
     secondaryActions.handleSecondary("toolbar.articles")
-    tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+    //tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
   }, [tabsActions, secondaryActions]);
 
 
