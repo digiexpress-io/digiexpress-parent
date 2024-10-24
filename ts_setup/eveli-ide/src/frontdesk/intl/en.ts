@@ -1,4 +1,11 @@
 const en = {
+
+  //----------------NEW-------------------------
+  'explorer.title': 'DigiExpress Task Management',
+
+  // ---------------END NEW ---------------------
+
+
   'locale.fi': 'Suomi',
   'locale.sv': 'Svenska',
   'locale.en': 'English',
