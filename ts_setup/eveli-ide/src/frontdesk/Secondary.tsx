@@ -14,7 +14,6 @@ import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 import SubjectIcon from '@mui/icons-material/Subject';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -105,7 +104,7 @@ export const Secondary: React.FC = () => {
   return (
     <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
       <ExplorerTitleBar>
-        <TaskAltIcon />
+        <Typography sx={{ color: 'white', fontStyle: 'italic', fontFamily: 'serif' }}>My Logo</Typography>
         <Typography>{intl.formatMessage({ id: 'explorer.title' })}</Typography>
       </ExplorerTitleBar>
       <Box display="flex" >
