@@ -203,8 +203,8 @@ export const DashboardView: React.FC = () => {
                   <YAxis allowDecimals={false}/>
                   <Tooltip />
                   <Legend verticalAlign='bottom' />
-                  {(['NEW', 'COMPLETED', 'REJECTED'] as TaskStatus[]).map(status=>{
-                    return (<Bar dataKey={status.toLowerCase()} 
+                  {(['NEW', 'COMPLETED', 'REJECTED'] as TaskStatus[]).map((status, index) => {
+                    return (<Bar key={index} dataKey={status.toLowerCase()} 
                       name={intl.formatMessage({id: taskStatusMapping[status]})} 
                       fill={statusColorMap[status]} label={<BarLabel/>}
                       stackId={status === 'COMPLETED' || status === 'REJECTED' ? 'closed' : undefined}/>)

@@ -50,6 +50,7 @@ export const Explorer: React.FC<{}> = () => {
     <SimpleTreeView>
       {menuItems.map((item) => (
         <MenuItem
+          key={item.nodeId}
           icon={item.icon}
           labelText={item.labelText}
           nodeId={item.nodeId}
@@ -84,13 +85,13 @@ export const Secondary: React.FC = () => {
   const showDashboard = isTestEnv || isTaskAdmin();
 
   return (
-    <BrowserRouter>
+
       <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
         <Box display="flex" >
           <Explorer />
         </Box>
       </Box>
-    </BrowserRouter>
+
   )
 }
 
