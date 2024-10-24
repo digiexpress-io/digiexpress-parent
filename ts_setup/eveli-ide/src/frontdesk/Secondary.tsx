@@ -16,14 +16,13 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
-import { BrowserRouter, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useConfig } from './context/ConfigContext';
 import { useUserInfo } from './context/UserContext';
 
 import { MenuItem, MenuItemProps } from './explorer';
 import { useIntl } from 'react-intl';
-import { fontStyle, textTransform } from '@mui/system';
 
 
 const menuItems: MenuItemProps[] = [

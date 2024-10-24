@@ -21,16 +21,13 @@ import { BurgerApi } from '@/burger';
 import { StencilComposer, StencilClient } from '../stencil';
 import { WrenchComposer, WrenchClient } from '../wrench';
 import { Secondary } from './Secondary';
+import { Toolbar } from './Toolbar';
 
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const basename = import.meta.env.PUBLIC_URL;
   return <RouterProvider router={createBrowserRouter(createRoutesFromElements(children), { basename })} />
-}
-
-const Toolbar: React.FC = () => {
-  return <></>
 }
 
 const frontdeskApp: BurgerApi.App<{}> = {
