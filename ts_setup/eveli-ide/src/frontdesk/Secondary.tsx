@@ -1,5 +1,5 @@
 import React from 'react';
-import { alpha, Box, styled, Typography } from '@mui/material';
+import { alpha, Box, styled, SxProps, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 
 
@@ -23,19 +23,22 @@ import { useUserInfo } from './context/UserContext';
 import { MenuItem, MenuItemProps } from './explorer';
 import { useIntl } from 'react-intl';
 
+const iconSize: SxProps = {
+  fontSize: '12pt'
+}
 
 const menuItems: MenuItemProps[] = [
-  { id: 'menu.tasks', to: '/ui/tasks', icon: <ViewListIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.content', to: '/ui/content', icon: <SubjectIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <AllInboxIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.releases', to: '/ui/releases', icon: <BusinessCenterIcon fontSize='small' />, onClick: () => { } },
-  { id: 'menu.help', to: '/ui/help', icon: <HelpIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.tasks', to: '/ui/tasks', icon: <ViewListIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.content', to: '/ui/content', icon: <SubjectIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <AllInboxIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.releases', to: '/ui/releases', icon: <BusinessCenterIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.help', to: '/ui/help', icon: <HelpIcon sx={iconSize} />, onClick: () => { } },
 ]
 
 

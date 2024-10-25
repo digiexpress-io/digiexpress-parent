@@ -20,11 +20,9 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
       itemId={props.id}
       onClick={props.onClick}
       label={
-        <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box color="link.main" sx={{ pl: 1, mr: 1 }}>{props.icon}</Box>
-          <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
-            sx={{ fontWeight: "inherit", flexGrow: 1 }}
-          >
+        <Box display='flex' marginTop={1}>
+          <Box display='flex' alignItems='center' marginRight={1} color="link.main">{props.icon}</Box>
+          <Typography align="left" maxWidth="300px" noWrap={true} variant="body1" sx={{ fontWeight: "inherit", flexGrow: 1 }}>
             {intl.formatMessage({ id: props.id })}
           </Typography>
         </Box>
