@@ -9,8 +9,6 @@ import { IAPSessionRefreshContext } from './context/SessionRefreshContext';
 import { DATE_LOCALE_MAP } from './intl/datelocalization';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-
 import { SnackbarProvider } from 'notistack';
 import { FeedbackProvider } from './context/FeedbackContext';
 import { AppSetup } from './AppSetup';
@@ -37,9 +35,9 @@ export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
 
   return (
     <ConfigContextProvider path={configUrl}>
-      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
-        <IAPSessionRefreshContext>
-          <FeedbackProvider>
+      <FeedbackProvider>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
+          <IAPSessionRefreshContext>
             <SnackbarProvider maxSnack={3} ref={notistackRef}
               action={(key) => (<Button onClick={onClickDismiss(key)}><FormattedMessage id='button.dismiss' /></Button>)}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
@@ -47,9 +45,10 @@ export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
                 <AppSetup locale={locale} />
               </UserContextProvider>
             </SnackbarProvider>
-          </FeedbackProvider>
-        </IAPSessionRefreshContext>
-      </LocalizationProvider>
+          </IAPSessionRefreshContext>
+        </LocalizationProvider>
+      </FeedbackProvider>
+
     </ConfigContextProvider>
 
   );

@@ -5,14 +5,14 @@ import { SimpleTreeView } from '@mui/x-tree-view';
 
 import ListIcon from '@mui/icons-material/ListAlt';
 import BuildIcon from '@mui/icons-material/Build';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import SubjectIcon from '@mui/icons-material/Subject';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import { useNavigate } from 'react-router-dom';
@@ -23,34 +23,80 @@ import { useUserInfo } from './context/UserContext';
 import { MenuItem, MenuItemProps } from './explorer';
 import { useIntl } from 'react-intl';
 
+import * as Burger from '@/burger';
+import { Feedback } from './components/Feedback';
+import { FeedbackContext } from './context/FeedbackContext';
+
+
 const iconSize: SxProps = {
-  fontSize: '12pt'
+  fontSize: '13pt'
 }
 
+
 const menuItems: MenuItemProps[] = [
-  { id: 'menu.tasks', to: '/ui/tasks', icon: <ViewListIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.content', to: '/ui/content', icon: <SubjectIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <AllInboxIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.releases', to: '/ui/releases', icon: <BusinessCenterIcon sx={iconSize} />, onClick: () => { } },
-  { id: 'menu.help', to: '/ui/help', icon: <HelpIcon sx={iconSize} />, onClick: () => { } },
+  { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
+  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon sx={iconSize} /> },
+  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon sx={iconSize} /> },
+  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} /> },
+  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} /> },
+  { id: 'menu.content', to: '/ui/content', icon: <MenuBookIcon sx={iconSize} /> },
+  { id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> },
+  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
+  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <NewReleasesIcon sx={iconSize} />, },
+  { id: 'menu.releases', to: '/ui/releases', icon: <BeenhereIcon sx={iconSize} /> },
+  { id: 'menu.help', to: '/ui/help', icon: <HelpIcon sx={iconSize} /> },
 ]
+
+// --------- Frame.tsx ----------
+const ENV_TYPE: 'prod' | 'test' = (process.env.VITE_ENV_TYPE || 'test') as any;
+const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
+
+
+
+const ExplorerSecondaryButtons: React.FC = () => {
+  const userInfo = useUserInfo();
+  const context = React.useContext(FeedbackContext);
+
+  const openFeedback = () => {
+    context.open();
+    console.log(context.isOpen, userInfo);
+  }
+
+  return (
+    <Box display='flex' marginTop='auto' justifyContent='center'>
+      {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */
+        <Burger.PrimaryButton label='explorer.feedback'
+          sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 10 }}
+          onClick={openFeedback}
+        />
+      }
+
+      <Burger.PrimaryButton label='explorer.logout'
+        sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
+        onClick={() => window.location.href = `${HOST_URL}/oauth2/authorization/oidcprovider`}
+      />
+    </Box>
+
+  )
+}
 
 
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
+  const context = React.useContext(FeedbackContext);
 
   const handleMenuItemClick = (to?: string) => {
     if (to) {
       navigate(to);
+    } else {
+      console.log('click');
+      context.open();
+      console.log(context.isOpen);
     }
   };
-  return (
+
+  return (<>
+
     <SimpleTreeView>
       {menuItems.map((item) => (
         <MenuItem
@@ -62,6 +108,7 @@ export const Explorer: React.FC<{}> = () => {
       )
       )}
     </SimpleTreeView>
+  </>
   );
 }
 
@@ -92,6 +139,7 @@ export const Secondary: React.FC = () => {
   const userInfo = useUserInfo();
   const intl = useIntl();
 
+
   const isTaskAdmin = () => {
     if (config.taskAdminGroups?.length) {
       if (userInfo.hasRole(...config.taskAdminGroups)) {
@@ -103,15 +151,19 @@ export const Secondary: React.FC = () => {
   }
   const showDashboard = isTestEnv || isTaskAdmin();
 
-  return (
+  return (<>
     <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
       <ExplorerTitleBar>
         <Typography sx={{ color: 'white', fontStyle: 'italic', fontFamily: 'serif' }}>My Logo</Typography>
         <Typography>{intl.formatMessage({ id: 'explorer.title' })}</Typography>
       </ExplorerTitleBar>
-      <Box display="flex" >
+      <Box display="flex" flexDirection='column' flexGrow={1}>
         <Explorer />
       </Box>
+      <Feedback />
+      <ExplorerSecondaryButtons />
     </Box>
+  </>
   )
 }
+

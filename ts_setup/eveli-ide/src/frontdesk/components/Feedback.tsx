@@ -41,7 +41,8 @@ export const Feedback: React.FC<Props> = () => {
   }, [context.isOpen]);
 
   //if (!feedbackKey || !feedbackUrl) return null;
-  if (!config.feedbackKey) return null;
+  
+  //if (!config.feedbackKey) return null; --> Commented out for local testing (JRM 25 Oct)
 
   function close() {
     setSendFeedback(false);
@@ -57,7 +58,7 @@ export const Feedback: React.FC<Props> = () => {
         <Snackbar open={true} anchorOrigin={{vertical: 'top', horizontal: 'center'}} message={intl.formatMessage({id: 'feedback.thanks'})} 
         sx={{backgroundColor: green[600]}}/>
       )}
-        <Dialog open={context.isOpen && requestState !== RequestState.Success} onClose={close} fullScreen={fullScreen}>
+      <Dialog open={context.isOpen && requestState !== RequestState.Success} onClose={close} fullScreen={fullScreen}>
           <DialogTitle><FormattedMessage id='feedback.title'/></DialogTitle>
           <DialogContent dividers>
           <TextField

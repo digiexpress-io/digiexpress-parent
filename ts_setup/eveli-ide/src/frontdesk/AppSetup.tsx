@@ -27,7 +27,7 @@ import { Toolbar } from './Toolbar';
 import { frontdeskIntl } from './intl'
 import { stencilIntl } from '../stencil'
 import { wrenchIntl } from '../wrench'
-
+import { FeedbackProvider } from './context/FeedbackContext';
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -66,11 +66,15 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   }
 
   return (
-    <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
-      <TaskSessionContext apiBaseUrl={config.tasksApiUrl || ''}>
-        <Burger.Provider children={[frontdeskApp]} secondary="toolbar.articles" drawerOpen />
-      </TaskSessionContext>
-    </IntlProvider>);
+    <FeedbackProvider>
+      <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
+        <TaskSessionContext apiBaseUrl={config.tasksApiUrl || ''}>
+          <Burger.Provider children={[frontdeskApp]} drawerOpen />
+        </TaskSessionContext>
+      </IntlProvider>
+    </FeedbackProvider>
+
+  );
 }
 
 export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {

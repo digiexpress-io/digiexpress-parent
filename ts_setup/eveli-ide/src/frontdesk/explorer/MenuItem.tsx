@@ -9,7 +9,7 @@ export interface MenuItemProps {
   id: string;
   to?: string | undefined;
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const MenuItem: React.FC<MenuItemProps> = (props) => {
@@ -22,7 +22,7 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
       label={
         <Box display='flex' marginTop={1}>
           <Box display='flex' alignItems='center' marginRight={1} color="link.main">{props.icon}</Box>
-          <Typography align="left" maxWidth="300px" noWrap={true} variant="body1" sx={{ fontWeight: "inherit", flexGrow: 1 }}>
+          <Typography align="left" width='100%' noWrap={true} variant="body1" sx={{ fontWeight: "inherit", flexGrow: 1 }}>
             {intl.formatMessage({ id: props.id })}
           </Typography>
         </Box>

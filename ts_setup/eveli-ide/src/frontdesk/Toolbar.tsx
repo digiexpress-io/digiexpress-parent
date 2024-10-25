@@ -3,10 +3,9 @@ import { Tabs, Tab, Box, TabProps, TabsProps, styled, Tooltip } from '@mui/mater
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { useNavigate } from 'react-router-dom';
 
 
 
@@ -43,32 +42,8 @@ export const Toolbar: React.FC<{}> = () => {
   const secondaryActions = secondaryCtx.actions;
 
 
-
-  const navigate = useNavigate();
-
-  const handleMenuItemClick = (to?: string) => {
-    if (to) {
-      navigate(to);
-    }
-  };
-
-  //TODO
-
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-
-    if (newValue === 'toolbar.tasks') {
-      secondaryCtx.actions.handleSecondary("toolbar.tasks")
-
-    } else if (newValue === 'toolbar.dashboard') {
-      secondaryCtx.actions.handleSecondary("toolbar.dashboard")
-
-    } else if (newValue === 'toolbar.monitoring') {
-      secondaryCtx.actions.handleSecondary("toolbar.monitoring")
-
-    } else if (newValue === 'toolbar.forms') {
-      secondaryCtx.actions.handleSecondary("toolbar.forms")
-
-    } else if (newValue === 'toolbar.expand') {
+    if (newValue === 'toolbar.expand') {
       drawerCtx.actions.handleDrawerOpen(!drawerOpen)
     }
   };
@@ -77,7 +52,7 @@ export const Toolbar: React.FC<{}> = () => {
   // open dashboard
   React.useLayoutEffect(() => {
     console.log("init toolbar");
-    secondaryActions.handleSecondary("toolbar.tasks")
+    // secondaryActions.handleSecondary("toolbar.tasks")
     //tabsActions.handleTabAdd({ id: 'newItem', label: "Tasks" });
   }, [tabsActions, secondaryActions]);
 
@@ -85,6 +60,7 @@ export const Toolbar: React.FC<{}> = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
+
         <StyledTabs orientation="vertical"
           onChange={handleChange}
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
@@ -95,7 +71,7 @@ export const Toolbar: React.FC<{}> = () => {
           </Tooltip>
 
           <Tooltip title={intl.formatMessage({ id: 'explorer.toolbar.help.msg' })}>
-          <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
+            <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
           </Tooltip>
 
         </StyledTabs>
