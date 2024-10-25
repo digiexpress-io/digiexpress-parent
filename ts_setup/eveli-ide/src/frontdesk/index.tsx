@@ -44,7 +44,7 @@ export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
               action={(key) => (<Button onClick={onClickDismiss(key)}><FormattedMessage id='button.dismiss' /></Button>)}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
               <UserContextProvider>
-                <AppSetup />
+                <AppSetup locale={locale} />
               </UserContextProvider>
             </SnackbarProvider>
           </FeedbackProvider>

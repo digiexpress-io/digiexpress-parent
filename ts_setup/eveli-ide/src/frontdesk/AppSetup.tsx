@@ -1,4 +1,5 @@
 import React from 'react';
+import { IntlProvider } from 'react-intl'
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider, Outlet, useMatch } from 'react-router-dom';
 import { useUserInfo } from './context/UserContext';
 import { FrontView } from './views/front/FrontView';
@@ -23,6 +24,10 @@ import { WrenchComposer, WrenchClient } from '../wrench';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
+import { frontdeskIntl } from './intl'
+import { stencilIntl } from '../stencil'
+import { wrenchIntl } from '../wrench'
+
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -40,7 +45,7 @@ const frontdeskApp: BurgerApi.App<{}> = {
   ]
 }
 
-const StartFrame: React.FC = () => {
+const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   const config = useConfig();
   const isWrench = useMatch({ path: '/wrench/ide' })
   const isStencil = useMatch({ path: '/ui/content' })
@@ -48,25 +53,33 @@ const StartFrame: React.FC = () => {
 
   if (isWrench) {
     const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: "http://localhost:8081/assets" }));
-    return <WrenchComposer service={service} />
+    return (
+      <IntlProvider locale='en' messages={wrenchIntl.en}>
+        <WrenchComposer service={service} />
+      </IntlProvider>)
   } else if (isStencil) {
     const service = StencilClient.service({ config: { url: "http://localhost:8080/q/ide-services" } });
-    return <StencilComposer service={service} />
+    return (
+      <IntlProvider locale='en' messages={stencilIntl.en}>
+        <StencilComposer service={service} />
+      </IntlProvider>)
   }
 
   return (
-    <TaskSessionContext apiBaseUrl={config.tasksApiUrl || ''}>
-      <Burger.Provider children={[frontdeskApp]} secondary="toolbar.articles" drawerOpen />
-    </TaskSessionContext>);
+    <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
+      <TaskSessionContext apiBaseUrl={config.tasksApiUrl || ''}>
+        <Burger.Provider children={[frontdeskApp]} secondary="toolbar.articles" drawerOpen />
+      </TaskSessionContext>
+    </IntlProvider>);
 }
 
-export const AppSetup: React.FC = () => {
+export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
   const userInfo = useUserInfo();
 
   if (!userInfo.isAuthenticated()) { // Public user routes
     return (
       <StartRouter>
-        <Route element={<StartFrame />}>
+        <Route element={<StartFrame locale={locale} />}>
           <Route path='/*' element={<FrontView />} />
         </Route>
       </StartRouter>);
@@ -74,14 +87,14 @@ export const AppSetup: React.FC = () => {
   } else if (!userInfo.isAuthorized()) {
     return (
       <StartRouter>
-        <Route element={<StartFrame />}>
+        <Route element={<StartFrame locale={locale} />}>
           <Route path='/*' element={<UnauthorizedView />} />
         </Route>
       </StartRouter>);
   }
 
   return (<StartRouter>
-    <Route element={<StartFrame />}>
+    <Route element={<StartFrame locale={locale} />}>
       <Route path='/' element={<Navigate replace to="/ui/tasks" />} />
       <Route path='/ui/tasks' element={<TasksView />} />
       <Route path='/ui/forms' element={<DialobAdminView />} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { IntlProvider } from 'react-intl'
-import { siteTheme, frontdeskIntl, Frontdesk } from '@dxs-ts/eveli-ide';
+
+import { siteTheme, Frontdesk } from '@dxs-ts/eveli-ide';
 
 
 
@@ -21,12 +21,10 @@ export const FrontdeskApp: React.FC = () => {
   const locale = getLocale();
 
   return (
-    <IntlProvider locale={locale} messages={frontdeskIntl.en}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={siteTheme}>
           <Frontdesk configUrl='/config' defaultLocale={locale} />
         </ThemeProvider>
-      </StyledEngineProvider>
-    </IntlProvider>
+    </StyledEngineProvider>
   );
 }
