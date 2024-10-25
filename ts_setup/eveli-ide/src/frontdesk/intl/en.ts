@@ -2,6 +2,8 @@ const en = {
 
   //----------------NEW-------------------------
   'explorer.title': 'DigiExpress Task Management',
+  'explorer.toolbar.expand.msg': 'Open or close menu',
+  'explorer.toolbar.help.msg': 'Go to our help documentation',
 
   // ---------------END NEW ---------------------
 

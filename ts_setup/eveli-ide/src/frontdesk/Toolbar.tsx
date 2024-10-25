@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
+import { Tabs, Tab, Box, TabProps, TabsProps, styled, Tooltip } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { useNavigate } from 'react-router-dom';
@@ -33,6 +33,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 export const Toolbar: React.FC<{}> = () => {
 
+  const intl = useIntl();
   const tabsCtx = Burger.useTabs();
   const drawerCtx = Burger.useDrawer();
   const secondaryCtx = Burger.useSecondary();
@@ -89,8 +90,13 @@ export const Toolbar: React.FC<{}> = () => {
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
           value={secondaryCtx.session.secondary}>
 
-          <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
+          <Tooltip title={intl.formatMessage({ id: 'explorer.toolbar.expand.msg' })}>
+            <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
+          </Tooltip>
+
+          <Tooltip title={intl.formatMessage({ id: 'explorer.toolbar.help.msg' })}>
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
+          </Tooltip>
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
