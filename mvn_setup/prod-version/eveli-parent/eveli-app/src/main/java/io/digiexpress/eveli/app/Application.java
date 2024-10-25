@@ -26,12 +26,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import io.digiexpress.eveli.client.config.EveliAssetAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
+import io.digiexpress.eveli.client.config.EveliDbAutoConfig;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableAsync
-@Import(value = { EveliAutoConfig.class })
+@Import(value = { EveliDbAutoConfig.class, EveliAssetAutoConfig.class, EveliAutoConfig.class })
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[]{Application.class}, args);

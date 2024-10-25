@@ -66,7 +66,7 @@ import io.vertx.sqlclient.PoolOptions;
 @EnableTransactionManagement
 @EntityScan(basePackageClasses = { TaskEntity.class })
 @EnableJpaRepositories(basePackageClasses = { TaskRepository.class })
-public class EveliComposerAutoConfig {
+public class EveliAssetAutoConfig {
   
   @Value("${spring.datasource.url}")
   private String datasourceUrl;
