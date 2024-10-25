@@ -25,17 +25,17 @@ import { useIntl } from 'react-intl';
 
 
 const menuItems: MenuItemProps[] = [
-  { nodeId: '1', to: '/ui/tasks', labelText: 'menu.tasks', icon: <ViewListIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '2', to: '/ui/dashboard', labelText: 'menu.dashboard', icon: <DashboardIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '3', to: '/ui/processes', labelText: 'menu.processes', icon: <NetworkCheckIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '5', to: '/ui/forms', labelText: 'menu.forms', icon: <ListIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '6', to: '/wrench/ide', labelText: 'menu.flow', icon: <BuildIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '7', to: '/ui/content', labelText: 'menu.content', icon: <SubjectIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '8', to: '/ui/calendar', labelText: 'menu.calendar', icon: <CalendarMonthIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '10', to: '/ui/workflows', labelText: 'menu.workflows', icon: <SettingsIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '11', to: '/ui/workflowReleases', labelText: 'menu.workflowReleases', icon: <AllInboxIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '12', to: '/ui/releases', labelText: 'menu.releases', icon: <BusinessCenterIcon fontSize='small' />, onClick: () => { } },
-  { nodeId: '13', to: '/ui/help', labelText: 'menu.help', icon: <HelpIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.tasks', to: '/ui/tasks', icon: <ViewListIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.content', to: '/ui/content', icon: <SubjectIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <AllInboxIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.releases', to: '/ui/releases', icon: <BusinessCenterIcon fontSize='small' />, onClick: () => { } },
+  { id: 'menu.help', to: '/ui/help', icon: <HelpIcon fontSize='small' />, onClick: () => { } },
 ]
 
 
@@ -51,10 +51,9 @@ export const Explorer: React.FC<{}> = () => {
     <SimpleTreeView>
       {menuItems.map((item) => (
         <MenuItem
-          key={item.nodeId}
+          key={item.id}
           icon={item.icon}
-          labelText={item.labelText}
-          nodeId={item.nodeId}
+          id={item.id}
           onClick={() => handleMenuItemClick(item.to)}
         />
       )

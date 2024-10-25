@@ -6,9 +6,8 @@ import { useIntl } from 'react-intl';
 
 
 export interface MenuItemProps {
-  labelText: string;
+  id: string;
   to?: string | undefined;
-  nodeId: string;
   icon: React.ReactNode;
   onClick: () => void;
 }
@@ -18,7 +17,7 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
 
   return (
     <Burger.TreeItemRoot
-      itemId={props.nodeId}
+      itemId={props.id}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
@@ -26,7 +25,7 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
-            {intl.formatMessage({ id: props.labelText })}
+            {intl.formatMessage({ id: props.id })}
           </Typography>
         </Box>
       }

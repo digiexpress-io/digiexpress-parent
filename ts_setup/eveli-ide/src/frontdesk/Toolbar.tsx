@@ -52,25 +52,22 @@ export const Toolbar: React.FC<{}> = () => {
   const secondaryActions = secondaryCtx.actions;
 
 
-  //TODO active tab
-
-  const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
-
   //TODO
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
 
-    if (newValue === 'toolbar.activities') {
-      tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+    if (newValue === 'toolbar.tasks') {
+      secondaryCtx.actions.handleSecondary("toolbar.tasks")
 
-    } else if (newValue === 'toolbar.articles') {
-      secondaryCtx.actions.handleSecondary("toolbar.articles")
 
-    } else if (newValue === 'toolbar.search') {
-      secondaryCtx.actions.handleSecondary("toolbar.search")
+    } else if (newValue === 'toolbar.dashboard') {
+      secondaryCtx.actions.handleSecondary("toolbar.dashboard")
 
-    } else if (newValue === 'toolbar.import') {
-      tabsActions.handleTabAdd({ id: 'import', label: 'Import' })
+    } else if (newValue === 'toolbar.monitoring') {
+      secondaryCtx.actions.handleSecondary("toolbar.monitoring")
+
+    } else if (newValue === 'toolbar.forms') {
+      secondaryCtx.actions.handleSecondary("toolbar.forms")
 
     } else if (newValue === 'toolbar.expand') {
       drawerCtx.actions.handleDrawerOpen(!drawerOpen)
@@ -81,8 +78,8 @@ export const Toolbar: React.FC<{}> = () => {
   // open dashboard
   React.useLayoutEffect(() => {
     console.log("init toolbar");
-    secondaryActions.handleSecondary("toolbar.articles")
-    //tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+    secondaryActions.handleSecondary("toolbar.tasks")
+    tabsActions.handleTabAdd({ id: 'newItem', label: "Tasks" });
   }, [tabsActions, secondaryActions]);
 
 
