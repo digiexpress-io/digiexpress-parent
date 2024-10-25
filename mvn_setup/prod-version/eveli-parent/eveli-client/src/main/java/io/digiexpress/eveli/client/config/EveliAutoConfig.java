@@ -22,6 +22,8 @@ package io.digiexpress.eveli.client.config;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +41,16 @@ import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
+import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
+import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.DialobCommandsImpl;
+import io.digiexpress.eveli.client.spi.HdesCommandsImpl.SpringTransactionWrapper;
+import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
+import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 import io.digiexpress.eveli.client.spi.PortalClientImpl;
 import io.digiexpress.eveli.client.web.resources.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.CommentApiController;
@@ -59,10 +66,20 @@ import io.digiexpress.eveli.client.web.resources.PortalTaskController;
 import io.digiexpress.eveli.client.web.resources.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.TaskApiController;
+import jakarta.persistence.EntityManager;
 
 
 
 @Configuration
+@EnableConfigurationProperties( value = {
+    EveliProps.class, 
+    EveliPropsAssets.class, 
+    EveliPropsDialob.class, 
+    EveliPropsEmail.class, 
+    EveliPropsGamut.class, 
+    EveliPropsPrintout.class,
+    EveliPropsTask.class
+})
 public class EveliAutoConfig {
   
   @Bean 
@@ -78,15 +95,23 @@ public class EveliAutoConfig {
     
     return new CommentApiController(taskRepository, commentRepository, notificator, taskAccessRepository);
   }
-  
+  @Bean 
   public DuplicateDetectionCache duplicateDetectionCache() {
     return new DuplicateDetectionCache();
   }
   
+  @Bean(name="submitTaskScheduler")
+  public ThreadPoolTaskScheduler submitTaskScheduler() {
+    ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+    threadPoolTaskScheduler.setPoolSize(10);
+    threadPoolTaskScheduler.setThreadNamePrefix("SubmitTaskScheduler-");
+    return threadPoolTaskScheduler;
+  }
+
   @Bean 
   public DialobCallbackController dialobCallbackController(
       PortalClient client, 
-      ThreadPoolTaskScheduler submitTaskScheduler,
+      @Qualifier(value="submitTaskScheduler") ThreadPoolTaskScheduler submitTaskScheduler,
       DuplicateDetectionCache cache) {
     
     final var submitMessageDelay = 10000l;
@@ -171,11 +196,30 @@ public class EveliAutoConfig {
   public TaskEventPublisher taskEventPublisher(ApplicationEventPublisher publisher) {
     return new TaskEventPublisher(publisher);
   }
+  @Bean
+  public RestTemplate restTemplate() {
+      return new RestTemplate();
+  }
+  @Bean
+  public TransactionWrapper transactionWrapper(EntityManager entityManager) {
+      return new SpringTransactionWrapper(entityManager);
+  }
+  @Bean
+  public PortalAccessValidator portalAccessValidator(PortalClient client) {
+      return new PortalAccessValidatorImpl(client);
+  }  
+  
   
   @Bean 
   public PortalClient portalClient(
       Optional<AttachmentCommands> attachment, 
       Optional<NotificationCommands> notification,
+      
+      ProcessRepository processRepository,
+      TaskRepository taskRepository,
+      TaskNotificator taskNotificator,
+      
+      TransactionWrapper transactionWrapper,
       
       RestTemplate restTemplate,
       ObjectMapper objectMapper,
@@ -194,8 +238,17 @@ public class EveliAutoConfig {
     return PortalClientImpl.builder()
         .dialobCommands(dialob)
         .attachmentCommands(attachment.orElse(new AttachmentCommandsDummy()))
-        .hdesClient(null)
+        .notificationCommands(notification.orElse(new NotificationCommandsDummy()))
+        
+        .hdesClient(eveliContext.getWrench())
         .programEnvir(eveliContext.getProgramEnvir())
+        .assetClient(eveliContext.getAssets())
+        .transactionWrapper(transactionWrapper)
+          
+        .processRepository(processRepository)
+        .taskNotificator(taskNotificator)
+        .taskRepository(taskRepository)
+        
         .build();
   }
 }

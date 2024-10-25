@@ -6,41 +6,15 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Value;
-
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.web.resources.AssetReleaseController;
 import io.digiexpress.eveli.client.web.resources.WorkflowController;
 import io.digiexpress.eveli.client.web.resources.WorkflowReleaseController;
@@ -63,9 +37,6 @@ import io.vertx.sqlclient.PoolOptions;
 
 
 @Configuration
-@EnableTransactionManagement
-@EntityScan(basePackageClasses = { TaskEntity.class })
-@EnableJpaRepositories(basePackageClasses = { TaskRepository.class })
 public class EveliAssetAutoConfig {
   
   @Value("${spring.datasource.url}")
@@ -96,9 +67,13 @@ public class EveliAssetAutoConfig {
       ApplicationContext context
     ) {
     
-    final var pgHost = "";
-    final var pgPort = 0;
-    final var pgDb = "";
+    final var datasourceConfig = datasourceUrl.split(":");
+    final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
+
+    
+    final var pgHost = datasourceConfig[2].substring(2);
+    final var pgPort = Integer.parseInt(portAndDb[0]);
+    final var pgDb = portAndDb[1];
     final var sslMode = SslMode.ALLOW;
     
     final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
