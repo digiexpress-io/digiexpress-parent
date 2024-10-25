@@ -41,7 +41,6 @@ import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.TaskCommands;
-import io.digiexpress.eveli.client.config.PortalConfigBean;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +51,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PrintoutController {
 
   private final PortalClient client;
-  private final PortalConfigBean config;
   private final RestTemplate restTemplate;
+  private final boolean adminsearch;
+  private final String serviceUrl;
   
   @GetMapping(value = {"/pdf"}, produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> printQuestionnaire(
@@ -71,7 +71,7 @@ public class PrintoutController {
         roles = getRoles(authentication);
       }
       log.debug("PDF printout request user has roles: {}", roles);
-      task = client.task().find(taskId, roles);
+      task = client.task().find(taskId, roles, adminsearch);
       
       
       
@@ -113,9 +113,9 @@ public class PrintoutController {
       // server which expects UTF-8 type defined to decode json correctly.
       printHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
       HttpEntity<?> printRequest = new HttpEntity<>(input, printHeaders);
-      log.debug("Calling printout service url  {}", config.getPrintoutServiceUrl());
+      log.debug("Calling printout service url  {}", serviceUrl);
       log.debug("body:{}", input);
-      pdfEntity = restTemplate.postForEntity(config.getPrintoutServiceUrl(), printRequest, byte[].class);
+      pdfEntity = restTemplate.postForEntity(serviceUrl, printRequest, byte[].class);
     } 
     catch(Exception e) {
       log.warn("Error accessing form:", e);

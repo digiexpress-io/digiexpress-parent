@@ -58,6 +58,7 @@ public class DialobCommandsImpl implements DialobCommands {
   private final ObjectMapper objectMapper;
   private final RestTemplate client;
   private final String authorization;
+  
   private final String questionnaireUrl;
   private final String callbackUrl;
   private final String formUrl;

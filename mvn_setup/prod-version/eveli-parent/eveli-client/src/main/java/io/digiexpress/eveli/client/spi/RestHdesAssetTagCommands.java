@@ -20,49 +20,18 @@ package io.digiexpress.eveli.client.spi;
  * #L%
  */
 
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
-import org.apache.commons.lang3.mutable.Mutable;
-import org.apache.commons.lang3.mutable.MutableObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import io.digiexpress.eveli.client.api.AssetTagCommands.AssetTag;
-import io.digiexpress.eveli.client.api.ImmutableAssetTag;
-import io.digiexpress.eveli.client.api.JsonNodeTagCommands;
-import io.resys.hdes.client.api.HdesComposer.CreateEntity;
-import io.resys.hdes.client.api.ImmutableCreateEntity;
-import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-@AllArgsConstructor
-public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
+// should be direct integration
+//@Slf4j
+/* @AllArgsConstructor
+public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AnyAssetTag> {
   private final RestTemplate client;
 
   private final String baseUrl;
   
 
   @Override
-  public AssetTag createTag(AssetTagInit init) {
-    Mutable<AssetTag> result = new MutableObject<>(null);
+  public AnyAssetTag createTag(AssetTagInit init) {
+    Mutable<AnyAssetTag> result = new MutableObject<>(null);
 
     final HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -87,8 +56,8 @@ public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
 
 
   @Override
-  public List<AssetTag> findAll() {
-    List<AssetTag> result = new ArrayList<>();
+  public List<AnyAssetTag> findAll() {
+    List<AnyAssetTag> result = new ArrayList<>();
 
     JsonNode state = getTagNodes();
     processTags(state, (tagAst,id)-> {
@@ -98,7 +67,7 @@ public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
   }
 
   @Override
-  public Optional<AssetTag> getByName(String name) {
+  public Optional<AnyAssetTag> getByName(String name) {
     JsonNode state = getTag(name);
     JsonNode tagAst = state.path("ast");
     String id = state.path("id").asText();
@@ -150,7 +119,7 @@ public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
     }
   }
   
-  private AssetTag convertAstTag(JsonNode node, String id) {
+  private AnyAssetTag convertAstTag(JsonNode node, String id) {
     return ImmutableAssetTag.builder()
         .id(id)
         .name(node.path("name").asText())
@@ -167,4 +136,5 @@ public class RestHdesAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
     JsonNode tagAst = state.path("ast");
     return tagAst;
   }
-}
+  
+}*/

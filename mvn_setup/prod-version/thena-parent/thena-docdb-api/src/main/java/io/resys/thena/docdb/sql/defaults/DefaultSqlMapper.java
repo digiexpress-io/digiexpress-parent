@@ -100,7 +100,7 @@ public class DefaultSqlMapper implements SqlMapper {
   public Blob blob(Row row) {
     return ImmutableBlob.builder()
         .id(row.getString("id"))
-        .value(row.getString("value"))
+        .value(row.getJsonObject("value"))
         .build();
   }
 }

@@ -20,13 +20,6 @@ package io.digiexpress.eveli.client.api;
  * #L%
  */
 
-import java.util.List;
-
 public interface HdesCommands {
   void execute(String dialobSessionId);
-  HdesQuery query();
-  
-  interface HdesQuery {
-    List<String> findFlowNames();
-  }
 }

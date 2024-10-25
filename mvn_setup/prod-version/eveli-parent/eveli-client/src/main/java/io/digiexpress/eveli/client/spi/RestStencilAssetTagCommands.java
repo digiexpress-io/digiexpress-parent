@@ -20,47 +20,17 @@ package io.digiexpress.eveli.client.spi;
  * #L%
  */
 
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
-import org.apache.commons.lang3.mutable.Mutable;
-import org.apache.commons.lang3.mutable.MutableObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import io.digiexpress.eveli.client.api.AssetTagCommands.AssetTag;
-import io.digiexpress.eveli.client.api.ImmutableAssetTag;
-import io.digiexpress.eveli.client.api.JsonNodeTagCommands;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
+/*should be direct integration
 @Slf4j
 @AllArgsConstructor
-public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AssetTag> {
+public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AnyAssetTag> {
   private final RestTemplate client;
 
   private final String baseUrl;
   
 
   @Override
-  public AssetTag createTag(AssetTagInit init) {
+  public AnyAssetTag createTag(AssetTagInit init) {
     final HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,30 +42,30 @@ public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AssetTag
         JsonNode.class);
     Assert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "Tag creation status was: " + response.getStatusCode() + " but expecting 200!");
     JsonNode result = response.getBody();
-    AssetTag retVal = convertAstTag(result.path("body"), result.path("id").textValue());
+    AnyAssetTag retVal = convertAstTag(result.path("body"), result.path("id").textValue());
     
     return retVal;
   }
 
   @Override
-  public List<AssetTag> findAll() {
-    List<AssetTag> result = new ArrayList<>();
+  public List<AnyAssetTag> findAll() {
+    List<AnyAssetTag> result = new ArrayList<>();
     JsonNode dataModel = readDataModels();
     processReleases(dataModel, (release, id)-> {
-      AssetTag tag = convertAstTag(release, id);
+      AnyAssetTag tag = convertAstTag(release, id);
       result.add(tag);
     });
     return result;
   }
   
   @Override
-  public Optional<AssetTag> getByName(String name) {
-    Mutable<AssetTag> result = new MutableObject<>(null);
+  public Optional<AnyAssetTag> getByName(String name) {
+    Mutable<AnyAssetTag> result = new MutableObject<>(null);
 
     JsonNode dataModel = readDataModels();
     processReleases(dataModel, (release, id)-> {
       if (name.equals(release.path("name").asText())) {
-        AssetTag tag = convertAstTag(release, id);
+        AnyAssetTag tag = convertAstTag(release, id);
         result.setValue(tag);
       }
     });
@@ -152,7 +122,7 @@ public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AssetTag
     return result;
   }
   
-  private AssetTag convertAstTag(JsonNode node, String id) {
+  private AnyAssetTag convertAstTag(JsonNode node, String id) {
     return ImmutableAssetTag.builder()
         .id(id)
         .name(node.path("name").asText())
@@ -164,7 +134,7 @@ public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AssetTag
   @Override
   public JsonNode getTagAssets(String tag) {
     log.debug("Requested content tag {} from assets, reading assets", tag);
-    Optional<AssetTag> assetTag = getByName(tag);
+    Optional<AnyAssetTag> assetTag = getByName(tag);
     if (assetTag.isPresent()) {
       log.debug("Found asset tag with id {}", assetTag.get().getId());
       return readRelease(assetTag.get().getId());
@@ -175,3 +145,4 @@ public class RestStencilAssetTagCommands implements JsonNodeTagCommands<AssetTag
     }
   }
 }
+*/

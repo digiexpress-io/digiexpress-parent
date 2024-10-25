@@ -32,6 +32,7 @@ import io.resys.thena.docdb.api.actions.ImmutableObjectsResult;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObjects;
 import io.resys.thena.docdb.api.actions.ObjectsActions.BlobStateBuilder;
+import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
 import io.resys.thena.docdb.api.exceptions.RepoException;
@@ -53,6 +54,7 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
   private String repoName;
   private String refOrCommitOrTag;
   private List<String> blobName = new ArrayList<>();
+  private List<MatchCriteria> matchCriteria = new ArrayList<>();
   
   @Value.Immutable
   public static interface BlobAndTree {
@@ -79,12 +81,16 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
     this.blobName.addAll(blobName);
     return this;
   }
-  
+  @Override
+  public BlobStateBuilderDefault matchBy(List<MatchCriteria> matchCriteria) {
+    this.matchCriteria.addAll(matchCriteria);
+    return this;
+  }
   @Override
   public Uni<ObjectsResult<BlobObjects>> list() {
     RepoAssert.notEmpty(repoName, () -> "repoName is not defined!");
     RepoAssert.notEmpty(refOrCommitOrTag, () -> "refOrCommitOrTag is not defined!");
-    RepoAssert.isTrue(!blobName.isEmpty(), () -> "blobName is not defined!");
+    RepoAssert.isTrue(!blobName.isEmpty() || !matchCriteria.isEmpty(), () -> "blobName or matchCriteria is not defined!");
     
     return state.repos().getByNameOrId(repoName).onItem()
     .transformToUni((Repo existing) -> {
@@ -126,7 +132,7 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
   public Uni<ObjectsResult<BlobObject>> get() {
     RepoAssert.notEmpty(repoName, () -> "repoName is not defined!");
     RepoAssert.notEmpty(refOrCommitOrTag, () -> "refOrCommitOrTag is not defined!");
-    RepoAssert.isTrue(!blobName.isEmpty(), () -> "blobName is not defined!");
+    RepoAssert.isTrue(!blobName.isEmpty() || !matchCriteria.isEmpty(), () -> "blobName or matchCriteriais not defined!");
     
     return state.repos().getByNameOrId(repoName).onItem()
     .transformToUni((Repo existing) -> {
@@ -217,7 +223,7 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
         .transformToUni(tree -> getBlob(tree, ctx)).onItem()
         .transformToUni(blobAndTree -> {
           
-          if(blobAndTree.getBlob().isEmpty()) {
+          if(!this.blobName.isEmpty() && this.matchCriteria.isEmpty() && blobAndTree.getBlob().isEmpty()) {
             return Uni.createFrom().item(ImmutableObjectsResult
                 .<BlobObjects>builder()
                 .status(ObjectsStatus.ERROR)
@@ -258,8 +264,9 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
         .map(e -> e.getValue().getBlob())
         .collect(Collectors.toList());
     
-    if(!entry.isEmpty()) {
-      return ctx.query().blobs().id(entry)
+    if(!entry.isEmpty() || !matchCriteria.isEmpty()) {
+      return ctx.query().blobs()
+          .id(tree.getId(), entry, matchCriteria)
           .onItem().transform(blobs -> ImmutableBlobAndTree.builder().blob(blobs).tree(tree).build());
     }
     

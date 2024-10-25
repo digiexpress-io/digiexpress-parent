@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessAuthorizationCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.config.PortalConfigBean;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,11 +50,12 @@ import lombok.extern.slf4j.Slf4j;
 public class PortalProcessController extends ProcessBaseController {
 
   private final PortalAccessValidator validator;
-  private PortalConfigBean config;
-  public PortalProcessController(PortalClient client, PortalAccessValidator validator, PortalConfigBean config) {
+  private final String anonymousUserId;
+
+  public PortalProcessController(PortalClient client, PortalAccessValidator validator, String anonymousUserId) {
     super(client);
     this.validator = validator;
-    this.config = config;
+    this.anonymousUserId = anonymousUserId;
   }
   
   @Transactional
@@ -73,17 +73,17 @@ public class PortalProcessController extends ProcessBaseController {
   
   @PostMapping("/processes/")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request,
+  public ResponseEntity<ProcessCommands.Process> create(
+      @RequestBody ProcessCommands.InitProcess request,
       @AuthenticationPrincipal Jwt principal) {
+    
     String identity = request.getIdentity();
     if (identity == null) {
       log.warn("Access violation by user: {}, missing request identity {}", validator.getUserName(principal), identity);
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-    }
-    else if (principal == null && identity.equals(config.getPortalAnonymousUserId())) {
+    } else if (principal == null && identity.equals(anonymousUserId)) {
       log.info("Anonymous process creation {}", request);
-    }
-    else {
+    } else {
       validator.validateUserAccess(principal, identity);
     }
     return new ResponseEntity<>(client.process().create(request), HttpStatus.CREATED);

@@ -1,5 +1,7 @@
 package io.resys.thena.docdb.api.actions;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -48,6 +50,8 @@ public interface ObjectsActions {
     BlobStateBuilder anyId(String refOrCommitOrTag);
     BlobStateBuilder blobNames(List<String> blobName);
     BlobStateBuilder blobName(String blobName);
+    BlobStateBuilder matchBy(List<MatchCriteria> blobCriteria);
+    
     Uni<ObjectsResult<BlobObject>> get();
     Uni<ObjectsResult<BlobObjects>> list();
   }
@@ -123,5 +127,52 @@ public interface ObjectsActions {
     T getObjects();
     ObjectsStatus getStatus();
     List<Message> getMessages();
+  }
+  
+
+  @Value.Immutable  
+  interface MatchCriteria {
+    MatchCriteriaType getType();
+    String getKey();
+    
+    @Nullable String getValue();
+    @Nullable LocalDateTime getTargetDate();
+    
+    public static MatchCriteria like(String documentField, String valueToMatch) {
+      return ImmutableMatchCriteria.builder()
+      .key(documentField).value(valueToMatch)
+      .type(MatchCriteriaType.LIKE)
+      .build();
+    }
+    
+    public static MatchCriteria equalsTo(String documentField, String valueToMatch) {
+      return ImmutableMatchCriteria.builder()
+      .key(documentField).value(valueToMatch)
+      .type(MatchCriteriaType.EQUALS)
+      .build();
+    }
+    public static MatchCriteria notNull(String documentField) {
+      return ImmutableMatchCriteria.builder()
+      .key(documentField)
+      .type(MatchCriteriaType.NOT_NULL)
+      .build();
+    }
+    
+    public static MatchCriteria greaterThanOrEqualTo(String documentField, LocalDateTime valueToMatch) {
+      return ImmutableMatchCriteria.builder()
+      .key(documentField)
+      .type(MatchCriteriaType.GTE)
+      .targetDate(valueToMatch)
+      .build();
+    }
+  }
+  
+  enum MatchCriteriaType {
+    EQUALS, LIKE, NOT_NULL, 
+    
+    //Greater Than or Equal to
+    GTE;
+    
+
   }
 }

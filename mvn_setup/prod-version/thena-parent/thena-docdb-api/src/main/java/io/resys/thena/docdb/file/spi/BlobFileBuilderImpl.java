@@ -118,7 +118,7 @@ public class BlobFileBuilderImpl implements BlobFileBuilder {
             return Arrays.asList(exists.get());
           }
           
-          final var newRow = ImmutableBlobTableRow.builder().id(blob.getId()).value(blob.getValue()).build();
+          final var newRow = ImmutableBlobTableRow.builder().id(blob.getId()).value(blob.getValue().encode()).build();
           root.getRepoTable(ctx).getBlobs().insert(newRow);
           
           return Arrays.asList(newRow);
@@ -143,7 +143,7 @@ public class BlobFileBuilderImpl implements BlobFileBuilder {
             if (byId.containsKey(blob.getId())) {
               results.add(byId.get(blob.getId()));
             } else {
-              final var newRow = ImmutableBlobTableRow.builder().id(blob.getId()).value(blob.getValue()).build();
+              final var newRow = ImmutableBlobTableRow.builder().id(blob.getId()).value(blob.getValue().encode()).build();
               inserts.add(newRow);
               results.add(newRow);
 

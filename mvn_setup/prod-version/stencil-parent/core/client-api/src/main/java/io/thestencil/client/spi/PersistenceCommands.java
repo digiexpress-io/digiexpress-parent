@@ -75,7 +75,7 @@ public abstract class PersistenceCommands implements StencilConfig.Commands {
             throw new QueryException(blobId, type, state);  
           }
           Entity<T> start = config.getDeserializer()
-              .fromString(type, state.getObjects().getBlob().getValue());
+              .fromString(type, state.getObjects().getBlob().getValue().encode());
           
           return ImmutableEntityState.<T>builder()
               .src(state)

@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.NotificationCommands.EmailRequest;
 import io.digiexpress.eveli.client.api.NotificationCommands.EmailResponse;
-import io.digiexpress.eveli.client.config.EmailProperties;
+import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
@@ -55,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EmailNotificationController {
   
   
-  private final EmailProperties emailProps;
+  private final EveliPropsEmail emailProps;
   private final EmailFilter filter;
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -142,9 +141,9 @@ public class EmailNotificationController {
   
   
   @Slf4j
+  @RequiredArgsConstructor
   public static class EmailFilter {
-    @Autowired
-    private EmailProperties properties;
+    private final EveliPropsEmail properties;
     
     public boolean isValidEmail(String email) {
       if (StringUtils.isBlank(email)) {

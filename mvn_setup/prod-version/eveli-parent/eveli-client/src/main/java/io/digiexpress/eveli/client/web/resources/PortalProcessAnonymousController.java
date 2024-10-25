@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.config.PortalConfigBean;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,11 +45,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PortalProcessAnonymousController extends ProcessBaseController {
 
   private final PortalAccessValidator validator;
-  private PortalConfigBean config;
-  public PortalProcessAnonymousController(PortalClient client, PortalAccessValidator validator, PortalConfigBean config) {
+  private final String anonymousUserId;
+  public PortalProcessAnonymousController(PortalClient client, PortalAccessValidator validator, String anonymousUserId) {
     super(client);
     this.validator = validator;
-    this.config = config;
+    this.anonymousUserId = anonymousUserId;
   }
   
   @PostMapping("/anonymous/processes/")
@@ -62,7 +61,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
       log.warn("Access violation by anonymous, missing request identity {}", identity);
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
-    else if (principal == null && identity.equals(config.getPortalAnonymousUserId())) {
+    else if (principal == null && identity.equals(anonymousUserId)) {
       log.info("Anonymous process creation {}", request);
     }
     return new ResponseEntity<>(client.process().create(request), HttpStatus.CREATED);
@@ -84,7 +83,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
   @Transactional
   public ResponseEntity<ProcessCommands.Process> delete(@PathVariable("id") String id,
       @AuthenticationPrincipal Jwt principal) {
-    validator.validateProcessAnonymousAccess(id, config.getPortalAnonymousUserId());
+    validator.validateProcessAnonymousAccess(id, anonymousUserId);
     client.process().delete(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }

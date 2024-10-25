@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.resys.thena.docdb.api.models.Objects.Commit;
 import io.resys.thena.docdb.api.models.Objects.Ref;
@@ -48,7 +49,7 @@ public interface ClientQuery {
   
   interface BlobQuery {
     Uni<Blob> id(String blobId);
-    Uni<List<Blob>> id(List<String> blobId);
+    Uni<List<Blob>> id(String treeId, List<String> blobId, List<MatchCriteria> criteria);
     
     Multi<Blob> find();
     Multi<Blob> find(Tree tree);

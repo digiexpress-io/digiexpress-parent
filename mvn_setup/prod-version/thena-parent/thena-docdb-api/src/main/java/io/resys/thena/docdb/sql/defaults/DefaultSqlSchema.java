@@ -37,7 +37,7 @@ public class DefaultSqlSchema implements SqlSchema {
     .append("CREATE TABLE ").append(options.getBlobs()).ln()
     .append("(").ln()
     .append("  id VARCHAR(40) PRIMARY KEY,").ln()
-    .append("  value TEXT NOT NULL").ln()
+    .append("  value JSONB NOT NULL").ln()
     .append(");").ln()
     .build()).build();
   }

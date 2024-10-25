@@ -20,13 +20,13 @@ package io.digiexpress.eveli.client.web.resources;
  * #L%
  */
 
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,10 +34,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.digiexpress.eveli.client.api.AssetTagCommands.AssetTagInit;
-import io.digiexpress.eveli.client.api.ImmutableAssetTagInit;
-import io.digiexpress.eveli.client.api.PortalClient;
-import io.digiexpress.eveli.client.api.WorkflowCommands.WorkflowTag;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
+import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,38 +47,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WorkflowReleaseController {
 
-  private final PortalClient client;
-
+  private final EveliAssetComposer composer;
+  private static final Duration timeout = Duration.ofMillis(10000);
+  
   @GetMapping("/workflowReleases/")
-  @Transactional
-  public ResponseEntity<List<WorkflowTag>> getAllWorkflows() {
-    return new ResponseEntity<>(client.workflow().release().findAll(), HttpStatus.OK);
+  public ResponseEntity<List<Entity<WorkflowTag>>> getAllWorkflows() {
+    return new ResponseEntity<>(composer.workflowTagQuery().findAll().await().atMost(timeout), HttpStatus.OK);
   }
 
 
   @PostMapping("/workflowReleases/")
-  @Transactional
-  public ResponseEntity<WorkflowTag> createSnapshot(@RequestBody AssetTagInit workflowRelease, @AuthenticationPrincipal Jwt principal) {
+  public ResponseEntity<Entity<WorkflowTag>> createSnapshot(@RequestBody CreateWorkflowTag workflowRelease, @AuthenticationPrincipal Jwt principal) {
     try {
-      String userName = getUserName(principal);
-      AssetTagInit snapshotRelease = ImmutableAssetTagInit.builder()
-        .name(workflowRelease.getName())
-        .description(workflowRelease.getDescription())
-        .user(userName)
+      final var snapshotRelease = ImmutableCreateWorkflowTag.builder()
+        .from(workflowRelease)
+        .user(getUserName(principal))
         .build();
-      return new ResponseEntity<>(client.workflow().release().createTag(snapshotRelease), HttpStatus.CREATED);
-    }
-    catch (org.springframework.dao.DataIntegrityViolationException e) {
-      log.warn("Data integrity violation in snapshot release creation: {}", e.getMostSpecificCause().getMessage());
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Tag already exists");
+      
+      return new ResponseEntity<>(composer.create().workflowTag(snapshotRelease).await().atMost(timeout), HttpStatus.CREATED);
+      
+    } catch (Exception e) {
+      log.warn("Data integrity violation in snapshot release creation: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists");
     }
   }
   
   @GetMapping("/workflowReleases/{name}")
-  @Transactional
-  public ResponseEntity<WorkflowTag> get(@PathVariable("name") String name) {
-    final var workflowRelease = client.workflow().release().getByName(name);
+  public ResponseEntity<Entity<WorkflowTag>> get(@PathVariable("name") String name) {
+    final var tags = composer.workflowTagQuery().findAll().await().atMost(timeout);
+    final var workflowRelease = tags.stream().filter(e -> e.getBody().getName().equals(name)).findFirst();
     if(workflowRelease.isEmpty()) {
       return ResponseEntity.notFound().build();
     }

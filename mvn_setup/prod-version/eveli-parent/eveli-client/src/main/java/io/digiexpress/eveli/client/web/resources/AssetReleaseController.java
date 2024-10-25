@@ -20,13 +20,15 @@ package io.digiexpress.eveli.client.web.resources;
  * #L%
  */
 
+import java.time.Duration;
+
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,75 +36,79 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import io.digiexpress.eveli.client.api.AssetReleaseCommands.AssetReleaseTag;
-import io.digiexpress.eveli.client.api.AssetReleaseCommands.AssetReleaseTagInit;
-import io.digiexpress.eveli.client.api.AssetReleaseCommands.ReleaseAssets;
-import io.digiexpress.eveli.client.api.AssetTagCommands.AssetTag;
-import io.digiexpress.eveli.client.api.ImmutableAssetReleaseTagInit;
-import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.AnyAssetTag;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.AssetTagType;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreatePublication;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.Deployment;
+import io.digiexpress.eveli.assets.api.ImmutableCreatePublication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class AssetReleaseController {
 
-  private final PortalClient client;
-
+  private final EveliAssetComposer composer;
+  private static final Duration timeout = Duration.ofMillis(10000);
+  
   @GetMapping("/releases/")
-  @Transactional
-  public ResponseEntity<List<AssetReleaseTag>> getAllReleases() {
-    return new ResponseEntity<>(client.assetRelease().findAll(), HttpStatus.OK);
+  public ResponseEntity<List<Entity<Publication>>> getAllReleases() {
+    return new ResponseEntity<>(composer.publicationQuery().findAll().await().atMost(timeout), HttpStatus.OK);
   }
   
-  @GetMapping("/releaseTags/wrench")
-  @Transactional
-  public ResponseEntity<List<AssetTag>> getWrenchTags() {
-    return new ResponseEntity<>(client.assetRelease().getWrenchTags(), HttpStatus.OK);
-  }
-
-  @GetMapping("/releaseTags/workflow")
-  @Transactional
-  public ResponseEntity<List<? extends AssetTag>> getWorkflowTags() {
-    return new ResponseEntity<>(client.assetRelease().getWorkflowTags(), HttpStatus.OK);
-  }
-
-  @GetMapping("/releaseTags/content")
-  @Transactional
-  public ResponseEntity<List<AssetTag>> getContentTags() {
-    return new ResponseEntity<>(client.assetRelease().getContentTags(), HttpStatus.OK);
+  @GetMapping("/releases/{name}")
+  public ResponseEntity<Entity<Publication>> get(@PathVariable("name") String name) {
+    final var workflowRelease = composer.publicationQuery().findOneByName(name).await().atMost(timeout);
+    if(workflowRelease.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
   }
   
   @PostMapping("/releases/")
-  @Transactional
-  public ResponseEntity<AssetReleaseTag> create(@RequestBody AssetReleaseTagInit workflowRelease, @AuthenticationPrincipal Jwt principal) {
-    String userName = getUserName(principal);
-    ImmutableAssetReleaseTagInit tagInit = ImmutableAssetReleaseTagInit.builder().from(workflowRelease).user(userName).build();
+  public ResponseEntity<Entity<Publication>> create(
+      @RequestBody CreatePublication workflowRelease, 
+      @AuthenticationPrincipal Jwt principal) {
+    
+    final var userName = getUserName(principal);
+    final var publicationInit = ImmutableCreatePublication.builder().from(workflowRelease).user(userName).build();
+    
     try {
-      return new ResponseEntity<>(client.assetRelease().createTag(tagInit), HttpStatus.CREATED);
-    }
-    catch (org.springframework.dao.DataIntegrityViolationException e) {
+      return new ResponseEntity<>(
+          composer.create().publication(publicationInit).await().atMost(timeout),
+          HttpStatus.CREATED);
+      
+    } catch (org.springframework.dao.DataIntegrityViolationException e) {
       log.warn("Data integrity violation in release creation: {}", e.getMostSpecificCause().getMessage());
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, "Tag already exists");
     }
   }
   
-  @GetMapping("/releases/{name}")
-  @Transactional
-  public ResponseEntity<AssetReleaseTag> get(@PathVariable("name") String name) {
-    final var workflowRelease = client.assetRelease().getByName(name);
-    if(workflowRelease.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
+  @GetMapping("/releaseTags/wrench")
+  public ResponseEntity<List<AnyAssetTag>> getWrenchTags() {
+    return new ResponseEntity<>(composer.anyAssetTagQuery().findAllByType(AssetTagType.WRENCH).await().atMost(timeout), HttpStatus.OK);
   }
 
+  @GetMapping("/releaseTags/workflow")
+  public ResponseEntity<List<? extends AnyAssetTag>> getWorkflowTags() {
+    return new ResponseEntity<>(composer.anyAssetTagQuery().findAllByType(AssetTagType.WORKFLOW).await().atMost(timeout), HttpStatus.OK);
+  }
+
+  @GetMapping("/releaseTags/content")
+  public ResponseEntity<List<AnyAssetTag>> getContentTags() {
+    return new ResponseEntity<>(composer.anyAssetTagQuery().findAllByType(AssetTagType.STENCIL).await().atMost(timeout), HttpStatus.OK);
+  }
+  
   @GetMapping("/releaseDownload/{name}")
-  @Transactional
-  public ResponseEntity<ReleaseAssets> download(@PathVariable("name") String name) {
-    final var workflowRelease = client.assetRelease().getAssetRelease(name);
+  public ResponseEntity<Deployment> download(@PathVariable("name") String name) {
+    final var workflowRelease = composer.deployment().id(name).build().await().atMost(timeout);
     if(workflowRelease.isEmpty()) {
       return ResponseEntity.notFound().build();
     }

@@ -54,7 +54,8 @@ public class PortalTaskController extends TaskControllerBase
     private final PortalAccessValidator accessValidator;
     
 
-    public PortalTaskController(TaskAccessRepository taskAccessRepository, 
+    public PortalTaskController(
+        TaskAccessRepository taskAccessRepository, 
         TaskRepository taskRepository, 
         PortalClient client,
         PortalAccessValidator validator)

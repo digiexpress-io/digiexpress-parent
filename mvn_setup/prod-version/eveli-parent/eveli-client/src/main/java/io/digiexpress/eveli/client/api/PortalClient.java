@@ -26,9 +26,7 @@ public interface PortalClient {
   DialobCommands dialob();
   TaskCommands task();
   NotificationCommands notification();
-  WorkflowCommands workflow();
   ProcessCommands process();
   ProcessAuthorizationCommands processAuthorization();
   HdesCommands hdes();
-  AssetReleaseCommands assetRelease();
 }

@@ -159,7 +159,7 @@ public class TestExporter {
     ctx.query().blobs()
     .find().onItem()
     .transform(item -> {
-      result.append("  - ").append(ID.apply(item.getId())).append(": ").append(replaceContent(item.getValue(), replacements)).append(System.lineSeparator());
+      result.append("  - ").append(ID.apply(item.getId())).append(": ").append(replaceContent(item.getValue().encode(), replacements)).append(System.lineSeparator());
       return item;
     }).collect().asList().await().indefinitely();
     

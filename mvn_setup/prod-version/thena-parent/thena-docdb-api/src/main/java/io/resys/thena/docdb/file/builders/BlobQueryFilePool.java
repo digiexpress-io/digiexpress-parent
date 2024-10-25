@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.resys.thena.docdb.api.models.Objects.Tree;
 import io.resys.thena.docdb.file.FileBuilder;
@@ -61,7 +62,11 @@ public class BlobQueryFilePool implements BlobQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id': '" + blobId + "'!", e));
   }
   @Override
-  public Uni<List<Blob>> id(List<String> blobId) {
+  public Uni<List<Blob>> id(String treeId, List<String> blobId, List<MatchCriteria> criteria) {
+    if(!criteria.isEmpty()) {
+      throw new IllegalArgumentException("Not implemented for version");
+    }
+    
     final var sql = builder.blobs().findByIds(blobId);
     return client.preparedQuery(sql)
         .mapping(row -> mapper.blob(row))

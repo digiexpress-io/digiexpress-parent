@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface TaskCommands {
   // used by Wrench flow tasks
   TaskBuilder create();
-  Optional<Task> find(String id, List<String> userRoles);
+  Optional<Task> find(String id, List<String> userRoles, boolean adminsearch);
   
   // not used?
   void complete(String id);

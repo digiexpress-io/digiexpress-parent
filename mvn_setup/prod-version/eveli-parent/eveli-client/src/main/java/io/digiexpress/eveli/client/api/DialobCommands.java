@@ -42,9 +42,12 @@ public interface DialobCommands {
   Form getForm(String formId);
   TagQueryBuilder getTags();
   
+  
   void complete(String sessionId);  
   void delete(String sessionId);
   
+  
+
   interface QuestionnaireBuilder {
     QuestionnaireBuilder formName(String formName);
     QuestionnaireBuilder formTag(String formTag);

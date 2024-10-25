@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.cache.DuplicateDetectionCache;
-import io.digiexpress.eveli.client.config.PortalConfigBean;
 import io.digiexpress.eveli.client.event.runnables.QuestionnaireCompletionRunnable;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,44 +43,36 @@ import lombok.extern.slf4j.Slf4j;
 public class DialobCallbackController {
   
   private final PortalClient client;
-  private final PortalConfigBean properties;
   private final ThreadPoolTaskScheduler submitTaskScheduler;
   private final DuplicateDetectionCache cache;
+  private final Long submitMessageDelay;
   
   public DialobCallbackController(
       PortalClient client, 
-      PortalConfigBean properties, 
       ThreadPoolTaskScheduler submitTaskScheduler,
-      DuplicateDetectionCache cache) {
+      DuplicateDetectionCache cache,
+      Long submitMessageDelay) {
     this.client = client;
-    this.properties = properties;
     this.submitTaskScheduler = submitTaskScheduler;
     this.cache = cache;
+    this.submitMessageDelay = submitMessageDelay;
   }
 
   @PostMapping
   public ResponseEntity<String> handleCallback(@RequestBody Questionnaire questionnaire) {
     String questionnaireId = questionnaire.getId();
     log.info("Dialob callback handler: questionnaire id: {}, start processing", questionnaireId);
+    
+    if (isMessageUnique(questionnaireId)) {
+      handleDialobCompletion(questionnaireId);
+    } else {
+      log.info("Message: Dialob, questionnaire ID: {}, result: handling skipped, duplicate message", questionnaireId);
+    }
 
-    String tenantId = properties.getDialobTenantId();
-    String questionnaireTenantId = questionnaire.getMetadata().getTenantId();
-    if (StringUtils.equals(tenantId, questionnaireTenantId)) {
-      if (isMessageUnique(questionnaireId)) {
-        handleDialobCompletion(questionnaireId);
-      }
-      else {
-        log.info("Message: Dialob, questionnaire ID: {}, result: handling skipped, duplicate message", questionnaireId);
-      }
-    }
-    else {
-      log.warn("Dialob callback handler: questionnaire id: {}, result: Not processed, unrecognized tenant ID: {}", questionnaireId, questionnaireTenantId);
-    }
     return ResponseEntity.ok("OK");
   }
 
   private void handleDialobCompletion(String questionnaireId) {
-    Long submitMessageDelay = properties.getSubmitMessageDelay();
     if (submitMessageDelay == 0) {
       log.debug("Dialob callback handler: questionnaire id: {}, synchronous processing", questionnaireId);
       client.dialob().complete(questionnaireId);
@@ -101,10 +92,8 @@ public class DialobCallbackController {
     String messageId = generateId();
     String cachedMessageId = cache.findQuestionnaireMessage(questionnaireId, messageId);
     log.info("Message: Dialob, questionnaire ID: {}, cached message id: {}", questionnaireId, cachedMessageId);
-    if (StringUtils.equals(messageId, cachedMessageId)) {
-      return true;
-    }
-    return false;
+    return StringUtils.equals(messageId, cachedMessageId);
+      
   }
     
   private String generateId() {

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -30,11 +32,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.ImmutableProcess;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
-import io.digiexpress.eveli.client.api.WorkflowCommands;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert;
@@ -51,7 +53,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
   
   private final DialobCommands forms;
   private final ProcessRepository processJPA;
-  private final WorkflowCommands workflowCommands;
+  private final EveliAssetClient workflowCommands;
 
   @Override
   public ProcessQuery query() {
@@ -101,7 +103,9 @@ public class ProcessCommandsImpl implements ProcessCommands {
   }
   @Override
   public Process create(InitProcess request) {
-    final var workflow = workflowCommands.query().getByName(request.getWorkflowName())
+    final var workflow = workflowCommands.queryBuilder().findOneWorkflowByName(request.getWorkflowName())
+        .await().atMost(Duration.ofMinutes(1))
+        .map(e -> e.getBody())
         .orElseThrow(() -> new WorkflowException(new StringBuilder()
         .append("Can't find workflow by name: '").append(request.getWorkflowName()).append("'!")
         .toString()));
@@ -245,7 +249,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
   public static class Builder {
     private DialobCommands forms;
     private ProcessRepository processJPA;
-    private WorkflowCommands workflowCommands;
+    private EveliAssetClient workflowCommands;
   
     public ProcessCommandsImpl build() {
       WorkflowAssert.notNull(forms, () -> "forms must be defined!");

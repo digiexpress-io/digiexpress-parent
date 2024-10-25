@@ -40,7 +40,7 @@ public class BlobDeserializer implements ThenaConfig.Deserializer {
   @Override
   public StoreEntity fromString(Blob value) {
     try {
-      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue(), ImmutableStoreEntity.class);
+      final ImmutableStoreEntity src = objectMapper.readValue(value.getValue().encode(), ImmutableStoreEntity.class);
       return ImmutableStoreEntity.builder().from(src).hash(value.getId()).build();
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage() + System.lineSeparator() + value, e);

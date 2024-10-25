@@ -37,19 +37,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import io.dialob.api.form.FormTag;
 import io.digiexpress.eveli.client.api.DialobCommands.FormListItem;
 import io.digiexpress.eveli.client.api.DialobCommands.FormTagResult;
-import io.digiexpress.eveli.client.config.PortalConfigBean;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/forms")
+@RequiredArgsConstructor
 public class FormsController {
-  
-  private final PortalConfigBean appPathConfig;
   private final RestTemplate restTemplate;
-
-  public FormsController(PortalConfigBean appPathConfig, RestTemplate restTemplate) {
-    this.appPathConfig = appPathConfig;
-    this.restTemplate = restTemplate;
-  }
+  private final String serviceUrl;
   
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/tags")
   public ResponseEntity<List<FormTagResult>> allTags() {
@@ -77,7 +72,7 @@ public class FormsController {
   }
 
   private FormTag[] getTags(String id) {
-    UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(appPathConfig.getFormsUrl())
+    UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(serviceUrl + "/dialob/api/forms")
         .pathSegment(id)
         .pathSegment("tags")
         .buildAndExpand();
@@ -85,7 +80,7 @@ public class FormsController {
   }
 
   private FormListItem[] getForms() {
-    UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(appPathConfig.getFormsUrl())
+    UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(serviceUrl + "/dialob/api/forms")
         .buildAndExpand();
     return restTemplate.getForObject(uriComponents.toUriString(), FormListItem[].class);
   }

@@ -119,7 +119,7 @@ public class DefaultFileMapper implements FileMapper {
     
     return ImmutableBlob.builder()
         .id(row.getId())
-        .value(row.getValue())
+        .value(new io.vertx.core.json.JsonObject(row.getValue()))
         .build();
   }
 }

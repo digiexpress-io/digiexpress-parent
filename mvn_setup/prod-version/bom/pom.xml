@@ -27,8 +27,12 @@
         <artifactId>thena-docdb-pgsql</artifactId>
         <version>${project.version}</version>
       </dependency>   
-    
-    
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-assets</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
       <!-- client -->
       <dependency>
         <groupId>io.digiexpress</groupId>

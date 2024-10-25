@@ -13,9 +13,11 @@
   
   <modules>
     <module>eveli-client</module>
+    <module>eveli-assets</module>
     <!--
     <module>eveli-integration-suomifi</module>
     -->
+    <module>eveli-integration-google</module>
     <module>eveli-app</module>
   </modules>
 </project>

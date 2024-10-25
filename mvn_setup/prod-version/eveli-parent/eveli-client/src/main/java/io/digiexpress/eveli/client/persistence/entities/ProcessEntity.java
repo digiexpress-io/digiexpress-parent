@@ -55,6 +55,7 @@ public class ProcessEntity {
 
   @Column(name="workflow_name", nullable=false)
   private String workflowName;
+  
   @Column(name="status")
   @Enumerated(EnumType.STRING)
 	private ProcessStatus status;

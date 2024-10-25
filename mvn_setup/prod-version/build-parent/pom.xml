@@ -21,6 +21,8 @@
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
     <surefire.plugin.version>3.3.1</surefire.plugin.version>
 
+    <spring-cloud-gcp.version>3.4.0</spring-cloud-gcp.version>
+
     <spring.security.version>6.3.3</spring.security.version>
     <spring.boot.version>3.3.4</spring.boot.version>
     <spring.version>6.1.13</spring.version>
@@ -400,6 +402,13 @@
         <version>${spring.security.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>spring-cloud-gcp-dependencies</artifactId>
+        <version>${spring-cloud-gcp.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
 
       <dependency>
         <groupId>org.junit</groupId>

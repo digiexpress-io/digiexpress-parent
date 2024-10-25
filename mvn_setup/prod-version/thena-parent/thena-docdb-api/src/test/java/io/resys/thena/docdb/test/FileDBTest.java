@@ -32,6 +32,7 @@ import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoStatus;
 import io.resys.thena.docdb.test.config.FileTestTemplate;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -58,7 +59,7 @@ public class FileDBTest extends FileTestTemplate {
     // Create head and first commit
     CommitResult commit_0 = getClient().commit().head()
       .head(repo.getRepo().getName(), "main")
-      .append("readme.md", "readme content")
+      .append("readme.md", JsonObject.of("key", "readme content").encode())
       .author("same vimes")
       .message("first commit!")
       .build()
@@ -98,9 +99,9 @@ public class FileDBTest extends FileTestTemplate {
     // Create head and first commit
     CommitResult commit_0 = getClient().commit().head()
       .head("project-x", "main")
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes").build().toString())
+      .append("readme.md", JsonObject.of("key", "readme content").encode())
+      .append("file1.json", "{}")
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()).encode())
       .author("same vimes")
       .head("project-x", "main")
       .message("first commit!")
@@ -127,9 +128,9 @@ public class FileDBTest extends FileTestTemplate {
     // Create head and first commit
     CommitResult commit_0 = getClient().commit().head()
       .head(repo.getRepo().getName(), "main")
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes").build().toString())
+      .append("readme.md", JsonObject.of("key", "readme content").encode())
+      .append("file1.json", "{}")
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes").build()).encode())
       .author("same vimes")
       .message("first commit!")
       .build()
@@ -144,9 +145,9 @@ public class FileDBTest extends FileTestTemplate {
     CommitResult commit_1 = getClient().commit().head()
       .head(repo.getRepo().getName(), "main")
       .parent(commit_0.getCommit().getId())
-      .append("readme.md", "readme content")
-      .append("file1.json", "[{}, {}]")
-      .append("fileFromObject.txt", ImmutableTestContent.builder().id("10").name("sam vimes 1").build().toString())
+      .append("readme.md", JsonObject.of("key", "readme content").encode())
+      .append("file1.json", "{ \"a\": 1 }")
+      .append("fileFromObject.txt", JsonObject.mapFrom(ImmutableTestContent.builder().id("10").name("sam vimes 1").build()).encode())
       .author("same vimes")
       .message("second commit!")
       .build()

@@ -54,6 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AttachmentApiController {
   
   private final PortalClient client;
+  private final boolean adminSearch;
   
   /**
    * Returns list of task attachments. 
@@ -162,7 +163,7 @@ public class AttachmentApiController {
  
   
   private Optional<TaskCommands.Task> getTask(String id, List<String> roles) {
-    return client.task().find(id, roles);
+    return client.task().find(id, roles, adminSearch);
   }
   private String getProcessIdFromTask(String taskId) {
     return client.process().query().getByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);

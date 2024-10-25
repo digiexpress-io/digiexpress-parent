@@ -23,6 +23,7 @@ package io.resys.thena.docdb.sql.builders;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.resys.thena.docdb.api.models.Objects.Tree;
 import io.resys.thena.docdb.spi.ErrorHandler;
@@ -60,8 +61,8 @@ public class BlobQuerySqlPool implements BlobQuery {
         .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id': '" + blobId + "'!", e));
   }
   @Override
-  public Uni<List<Blob>> id(List<String> blobId) {
-    final var sql = sqlBuilder.blobs().findByIds(blobId);
+  public Uni<List<Blob>> id(String treeId, List<String> blobId, List<MatchCriteria> criteria) {
+    final var sql = sqlBuilder.blobs().findByIds(treeId, blobId, criteria);
     return client.preparedQuery(sql.getValue())
         .mapping(row -> sqlMapper.blob(row))
         .execute(sql.getProps())
@@ -74,8 +75,15 @@ public class BlobQuerySqlPool implements BlobQuery {
           return result;
         })
         .onFailure(e -> errorHandler.notFound(e)).recoverWithNull()
-        .onFailure().invoke(e -> errorHandler.deadEnd("Can't find 'BLOB' by 'id'-s: '" + String.join(",", blobId) + "'!", e));
+        
+        .onFailure().invoke(e -> {
+          final var summary = "Can't find 'BLOB' by 'id'-s: '" + String.join(",", blobId) + "' and match criteria: '" + criteria + "'!";
+          final var sqlStmnt =  "=============SQL========================\r\n" + sql.getValue();
+          final var sqlParams = "=============PARAMS=====================\r\n" + sql.getProps().deepToString();
+          errorHandler.deadEnd("\r\n" + summary + "\r\n"+ sqlStmnt + sqlParams, e); 
+        });
   }
+  
   @Override
   public Multi<Blob> find() {
     final var sql = sqlBuilder.blobs().findAll();

@@ -14,6 +14,28 @@
       <artifactId>dialob-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.digiexpress</groupId>    
+      <artifactId>stencil-client-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.slf4j</groupId>
+          <artifactId>slf4j-jboss-logmanager</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>eveli-assets</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.slf4j</groupId>
+          <artifactId>slf4j-jboss-logmanager</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>hdes-client</artifactId>
       <exclusions>
@@ -23,6 +45,17 @@
       	</exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>hdes-store-thena</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.slf4j</groupId>
+          <artifactId>slf4j-jboss-logmanager</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  
   
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -71,7 +104,7 @@
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-envers</artifactId>
     </dependency>
-    
+
     
     <dependency>
       <groupId>org.hibernate.orm</groupId>

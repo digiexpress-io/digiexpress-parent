@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.resys.thena.docdb.api.models.Objects.Commit;
 import io.resys.thena.docdb.api.models.Objects.Ref;
@@ -58,7 +59,7 @@ public interface SqlBuilder {
   
   interface BlobSqlBuilder {
     SqlTuple getById(String blobId);
-    SqlTuple findByIds(Collection<String> blobId);
+    SqlTuple findByIds(String treeId, Collection<String> blobId, List<MatchCriteria> criteria);
     SqlTuple findByTree(Tree tree);
     SqlTuple insertOne(Blob blob);
     SqlTupleList insertAll(Collection<Blob> blobs);

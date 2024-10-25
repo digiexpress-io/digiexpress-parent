@@ -57,7 +57,7 @@ public final class Sha2  {
   public static Blob id(Blob blob) {
     String id = Hashing
         .murmur3_128()
-        .hashString(blob.getValue(), Charsets.UTF_8)
+        .hashString(blob.getValue().encode(), Charsets.UTF_8)
         .toString();
     return ImmutableBlob.builder().from(blob).id(id).build();
   }

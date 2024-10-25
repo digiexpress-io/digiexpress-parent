@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
-import io.digiexpress.eveli.client.config.TaskProperties;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
@@ -72,21 +71,21 @@ public class TaskApiController extends TaskControllerBase
 {
     private final TaskRepository taskRepository;
     private final JdbcTemplate jdbcTemplate;
-    private final TaskProperties taskProperties;
     private final TaskNotificator notificator;
+    private final boolean adminsearch;
 
     public TaskApiController(
         TaskAccessRepository taskAccessRepository, 
         TaskRepository taskRepository, 
-        TaskProperties taskProperties, 
         TaskNotificator notificator, 
-        JdbcTemplate jdbcTemplate) 
+        JdbcTemplate jdbcTemplate,
+        boolean adminsearch) 
     {
       super(taskAccessRepository);
       this.taskRepository = taskRepository;
       this.jdbcTemplate = jdbcTemplate;
-      this.taskProperties = taskProperties;
       this.notificator = notificator;
+      this.adminsearch = adminsearch;
     }
     
     @GetMapping("/taskSearch")
@@ -127,14 +126,14 @@ public class TaskApiController extends TaskControllerBase
       final var priorities = priorityValues.stream().map(el-> el.ordinal()).collect(Collectors.toList());
       
       final Page<TaskCommands.Task> tasks;
-      if (taskProperties.getAdminsearch()) {
+      if (adminsearch) {
         tasks = taskRepository.searchTasksAdmin(
             likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
             statuses, priorities, likeExpression(searchRole), dueDate, pageable)
             .map(TaskCommandsImpl::map);
       } else {
         tasks = taskRepository.searchTasks(
-            likeExpression(subject), likeExpression(clientIdentificator),likeExpression(assignedUser),
+            likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
             statuses, 
             priorities, roles, likeExpression(searchRole), dueDate, pageable)
             .map(TaskCommandsImpl::map);
@@ -160,13 +159,13 @@ public class TaskApiController extends TaskControllerBase
       log.info("Task get: id: {}, user id: {}", id, authentication != null ? authentication.getName() : null);
       Optional<TaskEntity> result;
       
-      if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && !taskProperties.getAdminsearch()) {
+      if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && !adminsearch) {
         List<String> roles = getRoles(authentication);
         log.info("User is authenticated with roles: {}", roles);
         result = taskRepository.findByIdAndAssignedRolesIn(id, roles);
       }
       else {
-        log.info("Unauthenticated request or admin({}), no role check", taskProperties.getAdminsearch());
+        log.info("Unauthenticated request or admin({}), no role check", adminsearch);
         result = taskRepository.findById(id);
       }
       return result
@@ -257,7 +256,7 @@ public class TaskApiController extends TaskControllerBase
       log.info("Task unread request: user id: {}", authentication.getName());
       List<Long> taskIds = new ArrayList<>();
       if (authentication != null && authentication.getName() != null) {
-        if (!(authentication instanceof AnonymousAuthenticationToken) && !taskProperties.getAdminsearch()) {
+        if (!(authentication instanceof AnonymousAuthenticationToken) && !adminsearch) {
           List<String> roles = getRoles(authentication);
           Iterable<Long> accesses = taskRepository.findUnreadTasksByRole(authentication.getName(), roles);
           accesses.forEach(access->taskIds.add(access));

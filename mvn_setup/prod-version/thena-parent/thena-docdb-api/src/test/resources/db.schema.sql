@@ -2,7 +2,7 @@
 CREATE TABLE blobs
 (
   id VARCHAR(40) PRIMARY KEY,
-  value TEXT NOT NULL
+  value JSONB NOT NULL
 );
 
 CREATE TABLE commits

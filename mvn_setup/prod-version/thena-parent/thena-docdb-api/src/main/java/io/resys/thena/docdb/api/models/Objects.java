@@ -85,6 +85,6 @@ public interface Objects {
   
   @Value.Immutable
   interface Blob extends IsObject {
-    String getValue();
+    io.vertx.core.json.JsonObject getValue();
   }
 }

@@ -32,29 +32,17 @@ import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.ImmutableTaskLink;
 import io.digiexpress.eveli.client.api.TaskCommands;
-import io.digiexpress.eveli.client.config.TaskProperties;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert.TaskException;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class TaskCommandsImpl implements TaskCommands {
   private final TaskRepository repository;
   private final TaskNotificator taskNotificator;
-  private final TaskProperties taskProperties;
-  
-  public TaskCommandsImpl(
-      TaskRepository repository,
-      TaskNotificator taskNotificator,
-      TaskProperties taskProperties) {
-    this.repository = repository;
-    this.taskNotificator = taskNotificator;
-    this.taskProperties = taskProperties;
-  }
   
   @Override
   public TaskBuilder create() {
@@ -151,13 +139,14 @@ public class TaskCommandsImpl implements TaskCommands {
   }
 
   @Override
-  public Optional<Task> find(String id, List<String> roles) {
+  public Optional<Task> find(String id, List<String> roles, boolean adminsearch) {
     if (StringUtils.isEmpty(id) || roles.isEmpty()) {
       return Optional.empty();
     }
     try {
       Long taskId = Long.parseLong(id);
-      final var result = taskProperties.getAdminsearch() ? repository.findById(taskId) : repository.findByIdAndAssignedRolesIn(taskId, roles);
+      final var result = adminsearch ? repository.findById(taskId) : repository.findByIdAndAssignedRolesIn(taskId, roles);
+      
       return result.map(task -> ImmutableTask.builder()
           .assignedUser(task.getAssignedUser())
           .assignedUserEmail(task.getAssignedUserEmail())
@@ -224,27 +213,6 @@ public class TaskCommandsImpl implements TaskCommands {
     }
     catch (Exception e) {
       throw new TaskException(e.getMessage(), e);
-    }
-  }
-  
-  
-
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Setter
-  @Accessors(fluent = true)
-  public static class Builder {
-    private TaskRepository repository;
-    private TaskNotificator taskNotificator;
-    private TaskProperties taskProperties;
-  
-    public TaskCommandsImpl build() {
-      TaskAssert.notNull(repository, () -> "repository must be defined!");
-      TaskAssert.notNull(taskNotificator, () -> "taskNotificator must be defined!");
-      TaskAssert.notNull(taskProperties, () -> "taskProperties must be defined!");
-      return new TaskCommandsImpl(repository, taskNotificator, taskProperties);
     }
   }
   

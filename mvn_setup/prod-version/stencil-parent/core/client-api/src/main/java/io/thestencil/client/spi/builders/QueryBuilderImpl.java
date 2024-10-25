@@ -104,7 +104,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
     final var builder = ImmutableSiteState.builder();
     for(final var treeValue : tree.getValues().values()) {
       final var blob = blobs.get(treeValue.getBlob());
-      final var entity = config.getDeserializer().fromString(blob.getValue());
+      final var entity = config.getDeserializer().fromString(blob.getValue().encode());
       final var id = entity.getId();
       
       switch (entity.getType()) {
@@ -177,7 +177,7 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
       }
       
       return state.getObjects().getBlob().stream()
-        .map(blob -> (Entity<T>) config.getDeserializer().fromString(type, blob.getValue()))
+        .map(blob -> (Entity<T>) config.getDeserializer().fromString(type, blob.getValue().encode()))
         .collect(Collectors.toList());
       
     });

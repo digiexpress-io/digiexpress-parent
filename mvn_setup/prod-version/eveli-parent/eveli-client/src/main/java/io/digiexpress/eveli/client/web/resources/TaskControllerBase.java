@@ -31,16 +31,15 @@ import io.digiexpress.eveli.client.persistence.entities.TaskAccessEntity;
 import io.digiexpress.eveli.client.persistence.entities.TaskAccessId;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class TaskControllerBase {
 
   private final TaskAccessRepository taskAccessRepository;
   
-  public TaskControllerBase(TaskAccessRepository taskAccessRepository) {
-    this.taskAccessRepository = taskAccessRepository;
-  }
   
   protected String userName(Authentication authentication) {
     return Optional.ofNullable(authentication).map(auth->auth.getName()).orElse("UNAUTHENTICATED");

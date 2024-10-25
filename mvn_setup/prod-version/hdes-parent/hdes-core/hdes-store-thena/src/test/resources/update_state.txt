@@ -21,5 +21,5 @@ Trees
     8: FLOW-1
 
 Blobs
-  - 7: {"id":"FLOW-1","bodyType":"FLOW","hash":"","body":[{"id":null,"value":"id: firstFlow","type":"SET_BODY"}]}
-  - 8: {"id":"FLOW-1","bodyType":"FLOW","hash":"","body":[{"id":null,"value":"id: change flow symbolic id","type":"SET_BODY"}]}
+  - 7: {"id":"FLOW-1","body":[{"id":null,"type":"SET_BODY","value":"id: firstFlow"}],"hash":"","bodyType":"FLOW"}
+  - 8: {"id":"FLOW-1","body":[{"id":null,"type":"SET_BODY","value":"id: change flow symbolic id"}],"hash":"","bodyType":"FLOW"}

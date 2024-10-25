@@ -22,19 +22,18 @@ package io.digiexpress.eveli.client.spi;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import io.digiexpress.eveli.assets.api.EveliAssetClient;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands.Process;
-import io.digiexpress.eveli.client.api.WorkflowCommands;
-import io.digiexpress.eveli.client.api.WorkflowCommands.Workflow;
 import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
@@ -58,17 +57,9 @@ public class HdesCommandsImpl implements HdesCommands {
   private final HdesClient hdesClient;
   private final Supplier<ProgramEnvir> programEnvir;
   private final TransactionWrapper ts;
-  private final WorkflowCommands workflowCommands;
+  private final EveliAssetClient workflowCommands;
   
-  @Override
-  public HdesQuery query() {
-    return new HdesQuery() {
-      @Override
-      public List<String> findFlowNames() {
-        return new ArrayList<>(programEnvir.get().getFlowsByName().keySet());
-      }
-    };
-  }
+
   @Override
   public void execute(String dialobSessionId) {
     ts.execute(em -> executeWorkflow(dialobSessionId));
@@ -77,14 +68,14 @@ public class HdesCommandsImpl implements HdesCommands {
     FlowResult run;
     final var flowInput = new HashMap<String, Serializable>();
     Optional<Process> processData = Optional.empty();
-    Optional<Workflow> wfData = Optional.empty();
+    Optional<Entity<Workflow>> wfData = Optional.empty();
     log.info("Hdes commands: dialob session completion for id: {}", dialobSessionId);
     try {
       processData = processCommands.query().getByQuestionnaireId(dialobSessionId);
       if (processData.isEmpty()) {
         log.warn("Hdes commands: No process data for dialob session: {}", dialobSessionId);
       } else {
-        wfData = workflowCommands.query().getByName(processData.get().getWorkflowName());
+        wfData = workflowCommands.queryBuilder().findOneWorkflowByName(processData.get().getWorkflowName()).await().atMost(Duration.ofMinutes(1));
         if (wfData.isEmpty()) {
           throw new RuntimeException("Missing workflow with name " + processData.get().getWorkflowName());
         }
@@ -92,7 +83,7 @@ public class HdesCommandsImpl implements HdesCommands {
         flowInput.put("workflowName", processData.get().getWorkflowName());
         run = hdesClient.executor(programEnvir.get())
             .inputMap(flowInput)
-            .flow(wfData.get().getFlowName())
+            .flow(wfData.get().getBody().getFlowName())
             .andGetBody();
         if (log.isDebugEnabled()){
           // this version prints out all input/output, could contain sensitive data
@@ -110,9 +101,9 @@ public class HdesCommandsImpl implements HdesCommands {
     } catch (RuntimeException e) {
       log.warn(new StringBuilder()
           .append("Hdes commands: error in execution:")
-          .append("  - flow: ").append(wfData.map(w -> w.getFlowName()).orElse("undefined"))
-          .append("  - formName: ").append(wfData.map(w -> w.getFormName()).orElse("undefined"))
-          .append("  - formTag: ").append(wfData.map(w -> w.getFormTag()).orElse("undefined"))
+          .append("  - flow: ").append(wfData.map(w -> w.getBody().getFlowName()).orElse("undefined"))
+          .append("  - formName: ").append(wfData.map(w -> w.getBody().getFormName()).orElse("undefined"))
+          .append("  - formTag: ").append(wfData.map(w -> w.getBody().getFormTag()).orElse("undefined"))
           .append("  - input: ").append(hdesClient.mapper().toJson(flowInput))
           .append("  - error: ").append(e.getMessage())
           .toString(), e);
@@ -175,7 +166,7 @@ public class HdesCommandsImpl implements HdesCommands {
   @Accessors(fluent = true)
   public static class Builder {
     private ProcessCommands process;
-    private WorkflowCommands workflow;
+    private EveliAssetClient workflow;
     private Supplier<ProgramEnvir> programEnvir;
     private HdesClient hdesClient;
     private TransactionWrapper transactionWrapper;

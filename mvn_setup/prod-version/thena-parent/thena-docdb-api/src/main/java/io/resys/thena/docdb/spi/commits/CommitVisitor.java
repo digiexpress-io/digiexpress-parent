@@ -191,7 +191,7 @@ public class CommitVisitor {
       
       nextBlobs.put(entry.getHash(), ImmutableBlob.builder()
           .id(entry.getHash())
-          .value(entry.getBlob())
+          .value(new io.vertx.core.json.JsonObject(entry.getBlob()))
           .build());
       nextTree.put(entry.getName(), ImmutableTreeValue.builder()
           .name(entry.getName())
@@ -226,7 +226,7 @@ public class CommitVisitor {
   
   private RedundentHashedBlob visitAppendEntry(Map.Entry<String, String> entry) {
     return ImmutableRedundentHashedBlob.builder()
-      .hash(Sha2.blobId(entry.getValue()))
+      .hash(Sha2.blobId(new io.vertx.core.json.JsonObject(entry.getValue()).encode()))
       .blob(entry.getValue())
       .name(entry.getKey())
       .build();
