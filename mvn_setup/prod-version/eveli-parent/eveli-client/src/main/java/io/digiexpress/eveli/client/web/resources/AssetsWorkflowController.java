@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class WorkflowController {
+public class AssetsWorkflowController {
 
   private final EveliAssetComposer composer;
   private final Supplier<ProgramEnvir> programEnvir;

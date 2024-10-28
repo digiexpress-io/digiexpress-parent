@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class AssetReleaseController {
+public class AssetssReleaseController {
 
   private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);

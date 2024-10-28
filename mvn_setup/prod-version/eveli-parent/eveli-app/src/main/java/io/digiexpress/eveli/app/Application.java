@@ -26,16 +26,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import io.digiexpress.eveli.client.config.EveliAssetAutoConfig;
+import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
-import io.digiexpress.eveli.client.config.EveliDbAutoConfig;
+import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableAsync
-@Import(value = { EveliDbAutoConfig.class, EveliAssetAutoConfig.class, EveliAutoConfig.class })
+@Import(value = { EveliAutoConfigDB.class, EveliAutoConfigAssets.class, EveliAutoConfig.class })
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[]{Application.class}, args);
   }
+  
+  // HHH015007 - https://hibernate.atlassian.net/browse/HHH-17612
 }

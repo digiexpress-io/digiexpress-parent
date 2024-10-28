@@ -1,5 +1,25 @@
 package io.digiexpress.eveli.client.config;
 
+/*-
+ * #%L
+ * eveli-client
+ * %%
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
@@ -15,11 +35,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
-import io.digiexpress.eveli.client.web.resources.AssetReleaseController;
-import io.digiexpress.eveli.client.web.resources.WorkflowController;
-import io.digiexpress.eveli.client.web.resources.WorkflowReleaseController;
+import io.digiexpress.eveli.client.web.resources.AssetsWorkflowController;
+import io.digiexpress.eveli.client.web.resources.AssetsWorkflowTagController;
+import io.digiexpress.eveli.client.web.resources.AssetsWrenchController;
+import io.digiexpress.eveli.client.web.resources.AssetssReleaseController;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
@@ -33,11 +55,13 @@ import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
+import lombok.extern.slf4j.Slf4j;
 
 
 
 @Configuration
-public class EveliAssetAutoConfig {
+@Slf4j
+public class EveliAutoConfigAssets {
   
   @Value("${spring.datasource.url}")
   private String datasourceUrl;
@@ -46,19 +70,31 @@ public class EveliAssetAutoConfig {
   @Value("${spring.datasource.password}")
   private String datasourcePassword;
   
+  // TODO @Value("${app.version}")
+  private String version = "alpha";
+
+  // TODO  @Value("${build.timestamp}")
+  private String timestamp = "";
+
+  
   
   @Bean 
-  public AssetReleaseController assetReleaseController(EveliContext context) {
-    return new AssetReleaseController(new EveliAssetsComposerImpl(context.getAssets()));
+  public AssetssReleaseController assetReleaseController(EveliContext context) {
+    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets()));
   }
   @Bean 
-  public WorkflowController workflowController(EveliContext context) {
-    return new WorkflowController(new EveliAssetsComposerImpl(context.getAssets()), context.getProgramEnvir());
+  public AssetsWorkflowController workflowController(EveliContext context) {
+    return new AssetsWorkflowController(new EveliAssetsComposerImpl(context.getAssets()), context.getProgramEnvir());
   }
   @Bean 
-  public WorkflowReleaseController workflowReleaseController(EveliContext context) {
-    return new WorkflowReleaseController(new EveliAssetsComposerImpl(context.getAssets()));
+  public AssetsWorkflowTagController workflowReleaseController(EveliContext context) {
+    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets()));
   }
+  @Bean
+  public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {
+    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, version, timestamp);
+  }
+  
 
   @Bean
   public EveliContext eveliContext(
@@ -143,6 +179,35 @@ public class EveliAssetAutoConfig {
             
         .build();
     
+
+    final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
+    final var createdWrench = wrenchClient.store().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
+    final var createdStencil = stencilClient.getStore().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
+    
+    
+    final var msg = new StringBuilder("\r\n")
+      .append("Creating asset DB:").append("\r\n")
+      .append("  parsed-datasource-url: ").append(datasourceUrl).append("\r\n")
+      .append("  pgHost: ").append(pgHost).append("\r\n")
+      .append("  pgPort: ").append(pgPort).append("\r\n")
+      .append("  pgDb: ").append(pgDb).append("\r\n")
+      .append("  sslMode: ").append(sslMode).append("\r\n")
+      
+      .append("  workflows: ").append("\r\n")
+      .append("    created-db: ").append(createdAssets).append("\r\n")
+      .append("    connected-to-repo: ").append(assetClient.getConfig().getRepoName()).append("\r\n")
+      
+      .append("  wrench: ").append("\r\n")
+      .append("    created-db: ").append(createdWrench).append("\r\n")
+      .append("    connected-to-repo: ").append(wrenchClient.store().getRepoName()).append("\r\n")
+      
+      
+      .append("  stencil: ").append("\r\n")
+      .append("    created-db: ").append(createdStencil).append("\r\n")
+      .append("    connected-to-repo: ").append(stencilClient.getStore().getRepoName()).append("\r\n")
+      ;
+    
+    EveliAutoConfigAssets.log.info(msg.toString());
     
     return EveliContext.builder()
         .stencil(stencilClient)

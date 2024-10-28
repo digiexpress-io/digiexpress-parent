@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.web.resources;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -61,17 +59,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/wrench")
 @RequiredArgsConstructor
-public class WrenchComposerController {
+public class AssetsWrenchController {
   private final HdesComposer composer;
   private final ObjectMapper objectMapper;
+  private final String version;
+  private final String timestamp;
   
   private static final Duration timeout = Duration.ofMillis(10000);
-
-  @Value("${app.version}")
-  private String version;
-
-  @Value("${build.timestamp}")
-  private String timestamp;
 
 
   @GetMapping(path = "/dataModels", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -30,7 +30,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * #L%
  */
 
-import io.digiexpress.eveli.client.config.EveliDbAutoConfig;
+import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 
 
@@ -38,7 +38,7 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 @Testcontainers
 @SpringBootTest(properties = {})
 @EnableAutoConfiguration
-@ContextConfiguration( classes = { EveliDbAutoConfig.class, IntegrationTest.IntegrationTestConfig.class })
+@ContextConfiguration( classes = { EveliAutoConfigDB.class, IntegrationTest.IntegrationTestConfig.class })
 public class IntegrationTest {
   
   @Autowired TaskRepository taskRepository;
