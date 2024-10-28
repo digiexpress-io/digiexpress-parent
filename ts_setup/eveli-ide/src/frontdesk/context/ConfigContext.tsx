@@ -5,7 +5,7 @@ export interface Config {
   loaded: boolean;
   error?: Error;
   api?: string;
-  tasksApiUrl?: string;
+  tasksApiUrl?: string; // api/tasks/v1
   dialobApiUrl?: string;
   dialobComposerUrl?: string;
   dialobSessionUrl?: string;

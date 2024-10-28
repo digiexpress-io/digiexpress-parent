@@ -33,6 +33,7 @@ import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.ImmutableTaskLink;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert.TaskException;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskCommandsImpl implements TaskCommands {
   private final TaskRepository repository;
   private final TaskNotificator taskNotificator;
-  
+  private final TaskRefGenerator taskRefGenerator;
   @Override
   public TaskBuilder create() {
     return new TaskBuilder() {
@@ -107,7 +108,7 @@ public class TaskCommandsImpl implements TaskCommands {
       public Task build() {
         final var taskModel = task.build();
         
-        io.digiexpress.eveli.client.persistence.entities.TaskEntity entity = map(taskModel);
+        io.digiexpress.eveli.client.persistence.entities.TaskEntity entity = map(taskModel).setTaskRef(taskRefGenerator.generateTaskRef());
         io.digiexpress.eveli.client.persistence.entities.TaskEntity savedTask = repository.save(entity);
         
         final var model = map(savedTask);

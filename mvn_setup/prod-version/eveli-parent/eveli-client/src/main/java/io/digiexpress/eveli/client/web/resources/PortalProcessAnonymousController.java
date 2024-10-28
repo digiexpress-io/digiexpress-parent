@@ -22,8 +22,6 @@ package io.digiexpress.eveli.client.web.resources;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessCommands;
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,17 +45,19 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
 
   private final PortalAccessValidator validator;
   private final String anonymousUserId;
-  public PortalProcessAnonymousController(PortalClient client, PortalAccessValidator validator, String anonymousUserId) {
+  private final AuthClient securityClient;
+  public PortalProcessAnonymousController(PortalClient client, PortalAccessValidator validator, String anonymousUserId, AuthClient securityClient) {
     super(client);
     this.validator = validator;
     this.anonymousUserId = anonymousUserId;
+    this.securityClient = securityClient;
   }
   
   @PostMapping("/anonymous/processes/")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request,
-      @AuthenticationPrincipal Jwt principal) {
+  public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request) {
     String identity = request.getIdentity();
+    final var principal = securityClient.getUser().getPrincipal();
     if (identity == null) {
       log.warn("Access violation by anonymous, missing request identity {}", identity);
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -69,8 +70,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
   
   @GetMapping("/anonymous/processes/{id}")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> get(@PathVariable("id") String id,
-      @AuthenticationPrincipal Jwt principal) {
+  public ResponseEntity<ProcessCommands.Process> get(@PathVariable("id") String id) {
     final var process = client.process().query().get(id);
     
     if(process.isEmpty()) {
@@ -81,8 +81,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
   
   @DeleteMapping("/anonymous/processes/{id}")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> delete(@PathVariable("id") String id,
-      @AuthenticationPrincipal Jwt principal) {
+  public ResponseEntity<ProcessCommands.Process> delete(@PathVariable("id") String id) {
     validator.validateProcessAnonymousAccess(id, anonymousUserId);
     client.process().delete(id);
     return new ResponseEntity<>(HttpStatus.OK);

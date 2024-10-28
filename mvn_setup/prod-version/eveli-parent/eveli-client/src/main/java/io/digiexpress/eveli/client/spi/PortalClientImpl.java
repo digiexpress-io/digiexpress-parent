@@ -34,6 +34,7 @@ import io.digiexpress.eveli.client.api.ProcessAuthorizationCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
@@ -59,7 +60,7 @@ public class PortalClientImpl implements PortalClient {
   private final ProcessAuthorizationCommands processAuthorization;
   private final TransactionWrapper transactionWrapper;
   private final NotificationCommands notification;
-
+  
   
   public static Builder builder() {
     return new Builder();
@@ -80,6 +81,7 @@ public class PortalClientImpl implements PortalClient {
     private TaskNotificator taskNotificator;
     private Supplier<ProgramEnvir> programEnvir;
     private EveliAssetClient assetClient;
+    private TaskRefGenerator taskRefGenerator;
     
     public PortalClientImpl build() {
 
@@ -93,9 +95,10 @@ public class PortalClientImpl implements PortalClient {
       Assert.notNull(taskRepository, () -> "taskRepository can't be null!");
       Assert.notNull(taskNotificator, () -> "taskNotificator can't be null!");
       Assert.notNull(assetClient, () -> "assetClient can't be null!");
+      Assert.notNull(taskRefGenerator, () -> "taskRefGenerator can't be null!");
       
 
-      final var task = new TaskCommandsImpl(taskRepository, taskNotificator);
+      final var task = new TaskCommandsImpl(taskRepository, taskNotificator, taskRefGenerator);
       final var process = ProcessCommandsImpl.builder().forms(dialobCommands).processJPA(processRepository).workflowCommands(assetClient).build();
       final var hdes = HdesCommandsImpl.builder().hdesClient(hdesClient).transactionWrapper(transactionWrapper)
             .process(process).programEnvir(programEnvir).workflow(assetClient).build();

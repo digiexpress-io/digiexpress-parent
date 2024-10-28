@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
 import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,10 +50,12 @@ public class PortalAttachmentController {
   
   private final PortalClient client;
   private final PortalAccessValidator validator;
-  
-  public PortalAttachmentController(PortalClient client, PortalAccessValidator validator) {
+  private final AuthClient securityClient;
+
+  public PortalAttachmentController(PortalClient client, PortalAccessValidator validator, AuthClient securityClient) {
     this.client = client;
     this.validator = validator;
+    this.securityClient = securityClient;
   }
   
   /**
@@ -64,10 +65,10 @@ public class PortalAttachmentController {
    * @throws URISyntaxException
    */
   @GetMapping("/process/{processId}/files/")
-  public ResponseEntity<List<Attachment>> listAttachments(@PathVariable String processId,
-      @AuthenticationPrincipal Jwt principal) 
+  public ResponseEntity<List<Attachment>> listAttachments(@PathVariable String processId) 
     throws URISyntaxException 
   {
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     return ResponseEntity.ok(client.attachments().query().processId(processId));
   }
@@ -84,10 +85,10 @@ public class PortalAttachmentController {
   @GetMapping("/process/{processId}/files/{filename}")
   public ResponseEntity<Void> getAttachment(
     @PathVariable String processId, 
-    @PathVariable String filename,
-    @AuthenticationPrincipal Jwt principal) 
+    @PathVariable String filename) 
     throws URISyntaxException 
   {
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var attachmentUrl = client.attachments().url().encodePath(filename).processId(processId);
     if (attachmentUrl.isPresent()) {
@@ -107,10 +108,10 @@ public class PortalAttachmentController {
   @PostMapping("/process/{processId}/files/")
   public ResponseEntity<AttachmentUpload> getUploadUrl(
     @PathVariable String processId, 
-    @RequestParam(name="filename") String filename,
-    @AuthenticationPrincipal Jwt principal) 
+    @RequestParam(name="filename") String filename) 
     throws URISyntaxException 
   {
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var uploadUrl = client.attachments().upload().encodePath(filename).processId(processId);
     if (uploadUrl.isPresent()) {
@@ -129,11 +130,11 @@ public class PortalAttachmentController {
    * @throws URISyntaxException
    */
   @GetMapping("/task/{taskId}/files/")
-  public ResponseEntity<List<Attachment>> listTaskAttachments(@PathVariable String taskId,
-      @AuthenticationPrincipal Jwt principal) 
+  public ResponseEntity<List<Attachment>> listTaskAttachments(@PathVariable String taskId) 
       throws URISyntaxException 
   {
     final var processId = getProcessIdFromTask(taskId);
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     List<Attachment> result = processId != null ?
         client.attachments().query().processId(processId) : client.attachments().query().taskId(taskId);
@@ -154,11 +155,11 @@ public class PortalAttachmentController {
   @GetMapping("/task/{taskId}/files/{filename}")
   public ResponseEntity<Void> getTaskAttachment(
       @PathVariable String taskId, 
-      @PathVariable String filename,
-      @AuthenticationPrincipal Jwt principal) 
+      @PathVariable String filename) 
       throws URISyntaxException 
   {
     String processId = getProcessIdFromTask(taskId);
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var attachmentUrl = processId != null ?
         client.attachments().url().encodePath(filename).processId(processId) : 
@@ -181,12 +182,12 @@ public class PortalAttachmentController {
   @PostMapping("/task/{taskId}/files/")
   public ResponseEntity<AttachmentUpload> getTaskAttachmentUploadUrl(
       @PathVariable String taskId, 
-      @RequestParam(name="filename") String filename,
-      @AuthenticationPrincipal Jwt principal) 
+      @RequestParam(name="filename") String filename) 
       throws URISyntaxException 
   {
     
     final var processId = getProcessIdFromTask(taskId);
+    final var principal = securityClient.getUser().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var uploadUrl = processId != null ?
         client.attachments().upload().encodePath(filename).processId(processId) :

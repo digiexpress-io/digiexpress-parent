@@ -88,7 +88,7 @@ const palette = {
     main: 'rgb(17, 24, 39)', // background colour, dark grey-black
     dark: '',
     light: '',
-    contrastText: ''
+    contrastText: 'rgb(17, 24, 39)'
   },
   explorerItem: {
     main: 'rgb(209, 213, 219)', // inactive item 
@@ -106,19 +106,19 @@ const palette = {
     main: 'rgb(80, 72, 229)', // primary ui element, blue-purple (button fill, button text, text, checkboxes, etc.)
     dark: '#F3F4F6', // table header gray
     light: 'rgba(80, 72, 229, 0.04)', // transparent purple for hover backgrounds, secondary button fill on hover
-    contrastText: ''
+    contrastText: 'rgb(80, 72, 229)'
   },
   table: {
     main: '#F3F4F6', // table header gray
     dark: '#e8eaed', // table header darker gray
     light: '',
-    contrastText: ''
+    contrastText: '#F3F4F6'
   },
   article: {
     main: '#5048E5', // blue
     dark: '#3229e0',
     light: '#3229e0',
-    contrastText: ' #fff'
+    contrastText: '#fff'
   },
   page: {
     main: '#14B8A6', // turquoise

@@ -25,8 +25,8 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.persistence.entities.TaskAccessEntity;
 import io.digiexpress.eveli.client.persistence.entities.TaskAccessId;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
@@ -45,29 +45,10 @@ public class TaskControllerBase {
     return Optional.ofNullable(authentication).map(auth->auth.getName()).orElse("UNAUTHENTICATED");
   }
   
-  protected String getUserName(Jwt principal) {
-    String userName = "";
-    if (principal != null) {
-     userName = principal.getClaimAsString("name");
-    }
-    return userName;
-  }
 
-  protected String getEmail(Jwt principal) {
-    String email = "";
-    if (principal != null) {
-      email = principal.getClaimAsString("email");
-    }
-    return email;
-  }
+  protected void registerTaskAccess(Object id, AuthClient.User authentication, Optional<TaskEntity> result) {
 
-  protected void registerTaskAccess(Object id, Authentication authentication, Optional<TaskEntity> result) {
-
-    String userName = "ANONYMOUS";
-    if (authentication != null && authentication.getName() != null) {
-      userName = authentication.getName();
-    }
-    registerUserTaskAccess(id, result, userName);
+    registerUserTaskAccess(id, result, authentication.getPrincipal().getUserName());
   }
 
   protected void registerUserTaskAccess(Object id, Optional<TaskEntity> result, String userName) {

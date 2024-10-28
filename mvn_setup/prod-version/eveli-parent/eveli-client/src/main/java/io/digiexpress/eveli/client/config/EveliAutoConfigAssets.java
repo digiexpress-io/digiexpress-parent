@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.web.resources.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowTagController;
@@ -81,16 +82,16 @@ public class EveliAutoConfigAssets {
   
   
   @Bean 
-  public AssetssReleaseController assetReleaseController(EveliContext context) {
-    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets()));
+  public AssetssReleaseController assetReleaseController(EveliContext context, AuthClient security) {
+    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets()), security);
   }
   @Bean 
   public AssetsWorkflowController workflowController(EveliContext context) {
     return new AssetsWorkflowController(new EveliAssetsComposerImpl(context.getAssets()), context.getProgramEnvir());
   }
   @Bean 
-  public AssetsWorkflowTagController workflowReleaseController(EveliContext context) {
-    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets()));
+  public AssetsWorkflowTagController workflowReleaseController(EveliContext context, AuthClient security) {
+    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets()), security);
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {

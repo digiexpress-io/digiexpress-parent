@@ -96,7 +96,7 @@ public interface TaskCommands {
     @Nullable String getAssignedUserEmail();
     
     String getSubject();
-    TaskPriority getPriority();
+    @Nullable TaskPriority getPriority();
 
     List<String> getKeyWords();
     List<TaskLink> getTaskLinks();

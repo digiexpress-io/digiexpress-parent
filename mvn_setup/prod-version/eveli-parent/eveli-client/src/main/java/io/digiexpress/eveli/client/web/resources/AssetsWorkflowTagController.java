@@ -25,8 +25,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +37,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
 import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
+import io.digiexpress.eveli.client.api.AuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,6 +48,8 @@ public class AssetsWorkflowTagController {
 
   private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
+  private final AuthClient securityClient;
+
   
   @GetMapping("/workflowReleases/")
   public ResponseEntity<List<Entity<WorkflowTag>>> getAllWorkflows() {
@@ -57,11 +58,11 @@ public class AssetsWorkflowTagController {
 
 
   @PostMapping("/workflowReleases/")
-  public ResponseEntity<Entity<WorkflowTag>> createSnapshot(@RequestBody CreateWorkflowTag workflowRelease, @AuthenticationPrincipal Jwt principal) {
+  public ResponseEntity<Entity<WorkflowTag>> createSnapshot(@RequestBody CreateWorkflowTag workflowRelease) {
     try {
       final var snapshotRelease = ImmutableCreateWorkflowTag.builder()
         .from(workflowRelease)
-        .user(getUserName(principal))
+        .user(securityClient.getUser().getPrincipal().getUserName())
         .build();
       
       return new ResponseEntity<>(composer.create().workflowTag(snapshotRelease).await().atMost(timeout), HttpStatus.CREATED);
@@ -82,11 +83,4 @@ public class AssetsWorkflowTagController {
     return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
   }
   
-  protected String getUserName(Jwt principal) {
-    String userName = "";
-    if (principal != null) {
-     userName = principal.getClaimAsString("name");
-    }
-    return userName;
-  }
 }

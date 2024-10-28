@@ -27,8 +27,15 @@ management:
       exposure:
         include: "health,mappings"
 
-#logging.level.org.springframework.web: DEBUG
+logging.level.org.springframework.web: DEBUG
 #logging.level.org.springframework.boot: DEBUG
+
+
+
+
+eveli: 
+  task: 
+    adminsearch: true
 
 
 

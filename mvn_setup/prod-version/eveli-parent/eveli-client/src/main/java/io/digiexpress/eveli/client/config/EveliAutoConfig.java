@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.config;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +33,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.cache.DuplicateDetectionCache;
@@ -42,6 +47,7 @@ import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
+import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
@@ -82,18 +88,25 @@ import jakarta.persistence.EntityManager;
 })
 public class EveliAutoConfig {
   
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
+      return builder -> builder
+          .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
+          .build();
+  }
+  
   @Bean 
-  public AttachmentApiController attachmentApiController(PortalClient client, EveliPropsTask config) {
-    return new AttachmentApiController(client, config.isAdminsearch());
+  public AttachmentApiController attachmentApiController(PortalClient client, EveliPropsTask config, AuthClient security) {
+    return new AttachmentApiController(client, config.isAdminsearch(), security);
   }
   @Bean 
   public CommentApiController commentApiController(
       TaskRepository taskRepository, 
       CommentRepository commentRepository, 
       TaskNotificator notificator, 
-      TaskAccessRepository taskAccessRepository) {
+      TaskAccessRepository taskAccessRepository, AuthClient security) {
     
-    return new CommentApiController(taskRepository, commentRepository, notificator, taskAccessRepository);
+    return new CommentApiController(taskRepository, commentRepository, notificator, taskAccessRepository, security);
   }
   @Bean 
   public DuplicateDetectionCache duplicateDetectionCache() {
@@ -132,8 +145,8 @@ public class EveliAutoConfig {
   }
   
   @Bean 
-  public PortalAttachmentController portalAttachmentController(PortalClient client, PortalAccessValidator validator) {
-    return new PortalAttachmentController(client, validator);
+  public PortalAttachmentController portalAttachmentController(PortalClient client, PortalAccessValidator validator, AuthClient security) {
+    return new PortalAttachmentController(client, validator, security);
   }
   @Bean 
   public PortalCommentController portalCommentController(
@@ -142,27 +155,27 @@ public class EveliAutoConfig {
       TaskAccessRepository taskAccessRepository, 
       
       PortalClient client, 
-      PortalAccessValidator validator
+      PortalAccessValidator validator, AuthClient security
   ) {
-    return new PortalCommentController(taskRepository, commentRepository, taskAccessRepository, client, validator);
+    return new PortalCommentController(taskRepository, commentRepository, taskAccessRepository, client, validator, security);
   }
   @Bean 
   public PortalProcessAnonymousController portalProcessAnonymousController(
-      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config
+      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config, AuthClient security
   ) {
-    return new PortalProcessAnonymousController(client, validator, config.getAnonymousUserId());
+    return new PortalProcessAnonymousController(client, validator, config.getAnonymousUserId(), security);
   }
   @Bean 
   public PortalProcessController portalProcessController(
-      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config
+      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config, AuthClient security
   ) {
-    return new PortalProcessController(client, validator, config.getAnonymousUserId());
+    return new PortalProcessController(client, validator, config.getAnonymousUserId(), security);
   }
   @Bean 
   public PortalTaskController portalTaskController(
-      TaskAccessRepository taskAccessRepository, TaskRepository taskRepository, PortalClient client, PortalAccessValidator validator
+      TaskAccessRepository taskAccessRepository, TaskRepository taskRepository, PortalClient client, PortalAccessValidator validator, AuthClient security
   ) {
-    return new PortalTaskController(taskAccessRepository, taskRepository, client, validator);
+    return new PortalTaskController(taskAccessRepository, taskRepository, client, validator, security);
   }
   @Bean 
   public PrintoutController printoutController(
@@ -183,10 +196,11 @@ public class EveliAutoConfig {
       TaskRepository taskRepository, 
       TaskNotificator notificator, 
       JdbcTemplate jdbcTemplate,
-      EveliPropsTask config
+      EveliPropsTask config, AuthClient security,
+      TaskRefGenerator taskRefGenerator
   ) {
     
-    return new TaskApiController(taskAccessRepository, taskRepository, notificator, jdbcTemplate, config.isAdminsearch());
+    return new TaskApiController(taskRefGenerator, taskAccessRepository, taskRepository, notificator, jdbcTemplate, config.isAdminsearch(), security);
   }
   @Bean 
   public TaskNotificator taskNotificator() {
@@ -208,7 +222,10 @@ public class EveliAutoConfig {
   public PortalAccessValidator portalAccessValidator(PortalClient client) {
       return new PortalAccessValidatorImpl(client);
   }  
-  
+  @Bean
+  public TaskRefGenerator taskRefGenerator(EntityManager client) {
+      return new TaskRefGenerator(client);
+  }  
   
   @Bean 
   public PortalClient portalClient(
@@ -220,6 +237,7 @@ public class EveliAutoConfig {
       TaskNotificator taskNotificator,
       
       TransactionWrapper transactionWrapper,
+      TaskRefGenerator taskRefGenerator,
       
       RestTemplate restTemplate,
       ObjectMapper objectMapper,
@@ -248,7 +266,7 @@ public class EveliAutoConfig {
         .processRepository(processRepository)
         .taskNotificator(taskNotificator)
         .taskRepository(taskRepository)
-        
+        .taskRefGenerator(taskRefGenerator)
         .build();
   }
 }

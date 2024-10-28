@@ -28,6 +28,8 @@ export const TasksView: React.FC = () => {
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
+  console.log("tasksApiUrl", tasksApiUrl)
+
   const taskDeletableCallback = (task:Task) => {
     if (taskDeleteGroups && taskDeleteGroups.length > 0) {
       if (userInfo.hasRole(...taskDeleteGroups)) {
@@ -79,9 +81,9 @@ export const TasksView: React.FC = () => {
     .then(response => response.json())
     .then(json=>{
       return {
-        data: json._embedded?.tasks || [],
-        page: json.page.number,
-        totalCount: json.page.totalElements
+        data: json.content || [],
+        page: json.number,//json.page.number || 0,
+        totalCount: 1// json.page.totalElements || 0
       };
     });
   }

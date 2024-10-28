@@ -26,10 +26,6 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -58,22 +55,26 @@ public class CommentApiController extends TaskControllerBase
     private final TaskRepository taskRepository;
     private final CommentRepository commentRepository;
     private final TaskNotificator notificator;
+    private final AuthClient securityClient;
+
     
     public CommentApiController(
         TaskRepository taskRepository, CommentRepository commentRepository, 
-        TaskNotificator notificator, TaskAccessRepository taskAccessRepository) 
+        TaskNotificator notificator, TaskAccessRepository taskAccessRepository,
+        AuthClient securityClient) 
     {
       super(taskAccessRepository);
       this.taskRepository = taskRepository;
       this.commentRepository = commentRepository;
       this.notificator = notificator;
+      this.securityClient = securityClient;
     }
     
     @GetMapping(value="/task/{id}/comments")
-    public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id) 
+    public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id)
     {
-      final var authentication = SecurityContextHolder.getContext().getAuthentication();
-      log.info("Task comments get: id: {}, user id: {}", id, authentication.getName());
+      final var authentication = securityClient.getUser();
+      log.info("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
       final var task = taskRepository.findById(id);
       registerTaskAccess(id, authentication, task);
       final var comments = commentRepository.findByTaskId(id);
@@ -93,10 +94,9 @@ public class CommentApiController extends TaskControllerBase
     
     @PostMapping("/comment")
     public ResponseEntity<TaskCommands.TaskComment> createComment(
-        @RequestBody TaskCommands.TaskComment comment,
-        @AuthenticationPrincipal Jwt principal) 
+        @RequestBody TaskCommands.TaskComment comment) 
     {
-      final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      final var authentication = securityClient.getUser();
       final var entity = TaskCommandsImpl.map(comment);
       final var task = getCommentTask(comment);
       entity.setTask(task);
@@ -105,7 +105,7 @@ public class CommentApiController extends TaskControllerBase
         final var replyComment = getReplyToComment(comment);
         entity.setReplyTo(replyComment);
       }
-      String userName = getUserName(principal);
+      String userName = securityClient.getUser().getPrincipal().getUserName();
       entity.setUserName(userName);
 
       final var savedComment = commentRepository.save(entity);

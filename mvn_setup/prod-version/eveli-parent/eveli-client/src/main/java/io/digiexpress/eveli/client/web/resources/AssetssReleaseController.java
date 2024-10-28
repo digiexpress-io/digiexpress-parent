@@ -21,14 +21,10 @@ package io.digiexpress.eveli.client.web.resources;
  */
 
 import java.time.Duration;
-
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +40,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetComposer.AssetTagType;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreatePublication;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.Deployment;
 import io.digiexpress.eveli.assets.api.ImmutableCreatePublication;
+import io.digiexpress.eveli.client.api.AuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,6 +53,8 @@ public class AssetssReleaseController {
 
   private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
+  private final AuthClient securityClient;
+
   
   @GetMapping("/releases/")
   public ResponseEntity<List<Entity<Publication>>> getAllReleases() {
@@ -73,10 +72,9 @@ public class AssetssReleaseController {
   
   @PostMapping("/releases/")
   public ResponseEntity<Entity<Publication>> create(
-      @RequestBody CreatePublication workflowRelease, 
-      @AuthenticationPrincipal Jwt principal) {
+      @RequestBody CreatePublication workflowRelease) {
     
-    final var userName = getUserName(principal);
+    final var userName = securityClient.getUser().getPrincipal().getUserName();
     final var publicationInit = ImmutableCreatePublication.builder().from(workflowRelease).user(userName).build();
     
     try {
@@ -114,12 +112,5 @@ public class AssetssReleaseController {
     }
     return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
   }
-  
-  protected String getUserName(Jwt principal) {
-    String userName = "";
-    if (principal != null) {
-     userName = principal.getClaimAsString("name");
-    }
-    return userName;
-  }
+
 }

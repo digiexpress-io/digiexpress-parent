@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.iam;
+package io.digiexpress.eveli.client.api;
 
 /*-
  * #%L
@@ -20,22 +20,34 @@ package io.digiexpress.eveli.client.iam;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
+import java.util.List;
 
-public interface PortalAccessValidator {
+import org.immutables.value.Value;
 
+import jakarta.annotation.Nullable;
 
-  void validateTaskAccess(Long id, AuthClient.Principal principal) ;
-
-  void validateProcessAccess(ProcessCommands.Process process, AuthClient.Principal principal);
-
-  void validateProcessIdAccess(String processId, AuthClient.Principal principal);
+public interface AuthClient {
+  User getUser();
   
-  void validateProcessAnonymousAccess(String processId, String anonymousUserId);
   
-  String getUserName(AuthClient.Principal principal);
+  @Value.Immutable
+  interface User {
+    List<String> getRoles();
+    Principal getPrincipal();
+    UserType getType();
+  }
+
+  @Value.Immutable
+  interface Principal {
+    String getUserName(); // get the subject name
+    String getEmail();
+    
+    
+    @Nullable String getRepresentedId();
+  }
   
-  void validateUserAccess(AuthClient.Principal principal, String userId);
-  
+  enum UserType {
+
+    ANON, AUTH
+  }
 }

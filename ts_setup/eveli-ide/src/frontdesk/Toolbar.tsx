@@ -49,13 +49,12 @@ export const Toolbar: React.FC<{}> = () => {
         <StyledTabs orientation="vertical"
           onChange={handleChange}
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
-          value={secondaryCtx.session.secondary || 'toolbar.expand'}>
-
+          value={secondaryCtx.session.secondary}>
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
           <LocaleSelect />
-
         </StyledTabs>
+
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
       </Box>
     </>

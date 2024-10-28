@@ -19,6 +19,7 @@
 ---
 
     create sequence REVINFO_SEQ start with 1 increment by 50;
+    CREATE SEQUENCE IF NOT EXISTS TASKREF_SEQ MINVALUE 1 MAXVALUE 999999 CYCLE;
 
     create table comment (
         id bigserial not null,

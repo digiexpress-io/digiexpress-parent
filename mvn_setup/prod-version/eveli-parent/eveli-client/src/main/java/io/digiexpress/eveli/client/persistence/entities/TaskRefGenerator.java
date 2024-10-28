@@ -22,34 +22,28 @@ package io.digiexpress.eveli.client.persistence.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.EnumSet;
 
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.generator.BeforeExecutionGenerator;
-import org.hibernate.generator.EventType;
-import org.hibernate.query.NativeQuery;
-
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
+import lombok.RequiredArgsConstructor;
 
-public class TaskRefGenerator implements BeforeExecutionGenerator {
-  
- private static final long serialVersionUID = 5950366427479761372L;
- public static final String DATE_NUMBER_SEPARATOR_DEFAULT = "-";
-  
- private static final String NEXTVAL_QUERY = "select nextval('TASKREF_SEQ')";
- private final SimpleDateFormat dataFormat = new SimpleDateFormat("yyyyMM");
 
+@RequiredArgsConstructor
+public class TaskRefGenerator {
   
-  @Override
-  public EnumSet<EventType> getEventTypes() {
-    return EnumSet.of(EventType.INSERT);
-  }
+  public static final String DATE_NUMBER_SEPARATOR_DEFAULT = "-";
 
-  @Override
-  public Object generate(SharedSessionContractImplementor session, Object owner, Object currentValue, EventType eventType) {
+  private static final SimpleDateFormat dataFormat = new SimpleDateFormat("yyyyMM");
+
+  private final EntityManager em;
+ 
+ 
+ 
+
+  public String generateTaskRef() {
     final Date now = new Date();
-    final NativeQuery<Number> nextvalQuery = session.createNativeQuery(NEXTVAL_QUERY, Number.class);
-    final Number nextvalValue = nextvalQuery.setFlushMode(FlushModeType.COMMIT).uniqueResult();
-    return dataFormat.format(now) + DATE_NUMBER_SEPARATOR_DEFAULT + nextvalValue.longValue();
+    final var nextvalQuery = em.createNativeQuery("select nextval('TASKREF_SEQ')", Long.class);
+    final var nextvalValue = (Long) nextvalQuery.setFlushMode(FlushModeType.COMMIT).getSingleResult();
+    return dataFormat.format(now) + DATE_NUMBER_SEPARATOR_DEFAULT + nextvalValue;
   }
 }

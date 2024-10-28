@@ -31,11 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,11 +43,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.AuthClient.UserType;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
+import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.TaskCommandsImpl;
@@ -73,19 +71,25 @@ public class TaskApiController extends TaskControllerBase
     private final JdbcTemplate jdbcTemplate;
     private final TaskNotificator notificator;
     private final boolean adminsearch;
+    private final AuthClient securityClient;
+    private final TaskRefGenerator taskRefGenerator;
 
     public TaskApiController(
+        TaskRefGenerator taskRefGenerator,
         TaskAccessRepository taskAccessRepository, 
         TaskRepository taskRepository, 
         TaskNotificator notificator, 
         JdbcTemplate jdbcTemplate,
-        boolean adminsearch) 
+        boolean adminsearch,
+        AuthClient securityClient) 
     {
       super(taskAccessRepository);
       this.taskRepository = taskRepository;
       this.jdbcTemplate = jdbcTemplate;
       this.notificator = notificator;
       this.adminsearch = adminsearch;
+      this.securityClient = securityClient;
+      this.taskRefGenerator = taskRefGenerator;
     }
     
     @GetMapping("/taskSearch")
@@ -100,12 +104,11 @@ public class TaskApiController extends TaskControllerBase
         @RequestParam(name="dueDate", required=false) String dueDate,
         Pageable pageable) {
       
-      final var authentication = SecurityContextHolder.getContext().getAuthentication();
-      
+      final var authentication = securityClient.getUser();
       log.info("Task search: subject: {}, clientIdentificator: {}, assignedUser: {}, status: {}, priority: {}, assignedRoles: {}, dueDate: {}, by user id: {}", 
-          subject, clientIdentificator, assignedUser, status, priority, searchRole, dueDate, authentication != null ? authentication.getName() : null);
+          subject, clientIdentificator, assignedUser, status, priority, searchRole, dueDate, authentication.getPrincipal().getUserName());
       
-      List<String> roles = getRoles(authentication);
+      List<String> roles = authentication.getRoles();
       List<TaskStatus> statusValues = status;
       List<TaskPriority> priorityValues = priority;
       
@@ -146,21 +149,18 @@ public class TaskApiController extends TaskControllerBase
       return "%" + value.toLowerCase() + "%";
     }
 
-    private List<String> getRoles(Authentication authentication) {
-      List<String> roles = authentication.getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toList());
-      return roles;
-    }
+
     
     @GetMapping("/task/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<TaskCommands.Task> getTaskById(@PathVariable("id") Long id) 
     {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      log.info("Task get: id: {}, user id: {}", id, authentication != null ? authentication.getName() : null);
+      final var authentication = securityClient.getUser();
+      log.info("Task get: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
       Optional<TaskEntity> result;
       
-      if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && !adminsearch) {
-        List<String> roles = getRoles(authentication);
+      if (authentication.getType() == UserType.AUTH && !adminsearch) {
+        List<String> roles = authentication.getRoles();
         log.info("User is authenticated with roles: {}", roles);
         result = taskRepository.findByIdAndAssignedRolesIn(id, roles);
       }
@@ -175,17 +175,19 @@ public class TaskApiController extends TaskControllerBase
     }
 
     
-    @PostMapping("/task/")
+    @PostMapping(path = "/task/")
     @Transactional
     public ResponseEntity<TaskCommands.Task> createTask(
-        @RequestBody TaskCommands.Task task,
-        @AuthenticationPrincipal Jwt principal) {
+        @RequestBody TaskCommands.Task task) {
       
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      String userName = getUserName(principal);
+      final var authentication = securityClient.getUser();
+      String userName = authentication.getPrincipal().getUserName();
       log.info("Task post: user id: {}", userName);
       
-      final var savedTask = taskRepository.save(TaskCommandsImpl.map(task).setUpdaterId(userName));
+      
+      final var savedTask = taskRepository.save(TaskCommandsImpl.map(task)
+          .setUpdaterId(userName)
+          .setTaskRef(taskRefGenerator.generateTaskRef()));
       registerTaskAccess(savedTask.getId(), authentication, Optional.of(savedTask));
       
       final var model = TaskCommandsImpl.map(savedTask);
@@ -199,14 +201,14 @@ public class TaskApiController extends TaskControllerBase
     @PutMapping("/task/{id}")
     @Transactional
     public ResponseEntity<TaskCommands.Task> saveTask(@PathVariable("id") Long id, 
-        @RequestBody TaskCommands.Task task,
-        @AuthenticationPrincipal Jwt principal) {
+        @RequestBody TaskCommands.Task task) {
       if (id.compareTo(task.getId()) != 0) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
-      final var  userName = getUserName(principal);
-      final var  email = getEmail(principal);
-      final var  authentication = SecurityContextHolder.getContext().getAuthentication();
+      final var authentication = securityClient.getUser();
+      final var userName = authentication.getPrincipal().getUserName();
+      final var email = authentication.getPrincipal().getEmail();
+
       log.info("Task put: id: {}, user id: {}", id, userName);
       
       final var savedTask = taskRepository.findById(id);
@@ -243,8 +245,8 @@ public class TaskApiController extends TaskControllerBase
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("id") Long id) {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      log.info("Task delete: id: {}, user id: {}", id, authentication.getName());
+      final var authentication = securityClient.getUser();
+      log.info("Task delete: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
       taskRepository.deleteById(id);
     }
     
@@ -252,20 +254,19 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<Collection<Long>> getUnreadTasks() 
     {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      log.info("Task unread request: user id: {}", authentication.getName());
+      final var authentication = securityClient.getUser();
+      log.info("Task unread request: user id: {}", authentication.getPrincipal().getUserName());
       List<Long> taskIds = new ArrayList<>();
-      if (authentication != null && authentication.getName() != null) {
-        if (!(authentication instanceof AnonymousAuthenticationToken) && !adminsearch) {
-          List<String> roles = getRoles(authentication);
-          Iterable<Long> accesses = taskRepository.findUnreadTasksByRole(authentication.getName(), roles);
-          accesses.forEach(access->taskIds.add(access));
-        }
-        else {
-          Iterable<Long> accesses = taskRepository.findUnreadTasks(authentication.getName());
-          accesses.forEach(access->taskIds.add(access));
-        }
+      
+      if (adminsearch) {
+        Iterable<Long> accesses = taskRepository.findUnreadTasks(authentication.getPrincipal().getUserName());
+        accesses.forEach(access->taskIds.add(access));
+      } else {
+        List<String> roles = authentication.getRoles();
+        Iterable<Long> accesses = taskRepository.findUnreadTasksByRole(authentication.getPrincipal().getUserName(), roles);
+        accesses.forEach(access->taskIds.add(access));
       }
+    
       return new ResponseEntity<>(taskIds,HttpStatus.OK);
     }
     
@@ -280,8 +281,8 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<KeyWordsResponse> getKeyWords() 
     {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      log.info("Task keyword request: user id: {}", authentication.getName());
+      final var authentication = securityClient.getUser();
+      log.info("Task keyword request: user id: {}", authentication.getPrincipal().getUserName());
       try {
         List<String> result = new ArrayList<>();
         jdbcTemplate.query(

@@ -51,6 +51,11 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
+        '/tasksUnread': {
+          target: '/api/tasks/v1/tasksUnread',
+          changeOrigin: false,
+          secure: false,
+        },
 
         '/userInfo': {
           target: 'http://localhost:8080',
@@ -58,7 +63,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
         '/wrench': {
-          target: 'http://localhost:8080',
+          target: 'http://localhost:8080/',
           changeOrigin: false,
           secure: false,
         },
