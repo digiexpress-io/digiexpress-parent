@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
+import io.digiexpress.eveli.client.web.resources.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowTagController;
 import io.digiexpress.eveli.client.web.resources.AssetsWrenchController;
@@ -50,6 +51,7 @@ import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
 import io.thestencil.client.spi.StencilClientImpl;
+import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.pgclient.PgConnectOptions;
@@ -93,6 +95,10 @@ public class EveliAutoConfigAssets {
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {
     return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, version, timestamp);
+  }
+  @Bean
+  public AssetsStencilController assetsStencilController(EveliContext context, ObjectMapper objectMapper) {
+    return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper);
   }
   
 
