@@ -6,6 +6,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
+import { LocaleSelect } from './explorer';
 
 
 
@@ -76,7 +77,7 @@ export const Toolbar: React.FC<{}> = () => {
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
-        {/* <LocaleFilter /> */}
+        <LocaleSelect /> 
 
       </Box>
     </>

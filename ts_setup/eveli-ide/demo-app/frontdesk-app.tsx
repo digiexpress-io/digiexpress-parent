@@ -21,10 +21,10 @@ export const FrontdeskApp: React.FC = () => {
   const locale = getLocale();
 
   return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={siteTheme}>
-          <Frontdesk configUrl='/config' defaultLocale={locale} />
-        </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={siteTheme}>
+        <Frontdesk configUrl='/config' defaultLocale={locale} />
+      </ThemeProvider>
     </StyledEngineProvider>
   );
 }
