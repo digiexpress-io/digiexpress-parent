@@ -39,8 +39,9 @@ export const LocaleSelect: React.FC = () => {
       </Button>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleSelect}>
-        {availableLocales.map((value) => (
+        {availableLocales.map((value, index) => (
           <MenuItem
+            key={index}
             onClick={() => handleSelect(value)}
             disabled={locale === value}
           >

@@ -50,9 +50,6 @@ const WithLocale: React.FC = () => {
 export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
   const { defaultLocale = 'en', configUrl = '/config' } = initProps;
 
-
-
-
   return (
     <ConfigContextProvider path={configUrl}>
       <FeedbackProvider>
