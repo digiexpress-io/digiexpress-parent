@@ -1,46 +1,53 @@
-import React from 'react';
-import { Tabs, Tab, TabProps, TabsProps, styled } from '@mui/material';
-
+import * as React from 'react';
+import { Menu, MenuItem, Button, Typography, useTheme } from '@mui/material';
+import { useLocaleSelect } from '../context';
 import { frontdeskIntl } from '../intl';
-import { useLocale } from '../context';
+import { useIntl } from 'react-intl';
 
 
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.explorerItem.main,
-  },
-  "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-  }
-}));
+export const LocaleSelect: React.FC = () => {
+  const { locale, setLocale } = useLocaleSelect();
+  const theme = useTheme();
+  const intl = useIntl();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
-    marginRight: "49px"
-  }
-}));
+  const availableLocales = Object.keys(frontdeskIntl);
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleSelect = (newValue: string) => {
+    setLocale(newValue)
+    console.log(newValue)
+    setAnchorEl(null);
+  };
 
 
-const locales = Object.keys(frontdeskIntl).map((key) => ({
-  id: key,
-  body: {
-    value: key.toUpperCase(),
-    enabled: key === 'fi'
-  },
-}));
+  return (
+    <div>
+      <Button variant='text' onClick={handleClick}>
+        <Typography sx={{
+          textTransform: 'uppercase',
+          fontWeight: 'bold',
+          color: theme.palette.explorerItem.main
+        }}
+        >
+          {locale}
+        </Typography>
+      </Button>
 
-const LocaleSelect: React.FC<{}> = () => {
-  const { locale, setLocale } = useLocale();
-
-  return (<StyledTabs orientation="vertical" sx={{ borderRight: 1, borderColor: 'explorerItem.dark', maxHeight: '200px' }} value={locale}
-    onChange={(_event, newValue) => setLocale(newValue)}
-    variant="scrollable"
-    scrollButtons="auto">{
-      locales.map((locale) => <StyledTab key={locale.id} value={locale.id} label={locale.body.value} />)
-    }
-  </StyledTabs>);
+      <Menu anchorEl={anchorEl} open={open} onClose={handleSelect}>
+        {availableLocales.map((value) => (
+          <MenuItem
+            onClick={() => handleSelect(value)}
+            disabled={locale === value}
+          >
+            {intl.formatMessage({ id: `locale.${value}` })}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
 }
-
-export { LocaleSelect }

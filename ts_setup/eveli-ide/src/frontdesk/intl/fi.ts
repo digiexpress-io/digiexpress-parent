@@ -2,8 +2,6 @@ const fi = {
 
   //----------------START NEW-------------------------
   'explorer.title': 'DigiExpress Task Management',
-  'explorer.toolbar.expand.msg': 'Lähetä palautetta',
-  'explorer.toolbar.help.msg': 'Siirry ohjedokumentaatioomme',
   'explorer.logout': 'Kirjaudu ulos',
   'explorer.feedback': 'Lähetä palautetta',
 

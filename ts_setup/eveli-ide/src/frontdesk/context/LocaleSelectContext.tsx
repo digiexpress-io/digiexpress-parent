@@ -23,7 +23,7 @@ export const LocaleSelectContextProvider: React.FC<{ locale: string, children: R
   return (<LocaleSelectContext.Provider value={contextValue}>{props.children}</LocaleSelectContext.Provider>)
 }
 
-export function useLocale() {
+export function useLocaleSelect() {
   const ctx: LocaleSelectContextType = React.useContext(LocaleSelectContext);
   return ctx;
 }

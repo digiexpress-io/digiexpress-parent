@@ -12,7 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
 import { FeedbackProvider } from './context/FeedbackContext';
 import { AppSetup } from './AppSetup';
-import { LocaleSelectContextProvider, useLocale } from './context';
+import { LocaleSelectContextProvider, useLocaleSelect } from './context';
 
 
 export { frontdeskIntl } from './intl';
@@ -26,8 +26,7 @@ export interface FrontdeskProps {
 
 
 const WithLocale: React.FC = () => {
-
-  const { locale } = useLocale();
+  const { locale } = useLocaleSelect();
   const notistackRef = React.createRef<SnackbarProvider>();
   const onClickDismiss = (key: string | number | undefined) => () => {
     notistackRef.current?.closeSnackbar(key);
