@@ -1,4 +1,15 @@
 const sv = {
+
+  //----------------START NEW-------------------------
+  'explorer.title': 'DigiExpress Task Management',
+  'explorer.toolbar.expand.msg': 'Öppna eller stäng meny',
+  'explorer.toolbar.help.msg': 'Gå till vår hjälpdokumentation',
+  'explorer.logout': 'Logga ut',
+  'explorer.feedback': 'Skicka feedback',
+
+  // ---------------END NEW --------------------------
+
+
   'locale.fi': 'Finska',
   'locale.sv': 'Svenska',
   'locale.en': 'Engelska',

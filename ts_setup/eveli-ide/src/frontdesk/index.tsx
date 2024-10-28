@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
@@ -12,6 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
 import { FeedbackProvider } from './context/FeedbackContext';
 import { AppSetup } from './AppSetup';
+import { LocaleSelectContextProvider, useLocale } from './context';
 
 
 export { frontdeskIntl } from './intl';
@@ -23,33 +24,43 @@ export interface FrontdeskProps {
 }
 
 
-export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
-  const { defaultLocale = 'en', configUrl = '/config' } = initProps;
 
-  const [locale, setLocale] = useState<string>(defaultLocale);
+const WithLocale: React.FC = () => {
 
+  const { locale } = useLocale();
   const notistackRef = React.createRef<SnackbarProvider>();
   const onClickDismiss = (key: string | number | undefined) => () => {
     notistackRef.current?.closeSnackbar(key);
   }
 
   return (
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
+      <IAPSessionRefreshContext>
+        <SnackbarProvider maxSnack={3} ref={notistackRef}
+          action={(key) => (<Button onClick={onClickDismiss(key)}><FormattedMessage id='button.dismiss' /></Button>)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+          <UserContextProvider>
+            <AppSetup locale={locale} />
+          </UserContextProvider>
+        </SnackbarProvider>
+      </IAPSessionRefreshContext>
+    </LocalizationProvider>
+  )
+}
+
+export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
+  const { defaultLocale = 'en', configUrl = '/config' } = initProps;
+
+
+
+
+  return (
     <ConfigContextProvider path={configUrl}>
       <FeedbackProvider>
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
-          <IAPSessionRefreshContext>
-            <SnackbarProvider maxSnack={3} ref={notistackRef}
-              action={(key) => (<Button onClick={onClickDismiss(key)}><FormattedMessage id='button.dismiss' /></Button>)}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
-              <UserContextProvider>
-                <AppSetup locale={locale} />
-              </UserContextProvider>
-            </SnackbarProvider>
-          </IAPSessionRefreshContext>
-        </LocalizationProvider>
+        <LocaleSelectContextProvider locale={defaultLocale}>
+          <WithLocale />
+        </LocaleSelectContextProvider>
       </FeedbackProvider>
-
     </ConfigContextProvider>
-
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab, TabProps, TabsProps, styled } from '@mui/material';
 
 import { frontdeskIntl } from '../intl';
+import { useLocale } from '../context';
 
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
@@ -31,11 +32,10 @@ const locales = Object.keys(frontdeskIntl).map((key) => ({
 }));
 
 const LocaleSelect: React.FC<{}> = () => {
-  const initialLocale = locales.find(locale => locale.body.enabled)!.id;
-  const [activeLocale, setActiveLocale] = React.useState<string>(initialLocale);
+  const { locale, setLocale } = useLocale();
 
-  return (<StyledTabs orientation="vertical" sx={{ borderRight: 1, borderColor: 'explorerItem.dark', maxHeight: '200px' }} value={activeLocale}
-    onChange={(_event, newValue) => setActiveLocale(newValue)}
+  return (<StyledTabs orientation="vertical" sx={{ borderRight: 1, borderColor: 'explorerItem.dark', maxHeight: '200px' }} value={locale}
+    onChange={(_event, newValue) => setLocale(newValue)}
     variant="scrollable"
     scrollButtons="auto">{
       locales.map((locale) => <StyledTab key={locale.id} value={locale.id} label={locale.body.value} />)

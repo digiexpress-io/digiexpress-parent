@@ -1,13 +1,13 @@
 const en = {
 
-  //----------------NEW-------------------------
+  //----------------START NEW-------------------------
   'explorer.title': 'DigiExpress Task Management',
   'explorer.toolbar.expand.msg': 'Open or close menu',
   'explorer.toolbar.help.msg': 'Go to our help documentation',
   'explorer.logout': 'Log out',
   'explorer.feedback': 'Send feedback',
 
-  // ---------------END NEW ---------------------
+  // ---------------END NEW --------------------------
 
 
   'locale.fi': 'Suomi',
