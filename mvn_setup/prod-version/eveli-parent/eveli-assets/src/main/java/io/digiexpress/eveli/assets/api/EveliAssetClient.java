@@ -66,7 +66,10 @@ public interface EveliAssetClient {
     Uni<List<Entity<Workflow>>> findAllWorkflows();
     Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name);
     Uni<Optional<Entity<WorkflowTag>>> findOneWorkflowTagByName(String name);    
-    Uni<AssetState> head();    
+    Uni<AssetState> head();
+    
+    Uni<List<Entity<Publication>>> findAllPublications();    
+    Uni<Optional<Entity<Publication>>> findOnePublicationByName(String name);    
   }
   
   interface RepoBuilder {

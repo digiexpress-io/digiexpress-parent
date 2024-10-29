@@ -94,10 +94,38 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
     final Uni<List<Entity<Publication>>> wks = findAnyById(ids, EntityType.PUBLICATION);
     return wks;
   }
+  
+  @Override
+  public Uni<List<Entity<Publication>>> findAllPublications() {
+    final Uni<List<Entity<Publication>>> wks = findAnyById(Collections.emptyList(), EntityType.PUBLICATION);
+    return wks;
+  }
+  
   @Override
   public Uni<List<Entity<WorkflowTag>>> findAllWorkflowTagsById(List<String> ids) {
     final Uni<List<Entity<WorkflowTag>>> wks = findAnyById(ids, EntityType.WORKFLOW_TAG);
     return wks;
+  }
+  @Override
+  public Uni<Optional<Entity<Publication>>> findOnePublicationByName(String name) {
+    return config.getClient()
+    .objects().blobState()
+    .repo(config.getRepoName())
+    .anyId(config.getHeadName())
+    .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.PUBLICATION.name()), MatchCriteria.equalsTo("body.name", name)))
+    .list().onItem()
+    .transform(state -> {
+      if(state.getStatus() != ObjectsStatus.OK) {
+        throw new QueryException("failed to find any publication", EntityType.PUBLICATION, state);  
+      }
+
+      return state.getObjects().getBlob().stream()
+        .map(blob -> {
+          final Entity<Publication> result = config.getDeserializer().fromString(EntityType.PUBLICATION, blob.getValue().encode());
+          return result;
+        })
+        .findAny();
+    });
   }
   @Override
   public Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name) {

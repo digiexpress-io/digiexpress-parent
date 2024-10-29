@@ -50,6 +50,7 @@ import lombok.extern.java.Log;
 @Log
 public class PgTestTemplate {
   private DocDB client;
+  
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
   
@@ -137,7 +138,7 @@ public class PgTestTemplate {
         .build();
     
     
-    return new EveliAssetsComposerImpl(store);
+    return new EveliAssetsComposerImpl(store, null, null);
   }
   
 }

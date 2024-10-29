@@ -51,6 +51,18 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
+        '/releaseTags': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+        '/releases': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
         '/config': {
           target: 'http://localhost:8080',
           changeOrigin: false,

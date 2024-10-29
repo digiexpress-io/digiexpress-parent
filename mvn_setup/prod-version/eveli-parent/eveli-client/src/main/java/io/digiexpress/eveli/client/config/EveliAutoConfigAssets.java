@@ -83,15 +83,15 @@ public class EveliAutoConfigAssets {
   
   @Bean 
   public AssetssReleaseController assetReleaseController(EveliContext context, AuthClient security) {
-    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets()), security);
+    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
   }
   @Bean 
   public AssetsWorkflowController workflowController(EveliContext context) {
-    return new AssetsWorkflowController(new EveliAssetsComposerImpl(context.getAssets()), context.getProgramEnvir());
+    return new AssetsWorkflowController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), context.getProgramEnvir());
   }
   @Bean 
   public AssetsWorkflowTagController workflowReleaseController(EveliContext context, AuthClient security) {
-    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets()), security);
+    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {

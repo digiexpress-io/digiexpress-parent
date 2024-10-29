@@ -25,16 +25,23 @@ import java.util.Optional;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
+import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.resys.hdes.client.api.HdesClient;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.StencilClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EveliAssetsComposerImpl implements EveliAssetComposer {
   private final EveliAssetClient client;
-
+  private final StencilClient stencilClient;
+  private final HdesClient hdesClient;
+  
   @Override
   public CreateBuilder create() {
     return new CreateBuilderImpl(client);
@@ -70,20 +77,101 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
 
   @Override
   public AnyTagQuery anyAssetTagQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new AnyTagQuery() {
+
+      @Override
+      public Uni<List<AnyAssetTag>> findAllByType(AssetTagType type) {
+        switch (type) {
+        case STENCIL: {
+          return stencilClient.getStore().query().head().onItem().transform(state -> {
+            
+            return state.getReleases().values().stream()
+                .map(release ->  (AnyAssetTag) ImmutableAnyAssetTag.builder()
+                .created(release.getBody().getCreated())
+                .type(AssetTagType.STENCIL)
+                .description(release.getBody().getNote())
+                .id(release.getId())
+                .name(release.getId())
+
+                .user("not-available")
+                .build())
+                .toList();
+            
+          });
+        }
+        case WRENCH: {
+          return hdesClient.store().query().get().onItem().transform(state -> {
+            
+            
+            return state.getTags().values().stream()
+                .map(release -> hdesClient.ast().commands(release.getBody()).tag())
+                .map(release ->  (AnyAssetTag) ImmutableAnyAssetTag.builder()
+                .created(release.getCreated())
+                .type(AssetTagType.WRENCH)
+                .description(release.getDescription())
+                .id("no-release-id")
+                .name(release.getName())
+
+                .user("not-available")
+                .build())
+                .toList();
+          });
+        }
+        case WORKFLOW: {
+          return workflowTagQuery().findAll().onItem().transform(tags -> {
+            return tags.stream().map(tag -> (AnyAssetTag) ImmutableAnyAssetTag.builder()
+                .created(tag.getBody().getCreated())
+                .type(AssetTagType.WORKFLOW)
+                .description(tag.getBody().getDescription())
+                .id(tag.getId())
+                .name(tag.getBody().getName())
+
+                .user(tag.getBody().getUser())
+                .build()).toList();
+          });
+          
+          
+        }
+        default:
+          throw new IllegalArgumentException("Unexpected value: " + type);
+        }
+      }
+    };
+  
   }
 
   @Override
   public PublicationQuery publicationQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new PublicationQuery() {
+
+      @Override
+      public Uni<List<Entity<Publication>>> findAll() {
+        return client.queryBuilder().findAllPublications();
+      }
+
+      @Override
+      public Uni<Optional<Entity<Publication>>> findOneByName(String name) {
+        return client.queryBuilder().findOnePublicationByName(name);
+      }
+      
+    };
   }
 
   @Override
   public WorkflowQuery workflowQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new WorkflowQuery() {
+
+      @Override
+      public Uni<List<Entity<Workflow>>> findAll() {
+        return client.queryBuilder().findAllWorkflows();
+      }
+
+      @Override
+      public Uni<Optional<Entity<Workflow>>> findOneByName(String name) {
+        return client.queryBuilder().findOneWorkflowByName(name);
+      }
+      
+    };
   }
 
   @Override
