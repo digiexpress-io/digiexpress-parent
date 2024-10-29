@@ -30,9 +30,9 @@ export const ProcessTable: React.FC = () => {
     .then(response=>response.json())
     .then(json=> {
       return {
-        data: json._embedded?.processDataList || [],
-        page: json.page.number,
-        totalCount: json.page.totalElements
+        data: json.content, // array of data
+        page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
+        totalCount: json.numberOfElements // total entries on all the pages combined
       }
     })
   };

@@ -22,7 +22,9 @@ package io.digiexpress.eveli.client.web.resources;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessCommands;
+import io.digiexpress.eveli.client.spi.ProcessCommandsImpl;
 
 @RestController
 /**
@@ -44,12 +47,16 @@ public class ProcessApiController extends ProcessBaseController {
   
   @Transactional
   @GetMapping("/api/processesSearch")
-  public ResponseEntity<List<ProcessCommands.Process>> searchProcesses(
+  public ResponseEntity<Page<ProcessCommands.Process>> processesSearch(
       @RequestParam(name="workflow.name", defaultValue="") String name, 
       @RequestParam(name="status", required=false) List<String> status,
       @RequestParam(name="userId", defaultValue="") String userId, 
       Pageable pageable) {
     
-    return super.searchProcesses(name, status, userId, pageable);
+    
+    final Page<ProcessCommands.Process> processes = client.process().query().find(name, status, userId, pageable)
+        .map(ProcessCommandsImpl::map);
+    
+    return new ResponseEntity<>(processes, HttpStatus.OK);
   }
 }

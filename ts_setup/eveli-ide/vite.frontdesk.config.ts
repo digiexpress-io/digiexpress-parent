@@ -71,12 +71,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,
-        },
-        '/status': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
+        }, 
+
         '/priority': {
           target: 'http://localhost:8080',
           changeOrigin: false,
