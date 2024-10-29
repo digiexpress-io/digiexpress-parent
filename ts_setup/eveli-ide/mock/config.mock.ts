@@ -10,7 +10,6 @@ export default defineMock({
     wrenchIdeUrl: '',
     contentRepositoryUrl: '',
 
-
     appVersion: '',
 
     calendarUrl: '',

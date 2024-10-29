@@ -45,6 +45,12 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
+        '/workflowReleases': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
         '/config': {
           target: 'http://localhost:8080',
           changeOrigin: false,
@@ -62,11 +68,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           changeOrigin: false,
           secure: false,
         },
-        '/wrench': {
-          target: 'http://localhost:8080/',
-          changeOrigin: false,
-          secure: false,
-        },
+
         '/groupsList': {
           target: 'http://localhost:8080',
           changeOrigin: false,

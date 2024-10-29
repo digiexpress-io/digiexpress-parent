@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.assets.spi;
 
+import java.util.List;
+import java.util.Optional;
+
 /*-
  * #%L
  * eveli-assets
@@ -21,8 +24,11 @@ package io.digiexpress.eveli.assets.spi;
  */
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -82,8 +88,18 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
 
   @Override
   public WorkflowTagQuery workflowTagQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    return new WorkflowTagQuery() {
+      
+      @Override
+      public Uni<Optional<Entity<WorkflowTag>>> findOneByName(String name) {
+        return client.queryBuilder().findOneWorkflowTagByName(name);
+      }
+      
+      @Override
+      public Uni<List<Entity<WorkflowTag>>> findAll() {
+        return client.queryBuilder().findAllWorkflowTags();
+      }
+    };
   }
   
 

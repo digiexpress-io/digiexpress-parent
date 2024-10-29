@@ -66,6 +66,8 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
       if(state.getStatus() != ObjectsStatus.OK) {
         throw new QueryException(String.join(",", ids), type, state);  
       }
+      
+
 
       return state.getObjects().getBlob().stream()
         .map(blob -> (Entity<T>) config.getDeserializer().fromString(type, blob.getValue().encode()))

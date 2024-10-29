@@ -20,6 +20,7 @@ export const WorkflowReleaseTable: React.FC = () => {
   const intl = useIntl();
   const config = useConfig();
   const apiUrl = config.wrenchApiUrl;
+
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
   const { response:workflows, refresh:refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${apiUrl}/workflowReleases/`);
@@ -27,7 +28,6 @@ export const WorkflowReleaseTable: React.FC = () => {
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
   const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease|null>(null);
 
- 
 
   const formatDateTime = (time:any) => {
     if (time) {

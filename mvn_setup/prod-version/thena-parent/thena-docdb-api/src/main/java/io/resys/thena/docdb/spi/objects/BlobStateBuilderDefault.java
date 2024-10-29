@@ -1,5 +1,7 @@
 package io.resys.thena.docdb.spi.objects;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -36,7 +38,9 @@ import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
 import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
 import io.resys.thena.docdb.api.exceptions.RepoException;
+import io.resys.thena.docdb.api.models.ImmutableCommit;
 import io.resys.thena.docdb.api.models.ImmutableMessage;
+import io.resys.thena.docdb.api.models.ImmutableTree;
 import io.resys.thena.docdb.api.models.Message;
 import io.resys.thena.docdb.api.models.Objects.Blob;
 import io.resys.thena.docdb.api.models.Objects.Commit;
@@ -117,11 +121,32 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
           return getCommit(commitId, ctx);
         }).onItem().transformToUni(commit -> {
           if(commit == null) {
-            return Uni.createFrom().item(ImmutableObjectsResult
-                .<BlobObjects>builder()
-                .status(ObjectsStatus.ERROR)
-                .addMessages(noCommit(existing))
-                .build()); 
+            
+            return ctx.query().commits().find().collect().asList().onItem()
+            .transform(allCommits -> {
+              
+              // empty repo, no commits yet
+              if(allCommits.isEmpty()) {
+                return ImmutableObjectsResult
+                    .<BlobObjects>builder()
+                    .status(ObjectsStatus.OK)
+                    .addMessages(emptyRepo(existing))
+                    .objects(ImmutableBlobObjects.builder()
+                        .repo(existing)
+                        .tree(ImmutableTree.builder().id("").build())
+                        .commit(ImmutableCommit.builder().id("").message("").tree("").author("").dateTime(LocalDateTime.now()).build())
+                        .build())
+                    .build();
+              }
+              
+              return ImmutableObjectsResult
+                  .<BlobObjects>builder()
+                  .status(ObjectsStatus.ERROR)
+                  .addMessages(noCommit(existing))
+                  .build();
+            });
+            
+
           }
           return getListState(existing, commit, ctx);
         });
@@ -176,6 +201,15 @@ public class BlobStateBuilderDefault implements BlobStateBuilder {
       .append("Repo with name: '").append(repo.getName()).append("'")
       .append(" does not contain: tag, ref or commit with id:")
       .append(" '").append(refOrCommitOrTag).append("'")
+      .toString())
+      .build();
+  }
+  
+  private Message emptyRepo(Repo repo) {
+    return ImmutableMessage.builder()
+      .text(new StringBuilder()
+      .append("Repo with name: '").append(repo.getName()).append("'")
+      .append(" is empty!")
       .toString())
       .build();
   }
