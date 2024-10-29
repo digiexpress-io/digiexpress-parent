@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, styled, Button, useTheme } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -11,63 +11,52 @@ import { FeedbackContext } from './context/FeedbackContext';
 
 
 
-
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+const StyledToolbarButton = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  margin: theme.spacing(1.5),
+  ':hover': {
+    cursor: 'pointer'
   },
-  "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-  }
-}));
-
-const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
-    marginRight: "49px"
+  '& .MuiSvgIcon-root': {
+    color: theme.palette.explorerItem.main
   }
 }));
 
 
 
+const StyledToolbar = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  display: 'flex',
+  width: "100%",
+  height: "100%",
+  flexDirection: 'column',
+  borderRight: `1px solid ${theme.palette.explorerItem.dark}`,
+  backgroundColor: theme.palette.explorer.main
+}))
 
 export const Toolbar: React.FC<{}> = () => {
-  const theme = useTheme();
   const drawerCtx = Burger.useDrawer();
   const drawerOpen = drawerCtx.session.drawer;
   const context = React.useContext(FeedbackContext);
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    if (newValue === 'toolbar.expand') {
-      drawerCtx.actions.handleDrawerOpen(!drawerOpen)
-    }
-  };
 
   const openFeedback = () => {
     context.open();
   }
+  const toggleDrawer = () => {
+    drawerCtx.actions.handleDrawerOpen(!drawerOpen);
+  };
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
-
-        <StyledTabs orientation="vertical"
-          onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
-          value={false}>
-          <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
-
-          {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
-          <Button variant='text' onClick={openFeedback} sx={{ my: 1 }}>
-            <FeedbackOutlinedIcon sx={{ color: theme.palette.explorerItem.main }} />
-          </Button>
-          <LocaleSelect />
-        </StyledTabs>
-
-        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
-      </Box>
+      <StyledToolbar>
+        <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
+        <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
+        <StyledToolbarButton onClick={openFeedback}><FeedbackOutlinedIcon /></StyledToolbarButton>
+        <LocaleSelect />
+        {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
+      </StyledToolbar>
     </>
   );
 }
