@@ -28,8 +28,6 @@ export const TasksView: React.FC = () => {
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
-  console.log("tasksApiUrl", tasksApiUrl)
-
   const taskDeletableCallback = (task:Task) => {
     if (taskDeleteGroups && taskDeleteGroups.length > 0) {
       if (userInfo.hasRole(...taskDeleteGroups)) {

@@ -16,6 +16,7 @@ const SecondaryProvider: React.FC<{appId: string, secondary?: string, children: 
   const [session, dispatch] = React.useReducer(SecondaryReducer, sessionInit.withAppId(appId).withSecondary(secondary));
   const actions = React.useMemo(() => new SecondaryReducerDispatch(dispatch), [dispatch]);
   
+
   return (<SecondaryContext.Provider key={appId} value={{ session, actions }}>
       {children}
     </SecondaryContext.Provider>);

@@ -1,11 +1,13 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
+import { Tabs, Tab, Box, TabProps, TabsProps, styled, Button, useTheme } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
 import * as Burger from '@/burger';
 import { LocaleSelect } from './explorer';
+import { FeedbackContext } from './context/FeedbackContext';
 
 
 
@@ -31,16 +33,20 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 export const Toolbar: React.FC<{}> = () => {
+  const theme = useTheme();
   const drawerCtx = Burger.useDrawer();
-  const secondaryCtx = Burger.useSecondary();
-
   const drawerOpen = drawerCtx.session.drawer;
+  const context = React.useContext(FeedbackContext);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     if (newValue === 'toolbar.expand') {
       drawerCtx.actions.handleDrawerOpen(!drawerOpen)
     }
   };
+
+  const openFeedback = () => {
+    context.open();
+  }
 
   return (
     <>
@@ -49,9 +55,14 @@ export const Toolbar: React.FC<{}> = () => {
         <StyledTabs orientation="vertical"
           onChange={handleChange}
           sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
-          value={secondaryCtx.session.secondary}>
+          value={false}>
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://google.com", "_blank")} />} />
+
+          {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
+          <Button variant='text' onClick={openFeedback} sx={{ my: 1 }}>
+            <FeedbackOutlinedIcon sx={{ color: theme.palette.explorerItem.main }} />
+          </Button>
           <LocaleSelect />
         </StyledTabs>
 

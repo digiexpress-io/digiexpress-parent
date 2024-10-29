@@ -54,23 +54,8 @@ const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
 
 
 const ExplorerSecondaryButtons: React.FC = () => {
-  const userInfo = useUserInfo();
-  const context = React.useContext(FeedbackContext);
-
-  const openFeedback = () => {
-    context.open();
-    console.log(context.isOpen, userInfo);
-  }
-
   return (
     <Box display='flex' marginTop='auto' justifyContent='center'>
-      {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */
-        <Burger.PrimaryButton label='explorer.feedback'
-          sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 10 }}
-          onClick={openFeedback}
-        />
-      }
-
       <Burger.PrimaryButton label='explorer.logout'
         sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
         onClick={() => window.location.href = `${HOST_URL}/oauth2/authorization/oidcprovider`}
@@ -89,9 +74,7 @@ export const Explorer: React.FC<{}> = () => {
     if (to) {
       navigate(to);
     } else {
-      console.log('click');
       context.open();
-      console.log(context.isOpen);
     }
   };
 
