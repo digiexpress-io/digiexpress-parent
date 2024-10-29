@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,11 +37,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.AuthClient.Customer;
+import io.digiexpress.eveli.client.iam.PortalAccessValidator;
+import io.digiexpress.eveli.client.spi.TaskCommandsImpl;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.IAMClient;
-import io.thestencil.iam.api.IAMClient.RepresentedCompany;
-import io.thestencil.iam.api.IAMClient.RepresentedPerson;
-import io.thestencil.iam.api.IAMClient.UserQueryResult;
 import io.thestencil.iam.api.UserActionsClient;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
 import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
@@ -57,9 +60,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/gamut/user-actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
-
-  private final IAMClient iam;
+  private final AuthClient auth;
   private final UserActionsClient userActions;
+  private final PortalClient client;
+  private final PortalAccessValidator validator;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Uni<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -86,37 +90,95 @@ public class GamutUserActionsController {
 
   @GetMapping(value="{actionId}/messages")
   public Uni<List<UserMessage>> getMessages(@PathVariable("actionId") String actionId) {
-    return iam.userQuery().get().onItem().transformToUni(client -> 
+    /*
+    final var process = client.process().query().get(actionId);
+    if(process.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    
+    final var customer = auth.getCustomer().getPrincipal();
+    validator.validateProcessAccess(process.get(), customer);
+    
+    final var taskId = process.get().getTask();
+    final var task = taskRepository.findById(id);
+    registerUserTaskAccess(id, task, userId);
+    
+    final var comments = commentRepository.findByTaskIdAndExternalTrue(id).stream().map(TaskCommandsImpl::map).toList();
+    
+    
+    
+    return new ResponseEntity<>(process.get(), HttpStatus.OK);
+    
+    
+
+     * 
+      final var process = super.get(getUri("/processes/" + processId)).send();
+      
+      return Uni.combine().all().unis(process, tasks).asTuple()
+          .onItem()
+          .transformToMulti(tuple -> 
+            findOne(tuple.getItem1(), tuple.getItem2(), config.getFillPath(), config.getReviewPath(), config.getMessagesPath())
+          )
+          .onItem()
+          .transformToUni(action -> addAttachments(action))
+          .concatenate();
+
+
+    return query.get().processId(processId).userId(userId).userName(userName).limit(1).list().collect()
+        .asList().onItem().ifNotNull()
+        .transformToUni(list -> {
+          if(list.size() == 1) {
+            final var action = list.get(0);
+            if(action.getTaskId() != null) {
+              return super.getTaskCommentsAndMarkThemViewed(action.getTaskId(), userId);
+            }
+            
+              // marks comments read
+  public Uni<List<UserMessage>> getTaskCommentsAndMarkThemViewed(String taskId, String userId) {
+    final var uri = getUri("/task/" + taskId + "/externalComments");
+    var request = super.get(uri).addQueryParam("userId", userId);
+    return request.send().onItem().transformToUni(resp -> mapToMessages(resp, uri, config.getMessagesPath()));
+  }  
+    
+    */
+    
+
+    
+    
+    
+    return  null;/*
       userActions.markUser()
         .processId(actionId)
-        .userId(client.getUser().getSsn())
-        .userName(client.getUser().getUsername())
-        .build()
-    );
+        .userId(client.getPrincipal().getSsn())
+        .userName(client.getPrincipal().getUsername())
+        .build(); */
+    
   }
+  
   @PostMapping(value="{actionId}/messages", consumes = MediaType.APPLICATION_JSON_VALUE)
   public Uni<UserMessage> createMessage(@PathVariable("actionId") String actionId, @RequestBody String raw) {
     final var body = new JsonObject(raw);
-    
-    return iam.userQuery().get().onItem().transformToUni(client -> 
+    final var client = auth.getCustomer();
+    return 
       userActions.replyTo()
         .processId(actionId)
-        .userId(client.getUser().getSsn())
-        .userName(client.getUser().getUsername())
+        .userId(client.getPrincipal().getSsn())
+        .userName(client.getPrincipal().getUsername())
         .replyToId(body.getString("replyToId"))
         .text(body.getString("text"))
         .build()
-    );
+    ;
   }
 
   @PostMapping(value="{actionId}/attachments", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public Uni<List<Attachment>> createAttachments(@PathVariable("actionId") String actionId, @RequestBody String raw) {
     final List<Map<String, String>> files = new JsonArray(raw).getList();
-       
-    return iam.userQuery().get().onItem().transformToUni(client ->
+    final var client = auth.getCustomer();
+    
+    return 
         userActions.attachment()
-        .userId(client.getUser().getSsn())
-        .userName(client.getUser().getUsername())
+        .userId(client.getPrincipal().getSsn())
+        .userName(client.getPrincipal().getUsername())
         .processId(actionId)
         .call(b -> files.stream()
             .forEach(item -> b.data(
@@ -124,95 +186,92 @@ public class GamutUserActionsController {
                 item.get("fileType")
                 )))
         .build().collect().asList()
-      );  
+      ;  
   }
   @GetMapping(value="{actionId}/attachments/{attachmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Uni<AttachmentDownloadUrl> getAttachment(@PathVariable("actionId") String actionId, @PathVariable("attachmentId") String attachmentId) {
-    return iam.userQuery().get().onItem().transformToUni(client ->
+    final var client = auth.getCustomer();
+    
+    return 
       userActions.attachmentDownload()
-        .userId(client.getUser().getSsn())
-        .userName(client.getUser().getUsername())
+        .userId(client.getPrincipal().getSsn())
+        .userName(client.getPrincipal().getUsername())
         .processId(actionId)
         .attachmentId(attachmentId)
         .build()
-      );
+      ;
   }
   
   
 
   @GetMapping(value="/authorizations")
   public Uni<AuthorizationAction> getAuthorizations(@RequestHeader("cookie") String id) {
+    final var client = auth.getCustomer();
     
-    return iam.userQuery().get().onItem().transformToUni(client -> {
-      final RepresentedPerson person = client.getUser().getRepresentedPerson();
-      final RepresentedCompany company = client.getUser().getRepresentedCompany();
-      if(person == null && company == null) {
-        return null; // Nobody is represented
-      }
-      
-      final var query = person != null ? 
-          iam.personRolesQuery().id(id).get() : 
-          iam.companyRolesQuery().id(id).get();
-      
-      return query
-          .onItem().transformToUni(roleData -> userActions
-              .authorizationActionQuery()
-              .userRoles(roleData.getUserRoles().getRoles())
-              .get());
-    });
+    final var person = client.getPrincipal().getRepresentedPerson();
+    final var company = client.getPrincipal().getRepresentedCompany();
+    if(person == null && company == null) {
+      return null; // Nobody is represented
+    }
+    
+    final var query = auth.getCustomerRoles();
+    
+    return userActions
+        .authorizationActionQuery()
+        .userRoles(query.getPrincipal().getRoles())
+        .get();
+    
   }
   
   @GetMapping(value="/")
   public Uni<List<UserAction>> findAllUserActions(@RequestHeader("cookie") String id) {
-    return iam.userQuery().get().onItem().transformToUni(client -> {
-      final var user = client.getUser();
+    final var client = auth.getCustomer();
+    final var user = client.getPrincipal();
+    
+    if(user.getRepresentedCompany() != null || user.getRepresentedPerson() != null) {
+      final var query = auth.getCustomerRoles();
       
-      if(user.getRepresentedCompany() != null || user.getRepresentedPerson() != null) {
-        final var query = user.getRepresentedPerson() != null ? 
-            iam.personRolesQuery().id(id).get() : 
-            iam.companyRolesQuery().id(id).get();
-        
-        final Uni<AuthorizationAction> authorizations = query
-            .onItem().transformToUni(roleData -> userActions
-                .authorizationActionQuery()
-                .userRoles(roleData.getUserRoles().getRoles())
-                .get());
-        
-        final var personNames = user.getRepresentedPerson() == null ? null : getRepresentativeName(user.getRepresentedPerson().getName());
-        
-        final var workflows = userActions.queryUserAction()
-          .userId(user.getRepresentedPerson() != null ? user.getRepresentedPerson().getPersonId() : user.getRepresentedCompany().getCompanyId())
-          .userName(personNames != null ? personNames[1] + " " + personNames[0]: user.getRepresentedCompany().getName())
-          .representativeUserName(client.getUser().getUsername())
-          .list().collect().asList();
-        
-        return Uni.combine().all().unis(workflows, authorizations)
-        .asTuple().onItem().transform(tuple -> {
-          final var validNames = tuple.getItem2().getAllowedProcessNames();
-          log.debug("Allowed process names: {}" , validNames, tuple.getItem1().stream().map(wk -> wk.getId() + "/" + wk.getName() + "/").collect(Collectors.toList()));
-          return tuple.getItem1().stream().filter(wk -> validNames.contains(wk.getName())).collect(Collectors.toList());
-        });
-      }
+      final Uni<AuthorizationAction> authorizations = userActions
+          .authorizationActionQuery()
+          .userRoles(query.getPrincipal().getRoles())
+          .get();
       
+      final var personNames = user.getRepresentedPerson() == null ? null : getRepresentativeName(user.getRepresentedPerson().getName());
       
-      return userActions.queryUserAction()
-          .userId(user.getSsn())
-          .userName(user.getUsername())
-          .list().collect().asList();
-    });
+      final var workflows = userActions.queryUserAction()
+        .userId(user.getRepresentedPerson() != null ? user.getRepresentedPerson().getPersonId() : user.getRepresentedCompany().getCompanyId())
+        .userName(personNames != null ? personNames[1] + " " + personNames[0]: user.getRepresentedCompany().getName())
+        .representativeUserName(user.getUsername())
+        .list().collect().asList();
+      
+      return Uni.combine().all().unis(workflows, authorizations)
+      .asTuple().onItem().transform(tuple -> {
+        final var validNames = tuple.getItem2().getAllowedProcessNames();
+        log.debug("Allowed process names: {}" , validNames, tuple.getItem1().stream().map(wk -> wk.getId() + "/" + wk.getName() + "/").collect(Collectors.toList()));
+        return tuple.getItem1().stream().filter(wk -> validNames.contains(wk.getName())).collect(Collectors.toList());
+      });
+    }
+    
+    
+    return userActions.queryUserAction()
+        .userId(user.getSsn())
+        .userName(user.getUsername())
+        .list().collect().asList();
+
   }
   
 
   
   @DeleteMapping(value="/{actionId}")
   public Uni<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
-    return iam.userQuery().get().onItem().transformToUni(client ->
+    final var client = auth.getCustomer();
+    return 
     
       userActions.cancelUserAction()
       .processId(actionId)
-      .userId(client.getUser().getSsn())
-      .userName(client.getUser().getUsername())
-      .build());
+      .userId(client.getPrincipal().getSsn())
+      .userName(client.getPrincipal().getUsername())
+      .build();
   }
   
   @GetMapping(value="/")
@@ -224,34 +283,34 @@ public class GamutUserActionsController {
       @RequestHeader("cookie") String id
   ) {
     
-    return iam.userQuery().get().onItem().transformToUni(client -> {
-      
-      final RepresentedPerson person = client.getUser().getRepresentedPerson();
-      final RepresentedCompany company = client.getUser().getRepresentedCompany();
-      if(person == null && company == null) {
-        return createUserAction(
-            actionId, client, actionLocale, inputContextId, inputParentContextId
-         ); // Nobody is represented
+    final var client = auth.getCustomer();
+    
+
+    
+    final var person = client.getPrincipal().getRepresentedPerson();
+    final var company = client.getPrincipal().getRepresentedCompany();
+    if(person == null && company == null) {
+      return createUserAction(
+          actionId, client, actionLocale, inputContextId, inputParentContextId
+       ); // Nobody is represented
+    }
+            
+    final var query = auth.getCustomerRoles();
+    
+    
+    final Uni<AuthorizationAction> authorizations = userActions
+        .authorizationActionQuery()
+        .userRoles(query.getPrincipal().getRoles())
+        .get();
+    return authorizations.onItem().transformToUni(auth -> {
+      if(auth.getAllowedProcessNames().contains(actionId)) {
+        return createUserAction(actionId, client, actionLocale, inputContextId, inputParentContextId); // User allowed
       }
-              
-      final var query = person != null ? 
-          iam.personRolesQuery().id(id).get() : 
-          iam.companyRolesQuery().id(id).get();
       
-      final Uni<AuthorizationAction> authorizations = query
-          .onItem().transformToUni(roleData -> userActions
-              .authorizationActionQuery()
-              .userRoles(roleData.getUserRoles().getRoles())
-              .get());
-      return authorizations.onItem().transformToUni(auth -> {
-        if(auth.getAllowedProcessNames().contains(actionId)) {
-          return createUserAction(actionId, client, actionLocale, inputContextId, inputParentContextId); // User allowed
-        }
-        
-        log.error("User blocked from accessing process: {} because they are not authorized!", actionId);
-        return Uni.createFrom().nullItem(); 
-      });
-    }); 
+      log.error("User blocked from accessing process: {} because they are not authorized!", actionId);
+      return Uni.createFrom().nullItem(); 
+    });
+
   }
   
 
@@ -266,11 +325,11 @@ public class GamutUserActionsController {
   
   private Uni<UserAction> createUserAction(
       String actionId, 
-      UserQueryResult client, String clientLocale, 
+      Customer client, String clientLocale, 
       String inputContextId,
       String inputParentContextId
       ) {
-	  final var user = client.getUser();
+	  final var user = client.getPrincipal();
     final var person = user.getRepresentedPerson();
     final var company = user.getRepresentedCompany();
     final var create = userActions.createUserAction()

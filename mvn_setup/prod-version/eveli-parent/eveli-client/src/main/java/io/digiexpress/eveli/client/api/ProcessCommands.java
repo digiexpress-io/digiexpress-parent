@@ -69,7 +69,7 @@ public interface ProcessCommands {
     ProcessStatus getStatus();
     String getQuestionnaire();
     @Nullable
-    String getTask();
+    Long getTask();
     @Nullable
     String getUserId();
     LocalDateTime getCreated();

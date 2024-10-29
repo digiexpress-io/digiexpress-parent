@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.client.iam;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 /*-
  * #%L
  * eveli-client
@@ -23,38 +26,194 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.json.JsonString;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.ImmutablePrincipal;
-import io.digiexpress.eveli.client.api.ImmutableUser;
+import io.digiexpress.eveli.client.api.ImmutableCustomer;
+import io.digiexpress.eveli.client.api.ImmutableCustomerAddress;
+import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
+import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedPerson;
+import io.digiexpress.eveli.client.api.ImmutableLiveness;
+import io.digiexpress.eveli.client.api.ImmutableWorker;
+import io.digiexpress.eveli.client.api.ImmutableWorkerPrincipal;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SpringJwtAuthClient implements AuthClient {
 
   @Override
-  public User getUser() {
+  public Worker getWorker() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
     if(!authentication.isAuthenticated()) {
-      return ImmutableUser.builder()
+      return ImmutableWorker.builder()
           .type(UserType.ANON)
-          .principal(ImmutablePrincipal.builder()
-              .userName("UNAUTHENTICATED")
+          .principal(ImmutableWorkerPrincipal.builder()
+              .username("UNAUTHENTICATED")
               .email("")
               .build())
           .build();
     }
     
     final Jwt token = (Jwt) authentication.getCredentials();
-    return ImmutableUser.builder()
+    return ImmutableWorker.builder()
         .type(UserType.AUTH)
-        .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
-        .principal(ImmutablePrincipal.builder()
-            .userName(authentication.getName())
+        .principal(ImmutableWorkerPrincipal.builder()
+            .username(authentication.getName())
             .email(getEmail(token))
-            .representedId(getRepresentedId(token))
+            .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
             .build())
         .build();
+  }
+ 
+  @Override
+  public CustomerRoles getCustomerRoles() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Liveness getLiveness() {
+    final var authentication = SecurityContextHolder.getContext().getAuthentication();
+    final Jwt token = (Jwt) authentication.getCredentials();
+    
+    final var now = LocalDateTime.now();
+    final var then = LocalDateTime.ofInstant(token.getExpiresAt(), ZoneId.systemDefault());
+    return ImmutableLiveness.builder()
+        .issuedAtTime(token.getIssuedAt().toEpochMilli())
+        .expiresIn(Duration.between(now, then).toSeconds())
+        .build();
+  
+  }
+
+  @Override
+  public Customer getCustomer() {
+    final var authentication = SecurityContextHolder.getContext().getAuthentication();
+    if(!authentication.isAuthenticated()) {
+      return ImmutableCustomer.builder()
+          .type(UserType.ANON)
+          .principal(ImmutableCustomerPrincipal.builder()
+                .id("UNAUTHENTICATED")
+                .ssn("anon")
+                .username("UNAUTHENTICATED")
+                .firstName("anon")
+                .lastName("anon")
+                .protectionOrder(false)
+                .contact(ImmutableCustomerContact.builder().email("anon@resys.io").build())
+              .build())
+          .build();
+    }
+    
+    final Jwt token = (Jwt) authentication.getCredentials();
+    
+    return ImmutableCustomer.builder()
+        .type(UserType.AUTH)
+        .principal(toCustomer(token))
+        .build();
+  }
+  
+  
+  
+  
+  private String getEmail(Jwt principal) {
+    String email = "";
+    if (principal != null) {
+      email = principal.getClaimAsString("email");
+    }
+    return email;
+  }
+
+  private ImmutableCustomerPrincipal toCustomer(Jwt idToken) {
+    final var sub = (String) idToken.getClaim("sub");
+    final var firstName = orEmpty((String) idToken.getClaim("firstNames"));
+    final var lastName = orEmpty((String) idToken.getClaim("lastName"));
+    final var ssn = (String) idToken.getClaim("personalIdentityCode");
+    final var email = (String) idToken.getClaim("email");
+    
+    final var address = toAddress(idToken);
+    final var protectionOrder = "true".equals(idToken.getClaim("protectionOrder"));
+    
+    return ImmutableCustomerPrincipal.builder()
+        .username(firstName + " " + lastName)
+        .firstName(firstName)
+        .lastName(lastName)
+        .ssn(orEmpty(ssn))
+        .id(sub)
+        .representedId(getRepresentedId(idToken))
+        .protectionOrder(protectionOrder)
+        .representedPerson(toRepresentedPerson(idToken))
+        .representedCompany(toRepresentedCompany(idToken))
+        .contact(ImmutableCustomerContact.builder()
+            .email(orEmpty(email))
+            .address(address)
+            .addressValue(toAddressValue(address))
+            .build())
+        .build();
+  }
+  private String toAddressValue(CustomerAddress src) {
+    if(src == null) {
+      return null;
+    }
+    return orEmpty(src.getStreet()) + ", " + orEmpty(src.getPostalCode()) + " " + orEmpty(src.getLocality());
+  }
+  
+  private ImmutableCustomerAddress toAddress(Jwt idToken) {
+    return ImmutableCustomerAddress.builder()
+        .postalCode(orEmpty(idToken.getClaim("postalCode")))
+        .locality(orEmpty(idToken.getClaim("locality")))
+        .street(orEmpty(idToken.getClaim("streetAddress")))
+        .country(orEmpty(idToken.getClaim("country")))
+        .build();
+  }
+  
+  @SuppressWarnings({ "unchecked" })
+  private AuthClient.CustomerRepresentedPerson toRepresentedPerson(Jwt idToken) {
+    final var value = (Map<String, Object>) idToken.getClaim("representedPerson");
+    if(value == null) {
+      return null;
+    }
+    
+    log.debug("rep claim is {}", value);
+    
+    final var name = (JsonString) value.get("name");
+    final var personId = (JsonString) value.get("personId");
+    log.debug("rep name is: {}", name);
+    log.debug("rep personId is: {}", personId);
+    
+    return ImmutableCustomerRepresentedPerson.builder()
+        .name(name.getString())
+        .personId(personId.getString())
+        .build();
+  }
+  
+
+  @SuppressWarnings({ "unchecked" })
+  private AuthClient.CustomerRepresentedCompany toRepresentedCompany(Jwt idToken) {
+    final var value = (Map<String, Object>) idToken.getClaim("representedOrganization");
+    if(value == null) {
+      return null;
+    }
+    
+    log.debug("rep claim is {}", value);
+    
+    final var name = (JsonString) value.get("name");
+    final var companyId = (JsonString) value.get("identifier");
+    log.debug("rep name is: {}", name);
+    log.debug("rep companyId is: {}", companyId);
+    
+    return ImmutableCustomerRepresentedCompany.builder()
+        .name(name.getString())
+        .companyId(companyId.getString())
+        .build();
+  }
+  
+  
+  private static String orEmpty(String value) {
+    return value == null ? "" : value; 
   }
 
   private String getRepresentedId(Jwt principal) {
@@ -74,13 +233,5 @@ public class SpringJwtAuthClient implements AuthClient {
       }
     }
     return null;
-  }
-
-  private String getEmail(Jwt principal) {
-    String email = "";
-    if (principal != null) {
-      email = principal.getClaimAsString("email");
-    }
-    return email;
   }
 }

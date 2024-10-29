@@ -40,24 +40,26 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
     this.client = client;
   }
 
-  public void validateTaskAccess(Long id, AuthClient.Principal principal) {
+  @Override
+  public void validateTaskAccess(Long id, AuthClient.CustomerPrincipal principal) {
     if (id == null || principal == null) {
-      log.error("Access violation by user: {} to access task by id: {}", getUserName(principal), id);
+      log.error("Access violation by user: {} to access task by id: {}", principal.getUsername(), id);
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     }
     final var process = getProcessFromTask(id.toString());
     if (process == null) {
-      log.error("Access violation by user: {}, process by task id {} not found", getUserName(principal), id);
+      log.error("Access violation by user: {}, process by task id {} not found", principal.getUsername(), id);
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     }    
     validateProcessAccess(process, principal);
   }
 
-  public void validateProcessAccess(ProcessCommands.Process process, AuthClient.Principal principal) {
+  @Override
+  public void validateProcessAccess(ProcessCommands.Process process, AuthClient.CustomerPrincipal principal) {
     if (process == null) {
-      log.error("Access violation by user: {}, process not found", getUserName(principal));
+      log.error("Access violation by user: {}, process not found", principal.getUsername());
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     } 
@@ -65,33 +67,34 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
     validateUserAccess(principal, userId);
   }
 
-  public void validateProcessIdAccess(String processId, AuthClient.Principal principal) {
+  @Override
+  public void validateProcessIdAccess(String processId, AuthClient.CustomerPrincipal principal) {
     final var process = client.process().query().get(processId).orElse(null);
     if (process == null) {
-      log.error("Access violation by user: {}, process by id {} not found", getUserName(principal), processId);
+      log.error("Access violation by user: {}, process by id {} not found", principal.getUsername(), processId);
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     } 
     validateProcessAccess(process, principal);
   }
   
-  public String getUserName(AuthClient.Principal principal) {
-    return principal.getUserName();
-  }
-  
+
   protected ProcessCommands.Process getProcessFromTask(String taskId) {
     return client.process().query().getByTaskId(taskId).orElse(null);
   }
   
-  public void validateUserAccess(AuthClient.Principal principal, String userId) {
+  @Override
+  public void validateUserAccess(AuthClient.CustomerPrincipal principal, String userId) {
     if (principal == null) {
       log.error("Access violation, missing principal");
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     }
-    if (!StringUtils.equals(Optional.ofNullable(principal).map(p->p.getUserName()).orElse(null), userId) &&
+    
+    
+    if (!StringUtils.equals(Optional.ofNullable(principal).map(p -> p.getUsername()).orElse(null), userId) &&
         !StringUtils.equals(Optional.ofNullable(principal.getRepresentedId()).orElse(null), userId)) {
-      log.error("Access violation by user: {}, unmatched user ID: {}", getUserName(principal), userId);
+      log.error("Access violation by user: {}, unmatched user ID: {}", principal.getUsername(), userId);
       throw new ResponseStatusException(
           HttpStatus.FORBIDDEN, "Access violation");
     }

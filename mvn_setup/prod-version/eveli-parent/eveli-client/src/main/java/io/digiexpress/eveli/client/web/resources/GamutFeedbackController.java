@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.IAMClient;
 import io.thestencil.iam.api.UserActionsClient;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GamutFeedbackController {
 
   private final UserActionsClient userActions;
-  private final IAMClient iam;
+  private final AuthClient auth;
   private final List<String> allowedActions;
   private final String anonUserFirstname;
   private final String anonUserLastname;
@@ -75,13 +75,13 @@ public class GamutFeedbackController {
   
   @DeleteMapping(value="/{actionId}")
   public Uni<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
-    return iam.userQuery().get().onItem().transformToUni(client ->
+    final var client = auth.getCustomer();
     
-      userActions.cancelUserAction()
+    return userActions.cancelUserAction()
       .processId(actionId)
-      .userId(client.getUser().getSsn())
-      .userName(client.getUser().getUsername())
-      .build());
+      .userId(client.getPrincipal().getSsn())
+      .userName(client.getPrincipal().getUsername())
+      .build();
   }
   
   @GetMapping(value="/allowed")

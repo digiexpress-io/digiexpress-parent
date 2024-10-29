@@ -71,8 +71,8 @@ public class PortalTaskController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<TaskCommands.Task> getTaskById(@PathVariable("id") Long id) 
     {
-      final var principal = securityClient.getUser().getPrincipal();
-      log.debug("Task portal get by user {} for task id {}", principal.getUserName(), id);
+      final var principal = securityClient.getCustomer().getPrincipal();
+      log.debug("Task portal get by user {} for task id {}", principal.getUsername(), id);
       accessValidator.validateTaskAccess(id, principal);
       final var result = taskRepository.findById(id);
       return result
@@ -85,9 +85,9 @@ public class PortalTaskController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<Collection<Long>> getUnreadExternalTasks(@RequestParam("userId") String userId) 
     {
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
 
-      log.debug("Task portal unread request by user id: {}", principal.getUserName());
+      log.debug("Task portal unread request by user id: {}", principal.getUsername());
       accessValidator.validateUserAccess(principal, userId);
       List<Long> taskIds = new ArrayList<>();
       Iterable<Long> accesses = taskRepository.findUnreadExternalTasks(userId);

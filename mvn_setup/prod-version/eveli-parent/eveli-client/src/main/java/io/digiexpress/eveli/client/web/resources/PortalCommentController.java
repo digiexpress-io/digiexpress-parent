@@ -71,11 +71,11 @@ public class PortalCommentController extends TaskControllerBase
     @GetMapping(value="/task/{id}/comments")
     public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id) 
     {
-      final var authentication = securityClient.getUser();//SecurityContextHolder.getContext().getAuthentication();
-      log.debug("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getCustomer();
+      log.debug("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       validator.validateTaskAccess(id, authentication.getPrincipal());
       final var task = taskRepository.findById(id);
-      registerTaskAccess(id, authentication, task);
+      registerTaskAccess(id, authentication.getPrincipal(), task);
       
       final var comments = commentRepository.findByTaskId(id).stream().map(TaskCommandsImpl::map).toList();
        
@@ -88,7 +88,7 @@ public class PortalCommentController extends TaskControllerBase
         @RequestParam("userId") String userId
         ) 
     {
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
       validator.validateTaskAccess(id, principal);
       final var task = taskRepository.findById(id);
       registerUserTaskAccess(id, task, userId);
@@ -102,7 +102,7 @@ public class PortalCommentController extends TaskControllerBase
     @GetMapping("/comment/{id}")
     public ResponseEntity<TaskCommands.TaskComment> getCommentById(@PathVariable("id") Long id) 
     {
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
       validator.validateTaskAccess(id, principal);
       return commentRepository.findById(id) 
           .map(TaskCommandsImpl::map) 
@@ -115,13 +115,13 @@ public class PortalCommentController extends TaskControllerBase
         @RequestBody TaskCommands.TaskComment comment,
         @RequestParam("userId") String userId) 
     {
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
       validator.validateTaskAccess(comment.getTaskId(), principal);
       
       final var task = getCommentTask(comment);
       final var entity = TaskCommandsImpl.map(comment).setTask(task);
       
-      String userName = securityClient.getUser().getPrincipal().getUserName();
+      String userName = securityClient.getWorker().getPrincipal().getUsername();
       if (!StringUtils.isBlank(userName)) {
         // use name from principal if given to ensure that no incorrect name can be given. 
         entity.setUserName(userName);
@@ -151,7 +151,7 @@ public class PortalCommentController extends TaskControllerBase
     public ResponseEntity<TaskCommands.TaskComment> getCommentReplyTo(@PathVariable("id") Long id) 
     {
       final var model = commentRepository.findOneByReplyTo(id).map(TaskCommandsImpl::map);
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
       validator.validateTaskAccess(model.map(comment-> comment.getTaskId()).orElse(null), principal);
       return model 
           .map(ResponseEntity::ok) 
@@ -162,7 +162,7 @@ public class PortalCommentController extends TaskControllerBase
     public ResponseEntity<TaskCommands.Task> getCommentTask(@PathVariable("id") Long id) 
     {
       final var commentEntity = commentRepository.findById(id);
-      final var principal = securityClient.getUser().getPrincipal();
+      final var principal = securityClient.getCustomer().getPrincipal();
       validator.validateTaskAccess(commentEntity.map(comment->comment.getTask().getId()).orElse(null), principal);
       return commentEntity
           .map(comment-> comment.getTask())

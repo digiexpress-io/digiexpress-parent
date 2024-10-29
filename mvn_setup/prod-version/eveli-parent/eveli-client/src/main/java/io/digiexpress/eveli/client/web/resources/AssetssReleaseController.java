@@ -74,7 +74,7 @@ public class AssetssReleaseController {
   public ResponseEntity<Entity<Publication>> create(
       @RequestBody CreatePublication workflowRelease) {
     
-    final var userName = securityClient.getUser().getPrincipal().getUserName();
+    final var userName = securityClient.getWorker().getPrincipal().getUsername();
     final var publicationInit = ImmutableCreatePublication.builder().from(workflowRelease).user(userName).build();
     
     try {

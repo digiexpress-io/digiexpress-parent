@@ -68,7 +68,7 @@ public class PortalAttachmentController {
   public ResponseEntity<List<Attachment>> listAttachments(@PathVariable String processId) 
     throws URISyntaxException 
   {
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     return ResponseEntity.ok(client.attachments().query().processId(processId));
   }
@@ -88,7 +88,7 @@ public class PortalAttachmentController {
     @PathVariable String filename) 
     throws URISyntaxException 
   {
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var attachmentUrl = client.attachments().url().encodePath(filename).processId(processId);
     if (attachmentUrl.isPresent()) {
@@ -111,7 +111,7 @@ public class PortalAttachmentController {
     @RequestParam(name="filename") String filename) 
     throws URISyntaxException 
   {
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var uploadUrl = client.attachments().upload().encodePath(filename).processId(processId);
     if (uploadUrl.isPresent()) {
@@ -134,7 +134,7 @@ public class PortalAttachmentController {
       throws URISyntaxException 
   {
     final var processId = getProcessIdFromTask(taskId);
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     List<Attachment> result = processId != null ?
         client.attachments().query().processId(processId) : client.attachments().query().taskId(taskId);
@@ -159,7 +159,7 @@ public class PortalAttachmentController {
       throws URISyntaxException 
   {
     String processId = getProcessIdFromTask(taskId);
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var attachmentUrl = processId != null ?
         client.attachments().url().encodePath(filename).processId(processId) : 
@@ -187,7 +187,7 @@ public class PortalAttachmentController {
   {
     
     final var processId = getProcessIdFromTask(taskId);
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(processId, principal);
     final var uploadUrl = processId != null ?
         client.attachments().upload().encodePath(filename).processId(processId) :

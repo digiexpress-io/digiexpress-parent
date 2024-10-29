@@ -57,7 +57,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
   @Transactional
   public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request) {
     String identity = request.getIdentity();
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getWorker().getPrincipal();
     if (identity == null) {
       log.warn("Access violation by anonymous, missing request identity {}", identity);
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);

@@ -104,11 +104,11 @@ public class TaskApiController extends TaskControllerBase
         @RequestParam(name="dueDate", required=false) String dueDate,
         Pageable pageable) {
       
-      final var authentication = securityClient.getUser();
+      final var authentication = securityClient.getWorker();
       log.info("Task search: subject: {}, clientIdentificator: {}, assignedUser: {}, status: {}, priority: {}, assignedRoles: {}, dueDate: {}, by user id: {}", 
-          subject, clientIdentificator, assignedUser, status, priority, searchRole, dueDate, authentication.getPrincipal().getUserName());
+          subject, clientIdentificator, assignedUser, status, priority, searchRole, dueDate, authentication.getPrincipal().getUsername());
       
-      List<String> roles = authentication.getRoles();
+      List<String> roles = authentication.getPrincipal().getRoles();
       List<TaskStatus> statusValues = status;
       List<TaskPriority> priorityValues = priority;
       
@@ -155,12 +155,12 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<TaskCommands.Task> getTaskById(@PathVariable("id") Long id) 
     {
-      final var authentication = securityClient.getUser();
-      log.info("Task get: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getWorker();
+      log.info("Task get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       Optional<TaskEntity> result;
       
       if (authentication.getType() == UserType.AUTH && !adminsearch) {
-        List<String> roles = authentication.getRoles();
+        List<String> roles = authentication.getPrincipal().getRoles();
         log.info("User is authenticated with roles: {}", roles);
         result = taskRepository.findByIdAndAssignedRolesIn(id, roles);
       }
@@ -180,15 +180,15 @@ public class TaskApiController extends TaskControllerBase
     public ResponseEntity<TaskCommands.Task> createTask(
         @RequestBody TaskCommands.Task task) {
       
-      final var authentication = securityClient.getUser();
-      String userName = authentication.getPrincipal().getUserName();
+      final var authentication = securityClient.getWorker();
+      String userName = authentication.getPrincipal().getUsername();
       log.info("Task post: user id: {}", userName);
       
       
       final var savedTask = taskRepository.save(TaskCommandsImpl.map(task)
           .setUpdaterId(userName)
           .setTaskRef(taskRefGenerator.generateTaskRef()));
-      registerTaskAccess(savedTask.getId(), authentication, Optional.of(savedTask));
+      registerTaskAccess(savedTask.getId(), authentication.getPrincipal(), Optional.of(savedTask));
       
       final var model = TaskCommandsImpl.map(savedTask);
       
@@ -205,8 +205,8 @@ public class TaskApiController extends TaskControllerBase
       if (id.compareTo(task.getId()) != 0) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
-      final var authentication = securityClient.getUser();
-      final var userName = authentication.getPrincipal().getUserName();
+      final var authentication = securityClient.getWorker();
+      final var userName = authentication.getPrincipal().getUsername();
       final var email = authentication.getPrincipal().getEmail();
 
       log.info("Task put: id: {}, user id: {}", id, userName);
@@ -231,7 +231,7 @@ public class TaskApiController extends TaskControllerBase
         t.setUpdaterId(userName);
         
         TaskEntity saved = taskRepository.save(t);
-        registerTaskAccess(id, authentication, savedTask);
+        registerTaskAccess(id, authentication.getPrincipal(), savedTask);
         notificator.handleTaskUpdate(task, previousVersion, email);
         
         return new ResponseEntity<>(TaskCommandsImpl.map(saved), HttpStatus.OK);
@@ -245,8 +245,8 @@ public class TaskApiController extends TaskControllerBase
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("id") Long id) {
-      final var authentication = securityClient.getUser();
-      log.info("Task delete: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getWorker();
+      log.info("Task delete: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       taskRepository.deleteById(id);
     }
     
@@ -254,16 +254,16 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<Collection<Long>> getUnreadTasks() 
     {
-      final var authentication = securityClient.getUser();
-      log.info("Task unread request: user id: {}", authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getWorker();
+      log.info("Task unread request: user id: {}", authentication.getPrincipal().getUsername());
       List<Long> taskIds = new ArrayList<>();
       
       if (adminsearch) {
-        Iterable<Long> accesses = taskRepository.findUnreadTasks(authentication.getPrincipal().getUserName());
+        Iterable<Long> accesses = taskRepository.findUnreadTasks(authentication.getPrincipal().getUsername());
         accesses.forEach(access->taskIds.add(access));
       } else {
-        List<String> roles = authentication.getRoles();
-        Iterable<Long> accesses = taskRepository.findUnreadTasksByRole(authentication.getPrincipal().getUserName(), roles);
+        List<String> roles = authentication.getPrincipal().getRoles();
+        Iterable<Long> accesses = taskRepository.findUnreadTasksByRole(authentication.getPrincipal().getUsername(), roles);
         accesses.forEach(access->taskIds.add(access));
       }
     
@@ -281,8 +281,8 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<KeyWordsResponse> getKeyWords() 
     {
-      final var authentication = securityClient.getUser();
-      log.info("Task keyword request: user id: {}", authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getWorker();
+      log.info("Task keyword request: user id: {}", authentication.getPrincipal().getUsername());
       try {
         List<String> result = new ArrayList<>();
         jdbcTemplate.query(

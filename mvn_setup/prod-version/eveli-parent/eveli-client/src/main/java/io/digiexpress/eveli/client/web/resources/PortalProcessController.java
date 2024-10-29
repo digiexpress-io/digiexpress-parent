@@ -25,7 +25,6 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessAuthorizationCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +51,7 @@ public class PortalProcessController extends ProcessBaseController {
   private final PortalAccessValidator validator;
   private final String anonymousUserId;
   private final AuthClient securityClient;
+  
 
 
   public PortalProcessController(PortalClient client, PortalAccessValidator validator, String anonymousUserId, AuthClient securityClient) {
@@ -68,21 +68,21 @@ public class PortalProcessController extends ProcessBaseController {
       @RequestParam(name="status", required=false) List<String> status,
       @RequestParam(name="userId", defaultValue="") String userId, 
       Pageable pageable) {
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateUserAccess(principal, userId);
     return super.searchProcesses(name, status, userId, pageable);
   }
   
   @PostMapping("/processes/")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> create(
-      @RequestBody ProcessCommands.InitProcess request,
-      @AuthenticationPrincipal AuthClient.Principal principal) {
+  public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request) {
+    final var identity = request.getIdentity();
+    final var principal = securityClient.getCustomer().getPrincipal();
     
-    String identity = request.getIdentity();
     if (identity == null) {
-      log.warn("Access violation by user: {}, missing request identity {}", validator.getUserName(principal), identity);
+      log.warn("Access violation by user: {}, missing request identity {}", principal.getUsername(), identity);
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+      
     } else if (principal == null && identity.equals(anonymousUserId)) {
       log.info("Anonymous process creation {}", request);
     } else {
@@ -103,7 +103,7 @@ public class PortalProcessController extends ProcessBaseController {
   @Transactional
   public ResponseEntity<ProcessCommands.Process> get(@PathVariable("id") String id) {
     final var process = client.process().query().get(id);
-    final var principal = securityClient.getUser().getPrincipal();
+    final var principal = securityClient.getCustomer().getPrincipal();
 
     if(process.isEmpty()) {
       return ResponseEntity.notFound().build();
@@ -116,8 +116,8 @@ public class PortalProcessController extends ProcessBaseController {
   
   @DeleteMapping("/processes/{id}")
   @Transactional
-  public ResponseEntity<ProcessCommands.Process> delete(@PathVariable("id") String id,
-      @AuthenticationPrincipal AuthClient.Principal principal) {
+  public ResponseEntity<ProcessCommands.Process> delete(@PathVariable("id") String id) {
+    final var principal = securityClient.getCustomer().getPrincipal();
     validator.validateProcessIdAccess(id, principal);
     client.process().delete(id);
     return new ResponseEntity<>(HttpStatus.OK);

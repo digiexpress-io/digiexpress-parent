@@ -25,11 +25,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.IAMClient;
-import io.thestencil.iam.api.IAMClient.UserLiveness;
-import io.thestencil.iam.api.IAMClient.UserQueryResult;
-import io.thestencil.iam.api.IAMClient.UserRolesResult;
+import io.digiexpress.eveli.client.api.AuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,31 +35,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class GamutIamController {
-  private final IAMClient iamClient;
+  private final AuthClient authClient;
   
 
   @GetMapping(path = "/")
-  public Uni<UserQueryResult> getUser() {
-    return iamClient.userQuery().get();
+  public AuthClient.Customer getUser() {
+    return authClient.getCustomer();
   }
   
-
   @GetMapping(path = "/roles")
-  public Uni<UserRolesResult> getRoles(@RequestHeader("cookie") String id) {
-    
-    return iamClient.userQuery().get().onItem()
-      .transformToUni(user -> {
-        if(user.getUser().getRepresentedCompany() != null) {
-          return iamClient.companyRolesQuery().id(id).get();
-        } else if(user.getUser().getRepresentedPerson() != null) {
-          return iamClient.personRolesQuery().id(id).get();
-        }
-        throw new RuntimeException("Represented person/company could not be resolved!");
-      });
+  public AuthClient.CustomerRoles getRoles(@RequestHeader("cookie") String id) {
+    return authClient.getCustomerRoles();
   }
 
   @GetMapping(path = "/liveness")
-  public Uni<UserLiveness> getLiveness() {
-    return iamClient.livenessQuery().get();
+  public AuthClient.Liveness getLiveness() {
+    return authClient.getLiveness();
   }
 }

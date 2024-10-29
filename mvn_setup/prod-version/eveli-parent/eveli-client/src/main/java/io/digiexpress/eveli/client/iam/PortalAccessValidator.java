@@ -26,16 +26,14 @@ import io.digiexpress.eveli.client.api.AuthClient;
 public interface PortalAccessValidator {
 
 
-  void validateTaskAccess(Long id, AuthClient.Principal principal) ;
+  void validateTaskAccess(Long id, AuthClient.CustomerPrincipal principal) ;
 
-  void validateProcessAccess(ProcessCommands.Process process, AuthClient.Principal principal);
+  void validateProcessAccess(ProcessCommands.Process process, AuthClient.CustomerPrincipal principal);
 
-  void validateProcessIdAccess(String processId, AuthClient.Principal principal);
+  void validateProcessIdAccess(String processId, AuthClient.CustomerPrincipal principal);
   
   void validateProcessAnonymousAccess(String processId, String anonymousUserId);
   
-  String getUserName(AuthClient.Principal principal);
-  
-  void validateUserAccess(AuthClient.Principal principal, String userId);
+  void validateUserAccess(AuthClient.CustomerPrincipal principal, String userId);
   
 }

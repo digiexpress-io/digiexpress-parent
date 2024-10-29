@@ -24,30 +24,117 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import jakarta.annotation.Nullable;
 
+
+
 public interface AuthClient {
-  User getUser();
+  Worker getWorker();
+  Customer getCustomer();
+  CustomerRoles getCustomerRoles();
+  Liveness getLiveness();
+  
+  
+  interface AnyPrincipal {
+    String getUsername(); // get the subject name
+  }
   
   
   @Value.Immutable
-  interface User {
-    List<String> getRoles();
-    Principal getPrincipal();
+  interface Worker {
     UserType getType();
+    WorkerPrincipal getPrincipal();
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerRoles.class) @JsonDeserialize(as = ImmutableCustomerRoles.class)
+  interface CustomerRoles {
+    UserType getType();
+    CustomerRolesPrincipal getPrincipal();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomer.class) @JsonDeserialize(as = ImmutableCustomer.class)
+  interface Customer {
+    UserType getType();
+    CustomerPrincipal getPrincipal();
   }
 
   @Value.Immutable
-  interface Principal {
-    String getUserName(); // get the subject name
+  interface WorkerPrincipal extends AnyPrincipal {
+    String getUsername(); // get the subject name
     String getEmail();
-    
-    
-    @Nullable String getRepresentedId();
+    List<String> getRoles();
   }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerRolesPrincipal.class) @JsonDeserialize(as = ImmutableCustomerRolesPrincipal.class)
+  interface CustomerRolesPrincipal extends AnyPrincipal {
+    String getIdentifier();
+    String getUserName();
+    List<String> getRoles();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerPrincipal.class) @JsonDeserialize(as = ImmutableCustomerPrincipal.class)
+  interface CustomerPrincipal extends AnyPrincipal  {
+    String getId();
+    String getSsn();
+    String getUsername();
+    String getFirstName();
+    String getLastName();
+    CustomerContact getContact();
+    Boolean getProtectionOrder();
+
+    @Nullable String getRepresentedId();
+    
+    @Nullable
+    CustomerRepresentedPerson getRepresentedPerson();
+    @Nullable
+    CustomerRepresentedCompany getRepresentedCompany();  
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerContact.class) @JsonDeserialize(as = ImmutableCustomerContact.class)
+  interface CustomerContact {
+    String getEmail();
+    @Nullable
+    CustomerAddress getAddress();
+    @Nullable
+    String getAddressValue();
+  }
+
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerAddress.class) @JsonDeserialize(as = ImmutableCustomerAddress.class)
+  interface CustomerAddress {
+    String getLocality();
+    String getStreet();
+    String getPostalCode();
+    String getCountry();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerRepresentedPerson.class) @JsonDeserialize(as = ImmutableCustomerRepresentedPerson.class)
+  interface CustomerRepresentedPerson {
+    String getPersonId();
+    String getName();
+  }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerRepresentedCompany.class) @JsonDeserialize(as = ImmutableCustomerRepresentedCompany.class)
+  interface CustomerRepresentedCompany {
+    String getCompanyId();
+    String getName();
+  }
+  
+  
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableLiveness.class) @JsonDeserialize(as = ImmutableLiveness.class)
+  interface Liveness {
+    // Issuance in seconds
+    long getIssuedAtTime();
+    
+    // Expiration in seconds
+    long getExpiresIn();
+  }
+  
   
   enum UserType {
-
     ANON, AUTH
   }
 }

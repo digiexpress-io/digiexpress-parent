@@ -235,7 +235,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
     .status(entity.getStatus())
     .workflowName(entity.getWorkflowName())
     .questionnaire(entity.getQuestionnaire())
-    .task(entity.getTask())
+    .task(Long.parseLong(entity.getTask()))
     .userId(entity.getUserId())
     .created(entity.getCreated())
     .updated(entity.getUpdated())

@@ -62,7 +62,7 @@ public class AssetsWorkflowTagController {
     try {
       final var snapshotRelease = ImmutableCreateWorkflowTag.builder()
         .from(workflowRelease)
-        .user(securityClient.getUser().getPrincipal().getUserName())
+        .user(securityClient.getWorker().getPrincipal().getUsername())
         .build();
       
       return new ResponseEntity<>(composer.create().workflowTag(snapshotRelease).await().atMost(timeout), HttpStatus.CREATED);

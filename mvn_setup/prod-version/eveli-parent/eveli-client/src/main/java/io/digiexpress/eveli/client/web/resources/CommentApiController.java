@@ -73,10 +73,10 @@ public class CommentApiController extends TaskControllerBase
     @GetMapping(value="/task/{id}/comments")
     public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id)
     {
-      final var authentication = securityClient.getUser();
-      log.info("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUserName());
+      final var authentication = securityClient.getWorker();
+      log.info("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       final var task = taskRepository.findById(id);
-      registerTaskAccess(id, authentication, task);
+      registerTaskAccess(id, authentication.getPrincipal(), task);
       final var comments = commentRepository.findByTaskId(id);
    
       return new ResponseEntity<>(comments.stream().map(TaskCommandsImpl::map).toList(), HttpStatus.OK);
@@ -96,7 +96,7 @@ public class CommentApiController extends TaskControllerBase
     public ResponseEntity<TaskCommands.TaskComment> createComment(
         @RequestBody TaskCommands.TaskComment comment) 
     {
-      final var authentication = securityClient.getUser();
+      final var authentication = securityClient.getWorker();
       final var entity = TaskCommandsImpl.map(comment);
       final var task = getCommentTask(comment);
       entity.setTask(task);
@@ -105,11 +105,11 @@ public class CommentApiController extends TaskControllerBase
         final var replyComment = getReplyToComment(comment);
         entity.setReplyTo(replyComment);
       }
-      String userName = securityClient.getUser().getPrincipal().getUserName();
+      String userName = securityClient.getWorker().getPrincipal().getUsername();
       entity.setUserName(userName);
 
       final var savedComment = commentRepository.save(entity);
-      registerTaskAccess(task.getId(), authentication, Optional.of(task));
+      registerTaskAccess(task.getId(), authentication.getPrincipal(), Optional.of(task));
       
       final var commentModel = TaskCommandsImpl.map(savedComment);
       if (savedComment.getExternal()) {
