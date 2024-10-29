@@ -88,7 +88,7 @@ public class AssetsWorkflowController {
     return new ResponseEntity<>(entity, HttpStatus.OK);
   }
   
-  @GetMapping(path="/workflowAssets")
+  @GetMapping(path="/workflowAssets/")
   public ResponseEntity<List<String>> allFlows() {
     return ResponseEntity.status(HttpStatus.OK).body(programEnvir.get().getFlowsByName().keySet().stream().toList());
   }

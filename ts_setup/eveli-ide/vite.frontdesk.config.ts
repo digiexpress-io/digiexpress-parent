@@ -36,8 +36,6 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       open: true,
       port: 3000,
 
-
-
       proxy: {
         '/api': {
           target: 'http://localhost:8080',
@@ -45,7 +43,24 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
+        '/dialob/api/forms': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
         '/workflowReleases': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+        '/workflowAssets': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+        '/workflows': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,
@@ -92,16 +107,31 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           changeOrigin: false,
           secure: false,
         },
+
         '/spo-task': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,
         },
+
         '/dialob': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,
-        }
+        },
+
+
+        '/wrench': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+        '/stencil': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
       }
     },
     optimizeDeps: {

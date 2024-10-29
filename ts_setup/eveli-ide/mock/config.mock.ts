@@ -20,5 +20,7 @@ export default defineMock({
     feedbackKey: '',
     taskDeleteGroups: [],
     taskAdminGroups: [],
+
+    modifiableAssets: true
   }
 })

@@ -11,13 +11,15 @@ export interface Config {
   dialobSessionUrl?: string;
   wrenchApiUrl?: string;
   wrenchIdeUrl?: string;
+  serviceUrl?: string;
+
   feedbackKey?: string;
   taskDeleteGroups?: string[];
   taskAdminGroups?: string[];
   appVersion?: string;
   contentRepositoryUrl?: string;
   calendarUrl?: string;
-  modifiableAssets?: boolean;
+  modifiableAssets?: boolean; //enable releases and other asset operations
 }
 
 const INITIAL_CONFIG: Config = {
