@@ -91,7 +91,7 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
                 .type(AssetTagType.STENCIL)
                 .description(release.getBody().getNote())
                 .id(release.getId())
-                .name(release.getId())
+                .name(release.getBody().getName())
 
                 .user("not-available")
                 .build())

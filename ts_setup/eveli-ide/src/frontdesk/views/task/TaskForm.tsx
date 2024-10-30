@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import {
-  TextField, Grid2, Button, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
-  Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete
+  TextField, Grid2, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
+  Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
 } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -12,23 +12,31 @@ import AttachmentIcon from '@mui/icons-material/Attachment';
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 
-import { AttachmentTable } from './AttachmentTable';
 import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
-import { Datepicker } from '../../components/Datepicker';
-import { TaskRoleDialog } from './TaskRoleDialog';
-import { GroupMember } from '../../types/GroupMember';
-import { withRouter, WithRouterProps } from '../../hooks/withRouter';
-import { Attachment, User } from '../../types';
-import { useAttachmentConfig } from '../../context/AttachmentContext';
-import { UserGroup } from '../../types/UserGroup';
-import { Task, TaskStatus } from '../../types/task/Task';
-import { ComponentResolver } from '../../context/ComponentResolver';
-import { CommentThreadComponent } from './CommentThread';
 import { StatusComponent } from '../../components/task/Status';
 import { Priority } from '../../components/task/Priority';
-import { Comment } from '../../types/task/Comment';
-import * as Yup from 'yup';
+import { Datepicker } from '../../components/Datepicker';
 import { TaskLinkProps } from '../../components/task/TaskLinkComponent';
+
+import { withRouter, WithRouterProps } from '../../hooks/withRouter';
+
+import { TaskRoleDialog } from './TaskRoleDialog';
+import { AttachmentTable } from './AttachmentTable';
+import { CommentThreadComponent } from './CommentThread';
+
+import { Attachment, User } from '../../types';
+import { UserGroup } from '../../types/UserGroup';
+import { Task, TaskStatus } from '../../types/task/Task';
+import { GroupMember } from '../../types/GroupMember';
+import { Comment } from '../../types/task/Comment';
+
+import { useAttachmentConfig } from '../../context/AttachmentContext';
+import { ComponentResolver } from '../../context/ComponentResolver';
+
+
+
+import * as Yup from 'yup';
+
 
 import * as Burger from '@/burger';
 
@@ -143,10 +151,6 @@ const classes = {
   taskRoleLegend: {
     marginLeft: 8,
     paddingLeft: 24
-  },
-  confirmRolesButton: {
-    borderRadius: 1,
-    marginLeft: "4px"
   },
   keywordChip: {
     width: "max-content",
@@ -351,7 +355,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
               <PageLeavingConfirmation navigate={(path) => this.props.navigate(path)}
                 navigationConfirmationRequired={() => dirty}
               />
-              <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
+              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="center">
                   <Grid2 size={{ xs: 12, md: 4 }}>
                     {editTask.keyWords && editTask.keyWords.length > 0 && (
@@ -437,7 +441,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                 </Grid2>
               </Paper>
 
-              <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
+              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2}>
                   <Grid2 size={{ xs: 12 }}>
                     <Accordion disableGutters={true}>
@@ -501,16 +505,14 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                 </Grid2>
               </Paper>
 
-              <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
+              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="top">
                   {!!groups.length &&
                     <Grid2 size={{ xs: 12, md: 6 }}>
                       <Box display="flex" alignItems="center">
                         <fieldset style={classes.taskRoleFieldset}>
                           <legend style={classes.taskRoleLegend}>
-                            <InputLabel size='small' shrink={true}>
-                              <FormattedMessage id='taskDialog.assignedTo' />
-                            </InputLabel>
+                            <InputLabel size='small' shrink={true}><FormattedMessage id='taskDialog.assignedTo' /></InputLabel>
                           </legend>
                           <Box id='task-role-list' sx={classes.taskRoleList}>
                             {values.assignedRoles.map((value: any) => (
@@ -518,16 +520,10 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                             ))}
                           </Box>
                         </fieldset>
-                        <Button
-                          onClick={() => { this.openDialog() }}
-                          color="secondary"
-                          size='small'
-                          variant='outlined'
-                          sx={classes.confirmRolesButton}
-                        >
-                          <FormattedMessage id={'button.editRoles'} />
-                        </Button>
+
                       </Box>
+                      <Burger.PrimaryButton onClick={() => { this.openDialog() }} label='button.editRoles' />
+
                     </Grid2>
                   }
                   {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }} sx={{ mt: 1 }}>
@@ -575,6 +571,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                     }
                   </Grid2>
                   }
+
                   <Grid2 size={{ xs: 12, md: 6 }}>
                     <Field
                       name='status' as={StatusComponent}
@@ -593,7 +590,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                 </Grid2>
               </Paper>
 
-              <Paper elevation={4} sx={{ p: 2, mb: 2 }}>
+              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2}>
                   {editTask?.id &&
                     <Grid2 size={{ xs: 12, md: 6 }} container justifyContent="flex-start">

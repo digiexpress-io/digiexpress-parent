@@ -1,9 +1,11 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useField, FieldInputProps } from 'formik';
-import { Box, Button, FormControl, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { COLORS, ColorMap } from './ColorMap';
+
+import * as Burger from '@/burger';
 
 interface CommonProps extends FieldInputProps<""> {
   label: string;
@@ -98,24 +100,22 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
           horizontal: 'center',
         }}
       >
-        <FormControl sx={{ px: 1, pt: 1, pb: 2 }}>
+        <Box sx={{ p: 2 }}>
           <RadioGroup value={radioValue || field.value} onChange={handleChange}>
             {entries.map(([value, color]) =>
               <FormControlLabel
                 key={value}
                 value={value}
                 control={<Radio />}
-                label={<FormattedMessage {...messages[value]} />}
+                label={<Typography variant='body2'><FormattedMessage {...messages[value]} /></Typography>}
                 sx={{ color: getColor(color), textTransform: "uppercase" }}
               />
             )}
           </RadioGroup>
-          <Box display="flex" justifyContent="center">
-            <Button color='primary' variant="contained" onClick={handleConfirm} disabled={!radioValue}>
-              <FormattedMessage id="button.accept" />
-            </Button>
+          <Box display='flex' justifyContent='center' mt={2}>
+            <Burger.PrimaryButton onClick={handleConfirm} disabled={!radioValue} label="button.accept" />
           </Box>
-        </FormControl>
+        </Box>
       </Popover>
     </>
   );

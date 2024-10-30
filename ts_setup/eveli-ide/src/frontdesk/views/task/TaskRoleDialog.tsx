@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { Autocomplete, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material"
-import { Container } from "@mui/system"
+import { Autocomplete, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Container } from "@mui/material"
 import { FormattedMessage, useIntl } from "react-intl"
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
 import { UserGroup } from '../../types/UserGroup';
+import * as Burger from '@/burger';
 
 export type TaskRoleDialogProps = {
   assignedRoles: string[]
   groups: UserGroup[]
-  closeDialog: ()=>void
-  acceptDialog: (selectedRoles: UserGroup[])=>void
+  closeDialog: () => void
+  acceptDialog: (selectedRoles: UserGroup[]) => void
 }
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 
-export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({assignedRoles, groups, closeDialog, acceptDialog}) => {
-  const {formatMessage} = useIntl();
-  const [roles, setRoles] = useState(groups.filter(g=> assignedRoles.includes(g.id)));
+export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({ assignedRoles, groups, closeDialog, acceptDialog }) => {
+  const { formatMessage } = useIntl();
+  const [roles, setRoles] = useState(groups.filter(g => assignedRoles.includes(g.id)));
 
-  const handleClose = (event:any, reason:string) => {
+  const handleClose = (event: any, reason: string) => {
     if (reason && reason === "backdropClick") {
       return;
     }
@@ -31,7 +32,7 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({assignedRoles, gr
   return (
     <Dialog open={true} onClose={handleClose} >
       <DialogTitle id="role-dialog-title">
-        <FormattedMessage id={'task.editRoles'}/>
+        <FormattedMessage id={'task.editRoles'} />
       </DialogTitle>
       <DialogContent>
         <Container maxWidth='md'>
@@ -58,9 +59,9 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({assignedRoles, gr
             )}
             style={{ width: 500, height: '30vh', padding: 2 }}
             renderInput={(params) => (
-              <TextField {...params} value={roles} label={formatMessage({id: 'taskDialog.assignedTo'})} 
-                placeholder={formatMessage({id: 'taskDialog.assignedTo'})} 
-                sx={{marginTop: 2}}
+              <TextField {...params} value={roles} label={formatMessage({ id: 'taskDialog.assignedTo' })}
+                placeholder={formatMessage({ id: 'taskDialog.assignedTo' })}
+                sx={{ marginTop: 2 }}
                 autoFocus={true}
               />
             )}
@@ -68,8 +69,8 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({assignedRoles, gr
         </Container>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeDialog}  color='secondary'>{<FormattedMessage id='button.cancel' /> }</Button>
-        <Button onClick={()=>acceptDialog(roles)} color='primary'>{<FormattedMessage id='button.accept' />}</Button>
+        <Burger.SecondaryButton onClick={closeDialog} label='button.cancel' />
+        <Burger.PrimaryButton onClick={() => acceptDialog(roles)} label='button.accept' />
       </DialogActions>
     </Dialog>
   )
