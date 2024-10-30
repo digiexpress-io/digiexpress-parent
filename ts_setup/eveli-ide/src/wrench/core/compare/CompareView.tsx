@@ -150,8 +150,8 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Burger.SecondaryButton label={"button.cancel"} onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-          <Burger.PrimaryButton label={"activities.compare.view"} onClick={() => setOpen(true)} disabled={disabled} />
+          <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
+          <Burger.PrimaryButton label="activities.compare.view" onClick={() => setOpen(true)} disabled={disabled} />
         </Box>
       </Box>
       <Typography variant="body2" sx={{ mx: 1, mt: 2 }}><FormattedMessage id={"compare.tip"} /></Typography>

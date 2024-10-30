@@ -82,7 +82,11 @@ const messages = defineMessages(
     },
     statusOpenError: {
       id: "error.statusOpenError"
+    },
+    cancel: {
+      id: 'taskButton.cancel'
     }
+
   }
 )
 
@@ -602,8 +606,8 @@ class TaskFormInternal extends React.Component<AllProps, State> {
             <Box sx={{position:'sticky', bottom: 10, width: 'fit-content', float: 'right'}}>
               <Paper elevation={2} sx={{padding: 1, marginRight: 2}}>
                 <Stack direction="row" spacing={1} justifyContent='flex-end'>
-                <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={intl.formatMessage({ id: 'button.cancel' })} />
-                {!readonly && <Burger.PrimaryButton disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label={intl.formatMessage({ id: 'button.accept' })} />}
+                <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={'taskButton.cancel'} />
+                {!readonly && <Burger.PrimaryButton disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label='taskButton.accept' />}
                 </Stack>
               </Paper>
             </Box>

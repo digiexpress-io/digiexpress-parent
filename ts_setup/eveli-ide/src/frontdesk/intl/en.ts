@@ -5,8 +5,6 @@ const en = {
   'explorer.logout': 'Log out',
   'explorer.feedback': 'Send feedback',
 
-  'button.comment.add': 'Add a comment',
-
   // ---------------END NEW --------------------------
 
 

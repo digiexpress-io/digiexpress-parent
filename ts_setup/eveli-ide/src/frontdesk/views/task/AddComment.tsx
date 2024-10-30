@@ -39,8 +39,8 @@ export const AddComment:React.FC<Props> = (props) => {
       </Grid2>
       <Grid2 size={{ xs: 6 }} sx={{ margin: 'auto', width: '90%' }}>
         <Stack direction='row' spacing={2}>
-          <Burger.PrimaryButton onClick={send} disabled={!inputValue} label={intl.formatMessage({ id: 'comment.store' })} />
-          <Burger.SecondaryButton onClick={props.onCancel} label={intl.formatMessage({ id: 'button.cancel' })} />
+          <Burger.PrimaryButton onClick={send} disabled={!inputValue} label={'comment.store'} />
+          <Burger.SecondaryButton onClick={props.onCancel} label='taskButton.cancel' />
         </Stack>
       </Grid2>
     </>

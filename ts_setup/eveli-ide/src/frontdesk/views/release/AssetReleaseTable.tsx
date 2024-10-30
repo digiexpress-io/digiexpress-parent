@@ -118,7 +118,7 @@ export const AssetReleaseTable: React.FC = () => {
           debounceInterval: 500,
           padding: 'dense',
           filtering: false,
-          sorting: true,
+          maxColumnSort: 1,
           search: true,
           paging: false
         }}

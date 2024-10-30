@@ -40,8 +40,8 @@ const TemplatesView: React.FC<{}> = () => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <Burger.SecondaryButton label={"button.cancel"} onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-            <Burger.PrimaryButton label={"button.create"} onClick={() => setTemplateComposer(true)} />
+            <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
+            <Burger.PrimaryButton label="button.create" onClick={() => setTemplateComposer(true)} />
           </Box>
         </Box>
 

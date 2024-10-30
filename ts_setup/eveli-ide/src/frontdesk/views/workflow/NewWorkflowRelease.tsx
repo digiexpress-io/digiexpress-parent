@@ -95,8 +95,8 @@ export const NewWorkflowRelease: React.FC<NewFormProps> = ({ onSubmit, workflowR
                   </Stack>
                 </DialogContent>
                 <DialogActions>
-                  <Burger.SecondaryButton onClick={handleClose} label={intl.formatMessage({ id: 'button.cancel' })} />
-                  <Burger.PrimaryButton onClick={submitForm} disabled={isSubmitting || !isValid} label={intl.formatMessage({ id: 'button.accept' })} />
+                  <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
+                  <Burger.PrimaryButton onClick={submitForm} disabled={isSubmitting || !isValid} label='button.accept' />
                 </DialogActions>
               </Form>
             )

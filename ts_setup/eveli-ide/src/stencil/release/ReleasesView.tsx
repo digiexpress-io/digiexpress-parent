@@ -35,9 +35,9 @@ const ReleasesView: React.FC<{}> = () => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <Burger.SecondaryButton label={"button.cancel"} onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-            <Burger.SecondaryButton label={"button.releasegraph"} onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }} />
-            <Burger.PrimaryButton label={"button.create"} onClick={() => setReleaseComposer(true)} />
+            <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
+            <Burger.SecondaryButton label="button.releasegraph" onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }} />
+            <Burger.PrimaryButton label="button.create" onClick={() => setReleaseComposer(true)} />
           </Box>
         </Box>
 

@@ -82,7 +82,7 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
           onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>
-            <Burger.PrimaryButton onClick={toggleComment} label={intl.formatMessage({ id: 'button.comment.add' })} />
+            <Burger.PrimaryButton onClick={toggleComment} label={buttonId} />
           </Grid2>
         )}
       </Grid2>

@@ -105,7 +105,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshW
           debounceInterval: 500,
           padding: 'dense',
           filtering: false,
-          sorting: true,
+          maxColumnSort: 1,
           search: true,
           paging: false
         }}

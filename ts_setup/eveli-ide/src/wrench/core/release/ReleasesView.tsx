@@ -295,11 +295,11 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
 
   const actionButton = () => {
     if (isLatest) {
-      return <Burger.PrimaryButton label={'releases.button.release'} onClick={() => setReleaseComposer(true)} />
+      return <Burger.PrimaryButton label='releases.button.release' onClick={() => setReleaseComposer(true)} />
     } else if (isDefault) {
-      return <Burger.SecondaryButton label={'releases.button.checkout'} onClick={() => handleCheckout("default")} />
+      return <Burger.SecondaryButton label='releases.button.checkout' onClick={() => handleCheckout("default")} />
     } else {
-      return <Burger.SecondaryButton sx={{ border: 1 }} label={'buttons.download'} onClick={() => onDownload(release.body.data)} />
+      return <Burger.SecondaryButton sx={{ border: 1 }} label='buttons.download' onClick={() => onDownload(release.body.data)} />
     }
   }
 
