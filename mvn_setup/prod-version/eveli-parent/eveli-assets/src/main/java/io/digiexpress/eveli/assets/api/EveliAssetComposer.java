@@ -98,12 +98,12 @@ public interface EveliAssetComposer {
   @JsonSerialize(as = ImmutableCreatePublication.class)
   @JsonDeserialize(as = ImmutableCreatePublication.class)
   interface CreatePublication extends CreateBuilder.CreateCommand {
-    String getStencilTag();
-    String getWrenchTag();
-    String getWorkflowTag();
+    @Nullable String getStencilTag(); // auto-create tag on null
+    @Nullable String getWrenchTag();  // auto-create tag on null
+    @Nullable String getWorkflowTag();// auto-create tag on null
     
     @Nullable String getUser();
-    @Nullable String getName();
+    @Nullable String getName();  // autoname on null
     @Nullable String getDescription();
     @Nullable LocalDateTime getLiveDate();
     

@@ -40,20 +40,30 @@ import io.digiexpress.eveli.assets.api.EveliAssetComposer.AssetBatch;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreatePublication;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflow;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
+import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
 import io.digiexpress.eveli.assets.api.ImmutableEntity;
 import io.digiexpress.eveli.assets.api.ImmutablePublication;
 import io.digiexpress.eveli.assets.api.ImmutableWorkflow;
 import io.digiexpress.eveli.assets.api.ImmutableWorkflowTag;
 import io.digiexpress.eveli.assets.spi.exceptions.ConstraintException;
 import io.digiexpress.eveli.assets.spi.visitors.BatchSiteCommandVisitor;
+import io.resys.hdes.client.api.HdesClient;
+import io.resys.hdes.client.api.ImmutableCreateEntity;
+import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
+import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableCreateRelease;
+import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilAssert;
+import io.thestencil.client.spi.StencilComposerImpl;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   private final EveliAssetClient client;
+  private final StencilClient stencilClient;
+  private final HdesClient hdesClient;
 
   @Override
   public Uni<List<Entity<?>>> batch(AssetBatch batch) {
@@ -63,7 +73,38 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   @Override
   public Uni<Entity<Publication>> publication(CreatePublication init) {
     final Uni<AssetState> query = client.queryBuilder().head();
-    return query.onItem().transformToUni(state -> client.crudBuilder().create(publication(init, state, client)));
+    return query.onItem().transformToUni(state -> client.crudBuilder().create(publication(init, state, client)))
+        .onItem().transformToUni(createdTag -> {
+          
+          
+          final var stencilRelease = init.getStencilTag() == null ? 
+              new StencilComposerImpl(stencilClient).create().release(ImmutableCreateRelease.builder()
+                  .name(createdTag.getBody().getStencilTagName())
+                  .note("auto-created")
+                  .build()):
+              Uni.createFrom().nothing();
+          
+          final var wrenchRelease = init.getWrenchTag() == null ? 
+              new HdesComposerImpl(hdesClient).create(ImmutableCreateEntity.builder()
+                  .type(AstBodyType.TAG)
+                  .name(createdTag.getBody().getWrenchTagName())
+                  .desc("auto-created")
+                  .build()):
+              Uni.createFrom().nothing();
+          
+          
+          final var workflowRelease = init.getWrenchTag() == null ? 
+              workflowTag(ImmutableCreateWorkflowTag.builder()
+                  .description("auto-created")
+                  .name(createdTag.getBody().getWorkflowTagName())
+                  .build()):
+              Uni.createFrom().nothing();
+          
+          return Uni.combine().all().unis(stencilRelease, wrenchRelease, workflowRelease).with((autoCreatedTags) -> {
+            
+            return createdTag;
+          });
+        });
   }
   @Override
   public Uni<Entity<Workflow>> workflow(CreateWorkflow init) {
@@ -134,15 +175,20 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   
   public static Entity<Publication> publication(CreatePublication init, AssetState state, EveliAssetClient client) {
     final var gid = client.getConfig().getGidProvider().getNextId();
+    final var name = Optional.ofNullable(init.getName()).orElse("generic-" + gid);
+    
+    
+    
+    
     final var article = ImmutablePublication.builder()
         .created(LocalDateTime.now())
-        .name(Optional.ofNullable(init.getName()).orElse("generic-" + gid))
+        .name(name)
         .description(Optional.ofNullable(init.getDescription()).orElse("nondescript"))
         .liveDate(init.getLiveDate() == null ? LocalDateTime.now() : init.getLiveDate())
         .user(Optional.ofNullable(init.getUser()).orElse(""))
-        .wrenchTagName(init.getWrenchTag())
-        .stencilTagName(init.getStencilTag())
-        .workflowTagName(init.getWorkflowTag())
+        .wrenchTagName(Optional.ofNullable(init.getWrenchTag()).orElse(name))
+        .stencilTagName(Optional.ofNullable(init.getStencilTag()).orElse(name))
+        .workflowTagName(Optional.ofNullable(init.getWorkflowTag()).orElse(name))
         .build();
     final Entity<Publication> entity = ImmutableEntity.<Publication>builder()
         .id(gid)

@@ -44,7 +44,7 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
   
   @Override
   public CreateBuilder create() {
-    return new CreateBuilderImpl(client);
+    return new CreateBuilderImpl(client, stencilClient, hdesClient);
   }
 
   @Override
