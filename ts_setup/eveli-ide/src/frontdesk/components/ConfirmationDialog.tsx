@@ -37,8 +37,11 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
+        {/* TODO correct types */}
+        {/* @ts-ignore */}
         <Burger.SecondaryButton onClick={handleCancel}
           {...cancelOptions} label={cancel || intl.formatMessage({ id: 'button.cancel' })} />
+        {/* @ts-ignore */}
         <Burger.PrimaryButton onClick={handleAccept}
           {...acceptOptions} label={accept || intl.formatMessage({ id: 'button.accept' })} />
       </DialogActions>

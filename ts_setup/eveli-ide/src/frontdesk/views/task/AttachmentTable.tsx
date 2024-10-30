@@ -144,7 +144,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
           options={{
             filtering: false,
             search: true,
-            sorting: true,
+            maxColumnSort: 1,
             padding: "dense",
             actionsColumnIndex: -1,
             paging: false

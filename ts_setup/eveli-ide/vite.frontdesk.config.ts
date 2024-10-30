@@ -43,6 +43,12 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
+        '/files': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
         '/dialob/api/forms': {
           target: 'http://localhost:8080',
           changeOrigin: false,
