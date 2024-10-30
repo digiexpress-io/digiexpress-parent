@@ -22,6 +22,14 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
   const intl = useIntl();
   const { open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions } = props;
 
+  const handleCancel: React.MouseEventHandler<HTMLElement> = (event) => {
+    onCancel();
+  };
+
+  const handleAccept: React.MouseEventHandler<HTMLElement> = (event) => {
+    onAccept();
+  };
+
   return (
     <Dialog open={open} onClose={onClose} {...dialogOptions}>
       { title && <DialogTitle>{title}</DialogTitle> }
@@ -29,9 +37,9 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Burger.SecondaryButton onClick={onCancel as React.MouseEventHandler<HTMLElement>}
+        <Burger.SecondaryButton onClick={handleCancel}
           {...cancelOptions} label={cancel || intl.formatMessage({ id: 'button.cancel' })} />
-        <Burger.PrimaryButton onClick={onAccept as React.MouseEventHandler<HTMLElement>}
+        <Burger.PrimaryButton onClick={handleAccept}
           {...acceptOptions} label={accept || intl.formatMessage({ id: 'button.accept' })} />
       </DialogActions>
     </Dialog>

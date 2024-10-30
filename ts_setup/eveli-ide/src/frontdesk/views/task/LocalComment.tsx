@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
+import { ListItem, Link, Typography, Grid2, Box, alpha } from '@mui/material';
 import { FormattedDate, useIntl } from 'react-intl';
-import { Comment as CommentData, CommentSource } from '../../types/task/Comment';
-import {
-  ListItem,
-  Link,
-  Typography,
-  Grid2,
-  Box
-} from '@mui/material';
-import { Task } from '../../types/task/Task';
 import { toZonedTime } from 'date-fns-tz';
-import { alpha } from "@mui/material";
+
+import { Task } from '../../types/task/Task';
+import { Comment as CommentData, CommentSource } from '../../types/task/Comment';
 import { AddComment } from './AddComment';
+
 
 type Props = {
   comment: CommentData

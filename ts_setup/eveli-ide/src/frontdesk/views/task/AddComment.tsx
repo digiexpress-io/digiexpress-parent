@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useIntl } from 'react-intl';
 import { OutlinedInput, Grid2, Stack } from '@mui/material';
 
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';
@@ -16,8 +15,7 @@ type Props = {
   isExternalThread?: boolean
 }
 
-export const AddComment:React.FC<Props> = (props) => {
-  const intl = useIntl();
+export const AddComment: React.FC<Props> = (props) => {
   let input:HTMLTextAreaElement|null = null;
   const [inputValue, setInputValue] = useState<string|null>(null);
   const backendContext = useContext(TaskBackendContext);
