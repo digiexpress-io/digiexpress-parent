@@ -71,6 +71,8 @@ public interface AttachmentCommands {
     ZonedDateTime getCreated();
     ZonedDateTime getUpdated();
     Long getSize();
+    Optional<String> getProcessId();
+    Optional<String> getTaskId();
     AttachmentStatus getStatus();
   }
   

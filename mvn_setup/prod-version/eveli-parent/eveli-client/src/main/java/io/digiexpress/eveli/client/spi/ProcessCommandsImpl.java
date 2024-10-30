@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.spi;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * eveli-client
@@ -40,7 +38,6 @@ import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert;
-import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert.WorkflowException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -77,6 +74,10 @@ public class ProcessCommandsImpl implements ProcessCommands {
         return processJPA.findByTask(id).map(ProcessCommandsImpl::map);
       }
       @Override
+      public List<ProcessCommands.Process> findAllByUserId(String userId) {
+        return processJPA.findAllByUserId(userId).stream().map(ProcessCommandsImpl::map).toList();
+      }
+      @Override
       public Page<ProcessEntity> find(String name, List<String> status, String userId, Pageable page) {
         List<ProcessStatus> statusList = new ArrayList<>();
         if (status == null || status.isEmpty()) {
@@ -100,60 +101,6 @@ public class ProcessCommandsImpl implements ProcessCommands {
         return processJPA.searchProcesses('%' + name + '%', statusList, userId, page);
       }
     };
-  }
-  @Override
-  public Process create(InitProcess request) {
-    final var workflow = workflowCommands.queryBuilder().findOneWorkflowByName(request.getWorkflowName())
-        .await().atMost(Duration.ofMinutes(1))
-        .map(e -> e.getBody())
-        .orElseThrow(() -> new WorkflowException(new StringBuilder()
-        .append("Can't find workflow by name: '").append(request.getWorkflowName()).append("'!")
-        .toString()));
-
-    final var formBuilder = forms.create()
-      .formName(workflow.getFormName())
-      .formTag(workflow.getFormTag())
-      .language(request.getLanguage())
-      .addContext("FirstNames", request.getFirstName())
-      .addContext("LastName", request.getLastName())
-      .addContext("SocialSecurityNumber", request.getIdentity()) // same field is used for company id and ssn
-      .addContext("Email", request.getEmail())
-      .addContext("Address", request.getAddress())
-      .addContext("ProtectionOrder", request.getProtectionOrder());
-      
-    if(request.getCompanyName() != null) {
-      formBuilder
-        .addContext("CompanyName", request.getCompanyName())
-        .addContext("CompanyId", request.getIdentity());  // same field is used for company id and ssn
-    }
-    
-    if(request.getRepresentativeIdentity() != null) {
-      formBuilder
-		  .addContext("RepresentativeEnabled", true)
-		  .addContext("RepresentativeFirstName", request.getRepresentativeFirstName())
-	    .addContext("RepresentativeLastName", request.getRepresentativeLastName())
-	    .addContext("RepresentativeIdentity", request.getRepresentativeIdentity());
-    } else {
-    	formBuilder.addContext("RepresentativeEnabled", false);
-    }
-    if (request.getInputContextId() != null) {
-      formBuilder.addContext("inputContextId", request.getInputContextId());
-    }
-    if (request.getInputParentContextId() != null) {
-      formBuilder.addContext("inputParentContextId", request.getInputParentContextId());
-    }
-    
-    final var sessionId = formBuilder.build().getId();
-    
-    return ProcessCommandsImpl.map(
-        processJPA.save(new ProcessEntity()
-        .setQuestionnaire(sessionId)
-        .setUserId(request.getIdentity())
-        .setStatus(ProcessStatus.CREATED)
-        .setWorkflowName(request.getWorkflowName())
-        .setInputContextId(request.getInputContextId())
-        .setInputParentContextId(request.getInputParentContextId()))
-    );
   }
   @Override
   public ProcessStatusBuilder status() {
@@ -205,22 +152,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
         }
       }
     };
-  }
-  @Override
-  public void delete(String processId) {
-    long id = Long.parseLong(processId);
-    Optional<ProcessEntity> process = processJPA.findById(id);
-    if (process.isPresent()) {
-      ProcessEntity entity = process.get();
-      if (entity.getStatus() != ProcessStatus.ANSWERING && entity.getStatus() != ProcessStatus.CREATED) {
-        throw new WorkflowException("Can't delete process with answered questionnaire, id: " + processId);
-      }
-      processJPA.deleteById(id);
-    } else {
-      throw new WorkflowException("Process with id:" + processId + " not found");
-    }
-  }
-  
+  }  
   private void setStatus(String id, ProcessStatus status) {
     processJPA.findById(Long.parseLong(id)).ifPresent(entity -> processJPA.save(entity.setStatus(status)));
   }
@@ -229,7 +161,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
     return new Builder();
   }
   
-  public static ImmutableProcess map(ProcessEntity entity) {
+  public static Process map(ProcessEntity entity) {
     return ImmutableProcess.builder()
     .id(entity.getId())
     .status(entity.getStatus())

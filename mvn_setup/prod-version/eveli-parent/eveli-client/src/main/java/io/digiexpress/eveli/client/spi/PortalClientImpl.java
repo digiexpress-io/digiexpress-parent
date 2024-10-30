@@ -30,7 +30,6 @@ import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
-import io.digiexpress.eveli.client.api.ProcessAuthorizationCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -57,7 +56,6 @@ public class PortalClientImpl implements PortalClient {
   private final ProcessCommands process;
   private final AttachmentCommands attachments;
   private final HdesCommands hdes;
-  private final ProcessAuthorizationCommands processAuthorization;
   private final TransactionWrapper transactionWrapper;
   private final NotificationCommands notification;
   
@@ -103,8 +101,7 @@ public class PortalClientImpl implements PortalClient {
       final var hdes = HdesCommandsImpl.builder().hdesClient(hdesClient).transactionWrapper(transactionWrapper)
             .process(process).programEnvir(programEnvir).workflow(assetClient).build();
       
-      final var auth = ProcessAuthorizationCommandsImpl.builder().hdesClient(hdesClient).programEnvir(programEnvir).build();
-      return new PortalClientImpl(dialobCommands, task, process, attachmentCommands, hdes, auth, transactionWrapper, notificationCommands);
+      return new PortalClientImpl(dialobCommands, task, process, attachmentCommands, hdes, transactionWrapper, notificationCommands);
     }
   }
 }

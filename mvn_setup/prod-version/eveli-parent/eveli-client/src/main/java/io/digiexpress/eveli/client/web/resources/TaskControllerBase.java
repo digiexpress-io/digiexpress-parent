@@ -47,11 +47,10 @@ public class TaskControllerBase {
   
 
   protected void registerTaskAccess(Object id, AuthClient.AnyPrincipal authentication, Optional<TaskEntity> result) {
-
     registerUserTaskAccess(id, result, authentication.getUsername());
   }
 
-  protected void registerUserTaskAccess(Object id, Optional<TaskEntity> result, String userName) {
+  public void registerUserTaskAccess(Object id, Optional<TaskEntity> result, String userName) {
     if (result.isPresent()) {
       log.info("Registering access to task with id: {} by user {}", id, userName);
       try {

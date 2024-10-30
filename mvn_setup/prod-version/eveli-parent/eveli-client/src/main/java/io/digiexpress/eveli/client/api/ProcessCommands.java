@@ -39,8 +39,6 @@ import jakarta.annotation.Nullable;
 public interface ProcessCommands {
   ProcessQuery query();
   ProcessStatusBuilder status();
-  Process create(InitProcess request);
-  void delete(String processId);
   
   interface ProcessQuery {
     Optional<Process> get(String id);
@@ -48,6 +46,7 @@ public interface ProcessCommands {
     Optional<Process> getByTaskId(String id);
     Page<ProcessEntity> find(String name, List<String> status, String userId, Pageable page);
     List<Process> findAll();
+    List<Process> findAllByUserId(String userId);
   }
 
   interface ProcessStatusBuilder {
@@ -80,39 +79,7 @@ public interface ProcessCommands {
     String getInputParentContextId();
   }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableInitProcess.class)
-  @JsonDeserialize(as = ImmutableInitProcess.class)
-  interface InitProcess {
-    String getIdentity();
-    String getWorkflowName();
-    Boolean getProtectionOrder();    
 
-    @Nullable
-    String getCompanyName();
-    @Nullable
-    String getFirstName();
-    @Nullable
-    String getLastName();
-    @Nullable
-    String getLanguage();
-    @Nullable
-    String getEmail();
-    @Nullable
-    String getAddress();
-
-    @Nullable
-    String getRepresentativeFirstName();
-    @Nullable
-    String getRepresentativeLastName();
-    @Nullable
-    String getRepresentativeIdentity();
-    @Nullable
-    String getInputContextId();
-    @Nullable
-    String getInputParentContextId();
-  }
-  
   enum ProcessStatus {
     CREATED,
     ANSWERING,

@@ -64,11 +64,6 @@ import io.digiexpress.eveli.client.web.resources.DialobCallbackController;
 import io.digiexpress.eveli.client.web.resources.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.EmailNotificationController.EmailFilter;
 import io.digiexpress.eveli.client.web.resources.FormsController;
-import io.digiexpress.eveli.client.web.resources.PortalAttachmentController;
-import io.digiexpress.eveli.client.web.resources.PortalCommentController;
-import io.digiexpress.eveli.client.web.resources.PortalProcessAnonymousController;
-import io.digiexpress.eveli.client.web.resources.PortalProcessController;
-import io.digiexpress.eveli.client.web.resources.PortalTaskController;
 import io.digiexpress.eveli.client.web.resources.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.TaskApiController;
@@ -143,40 +138,6 @@ public class EveliAutoConfig {
     ) {
     return new FormsController(restTemplate, config.getServiceUrl());
   }
-  
-  @Bean 
-  public PortalAttachmentController portalAttachmentController(PortalClient client, PortalAccessValidator validator, AuthClient security) {
-    return new PortalAttachmentController(client, validator, security);
-  }
-  @Bean 
-  public PortalCommentController portalCommentController(
-      TaskRepository taskRepository, 
-      CommentRepository commentRepository, 
-      TaskAccessRepository taskAccessRepository, 
-      
-      PortalClient client, 
-      PortalAccessValidator validator, AuthClient security
-  ) {
-    return new PortalCommentController(taskRepository, commentRepository, taskAccessRepository, client, validator, security);
-  }
-  @Bean 
-  public PortalProcessAnonymousController portalProcessAnonymousController(
-      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config, AuthClient security
-  ) {
-    return new PortalProcessAnonymousController(client, validator, config.getAnonymousUserId(), security);
-  }
-  @Bean 
-  public PortalProcessController portalProcessController(
-      PortalClient client, PortalAccessValidator validator, EveliPropsGamut config, AuthClient security
-  ) {
-    return new PortalProcessController(client, validator, config.getAnonymousUserId(), security);
-  }
-  @Bean 
-  public PortalTaskController portalTaskController(
-      TaskAccessRepository taskAccessRepository, TaskRepository taskRepository, PortalClient client, PortalAccessValidator validator, AuthClient security
-  ) {
-    return new PortalTaskController(taskAccessRepository, taskRepository, client, validator, security);
-  }
   @Bean 
   public PrintoutController printoutController(
       PortalClient client,  
@@ -250,6 +211,7 @@ public class EveliAutoConfig {
         .authorization(dialobProps.getAuthorization())
         .url(dialobProps.getServiceUrl() + "/dialob/api/questionnaires")
         .formUrl(dialobProps.getServiceUrl() + "/dialob/api/forms")
+        .sessionUrl(dialobProps.getServiceUrl() + "/session/dialob")
         .submitCallbackUrl(eveliProps.getServiceUrl() + "/dialobSubmitCallback")
         .build();
     

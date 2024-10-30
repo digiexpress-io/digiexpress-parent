@@ -53,6 +53,7 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
     this.securityClient = securityClient;
   }
   
+  /*
   @PostMapping("/anonymous/processes/")
   @Transactional
   public ResponseEntity<ProcessCommands.Process> create(@RequestBody ProcessCommands.InitProcess request) {
@@ -85,5 +86,5 @@ public class PortalProcessAnonymousController extends ProcessBaseController {
     validator.validateProcessAnonymousAccess(id, anonymousUserId);
     client.process().delete(id);
     return new ResponseEntity<>(HttpStatus.OK);
-  }
+  }*/
 }

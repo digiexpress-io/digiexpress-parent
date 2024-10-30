@@ -177,16 +177,15 @@ public class SpringJwtAuthClient implements AuthClient {
       return null;
     }
     
-    log.debug("rep claim is {}", value);
     
     final var name = (JsonString) value.get("name");
     final var personId = (JsonString) value.get("personId");
-    log.debug("rep name is: {}", name);
-    log.debug("rep personId is: {}", personId);
+
     
     return ImmutableCustomerRepresentedPerson.builder()
         .name(name.getString())
         .personId(personId.getString())
+        .representativeName(getRepresentativeName(name.getString()))
         .build();
   }
   
@@ -198,12 +197,8 @@ public class SpringJwtAuthClient implements AuthClient {
       return null;
     }
     
-    log.debug("rep claim is {}", value);
-    
     final var name = (JsonString) value.get("name");
     final var companyId = (JsonString) value.get("identifier");
-    log.debug("rep name is: {}", name);
-    log.debug("rep companyId is: {}", companyId);
     
     return ImmutableCustomerRepresentedCompany.builder()
         .name(name.getString())
@@ -233,5 +228,13 @@ public class SpringJwtAuthClient implements AuthClient {
       }
     }
     return null;
+  }
+  
+  private String[] getRepresentativeName(String name) {
+    final var splitAt = name.indexOf(" ");
+    if(splitAt <= 0) {
+      return new String[] {" ", name.trim()};
+    }
+    return new String[] {name.substring(0, splitAt).trim(), name.substring(splitAt).trim()};
   }
 }

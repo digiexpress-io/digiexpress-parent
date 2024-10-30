@@ -114,6 +114,7 @@ public interface AuthClient {
   interface CustomerRepresentedPerson {
     String getPersonId();
     String getName();
+    String[] getRepresentativeName();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerRepresentedCompany.class) @JsonDeserialize(as = ImmutableCustomerRepresentedCompany.class)

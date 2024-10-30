@@ -84,6 +84,10 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
       Pageable page);
 
   
+  @Query(value="select task from TaskEntity as task where id in :ids")
+  List<TaskEntity> findAllTasksId(@Param("ids") List<Long> ids);
+  
+  
   @Query(value="select distinct t.id from task t join comment c on c.task_id = t.id left join task_access ta on t.id = ta.task_id and ta.user_id=:user_id where (ta.task_id is null or c.created > ta.updated) and c.external=TRUE", nativeQuery = true)
   List<Long> findUnreadExternalTasks(@Param("user_id") String userName);
   
@@ -92,6 +96,7 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
   
   @Query(value="select distinct t.id from task t inner join task_roles ar on t.id =ar.task_id left join task_access ta on t.id = ta.task_id and ta.user_id=:user_id left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated) and ar.assigned_roles in :roles", nativeQuery = true)
   List<Long> findUnreadTasksByRole(@Param("user_id") String userName, @Param("roles") List<String> roles);
+
   
   
   void deleteById(@Param("id") Long id);

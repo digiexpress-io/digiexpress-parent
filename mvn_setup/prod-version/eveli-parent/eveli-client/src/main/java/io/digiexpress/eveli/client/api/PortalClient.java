@@ -27,6 +27,5 @@ public interface PortalClient {
   TaskCommands task();
   NotificationCommands notification();
   ProcessCommands process();
-  ProcessAuthorizationCommands processAuthorization();
   HdesCommands hdes();
 }

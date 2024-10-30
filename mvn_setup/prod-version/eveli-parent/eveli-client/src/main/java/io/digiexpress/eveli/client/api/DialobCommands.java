@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.dialob.api.form.Form;
@@ -42,10 +44,18 @@ public interface DialobCommands {
   Form getForm(String formId);
   TagQueryBuilder getTags();
   
+  DialobProxy proxy();
+  
   
   void complete(String sessionId);  
   void delete(String sessionId);
   
+  
+  interface DialobProxy {
+    ResponseEntity<String> fillGet(String sessionId);
+    ResponseEntity<String> fillPost(String sessionId, String body);
+    ResponseEntity<String> reviewGet(String sessionId);
+  }
   
 
   interface QuestionnaireBuilder {

@@ -45,6 +45,7 @@ import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.spi.asserts.DialobAssert;
 import io.digiexpress.eveli.client.spi.asserts.DialobAssert.DialobException;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -59,6 +60,7 @@ public class DialobCommandsImpl implements DialobCommands {
   private final RestTemplate client;
   private final String authorization;
   
+  private final String sessionUrl;
   private final String questionnaireUrl;
   private final String callbackUrl;
   private final String formUrl;
@@ -219,30 +221,7 @@ public class DialobCommandsImpl implements DialobCommands {
     metadata.set("status", TextNode.valueOf(status));
     return getBody;
   }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Setter
-  @Accessors(fluent = true)
-  public static class Builder {
-    private ObjectMapper objectMapper;
-    private RestTemplate client;
-    private String authorization;
-    private String url;
-    private String submitCallbackUrl;
-    private String formUrl;
 
-    public DialobCommandsImpl build() {
-      DialobAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
-      DialobAssert.notNull(client, () -> "client must be defined!");
-      DialobAssert.notNull(url, () -> "url must be defined!");
-      DialobAssert.notNull(formUrl, () -> "form url must be defined!");
-      
-      return new DialobCommandsImpl(objectMapper, client, authorization, url, submitCallbackUrl, formUrl);
-    }
-  }
 
   @Override
   public TagQueryBuilder getTags() {
@@ -270,4 +249,64 @@ public class DialobCommandsImpl implements DialobCommands {
     };
   }
 
+  @Override
+  public DialobProxy proxy() {
+    return new DialobProxy() {
+      @Override
+      public ResponseEntity<String> reviewGet(String sessionId) {
+        return client.getForEntity(questionnaireUrl + "/"+ sessionId, String.class);
+      }
+      @Override
+      public ResponseEntity<String> fillPost(String sessionId, String body) {
+        final var headers = headers();
+        headers.set(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json");
+        final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        try {
+          ResponseEntity<String> response = client.exchange(questionnaireUrl, HttpMethod.POST, requestEntity, String.class);
+          return response;
+        } catch (Exception e) {
+          throw new DialobException(e.getMessage(), e);
+        }
+      }
+      
+      @Override
+      public ResponseEntity<String> fillGet(String sessionId) {            
+        try {
+          UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(sessionUrl).pathSegment("sessionId");
+          ResponseEntity<String> response = client.getForEntity(uriBuilder.toUriString(), String.class);
+          return response;
+        } catch (Exception e) {
+          throw new DialobException(e.getMessage(), e);
+        }
+      }
+    };
+  }
+  
+  
+  
+  public static Builder builder() {
+    return new Builder();
+  }
+  
+  @Setter
+  @Accessors(fluent = true)
+  public static class Builder {
+    private ObjectMapper objectMapper;
+    private RestTemplate client;
+    private String authorization;
+    private String url;
+    private String submitCallbackUrl;
+    private String formUrl;
+    private String sessionUrl;
+
+    public DialobCommandsImpl build() {
+      DialobAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
+      DialobAssert.notNull(client, () -> "client must be defined!");
+      DialobAssert.notNull(url, () -> "url must be defined!");
+      DialobAssert.notNull(formUrl, () -> "form url must be defined!");
+      DialobAssert.notNull(sessionUrl, () -> "form url must be defined!");
+      
+      return new DialobCommandsImpl(objectMapper, client, authorization, url, submitCallbackUrl, formUrl, sessionUrl);
+    }
+  }
 }

@@ -63,13 +63,13 @@ public class AttachmentCommandsImpl implements AttachmentCommands {
       @Override
       public List<Attachment> taskId(String taskId) {
         final var pathString = String.format("tasks/%s/files/", taskId);
-        return getAttachments(pathString);
+        return getAttachments(pathString, Optional.empty(), Optional.of(taskId));
       }
 
       @Override
       public List<Attachment> processId(String processId) {
         final var pathString = String.format("processes/%s/files/", processId);
-        return getAttachments(pathString);
+        return getAttachments(pathString, Optional.of(processId), Optional.empty());
       }
     };
   }
@@ -154,7 +154,7 @@ public class AttachmentCommandsImpl implements AttachmentCommands {
     };
   }
 
-  private List<Attachment> getAttachments(String pathString) {
+  private List<Attachment> getAttachments(String pathString, Optional<String> processId, Optional<String> taskId) {
     final var result = new ArrayList<Attachment>();
     final var blobs = storage.list(downloadBucket, BlobListOption.currentDirectory(),
         BlobListOption.prefix(pathString));
@@ -162,6 +162,8 @@ public class AttachmentCommandsImpl implements AttachmentCommands {
       final var filenameFromPath = getFilenameFromPath(blob.getName());
       if (!StringUtils.isEmpty(filenameFromPath)) {
         result.add(ImmutableAttachment.builder().name(filenameFromPath)
+            .processId(processId)
+            .taskId(taskId)
             .created(ZonedDateTime.ofInstant(Instant.ofEpochMilli(blob.getCreateTime()), ZoneOffset.UTC))
             .updated(ZonedDateTime.ofInstant(Instant.ofEpochMilli(blob.getUpdateTime()), ZoneOffset.UTC))
             .size(blob.getSize()).status(AttachmentStatus.OK).build());
