@@ -5,6 +5,8 @@ const sv = {
   'explorer.logout': 'Logga ut',
   'explorer.feedback': 'Skicka feedback',
 
+  'button.comment.add': 'Lägg till en kommentar',
+
   // ---------------END NEW --------------------------
 
 

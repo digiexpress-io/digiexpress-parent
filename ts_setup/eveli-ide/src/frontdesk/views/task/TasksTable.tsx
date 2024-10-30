@@ -1,18 +1,19 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
+import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
+import { Box, Link } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import MessageIcon from '@mui/icons-material/Message';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 
 import { FormattedDate, useIntl } from 'react-intl';
-import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
-import { Box } from '@mui/material';
 import { localizeTable } from '../../util/localizeTable';
 import { Link as RouterLink } from 'react-router-dom';
-import { Link } from '@mui/material';
 import moment from 'moment';
 import { mapRolesList } from '../../util/rolemapper';
-import LockIcon from '@mui/icons-material/Lock';
+
 import { TableStateContext } from '../../context/TaskSessionContext';
-import MessageIcon from '@mui/icons-material/Message';
-import RefreshIcon from '@mui/icons-material/Refresh';
+
 import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
 import { UserGroup } from '../../types/UserGroup';
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';

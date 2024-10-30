@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Comment as CommentData } from '../../types/task/Comment';
-import {
-  Button,
-  Paper,
-  Box,
-  Grid2
-} from '@mui/material';
+import { Paper, Box, Grid2 } from '@mui/material';
+import { useIntl } from 'react-intl';
+
 import { Task } from '../../types/task/Task';
 import mapNestedEntities from '../../util/mapNestedEntities';
 import { Thread } from './Thread';
 import { AddComment } from './AddComment';
+
+import * as Burger from '@/burger';
 
 type OwnProps = {
   task: Task
@@ -21,6 +19,7 @@ type OwnProps = {
 }
 
 export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
+  const intl = useIntl();
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -83,9 +82,7 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
           onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>
-            <Button onClick={toggleComment} variant='contained' size='small'>
-              <FormattedMessage id={buttonId} defaultMessage='Add comment' />
-            </Button>
+            <Burger.PrimaryButton onClick={toggleComment} label={intl.formatMessage({ id: 'button.comment.add' })} />
           </Grid2>
         )}
       </Grid2>

@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { 
   Button, 
   OutlinedInput, 
   Grid2,
   Stack
 } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 import { Comment } from '../../types/task/Comment';
 import { Task } from '../../types/task/Task';
+
+import * as Burger from '@/burger';
 
 type Props = {
   parentComment?: Comment
@@ -21,6 +22,7 @@ type Props = {
 }
 
 export const AddComment:React.FC<Props> = (props) => {
+  const intl = useIntl();
   let input:HTMLTextAreaElement|null = null;
   const [inputValue, setInputValue] = useState<string|null>(null);
   const backendContext = useContext(TaskBackendContext);
@@ -42,14 +44,8 @@ export const AddComment:React.FC<Props> = (props) => {
       </Grid2>
       <Grid2 size={{ xs: 6 }} sx={{ margin: 'auto', width: '90%' }}>
         <Stack direction='row' spacing={2}>
-          <Button onClick={send} color="primary" disabled={!inputValue}>
-            <SendIcon />
-            <FormattedMessage id='comment.store' defaultMessage='Send'/>
-          </Button>
-          <Button onClick={props.onCancel} color="secondary">
-            <CloseIcon />
-            <FormattedMessage id='taskButton.cancel' defaultMessage='Cancel'/>
-          </Button>
+          <Burger.PrimaryButton onClick={send} disabled={!inputValue} label={intl.formatMessage({ id: 'comment.store' })} />
+          <Burger.SecondaryButton onClick={props.onCancel} label={intl.formatMessage({ id: 'button.cancel' })} />
         </Stack>
       </Grid2>
     </>

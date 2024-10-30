@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField } from "@mui/material";
 import { WorkflowRelease } from "../../types/WorkflowRelease";
 import { WorkflowTable } from "./WorkflowTable";
 import { FormattedMessage, useIntl } from "react-intl";

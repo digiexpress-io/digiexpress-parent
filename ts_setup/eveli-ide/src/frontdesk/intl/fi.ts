@@ -5,6 +5,8 @@ const fi = {
   'explorer.logout': 'Kirjaudu ulos',
   'explorer.feedback': 'Lähetä palautetta',
 
+  'button.comment.add': 'Lisää kommentti',
+
   // ---------------END NEW --------------------------
 
 

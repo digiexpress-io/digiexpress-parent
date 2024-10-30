@@ -3,6 +3,9 @@ import React, { useRef } from 'react';
 import { FormattedDate, FormattedNumber, FormattedTime, useIntl, } from 'react-intl';
 import MaterialTable, { Column, MTableAction  } from '@material-table/core';
 import { Box, Button} from '@mui/material';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DownloadIcon from '@mui/icons-material/Download';
+
 import { localizeTable } from '../../util/localizeTable';
 import { Attachment } from '../../types';
 import { useAttachmentConfig } from '../../context/AttachmentContext';
@@ -148,7 +151,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
           }}
           actions={[
             {
-              icon: 'upload',
+              icon: FileUploadIcon,
               isFreeAction: true,
               tooltip: intl.formatMessage({id: 'attachmentButton.addAttachment'}),
               disabled: readonly,
@@ -156,7 +159,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
               onClick: ()=>{}
             },
             {
-              icon: 'download',
+              icon: DownloadIcon,
               isFreeAction: false,
               tooltip: intl.formatMessage({id: 'attachmentButton.downloadAttachment'}),
               onClick: (event, data)=>{handleDownloadClick(data)}
