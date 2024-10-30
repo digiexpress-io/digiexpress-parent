@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid2 } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/burger';
@@ -28,7 +28,7 @@ const parseInput = (json: string) => {
       }
     }
     return parsed;
-  } catch(e) {
+  } catch (e) {
     console.error(e);
     return {};
   }
@@ -41,7 +41,7 @@ const getValueFromJson = (parameter: HdesApi.TypeDef, json: Record<string, any>)
   }
   if (init.includes(" - ")) {
     return init.split(" - ")[0];
-  } 
+  }
   if (init.includes(", ")) {
     return init.split(", ")[0];
   }
@@ -91,13 +91,13 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
       <Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.formTitle"} /></Typography></Box>
       {!selected ? (<Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.noAsset"} /></Typography></Box>) : null}
       {!selected ? null : (
-        <Grid container spacing={2}>
+        <Grid2 container spacing={2}>
           {elements.map((typeDef, index) => (
-            <Grid item xs={4} key={index}>
+            <Grid2 size={{ xs: 4 }} key={index}>
               <InputFORMField typeDef={typeDef} value={getValueFromJson(typeDef, json)} onChange={handleChange} />
-            </Grid>)
+            </Grid2>)
           )}
-        </Grid>
+        </Grid2>
       )}
 
     </Box>

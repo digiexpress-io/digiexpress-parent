@@ -1,4 +1,4 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useContext, useMemo } from 'react';
@@ -104,13 +104,13 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
               ({values, submitForm, isSubmitting, errors, isValid}) => (
                 <Form>
                   <DialogContent>
-                    <Grid container spacing={1} >
-                      <Grid item xs={12} md={12}>
+                    <Grid2 container spacing={1} >
+                      <Grid2 size={{ xs: 12, md: 12 }}>
                         <Field component={TextField} name='name' label={intl.formatMessage({id: 'workflow.name'})} 
                           fullWidth required  validate={requiredValidator} error={!!errors.name}
                           helperText={errors.name} />
-                      </Grid>
-                      <Grid item xs={12} md={6}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, md: 6 }}>
                         <Field component={TextField} name='formName' select
                           label={intl.formatMessage({id: 'workflow.form.formName'})} 
                           fullWidth required  validate={requiredValidator} error={!!errors.formName}
@@ -119,8 +119,8 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
                             forms.map((namelabel, index) => <MenuItem key={index} value={namelabel[0]}>{namelabel[1]}</MenuItem>)
                           }
                         </Field>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, md: 6 }}>
                         <Field component={TextField} name='formTag' select
                           label={intl.formatMessage({id: 'workflow.form.formTag'})} 
                           fullWidth required  validate={requiredValidator} error={!!errors.formTag}
@@ -130,8 +130,8 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
                             .map((tag, i) => <MenuItem key={i} value={tag.tagName}>{tag.tagName}</MenuItem>  )
                           }
                         </Field>
-                      </Grid>
-                      <Grid item xs={12} md={12}>
+                      </Grid2>
+                      <Grid2 size={{ xs: 12, md: 12 }}>
                         <Field component={TextField} name='flowName' select
                           label={intl.formatMessage({id: 'workflow.flowName'})} 
                           fullWidth required  validate={requiredValidator} error={!!errors.flowName}
@@ -140,8 +140,8 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
                             flows?.map((name, index) => <MenuItem key={index} value={name}>{name}</MenuItem>)
                           }
                         </Field>
-                      </Grid>
-                    </Grid>
+                      </Grid2>
+                    </Grid2>
                   </DialogContent>
                   <DialogActions>
                     <Burger.SecondaryButton onClick={handleClose} label={intl.formatMessage({ id: 'button.cancel' })} />

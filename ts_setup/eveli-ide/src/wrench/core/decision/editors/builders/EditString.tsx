@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Grid, Box } from '@mui/material';
+import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Grid2, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -45,8 +45,8 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
 
   return (<>
 
-    <Grid container spacing={2}>
-      <Grid item xs={3}>
+    <Grid2 container spacing={2}>
+      <Grid2 size={{ xs: 3 }}>
         <Burger.Select
           label="decisions.cells.newvalue.string.comparisonType"
           onChange={handleOperatorChange}
@@ -57,15 +57,15 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
             value: (<ListItemText primary={v.text} />)
           }))}
         />
-      </Grid>
-      <Grid item xs={9}>
+      </Grid2>
+      <Grid2 size={{ xs: 3 }}>
         <Burger.TextField
           label='decisions.cells.newvalue.string.addValue'
           value={value}
           onChange={setValue}
           onEnter={() => handleAddValue(value)} />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
 
     <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected' /></InputLabel>
     <List>{list}</List>

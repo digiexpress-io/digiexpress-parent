@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { 
   Button, 
   OutlinedInput, 
-  Grid,
+  Grid2,
   Stack
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -37,10 +37,10 @@ export const AddComment:React.FC<Props> = (props) => {
 
   return (
     <>
-      <Grid item xs={6}>
+      <Grid2 size={{ xs: 6 }}>
         <OutlinedInput inputRef={ref => input = ref} multiline autoFocus onChange={handleChange} fullWidth margin='dense'/>
-      </Grid>
-      <Grid item xs={6} sx={{margin: 'auto', width: '90%'}}>
+      </Grid2>
+      <Grid2 size={{ xs: 6 }} sx={{ margin: 'auto', width: '90%' }}>
         <Stack direction='row' spacing={2}>
           <Button onClick={send} color="primary" disabled={!inputValue}>
             <SendIcon />
@@ -51,7 +51,7 @@ export const AddComment:React.FC<Props> = (props) => {
             <FormattedMessage id='taskButton.cancel' defaultMessage='Cancel'/>
           </Button>
         </Stack>
-      </Grid>
+      </Grid2>
     </>
   );
 }

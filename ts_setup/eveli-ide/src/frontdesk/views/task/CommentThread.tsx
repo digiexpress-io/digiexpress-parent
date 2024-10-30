@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Comment as CommentData } from '../../types/task/Comment';
-import { 
+import {
   Button,
   Paper,
   Box,
-  Grid
+  Grid2
 } from '@mui/material';
 import { Task } from '../../types/task/Task';
 import mapNestedEntities from '../../util/mapNestedEntities';
@@ -16,11 +16,11 @@ type OwnProps = {
   task: Task
   isExternalThread?: boolean,
   comments: CommentData[],
-  loadData: ()=>void,
-  isThreaded?: boolean 
+  loadData: () => void,
+  isThreaded?: boolean
 }
 
-export const CommentThreadComponent:React.FC<OwnProps> = ({task, isExternalThread, comments, loadData, isThreaded}) => {
+export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ export const CommentThreadComponent:React.FC<OwnProps> = ({task, isExternalThrea
         behavior: 'smooth',
       });
     }
-  },[reply, comments])
+  }, [reply, comments])
 
   const handleCommentAdding = () => {
     setReply(false);
@@ -45,8 +45,8 @@ export const CommentThreadComponent:React.FC<OwnProps> = ({task, isExternalThrea
     toggleComment();
   }
 
-  const getThread = (value:CommentData[], task:Task) => {
-    if(!task) return null;
+  const getThread = (value: CommentData[], task: Task) => {
+    if (!task) return null;
     let comments = value;
     if (typeof isExternalThread !== 'undefined') {
       comments = comments.filter(comment => !!comment.external === isExternalThread);
@@ -57,7 +57,7 @@ export const CommentThreadComponent:React.FC<OwnProps> = ({task, isExternalThrea
       'replyToId'
     );
     return (<Thread
-      comments={comments} task={task} loadData={loadData} isExternalThread={isExternalThread} isThreaded={isThreaded} setReply={setReply}/>);
+      comments={comments} task={task} loadData={loadData} isExternalThread={isExternalThread} isThreaded={isThreaded} setReply={setReply} />);
   }
 
   const thread = getThread(comments, task);
@@ -74,21 +74,21 @@ export const CommentThreadComponent:React.FC<OwnProps> = ({task, isExternalThrea
     }
   }
   return (
-    <Paper sx={{boxShadow: "none", padding: 1}}>
-      <Box style={{maxHeight: '40vh', overflow: 'auto'}} ref={listRef}>
+    <Paper sx={{ boxShadow: "none", padding: 1 }}>
+      <Box style={{ maxHeight: '40vh', overflow: 'auto' }} ref={listRef}>
         {thread}
       </Box>
-      <Grid container spacing={1}>
-      {writingComment && <AddComment task={task}
-        onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread}/>}
-      {!writingComment && (
-        <Grid item xs={12}>
-          <Button onClick={toggleComment} variant='contained' size='small'>
-            <FormattedMessage id={buttonId} defaultMessage='Add comment'/>
-          </Button>
-        </Grid>
-      )}
-      </Grid>
+      <Grid2 container spacing={1}>
+        {writingComment && <AddComment task={task}
+          onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
+        {!writingComment && (
+          <Grid2 size={{ xs: 12 }}>
+            <Button onClick={toggleComment} variant='contained' size='small'>
+              <FormattedMessage id={buttonId} defaultMessage='Add comment' />
+            </Button>
+          </Grid2>
+        )}
+      </Grid2>
     </Paper>
   );
 }

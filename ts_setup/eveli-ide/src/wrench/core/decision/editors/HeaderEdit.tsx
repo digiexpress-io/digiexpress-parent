@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Grid, ListItemText } from '@mui/material';
+import { Box, Grid2, ListItemText } from '@mui/material';
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
 import { useIntl } from 'react-intl';
@@ -47,18 +47,18 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
   const intl = useIntl();
   const editor = (
     <Box component="form" noValidate autoComplete="off">
-      <Grid container spacing={2}>
+      <Grid2 container spacing={2}>
 
         {/** name and type */}
-        <Grid item xs={6}>
+        <Grid2 size={{ xs: 6 }}>
           <Burger.TextField label={intl.formatMessage({ id: 'dt.header.name' })}
             value={name}
             onChange={(value: string) => {
               setCommands(addCommand({ type: 'SET_HEADER_REF', id: header.id, value }, commands));
               setName(value);
             }} />
-        </Grid>
-        <Grid item xs={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 6 }}>
           <Burger.Select label={intl.formatMessage({ id: 'dt.header.dataType' })}
             selected={valueType}
             onChange={(value) => {
@@ -71,9 +71,9 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
               value: (<ListItemText primary={type} />)
             }))}
           />
-        </Grid>
+        </Grid2>
 
-        <Grid item xs={6}>
+        <Grid2 size={{ xs: 6 }}>
           {header.direction === 'OUT' ? null : (
             <Burger.Select label={intl.formatMessage({ id: 'dt.header.expression' })}
               selected={exp}
@@ -99,8 +99,8 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
                 id: type,
                 value: (<ListItemText primary={type} />)
               }))} />)}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
       {header.direction === 'IN' && header.valueType === 'STRING' && <EditValueSet valueSet={valueSet} setValueSet={setValueSet} commands={commands} setCommands={setCommands} headerId={header.id} />}
     </Box >);
 

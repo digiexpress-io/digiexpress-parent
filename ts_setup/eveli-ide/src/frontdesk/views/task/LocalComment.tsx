@@ -5,7 +5,7 @@ import {
   ListItem,
   Link,
   Typography,
-  Grid,
+  Grid2,
   Box
 } from '@mui/material';
 import { Task } from '../../types/task/Task';
@@ -87,7 +87,7 @@ export const LocalComment:React.FC<React.PropsWithChildren<Props>> =
       {header}
       {body}
       {writingReply && (
-        <Grid container spacing={1}>
+        <Grid2 container spacing={1}>
           <AddComment
             parentComment={comment}
             onAdded={handleCommentAdd}
@@ -95,7 +95,7 @@ export const LocalComment:React.FC<React.PropsWithChildren<Props>> =
             task={task}
             isExternalThread={isExternalThread}
           />
-        </Grid>
+        </Grid2>
       )}
       {children}
     </ListItem>

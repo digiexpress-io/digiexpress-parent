@@ -1,6 +1,4 @@
-import { Button, Popover, Box, Grid,
-  Typography,
-  Divider} from '@mui/material';
+import { Button, Popover, Box, Grid2, Typography, Divider } from '@mui/material';
 import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import { useUserInfo } from '../context/UserContext';
@@ -45,37 +43,37 @@ export const Impersonation: React.FC = () => {
         }}
       >
         <Box padding={1}>
-          <Grid container>
-            <Grid item xs={6}>
+          <Grid2 container>
+            <Grid2 size={{ xs: 6 }}>
             <Typography variant="body2" gutterBottom><FormattedMessage id='profile.user.name' /></Typography>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <strong>{userInfo.user.name}</strong>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
             <Typography variant="body2" gutterBottom><FormattedMessage id='profile.user.email' /></Typography>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <strong>{userInfo.user.email || '-'}</strong>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <Typography variant="body2" gutterBottom><FormattedMessage id='profile.user.role' /></Typography>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <strong>{userInfo.user.roles?.map(role=>mapRole(role)).join() || '-'}</strong>
-            </Grid>
-            <Grid item xs={12}>
+            </Grid2>
+            <Grid2 size={{ xs: 12 }}>
               <Typography variant="body2" gutterBottom>
               <Divider />
               </Typography>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <Typography variant="body2" gutterBottom><FormattedMessage id='profile.app.version' /></Typography>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
               <strong>{config.appVersion || '-'}</strong>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </Box>
       </Popover>
     </>

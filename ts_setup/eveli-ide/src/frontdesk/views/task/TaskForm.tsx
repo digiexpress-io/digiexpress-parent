@@ -1,7 +1,8 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { Formik, Form, Field } from 'formik';
-import { TextField, Grid, Button, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox, 
+import {
+  TextField, Grid2, Button, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox, 
   Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import { toZonedTime } from 'date-fns-tz';
@@ -25,6 +26,8 @@ import { Priority } from '../../components/task/Priority';
 import { Comment } from '../../types/task/Comment';
 import * as Yup from 'yup';
 import { TaskLinkProps } from '../../components/task/TaskLinkComponent';
+
+import * as Burger from '@/burger';
 
 const AttachmentTableWrapper: React.FC<{editTask: Task, readonly: boolean}> = ({editTask, readonly}) => {
   const taskId = editTask.id;
@@ -168,6 +171,8 @@ type State = {
 const minLength = 3;
 
 class TaskFormInternal extends React.Component<AllProps, State> {
+
+
   formRef = React.createRef<any>();
 
   validationSchema = Yup.object().shape({
@@ -308,8 +313,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
   }
 
   render() {
-    const {editTask, handleSubmit, groups, 
-      externalThreads, comments, reloadComments} = this.props;
+    const { editTask, intl, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
     const { formatMessage } = this.props.intl;
     const readonly = (editTask.status === TaskStatus.COMPLETED ||
       editTask.status === TaskStatus.REJECTED);
@@ -341,8 +345,8 @@ class TaskFormInternal extends React.Component<AllProps, State> {
               navigationConfirmationRequired={()=>dirty}
             />
             <Paper elevation={4} sx={{p: 2, mb: 2}}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={4}>
+            <Grid2 container spacing={2} alignItems="center">
+              <Grid2 size={{ xs: 12, md: 4 }}>
                   {editTask.keyWords && editTask.keyWords.length > 0 && (
                     <Box display='flex' alignItems='center'>
                       <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: </InputLabel>
@@ -356,13 +360,13 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                   {( !editTask.keyWords || editTask.keyWords.length === 0 ) && (
                     <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: -</InputLabel>
                   )}
-                </Grid>
-                <Grid item xs={12} md={4}>
+              </Grid2>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                   <Typography>
                     <FormattedMessage id={'task.created'} />:&nbsp;{this.formatTimestamp(editTask.created)}
                   </Typography>
-                </Grid>
-                <Grid item xs={12} md={4}>
+              </Grid2>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                   <Field
                     name='dueDate' 
                     component={Datepicker}
@@ -371,10 +375,10 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                     fullWidth={true}
                     readonly={readonly}
                   />
-                </Grid>
-              </Grid>
-              <Grid container spacing={2} alignItems="top" sx={{mt: 1}}>
-                <Grid item xs={12} md={6}>
+              </Grid2>
+            </Grid2>
+            <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                   <Field
                     name='clientIdentificator' as={TextField}
                     label={formatMessage({id: 'taskDialog.clientIdentificator'})}
@@ -383,8 +387,8 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                       readOnly:readonly
                     }}
                     />
-                </Grid>
-                <Grid item xs={12} md={6}>
+              </Grid2>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                   <Field
                     name='subject' as={TextField}
                     label={formatMessage({id: 'taskDialog.subject'})}
@@ -396,19 +400,19 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                       readOnly:readonly
                     }}
                   />
-                </Grid>
-              </Grid>
-              <Grid container spacing={2} alignItems="center" sx={{mt: 1}}>
+              </Grid2>
+            </Grid2>
+            <Grid2 container spacing={2} alignItems="center" sx={{ mt: 1 }}>
                 {!!editTask.taskLinks && editTask.taskLinks.length > 0 &&
-                  <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                     <Box display="flex" gap={1} flexWrap="wrap">
                     {editTask.taskLinks.map(taskLink=> {
                       return this.renderTaskLink({link: taskLink, taskId: editTask.id})
                     })}
                     </Box>
-                  </Grid>
+                </Grid2>
                 }
-                <Grid item xs={12} md={!!editTask.taskLinks && editTask.taskLinks.length > 0 ? 6 : 12}>
+              <Grid2 size={{ xs: 12, md: !!editTask.taskLinks && editTask.taskLinks.length > 0 ? 6 : 12 }}>
                   {editTask.keyWords && editTask.keyWords.length > 0 && (
                     <Box display='flex' alignItems='center'>
                       <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: </InputLabel>
@@ -422,13 +426,13 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                   {( !editTask.keyWords || editTask.keyWords.length === 0 ) && (
                     <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: -</InputLabel>
                   )}  
-                </Grid>
-              </Grid>
+              </Grid2>
+            </Grid2>
             </Paper>
             
             <Paper elevation={4} sx={{p: 2, mb: 2}}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+            <Grid2 container spacing={2}>
+              <Grid2 size={{ xs: 12 }}>
                   <Accordion disableGutters={true}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
@@ -455,11 +459,11 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                       }
                     </AccordionDetails>
                   </Accordion>
-                </Grid>
-                <Grid item xs={12}>
+              </Grid2>
+              <Grid2 size={{ xs: 12 }}>
                   <AttachmentTableWrapper readonly={readonly} editTask={editTask}/>
-                </Grid>
-                <Grid item xs={12}>
+              </Grid2>
+              <Grid2 size={{ xs: 12 }}>
                   <Accordion disableGutters={true}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
@@ -486,14 +490,14 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                       }
                     </AccordionDetails>
                   </Accordion>
-                </Grid>
-              </Grid>
+              </Grid2>
+            </Grid2>
             </Paper>
 
             <Paper elevation={4} sx={{p: 2, mb: 2}}>
-              <Grid container spacing={2} alignItems="top">
+            <Grid2 container spacing={2} alignItems="top">
                 {!!groups.length &&
-                  <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                     <Box display="flex" alignItems="center">
                       <fieldset style={classes.taskRoleFieldset}>
                         <legend style={classes.taskRoleLegend}>
@@ -517,9 +521,9 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                         <FormattedMessage id={'button.editRoles'} />
                       </Button>
                     </Box>
-                  </Grid>
+                </Grid2>
                 }
-                {<Grid item xs={12} md={!!groups.length ? 6 : 12} sx={{mt: 1}}>
+              {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }} sx={{ mt: 1 }}>
                     {!readonly &&
                       <Autocomplete
                         id="assignedUser"
@@ -562,44 +566,44 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                     >
                     </TextField>
                   }
-                  </Grid>
+              </Grid2>
                 }
-                <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                   <Field
                     name='status' as={StatusComponent}
                     label={formatMessage({id: 'taskDialog.status'})}
                     readonly={readonly}
                     handleCallback={this.handleStatusCallback}
                   />
-                </Grid>
-                <Grid item xs={12} md={6}>
+              </Grid2>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                   <Field
                     name='priority' as={Priority}
                     label={formatMessage({id: 'taskDialog.priority'})}
                     readonly={readonly}
                   />
-                </Grid>
-              </Grid>
+              </Grid2>
+            </Grid2>
             </Paper>
 
             <Paper elevation={4} sx={{p: 2, mb: 2}}>
-              <Grid container spacing={2}>      
+            <Grid2 container spacing={2}>      
                 {editTask?.id &&
-                  <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                <Grid2 size={{ xs: 12, md: 6 }} container justifyContent="flex-start">
                     <Typography variant="caption" display="block" gutterBottom>
                     <FormattedMessage id={'task.updated'} />:&nbsp;{this.formatTimestamp(editTask.updated)}&nbsp;&nbsp;
                     {editTask.updaterId || ''}
                     </Typography>
-                  </Grid>
+                </Grid2>
                 }
-              </Grid>
+            </Grid2>
             </Paper>
 
             <Box sx={{position:'sticky', bottom: 10, width: 'fit-content', float: 'right'}}>
               <Paper elevation={2} sx={{padding: 1, marginRight: 2}}>
                 <Stack direction="row" spacing={1} justifyContent='flex-end'>
-                  <Button onClick={()=>this.props.navigate('/ui/tasks')} color="secondary" variant='contained'><FormattedMessage id={'taskButton.cancel'} /></Button>
-                  {!readonly && <Button color="primary" disabled={isSubmitting || !isValid || !dirty} onClick={submitForm}  variant='contained'><FormattedMessage id={'taskButton.accept'}/></Button>}
+                <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={intl.formatMessage({ id: 'button.cancel' })} />
+                {!readonly && <Burger.PrimaryButton disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label={intl.formatMessage({ id: 'button.accept' })} />}
                 </Stack>
               </Paper>
             </Box>

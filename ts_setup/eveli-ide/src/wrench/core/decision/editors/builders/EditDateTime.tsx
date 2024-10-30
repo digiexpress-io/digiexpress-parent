@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ListItemText, Grid } from '@mui/material';
+import { ListItemText, Grid2 } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { DateBuilder } from './'
@@ -41,10 +41,10 @@ export const EditDateTime: React.FC<{ builder: DateBuilder, onChange: (value: st
 
   if (builder.getOperator() !== 'between') {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={3}>{operator}</Grid>
-        <Grid item xs={9}>{start}</Grid>
-      </Grid>
+      <Grid2 container spacing={2}>
+        <Grid2 size={{ xs: 3 }}>{operator}</Grid2>
+        <Grid2 size={{ xs: 9 }}>{start}</Grid2>
+      </Grid2>
     );
   }
 
@@ -53,9 +53,9 @@ export const EditDateTime: React.FC<{ builder: DateBuilder, onChange: (value: st
     value={builder.getEnd()}
     onChange={handleEndChange} />)
 
-  return (<Grid container spacing={2}>
-    <Grid item xs={3}>{operator}</Grid>
-    <Grid item xs={4}>{start}</Grid>
-    <Grid item xs={5}>{end}</Grid>
-  </Grid>);
+  return (<Grid2 container spacing={2}>
+    <Grid2 size={{ xs: 3 }}>{operator}</Grid2>
+    <Grid2 size={{ xs: 4 }}>{start}</Grid2>
+    <Grid2 size={{ xs: 5 }}>{end}</Grid2>
+  </Grid2>);
 }

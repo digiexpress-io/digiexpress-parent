@@ -1,6 +1,8 @@
-import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle } from '@mui/material';
+import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle } from '@mui/material';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+
+import * as Burger from '@/burger';
 
 export interface ConfirmationDialogProps  {
   title ?: string;
@@ -16,7 +18,9 @@ export interface ConfirmationDialogProps  {
   onCancel: () => void;
 };
 
-export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions}) => {
+export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
+  const intl = useIntl();
+  const { open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions } = props;
 
   return (
     <Dialog open={open} onClose={onClose} {...dialogOptions}>
@@ -25,8 +29,10 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({open, tit
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} {...cancelOptions} color='secondary'>{cancel || <FormattedMessage id='button.cancel' /> }</Button>
-        <Button onClick={onAccept} color='primary' {...acceptOptions}>{accept || <FormattedMessage id='button.accept' />}</Button>
+        <Burger.SecondaryButton onClick={onCancel as React.MouseEventHandler<HTMLElement>}
+          {...cancelOptions} label={cancel || intl.formatMessage({ id: 'button.cancel' })} />
+        <Burger.PrimaryButton onClick={onAccept as React.MouseEventHandler<HTMLElement>}
+          {...acceptOptions} label={accept || intl.formatMessage({ id: 'button.accept' })} />
       </DialogActions>
     </Dialog>
   );
