@@ -104,8 +104,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
     .then(response => {
       if (response.ok) return response.json();
       throw new Error("Error with code:" + response.status);
-    })
-    .then(json=>json._embedded?.comments || []);
+    });
   }
 
   const saveComment = (commentText:string, replyToId:number|undefined, task:Task, isExternalThread:boolean|undefined):Promise<Comment> => {

@@ -301,7 +301,7 @@ private Collection<TaskLink> map(Collection<io.digiexpress.eveli.client.persiste
         .created(task.getCreated())
         .commentText(task.getCommentText())
         .userName(task.getUserName())
-        .replyToId(task.getReplyTo().getId()) // probably bad idea, lazy relations
+        .replyToId(Optional.ofNullable(task.getReplyTo()).map(r -> r.getId()).orElse(null)) // probably bad idea, lazy relations
         .taskId(task.getTask().getId()) // probably bad idea, lazy relations
         .external(task.getExternal())
         .source(task.getSource())

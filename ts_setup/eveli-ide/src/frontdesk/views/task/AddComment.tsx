@@ -1,12 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useIntl } from 'react-intl';
-import { 
-  Button, 
-  OutlinedInput, 
-  Grid2,
-  Stack
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { OutlinedInput, Grid2, Stack } from '@mui/material';
+
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 import { Comment } from '../../types/task/Comment';
 import { Task } from '../../types/task/Task';
