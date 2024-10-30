@@ -1,4 +1,7 @@
 import MaterialTable, { Column } from '@material-table/core';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+
 import moment from 'moment';
 import React, { useRef, useState } from 'react';
 import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
@@ -108,13 +111,13 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshW
         }}
         actions={historyView || !config.modifiableAssets ? [] : [
           {
-            icon: 'add',
+            icon: AddIcon,
             tooltip: intl.formatMessage({id: 'workflowTable.addButton'}),
             isFreeAction: true,
             onClick: () => {setWorkflow(null);setOpen(true);}
           },
           {
-            icon: 'edit',
+            icon: EditIcon,
             tooltip: intl.formatMessage({id: 'workflowTable.editButton'}),
             onClick: (event, data) => {setWorkflow(data as Workflow);setOpen(true)}
           }

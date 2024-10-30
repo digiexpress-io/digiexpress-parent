@@ -1,4 +1,6 @@
 import MaterialTable, { Column } from '@material-table/core';
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
 import moment from 'moment';
 import React, { useContext, useRef, useState } from 'react';
 import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
@@ -122,14 +124,14 @@ export const AssetReleaseTable: React.FC = () => {
         }}
         actions={[
           {
-            icon: 'add',
+            icon: AddIcon,
             tooltip: intl.formatMessage({id: 'assetReleaseTable.addButton'}),
             isFreeAction: true,
             hidden: !config.modifiableAssets,
             onClick: () => {setNewDialogOpen(true);}
           },
           {
-            icon: 'save_alt',
+            icon: SaveIcon,
             tooltip: intl.formatMessage({id: 'assetReleaseTable.exportButton'}),
             onClick: (event, data) => {!Array.isArray(data) &&  getRelease(data)}
           }

@@ -1,4 +1,6 @@
 import MaterialTable, { Column } from '@material-table/core';
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
 import moment from 'moment';
 import React, { useRef, useState } from 'react';
 import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
@@ -12,7 +14,7 @@ import { downloadFile } from '../../util/downloadFile';
 import { WorkflowTagDialog } from './WorkflowTagDialog';
 import Visibility from '@mui/icons-material/Visibility';
 
-interface TableState  {
+interface TableState {
   columns: Array<Column<WorkflowRelease>>;
 }
 
@@ -23,13 +25,13 @@ export const WorkflowReleaseTable: React.FC = () => {
 
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response:workflows, refresh:refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${apiUrl}/workflowReleases/`);
+  const { response: workflows, refresh: refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${apiUrl}/workflowReleases/`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
-  const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease|null>(null);
+  const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease | null>(null);
 
 
-  const formatDateTime = (time:any) => {
+  const formatDateTime = (time: any) => {
     if (time) {
       const localTime = moment.utc(time).local().toDate();
       return (
@@ -44,17 +46,17 @@ export const WorkflowReleaseTable: React.FC = () => {
   const tableState: TableState = {
     columns: [
       {
-        title: intl.formatMessage({id: 'workflowReleaseTableHeader.name'}),
+        title: intl.formatMessage({ id: 'workflowReleaseTableHeader.name' }),
         field: 'name',
         headerStyle: { fontWeight: 'bold' }
       },
       {
-        title: intl.formatMessage({id: 'workflowReleaseTableHeader.description'}),
+        title: intl.formatMessage({ id: 'workflowReleaseTableHeader.description' }),
         field: 'description',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({id: 'workflowReleaseTableHeader.updated'}),
+        title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updated' }),
         field: 'created',
         filtering: false,
         type: 'date',
@@ -63,7 +65,7 @@ export const WorkflowReleaseTable: React.FC = () => {
         headerStyle: { fontWeight: 'bold' }
       },
       {
-        title: intl.formatMessage({id: 'workflowReleaseTableHeader.updatedBy'}),
+        title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updatedBy' }),
         field: 'user',
         headerStyle: { fontWeight: 'bold' }
       }
@@ -71,9 +73,9 @@ export const WorkflowReleaseTable: React.FC = () => {
   };
 
   return (
-      <>
+    <>
       <MaterialTable
-        title = {intl.formatMessage({id: 'workflowReleaseTable.title'})}
+        title={intl.formatMessage({ id: 'workflowReleaseTable.title' })}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}
@@ -88,31 +90,31 @@ export const WorkflowReleaseTable: React.FC = () => {
         }}
         actions={[
           {
-            icon: 'add',
-            tooltip: intl.formatMessage({id: 'workflowReleaseTable.addButton'}),
+            icon: AddIcon,
+            tooltip: intl.formatMessage({ id: 'workflowReleaseTable.addButton' }),
             isFreeAction: true,
             hidden: !config.modifiableAssets,
-            onClick: () => {setWorkflowRelease(null);setNewDialogOpen(true);}
+            onClick: () => { setWorkflowRelease(null); setNewDialogOpen(true); }
           },
           {
-            icon: ()=>(<Visibility/>),
-            tooltip: intl.formatMessage({id: 'workflowReleaseTable.viewButton'}),
-            onClick: (event, data) => {setWorkflowRelease(data as WorkflowRelease);setTagDialogOpen(true)}
+            icon: () => (<Visibility />),
+            tooltip: intl.formatMessage({ id: 'workflowReleaseTable.viewButton' }),
+            onClick: (event, data) => { setWorkflowRelease(data as WorkflowRelease); setTagDialogOpen(true) }
           },
           {
-            icon: 'save_alt',
-            tooltip: intl.formatMessage({id: 'workflowReleaseTable.exportButton'}),
-            onClick: (event, data) => {!Array.isArray(data) &&  downloadFile(JSON.stringify(data, undefined, 2), data.name + '.json', 'text/json')}
+            icon: SaveIcon,
+            tooltip: intl.formatMessage({ id: 'workflowReleaseTable.exportButton' }),
+            onClick: (event, data) => { !Array.isArray(data) && downloadFile(JSON.stringify(data, undefined, 2), data.name + '.json', 'text/json') }
           }
         ]}
-       
+
         isLoading={false}
-        data={workflows||[]}
+        data={workflows || []}
       />
-      <NewWorkflowRelease open={newDialogOpen} setOpen={setNewDialogOpen} workflowRelease={workflowRelease} onSubmit={() => refreshWorkflowReleases()} /> 
+      <NewWorkflowRelease open={newDialogOpen} setOpen={setNewDialogOpen} workflowRelease={workflowRelease} onSubmit={() => refreshWorkflowReleases()} />
       {workflowRelease &&
-        <WorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen}/>
+        <WorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />
       }
-      </>
+    </>
   );
 }

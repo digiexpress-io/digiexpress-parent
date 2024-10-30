@@ -4,6 +4,9 @@ import { WorkflowRelease } from "../../types/WorkflowRelease";
 import { WorkflowTable } from "./WorkflowTable";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import * as Burger from '@/burger';
+
+
 interface WorkflowTagDialogProps {
   workflowRelease : WorkflowRelease
   open: boolean
@@ -42,7 +45,7 @@ export const WorkflowTagDialog: React.FC<WorkflowTagDialogProps> = ({workflowRel
           <WorkflowTable workflows={workflowRelease.entries} refreshWorkflows={()=>{}} historyView={true}/>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setOpen(false)} variant='contained'><FormattedMessage id='button.close' /></Button>
+          <Burger.SecondaryButton onClick={() => setOpen(false)} label={intl.formatMessage({ id: 'button.close' })} />
         </DialogActions>
       </Dialog>
     </>

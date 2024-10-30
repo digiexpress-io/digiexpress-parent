@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useContext, useMemo } from 'react';
@@ -10,6 +10,7 @@ import { Workflow } from '../../types/Workflow';
 import { DialobFormTag } from '../../types';
 import { useSnackbar } from 'notistack';
 
+import * as Burger from '@/burger';
 
 const messages = defineMessages(
   {
@@ -143,8 +144,8 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
                     </Grid>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={handleClose} variant='contained'><FormattedMessage id='button.cancel' /></Button>
-                    <Button onClick={submitForm} disabled={isSubmitting || !isValid} color='primary' variant='contained'><FormattedMessage id='button.accept' /></Button>
+                    <Burger.SecondaryButton onClick={handleClose} label={intl.formatMessage({ id: 'button.cancel' })} />
+                    <Burger.PrimaryButton onClick={submitForm} disabled={isSubmitting || !isValid} label={intl.formatMessage({ id: 'button.accept' })} />
                   </DialogActions>
                   </Form>
                 )

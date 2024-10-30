@@ -1,4 +1,6 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+
 import { FormattedDate, useIntl } from 'react-intl';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
 import { Box } from '@mui/material';
@@ -299,7 +301,7 @@ export const TasksTable:React.FC<Props> =
               onClick: () => tableRef.current.onQueryChange()
             },
             {
-              icon: 'add',
+              icon: AddIcon,
               isFreeAction: true,
               tooltip: intl.formatMessage({id: 'taskButton.addTask'}),
               onClick: addTask
