@@ -208,7 +208,7 @@ public class EveliAutoConfig {
   ) {
     
     final var dialob = DialobCommandsImpl.builder().objectMapper(objectMapper).client(restTemplate)
-        .authorization(dialobProps.getAuthorization())
+        .authorization(dialobProps.getApiKey())
         .url(dialobProps.getServiceUrl() + "/dialob/api/questionnaires")
         .formUrl(dialobProps.getServiceUrl() + "/dialob/api/forms")
         .sessionUrl(dialobProps.getServiceUrl() + "/session/dialob")

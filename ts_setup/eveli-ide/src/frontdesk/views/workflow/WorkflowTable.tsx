@@ -31,7 +31,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshW
   const [open, setOpen] = useState(false);
   const [workflow, setWorkflow] = useState<Workflow|null>(null);
 
- 
+
   const formName = (data: Workflow) => {
     let formLabel = data.formName;
     const tag = formTags?.find(t => t.formName === data.formName && t.tagName === data.formTag);

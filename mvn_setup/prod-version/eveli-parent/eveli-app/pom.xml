@@ -29,14 +29,14 @@
             <profile>dev</profile>
             <profile>fake-user</profile>
           </profiles>
-          <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000</jvmArguments>
+           <jvmArguments>-Dspring.config.location=file:../../../../../eveli-app.properties,classpath:application-dev.yml -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000
+           </jvmArguments>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
-  
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>

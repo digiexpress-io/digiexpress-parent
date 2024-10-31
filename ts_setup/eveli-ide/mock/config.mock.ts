@@ -1,4 +1,4 @@
-import { createSSEStream, defineMock } from 'vite-plugin-mock-dev-server'
+import { defineMock } from 'vite-plugin-mock-dev-server'
 
 export default defineMock({
   url: '/config',
@@ -6,6 +6,8 @@ export default defineMock({
   body: {
     api: '/api',
     tasksApiUrl: '/api/tasks/v1',
+    dialobComposerUrl: '/dialob/composer',
+
     wrenchApiUrl: '',
     wrenchIdeUrl: '',
     contentRepositoryUrl: '',
@@ -15,7 +17,7 @@ export default defineMock({
     calendarUrl: '',
 
     dialobApiUrl: '',
-    dialobComposerUrl: '',
+
     dialobSessionUrl: '',
     feedbackKey: '',
     taskDeleteGroups: [],

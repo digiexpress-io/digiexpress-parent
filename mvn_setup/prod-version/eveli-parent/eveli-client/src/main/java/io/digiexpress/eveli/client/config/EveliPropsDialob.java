@@ -33,5 +33,5 @@ public class EveliPropsDialob {
   
   private String tenantId;
   private Long submitMessageDelay;
-  private String authorization;
+  private String apiKey;
 }

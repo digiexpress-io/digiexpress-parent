@@ -27,8 +27,10 @@ export const WorkflowTagDialog: React.FC<WorkflowTagDialogProps> = ({workflowRel
               label={intl.formatMessage({id:'workflowReleaseTableHeader.name'})}
               defaultValue={workflowRelease.name}
               size='small'
-              InputProps={{
-                readOnly: true,
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                }
               }}
             />
             <TextField
@@ -36,8 +38,10 @@ export const WorkflowTagDialog: React.FC<WorkflowTagDialogProps> = ({workflowRel
               label={intl.formatMessage({id:'workflowReleaseTableHeader.description'})}
               defaultValue={workflowRelease.description}
               size='small'
-              InputProps={{
-                readOnly: true,
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  }
               }}
             />
             </Stack>

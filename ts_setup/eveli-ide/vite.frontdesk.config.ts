@@ -49,8 +49,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
-        '/dialob/api/forms': {
-          target: 'http://localhost:8080',
+        '/dialob': {
+          target: 'http://localhost:92',
           changeOrigin: false,
           secure: false,
         },
@@ -115,12 +115,6 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         },
 
         '/spo-task': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/dialob': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,

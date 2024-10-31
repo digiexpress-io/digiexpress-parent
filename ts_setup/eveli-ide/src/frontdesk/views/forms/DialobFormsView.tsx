@@ -59,7 +59,7 @@ export const DialobFormsView: React.FC = () => {
     }
     return "-";
   }
-
+  console.log('forms view')
   interface TableState {
     columns: Array<Column<DialobFormEntry>>;
   }

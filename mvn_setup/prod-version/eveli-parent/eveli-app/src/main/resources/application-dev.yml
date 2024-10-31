@@ -1,8 +1,5 @@
 spring:
-  datasource:
-    url: "jdbc:postgresql://localhost:5433/eveli-app"
-    username: "eveli-app"
-    password: "password123"
+  config.activate.on-profile: 'dev'
   jpa:
     showSql: false
     generateDdl: false
@@ -27,17 +24,19 @@ management:
       exposure:
         include: "health,mappings"
 
+# Logging config
 logging.level.org.springframework.web: DEBUG
 #logging.level.org.springframework.boot: DEBUG
 
 
+# DB config
+spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli-app"
+spring.datasource.username: "eveli-app"
+spring.datasource.password: "password123"
 
+eveli.task.adminsearch: true
 
-eveli: 
-  task: 
-    adminsearch: true
-
-
-
-
-
+# dialob related config
+eveli.dialob.enabled: true
+eveli.dialob.service-url: 
+eveli.dialob.api-key: 
