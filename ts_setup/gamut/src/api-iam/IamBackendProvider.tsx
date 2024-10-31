@@ -19,10 +19,17 @@ export interface IamBackendProviderProps {
 
 export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => {
   const [user, setUser] = React.useState<IamApi.User>();
+  const [pending, setPending] = React.useState<boolean>(true);
   const [userRolesProducts, setUserRolesProducts] = React.useState<{userRoles: IamApi.UserRoles | undefined, userProducts: IamApi.UserProducts | undefined}>();
 
   // load user and related data
-  React.useEffect(() => { getUser(props).then(setUser) }, [props]);
+  React.useEffect(() => { 
+    getUser(props).then(newUser => {
+      setUser(newUser);
+      setPending(false);
+    }).catch(ex => setPending(false))
+  }, [props]);
+  
   React.useEffect(() => { 
     if(user) {
       getUserRoles(props).then(async userRoles => {
@@ -39,6 +46,10 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
     createContext(props, user, userRolesProducts?.userRoles, userRolesProducts?.userProducts ), 
     [props, user, userRolesProducts]
   );
+
+  if(pending) {
+    return (<>I'am loading...</>);
+  }
 
   return (<IamBackendContext.Provider value={contextValue}>
     {props.children}
