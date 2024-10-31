@@ -73,8 +73,10 @@ export const NewWorkflowRelease: React.FC<NewFormProps> = ({ onSubmit, workflowR
 
         <Formik
           initialValues={{
-            name: '',
-            description: ''
+            body: {
+              name: workflowRelease?.body.name,
+              description: workflowRelease?.body.description
+            }
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
@@ -88,8 +90,8 @@ export const NewWorkflowRelease: React.FC<NewFormProps> = ({ onSubmit, workflowR
                 <DialogContent>
                   <Stack spacing={1}>
                     <Field component={TextField} name='name' label={intl.formatMessage({ id: 'workflowRelease.name' })}
-                      fullWidth required validate={requiredValidator} error={!!errors.name}
-                      helperText={errors.name} InputProps={{ margin: 'normal' }} />
+                      fullWidth required validate={requiredValidator} error={!!errors.body?.name}
+                      helperText={errors.body?.name} InputProps={{ margin: 'normal' }} />
                     <Field component={TextField} name='description' label={intl.formatMessage({ id: 'workflowRelease.description' })}
                       fullWidth InputProps={{ margin: 'normal' }} />
                   </Stack>

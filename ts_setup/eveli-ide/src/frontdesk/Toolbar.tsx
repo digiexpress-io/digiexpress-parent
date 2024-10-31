@@ -53,7 +53,8 @@ export const Toolbar: React.FC<{}> = () => {
       <StyledToolbar>
         <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
         <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
-        <StyledToolbarButton onClick={openFeedback}><FeedbackOutlinedIcon /></StyledToolbarButton>
+        {/*TODO Feedback still needed??  */}
+        { /*<StyledToolbarButton onClick={openFeedback}><FeedbackOutlinedIcon /></StyledToolbarButton> */}
         <LocaleSelect />
         {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
       </StyledToolbar>

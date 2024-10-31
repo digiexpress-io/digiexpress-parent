@@ -57,11 +57,11 @@ export const WorkflowReleaseTable: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updated' }),
-        field: 'bodycreated',
+        field: 'body.updated',
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => formatDateTime(data.created),
+        render: data => formatDateTime(data.body.created),
         headerStyle: { fontWeight: 'bold' }
       },
       {
@@ -71,6 +71,7 @@ export const WorkflowReleaseTable: React.FC = () => {
       }
     ]
   };
+
 
   return (
     <>
@@ -104,7 +105,7 @@ export const WorkflowReleaseTable: React.FC = () => {
           {
             icon: SaveIcon,
             tooltip: intl.formatMessage({ id: 'workflowReleaseTable.exportButton' }),
-            onClick: (event, data) => { !Array.isArray(data) && downloadFile(JSON.stringify(data, undefined, 2), data.name + '.json', 'text/json') }
+            onClick: (event, data) => { !Array.isArray(data) && downloadFile(JSON.stringify(data, undefined, 2), data.body.name + '.json', 'text/json') }
           }
         ]}
 
@@ -112,9 +113,7 @@ export const WorkflowReleaseTable: React.FC = () => {
         data={workflows || []}
       />
       <NewWorkflowRelease open={newDialogOpen} setOpen={setNewDialogOpen} workflowRelease={workflowRelease} onSubmit={() => refreshWorkflowReleases()} />
-      {workflowRelease &&
-        <WorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />
-      }
+      {workflowRelease && <WorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />}
     </>
   );
 }
