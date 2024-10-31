@@ -22,7 +22,9 @@ package io.digiexpress.eveli.client.web.resources;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +34,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.UserActionsClient;
+import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.GamutClient;
+import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
+import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
+import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,51 +50,34 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/gamut/feedback")
 @RequiredArgsConstructor
 public class GamutFeedbackController {
-
-  private final UserActionsClient userActions;
-  private final AuthClient auth;
+  private final GamutClient gamutClient;
+  private final DialobCommands dialob;
   private final List<String> allowedActions;
-  private final String anonUserFirstname;
-  private final String anonUserLastname;
-  private final String anonEmail;
-  private final String anonUserid;
-  private final String anonAddress;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Uni<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return userActions.fill()
-    .path("session/dialob/" + sessionId)
-    .method(io.vertx.core.http.HttpMethod.GET)
-    .build()
-    .onItem().transform(b -> b.toString());
+  public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
+    return dialob.proxy().fillGet(sessionId);
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Uni<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return userActions.fill()
-    .path("session/dialob/"+ sessionId)
-    .method(io.vertx.core.http.HttpMethod.POST)
-    .body(io.vertx.mutiny.core.buffer.Buffer.buffer(body))
-    .build()
-    .onItem().transform(b -> b.toString());
+  public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
+    return dialob.proxy().fillPost(sessionId, body);
   }
-  
   @DeleteMapping(value="/{actionId}")
-  public Uni<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
-    final var client = auth.getCustomer();
-    
-    return userActions.cancelUserAction()
-      .processId(actionId)
-      .userId(client.getPrincipal().getSsn())
-      .userName(client.getPrincipal().getUsername())
-      .build();
+  public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
+    try {
+      return new ResponseEntity<>(gamutClient.cancelUserActionBuilder().actionId(actionId).cancelOne(), HttpStatus.OK);
+    } catch (ProcessNotFoundException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    } catch (ProcessCantBeDeletedException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
   }
-  
   @GetMapping(value="/allowed")
   public List<String> getAllowed() {
     return allowedActions;
   }
   
-  public Uni<UserAction> kindOfCreateAction(
+  public ResponseEntity<UserAction> kindOfCreateAction(
       @RequestParam("actionId") String actionId,
       @RequestParam("inputContextId") String inputContextId,
       @RequestParam("inputParentContextId") String inputParentContextId,
@@ -100,30 +88,17 @@ public class GamutFeedbackController {
       throw new org.springframework.security.access.AccessDeniedException("actionId: " + actionId + ", not allowed!, Allowed: " + allowedActions + "!");
     }
     
-    return createUserAction(actionId, actionLocale, inputContextId, inputParentContextId);
-  }
-  
-  
-  private Uni<UserAction> createUserAction(
-      String actionId, 
-      String clientLocale, 
-      String inputContextId,
-      String inputParentContextId
-  ) {
-    
-
-    final var create = userActions.createUserAction()
-      .actionName(actionId)
-      .protectionOrder(false)
-      .language(clientLocale);
-    	
-    return create
-      .userName(anonUserFirstname, anonUserLastname)
-      .email(anonEmail)
-      .address(anonAddress)
-      .userId(anonUserid)
-      .inputParentContextId(inputParentContextId)
-      .inputContextId(inputContextId)
-      .build();
+    try {
+      return ResponseEntity.ok(gamutClient.userActionBuilder()
+          .actionId(actionId)
+          .clientLocale(actionLocale)
+          .inputContextId(inputContextId)
+          .inputParentContextId(inputParentContextId)
+          .createOne());
+    } catch(UserActionNotAllowedException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    } catch (WorkflowNotFoundException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
   }
 }

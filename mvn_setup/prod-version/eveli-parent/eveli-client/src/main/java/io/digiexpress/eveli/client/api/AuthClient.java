@@ -32,10 +32,12 @@ import jakarta.annotation.Nullable;
 
 
 public interface AuthClient {
+  Liveness getLiveness();
+  
+  
   Worker getWorker();
   Customer getCustomer();
   CustomerRoles getCustomerRoles();
-  Liveness getLiveness();
   
   
   interface AnyPrincipal {

@@ -34,17 +34,16 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.spi.ProcessCommandsImpl;
+import lombok.RequiredArgsConstructor;
 
-@RestController
 /**
  * Rest controller to handle external requests from admin UI.
  */
-public class ProcessApiController extends ProcessBaseController {
+@RestController
+@RequiredArgsConstructor
+public class ProcessApiController {
+  protected final PortalClient client;
 
-  public ProcessApiController(PortalClient client) {
-    super(client);
-  }
-  
   @Transactional
   @GetMapping("/api/processesSearch")
   public ResponseEntity<Page<ProcessCommands.Process>> processesSearch(
@@ -53,10 +52,7 @@ public class ProcessApiController extends ProcessBaseController {
       @RequestParam(name="userId", defaultValue="") String userId, 
       Pageable pageable) {
     
-    
-    final Page<ProcessCommands.Process> processes = client.process().query().find(name, status, userId, pageable)
-        .map(ProcessCommandsImpl::map);
-    
+    final var processes = client.process().query().find(name, status, userId, pageable).map(ProcessCommandsImpl::map);    
     return new ResponseEntity<>(processes, HttpStatus.OK);
   }
 }
