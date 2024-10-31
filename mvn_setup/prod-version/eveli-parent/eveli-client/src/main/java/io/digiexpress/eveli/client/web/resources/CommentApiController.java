@@ -73,7 +73,7 @@ public class CommentApiController extends TaskControllerBase
     @GetMapping(value="/task/{id}/comments")
     public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id)
     {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       final var task = taskRepository.findById(id);
       registerTaskAccess(id, authentication.getPrincipal(), task);
@@ -96,7 +96,7 @@ public class CommentApiController extends TaskControllerBase
     public ResponseEntity<TaskCommands.TaskComment> createComment(
         @RequestBody TaskCommands.TaskComment comment) 
     {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       final var entity = TaskCommandsImpl.map(comment);
       final var task = getCommentTask(comment);
       entity.setTask(task);
@@ -105,7 +105,7 @@ public class CommentApiController extends TaskControllerBase
         final var replyComment = getReplyToComment(comment);
         entity.setReplyTo(replyComment);
       }
-      String userName = securityClient.getWorker().getPrincipal().getUsername();
+      String userName = securityClient.getUser().getPrincipal().getUsername();
       entity.setUserName(userName);
 
       final var savedComment = commentRepository.save(entity);

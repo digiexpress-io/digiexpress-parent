@@ -44,7 +44,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.AuthClient.UserType;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
@@ -104,7 +103,7 @@ public class TaskApiController extends TaskControllerBase
         @RequestParam(name="dueDate", required=false) String dueDate,
         Pageable pageable) {
       
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task search: subject: {}, clientIdentificator: {}, assignedUser: {}, status: {}, priority: {}, assignedRoles: {}, dueDate: {}, by user id: {}", 
           subject, clientIdentificator, assignedUser, status, priority, searchRole, dueDate, authentication.getPrincipal().getUsername());
       
@@ -155,11 +154,11 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<TaskCommands.Task> getTaskById(@PathVariable("id") Long id) 
     {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       Optional<TaskEntity> result;
       
-      if (authentication.getType() == UserType.AUTH && !adminsearch) {
+      if (!adminsearch) {
         List<String> roles = authentication.getPrincipal().getRoles();
         log.info("User is authenticated with roles: {}", roles);
         result = taskRepository.findByIdAndAssignedRolesIn(id, roles);
@@ -180,7 +179,7 @@ public class TaskApiController extends TaskControllerBase
     public ResponseEntity<TaskCommands.Task> createTask(
         @RequestBody TaskCommands.Task task) {
       
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       String userName = authentication.getPrincipal().getUsername();
       log.info("Task post: user id: {}", userName);
       
@@ -205,7 +204,7 @@ public class TaskApiController extends TaskControllerBase
       if (id.compareTo(task.getId()) != 0) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       final var userName = authentication.getPrincipal().getUsername();
       final var email = authentication.getPrincipal().getEmail();
 
@@ -245,7 +244,7 @@ public class TaskApiController extends TaskControllerBase
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("id") Long id) {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task delete: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
       taskRepository.deleteById(id);
     }
@@ -254,7 +253,7 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<Collection<Long>> getUnreadTasks() 
     {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task unread request: user id: {}", authentication.getPrincipal().getUsername());
       List<Long> taskIds = new ArrayList<>();
       
@@ -281,7 +280,7 @@ public class TaskApiController extends TaskControllerBase
     @Transactional(readOnly = true)
     public ResponseEntity<KeyWordsResponse> getKeyWords() 
     {
-      final var authentication = securityClient.getWorker();
+      final var authentication = securityClient.getUser();
       log.info("Task keyword request: user id: {}", authentication.getPrincipal().getUsername());
       try {
         List<String> result = new ArrayList<>();

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,16 +36,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class GamutIamController {
-  private final AuthClient authClient;
+  private final CrmClient authClient;
   
 
   @GetMapping(path = "/")
-  public AuthClient.Customer getUser() {
+  public CrmClient.Customer getUser() {
     return authClient.getCustomer();
   }
   
   @GetMapping(path = "/roles")
-  public AuthClient.CustomerRoles getRoles(@RequestHeader("cookie") String id) {
+  public CrmClient.CustomerRoles getRoles(@RequestHeader("cookie") String id) {
     return authClient.getCustomerRoles();
   }
 

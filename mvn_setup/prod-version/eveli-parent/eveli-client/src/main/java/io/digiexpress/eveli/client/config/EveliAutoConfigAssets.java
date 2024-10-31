@@ -40,7 +40,7 @@ import io.digiexpress.eveli.client.web.resources.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowTagController;
 import io.digiexpress.eveli.client.web.resources.AssetsWrenchController;
-import io.digiexpress.eveli.client.web.resources.AssetssReleaseController;
+import io.digiexpress.eveli.client.web.resources.AssetsReleaseController;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -82,8 +82,8 @@ public class EveliAutoConfigAssets {
   
   
   @Bean 
-  public AssetssReleaseController assetReleaseController(EveliContext context, AuthClient security) {
-    return new AssetssReleaseController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
+  public AssetsReleaseController assetReleaseController(EveliContext context, AuthClient security) {
+    return new AssetsReleaseController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
   }
   @Bean 
   public AssetsWorkflowController workflowController(EveliContext context) {

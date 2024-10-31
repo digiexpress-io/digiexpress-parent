@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.dialob;
 
 /*-
  * #%L
@@ -43,8 +43,7 @@ import io.dialob.api.form.FormTag;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.client.api.DialobCommands;
-import io.digiexpress.eveli.client.spi.asserts.DialobAssert;
-import io.digiexpress.eveli.client.spi.asserts.DialobAssert.DialobException;
+import io.digiexpress.eveli.client.spi.dialob.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

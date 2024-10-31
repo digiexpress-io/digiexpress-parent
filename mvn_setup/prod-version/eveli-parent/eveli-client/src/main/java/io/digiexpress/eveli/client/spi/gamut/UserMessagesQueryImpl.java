@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -23,8 +23,8 @@ package io.digiexpress.eveli.client.spi;
 import java.util.List;
 import java.util.Optional;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.AuthClient.Customer;
+import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.CrmClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
@@ -45,7 +45,7 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
   private final CommentRepository commentRepository;
   private final TaskRepository taskRepository;
   private final TaskAccessRepository taskAccessRepository;
-  private final AuthClient authClient;
+  private final CrmClient authClient;
   
   @Override
   public List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException {

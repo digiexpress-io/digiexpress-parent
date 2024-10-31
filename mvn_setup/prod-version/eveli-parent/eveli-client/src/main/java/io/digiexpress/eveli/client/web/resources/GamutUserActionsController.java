@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
@@ -64,7 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GamutUserActionsController {
   
   private final GamutClient gamutClient;
-  private final AuthClient authClient;
+  private final CrmClient authClient;
   private final DialobCommands dialob;
   private final HdesCommands hdes;
 
@@ -134,7 +134,7 @@ public class GamutUserActionsController {
     if(person == null && company == null) {
       return ResponseEntity.ok(null); // Nobody is represented
     }
-    final var roles = authClient.getCustomerRoles().getPrincipal().getRoles();
+    final var roles = authClient.getCustomerRoles().getRoles();
     final var allowed = hdes.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
         .addAllUserRoles(roles)
         .build());

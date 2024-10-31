@@ -67,7 +67,7 @@ public class AttachmentApiController {
   public ResponseEntity<List<Attachment>> listTaskAttachments(@PathVariable String taskId) 
       throws URISyntaxException 
   {
-    final var authentication = securityClient.getWorker();
+    final var authentication = securityClient.getUser();
     log.info("Attachment list GET API call for task id: {} from user {}", taskId, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
@@ -96,7 +96,7 @@ public class AttachmentApiController {
       ) 
       throws URISyntaxException 
   {
-    final var authentication = securityClient.getWorker();
+    final var authentication = securityClient.getUser();
     log.info("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
@@ -126,7 +126,7 @@ public class AttachmentApiController {
       @RequestParam(name="filename") String filename) 
       throws URISyntaxException 
   {
-    final var authentication = securityClient.getWorker();
+    final var authentication = securityClient.getUser();
     log.info("Attachment file POST API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
     if (!checkTaskAccess(taskId, authentication)) {
       return ResponseEntity.notFound().build();
@@ -141,7 +141,7 @@ public class AttachmentApiController {
     return ResponseEntity.notFound().build();
   }
 
-  private boolean checkTaskAccess(String taskId, AuthClient.Worker authentication) {
+  private boolean checkTaskAccess(String taskId, AuthClient.User authentication) {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
     if (getTask(taskId, roles).isEmpty()) {

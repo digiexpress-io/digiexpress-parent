@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.iam;
 
+import io.digiexpress.eveli.client.api.CrmClient;
+
 /*-
  * #%L
  * eveli-client
@@ -21,19 +23,18 @@ package io.digiexpress.eveli.client.iam;
  */
 
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
 
 public interface PortalAccessValidator {
 
 
-  void validateTaskAccess(Long id, AuthClient.CustomerPrincipal principal) ;
+  void validateTaskAccess(Long id, CrmClient.CustomerPrincipal principal) ;
 
-  void validateProcessAccess(ProcessCommands.Process process, AuthClient.CustomerPrincipal principal);
+  void validateProcessAccess(ProcessCommands.Process process, CrmClient.CustomerPrincipal principal);
 
-  void validateProcessIdAccess(String processId, AuthClient.CustomerPrincipal principal);
+  void validateProcessIdAccess(String processId, CrmClient.CustomerPrincipal principal);
   
   void validateProcessAnonymousAccess(String processId, String anonymousUserId);
   
-  void validateUserAccess(AuthClient.CustomerPrincipal principal, String userId);
+  void validateUserAccess(CrmClient.CustomerPrincipal principal, String userId);
   
 }

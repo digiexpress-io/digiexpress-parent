@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.HdesCommands.ProcessAuthorization;
@@ -53,7 +53,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private final TaskRepository taskRepository;
   private final ProcessRepository processRepository;
-  private final AuthClient authClient;
+  private final CrmClient authClient;
   private final HdesCommands hdesCommands;
   private final AttachmentCommands attachmentsCommands;
   
@@ -108,7 +108,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private Optional<ProcessAuthorization> visitAuthorization() {
     if(authClient.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = authClient.getCustomerRoles().getPrincipal().getRoles();  
+      final var userRoles = authClient.getCustomerRoles().getRoles();  
       final var allowed = hdesCommands.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
           .build());

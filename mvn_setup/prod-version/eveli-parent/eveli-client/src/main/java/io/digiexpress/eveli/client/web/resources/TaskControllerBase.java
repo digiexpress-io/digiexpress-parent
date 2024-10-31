@@ -46,7 +46,7 @@ public class TaskControllerBase {
   }
   
 
-  protected void registerTaskAccess(Object id, AuthClient.AnyPrincipal authentication, Optional<TaskEntity> result) {
+  protected void registerTaskAccess(Object id, AuthClient.UserPrincipal authentication, Optional<TaskEntity> result) {
     registerUserTaskAccess(id, result, authentication.getUsername());
   }
 

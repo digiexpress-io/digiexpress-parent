@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class AssetssReleaseController {
+public class AssetsReleaseController {
 
   private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
@@ -74,7 +74,7 @@ public class AssetssReleaseController {
   public ResponseEntity<Entity<Publication>> create(
       @RequestBody CreatePublication workflowRelease) {
     
-    final var userName = securityClient.getWorker().getPrincipal().getUsername();
+    final var userName = securityClient.getUser().getPrincipal().getUsername();
     final var publicationInit = ImmutableCreatePublication.builder().from(workflowRelease).user(userName).build();
     
     try {

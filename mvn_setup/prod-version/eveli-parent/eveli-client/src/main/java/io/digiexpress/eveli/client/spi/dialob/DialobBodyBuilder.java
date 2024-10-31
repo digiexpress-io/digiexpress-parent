@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.dialob;
 
 /*-
  * #%L
@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.DialobCommands.QuestionnaireBuilder;
-import io.digiexpress.eveli.client.spi.asserts.DialobAssert.DialobException;
+import io.digiexpress.eveli.client.spi.dialob.DialobAssert.DialobException;
 
 public abstract class DialobBodyBuilder implements DialobCommands.QuestionnaireBuilder {
   private final ObjectMapper objectMapper;

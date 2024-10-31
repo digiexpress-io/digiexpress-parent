@@ -1,8 +1,9 @@
-package io.digiexpress.eveli.client.iam;
+package io.digiexpress.eveli.client.spi.crm;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 /*-
  * #%L
  * eveli-client
@@ -28,52 +29,55 @@ import java.util.stream.Collectors;
 
 import javax.json.JsonString;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.AuthClient.Liveness;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerAddress;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedPerson;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
-import io.digiexpress.eveli.client.api.ImmutableWorker;
-import io.digiexpress.eveli.client.api.ImmutableWorkerPrincipal;
+import io.thestencil.iam.api.ImmutableUserRoles;
+import io.thestencil.iam.api.ImmutableUserRolesPrincipal;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SpringJwtAuthClient implements AuthClient {
-
-  @Override
-  public Worker getWorker() {
-    final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated()) {
-      return ImmutableWorker.builder()
-          .type(UserType.ANON)
-          .principal(ImmutableWorkerPrincipal.builder()
-              .username("UNAUTHENTICATED")
-              .email("")
-              .build())
-          .build();
-    }
-    
-    final Jwt token = (Jwt) authentication.getCredentials();
-    return ImmutableWorker.builder()
-        .type(UserType.AUTH)
-        .principal(ImmutableWorkerPrincipal.builder()
-            .username(authentication.getName())
-            .email(getEmail(token))
-            .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
-            .build())
-        .build();
-  }
- 
+@RequiredArgsConstructor
+public class SpringJwtCrmClient implements CrmClient {
+  private final RestTemplate rest;
+  private final String serviceUrl;
+  
   @Override
   public CustomerRoles getCustomerRoles() {
-    // TODO Auto-generated method stub
-    return null;
+    final var request = getCurrentHttpRequest();
+    final var cookie = request.getHeader("cookie");
+    
+    final var headers = new HttpHeaders();
+    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    headers.set("cookie", cookie);
+    final HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
+    final var uri = UriComponentsBuilder.fromHttpUrl(serviceUrl).build().toUri();
+    
+    final var entity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+    return getRoles(entity, getCustomer().getType() == CustomerType.REP_PERSON);
   }
 
   @Override
@@ -87,7 +91,6 @@ public class SpringJwtAuthClient implements AuthClient {
         .issuedAtTime(token.getIssuedAt().toEpochMilli())
         .expiresIn(Duration.between(now, then).toSeconds())
         .build();
-  
   }
 
   @Override
@@ -95,7 +98,7 @@ public class SpringJwtAuthClient implements AuthClient {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
     if(!authentication.isAuthenticated()) {
       return ImmutableCustomer.builder()
-          .type(UserType.ANON)
+          .type(CustomerType.ANON)
           .principal(ImmutableCustomerPrincipal.builder()
                 .id("UNAUTHENTICATED")
                 .ssn("anon")
@@ -109,22 +112,31 @@ public class SpringJwtAuthClient implements AuthClient {
     }
     
     final Jwt token = (Jwt) authentication.getCredentials();
+    final var principal = toCustomer(token);
+    
+    final CustomerType type;
+    if(principal.getRepresentedId() == null) {
+      type = CustomerType.AUTH_CUSTOMER;
+    } else if(principal.getRepresentedCompany() != null) {
+      type = CustomerType.REP_COMPANY;
+    } else if(principal.getRepresentedPerson() != null) {
+      type = CustomerType.REP_PERSON;
+    } else {
+      throw new CustomerJwtParsingException("Can't resolve customer type from the JWT!");
+    }
+    
     
     return ImmutableCustomer.builder()
-        .type(UserType.AUTH)
-        .principal(toCustomer(token))
+        .type(type)
+        .principal(principal)
         .build();
   }
   
-  
-  
-  
-  private String getEmail(Jwt principal) {
-    String email = "";
-    if (principal != null) {
-      email = principal.getClaimAsString("email");
+  private static class CustomerJwtParsingException extends RuntimeException {
+    private static final long serialVersionUID = 1781444267360040922L;
+    public CustomerJwtParsingException(String message) {
+      super(message);
     }
-    return email;
   }
 
   private ImmutableCustomerPrincipal toCustomer(Jwt idToken) {
@@ -171,7 +183,7 @@ public class SpringJwtAuthClient implements AuthClient {
   }
   
   @SuppressWarnings({ "unchecked" })
-  private AuthClient.CustomerRepresentedPerson toRepresentedPerson(Jwt idToken) {
+  private CrmClient.CustomerRepresentedPerson toRepresentedPerson(Jwt idToken) {
     final var value = (Map<String, Object>) idToken.getClaim("representedPerson");
     if(value == null) {
       return null;
@@ -191,7 +203,7 @@ public class SpringJwtAuthClient implements AuthClient {
   
 
   @SuppressWarnings({ "unchecked" })
-  private AuthClient.CustomerRepresentedCompany toRepresentedCompany(Jwt idToken) {
+  private CrmClient.CustomerRepresentedCompany toRepresentedCompany(Jwt idToken) {
     final var value = (Map<String, Object>) idToken.getClaim("representedOrganization");
     if(value == null) {
       return null;
@@ -236,5 +248,71 @@ public class SpringJwtAuthClient implements AuthClient {
       return new String[] {" ", name.trim()};
     }
     return new String[] {name.substring(0, splitAt).trim(), name.substring(splitAt).trim()};
+  }
+  
+  
+  private static HttpServletRequest getCurrentHttpRequest() {
+    final var requestAttributes = RequestContextHolder.getRequestAttributes();
+    if (requestAttributes instanceof ServletRequestAttributes) {
+      return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+    return null;
+  }
+  
+  
+
+  private ImmutableCustomerRoles getRoles(ResponseEntity<String> resp, boolean isPersonRoles) {
+    if (!resp.getStatusCode().is2xxSuccessful()) {
+      String error = "Can't create response, e = " + resp.getStatusCode()  + " | " + resp.getHeaders();
+      log.error("USER ROLES: Error: {} body: {}", error, resp.getBody());
+      return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+    }
+    
+    final ImmutableUserRoles userRoles;
+    if(isPersonRoles) {
+      final JsonObject body = new JsonObject(resp.getBody());
+      if(body.isEmpty()) {
+        return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+      }
+
+      final var jsonRoles = body.getJsonArray("roles");
+      final var roles = jsonRoles.stream().map(data -> (String) data).collect(Collectors.toList());
+      final var jsonPrincipal = body.getJsonObject("principal");
+      final var principal = jsonPrincipal == null ? null : ImmutableUserRolesPrincipal.builder()
+          .name(jsonPrincipal.getString("name"))
+          .identifier(jsonPrincipal.getString("personId"))
+          .build();
+      
+      userRoles = ImmutableUserRoles.builder()
+        .roles(roles)
+        .principal(principal)
+        .build();
+    } else {
+      final JsonArray bodies = new JsonArray(resp.getBody());
+      if(bodies.isEmpty()) {
+        return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+      }
+      
+      final var body = bodies.getJsonObject(0);
+      final var jsonName = body.getString("name");
+      final var jsonIdentifier = body.getString("identifier");
+      final var jsonRoles = body.getJsonArray("roles");
+      final var roles = jsonRoles.stream().map(data -> (String) data).collect(Collectors.toList());
+      
+      final var principal = jsonIdentifier == null ? null : ImmutableUserRolesPrincipal.builder()
+          .name(jsonName)
+          .identifier(jsonIdentifier)
+          .build(); 
+      userRoles = ImmutableUserRoles.builder()
+          .roles(roles)
+          .principal(principal)
+          .build();
+    }
+    
+    return ImmutableCustomerRoles.builder()
+        .identifier(userRoles.getPrincipal().getIdentifier())
+        .userName(userRoles.getPrincipal().getName())
+        .addAllRoles(userRoles.getRoles())
+        .build();
   }
 }

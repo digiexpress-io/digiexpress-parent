@@ -28,9 +28,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.ImmutableWorker;
-import io.digiexpress.eveli.client.api.ImmutableWorkerPrincipal;
-import io.digiexpress.eveli.client.iam.SpringJwtAuthClient;
+import io.digiexpress.eveli.client.api.ImmutableUser;
+import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
+import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
 
 
 
@@ -43,11 +43,10 @@ public class SecurityProvider  {
   public AuthClient authClientFakeUser() {
     return new AuthClient() {
       @Override
-      public Worker getWorker() {
-        return ImmutableWorker.builder()
-            
-            .type(UserType.AUTH)
-            .principal(ImmutableWorkerPrincipal.builder()
+      public User getUser() {
+        return ImmutableUser.builder()
+            .isAuthenticated(true)
+            .principal(ImmutableUserPrincipal.builder()
                 .username("tester")
                 .email("tester@resys.io")
                 .roles(Arrays.asList())
@@ -55,17 +54,6 @@ public class SecurityProvider  {
             .build();
       }
 
-      @Override
-      public Customer getCustomer() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-
-      @Override
-      public CustomerRoles getCustomerRoles() {
-        // TODO Auto-generated method stub
-        return null;
-      }
 
       @Override
       public Liveness getLiveness() {

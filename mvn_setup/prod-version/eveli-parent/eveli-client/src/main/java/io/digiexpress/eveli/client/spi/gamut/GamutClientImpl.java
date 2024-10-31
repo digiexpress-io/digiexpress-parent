@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -22,7 +22,7 @@ package io.digiexpress.eveli.client.spi;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.HdesCommands;
@@ -48,7 +48,7 @@ public class GamutClientImpl implements GamutClient {
   private final DialobCommands dialobCommands;
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
-  private final AuthClient authClient;
+  private final CrmClient authClient;
 
   @Override
   public UserActionBuilder userActionBuilder() {
@@ -77,7 +77,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public AttachmentDownloadQuery attachmentDownloadQuery() {
-    return new AttachmentDownloadQueryImpl(processRepository, authClient, attachmentsCommands);
+    return new AttachmentDownloadQueryImpl(processRepository, attachmentsCommands);
   }
 
   @Override

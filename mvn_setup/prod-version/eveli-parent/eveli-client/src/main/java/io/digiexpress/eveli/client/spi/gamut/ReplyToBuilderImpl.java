@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -22,7 +22,7 @@ package io.digiexpress.eveli.client.spi;
 
 import java.util.Optional;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
@@ -48,7 +48,7 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final ProcessRepository processRepository;
   private final TaskRepository taskRepository;
   private final TaskAccessRepository taskAccessRepository;
-  private final AuthClient authClient;
+  private final CrmClient authClient;
   private String actionId;
   private ReplayToInit from;
 

@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.DialobCommands;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
@@ -57,8 +57,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final DialobCommands dialobCommands;
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
-  private final AuthClient auth;
   
+  
+  private final CrmClient auth;
   
   private String actionId;
   private String clientLocale; 
@@ -72,7 +73,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     TaskAssert.notNull(inputParentContextId, () -> "inputParentContextId can't be null!");    
     
     if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = auth.getCustomerRoles().getPrincipal().getRoles();  
+      final var userRoles = auth.getCustomerRoles().getRoles();  
       final var allowed = hdesCommands.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
           .build());

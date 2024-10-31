@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.gamut;
 
 /*-
  * #%L
@@ -23,7 +23,6 @@ package io.digiexpress.eveli.client.spi;
 import java.net.URISyntaxException;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadQuery;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
@@ -38,7 +37,6 @@ import lombok.experimental.Accessors;
 public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
   
   private final ProcessRepository processRepository;
-  private final AuthClient auth;
   private final AttachmentCommands attachmentCommands;
   
   
