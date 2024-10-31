@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, useThemeProps } from '@mui/material';
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { Components } from 'react-markdown'
 import { useUtilityClasses, GMarkdownRoot, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 
@@ -19,15 +19,15 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
 
   const classes = useUtilityClasses();
 
-  const components = React.useMemo(() => ({
-    h1: delegate({ fontVariant: "h1" }),
-    h2: delegate({ fontVariant: "h2" }),
-    h3: delegate({ fontVariant: "h3" }),
-    h4: delegate({ fontVariant: "h4" }),
-    h5: delegate({ fontVariant: "h5" }),
-    h6: delegate({ fontVariant: "body1" }),
-    p: delegate({ fontVariant: "body1" }),
-    ul: delegate({ fontVariant: "body1" })
+  const components: Components = React.useMemo(() => ({
+    h1: (props) => (<Typography variant={'h1'}>{props.children}</Typography>),
+    h2: (props) => (<Typography variant={'h2'}>{props.children}</Typography>),
+    h3: (props) => (<Typography variant={'h3'}>{props.children}</Typography>),
+    h4: (props) => (<Typography variant={'h4'}>{props.children}</Typography>),
+    h5: (props) => (<Typography variant={'h5'}>{props.children}</Typography>),
+    h6: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
+    p: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
+    ul: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
   }), []);
 
   const Root = props.component ?? GMarkdownRoot;
@@ -36,12 +36,4 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
       <ReactMarkdown 
         children={props.children ?? "no children to render"} components={components} />
     </Root>)
-}
-
-const delegate = (sx: {
-  fontVariant: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body1',
-
-}) => (props: { children: React.ReactNode }) => {
-  const variant = sx.fontVariant;
-  return (<Typography variant={variant}>{props.children}</Typography>);
 }
