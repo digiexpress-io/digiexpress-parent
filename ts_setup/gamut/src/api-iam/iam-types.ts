@@ -66,5 +66,7 @@ export declare namespace IamApi {
     userProducts: UserProducts | undefined;
 
     liveness: number | undefined;
+
+    getUser: () => Promise<User | undefined>
   }
 }

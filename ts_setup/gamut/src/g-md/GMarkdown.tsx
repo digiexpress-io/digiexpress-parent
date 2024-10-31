@@ -33,7 +33,8 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
   const Root = props.component ?? GMarkdownRoot;
   return (
     <Root ownerState={props} className={classes.root}>
-      <ReactMarkdown children={props.children ?? "no children to render"} components={components} />
+      <ReactMarkdown 
+        children={props.children ?? "no children to render"} components={components} />
     </Root>)
 }
 

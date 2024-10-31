@@ -1,11 +1,26 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, Navigate } from '@tanstack/react-router'
+import { useIam } from '../api-iam';
+import React from 'react';
 
-// @ts-ignore
 export const Route = createFileRoute('/')({
-  loader: () => redirect({
-    from: '/',
-    to: '/secured/$locale/views/$viewId',
-    params: { viewId: 'user-overview', locale: 'en' }
-  }),
+  component: Component,
 
 })
+
+
+function Component() {
+  const iam = useIam();
+  if(iam.authType === 'ANON') {
+    return <Navigate {...{
+      from: '/',
+      to: '/public/$locale',
+      params: { viewId: '', locale: 'en' }
+    }}/>
+  } else {
+    return <Navigate {...{
+      from: '/',
+      to: '/secured/$locale/views/$viewId',
+      params: { viewId: 'user-overview', locale: 'en' }
+    }}/>
+  }
+}

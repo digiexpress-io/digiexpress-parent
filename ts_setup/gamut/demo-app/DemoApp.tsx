@@ -9,6 +9,7 @@ import {
   CommsProvider,
   BookingProvider,
   LocaleProvider,
+  useIam,
 } from '@dxs-ts/gamut';
 
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
@@ -26,20 +27,47 @@ import {
 } from './fetch';
 
 
-export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const queryClient = new QueryClient()
+const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const staleTime = 5 * 1000;
+  const processesQueryKey = 'legacy-processes';
   const dialobFetch = createDialobFetch();
-  const iamFetch = createIamFetch();
-  const siteFetch = createSiteFetch();
   const offerFetch = createOfferFetch();
   const contractFetch = createContractFetch();
   const subjectFetch = createSubjectFetch();
   const bookingFetch = createBookingFetch();
 
-  const liveness = 60000;
-  const staleTime = 5 * 1000;
-  const processesQueryKey = 'legacy-processes';
 
+  return (<DialobProvider fetchGet={dialobFetch.fetchGet} fetchPost={dialobFetch.fetchPost}>
+
+      <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+        <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+          <CommsProvider getSubjects={subjectFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+            <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
+              {children}
+            </BookingProvider>
+          </CommsProvider>
+        </ContractProvider>
+      </OfferProvider>
+  </DialobProvider>)
+}
+
+const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (<>{children}</>)
+}
+
+
+const AuthSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const iam = useIam();
+  return (iam.authType === 'ANON' ? <PublicSetup>{children}</PublicSetup> : <SecuredSetup>{children}</SecuredSetup>)
+}
+
+
+export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const queryClient = new QueryClient()
+  const iamFetch = createIamFetch();
+  const siteFetch = createSiteFetch();
+
+  const liveness = 60000;
   function handleExpire() {
     alert("SESSION EXPIRED");
   }
@@ -53,20 +81,9 @@ export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) =
             fetchUserLivenessGET={iamFetch.fetchUserLivenessGET}
             fetchUserProductsGET={iamFetch.fetchUserProductsGET}
             fetchUserRolesGET={iamFetch.fetchUserRolesGET}>
-
-            <DialobProvider fetchGet={dialobFetch.fetchGet} fetchPost={dialobFetch.fetchPost}>
-              <SiteBackendProvider fetchGet={siteFetch.fetchGet}>
-                <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-                  <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-                    <CommsProvider getSubjects={subjectFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-                      <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
-                        {children}
-                      </BookingProvider>
-                    </CommsProvider>
-                  </ContractProvider>
-                </OfferProvider>
-              </SiteBackendProvider>
-            </DialobProvider>
+            <SiteBackendProvider fetchGet={siteFetch.fetchGet}>
+              <AuthSetup>{children}</AuthSetup>
+            </SiteBackendProvider>
           </IamBackendProvider>
         </DemoTheme>
       </LocaleProvider>

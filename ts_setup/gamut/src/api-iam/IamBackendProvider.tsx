@@ -62,13 +62,14 @@ function createContext(
     authType = 'REP_COMPANY';
   } else if(user && user.representedPerson) {
     authType = 'REP_PERSON';
-  } else {
+  } else if(user) {
     authType = 'USER';
   }
 
   return Object.freeze({
     authType, user, userRoles, userProducts,
-    liveness: props.liveness
+    liveness: props.liveness,
+    getUser: () => getUser(props)
   });
 }
 
