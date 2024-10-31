@@ -23,7 +23,9 @@ package io.digiexpress.eveli.client.api;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -55,6 +57,9 @@ public interface DialobCommands {
     ResponseEntity<String> fillGet(String sessionId);
     ResponseEntity<String> fillPost(String sessionId, String body);
     ResponseEntity<String> reviewGet(String sessionId);
+    
+    
+    ResponseEntity<String> request(String path, String query, HttpMethod method, String body, Map<String, String> headers);
   }
   
 

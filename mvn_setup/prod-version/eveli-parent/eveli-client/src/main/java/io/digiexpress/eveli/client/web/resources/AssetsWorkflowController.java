@@ -78,7 +78,7 @@ public class AssetsWorkflowController {
   @PutMapping("/workflows/{id}")
   @Transactional
   public ResponseEntity<Entity<Workflow>> save(@PathVariable("id") String id, @RequestBody WorkflowMutator workflow) {
-    final var previousWorkflow = composer.workflowQuery().findOneByName(id)
+    final var previousWorkflow = composer.workflowQuery().findOneById(id)
         .await().atMost(timeout);
 
     if(previousWorkflow.isEmpty()) {

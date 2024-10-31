@@ -64,6 +64,8 @@ public class DialobCommandsImpl implements DialobCommands {
   private final String callbackUrl;
   private final String formUrl;
   
+  private final String serviceUrl;
+  
   @Override
   public Questionnaire get(String questionnaireId) {
     return client.getForObject(questionnaireUrl + "/"+ questionnaireId, Questionnaire.class);
@@ -267,7 +269,7 @@ public class DialobCommandsImpl implements DialobCommands {
           throw new DialobException(e.getMessage(), e);
         }
       }
-      
+
       @Override
       public ResponseEntity<String> fillGet(String sessionId) {            
         try {
@@ -277,6 +279,23 @@ public class DialobCommandsImpl implements DialobCommands {
         } catch (Exception e) {
           throw new DialobException(e.getMessage(), e);
         }
+      }
+      @Override
+      public ResponseEntity<String> request(String path, String query, HttpMethod method, String body, Map<String, String> headers) {
+        final var uriBuilder = UriComponentsBuilder.fromHttpUrl(serviceUrl)
+            .pathSegment(path).query(query);
+        final var reqHeaders = new HttpHeaders();
+        if(authorization != null) {
+          reqHeaders.set("x-api-key", authorization);
+        }
+        
+        headers.entrySet().stream()
+        .filter(entry -> 
+          entry.getKey().equals(HttpHeaderNames.CONTENT_TYPE.toString()) 
+          )
+        .forEach((entry) -> reqHeaders.put(entry.getKey(), Arrays.asList(entry.getValue())));
+        //reqHeaders.keySet().toArray()
+        return client.exchange(uriBuilder.build().toUri(), method, new HttpEntity<String>(headers()), String.class);
       }
     };
   }
@@ -296,6 +315,7 @@ public class DialobCommandsImpl implements DialobCommands {
     private String url;
     private String submitCallbackUrl;
     private String formUrl;
+    private String serviceUrl;
     private String sessionUrl;
 
     public DialobCommandsImpl build() {
@@ -304,8 +324,9 @@ public class DialobCommandsImpl implements DialobCommands {
       DialobAssert.notNull(url, () -> "url must be defined!");
       DialobAssert.notNull(formUrl, () -> "form url must be defined!");
       DialobAssert.notNull(sessionUrl, () -> "form url must be defined!");
+      DialobAssert.notNull(serviceUrl, () -> "serviceUrl must be defined!");
       
-      return new DialobCommandsImpl(objectMapper, client, authorization, url, submitCallbackUrl, formUrl, sessionUrl);
+      return new DialobCommandsImpl(objectMapper, client, authorization, url, submitCallbackUrl, formUrl, sessionUrl, serviceUrl);
     }
   }
 }

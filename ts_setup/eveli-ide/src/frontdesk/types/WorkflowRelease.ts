@@ -6,11 +6,13 @@ export interface WorkflowReleaseEntry extends Workflow {
 
 export interface WorkflowRelease {
   id: number;
-  name: string;
   description: string;
+  entries: WorkflowReleaseEntry[];
+
+  name: string;
   flowName: string;
   created?: Date;
   createdBy?: string;
   updated?: Date;
-  entries: WorkflowReleaseEntry[];
 }
+

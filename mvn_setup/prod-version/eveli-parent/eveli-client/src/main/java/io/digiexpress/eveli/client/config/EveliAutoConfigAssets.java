@@ -36,6 +36,8 @@ import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.web.resources.AssetsDialobController;
 import io.digiexpress.eveli.client.web.resources.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.AssetsWorkflowTagController;
@@ -79,8 +81,10 @@ public class EveliAutoConfigAssets {
   // TODO  @Value("${build.timestamp}")
   private String timestamp = "";
 
-  
-  
+  @Bean
+  public AssetsDialobController assetsDialobController(PortalClient client, ObjectMapper objectMapper) {
+    return new AssetsDialobController(client.dialob(), objectMapper);
+  }
   @Bean 
   public AssetsReleaseController assetReleaseController(EveliContext context, AuthClient security) {
     return new AssetsReleaseController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);

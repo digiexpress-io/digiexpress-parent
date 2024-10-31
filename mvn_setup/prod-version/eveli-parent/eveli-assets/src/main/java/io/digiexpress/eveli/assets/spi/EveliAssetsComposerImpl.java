@@ -31,6 +31,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.digiexpress.eveli.assets.spi.builders.UpdateBuilderImpl;
 import io.resys.hdes.client.api.HdesClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
@@ -49,8 +50,7 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
 
   @Override
   public UpdateBuilder update() {
-    // TODO Auto-generated method stub
-    return null;
+    return new UpdateBuilderImpl(client);
   }
 
   @Override
@@ -169,6 +169,11 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
       @Override
       public Uni<Optional<Entity<Workflow>>> findOneByName(String name) {
         return client.queryBuilder().findOneWorkflowByName(name);
+      }
+
+      @Override
+      public Uni<Optional<Entity<Workflow>>> findOneById(String id) {
+        return client.queryBuilder().findOneWorkflowById(id);
       }
       
     };

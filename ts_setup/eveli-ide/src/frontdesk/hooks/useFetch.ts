@@ -16,6 +16,8 @@ export function useFetch<R>(url: string, options?: CFetchOptions & HookOptions):
   const [response, setResponse] = useState<R>();
   const [error, setError] = useState<Error>();
   const [code, setCode] = useState<number>();
+  const [isLoading, setIsLoading] = useState(true); 
+
   const session = useContext(SessionRefreshContext);
   // lazy way to enable refreshing.
   // TODO: optimize this or find a more robust library that has `useFetch` in it

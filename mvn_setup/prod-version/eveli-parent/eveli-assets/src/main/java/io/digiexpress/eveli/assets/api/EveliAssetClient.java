@@ -65,6 +65,7 @@ public interface EveliAssetClient {
     Uni<List<Entity<WorkflowTag>>> findAllWorkflowTags();
     Uni<List<Entity<Workflow>>> findAllWorkflows();
     Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name);
+    Uni<Optional<Entity<Workflow>>> findOneWorkflowById(String id);
     Uni<Optional<Entity<WorkflowTag>>> findOneWorkflowTagByName(String name);    
     Uni<AssetState> head();
     

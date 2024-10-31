@@ -47,17 +47,17 @@ export const WorkflowReleaseTable: React.FC = () => {
     columns: [
       {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.name' }),
-        field: 'name',
+        field: 'body.name',
         headerStyle: { fontWeight: 'bold' }
       },
       {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.description' }),
-        field: 'description',
+        field: 'body.description',
         headerStyle: { fontWeight: 'bold' },
       },
       {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updated' }),
-        field: 'created',
+        field: 'bodycreated',
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
@@ -66,7 +66,7 @@ export const WorkflowReleaseTable: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updatedBy' }),
-        field: 'user',
+        field: 'body.user',
         headerStyle: { fontWeight: 'bold' }
       }
     ]

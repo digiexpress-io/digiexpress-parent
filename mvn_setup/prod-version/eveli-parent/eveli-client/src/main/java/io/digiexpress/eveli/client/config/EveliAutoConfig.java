@@ -63,7 +63,6 @@ import io.digiexpress.eveli.client.web.resources.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.DialobCallbackController;
 import io.digiexpress.eveli.client.web.resources.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.EmailNotificationController.EmailFilter;
-import io.digiexpress.eveli.client.web.resources.FormsController;
 import io.digiexpress.eveli.client.web.resources.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.TaskApiController;
@@ -131,13 +130,7 @@ public class EveliAutoConfig {
   public EmailNotificationController emailNotificationController(EveliPropsEmail emailProps) {
     return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
   }
-  
-  @Bean 
-  public FormsController formsController(
-    RestTemplate restTemplate, EveliPropsDialob config
-    ) {
-    return new FormsController(restTemplate, config.getServiceUrl());
-  }
+
   @Bean 
   public PrintoutController printoutController(
       PortalClient client,  
@@ -209,6 +202,7 @@ public class EveliAutoConfig {
     
     final var dialob = DialobCommandsImpl.builder().objectMapper(objectMapper).client(restTemplate)
         .authorization(dialobProps.getApiKey())
+        .serviceUrl(dialobProps.getServiceUrl())
         .url(dialobProps.getServiceUrl() + "/dialob/api/questionnaires")
         .formUrl(dialobProps.getServiceUrl() + "/dialob/api/forms")
         .sessionUrl(dialobProps.getServiceUrl() + "/session/dialob")

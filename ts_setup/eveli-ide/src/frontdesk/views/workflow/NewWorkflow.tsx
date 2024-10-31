@@ -25,7 +25,7 @@ const messages = defineMessages(
 
 export interface NewFormFormProps {
   onSubmit: () => void;
-  workflow: Workflow|null;
+  workflow: Workflow | null;
   open: boolean;
   setOpen: (open:boolean)=>void;
   dialobTags: DialobFormTag[];
@@ -58,7 +58,7 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
       headers: {
         'Accept': 'application/json'
       },
-      body: workflowCommand
+      body: { ...workflowCommand.body, ...(workflowCommand.id ? { id: workflowCommand.id } : {}) }
     })
     .then((response:any) => {
       if (response.ok) {
@@ -86,13 +86,14 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
     
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
         <DialogTitle id='new-form-dialog-title'><FormattedMessage id='workflow.dialogTitle' /></DialogTitle>
-
           <Formik
             initialValues={workflow || {
-              name: '',
-              flowName: '',
-              formName:'',
-              formTag: ''
+            body: {
+                name: '',
+                flowName: '',
+                formName: '',
+                formTag: ''
+              }
             }}
             enableReinitialize={true}
             onSubmit={(values, {setSubmitting}) => {
@@ -106,36 +107,36 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
                   <DialogContent>
                     <Grid2 container spacing={1} >
                       <Grid2 size={{ xs: 12, md: 12 }}>
-                        <Field component={TextField} name='name' label={intl.formatMessage({id: 'workflow.name'})} 
-                          fullWidth required  validate={requiredValidator} error={!!errors.name}
-                          helperText={errors.name} />
+                        <Field component={TextField} name='body.name' label={intl.formatMessage({ id: 'workflow.name' })}
+                          fullWidth required validate={requiredValidator} error={!!errors.body?.name}
+                          helperText={errors.body?.name} />
                       </Grid2>
                       <Grid2 size={{ xs: 12, md: 6 }}>
-                        <Field component={TextField} name='formName' select
+                        <Field component={TextField} name='body.formName' select
                           label={intl.formatMessage({id: 'workflow.form.formName'})} 
-                          fullWidth required  validate={requiredValidator} error={!!errors.formName}
-                          helperText={errors.formName} >
+                          fullWidth required validate={requiredValidator} error={!!errors.body?.formName}
+                          helperText={errors.body?.formName} >
                           {
                             forms.map((namelabel, index) => <MenuItem key={index} value={namelabel[0]}>{namelabel[1]}</MenuItem>)
                           }
                         </Field>
                       </Grid2>
                       <Grid2 size={{ xs: 12, md: 6 }}>
-                        <Field component={TextField} name='formTag' select
+                        <Field component={TextField} name='body.formTag' select
                           label={intl.formatMessage({id: 'workflow.form.formTag'})} 
-                          fullWidth required  validate={requiredValidator} error={!!errors.formTag}
-                          helperText={errors.formTag} >
+                          fullWidth required validate={requiredValidator} error={!!errors.body?.formTag}
+                          helperText={errors.body?.formTag} >
                           {
-                            dialobTags?.filter(tag=>tag.formName === values.formName)
+                            dialobTags?.filter(tag => tag.formName === values.body?.formName)
                             .map((tag, i) => <MenuItem key={i} value={tag.tagName}>{tag.tagName}</MenuItem>  )
                           }
                         </Field>
                       </Grid2>
                       <Grid2 size={{ xs: 12, md: 12 }}>
-                        <Field component={TextField} name='flowName' select
+                        <Field component={TextField} name='body.flowName' select
                           label={intl.formatMessage({id: 'workflow.flowName'})} 
-                          fullWidth required  validate={requiredValidator} error={!!errors.flowName}
-                          helperText={errors.flowName} >
+                          fullWidth required validate={requiredValidator} error={!!errors.body?.flowName}
+                          helperText={errors.body?.flowName} >
                           {
                             flows?.map((name, index) => <MenuItem key={index} value={name}>{name}</MenuItem>)
                           }

@@ -41,7 +41,6 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.ImmutableWorkflowMutator;
 import io.thestencil.client.api.StencilClient;
 
 
@@ -153,6 +152,7 @@ public interface EveliAssetComposer {
   interface WorkflowQuery {
     Uni<List<Entity<Workflow>>> findAll();
     Uni<Optional<Entity<Workflow>>> findOneByName(String name);
+    Uni<Optional<Entity<Workflow>>> findOneById(String id);
   }
   
   interface AnyTagQuery {

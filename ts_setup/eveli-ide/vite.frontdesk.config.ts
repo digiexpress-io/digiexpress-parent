@@ -49,8 +49,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         },
 
-        '/dialob': {
-          target: 'http://localhost:92',
+        '/dialob-assets': {
+          target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,
         },
@@ -66,6 +66,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           changeOrigin: false,
           secure: false,
         },
+
         '/workflows': {
           target: 'http://localhost:8080',
           changeOrigin: false,

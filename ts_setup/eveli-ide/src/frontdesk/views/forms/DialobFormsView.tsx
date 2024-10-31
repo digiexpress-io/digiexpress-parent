@@ -17,7 +17,9 @@ import Edit from '@mui/icons-material/Edit';
 
 export const DialobFormsView: React.FC = () => {
   const config = useConfig();
-  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>(`${config.api}/forms`);
+
+  console.log(`${config.api}/forms`);
+  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>('/dialob-assets');
   const [selectedForm, setSelectedForm] = useState<DialobFormEntry | undefined>();
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);

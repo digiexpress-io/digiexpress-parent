@@ -7,8 +7,9 @@ import { useConfig } from '../../context/ConfigContext';
 export const WorkflowView: React.FC = () => {
   const config = useConfig();
   const apiUrl = config.wrenchApiUrl;
-  const { response:workflows, refresh:refreshWorkflows } = useFetch<Workflow[]>(`${apiUrl}/workflows/`);
+  const { response: workflows, refresh: refreshWorkflows } = useFetch<Workflow[]>(`${apiUrl}/workflows/`);
+
   return (
-    <WorkflowTable workflows={workflows} refreshWorkflows={refreshWorkflows}/>
+    <WorkflowTable workflows={workflows} refreshWorkflows={refreshWorkflows} />
   );
 }

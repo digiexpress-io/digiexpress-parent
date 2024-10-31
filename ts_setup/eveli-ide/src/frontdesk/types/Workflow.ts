@@ -1,12 +1,12 @@
 
 export interface Workflow {
-  id: number;
-  name: string;
-  formName: string;
-  formTag: string;
-  flowName: string;
-  startDate?: Date;
-  endDate?: Date;
-  updated?: Date;
-  
+  id: string;
+  type: string;
+  body: {
+    name: string;
+    formName: string;
+    formTag: string;
+    flowName: string;
+    updated?: Date;
+  }
 }

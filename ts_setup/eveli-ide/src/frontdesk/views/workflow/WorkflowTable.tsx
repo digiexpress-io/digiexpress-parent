@@ -12,44 +12,45 @@ import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
 import { NewWorkflow } from './NewWorkflow';
-interface TableState  {
+interface TableState {
   columns: Array<Column<Workflow>>;
 }
 
 interface WorkflowTableProps {
-  workflows? : Workflow[]
-  refreshWorkflows: ()=>void
+  workflows?: Workflow[]
+  refreshWorkflows: () => void
   historyView?: boolean
 }
 
-export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshWorkflows, historyView=false}) => {
+export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refreshWorkflows, historyView = false }) => {
   const intl = useIntl();
   const config = useConfig();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response:formTags } = useFetch<DialobFormTag[]>(`${config.api}/forms/tags`);
-  const [open, setOpen] = useState(false);
-  const [workflow, setWorkflow] = useState<Workflow|null>(null);
 
+  const { response: formTags } = useFetch<DialobFormTag[]>('/dialob-assets/tags');
+
+  const [open, setOpen] = useState(false);
+  const [workflow, setWorkflow] = useState<Workflow | null>(null);
 
   const formName = (data: Workflow) => {
-    let formLabel = data.formName;
-    const tag = formTags?.find(t => t.formName === data.formName && t.tagName === data.formTag);
+    let formLabel = data.body.formName;
+    const tag = formTags?.find(t => t.formName === data.body.formName && t.tagName === data.body.formTag);
     if (tag) {
       formLabel = tag.formLabel;
     }
-    return `${formLabel} / ${data.formTag}`;
+    return `${formLabel} / ${data.body.formTag}`;
   }
 
   const searchForms = (filter: any, rowData: Workflow, columnDef: Column<Workflow>) => {
     return formName(rowData).toLowerCase().includes(filter);
   }
 
-  const sortForms = (form1:Workflow, form2: Workflow) => {
+  const sortForms = (form1: Workflow, form2: Workflow) => {
     return formName(form1).localeCompare(formName(form2));
   }
 
-  const formatDateTime = (time:any) => {
+  const formatDateTime = (time: any) => {
     if (time) {
       const localTime = moment.utc(time).local().toDate();
       return (
@@ -61,42 +62,43 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshW
     return "-";
   }
 
+
   const tableState: TableState = {
     columns: [
       {
-        title: intl.formatMessage({id: 'workflowTableHeader.name'}),
-        field: 'name',
+        title: intl.formatMessage({ id: 'workflowTableHeader.name' }),
+        field: 'body.name',
         headerStyle: { fontWeight: 'bold' },
         defaultSort: 'asc'
       },
       {
-        title: intl.formatMessage({id: 'workflowTableHeader.formName'}),
-        field: 'formName',
+        title: intl.formatMessage({ id: 'workflowTableHeader.formName' }),
+        field: 'body.formName',
         headerStyle: { fontWeight: 'bold' },
         render: data => formName(data),
         customFilterAndSearch: searchForms,
         customSort: sortForms
       },
       {
-        title: intl.formatMessage({id: 'workflowTableHeader.flowName'}),
-        field: 'flowName',
+        title: intl.formatMessage({ id: 'workflowTableHeader.flowName' }),
+        field: 'body.flowName',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({id: 'workflowTableHeader.updated'}),
-        field: 'updated',
+        title: intl.formatMessage({ id: 'workflowTableHeader.updated' }),
+        field: 'body.updated',
         filtering: false,
         type: 'date',
-        render: data => formatDateTime(data.updated),
+        render: data => formatDateTime(data.body.updated),
         headerStyle: { fontWeight: 'bold' }
       }
     ]
   };
 
   return (
-      <>
+    <>
       <MaterialTable
-        title = {intl.formatMessage({id: 'workflowTable.title'})}
+        title={intl.formatMessage({ id: 'workflowTable.title' })}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}
@@ -112,22 +114,22 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({workflows, refreshW
         actions={historyView || !config.modifiableAssets ? [] : [
           {
             icon: AddIcon,
-            tooltip: intl.formatMessage({id: 'workflowTable.addButton'}),
+            tooltip: intl.formatMessage({ id: 'workflowTable.addButton' }),
             isFreeAction: true,
-            onClick: () => {setWorkflow(null);setOpen(true);}
+            onClick: () => { setWorkflow(null); setOpen(true); }
           },
           {
             icon: EditIcon,
-            tooltip: intl.formatMessage({id: 'workflowTable.editButton'}),
-            onClick: (event, data) => {setWorkflow(data as Workflow);setOpen(true)}
+            tooltip: intl.formatMessage({ id: 'workflowTable.editButton' }),
+            onClick: (event, data) => { setWorkflow(data as Workflow); setOpen(true) }
           }
         ]}
-       
+
         isLoading={false}
-        data={workflows||[]}
+        data={workflows || []}
       />
-      <NewWorkflow open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()} 
-        dialobTags={formTags || []} /> 
-      </>
+      <NewWorkflow open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()}
+        dialobTags={formTags || []} />
+    </>
   );
 }

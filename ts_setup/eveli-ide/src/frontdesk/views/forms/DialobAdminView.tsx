@@ -11,10 +11,11 @@ export const DialobAdminView: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const dialobAdminConfig: DialobAdminConfig | undefined = React.useMemo(() => {
+
     if (config.dialobComposerUrl) {
       return {
         csrf: undefined,
-        dialobApiUrl: config.dialobComposerUrl.split("/composer")[0],
+        dialobApiUrl: '/dialob-assets/dialob-proxy',
         setLoginRequired: () => { },
         setTechnicalError: () => { },
         language: intl.locale

@@ -128,6 +128,27 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
     });
   }
   @Override
+  public Uni<Optional<Entity<Workflow>>> findOneWorkflowById(String id) {
+    return config.getClient()
+    .objects().blobState()
+    .repo(config.getRepoName())
+    .anyId(config.getHeadName())
+    .blobName(id)
+    .list().onItem()
+    .transform(state -> {
+      if(state.getStatus() != ObjectsStatus.OK) {
+        throw new QueryException("failed to find any workflows", EntityType.WORKFLOW, state);  
+      }
+
+      return state.getObjects().getBlob().stream()
+        .map(blob -> {
+          final Entity<Workflow> result = config.getDeserializer().fromString(EntityType.WORKFLOW, blob.getValue().encode());
+          return result;
+        })
+        .findAny();
+    });
+  }
+  @Override
   public Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name) {
     return config.getClient()
     .objects().blobState()
