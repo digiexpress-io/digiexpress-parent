@@ -16,7 +16,7 @@ import { NewAssetReleaseDialog } from './NewAssetReleaseDialog';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
 
-import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 
 interface TableState {

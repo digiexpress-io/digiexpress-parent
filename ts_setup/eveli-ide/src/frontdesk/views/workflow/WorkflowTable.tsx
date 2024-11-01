@@ -13,7 +13,7 @@ import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
 import { NewWorkflow } from './NewWorkflow';
-import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 
 interface TableState {

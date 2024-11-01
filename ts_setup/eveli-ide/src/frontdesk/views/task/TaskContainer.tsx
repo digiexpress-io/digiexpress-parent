@@ -1,22 +1,26 @@
 
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-
 import { Container } from '@mui/material';
-import { TasksComponentResolver } from './LinkResolver';
-import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
-import { ReviewDialog } from './ReviewDialog';
-import { useFetch } from '../../hooks/useFetch';
-import { Group as OrgGroup } from '../../types/Group';
-import { ROLE_AUTHORIZED } from '../../util/rolemapper';
+import { useParams } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import { TaskView } from './TaskView';
+
+import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
+//import { ReviewDialog } from './ReviewDialog';
+import { useFetch } from '../../hooks/useFetch';
+
+import { ROLE_AUTHORIZED } from '../../util/rolemapper';
+
 import { AttachmentContextProvider } from '../../context/AttachmentContext';
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
+
 import { GroupMember } from '../../types/GroupMember';
-import { useParams } from 'react-router-dom';
 import { UserGroup } from '../../types/UserGroup';
 import { TaskLink } from '../../types/task/TaskLink';
+import { Group as OrgGroup } from '../../types/Group';
+
+import { TaskView } from './TaskView';
+import { TasksComponentResolver } from './LinkResolver';
 
 
 type OwnProps = {
@@ -81,9 +85,9 @@ export const TaskContainer:React.FC<Props> = (props) => {
     <Container maxWidth='lg'>
       <TaskView taskId={id} groups={groups} getUsers={getUsers} userSelectionFree={true}
         componentResolver={componentResolver} externalThreads={true}/>
-      {!!link && reviewDialogOpen &&
+        {/*!!link && reviewDialogOpen &&
         <ReviewDialog closeDialog={()=>setReviewDialogOpen(false)} link={link}/>
-      }
+      */}
     </Container>
     </AttachmentContextProvider>
   )

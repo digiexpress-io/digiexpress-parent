@@ -17,7 +17,7 @@ import { DialobFormEntry } from '../../types';
 
 import { useFetch } from '../../hooks/useFetch';
 import { localizeTable } from '../../util/localizeTable';
-import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 export const DialobFormsView: React.FC = () => {
   const config = useConfig();

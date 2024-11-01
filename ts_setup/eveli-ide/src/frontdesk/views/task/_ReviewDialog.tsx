@@ -1,3 +1,5 @@
+/*
+
 import React, { useContext, useEffect, useState } from 'react';
 import { useFetch } from '../../hooks/useFetch';
 import { DialobReviewDialog } from '../../dialob/DialobReviewDialog';
@@ -41,3 +43,5 @@ export const ReviewDialog: React.FC<ReviewDialogProps> = ({closeDialog, link}) =
     <CircularProgress />
   )
 }
+
+*/

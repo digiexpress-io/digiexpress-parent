@@ -12,7 +12,7 @@ import { WorkflowRelease } from '../../types/WorkflowRelease';
 import { downloadFile } from '../../util/downloadFile';
 import { WorkflowTagDialog } from './WorkflowTagDialog';
 import Visibility from '@mui/icons-material/Visibility';
-import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 interface TableState {
   columns: Array<Column<WorkflowRelease>>;

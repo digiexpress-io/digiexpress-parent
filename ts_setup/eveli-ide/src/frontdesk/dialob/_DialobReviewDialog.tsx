@@ -1,3 +1,6 @@
+
+
+/*
 import React from 'react';
 import { Dialog, useTheme, useMediaQuery, DialogContent, DialogActions, Button, LinearProgress, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
@@ -35,3 +38,4 @@ export const DialobReviewDialog: React.FC<DialobDialogProps> = ({closeDialog, fo
     </Dialog>
   )
 }
+  */
