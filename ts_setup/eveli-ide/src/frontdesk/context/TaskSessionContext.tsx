@@ -25,8 +25,6 @@ export const TableStateContext = createContext<TableState>({
 
 export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({apiBaseUrl, children}) => {
 
-  console.log('app base url', apiBaseUrl)
-
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
   const intl = useIntl();

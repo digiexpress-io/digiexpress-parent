@@ -51,16 +51,16 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
   const handleSubmit = (assetReleaseCommand: AssetReleaseInit): void => {
     let method = 'POST';
     let url = `${apiUrl}/releases/`;
-    let body: AssetReleaseInit = { ...assetReleaseCommand }
+    let init: AssetReleaseInit = { ...assetReleaseCommand }
     // clear markers for new release creation
-    if (assetReleaseCommand.contentTag === NEW_TAG_VALUE) {
-      body.contentTag = null;
+    if (assetReleaseCommand.body.contentTag === NEW_TAG_VALUE) {
+      init.body.contentTag = null;
     }
-    if (assetReleaseCommand.wrenchTag === NEW_TAG_VALUE) {
-      body.wrenchTag = null;
+    if (assetReleaseCommand.body.wrenchTag === NEW_TAG_VALUE) {
+      init.body.wrenchTag = null;
     }
-    if (assetReleaseCommand.workflowTag === NEW_TAG_VALUE) {
-      body.workflowTag = null;
+    if (assetReleaseCommand.body.workflowTag === NEW_TAG_VALUE) {
+      init.body.workflowTag = null;
     }
 
     session.cFetch(`${url}`, {
@@ -68,7 +68,7 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
       headers: {
         'Accept': 'application/json'
       },
-      body: body
+      body: init
     })
       .then(response => handleErrors(response))
       .then((response: any) => {
@@ -101,11 +101,15 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
 
         <Formik
           initialValues={{
-            name: '',
-            description: '',
-            workflowTag: NEW_TAG_VALUE,
-            wrenchTag: NEW_TAG_VALUE,
-            contentTag: NEW_TAG_VALUE
+            id: 0,
+            body: {
+              name: '',
+              description: '',
+              workflowTag: NEW_TAG_VALUE,
+              wrenchTag: NEW_TAG_VALUE,
+              contentTag: NEW_TAG_VALUE
+            }
+
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
@@ -119,13 +123,13 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
                 <DialogContent>
                   <Stack spacing={1}>
                     <Field component={TextField} name='name' label={intl.formatMessage({ id: 'assetRelease.name' })}
-                      fullWidth required validate={requiredValidator} error={!!errors.name}
-                      helperText={errors.name} InputProps={{ margin: 'normal' }} />
+                      fullWidth required validate={requiredValidator} error={!!errors.body?.name}
+                      helperText={errors.body?.name} InputProps={{ margin: 'normal' }} />
                     <Field component={TextField} name='description' label={intl.formatMessage({ id: 'assetRelease.description' })}
                       fullWidth InputProps={{ margin: 'normal' }} />
-                    <TagComponent name='contentTag' labelId='assetRelease.contentTag' newTag={values.name} tags={contentTags} />
-                    <TagComponent name='workflowTag' labelId='assetRelease.workflowTag' newTag={values.name} tags={workflowTags} />
-                    <TagComponent name='wrenchTag' labelId='assetRelease.wrenchTag' newTag={values.name} tags={wrenchTags} />
+                    <TagComponent name='contentTag' labelId='assetRelease.contentTag' newTag={values.body.name} tags={contentTags} />
+                    <TagComponent name='workflowTag' labelId='assetRelease.workflowTag' newTag={values.body.name} tags={workflowTags} />
+                    <TagComponent name='wrenchTag' labelId='assetRelease.wrenchTag' newTag={values.body.name} tags={wrenchTags} />
                   </Stack>
                 </DialogContent>
                 <DialogActions>

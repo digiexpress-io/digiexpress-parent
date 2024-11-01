@@ -20,7 +20,6 @@ export const LocaleSelect: React.FC = () => {
   };
   const handleSelect = (newValue: string) => {
     setLocale(newValue)
-    console.log(newValue)
     setAnchorEl(null);
   };
 
