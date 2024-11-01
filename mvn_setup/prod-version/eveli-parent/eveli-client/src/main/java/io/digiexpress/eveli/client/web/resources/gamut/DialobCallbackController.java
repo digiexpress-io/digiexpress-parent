@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.web.resources.worker;
+package io.digiexpress.eveli.client.web.resources.gamut;
 
 /*-
  * #%L
