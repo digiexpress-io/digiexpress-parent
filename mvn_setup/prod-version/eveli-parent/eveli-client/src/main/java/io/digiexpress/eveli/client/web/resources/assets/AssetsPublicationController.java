@@ -54,7 +54,7 @@ public class AssetsPublicationController {
   private final AuthClient securityClient;
 
   
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<List<Entity<Publication>>> findAllPublications() {
     return new ResponseEntity<>(composer.publicationQuery().findAll().await().atMost(timeout), HttpStatus.OK);
   }
@@ -68,7 +68,7 @@ public class AssetsPublicationController {
     return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
   }
   
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<Entity<Publication>> createOnePublication(
       @RequestBody CreatePublication workflowRelease) {
     

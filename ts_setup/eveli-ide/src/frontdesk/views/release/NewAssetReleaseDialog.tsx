@@ -51,6 +51,9 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
   const handleSubmit = (assetReleaseCommand: AssetReleaseInit): void => {
     let method = 'POST';
     let url = `${serviceUrl}rest/api/assets/publications`;
+
+    console.log("wwwwww", serviceUrl)
+
     let init: AssetReleaseInit = { ...assetReleaseCommand }
     // clear markers for new release creation
     if (assetReleaseCommand.body.contentTag === NEW_TAG_VALUE) {

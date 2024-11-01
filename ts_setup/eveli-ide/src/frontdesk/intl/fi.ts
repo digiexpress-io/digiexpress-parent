@@ -28,7 +28,7 @@ const fi = {
   'menu.reports': 'Raportointi',
   'menu.workflows': 'Konfigurointi',
   'menu.workflowReleases': 'Versiointi',
-  'menu.releases': 'Julkaisut',
+  'menu.publications': 'Julkaisut',
   'menu.services': 'Palvelut',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalenteri',

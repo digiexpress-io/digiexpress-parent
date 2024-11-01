@@ -28,7 +28,7 @@ const sv = {
   'menu.reports': 'Rapportering',
   'menu.workflows': 'Konfigurera',
   'menu.workflowReleases': 'Arbetsflödestaggar',
-  'menu.releases': 'Offentliggörande',
+  'menu.publications': 'Offentliggörande',
   'menu.services': 'Tjänster',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalender',

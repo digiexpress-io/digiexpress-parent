@@ -7,13 +7,11 @@ import ListIcon from '@mui/icons-material/ListAlt';
 import BuildIcon from '@mui/icons-material/Build';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import SettingsIcon from '@mui/icons-material/Settings';
-import HelpIcon from '@mui/icons-material/Help';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -44,7 +42,7 @@ const menuItems: MenuItemProps[] = [
   //{ id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> }, 
   { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
   { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <NewReleasesIcon sx={iconSize} />, },
-  { id: 'menu.releases', to: '/ui/releases', icon: <BeenhereIcon sx={iconSize} /> },
+  { id: 'menu.publications', to: '/ui/publications', icon: <BeenhereIcon sx={iconSize} /> },
 ]
 
 // --------- Frame.tsx ----------

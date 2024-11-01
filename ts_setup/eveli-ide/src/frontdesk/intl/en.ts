@@ -28,7 +28,7 @@ const en = {
   'menu.reports': 'Reports',
   'menu.workflows': 'Configuration',
   'menu.workflowReleases': 'Workflow tags',
-  'menu.releases': 'Publications',
+  'menu.publications': 'Publications',
   'menu.services': 'Services',
   'menu.content': 'Stencil',
   'menu.calendar': 'Calendar',
