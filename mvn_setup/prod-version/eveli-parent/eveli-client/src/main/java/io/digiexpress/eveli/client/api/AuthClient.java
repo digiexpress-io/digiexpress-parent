@@ -36,7 +36,6 @@ public interface AuthClient {
   
   @Value.Immutable @JsonSerialize(as = ImmutableUser.class) @JsonDeserialize(as = ImmutableUser.class)
   interface User {
-    User getType();
     UserPrincipal getPrincipal();
     boolean isAuthenticated();
   }

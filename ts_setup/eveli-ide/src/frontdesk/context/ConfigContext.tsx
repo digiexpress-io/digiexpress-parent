@@ -2,29 +2,21 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useStat
 import { useFetch } from '../hooks/useFetch';
 
 export interface Config {
-  loaded: boolean;
-  error?: Error;
+
   api?: string;
   tasksApiUrl?: string; // api/tasks/v1
-  dialobApiUrl?: string;
-  dialobComposerUrl?: string;
-  dialobSessionUrl?: string;
-  wrenchApiUrl?: string;
-  wrenchIdeUrl?: string;
+
+
   serviceUrl?: string;
 
   feedbackKey?: string;
   taskDeleteGroups?: string[];
   taskAdminGroups?: string[];
   appVersion?: string;
-  contentRepositoryUrl?: string;
-  calendarUrl?: string;
   modifiableAssets?: boolean; //enable releases and other asset operations
 }
 
-const INITIAL_CONFIG: Config = {
-  loaded: false
-};
+const INITIAL_CONFIG: Config = {};
 
 export interface ConfigContextProviderProps {
   path: string;
@@ -34,18 +26,22 @@ export const ConfigContext = createContext<Config>(INITIAL_CONFIG);
 
 export const ConfigContextProvider: React.FC<PropsWithChildren<ConfigContextProviderProps>> = 
 ({path, children}) => {
-  const [config, setConfig] = useState<Config>({ loaded: false });
+
+  const [pending, setPending] = useState<boolean>(true);
+
+  const [config, setConfig] = useState<Config>({});
   const { response } = useFetch<Config>(path);
 
   useEffect(() => {
     if (response) {
-     setConfig({...response, loaded: true});
+      setConfig({ ...response });
+      setPending(false);
     }
   }, [response]);
 
   return (
     <ConfigContext.Provider value={config}>
-      {config.loaded && children}
+      {!pending && children}
     </ConfigContext.Provider>
   );
 };

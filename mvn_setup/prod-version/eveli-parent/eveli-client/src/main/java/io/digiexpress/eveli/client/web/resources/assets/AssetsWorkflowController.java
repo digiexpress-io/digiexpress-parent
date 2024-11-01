@@ -23,7 +23,6 @@ import java.time.Duration;
  */
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,37 +33,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflow;
+import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.WorkflowMutator;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
+import io.digiexpress.eveli.client.api.AuthClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 
-@RestController
+@RestController("/assets/workflows")
 @RequiredArgsConstructor
+@Slf4j
 public class AssetsWorkflowController {
 
+  private final AuthClient authClient;
   private final EveliAssetComposer composer;
-  private final Supplier<ProgramEnvir> programEnvir;
   private static final Duration timeout = Duration.ofMillis(10000);
   
-  @GetMapping("/workflows/")
-  public ResponseEntity<List<Entity<Workflow>>> getAllWorkflows() {
+  @GetMapping("/")
+  public ResponseEntity<List<Entity<Workflow>>> findAllWorkflows() {
     final var wks = composer.workflowQuery().findAll().await().atMost(timeout);
     return new ResponseEntity<>(wks, HttpStatus.OK);
   }
   
-  @PostMapping("/workflows/")
+  @PostMapping("/")
   public ResponseEntity<Entity<Workflow>> create(@RequestBody CreateWorkflow workflow) {
     return new ResponseEntity<>(composer.create().workflow(workflow).await().atMost(timeout), HttpStatus.CREATED);
   }
   
-  @GetMapping("/workflows/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<Entity<Workflow>> get(@PathVariable("id") String id) {
     final var workflow = composer.workflowQuery().findOneByName(id)
         .await().atMost(timeout);
@@ -75,7 +80,7 @@ public class AssetsWorkflowController {
     return new ResponseEntity<>(workflow.get(), HttpStatus.OK);
   }
   
-  @PutMapping("/workflows/{id}")
+  @PutMapping("/{id}")
   @Transactional
   public ResponseEntity<Entity<Workflow>> save(@PathVariable("id") String id, @RequestBody WorkflowMutator workflow) {
     final var previousWorkflow = composer.workflowQuery().findOneById(id)
@@ -88,8 +93,34 @@ public class AssetsWorkflowController {
     return new ResponseEntity<>(entity, HttpStatus.OK);
   }
   
-  @GetMapping(path="/workflowAssets/")
-  public ResponseEntity<List<String>> allFlows() {
-    return ResponseEntity.status(HttpStatus.OK).body(programEnvir.get().getFlowsByName().keySet().stream().toList());
+  
+  
+  @GetMapping("/tags")
+  public ResponseEntity<List<Entity<WorkflowTag>>> findAllTags() {
+    return new ResponseEntity<>(composer.workflowTagQuery().findAll().await().atMost(timeout), HttpStatus.OK);
+  }
+  @PostMapping("/tags")
+  public ResponseEntity<Entity<WorkflowTag>> createOneTag(@RequestBody CreateWorkflowTag workflowRelease) {
+    try {
+      final var snapshotRelease = ImmutableCreateWorkflowTag.builder()
+        .from(workflowRelease)
+        .user(authClient.getUser().getPrincipal().getUsername())
+        .build();
+      
+      return new ResponseEntity<>(composer.create().workflowTag(snapshotRelease).await().atMost(timeout), HttpStatus.CREATED);
+      
+    } catch (Exception e) {
+      log.warn("Data integrity violation in snapshot release creation: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists");
+    }
+  }
+  @GetMapping("/tags/{id}")
+  public ResponseEntity<Entity<WorkflowTag>> getOneTagById(@PathVariable("id") String name) {
+    final var tags = composer.workflowTagQuery().findAll().await().atMost(timeout);
+    final var workflowRelease = tags.stream().filter(e -> e.getBody().getName().equals(name)).findFirst();
+    if(workflowRelease.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
   }
 }

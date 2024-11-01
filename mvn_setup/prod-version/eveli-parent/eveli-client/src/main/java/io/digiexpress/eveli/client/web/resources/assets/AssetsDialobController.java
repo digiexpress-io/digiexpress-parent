@@ -49,7 +49,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/dialob-assets")
+@RequestMapping(path = "/assets/dialob")
 @RequiredArgsConstructor
 public class AssetsDialobController {
   
@@ -57,7 +57,7 @@ public class AssetsDialobController {
   private final ObjectMapper objectMapper;
 
 
-  @RequestMapping(path="/dialob-proxy/**", produces = "application/json; charset=UTF-8")
+  @RequestMapping(path="/proxy/**", produces = "application/json; charset=UTF-8")
   public ResponseEntity<?> proxy(
       HttpServletRequest request, 
       @RequestBody(required = false) String body,

@@ -21,6 +21,8 @@ package io.digiexpress.eveli.client.web.resources.assets;
  */
 
 import java.time.Duration;
+import java.util.List;
+import java.util.function.Supplier;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,19 +54,20 @@ import io.resys.hdes.client.api.ImmutableDiffRequest;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
 import io.resys.hdes.client.api.diff.TagDiff;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/wrench")
+@RequestMapping("/assets/wrench")
 @RequiredArgsConstructor
 public class AssetsWrenchController {
   private final HdesComposer composer;
   private final ObjectMapper objectMapper;
+  private final Supplier<ProgramEnvir> programEnvir;
   private final String version;
   private final String timestamp;
-  
   private static final Duration timeout = Duration.ofMillis(10000);
 
 
@@ -138,6 +141,11 @@ public class AssetsWrenchController {
   @GetMapping(path = "/version", produces = MediaType.APPLICATION_JSON_VALUE)
   public VersionEntity version() {
     return new VersionEntity(version, timestamp);
+  }
+  
+  @GetMapping(path="/flow-names")
+  public List<String> flowNames() {
+    return programEnvir.get().getFlowsByName().keySet().stream().toList();
   }
   
   @Data

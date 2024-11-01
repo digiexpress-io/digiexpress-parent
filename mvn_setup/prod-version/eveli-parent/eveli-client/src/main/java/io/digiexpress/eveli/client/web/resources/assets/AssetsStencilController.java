@@ -70,7 +70,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/stencil")
+@RequestMapping("assets/stencil")
 @Slf4j
 @RequiredArgsConstructor
 public class AssetsStencilController {

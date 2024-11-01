@@ -37,11 +37,12 @@ import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsReleaseController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
@@ -82,30 +83,37 @@ public class EveliAutoConfigAssets {
   private String timestamp = "";
 
   @Bean
+  public AssetsAnyTagController assetsAnyTagController(EveliContext context, AuthClient security) {
+    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench());
+    return new AssetsAnyTagController(composer);
+  }
+  
+  @Bean
+  public AssetsDeploymentController assetsDeploymentController(EveliContext context, AuthClient auth) {
+    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench());
+    return new AssetsDeploymentController(composer);
+  } 
+  
+  @Bean
   public AssetsDialobController assetsDialobController(PortalClient client, ObjectMapper objectMapper) {
     return new AssetsDialobController(client.dialob(), objectMapper);
   }
   @Bean 
-  public AssetsReleaseController assetReleaseController(EveliContext context, AuthClient security) {
-    return new AssetsReleaseController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
+  public AssetsPublicationController assetReleaseController(EveliContext context, AuthClient security) {
+    return new AssetsPublicationController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
   }
   @Bean 
-  public AssetsWorkflowController workflowController(EveliContext context) {
-    return new AssetsWorkflowController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), context.getProgramEnvir());
-  }
-  @Bean 
-  public AssetsWorkflowTagController workflowReleaseController(EveliContext context, AuthClient security) {
-    return new AssetsWorkflowTagController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
+  public AssetsWorkflowController workflowController(EveliContext context, AuthClient auth) {
+    return new AssetsWorkflowController(auth, new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()));
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {
-    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, version, timestamp);
+    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, context.getProgramEnvir(), version, timestamp);
   }
   @Bean
   public AssetsStencilController assetsStencilController(EveliContext context, ObjectMapper objectMapper) {
     return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper);
   }
-  
 
   @Bean
   public EveliContext eveliContext(
