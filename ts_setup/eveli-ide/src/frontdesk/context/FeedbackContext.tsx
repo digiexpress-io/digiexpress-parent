@@ -1,5 +1,9 @@
 import React, { PropsWithChildren, useState } from 'react';
-import type Feedback from '@resys/feedback';
+//import type Feedback from '@resys/feedback';
+
+interface Feedback {
+  
+}
 
 interface State {
   isOpen: boolean;

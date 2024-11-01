@@ -98,7 +98,7 @@ export const Feedback: React.FC<Props> = () => {
           <Burger.PrimaryButton label='feedback.send'
             onClick={async () => {
               setRequestState(RequestState.Loading);
-              const FeedbackAPI = (await import('@resys/feedback')).default;
+              /*const FeedbackAPI = (await import('@resys/feedback')).default;
               try {
                 const feedback = new FeedbackAPI(config.feedbackKey || '', feedbackUrl);
                 if (sendFeedback) {
@@ -122,6 +122,7 @@ export const Feedback: React.FC<Props> = () => {
               } catch (e) {
                 setRequestState(RequestState.Error);
               }
+                */
             }} />
         </DialogActions>
       </Dialog>
