@@ -17,13 +17,11 @@ import { DialobFormEntry } from '../../types';
 
 import { useFetch } from '../../hooks/useFetch';
 import { localizeTable } from '../../util/localizeTable';
-import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 export const DialobFormsView: React.FC = () => {
-  const config = useConfig();
+  const { serviceUrl, dialobComposerUrl } = useConfig();
 
-  console.log(`${config.api}/forms`);
-  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>('/dialob-assets');
+  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>(`${serviceUrl}rest/api/assets/dialob`);
   const [selectedForm, setSelectedForm] = useState<DialobFormEntry | undefined>();
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
@@ -78,7 +76,7 @@ export const DialobFormsView: React.FC = () => {
             <IconButton
               color="inherit"
               onClick={() => {
-                window.location.replace(`${config.dialobComposerUrl!}/${rowData.id}`)
+                window.location.replace(`${dialobComposerUrl!}/${rowData.id}`)
               }}
             >
               <Edit />

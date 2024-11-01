@@ -18,7 +18,7 @@ export const TasksView: React.FC = () => {
   const userContext = useContext(UserBackendContext);
   const [groups, setGroups] = useState<UserGroup[]>([]);
   const session = useContext(SessionRefreshContext);
-  const {tasksApiUrl, taskDeleteGroups} = useConfig();
+  const { serviceUrl, taskDeleteGroups } = useConfig();
   const userInfo = useUserInfo();
   const [newTasks, setNewTasks] = useState<number[]>([]);
   const tableContext = useContext(TableStateContext);
@@ -75,7 +75,7 @@ export const TasksView: React.FC = () => {
       columns.filter((column: any) => !column.hidden)
     );
 
-    return session.cFetch(`${tasksApiUrl}/taskSearch?${queryString}`)
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks?${queryString}`)
     .then(response => response.json())
     .then(json=>{
       return {
@@ -87,7 +87,7 @@ export const TasksView: React.FC = () => {
   }
 
   const loadNewTasks = () => {
-    return session.cFetch(`${tasksApiUrl}/tasksUnread`)
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/unread`)
     .then(response => response.json())
     .then(json=>{
       return json;

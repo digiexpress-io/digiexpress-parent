@@ -37,62 +37,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       port: 3000,
 
       proxy: {
-        '/api': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/files': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/dialob-assets': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/workflowReleases': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/workflowAssets': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/workflows': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/releaseTags': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/releases': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
         '/config': {
           target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/tasksUnread': {
-          target: '/api/tasks/v1/tasksUnread',
           changeOrigin: false,
           secure: false,
         },
@@ -109,25 +55,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         }, 
 
-        '/priority': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/spo-task': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/wrench': {
-          target: 'http://localhost:8080',
-          changeOrigin: false,
-          secure: false,
-        },
-
-        '/stencil': {
+        '/rest/api/': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,

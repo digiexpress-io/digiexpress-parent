@@ -34,8 +34,8 @@ export interface NewFormFormProps {
 export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, open, setOpen, dialobTags}) => {
   const intl = useIntl();
   
-  const apiUrl = useConfig().wrenchApiUrl;
-  const { response:flows } = useFetch<string[]>(`${apiUrl}/workflowAssets/`);
+  const { serviceUrl } = useConfig();
+  const { response: flows } = useFetch<string[]>(`${serviceUrl}rest/api/assets/workflows`);
 
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +46,7 @@ export const NewWorkflow: React.FC<NewFormFormProps> = ({onSubmit, workflow, ope
 
   const handleSubmit = (workflowCommand: Workflow):void => {
     let method = 'POST';
-    let url = `${apiUrl}/workflows/`;
+    let url = `${serviceUrl}rest/api/assets/workflows`;
 
     if (workflowCommand.id) {
       method = 'PUT';

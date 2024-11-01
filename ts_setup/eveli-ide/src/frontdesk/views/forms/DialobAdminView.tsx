@@ -6,16 +6,16 @@ import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
 import { useConfig } from "../../context/ConfigContext";
 
 export const DialobAdminView: React.FC = () => {
-  const config = useConfig();
+  const { serviceUrl } = useConfig();
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
   const dialobAdminConfig: DialobAdminConfig | undefined = React.useMemo(() => {
 
-    if (config.dialobComposerUrl) {
+    if (serviceUrl) {
       return {
         csrf: undefined,
-        dialobApiUrl: '/dialob-assets/dialob-proxy',
+        dialobApiUrl: 'rest/api/assets/dialob/proxy',
         setLoginRequired: () => { },
         setTechnicalError: () => { },
         language: intl.locale
@@ -23,7 +23,7 @@ export const DialobAdminView: React.FC = () => {
     } else {
       return undefined;
     }
-  }, [config.dialobComposerUrl, intl.locale])
+  }, [serviceUrl, intl.locale])
 
   return (
     <>

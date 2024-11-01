@@ -32,7 +32,9 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
 
-  const { response: formTags } = useFetch<DialobFormTag[]>('/dialob-assets/tags');
+  console.log(config, "XXXXX");
+
+  const { response: formTags } = useFetch<DialobFormTag[]>(`${config.serviceUrl}rest/api/assets/dialob/tags`);
 
   const [open, setOpen] = useState(false);
   const [workflow, setWorkflow] = useState<Workflow | null>(null);

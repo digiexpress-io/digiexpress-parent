@@ -58,7 +58,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/tasks/v1")
+@RequestMapping("/rest/api/worker")
 @Transactional
 @Slf4j
 /*
@@ -91,7 +91,7 @@ public class TaskApiController extends TaskControllerBase
       this.taskRefGenerator = taskRefGenerator;
     }
     
-    @GetMapping("/taskSearch")
+    @GetMapping("/tasks")
     @Transactional(readOnly = true)
     public ResponseEntity<Page<TaskCommands.Task>> taskSearch(
         @RequestParam(name="subject", defaultValue="") String subject, 
@@ -150,7 +150,7 @@ public class TaskApiController extends TaskControllerBase
 
 
     
-    @GetMapping("/task/{id}")
+    @GetMapping("/tasks/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<TaskCommands.Task> getTaskById(@PathVariable("id") Long id) 
     {
@@ -174,7 +174,7 @@ public class TaskApiController extends TaskControllerBase
     }
 
     
-    @PostMapping(path = "/task/")
+    @PostMapping(path = "/tasks")
     @Transactional
     public ResponseEntity<TaskCommands.Task> createTask(
         @RequestBody TaskCommands.Task task) {
@@ -197,7 +197,7 @@ public class TaskApiController extends TaskControllerBase
       return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
     
-    @PutMapping("/task/{id}")
+    @PutMapping("/tasks/{id}")
     @Transactional
     public ResponseEntity<TaskCommands.Task> saveTask(@PathVariable("id") Long id, 
         @RequestBody TaskCommands.Task task) {
@@ -240,7 +240,7 @@ public class TaskApiController extends TaskControllerBase
       }
     }
 
-    @DeleteMapping("/task/{id}")
+    @DeleteMapping("/tasks/{id}")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("id") Long id) {
@@ -249,7 +249,7 @@ public class TaskApiController extends TaskControllerBase
       taskRepository.deleteById(id);
     }
     
-    @GetMapping(value="/tasksUnread")
+    @GetMapping(value="/tasks/unread")
     @Transactional(readOnly = true)
     public ResponseEntity<Collection<Long>> getUnreadTasks() 
     {
@@ -276,7 +276,7 @@ public class TaskApiController extends TaskControllerBase
       List<String> keyWords;
     }
     
-    @GetMapping("/task-keywords")
+    @GetMapping("/tasks/keywords")
     @Transactional(readOnly = true)
     public ResponseEntity<KeyWordsResponse> getKeyWords() 
     {

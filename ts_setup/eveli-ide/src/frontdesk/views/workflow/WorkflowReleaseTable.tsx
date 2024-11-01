@@ -20,12 +20,11 @@ interface TableState {
 
 export const WorkflowReleaseTable: React.FC = () => {
   const intl = useIntl();
-  const config = useConfig();
-  const apiUrl = config.wrenchApiUrl;
+  const { serviceUrl, modifiableAssets } = useConfig();
 
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: workflows, refresh: refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${apiUrl}/workflowReleases/`);
+  const { response: workflows, refresh: refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${serviceUrl}rest/api/assets/workflows/tags`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
   const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease | null>(null);
@@ -81,7 +80,7 @@ export const WorkflowReleaseTable: React.FC = () => {
             icon: AddIcon,
             tooltip: intl.formatMessage({ id: 'workflowReleaseTable.addButton' }),
             isFreeAction: true,
-            hidden: !config.modifiableAssets,
+            hidden: !modifiableAssets,
             onClick: () => { setWorkflowRelease(null); setNewDialogOpen(true); }
           },
           {

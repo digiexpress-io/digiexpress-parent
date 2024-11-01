@@ -5,9 +5,10 @@ import { ROLE_AUTHORIZED } from '../util/rolemapper'
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl'
 import { useUserInfo } from './UserContext'
-import { TaskApiConfig, TaskApiConfigContext, TaskBackend, TaskBackendProvider } from './TaskApiConfigContext';
+import { TaskBackend, TaskBackendProvider } from './TaskApiConfigContext';
 import { Task } from '../types/task/Task';
 import { Comment, CommentSource } from '../types/task/Comment';
+import { useConfig } from './ConfigContext';
 
 export interface TableState {
   sort: any;
@@ -23,8 +24,8 @@ export const TableStateContext = createContext<TableState>({
   filters:undefined, setFilters:()=>{},
   paging:undefined, setPaging: ()=>{}});
 
-export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({apiBaseUrl, children}) => {
-
+export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
   const intl = useIntl();
@@ -35,7 +36,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
   const [paging, setPaging] = useState<any>();
 
   const getTasks = (page=0, size=20):Promise<QueryResult<Task>> => {
-    return session.cFetch(`${apiBaseUrl}/task?page=${page}&size=${size}`)
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks?page=${page}&size=${size}`)
       .then(response => response.json())
       .then(json=>{
         return {
@@ -47,7 +48,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
   }
 
   const getTask = (taskId:any) => {
-    return session.cFetch(`${apiBaseUrl}/task/${taskId}`)
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}`)
     .then(response => response.json())
     .then(task => {
       if (task.dueDate) {
@@ -58,10 +59,10 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
   }
   const saveTask = (task:Task) => {
     let method = 'POST';
-    let url = `${apiBaseUrl}/task/`;
+    let url = `${serviceUrl}rest/api/worker/tasks`;
     if (task.id) {
       method = 'PUT';
-      url = url + task.id;
+      url = url + "/" + task.id;
     }
     else {
       // default label for created task
@@ -79,7 +80,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
     .then(response => response.json());
   }
   const deleteTask = (taskId:any) => {
-    return session.cFetch(`${apiBaseUrl}/task/${taskId}`, 
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}`, 
       {method: 'DELETE'})
     .then(response=>{
       if (!response.ok) {
@@ -96,7 +97,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
     if (!task.id) {
       return Promise.resolve();
     }
-    const commentsUrl = `${apiBaseUrl}/task/${task.id}/comments`;
+    const commentsUrl = `${serviceUrl}rest/api/worker/tasks/${task.id}/comments`;
     
     return session.cFetch(commentsUrl)
     .then(response => {
@@ -114,7 +115,7 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
       userName: userInfo.user.name,
       source: CommentSource.FRONTDESK
     };
-    let url = `${apiBaseUrl}/comment`;
+    let url = `${serviceUrl}rest/api/worker/comments`;
     return session.cFetch(url, {method: 'POST',
       body: JSON.stringify(savingComment)
     })
@@ -146,12 +147,10 @@ export const TaskSessionContext:React.FC<PropsWithChildren<TaskApiConfig>> = ({a
   }
 
   return (
-    <TaskApiConfigContext.Provider value={{apiBaseUrl}}>
       <TaskBackendProvider value={apiSessionContext}>
         <TableStateContext.Provider value={tableState}>
           {children}
         </TableStateContext.Provider>
-      </TaskBackendProvider>
-    </TaskApiConfigContext.Provider>
+    </TaskBackendProvider>
   )
 }

@@ -33,7 +33,7 @@ export const TaskContainer:React.FC<Props> = (props) => {
   const params = useParams();
   const {response:groupResponse} = useFetch<OrgGroup[]>(`/groupsList`);
   const intl = useIntl();
-  const config = useConfig();
+  const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
 
   let id:any = props.taskId;
@@ -71,7 +71,7 @@ export const TaskContainer:React.FC<Props> = (props) => {
     }
   }
   const pdfTaskLinkCallback = (link:TaskLink, taskId: number) => {
-    let url = `${config.wrenchApiUrl}/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
+    let url = `${serviceUrl}rest/api/worker/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
     window.open(url);
   }
 
@@ -81,7 +81,7 @@ export const TaskContainer:React.FC<Props> = (props) => {
 
 
   return (
-    <AttachmentContextProvider apiBaseUrl={`${config.wrenchApiUrl}/api/attachments`}>
+    <AttachmentContextProvider>
     <Container maxWidth='lg'>
       <TaskView taskId={id} groups={groups} getUsers={getUsers} userSelectionFree={true}
         componentResolver={componentResolver} externalThreads={true}/>

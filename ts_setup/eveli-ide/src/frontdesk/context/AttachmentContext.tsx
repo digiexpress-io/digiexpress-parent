@@ -1,8 +1,9 @@
-import React, { createContext, PropsWithChildren, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { SessionRefreshContext } from './SessionRefreshContext'
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl'
 import { Attachment, AttachmentUploadResponse } from '../types'
+import { useConfig } from './ConfigContext';
 
 export interface AttachmentContextType {
   loadAttachments:(taskId:number)=>Promise<Attachment[]>
@@ -10,25 +11,22 @@ export interface AttachmentContextType {
   downloadAttachmentLink:(taskId:number, filename:string)=>string;
 }
 
-export interface AttachmentApiConfig {
-  apiBaseUrl: string;
-}
-
 const INITIAL_CONFIG = {
-  loadAttachments: (taskId:number)=>Promise.resolve([]),
-  addAttachment: (taskId:number, file:File)=>{return Promise.resolve()},
-  downloadAttachmentLink: (taskId:number, filename:string)=>{return ""}
+  loadAttachments: (_taskId: number) => Promise.resolve([]),
+  addAttachment: (_taskId: number, _file: File) => { return Promise.resolve() },
+  downloadAttachmentLink: (_taskId: number, _filename: string) => { return "" }
 }
 export const AttachmentContext = createContext<AttachmentContextType>(INITIAL_CONFIG);
 
-export const AttachmentContextProvider:React.FC<PropsWithChildren<AttachmentApiConfig>> = ({apiBaseUrl, children}) => {
+export const AttachmentContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
   const intl = useIntl();
+  const { serviceUrl } = useConfig();
 
 
   const loadAttachments = (taskId:number) => {
-    return session.cFetch(`${apiBaseUrl}/task/${taskId}/files/`)
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}/files/`)
     .then(response => response.json());
   }
 
@@ -40,7 +38,7 @@ export const AttachmentContextProvider:React.FC<PropsWithChildren<AttachmentApiC
 }
   const addAttachment = (taskId:number, file:File):Promise<Response|void> => {
     const filename = file.name;
-    return session.cFetch(`${apiBaseUrl}/task/${taskId}/files/?filename=${filename}`, 
+    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}/files/?filename=${filename}`, 
         {method:'POST', headers: {'Content-Type': file.type || 'application/octet-stream'}})
     .then(response=>handleErrors(response))
     .then(response => response.json())
@@ -59,7 +57,7 @@ export const AttachmentContextProvider:React.FC<PropsWithChildren<AttachmentApiC
   }
 
   const downloadAttachmentLink = (taskId:number, filename:string) => {
-    return `${apiBaseUrl}/task/${taskId}/files/${filename}`
+    return `${serviceUrl}rest/api/worker/tasks/${taskId}/files/${filename}`
   }
 
   const attachmentContext:AttachmentContextType = {

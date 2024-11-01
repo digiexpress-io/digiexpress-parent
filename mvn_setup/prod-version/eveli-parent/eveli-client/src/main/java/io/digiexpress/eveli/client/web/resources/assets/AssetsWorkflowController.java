@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,7 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 
-@RestController("/assets/workflows")
+@RestController
+@RequestMapping("/rest/api/assets/workflows")
 @RequiredArgsConstructor
 @Slf4j
 public class AssetsWorkflowController {
@@ -58,13 +60,13 @@ public class AssetsWorkflowController {
   private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
   
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<List<Entity<Workflow>>> findAllWorkflows() {
     final var wks = composer.workflowQuery().findAll().await().atMost(timeout);
     return new ResponseEntity<>(wks, HttpStatus.OK);
   }
   
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<Entity<Workflow>> create(@RequestBody CreateWorkflow workflow) {
     return new ResponseEntity<>(composer.create().workflow(workflow).await().atMost(timeout), HttpStatus.CREATED);
   }

@@ -21,11 +21,11 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   formConfiguration,
 }) => {
   const intl = useIntl();
-  const config = useConfig();
+  const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
 
   const deleteDialog = async () => {
-    let url = `${config.dialobApiUrl}/forms/${formConfiguration?.id}`;
+    let url = `${serviceUrl}rest/api/assets/dialob/proxy/forms/${formConfiguration?.id}`;
     return session.cFetch(`${url}`,{
       method: 'DELETE',
     })

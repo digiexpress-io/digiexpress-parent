@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,16 +41,17 @@ import lombok.RequiredArgsConstructor;
  * Rest controller to handle external requests from admin UI.
  */
 @RestController
+@RequestMapping("/rest/api/worker")
 @RequiredArgsConstructor
 public class ProcessApiController {
   protected final PortalClient client;
 
   @Transactional
-  @GetMapping("/api/processesSearch")
+  @GetMapping("/processes")
   public ResponseEntity<Page<ProcessCommands.Process>> processesSearch(
-      @RequestParam(name="workflow.name", defaultValue="") String name, 
-      @RequestParam(name="status", required=false) List<String> status,
-      @RequestParam(name="userId", defaultValue="") String userId, 
+      @RequestParam(name="workflow.name", defaultValue= "") String name, 
+      @RequestParam(name="status", required = false) List<String> status,
+      @RequestParam(name="userId", defaultValue = "") String userId, 
       Pageable pageable) {
     
     final var processes = client.process().query().find(name, status, userId, pageable).map(ProcessCommandsImpl::map);    

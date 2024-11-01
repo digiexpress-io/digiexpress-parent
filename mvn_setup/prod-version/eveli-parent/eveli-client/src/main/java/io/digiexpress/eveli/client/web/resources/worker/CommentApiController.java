@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Transactional
-@RequestMapping("/api/tasks/v1")
+@RequestMapping("/rest/api/worker")
 @Slf4j
 public class CommentApiController extends TaskControllerBase
 {
@@ -70,7 +70,7 @@ public class CommentApiController extends TaskControllerBase
       this.securityClient = securityClient;
     }
     
-    @GetMapping(value="/task/{id}/comments")
+    @GetMapping(value="/tasks/{id}/comments")
     public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id)
     {
       final var authentication = securityClient.getUser();
@@ -83,7 +83,7 @@ public class CommentApiController extends TaskControllerBase
     }
 
     
-    @GetMapping("/comment/{id}")
+    @GetMapping("/comments/{id}")
     public ResponseEntity<TaskCommands.TaskComment> getCommentById(@PathVariable("id") Long id) 
     {
       return commentRepository.findById(id) 
@@ -92,7 +92,7 @@ public class CommentApiController extends TaskControllerBase
           .orElse(ResponseEntity.notFound().build());
     }
     
-    @PostMapping("/comment")
+    @PostMapping("/comments")
     public ResponseEntity<TaskCommands.TaskComment> createComment(
         @RequestBody TaskCommands.TaskComment comment) 
     {
@@ -138,7 +138,7 @@ public class CommentApiController extends TaskControllerBase
       return replyComment.get();
     }
     
-    @GetMapping("/comment/{id}/replyTo")
+    @GetMapping("/comments/{id}/reply-to")
     public ResponseEntity<TaskCommands.TaskComment> getCommentReplyTo(@PathVariable("id") Long id) 
     {
       return commentRepository.findOneByReplyTo(id)
@@ -147,7 +147,7 @@ public class CommentApiController extends TaskControllerBase
           .orElse(ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/comment/{id}/task")
+    @GetMapping("/comments/{id}/task")
     public ResponseEntity<TaskCommands.Task> getCommentTask(@PathVariable("id") Long id) 
     {
       return commentRepository.findById(id)

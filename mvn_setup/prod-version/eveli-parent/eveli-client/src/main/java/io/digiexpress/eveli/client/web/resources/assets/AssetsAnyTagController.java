@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("assets/any-tags")
+@RequestMapping("/rest/api/assets/any-tags")
 @Slf4j
 public class AssetsAnyTagController {
   private static final Duration timeout = Duration.ofMillis(10000);

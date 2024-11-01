@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping(path = "/api/notification")
+@RequestMapping(path = "/rest/api/notification")
 @Slf4j
 public class NotificationController {
   

@@ -36,12 +36,12 @@ export interface NewReleaseProps {
 export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
-  const apiUrl = useConfig().wrenchApiUrl;
+  const { serviceUrl } = useConfig()
 
   const session = useContext(SessionRefreshContext);
-  const { response: workflowTags } = useFetch<AssetTag[]>(`${apiUrl}/releaseTags/workflow`);
-  const { response: wrenchTags } = useFetch<AssetTag[]>(`${apiUrl}/releaseTags/wrench`);
-  const { response: contentTags } = useFetch<AssetTag[]>(`${apiUrl}/releaseTags/content`);
+  const { response: workflowTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/workflow-tags`);
+  const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/wrench-tags`);
+  const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/stencil-tags`);
 
 
   const handleClose = () => {
@@ -50,7 +50,7 @@ export const NewAssetReleaseDialog: React.FC<NewReleaseProps> = ({ onSubmit, ope
 
   const handleSubmit = (assetReleaseCommand: AssetReleaseInit): void => {
     let method = 'POST';
-    let url = `${apiUrl}/releases/`;
+    let url = `${serviceUrl}rest/api/assets/publications`;
     let init: AssetReleaseInit = { ...assetReleaseCommand }
     // clear markers for new release creation
     if (assetReleaseCommand.body.contentTag === NEW_TAG_VALUE) {

@@ -46,19 +46,18 @@ const frontdeskApp: BurgerApi.App<{}> = {
 }
 
 const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
-  const config = useConfig();
   const isWrench = useMatch({ path: '/wrench/ide' })
   const isStencil = useMatch({ path: '/ui/content' })
-
+  const { serviceUrl } = useConfig();
 
   if (isWrench) {
-    const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: "/wrench" }));
+    const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: serviceUrl + "rest/api/assets/wrench" }));
     return (
       <IntlProvider locale='en' messages={wrenchIntl.en}>
         <WrenchComposer service={service} />
       </IntlProvider>)
   } else if (isStencil) {
-    const service = StencilClient.service({ config: { url: "/stencil" } });
+    const service = StencilClient.service({ config: { url: serviceUrl + "/rest/api/assets/stencil" } });
     return (
       <IntlProvider locale='en' messages={stencilIntl.en}>
         <StencilComposer service={service} />
@@ -68,7 +67,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   return (
     <FeedbackProvider>
       <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
-        <TaskSessionContext apiBaseUrl={config.tasksApiUrl || ''}>
+        <TaskSessionContext>
           <Burger.Provider children={[frontdeskApp]} drawerOpen />
         </TaskSessionContext>
       </IntlProvider>

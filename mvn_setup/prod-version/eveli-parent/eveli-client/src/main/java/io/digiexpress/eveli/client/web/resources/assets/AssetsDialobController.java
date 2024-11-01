@@ -49,7 +49,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/assets/dialob")
+@RequestMapping(path = "/rest/api/assets/dialob")
 @RequiredArgsConstructor
 public class AssetsDialobController {
   

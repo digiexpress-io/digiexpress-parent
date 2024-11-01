@@ -18,11 +18,9 @@ export const ProcessTable: React.FC = () => {
   const config = useConfig();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
 
-  const apiUrl = config.wrenchApiUrl;
-
   const loadProcesses = (query: Query<Process>):Promise<QueryResult<Process>> => {
     let queryString = createQueryString(query, tableState.columns);
-    return session.cFetch(`${apiUrl}/api/processesSearch?${queryString}`,{
+    return session.cFetch(`${config.serviceUrl}rest/api/worker/processes?${queryString}`, {
       headers: {
         'Accept': 'application/json'
       },

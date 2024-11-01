@@ -35,14 +35,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
-import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.TaskCommands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/attachments")
+@RequestMapping("/rest/api/worker/attachments")
 @Slf4j
 @RequiredArgsConstructor
 /**

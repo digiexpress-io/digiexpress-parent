@@ -3,11 +3,13 @@ import { useFetch } from '../hooks/useFetch';
 
 export interface Config {
 
-  api?: string;
-  tasksApiUrl?: string; // api/tasks/v1
+  //api?: string;
+  //tasksApiUrl?: string; // api/tasks/v1
 
 
   serviceUrl?: string;
+
+  dialobComposerUrl?: string;
 
   feedbackKey?: string;
   taskDeleteGroups?: string[];
@@ -28,7 +30,6 @@ export const ConfigContextProvider: React.FC<PropsWithChildren<ConfigContextProv
 ({path, children}) => {
 
   const [pending, setPending] = useState<boolean>(true);
-
   const [config, setConfig] = useState<Config>({});
   const { response } = useFetch<Config>(path);
 

@@ -4,9 +4,7 @@ export default defineMock({
   url: '/config',
 
   body: {
-    api: '/api',
-    tasksApiUrl: '/api/tasks/v1',
-
+    serviceUrl: '/',
 
     appVersion: '',
     feedbackKey: '',

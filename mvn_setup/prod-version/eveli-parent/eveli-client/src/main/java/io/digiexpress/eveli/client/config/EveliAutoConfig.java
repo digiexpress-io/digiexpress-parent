@@ -55,12 +55,12 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.HdesCommandsImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
-import io.digiexpress.eveli.client.spi.dialob.DialobCommandsImpl;
 import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 import io.digiexpress.eveli.client.spi.PortalClientImpl;
+import io.digiexpress.eveli.client.spi.dialob.DialobCommandsImpl;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
-import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
+import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.gamut.DialobCallbackController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
@@ -81,14 +81,8 @@ import jakarta.persistence.EntityManager;
     EveliPropsTask.class
 })
 public class EveliAutoConfig {
-  
-  @Bean
-  public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
-      return builder -> builder
-          .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
-          .build();
-  }
-  
+
+
   @Bean 
   public AttachmentApiController attachmentApiController(PortalClient client, EveliPropsTask config, AuthClient security) {
     return new AttachmentApiController(client, config.isAdminsearch(), security);
@@ -101,18 +95,6 @@ public class EveliAutoConfig {
       TaskAccessRepository taskAccessRepository, AuthClient security) {
     
     return new CommentApiController(taskRepository, commentRepository, notificator, taskAccessRepository, security);
-  }
-  @Bean 
-  public DuplicateDetectionCache duplicateDetectionCache() {
-    return new DuplicateDetectionCache();
-  }
-  
-  @Bean(name="submitTaskScheduler")
-  public ThreadPoolTaskScheduler submitTaskScheduler() {
-    ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-    threadPoolTaskScheduler.setPoolSize(10);
-    threadPoolTaskScheduler.setThreadNamePrefix("SubmitTaskScheduler-");
-    return threadPoolTaskScheduler;
   }
 
   @Bean 
@@ -140,10 +122,7 @@ public class EveliAutoConfig {
   ) {
     return new PrintoutController(client, restTemplate, taskConfig.isAdminsearch(), printoutConfig.getServiceUrl());
   }
-  @Bean 
-  public ProcessApiController processApiController(PortalClient client) {
-    return new ProcessApiController(client);
-  }
+
   @Bean 
   public TaskApiController taskApiController(
       TaskAccessRepository taskAccessRepository, 
@@ -155,6 +134,12 @@ public class EveliAutoConfig {
   ) {
     
     return new TaskApiController(taskRefGenerator, taskAccessRepository, taskRepository, notificator, jdbcTemplate, config.isAdminsearch(), security);
+  }
+  
+  
+  @Bean 
+  public ProcessApiController processApiController(PortalClient client) {
+    return new ProcessApiController(client);
   }
   @Bean 
   public TaskNotificator taskNotificator() {
@@ -225,4 +210,25 @@ public class EveliAutoConfig {
         .taskRefGenerator(taskRefGenerator)
         .build();
   }
+  
+  
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
+      return builder -> builder
+          .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
+          .build();
+  }
+  @Bean 
+  public DuplicateDetectionCache duplicateDetectionCache() {
+    return new DuplicateDetectionCache();
+  }
+  
+  @Bean(name="submitTaskScheduler")
+  public ThreadPoolTaskScheduler submitTaskScheduler() {
+    ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+    threadPoolTaskScheduler.setPoolSize(10);
+    threadPoolTaskScheduler.setThreadNamePrefix("SubmitTaskScheduler-");
+    return threadPoolTaskScheduler;
+  }
+
 }

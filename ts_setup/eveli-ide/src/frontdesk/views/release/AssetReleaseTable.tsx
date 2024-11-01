@@ -25,20 +25,20 @@ interface TableState {
 
 export const AssetReleaseTable: React.FC = () => {
   const intl = useIntl();
+  const { serviceUrl } = useConfig();
   const config = useConfig();
-  const apiUrl = config.wrenchApiUrl;
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<AssetRelease[]>(`${apiUrl}/releases/`);
+  const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<AssetRelease[]>(`${serviceUrl}rest/api/assets/publications`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
 
 
 
 
   const getRelease = (releaseTag: AssetRelease) => {
-    let url = `${apiUrl}/releaseDownload/${releaseTag.body.name}`;
+    let url = `${serviceUrl}rest/api/assets/publications/${releaseTag.body.name}`;
     return session.cFetch(`${url}`, {
       method: 'GET',
       headers: {

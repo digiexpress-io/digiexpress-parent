@@ -3,9 +3,6 @@ import { QueryResult } from '@material-table/core';
 import { Task } from '../types/task/Task';
 import { Comment } from '../types/task/Comment';
 
-export interface TaskApiConfig {
-  apiBaseUrl: string
-}
 
 export interface TaskBackend {
   getTasks:(page?:number, size?:number)=>Promise<QueryResult<Task>>
@@ -15,10 +12,6 @@ export interface TaskBackend {
   getTaskComments(task:Task):Promise<Comment[]>
   saveComment(commentText:string, replyToId:number|undefined, task:Task,isExternalThread:boolean|undefined):Promise<Comment>
 }
-
-export const TaskApiConfigContext = React.createContext<TaskApiConfig>({
-  apiBaseUrl: ''
-});
 
 export const getTasksProto = (page?:number, size?:number)=>new Promise<QueryResult<Task>>((resolve,reject)=>reject());
 export const getTaskProto = (taskId:any)=>new Promise<Task>((resolve, reject)=>resolve({}));

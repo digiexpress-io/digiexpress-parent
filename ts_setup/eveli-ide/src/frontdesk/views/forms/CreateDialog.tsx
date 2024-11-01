@@ -28,7 +28,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
   formConfiguration,
 }) => {
   const intl = useIntl();
-  const config = useConfig();
+  const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
 
   const tagFormSchema = () => Yup.object().shape({
@@ -42,7 +42,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
     };
 
     const getForm = (formId: string) => {
-      let url = `${config.dialobApiUrl}/forms/${formId}`;
+      let url = `${serviceUrl}rest/api/assets/dialob/proxy/forms/${formId}`;
       return session.cFetch(`${url}`,{
         method: 'GET',
         headers: {
@@ -59,7 +59,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
       });
     }
     const saveForm = (form: Partial<DialobForm>) => {
-      let url = `${config.dialobApiUrl}/forms/`;
+      let url = `${serviceUrl}rest/api/assets/dialob/proxy/forms/`;
       return session.cFetch(`${url}`,{
         method: 'POST',
         headers: {

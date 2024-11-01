@@ -33,7 +33,7 @@ export const NewWorkflowRelease: React.FC<NewFormProps> = ({ onSubmit, workflowR
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
-  const apiUrl = useConfig().wrenchApiUrl;
+  const { serviceUrl } = useConfig();
 
   const session = useContext(SessionRefreshContext);
 
@@ -43,7 +43,7 @@ export const NewWorkflowRelease: React.FC<NewFormProps> = ({ onSubmit, workflowR
 
   const handleSubmit = (workflowReleaseCommand: WorkflowRelease): void => {
     let method = 'POST';
-    let url = `${apiUrl}/workflowReleases/`;
+    let url = `${serviceUrl}rest/api/assets/workflows`;
 
     session.cFetch(`${url}`, {
       method: method,

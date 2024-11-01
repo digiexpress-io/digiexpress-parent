@@ -45,7 +45,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
+@RestController("/rest/api/worker")
 @Slf4j
 @RequiredArgsConstructor
 public class PrintoutController {
