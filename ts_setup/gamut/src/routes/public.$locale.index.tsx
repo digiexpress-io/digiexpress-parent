@@ -14,5 +14,5 @@ function Component() {
 
   React.useEffect(() => setLocale(locale), [locale])
 
-  return (<RouterUnsecured />)
+  return (<RouterUnsecured pageId='000_index'/>)
 }

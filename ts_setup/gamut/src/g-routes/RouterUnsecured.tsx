@@ -25,17 +25,20 @@ const FlexSpacerRow: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 }
 
 
-const Internal: React.FC<{}> = () => {
+const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
   const nav = useNavigate();
   const theme = useTheme();
   const { locale } = useLocale();
   const { views } = useSite();
-  const [topic, setTopic] = React.useState<SiteApi.TopicView>();
-
-  const landingTopic = Object.values(views).find(a => a.id === '000_index');
+  
+  const landingTopic = Object.values(views).find(a => a.id === pageId);
 
   function handleTopicChange(topic: SiteApi.TopicView) {
-    setTopic(topic);
+    nav({
+      from: '/public/$locale',
+      params: { locale, pageId: topic.id },
+      to: '/public/$locale/pages/$pageId',
+    })
   }
 
   function handleLocale(locale: string) {
@@ -86,7 +89,7 @@ const Internal: React.FC<{}> = () => {
           </Box>
 
           {/*<GForm variant="general-message">1dfe0a3eef10f0306171f85b37a15209</GForm> */}
-          {topic === undefined ? <GArticle>{landingTopic}</GArticle> : <GArticle>{topic}</GArticle>}
+          <GArticle>{landingTopic}</GArticle>
         </Container>
       </main>
 
@@ -100,10 +103,10 @@ const Internal: React.FC<{}> = () => {
 
 
 
-export const RouterUnsecured: React.FC<{}> = () => {
+export const RouterUnsecured: React.FC<{pageId: string}> = ({ pageId }) => {
   return (
     <GShell drawerOpen={false}>
-      <Internal />
+      <Internal pageId={pageId}/>
     </GShell>
   );
 }
