@@ -24,7 +24,7 @@ readonly local PROJECT_VERSION_NEXT=$(node -e "console.log(require('./package.js
 
 # version info 
 DATE=$(date "+%d/%m/%Y %H:%M:%S")
-echo "export const version = ${PROJECT_VERSION_NEXT};${NEWLINE}export const build_time = '${DATE}';" > ./src/version.ts
+echo "export const version = '${PROJECT_VERSION_NEXT}';${NEWLINE}export const build_time = '${DATE}';" > ./src/version.ts
 git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
 
 # Log
