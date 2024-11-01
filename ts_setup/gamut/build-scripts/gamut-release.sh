@@ -36,7 +36,7 @@ pnpm install
 pnpm build
 pnpm publish --access public --no-git-checks --publish-branch dev
 
-git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
+#git commit -am "gamut release ${PROJECT_VERSION_NEXT}"
 git tag -a "gamut_release_${PROJECT_VERSION_NEXT}" -m "gamut release ${PROJECT_VERSION_NEXT}"
 git push origin --tags
 git push origin dev
