@@ -1,19 +1,23 @@
 import React, { useRef, useState } from 'react'
 import { Box, CircularProgress, IconButton } from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Edit from '@mui/icons-material/Edit';
 
+import MaterialTable, { Column } from '@material-table/core';
+import moment from 'moment';
 import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
+
 import { CreateDialog } from './CreateDialog';
 import { DeleteDialog } from './DeleteDialog';
 import { useConfig } from '../../context/ConfigContext';
 import { DialobFormEntry } from '../../types';
-import moment from 'moment';
+
 import { useFetch } from '../../hooks/useFetch';
-import MaterialTable, { Column } from '@material-table/core';
 import { localizeTable } from '../../util/localizeTable';
-import Edit from '@mui/icons-material/Edit';
+import { DateTimeFormatter } from '../../components/DateTImeFormatter';
 
 export const DialobFormsView: React.FC = () => {
   const config = useConfig();

@@ -1,11 +1,10 @@
 
-import { Box, Stack, Typography } from '@mui/material';
+import React, { useContext, useRef, useState } from 'react';
 import MaterialTable, { Column } from '@material-table/core';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import moment from 'moment';
-import React, { useContext, useRef, useState } from 'react';
-import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
+
+import { useIntl } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
 import { useFetch } from '../../hooks/useFetch';
 import { useSnackbar } from 'notistack';
@@ -16,6 +15,9 @@ import { AssetRelease } from '../../types/AssetRelease';
 import { NewAssetReleaseDialog } from './NewAssetReleaseDialog';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
+
+import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+
 
 interface TableState {
   columns: Array<Column<AssetRelease>>;
@@ -34,18 +36,7 @@ export const AssetReleaseTable: React.FC = () => {
 
 
 
-  const formatDateTime = (time:any) => {
-    if (time) {
-      const localTime = moment.utc(time).local().toDate();
-      return (
-        <Stack direction='column'>
-          <Typography variant='body2'><FormattedDate value={localTime} /></Typography>
-          <Typography variant='body1'><FormattedTime value={localTime} /></Typography>
-        </Stack>
-      )
-    }
-    return "-";
-  }
+
   const getRelease = (releaseTag: AssetRelease) => {
     let url = `${apiUrl}/releaseDownload/${releaseTag.body.name}`;
     return session.cFetch(`${url}`, {
@@ -97,7 +88,7 @@ export const AssetReleaseTable: React.FC = () => {
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => formatDateTime(data.body.created),
+        render: data => <DateTimeFormatter value={data.body.created} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {

@@ -1,10 +1,11 @@
+import React, { useRef, useState } from 'react';
 import MaterialTable, { Column } from '@material-table/core';
+
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 
-import moment from 'moment';
-import React, { useRef, useState } from 'react';
-import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+
 import { useConfig } from '../../context/ConfigContext';
 import { useFetch } from '../../hooks/useFetch';
 import { DialobFormTag } from '../../types';
@@ -12,6 +13,9 @@ import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
 import { NewWorkflow } from './NewWorkflow';
+import { DateTimeFormatter } from '../../components/DateTImeFormatter';
+
+
 interface TableState {
   columns: Array<Column<Workflow>>;
 }
@@ -50,19 +54,6 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
     return formName(form1).localeCompare(formName(form2));
   }
 
-  const formatDateTime = (time: any) => {
-    if (time) {
-      const localTime = moment.utc(time).local().toDate();
-      return (
-        <React.Fragment>
-          <FormattedDate value={localTime} />&nbsp;<FormattedTime value={localTime} />
-        </React.Fragment>
-      )
-    }
-    return "-";
-  }
-
-
   const tableState: TableState = {
     columns: [
       {
@@ -89,7 +80,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
         field: 'body.updated',
         filtering: false,
         type: 'date',
-        render: data => formatDateTime(data.body.updated),
+        render: data => <DateTimeFormatter value={data.body.updated} />,
         headerStyle: { fontWeight: 'bold' }
       }
     ]

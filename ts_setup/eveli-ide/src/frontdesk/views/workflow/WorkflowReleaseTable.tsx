@@ -1,9 +1,8 @@
 import MaterialTable, { Column } from '@material-table/core';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import moment from 'moment';
 import React, { useRef, useState } from 'react';
-import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
 import { useFetch } from '../../hooks/useFetch';
 
@@ -13,6 +12,7 @@ import { WorkflowRelease } from '../../types/WorkflowRelease';
 import { downloadFile } from '../../util/downloadFile';
 import { WorkflowTagDialog } from './WorkflowTagDialog';
 import Visibility from '@mui/icons-material/Visibility';
+import { DateTimeFormatter } from '../../components/DateTImeFormatter';
 
 interface TableState {
   columns: Array<Column<WorkflowRelease>>;
@@ -29,19 +29,6 @@ export const WorkflowReleaseTable: React.FC = () => {
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
   const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease | null>(null);
-
-
-  const formatDateTime = (time: any) => {
-    if (time) {
-      const localTime = moment.utc(time).local().toDate();
-      return (
-        <React.Fragment>
-          <FormattedDate value={localTime} />&nbsp;<FormattedTime value={localTime} />
-        </React.Fragment>
-      )
-    }
-    return "-";
-  }
 
   const tableState: TableState = {
     columns: [
@@ -61,7 +48,7 @@ export const WorkflowReleaseTable: React.FC = () => {
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => formatDateTime(data.body.created),
+        render: data => <DateTimeFormatter value={data.body.created} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {
