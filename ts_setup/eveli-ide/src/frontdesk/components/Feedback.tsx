@@ -9,7 +9,6 @@ import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
 
-const feedbackUrl = 'https://feedback.resys.io/api/feedback';
 
 enum RequestState {
   NotSent, Loading, Success, Error,
@@ -38,7 +37,7 @@ export const Feedback: React.FC<Props> = () => {
   useEffect(() => {
     if (context.isOpen) {
       // pre-import feedback library after user opens modal
-      import('@resys/feedback');
+      
     }
   }, [context.isOpen]);
 

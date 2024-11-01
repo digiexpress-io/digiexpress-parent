@@ -13,6 +13,7 @@
     "start-wrench": "START_MODE=wrench vite",
     "start-stencil": "START_MODE=stencil vite",
     "start-frontdesk": "START_MODE=frontdesk vite",
+    "start": "START_MODE=frontdesk vite",
     "build": "NODE_ENV=production vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
@@ -30,7 +31,6 @@
   },
   "peerDependencies": {
     "@dialob/dashboard-material": "^1.2.3",
-    "@resys/feedback": "^1.3.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/lab": "6.0.0-beta.12",
