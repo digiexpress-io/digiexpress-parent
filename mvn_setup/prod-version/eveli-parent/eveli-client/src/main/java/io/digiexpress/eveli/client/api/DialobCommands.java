@@ -39,38 +39,47 @@ import lombok.Data;
 
 public interface DialobCommands {
   
-  QuestionnaireBuilder create();
+  OneSessionBuilder createOneSession();
+  DialobProxy createProxy();
+
+  
+  // is it used ???
   Questionnaire.Metadata.Status getStatus(String sessionId);
+  
+  
   Questionnaire get(String questionnaireId);
   Dialob getDialob(String questionnaireId);
+  
   Form getForm(String formId);
   TagQueryBuilder getTags();
   
-  DialobProxy proxy();
   
   
   void complete(String sessionId);  
   void delete(String sessionId);
   
   
+  
+  interface OneSessionBuilder {
+    OneSessionBuilder formName(String formName);
+    OneSessionBuilder formTag(String formTag);
+    OneSessionBuilder language(String language);
+    OneSessionBuilder addContext(String id, Serializable value);
+    OneSessionBuilder addAnswer(String id, Serializable value);
+    IdAndRevision build();
+  }
+  
+  // Proxy any request against dialob api
   interface DialobProxy {
     ResponseEntity<String> fillGet(String sessionId);
     ResponseEntity<String> fillPost(String sessionId, String body);
+    
     ResponseEntity<String> reviewGet(String sessionId);
-    
-    
-    ResponseEntity<String> request(String path, String query, HttpMethod method, String body, Map<String, String> headers);
+    ResponseEntity<String> anyRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers);
   }
   
 
-  interface QuestionnaireBuilder {
-    QuestionnaireBuilder formName(String formName);
-    QuestionnaireBuilder formTag(String formTag);
-    QuestionnaireBuilder language(String language);
-    QuestionnaireBuilder addContext(String id, Serializable value);
-    QuestionnaireBuilder addAnswer(String id, Serializable value);
-    IdAndRevision build();
-  }
+
   
   interface TagQueryBuilder {
     TagQueryBuilder formName(String formName);

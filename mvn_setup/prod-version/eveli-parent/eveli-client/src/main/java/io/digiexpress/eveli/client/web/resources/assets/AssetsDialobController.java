@@ -68,7 +68,7 @@ public class AssetsDialobController {
     final var path = request.getServletPath().substring(28);
     final var method = HttpMethod.valueOf(request.getMethod());
     
-    return dialobCommands.proxy().request(path, query, method, body, headers);
+    return dialobCommands.createProxy().anyRequest(path, query, method, body, headers);
   }
  
   @GetMapping(path="/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,13 +103,13 @@ public class AssetsDialobController {
 
   private FormTag[] getTags(String id) throws JsonMappingException, JsonProcessingException {
     final var uri = "api/forms/" + id + "/tags";
-    final String body = dialobCommands.proxy().request(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+    final String body = dialobCommands.createProxy().anyRequest(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormTag.class).readValue(body);
   }
 
   private FormListItem[] getForms() throws JsonMappingException, JsonProcessingException {
     final var uri = "api/forms";
-    final String body = dialobCommands.proxy().request(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+    final String body = dialobCommands.createProxy().anyRequest(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormListItem.class).readValue(body);
   }
 }

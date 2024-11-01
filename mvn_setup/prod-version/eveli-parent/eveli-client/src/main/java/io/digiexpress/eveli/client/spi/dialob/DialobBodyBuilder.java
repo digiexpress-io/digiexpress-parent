@@ -33,10 +33,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.DialobCommands;
-import io.digiexpress.eveli.client.api.DialobCommands.QuestionnaireBuilder;
+import io.digiexpress.eveli.client.api.DialobCommands.OneSessionBuilder;
 import io.digiexpress.eveli.client.spi.dialob.DialobAssert.DialobException;
 
-public abstract class DialobBodyBuilder implements DialobCommands.QuestionnaireBuilder {
+public abstract class DialobBodyBuilder implements DialobCommands.OneSessionBuilder {
   private final ObjectMapper objectMapper;
   private final JsonFactory jsonFactory;
   private final String submitCallbackUrl;
@@ -56,22 +56,22 @@ public abstract class DialobBodyBuilder implements DialobCommands.QuestionnaireB
   }
 
   @Override
-  public QuestionnaireBuilder language(String language) {
+  public OneSessionBuilder language(String language) {
     this.language = language;
     return this;
   }
   @Override
-  public QuestionnaireBuilder addContext(String id, Serializable value) {
+  public OneSessionBuilder addContext(String id, Serializable value) {
     this.context.put(id, value);
     return this;
   }
   @Override
-  public QuestionnaireBuilder addAnswer(String id, Serializable value) {
+  public OneSessionBuilder addAnswer(String id, Serializable value) {
     this.answer.put(id, value);
     return this;
   }
   
-  protected QuestionnaireBuilder formId(String formId) {
+  protected OneSessionBuilder formId(String formId) {
     this.formId = formId;
     return this;
   }

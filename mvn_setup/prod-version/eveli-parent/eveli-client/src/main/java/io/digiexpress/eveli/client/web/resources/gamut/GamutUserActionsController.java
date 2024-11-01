@@ -70,15 +70,15 @@ public class GamutUserActionsController {
 
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.proxy().fillGet(sessionId);
+    return dialob.createProxy().fillGet(sessionId);
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return dialob.proxy().fillPost(sessionId, body);
+    return dialob.createProxy().fillPost(sessionId, body);
   }
   @GetMapping(value="/review/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.proxy().reviewGet(sessionId);
+    return dialob.createProxy().reviewGet(sessionId);
   }
 
   @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities

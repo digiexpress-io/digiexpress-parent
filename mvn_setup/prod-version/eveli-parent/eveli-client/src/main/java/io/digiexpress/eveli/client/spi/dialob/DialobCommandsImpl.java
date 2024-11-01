@@ -78,7 +78,7 @@ public class DialobCommandsImpl implements DialobCommands {
   
   
   @Override
-  public QuestionnaireBuilder create() {
+  public OneSessionBuilder createOneSession() {
     return new DialobBodyBuilder(objectMapper, objectMapper.getFactory(), callbackUrl) {
       private String formName;
       private String formTag;
@@ -109,13 +109,13 @@ public class DialobCommandsImpl implements DialobCommands {
       }
 
       @Override
-      public QuestionnaireBuilder formName(String formName) {
+      public OneSessionBuilder formName(String formName) {
         this.formName = formName;
         return this;
       }
 
       @Override
-      public QuestionnaireBuilder formTag(String formTag) {
+      public OneSessionBuilder formTag(String formTag) {
         this.formTag = formTag;
         return this;
       }
@@ -251,7 +251,7 @@ public class DialobCommandsImpl implements DialobCommands {
   }
 
   @Override
-  public DialobProxy proxy() {
+  public DialobProxy createProxy() {
     return new DialobProxy() {
       @Override
       public ResponseEntity<String> reviewGet(String sessionId) {
@@ -281,7 +281,7 @@ public class DialobCommandsImpl implements DialobCommands {
         }
       }
       @Override
-      public ResponseEntity<String> request(String path, String query, HttpMethod method, String body, Map<String, String> headers) {
+      public ResponseEntity<String> anyRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers) {
         final var uriBuilder = UriComponentsBuilder.fromHttpUrl(serviceUrl)
             .pathSegment(path).query(query);
         final var reqHeaders = new HttpHeaders();

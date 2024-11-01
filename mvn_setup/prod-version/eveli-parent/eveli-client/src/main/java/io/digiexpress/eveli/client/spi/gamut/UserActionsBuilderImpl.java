@@ -123,7 +123,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   
   private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
-    final var formBuilder = dialobCommands.create()
+    final var formBuilder = dialobCommands.createOneSession()
         .formName(workflow.getFormName())
         .formTag(workflow.getFormTag())
         .language(clientLocale)
