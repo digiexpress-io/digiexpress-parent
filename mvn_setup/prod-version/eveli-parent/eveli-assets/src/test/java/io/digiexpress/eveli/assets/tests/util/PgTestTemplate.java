@@ -134,7 +134,6 @@ public class PgTestTemplate {
             })
             .gidProvider(() -> gid.incrementAndGet() + "")
             .authorProvider(() -> "junit-test"))
-            
         .build();
     
     

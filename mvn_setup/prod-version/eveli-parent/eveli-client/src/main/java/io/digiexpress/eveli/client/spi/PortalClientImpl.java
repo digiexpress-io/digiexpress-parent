@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class PortalClientImpl implements PortalClient {
-  private final DialobCommands dialob;
+  private final DialobClient dialob;
   private final TaskCommands task;
   private final ProcessCommands process;
   private final AttachmentCommands attachments;
@@ -71,7 +71,7 @@ public class PortalClientImpl implements PortalClient {
     
     private AttachmentCommands attachmentCommands;
     private NotificationCommands notificationCommands;
-    private DialobCommands dialobCommands;
+    private DialobClient dialobCommands;
     private ProcessRepository processRepository;
     private HdesClient hdesClient;
     private TransactionWrapper transactionWrapper;

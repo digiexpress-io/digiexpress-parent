@@ -42,7 +42,7 @@ import io.dialob.api.form.Form;
 import io.dialob.api.form.FormTag;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.spi.dialob.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class DialobCommandsImpl implements DialobCommands {
+public class DialobCommandsImpl implements DialobClient {
   
   
   private final ObjectMapper objectMapper;
@@ -78,7 +78,7 @@ public class DialobCommandsImpl implements DialobCommands {
   
   
   @Override
-  public OneSessionBuilder createOneSession() {
+  public SessionBuilder createSession() {
     return new DialobBodyBuilder(objectMapper, objectMapper.getFactory(), callbackUrl) {
       private String formName;
       private String formTag;
@@ -109,13 +109,13 @@ public class DialobCommandsImpl implements DialobCommands {
       }
 
       @Override
-      public OneSessionBuilder formName(String formName) {
+      public SessionBuilder formName(String formName) {
         this.formName = formName;
         return this;
       }
 
       @Override
-      public OneSessionBuilder formTag(String formTag) {
+      public SessionBuilder formTag(String formTag) {
         this.formTag = formTag;
         return this;
       }

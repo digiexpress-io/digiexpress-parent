@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
@@ -65,7 +65,7 @@ public class GamutUserActionsController {
   
   private final GamutClient gamutClient;
   private final CrmClient authClient;
-  private final DialobCommands dialob;
+  private final DialobClient dialob;
   private final HdesCommands hdes;
 
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)

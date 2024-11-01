@@ -82,7 +82,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
                   .name(createdTag.getBody().getStencilTagName())
                   .note("auto-created")
                   .build()):
-              Uni.createFrom().nothing();
+              Uni.createFrom().nullItem();
           
           final var wrenchRelease = init.getWrenchTag() == null ? 
               new HdesComposerImpl(hdesClient).create(ImmutableCreateEntity.builder()
@@ -90,7 +90,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
                   .name(createdTag.getBody().getWrenchTagName())
                   .desc("auto-created")
                   .build()):
-              Uni.createFrom().nothing();
+              Uni.createFrom().nullItem();
           
           
           final var workflowRelease = init.getWrenchTag() == null ? 
@@ -98,7 +98,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
                   .description("auto-created")
                   .name(createdTag.getBody().getWorkflowTagName())
                   .build()):
-              Uni.createFrom().nothing();
+              Uni.createFrom().nullItem();
           
           return Uni.combine().all().unis(stencilRelease, wrenchRelease, workflowRelease).with((autoCreatedTags) -> {
             

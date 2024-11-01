@@ -23,7 +23,7 @@ package io.digiexpress.eveli.client.spi.gamut;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
@@ -45,7 +45,7 @@ public class GamutClientImpl implements GamutClient {
   private final TaskAccessRepository taskAccessRepository;
   
   private final AttachmentCommands attachmentsCommands;
-  private final DialobCommands dialobCommands;
+  private final DialobClient dialobCommands;
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
   private final CrmClient authClient;

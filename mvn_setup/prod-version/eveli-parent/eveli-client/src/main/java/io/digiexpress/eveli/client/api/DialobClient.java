@@ -37,9 +37,9 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
 import lombok.Data;
 
-public interface DialobCommands {
+public interface DialobClient {
   
-  OneSessionBuilder createOneSession();
+  SessionBuilder createSession();
   DialobProxy createProxy();
 
   
@@ -60,12 +60,12 @@ public interface DialobCommands {
   
   
   
-  interface OneSessionBuilder {
-    OneSessionBuilder formName(String formName);
-    OneSessionBuilder formTag(String formTag);
-    OneSessionBuilder language(String language);
-    OneSessionBuilder addContext(String id, Serializable value);
-    OneSessionBuilder addAnswer(String id, Serializable value);
+  interface SessionBuilder {
+    SessionBuilder formName(String formName);
+    SessionBuilder formTag(String formTag);
+    SessionBuilder language(String language);
+    SessionBuilder addContext(String id, Serializable value);
+    SessionBuilder addAnswer(String id, Serializable value);
     IdAndRevision build();
   }
   

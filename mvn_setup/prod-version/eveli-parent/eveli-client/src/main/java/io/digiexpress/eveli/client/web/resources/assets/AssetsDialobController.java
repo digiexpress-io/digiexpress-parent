@@ -42,9 +42,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.dialob.api.form.FormTag;
-import io.digiexpress.eveli.client.api.DialobCommands;
-import io.digiexpress.eveli.client.api.DialobCommands.FormListItem;
-import io.digiexpress.eveli.client.api.DialobCommands.FormTagResult;
+import io.digiexpress.eveli.client.api.DialobClient;
+import io.digiexpress.eveli.client.api.DialobClient.FormListItem;
+import io.digiexpress.eveli.client.api.DialobClient.FormTagResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -53,7 +53,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AssetsDialobController {
   
-  private final DialobCommands dialobCommands;
+  private final DialobClient dialobCommands;
   private final ObjectMapper objectMapper;
 
 

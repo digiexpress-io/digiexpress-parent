@@ -27,7 +27,7 @@ import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.ContextValue;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.VariableValue;
-import io.digiexpress.eveli.client.api.DialobCommands.Dialob;
+import io.digiexpress.eveli.client.api.DialobClient.Dialob;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

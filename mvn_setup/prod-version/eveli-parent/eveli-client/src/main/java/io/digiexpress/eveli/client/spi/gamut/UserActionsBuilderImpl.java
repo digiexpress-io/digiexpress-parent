@@ -31,7 +31,7 @@ import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
@@ -53,8 +53,7 @@ import lombok.experimental.Accessors;
 public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private final ProcessRepository processRepository;
-  
-  private final DialobCommands dialobCommands;
+  private final DialobClient dialobCommands;
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
   
@@ -123,7 +122,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   
   private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
-    final var formBuilder = dialobCommands.createOneSession()
+    final var formBuilder = dialobCommands.createSession()
         .formName(workflow.getFormName())
         .formTag(workflow.getFormTag())
         .language(clientLocale)

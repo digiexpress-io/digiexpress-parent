@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GamutFeedbackController {
   private final GamutClient gamutClient;
-  private final DialobCommands dialob;
+  private final DialobClient dialob;
   private final List<String> allowedActions;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)

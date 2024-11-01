@@ -31,7 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
-import io.digiexpress.eveli.client.api.DialobCommands;
+import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.ImmutableProcess;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProcessCommandsImpl implements ProcessCommands {
   
-  private final DialobCommands forms;
+  private final DialobClient forms;
   private final ProcessRepository processJPA;
   private final EveliAssetClient workflowCommands;
 
@@ -179,7 +179,7 @@ public class ProcessCommandsImpl implements ProcessCommands {
   @Setter
   @Accessors(fluent = true)
   public static class Builder {
-    private DialobCommands forms;
+    private DialobClient forms;
     private ProcessRepository processJPA;
     private EveliAssetClient workflowCommands;
   
