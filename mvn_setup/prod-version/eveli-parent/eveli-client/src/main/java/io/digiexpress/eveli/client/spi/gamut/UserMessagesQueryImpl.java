@@ -33,7 +33,7 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.digiexpress.eveli.client.web.resources.TaskControllerBase;
+import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
 import io.thestencil.iam.api.ImmutableUserMessage;
 import io.thestencil.iam.api.UserActionsClient.UserMessage;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.web.resources;
+package io.digiexpress.eveli.client.web.resources.assets;
 
 import java.util.ArrayList;
 import java.util.Arrays;

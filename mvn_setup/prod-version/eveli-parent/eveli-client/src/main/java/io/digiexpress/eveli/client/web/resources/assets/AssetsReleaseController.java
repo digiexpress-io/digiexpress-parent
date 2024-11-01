@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.web.resources;
+package io.digiexpress.eveli.client.web.resources.assets;
 
 /*-
  * #%L
@@ -50,9 +50,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AssetsReleaseController {
-
-  private final EveliAssetComposer composer;
   private static final Duration timeout = Duration.ofMillis(10000);
+  private final EveliAssetComposer composer;
   private final AuthClient securityClient;
 
   

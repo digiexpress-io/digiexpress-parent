@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.web.resources;
+package io.digiexpress.eveli.client.web.resources.assets;
 
 /*-
  * #%L
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.web.resources.AssetsWrenchController.VersionEntity;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController.VersionEntity;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableArticleMutator;
 import io.thestencil.client.api.ImmutableCreateArticle;

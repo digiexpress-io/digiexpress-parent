@@ -58,14 +58,14 @@ import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.dialob.DialobCommandsImpl;
 import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 import io.digiexpress.eveli.client.spi.PortalClientImpl;
-import io.digiexpress.eveli.client.web.resources.AttachmentApiController;
-import io.digiexpress.eveli.client.web.resources.CommentApiController;
-import io.digiexpress.eveli.client.web.resources.DialobCallbackController;
-import io.digiexpress.eveli.client.web.resources.EmailNotificationController;
-import io.digiexpress.eveli.client.web.resources.EmailNotificationController.EmailFilter;
-import io.digiexpress.eveli.client.web.resources.PrintoutController;
-import io.digiexpress.eveli.client.web.resources.ProcessApiController;
-import io.digiexpress.eveli.client.web.resources.TaskApiController;
+import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
+import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
+import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
+import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
+import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
+import io.digiexpress.eveli.client.web.resources.worker.DialobCallbackController;
+import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
+import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import jakarta.persistence.EntityManager;
 
 
