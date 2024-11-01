@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.web.resources.gamut;
  */
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,7 +44,7 @@ public class GamutIamController {
   }
   
   @GetMapping(path = "/roles")
-  public CrmClient.CustomerRoles getRoles(@RequestHeader("cookie") String id) {
+  public CrmClient.CustomerRoles getRoles() {
     return authClient.getCustomerRoles();
   }
 
