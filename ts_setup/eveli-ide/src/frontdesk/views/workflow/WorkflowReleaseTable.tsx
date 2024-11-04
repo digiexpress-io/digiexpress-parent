@@ -1,6 +1,7 @@
 import MaterialTable, { Column } from '@material-table/core';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import PreviewIcon from '@mui/icons-material/Preview';
 import React, { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
@@ -11,7 +12,6 @@ import { NewWorkflowRelease } from './NewWorkflowRelease';
 import { WorkflowRelease } from '../../types/WorkflowRelease';
 import { downloadFile } from '../../util/downloadFile';
 import { WorkflowTagDialog } from './WorkflowTagDialog';
-import Visibility from '@mui/icons-material/Visibility';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 interface TableState {
@@ -84,7 +84,7 @@ export const WorkflowReleaseTable: React.FC = () => {
             onClick: () => { setWorkflowRelease(null); setNewDialogOpen(true); }
           },
           {
-            icon: () => (<Visibility />),
+            icon: PreviewIcon,
             tooltip: intl.formatMessage({ id: 'workflowReleaseTable.viewButton' }),
             onClick: (event, data) => { setWorkflowRelease(data as WorkflowRelease); setTagDialogOpen(true) }
           },

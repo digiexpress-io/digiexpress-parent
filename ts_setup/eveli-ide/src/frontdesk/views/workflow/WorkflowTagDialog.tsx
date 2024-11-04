@@ -16,8 +16,6 @@ interface WorkflowTagDialogProps {
 export const WorkflowTagDialog: React.FC<WorkflowTagDialogProps> = ({ workflowRelease, open, setOpen }) => {
   const intl = useIntl();
 
-  console.log("workflowRelease", workflowRelease)
-
   return (
     <>
       <Dialog open={open} aria-labelledby='workflow-tag-dialog-title' maxWidth='md' fullWidth>
