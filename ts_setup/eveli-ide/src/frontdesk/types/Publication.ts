@@ -1,6 +1,6 @@
 
 
-export interface AssetRelease {
+export interface Publication {
   id: number;
   body: {
     name: string;
@@ -13,7 +13,7 @@ export interface AssetRelease {
   }
 }
 
-export interface AssetReleaseInit {
+export interface PublicationInit {
   id: number;
   body: {
     name: string;

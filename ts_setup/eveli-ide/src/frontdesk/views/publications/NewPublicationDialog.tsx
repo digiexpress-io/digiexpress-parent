@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { AssetRelease, AssetReleaseInit } from '../../types/AssetRelease';
+import { Publication, PublicationInit } from '../../types/Publication';
 import { useFetch } from '../../hooks/useFetch';
 import { AssetTag } from '../../types/AssetTag';
 import { useSnackbar } from 'notistack';
@@ -43,16 +43,15 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/wrench-tags`);
   const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/stencil-tags`);
 
-
   const handleClose = () => {
     setOpen(false);
   }
 
-  const handleSubmit = (assetReleaseCommand: AssetReleaseInit): void => {
+  const handleSubmit = (assetReleaseCommand: PublicationInit): void => {
     let method = 'POST';
     let url = `${serviceUrl}rest/api/assets/publications`;
 
-    let init: AssetReleaseInit = { ...assetReleaseCommand }
+    let init: PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
     if (assetReleaseCommand.body.contentTag === NEW_TAG_VALUE) {
       init.body.contentTag = null;
@@ -114,7 +113,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values as AssetRelease);
+            handleSubmit(values as Publication);
             setSubmitting(false);
           }}
         >
@@ -123,14 +122,14 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               <Form>
                 <DialogContent>
                   <Stack spacing={1}>
-                    <Field component={TextField} name='name' label={intl.formatMessage({ id: 'publications.name' })}
+                    <Field component={TextField} name='body.name' label={intl.formatMessage({ id: 'publications.name' })}
                       fullWidth required validate={requiredValidator} error={!!errors.body?.name}
                       helperText={errors.body?.name} InputProps={{ margin: 'normal' }} />
-                    <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })}
+                    <Field component={TextField} name='body.description' label={intl.formatMessage({ id: 'publications.description' })}
                       fullWidth InputProps={{ margin: 'normal' }} />
-                    <TagComponent name='contentTag' labelId='publications.contentTag' newTag={values.body.name} tags={contentTags} />
-                    <TagComponent name='workflowTag' labelId='publications.workflowTag' newTag={values.body.name} tags={workflowTags} />
-                    <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={values.body.name} tags={wrenchTags} />
+                    <TagComponent name='body.contentTag' labelId='publications.contentTag' newTag={values.body.name} tags={contentTags} />
+                    <TagComponent name='body.workflowTag' labelId='publications.workflowTag' newTag={values.body.name} tags={workflowTags} />
+                    <TagComponent name='body.wrenchTag' labelId='publications.wrenchTag' newTag={values.body.name} tags={wrenchTags} />
                   </Stack>
                 </DialogContent>
                 <DialogActions>
