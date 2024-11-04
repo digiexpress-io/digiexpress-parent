@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 
 import { localizeTable } from '../../util/localizeTable';
 import { downloadFile } from '../../util/downloadFile';
-import { AssetRelease } from '../../types/AssetRelease';
+import { Publication } from '../../types/Publication';
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
@@ -20,7 +20,7 @@ import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 
 interface TableState {
-  columns: Array<Column<AssetRelease>>;
+  columns: Array<Column<Publication>>;
 }
 
 export const PublicationsTable: React.FC = () => {
@@ -31,13 +31,13 @@ export const PublicationsTable: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<AssetRelease[]>(`${serviceUrl}rest/api/assets/publications`);
+  const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<Publication[]>(`${serviceUrl}rest/api/assets/publications`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
 
 
 
 
-  const getRelease = (releaseTag: AssetRelease) => {
+  const getRelease = (releaseTag: Publication) => {
     let url = `${serviceUrl}rest/api/assets/publications/${releaseTag.body.name}`;
     return session.cFetch(`${url}`, {
       method: 'GET',
