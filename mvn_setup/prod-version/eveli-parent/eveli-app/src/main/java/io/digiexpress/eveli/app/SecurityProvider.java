@@ -47,6 +47,7 @@ public class SecurityProvider  {
         return ImmutableUser.builder()
             .isAuthenticated(true)
             .principal(ImmutableUserPrincipal.builder()
+                .isAdmin(true)
                 .username("tester")
                 .email("tester@resys.io")
                 .roles(Arrays.asList())
