@@ -115,7 +115,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          <StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} />
+          {/*<StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} /> */}
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />

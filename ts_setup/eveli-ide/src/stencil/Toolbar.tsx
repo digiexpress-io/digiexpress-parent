@@ -117,7 +117,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          <StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} />
+          {/*<StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} /> */}
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
