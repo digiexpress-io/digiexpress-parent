@@ -83,10 +83,10 @@ const BarLabel = (props: any) => {
 
 export const DashboardView: React.FC = () => {
   const { serviceUrl } = useConfig();
-  const { response: taskStatusStats } = useFetch<TaskStatusStatistics[]>(`${serviceUrl}/statistics/status`);
-  const { response: taskPriorityStats } = useFetch<TaskPriorityStatistics[]>(`${serviceUrl}/statistics/priority`);
-  const { response: taskTimelineStats } = useFetch<TaskStatusTimelineStatistics[]>(`${serviceUrl}/statistics/status-timeline`);
-  const { response: overdueStats } = useFetch<OverdueByGroupStatistics[]>(`${serviceUrl}/statistics/task-overdue`);
+  const { response: taskStatusStats } = useFetch<TaskStatusStatistics[]>(`${serviceUrl}statistics/status`);
+  const { response: taskPriorityStats } = useFetch<TaskPriorityStatistics[]>(`${serviceUrl}statistics/priority`);
+  const { response: taskTimelineStats } = useFetch<TaskStatusTimelineStatistics[]>(`${serviceUrl}statistics/status-timeline`);
+  const { response: overdueStats } = useFetch<OverdueByGroupStatistics[]>(`${serviceUrl}statistics/task-overdue`);
 
 
   const intl = useIntl();
