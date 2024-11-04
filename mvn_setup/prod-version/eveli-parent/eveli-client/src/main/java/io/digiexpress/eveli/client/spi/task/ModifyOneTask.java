@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task;
 
+import java.util.HashSet;
+
 /*-
  * #%L
  * eveli-client
@@ -55,7 +57,7 @@ public class ModifyOneTask {
     current.setSubject(command.getSubject());
     current.setVersion(command.getVersion());
     current.setClientIdentificator(command.getClientIdentificator());
-    current.setAssignedRoles(command.getAssignedRoles());
+    current.setAssignedRoles(new HashSet<>(command.getAssignedRoles()));
     current.setUpdaterId(userId);
     
     final TaskEntity savedTask = taskRepository.save(current);

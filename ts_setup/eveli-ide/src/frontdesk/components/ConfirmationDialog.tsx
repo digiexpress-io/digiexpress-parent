@@ -4,13 +4,13 @@ import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
 
-export interface ConfirmationDialogProps  {
-  title ?: string;
-  accept ?: string;
-  cancel ?: string;
-  dialogOptions ?: Partial<DialogProps>;
-  cancelOptions ?: Partial<ButtonProps>;
-  acceptOptions ?: Partial<ButtonProps>;
+export interface ConfirmationDialogProps {
+  title?: string;
+  accept?: string;
+  cancel?: string;
+  dialogOptions?: Partial<DialogProps>;
+  cancelOptions?: Partial<ButtonProps>;
+  acceptOptions?: Partial<ButtonProps>;
   open: boolean;
   text: string;
   onClose: () => void;
@@ -32,18 +32,18 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
 
   return (
     <Dialog open={open} onClose={onClose} {...dialogOptions}>
-      { title && <DialogTitle>{title}</DialogTitle> }
+      {title && <DialogTitle>{title}</DialogTitle>}
       <DialogContent>
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
         {/* TODO correct types */}
-        {/* @ts-ignore */}
+        {/* //@ts-ignore */}
         <Burger.SecondaryButton onClick={handleCancel}
-          {...cancelOptions} label={cancel || intl.formatMessage({ id: 'button.cancel' })} />
-        {/* @ts-ignore */}
+          {...cancelOptions} label={cancel || 'button.cancel'} />
+        {/* //@ts-ignore */}
         <Burger.PrimaryButton onClick={handleAccept}
-          {...acceptOptions} label={accept || intl.formatMessage({ id: 'button.accept' })} />
+          {...acceptOptions} label={accept || 'button.accept'} />
       </DialogActions>
     </Dialog>
   );

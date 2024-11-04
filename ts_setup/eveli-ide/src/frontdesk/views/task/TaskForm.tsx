@@ -32,12 +32,7 @@ import { Comment } from '../../types/task/Comment';
 
 import { useAttachmentConfig } from '../../context/AttachmentContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
-
-
-
 import * as Yup from 'yup';
-
-
 import * as Burger from '@/burger';
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -171,6 +166,7 @@ type Props = {
   reloadComments: () => void
   userSelectionFree?: boolean
   currentUser: Partial<User>
+  supressConfirmation?: boolean | undefined
 }
 
 type AllProps = Props & WrappedComponentProps & WithRouterProps;
@@ -287,6 +283,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
   }
   onDialogAccept = () => {
     this.setState({ dialogOpen: false });
+
   }
 
   handleRoleChange = (roles: UserGroup[],
@@ -324,7 +321,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
   }
 
   render() {
-    const { editTask, intl, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
+    const { editTask, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
     const { formatMessage } = this.props.intl;
     const readonly = (editTask.status === TaskStatus.COMPLETED ||
       editTask.status === TaskStatus.REJECTED);
@@ -353,7 +350,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
           ({ values, submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
             <Form>
               <PageLeavingConfirmation navigate={(path) => this.props.navigate(path)}
-                navigationConfirmationRequired={() => dirty}
+                navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true}
               />
               <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="center">

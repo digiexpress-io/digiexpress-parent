@@ -22,13 +22,13 @@ type OwnProps = {
   userSelectionFree?: boolean
 }
 
-type Props = OwnProps;
-
-export const TaskView:React.FC<Props> = (props) =>{
+export const TaskView: React.FC<OwnProps> = (props) => {
+  const navigate = useNavigate();
+  const [supressConfirmation, setSupressConfirmation] = useState<boolean>();
   const [taskData, setTaskData] = useState<Task|null>(null);
   const [commentData, setCommentData] = useState<Comment[]>([]);
   const taskContext = useContext(TaskBackendContext);
-  let navigate = useNavigate();
+
   const userInfo = useUserInfo();
 
   const navigateBack = ()=> {
@@ -51,9 +51,15 @@ export const TaskView:React.FC<Props> = (props) =>{
 
   const accept = (task:Task) => {
     taskContext.saveTask(task)
-    .then(result=>{!!props.taskUpdateCallback && props.taskUpdateCallback();return result;})
-    .then(result=>{setTaskData(null); return result;})
-    .then(result=> navigateBack());
+      .then(result => {
+        setSupressConfirmation(true);
+        return result;
+      })
+      .then(_result => {
+        !!props.taskUpdateCallback && props.taskUpdateCallback();
+        setTaskData(null);
+        // navigateBack(); this wont work because of react router prompt unmound
+      });
   }
 
   useEffect(()=>{
@@ -75,17 +81,26 @@ export const TaskView:React.FC<Props> = (props) =>{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskData]);
 
-  if (!taskData) {
+  useEffect(() => {
+    // react router hack, because you can't make prompt work with unsafe unmount by returning LinearProgress!!!
+    if (supressConfirmation === true) {
+      setSupressConfirmation(undefined)
+      navigateBack();
+    }
+  }, [supressConfirmation]);
+
+  if (!taskData && supressConfirmation === undefined) {
     return (<LinearProgress/>);
   }
+
   return (
     <Container maxWidth='lg'>
       <Typography variant='h2' m={2}>
-        <FormattedMessage id='taskDialog.task' /> {taskData.taskRef || ''}
+        <FormattedMessage id='taskDialog.task' /> {taskData?.taskRef || ''}
       </Typography>
       <TaskForm
         id='taskForm'
-        editTask={taskData}
+        editTask={taskData ?? {}}
         cancel={cancel}
         handleSubmit={accept}
         groups={props.groups}
@@ -96,6 +111,7 @@ export const TaskView:React.FC<Props> = (props) =>{
         reloadComments={loadCommentData}
         userSelectionFree={props.userSelectionFree}
         currentUser={userInfo?.user}
+        supressConfirmation={supressConfirmation}
       />
     </Container>
     
