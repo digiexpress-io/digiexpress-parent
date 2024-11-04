@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { SessionRefreshContext } from './SessionRefreshContext'
 import { QueryResult } from '@material-table/core'
 import { ROLE_AUTHORIZED } from '../util/rolemapper'

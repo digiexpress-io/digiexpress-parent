@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/rest/api/worker/attachments")
+@RequestMapping("/rest/api/worker")
 @Slf4j
 @RequiredArgsConstructor
 /**
@@ -63,7 +63,7 @@ public class AttachmentApiController {
    * @return task attachments.
    * @throws URISyntaxException
    */
-  @GetMapping("/task/{taskId}/files/")
+  @GetMapping("/tasks/{taskId}/files/")
   public ResponseEntity<List<Attachment>> listTaskAttachments(@PathVariable String taskId) 
       throws URISyntaxException 
   {
@@ -89,7 +89,7 @@ public class AttachmentApiController {
    * @return FOUND Http status code with redirection link.
    * @throws URISyntaxException
    */
-  @GetMapping("/task/{taskId}/files/{filename}")
+  @GetMapping("/tasks/{taskId}/files/{filename}")
   public ResponseEntity<Void> getTaskAttachment(
       @PathVariable String taskId, 
       @PathVariable String filename 
@@ -120,7 +120,7 @@ public class AttachmentApiController {
    * @return Signed url for upload with OK (200) response code. In case of error NOT FOUND response code.
    * @throws URISyntaxException
    */
-  @PostMapping("/task/{taskId}/files/")
+  @PostMapping("/tasks/{taskId}/files/")
   public ResponseEntity<AttachmentUpload> getTaskAttachmentUploadUrl(
       @PathVariable String taskId, 
       @RequestParam(name="filename") String filename) 

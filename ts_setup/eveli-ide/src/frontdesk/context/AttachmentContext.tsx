@@ -24,7 +24,7 @@ export const AttachmentContextProvider: React.FC<{ children: React.ReactNode }> 
   const intl = useIntl();
   const { serviceUrl } = useConfig();
 
-
+  console.log("service url", serviceUrl)
   const loadAttachments = (taskId:number) => {
     return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}/files/`)
     .then(response => response.json());
