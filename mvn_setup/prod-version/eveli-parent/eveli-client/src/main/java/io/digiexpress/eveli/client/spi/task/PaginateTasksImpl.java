@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import lombok.RequiredArgsConstructor;
 
 
@@ -108,6 +109,7 @@ public class PaginateTasksImpl implements PaginateTasks {
 
   @Override
   public Page<Task> findAll() {
+    TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
     if (this.status.isEmpty()) {
       this.status.addAll(Arrays.asList(TaskStatus.values()));
     }
@@ -138,6 +140,7 @@ public class PaginateTasksImpl implements PaginateTasks {
   
   public static Task map(TaskEntity task) {
     return ImmutableTask.builder()
+      .version(task.getVersion())
       .assignedUser(task.getAssignedUser())
       .assignedUserEmail(task.getAssignedUserEmail())
       .clientIdentificator(task.getClientIdentificator())

@@ -82,7 +82,8 @@ public class TaskApiController {
         .role(searchRole)
         .dueDate(dueDate)
         .status(status)
-        .priority(priority);
+        .priority(priority)
+        .page(pageable);
     
     if (worker.getPrincipal().isAdmin()) {
       return ResponseEntity.ok(query.findAll());
