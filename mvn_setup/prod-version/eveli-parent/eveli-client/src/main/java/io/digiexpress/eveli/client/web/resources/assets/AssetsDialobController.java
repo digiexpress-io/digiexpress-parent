@@ -65,7 +65,7 @@ public class AssetsDialobController {
   ) {
     
     final var query = request.getQueryString();
-    final var path = request.getServletPath().substring(28);
+    final var path = request.getServletPath().substring(30);
     final var method = HttpMethod.valueOf(request.getMethod());
     
     return dialobCommands.createProxy().anyRequest(path, query, method, body, headers);
