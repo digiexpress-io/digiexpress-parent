@@ -11,7 +11,7 @@ import { ProcessView } from './views/process/ProcessView';
 import { HelpView } from './views/help/HelpView';
 import { DashboardView } from './views/dashboard/DashboardView';
 import { WorkflowReleaseView } from './views/workflow/WorkflowReleaseView';
-import { AssetReleaseView } from './views/release/AssetReleaseView';
+import { PublicationsView } from './views/publications/PublicationsView';
 import { DialobAdminView } from './views/forms/DialobAdminView';
 
 import { useConfig } from './context/ConfigContext';
@@ -105,7 +105,7 @@ export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
       <Route path='/ui/tasks/task/' element={<TaskContainer />} />
       <Route path='/ui/workflows' element={<WorkflowView />} />
       <Route path='/ui/workflowReleases' element={<WorkflowReleaseView />} />
-      <Route path='/ui/publications' element={<AssetReleaseView />} />
+      <Route path='/ui/publications' element={<PublicationsView />} />
       <Route path='/ui/processes' element={<ProcessView />} />
       <Route path='/ui/help' element={<HelpView />} />
       <Route path='/ui/dashboard' element={<DashboardView />} />

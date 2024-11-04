@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 import { localizeTable } from '../../util/localizeTable';
 import { downloadFile } from '../../util/downloadFile';
 import { AssetRelease } from '../../types/AssetRelease';
-import { NewAssetReleaseDialog } from './NewAssetReleaseDialog';
+import { NewPublicationDialog } from './NewPublicationDialog';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
 
@@ -23,7 +23,7 @@ interface TableState {
   columns: Array<Column<AssetRelease>>;
 }
 
-export const AssetReleaseTable: React.FC = () => {
+export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const { serviceUrl } = useConfig();
   const config = useConfig();
@@ -58,32 +58,32 @@ export const AssetReleaseTable: React.FC = () => {
   const tableState: TableState = {
     columns: [
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.name' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.name' }),
         field: 'body.name',
         headerStyle: { fontWeight: 'bold' }
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.description' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.description' }),
         field: 'body.description',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.contentTag' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.contentTag' }),
         field: 'body.stencilTagName',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.workflowTag' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.workflowTag' }),
         field: 'body.workflowTagName',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.wrenchTag' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.wrenchTag' }),
         field: 'body.wrenchTagName',
         headerStyle: { fontWeight: 'bold' },
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.created' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
         field: 'body.created',
         filtering: false,
         type: 'date',
@@ -92,7 +92,7 @@ export const AssetReleaseTable: React.FC = () => {
         headerStyle: { fontWeight: 'bold' }
       },
       {
-        title: intl.formatMessage({ id: 'assetReleaseTableHeader.updatedBy' }),
+        title: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
         field: 'body.user',
         headerStyle: { fontWeight: 'bold' }
       }
@@ -102,7 +102,7 @@ export const AssetReleaseTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={intl.formatMessage({ id: 'assetReleaseTable.title' })}
+        title={intl.formatMessage({ id: 'publicationsTable.title' })}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}
@@ -118,14 +118,14 @@ export const AssetReleaseTable: React.FC = () => {
         actions={[
           {
             icon: AddIcon,
-            tooltip: intl.formatMessage({ id: 'assetReleaseTable.addButton' }),
+            tooltip: intl.formatMessage({ id: 'publicationsTable.addButton' }),
             isFreeAction: true,
             hidden: !config.modifiableAssets,
             onClick: () => { setNewDialogOpen(true); }
           },
           {
             icon: SaveIcon,
-            tooltip: intl.formatMessage({ id: 'assetReleaseTable.exportButton' }),
+            tooltip: intl.formatMessage({ id: 'publicationsTable.exportButton' }),
             onClick: (event, data) => { !Array.isArray(data) && getRelease(data) }
           }
         ]}
@@ -133,7 +133,7 @@ export const AssetReleaseTable: React.FC = () => {
         isLoading={false}
         data={assetReleases || []}
       />
-      <NewAssetReleaseDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshAssetReleases()} />
+      <NewPublicationDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshAssetReleases()} />
     </>
   );
 }
