@@ -58,6 +58,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
       </IntlProvider>)
   } else if (isStencil) {
     const service = StencilClient.service({ config: { url: serviceUrl + "rest/api/assets/stencil" } });
+
     return (
       <IntlProvider locale='en' messages={stencilIntl.en}>
         <StencilComposer service={service} />

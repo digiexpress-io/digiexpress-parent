@@ -79,7 +79,7 @@ public class AssetsStencilController {
   private final ObjectMapper objectMapper;
   
   
-  @GetMapping
+  @GetMapping("/")
   public Uni<SiteState> root() {
     return getClient().onItem().transformToUni(composer -> composer.query().head());
   }
