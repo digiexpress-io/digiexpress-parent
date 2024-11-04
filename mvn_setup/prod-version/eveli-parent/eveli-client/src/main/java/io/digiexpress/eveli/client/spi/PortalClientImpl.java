@@ -31,7 +31,6 @@ import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.TaskCommands;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
@@ -52,13 +51,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PortalClientImpl implements PortalClient {
   private final DialobClient dialob;
-  private final TaskCommands task;
   private final ProcessCommands process;
   private final AttachmentCommands attachments;
   private final HdesCommands hdes;
   private final TransactionWrapper transactionWrapper;
   private final NotificationCommands notification;
-  
   
   public static Builder builder() {
     return new Builder();
@@ -96,12 +93,11 @@ public class PortalClientImpl implements PortalClient {
       Assert.notNull(taskRefGenerator, () -> "taskRefGenerator can't be null!");
       
 
-      final var task = new TaskCommandsImpl(taskRepository, taskNotificator, taskRefGenerator);
       final var process = ProcessCommandsImpl.builder().forms(dialobCommands).processJPA(processRepository).workflowCommands(assetClient).build();
       final var hdes = HdesCommandsImpl.builder().hdesClient(hdesClient).transactionWrapper(transactionWrapper)
             .process(process).programEnvir(programEnvir).workflow(assetClient).build();
       
-      return new PortalClientImpl(dialobCommands, task, process, attachmentCommands, hdes, transactionWrapper, notificationCommands);
+      return new PortalClientImpl(dialobCommands, process, attachmentCommands, hdes, transactionWrapper, notificationCommands);
     }
   }
 }

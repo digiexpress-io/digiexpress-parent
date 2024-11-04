@@ -26,7 +26,7 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
-import io.digiexpress.eveli.client.api.TaskCommands.TaskCommentSource;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
@@ -63,7 +63,7 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
     
     final var customer = authClient.getCustomer().getPrincipal();    
     final var taskId = Long.parseLong(process.getTask());
-    final var commentTask = taskRepository.findById(taskId).get();
+    final var commentTask = taskRepository.getOneById(taskId);
     final var entity = new TaskCommentEntity()
         .setTask(commentTask)
         .setUserName(customer.getUsername())

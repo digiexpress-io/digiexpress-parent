@@ -26,7 +26,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import io.digiexpress.eveli.client.api.TaskCommands;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskEvent.TaskEventType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,7 @@ public class NotificationMessagingComponent implements TaskNotificator {
   private TaskEventPublisher publisher;
   
   @Override
-  public void sendNewCommentNotificationToClient(TaskCommands.TaskComment comment, TaskCommands.Task taskModel) {
+  public void sendNewCommentNotificationToClient(TaskClient.TaskComment comment, TaskClient.Task taskModel) {
     if (publisher != null) {
       TaskEvent event = TaskEvent.builder().task(taskModel).comment(comment).taskEventType(TaskEventType.TASK_COMMENT_SAVE).build();
       log.info("Sending new comment event {}", event);
@@ -50,7 +50,7 @@ public class NotificationMessagingComponent implements TaskNotificator {
   }
 
   @Override
-  public void handleTaskUpdate(TaskCommands.Task newTask, TaskCommands.Task previous, String currentUserEmail) {
+  public void handleTaskUpdate(TaskClient.Task newTask, TaskClient.Task previous, String currentUserEmail) {
     if (publisher != null) {
       var builder = TaskEvent.builder().task(newTask).taskEventType(TaskEventType.TASK_SAVE);
       if (newTask.getStatus() != previous.getStatus()) {
@@ -88,7 +88,7 @@ public class NotificationMessagingComponent implements TaskNotificator {
   }
   
   @Override
-  public void handleTaskCreation(TaskCommands.Task createdTask, String currentUserEmail) {
+  public void handleTaskCreation(TaskClient.Task createdTask, String currentUserEmail) {
     if (publisher != null) {
       var builder = TaskEvent.builder().task(createdTask).taskEventType(TaskEventType.TASK_SAVE);
       if (!StringUtils.isBlank(createdTask.getAssignedUser())) {

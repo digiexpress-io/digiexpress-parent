@@ -35,8 +35,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import io.digiexpress.eveli.client.api.TaskCommands.TaskPriority;
-import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
+import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
+import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -107,6 +107,9 @@ public class TaskEntity {
   @Column(name = "updater_id")
   private String updaterId;
 
+  @Column(name = "questionnanire_id")
+  private String questionnanireId;
+  
   @Column(name="due_date")
   private LocalDate dueDate;
 
@@ -143,13 +146,9 @@ public class TaskEntity {
   @NotAudited
   private Collection<TaskPayloadEntity> payloads;
   
-  @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-  @NotAudited
-  private Collection<TaskLinkEntity> taskLinks;
   
   @PrePersist
   void prePersist() {
-  	updateLinkAssociation();
     updated = ZonedDateTime.now(ZoneId.of("UTC"));
     if (id == null) {
       created = updated;
@@ -164,19 +163,10 @@ public class TaskEntity {
 
   @PreUpdate
   void preUpdated() {
-  	updateLinkAssociation();
     updated = ZonedDateTime.now(ZoneId.of("UTC"));
   }
 
 
-  public void updateLinkAssociation(){
-  	if (taskLinks != null) {
-      for(TaskLinkEntity link : this.taskLinks){
-        link.setTask(this);
-      }
-    }
-  }
-  
   public void setKeyWords(Collection<String> keyWords) {
     this.keyWords = keyWords != null ? new HashSet<>(keyWords): null;
   }

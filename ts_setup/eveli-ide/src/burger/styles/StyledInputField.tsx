@@ -98,12 +98,8 @@ const StyledFileField: React.FC<StyledInputFieldProps<string>> = (props) => {
     <>
       <StyledInputLabel><FormattedMessage id={label} /></StyledInputLabel>
       <StyledFormControl variant="outlined" fullWidth>
-        <input
-          type="file"
-          hidden
-          ref={inputFile}
-          onChange={(e) => handleFileChange}
-        />
+        <input type="file" hidden ref={inputFile} accept="json" onChange={handleFileChange} />
+
         <StyledUploadButton
           variant="outlined"
           disabled={disabled}

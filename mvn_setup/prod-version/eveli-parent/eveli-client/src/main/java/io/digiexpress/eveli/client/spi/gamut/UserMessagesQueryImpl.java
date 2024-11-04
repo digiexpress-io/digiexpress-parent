@@ -60,9 +60,9 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     final var comments = commentRepository.findByTaskIdAndExternalTrue(taskId).stream()
         .map(comment -> visitUserMessage(comment, customer))
         .toList();
-    final var task = taskRepository.findById(taskId);
+    final var task = taskRepository.getOneById(taskId);
     
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(taskId, task,  customer.getPrincipal().getUsername());
+    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(taskId, Optional.of(task),  customer.getPrincipal().getUsername());
     
     return comments;
   }

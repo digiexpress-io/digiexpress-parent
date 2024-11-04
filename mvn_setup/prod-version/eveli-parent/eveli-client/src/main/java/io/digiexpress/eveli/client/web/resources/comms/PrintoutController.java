@@ -20,18 +20,11 @@ package io.digiexpress.eveli.client.web.resources.comms;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,8 +32,9 @@ import org.springframework.web.client.RestTemplate;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.PortalClient;
-import io.digiexpress.eveli.client.api.TaskCommands;
+import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,54 +44,47 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PrintoutController {
 
-  private final PortalClient client;
+  private final TaskClient client;
+  private final AuthClient auth;
+  private final PortalClient portalClient;
   private final RestTemplate restTemplate;
-  private final boolean adminsearch;
   private final String serviceUrl;
   
   @GetMapping(value = {"/pdf"}, produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> printQuestionnaire(
-      @RequestParam(required = false, value = "taskId")String taskId, 
-      @RequestParam(required = false, value = "questionnaireId")String questionnaireId,
-      Authentication authentication) {
-    
-    Optional<TaskCommands.Task> task = Optional.empty();
-    List<String> roles = Collections.emptyList();
+      @RequestParam(required = false, value = "taskId")Long taskId, 
+      @RequestParam(required = false, value = "questionnaireId")String questionnaireId) {
     
     try {
-      log.info("PDF printout request from user: {} for printout of task: {} and questionnaire: {}", 
-          authentication != null ? authentication.getName() : "UNAUTHENTICATED", taskId, questionnaireId);
-      if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-        roles = getRoles(authentication);
-      }
-      log.debug("PDF printout request user has roles: {}", roles);
-      task = client.task().find(taskId, roles, adminsearch);
+      final var worker = auth.getUser().getPrincipal();
       
       
+      log.debug("PDF printout request user has roles: {}", worker.getRoles());
+      final var task = client.queryTasks().getOneById(taskId);
       
-      if (task.isEmpty()) {
+      if(!worker.isAdmin() && !worker.isAccessGranted(task.getAssignedRoles())) {
         log.warn("Task with ID {} not found or no roles access for printout, returning 404", taskId);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(403).build();
+      }
+    
+
+      if (verifyLink(questionnaireId, task)) {
+        Questionnaire questionnaire = portalClient.dialob().get(questionnaireId);
+        Form form = portalClient.dialob().getForm(questionnaire.getMetadata().getFormId());
+        PrintoutInput input = new PrintoutInput();
+        input.setForm(form);
+        input.setSession(questionnaire);
+        input.setLang(questionnaire.getMetadata().getLanguage());
+        ResponseEntity<byte[]> printoutResponse = callPrintoutService(restTemplate, input);
+        log.info("PDF printout request completed for user: {} for printout of task: {} and questionnaire: {}", 
+            worker.getUsername(), taskId, questionnaireId);
+        return new ResponseEntity<>(printoutResponse.getBody(), HttpStatus.OK);
       }
       else {
-        TaskCommands.Task taskModel = task.get();
-        if (verifyLink(questionnaireId, taskModel)) {
-          Questionnaire questionnaire = client.dialob().get(questionnaireId);
-          Form form = client.dialob().getForm(questionnaire.getMetadata().getFormId());
-          PrintoutInput input = new PrintoutInput();
-          input.setForm(form);
-          input.setSession(questionnaire);
-          input.setLang(questionnaire.getMetadata().getLanguage());
-          ResponseEntity<byte[]> printoutResponse = callPrintoutService(restTemplate, input);
-          log.info("PDF printout request completed for user: {} for printout of task: {} and questionnaire: {}", 
-              authentication != null ? authentication.getName() : "UNAUTHENTICATED", taskId, questionnaireId);
-          return new ResponseEntity<>(printoutResponse.getBody(), HttpStatus.OK);
-        }
-        else {
-          log.warn("Task with ID {} has no questionnaire {} for printout, returning 404", taskId, questionnaireId);
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        log.warn("Task with ID {} has no questionnaire {} for printout, returning 404", taskId, questionnaireId);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
+      
     }
     catch (Exception e) {
       log.error("PDF printout request FAILED with cause {}", e);
@@ -142,25 +129,14 @@ public class PrintoutController {
     }
   }
 
-  private boolean verifyLink(String questionnaireId, TaskCommands.Task taskModel) {
+  private boolean verifyLink(String questionnaireId, TaskClient.Task taskModel) {
     boolean linkFound = false;
-    for (var link : taskModel.getTaskLinks()) {
-      log.debug("Found link with id {}, key: {}, link: {}", link.getId(), link.getLinkKey(), link.getLinkAddress());
-      if ("questionnaireId".equals(link.getLinkKey())) {
-        if (questionnaireId.equals(link.getLinkAddress())) {
-          log.debug("Found link match with id {}, key: {}, link: {}", link.getId(), link.getLinkKey(), link.getLinkAddress());
-          linkFound = true;
-        }
-      }
+    if (questionnaireId.equals(taskModel.getQuestionnaireId())) {
+      linkFound = true;
     }
     return linkFound;
   }
-  
-  private List<String> getRoles(Authentication authentication) {
-    List<String> roles = authentication.getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toList());
-    return roles;
-  }
-  
+
   @Data
   public static class PrintoutInput {
     String lang;

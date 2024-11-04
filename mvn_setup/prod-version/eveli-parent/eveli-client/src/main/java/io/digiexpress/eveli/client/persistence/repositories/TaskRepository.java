@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.persistence.repositories;
  */
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,20 +28,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 
 @Repository
 public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, Long> {
   
-  //@Override
-  @Transactional(propagation = Propagation.SUPPORTS)
-  Optional<TaskEntity> findById(Long id);
+  TaskEntity getOneById(Long id);
   
-	Optional<TaskEntity> findByIdAndAssignedRolesIn(@Param("id")Long id,@Param("assignedRoles") List<String> roles);
-	
   @Query(value=
       "select distinct t from TaskEntity t join t.assignedRoles r left join t.assignedRoles r2 where " +
       " (lower(subject) like :subject or lower(taskRef) like :subject)" +

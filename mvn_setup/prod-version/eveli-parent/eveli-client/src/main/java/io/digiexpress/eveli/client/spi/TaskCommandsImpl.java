@@ -18,7 +18,7 @@ package io.digiexpress.eveli.client.spi;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * #L%
- */
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class TaskCommandsImpl implements TaskCommands {
+public class TaskCommandsImpl implements TaskCommandBuilder {
   private final TaskRepository repository;
   private final TaskNotificator taskNotificator;
   private final TaskRefGenerator taskRefGenerator;
@@ -318,3 +318,4 @@ private Collection<TaskLink> map(Collection<io.digiexpress.eveli.client.persiste
         .setSource(task.getSource());
   }
 }
+ */

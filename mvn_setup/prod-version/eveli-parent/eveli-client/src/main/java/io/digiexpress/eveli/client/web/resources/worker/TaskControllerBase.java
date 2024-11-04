@@ -50,9 +50,9 @@ public class TaskControllerBase {
     registerUserTaskAccess(id, result, authentication.getUsername());
   }
 
-  public void registerUserTaskAccess(Object id, Optional<TaskEntity> result, String userName) {
+  public void registerUserTaskAccess(Object taskId, Optional<TaskEntity> result, String userName) {
     if (result.isPresent()) {
-      log.info("Registering access to task with id: {} by user {}", id, userName);
+      log.info("Registering access to task with id: {} by user {}", taskId, userName);
       try {
         TaskAccessId accessId = new TaskAccessId(result.get(), userName);
         TaskAccessEntity access = taskAccessRepository.findById(accessId).orElse(new TaskAccessEntity(accessId));
@@ -66,7 +66,7 @@ public class TaskControllerBase {
       }
     }
     else {
-      log.warn("No task for id {}, registration skipped", id);
+      log.warn("No task for id {}, registration skipped", taskId);
     }
   }
  

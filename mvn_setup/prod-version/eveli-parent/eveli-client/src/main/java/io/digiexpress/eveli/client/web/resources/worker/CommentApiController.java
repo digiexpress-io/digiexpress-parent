@@ -33,15 +33,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.TaskCommands;
-import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.digiexpress.eveli.client.spi.TaskCommandsImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -50,110 +47,37 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequestMapping("/rest/api/worker")
 @Slf4j
-public class CommentApiController extends TaskControllerBase
+@RequiredArgsConstructor
+public class CommentApiController
 {
-    private final TaskRepository taskRepository;
-    private final CommentRepository commentRepository;
-    private final TaskNotificator notificator;
-    private final AuthClient securityClient;
+  private final TaskClient taskClient;
+  private final AuthClient securityClient;
+  private final TaskAccessRepository taskAccessRepository;
+  private final TaskRepository taskRepository;
+  
+  @GetMapping(value="/tasks/{id}/comments")
+  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
+    final var comments = taskClient.queryComments().findAllByTaskId(id);
+ 
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
 
-    
-    public CommentApiController(
-        TaskRepository taskRepository, CommentRepository commentRepository, 
-        TaskNotificator notificator, TaskAccessRepository taskAccessRepository,
-        AuthClient securityClient) 
-    {
-      super(taskAccessRepository);
-      this.taskRepository = taskRepository;
-      this.commentRepository = commentRepository;
-      this.notificator = notificator;
-      this.securityClient = securityClient;
-    }
-    
-    @GetMapping(value="/tasks/{id}/comments")
-    public ResponseEntity<List<TaskCommands.TaskComment>> getTaskComments(@PathVariable("id") Long id)
-    {
-      final var authentication = securityClient.getUser();
-      log.info("Task comments get: id: {}, user id: {}", id, authentication.getPrincipal().getUsername());
-      final var task = taskRepository.findById(id);
-      registerTaskAccess(id, authentication.getPrincipal(), task);
-      final var comments = commentRepository.findByTaskId(id);
-   
-      return new ResponseEntity<>(comments.stream().map(TaskCommandsImpl::map).toList(), HttpStatus.OK);
-    }
-
-    
-    @GetMapping("/comments/{id}")
-    public ResponseEntity<TaskCommands.TaskComment> getCommentById(@PathVariable("id") Long id) 
-    {
-      return commentRepository.findById(id) 
-          .map(TaskCommandsImpl::map) 
-          .map(ResponseEntity::ok) 
-          .orElse(ResponseEntity.notFound().build());
-    }
-    
-    @PostMapping("/comments")
-    public ResponseEntity<TaskCommands.TaskComment> createComment(
-        @RequestBody TaskCommands.TaskComment comment) 
-    {
-      final var authentication = securityClient.getUser();
-      final var entity = TaskCommandsImpl.map(comment);
-      final var task = getCommentTask(comment);
-      entity.setTask(task);
-
-      if (comment.getReplyToId() != null) {
-        final var replyComment = getReplyToComment(comment);
-        entity.setReplyTo(replyComment);
-      }
-      String userName = securityClient.getUser().getPrincipal().getUsername();
-      entity.setUserName(userName);
-
-      final var savedComment = commentRepository.save(entity);
-      registerTaskAccess(task.getId(), authentication.getPrincipal(), Optional.of(task));
-      
-      final var commentModel = TaskCommandsImpl.map(savedComment);
-      if (savedComment.getExternal()) {
-        final var taskModel = TaskCommandsImpl.map(task);
-        notificator.sendNewCommentNotificationToClient(commentModel, taskModel);
-      }
-      return new ResponseEntity<>(commentModel, HttpStatus.CREATED);
-    }
-
-
-    private io.digiexpress.eveli.client.persistence.entities.TaskEntity getCommentTask(TaskCommands.TaskComment comment) {
-      final var commentTask = taskRepository.findById(comment.getTaskId());
-      if (!commentTask.isPresent()) {
-        throw new ResponseStatusException(
-            HttpStatus.UNPROCESSABLE_ENTITY, "Task id incorrect");
-      }
-      return commentTask.get();
-    }
-
-    private io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity getReplyToComment(TaskCommands.TaskComment comment) {
-      final var replyComment = commentRepository.findById(comment.getReplyToId());
-      if (!replyComment.isPresent()) {
-        throw new ResponseStatusException(
-            HttpStatus.UNPROCESSABLE_ENTITY, "Reply to id incorrect");
-      }
-      return replyComment.get();
-    }
-    
-    @GetMapping("/comments/{id}/reply-to")
-    public ResponseEntity<TaskCommands.TaskComment> getCommentReplyTo(@PathVariable("id") Long id) 
-    {
-      return commentRepository.findOneByReplyTo(id)
-          .map(TaskCommandsImpl::map) 
-          .map(ResponseEntity::ok) 
-          .orElse(ResponseEntity.notFound().build());
-    }
-    
-    @GetMapping("/comments/{id}/task")
-    public ResponseEntity<TaskCommands.Task> getCommentTask(@PathVariable("id") Long id) 
-    {
-      return commentRepository.findById(id)
-          .map(comment-> TaskCommandsImpl.map(comment.getTask())) 
-          .map(ResponseEntity::ok) 
-          .orElse(ResponseEntity.notFound().build());
-    }
-
+  @GetMapping("/comments/{id}")
+  public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") Long id) 
+  {
+    return ResponseEntity.ok(taskClient.queryComments().getOneById(id));
+  }
+  
+  @PostMapping("/comments")
+  public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
+  {
+    final var worker = securityClient.getUser().getPrincipal();
+    final var newComment = taskClient.commandTaskBuilder()
+        .userId(worker.getUsername(), worker.getEmail())
+        .createTaskComment(command);
+    return new ResponseEntity<>(newComment, HttpStatus.CREATED);
+  }
 }

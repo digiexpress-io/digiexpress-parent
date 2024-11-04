@@ -41,6 +41,7 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.cache.DuplicateDetectionCache;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
@@ -58,6 +59,7 @@ import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 import io.digiexpress.eveli.client.spi.PortalClientImpl;
 import io.digiexpress.eveli.client.spi.dialob.DialobCommandsImpl;
+import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
@@ -84,17 +86,14 @@ public class EveliAutoConfig {
 
 
   @Bean 
-  public AttachmentApiController attachmentApiController(PortalClient client, EveliPropsTask config, AuthClient security) {
-    return new AttachmentApiController(client, config.isAdminsearch(), security);
+  public AttachmentApiController attachmentApiController(PortalClient client, AuthClient security, TaskClient taskClient) {
+    return new AttachmentApiController(client, taskClient, security);
   }
   @Bean 
   public CommentApiController commentApiController(
-      TaskRepository taskRepository, 
-      CommentRepository commentRepository, 
-      TaskNotificator notificator, 
-      TaskAccessRepository taskAccessRepository, AuthClient security) {
+      TaskClient taskClient, AuthClient security, TaskAccessRepository taskAccessRepository, TaskRepository taskRepository) {
     
-    return new CommentApiController(taskRepository, commentRepository, notificator, taskAccessRepository, security);
+    return new CommentApiController(taskClient, security, taskAccessRepository, taskRepository);
   }
 
   @Bean 
@@ -115,25 +114,18 @@ public class EveliAutoConfig {
 
   @Bean 
   public PrintoutController printoutController(
-      PortalClient client,  
+      AuthClient authClient,  
       RestTemplate restTemplate,
-      EveliPropsTask taskConfig,
+      PortalClient portalClient,
+      TaskClient taskClient,
       EveliPropsPrintout printoutConfig
   ) {
-    return new PrintoutController(client, restTemplate, taskConfig.isAdminsearch(), printoutConfig.getServiceUrl());
+    return new PrintoutController(taskClient, authClient, portalClient, restTemplate, printoutConfig.getServiceUrl());
   }
 
   @Bean 
-  public TaskApiController taskApiController(
-      TaskAccessRepository taskAccessRepository, 
-      TaskRepository taskRepository, 
-      TaskNotificator notificator, 
-      JdbcTemplate jdbcTemplate,
-      EveliPropsTask config, AuthClient security,
-      TaskRefGenerator taskRefGenerator
-  ) {
-    
-    return new TaskApiController(taskRefGenerator, taskAccessRepository, taskRepository, notificator, jdbcTemplate, config.isAdminsearch(), security);
+  public TaskApiController taskApiController(AuthClient security, TaskClient taskClient) {
+    return new TaskApiController(security, taskClient);
   }
   
   
@@ -209,6 +201,24 @@ public class EveliAutoConfig {
         .taskRepository(taskRepository)
         .taskRefGenerator(taskRefGenerator)
         .build();
+  }
+  
+  
+  
+  @Bean 
+  public TaskClient taskClient(
+
+      TaskRepository taskRepository,
+      TaskNotificator taskNotificator,      
+      TaskRefGenerator taskRefGenerator,
+      JdbcTemplate jdbcTemplate,
+      
+      TaskAccessRepository taskAccessRepository,
+      CommentRepository commentRepository
+      
+  ) {
+  
+    return new TaskClientImpl(jdbcTemplate, taskRepository, taskRefGenerator, taskNotificator, taskAccessRepository, commentRepository);
   }
   
   

@@ -32,9 +32,12 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 const CodeEditorState: React.FC<ViewProps> = (props) => {
   const ref = React.createRef<HTMLTextAreaElement>();
   const [view, setView] = React.useState<View>();
+  const [pending, setPending] = React.useState<boolean>(true);
   
+
   React.useEffect(() => {
-    if(ref.current && !view) {
+    if(ref.current && !view && pending) {
+      setPending(false);
       setView(createView(ref, props));  
     } else if(view) {
       setView(view.withEvents({
@@ -43,13 +46,16 @@ const CodeEditorState: React.FC<ViewProps> = (props) => {
         hint: props.hint
       }));
     }
+
+    return () => {
+      view?.remove();
+    };
   }, [ref, props, setView, view])
 
   return (<textarea key={props.id} id={props.id} ref={ref} />);
 }
 
 const CodeEditor: React.FC<ViewProps> = (props) => {
-  const {id} = props;
-  return (<StyledBox key={id} id={id}><CodeEditorState {...props} /></StyledBox>);
+  return (<StyledBox><CodeEditorState {...props} /></StyledBox>);
 }
 export { CodeEditor };

@@ -40,6 +40,7 @@ const Main: React.FC<{}> = () => {
   //composers which are NOT linked directly with an article
 
   return React.useMemo(() => {
+    
     if (site.contentType === "NO_CONNECTION") {
       return (<Box>{site.contentType}</Box>);
     }
@@ -60,7 +61,6 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><CompareView /></Box>);
     }
     if (entity) {
-      console.log(entity);
       return <Box sx={root}><EntityEditor entity={entity} /></Box>
     }
     throw new Error("unknown view: " + JSON.stringify(active, null, 2));

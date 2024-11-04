@@ -48,7 +48,7 @@ public interface DialobClient {
   
   
   Questionnaire get(String questionnaireId);
-  Dialob getDialob(String questionnaireId);
+  Dialob getDialob(String questionnaireId); // use by assets
   
   Form getForm(String formId);
   TagQueryBuilder getTags();

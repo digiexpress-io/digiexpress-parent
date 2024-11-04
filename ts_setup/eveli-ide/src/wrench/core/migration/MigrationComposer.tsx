@@ -8,10 +8,14 @@ const MigrationComposer: React.FC<{ onClose: () => void}> = ({onClose}) => {
   const [loading, setLoading] = React.useState<boolean | undefined>();
   const { service, actions } = Composer.useComposer();
 
+  
+
   const handleCreate = () => {
     if (!file) {
       return;
     }
+
+
     setLoading(true);
     service.create().importData(file)
       .then(() => actions.handleLoadSite())

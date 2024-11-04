@@ -29,10 +29,11 @@ interface View {
   id: string;
   withValue(value: string): View;
   withEvents(events: ViewEvents): View
+  remove(): void;
 }
 
 class ViewImpl implements View {
-  private _editor: CodeMirror.Editor;
+  private _editor: CodeMirror.EditorFromTextArea;
   private _events: ViewEvents = {};
   private _id: string;
 
@@ -62,6 +63,7 @@ class ViewImpl implements View {
     this._id = props.id;
     
     const editor = CodeMirror.fromTextArea(area.current, {
+
       lineNumbers: true,
       tabSize: 2,
       firstLineNumber: 0,
@@ -97,6 +99,10 @@ class ViewImpl implements View {
 
   get id() {
     return this._id;
+  }
+
+  remove() {
+    this._editor.toTextArea();
   }
 
   getAnnotations(

@@ -34,7 +34,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.ImmutableProcess;
 import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
+import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert;

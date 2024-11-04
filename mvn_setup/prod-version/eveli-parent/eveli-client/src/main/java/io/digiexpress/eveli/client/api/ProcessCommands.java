@@ -31,7 +31,7 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.TaskCommands.TaskStatus;
+import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import jakarta.annotation.Nullable;
 
@@ -51,7 +51,7 @@ public interface ProcessCommands {
 
   interface ProcessStatusBuilder {
     void answered(String id);
-    void answeredByQuestionnaire(String questionnaireId, String taskId);
+    void answeredByQuestionnaire(String questionnaireId, String taskId); // used by assets
     void taskStatusChange(String taskId, TaskStatus taskStatus);
     void inProgress(String id);
     void completed(String id);

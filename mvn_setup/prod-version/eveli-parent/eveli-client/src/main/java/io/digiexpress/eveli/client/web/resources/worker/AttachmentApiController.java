@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.PortalClient;
-import io.digiexpress.eveli.client.api.TaskCommands;
+import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AttachmentApiController {
   
   private final PortalClient client;
-  private final boolean adminSearch;
+  private final TaskClient taskClient;  
   private final AuthClient securityClient;
 
   /**
@@ -144,19 +143,17 @@ public class AttachmentApiController {
   private boolean checkTaskAccess(String taskId, AuthClient.User authentication) {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
-    if (getTask(taskId, roles).isEmpty()) {
+    
+    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId));
+    if(!authentication.getPrincipal().isAdmin() && !authentication.getPrincipal().isAccessGranted(task.getAssignedRoles())) {
       log.warn("Access to task {} disabled for roles {} or task not found", taskId, roles);
       return false;
     }
+    
     log.debug("Check for task {} access PASSED", taskId);
     return true;
   }
 
- 
-  
-  private Optional<TaskCommands.Task> getTask(String id, List<String> roles) {
-    return client.task().find(id, roles, adminSearch);
-  }
   private String getProcessIdFromTask(String taskId) {
     return client.process().query().getByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);
   }

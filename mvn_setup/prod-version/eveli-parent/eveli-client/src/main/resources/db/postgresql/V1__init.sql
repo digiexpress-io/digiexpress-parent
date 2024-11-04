@@ -19,7 +19,6 @@
 ---
 
     create sequence REVINFO_SEQ start with 1 increment by 50;
-    CREATE SEQUENCE IF NOT EXISTS TASKREF_SEQ MINVALUE 1 MAXVALUE 999999 CYCLE;
 
     create table comment (
         id bigserial not null,
@@ -63,6 +62,7 @@
         description TEXT,
         due_date date,
         priority smallint not null check (priority between 0 and 2),
+        questionnanire_id varchar(255),
         status smallint not null check (status between 0 and 4),
         subject varchar(255) not null,
         task_ref varchar(255) not null unique,
@@ -100,6 +100,7 @@
         description TEXT,
         due_date date,
         priority smallint check (priority between 0 and 2),
+        questionnanire_id varchar(255),
         status smallint check (status between 0 and 4),
         subject varchar(255),
         task_ref varchar(255),
@@ -112,14 +113,6 @@
     create table task_keywords (
         task_id bigint not null,
         key_words varchar(255)
-    );
-
-    create table task_link (
-        id bigserial not null,
-        link_address varchar(255),
-        link_key varchar(255),
-        task_id bigint,
-        primary key (id)
     );
 
     create table task_payload (
@@ -176,11 +169,6 @@
        foreign key (task_id) 
        references task;
 
-    alter table if exists task_link 
-       add constraint fk_link_task_id_to_task 
-       foreign key (task_id) 
-       references task;
-
     alter table if exists task_payload 
        add constraint fk_payload_to_task 
        foreign key (task_id) 
@@ -195,4 +183,3 @@
        add constraint FKflhycr209fau6hnw50ro7mdmf 
        foreign key (rev) 
        references REVINFO;
-

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.api;
 
+import java.util.Collection;
+
 /*-
  * #%L
  * eveli-client
@@ -53,6 +55,15 @@ public interface AuthClient {
   interface UserPrincipal {
     String getUsername(); // get the subject name
     String getEmail();
+    boolean isAdmin(); //private final boolean adminsearch;
     List<String> getRoles();
+    
+    default boolean isAccessGranted(Collection<String> entityRoles) {
+      final var workerRoles = this.getRoles();
+      final var isWorkerInAssignedRoles = entityRoles.stream()
+          .filter(assignedRole -> workerRoles.contains(assignedRole)).findFirst().isPresent();
+      
+      return isWorkerInAssignedRoles;
+    }
   }
 }

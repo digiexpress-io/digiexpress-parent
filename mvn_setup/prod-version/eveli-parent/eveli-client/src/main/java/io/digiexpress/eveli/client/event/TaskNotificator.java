@@ -20,11 +20,11 @@ package io.digiexpress.eveli.client.event;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.TaskCommands;
+import io.digiexpress.eveli.client.api.TaskClient;
 
 public interface TaskNotificator {
 
-  void sendNewCommentNotificationToClient(TaskCommands.TaskComment comment, TaskCommands.Task taskModel);
-  void handleTaskUpdate(TaskCommands.Task newTask, TaskCommands.Task previous, String userEmail);
-  void handleTaskCreation(TaskCommands.Task createdTask, String userEmail);
+  void sendNewCommentNotificationToClient(TaskClient.TaskComment comment, TaskClient.Task taskModel);
+  void handleTaskUpdate(TaskClient.Task newTask, TaskClient.Task previous, String userEmail);
+  void handleTaskCreation(TaskClient.Task createdTask, String userEmail);
 }

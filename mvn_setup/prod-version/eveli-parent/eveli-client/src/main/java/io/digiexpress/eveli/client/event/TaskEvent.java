@@ -23,7 +23,7 @@ package io.digiexpress.eveli.client.event;
 import java.util.List;
 import java.util.Set;
 
-import io.digiexpress.eveli.client.api.TaskCommands;
+import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,12 +50,12 @@ public class TaskEvent {
   @Singular
   private List<TaskEventType> taskEventTypes;
   // new task data
-  private TaskCommands.Task task;
+  private TaskClient.Task task;
   // added comment
-  private TaskCommands.TaskComment comment;
+  private TaskClient.TaskComment comment;
   
   // if task status change then previous status
-  private TaskCommands.TaskStatus previousStatus;
+  private TaskClient.TaskStatus previousStatus;
   
   // if group assignment change then indicates previous roles
   private Set<String> previousAssignedRoles;

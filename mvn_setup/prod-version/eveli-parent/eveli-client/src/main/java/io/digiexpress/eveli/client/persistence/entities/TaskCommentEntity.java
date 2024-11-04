@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import io.digiexpress.eveli.client.api.TaskCommands.TaskCommentSource;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
