@@ -18,8 +18,9 @@
 -- #L%
 ---
 
-    create sequence REVINFO_SEQ start with 1 increment by 50;
     CREATE SEQUENCE IF NOT EXISTS TASKREF_SEQ MINVALUE 1 MAXVALUE 999999 CYCLE;
+
+    create sequence REVINFO_SEQ start with 1 increment by 50;
 
     create table comment (
         id bigserial not null,
@@ -36,6 +37,8 @@
     create table process (
         id bigserial not null,
         created timestamp(6) not null,
+        flow_body jsonb,
+        form_body jsonb,
         input_context_id varchar(255),
         input_parent_context_id varchar(255),
         questionnaire_id varchar(255),
@@ -124,6 +127,18 @@
         payload_type varchar(255),
         visible boolean,
         task_id bigint,
+        primary key (id)
+    );
+
+    create table task_process_event (
+        id bigserial not null,
+        created_date timestamp(6) with time zone not null,
+        error_text varchar(255),
+        event_body jsonb not null,
+        event_type varchar(255) check (event_type in ('TASK_EVENT')),
+        status varchar(255) check (status in ('DONE','FAILED','NEW')),
+        target_id varchar(255) not null,
+        updated_date timestamp(6) with time zone,
         primary key (id)
     );
 

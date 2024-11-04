@@ -22,15 +22,20 @@ package io.digiexpress.eveli.client.persistence.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
@@ -80,6 +85,18 @@ public class ProcessEntity {
 
   @Column(name="updated", nullable = false)
   private LocalDateTime updated;
+
+
+  @Basic(fetch = FetchType.LAZY)
+  @Column(name = "form_body")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private String formBody;
+
+  @Basic(fetch = FetchType.LAZY)
+  @Column(name = "flow_body")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private String flowBody;
+
   
   @PrePersist
   void prePersist() {

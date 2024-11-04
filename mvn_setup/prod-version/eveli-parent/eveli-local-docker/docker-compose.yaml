@@ -1,0 +1,89 @@
+services:
+  
+  postgresql:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_USER=eveli-app
+      - TZ=Europe/Helsinki
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./_db/eveli_db_init:/docker-entrypoint-initdb.d
+      - ./_db/eveli_db_data:/var/lib/postgresql/data
+  
+  
+# dialob related mess
+  postgresql0dialob:
+    image: postgres:16
+    restart: on-failure
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_PASSWORD=dialob123
+      - POSTGRES_USER=dialob
+      - TZ=Europe/Helsinki
+
+    volumes:
+      - ./_db/dialob_db_init:/docker-entrypoint-initdb.d
+      - ./_db/dialob_db_data:/var/lib/postgresql/data
+    networks:
+      - dialob-backend
+
+  redis:
+    image: redis:4.0-alpine
+    restart: on-failure
+    networks:
+      - dialob-backend
+
+  dialob-service:
+    image: resys/dialob-boot:2.1.21
+    restart: no
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_PROFILES_ACTIVE=ui,jdbc,cors
+      - SPRING_SESSION_STORE_TYPE=redis
+      - SPRING_SESSION_REDIS_NAMESPACE=dialobServiceSession
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql0dialob/dialob
+      - SPRING_DATASOURCE_USERNAME=dialob
+      - SPRING_DATASOURCE_PASSWORD=dialob123
+      - ADMIN_VERSIONING=true
+      - DIALOB_SESSION_POSTSUBMITHANDLER_ENABLED=true
+      - DIALOB_SECURITY_ENABLED=false
+      - SERVER_SERVLET_CONTEXTPATH=/dialob
+      - LOGGING_LEVEL_IO_DIALOB=INFO
+      - SPRING_CLOUD_GCP_CORE_ENABLED=false
+      - SPRING_CLOUD_GCP_LOGGING_ENABLED=false
+      - DIALOB_TENANT_MODE=URL_PARAM
+      - DIALOB_TENANT_FIXED_ID=00000000-0000-0000-0000-000000000000
+      - QUESTIONNAIRE_RESTURL=/session/dialob
+      - COMPOSER_ADMINAPPURL=/ui/forms
+    networks:
+      - dialob-backend
+  
+  dialob-session:
+    image: resys/dialob-session-boot:2.1.21
+    restart: no
+    ports:
+      - 8082:8082
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_REDIS_HOST=redis
+      - SPRING_PROFILES_ACTIVE=jdbc,cors
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql0dialob/dialob
+      - SPRING_DATASOURCE_USERNAME=dialob
+      - SPRING_DATASOURCE_PASSWORD=dialob123
+      - DIALOB_SESSION_POSTSUBMITHANDLER_ENABLED=true
+      - SPRING_CLOUD_GCP_CORE_ENABLED=false
+    volumes:
+      - ./_db/dialob-session-config:/java/config/
+    networks:
+      - dialob-backend
+
+networks:
+  dialob-backend:
+    external: false
