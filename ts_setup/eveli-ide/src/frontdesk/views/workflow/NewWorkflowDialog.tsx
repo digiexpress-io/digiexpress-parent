@@ -1,4 +1,4 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem, Typography } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useContext, useMemo } from 'react';
@@ -85,7 +85,7 @@ export const NewWorkflowDialog: React.FC<NewWorkflowDialogProps> = ({ onSubmit, 
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><FormattedMessage id='workflow.dialogTitle' /></DialogTitle>
+        <DialogTitle id='new-form-dialog-title'><Typography variant='h1'><FormattedMessage id='workflow.dialogTitle' /></Typography></DialogTitle>
         <Formik
           initialValues={workflow || {
             body: {

@@ -190,8 +190,6 @@ type State = {
 const minLength = 3;
 
 class TaskFormInternal extends React.Component<AllProps, State> {
-
-
   formRef = React.createRef<any>();
 
   validationSchema = Yup.object().shape({

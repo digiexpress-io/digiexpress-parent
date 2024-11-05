@@ -95,7 +95,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
 
   return (
     <Container maxWidth='lg'>
-      <Typography variant='h2' m={2}>
+      <Typography variant='h1' m={2}>
         <FormattedMessage id='taskDialog.task' /> {taskData?.taskRef || ''}
       </Typography>
       <TaskForm

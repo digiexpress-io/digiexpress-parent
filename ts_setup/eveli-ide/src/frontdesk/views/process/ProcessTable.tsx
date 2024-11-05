@@ -1,5 +1,7 @@
-import MaterialTable, { Column, Query, QueryResult } from '@material-table/core';
 import React, { useContext } from 'react';
+import { Typography } from '@mui/material';
+import MaterialTable, { Column, Query, QueryResult } from '@material-table/core';
+
 import { useIntl } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
@@ -7,6 +9,7 @@ import { Process } from '../../types/Process';
 
 import { localizeTable } from '../../util/localizeTable';
 import { createQueryString } from '../../util/tableQuery';
+
 
 interface TableState  {
   columns: Array<Column<Process>>;
@@ -76,7 +79,7 @@ export const ProcessTable: React.FC = () => {
   return (
       <>
       <MaterialTable
-        title = {intl.formatMessage({id: 'processTable.title'})}
+        title={<Typography variant='h1'>{intl.formatMessage({ id: 'processTable.title' })}</Typography>}
         localization={tableLocalization}
         columns={tableState.columns}
         options={{

@@ -117,10 +117,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         sx={{ height: "50%", top: 70 }}
       >
         <DialogTitle sx={{ m: 0, p: "20px 40px" }}>
-          <Typography  variant='h2'>
-
-            {formConfiguration ? (
-              <FormattedMessage id='dialobForm.heading.copyDialog' />
+          <Typography variant='h1'> {formConfiguration ? (<FormattedMessage id='dialobForm.heading.copyDialog' />
             ): (
               <FormattedMessage id='dialobForm.heading.addDialog' />
             )}

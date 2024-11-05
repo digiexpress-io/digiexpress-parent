@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Box, CircularProgress, IconButton } from '@mui/material';
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
@@ -118,7 +118,7 @@ export const DialobFormsView: React.FC = () => {
       {dialobForms ? (
         <Box sx={{ padding: "0 50px" }}>
           <MaterialTable
-            title={intl.formatMessage({ id: 'dialobForms.dialog.heading' })}
+            title={<Typography variant='h1'>{intl.formatMessage({ id: 'dialobForms.dialog.heading' })}</Typography>}
             localization={tableLocalization}
             columns={tableState.columns}
             tableRef={tableRef}

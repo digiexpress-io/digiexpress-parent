@@ -1,22 +1,25 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
+import { Box, Link, Typography } from '@mui/material';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
-import { Box, Link } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import MessageIcon from '@mui/icons-material/Message';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 
 import { FormattedDate, useIntl } from 'react-intl';
-import { localizeTable } from '../../util/localizeTable';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
+
+
+import { localizeTable } from '../../util/localizeTable';
 import { mapRolesList } from '../../util/rolemapper';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
+import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 
 import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
 import { UserGroup } from '../../types/UserGroup';
-import { TaskBackendContext } from '../../context/TaskApiConfigContext';
+
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
 
@@ -280,7 +283,7 @@ export const TasksTable: React.FC<Props> =
       <MaterialTable
         tableRef={tableRef}
         icons={{ Filter: forwardRef(() => <div />) }}
-        title={intl.formatMessage({ id: 'tasksView.title' })}
+        title={<Typography variant='h1'>{intl.formatMessage({ id: 'tasksView.title' })}</Typography>}
         localization={tableLocalization}
         columns={tableState.columns}
         options={{

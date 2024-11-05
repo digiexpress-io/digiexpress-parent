@@ -19,7 +19,7 @@ export const ViewWorkflowTagDialog: React.FC<ViewWorkflowTagDialogProps> = ({ wo
   return (
     <>
       <Dialog open={open} aria-labelledby='workflow-tag-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><FormattedMessage id='workflowRelease.dialogTitle' /></DialogTitle>
+        <DialogTitle id='new-form-dialog-title'><Typography variant='h1'><FormattedMessage id='workflowRelease.dialogTitle' /></Typography></DialogTitle>
         <DialogContent>
           <Box sx={{ padding: 1, mb: 1 }}>
             <Stack spacing={1}>

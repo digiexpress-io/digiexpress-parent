@@ -1,20 +1,24 @@
 
 import React, { useContext, useRef, useState } from 'react';
-import MaterialTable, { Column } from '@material-table/core';
+import { Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import MaterialTable, { Column } from '@material-table/core';
 
 import { useIntl } from 'react-intl';
-import { useConfig } from '../../context/ConfigContext';
-import { useFetch } from '../../hooks/useFetch';
 import { useSnackbar } from 'notistack';
 
 import { localizeTable } from '../../util/localizeTable';
 import { downloadFile } from '../../util/downloadFile';
+import { handleErrors } from '../../util/cFetch';
+
+import { SessionRefreshContext } from '../../context/SessionRefreshContext';
+import { useConfig } from '../../context/ConfigContext';
+import { useFetch } from '../../hooks/useFetch';
+
 import { Publication } from '../../types/Publication';
 import { NewPublicationDialog } from './NewPublicationDialog';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { handleErrors } from '../../util/cFetch';
+
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
@@ -102,7 +106,7 @@ export const PublicationsTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={intl.formatMessage({ id: 'publicationsTable.title' })}
+        title={<Typography variant='h1'>{intl.formatMessage({ id: 'publicationsTable.title' })}</Typography>}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

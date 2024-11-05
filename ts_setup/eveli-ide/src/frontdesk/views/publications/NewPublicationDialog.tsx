@@ -1,14 +1,17 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack } from '@mui/material';
+import React, { useContext } from 'react';
+
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Typography } from '@mui/material';
+
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import React, { useContext } from 'react';
+import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { Publication, PublicationInit } from '../../types/Publication';
-import { useFetch } from '../../hooks/useFetch';
 import { AssetTag } from '../../types/AssetTag';
-import { useSnackbar } from 'notistack';
+import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';
 
 import * as Burger from '@/burger';
@@ -97,7 +100,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><FormattedMessage id='publications.dialogTitle' /></DialogTitle>
+        <DialogTitle id='new-form-dialog-title'><Typography variant='h1'><FormattedMessage id='publications.dialogTitle' /></Typography></DialogTitle>
 
         <Formik
           initialValues={{
