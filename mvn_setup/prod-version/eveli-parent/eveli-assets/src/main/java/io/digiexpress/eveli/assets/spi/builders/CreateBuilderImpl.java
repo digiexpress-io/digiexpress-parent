@@ -137,7 +137,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
         .body(release)
         .build();
     
-    final var duplicate = state.getWorkflows().values().stream()
+    final var duplicate = state.getWorkflowTags().values().stream()
         .filter(p -> p.getBody().getName().equals(init.getName()))
         .findFirst();
     

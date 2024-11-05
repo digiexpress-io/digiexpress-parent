@@ -26,8 +26,8 @@ const en = {
   'menu.flow': 'Wrench',
   'menu.processes': 'Monitoring',
   'menu.reports': 'Reports',
-  'menu.workflows': 'Configuration',
-  'menu.workflowReleases': 'Workflow tags',
+  'menu.workflows': 'Workflows',
+  'menu.workflowTags': 'Workflow tags',
   'menu.publications': 'Publications',
   'menu.services': 'Services',
   'menu.content': 'Stencil',
@@ -77,7 +77,7 @@ const en = {
   'workflowTable.addButton': 'New workflow',
   'workflowTable.editButton': 'Edit workflow',
 
-  'workflow.dialogTitle': 'Workflow',
+  'workflow.dialogTitle': 'New workflow',
   'workflow.name': 'Name',
   'workflow.form.formName': 'Form name',
   'workflow.form.formTag': 'Form tag',
@@ -173,7 +173,7 @@ const en = {
   'workflowReleaseTable.viewButton': 'View',
   'workflowReleaseTable.exportButton': 'Export',
   
-  'workflowRelease.dialogTitle': 'Workflow release',
+  'workflowRelease.dialogTitle': 'View workflow release',
   'workflowRelease.name': 'Release name',
   'workflowRelease.description': 'Description',
   'workflowRelease.releaseCreationFailed': 'Workflow tag creation failed, cause: {cause}',

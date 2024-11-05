@@ -7,13 +7,13 @@ import { FormattedMessage, useIntl } from "react-intl";
 import * as Burger from '@/burger';
 
 
-interface WorkflowTagDialogProps {
+interface ViewWorkflowTagDialogProps {
   workflowRelease: WorkflowRelease
   open: boolean
   setOpen: (open: boolean) => void
 }
 
-export const WorkflowTagDialog: React.FC<WorkflowTagDialogProps> = ({ workflowRelease, open, setOpen }) => {
+export const ViewWorkflowTagDialog: React.FC<ViewWorkflowTagDialogProps> = ({ workflowRelease, open, setOpen }) => {
   const intl = useIntl();
 
   return (

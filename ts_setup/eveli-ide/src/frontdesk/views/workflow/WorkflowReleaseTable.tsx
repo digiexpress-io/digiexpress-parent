@@ -1,18 +1,21 @@
+import React, { useRef, useState } from 'react';
+
 import MaterialTable, { Column } from '@material-table/core';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import PreviewIcon from '@mui/icons-material/Preview';
-import React, { useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
-import { useConfig } from '../../context/ConfigContext';
-import { useFetch } from '../../hooks/useFetch';
 
 import { localizeTable } from '../../util/localizeTable';
-import { NewWorkflowRelease } from './NewWorkflowRelease';
+import { useIntl } from 'react-intl';
+
+import { NewWorkflowTagDialog } from './NewWorkflowTagDialog';
+import { ViewWorkflowTagDialog } from './ViewWorkflowTagDialog';
 import { WorkflowRelease } from '../../types/WorkflowRelease';
+
 import { downloadFile } from '../../util/downloadFile';
-import { WorkflowTagDialog } from './WorkflowTagDialog';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
+import { useConfig } from '../../context/ConfigContext';
+import { useFetch } from '../../hooks/useFetch';
 
 interface TableState {
   columns: Array<Column<WorkflowRelease>>;
@@ -98,8 +101,8 @@ export const WorkflowReleaseTable: React.FC = () => {
         isLoading={false}
         data={workflows || []}
       />
-      <NewWorkflowRelease open={newDialogOpen} setOpen={setNewDialogOpen} workflowRelease={workflowRelease} onSubmit={() => refreshWorkflowReleases()} />
-      {workflowRelease && <WorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />}
+      <NewWorkflowTagDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshWorkflowReleases()} />
+      {workflowRelease && <ViewWorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />}
     </>
   );
 }

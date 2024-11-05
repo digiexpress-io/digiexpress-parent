@@ -145,7 +145,7 @@ public interface EveliAssetClient {
   @JsonDeserialize(as = ImmutableWorkflowTag.class)
   @JsonIgnoreProperties(ignoreUnknown = true)
   interface WorkflowTag extends EntityBody {
-    String getParentCommit();
+    @Nullable String getParentCommit();
     List<Workflow> getEntries();
   
     String getName();

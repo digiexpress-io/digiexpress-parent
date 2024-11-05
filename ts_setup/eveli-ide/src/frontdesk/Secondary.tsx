@@ -41,7 +41,7 @@ const menuItems: MenuItemProps[] = [
   //TODO Calendar still needed??  
   //{ id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> }, 
   { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
-  { id: 'menu.workflowReleases', to: '/ui/workflowReleases', icon: <NewReleasesIcon sx={iconSize} />, },
+  { id: 'menu.workflowTags', to: '/ui/workflowTags', icon: <NewReleasesIcon sx={iconSize} />, },
   { id: 'menu.publications', to: '/ui/publications', icon: <BeenhereIcon sx={iconSize} /> },
 ]
 

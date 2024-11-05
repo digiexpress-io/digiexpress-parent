@@ -27,7 +27,7 @@ const fi = {
   'menu.processes': 'Monitorointi',
   'menu.reports': 'Raportointi',
   'menu.workflows': 'Konfigurointi',
-  'menu.workflowReleases': 'Versiointi',
+  'menu.workflowTags': 'Versiointi',
   'menu.publications': 'Julkaisut',
   'menu.services': 'Palvelut',
   'menu.content': 'Stencil',
@@ -77,7 +77,7 @@ const fi = {
   'workflowTable.addButton': 'Lisää uusi',
   'workflowTable.editButton': 'Muokka',
 
-  'workflow.dialogTitle': 'Kokoonpano',
+  'workflow.dialogTitle': 'Uusi työnkulku',
   'workflow.name': 'Nimi',
   'workflow.form.formName': 'Lomakkeen nimi',
   'workflow.form.formTag': 'Lomakkeen versio',
@@ -172,7 +172,7 @@ const fi = {
   'workflowReleaseTable.viewButton': 'Katso',
   'workflowReleaseTable.exportButton': 'Lataa',
 
-  'workflowRelease.dialogTitle': 'Palveluversio',
+  'workflowRelease.dialogTitle': 'Näytä työnkulun julkaisu',
   'workflowRelease.name': 'Nimi',
   'workflowRelease.description': 'Kuvaus',
   'workflowRelease.releaseCreationFailed': 'Palveluversion luominen epäonnistui, syy: {cause}',

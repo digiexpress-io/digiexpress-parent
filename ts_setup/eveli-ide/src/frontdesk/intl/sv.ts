@@ -27,7 +27,7 @@ const sv = {
   'menu.processes': 'Övervakning',
   'menu.reports': 'Rapportering',
   'menu.workflows': 'Konfigurera',
-  'menu.workflowReleases': 'Arbetsflödestaggar',
+  'menu.workflowTags': 'Arbetsflödestaggar',
   'menu.publications': 'Offentliggörande',
   'menu.services': 'Tjänster',
   'menu.content': 'Stencil',
@@ -77,7 +77,7 @@ const sv = {
   'workflowTable.addButton': 'Lägg till ny',
   'workflowTable.editButton': 'Editera',
 
-  'workflow.dialogTitle': 'Sammansättning',
+  'workflow.dialogTitle': 'Nytt arbetsflöde',
   'workflow.name': 'Namn',
   'workflow.form.formName': 'Blankettens namn',
   'workflow.form.formTag': 'Blankettens version',
@@ -172,7 +172,7 @@ const sv = {
   'workflowReleaseTable.viewButton': 'View',
   'workflowReleaseTable.exportButton': 'Export',
   
-  'workflowRelease.dialogTitle': 'Workflow release',
+  'workflowRelease.dialogTitle': 'View workflow release',
   'workflowRelease.name': 'Release name',
   'workflowRelease.description': 'Description',
   'workflowRelease.releaseCreationFailed': 'Workflow tag creation failed, cause: {cause}',

@@ -105,7 +105,7 @@ export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
       <Route path='/ui/tasks/task/:id' element={<TaskContainer />} />
       <Route path='/ui/tasks/task/' element={<TaskContainer />} />
       <Route path='/ui/workflows' element={<WorkflowView />} />
-      <Route path='/ui/workflowReleases' element={<WorkflowReleaseView />} />
+      <Route path='/ui/workflowTags' element={<WorkflowReleaseView />} />
       <Route path='/ui/publications' element={<PublicationsView />} />
       <Route path='/ui/processes' element={<ProcessView />} />
       <Route path='/ui/help' element={<HelpView />} />

@@ -12,7 +12,7 @@ import { DialobFormTag } from '../../types';
 import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
-import { NewWorkflow } from './NewWorkflow';
+import { NewWorkflowDialog } from './NewWorkflowDialog';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 
 
@@ -119,8 +119,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
         isLoading={false}
         data={workflows || []}
       />
-      <NewWorkflow open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()}
-        dialobTags={formTags || []} />
+      <NewWorkflowDialog open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()} dialobTags={formTags || []} />
     </>
   );
 }
