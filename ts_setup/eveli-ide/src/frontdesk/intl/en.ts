@@ -50,6 +50,7 @@ const en = {
   'button.send': 'Send',
   'button.dismiss': 'Dismiss',
   'button.editRoles': 'Edit',
+  'button.select': 'Select',
 
   'error.minTextLength': 'Value should be at least {minLength} characters long',
   'error.maxTextLength': 'Value should be no more than {max} characters long',

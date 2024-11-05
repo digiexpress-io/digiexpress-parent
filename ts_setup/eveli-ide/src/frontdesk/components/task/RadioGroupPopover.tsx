@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useField, FieldInputProps } from 'formik';
-import { Box, Button, Divider, FormControl, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, Button, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { COLORS, ColorMap } from './ColorMap';
 
@@ -84,7 +84,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
           endIcon={<ArrowDropDownIcon />}
           disabled={!!readonly}
         >
-          {field.value && <FormattedMessage {...messages[field.value]} />}
+          {field.value ? <FormattedMessage {...messages[field.value]} /> : <FormattedMessage id='button.select' />}
         </Button>
       </Box>
       <Popover
@@ -101,7 +101,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
         }}
       >
         <Box sx={{ p: 2 }}>
-          <RadioGroup value={radioValue || field.value} onChange={handleChange}>
+          <RadioGroup value={radioValue ? radioValue : field.value || ''} onChange={handleChange}>
             {entries.map(([value, color]) =>
               <FormControlLabel
                 key={value}

@@ -50,6 +50,7 @@ const sv = {
   'button.send': 'Skicka',
   'button.dismiss': 'Stäng',
   'button.editRoles': 'Redigera',
+  'button.select': 'Select',
 
   'error.minTextLength': 'Texten måste vara minst {minLength} tecken lång.',
   'error.maxTextLength': 'Texten måste vara max {max} tecken lång.',

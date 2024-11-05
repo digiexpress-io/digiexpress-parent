@@ -50,6 +50,7 @@ const fi = {
   'button.send': 'Lähetä',
   'button.dismiss': 'Sulje',
   'button.editRoles': 'Muokkaa',
+  'button.select': 'Valita',
 
   'error.minTextLength': 'Annetun arvon pitää olla vähintään {minLength} merkkiä',
   'error.maxTextLength': 'Annetun arvon tulee olla enintään {max} merkkiä pitkä',
