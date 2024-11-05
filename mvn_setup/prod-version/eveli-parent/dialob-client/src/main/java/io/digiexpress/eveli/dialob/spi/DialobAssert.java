@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.dialob;
+package io.digiexpress.eveli.dialob.spi;
 
 /*-
  * #%L

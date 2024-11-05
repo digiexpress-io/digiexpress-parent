@@ -1,8 +1,8 @@
-package io.digiexpress.eveli.client.spi.dialob;
+package io.digiexpress.eveli.dialob.spi;
 
 /*-
  * #%L
- * eveli-client
+ * dialob-client
  * %%
  * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
@@ -23,55 +23,106 @@ package io.digiexpress.eveli.client.spi.dialob;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.DialobClient;
-import io.digiexpress.eveli.client.api.DialobClient.SessionBuilder;
-import io.digiexpress.eveli.client.spi.dialob.DialobAssert.DialobException;
+import io.dialob.api.form.FormTag;
+import io.dialob.api.rest.IdAndRevision;
+import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobClient.DialobSessionBuilder;
+import io.digiexpress.eveli.dialob.spi.DialobAssert.DialobException;
+import lombok.RequiredArgsConstructor;
 
-public abstract class DialobBodyBuilder implements DialobClient.SessionBuilder {
+
+@RequiredArgsConstructor
+public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuilder {
   private final ObjectMapper objectMapper;
   private final JsonFactory jsonFactory;
-  private final String submitCallbackUrl;
+  
+  private final String authorization;
+  private final String questionnaireUrl;
+  private final String callbackUrl;
+  private final String formUrl;
+  
+  private final RestTemplate restTemplate;
   private final Map<String, Serializable> context = new HashMap<>();
   private final Map<String, Serializable> answer = new HashMap<>();
   
   private String formId;
   private String language;
+  private String formName;
+  private String formTag;
   
-  public DialobBodyBuilder(
-      ObjectMapper objectMapper,
-      JsonFactory jsonFactory,
-      String submitCallbackUrl) {
-    this.objectMapper = objectMapper;
-    this.jsonFactory = jsonFactory;
-    this.submitCallbackUrl = submitCallbackUrl;
-  }
-
   @Override
-  public SessionBuilder language(String language) {
+  public DialobSessionBuilder language(String language) {
     this.language = language;
     return this;
   }
   @Override
-  public SessionBuilder addContext(String id, Serializable value) {
+  public DialobSessionBuilder addContext(String id, Serializable value) {
     this.context.put(id, value);
     return this;
   }
   @Override
-  public SessionBuilder addAnswer(String id, Serializable value) {
+  public DialobSessionBuilder addAnswer(String id, Serializable value) {
     this.answer.put(id, value);
     return this;
   }
+  @Override
+  public DialobSessionBuilder formName(String formName) {
+    this.formName = formName;
+    return this;
+  }
+  @Override
+  public DialobSessionBuilder formTag(String formTag) {
+    this.formTag = formTag;
+    return this;
+  }
   
-  protected SessionBuilder formId(String formId) {
+  @Override
+  public IdAndRevision build() {
+    String formId = getFormId(formName, formTag);
+    formId(formId);
+    final var body = buildBody();
+    
+
+    
+    final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers());
+    try {
+      ResponseEntity<IdAndRevision> response = restTemplate.exchange(questionnaireUrl, HttpMethod.POST, requestEntity, IdAndRevision.class);
+      DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 201!");
+      return response.getBody();
+    } catch (Exception e) {
+      throw new DialobException(e.getMessage(), e);
+    }
+  }
+  
+  private HttpHeaders headers() {
+    final var headers = new HttpHeaders();
+    if(authorization != null) {
+      headers.set("x-api-key", authorization);
+    }
+    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    return headers;
+  } 
+  
+  
+  protected DialobSessionBuilder formId(String formId) {
     this.formId = formId;
     return this;
   }
@@ -131,8 +182,8 @@ public abstract class DialobBodyBuilder implements DialobClient.SessionBuilder {
     } else {
       jsonGenerator.writeStringField("language", "fi");
     }
-    if (submitCallbackUrl != null) {
-      jsonGenerator.writeStringField("submitUrl", submitCallbackUrl);
+    if (callbackUrl != null) {
+      jsonGenerator.writeStringField("submitUrl", callbackUrl);
     }
     jsonGenerator.writeEndObject();
   }
@@ -153,4 +204,19 @@ public abstract class DialobBodyBuilder implements DialobClient.SessionBuilder {
     }
     jsonGenerator.writeEndArray();
   }
+    
+
+
+  private String getFormId(String formName2, String formTag2) {
+    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(formUrl)
+    .pathSegment(formName)
+    .pathSegment("tags")
+    .pathSegment(formTag);
+    ResponseEntity<FormTag> response = restTemplate.getForEntity(uriBuilder.toUriString(), FormTag.class);
+    DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 200!");
+    FormTag tag = response.getBody();
+    return tag.getFormId();
+  }
+
+  
 }

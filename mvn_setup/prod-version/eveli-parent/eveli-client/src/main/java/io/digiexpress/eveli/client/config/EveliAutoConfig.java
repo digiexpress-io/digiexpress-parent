@@ -58,7 +58,6 @@ import io.digiexpress.eveli.client.spi.HdesCommandsImpl.SpringTransactionWrapper
 import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 import io.digiexpress.eveli.client.spi.PortalClientImpl;
-import io.digiexpress.eveli.client.spi.dialob.DialobCommandsImpl;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
@@ -68,6 +67,7 @@ import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import jakarta.persistence.EntityManager;
 
 
@@ -75,8 +75,7 @@ import jakarta.persistence.EntityManager;
 @Configuration
 @EnableConfigurationProperties( value = {
     EveliProps.class, 
-    EveliPropsAssets.class, 
-    EveliPropsDialob.class, 
+    EveliPropsAssets.class,  
     EveliPropsEmail.class, 
     EveliPropsGamut.class, 
     EveliPropsPrintout.class,
@@ -95,17 +94,6 @@ public class EveliAutoConfig {
     
     return new CommentApiController(taskClient, security, taskAccessRepository, taskRepository);
   }
-
-  @Bean 
-  public DialobCallbackController dialobCallbackController(
-      PortalClient client, 
-      @Qualifier(value="submitTaskScheduler") ThreadPoolTaskScheduler submitTaskScheduler,
-      DuplicateDetectionCache cache) {
-    
-    final var submitMessageDelay = 10000l;
-    return new DialobCallbackController(client, submitTaskScheduler, cache, submitMessageDelay);
-  }
-  
   
   @Bean 
   public EmailNotificationController emailNotificationController(EveliPropsEmail emailProps) {
@@ -116,11 +104,11 @@ public class EveliAutoConfig {
   public PrintoutController printoutController(
       AuthClient authClient,  
       RestTemplate restTemplate,
-      PortalClient portalClient,
+      DialobClient dialobClient,
       TaskClient taskClient,
       EveliPropsPrintout printoutConfig
   ) {
-    return new PrintoutController(taskClient, authClient, portalClient, restTemplate, printoutConfig.getServiceUrl());
+    return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
   }
 
   @Bean 
@@ -172,22 +160,11 @@ public class EveliAutoConfig {
       
       RestTemplate restTemplate,
       ObjectMapper objectMapper,
-      EveliPropsDialob dialobProps,
       EveliProps eveliProps,
       EveliContext eveliContext
   ) {
     
-    final var dialob = DialobCommandsImpl.builder().objectMapper(objectMapper).client(restTemplate)
-        .authorization(dialobProps.getApiKey())
-        .serviceUrl(dialobProps.getServiceUrl())
-        .url(dialobProps.getServiceUrl() + "/dialob/api/questionnaires")
-        .formUrl(dialobProps.getServiceUrl() + "/dialob/api/forms")
-        .sessionUrl(dialobProps.getServiceUrl() + "/session/dialob")
-        .submitCallbackUrl(eveliProps.getServiceUrl() + "/dialobSubmitCallback")
-        .build();
-    
     return PortalClientImpl.builder()
-        .dialobCommands(dialob)
         .attachmentCommands(attachment.orElse(new AttachmentCommandsDummy()))
         .notificationCommands(notification.orElse(new NotificationCommandsDummy()))
         
@@ -232,7 +209,16 @@ public class EveliAutoConfig {
   public DuplicateDetectionCache duplicateDetectionCache() {
     return new DuplicateDetectionCache();
   }
-  
+  @Bean 
+  public DialobCallbackController dialobCallbackController(
+      DialobClient dialobClient,
+      PortalClient portalClient,
+      @Qualifier(value="submitTaskScheduler") ThreadPoolTaskScheduler submitTaskScheduler,
+      DuplicateDetectionCache cache) {
+    
+    final var submitMessageDelay = 10000l;
+    return new DialobCallbackController(dialobClient, portalClient, submitTaskScheduler, cache, submitMessageDelay);
+  }
   @Bean(name="submitTaskScheduler")
   public ThreadPoolTaskScheduler submitTaskScheduler() {
     ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();

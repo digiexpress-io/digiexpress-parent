@@ -35,6 +35,7 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.cache.DuplicateDetectionCache;
 import io.digiexpress.eveli.client.event.runnables.QuestionnaireCompletionRunnable;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -42,17 +43,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DialobCallbackController {
   
-  private final PortalClient client;
+  private final DialobClient dialobClient;
+  private final PortalClient portalClient;
   private final ThreadPoolTaskScheduler submitTaskScheduler;
   private final DuplicateDetectionCache cache;
   private final Long submitMessageDelay;
   
   public DialobCallbackController(
-      PortalClient client, 
+      DialobClient dialobClient,
+      PortalClient portalClient, 
       ThreadPoolTaskScheduler submitTaskScheduler,
       DuplicateDetectionCache cache,
       Long submitMessageDelay) {
-    this.client = client;
+    this.portalClient = portalClient;
+    this.dialobClient = dialobClient;
     this.submitTaskScheduler = submitTaskScheduler;
     this.cache = cache;
     this.submitMessageDelay = submitMessageDelay;
@@ -75,14 +79,14 @@ public class DialobCallbackController {
   private void handleDialobCompletion(String questionnaireId) {
     if (submitMessageDelay == 0) {
       log.debug("Dialob callback handler: questionnaire id: {}, synchronous processing", questionnaireId);
-      client.dialob().complete(questionnaireId);
+      dialobClient.completeSession(questionnaireId);
       log.info("Message: Dialob, questionnaire ID: {}, result: handled", questionnaireId);
     }
     else {
       log.debug("Dialob callback handler: questionnaire id: {}, asynchronous processing with delay {} ms.", questionnaireId, submitMessageDelay);
       // create runnable and schedule its execution by some amount to overcome issue #2536
       // this should allow enough time to get all changes stored even if completion message arrives before last answer
-      Runnable runnable = new QuestionnaireCompletionRunnable(client, questionnaireId);
+      Runnable runnable = new QuestionnaireCompletionRunnable(portalClient, questionnaireId);
       submitTaskScheduler.schedule(runnable, new Date(System.currentTimeMillis() + submitMessageDelay));
       log.info("Dialob callback handler: questionnaire id: {}, result: scheduled with delay {} seconds", questionnaireId, submitMessageDelay/1000);
     }

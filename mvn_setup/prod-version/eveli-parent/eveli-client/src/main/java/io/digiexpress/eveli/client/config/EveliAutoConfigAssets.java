@@ -36,7 +36,6 @@ import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
@@ -44,6 +43,7 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationControl
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -95,8 +95,8 @@ public class EveliAutoConfigAssets {
   } 
   
   @Bean
-  public AssetsDialobController assetsDialobController(PortalClient client, ObjectMapper objectMapper) {
-    return new AssetsDialobController(client.dialob(), objectMapper);
+  public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
+    return new AssetsDialobController(client, objectMapper);
   }
   @Bean 
   public AssetsPublicationController assetReleaseController(EveliContext context, AuthClient security) {

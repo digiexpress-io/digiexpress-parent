@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
@@ -46,6 +45,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.thestencil.iam.api.ImmutableAuthorizationAction;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
 import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;

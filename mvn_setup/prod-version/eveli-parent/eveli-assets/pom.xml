@@ -9,6 +9,19 @@
   <artifactId>eveli-assets</artifactId>
   
   <dependencies>
+  
+    <!-- required by dialob -->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+    <!-- required by dialob -->
+    <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+    </dependency>
+
+
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
@@ -17,6 +30,10 @@
     <dependency>
       <groupId>io.digiexpress</groupId>    
       <artifactId>stencil-client-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>    
+      <artifactId>dialob-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>

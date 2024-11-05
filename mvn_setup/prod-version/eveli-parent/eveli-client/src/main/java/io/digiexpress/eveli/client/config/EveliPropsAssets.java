@@ -33,4 +33,10 @@ public class EveliPropsAssets {
    */
   private Boolean enabled;
 
+  
+  /**
+   * json of type Deployment, used for importing WRENCH, STENCIL, DIALOB, WORKFLOWS into empty DB
+   */
+  private String importDeployment;
+  
 }

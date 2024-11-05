@@ -23,7 +23,6 @@ package io.digiexpress.eveli.client.api;
 
 public interface PortalClient {
   AttachmentCommands attachments();
-  DialobClient dialob();
   NotificationCommands notification();
   ProcessCommands process();
   HdesCommands hdes();

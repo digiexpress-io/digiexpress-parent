@@ -41,7 +41,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.smallrye.mutiny.Uni;
-import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.api.StencilComposer.SiteState;
 
 
 
@@ -51,6 +51,8 @@ public interface EveliAssetComposer {
   DeleteBuilder delete();
   MigrationBuilder migration();
   DeploymentBuilder deployment();
+  
+  
   
   AnyTagQuery anyAssetTagQuery();
   PublicationQuery publicationQuery();
@@ -69,7 +71,7 @@ public interface EveliAssetComposer {
     LocalDateTime getCreated(); // download time
     
     WorkflowTag getWorkflowTag();
-    StencilClient.Release getStencilTag();
+    SiteState getStencilTag();
     AstTag getWrenchTag();
     List<Form> getDialobTag();
   }

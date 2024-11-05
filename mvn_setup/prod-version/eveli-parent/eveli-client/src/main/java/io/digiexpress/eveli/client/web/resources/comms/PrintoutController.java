@@ -33,8 +33,8 @@ import org.springframework.web.client.RestTemplate;
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.PortalClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class PrintoutController {
 
   private final TaskClient client;
   private final AuthClient auth;
-  private final PortalClient portalClient;
+  private final DialobClient dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;
   
@@ -66,11 +66,10 @@ public class PrintoutController {
         log.warn("Task with ID {} not found or no roles access for printout, returning 404", taskId);
         return ResponseEntity.status(403).build();
       }
-    
 
       if (verifyLink(questionnaireId, task)) {
-        Questionnaire questionnaire = portalClient.dialob().get(questionnaireId);
-        Form form = portalClient.dialob().getForm(questionnaire.getMetadata().getFormId());
+        Questionnaire questionnaire = dialob.getQuestionnaireById(questionnaireId);
+        Form form = dialob.getFormById(questionnaire.getMetadata().getFormId());
         PrintoutInput input = new PrintoutInput();
         input.setForm(form);
         input.setSession(questionnaire);

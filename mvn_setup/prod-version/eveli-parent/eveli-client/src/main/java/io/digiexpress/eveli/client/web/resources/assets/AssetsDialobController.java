@@ -37,15 +37,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.dialob.api.form.Form;
 import io.dialob.api.form.FormTag;
-import io.digiexpress.eveli.client.api.DialobClient;
-import io.digiexpress.eveli.client.api.DialobClient.FormListItem;
-import io.digiexpress.eveli.client.api.DialobClient.FormTagResult;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -96,9 +97,6 @@ public class AssetsDialobController {
 
     return Arrays.asList(forms);
   }
-  
-  
-  
 
 
   private FormTag[] getTags(String id) throws JsonMappingException, JsonProcessingException {
@@ -111,5 +109,23 @@ public class AssetsDialobController {
     final var uri = "api/forms";
     final String body = dialobCommands.createProxy().anyRequest(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormListItem.class).readValue(body);
+  }
+  
+  
+  
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  @Data
+  public static class FormListItem {
+    private String id;
+    private Form.Metadata metadata;
+  }
+  
+  @Data
+  public static class FormTagResult {
+    private String formLabel;
+    private String formName;
+    private String tagFormId;
+    private String tagName;
   }
 }

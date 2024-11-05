@@ -32,7 +32,11 @@
         <artifactId>eveli-assets</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+      <dependency>
+        <groupId>io.digiexpress</groupId>    
+        <artifactId>dialob-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- client -->
       <dependency>
         <groupId>io.digiexpress</groupId>

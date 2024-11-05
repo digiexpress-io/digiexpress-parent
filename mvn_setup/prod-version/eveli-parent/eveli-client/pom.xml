@@ -10,8 +10,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.dialob</groupId>
-      <artifactId>dialob-api</artifactId>
+      <groupId>io.digiexpress</groupId>    
+      <artifactId>dialob-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>    

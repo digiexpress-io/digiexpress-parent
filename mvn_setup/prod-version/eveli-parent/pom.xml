@@ -19,5 +19,6 @@
     -->
     <module>eveli-integration-google</module>
     <module>eveli-app</module>
+    <module>dialob-client</module>
   </modules>
 </project>

@@ -14,8 +14,18 @@ services:
       - ./_db/eveli_db_init:/docker-entrypoint-initdb.d
       - ./_db/eveli_db_data:/var/lib/postgresql/data
   
-  
+
 # dialob related mess
+  nginx:
+    build: compose
+    ports:
+      - 9000:9000
+    links:
+      - dialob-service:dialob-service
+      - dialob-session:dialob-session
+    networks:
+      - dialob-backend
+
   postgresql0dialob:
     image: postgres:16
     restart: on-failure

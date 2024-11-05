@@ -52,7 +52,7 @@
     <commons-lang.version>3.17.0</commons-lang.version>
     <commons-collections.version>4.4</commons-collections.version>
     <commons-validator.version>1.7</commons-validator.version>
-    <dialob.version>2.2.4</dialob.version>
+    <dialob.version>3.0.1</dialob.version>
     <flexmark.version>0.62.2</flexmark.version>
 
   

@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.dialob;
+package io.digiexpress.eveli.dialob.spi;
 
 /*-
  * #%L
@@ -27,11 +27,11 @@ import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.ContextValue;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.VariableValue;
-import io.digiexpress.eveli.client.api.DialobClient.Dialob;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DialobImpl implements Dialob {
+public class QuestionnaireWrapperImpl implements DialobClient.Dialob {
   private final Questionnaire questionnaire;
   
   public Answer answer(String name) {

@@ -26,7 +26,6 @@ import org.springframework.util.Assert;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.NotificationCommands;
 import io.digiexpress.eveli.client.api.PortalClient;
@@ -50,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class PortalClientImpl implements PortalClient {
-  private final DialobClient dialob;
   private final ProcessCommands process;
   private final AttachmentCommands attachments;
   private final HdesCommands hdes;
@@ -68,7 +66,6 @@ public class PortalClientImpl implements PortalClient {
     
     private AttachmentCommands attachmentCommands;
     private NotificationCommands notificationCommands;
-    private DialobClient dialobCommands;
     private ProcessRepository processRepository;
     private HdesClient hdesClient;
     private TransactionWrapper transactionWrapper;
@@ -79,8 +76,6 @@ public class PortalClientImpl implements PortalClient {
     private TaskRefGenerator taskRefGenerator;
     
     public PortalClientImpl build() {
-
-      Assert.notNull(dialobCommands, () -> "dialobCommands can't be null!");
       Assert.notNull(notificationCommands, () -> "notificationCommands can't be null!");
       Assert.notNull(attachmentCommands, () -> "attachmentCommands can't be null!");
       Assert.notNull(processRepository, () -> "processRepository can't be null!");
@@ -93,11 +88,11 @@ public class PortalClientImpl implements PortalClient {
       Assert.notNull(taskRefGenerator, () -> "taskRefGenerator can't be null!");
       
 
-      final var process = ProcessCommandsImpl.builder().forms(dialobCommands).processJPA(processRepository).workflowCommands(assetClient).build();
+      final var process = ProcessCommandsImpl.builder().processJPA(processRepository).build();
       final var hdes = HdesCommandsImpl.builder().hdesClient(hdesClient).transactionWrapper(transactionWrapper)
             .process(process).programEnvir(programEnvir).workflow(assetClient).build();
       
-      return new PortalClientImpl(dialobCommands, process, attachmentCommands, hdes, transactionWrapper, notificationCommands);
+      return new PortalClientImpl(process, attachmentCommands, hdes, transactionWrapper, notificationCommands);
     }
   }
 }

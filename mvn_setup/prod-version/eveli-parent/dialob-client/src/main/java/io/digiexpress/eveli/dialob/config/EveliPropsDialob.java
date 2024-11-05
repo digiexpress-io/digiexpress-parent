@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.config;
+package io.digiexpress.eveli.dialob.config;
 
 /*-
  * #%L

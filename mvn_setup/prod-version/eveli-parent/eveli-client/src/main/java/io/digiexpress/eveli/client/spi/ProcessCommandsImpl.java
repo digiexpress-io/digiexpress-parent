@@ -30,8 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient;
-import io.digiexpress.eveli.client.api.DialobClient;
 import io.digiexpress.eveli.client.api.ImmutableProcess;
 import io.digiexpress.eveli.client.api.ProcessCommands;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
@@ -47,10 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ProcessCommandsImpl implements ProcessCommands {
-  
-  private final DialobClient forms;
   private final ProcessRepository processJPA;
-  private final EveliAssetClient workflowCommands;
 
   @Override
   public ProcessQuery query() {
@@ -179,15 +174,12 @@ public class ProcessCommandsImpl implements ProcessCommands {
   @Setter
   @Accessors(fluent = true)
   public static class Builder {
-    private DialobClient forms;
+
     private ProcessRepository processJPA;
-    private EveliAssetClient workflowCommands;
   
     public ProcessCommandsImpl build() {
-      WorkflowAssert.notNull(forms, () -> "forms must be defined!");
       WorkflowAssert.notNull(processJPA, () -> "processJPA must be defined!");
-      WorkflowAssert.notNull(workflowCommands, () -> "workflowCommands must be defined!");
-      return new ProcessCommandsImpl(forms, processJPA, workflowCommands);
+      return new ProcessCommandsImpl(processJPA);
     }
   }
 }
