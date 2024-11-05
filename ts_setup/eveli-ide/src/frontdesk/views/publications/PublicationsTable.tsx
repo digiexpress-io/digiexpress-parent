@@ -1,6 +1,5 @@
 
 import React, { useContext, useRef, useState } from 'react';
-import { Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import MaterialTable, { Column } from '@material-table/core';
@@ -21,6 +20,7 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
+import { TableHeader } from '../../components/TableHeader';
 
 
 interface TableState {
@@ -106,7 +106,7 @@ export const PublicationsTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={<Typography variant='h1'>{intl.formatMessage({ id: 'publicationsTable.title' })}</Typography>}
+        title={<TableHeader id='publicationsTable.title' />}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

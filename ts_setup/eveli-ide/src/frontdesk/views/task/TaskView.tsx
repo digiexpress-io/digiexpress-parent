@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { useNavigate } from "react-router-dom";
-import { LinearProgress, Container, Typography } from '@mui/material';
+import { LinearProgress, Container } from '@mui/material';
 
 import {TaskForm} from './TaskForm';
 import { GroupMember } from '../../types/GroupMember';
@@ -11,6 +10,7 @@ import { ComponentResolver } from '../../context/ComponentResolver';
 import { UserGroup } from '../../types/UserGroup';
 import { Task } from '../../types/task/Task';
 import { useUserInfo } from '../../context/UserContext';
+import { TableHeader } from '../../components/TableHeader';
 
 type OwnProps = {
   taskId?: number
@@ -95,9 +95,8 @@ export const TaskView: React.FC<OwnProps> = (props) => {
 
   return (
     <Container maxWidth='lg'>
-      <Typography variant='h1' m={2}>
-        <FormattedMessage id='taskDialog.task' /> {taskData?.taskRef || ''}
-      </Typography>
+      <TableHeader id='taskDialog.task'> {taskData?.taskRef || ''}</TableHeader>
+
       <TaskForm
         id='taskForm'
         editTask={taskData ?? {}}

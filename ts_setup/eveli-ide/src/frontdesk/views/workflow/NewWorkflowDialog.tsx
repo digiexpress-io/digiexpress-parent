@@ -1,14 +1,15 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useContext, useMemo } from 'react';
-import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { useFetch } from '../../hooks/useFetch';
 import { Workflow } from '../../types/Workflow';
 import { DialobFormTag } from '../../types';
 import { useSnackbar } from 'notistack';
+import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';
 
@@ -85,7 +86,7 @@ export const NewWorkflowDialog: React.FC<NewWorkflowDialogProps> = ({ onSubmit, 
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><Typography variant='h1'><FormattedMessage id='workflow.dialogTitle' /></Typography></DialogTitle>
+        <DialogTitle id='new-form-dialog-title'><TableHeader id='workflow.dialogTitle' /></DialogTitle>
         <Formik
           initialValues={workflow || {
             body: {

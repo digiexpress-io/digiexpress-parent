@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
 import { enqueueSnackbar } from 'notistack';
+import { TableHeader } from 'frontdesk/components/TableHeader';
 
 interface DeleteDialogProps {
   deleteModalOpen: boolean;
@@ -49,7 +50,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
         maxWidth={'lg'}
         sx={{ height: "50%", top: 70 }}
       >
-        <DialogTitle sx={{ m: 0, p: "20px 20px" }}> <Typography variant='h1'><FormattedMessage id='dialobForm.heading.deleteDialog' /></Typography></DialogTitle>
+        <DialogTitle sx={{ m: 0, p: "20px 20px" }}><TableHeader id='dialobForm.heading.deleteDialog' /></DialogTitle>
         <Divider />
         <DialogContent>
             <Typography sx={{padding: "20px 4px 4px 2px"}}><FormattedMessage id="dialobForm.dialog.deleteQuestion" values={{formName: formConfiguration?.metadata.label || intl.formatMessage({id: "dialobForms.dialog.emptyTitle"})}}/></Typography>

@@ -16,7 +16,7 @@ import { downloadFile } from '../../util/downloadFile';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { useConfig } from '../../context/ConfigContext';
 import { useFetch } from '../../hooks/useFetch';
-import { Typography } from '@mui/material';
+import { TableHeader } from '../../components/TableHeader';
 
 interface TableState {
   columns: Array<Column<WorkflowRelease>>;
@@ -66,7 +66,7 @@ export const WorkflowReleaseTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={<Typography variant='h1'>{intl.formatMessage({ id: 'workflowReleaseTable.title' })}</Typography>}
+        title={<TableHeader id='workflowReleaseTable.title' />}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

@@ -8,6 +8,7 @@ import { handleErrors } from '../../util/cFetch';
 import { enqueueSnackbar } from 'notistack';
 import { useContext } from 'react';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
+import { TableHeader } from 'frontdesk/components/TableHeader';
 
 interface CreateDialogProps {
   createModalOpen: boolean;
@@ -117,11 +118,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         sx={{ height: "50%", top: 70 }}
       >
         <DialogTitle sx={{ m: 0, p: "20px 40px" }}>
-          <Typography variant='h1'> {formConfiguration ? (<FormattedMessage id='dialobForm.heading.copyDialog' />
-            ): (
-              <FormattedMessage id='dialobForm.heading.addDialog' />
-            )}
-          </Typography>
+          <TableHeader id={formConfiguration ? 'dialobForm.heading.copyDialog' : 'dialobForm.heading.addDialog'} />
         </DialogTitle>
         <Divider />
         <DialogContent>

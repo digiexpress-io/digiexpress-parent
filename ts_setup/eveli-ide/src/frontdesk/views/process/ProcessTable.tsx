@@ -9,6 +9,7 @@ import { Process } from '../../types/Process';
 
 import { localizeTable } from '../../util/localizeTable';
 import { createQueryString } from '../../util/tableQuery';
+import { TableHeader } from 'frontdesk/components/TableHeader';
 
 
 interface TableState  {
@@ -79,7 +80,7 @@ export const ProcessTable: React.FC = () => {
   return (
       <>
       <MaterialTable
-        title={<Typography variant='h1'>{intl.formatMessage({ id: 'processTable.title' })}</Typography>}
+        title={<TableHeader id='processTable.title' />}
         localization={tableLocalization}
         columns={tableState.columns}
         options={{

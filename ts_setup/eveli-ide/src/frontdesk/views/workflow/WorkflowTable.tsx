@@ -14,7 +14,7 @@ import { Workflow } from '../../types/Workflow';
 import { localizeTable } from '../../util/localizeTable';
 import { NewWorkflowDialog } from './NewWorkflowDialog';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
-import { Typography } from '@mui/material';
+import { TableHeader } from '../../components/TableHeader';
 
 
 interface TableState {
@@ -90,7 +90,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
   return (
     <>
       <MaterialTable
-        title={<Typography variant='h1'>{intl.formatMessage({ id: 'workflowTable.title' })}</Typography>}
+        title={<TableHeader id='workflowTable.title' />}
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

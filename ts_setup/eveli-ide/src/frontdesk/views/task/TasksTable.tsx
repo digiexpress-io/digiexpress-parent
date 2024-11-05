@@ -22,6 +22,8 @@ import { UserGroup } from '../../types/UserGroup';
 
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
+import { TableHeader } from '../../components/TableHeader';
+
 
 function getStatusCode(status: TaskStatus | undefined) {
   switch (status) {
@@ -283,7 +285,7 @@ export const TasksTable: React.FC<Props> =
       <MaterialTable
         tableRef={tableRef}
         icons={{ Filter: forwardRef(() => <div />) }}
-        title={<Typography variant='h1'>{intl.formatMessage({ id: 'tasksView.title' })}</Typography>}
+        title={<TableHeader id='tasksView.title' />}
         localization={tableLocalization}
         columns={tableState.columns}
         options={{

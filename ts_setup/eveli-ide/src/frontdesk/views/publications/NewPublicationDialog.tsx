@@ -5,7 +5,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Typ
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { useSnackbar } from 'notistack';
-import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
@@ -13,6 +13,8 @@ import { Publication, PublicationInit } from '../../types/Publication';
 import { AssetTag } from '../../types/AssetTag';
 import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';
+
+import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';
 
@@ -100,7 +102,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><Typography variant='h1'><FormattedMessage id='publications.dialogTitle' /></Typography></DialogTitle>
+        <DialogTitle id='new-form-dialog-title'><TableHeader id='publications.dialogTitle' /></DialogTitle>
 
         <Formik
           initialValues={{
