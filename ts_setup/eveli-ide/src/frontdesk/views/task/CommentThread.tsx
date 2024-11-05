@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Comment as CommentData } from '../../types/task/Comment';
-import { Paper, Box, Grid2 } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { Box, Grid2 } from '@mui/material';
 
 import { Task } from '../../types/task/Task';
 import mapNestedEntities from '../../util/mapNestedEntities';
@@ -19,7 +18,6 @@ type OwnProps = {
 }
 
 export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
-  const intl = useIntl();
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -55,8 +53,12 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
       'id',
       'replyToId'
     );
-    return (<Thread
-      comments={comments} task={task} loadData={loadData} isExternalThread={isExternalThread} isThreaded={isThreaded} setReply={setReply} />);
+    return (<Thread comments={comments} task={task}
+      loadData={loadData}
+      isExternalThread={isExternalThread}
+      isThreaded={isThreaded}
+      setReply={setReply}
+    />);
   }
 
   const thread = getThread(comments, task);
@@ -73,7 +75,7 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
     }
   }
   return (
-    <Paper sx={{ boxShadow: "none", padding: 1 }}>
+    <Box p={1}>
       <Box style={{ maxHeight: '40vh', overflow: 'auto' }} ref={listRef}>
         {thread}
       </Box>
@@ -86,6 +88,6 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
           </Grid2>
         )}
       </Grid2>
-    </Paper>
+    </Box>
   );
 }

@@ -38,10 +38,10 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
       </DialogContent>
       <DialogActions>
         {/* TODO correct types */}
-        {/* //@ts-ignore */}
+        {/* @ts-ignore */}
         <Burger.SecondaryButton onClick={handleCancel}
           {...cancelOptions} label={cancel || 'button.cancel'} />
-        {/* //@ts-ignore */}
+        {/* @ts-ignore */}
         <Burger.PrimaryButton onClick={handleAccept}
           {...acceptOptions} label={accept || 'button.accept'} />
       </DialogActions>

@@ -3,11 +3,14 @@ import { Formik, Form, Field } from 'formik';
 import {
   TextField, Grid2, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
   Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
+  useTheme,
+  alpha,
 } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import AttachmentIcon from '@mui/icons-material/Attachment';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
@@ -75,6 +78,15 @@ const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = 
       </AccordionDetails>
     </Accordion>
   )
+}
+
+const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
+  const theme = useTheme();
+  return (
+    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', backgroundColor: alpha(theme.palette.uiElements.main, 0.05) }}>
+      <InfoOutlinedIcon sx={{ mr: 1, color: theme.palette.uiElements.main }} />
+      <Typography variant='subtitle2'><FormattedMessage id={id} /></Typography>
+    </Paper>)
 }
 
 
@@ -441,22 +453,22 @@ class TaskFormInternal extends React.Component<AllProps, State> {
               <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2}>
                   <Grid2 size={{ xs: 12 }}>
-                    <Accordion disableGutters={true}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="externalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        {!!editTask.id && !!externalThreads &&
+                    {editTask.id && externalThreads ?
+                      <Accordion disableGutters={true}>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1bh-content"
+                          id="panel1bh-header"
+                          sx={classes.accordionSummary}
+                        >
+                          <Typography sx={classes.accordionTitle}>
+                            <FormattedMessage id="externalComments" />
+                          </Typography>
+                          <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
+                            <ChatBubbleOutlineIcon />
+                          </Badge>
+                        </AccordionSummary>
+                        <AccordionDetails sx={classes.accordionDetails}>
                           <CommentThreadComponent
                             task={editTask}
                             isExternalThread={true}
@@ -464,30 +476,33 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                             loadData={reloadComments}
                             isThreaded={false}
                           />
-                        }
-                      </AccordionDetails>
-                    </Accordion>
+
+                        </AccordionDetails>
+                      </Accordion>
+                      : <NewTaskAccordianMsg id='task.comments.external.createTask' />
+                    }
                   </Grid2>
                   <Grid2 size={{ xs: 12 }}>
-                    <AttachmentTableWrapper readonly={readonly} editTask={editTask} />
+                    {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
                   </Grid2>
                   <Grid2 size={{ xs: 12 }}>
-                    <Accordion disableGutters={true}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="internalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        {!!editTask.id &&
+                    {editTask.id ?
+                      <Accordion disableGutters={true}>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1bh-content"
+                          id="panel1bh-header"
+                          sx={classes.accordionSummary}
+                        >
+                          <Typography sx={classes.accordionTitle}>
+                            <FormattedMessage id="internalComments" />
+                          </Typography>
+                          <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
+                            <ChatBubbleOutlineIcon />
+                          </Badge>
+                        </AccordionSummary>
+                        <AccordionDetails sx={classes.accordionDetails}>
+
                           <CommentThreadComponent
                             task={editTask}
                             isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
@@ -495,9 +510,10 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                             loadData={reloadComments}
                             isThreaded={true}
                           />
-                        }
-                      </AccordionDetails>
-                    </Accordion>
+
+                        </AccordionDetails>
+                      </Accordion>
+                      : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
                   </Grid2>
                 </Grid2>
               </Paper>

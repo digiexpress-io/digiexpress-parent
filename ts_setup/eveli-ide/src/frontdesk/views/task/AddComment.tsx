@@ -32,10 +32,10 @@ export const AddComment: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Grid2 size={{ xs: 6 }}>
-        <OutlinedInput inputRef={ref => input = ref} multiline autoFocus onChange={handleChange} fullWidth margin='dense'/>
+      <Grid2 size={{ xs: 12 }}>
+        <OutlinedInput fullWidth inputRef={ref => input = ref} multiline autoFocus onChange={handleChange} margin='dense' />
       </Grid2>
-      <Grid2 size={{ xs: 6 }} sx={{ margin: 'auto', width: '90%' }}>
+      <Grid2 size={{ xs: 12 }} sx={{ margin: 'auto', width: '90%' }}>
         <Stack direction='row' spacing={2}>
           <Burger.PrimaryButton onClick={send} disabled={!inputValue} label={'comment.store'} />
           <Burger.SecondaryButton onClick={props.onCancel} label='taskButton.cancel' />
