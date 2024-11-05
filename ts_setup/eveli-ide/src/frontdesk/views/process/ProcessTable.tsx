@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Typography } from '@mui/material';
 import MaterialTable, { Column, Query, QueryResult } from '@material-table/core';
 
 import { useIntl } from 'react-intl';
@@ -9,7 +8,7 @@ import { Process } from '../../types/Process';
 
 import { localizeTable } from '../../util/localizeTable';
 import { createQueryString } from '../../util/tableQuery';
-import { TableHeader } from 'frontdesk/components/TableHeader';
+import { TableHeader } from '../../components/TableHeader';
 
 
 interface TableState  {
