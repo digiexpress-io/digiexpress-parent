@@ -1,6 +1,5 @@
 import React from 'react';
-import Chip from '@mui/material/Chip';
-import Button from '@mui/material/Button';
+import { Typography, Chip, Button } from '@mui/material';
 import { COLORS } from './ColorMap';
 
 
@@ -43,7 +42,7 @@ const Indicator:React.FC<Props> = ({ inactive, withLabel, children, color, ...re
 
   if (!showButton) {
     // chip does not support children...
-    return <Chip disabled={inactive} {...extraProps} label={rootNode}/>
+    return <Chip disabled={inactive} {...extraProps} label={<Typography variant="caption">{rootNode}</Typography>} />
   }
 
   return (
