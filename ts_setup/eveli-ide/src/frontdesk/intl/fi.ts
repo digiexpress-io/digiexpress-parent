@@ -77,7 +77,7 @@ const fi = {
   'workflowTable.addButton': 'Lisää uusi',
   'workflowTable.editButton': 'Muokka',
 
-  'workflow.dialogTitle': 'Uusi työnkulku',
+  'workflow.dialogTitle': 'Työnkulku',
   'workflow.name': 'Nimi',
   'workflow.form.formName': 'Lomakkeen nimi',
   'workflow.form.formTag': 'Lomakkeen versio',

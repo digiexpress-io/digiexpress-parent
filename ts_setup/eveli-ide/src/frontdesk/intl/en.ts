@@ -77,7 +77,7 @@ const en = {
   'workflowTable.addButton': 'New workflow',
   'workflowTable.editButton': 'Edit workflow',
 
-  'workflow.dialogTitle': 'New workflow',
+  'workflow.dialogTitle': 'Workflow',
   'workflow.name': 'Name',
   'workflow.form.formName': 'Form name',
   'workflow.form.formTag': 'Form tag',

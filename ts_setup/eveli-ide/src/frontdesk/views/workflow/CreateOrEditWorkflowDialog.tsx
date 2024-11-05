@@ -24,7 +24,7 @@ const messages = defineMessages(
   }
 );
 
-export interface NewWorkflowDialogProps {
+export interface CreateOrEditWorkflowDialogProps {
   onSubmit: () => void;
   workflow: Workflow | null;
   open: boolean;
@@ -32,7 +32,7 @@ export interface NewWorkflowDialogProps {
   dialobTags: DialobFormTag[];
 }
 
-export const NewWorkflowDialog: React.FC<NewWorkflowDialogProps> = ({ onSubmit, workflow, open, setOpen, dialobTags }) => {
+export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProps> = ({ onSubmit, workflow, open, setOpen, dialobTags }) => {
   const intl = useIntl();
 
   const { serviceUrl } = useConfig();
@@ -51,7 +51,7 @@ export const NewWorkflowDialog: React.FC<NewWorkflowDialogProps> = ({ onSubmit, 
 
     if (workflowCommand.id) {
       method = 'PUT';
-      url = url + workflowCommand.id;
+      url = url + '/' + workflowCommand.id;
     }
 
     session.cFetch(`${url}`, {
