@@ -93,7 +93,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
               Uni.createFrom().nullItem();
           
           
-          final var workflowRelease = init.getWrenchTag() == null ? 
+          final var workflowRelease = init.getWorkflowTag() == null ? 
               workflowTag(ImmutableCreateWorkflowTag.builder()
                   .description("auto-created")
                   .name(createdTag.getBody().getWorkflowTagName())
