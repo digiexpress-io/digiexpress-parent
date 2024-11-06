@@ -14,7 +14,6 @@ import { AssetTag } from '../../types/AssetTag';
 import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';
 
-import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';
 
@@ -90,7 +89,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const TagComponent: React.FC<{ name: string, labelId: string, tags?: AssetTag[], newTag: string }> =
     ({ name, labelId, tags, newTag }) => (
       <Field component={TextField} select name={name} label={intl.formatMessage({ id: labelId })}
-        fullWidth InputProps={{ margin: 'normal' }}>
+        fullWidth InputProps={{ margin: 'dense' }}>
         <MenuItem key='-1' value={NEW_TAG_VALUE}>{intl.formatMessage({ id: 'publications.createNewTag' }, { tag: newTag })}</MenuItem>
         {
           tags?.map(tag => <MenuItem key={tag.name} value={tag.name}>{tag.name} / {tag.description}</MenuItem>)
@@ -125,9 +124,9 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
                   <Stack spacing={1}>
                     <Field component={TextField} name='name' label={intl.formatMessage({ id: 'publications.name' })}
                       fullWidth required validate={requiredValidator} error={!!errors?.name}
-                      helperText={errors?.name} InputProps={{ margin: 'normal' }} />
+                      helperText={errors?.name} InputProps={{ margin: 'dense' }} />
                     <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })}
-                      fullWidth InputProps={{ margin: 'normal' }} />
+                      fullWidth InputProps={{ margin: 'dense' }} />
                     <TagComponent name='contentTag' labelId='publications.contentTag' newTag={values.name} tags={contentTags} />
                     <TagComponent name='workflowTag' labelId='publications.workflowTag' newTag={values.name} tags={workflowTags} />
                     <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={values.name} tags={wrenchTags} />

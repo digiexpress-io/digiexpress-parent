@@ -86,9 +86,9 @@ export const CreateWorkflowTagDialog: React.FC<CreateWorkflowTagDialogProps> = (
                 <Stack spacing={1}>
                   <Field component={TextField} name='name' label={intl.formatMessage({ id: 'workflowRelease.name' })}
                     fullWidth required validate={requiredValidator} error={!!errors.name}
-                    helperText={errors.name} InputProps={{ margin: 'normal' }} />
+                    helperText={errors.name} InputProps={{ margin: 'dense' }} />
                   <Field component={TextField} name='description' label={intl.formatMessage({ id: 'workflowRelease.description' })}
-                    fullWidth InputProps={{ margin: 'normal' }} />
+                    fullWidth InputProps={{ margin: 'dense' }} />
                 </Stack>
               </DialogContent>
               <DialogActions>
