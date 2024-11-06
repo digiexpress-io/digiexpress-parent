@@ -56,6 +56,7 @@ public class Application {
     
     endpoints.forEach((key, value) -> {
       
+      
       msg.append("  - ").append(key).append(" = ").append(value).append("\r\n");
     });
     

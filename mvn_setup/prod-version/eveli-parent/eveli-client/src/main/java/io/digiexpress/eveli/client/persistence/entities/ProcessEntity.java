@@ -86,7 +86,6 @@ public class ProcessEntity {
   @Column(name="updated", nullable = false)
   private LocalDateTime updated;
 
-
   @Basic(fetch = FetchType.LAZY)
   @Column(name = "form_body")
   @JdbcTypeCode(SqlTypes.JSON)

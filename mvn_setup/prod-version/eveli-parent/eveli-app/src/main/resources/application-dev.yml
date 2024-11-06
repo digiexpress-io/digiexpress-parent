@@ -39,5 +39,5 @@ eveli.task.adminsearch: true
 
 # dialob related config
 eveli.dialob.enabled: true
-eveli.dialob.service-url: 
-eveli.dialob.api-key: 
+eveli.dialob.service-url: http://localhost:9000
+eveli.dialob.api-key:

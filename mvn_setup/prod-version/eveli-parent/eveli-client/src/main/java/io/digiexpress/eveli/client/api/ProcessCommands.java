@@ -83,7 +83,8 @@ public interface ProcessCommands {
   enum ProcessStatus {
     CREATED,
     ANSWERING,
-    ANSWERED,
+    ANSWERED, // 
+    
     IN_PROGRESS,
     WAITING,
     COMPLETED,

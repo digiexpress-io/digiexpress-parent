@@ -49,12 +49,12 @@ public class CreateOneTaskComment {
     final var replyTo = Optional.ofNullable(command.getReplyToId()).map(replyToId -> commentRepository.findById(replyToId).get());
     
     final var entity = new TaskCommentEntity()
-    .setCommentText(command.getCommentText())
-    .setUserName(userId)
-    .setExternal(command.getExternal())
-    .setSource(command.getSource())
-    .setTask(task)
-    .setReplyTo(replyTo.orElse(null));
+      .setCommentText(command.getCommentText())
+      .setUserName(userId)
+      .setExternal(command.getExternal())
+      .setSource(command.getSource())
+      .setTask(task)
+      .setReplyTo(replyTo.orElse(null));
 
     
     final var savedComment = commentRepository.save(entity);

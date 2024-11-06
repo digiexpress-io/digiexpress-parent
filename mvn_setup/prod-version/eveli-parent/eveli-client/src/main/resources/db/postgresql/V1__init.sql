@@ -130,18 +130,6 @@
         primary key (id)
     );
 
-    create table task_process_event (
-        id bigserial not null,
-        created_date timestamp(6) with time zone not null,
-        error_text varchar(255),
-        event_body jsonb not null,
-        event_type varchar(255) check (event_type in ('TASK_EVENT')),
-        status varchar(255) check (status in ('DONE','FAILED','NEW')),
-        target_id varchar(255) not null,
-        updated_date timestamp(6) with time zone,
-        primary key (id)
-    );
-
     create table task_roles (
         task_id bigint not null,
         assigned_roles varchar(255)
