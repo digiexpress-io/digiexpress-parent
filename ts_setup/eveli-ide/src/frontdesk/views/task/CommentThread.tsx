@@ -9,7 +9,7 @@ import { AddComment } from './AddComment';
 
 import * as Burger from '@/burger';
 
-type OwnProps = {
+type CommentThreadProps = {
   task: Task
   isExternalThread?: boolean,
   comments: CommentData[],
@@ -17,7 +17,7 @@ type OwnProps = {
   isThreaded?: boolean
 }
 
-export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
+export const CommentThread: React.FC<CommentThreadProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -53,12 +53,13 @@ export const CommentThreadComponent: React.FC<OwnProps> = ({ task, isExternalThr
       'id',
       'replyToId'
     );
-    return (<Thread comments={comments} task={task}
-      loadData={loadData}
-      isExternalThread={isExternalThread}
-      isThreaded={isThreaded}
-      setReply={setReply}
-    />);
+    return (
+      <Thread comments={comments} task={task}
+        loadData={loadData}
+        isExternalThread={isExternalThread}
+        isThreaded={isThreaded}
+        setReply={setReply}
+      />);
   }
 
   const thread = getThread(comments, task);

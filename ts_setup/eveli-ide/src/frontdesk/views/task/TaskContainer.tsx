@@ -23,72 +23,73 @@ import { TaskView } from './TaskView';
 import { TasksComponentResolver } from './LinkResolver';
 
 
-type OwnProps = {
+type Props = {
   taskId?: number
 }
 
-type Props = OwnProps;
-
-export const TaskContainer:React.FC<Props> = (props) => {
+export const TaskContainer: React.FC<Props> = (props) => {
   const params = useParams();
-  const {response:groupResponse} = useFetch<OrgGroup[]>(`/groupsList`);
+  const { response: groupResponse } = useFetch<OrgGroup[]>(`/groupsList`);
   const intl = useIntl();
   const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
 
-  let id:any = props.taskId;
+  let id: any = props.taskId;
   if (!id) {
     id = params.id;
   }
 
-  const groups:UserGroup[] = useMemo(() => {
+  const groups: UserGroup[] = useMemo(() => {
     if (groupResponse) {
-      let result = groupResponse.map(response=>{
-        return {id:response.name, 
-          groupName:response.description}});
-      result.push({id:ROLE_AUTHORIZED, groupName: intl.formatMessage({id:'task.role.assignedAllUsers'})});
+      let result = groupResponse.map(response => {
+        return {
+          id: response.name,
+          groupName: response.description
+        }
+      });
+      result.push({ id: ROLE_AUTHORIZED, groupName: intl.formatMessage({ id: 'task.role.assignedAllUsers' }) });
       return result;
     }
     return [];
-  },[groupResponse, intl]);
+  }, [groupResponse, intl]);
 
-  const getUsers = useCallback(async (groupName:string[]):Promise<GroupMember[]> => {
-    if(!groupName || groupName.length === 0) {
+  const getUsers = useCallback(async (groupName: string[]): Promise<GroupMember[]> => {
+    if (!groupName || groupName.length === 0) {
       return [];
     }
-    const filteredGroups = groupName.filter(name=>name!==ROLE_AUTHORIZED).join(',');
+    const filteredGroups = groupName.filter(name => name !== ROLE_AUTHORIZED).join(',');
     if (!filteredGroups) {
       return [];
     }
     return await session.cFetch(`/groupMembership?groupName=${filteredGroups}`)
-    .then(response => response.json());
+      .then(response => response.json());
   }, [session]);
 
-  const openTaskLinkCallback = (link:TaskLink) => {
+  const openTaskLinkCallback = (link: TaskLink) => {
     setLink(link);
-    if (link.linkKey ===QUESTIONNAIRE_REVIEW) {
+    if (link.linkKey === QUESTIONNAIRE_REVIEW) {
       setReviewDialogOpen(true);
     }
   }
-  const pdfTaskLinkCallback = (link:TaskLink, taskId: number) => {
+  const pdfTaskLinkCallback = (link: TaskLink, taskId: number) => {
     let url = `${serviceUrl}rest/api/worker/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
     window.open(url);
   }
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [link, setLink] = useState<TaskLink|null>(null);
+  const [link, setLink] = useState<TaskLink | null>(null);
   const componentResolver = new TasksComponentResolver(openTaskLinkCallback, pdfTaskLinkCallback);
 
 
   return (
     <AttachmentContextProvider>
-    <Container maxWidth='lg'>
-      <TaskView taskId={id} groups={groups} getUsers={getUsers} userSelectionFree={true}
-        componentResolver={componentResolver} externalThreads={true}/>
+      <Container maxWidth='lg'>
+        <TaskView taskId={id} groups={groups} getUsers={getUsers} userSelectionFree={true}
+          componentResolver={componentResolver} externalThreads={true} />
         {/*!!link && reviewDialogOpen &&
         <ReviewDialog closeDialog={()=>setReviewDialogOpen(false)} link={link}/>
       */}
-    </Container>
+      </Container>
     </AttachmentContextProvider>
   )
 }

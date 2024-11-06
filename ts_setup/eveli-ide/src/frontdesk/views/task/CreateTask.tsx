@@ -25,7 +25,7 @@ import { withRouter, WithRouterProps } from '../../hooks/withRouter';
 
 import { TaskRoleDialog } from './TaskRoleDialog';
 import { AttachmentTable } from './AttachmentTable';
-import { CommentThreadComponent } from './CommentThread';
+import { CommentThread } from './CommentThread';
 
 import { Attachment, User } from '../../types';
 import { UserGroup } from '../../types/UserGroup';
@@ -57,7 +57,7 @@ const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = 
   }, [taskId]);
 
   return (
-    <Accordion disableGutters={true}>
+    <Accordion>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1bh-content"
@@ -189,7 +189,7 @@ type State = {
 
 const minLength = 3;
 
-class TaskFormInternal extends React.Component<AllProps, State> {
+class CreateTaskInternal extends React.Component<AllProps, State> {
   formRef = React.createRef<any>();
 
   validationSchema = Yup.object().shape({
@@ -452,7 +452,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                 <Grid2 container spacing={2}>
                   <Grid2 size={{ xs: 12 }}>
                     {editTask.id && externalThreads ?
-                      <Accordion disableGutters={true}>
+                      <Accordion>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1bh-content"
@@ -467,7 +467,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                           </Badge>
                         </AccordionSummary>
                         <AccordionDetails sx={classes.accordionDetails}>
-                          <CommentThreadComponent
+                          <CommentThread
                             task={editTask}
                             isExternalThread={true}
                             comments={comments}
@@ -485,7 +485,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                   </Grid2>
                   <Grid2 size={{ xs: 12 }}>
                     {editTask.id ?
-                      <Accordion disableGutters={true}>
+                      <Accordion>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1bh-content"
@@ -501,7 +501,7 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                         </AccordionSummary>
                         <AccordionDetails sx={classes.accordionDetails}>
 
-                          <CommentThreadComponent
+                          <CommentThread
                             task={editTask}
                             isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
                             comments={comments}
@@ -543,8 +543,8 @@ class TaskFormInternal extends React.Component<AllProps, State> {
                         id="assignedUser"
                         freeSolo
                         options={this.state.userList}
-                      getOptionLabel={option => (typeof option === "string") ? option : option.userName}
-                      value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
+                        getOptionLabel={option => (typeof option === "string") ? option : option.userName}
+                        value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
                         onInputChange={(event, newInputValue) => {
                           if (newInputValue !== values.assignedUser) {
                             setFieldValue("assignedUserEmail", this.state.userList.find(el => el.userName === newInputValue)?.userEmail || '');
@@ -636,4 +636,4 @@ class TaskFormInternal extends React.Component<AllProps, State> {
   }
 }
 
-export const TaskForm = injectIntl(withRouter(TaskFormInternal))
+export const CreateTask = injectIntl(withRouter(CreateTaskInternal))
