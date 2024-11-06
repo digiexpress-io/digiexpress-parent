@@ -303,7 +303,7 @@ export const TasksTable: React.FC<Props> =
         }}
         actions={[
           {
-            icon: () => <RefreshIcon />,
+            icon: RefreshIcon,
             isFreeAction: true,
             tooltip: intl.formatMessage({ id: 'taskButton.refresh' }),
             onClick: () => tableRef.current.onQueryChange()

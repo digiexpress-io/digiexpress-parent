@@ -17,6 +17,7 @@ import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { useConfig } from '../../context/ConfigContext';
 import { useFetch } from '../../hooks/useFetch';
 import { TableHeader } from '../../components/TableHeader';
+import { Box, IconButton, Tooltip } from '@mui/material';
 
 interface TableState {
   columns: Array<Column<WorkflowRelease>>;
@@ -58,6 +59,28 @@ export const WorkflowReleaseTable: React.FC = () => {
         title: intl.formatMessage({ id: 'workflowReleaseTableHeader.updatedBy' }),
         field: 'body.user',
         headerStyle: { fontWeight: 'bold' }
+      },
+      {
+        render: data => (
+          <Box justifySelf='end'>
+            <Tooltip title={intl.formatMessage({ id: 'workflowReleaseTable.viewButton' })}>
+              <IconButton onClick={() => {
+                setWorkflowRelease(data as WorkflowRelease);
+                setTagDialogOpen(true)
+              }}>
+                <PreviewIcon color='primary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={intl.formatMessage({ id: 'workflowReleaseTable.exportButton' })}>
+              <IconButton onClick={() => {
+                !Array.isArray(data) && downloadFile(JSON.stringify(data, undefined, 2),
+                  data.body.name + '.json', 'text/json')
+              }}>
+                <SaveIcon color='primary' />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )
       }
     ]
   };
@@ -86,16 +109,6 @@ export const WorkflowReleaseTable: React.FC = () => {
             isFreeAction: true,
             hidden: !modifiableAssets,
             onClick: () => { setWorkflowRelease(null); setNewDialogOpen(true); }
-          },
-          {
-            icon: PreviewIcon,
-            tooltip: intl.formatMessage({ id: 'workflowReleaseTable.viewButton' }),
-            onClick: (event, data) => { setWorkflowRelease(data as WorkflowRelease); setTagDialogOpen(true) }
-          },
-          {
-            icon: SaveIcon,
-            tooltip: intl.formatMessage({ id: 'workflowReleaseTable.exportButton' }),
-            onClick: (event, data) => { !Array.isArray(data) && downloadFile(JSON.stringify(data, undefined, 2), data.body.name + '.json', 'text/json') }
           }
         ]}
 

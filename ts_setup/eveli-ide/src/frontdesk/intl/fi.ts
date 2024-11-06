@@ -172,7 +172,7 @@ const fi = {
   'workflowReleaseTable.viewButton': 'Katso',
   'workflowReleaseTable.exportButton': 'Lataa',
 
-  'workflowRelease.dialogTitle': 'Näytä työnkulun julkaisu',
+  'workflowRelease.dialogTitle': 'Työnkulun julkaisu',
   'workflowRelease.name': 'Nimi',
   'workflowRelease.description': 'Kuvaus',
   'workflowRelease.releaseCreationFailed': 'Palveluversion luominen epäonnistui, syy: {cause}',

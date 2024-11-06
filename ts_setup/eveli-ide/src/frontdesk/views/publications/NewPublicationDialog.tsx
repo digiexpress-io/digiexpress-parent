@@ -102,7 +102,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><TableHeader id='publications.dialogTitle' /></DialogTitle>
+        <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'publications.dialogTitle' })}</DialogTitle>
 
         <Formik
           initialValues={{

@@ -32,9 +32,7 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({ assignedRoles, g
   }
   return (
     <Dialog open={true} onClose={handleClose} >
-      <DialogTitle id="role-dialog-title">
-        <FormattedMessage id={'task.editRoles'} />
-      </DialogTitle>
+      <DialogTitle fontWeight='bold' id="role-dialog-title"><FormattedMessage id={'task.editRoles'} /></DialogTitle>
       <DialogContent>
         <Container maxWidth='md'>
           <Autocomplete

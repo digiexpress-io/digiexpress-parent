@@ -1,6 +1,5 @@
 import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle } from '@mui/material';
 import React from 'react';
-import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
 
@@ -19,7 +18,6 @@ export interface ConfirmationDialogProps {
 };
 
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
-  const intl = useIntl();
   const { open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions } = props;
 
   const handleCancel: React.MouseEventHandler<HTMLElement> = (event) => {

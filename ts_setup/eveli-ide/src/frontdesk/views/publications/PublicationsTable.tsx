@@ -21,6 +21,7 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
+import { Box, IconButton, Tooltip } from '@mui/material';
 
 
 interface TableState {
@@ -99,6 +100,17 @@ export const PublicationsTable: React.FC = () => {
         title: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
         field: 'body.user',
         headerStyle: { fontWeight: 'bold' }
+      },
+      {
+        render: data => (
+          <Box justifySelf='end'>
+            <Tooltip title={intl.formatMessage({ id: 'publicationsTable.exportButton' })}>
+              <IconButton onClick={() => { !Array.isArray(data) && getRelease(data) }}>
+                <SaveIcon color='primary' />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )
       }
     ]
   };
@@ -126,11 +138,6 @@ export const PublicationsTable: React.FC = () => {
             isFreeAction: true,
             hidden: !config.modifiableAssets,
             onClick: () => { setNewDialogOpen(true); }
-          },
-          {
-            icon: SaveIcon,
-            tooltip: intl.formatMessage({ id: 'publicationsTable.exportButton' }),
-            onClick: (event, data) => { !Array.isArray(data) && getRelease(data) }
           }
         ]}
 

@@ -15,6 +15,7 @@ import { localizeTable } from '../../util/localizeTable';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
 import { CreateOrEditWorkflowDialog } from './CreateOrEditWorkflowDialog';
+import { Box, IconButton, Tooltip } from '@mui/material';
 
 
 interface TableState {
@@ -83,9 +84,23 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
         type: 'date',
         render: data => <DateTimeFormatter value={data.body.updated} />,
         headerStyle: { fontWeight: 'bold' }
+      },
+      {
+        render: data =>
+          <Box justifySelf='end'>
+            <Tooltip title={intl.formatMessage({ id: 'workflowTable.editButton' })}>
+              <IconButton onClick={() => {
+                setWorkflow(data as Workflow);
+                setOpen(true);
+              }}>
+                <EditIcon color='primary' />
+              </IconButton>
+            </Tooltip>
+          </Box>
       }
     ]
   };
+
 
   return (
     <>
@@ -108,12 +123,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
             icon: AddIcon,
             tooltip: intl.formatMessage({ id: 'workflowTable.addButton' }),
             isFreeAction: true,
-            onClick: () => { setWorkflow(null); setOpen(true); }
-          },
-          {
-            icon: EditIcon,
-            tooltip: intl.formatMessage({ id: 'workflowTable.editButton' }),
-            onClick: (event, data) => { setWorkflow(data as Workflow); setOpen(true) }
+            onClick: () => { setWorkflow(null); setOpen(true); },
           }
         ]}
 

@@ -173,7 +173,7 @@ const en = {
   'workflowReleaseTable.viewButton': 'View',
   'workflowReleaseTable.exportButton': 'Export',
   
-  'workflowRelease.dialogTitle': 'View workflow release',
+  'workflowRelease.dialogTitle': 'Workflow release',
   'workflowRelease.name': 'Release name',
   'workflowRelease.description': 'Description',
   'workflowRelease.releaseCreationFailed': 'Workflow tag creation failed, cause: {cause}',

@@ -11,8 +11,6 @@ import { useFetch } from '../../hooks/useFetch';
 import { Workflow } from '../../types/Workflow';
 import { DialobFormTag } from '../../types';
 
-import { TableHeader } from '../../components/TableHeader';
-
 import * as Burger from '@/burger';
 
 const messages = defineMessages(
@@ -88,7 +86,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><TableHeader id='workflow.dialogTitle' /></DialogTitle>
+        <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'workflow.dialogTitle' })}</DialogTitle>
         <Formik
           initialValues={workflow || {
             body: {

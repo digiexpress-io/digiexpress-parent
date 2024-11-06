@@ -1,8 +1,6 @@
 import React from 'react';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { useIntl } from "react-intl";
-
-import { TableHeader } from '../../components/TableHeader';
 import { WorkflowRelease } from "../../types/WorkflowRelease";
 import { WorkflowTable } from "./WorkflowTable";
 
@@ -21,7 +19,7 @@ export const ViewWorkflowTagDialog: React.FC<ViewWorkflowTagDialogProps> = ({ wo
   return (
     <>
       <Dialog open={open} aria-labelledby='workflow-tag-dialog-title' maxWidth='md' fullWidth>
-        <DialogTitle id='new-form-dialog-title'><TableHeader id='workflowRelease.dialogTitle' /></DialogTitle>
+        <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'workflowRelease.dialogTitle' })}</DialogTitle>
         <DialogContent>
           <Box sx={{ padding: 1, mb: 1 }}>
             <Stack spacing={1}>

@@ -8,7 +8,6 @@ import { useSnackbar } from 'notistack';
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
-import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';
 
@@ -67,7 +66,7 @@ export const CreateWorkflowTagDialog: React.FC<CreateWorkflowTagDialogProps> = (
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
-      <DialogTitle id='new-form-dialog-title'><TableHeader id='workflowRelease.dialogTitle' /></DialogTitle>
+      <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'workflowRelease.dialogTitle' })}</DialogTitle>
 
       <Formik
         initialValues={{
