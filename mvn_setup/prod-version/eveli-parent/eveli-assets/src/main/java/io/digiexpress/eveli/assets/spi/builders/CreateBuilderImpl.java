@@ -47,6 +47,7 @@ import io.digiexpress.eveli.assets.api.ImmutableWorkflow;
 import io.digiexpress.eveli.assets.api.ImmutableWorkflowTag;
 import io.digiexpress.eveli.assets.spi.exceptions.ConstraintException;
 import io.digiexpress.eveli.assets.spi.visitors.BatchSiteCommandVisitor;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.ImmutableCreateEntity;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
@@ -64,11 +65,12 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   private final EveliAssetClient client;
   private final StencilClient stencilClient;
   private final HdesClient hdesClient;
+  private final DialobClient dialobClient;
 
   @Override
   public Uni<List<Entity<?>>> batch(AssetBatch batch) {
     final Uni<AssetState> query = client.queryBuilder().head();
-    return query.onItem().transformToUni(state -> client.crudBuilder().batch(new BatchSiteCommandVisitor(state, client).visit(batch)));
+    return query.onItem().transformToUni(state -> client.crudBuilder().batch(new BatchSiteCommandVisitor(state, client, dialobClient).visit(batch)));
   }
   @Override
   public Uni<Entity<Publication>> publication(CreatePublication init) {
@@ -109,7 +111,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   @Override
   public Uni<Entity<Workflow>> workflow(CreateWorkflow init) {
     final Uni<AssetState> query = client.queryBuilder().head();
-    return query.onItem().transformToUni(state -> client.crudBuilder().create(workflow(init, state, client)));
+    return query.onItem().transformToUni(state -> client.crudBuilder().create(workflow(init, state, client, dialobClient)));
   }
   @Override
   public Uni<Entity<WorkflowTag>> workflowTag(CreateWorkflowTag init) {
@@ -148,13 +150,18 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
     return assertUniqueId(entity, state);
   }
   
-  public static Entity<Workflow> workflow(CreateWorkflow init, AssetState state, EveliAssetClient client) {
+  public static Entity<Workflow> workflow(CreateWorkflow init, AssetState state, EveliAssetClient client, DialobClient dialobClient) {
+
+    final var form = dialobClient.getFormByNameAndTag(init.getFormName(), init.getFormTag());
+    
+    
     final var gid = client.getConfig().getGidProvider().getNextId();
     final var template = ImmutableWorkflow.builder()
         .name(init.getName())
         .formName(init.getFormName())
         .formTag(init.getFormTag())
         .flowName(init.getFlowName())
+        .formId(form.getId())
         .updated(ZonedDateTime.now(ZoneId.of("UTC")))
         .build();
     final Entity<Workflow> entity = ImmutableEntity.<Workflow>builder()

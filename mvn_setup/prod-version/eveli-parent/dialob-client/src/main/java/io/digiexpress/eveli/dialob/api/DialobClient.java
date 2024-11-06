@@ -22,8 +22,10 @@ package io.digiexpress.eveli.dialob.api;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormTag;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
@@ -35,7 +37,14 @@ public interface DialobClient {
 
   
   Form createForm(Form form);
+  FormTag createTag(String formId, String tagName);
+  
   Form getFormById(String formId);
+  Optional<Form> findOneFormById(String formId);
+  
+  Form getFormByNameAndTag(String formName, String formTag);
+  
+  
   Questionnaire getQuestionnaireById(String questionnaireId);
   Dialob getDialobById(String questionnaireId);
   

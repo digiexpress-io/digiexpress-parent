@@ -99,7 +99,7 @@ public class AssetsDialobController {
 
 
   private FormTag[] getTags(String id) throws JsonMappingException, JsonProcessingException {
-    final String body = dialobCommands.createProxy().formRequest(id + "/tags", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+    final String body = dialobCommands.createProxy().formRequest("/" + id + "/tags", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormTag.class).readValue(body);
   }
 
@@ -107,9 +107,6 @@ public class AssetsDialobController {
     final String body = dialobCommands.createProxy().formRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormListItem.class).readValue(body);
   }
-  
-  
-  
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   @Data

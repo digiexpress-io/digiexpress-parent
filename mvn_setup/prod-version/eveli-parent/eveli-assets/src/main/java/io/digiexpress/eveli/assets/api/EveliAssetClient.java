@@ -133,6 +133,7 @@ public interface EveliAssetClient {
   @JsonIgnoreProperties(ignoreUnknown = true)
   interface Workflow extends EntityBody {
     String getName();
+    String getFormId();
     String getFormName();
     String getFormTag();
     String getFlowName();

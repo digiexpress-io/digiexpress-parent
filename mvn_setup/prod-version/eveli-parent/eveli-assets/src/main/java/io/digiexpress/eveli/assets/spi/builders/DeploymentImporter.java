@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.assets.spi.builders;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * eveli-assets
@@ -27,6 +29,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.Deployment;
 import io.digiexpress.eveli.assets.api.ImmutableAssetBatchCommand;
 import io.digiexpress.eveli.assets.api.ImmutableEntity;
+import io.digiexpress.eveli.assets.api.ImmutableWorkflow;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -48,12 +51,29 @@ public class DeploymentImporter {
   
   public Uni<Void> importData(Deployment deployment) {
     
-    deployment.getDialobTag().forEach(form -> dialob.createForm(form));
+    final var newWorkflows = new ArrayList<Workflow>();
+    deployment.getDialobTag().forEach(form -> {
+      //final var exists = dialob.findOneFormById(form.getName()).isPresent();
+
+      final var workflow = deployment.getWorkflowTag().getEntries().stream().filter(e -> e.getFormName().equals(form.getName())).findFirst().get();
+      
+      final var newForm = dialob.createForm(form);        
+      final var newTag = dialob.createTag(newForm.getName(), workflow.getFormTag());
+
+      newWorkflows.add(ImmutableWorkflow.builder()
+          .from(workflow)
+          .formId(newTag.getFormId())
+          .build());  
+    });
+    
+    
     
     final var wrenchImport = new HdesComposerImpl(wrench).importTag(deployment.getWrenchTag());
     final var stencilImport = new StencilComposerImpl(stencil).migration().importData(deployment.getStencilTag());
+    
+    
     final var workflowImport = eveliAssets.repoBuilder().createIfNot().onItem().transformToUni(junk -> {
-      final var workflows = deployment.getWorkflowTag().getEntries().stream().map(body -> {
+      final var workflows = newWorkflows.stream().map(body -> {
         final var gid = eveliAssets.getConfig().getGidProvider().getNextId();
         final Entity<Workflow> entity = ImmutableEntity.<Workflow>builder()
             .id(gid)

@@ -1,5 +1,8 @@
 package io.digiexpress.eveli.dialob.spi;
 
+import java.io.IOException;
+import java.util.Optional;
+
 /*-
  * #%L
  * dialob-client
@@ -20,9 +23,6 @@ package io.digiexpress.eveli.dialob.spi;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,6 +35,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormTag;
+import io.dialob.api.form.FormTag.Type;
+import io.dialob.api.form.ImmutableFormTag;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobProxy;
@@ -56,35 +59,68 @@ public class DialobClientImpl implements DialobClient {
   public DialobSessionBuilderImpl createSession() {
     return new DialobSessionBuilderImpl(objectMapper, callbackUrl, dialobService);
   }
-
   @Override
   public DialobProxy createProxy() {
     return new DialobProxyImpl(dialobService);
   }
-
   @Override
   public Questionnaire getQuestionnaireById(String questionnaireId) {
     return dialobService.getSessions().getForObject(questionnaireId, Questionnaire.class);
   }
-  
   @Override
   public Dialob getDialobById(String questionnaireId) {
     final var q = getQuestionnaireById(questionnaireId);
     return new QuestionnaireWrapperImpl(q);
   }
-
   @Override
   public Form createForm(Form form) {
     try {
       final var headers = headers().toSingleValueMap();
       final var body = objectMapper.writeValueAsString(form);
-      final var resp = createProxy().formRequest("dialob/api/forms", null, HttpMethod.POST, body, headers);
-      
+      final var resp = createProxy().formRequest("", null, HttpMethod.POST, body, headers);
       return objectMapper.readValue(resp.getBody(), Form.class);
-    } catch (Exception e) {
+    } catch (IOException e) {
       throw new DialobException(e.getMessage(), e);
     }
   }
+  @Override
+  public FormTag createTag(String formId, String tagName) {
+    try {
+      final var headers = headers().toSingleValueMap();
+      final var body = objectMapper.writeValueAsString(ImmutableFormTag.builder()
+          .name(tagName)
+          .formName(formId)
+          .type(Type.NORMAL)
+          .build());
+      final var postTagResp = createProxy().formRequest("/" + formId + "/tags", null, HttpMethod.POST, body, headers);
+      DialobAssert.isTrue(postTagResp.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + postTagResp.getStatusCode() + " but expecting 2xx!");
+      
+      
+      final var getTagResp = createProxy().formRequest("/" + formId + "/tags/" + tagName, null, HttpMethod.GET, body, headers);
+      DialobAssert.isTrue(getTagResp.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + getTagResp.getStatusCode() + " but expecting 2xx!");
+      
+      return objectMapper.readValue(getTagResp.getBody(), FormTag.class);
+    } catch (IOException e) {
+      throw new DialobException(e.getMessage(), e);
+    }
+  }
+  @Override
+  public Form getFormById(String formId) {
+    return dialobService.getForms().getForObject("/" + formId, Form.class);
+  }
+  @Override
+  public Form getFormByNameAndTag(String formName, String formTag) {
+    return dialobService.getForms().getForObject("/" + formName + "/tags/" + formTag, Form.class);
+  }
+  @Override
+  public Optional<Form> findOneFormById(String formId) {
+    try {
+      return Optional.ofNullable(dialobService.getForms().getForObject("/" + formId, Form.class));
+    } catch(org.springframework.web.client.HttpClientErrorException.NotFound e) {
+      return Optional.empty();
+    }
+  }
+  
 
   @Override
   public void completeSession(String sessionId) {
@@ -137,14 +173,6 @@ public class DialobClientImpl implements DialobClient {
     } catch (Exception e) {
       throw new DialobException(e.getMessage(), e);
     }
-  }
-  
-
-  @Override
-  public Form getFormById(String formId) {
-    Map<String, String> uriMap = new HashMap<>();
-    uriMap.put("formId", formId);
-    return dialobService.getForms().getForObject("{formId}", Form.class, uriMap);
   }
   
   private HttpHeaders headers() {

@@ -23,19 +23,26 @@ package io.digiexpress.eveli.assets.tests.util;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.dialob.api.form.Form;
+import io.dialob.api.form.FormTag;
+import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
+import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobProxy;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientCollections;
@@ -136,8 +143,14 @@ public class PgTestTemplate {
             .authorProvider(() -> "junit-test"))
         .build();
     
+
+    final var dialobClient = Mockito.mock(DialobClient.class);
+    final var form = Mockito.mock(Form.class);
     
-    return new EveliAssetsComposerImpl(store, null, null);
+    Mockito.when(form.getId()).thenReturn("mock-form");
+    Mockito.when(dialobClient.getFormByNameAndTag(Mockito.anyString(), Mockito.anyString())).thenReturn(form);    
+    
+    return new EveliAssetsComposerImpl(store, null, null, dialobClient);
   }
   
 }

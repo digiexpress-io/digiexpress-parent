@@ -32,6 +32,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.UpdateBuilderImpl;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
@@ -42,15 +43,16 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
   private final EveliAssetClient client;
   private final StencilClient stencilClient;
   private final HdesClient hdesClient;
+  private final DialobClient dialobClient;
   
   @Override
   public CreateBuilder create() {
-    return new CreateBuilderImpl(client, stencilClient, hdesClient);
+    return new CreateBuilderImpl(client, stencilClient, hdesClient, dialobClient);
   }
 
   @Override
   public UpdateBuilder update() {
-    return new UpdateBuilderImpl(client);
+    return new UpdateBuilderImpl(client, dialobClient);
   }
 
   @Override

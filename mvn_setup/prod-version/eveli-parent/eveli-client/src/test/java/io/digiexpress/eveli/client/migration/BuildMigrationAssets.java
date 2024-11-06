@@ -133,6 +133,7 @@ public class BuildMigrationAssets {
                   .flowName(oldWk.getString("flowName"))
                   .formName(oldWk.getString("formName"))
                   .formTag(oldWk.getString("formTag"))
+                  .formId(Optional.ofNullable(oldWk.getString("flowid")).orElse(""))
                   .updated(ZonedDateTime.now())
                   .build();
             }).toList())

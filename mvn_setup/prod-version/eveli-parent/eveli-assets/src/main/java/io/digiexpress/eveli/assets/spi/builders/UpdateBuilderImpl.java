@@ -32,33 +32,41 @@ import io.digiexpress.eveli.assets.api.EveliAssetComposer.WorkflowMutator;
 import io.digiexpress.eveli.assets.api.ImmutableEntity;
 import io.digiexpress.eveli.assets.api.ImmutableWorkflow;
 import io.digiexpress.eveli.assets.spi.exceptions.ConstraintException;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class UpdateBuilderImpl implements EveliAssetComposer.UpdateBuilder {
-  private final EveliAssetClient client;
+  private final EveliAssetClient eveliAssetClient;
+  private final DialobClient dialobClient;
   
   @Override
   public Uni<Entity<Workflow>> workflow(WorkflowMutator changes) {
-    final Uni<AssetState> query = client.queryBuilder().head();
+    final Uni<AssetState> query = eveliAssetClient.queryBuilder().head();
     
     // Change the workflow
     return query.onItem().transformToUni(state -> {
       
-      
       final var currentState = state.getWorkflows().get(changes.getId());
+      final var formName = Optional.ofNullable(changes.getFormName()).orElse(currentState.getBody().getFormName());
+      final var formTag = Optional.ofNullable(changes.getFormTag()).orElse(currentState.getBody().getFormTag());
+      final var formId = dialobClient.getFormByNameAndTag(formName, formTag).getId();
+      
+      
       final var newState = ImmutableEntity.<Workflow>builder()
           .from(currentState)
           .body(ImmutableWorkflow.builder().from(currentState.getBody())
               
               .name(Optional.ofNullable(changes.getName()).orElse(currentState.getBody().getName()))
               .flowName(Optional.ofNullable(changes.getFlowName()).orElse(currentState.getBody().getFlowName()))
-              .formName(Optional.ofNullable(changes.getFormName()).orElse(currentState.getBody().getFormName()))
-              .formTag(Optional.ofNullable(changes.getFormTag()).orElse(currentState.getBody().getFormTag()))
               
+              .formName(formName)
+              .formTag(formTag)
+              .formId(formId)
               .updated(ZonedDateTime.now())
+              
               .build())
           .build();
       
@@ -71,7 +79,7 @@ public class UpdateBuilderImpl implements EveliAssetComposer.UpdateBuilder {
         throw new ConstraintException(newState, "Workflow: '" + newState.getBody().getName() + "' already exists!");
       }
       
-      return client.crudBuilder().save(newState);
+      return eveliAssetClient.crudBuilder().save(newState);
       
     });
   }

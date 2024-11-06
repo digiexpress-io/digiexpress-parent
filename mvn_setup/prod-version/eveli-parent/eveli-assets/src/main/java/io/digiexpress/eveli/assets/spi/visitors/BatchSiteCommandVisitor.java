@@ -35,6 +35,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreatePublication;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflow;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.assets.api.ImmutableAssetBatchCommand;
 import io.digiexpress.eveli.assets.api.ImmutableAssetState;
 
@@ -42,11 +43,13 @@ import io.digiexpress.eveli.assets.api.ImmutableAssetState;
 public class BatchSiteCommandVisitor {
   private final EveliAssetClient client;
   private final ImmutableAssetState.Builder next;
+  private final DialobClient dialobClient;
   
-  public BatchSiteCommandVisitor(AssetState start, EveliAssetClient client) {
+  public BatchSiteCommandVisitor(AssetState start, EveliAssetClient client, DialobClient dialobClient) {
     super();
     this.client = client;
     this.next = ImmutableAssetState.builder().from(start);
+    this.dialobClient = dialobClient;
   }
 
   public AssetBatchCommand visit(AssetBatch command) {
@@ -67,7 +70,7 @@ public class BatchSiteCommandVisitor {
     return created;
   }
   private Entity<Workflow> visitWorkflows(CreateWorkflow init) {
-    final var created = CreateBuilderImpl.workflow(init, next.build(), client);
+    final var created = CreateBuilderImpl.workflow(init, next.build(), client, dialobClient);
     next.putWorkflows(created.getId(), created);
     return created;
   }

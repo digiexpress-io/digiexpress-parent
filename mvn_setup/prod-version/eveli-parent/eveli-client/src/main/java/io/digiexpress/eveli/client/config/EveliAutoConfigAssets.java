@@ -83,14 +83,14 @@ public class EveliAutoConfigAssets {
   private String timestamp = "";
 
   @Bean
-  public AssetsAnyTagController assetsAnyTagController(EveliContext context, AuthClient security) {
-    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench());
+  public AssetsAnyTagController assetsAnyTagController(EveliContext context, AuthClient security, DialobClient dialobClient) {
+    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
     return new AssetsAnyTagController(composer);
   }
   
   @Bean
-  public AssetsDeploymentController assetsDeploymentController(EveliContext context, AuthClient auth) {
-    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench());
+  public AssetsDeploymentController assetsDeploymentController(EveliContext context, AuthClient auth, DialobClient dialobClient) {
+    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
     return new AssetsDeploymentController(composer);
   } 
   
@@ -99,12 +99,12 @@ public class EveliAutoConfigAssets {
     return new AssetsDialobController(client, objectMapper);
   }
   @Bean 
-  public AssetsPublicationController assetReleaseController(EveliContext context, AuthClient security) {
-    return new AssetsPublicationController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()), security);
+  public AssetsPublicationController assetReleaseController(EveliContext context, AuthClient security, DialobClient dialobClient) {
+    return new AssetsPublicationController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient), security);
   }
   @Bean 
-  public AssetsWorkflowController workflowController(EveliContext context, AuthClient auth) {
-    return new AssetsWorkflowController(auth, new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench()));
+  public AssetsWorkflowController workflowController(EveliContext context, AuthClient auth, DialobClient dialobClient) {
+    return new AssetsWorkflowController(auth, new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient));
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {
