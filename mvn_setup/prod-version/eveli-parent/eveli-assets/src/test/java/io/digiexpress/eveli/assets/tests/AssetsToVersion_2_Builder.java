@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.migration;
+package io.digiexpress.eveli.assets.tests;
 
 /*-
  * #%L
@@ -64,7 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class BuildMigrationAssets {
+public class AssetsToVersion_2_Builder {
   
   private static final String JSON_DIR = "classpath*:assets-to-migrate/**/*.json"; 
   private static final ResourcePatternResolver RESOLVER = new PathMatchingResourcePatternResolver();
@@ -203,7 +203,7 @@ public class BuildMigrationAssets {
       if(fieldNames.contains("pages")) {
         anyAsset.remove("releases");
         final var tag = OBJECT_MAPPER.readValue(anyAsset.encode(), ImmutableSiteState.class);
-        //this.stencil = tag;
+        this.stencil = tag;
         log.info("found stencul tag: {}", tag.getName());
         
         tag.getWorkflows().values().forEach(wk -> {

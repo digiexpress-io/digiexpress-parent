@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.test;
+package io.digiexpress.eveli.assets.tests;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Disabled;
 
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.eveli.client.migration.BuildMigrationAssets;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -45,10 +44,10 @@ public class AssetsToVersion_2 {
     new File("src/test/resources/migrated").mkdir();
 
     
-    final var deployment = new BuildMigrationAssets().build();
+    final var deployment = new AssetsToVersion_2_Builder().build();
     
     final var writer = new BufferedWriter(new FileWriter("src/test/resources/migrated/deployment-" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + ".json", true));
-    BuildMigrationAssets.OBJECT_MAPPER.writeValue(writer, deployment);
+    AssetsToVersion_2_Builder.OBJECT_MAPPER.writeValue(writer, deployment);
     writer.close();
     
   }
