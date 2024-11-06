@@ -7,27 +7,27 @@ import { Task } from '../../types/task/Task';
 
 import * as Burger from '@/burger';
 
-type Props = {
+type CommentAddProps = {
   parentComment?: Comment
   task: Task
-  onAdded: ()=>void
-  onCancel: ()=>void
+  onAdded: () => void
+  onCancel: () => void
   isExternalThread?: boolean
 }
 
-export const AddComment: React.FC<Props> = (props) => {
-  let input:HTMLTextAreaElement|null = null;
-  const [inputValue, setInputValue] = useState<string|null>(null);
+export const CommentAdd: React.FC<CommentAddProps> = (props) => {
+  let input: HTMLTextAreaElement | null = null;
+  const [inputValue, setInputValue] = useState<string | null>(null);
   const backendContext = useContext(TaskBackendContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value);
 
   const send = () => {
-    const { parentComment, task, onAdded,isExternalThread} = props;
-    if(!input || !input.value) return;
+    const { parentComment, task, onAdded, isExternalThread } = props;
+    if (!input || !input.value) return;
     const replyToId = parentComment?.id;
     backendContext.saveComment(input.value, replyToId, task, isExternalThread)
-    .then(()=>onAdded());
+      .then(() => onAdded());
   };
 
   return (

@@ -5,7 +5,7 @@ import { Box, Grid2 } from '@mui/material';
 import { Task } from '../../types/task/Task';
 import mapNestedEntities from '../../util/mapNestedEntities';
 import { Thread } from './Thread';
-import { AddComment } from './AddComment';
+import { CommentAdd } from './CommentAdd';
 
 import * as Burger from '@/burger';
 
@@ -81,7 +81,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({ task, isExternalTh
         {thread}
       </Box>
       <Grid2 container spacing={1}>
-        {writingComment && <AddComment task={task}
+        {writingComment && <CommentAdd task={task}
           onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>

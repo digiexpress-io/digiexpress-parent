@@ -8,7 +8,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import { localizeTable } from '../../util/localizeTable';
 import { useIntl } from 'react-intl';
 
-import { NewWorkflowTagDialog } from './NewWorkflowTagDialog';
+import { CreateWorkflowTagDialog } from './CreateWorkflowTagDialog';
 import { ViewWorkflowTagDialog } from './ViewWorkflowTagDialog';
 import { WorkflowRelease } from '../../types/WorkflowRelease';
 
@@ -102,7 +102,7 @@ export const WorkflowReleaseTable: React.FC = () => {
         isLoading={false}
         data={workflows || []}
       />
-      <NewWorkflowTagDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshWorkflowReleases()} />
+      <CreateWorkflowTagDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshWorkflowReleases()} />
       {workflowRelease && <ViewWorkflowTagDialog open={tagDialogOpen} workflowRelease={workflowRelease} setOpen={setTagDialogOpen} />}
     </>
   );

@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { TasksTable } from './TasksTable';
 import { Column, Query } from '@material-table/core';
+import { useNavigate } from 'react-router-dom';
+
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { useConfig } from '../../context/ConfigContext';
-import { createQueryString } from '../../util/tableQuery';
 import { useUserInfo } from '../../context/UserContext';
 import { TableStateContext } from '../../context/TaskSessionContext';
+import { UserBackendContext } from '../../context/TaskUserContext';
+
+import { createQueryString } from '../../util/tableQuery';
+
 import { Task } from '../../types/task/Task';
 import { UserGroup } from '../../types/UserGroup';
-import { UserBackendContext } from '../../context/TaskUserContext';
+
+import { TasksTable } from './TasksTable';
 
 
 export const TasksView: React.FC = () => {

@@ -22,13 +22,13 @@ const messages = defineMessages(
   }
 );
 
-export interface NewFormProps {
+export interface CreateWorkflowTagDialogProps {
   onSubmit: () => void;
   open: boolean;
   setOpen: (open: boolean) => void
 }
 
-export const NewWorkflowTagDialog: React.FC<NewFormProps> = ({ onSubmit, open, setOpen }) => {
+export const CreateWorkflowTagDialog: React.FC<CreateWorkflowTagDialogProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
