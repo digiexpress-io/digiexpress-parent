@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { LinearProgress, Container } from '@mui/material';
 
-import { CreateTask } from './CreateTask';
+import { TaskCreate } from './TaskCreate';
 import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';
@@ -97,8 +97,8 @@ export const TaskView: React.FC<OwnProps> = (props) => {
     <Container maxWidth='lg'>
       <TableHeader id='taskDialog.task'> {taskData?.taskRef || ''}</TableHeader>
 
-      <CreateTask
-        id='createTask'
+      <TaskCreate
+        id='taskCreate'
         editTask={taskData ?? {}}
         cancel={cancel}
         handleSubmit={accept}
