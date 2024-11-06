@@ -161,7 +161,7 @@ public interface StencilClient {
   @JsonSerialize(as = ImmutableRelease.class)
   @JsonDeserialize(as = ImmutableRelease.class)
   interface Release extends EntityBody {
-    String getParentCommit();
+    @Nullable String getParentCommit();
     String getName();
     String getNote();
     LocalDateTime getCreated();

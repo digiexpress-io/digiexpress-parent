@@ -58,14 +58,14 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
     let init: PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
-    if (assetReleaseCommand.body.contentTag === NEW_TAG_VALUE) {
-      init.body.contentTag = null;
+    if (assetReleaseCommand.contentTag === NEW_TAG_VALUE) {
+      init.contentTag = null;
     }
-    if (assetReleaseCommand.body.wrenchTag === NEW_TAG_VALUE) {
-      init.body.wrenchTag = null;
+    if (assetReleaseCommand.wrenchTag === NEW_TAG_VALUE) {
+      init.wrenchTag = null;
     }
-    if (assetReleaseCommand.body.workflowTag === NEW_TAG_VALUE) {
-      init.body.workflowTag = null;
+    if (assetReleaseCommand.workflowTag === NEW_TAG_VALUE) {
+      init.workflowTag = null;
     }
 
     session.cFetch(`${url}`, {
@@ -106,19 +106,15 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
         <Formik
           initialValues={{
-            id: 0,
-            body: {
-              name: '',
-              description: '',
-              workflowTag: NEW_TAG_VALUE,
-              wrenchTag: NEW_TAG_VALUE,
-              contentTag: NEW_TAG_VALUE
-            }
-
+            name: '',
+            description: '',
+            workflowTag: NEW_TAG_VALUE,
+            wrenchTag: NEW_TAG_VALUE,
+            contentTag: NEW_TAG_VALUE
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values as Publication);
+            handleSubmit(values as PublicationInit);
             setSubmitting(false);
           }}
         >
@@ -127,14 +123,14 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               <Form>
                 <DialogContent>
                   <Stack spacing={1}>
-                    <Field component={TextField} name='body.name' label={intl.formatMessage({ id: 'publications.name' })}
-                      fullWidth required validate={requiredValidator} error={!!errors.body?.name}
-                      helperText={errors.body?.name} InputProps={{ margin: 'normal' }} />
-                    <Field component={TextField} name='body.description' label={intl.formatMessage({ id: 'publications.description' })}
+                    <Field component={TextField} name='name' label={intl.formatMessage({ id: 'publications.name' })}
+                      fullWidth required validate={requiredValidator} error={!!errors?.name}
+                      helperText={errors?.name} InputProps={{ margin: 'normal' }} />
+                    <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })}
                       fullWidth InputProps={{ margin: 'normal' }} />
-                    <TagComponent name='body.contentTag' labelId='publications.contentTag' newTag={values.body.name} tags={contentTags} />
-                    <TagComponent name='body.workflowTag' labelId='publications.workflowTag' newTag={values.body.name} tags={workflowTags} />
-                    <TagComponent name='body.wrenchTag' labelId='publications.wrenchTag' newTag={values.body.name} tags={wrenchTags} />
+                    <TagComponent name='contentTag' labelId='publications.contentTag' newTag={values.name} tags={contentTags} />
+                    <TagComponent name='workflowTag' labelId='publications.workflowTag' newTag={values.name} tags={workflowTags} />
+                    <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={values.name} tags={wrenchTags} />
                   </Stack>
                 </DialogContent>
                 <DialogActions>

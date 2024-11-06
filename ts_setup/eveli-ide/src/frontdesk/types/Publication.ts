@@ -14,12 +14,9 @@ export interface Publication {
 }
 
 export interface PublicationInit {
-  id: number;
-  body: {
-    name: string;
-    description: string | null;
-    contentTag: string | null;
-    wrenchTag: string | null;
-    workflowTag: string | null;
-  }
+  name: string;
+  description: string | null;
+  contentTag: string | null;
+  wrenchTag: string | null;
+  workflowTag: string | null;
 }

@@ -203,10 +203,6 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
     if(duplicate.isPresent()) {
       throw new ConstraintException(entity, "Publication: '" + init.getName() + "' already exists!");
     }
-
-    if(state.getWorkflowTags().values().stream().filter(e -> e.getBody().getName().equals(init.getWorkflowTag())).count() == 0) {
-      throw new ConstraintException(entity, "Publication: '" + init.getName() + "', workflow tag: '" + init.getWorkflowTag() + "' does not exist!");
-    }
     return assertUniqueId(entity, state);
   }
   
