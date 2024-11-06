@@ -28,9 +28,11 @@ import org.springframework.http.ResponseEntity;
 
 // whatever api 
 public interface DialobProxy {
-  ResponseEntity<String> fillGet(String sessionId);
-  ResponseEntity<String> fillPost(String sessionId, String body);
   
-  ResponseEntity<String> reviewGet(String sessionId);
-  ResponseEntity<String> anyRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers);
+  ResponseEntity<String> sessionGet(String sessionId);
+  ResponseEntity<String> sessionPost(String sessionId, String body);
+  
+  
+  // path = anything that comes after forms/api
+  ResponseEntity<String> formRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers);
 }

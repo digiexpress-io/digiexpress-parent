@@ -27,7 +27,7 @@ import lombok.Data;
 
 @Data
 @ConfigurationProperties(prefix = "eveli.dialob")
-public class EveliPropsDialob {
+public class DialobConfigProps {
   private Boolean enabled;
   private String serviceUrl;
   

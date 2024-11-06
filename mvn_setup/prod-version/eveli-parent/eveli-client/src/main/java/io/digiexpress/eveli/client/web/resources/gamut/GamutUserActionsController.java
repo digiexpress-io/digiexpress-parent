@@ -70,15 +70,15 @@ public class GamutUserActionsController {
 
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().fillGet(sessionId);
+    return dialob.createProxy().sessionGet(sessionId);
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return dialob.createProxy().fillPost(sessionId, body);
+    return dialob.createProxy().sessionPost(sessionId, body);
   }
   @GetMapping(value="/review/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().reviewGet(sessionId);
+    return dialob.createProxy().sessionGet(sessionId);
   }
 
   @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
@@ -157,12 +157,12 @@ public class GamutUserActionsController {
   }
   
   
-  @GetMapping(value="/")
+  @GetMapping
   public ResponseEntity<List<UserAction>> findAllUserActions() {
     return ResponseEntity.ok(gamutClient.userActionQuery().findAll());
   }
   
-  @GetMapping(value="/")
+  @GetMapping
   public ResponseEntity<UserAction> kindOfCreateAction(
       @RequestParam("actionId") String actionId,
       @RequestParam("inputContextId") String inputContextId,

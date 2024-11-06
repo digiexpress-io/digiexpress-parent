@@ -2,7 +2,7 @@ package io.digiexpress.eveli.dialob.spi;
 
 /*-
  * #%L
- * eveli-client
+ * dialob-client
  * %%
  * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
@@ -20,7 +20,6 @@ package io.digiexpress.eveli.dialob.spi;
  * #L%
  */
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,9 +28,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,31 +48,23 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 public class DialobClientImpl implements DialobClient {
   
-  
   private final ObjectMapper objectMapper;
-  private final RestTemplate restTemplate;
-  private final String authorization;
-  
-  private final String sessionUrl;
-  private final String questionnaireUrl;
+  private final DialobService dialobService;
   private final String callbackUrl;
-  private final String formUrl;
-  
-  private final String serviceUrl;
   
   @Override
   public DialobSessionBuilderImpl createSession() {
-    return new DialobSessionBuilderImpl(objectMapper, objectMapper.getFactory(), authorization, questionnaireUrl, callbackUrl, formUrl, restTemplate);
+    return new DialobSessionBuilderImpl(objectMapper, callbackUrl, dialobService);
   }
 
   @Override
   public DialobProxy createProxy() {
-    return new DialobProxyImpl(serviceUrl, sessionUrl, questionnaireUrl, authorization, restTemplate);
+    return new DialobProxyImpl(dialobService);
   }
 
   @Override
   public Questionnaire getQuestionnaireById(String questionnaireId) {
-    return restTemplate.getForObject(questionnaireUrl + "/"+ questionnaireId, Questionnaire.class);
+    return dialobService.getSessions().getForObject(questionnaireId, Questionnaire.class);
   }
   
   @Override
@@ -90,7 +78,7 @@ public class DialobClientImpl implements DialobClient {
     try {
       final var headers = headers().toSingleValueMap();
       final var body = objectMapper.writeValueAsString(form);
-      final var resp = createProxy().anyRequest("dialob/api/forms", null, HttpMethod.POST, body, headers);
+      final var resp = createProxy().formRequest("dialob/api/forms", null, HttpMethod.POST, body, headers);
       
       return objectMapper.readValue(resp.getBody(), Form.class);
     } catch (Exception e) {
@@ -104,9 +92,8 @@ public class DialobClientImpl implements DialobClient {
     DialobAssert.notNull(sessionId, () -> "sessionId can't be null!");
     try {
       final var headers = headers();
-      final var sessionUrl = UriComponentsBuilder.fromHttpUrl(questionnaireUrl).pathSegment(sessionId).toUriString();
       
-      final var getResponse = restTemplate.exchange(sessionUrl, HttpMethod.GET, new HttpEntity<String>(headers), JsonNode.class);
+      final var getResponse = dialobService.getSessions().exchange(sessionId, HttpMethod.GET, new HttpEntity<String>(headers), JsonNode.class);
       DialobAssert.isTrue(getResponse.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + getResponse.getStatusCode() + " but expecting 200!");
       
       
@@ -114,12 +101,12 @@ public class DialobClientImpl implements DialobClient {
       String statusValue = getStatus(getResponse.getBody());
       if(statusValue.equals("NEW")) {
         
-        ResponseEntity<String> response = restTemplate.exchange(sessionUrl, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(getResponse.getBody(), "OPEN"), headers), String.class);
+        ResponseEntity<String> response = dialobService.getSessions().exchange(sessionId, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(getResponse.getBody(), "OPEN"), headers), String.class);
         DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 200!");
       
         // OPEN -> COMPLETED
-        ResponseEntity<JsonNode> openResponse = restTemplate.exchange(sessionUrl, HttpMethod.GET, new HttpEntity<String>(headers), JsonNode.class);
-        ResponseEntity<String> completed = restTemplate.exchange(sessionUrl, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(openResponse.getBody(), "COMPLETED"), headers), String.class);
+        ResponseEntity<JsonNode> openResponse = dialobService.getSessions().exchange(sessionId, HttpMethod.GET, new HttpEntity<String>(headers), JsonNode.class);
+        ResponseEntity<String> completed = dialobService.getSessions().exchange(sessionId, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(openResponse.getBody(), "COMPLETED"), headers), String.class);
         DialobAssert.isTrue(completed.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 200!");
         
         return;
@@ -127,7 +114,7 @@ public class DialobClientImpl implements DialobClient {
         return;
         
       } else {
-        ResponseEntity<String> response = restTemplate.exchange(sessionUrl, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(getResponse.getBody(), "COMPLETED"), headers), String.class);
+        ResponseEntity<String> response = dialobService.getSessions().exchange(sessionId, HttpMethod.PUT, new HttpEntity<JsonNode>(setStatus(getResponse.getBody(), "COMPLETED"), headers), String.class);
         DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 200!");
         return;
       }
@@ -140,10 +127,9 @@ public class DialobClientImpl implements DialobClient {
 
   public Questionnaire.Metadata.Status getStatus(String sessionId) {
     DialobAssert.notNull(sessionId, () -> "sessionId can't be null!");
-
     try {
-      String sessionUrl = UriComponentsBuilder.fromHttpUrl(questionnaireUrl).pathSegment(sessionId).pathSegment("status").toUriString();
-      ResponseEntity<String> getResponse = restTemplate.exchange(sessionUrl, HttpMethod.GET, new HttpEntity<String>(headers()), String.class);
+
+      ResponseEntity<String> getResponse = dialobService.getSessions().exchange(sessionId + "/status", HttpMethod.GET, new HttpEntity<String>(headers()), String.class);
       DialobAssert.isTrue(getResponse.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + getResponse.getStatusCode() + " but expecting 200!");
       
       String statusValue = getResponse.getBody().substring(1, getResponse.getBody().length() - 1);
@@ -158,19 +144,13 @@ public class DialobClientImpl implements DialobClient {
   public Form getFormById(String formId) {
     Map<String, String> uriMap = new HashMap<>();
     uriMap.put("formId", formId);
-    return restTemplate.getForObject(formUrl + "/{formId}", Form.class, uriMap);
+    return dialobService.getForms().getForObject("{formId}", Form.class, uriMap);
   }
   
   private HttpHeaders headers() {
     final var headers = new HttpHeaders();
     headers.set(HttpHeaderNames.CONTENT_TYPE.toString(), MediaType.APPLICATION_JSON.toString());
-    //headers.set(HttpHeaderNames.ACCEPT.toString(), MediaType.APPLICATION_JSON.toString());
-    
-    
-    
-    if(!ObjectUtils.isEmpty(authorization)) {
-      headers.set("x-api-key", authorization);
-    }
+    headers.set(HttpHeaderNames.ACCEPT.toString(), MediaType.APPLICATION_JSON.toString());
     return headers;
   } 
   
@@ -194,23 +174,14 @@ public class DialobClientImpl implements DialobClient {
   @Accessors(fluent = true)
   public static class Builder {
     private ObjectMapper objectMapper;
-    private RestTemplate restTemplate;
-    private String authorization;
-    private String url;
+    private DialobService dialobService;
     private String submitCallbackUrl;
-    private String formUrl;
-    private String serviceUrl;
-    private String sessionUrl;
 
     public DialobClientImpl build() {
       DialobAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
-      DialobAssert.notNull(restTemplate, () -> "restTemplate must be defined!");
-      DialobAssert.notNull(url, () -> "url must be defined!");
-      DialobAssert.notNull(formUrl, () -> "form url must be defined!");
-      DialobAssert.notNull(sessionUrl, () -> "form url must be defined!");
-      DialobAssert.notNull(serviceUrl, () -> "serviceUrl must be defined!");
+      DialobAssert.notNull(dialobService, () -> "dialobService must be defined!");
       
-      return new DialobClientImpl(objectMapper, restTemplate, authorization, url, submitCallbackUrl, formUrl, sessionUrl, serviceUrl);
+      return new DialobClientImpl(objectMapper, dialobService, submitCallbackUrl);
     }
   }
 }

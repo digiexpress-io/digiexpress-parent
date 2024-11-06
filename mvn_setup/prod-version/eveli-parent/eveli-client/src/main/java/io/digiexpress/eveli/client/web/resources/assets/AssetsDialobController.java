@@ -58,7 +58,7 @@ public class AssetsDialobController {
   private final ObjectMapper objectMapper;
 
 
-  @RequestMapping(path="/proxy/**", produces = "application/json; charset=UTF-8")
+  @RequestMapping(path="/proxy/api/forms/**", produces = "application/json; charset=UTF-8")
   public ResponseEntity<?> proxy(
       HttpServletRequest request, 
       @RequestBody(required = false) String body,
@@ -66,10 +66,10 @@ public class AssetsDialobController {
   ) {
     
     final var query = request.getQueryString();
-    final var path = request.getServletPath().substring(30);
+    final var path = request.getServletPath().substring(39);
     final var method = HttpMethod.valueOf(request.getMethod());
     
-    return dialobCommands.createProxy().anyRequest(path, query, method, body, headers);
+    return dialobCommands.createProxy().formRequest(path, query, method, body, headers);
   }
  
   @GetMapping(path="/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,23 +91,20 @@ public class AssetsDialobController {
     return ResponseEntity.status(HttpStatus.OK).body(tags);
   }
 
-  @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FormListItem> allForms() throws JsonMappingException, JsonProcessingException{
     FormListItem[] forms = getForms();
-
     return Arrays.asList(forms);
   }
 
 
   private FormTag[] getTags(String id) throws JsonMappingException, JsonProcessingException {
-    final var uri = "api/forms/" + id + "/tags";
-    final String body = dialobCommands.createProxy().anyRequest(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+    final String body = dialobCommands.createProxy().formRequest(id + "/tags", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormTag.class).readValue(body);
   }
 
   private FormListItem[] getForms() throws JsonMappingException, JsonProcessingException {
-    final var uri = "api/forms";
-    final String body = dialobCommands.createProxy().anyRequest(uri, "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+    final String body = dialobCommands.createProxy().formRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
     return objectMapper.readerForArrayOf(FormListItem.class).readValue(body);
   }
   

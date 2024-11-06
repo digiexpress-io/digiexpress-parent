@@ -56,11 +56,11 @@ public class GamutFeedbackController {
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().fillGet(sessionId);
+    return dialob.createProxy().sessionGet(sessionId);
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return dialob.createProxy().fillPost(sessionId, body);
+    return dialob.createProxy().sessionPost(sessionId, body);
   }
   @DeleteMapping(value="/{actionId}")
   public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {
