@@ -1,7 +1,8 @@
 import React from 'react';
-import { Comment as CommentData } from '../../types/task/Comment';
 import { List } from '@mui/material';
+
 import { Task } from '../../types/task/Task';
+import { Comment as CommentData } from '../../types/task/Comment';
 import { CommentLocal } from './CommentLocal';
 
 type Props = {

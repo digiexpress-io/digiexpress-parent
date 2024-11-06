@@ -1,8 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { useField, FieldInputProps } from 'formik';
 import { Box, Button, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { FormattedMessage } from 'react-intl';
+import { useField, FieldInputProps } from 'formik';
+
 import { COLORS, ColorMap } from './ColorMap';
 
 import * as Burger from '@/burger';

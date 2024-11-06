@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import { useIntl } from "react-intl";
+
+import { TableHeader } from '../../components/TableHeader';
 import { WorkflowRelease } from "../../types/WorkflowRelease";
 import { WorkflowTable } from "./WorkflowTable";
-import { useIntl } from "react-intl";
-import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';
 

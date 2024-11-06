@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-
 import MaterialTable, { Column } from '@material-table/core';
+
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import PreviewIcon from '@mui/icons-material/Preview';
@@ -10,8 +10,8 @@ import { useIntl } from 'react-intl';
 
 import { CreateWorkflowTagDialog } from './CreateWorkflowTagDialog';
 import { ViewWorkflowTagDialog } from './ViewWorkflowTagDialog';
-import { WorkflowRelease } from '../../types/WorkflowRelease';
 
+import { WorkflowRelease } from '../../types/WorkflowRelease';
 import { downloadFile } from '../../util/downloadFile';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { useConfig } from '../../context/ConfigContext';

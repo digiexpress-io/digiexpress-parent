@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Comment as CommentData } from '../../types/task/Comment';
 import { Box, Grid2 } from '@mui/material';
 
 import { Task } from '../../types/task/Task';
+import { Comment as CommentData } from '../../types/task/Comment';
+import { CommentAdd } from './CommentAdd';
 import mapNestedEntities from '../../util/mapNestedEntities';
 import { Thread } from './Thread';
-import { CommentAdd } from './CommentAdd';
+
 
 import * as Burger from '@/burger';
 

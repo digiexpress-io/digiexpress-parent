@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link } from '@mui/material';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
 import LockIcon from '@mui/icons-material/Lock';
 import MessageIcon from '@mui/icons-material/Message';
@@ -9,7 +9,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { FormattedDate, useIntl } from 'react-intl';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-
 
 import { localizeTable } from '../../util/localizeTable';
 import { mapRolesList } from '../../util/rolemapper';

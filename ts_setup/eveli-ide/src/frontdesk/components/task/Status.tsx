@@ -1,6 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { FieldInputProps } from 'formik';
+
 import Indicator from './Indicator';
 import RadioGroupPopover from './RadioGroupPopover';
 import { ColorMap, COLORS } from './ColorMap';

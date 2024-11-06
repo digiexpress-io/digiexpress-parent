@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
 import { enqueueSnackbar } from 'notistack';
-import { TableHeader } from 'frontdesk/components/TableHeader';
+import { TableHeader } from '../../components/TableHeader';
 
 interface DeleteDialogProps {
   deleteModalOpen: boolean;

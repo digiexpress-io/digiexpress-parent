@@ -3,7 +3,6 @@ import { Box, styled } from '@mui/material';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 
 import * as Burger from '@/burger';
 import { LocaleSelect } from './explorer';
@@ -38,12 +37,13 @@ const StyledToolbar = styled(Box)(({ theme }) => ({
 export const Toolbar: React.FC<{}> = () => {
   const drawerCtx = Burger.useDrawer();
   const drawerOpen = drawerCtx.session.drawer;
-  const context = React.useContext(FeedbackContext);
+  //const context = React.useContext(FeedbackContext);
 
-
+  /*
   const openFeedback = () => {
     context.open();
   }
+  */
   const toggleDrawer = () => {
     drawerCtx.actions.handleDrawerOpen(!drawerOpen);
   };

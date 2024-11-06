@@ -1,12 +1,13 @@
+import React, { useContext } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Stack } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import React, { useContext } from 'react';
 import { useIntl, defineMessages } from 'react-intl';
+import { useSnackbar } from 'notistack';
+
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { handleErrors } from '../../util/cFetch';
-import { useSnackbar } from 'notistack';
 import { TableHeader } from '../../components/TableHeader';
 
 import * as Burger from '@/burger';

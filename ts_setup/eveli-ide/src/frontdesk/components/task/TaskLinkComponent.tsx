@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Stack } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { FormattedMessage } from 'react-intl';
+
 import { TaskLink } from '../../types/task/TaskLink';
 
 export type TaskLinkProps = {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack } from '@mui/material';
 
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
@@ -9,7 +9,7 @@ import { useIntl, defineMessages } from 'react-intl';
 
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { Publication, PublicationInit } from '../../types/Publication';
+import { PublicationInit } from '../../types/Publication';
 import { AssetTag } from '../../types/AssetTag';
 import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';

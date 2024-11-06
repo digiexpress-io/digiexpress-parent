@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Autocomplete, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Container } from "@mui/material"
-import { FormattedMessage, useIntl } from "react-intl"
+import { Autocomplete, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Container } from "@mui/material";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
+import { FormattedMessage, useIntl } from "react-intl";
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 import { UserGroup } from '../../types/UserGroup';
 import * as Burger from '@/burger';
