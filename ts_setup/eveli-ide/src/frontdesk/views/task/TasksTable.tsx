@@ -1,10 +1,11 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
-import { Box, Link } from '@mui/material';
+import { Box, IconButton, Link } from '@mui/material';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
 import LockIcon from '@mui/icons-material/Lock';
 import MessageIcon from '@mui/icons-material/Message';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { FormattedDate, useIntl } from 'react-intl';
 import { Link as RouterLink } from 'react-router-dom';
@@ -47,7 +48,7 @@ type Props = {
   loadTasks: (query: Query<Task>, columns: Column<any>[], defaultOrder?: OrderByCollection[]) => Promise<QueryResult<Task>>
   groups: UserGroup[]
   taskOpenHandler: (id?: number) => void
-  taskDeletableHandler?: (task: Task) => boolean
+  taskDeletableHandler?: () => boolean
   newTasks: number[]
 }
 
@@ -195,9 +196,18 @@ export const TasksTable: React.FC<Props> =
     const onOrderCollectionChange = (orderByCollection: any) => {
       tableContext.setSort(orderByCollection);
     };
+    const isDeleteHidden: boolean | undefined = taskDeletableHandler ? !taskDeletableHandler() : false;
+
 
     const tableState: TableState = {
       columns: [
+        {
+          render: (data) => {
+            return <div onClick={() => deleteTask(data.id)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
+          },
+          hidden: isDeleteHidden
+        },
+
         {
           title: intl.formatMessage({ id: 'spoTasksTableHeader.priority' }),
           field: 'priority',
@@ -315,12 +325,6 @@ export const TasksTable: React.FC<Props> =
             onClick: addTask
           }
         ]}
-        editable={{
-          isDeleteHidden: rowData => taskDeletableHandler ? !taskDeletableHandler(rowData) : false,
-          onRowDelete: oldData => {
-            return deleteTask(oldData.id);
-          }
-        }}
         data={query => {
           if (isFirstRenderAfterRefresh && tableContext.filters) {
             query.filters = tableContext.filters;

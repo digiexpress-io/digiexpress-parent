@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container } from '@mui/material';
+
 import { Column, Query } from '@material-table/core';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,7 +33,7 @@ export const TasksView: React.FC = () => {
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
-  const taskDeletableCallback = (task:Task) => {
+  const taskDeletableCallback = () => {
     if (taskDeleteGroups && taskDeleteGroups.length > 0) {
       if (userInfo.hasRole(...taskDeleteGroups)) {
         return true;
