@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
+import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +40,13 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAutoConfiguration
 @EnableAsync
 @Slf4j
-@Import(value = { EveliAutoConfigDB.class, EveliAutoConfigAssets.class, EveliAutoConfig.class, DialobAutoConfig.class })
+@Import(value = { 
+    EveliAutoConfigDB.class, 
+    EveliAutoConfigAssets.class, 
+    EveliAutoConfig.class,
+    DialobAutoConfig.class,
+    EveliAutoConfigGamut.class
+})
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[]{Application.class}, args);

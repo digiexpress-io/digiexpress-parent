@@ -1,7 +1,7 @@
 import { DialobApi } from "@dxs-ts/gamut";
 
 
-export function createDialobFetch(url: (string | undefined) = 'http://localhost:8080/portal/session/dialob/') {
+export function createDialobFetch(url: (string | undefined) = '/portal/session/dialob/') {
   const fetchPost: DialobApi.FetchPOST = async (sessionId: string, actions: DialobApi.Action[], rev: number) => {
     const response = await window.fetch(`${url}${sessionId}`, {
       method: 'POST',

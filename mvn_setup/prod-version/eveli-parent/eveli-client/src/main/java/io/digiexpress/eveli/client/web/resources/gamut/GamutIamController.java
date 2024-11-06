@@ -31,14 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @RestController
-@RequestMapping("/gamut/iam")
+@RequestMapping("/portal/secured/iam")
 @RequiredArgsConstructor
 @Slf4j
 public class GamutIamController {
   private final CrmClient authClient;
   
 
-  @GetMapping(path = "/")
+  @GetMapping
   public CrmClient.Customer getUser() {
     return authClient.getCustomer();
   }

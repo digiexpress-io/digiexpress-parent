@@ -34,14 +34,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/gamut/sites")
+@RequestMapping("/portal/site")
 @RequiredArgsConstructor
 public class GamutSiteController {
   
   
   private final StencilClient client;
 
-  @GetMapping(path = "/")
+  @GetMapping
   public Uni<LocalizedSite> getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
    
     

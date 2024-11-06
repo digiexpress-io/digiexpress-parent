@@ -39,7 +39,15 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     resolve: { alias },
     server: {
       open: true,
-      port: 3000,
+      port: 3001,
+      proxy: {
+        '/portal': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+      }
+
     },
     optimizeDeps: {
       //https://github.com/vitejs/vite/issues/12423

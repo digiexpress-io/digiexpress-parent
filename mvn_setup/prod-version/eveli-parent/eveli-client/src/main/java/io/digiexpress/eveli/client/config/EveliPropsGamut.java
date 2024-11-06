@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -30,4 +32,5 @@ import lombok.Data;
 public class EveliPropsGamut {  
   private Boolean enabled;
   private String anonymousUserId;
+  private List<String> allowedActions;
 }

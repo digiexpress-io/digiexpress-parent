@@ -265,14 +265,14 @@ public class SpringJwtCrmClient implements CrmClient {
     if (!resp.getStatusCode().is2xxSuccessful()) {
       String error = "Can't create response, e = " + resp.getStatusCode()  + " | " + resp.getHeaders();
       log.error("USER ROLES: Error: {} body: {}", error, resp.getBody());
-      return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+      return ImmutableCustomerRoles.builder().identifier("").username("").build();
     }
     
     final ImmutableUserRoles userRoles;
     if(isPersonRoles) {
       final JsonObject body = new JsonObject(resp.getBody());
       if(body.isEmpty()) {
-        return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+        return ImmutableCustomerRoles.builder().identifier("").username("").build();
       }
 
       final var jsonRoles = body.getJsonArray("roles");
@@ -290,7 +290,7 @@ public class SpringJwtCrmClient implements CrmClient {
     } else {
       final JsonArray bodies = new JsonArray(resp.getBody());
       if(bodies.isEmpty()) {
-        return ImmutableCustomerRoles.builder().identifier("").userName("").build();
+        return ImmutableCustomerRoles.builder().identifier("").username("").build();
       }
       
       final var body = bodies.getJsonObject(0);
@@ -311,7 +311,7 @@ public class SpringJwtCrmClient implements CrmClient {
     
     return ImmutableCustomerRoles.builder()
         .identifier(userRoles.getPrincipal().getIdentifier())
-        .userName(userRoles.getPrincipal().getName())
+        .username(userRoles.getPrincipal().getName())
         .addAllRoles(userRoles.getRoles())
         .build();
   }

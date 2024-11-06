@@ -90,12 +90,12 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GAuth: {
     defaultProps: {
-      action: "http://localhost:3000/secured/en/views/user-overview",
+      action: "http://localhost:3001/secured/en/views/user-overview",
     }
   },
   GAuthRepCompany: {
     defaultProps: {
-      action: "http://localhost:3000/secured/en/views/user-overview/rep-comp",
+      action: "http://localhost:3001/secured/en/views/user-overview/rep-comp",
       onSubmit: () => {
         console.log('log-in REP-COMPANY');
       }
@@ -103,7 +103,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   },
   GAuthRepPerson: {
     defaultProps: {
-      action: "http://localhost:3000/secured/en/views/user-overview/rep-person",
+      action: "http://localhost:3001/secured/en/views/user-overview/rep-person",
       onSubmit: () => {
         console.log('log-in REP-PERSON');
       }
@@ -112,17 +112,17 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GAuthUn: {
     defaultProps: {
-      action: "http://localhost:3000/public/en",
+      action: "http://localhost:3001/public/en",
       onSubmit: (event) => {
         console.log('log-out');
         event.preventDefault();
-        window.location.href = 'http://localhost:3000/public/en'
+        window.location.href = 'http://localhost:3001/public/en'
       }
     }
   },
   GAuthUnRepCompany: {
     defaultProps: {
-      action: "http://localhost:3000/secured/en/views/user-overview",
+      action: "http://localhost:3001/secured/en/views/user-overview",
       onSubmit: () => {
         console.log('log-out REP-COMPANY');
       }
@@ -131,7 +131,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   },
   GAuthUnRepPerson: {
     defaultProps: {
-      action: "http://localhost:3000/secured/en/views/user-overview",
+      action: "http://localhost:3001/secured/en/views/user-overview",
       onSubmit: () => {
         console.log('log-out REP-PERSON');
       }

@@ -1,7 +1,7 @@
 import { CommsApi, ContractApi } from "@dxs-ts/gamut";
 
 
-export function createSubjectFetch(url: (string | undefined) = 'http://localhost:8080/portal/secured/actions') {
+export function createSubjectFetch(url: (string | undefined) = '/portal/secured/actions') {
   const fetchGet: CommsApi.GetSubjectsFetchGET = async () => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
     const response = await window.fetch(url, {
@@ -15,7 +15,7 @@ export function createSubjectFetch(url: (string | undefined) = 'http://localhost
 }
 
 
-export function createContractFetch(url: (string | undefined) = 'http://localhost:8080/portal/secured/actions') {
+export function createContractFetch(url: (string | undefined) = '/portal/secured/actions') {
   const appendContractAttachment: ContractApi.AppendContractAttachmentFetchPOST = async (contractId: ContractApi.ContractId, files: FileList) => {
     const filesByName: Record<string, File> = {};
     const body: { fileName: string, fileType: string }[] = [];

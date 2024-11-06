@@ -1,6 +1,6 @@
 import { OfferApi } from "@dxs-ts/gamut";
 
-export function createOfferFetch(url: (string | undefined) = 'http://localhost:8080/portal/secured/actions') {
+export function createOfferFetch(url: (string | undefined) = '/portal/secured/actions') {
   const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest) => {
 
     const superTestForm = '5032fb6bbd7d5eed6daf53d0f87603d3';

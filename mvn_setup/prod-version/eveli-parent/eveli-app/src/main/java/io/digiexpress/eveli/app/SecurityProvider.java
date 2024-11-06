@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.app;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,19 @@ import org.springframework.context.annotation.Configuration;
  */
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.AuthClient.Liveness;
+import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.ImmutableCustomer;
+import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
+import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
+import io.digiexpress.eveli.client.spi.crm.SpringJwtCrmClient;
 
 
 
@@ -63,9 +72,55 @@ public class SecurityProvider  {
       }
     };
   }
+  
+  @Bean
+  @Profile("fake-user")
+  public CrmClient crm() {
+    return new CrmClient() {
+      @Override
+      public Liveness getLiveness() {
+        return null;
+      }
+      @Override
+      public Customer getCustomer() {
+        return ImmutableCustomer.builder()
+            .principal(ImmutableCustomerPrincipal.builder()
+                .id(UUID.randomUUID().toString())
+                .ssn("my-ssn")
+                .username("same vimes")
+                .firstName("same")
+                .lastName("vimes")
+                .protectionOrder(false)
+                .contact(ImmutableCustomerContact.builder()
+                    .email("same.vimes@resys.io")
+                    .addressValue("test-street")
+                    .build())
+                .build())
+            .type(CustomerType.AUTH_CUSTOMER)
+            .build();
+      }
+
+      @Override
+      public CustomerRoles getCustomerRoles() {
+        final var customer = getCustomer();
+        
+        return ImmutableCustomerRoles.builder()
+            .identifier(customer.getPrincipal().getSsn())
+            .username(customer.getPrincipal().getUsername())
+            .build();
+      }
+    };
+  }
+  
+  
   @Bean
   @Profile("jwt")
   public SpringJwtAuthClient authClientJwt() {
     return new SpringJwtAuthClient();
+  }
+  @Bean
+  @Profile("jwt")
+  public SpringJwtCrmClient crmClientJwt() {
+    return new SpringJwtCrmClient(new RestTemplate(), "");
   }
 }

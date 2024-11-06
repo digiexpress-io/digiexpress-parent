@@ -59,7 +59,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/gamut/user-actions")
+@RequestMapping("/portal/secured/actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
   
@@ -157,18 +157,18 @@ public class GamutUserActionsController {
   }
   
   
+
   @GetMapping
-  public ResponseEntity<List<UserAction>> findAllUserActions() {
-    return ResponseEntity.ok(gamutClient.userActionQuery().findAll());
-  }
-  
-  @GetMapping
-  public ResponseEntity<UserAction> kindOfCreateAction(
-      @RequestParam("actionId") String actionId,
-      @RequestParam("inputContextId") String inputContextId,
-      @RequestParam("inputParentContextId") String inputParentContextId,
-      @RequestParam("actionLocale") String actionLocale
+  public ResponseEntity<?> kindOfCreateActionOrGet(
+      @RequestParam(name = "actionId", required = false) String actionId,
+      @RequestParam(name = "inputContextId", required = false) String inputContextId,
+      @RequestParam(name = "inputParentContextId", required = false) String inputParentContextId,
+      @RequestParam(name = "actionLocale", required = false) String actionLocale
   ) {
+    
+    if(actionId == null) {
+      return ResponseEntity.ok(gamutClient.userActionQuery().findAll());
+    }
 
     try {
       return ResponseEntity.ok(gamutClient.userActionBuilder()

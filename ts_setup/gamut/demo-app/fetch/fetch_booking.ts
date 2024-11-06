@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 
 
 
-export function createBookingFetch(url: (string | undefined) = 'http://localhost:8080/portal/secured/bookings') {
+export function createBookingFetch(url: (string | undefined) = '/portal/secured/bookings') {
   const fetchPost: BookingApi.CancelBookingFetchPOST = async (request: BookingApi.Booking) => {
     const response = await window.fetch(url + "?id=" + request.id, {
       method: 'POST',

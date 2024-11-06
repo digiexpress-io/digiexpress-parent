@@ -1,6 +1,6 @@
 import { IamApi } from "@dxs-ts/gamut";
 
-export function createIamFetch(url: (string | undefined) = 'http://localhost:8080/portal/secured/iam') {
+export function createIamFetch(url: (string | undefined) = '/portal/secured/iam') {
   const fetchUserGET: IamApi.FetchUserGET = async () => {
     const response = await window.fetch(`${url}`, {
       method: 'GET',
