@@ -49,24 +49,56 @@ import lombok.extern.slf4j.Slf4j;
 })
 public class Application {
   public static void main(String[] args) throws Exception {
-    SpringApplication.run(new Class<?>[]{Application.class}, args);
+    SpringApplication.run(new Class<?>[] { Application.class }, args);
   }
-  
-  
+
   @EventListener
   public void handleContextRefresh(ContextRefreshedEvent event) {
     final var applicationContext = event.getApplicationContext();
     final var requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
     final var endpoints = requestMappingHandlerMapping.getHandlerMethods();
+
+    final var msg = new StringBuilder("\r\nREST API\r\n");
+    String greenColor = "\033[32m";
+    String resetColor = "\033[0m"; 
     
-    final var msg = new StringBuilder("\r\nREST API:");
-    
+    msg.append("\r\n--------------------------------- GET Endpoints ---------------------------------\r\n");
+
     endpoints.forEach((key, value) -> {
-      
-      
-      msg.append("  - ").append(key).append(" = ").append(value).append("\r\n");
+      if (key.toString().contains("GET")) {
+        msg.append(greenColor);
+        msg.append(key).append(" - ");
+        msg.append(resetColor);
+        msg.append(value).append("\r\n");
+      }
     });
     
+    msg.append("\r\n--------------------------------- PUT Endpoints ---------------------------------\r\n");
+
+    endpoints.forEach((key, value) -> {
+      if (key.toString().contains("PUT") ) {
+        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
+      }
+    });
+    
+    msg.append("\r\n--------------------------------- POST Endpoints ---------------------------------\r\n");
+
+    endpoints.forEach((key, value) -> {
+      if (key.toString().contains("POST")) {
+        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
+      }
+    });
+    
+    msg.append("\r\n--------------------------------- DELETE ---------------------------------\r\n");
+
+    endpoints.forEach((key, value) -> {
+      if (key.toString().contains("DELETE")) {
+        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
+      }
+    });
+    
+    
+
     log.info(msg.toString());
   }
   // HHH015007 - https://hibernate.atlassian.net/browse/HHH-17612
