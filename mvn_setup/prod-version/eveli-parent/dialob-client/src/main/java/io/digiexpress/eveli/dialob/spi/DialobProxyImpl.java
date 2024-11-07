@@ -26,7 +26,6 @@ import java.util.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import io.digiexpress.eveli.dialob.api.DialobProxy;
@@ -43,12 +42,10 @@ public class DialobProxyImpl implements DialobProxy {
   @Override
   public ResponseEntity<String> sessionPost(String sessionId, String body) {
     final var headers = new HttpHeaders();
-    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    headers.setContentType(MediaType.APPLICATION_JSON);
     
     final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
     try {
-      ResponseEntity<String> response = dialobService.getSessions().exchange(sessionId, HttpMethod.POST, requestEntity, String.class);
+      ResponseEntity<String> response = dialobService.getSessions().exchange("/"+ sessionId, HttpMethod.POST, requestEntity, String.class);
       return response;
     } catch (Exception e) {
       throw new DialobException(e.getMessage(), e);
@@ -58,7 +55,8 @@ public class DialobProxyImpl implements DialobProxy {
   @Override
   public ResponseEntity<String> sessionGet(String sessionId) {            
     try {
-      ResponseEntity<String> response = dialobService.getSessions().getForEntity(sessionId, String.class);
+      
+      ResponseEntity<String> response = dialobService.getSessions().getForEntity("/" + sessionId, String.class);
       return response;
     } catch (Exception e) {
       throw new DialobException(e.getMessage(), e);

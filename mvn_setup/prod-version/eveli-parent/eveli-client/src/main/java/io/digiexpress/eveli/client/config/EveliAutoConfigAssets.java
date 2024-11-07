@@ -54,6 +54,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
@@ -178,6 +179,18 @@ public class EveliAutoConfigAssets {
       return ComposerEntityMapper.toEnvir(wrenchClient.envir(), state).build();          
     };
 
+    final Supplier<Sites> siteEnvir = () -> {
+      final var stencilState = stencilClient.getStore().query().head()
+          .onItem().transform(state -> stencilClient.markdown().json(state, true).build())
+          .onItem().transform(markdowns -> stencilClient.sites()
+              .imagePath("images")
+              .created(System.currentTimeMillis())
+              .source(markdowns)
+              .build());
+      
+      return stencilState.await().atMost(Duration.ofMinutes(1));
+    };
+    
 
     final var assetClient = EveliAssetsClientImpl.builder()
         .config((builder) -> builder
@@ -232,6 +245,7 @@ public class EveliAutoConfigAssets {
         .stencil(stencilClient)
         .wrench(wrenchClient)
         .programEnvir(programEnvir)
+        .siteEnvir(siteEnvir)
         .assets(assetClient)
         .build();
   }

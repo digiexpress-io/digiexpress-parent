@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.smallrye.mutiny.Uni;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
 import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
@@ -84,7 +85,7 @@ public interface GamutClient {
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
     UserActionBuilder inputParentContextId(String inputParentContextId);
-    UserAction createOne() throws UserActionNotAllowedException, WorkflowNotFoundException;
+    Uni<UserAction> createOne();
   }
   
 
@@ -104,14 +105,14 @@ public interface GamutClient {
     String getText();
   }
   
-  public static class UserActionNotAllowedException extends Exception {
+  public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public UserActionNotAllowedException(String message) {
       super(message);
     }
   }
   
-  public static class WorkflowNotFoundException extends Exception {
+  public static class WorkflowNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public WorkflowNotFoundException(String message) {
       super(message);

@@ -70,7 +70,9 @@ public class EveliAutoConfigGamut {
         dialobCommands, 
         portalClient.hdes(), 
         eveliContext.getAssets(), 
-        authClient);
+        authClient,
+        eveliContext.getStencil(),
+        eveliContext.getSiteEnvir());
   }
   
   @Bean
@@ -86,7 +88,7 @@ public class EveliAutoConfigGamut {
   
   @Bean
   public GamutSiteController gamutSiteController(EveliContext eveliContext) {
-    return new GamutSiteController(eveliContext.getStencil());
+    return new GamutSiteController(eveliContext.getSiteEnvir());
   }
   
   @Bean

@@ -65,8 +65,9 @@ public interface DialobClient {
   }
   
   interface DialobSessionBuilder {
-    DialobSessionBuilder formName(String formName);
-    DialobSessionBuilder formTag(String formTag);
+    //DialobSessionBuilder formName(String formName);
+    //DialobSessionBuilder formTag(String formTag);
+    DialobSessionBuilder formId(String formId);
     DialobSessionBuilder language(String language);
     DialobSessionBuilder addContext(String id, Serializable value);
     DialobSessionBuilder addAnswer(String id, Serializable value);

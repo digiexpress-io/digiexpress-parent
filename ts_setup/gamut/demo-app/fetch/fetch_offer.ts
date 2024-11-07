@@ -3,9 +3,16 @@ import { OfferApi } from "@dxs-ts/gamut";
 export function createOfferFetch(url: (string | undefined) = '/portal/secured/actions') {
   const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest) => {
 
-    const superTestForm = '5032fb6bbd7d5eed6daf53d0f87603d3';
+    const superTestForm = undefined//'5032fb6bbd7d5eed6daf53d0f87603d3';
 
-    const response = await window.fetch(url + "?id=" + (superTestForm ?? request.productId) + "&locale=" + request.locale, {
+    const id = superTestForm ?? request.productId;
+    const locale = request.locale;
+    const inputContextId = request.productId;
+    const inputParentContextId = request.productGroupId;
+
+    const query = `${url}?id=${id}&locale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}`;
+
+    const response = await window.fetch(query, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,

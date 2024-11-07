@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.Duration;
+import java.util.function.Supplier;
 
 import org.immutables.value.Value;
 
@@ -41,6 +42,8 @@ import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.iam.api.ImmutableUserAction;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import jakarta.annotation.Nullable;
@@ -56,7 +59,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final DialobClient dialobCommands;
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
-  
+  private final Supplier<Sites> siteEnvir;
   
   private final CrmClient auth;
   
@@ -65,12 +68,19 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private String inputContextId;
   private String inputParentContextId;
   
-  public UserAction createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
+  
+  public Uni<UserAction> createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(clientLocale, () -> "clientLocale can't be null!");
     TaskAssert.notNull(inputContextId, () -> "inputContextId can't be null!");
     TaskAssert.notNull(inputParentContextId, () -> "inputParentContextId can't be null!");    
     
+    return Uni.createFrom().item(siteEnvir.get())
+        .onItem()
+        .transform(site -> createUserAction(site));
+  }
+  
+  private UserAction createUserAction(Sites site) {
     if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
       final var userRoles = auth.getCustomerRoles().getRoles();  
       final var allowed = hdesCommands.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
@@ -82,9 +92,25 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
        }
     }
     
-    final var request = visitRequest();
+    if(siteEnvir.get().getSites().get(clientLocale) == null) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+          .append("Can't find stencil service for locale: '").append(clientLocale).append("'!")
+          .toString());
+    }
     
-    final Workflow workflow = assetClient.queryBuilder().findOneWorkflowByName(clientLocale)
+    
+    final var request = visitRequest();
+    final var stencilService = siteEnvir.get().getSites().get(clientLocale).getLinks().get(actionId);
+    
+    
+    if(stencilService == null) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+          .append("Can't find stencil service by id: '").append(actionId).append("'!")
+          .toString());
+    }
+    
+    
+    final Workflow workflow = assetClient.queryBuilder().findOneWorkflowByName(stencilService.getValue())
         .await().atMost(Duration.ofMinutes(1))
         .map(e -> e.getBody())
         .orElseThrow(() -> new WorkflowNotFoundException(new StringBuilder()
@@ -97,7 +123,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .setQuestionnaire(sessionId)
         .setUserId(request.getIdentity())
         .setStatus(ProcessStatus.CREATED)
-        .setWorkflowName(request.getWorkflowName())
+        .setWorkflowName(workflow.getName())
         .setInputContextId(request.getInputContextId())
         .setInputParentContextId(request.getInputParentContextId()));
 
@@ -123,8 +149,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
     final var formBuilder = dialobCommands.createSession()
-        .formName(workflow.getFormName())
-        .formTag(workflow.getFormTag())
+        .formId(workflow.getFormId())
         .language(clientLocale)
         .addContext("FirstNames", request.getFirstName())
         .addContext("LastName", request.getLastName())

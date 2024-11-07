@@ -17,10 +17,12 @@ import { Route as PublicLocaleIndexImport } from './routes/public.$locale.index'
 import { Route as SecuredLocaleViewsViewIdImport } from './routes/secured.$locale.views.$viewId'
 import { Route as PublicLocalePagesPageIdImport } from './routes/public.$locale.pages.$pageId'
 import { Route as SecuredLocaleViewsViewIdIndexImport } from './routes/secured.$locale.views.$viewId.index'
+import { Route as PublicLocalePagesPageIdIndexImport } from './routes/public.$locale.pages.$pageId.index'
 import { Route as SecuredLocaleViewsViewIdSubjectIdImport } from './routes/secured.$locale.views.$viewId.$subjectId'
 import { Route as SecuredLocalePagesPageIdProductsProductIdImport } from './routes/secured.$locale.pages.$pageId.products.$productId'
 import { Route as PublicLocalePagesPageIdProductsProductIdImport } from './routes/public.$locale.pages.$pageId.products.$productId'
 import { Route as SecuredLocalePagesPageIdProductsProductIdIndexImport } from './routes/secured.$locale.pages.$pageId.products.$productId.index'
+import { Route as PublicLocalePagesPageIdProductsProductIdIndexImport } from './routes/public.$locale.pages.$pageId.products.$productId.index'
 import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId'
 import { Route as PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport } from './routes/public.$locale.pages.$pageId.products.$productId.offers.$offerId'
 import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport } from './routes/secured.$locale.pages.$pageId.products.$productId.offers.$offerId.index'
@@ -65,6 +67,13 @@ const SecuredLocaleViewsViewIdIndexRoute =
     getParentRoute: () => SecuredLocaleViewsViewIdRoute,
   } as any)
 
+const PublicLocalePagesPageIdIndexRoute =
+  PublicLocalePagesPageIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PublicLocalePagesPageIdRoute,
+  } as any)
+
 const SecuredLocaleViewsViewIdSubjectIdRoute =
   SecuredLocaleViewsViewIdSubjectIdImport.update({
     id: '/$subjectId',
@@ -91,6 +100,13 @@ const SecuredLocalePagesPageIdProductsProductIdIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocalePagesPageIdProductsProductIdRoute,
+  } as any)
+
+const PublicLocalePagesPageIdProductsProductIdIndexRoute =
+  PublicLocalePagesPageIdProductsProductIdIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => PublicLocalePagesPageIdProductsProductIdRoute,
   } as any)
 
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute =
@@ -169,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleViewsViewIdSubjectIdImport
       parentRoute: typeof SecuredLocaleViewsViewIdImport
     }
+    '/public/$locale/pages/$pageId/': {
+      id: '/public/$locale/pages/$pageId/'
+      path: '/'
+      fullPath: '/public/$locale/pages/$pageId/'
+      preLoaderRoute: typeof PublicLocalePagesPageIdIndexImport
+      parentRoute: typeof PublicLocalePagesPageIdImport
+    }
     '/secured/$locale/views/$viewId/': {
       id: '/secured/$locale/views/$viewId/'
       path: '/'
@@ -189,6 +212,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/pages/$pageId/products/$productId'
       preLoaderRoute: typeof SecuredLocalePagesPageIdProductsProductIdImport
       parentRoute: typeof rootRoute
+    }
+    '/public/$locale/pages/$pageId/products/$productId/': {
+      id: '/public/$locale/pages/$pageId/products/$productId/'
+      path: '/'
+      fullPath: '/public/$locale/pages/$pageId/products/$productId/'
+      preLoaderRoute: typeof PublicLocalePagesPageIdProductsProductIdIndexImport
+      parentRoute: typeof PublicLocalePagesPageIdProductsProductIdImport
     }
     '/secured/$locale/pages/$pageId/products/$productId/': {
       id: '/secured/$locale/pages/$pageId/products/$productId/'
@@ -231,11 +261,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface PublicLocalePagesPageIdProductsProductIdRouteChildren {
+  PublicLocalePagesPageIdProductsProductIdIndexRoute: typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
   PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute: typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
 }
 
 const PublicLocalePagesPageIdProductsProductIdRouteChildren: PublicLocalePagesPageIdProductsProductIdRouteChildren =
   {
+    PublicLocalePagesPageIdProductsProductIdIndexRoute:
+      PublicLocalePagesPageIdProductsProductIdIndexRoute,
     PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute:
       PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
   }
@@ -246,11 +279,13 @@ const PublicLocalePagesPageIdProductsProductIdRouteWithChildren =
   )
 
 interface PublicLocalePagesPageIdRouteChildren {
+  PublicLocalePagesPageIdIndexRoute: typeof PublicLocalePagesPageIdIndexRoute
   PublicLocalePagesPageIdProductsProductIdRoute: typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
 }
 
 const PublicLocalePagesPageIdRouteChildren: PublicLocalePagesPageIdRouteChildren =
   {
+    PublicLocalePagesPageIdIndexRoute: PublicLocalePagesPageIdIndexRoute,
     PublicLocalePagesPageIdProductsProductIdRoute:
       PublicLocalePagesPageIdProductsProductIdRouteWithChildren,
   }
@@ -334,9 +369,11 @@ export interface FileRoutesByFullPath {
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
   '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
   '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
   '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
   '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
   '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
   '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
@@ -347,10 +384,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/public/$locale': typeof PublicLocaleIndexRoute
-  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdIndexRoute
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdIndexRoute
-  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
   '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
   '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
   '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute
@@ -365,9 +402,11 @@ export interface FileRoutesById {
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
+  '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
   '/secured/$locale/views/$viewId/': typeof SecuredLocaleViewsViewIdIndexRoute
   '/public/$locale/pages/$pageId/products/$productId': typeof PublicLocalePagesPageIdProductsProductIdRouteWithChildren
   '/secured/$locale/pages/$pageId/products/$productId': typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
+  '/public/$locale/pages/$pageId/products/$productId/': typeof PublicLocalePagesPageIdProductsProductIdIndexRoute
   '/secured/$locale/pages/$pageId/products/$productId/': typeof SecuredLocalePagesPageIdProductsProductIdIndexRoute
   '/public/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute
   '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId': typeof SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRouteWithChildren
@@ -384,9 +423,11 @@ export interface FileRouteTypes {
     | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
     | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId/'
     | '/secured/$locale/views/$viewId/'
     | '/public/$locale/pages/$pageId/products/$productId'
     | '/secured/$locale/pages/$pageId/products/$productId'
+    | '/public/$locale/pages/$pageId/products/$productId/'
     | '/secured/$locale/pages/$pageId/products/$productId/'
     | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
     | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
@@ -396,8 +437,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/public/$locale'
-    | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
     | '/public/$locale/pages/$pageId/products/$productId'
     | '/secured/$locale/pages/$pageId/products/$productId'
@@ -412,9 +453,11 @@ export interface FileRouteTypes {
     | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
     | '/secured/$locale/views/$viewId/$subjectId'
+    | '/public/$locale/pages/$pageId/'
     | '/secured/$locale/views/$viewId/'
     | '/public/$locale/pages/$pageId/products/$productId'
     | '/secured/$locale/pages/$pageId/products/$productId'
+    | '/public/$locale/pages/$pageId/products/$productId/'
     | '/secured/$locale/pages/$pageId/products/$productId/'
     | '/public/$locale/pages/$pageId/products/$productId/offers/$offerId'
     | '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId'
@@ -474,6 +517,7 @@ export const routeTree = rootRoute
       "filePath": "public.$locale.pages.$pageId.tsx",
       "parent": "/public/$locale",
       "children": [
+        "/public/$locale/pages/$pageId/",
         "/public/$locale/pages/$pageId/products/$productId"
       ]
     },
@@ -488,6 +532,10 @@ export const routeTree = rootRoute
       "filePath": "secured.$locale.views.$viewId.$subjectId.tsx",
       "parent": "/secured/$locale/views/$viewId"
     },
+    "/public/$locale/pages/$pageId/": {
+      "filePath": "public.$locale.pages.$pageId.index.tsx",
+      "parent": "/public/$locale/pages/$pageId"
+    },
     "/secured/$locale/views/$viewId/": {
       "filePath": "secured.$locale.views.$viewId.index.tsx",
       "parent": "/secured/$locale/views/$viewId"
@@ -496,6 +544,7 @@ export const routeTree = rootRoute
       "filePath": "public.$locale.pages.$pageId.products.$productId.tsx",
       "parent": "/public/$locale/pages/$pageId",
       "children": [
+        "/public/$locale/pages/$pageId/products/$productId/",
         "/public/$locale/pages/$pageId/products/$productId/offers/$offerId"
       ]
     },
@@ -505,6 +554,10 @@ export const routeTree = rootRoute
         "/secured/$locale/pages/$pageId/products/$productId/",
         "/secured/$locale/pages/$pageId/products/$productId/offers/$offerId"
       ]
+    },
+    "/public/$locale/pages/$pageId/products/$productId/": {
+      "filePath": "public.$locale.pages.$pageId.products.$productId.index.tsx",
+      "parent": "/public/$locale/pages/$pageId/products/$productId"
     },
     "/secured/$locale/pages/$pageId/products/$productId/": {
       "filePath": "secured.$locale.pages.$pageId.products.$productId.index.tsx",

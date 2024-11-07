@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -50,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/feedback")
 @RequiredArgsConstructor
 public class GamutFeedbackController {
+  private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final DialobClient dialob;
   private final List<String> allowedActions;
@@ -94,7 +97,7 @@ public class GamutFeedbackController {
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)
-          .createOne());
+          .createOne().await().atMost(timeout));
     } catch(UserActionNotAllowedException e) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     } catch (WorkflowNotFoundException e) {

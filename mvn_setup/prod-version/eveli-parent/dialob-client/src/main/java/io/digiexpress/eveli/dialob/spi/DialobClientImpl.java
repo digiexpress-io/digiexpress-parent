@@ -53,11 +53,10 @@ public class DialobClientImpl implements DialobClient {
   
   private final ObjectMapper objectMapper;
   private final DialobService dialobService;
-  private final String callbackUrl;
   
   @Override
   public DialobSessionBuilderImpl createSession() {
-    return new DialobSessionBuilderImpl(objectMapper, callbackUrl, dialobService);
+    return new DialobSessionBuilderImpl(objectMapper, dialobService);
   }
   @Override
   public DialobProxy createProxy() {
@@ -203,13 +202,12 @@ public class DialobClientImpl implements DialobClient {
   public static class Builder {
     private ObjectMapper objectMapper;
     private DialobService dialobService;
-    private String submitCallbackUrl;
 
     public DialobClientImpl build() {
       DialobAssert.notNull(objectMapper, () -> "objectMapper must be defined!");
       DialobAssert.notNull(dialobService, () -> "dialobService must be defined!");
       
-      return new DialobClientImpl(objectMapper, dialobService, submitCallbackUrl);
+      return new DialobClientImpl(objectMapper, dialobService);
     }
   }
 }

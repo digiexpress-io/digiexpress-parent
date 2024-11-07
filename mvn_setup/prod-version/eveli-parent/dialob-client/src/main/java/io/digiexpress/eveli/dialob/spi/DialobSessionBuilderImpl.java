@@ -37,7 +37,6 @@ import org.springframework.util.Assert;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.dialob.api.form.FormTag;
 import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobClient.DialobSessionBuilder;
@@ -48,15 +47,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuilder {
   private final ObjectMapper objectMapper;
-  private final String callbackUrl;
   private final DialobService dialobService;
   
   private final Map<String, Serializable> context = new HashMap<>();
   private final Map<String, Serializable> answer = new HashMap<>();
   
   private String language;
-  private String formName;
-  private String formTag;
+  private String formId;
   
   @Override
   public DialobSessionBuilder language(String language) {
@@ -74,25 +71,19 @@ public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuild
     return this;
   }
   @Override
-  public DialobSessionBuilder formName(String formName) {
-    this.formName = formName;
+  public DialobSessionBuilder formId(String formId) {
+    this.formId = formId;
     return this;
   }
-  @Override
-  public DialobSessionBuilder formTag(String formTag) {
-    this.formTag = formTag;
-    return this;
-  }
-  
+
   @Override
   public IdAndRevision build() {
-    final String formId = getFormId(formName, formTag);
-    Assert.notNull(formId, () -> "formName can't be null!");
+    Assert.notNull(formId, () -> "formId can't be null!");
     final String body = createBody(formId, language, context, answer);
     
     final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers());
     try {
-      ResponseEntity<IdAndRevision> response = dialobService.getSessions().exchange("", HttpMethod.POST, requestEntity, IdAndRevision.class);
+      ResponseEntity<IdAndRevision> response = dialobService.getQuestionnaires().exchange("", HttpMethod.POST, requestEntity, IdAndRevision.class);
       DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 201!");
       return response.getBody();
     } catch (Exception e) {
@@ -147,17 +138,15 @@ public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuild
     jsonGenerator.writeFieldName("metadata");
     jsonGenerator.writeStartObject();
     jsonGenerator.writeStringField("formId", formId);
-    jsonGenerator.writeStringField("formRev", "LATEST");
     if (copy) {
       jsonGenerator.writeStringField("status", "OPEN");
     }
+    
+    
     if (language != null) {
       jsonGenerator.writeStringField("language", language);
     } else {
       jsonGenerator.writeStringField("language", "fi");
-    }
-    if (callbackUrl != null) {
-      jsonGenerator.writeStringField("submitUrl", callbackUrl);
     }
     jsonGenerator.writeEndObject();
   }
@@ -177,12 +166,5 @@ public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuild
       jsonGenerator.writeEndObject();
     }
     jsonGenerator.writeEndArray();
-  }
-
-  private String getFormId(String formName2, String formTag2) {
-    ResponseEntity<FormTag> response = dialobService.getForms().getForEntity(formName + "/tags/" + formTag, FormTag.class);
-    DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 200!");
-    FormTag tag = response.getBody();
-    return tag.getFormId();
   }
 }

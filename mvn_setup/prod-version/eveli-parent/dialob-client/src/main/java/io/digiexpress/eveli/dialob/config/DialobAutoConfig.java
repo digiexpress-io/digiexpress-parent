@@ -1,6 +1,9 @@
 package io.digiexpress.eveli.dialob.config;
 
+import java.util.Arrays;
 import java.util.Collections;
+
+import org.springframework.boot.autoconfigure.web.client.RestTemplateBuilderConfigurer;
 
 /*-
  * #%L
@@ -23,9 +26,11 @@ import java.util.Collections;
  */
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.util.ObjectUtils;
@@ -51,32 +56,41 @@ public class DialobAutoConfig {
   public DialobService dialobService(DialobConfigProps props) {
     final var serviceUrl = props.getServiceUrl();
     
-    final var forms = new RestTemplate();
-    forms.setUriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api/forms"));
-
-    final var sessions = new RestTemplate();
-    sessions.setUriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/session/api/questionnaires"));
-
-    if(!ObjectUtils.isEmpty(props.getApiKey())) {
-      final ClientHttpRequestInterceptor auth = (HttpRequest request, byte[] body, ClientHttpRequestExecution execution) -> {
-        final var headers = request.getHeaders();
+    final ClientHttpRequestInterceptor interceptor = (HttpRequest request, byte[] body, ClientHttpRequestExecution execution) -> {
+      final var headers = request.getHeaders();
+      if(!ObjectUtils.isEmpty(props.getApiKey())) {
         headers.set("x-api-key", props.getApiKey());
-        return execution.execute(request, body);    
-      };
+      }
+      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      return execution.execute(request, body);    
+    };
+    
+    final var interceptors = Collections.singletonList(interceptor);
+    
+    final var forms = new RestTemplateBuilder()
+        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api/forms"))
+        .additionalInterceptors(interceptors)
+        .build();
+
+    final var questionnaires = new RestTemplateBuilder()
+        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api/questionnaires"))
+        .additionalInterceptors(interceptors)
+        .build();
+
+    final var sessions = new RestTemplateBuilder()
+      .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/session/dialob"))
+      .additionalInterceptors(interceptors)
+      .build();
   
-      forms.setInterceptors(Collections.singletonList(auth));
-      sessions.setInterceptors(Collections.singletonList(auth));
-    }
-  
-    return new DialobService(forms, sessions);
+    return new DialobService(forms, sessions, questionnaires);
   }
   
   @Bean 
-  public DialobClient dialobClient(DialobService service, DialobConfigProps config, ObjectMapper objectMapper) {
+  public DialobClient dialobClient(DialobService service, ObjectMapper objectMapper) {
     return DialobClientImpl.builder()
         .objectMapper(objectMapper)
         .dialobService(service)
-        .submitCallbackUrl(config.getServiceUrl() + "/dialobSubmitCallback")
         .build();
   }  
 }

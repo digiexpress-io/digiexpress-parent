@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
+import java.util.function.Supplier;
+
 /*-
  * #%L
  * eveli-client
@@ -32,6 +34,8 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.iam.api.ImmutableUserAction;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +53,12 @@ public class GamutClientImpl implements GamutClient {
   private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
   private final CrmClient authClient;
+  private final StencilClient stencilClient;
+  private final Supplier<Sites> siteEnvir;
 
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processRepository, dialobCommands, hdesCommands, assetClient, authClient);
+    return new UserActionsBuilderImpl(processRepository, dialobCommands, hdesCommands, assetClient, siteEnvir, authClient);
   }
 
   @Override

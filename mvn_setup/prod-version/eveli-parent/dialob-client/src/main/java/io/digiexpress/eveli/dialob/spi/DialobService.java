@@ -31,4 +31,5 @@ import lombok.RequiredArgsConstructor;
 public class DialobService {
   private final RestTemplate forms;
   private final RestTemplate sessions;
+  private final RestTemplate questionnaires;
 }

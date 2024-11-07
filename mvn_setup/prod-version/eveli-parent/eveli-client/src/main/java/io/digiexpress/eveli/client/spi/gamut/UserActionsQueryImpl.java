@@ -73,7 +73,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private String visitUserId() {
     final var customer = authClient.getCustomer().getPrincipal();
-    if(customer.getRepresentedId() == null) {
+    if(customer.getRepresentedId() != null) {
       return customer.getRepresentedId();
     }
     return customer.getSsn();

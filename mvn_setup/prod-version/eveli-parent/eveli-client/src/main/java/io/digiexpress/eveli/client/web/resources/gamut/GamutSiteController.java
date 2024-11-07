@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
+import java.util.function.Supplier;
+
 /*-
  * #%L
  * eveli-client
@@ -25,9 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
-import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,30 +39,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GamutSiteController {
   
-  
-  private final StencilClient client;
+  private final Supplier<Sites> siteEnvir;
 
   @GetMapping
-  public Uni<LocalizedSite> getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
+  public LocalizedSite getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
    
+    final var sites = siteEnvir.get();
+    final var data = sites.getSites().get(locale);
     
-    return client.getStore().query().head()
-    .onItem().transform(state -> client.markdown().json(state, true).build())
-    .onItem().transform(markdowns -> client.sites()
-        .imagePath("images")
-        .created(System.currentTimeMillis())
-        .source(markdowns)
-        .build())
-    .onItem().transform(sites -> sites.getSites().get(locale))
-    .onItem().transform(data -> {
-      if(data == null) {
-        return LocalizedSiteBean.builder().id("not-found")
-            .images("images")
-            .locale(locale)
-            .build();
-      }
-      return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
-    });
+    if(data == null) {
+      return LocalizedSiteBean.builder().id("not-found")
+          .images("images")
+          .locale(locale)
+          .build();
+    }
+    return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
     
   }
 }

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -23,7 +25,6 @@ package io.digiexpress.eveli.client.web.resources.gamut;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,21 +63,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/secured/actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
-  
+  private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final CrmClient authClient;
   private final DialobClient dialob;
   private final HdesCommands hdes;
 
-  @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value="fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
     return dialob.createProxy().sessionGet(sessionId);
   }
-  @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
     return dialob.createProxy().sessionPost(sessionId, body);
   }
-  @GetMapping(value="/review/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value="/review/{sessionId}")
   public ResponseEntity<String> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
     return dialob.createProxy().sessionGet(sessionId);
   }
@@ -92,7 +93,7 @@ public class GamutUserActionsController {
   }
   
   @Transactional
-  @PostMapping(value="{actionId}/messages", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value="{actionId}/messages")
   public ResponseEntity<UserMessage> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
     try {
       return ResponseEntity.ok(gamutClient.replyToBuilder().actionId(actionId).from(raw).createOne());
@@ -101,7 +102,7 @@ public class GamutUserActionsController {
     }
   }
   
-  @PostMapping(value="{actionId}/attachments", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value="{actionId}/attachments")
   public ResponseEntity<List<Attachment>> createAttachments(@PathVariable("actionId") String actionId, @RequestBody List<UserAttachmentUploadInit> raw) {
     try {
       return new ResponseEntity<>(gamutClient.userAttachmentBuilder().actionId(actionId).addAll(raw).createMany(), HttpStatus.CREATED);
@@ -112,7 +113,7 @@ public class GamutUserActionsController {
     }
   }
   
-  @GetMapping(value="{actionId}/attachments/{filename}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value="{actionId}/attachments/{filename}")
   public ResponseEntity<AttachmentDownloadUrl> getAttachment(
       @PathVariable("actionId") String actionId, 
       @PathVariable("filename") String filename) {
@@ -160,10 +161,10 @@ public class GamutUserActionsController {
 
   @GetMapping
   public ResponseEntity<?> kindOfCreateActionOrGet(
-      @RequestParam(name = "actionId", required = false) String actionId,
+      @RequestParam(name = "id", required = false) String actionId,
       @RequestParam(name = "inputContextId", required = false) String inputContextId,
       @RequestParam(name = "inputParentContextId", required = false) String inputParentContextId,
-      @RequestParam(name = "actionLocale", required = false) String actionLocale
+      @RequestParam(name = "locale", required = false) String actionLocale
   ) {
     
     if(actionId == null) {
@@ -176,7 +177,7 @@ public class GamutUserActionsController {
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)
-          .createOne());
+          .createOne().await().atMost(timeout));
     } catch(UserActionNotAllowedException e) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     } catch (WorkflowNotFoundException e) {

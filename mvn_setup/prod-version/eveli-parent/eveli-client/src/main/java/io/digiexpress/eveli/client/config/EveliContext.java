@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.StencilClient;
 import lombok.Builder;
 import lombok.Data;
@@ -37,4 +38,5 @@ public class EveliContext {
   private final HdesClient wrench;
   private final EveliAssetClient assets;
   private final Supplier<ProgramEnvir> programEnvir;
+  private final Supplier<Sites> siteEnvir;
 }

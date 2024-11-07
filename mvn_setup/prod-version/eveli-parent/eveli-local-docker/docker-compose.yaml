@@ -70,7 +70,7 @@ services:
       - SPRING_CLOUD_GCP_LOGGING_ENABLED=false
       - DIALOB_TENANT_MODE=URL_PARAM
       - DIALOB_TENANT_FIXED_ID=00000000-0000-0000-0000-000000000000
-      - QUESTIONNAIRE_RESTURL=/session/dialob
+      - QUESTIONNAIRE_REST_URL=/session/dialob
       - COMPOSER_ADMINAPPURL=/ui/forms
     networks:
       - dialob-backend
