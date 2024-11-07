@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 public class AssetsToVersion_2 {
 
@@ -42,7 +41,7 @@ public class AssetsToVersion_2 {
   public void readAssets() throws IOException {
     
     new File("src/test/resources/migrated").mkdir();
-
+    System.out.print(log);
     
     final var deployment = new AssetsToVersion_2_Builder().build();
     

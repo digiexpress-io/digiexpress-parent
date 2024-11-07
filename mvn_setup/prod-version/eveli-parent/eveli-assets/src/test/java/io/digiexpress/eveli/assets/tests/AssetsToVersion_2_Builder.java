@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.ImmutableList;
 
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.Deployment;
@@ -90,6 +92,7 @@ public class AssetsToVersion_2_Builder {
     final var assets = list(JSON_DIR);
     assets.stream()
       .map(this::visitAnyResource)
+      .flatMap(e -> e.stream())
       .forEach(this::visitAnyAsset);
     
     return visitDeployment();
@@ -236,11 +239,24 @@ public class AssetsToVersion_2_Builder {
   }
   
   
-  private JsonObject visitAnyResource(Resource resource) {
+  @SuppressWarnings("unchecked")
+  private List<JsonObject> visitAnyResource(Resource resource) {
     try {
       final var content = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
       final var json = new JsonObject(content);
-      return json;
+      
+      if(json.containsKey("assetRelease")) {
+        return ImmutableList.<JsonObject>builder()
+            .add(json.getJsonObject("workflowRelease"))
+            .add(json.getJsonObject("contentRelease"))
+            .add(json.getJsonObject("wrenchRelease"))
+            .addAll(json.getJsonArray("dialobReleaseForms").getList().stream().map(e-> JsonObject.mapFrom(e)).toList())
+            .build();
+      }
+      
+      
+      
+      return Arrays.asList(json);
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     } 
