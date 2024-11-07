@@ -40,13 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAutoConfiguration
 @EnableAsync
 @Slf4j
-@Import(value = { 
-    EveliAutoConfigDB.class, 
-    EveliAutoConfigAssets.class, 
-    EveliAutoConfig.class,
-    DialobAutoConfig.class,
-    EveliAutoConfigGamut.class
-})
+@Import(value = { EveliAutoConfigDB.class, EveliAutoConfigAssets.class, EveliAutoConfig.class, DialobAutoConfig.class,
+    EveliAutoConfigGamut.class })
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[] { Application.class }, args);
@@ -55,51 +50,154 @@ public class Application {
   @EventListener
   public void handleContextRefresh(ContextRefreshedEvent event) {
     final var applicationContext = event.getApplicationContext();
-    final var requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
-    final var endpoints = requestMappingHandlerMapping.getHandlerMethods();
+    final var requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping",
+        RequestMappingHandlerMapping.class);
 
-    final var msg = new StringBuilder("\r\nREST API\r\n");
-    String greenColor = "\033[32m";
-    String resetColor = "\033[0m"; 
+    final var newLog = new ApplicationConfigLogger().log(requestMappingHandlerMapping);
+    log.info(newLog);
     
-    msg.append("\r\n--------------------------------- GET Endpoints ---------------------------------\r\n");
+    
+    
+    
+    /*
+     *     final var endpoints = requestMappingHandlerMapping.getHandlerMethods();
 
-    endpoints.forEach((key, value) -> {
-      if (key.toString().contains("GET")) {
-        msg.append(greenColor);
-        msg.append(key).append(" - ");
-        msg.append(resetColor);
-        msg.append(value).append("\r\n");
-      }
+    final var endpointCount = endpoints.size();
+
+    final var msg = new StringBuilder("\r\nEVELI REST API\r\n");
+
+    final var httpGETCount = endpoints.entrySet().stream().filter(entry -> entry.getKey().toString().contains("GET"))
+        .count();
+    final var httpPUTCount = endpoints.entrySet().stream().filter(entry -> entry.getKey().toString().contains("PUT"))
+        .count();
+    final var httpPOSTCount = endpoints.entrySet().stream().filter(entry -> entry.getKey().toString().contains("POST"))
+        .count();
+    final var httpDELETECount = endpoints.entrySet().stream()
+        .filter(entry -> entry.getKey().toString().contains("DELETE")).count();
+
+    Map<String, Set<String>> httpMethods = new HashMap<>();
+    endpoints.entrySet().forEach(entry -> {
+
+      String url = entry.getKey().toString();
+
+      String[] parts = url.split(" ", 2);
+      String httpMethod = parts[0];
+      String endpointPath = parts[1];
+
+      httpMethods.computeIfAbsent(endpointPath, k -> new HashSet<>()).add(httpMethod);
     });
-    
-    msg.append("\r\n--------------------------------- PUT Endpoints ---------------------------------\r\n");
 
-    endpoints.forEach((key, value) -> {
-      if (key.toString().contains("PUT") ) {
-        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
-      }
-    });
-    
-    msg.append("\r\n--------------------------------- POST Endpoints ---------------------------------\r\n");
+    msg.append("Total endpoints: " + endpointCount).append("\r\n");
+    msg.append("Total GET: ").append(httpGETCount).append("\r\n");
+    msg.append("Total PUT: ").append(httpPUTCount).append("\r\n");
+    msg.append("Total POST: ").append(httpPOSTCount).append("\r\n");
+    msg.append("Total DELETE: ").append(httpDELETECount).append("\r\n");
 
-    endpoints.forEach((key, value) -> {
-      if (key.toString().contains("POST")) {
-        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
-      }
-    });
-    
-    msg.append("\r\n--------------------------------- DELETE ---------------------------------\r\n");
+    msg.append("\r\n------------------------------------------------------------------\r\n");
+    msg.append("\r\n");
+    msg.append("Grouped endpoints by base URL and associated HTTP methods:\r\n");
 
-    endpoints.forEach((key, value) -> {
-      if (key.toString().contains("DELETE")) {
-        msg.append(key).append("  - ").append(" = ").append(value).append("\r\n");
+    Map<String, List<String>> groupedEndpoints = new HashMap<>();
+    int baseUrlDepth = 4;
+
+    for (Map.Entry<String, Set<String>> entry : httpMethods.entrySet()) {
+      String endpoint = entry.getKey();
+      Set<String> methods = entry.getValue();
+
+      String cleanedEndpoint = endpoint
+        .replace("[", "")
+        .replace("]", "")
+        .trim();
+      
+      if (cleanedEndpoint.contains("produces")) { 
+        int producesIndex = cleanedEndpoint.indexOf("produces"); 
+        cleanedEndpoint = cleanedEndpoint.substring(0, producesIndex).trim(); 
       }
+      
+      
+      if (cleanedEndpoint.contains("consumes")) { 
+        int consumesIndex = cleanedEndpoint.indexOf("consumes"); 
+        cleanedEndpoint = cleanedEndpoint.substring(0, consumesIndex).trim(); 
+      }
+         
+      String[] parts = cleanedEndpoint.split("/");
+
+      StringBuilder baseUrl = new StringBuilder();
+      for (int i = 0; i < Math.min(parts.length, baseUrlDepth); i++) {
+        if (i > 0)
+          baseUrl.append("/"); 
+          baseUrl.append(parts[i]);
+      }
+
+      String baseUrlString = baseUrl.toString();
+      groupedEndpoints.computeIfAbsent(baseUrlString, k -> new ArrayList<>())
+        .add(cleanedEndpoint + " —> " + String.join(", ", methods.toString()
+          .replace("{", "")
+          .replace("[", "")
+          .replace("]", "")
+        ));
+    }
+
+    for (Map.Entry<String, List<String>> entry : groupedEndpoints.entrySet()) {
+      String baseUrl = entry.getKey();
+      List<String> endpointsInGroup = entry.getValue();
+
+      msg.append("Group: ").append(baseUrl).append("\r\n");
+      for (String endpoint : endpointsInGroup) {
+        msg.append(endpoint).append("\r\n");
+      }
+      msg.append("\r\n");
+    }
+
+    endpoints.forEach((key, value) -> { 
+      int length = value.toString().length();
+      
+      
+      int start = value.toString().indexOf(".");
+      int end = value.toString().indexOf("#");
+      
+      msg.append(value.toString().substring(start, end)).append("\r\n"); 
     });
-    
-    
 
     log.info(msg.toString());
+
+    
+     * 
+     * String greenColor = "\033[32m"; String resetColor = "\033[0m";
+     * 
+     * msg.
+     * append("\r\n--------------------------------- GET Endpoints ---------------------------------\r\n"
+     * );
+     * 
+     * endpoints.forEach((key, value) -> { if (key.toString().contains("GET")) {
+     * msg.append(greenColor); msg.append(key).append(" - ");
+     * msg.append(resetColor); msg.append(value).append("\r\n"); } });
+     * 
+     * msg.
+     * append("\r\n--------------------------------- PUT Endpoints ---------------------------------\r\n"
+     * );
+     * 
+     * endpoints.forEach((key, value) -> { if (key.toString().contains("PUT") ) {
+     * msg.append(key).append("  - ").append(" = ").append(value).append("\r\n"); }
+     * });
+     * 
+     * msg.
+     * append("\r\n--------------------------------- POST Endpoints ---------------------------------\r\n"
+     * );
+     * 
+     * endpoints.forEach((key, value) -> { if (key.toString().contains("POST")) {
+     * msg.append(key).append("  - ").append(" = ").append(value).append("\r\n"); }
+     * });
+     * 
+     * msg.
+     * append("\r\n--------------------------------- DELETE ---------------------------------\r\n"
+     * );
+     * 
+     * endpoints.forEach((key, value) -> { if (key.toString().contains("DELETE")) {
+     * msg.append(key).append("  - ").append(" = ").append(value).append("\r\n"); }
+     * });
+     */
+
   }
   // HHH015007 - https://hibernate.atlassian.net/browse/HHH-17612
 }
