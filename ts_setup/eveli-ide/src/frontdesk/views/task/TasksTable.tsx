@@ -158,7 +158,7 @@ export const TasksTable: React.FC<Props> =
         </Link>
       );
       if (id && newTasks.includes(id)) {
-        if (keywords && keywords[0].includes('Protected')) {
+        if (keywords && keywords[0]?.includes('Protected')) {
           return (
             <Box display="flex" alignItems="center" justifyContent="space-between">
               {link}

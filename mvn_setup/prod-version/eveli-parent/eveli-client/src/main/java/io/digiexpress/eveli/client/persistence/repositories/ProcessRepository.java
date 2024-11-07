@@ -50,6 +50,9 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
 
   @Query(value="select p from ProcessEntity p where userId = :userId")
   List<ProcessEntity> findAllByUserId(@Param("userId") String userId);
+
+  @Query(value="select p from ProcessEntity p where status = :status and task is null")
+  List<ProcessEntity> findAllByStatus(ProcessStatus status);
   
   void deleteById(@Param("id") Long id);
   ProcessEntity save(ProcessEntity entity);

@@ -101,6 +101,14 @@ export class FormImpl implements DialobApi.Form {
     return Object.freeze(tip.items);
   }
 
+  public get completeAllowed() {
+    return this.tip?.allowedActions?.includes("COMPLETE") ?? false;
+  }
+
+  public get proceedAllowed() {
+    return this.tip?.allowedActions?.includes("NEXT") ?? false;
+  }
+
   public get id() { return this._id }
 
   public get tip(): DialobApi.ActionItem | undefined {

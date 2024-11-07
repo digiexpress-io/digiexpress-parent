@@ -35,7 +35,6 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
 
   const { variant } = getSlotVariant(element, store);
   const intl = useIntl();
-  
 
   if (variant === 'date') {
     const errors = store.form.toErrors(element.id);
@@ -205,6 +204,9 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
       active: meta.active,
       pageNumber: meta.order,
 
+      proceedAllowed: store.form.proceedAllowed,
+      completeAllowed: store.form.completeAllowed,
+
       subTitle,
       description,
       pages,
@@ -266,7 +268,6 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
   }
 
   if (variant === 'group') {
-    
     const desc = store.form.toDescription(element.id);
     const result: [React.ElementType, GFormGroupProps] = [GFormGroup, {
       id: element.id,
@@ -291,6 +292,7 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
   }
 
   if (variant === 'row') {
+
     const meta = store.form.toInputRow(element.id);
     const description = store.form.toDescription(element.id);
     const result: [React.ElementType, GInputGroupRowProps] = [GInputGroupRow, {
@@ -307,6 +309,7 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
   }
 
   if (variant === 'boolean') {
+    const errors = store.form.toErrors(element.id);
     const desc = store.form.toDescription(element.id);
     const labelPosition = getLabelPosition(element, store);
     const result: [React.ElementType, GInputBooleanProps] = [GInputBoolean, {
@@ -314,6 +317,7 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
       label: element.label,
       description: desc,
       variant: 'checkbox',
+      errors,
       value: element.value,
       onChange: () => {},
       labelPosition
@@ -326,11 +330,12 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
     const valueset = store.form.toValueSet(element.id);
     const desc = store.form.toDescription(element.id);
     const labelPosition = getLabelPosition(element, store);
-
+    const errors = store.form.toErrors(element.id);
     const result: [React.ElementType, GInputListProps] = [GInputList, {
       id: element.id,
       label: element.label,
       description: desc,
+      errors,
       variant: 'list',
       undefinedValue: UNDEFINED_SELECTION_VALUE,
       value: element.value ?? UNDEFINED_SELECTION_VALUE,
@@ -346,12 +351,13 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
     const valueset = store.form.toValueSet(element.id);
     const desc = store.form.toDescription(element.id);
     const labelPosition = getLabelPosition(element, store);
-
+    const errors = store.form.toErrors(element.id);
     const result: [React.ElementType, GInputMultilistProps] = [GInputMultilist, {
       id: element.id,
       label: element.label,
       description: desc,
       variant: 'multilist',
+      errors,
       value: element.value,
       datasource: valueset!,
       onChange: () => {},

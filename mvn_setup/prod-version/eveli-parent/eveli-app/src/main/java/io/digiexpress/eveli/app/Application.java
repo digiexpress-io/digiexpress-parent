@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
@@ -39,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableAsync
+@EnableScheduling
 @Slf4j
 @Import(value = { EveliAutoConfigDB.class, EveliAutoConfigAssets.class, EveliAutoConfig.class, DialobAutoConfig.class,
     EveliAutoConfigGamut.class })

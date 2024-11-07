@@ -90,7 +90,7 @@ export const RouterFormsAwaitingDecision: React.FC<RouterFormsAwaitingDecisionPr
               left: () => (<>
                 <Divider />
                 <GContracts
-                  filter={(contract => contract.status === 'OPEN')}
+                  filter={(contract => contract.status === 'OPEN' || contract.status === 'NEW')}
                   slotProps={{ item: { color, onClick: handleContractItemClick } }}
                 />
               </>

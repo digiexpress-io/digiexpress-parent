@@ -14,7 +14,9 @@ export function mapToOfferData(data: LegacyProcessApi.Process[]): {
   const offers: OfferApi.Offer[] = [];
 
   for (const proc of data) {
-    if (proc.status !== 'CREATED') {
+    if (!(proc.status === 'CREATED' 
+      //|| proc.status === 'ANSWERED'
+    )) {
       continue;
     }
 

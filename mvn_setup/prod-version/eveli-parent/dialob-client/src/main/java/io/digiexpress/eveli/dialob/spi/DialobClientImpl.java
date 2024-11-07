@@ -64,7 +64,7 @@ public class DialobClientImpl implements DialobClient {
   }
   @Override
   public Questionnaire getQuestionnaireById(String questionnaireId) {
-    return dialobService.getSessions().getForObject(questionnaireId, Questionnaire.class);
+    return dialobService.getQuestionnaires().getForObject("/" + questionnaireId, Questionnaire.class);
   }
   @Override
   public Dialob getDialobById(String questionnaireId) {

@@ -28,6 +28,8 @@ import java.util.stream.StreamSupport;
 import org.springframework.data.domain.Sort;
 
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +68,9 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   @Override
   public void deleteOneById(String id) {
     processJPA.deleteById(Long.parseLong(id)); 
+  }
+  @Override
+  public List<ProcessInstance> findAllAnswered() {
+    return processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList();
   }
 }

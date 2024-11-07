@@ -15,10 +15,10 @@ export function mapToContractData(data: LegacyProcessApi.Process[]): {
   const contracts: ContractApi.Contract[] = [];
 
   for (const proc of data) {
+    
     if (!proc.taskId) {
       continue;
     }
-
     const contract = mapToContract(proc);
     md5
       .appendStr(proc.id)
@@ -57,7 +57,7 @@ function mapToContract(data: LegacyProcessApi.Process): ContractApi.Contract {
   return Object.freeze({
     id: data.id,
     exchangeId: data.taskId!,
-    status: data.taskStatus!,
+    status: data.taskStatus! as any, 
     reviewUri: data.reviewUri!,
     documents: docs,
     product: {} as any,

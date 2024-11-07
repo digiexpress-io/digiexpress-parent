@@ -150,9 +150,10 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private UserAction visitUserAction(ProcessInstance process, TasksContext tasks) {
     final var messages = visitUserActionMessages(process, tasks);
-    final var taskRef = Optional.ofNullable(process.getTask())
-        .map(taskId -> tasks.getTasksById().get(taskId))
-        .map(task -> task.getTaskRef())
+    final var task =  Optional.ofNullable(process.getTask())
+        .map(taskId -> tasks.getTasksById().get(taskId));
+    final var taskRef = task
+        .map(t -> t.getTaskRef())
         .orElse(null);
     
     final var att = visitAttachments(process);
@@ -168,7 +169,10 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .inputParentContextId(process.getInputParentContextId())
         .formId(process.getQuestionnaire())
         .formInProgress(process.getStatus() == ProcessStatus.ANSWERING || process.getStatus() == ProcessStatus.CREATED)        
-        .taskRef(taskRef)        
+        .taskRef(taskRef)
+        .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))
+        .taskCreated(task.map(t -> t.getCreated()).orElse(null))
+        .taskUpdated(task.map(t -> t.getUpdated()).orElse(null))
         .viewed(messages.isViewed())
         .updated(messages.getUpdated())
         .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())

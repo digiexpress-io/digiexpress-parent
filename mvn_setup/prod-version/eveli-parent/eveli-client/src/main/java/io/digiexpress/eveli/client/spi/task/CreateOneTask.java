@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommand;
+import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
@@ -49,7 +50,7 @@ public class CreateOneTask {
         .setDescription(commmand.getDescription())
         .setDueDate(commmand.getDueDate())
         .setPriority(commmand.getPriority())
-        .setStatus(commmand.getStatus())
+        .setStatus(commmand.getStatus() == null ? TaskStatus.NEW: commmand.getStatus())
         .setSubject(commmand.getSubject())
         .setTaskRef(taskRefGenerator.generateTaskRef())
         .setUpdaterId(userId);

@@ -180,6 +180,9 @@ export declare namespace DialobApi {
     toInputRow(id: ControlId): ControlInputRow;
     toParent(id: ControlId): ActionItem | undefined;
 
+    proceedAllowed: boolean;
+    completeAllowed: boolean;
+
     tip: ActionItem | undefined;
     pagesIds: readonly ControlId[];
 

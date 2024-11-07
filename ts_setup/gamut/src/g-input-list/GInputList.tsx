@@ -75,10 +75,7 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
       adornment: { id, children: props.description, title: label }
     }
   }
-
   const classes = useUtilityClasses(props.id, variant);
-
-
   return (<GInputListRoot className={classes.root} ownerState={ownerState} as={props.component}>
     <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
   </GInputListRoot>);

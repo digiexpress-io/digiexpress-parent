@@ -76,6 +76,7 @@ public interface ProcessClient {
     
     void deleteOneById(String id);
     List<ProcessInstance> findAll();
+    List<ProcessInstance> findAllAnswered();
     List<ProcessInstance> findAllByUserId(String userId);    
   }
 
@@ -111,14 +112,16 @@ public interface ProcessClient {
   
 
   enum ProcessStatus {
+    
     CREATED,
-    ANSWERING,
+    ANSWERING,    
     ANSWERED, // 
     
     IN_PROGRESS,
     WAITING,
     COMPLETED,
-    REJECTED
+    REJECTED,
+    WAITING_FOR_SYNC // complete event arrived from form, waiting to launch flow
   }
   
   

@@ -21,6 +21,9 @@ export type GFormPageClassKey = keyof GFormPageClasses;
 
 export interface GFormPageProps {
   id: string;
+  proceedAllowed: boolean;
+  completeAllowed: boolean;
+
   pageNumber: number; // starts from 1..n
   pages: { id: string; title: string | undefined, pageNumber: number }[];
   onChangePage: (pageId: string) => void;
@@ -114,7 +117,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
         </Button>
         }
 
-        { props.pages.length === props.pageNumber &&
+        { props.completeAllowed &&
           <Button onClick={handleComplete} color='primary' autoFocus>
             <FormattedMessage id='gamut.forms.page.complete' />
           </Button> 
