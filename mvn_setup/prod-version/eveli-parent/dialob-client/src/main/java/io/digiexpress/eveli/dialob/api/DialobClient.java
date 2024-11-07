@@ -33,9 +33,7 @@ import io.dialob.api.rest.IdAndRevision;
 public interface DialobClient {
 
   DialobSessionBuilder createSession();
-  DialobProxy createProxy();
-
-  
+  DialobProxy createProxy();  
   Form createForm(Form form);
   FormTag createTag(String formId, String tagName);
   

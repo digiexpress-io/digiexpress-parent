@@ -35,11 +35,8 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
-import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
@@ -54,10 +51,8 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class UserActionsBuilderImpl implements UserActionBuilder {
-  
-  private final ProcessRepository processRepository;
+  private final ProcessClient hdesCommands;  
   private final DialobClient dialobCommands;
-  private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
   private final Supplier<Sites> siteEnvir;
   
@@ -83,7 +78,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private UserAction createUserAction(Sites site) {
     if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
       final var userRoles = auth.getCustomerRoles().getRoles();  
-      final var allowed = hdesCommands.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
+      final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
           .build());
       
@@ -118,14 +113,13 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .toString()));
 
     final var sessionId = visitForm(request, workflow).getId();    
-    
-    final ProcessEntity process = processRepository.save(new ProcessEntity()
-        .setQuestionnaire(sessionId)
-        .setUserId(request.getIdentity())
-        .setStatus(ProcessStatus.CREATED)
-        .setWorkflowName(workflow.getName())
-        .setInputContextId(request.getInputContextId())
-        .setInputParentContextId(request.getInputParentContextId()));
+    final var process = hdesCommands.createInstance()
+        .questionnaire(sessionId)
+        .userId(request.getIdentity())
+        .workflowName(workflow.getName())
+        .inputContextId(request.getInputContextId())
+        .inputParentContextId(request.getInputParentContextId())
+        .create();
 
     return ImmutableUserAction.builder()
         .id(process.getId().toString())

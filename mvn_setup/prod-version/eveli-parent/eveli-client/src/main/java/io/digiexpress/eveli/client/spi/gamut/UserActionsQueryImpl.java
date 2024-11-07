@@ -31,13 +31,12 @@ import java.util.stream.Collectors;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
-import io.digiexpress.eveli.client.api.HdesCommands;
-import io.digiexpress.eveli.client.api.HdesCommands.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.thestencil.iam.api.ImmutableAttachment;
 import io.thestencil.iam.api.ImmutableUserAction;
@@ -51,16 +50,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserActionsQueryImpl implements UserActionQuery {
   
+  private final ProcessClient hdesCommands;
   private final TaskRepository taskRepository;
-  private final ProcessRepository processRepository;
   private final CrmClient authClient;
-  private final HdesCommands hdesCommands;
   private final AttachmentCommands attachmentsCommands;
   
   @Override
   public List<UserAction> findAll() {
     final var ssn = visitUserId();
-    final var processes = processRepository.findAllByUserId(ssn);
+    final var processes = hdesCommands.queryInstances().findAllByUserId(ssn);
     final var tasks = visitTasks(processes, ssn);
     final var auth = visitAuthorization();
     
@@ -79,19 +77,21 @@ public class UserActionsQueryImpl implements UserActionQuery {
     return customer.getSsn();
   }
   
-  private AttachmentsContext visitAttachments(ProcessEntity process) {
+  private AttachmentsContext visitAttachments(ProcessInstance process) {
     final List<AttachmentCommands.Attachment> processAttachments = attachmentsCommands.query().processId(process.getId().toString());
-    final List<AttachmentCommands.Attachment> taskAttachments = process.getTask() == null ? Collections.emptyList(): attachmentsCommands.query().taskId(process.getTask());
+    final List<AttachmentCommands.Attachment> taskAttachments = process.getTask() == null ? 
+      Collections.emptyList() : 
+      attachmentsCommands.query().taskId(process.getTask().toString());
     return new AttachmentsContext(processAttachments, taskAttachments);
   }
   
-  private ImmutableAttachment visitAttachment(ProcessEntity process, AttachmentCommands.Attachment source) {
+  private ImmutableAttachment visitAttachment(ProcessInstance process, AttachmentCommands.Attachment source) {
     final var id = UserAttachmentBuilderImpl.attachmentId(source.getName(), process);
     
     return ImmutableAttachment.builder()
         .id(id)
         .processId(process.getId().toString())
-        .taskId(process.getTask())
+        .taskId(Optional.ofNullable(process.getTask()).map(e -> e.toString()).orElse(null))
         .name(source.getName())
         .created(source.getCreated().toString())
         .size(source.getSize())
@@ -99,8 +99,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .build();
   }
   
-  private TasksContext visitTasks(List<ProcessEntity> processes, String userId) {
-    final var taskIds = processes.stream().filter(t -> t.getTask() != null).map(t -> Long.parseLong(t.getTask())).toList();
+  private TasksContext visitTasks(List<ProcessInstance> processes, String userId) {
+    final var taskIds = processes.stream().filter(t -> t.getTask() != null).map(t -> t.getTask()).toList();
     final var unreadTasks = taskRepository.findUnreadExternalTasks(userId);
     final var allTasks = taskRepository.findAllTasksId(taskIds);    
     return new TasksContext(allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), unreadTasks);
@@ -109,7 +109,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private Optional<ProcessAuthorization> visitAuthorization() {
     if(authClient.getCustomer().getPrincipal().getRepresentedId() != null) {
       final var userRoles = authClient.getCustomerRoles().getRoles();  
-      final var allowed = hdesCommands.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
+      final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
           .build());
       return Optional.of(allowed);      
@@ -118,7 +118,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     return Optional.empty();
   }
   
-  private UserMessagesContext visitUserActionMessages(ProcessEntity process, TasksContext tasks) {
+  private UserMessagesContext visitUserActionMessages(ProcessInstance process, TasksContext tasks) {
     
     // task not created yet
     if(process.getTask() == null) {
@@ -126,7 +126,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     }
     final var user = authClient.getCustomer();
     
-    final var task = tasks.getTasksById().get(Long.parseLong(process.getTask()));
+    final var task = tasks.getTasksById().get(process.getTask());
     var lastUpdate = process.getUpdated();
     final var userMessages = new ArrayList<UserMessage>();
     for(final var msg : task.getComments()) {
@@ -148,10 +148,9 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
 
   
-  private UserAction visitUserAction(ProcessEntity process, TasksContext tasks) {
+  private UserAction visitUserAction(ProcessInstance process, TasksContext tasks) {
     final var messages = visitUserActionMessages(process, tasks);
     final var taskRef = Optional.ofNullable(process.getTask())
-        .map(Long::parseLong)
         .map(taskId -> tasks.getTasksById().get(taskId))
         .map(task -> task.getTaskRef())
         .orElse(null);
@@ -160,7 +159,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     
     return ImmutableUserAction.builder()
         .id(process.getId().toString())
-        .taskId(process.getTask())
+        .taskId(Optional.ofNullable(process.getTask()).map(e -> e.toString()).orElse(null))
         .status(process.getStatus().name())
         .created(process.getCreated())
         .updated(process.getUpdated())
@@ -182,7 +181,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .build();
   }
   
-  private boolean isAuthorizedProcess(ProcessEntity process, Optional<ProcessAuthorization> authorization) {
+  private boolean isAuthorizedProcess(ProcessInstance process, Optional<ProcessAuthorization> authorization) {
     if(authorization.isEmpty()) {
       return true;
     }

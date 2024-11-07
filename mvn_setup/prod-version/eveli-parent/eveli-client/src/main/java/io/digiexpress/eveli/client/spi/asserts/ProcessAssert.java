@@ -22,35 +22,35 @@ package io.digiexpress.eveli.client.spi.asserts;
 
 import java.util.function.Supplier;
 
-public class WorkflowAssert {
+public class ProcessAssert {
   public static void notNull(Object object, Supplier<String> message) {
     if (object == null) {
-      throw new WorkflowException(getMessage(message));
+      throw new ProcessException(getMessage(message));
     }
   }
   public static void notEmpty(String object, Supplier<String> message) {
     if (object == null || object.isBlank()) {
-      throw new WorkflowException(getMessage(message));
+      throw new ProcessException(getMessage(message));
     }
   }
   public static void isTrue(boolean expression, Supplier<String> message) {
     if (!expression) {
-      throw new WorkflowException(getMessage(message));
+      throw new ProcessException(getMessage(message));
     }
   }
   private static String getMessage(Supplier<String> supplier) {
     return (supplier != null ? supplier.get() : null);
   }
 
-  public static class WorkflowException extends RuntimeException {
+  public static class ProcessException extends RuntimeException {
 
     private static final long serialVersionUID = 1781444267360040922L;
 
-    public WorkflowException(String message, Throwable cause) {
+    public ProcessException(String message, Throwable cause) {
       super(message, cause);
     }
 
-    public WorkflowException(String message) {
+    public ProcessException(String message) {
       super(message);
     }
   }

@@ -22,14 +22,14 @@ import io.digiexpress.eveli.client.api.CrmClient;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.ProcessCommands;
+import io.digiexpress.eveli.client.api.ProcessClient;
 
 public interface PortalAccessValidator {
 
 
   void validateTaskAccess(Long id, CrmClient.CustomerPrincipal principal) ;
 
-  void validateProcessAccess(ProcessCommands.Process process, CrmClient.CustomerPrincipal principal);
+  void validateProcessAccess(ProcessClient.ProcessInstance process, CrmClient.CustomerPrincipal principal);
 
   void validateProcessIdAccess(String processId, CrmClient.CustomerPrincipal principal);
   

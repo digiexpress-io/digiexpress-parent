@@ -27,9 +27,9 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.CrmClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserMessagesQueryImpl implements UserMessagesQuery {
-  private final ProcessRepository processRepository;
+  private final ProcessClient processRepository;
   private final CommentRepository commentRepository;
   private final TaskRepository taskRepository;
   private final TaskAccessRepository taskAccessRepository;
@@ -51,12 +51,12 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
   public List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     
-    final var process = processRepository.findById(Long.parseLong(actionId))
+    final var process = processRepository.queryInstances().findOneById(actionId)
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     
     final var customer = authClient.getCustomer();
-    final var taskId = Long.parseLong(process.getTask());
+    final var taskId = process.getTask();
     final var comments = commentRepository.findByTaskIdAndExternalTrue(taskId).stream()
         .map(comment -> visitUserMessage(comment, customer))
         .toList();

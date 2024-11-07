@@ -32,6 +32,9 @@ import io.thestencil.iam.api.UserActionsClient.Attachment;
 import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
 import io.thestencil.iam.api.UserActionsClient.UserMessage;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 
 
@@ -43,9 +46,16 @@ public interface GamutClient {
   UserMessagesQuery userMessagesQuery();
   ReplyToBuilder replyToBuilder();
   AttachmentDownloadQuery attachmentDownloadQuery();
-  
   CancelUserActionBuilder cancelUserActionBuilder();
+  UserActionFillEventBuilder fillEvent();
   
+  
+  interface UserActionFillEventBuilder {
+    UserActionFillEventBuilder sessionId(String sessionId);
+    UserActionFillEventBuilder requestBody(String req);
+    UserActionFillEventBuilder responseBody(String resp);
+    UserActionFillEvent create();
+  }
   
   interface CancelUserActionBuilder {
     CancelUserActionBuilder actionId(String id);
@@ -104,6 +114,14 @@ public interface GamutClient {
     String getReplyToId();
     String getText();
   }
+  
+  @RequiredArgsConstructor @Data @Builder
+  public class UserActionFillEvent {
+    private final String sessionId;
+    private final String requestBody;
+    private final String responseBody;    
+  }
+  
   
   public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;

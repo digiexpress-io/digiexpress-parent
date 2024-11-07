@@ -24,6 +24,7 @@ import java.time.Duration;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +45,8 @@ import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
-import io.digiexpress.eveli.client.api.HdesCommands;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.thestencil.iam.api.ImmutableAuthorizationAction;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
@@ -63,11 +64,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/portal/secured/actions")
 @RequiredArgsConstructor
 public class GamutUserActionsController {
+  private final ApplicationEventPublisher publisher;
   private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final CrmClient authClient;
   private final DialobClient dialob;
-  private final HdesCommands hdes;
+  private final ProcessClient hdes;
+  
 
   @GetMapping(value="fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -75,7 +78,17 @@ public class GamutUserActionsController {
   }
   @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    return dialob.createProxy().sessionPost(sessionId, body);
+    final var resp = dialob.createProxy().sessionPost(sessionId, body);
+    
+    if(resp.getStatusCode().is2xxSuccessful()) {
+      final var event = gamutClient.fillEvent()
+        .requestBody(body)
+        .responseBody(resp.getBody())
+        .sessionId(sessionId)
+        .create();
+      publisher.publishEvent(event);
+    }
+    return resp; 
   }
   @GetMapping(value="/review/{sessionId}")
   public ResponseEntity<String> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -136,7 +149,7 @@ public class GamutUserActionsController {
       return ResponseEntity.ok(null); // Nobody is represented
     }
     final var roles = authClient.getCustomerRoles().getRoles();
-    final var allowed = hdes.processAuthorizationQuery().get(ImmutableInitProcessAuthorization.builder()
+    final var allowed = hdes.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
         .addAllUserRoles(roles)
         .build());
     

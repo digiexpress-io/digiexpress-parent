@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.PortalClient;
-import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.spi.ProcessCommandsImpl;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -44,17 +42,22 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/rest/api/worker")
 @RequiredArgsConstructor
 public class ProcessApiController {
-  protected final PortalClient client;
+  protected final ProcessClient client;
 
   @Transactional
   @GetMapping("/processes")
-  public ResponseEntity<Page<ProcessCommands.Process>> processesSearch(
+  public ResponseEntity<Page<ProcessClient.ProcessInstance>> processesSearch(
       @RequestParam(name="workflow.name", defaultValue= "") String name, 
       @RequestParam(name="status", required = false) List<String> status,
       @RequestParam(name="userId", defaultValue = "") String userId, 
       Pageable pageable) {
     
-    final var processes = client.process().query().find(name, status, userId, pageable).map(ProcessCommandsImpl::map);    
+    final var processes = client.paginateInstances()
+        .name(name)
+        .status(status)
+        .userId(userId)
+        .page(pageable)
+        .findAll();
     return new ResponseEntity<>(processes, HttpStatus.OK);
   }
 }

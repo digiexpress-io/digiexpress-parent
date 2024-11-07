@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi;
+package io.digiexpress.eveli.client.spi.process;
 
 /*-
  * #%L
@@ -22,120 +22,53 @@ package io.digiexpress.eveli.client.spi;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.client.api.HdesCommands;
-import io.digiexpress.eveli.client.api.ImmutableProcessAuthorization;
-import io.digiexpress.eveli.client.api.ProcessCommands;
-import io.digiexpress.eveli.client.api.ProcessCommands.Process;
-import io.digiexpress.eveli.client.spi.asserts.WorkflowAssert;
+import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessExecutor;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
+import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
-import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
-import io.resys.hdes.client.spi.HdesInMemoryStore;
-import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Slf4j
 @RequiredArgsConstructor
-public class HdesCommandsImpl implements HdesCommands {
-  private final static String DT_NAME = "ProcessAuthorizationDT";  
-  private final static String DT_ROLE_INPUT_NAME = "role";
-  private final static String DT_ROLE_OUTPUT_NAME = "processName";  
-  private final static String ROLE_SPLIT = ";";  
+public class CreateProcessExecutorImpl implements CreateProcessExecutor {
   
   
-  private final ProcessCommands processCommands;
+  private final Supplier<QueryProcessInstances> processCommands;
   private final HdesClient hdesClient;
   private final Supplier<ProgramEnvir> programEnvir;
   private final TransactionWrapper ts;
   private final EveliAssetClient workflowCommands;
-  
   
 
   @Override
   public void execute(String dialobSessionId) {
     ts.execute(em -> executeWorkflow(dialobSessionId));
   }
-  
-  @Data @RequiredArgsConstructor
-  private static class AuthorizationRequest {
-    private final HdesClient hdesClient;
-    private final ProgramEnvir programEnvir;
-    private final InitProcessAuthorization init;
-  }
-  
-  @Override
-  public ProcessAuthorizationQuery processAuthorizationQuery() {
-    return new ProcessAuthorizationQuery() {
-      @Override
-      public ProcessAuthorization get(InitProcessAuthorization init) {
-        return processRequest(new AuthorizationRequest(hdesClient, programEnvir.get(), init));
-      }
-    };
-  }
-  
-  private static ProcessAuthorization processRequest(AuthorizationRequest init) {
-    final var dt = init.programEnvir.getDecisionsByName().get(DT_NAME);
-    WorkflowAssert.notNull(dt, () -> "Authorizations requires DT with name: " + DT_NAME + "!");
-    WorkflowAssert.isTrue(dt.getStatus() == ProgramStatus.UP, () -> "Authorizations required DT with name: " + DT_NAME + " has compilation errors!");
-    final var ast = dt.getAst().get();
-    
-    final var output = ast.getHeaders().getReturnDefs().stream().filter(t -> t.getName().equals(DT_ROLE_OUTPUT_NAME)).findFirst();
-    final var input = ast.getHeaders().getAcceptDefs().stream().filter(t -> t.getName().equals(DT_ROLE_INPUT_NAME)).findFirst();
-    WorkflowAssert.isTrue(input.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain input field with name: " + DT_ROLE_INPUT_NAME + "!");
-    WorkflowAssert.notNull(output.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain output field with name: " + DT_ROLE_OUTPUT_NAME + "!");    
-    
-    final var processNames = new ArrayList<String>();
-    for(final var role : init.getInit().getUserRoles()) {
-      final List<String> rows = init.hdesClient.executor(init.programEnvir).inputField(DT_ROLE_INPUT_NAME, role).decision(DT_NAME).andFind()
-          .stream().flatMap(row -> {
-            final var outputName = row.get(DT_ROLE_OUTPUT_NAME);
-            if(outputName == null) {
-              return new ArrayList<String>().stream();
-            }
-            return Arrays.asList(outputName.toString().split(ROLE_SPLIT)).stream();
-          })
-          .collect(Collectors.toList());
-      processNames.addAll(rows);
-    }
-    
-    return ImmutableProcessAuthorization.builder()
-        .addAllAllowedProcessNames(processNames.stream().map(e -> e.trim()).distinct().collect(Collectors.toList()))
-        .userRoles(init.init.getUserRoles())
-        .build();
-  }
-  
-  
   private void executeWorkflow(String dialobSessionId) {
     FlowResult run;
     final var flowInput = new HashMap<String, Serializable>();
-    Optional<Process> processData = Optional.empty();
+    Optional<ProcessInstance> processData = Optional.empty();
     Optional<Entity<Workflow>> wfData = Optional.empty();
     log.info("Hdes commands: dialob session completion for id: {}", dialobSessionId);
     try {
-      processData = processCommands.query().getByQuestionnaireId(dialobSessionId);
+      processData = processCommands.get().findOneByQuestionnaireId(dialobSessionId);
       if (processData.isEmpty()) {
         log.warn("Hdes commands: No process data for dialob session: {}", dialobSessionId);
       } else {
@@ -194,10 +127,6 @@ public class HdesCommandsImpl implements HdesCommands {
     return builder.toString();
   }
   
-  public static Builder builder() {
-    return new Builder();
-  }
-  
   
   public interface TransactionWrapper {  
     void execute(Consumer<EntityManager> supplier);
@@ -223,39 +152,6 @@ public class HdesCommandsImpl implements HdesCommands {
     @Transactional
     public <T> T map(Function<EntityManager, T> supplier) {
       return supplier.apply(entityManager);
-    }
-  }
-  
-  @Setter
-  @Accessors(fluent = true)
-  public static class Builder {
-    private ProcessCommands process;
-    private EveliAssetClient workflow;
-    private Supplier<ProgramEnvir> programEnvir;
-    private HdesClient hdesClient;
-    private TransactionWrapper transactionWrapper;
-    
-    public HdesCommandsImpl build() {
-      WorkflowAssert.notNull(process, () -> "process commands must be defiend!");
-      WorkflowAssert.notNull(workflow, () -> "workflow commands must be defiend!");
-      WorkflowAssert.notNull(hdesClient, () -> "hdesClient must be defiend!");
-      WorkflowAssert.notNull(transactionWrapper, () -> "transactionWrapper commands must be defiend!");
-      
-      if(hdesClient.store() instanceof HdesInMemoryStore) {
-        log.warn("HDES static compile enabled");
-        final var source = hdesClient.store().query().get().await().atMost(Duration.ofMinutes(2));
-        final var result = ComposerEntityMapper.toEnvir(hdesClient.envir(), source).build();
-        this.programEnvir = () -> result;
-      }
-      
-      if(programEnvir == null) {
-        programEnvir = () -> {
-          log.warn("HDES dynamic compile enabled");
-          final var source = hdesClient.store().query().get().await().atMost(Duration.ofMinutes(1));
-          return ComposerEntityMapper.toEnvir(hdesClient.envir(), source).build();
-        };
-      }
-      return new HdesCommandsImpl(process, hdesClient, programEnvir, transactionWrapper, workflow);
     }
   }
 

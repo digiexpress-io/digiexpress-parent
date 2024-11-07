@@ -32,10 +32,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +50,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class AttachmentApiController {
   
-  private final PortalClient client;
+  private final AttachmentCommands client;
   private final TaskClient taskClient;  
   private final AuthClient securityClient;
-
+  private final ProcessClient processClient;
+  
   /**
    * Returns list of task attachments. 
    * If task is associated with process then process-bound attachments are returned.
@@ -72,7 +74,7 @@ public class AttachmentApiController {
       return ResponseEntity.notFound().build();
     }
     final var processId = getProcessIdFromTask(taskId);
-    final var result = processId != null ? client.attachments().query().processId(processId) : client.attachments().query().taskId(taskId);
+    final var result = processId != null ? client.query().processId(processId) : client.query().taskId(taskId);
     
     return ResponseEntity.ok(result);
   }
@@ -102,8 +104,8 @@ public class AttachmentApiController {
     }
     final var processId = getProcessIdFromTask(taskId);
     final var attachmentUrl = processId != null ?
-        client.attachments().url().encodePath(filename).processId(processId) : 
-        client.attachments().url().encodePath(filename).taskId(taskId);
+        client.url().encodePath(filename).processId(processId) : 
+        client.url().encodePath(filename).taskId(taskId);
     if (attachmentUrl.isPresent()) {
       return ResponseEntity.status(HttpStatus.FOUND).location(attachmentUrl.get().toURI()).build();
     }
@@ -132,8 +134,8 @@ public class AttachmentApiController {
     }
     final var processId = getProcessIdFromTask(taskId);
     final var uploadUrl = processId != null ?
-        client.attachments().upload().encodePath(filename).processId(processId) :
-        client.attachments().upload().encodePath(filename).taskId(taskId);
+        client.upload().encodePath(filename).processId(processId) :
+        client.upload().encodePath(filename).taskId(taskId);
     if (uploadUrl.isPresent()) {
       return ResponseEntity.ok(uploadUrl.get());
     }
@@ -155,6 +157,6 @@ public class AttachmentApiController {
   }
 
   private String getProcessIdFromTask(String taskId) {
-    return client.process().query().getByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);
+    return processClient.queryInstances().findOneByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);
   }
 }

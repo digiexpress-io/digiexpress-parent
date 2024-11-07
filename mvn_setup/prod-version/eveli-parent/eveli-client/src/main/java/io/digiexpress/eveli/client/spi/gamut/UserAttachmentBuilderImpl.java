@@ -35,8 +35,8 @@ import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.thestencil.iam.api.ImmutableAttachment;
 import io.thestencil.iam.api.UserActionsClient.Attachment;
@@ -48,7 +48,7 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
-  private final ProcessRepository processRepository;
+  private final ProcessClient processRepository;
   private final AttachmentCommands attachmentCommands;
   private final List<UserAttachmentUploadInit> attachments = new ArrayList<>();
   private String actionId;
@@ -72,7 +72,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   public List<Attachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     
-    final var process = processRepository.findById(Long.parseLong(actionId))
+    final var process = processRepository.queryInstances().findOneById(actionId)
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     final var result = new ArrayList<Attachment>();
@@ -85,12 +85,12 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   }
 
   
-  private Attachment visitAttachment(ProcessEntity process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
+  private Attachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
     final var taskId = process.getTask();
     final var filename = file.getName();
     final Optional<AttachmentUpload> uploadUrl = taskId == null ?
         attachmentCommands.upload().encodePath(filename).processId(actionId) :
-        attachmentCommands.upload().encodePath(filename).taskId(taskId);
+        attachmentCommands.upload().encodePath(filename).taskId(taskId.toString());
 
     if(uploadUrl.isEmpty()) {
       throw new AttachmentUploadUrlException("Can't create upload url for: " + filename + "!");
@@ -108,7 +108,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
         .build();
   }
 
-  public static String attachmentId(String name, ProcessEntity process) {
+  public static String attachmentId(String name, ProcessInstance process) {
     return Hashing
     .murmur3_128()
     .hashString(name + "::" + process.getTask() + "::" + process.getId(), Charsets.UTF_8)

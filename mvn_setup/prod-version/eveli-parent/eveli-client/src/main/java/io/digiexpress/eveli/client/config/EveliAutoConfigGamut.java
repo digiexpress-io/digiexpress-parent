@@ -23,14 +23,15 @@ package io.digiexpress.eveli.client.config;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.gamut.GamutClientImpl;
@@ -49,11 +50,12 @@ public class EveliAutoConfigGamut {
   
   @Bean
   public GamutClient gamutClient(
-      ProcessRepository processRepository,
+      ProcessClient processRepository,
       TaskRepository taskRepository,
       CommentRepository commentRepository,
       TaskAccessRepository taskAccessRepository,
-      PortalClient portalClient,
+      
+      AttachmentCommands attachmentCommands,
       EveliContext eveliContext,
       DialobClient dialobCommands,
       
@@ -66,12 +68,10 @@ public class EveliAutoConfigGamut {
         commentRepository, 
         taskAccessRepository, 
         
-        portalClient.attachments(), 
-        dialobCommands, 
-        portalClient.hdes(), 
+        attachmentCommands, 
+        dialobCommands,
         eveliContext.getAssets(), 
         authClient,
-        eveliContext.getStencil(),
         eveliContext.getSiteEnvir());
   }
   
@@ -92,7 +92,10 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutUserActionsController gamutUserActionsController(GamutClient gamutClient, DialobClient dialobClient, CrmClient crmClient, PortalClient portalClient) {
-    return new GamutUserActionsController(gamutClient, crmClient, dialobClient, portalClient.hdes());
+  public GamutUserActionsController gamutUserActionsController(
+      GamutClient gamutClient, DialobClient dialobClient, CrmClient crmClient, ProcessClient processRepository,
+      ApplicationEventPublisher publisher
+      ) {
+    return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, processRepository);
   }
 }

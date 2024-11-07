@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadQuery;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.thestencil.iam.api.ImmutableAttachmentDownloadUrl;
 import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
 import lombok.Data;
@@ -36,9 +36,8 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
   
-  private final ProcessRepository processRepository;
+  private final ProcessClient processClient;
   private final AttachmentCommands attachmentCommands;
-  
   
   private String actionId;
   private String filename;
@@ -46,7 +45,7 @@ public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
   
   @Override
   public AttachmentDownloadUrl getOne() throws ProcessNotFoundException {
-    final var process = processRepository.findById(Long.parseLong(actionId))
+    final var process = processClient.queryInstances().findOneById(actionId)
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     try {

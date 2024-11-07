@@ -25,7 +25,7 @@ management:
         include: "health,mappings"
 
 # Logging config
-logging.level.org.springframework.web: DEBUG
+#logging.level.org.springframework.web: DEBUG
 #logging.org.springframework.http: DEBUG
 #logging.level.org.springframework.boot: DEBUG
 

@@ -26,15 +26,13 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.HdesCommands;
-import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.iam.api.ImmutableUserAction;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
@@ -43,47 +41,51 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GamutClientImpl implements GamutClient {
-  private final ProcessRepository processRepository;
+  private final ProcessClient processInstanceClient;
   private final TaskRepository taskRepository;
   private final CommentRepository commentRepository;
   private final TaskAccessRepository taskAccessRepository;
   
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
-  private final HdesCommands hdesCommands;
   private final EveliAssetClient assetClient;
   private final CrmClient authClient;
-  private final StencilClient stencilClient;
   private final Supplier<Sites> siteEnvir;
 
+
+  @Override
+  public UserActionFillEventBuilder fillEvent() {
+    return new UserActionFillEventBuilderImpl();
+  }
+  
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processRepository, dialobCommands, hdesCommands, assetClient, siteEnvir, authClient);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, assetClient, siteEnvir, authClient);
   }
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(taskRepository, processRepository, authClient, hdesCommands, attachmentsCommands);
+    return new UserActionsQueryImpl(processInstanceClient, taskRepository, authClient, attachmentsCommands);
   }
 
   @Override
   public UserMessagesQuery userMessagesQuery() {
-    return new UserMessagesQueryImpl(processRepository, commentRepository, taskRepository, taskAccessRepository, authClient);
+    return new UserMessagesQueryImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
   }
 
   @Override
   public UserAttachmentBuilder userAttachmentBuilder() {
-    return new UserAttachmentBuilderImpl(processRepository, attachmentsCommands);
+    return new UserAttachmentBuilderImpl(processInstanceClient, attachmentsCommands);
   }
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(commentRepository, processRepository, taskRepository, taskAccessRepository, authClient);
+    return new ReplyToBuilderImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
   }
 
   @Override
   public AttachmentDownloadQuery attachmentDownloadQuery() {
-    return new AttachmentDownloadQueryImpl(processRepository, attachmentsCommands);
+    return new AttachmentDownloadQueryImpl(processInstanceClient, attachmentsCommands);
   }
 
   @Override
@@ -95,16 +97,14 @@ public class GamutClientImpl implements GamutClient {
       public UserAction cancelOne() throws ProcessNotFoundException, ProcessCantBeDeletedException {
         TaskAssert.notNull(actionId, () -> "actionId can't be null!");
 
-        long id = Long.parseLong(actionId);
-        final var process = processRepository.findById(Long.parseLong(actionId))
+        final var process = processInstanceClient.queryInstances().findOneById(actionId)
             .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
-        
-        
+                
         if (process.getStatus() != ProcessStatus.ANSWERING && process.getStatus() != ProcessStatus.CREATED) {
           throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
         }
         
-        processRepository.deleteById(id);
+        processInstanceClient.queryInstances().deleteOneById(actionId);
       
         return ImmutableUserAction.builder()
             .id(process.getId().toString())
@@ -133,5 +133,4 @@ public class GamutClientImpl implements GamutClient {
       }
     };
   }
-
 }

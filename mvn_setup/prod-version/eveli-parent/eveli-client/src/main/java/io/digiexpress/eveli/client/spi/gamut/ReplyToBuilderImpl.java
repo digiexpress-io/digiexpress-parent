@@ -26,10 +26,10 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
@@ -43,9 +43,8 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class ReplyToBuilderImpl implements ReplyToBuilder {
-
+  private final ProcessClient processRepository;
   private final CommentRepository commentRepository;
-  private final ProcessRepository processRepository;
   private final TaskRepository taskRepository;
   private final TaskAccessRepository taskAccessRepository;
   private final CrmClient authClient;
@@ -58,11 +57,11 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(from, () -> "from can't be null!");
     
-    final var process = processRepository.findById(Long.parseLong(actionId))
+    final var process = processRepository.queryInstances().findOneById(actionId)
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     final var customer = authClient.getCustomer().getPrincipal();    
-    final var taskId = Long.parseLong(process.getTask());
+    final var taskId = process.getTask();
     final var commentTask = taskRepository.getOneById(taskId);
     final var entity = new TaskCommentEntity()
         .setTask(commentTask)

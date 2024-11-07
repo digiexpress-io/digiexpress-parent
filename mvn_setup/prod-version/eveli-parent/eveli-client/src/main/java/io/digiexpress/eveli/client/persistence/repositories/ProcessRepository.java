@@ -29,7 +29,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import io.digiexpress.eveli.client.api.ProcessCommands.ProcessStatus;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
@@ -50,8 +50,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
 
   @Query(value="select p from ProcessEntity p where userId = :userId")
   List<ProcessEntity> findAllByUserId(@Param("userId") String userId);
-
-  
   
   void deleteById(@Param("id") Long id);
   ProcessEntity save(ProcessEntity entity);

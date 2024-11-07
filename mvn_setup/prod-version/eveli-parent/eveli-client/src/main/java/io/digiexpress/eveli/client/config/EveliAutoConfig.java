@@ -20,9 +20,6 @@ package io.digiexpress.eveli.client.config;
  * #L%
  */
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,17 +29,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.NotificationCommands;
-import io.digiexpress.eveli.client.api.PortalClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.cache.DuplicateDetectionCache;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -53,16 +47,14 @@ import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
-import io.digiexpress.eveli.client.spi.HdesCommandsImpl.SpringTransactionWrapper;
-import io.digiexpress.eveli.client.spi.HdesCommandsImpl.TransactionWrapper;
-import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
-import io.digiexpress.eveli.client.spi.PortalClientImpl;
+import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
+import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
+import io.digiexpress.eveli.client.spi.process.DialobCallbackController;
+import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
-import io.digiexpress.eveli.client.web.resources.gamut.DialobCallbackController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
@@ -85,8 +77,8 @@ public class EveliAutoConfig {
 
 
   @Bean 
-  public AttachmentApiController attachmentApiController(PortalClient client, AuthClient security, TaskClient taskClient) {
-    return new AttachmentApiController(client, taskClient, security);
+  public AttachmentApiController attachmentApiController(ProcessClient processClient, AuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
+    return new AttachmentApiController(attachments, taskClient, security, processClient);
   }
   @Bean 
   public CommentApiController commentApiController(
@@ -118,7 +110,7 @@ public class EveliAutoConfig {
   
   
   @Bean 
-  public ProcessApiController processApiController(PortalClient client) {
+  public ProcessApiController processApiController(ProcessClient client) {
     return new ProcessApiController(client);
   }
   @Bean 
@@ -138,49 +130,13 @@ public class EveliAutoConfig {
       return new SpringTransactionWrapper(entityManager);
   }
   @Bean
-  public PortalAccessValidator portalAccessValidator(PortalClient client) {
+  public PortalAccessValidator portalAccessValidator(ProcessClient client) {
       return new PortalAccessValidatorImpl(client);
   }  
   @Bean
   public TaskRefGenerator taskRefGenerator(EntityManager client) {
       return new TaskRefGenerator(client);
   }  
-  
-  @Bean 
-  public PortalClient portalClient(
-      Optional<AttachmentCommands> attachment, 
-      Optional<NotificationCommands> notification,
-      
-      ProcessRepository processRepository,
-      TaskRepository taskRepository,
-      TaskNotificator taskNotificator,
-      
-      TransactionWrapper transactionWrapper,
-      TaskRefGenerator taskRefGenerator,
-      
-      RestTemplate restTemplate,
-      ObjectMapper objectMapper,
-      EveliProps eveliProps,
-      EveliContext eveliContext
-  ) {
-    
-    return PortalClientImpl.builder()
-        .attachmentCommands(attachment.orElse(new AttachmentCommandsDummy()))
-        .notificationCommands(notification.orElse(new NotificationCommandsDummy()))
-        
-        .hdesClient(eveliContext.getWrench())
-        .programEnvir(eveliContext.getProgramEnvir())
-        .assetClient(eveliContext.getAssets())
-        .transactionWrapper(transactionWrapper)
-          
-        .processRepository(processRepository)
-        .taskNotificator(taskNotificator)
-        .taskRepository(taskRepository)
-        .taskRefGenerator(taskRefGenerator)
-        .build();
-  }
-  
-  
   
   @Bean 
   public TaskClient taskClient(
@@ -205,26 +161,29 @@ public class EveliAutoConfig {
           .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
           .build();
   }
-  @Bean 
-  public DuplicateDetectionCache duplicateDetectionCache() {
-    return new DuplicateDetectionCache();
+
+  @Bean
+  public DialobCallbackController dialobCallbackController(ThreadPoolTaskScheduler submitTaskScheduler, ProcessClient processClient, DialobClient dialobClient) {
+    return new DialobCallbackController(submitTaskScheduler, processClient, dialobClient);
   }
-  @Bean 
-  public DialobCallbackController dialobCallbackController(
-      DialobClient dialobClient,
-      PortalClient portalClient,
-      @Qualifier(value="submitTaskScheduler") ThreadPoolTaskScheduler submitTaskScheduler,
-      DuplicateDetectionCache cache) {
-    
-    final var submitMessageDelay = 10000l;
-    return new DialobCallbackController(dialobClient, portalClient, submitTaskScheduler, cache, submitMessageDelay);
-  }
+  
+
   @Bean(name="submitTaskScheduler")
   public ThreadPoolTaskScheduler submitTaskScheduler() {
     ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
     threadPoolTaskScheduler.setPoolSize(10);
     threadPoolTaskScheduler.setThreadNamePrefix("SubmitTaskScheduler-");
     return threadPoolTaskScheduler;
+  }
+
+  @Bean
+  public ProcessClient processClient(
+      ProcessRepository processJPA,
+      TransactionWrapper ts,
+      EveliContext eveliContext
+      ) {
+
+    return new ProcessClientImpl(processJPA, eveliContext.getWrench(), eveliContext.getProgramEnvir(), ts, eveliContext.getAssets());
   }
 
 }
