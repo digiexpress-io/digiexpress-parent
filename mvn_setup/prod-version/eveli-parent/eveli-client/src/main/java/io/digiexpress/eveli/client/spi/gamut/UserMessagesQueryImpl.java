@@ -84,8 +84,17 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
   public static String visitMessageUserName(TaskCommentEntity entity, Customer customer) {
     
     final var user = customer.getPrincipal();
-    final var personNames = user.getRepresentedPerson() == null ? null : user.getRepresentedPerson().getRepresentativeName();
-    final var userName = personNames != null ? personNames[1] + " " + personNames[0]: user.getRepresentedCompany().getName();
+    
+    final String userName;
+    if(user.getRepresentedPerson() != null) {
+      final var personNames = user.getRepresentedPerson().getRepresentativeName();
+      userName = personNames[1] + " " + personNames[0];
+    } else if(user.getRepresentedCompany() != null) {
+      userName = user.getRepresentedCompany().getName();
+    } else {
+      userName = null;
+    }
+    
     final var representativeUserName = user.getUsername();
     
     if(entity.getUserName().equals(userName)) {
