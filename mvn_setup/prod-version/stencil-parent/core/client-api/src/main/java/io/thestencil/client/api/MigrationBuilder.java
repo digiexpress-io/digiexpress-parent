@@ -1,5 +1,7 @@
 package io.thestencil.client.api;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * stencil-client-api
@@ -25,6 +27,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -34,7 +38,7 @@ import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
-import io.thestencil.client.spi.beans.TopicLinkBean;
+
 
 public interface MigrationBuilder {
 
@@ -87,15 +91,19 @@ public interface MigrationBuilder {
     Integer getLevel();
   }
   
-  @JsonSerialize(as = TopicLinkBean.class)
-  @JsonDeserialize(as = TopicLinkBean.class)
+  @JsonSerialize(as = ImmutableTopicLink.class)
+  @JsonDeserialize(as = ImmutableTopicLink.class)
+  @Value.Immutable
   interface TopicLink {
     String getId();
-    String getPath();
+    @Nullable String getPath();
     String getType();
     String getName();
     String getValue();
     Boolean getGlobal();
     Boolean getWorkflow();
+    
+    @Nullable LocalDateTime getStartDate();
+    @Nullable LocalDateTime getEndDate();
   }
 }

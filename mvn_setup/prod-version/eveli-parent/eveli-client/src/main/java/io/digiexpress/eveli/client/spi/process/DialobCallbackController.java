@@ -46,7 +46,7 @@ public class DialobCallbackController {
   private final DialobClient dialobClient;
   
   @Scheduled(fixedRate = 15, timeUnit = TimeUnit.SECONDS)
-  public void reportCurrentTime() {
+  public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnswered()) {
       try {
         processClient.createExecutor().execute(instance.getQuestionnaire());
@@ -54,6 +54,14 @@ public class DialobCallbackController {
         log.error("Failed to run flow for process instance: {}, e: {}!", instance.getId(), e.getMessage(), e);
       }
     }
+  }
+  
+  @Scheduled(fixedRate = 120, timeUnit = TimeUnit.SECONDS)
+  public void rejectProcessesWithDeadline() {
+    processClient.queryInstances().findAllExpired().forEach(instance -> {
+      log.warn("Expiry for process instance: {}, e: {}!", instance.getId());
+      processClient.changeInstanceStatus().rejected(instance.getId().toString());
+    });
   }
   
   @EventListener

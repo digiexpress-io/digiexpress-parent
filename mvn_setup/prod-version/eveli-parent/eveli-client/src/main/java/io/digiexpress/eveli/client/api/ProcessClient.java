@@ -52,6 +52,8 @@ public interface ProcessClient {
     CreateProcessInstance questionnaire(String questionnaire);
     CreateProcessInstance userId(String userId);
     CreateProcessInstance workflowName(String name);
+    CreateProcessInstance expiresInSeconds(Long expires_in_seconds);
+    CreateProcessInstance expiresAt(LocalDateTime expiresAt);
     CreateProcessInstance inputContextId(String inputContext);
     CreateProcessInstance inputParentContextId(String inputParentContextId);
     ProcessInstance create();
@@ -77,6 +79,7 @@ public interface ProcessClient {
     void deleteOneById(String id);
     List<ProcessInstance> findAll();
     List<ProcessInstance> findAllAnswered();
+    List<ProcessInstance> findAllExpired();
     List<ProcessInstance> findAllByUserId(String userId);    
   }
 
@@ -108,6 +111,11 @@ public interface ProcessClient {
     String getInputContextId();
     @Nullable
     String getInputParentContextId();
+    
+    @Nullable LocalDateTime getExpiresAt();
+    
+    @Nullable
+    Long getExpiresInSeconds();
   }
   
 

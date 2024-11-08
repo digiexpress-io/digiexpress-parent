@@ -21,6 +21,9 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
 import org.immutables.value.Value;
@@ -55,8 +58,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final DialobClient dialobCommands;
   private final EveliAssetClient assetClient;
   private final Supplier<Sites> siteEnvir;
-  
   private final CrmClient auth;
+  private final ZoneOffset offset;
+  
   
   private String actionId;
   private String clientLocale; 
@@ -104,6 +108,13 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .toString());
     }
     
+    final var expiresInSeconds = ChronoUnit.SECONDS.between(Instant.now().atOffset(offset).toLocalDateTime(), stencilService.getEndDate());
+    if(expiresInSeconds <= 0) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+          .append("Can't find stencil service by id: '").append(actionId).append("'!")
+          .toString());
+    }
+    
     
     final Workflow workflow = assetClient.queryBuilder().findOneWorkflowByName(stencilService.getValue())
         .await().atMost(Duration.ofMinutes(1))
@@ -119,6 +130,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .workflowName(workflow.getName())
         .inputContextId(request.getInputContextId())
         .inputParentContextId(request.getInputParentContextId())
+        .expiresInSeconds(expiresInSeconds)
+        .expiresAt(stencilService.getEndDate())
         .create();
 
     return ImmutableUserAction.builder()

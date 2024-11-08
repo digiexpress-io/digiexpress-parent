@@ -54,6 +54,17 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
   @Query(value="select p from ProcessEntity p where status = :status and task is null")
   List<ProcessEntity> findAllByStatus(ProcessStatus status);
   
+
+  @Query(nativeQuery = true, value=
+"""
+SELECT * FROM process 
+WHERE expires_in_seconds is not null
+and created + make_interval(secs => expires_in_seconds) < expires_at
+and status in('CREATED', 'ANSWERING')
+""")
+  List<ProcessEntity> findAllByExpiration();
+  
+  
   void deleteById(@Param("id") Long id);
   ProcessEntity save(ProcessEntity entity);
 }

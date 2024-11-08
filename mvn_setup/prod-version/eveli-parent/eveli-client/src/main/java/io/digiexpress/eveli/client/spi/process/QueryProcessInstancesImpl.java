@@ -73,4 +73,8 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   public List<ProcessInstance> findAllAnswered() {
     return processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList();
   }
+  @Override
+  public List<ProcessInstance> findAllExpired() {
+    return processJPA.findAllByExpiration().stream().map(CreateProcessInstanceImpl::map).toList();
+  }
 }

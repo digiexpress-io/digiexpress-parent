@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.ZoneOffset;
+
 /*-
  * #%L
  * eveli-client
@@ -33,6 +35,9 @@ public class EveliPropsAssets {
    */
   private Boolean enabled;
 
+
+  private ZoneOffset timezoneOffset = ZoneOffset.ofHours(2);
+  
   
   /**
    * json of type Deployment, used for importing WRENCH, STENCIL, DIALOB, WORKFLOWS into empty DB

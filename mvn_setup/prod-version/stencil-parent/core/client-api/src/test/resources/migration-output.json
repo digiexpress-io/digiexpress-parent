@@ -2,7 +2,7 @@
   "created" : 1,
   "sites" : {
     "sv" : {
-      "id" : "463d866b2bfb4de534b3962ea7052339",
+      "id" : "3e562a916c7dd1566716c2ca66fbc8aa",
       "images" : "/",
       "locale" : "sv",
       "topics" : {
@@ -78,35 +78,41 @@
       "links" : {
         "7f5e4540055d46ced87141a234b6c108" : {
           "id" : "7f5e4540055d46ced87141a234b6c108",
+          "path" : "democracy",
           "type" : "internal",
           "name" : "TEXT IN SV for DEM",
-          "path" : "democracy",
           "value" : "https://www.some.site.com/",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         },
         "e13b04481ca9c97fcd2d0415ee9693cd" : {
           "id" : "e13b04481ca9c97fcd2d0415ee9693cd",
+          "path" : "index",
           "type" : "phone",
           "name" : "TEXT IN SV for INDEX",
-          "path" : "index",
           "value" : "+357 786767",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         },
         "e617a26067ef2a11d3ae4e95a416cfc6" : {
           "id" : "e617a26067ef2a11d3ae4e95a416cfc6",
+          "path" : "",
           "type" : "workflow",
           "name" : "workflow LINK IN SV",
-          "path" : "",
           "value" : "General message",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         }
       }
     },
     "fi" : {
-      "id" : "ff21a96ba982899cf4fb72cde3391210",
+      "id" : "e28ab39290504b4c629626ceba5d0938",
       "images" : "/",
       "locale" : "fi",
       "topics" : {
@@ -182,35 +188,41 @@
       "links" : {
         "0e813f098c1d889900560ca96896bbb1" : {
           "id" : "0e813f098c1d889900560ca96896bbb1",
+          "path" : "democracy",
           "type" : "internal",
           "name" : "TEXT IN FIN for DEM",
-          "path" : "democracy",
           "value" : "https://www.some.site.com/",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         },
         "b0b59cfc8583d240c47c4eabb7bdde1e" : {
           "id" : "b0b59cfc8583d240c47c4eabb7bdde1e",
+          "path" : "",
           "type" : "workflow",
           "name" : "workflow LINK IN FI",
-          "path" : "",
           "value" : "General message",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         },
         "ec7920f7fed165ca3b6df043845d2f60" : {
           "id" : "ec7920f7fed165ca3b6df043845d2f60",
+          "path" : "index",
           "type" : "phone",
           "name" : "TEXT IN FI for INDEX",
-          "path" : "index",
           "value" : "+357 786767",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         }
       }
     },
     "en" : {
-      "id" : "307cb1f8c16151dfe29c212abffb496d",
+      "id" : "edb494dd9c8f3e6ff01e30ed9d62e131",
       "images" : "/",
       "locale" : "en",
       "topics" : {
@@ -286,21 +298,25 @@
       "links" : {
         "baa314b77a861b348ec10e117e08c540" : {
           "id" : "baa314b77a861b348ec10e117e08c540",
+          "path" : "",
           "type" : "workflow",
           "name" : "workflow LINK IN EN",
-          "path" : "",
           "value" : "General message",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         },
         "eee60d19acb9ab97d92e4d40b7f1ad09" : {
           "id" : "eee60d19acb9ab97d92e4d40b7f1ad09",
+          "path" : "index",
           "type" : "phone",
           "name" : "TEXT IN EN for INDEX",
-          "path" : "index",
           "value" : "+357 786767",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         }
       }
     }

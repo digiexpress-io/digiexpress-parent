@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
+import java.time.ZoneOffset;
 import java.util.function.Supplier;
 
 /*-
@@ -51,6 +52,7 @@ public class GamutClientImpl implements GamutClient {
   private final EveliAssetClient assetClient;
   private final CrmClient authClient;
   private final Supplier<Sites> siteEnvir;
+  private final ZoneOffset offset;
 
 
   @Override
@@ -60,7 +62,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, assetClient, siteEnvir, authClient);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, assetClient, siteEnvir, authClient, offset);
   }
 
   @Override

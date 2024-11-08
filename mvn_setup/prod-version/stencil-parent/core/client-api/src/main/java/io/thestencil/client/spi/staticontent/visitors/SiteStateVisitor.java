@@ -1,5 +1,9 @@
 package io.thestencil.client.spi.staticontent.visitors;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 /*-
  * #%L
  * stencil-static-content
@@ -41,7 +45,10 @@ import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.thestencil.client.spi.staticontent.support.ParserAssert;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SiteStateVisitor {
   private static final Logger LOGGER = LoggerFactory.getLogger(SiteStateVisitor.class);
   public static String LINK_TYPE_WORKFLOW = "workflow";
@@ -49,10 +56,16 @@ public class SiteStateVisitor {
   private final Map<String, Entity<Locale>> enablesLocales = new HashMap<>();
   private SiteState entity;
   private final boolean dev;
+  private final ZoneOffset offset;
+  private final LocalDateTime now;
   
-  public SiteStateVisitor(boolean dev) {
+  public SiteStateVisitor(boolean dev, ZoneOffset offset) {
     super();
     this.dev = dev;
+    ParserAssert.notNull(offset, () -> "offset must be defined!");
+    this.offset = offset;
+    this.now = Instant.now().atOffset(this.offset).toLocalDateTime();
+    log.info("Using offset for instant: {}, now: {}", this.offset, this.now);
   }
 
   public Markdowns visit(SiteState entity) {
@@ -73,6 +86,23 @@ public class SiteStateVisitor {
     
     return result.build();
   }
+  
+  private boolean isWorkflowEnabled(Entity<Workflow> link) {
+    if(link.getBody().getStartDate() == null && link.getBody().getEndDate() == null) {
+      return true;
+    }
+    
+    if(link.getBody().getEndDate() != null && link.getBody().getEndDate().compareTo(now) < 0) {
+      return false;
+    }
+
+    if(link.getBody().getStartDate() != null && link.getBody().getStartDate().compareTo(now) > 0) {
+      return false;
+    }
+    
+
+    return true;
+  }
 
   private List<LinkResource> visitWorkflows(Entity<Workflow> link) {
     final List<LinkResource> result = new ArrayList<>();
@@ -81,6 +111,9 @@ public class SiteStateVisitor {
       return result;
     }
     
+    if(!isWorkflowEnabled(link)) {
+      return result;
+    }
     
     final var usedLocales = link.getBody().getLabels().stream()
         .map(label -> label.getLocale())
@@ -105,6 +138,8 @@ public class SiteStateVisitor {
             .desc(label.getLabelValue())
             .path(visitArticlePath(article))
             .value(link.getBody().getValue())
+            .startDate(link.getBody().getStartDate())
+            .endDate(link.getBody().getEndDate())
             .workflow(true).global(false)
             .type(LINK_TYPE_WORKFLOW)
             .build();

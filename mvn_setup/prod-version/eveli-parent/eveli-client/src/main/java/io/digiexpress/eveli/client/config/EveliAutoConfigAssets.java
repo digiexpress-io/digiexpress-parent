@@ -119,6 +119,7 @@ public class EveliAutoConfigAssets {
   @Bean
   public EveliContext eveliContext(
       EveliProps eveliProps, 
+      EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context
     ) {
@@ -181,7 +182,9 @@ public class EveliAutoConfigAssets {
 
     final Supplier<Sites> siteEnvir = () -> {
       final var stencilState = stencilClient.getStore().query().head()
-          .onItem().transform(state -> stencilClient.markdown().json(state, true).build())
+          .onItem().transform(state -> stencilClient.markdown()
+              .offset(assetProps.getTimezoneOffset())
+              .json(state, true).build())
           .onItem().transform(markdowns -> stencilClient.sites()
               .imagePath("images")
               .created(System.currentTimeMillis())

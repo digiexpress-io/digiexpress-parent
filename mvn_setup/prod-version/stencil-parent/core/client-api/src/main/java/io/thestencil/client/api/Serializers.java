@@ -28,7 +28,6 @@ import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
-import io.thestencil.client.spi.beans.TopicLinkBean;
 
 public class Serializers {
 
@@ -38,7 +37,7 @@ public class Serializers {
     TopicBlobBean.class,
     TopicBean.class,
     TopicHeadingBean.class,
-    TopicLinkBean.class,
+    ImmutableTopicLink.class,
     
     ImmutableSiteState.class,
     ImmutableArticle.class,

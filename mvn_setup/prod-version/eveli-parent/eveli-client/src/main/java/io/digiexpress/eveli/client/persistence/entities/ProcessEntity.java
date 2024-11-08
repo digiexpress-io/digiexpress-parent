@@ -85,7 +85,13 @@ public class ProcessEntity {
 
   @Column(name="updated", nullable = false)
   private LocalDateTime updated;
+  
+  @Column(name="expires_at")
+  private LocalDateTime expiresAt;
 
+  @Column(name="expires_in_seconds")
+  private Long expiresInSeconds;
+  
   @Basic(fetch = FetchType.LAZY)
   @Column(name = "form_body")
   @JdbcTypeCode(SqlTypes.JSON)

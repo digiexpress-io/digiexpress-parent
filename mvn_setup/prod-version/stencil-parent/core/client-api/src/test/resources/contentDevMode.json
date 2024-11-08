@@ -2,7 +2,7 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "7c1b0d35e1a7cf98b920e38a519df934",
+      "id" : "c558faae25a0f2713202b1f5a677efbe",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
@@ -63,39 +63,47 @@
       "links" : {
         "0d53af3ab209110e87307ff22e90900d" : {
           "id" : "0d53af3ab209110e87307ff22e90900d",
+          "path" : "000_test-article",
           "type" : "workflow",
           "name" : "cool name",
-          "path" : "000_test-article",
           "value" : "workflow name",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         },
         "3047608d3761989a2c6ea71cf7cc3ef0" : {
           "id" : "3047608d3761989a2c6ea71cf7cc3ef0",
+          "path" : "000_test-article",
           "type" : "internal",
           "name" : "description",
-          "path" : "000_test-article",
           "value" : "www.example.com",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         },
         "430a77ecb1ff7bc8e760b78652f582e4" : {
           "id" : "430a77ecb1ff7bc8e760b78652f582e4",
+          "path" : "000_test-article-in-prod",
           "type" : "workflow",
           "name" : "cool name",
-          "path" : "000_test-article-in-prod",
           "value" : "workflow name",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         },
         "ac729fe18fccea8b68e30ae7d0f2461a" : {
           "id" : "ac729fe18fccea8b68e30ae7d0f2461a",
+          "path" : "000_test-article-dev-mode",
           "type" : "workflow",
           "name" : "cool name",
-          "path" : "000_test-article-dev-mode",
           "value" : "workflow name",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         }
       }
     }

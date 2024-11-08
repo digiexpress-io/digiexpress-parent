@@ -57,6 +57,7 @@ public class EveliAutoConfigGamut {
       
       AttachmentCommands attachmentCommands,
       EveliContext eveliContext,
+      EveliPropsAssets eveliAssetProps, 
       DialobClient dialobCommands,
       
       CrmClient authClient
@@ -72,7 +73,9 @@ public class EveliAutoConfigGamut {
         dialobCommands,
         eveliContext.getAssets(), 
         authClient,
-        eveliContext.getSiteEnvir());
+        eveliContext.getSiteEnvir(),
+        eveliAssetProps.getTimezoneOffset()
+        );
   }
   
   @Bean

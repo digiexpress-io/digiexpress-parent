@@ -2,6 +2,7 @@ package io.thestencil.client.spi;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneOffset;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,6 +65,12 @@ public class StencilClientImpl implements StencilClient {
     return new MarkdownBuilder() {
       private Markdowns jsonOfSiteState;
       private ImmutableMarkdowns.Builder fromFiles;
+      private ZoneOffset offset;
+      @Override
+      public MarkdownBuilder offset(ZoneOffset offset) {
+        this.offset = offset;
+        return this;
+      }
       
       @Override
       public MarkdownBuilder md(String path, byte[] value) {
@@ -125,7 +132,7 @@ public class StencilClientImpl implements StencilClient {
       public MarkdownBuilder json(String jsonOfSiteState, boolean dev) {
         try {
           final var site = store.getConfig().getObjectMapper().readValue(jsonOfSiteState, SiteState.class);
-          this.jsonOfSiteState = new SiteStateVisitor(dev).visit(site);
+          this.jsonOfSiteState = new SiteStateVisitor(dev, offset).visit(site);
         } catch (IOException e) {
           throw new RuntimeException(e.getMessage(), e);
         }
@@ -134,7 +141,7 @@ public class StencilClientImpl implements StencilClient {
       
       @Override
       public MarkdownBuilder json(SiteState jsonOfSiteState, boolean dev) {
-        this.jsonOfSiteState = new SiteStateVisitor(dev).visit(jsonOfSiteState);
+        this.jsonOfSiteState = new SiteStateVisitor(dev, offset).visit(jsonOfSiteState);
         return this;
       }
       
@@ -196,18 +203,22 @@ public class StencilClientImpl implements StencilClient {
         .images(value.getImages())
         .value(value.getValue())
         .build()));
+        
       
         markdowns.getLinks()
-        .forEach(link -> link.getLocale().forEach(locale -> link(builder -> builder
-          .id(link.getId())
-          .path(link.getPath())
-          .locale(locale)
-          .type(link.getType())
-          .name(link.getDesc())
-          .global(link.getGlobal())
-          .value(link.getValue())
-          .workflow(link.getType().equals(SiteStateVisitor.LINK_TYPE_WORKFLOW))
-          .build()
+          .forEach(link -> link.getLocale()
+            .forEach(locale -> link(builder -> builder
+              .id(link.getId())
+              .path(link.getPath())
+              .locale(locale)
+              .type(link.getType())
+              .name(link.getDesc())
+              .global(link.getGlobal())
+              .value(link.getValue())
+              .startDate(link.getStartDate())
+              .endDate(link.getEndDate())
+              .workflow(link.getType().equals(SiteStateVisitor.LINK_TYPE_WORKFLOW))
+              .build()
         )));
         
         final var visited = visitor.visit(imageUrl);

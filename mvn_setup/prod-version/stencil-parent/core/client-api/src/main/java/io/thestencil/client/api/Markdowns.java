@@ -1,5 +1,7 @@
 package io.thestencil.client.api;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * stencil-client-api
@@ -42,8 +44,9 @@ public interface Markdowns {
     List<String> getLocale();
     Boolean getWorkflow();
     Boolean getGlobal();
-    @Nullable
-    String getDesc();
+    @Nullable LocalDateTime getStartDate();
+    @Nullable LocalDateTime getEndDate();
+    @Nullable String getDesc();
   }
   
   @Value.Immutable

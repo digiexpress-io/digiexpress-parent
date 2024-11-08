@@ -2,7 +2,7 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "6111e870dcc453e91eca3e4c415ff22f",
+      "id" : "78dbc39e08c171ecedb3d997a98d17e4",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
@@ -29,21 +29,25 @@
       "links" : {
         "0d53af3ab209110e87307ff22e90900d" : {
           "id" : "0d53af3ab209110e87307ff22e90900d",
+          "path" : "000_test-article",
           "type" : "workflow",
           "name" : "cool name",
-          "path" : "000_test-article",
           "value" : "workflow name",
           "global" : true,
-          "workflow" : true
+          "workflow" : true,
+          "startDate" : null,
+          "endDate" : null
         },
         "3047608d3761989a2c6ea71cf7cc3ef0" : {
           "id" : "3047608d3761989a2c6ea71cf7cc3ef0",
+          "path" : "000_test-article",
           "type" : "internal",
           "name" : "description",
-          "path" : "000_test-article",
           "value" : "www.example.com",
           "global" : false,
-          "workflow" : false
+          "workflow" : false,
+          "startDate" : null,
+          "endDate" : null
         }
       }
     }

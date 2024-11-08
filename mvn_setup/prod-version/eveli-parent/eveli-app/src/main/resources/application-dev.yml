@@ -36,6 +36,8 @@ spring.datasource.username: "eveli-app"
 spring.datasource.password: "password123"
 
 eveli.task.adminsearch: true
+eveli.assets.timezoneOffset: +2
+
 
 # dialob related config
 eveli.dialob.enabled: true

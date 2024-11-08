@@ -1,5 +1,7 @@
 package io.thestencil.client.spi.staticontent.visitors;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * stencil-static-content
@@ -76,6 +78,8 @@ public interface SiteVisitor {
     String getLocale();
     Boolean getGlobal();
     Boolean getWorkflow();
+    @Nullable LocalDateTime getStartDate();
+    @Nullable LocalDateTime getEndDate();
   }
 
   @Value.Immutable

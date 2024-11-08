@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /*-
@@ -43,6 +44,8 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private String workflowName;
   private String inputContextId;
   private String inputParentContextId;
+  private LocalDateTime expiresAt;
+  private Long expiresInSeconds;
   
   public ProcessInstance create() {
     
@@ -53,11 +56,14 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
     ProcessAssert.notNull(inputParentContextId, () -> "inputParentContextId must be defined!");
     
     final var entity = processRepository.save(new ProcessEntity()
+      .setExpiresAt(expiresAt)
       .setQuestionnaire(questionnaire)
       .setUserId(userId)
       .setStatus(ProcessStatus.CREATED)
       .setWorkflowName(workflowName)
       .setInputContextId(inputContextId)
+      .setExpiresInSeconds(expiresInSeconds)
+      .setExpiresAt(expiresAt)
       .setInputParentContextId(inputParentContextId));
     return map(entity);
   }
@@ -75,7 +81,9 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .updated(entity.getUpdated())
       .inputContextId(entity.getInputContextId())
       .inputParentContextId(entity.getInputParentContextId())
+      .expiresInSeconds(entity.getExpiresInSeconds())
+      .expiresAt(entity.getExpiresAt())
       .build();
   }
-  
+
 }

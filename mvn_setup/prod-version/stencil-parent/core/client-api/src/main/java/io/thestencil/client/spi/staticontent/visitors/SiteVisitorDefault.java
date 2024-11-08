@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.thestencil.client.api.ImmutableTopicLink;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Topic;
 import io.thestencil.client.api.MigrationBuilder.TopicBlob;
@@ -38,7 +39,6 @@ import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
-import io.thestencil.client.spi.beans.TopicLinkBean;
 import io.thestencil.client.spi.staticontent.support.ParserAssert;
 import io.thestencil.client.spi.staticontent.support.Sha2;
 
@@ -253,7 +253,7 @@ public class SiteVisitorDefault implements SiteVisitor {
       final var topicLocale = link.getLocale() != null && link.getLocale().indexOf(locale) > -1;
       if(allLocales || topicLocale) {
         
-        final var template = TopicLinkBean.builder()
+        final var template = ImmutableTopicLink.builder()
           .id("template")
           .path(link.getPath())
           .global(link.getGlobal())
@@ -261,10 +261,12 @@ public class SiteVisitorDefault implements SiteVisitor {
           .name(link.getName())
           .value(link.getValue())
           .workflow(link.getWorkflow())
+          .startDate(link.getStartDate())
+          .endDate(link.getEndDate())
           .build();
         
         String id = Sha2.blobId(template.toString());
-        this.links.put(id, TopicLinkBean.builder().from(template).id(id).build());
+        this.links.put(id, ImmutableTopicLink.builder().from(template).id(id).build());
         result.add(id);
       }
     }
