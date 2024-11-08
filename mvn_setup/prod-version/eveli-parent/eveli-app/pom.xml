@@ -29,7 +29,7 @@
             <profile>dev</profile>
             <profile>fake-user</profile>
           </profiles>
-           <jvmArguments>-Dspring.config.location=classpath:application-dev.yml,file:../../../../../eveli-app.properties -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=*:8000
+           <jvmArguments>-Dspring.config.location=classpath:application-dev.yml,file:../../../../../eveli-app.properties -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000
            </jvmArguments>
         </configuration>
       </plugin>
