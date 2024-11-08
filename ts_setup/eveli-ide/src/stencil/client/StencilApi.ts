@@ -172,7 +172,9 @@ export declare namespace StencilApi {
       articles: ArticleId[],
       value: string,
       labels: LocaleLabel[],
-      devMode?: boolean
+      devMode?: boolean,
+      startDate?: string | undefined,
+      endDate?: string | undefined,
     }
   }
 
@@ -181,7 +183,9 @@ export declare namespace StencilApi {
     value: string,
     articles: ArticleId[] | undefined,
     labels: LocaleLabel[] | undefined,
-    devMode: boolean | undefined
+    devMode: boolean | undefined,
+    startDate?: string | undefined,
+    endDate?: string | undefined,
   }
 
   export interface FetchIntegration {
@@ -239,6 +243,8 @@ export declare namespace StencilApi {
     labels: LocaleLabel[];
     articles: ArticleId[];
     devMode: boolean | undefined;
+    startDate?: string | undefined;
+    endDate?: string | undefined;
   }
   export interface CreateRelease {
     name: string,

@@ -1,5 +1,7 @@
 package io.thestencil.client.api;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * stencil-persistence-api
@@ -55,10 +57,10 @@ public interface UpdateBuilder {
   @JsonDeserialize(as = ImmutableTemplateMutator.class)
   interface TemplateMutator {
     String getTemplateId(); 
-	String getName();
+    String getName();
     String getDescription();
-	String getContent();
-	String getType();
+    String getContent();
+    String getType();
   }
     
   @Value.Immutable
@@ -123,5 +125,10 @@ public interface UpdateBuilder {
     List<String> getArticles();
     @Nullable
     Boolean getDevMode();
+    
+    @Nullable
+    LocalDateTime getStartDate();
+    @Nullable
+    LocalDateTime getEndDate();
   }
 }

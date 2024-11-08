@@ -132,6 +132,14 @@ public interface StencilClient {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getDevMode();
+
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    LocalDateTime getStartDate();
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    @Nullable
+    LocalDateTime getEndDate();
+    
     List<String> getArticles();
     List<LocaleLabel> getLabels();
   }

@@ -1,6 +1,7 @@
 package io.thestencil.client.api;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /*-
  * #%L
@@ -155,6 +156,11 @@ public interface CreateBuilder {
     List<LocaleLabel> getLabels();
     @Nullable
     Boolean getDevMode();
+    
+    @Nullable
+    LocalDateTime getStartDate();
+    @Nullable
+    LocalDateTime getEndDate();
   }
 
 }

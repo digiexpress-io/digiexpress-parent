@@ -15,6 +15,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { service, actions, site } = Composer.useComposer();
 
   const [devMode, setDevMode] = React.useState<boolean>(false);
+  const [startdate, setStartdate] = React.useState<string>('');
+  const [enddate, setEnddate] = React.useState<string>('');
 
   let articleSelectOpen: boolean | undefined;
 
@@ -27,7 +29,11 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 
   const handleCreate = () => {
-    const entity: StencilApi.CreateWorkflow = { value: technicalname, articles: articleId, devMode, labels };
+    const entity: StencilApi.CreateWorkflow = { 
+      value: technicalname, articles: articleId, devMode, labels,
+      startDate: startdate ? startdate + ":00" : undefined,
+      endDate: enddate ? enddate + ":00": undefined,
+     };
     service.create().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
       console.log(success)
@@ -69,7 +75,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
 
         <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
-
           <Box display="flex">
             <Box flexGrow={1}>
               <Burger.TextField label='services.technicalname' helperText='services.technicalname.description'
@@ -85,7 +90,21 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 onChange={setDevMode}
               />
             </Box>
+          </Box>
 
+          <Box display="flex">
+            <Box flexGrow={1}>
+              <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'
+                required
+                value={startdate}
+                onChange={setStartdate} />
+            </Box>
+            <Box maxWidth="50%" sx={{ ml: 1 }}>
+              <Burger.DateTimeField label='services.enddate' helperText='services.enddate.description'
+                required
+                value={enddate}
+                onChange={setEnddate} />
+            </Box>
           </Box>
 
           <Burger.SelectMultiple label='article.select'

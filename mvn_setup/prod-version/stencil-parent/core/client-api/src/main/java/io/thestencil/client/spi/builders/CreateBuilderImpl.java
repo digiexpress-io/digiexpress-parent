@@ -278,8 +278,11 @@ public class CreateBuilderImpl implements CreateBuilder {
   
   public static Entity<Workflow> workflow(CreateWorkflow init, SiteState state, StencilClient client) {
     final var gid = client.getStore().gid(EntityType.WORKFLOW);
-    final var workflow = ImmutableWorkflow.builder().devMode(init.getDevMode())
-        .value(init.getValue());
+    final var workflow = ImmutableWorkflow.builder()
+        .devMode(init.getDevMode())
+        .value(init.getValue())
+        .startDate(init.getStartDate())
+        .endDate(init.getEndDate());
 
     final var articles = new ArrayList<String>();
     for(final var articleRef : init.getArticles()) {
