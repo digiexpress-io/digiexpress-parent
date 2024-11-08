@@ -67,6 +67,15 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     return comments;
   }
   
+  @Override
+  public List<UserMessage> findAllByUserId() {
+    final var customer = authClient.getCustomer();
+    final var comments = commentRepository.findAllByUserId(customer.getPrincipal().getId()).stream()
+        .map(comment -> visitUserMessage(comment, customer))
+        .toList();
+    return comments;
+  }
+  
   public static UserMessage visitUserMessage(TaskCommentEntity msg, Customer customer) {
     final var replyToId = Optional.ofNullable(msg.getReplyTo()).map(replay -> replay.getId().toString()).orElse(null);
     final var userMsg = ImmutableUserMessage.builder()
@@ -105,4 +114,5 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     } 
     return "";
   }
+
 }

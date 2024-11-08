@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.app;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -85,7 +84,7 @@ public class SecurityProvider  {
       public Customer getCustomer() {
         return ImmutableCustomer.builder()
             .principal(ImmutableCustomerPrincipal.builder()
-                .id(UUID.randomUUID().toString())
+                .id("my-ssn")
                 .ssn("my-ssn")
                 .username("same vimes")
                 .firstName("same")

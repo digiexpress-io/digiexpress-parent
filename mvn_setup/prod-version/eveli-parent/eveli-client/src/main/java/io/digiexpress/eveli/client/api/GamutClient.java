@@ -84,6 +84,7 @@ public interface GamutClient {
   
   interface UserMessagesQuery {
     List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException;
+    List<UserMessage> findAllByUserId();
   }
   
   interface UserActionQuery {

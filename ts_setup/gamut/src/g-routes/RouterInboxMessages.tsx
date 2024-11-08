@@ -51,7 +51,9 @@ export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, 
 
   const subject = getSubject(subjectId)!;
 
-
+  if (!subject) {
+    return <>...</>
+  }
 
   return (
     <GShell>
@@ -71,7 +73,7 @@ export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, 
                     {intl.formatMessage({ id: 'gamut.userOverview.home' })}
                   </Link>
                   <Link onClick={() => handleClick('inbox')}>{intl.formatMessage({ id: 'gamut.inbox.title' })}</Link>
-                  <Typography>{intl.formatMessage({ id: 'gamut.subjectMessage.title' }, { subject: subject.name })}</Typography>
+                  <Typography>{intl.formatMessage({ id: 'gamut.subjectMessage.title' }, { subject: subject?.name })}</Typography>
                 </Breadcrumbs>
               ),
               topTitle: () => (

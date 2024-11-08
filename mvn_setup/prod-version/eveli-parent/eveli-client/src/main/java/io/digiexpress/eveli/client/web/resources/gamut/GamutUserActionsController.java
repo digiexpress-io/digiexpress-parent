@@ -72,7 +72,7 @@ public class GamutUserActionsController {
   private final ProcessClient hdes;
   
 
-  @GetMapping(value="fill/{sessionId}")
+  @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
     return dialob.createProxy().sessionGet(sessionId);
   }
@@ -95,6 +95,11 @@ public class GamutUserActionsController {
     return dialob.createProxy().sessionGet(sessionId);
   }
 
+  @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
+  @GetMapping(value="/messages")
+  public ResponseEntity<List<UserMessage>> getMessages() {
+    return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByUserId());
+  }
   @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
   @GetMapping(value="{actionId}/messages")
   public ResponseEntity<List<UserMessage>> getMessages(@PathVariable("actionId") String actionId) {

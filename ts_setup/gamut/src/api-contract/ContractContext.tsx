@@ -4,7 +4,6 @@ import { ContractApi } from './contract-types';
 import { usePopulateContext } from './usePopulateContext';
 
 
-
 export const ContractContext = React.createContext<ContractApi.ContractContextType>({} as any);
 
 
@@ -29,8 +28,11 @@ export const ContractProvider: React.FC<{
       appendContractAttachment: data.appendContractAttachment,
       contractStats: Object.freeze({ awaitingDecision: awaitingDecision.length, decided: decided.length })
     };
+    return (
+      <ContractContext.Provider value={contextValue}>
+        {props.children}
+      </ContractContext.Provider>);
 
-    return (<ContractContext.Provider value={contextValue}>{props.children}</ContractContext.Provider>);
   }, [data, props]);
 }
 

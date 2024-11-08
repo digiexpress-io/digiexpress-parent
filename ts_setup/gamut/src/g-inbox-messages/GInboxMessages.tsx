@@ -39,7 +39,6 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { getSubject } = useComms();
-
   const subject = getSubject(props.subjectId);
 
   if (!subject) {

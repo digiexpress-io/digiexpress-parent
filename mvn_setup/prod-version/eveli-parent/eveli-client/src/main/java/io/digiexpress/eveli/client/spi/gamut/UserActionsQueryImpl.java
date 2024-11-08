@@ -103,7 +103,11 @@ public class UserActionsQueryImpl implements UserActionQuery {
     final var taskIds = processes.stream().filter(t -> t.getTask() != null).map(t -> t.getTask()).toList();
     final var unreadTasks = taskRepository.findUnreadExternalTasks(userId);
     final var allTasks = taskRepository.findAllTasksId(taskIds);    
-    return new TasksContext(allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), unreadTasks);
+    
+    return new TasksContext(
+        allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), 
+        unreadTasks
+    );
   }
   
   private Optional<ProcessAuthorization> visitAuthorization() {
@@ -156,6 +160,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .map(t -> t.getTaskRef())
         .orElse(null);
     
+    
+    
     final var att = visitAttachments(process);
     
     return ImmutableUserAction.builder()
@@ -177,6 +183,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .updated(messages.getUpdated())
         .addAllAttachments(att.getProcessAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
         .addAllAttachments(att.getTaskAttachments().stream().map(attachment -> visitAttachment(process, attachment)).toList())
+        .addAllMessages(messages.getMessages())
         
         // deprecated
         .messagesUri("not-needed")
@@ -199,6 +206,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     private final Map<Long, TaskEntity> tasksById;
     private final List<Long> unreadTaskIds;
   }
+  
   
   @Data
   @RequiredArgsConstructor

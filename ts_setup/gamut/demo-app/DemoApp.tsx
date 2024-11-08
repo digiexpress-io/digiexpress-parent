@@ -30,6 +30,7 @@ import {
 const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const staleTime = 5 * 1000;
   const processesQueryKey = 'legacy-processes';
+
   const dialobFetch = createDialobFetch();
   const offerFetch = createOfferFetch();
   const contractFetch = createContractFetch();
@@ -41,7 +42,7 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
       <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-          <CommsProvider getSubjects={subjectFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+        <CommsProvider getSubjects={subjectFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
             <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
               {children}
             </BookingProvider>

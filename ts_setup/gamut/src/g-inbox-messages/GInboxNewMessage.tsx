@@ -16,6 +16,8 @@ export interface GInboxNewMessageProps {
 export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => {
   const intl = useIntl();
 
+
+
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -45,7 +47,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
       <TextField multiline minRows={ownerState.minRows} placeholder={intl.formatMessage({ id: 'gamut.inbox.newMessage.placeholder' })} />
 
       <div className={classes.newMsgButtons}>
-        <Button startIcon={<ReplyIcon />} variant='contained'>
+        <Button startIcon={<ReplyIcon />} variant='contained' onClick={() => console.log("reply")}>
           {intl.formatMessage({ id: 'gamut.buttons.reply' })}
         </Button>
         <Button className={classes.newMsgAddButton} startIcon={<AttachFileIcon />} variant='outlined'>

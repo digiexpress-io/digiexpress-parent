@@ -17,7 +17,7 @@ export function mapToSubjectData(data: LegacyProcessApi.Process[], user: IamApi.
     if (!proc.taskId) {
       continue;
     }
-    if (proc.messages.length === 0) {
+    if (proc.messages?.length === 0) {
       //continue;
     }
 

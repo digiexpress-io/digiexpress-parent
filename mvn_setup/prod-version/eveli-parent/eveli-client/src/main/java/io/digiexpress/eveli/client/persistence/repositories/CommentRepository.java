@@ -21,8 +21,11 @@ package io.digiexpress.eveli.client.persistence.repositories;
  */
 
 import java.util.Collection;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
@@ -35,4 +38,16 @@ public interface CommentRepository extends CrudRepository<TaskCommentEntity, Lon
 	
 	Collection<TaskCommentEntity> findByTaskId(Long id);
 	Collection<TaskCommentEntity> findByTaskIdAndExternalTrue(Long id);
+	
+	
+	@Query(nativeQuery = true, value=
+"""
+SELECT comment.* 
+FROM comment
+left join task on(task.id = comment.task_id)
+left join process on(process.task_id::bigint = comment.task_id)
+where comment.external = true and process.user_id = :userName
+""")
+  List<TaskCommentEntity> findAllByUserId(@Param("userName") String userName);
+  
 }
