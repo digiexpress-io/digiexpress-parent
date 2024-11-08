@@ -46,19 +46,21 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = () => {
-  const [, , selectedLocale] = window.location.pathname.split('\/');
-  if (selectedLocale) {
-    return selectedLocale;
-  }
-
-  const language = navigator.language;
-
   let locale = 'en';
-  if (language.length > 2) {
-    locale = language.split("-")[0];
+
+  // filter empty elements to avoid empty first element when pathname starts with '/'
+  const [, , selectedLocale] = window.location.pathname.split('\/').filter(pathElement=>pathElement);
+  if (selectedLocale) {
+    locale = selectedLocale;
   }
   else {
-    locale = language;
+    const language = navigator.language;
+    if (language.length > 2) {
+      locale = language.split("-")[0];
+    }
+    else {
+      locale = language;
+    }
   }
   if (locale !== 'en' && locale !== 'fi') {
     return 'en';
