@@ -39,11 +39,8 @@ export const PublicationsTable: React.FC = () => {
   const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<Publication[]>(`${serviceUrl}rest/api/assets/publications`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
 
-
-
-
   const getRelease = (releaseTag: Publication) => {
-    let url = `${serviceUrl}rest/api/assets/publications/${releaseTag.body.name}`;
+    let url = `${serviceUrl}rest/api/assets/deployments/${releaseTag.body.name}`;
     return session.cFetch(`${url}`, {
       method: 'GET',
       headers: {

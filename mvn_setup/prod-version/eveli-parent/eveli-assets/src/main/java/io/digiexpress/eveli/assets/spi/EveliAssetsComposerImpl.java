@@ -31,6 +31,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.digiexpress.eveli.assets.spi.builders.DeploymentBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.UpdateBuilderImpl;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
@@ -56,6 +57,11 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
   }
 
   @Override
+  public DeploymentBuilder deployment() {
+    return new DeploymentBuilderImpl(client, stencilClient, hdesClient, dialobClient);
+  }
+
+  @Override
   public DeleteBuilder delete() {
     // TODO Auto-generated method stub
     return null;
@@ -63,12 +69,6 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
 
   @Override
   public MigrationBuilder migration() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public DeploymentBuilder deployment() {
     // TODO Auto-generated method stub
     return null;
   }
