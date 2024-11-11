@@ -47,7 +47,8 @@ export const GFormPageRoot = styled('div', {
   },
 })<{ ownerState: GFormPageProps }>(({ theme }) => {
   return {
-
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
 
   };
 });
@@ -162,6 +163,8 @@ export const GFormPageFooter = styled('div', {
   },
 })<{ ownerState: GFormPageProps }>(({ theme }) => {
   return {
-
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    justifySelf: 'flex-end'
   };
 });

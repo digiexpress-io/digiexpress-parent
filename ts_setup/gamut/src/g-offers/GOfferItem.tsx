@@ -67,9 +67,9 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     />
     <GOfferItemRoot className={classes.root} ownerState={ownerState}>
       <GFlex variant='body'>
-        <Grid container>
+        <Grid container onClick={() => onOpen(offers.getOffer(offerId)!)}>
           <Grid item xs={12} sm={12} md={12} lg={5} xl={4}>
-            <Typography onClick={() => onOpen(offers.getOffer(offerId)!)}>{name}</Typography>
+            <Typography>{name}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={2} xl={3}>
@@ -94,8 +94,13 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
             </Typography>
           </Grid>
 
+
           <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-            <Button startIcon={<DeleteForeverIcon />} className={classes.cancel} onClick={handleToggleDialog}>
+            <Button startIcon={<DeleteForeverIcon />} className={classes.cancel}
+              onClick={(event) => {
+                event.stopPropagation(); // prevent clicking the grid from overriding the button click
+                handleToggleDialog();
+              }}>
               <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
             </Button>
           </Grid>

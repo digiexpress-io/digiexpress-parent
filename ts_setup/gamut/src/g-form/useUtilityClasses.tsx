@@ -1,4 +1,4 @@
-import { alpha, CircularProgress, generateUtilityClass, styled } from "@mui/material";
+import { alpha, generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { useVariantOverride } from '../api-variants';
 import { OwnerState } from './GForm';
@@ -145,16 +145,20 @@ export const GFormRoot = styled("div", {
 
 
 
-export const GFormProgress = styled(CircularProgress, {
+export const GFormProgress = styled("div", {
   name: MUI_NAME,
   slot: 'Progress',
   overridesResolver: (props, styles) => {
     return [
-      styles.loader,
+      styles.progress,
     ];
   },
 })(({ theme }) => {
   return {
-
+    display: 'flex',
+    paddingTop: theme.spacing(5),
+    justifyContent: 'center',
+    width: '100%',
+    height: '100vh'
   };
 });

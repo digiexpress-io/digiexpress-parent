@@ -6,10 +6,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { FormattedMessage } from 'react-intl';
 
 import { GFormStepper } from '../g-form-stepper'
-import { 
-  useThemeInfra, 
-  GFormPageRoot, GFormPageTitle, GFormPageSubTitle, 
-  GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter 
+import {
+  useThemeInfra,
+  GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
+  GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
 } from './useThemeInfra';
 
 
@@ -59,7 +59,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   }
 
   function handleNextPage() {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
     props.onNextPage();
   }
 
@@ -67,7 +67,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
     props.onComplete();
   }
 
-  if(!props.active) {
+  if (!props.active) {
     return (<></>)
   }
 
@@ -82,18 +82,18 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
           {/** Title to the next page */}
           <GFormPageSubTitle ownerState={ownerState} className={classes.subTitle}>
             <Typography>{props.subTitle}</Typography>
-            
+
             {/** Page selection */}
             <IconButton onClick={togglePageSelection}><ExpandMoreIcon /></IconButton>
 
             <GFormPageMenu anchorEl={anchorEl} open={open} onClose={togglePageSelection} TransitionComponent={Fade} ownerState={ownerState}>
-              
+
               {props.pages.map(({ id: key, title: value, pageNumber }) => {
                 const selected = key === value;
                 const prefix = selected && <CheckIcon color='primary' fontSize='small' sx={{ mr: 1 }} />;
 
                 return (<MenuItem key={key} value={key} onClick={() => handlePageChange(key)}>
-                  <ListItemIcon><FormattedMessage id='gamut.forms.page.selection.key' values={{ stepNumber: pageNumber, totalSteps: props.pages.length }}/></ListItemIcon>
+                  <ListItemIcon><FormattedMessage id='gamut.forms.page.selection.key' values={{ stepNumber: pageNumber, totalSteps: props.pages.length }} /></ListItemIcon>
                   <Typography>{value}</Typography>
                 </MenuItem>);
               })}
@@ -102,7 +102,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
           </GFormPageSubTitle>
         </div>
 
-        <GFormStepper id={props.id} pageNumber={props.pageNumber} totalPages={props.pages.length}/>
+        <GFormStepper id={props.id} pageNumber={props.pageNumber} totalPages={props.pages.length} />
       </GFormPageHeader>
 
       <GFormPageBody ownerState={ownerState} className={classes.body} as={ownerState.slots?.body}>
@@ -110,17 +110,17 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
       </GFormPageBody>
 
       <GFormPageFooter ownerState={ownerState} className={classes.footer} as={ownerState.slots?.footer}>
-        
-        { props.pages.length !== props.pageNumber &&
-        <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
-          <FormattedMessage id='gamut.forms.page.next' />
-        </Button>
+
+        {props.pages.length !== props.pageNumber &&
+          <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>
+            <FormattedMessage id='gamut.forms.page.next' />
+          </Button>
         }
 
-        { props.completeAllowed &&
-          <Button onClick={handleComplete} color='primary' autoFocus>
+        {
+          <Button onClick={handleComplete} variant='contained' color='primary' autoFocus disabled={!props.completeAllowed}>
             <FormattedMessage id='gamut.forms.page.complete' />
-          </Button> 
+          </Button>
         }
       </GFormPageFooter>
     </GFormPageRoot>)

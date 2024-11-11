@@ -3,6 +3,7 @@ import { GFormIterator } from './GFormIterator'
 import { FormProvider, useFormTip, DialobApi } from '../api-dialob';
 
 import { useUtilityClasses, GFormRoot, GFormProgress } from './useUtilityClasses';
+import { CircularProgress } from '@mui/material';
 
 
 export interface GFormProps {
@@ -38,7 +39,7 @@ const GFormTip: React.FC<GFormProps> = (props) => {
 
   return (
     <GFormRoot ownerState={ownerState} className={classes.root}>
-      {tip ? <GFormIterator /> : <GFormProgress className={classes.progress} />}
+      {tip ? <GFormIterator /> : <GFormProgress className={classes.progress}><CircularProgress /></GFormProgress>}
     </GFormRoot>);
 }
 
