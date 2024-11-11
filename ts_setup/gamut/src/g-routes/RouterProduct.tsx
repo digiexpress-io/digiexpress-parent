@@ -88,8 +88,11 @@ const Center: React.FC<RouterProductOwnerState> = (props) => {
 
   const { topicLink, topic, locale } = props.ownerState;
   const productId = topicLink.id;
-  const pageId = topic.id;
   const anonymousUser = anon.authType === 'ANON';
+
+  // article links
+  const parentPageId = topic.parent?.id ?? undefined;
+  const pageId = topic.id;
 
 
   function handleCancelOffer() {
@@ -108,7 +111,7 @@ const Center: React.FC<RouterProductOwnerState> = (props) => {
   }
 
   function handleCreateOffer() {
-    offers.createOffer({ locale, productId, productGroupId: pageId }).then((offer) => {
+    offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
       nav({
         params: { locale, pageId, productId, offerId: offer.id },
         to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',

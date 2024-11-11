@@ -25,25 +25,19 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.thestencil.client.api.MigrationBuilder.Sites;
-
 public class StaticContentContext {
   private static final Logger LOGGER = LoggerFactory.getLogger(StaticContentContext.class.getName());
   
-  private final Sites content;
   private final Map<String, String> contentValue;
   private final String defaultLocale;
+  
+  
   public StaticContentContext(
-      Sites content, 
       Map<String, String> contentValue,
       String defaultLocale) {
     super();
-    this.content = content;
     this.contentValue = contentValue;
     this.defaultLocale = defaultLocale;
-  }
-  public Sites getContent() {
-    return content;
   }
   public String getContentValue(String queryLocale) {
     final String usedLocale;

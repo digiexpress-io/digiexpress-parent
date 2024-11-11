@@ -1,8 +1,5 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
-import java.time.ZoneOffset;
-import java.util.function.Supplier;
-
 /*-
  * #%L
  * eveli-client
@@ -23,7 +20,10 @@ import java.util.function.Supplier;
  * #L%
  */
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient;
+import java.time.ZoneOffset;
+import java.util.function.Supplier;
+
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
@@ -34,6 +34,7 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.iam.api.ImmutableUserAction;
 import io.thestencil.iam.api.UserActionsClient.UserAction;
@@ -49,10 +50,12 @@ public class GamutClientImpl implements GamutClient {
   
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
-  private final EveliAssetClient assetClient;
   private final CrmClient authClient;
-  private final Supplier<Sites> siteEnvir;
   private final ZoneOffset offset;
+  
+  private final Supplier<Sites> siteEnvir;
+  private final Supplier<ProgramEnvir> programEnvir;
+  private final Supplier<WorkflowTag> workflowEnvir;
 
 
   @Override
@@ -62,7 +65,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, assetClient, siteEnvir, authClient, offset);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, siteEnvir, programEnvir, workflowEnvir, authClient, offset);
   }
 
   @Override
@@ -114,9 +117,9 @@ public class GamutClientImpl implements GamutClient {
             .created(process.getCreated())
             .updated(process.getUpdated())
             .name(process.getWorkflowName())
-            .inputContextId(process.getInputContextId())
-            .inputParentContextId(process.getInputParentContextId())
-            .formId(process.getQuestionnaire())
+            .inputContextId(process.getArticleName())
+            .inputParentContextId(process.getParentArticleName())
+            .formId(process.getQuestionnaireId())
             .formInProgress(true)
             .viewed(true)
             

@@ -157,6 +157,6 @@ public class AttachmentApiController {
   }
 
   private String getProcessIdFromTask(String taskId) {
-    return processClient.queryInstances().findOneByTaskId(taskId).map(e -> e.getId().toString()).orElse(null);
+    return processClient.queryInstances().findOneByTaskId(Long.parseLong(taskId)).map(e -> e.getId().toString()).orElse(null);
   }
 }

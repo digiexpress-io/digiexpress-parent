@@ -22,26 +22,19 @@ package io.thestencil.staticontent;
 
 import java.util.Map;
 
+import io.quarkus.arc.DefaultBean;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 
-import io.quarkus.arc.DefaultBean;
-import io.thestencil.client.api.MigrationBuilder.Sites;
-
 @ApplicationScoped
 public class StaticContentBeanFactory {
   
-  private Sites staticContent;
   private Map<String, String> serializedContent;
   private String defaultLocale;
   
   public StaticContentBeanFactory setDefaultLocale(String defaultLocale) {
     this.defaultLocale = defaultLocale;
-    return this;
-  }
-  public StaticContentBeanFactory setStaticContent(Sites staticContent) {
-    this.staticContent = staticContent;
     return this;
   }
   public StaticContentBeanFactory setSerializedContent(Map<String, String> serializedContent) {
@@ -53,6 +46,6 @@ public class StaticContentBeanFactory {
   @Singleton
   @DefaultBean
   public StaticContentContext staticContentContext() {
-    return new StaticContentContext(staticContent, serializedContent, defaultLocale);
+    return new StaticContentContext(serializedContent, defaultLocale);
   }
 }

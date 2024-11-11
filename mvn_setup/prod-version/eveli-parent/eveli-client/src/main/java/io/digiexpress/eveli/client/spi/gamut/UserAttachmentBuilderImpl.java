@@ -86,7 +86,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
 
   
   private Attachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
-    final var taskId = process.getTask();
+    final var taskId = process.getTaskId();
     final var filename = file.getName();
     final Optional<AttachmentUpload> uploadUrl = taskId == null ?
         attachmentCommands.upload().encodePath(filename).processId(actionId) :
@@ -111,7 +111,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   public static String attachmentId(String name, ProcessInstance process) {
     return Hashing
     .murmur3_128()
-    .hashString(name + "::" + process.getTask() + "::" + process.getId(), Charsets.UTF_8)
+    .hashString(name + "::" + process.getTaskId() + "::" + process.getId(), Charsets.UTF_8)
     .toString();
 
   }

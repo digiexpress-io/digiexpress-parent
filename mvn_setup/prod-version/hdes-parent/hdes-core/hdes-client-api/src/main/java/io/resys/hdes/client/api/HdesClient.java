@@ -106,6 +106,7 @@ public interface HdesClient {
   
   
   interface EnvirBuilder {
+    EnvirBuilder tagName(String tagName);
     EnvirBuilder from(ProgramEnvir envir);
     EnvirCommandFormatBuilder addCommand();
     ProgramEnvir build();

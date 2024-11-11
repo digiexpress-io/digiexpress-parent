@@ -71,6 +71,7 @@ public class ProgramEnvirFactory {
   private final List<String> cachlessIds = new ArrayList<>();
   private final StringBuilder treelog = new StringBuilder();
   private ProgramEnvir baseEnvir;
+  private String tagName;
   
   public ProgramEnvirFactory(HdesAstTypes hdesTypes, HdesTypesMapper hdesFactory, HdesClientConfig config) {
     super();
@@ -82,6 +83,11 @@ public class ProgramEnvirFactory {
   
   public ProgramEnvirFactory add(ProgramEnvir envir) {
     this.baseEnvir = envir;
+    return this;
+  }
+  
+  public ProgramEnvirFactory tagName(String tagName) {
+    this.tagName = tagName;
     return this;
   }
   public ProgramEnvirFactory add(AstSource entity, boolean cachless) {
@@ -130,7 +136,7 @@ public class ProgramEnvirFactory {
           .append(treelog.toString())
           .toString());
     }
-    return envir.build();
+    return envir.tagName(tagName).build();
   }
   
   public void visitTreeLog(ProgramWrapper<?, ?> wrapper) {

@@ -51,6 +51,7 @@ import io.thestencil.client.api.ImmutableLinkMutator;
 import io.thestencil.client.api.ImmutableLocaleMutator;
 import io.thestencil.client.api.ImmutablePageMutator;
 import io.thestencil.client.api.ImmutableSiteState;
+import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.ImmutableTemplateMutator;
 import io.thestencil.client.api.ImmutableWorkflowArticlePage;
 import io.thestencil.client.api.ImmutableWorkflowMutator;
@@ -65,7 +66,6 @@ import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.beans.SitesBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -227,7 +227,7 @@ public class AssetsStencilController {
   private Sites parseSites(byte[] body) {    
     Sites site = null;
     try {
-      site = objectMapper.readValue(body, SitesBean.class);
+      site = objectMapper.readValue(body, ImmutableSites.class);
       
       if(site == null || site.getSites() == null  || site.getSites().isEmpty()) {
         final var md = client

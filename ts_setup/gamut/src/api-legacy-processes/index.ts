@@ -5,8 +5,7 @@ export namespace LegacyProcessApi {
     name: string;
     created: string;  // "2023-05-15T08:51:40.380479"
     updated: string;  // "2023-05-15T08:51:40.380479"
-
-    inputPageId: string;
+    
     inputContextId: string;
     inputParentContextId: string;
     taskId?: string | undefined;

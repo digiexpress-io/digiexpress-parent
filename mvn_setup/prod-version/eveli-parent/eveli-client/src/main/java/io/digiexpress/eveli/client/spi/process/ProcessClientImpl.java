@@ -64,6 +64,10 @@ public class ProcessClientImpl implements ProcessClient {
   @Override
   public CreateProcessExecutor createExecutor() {
     return new CreateProcessExecutorImpl(() -> queryInstances(), hdesClient, programEnvir, ts, workflowCommands);
+  }
+  @Override
+  public ProcessInstanceBodyBuilder createBodyBuilder() {
+    return new ProcessInstanceBodyBuilderImpl(processJPA);
   }  
 
 }

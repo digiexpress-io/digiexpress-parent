@@ -112,6 +112,7 @@ public interface HdesStore {
   @JsonDeserialize(as = ImmutableStoreState.class)
   @Value.Immutable
   interface StoreState {
+    String getTagName();
     Map<String, StoreEntity> getBranches();
     Map<String, StoreEntity> getTags();
     Map<String, StoreEntity> getFlows();

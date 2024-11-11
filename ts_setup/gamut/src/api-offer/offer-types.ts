@@ -22,14 +22,17 @@ export declare namespace OfferApi {
     formUri: string;
     formId: string;
 
-    productId: string;
+    productId: string; // link id which was clicked to trigger form filling
     pageId: string;
+    parentPageId: string | undefined;
   }
 
 
   export interface OfferRequest {
-    productGroupId: string;
-    productId: string;
+    pageId: string; // article.id = human readable articale name
+    parentPageId: string | undefined;
+
+    productId: string; // links technical id, linked to workflow
     locale: string;
   }
 

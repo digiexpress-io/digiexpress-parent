@@ -32,7 +32,9 @@ export const RouterOfferSummary: React.FC<{
   const anon = useIam();
   const site = useSite();
   const topic = site.views[props.pageId];
-  const topicLink = topic.links.find(l => l.id === props.productId)!
+  const topicLink = topic.links.find(l => l.id === props.productId)
+
+  console.log(topic.links)
 
   const anonymousUser = anon.authType === 'ANON';
   const buttonBackToMsg = anonymousUser ? 'gamut.public.forms.summary.button.backToServicesHome' : 'gamut.forms.summary.button.back-to-overview';
@@ -71,7 +73,7 @@ export const RouterOfferSummary: React.FC<{
                 <Box display='flex' flexDirection='column'>
                   <Typography variant='h1' textAlign='center' marginBottom='20px'>{intl.formatMessage({ id: 'gamut.forms.filling.summary.thank-you' })}</Typography>
 
-                  <Typography variant='h2'>{intl.formatMessage({ id: 'gamut.forms.filling.summary' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink.name}</Typography>
+                  <Typography variant='h2'>{intl.formatMessage({ id: 'gamut.forms.filling.summary' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink?.name ?? "-"}</Typography>
                   <Typography variant='body1'>{intl.formatMessage({ id: 'gamut.forms.filling.summary.info1' })}</Typography>
 
                   <div style={{ marginTop: '25px' }} />

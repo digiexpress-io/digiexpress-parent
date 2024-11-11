@@ -33,8 +33,8 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
-  Optional<ProcessEntity> findByQuestionnaire(String questionnaireId);
-  Optional<ProcessEntity> findByTask(String taskId);
+  Optional<ProcessEntity> findByQuestionnaireId(String questionnaireId);
+  Optional<ProcessEntity> findByTaskId(Long taskId);
   Optional<ProcessEntity> findById(Long id);
   
   @Query(value=
@@ -51,7 +51,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
   @Query(value="select p from ProcessEntity p where userId = :userId")
   List<ProcessEntity> findAllByUserId(@Param("userId") String userId);
 
-  @Query(value="select p from ProcessEntity p where status = :status and task is null")
+  @Query(value="select p from ProcessEntity p where status = :status and taskId is null")
   List<ProcessEntity> findAllByStatus(ProcessStatus status);
   
 

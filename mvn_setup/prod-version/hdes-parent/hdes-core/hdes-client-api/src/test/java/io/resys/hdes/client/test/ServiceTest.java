@@ -43,7 +43,7 @@ public class ServiceTest {
         .type(AstCommandValue.SET_BODY)
         .value(FileUtils.toString(getClass(), "service/Type1Service.txt"))
         .build()));
-    final var envir = TestUtils.client.envir().addCommand().id("Type1Service.txt").service(src).build().build();
+    final var envir = TestUtils.client.envir().tagName("type0").addCommand().id("Type1Service.txt").service(src).build().build();
 
     
   
@@ -71,7 +71,7 @@ public class ServiceTest {
         .type(AstCommandValue.SET_BODY)
         .value(FileUtils.toString(getClass(), "service/Type2Service.txt"))
         .build()));
-    final var envir = TestUtils.client.envir().addCommand().id("Type2Service.txt").service(src).build().build();
+    final var envir = TestUtils.client.envir().tagName("type2").addCommand().id("Type2Service.txt").service(src).build().build();
 
     // map conversion
     ServiceResult result = TestUtils.client.executor(envir)

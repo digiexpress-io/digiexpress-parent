@@ -107,7 +107,7 @@ public class AssetIntegrationTest {
     @Bean
     public ProgramEnvir staticAssets(HdesClient client) {
       final var source = client.store().query().get().await().atMost(Duration.ofMinutes(1));
-      return ComposerEntityMapper.toEnvir(client.envir(), source).build();
+      return ComposerEntityMapper.toEnvir(client.envir().tagName("live"), source).build();
     }
   }
 

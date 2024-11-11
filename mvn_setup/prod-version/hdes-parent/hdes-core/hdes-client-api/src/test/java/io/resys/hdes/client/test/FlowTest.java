@@ -127,7 +127,7 @@ public class FlowTest {
   
   @Test
   public void programAmlTest() throws IOException {
-    final var envir = TestUtils.client.envir().addCommand().id("programAmlTest")
+    final var envir = TestUtils.client.envir().tagName("programAmlTest").addCommand().id("programAmlTest")
         .flow(
             TestUtils.objectMapper.writeValueAsString(Arrays.asList(ImmutableAstCommand.builder()
                 .type(AstCommandValue.SET_BODY)

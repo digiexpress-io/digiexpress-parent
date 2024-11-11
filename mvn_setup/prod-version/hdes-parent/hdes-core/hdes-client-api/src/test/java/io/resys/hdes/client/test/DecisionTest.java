@@ -90,7 +90,7 @@ public class DecisionTest {
 //}
   @Test
   public void executionTest() throws IOException {
-    final var envir = TestUtils.client.envir().addCommand().id("dt").decision(FileUtils.toString(getClass(), "decision/dt.json")).build().build();
+    final var envir = TestUtils.client.envir().tagName("executionTest").addCommand().id("dt").decision(FileUtils.toString(getClass(), "decision/dt.json")).build().build();
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("sriBoolean", false);
@@ -107,7 +107,7 @@ public class DecisionTest {
 
   @Test
   public void nullEqualsNull() throws IOException {
-    final var envir = TestUtils.client.envir().addCommand().id("nullEqualsNull").decision(FileUtils.toString(getClass(), "decision/nullEqualsNull.json")).build().build();
+    final var envir = TestUtils.client.envir().tagName("nullEqualsNull").addCommand().id("nullEqualsNull").decision(FileUtils.toString(getClass(), "decision/nullEqualsNull.json")).build().build();
     
     Map<String, Serializable> values = new HashMap<>();
     values.put("risk", null);
@@ -119,7 +119,7 @@ public class DecisionTest {
   
   @Test
   public void firstHitPolicy() throws IOException {
-    final var envir = TestUtils.client.envir().addCommand().id("test1").decision(FileUtils.toString(getClass(), "decision/firstHitPolicy.json")).build().build();
+    final var envir = TestUtils.client.envir().tagName("firstHitPolicy").addCommand().id("test1").decision(FileUtils.toString(getClass(), "decision/firstHitPolicy.json")).build().build();
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("regionName", "FIN");
@@ -137,7 +137,7 @@ public class DecisionTest {
 
   @Test
   public void all() throws IOException {
-    final var envir = TestUtils.client.envir().addCommand().id("allHitPolicy").decision(FileUtils.toString(getClass(), "decision/allHitPolicy.json")).build().build();
+    final var envir = TestUtils.client.envir().tagName("all").addCommand().id("allHitPolicy").decision(FileUtils.toString(getClass(), "decision/allHitPolicy.json")).build().build();
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("firstName", "Mark");

@@ -30,8 +30,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.tests.util.PgProfile;
 import io.thestencil.client.tests.util.PgTestTemplate;
 import io.thestencil.client.tests.util.TestExporter;
@@ -45,7 +45,7 @@ public class MigrationPgTest extends PgTestTemplate {
     final var repo = getPersistence("migration-test");
  
     final var input = TestExporter.toString(getClass(), "migration-input.json");
-    final SitesBean sites = PgTestTemplate.objectMapper.readValue(input, SitesBean.class);
+    final ImmutableSites sites = PgTestTemplate.objectMapper.readValue(input, ImmutableSites.class);
     
     
     SiteState imported = repo.migration().importData(sites)

@@ -44,8 +44,12 @@ public interface MigrationBuilder {
 
   Uni<SiteState> importData(Sites sites);
   Uni<SiteState> importData(SiteState sites);  
-  
+
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableSites.class)
+  @JsonDeserialize(as = ImmutableSites.class)
   interface Sites {
+    String getTagName();
     Long getCreated();
     Map<String, LocalizedSite> getSites();
   }

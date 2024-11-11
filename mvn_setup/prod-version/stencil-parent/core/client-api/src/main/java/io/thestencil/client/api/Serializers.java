@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
-import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
@@ -32,7 +31,7 @@ import io.thestencil.client.spi.beans.TopicHeadingBean;
 public class Serializers {
 
   public static final List<Class<?>> VALUES = Arrays.asList(
-    SitesBean.class, 
+    ImmutableSites.class, 
     LocalizedSiteBean.class,
     TopicBlobBean.class,
     TopicBean.class,

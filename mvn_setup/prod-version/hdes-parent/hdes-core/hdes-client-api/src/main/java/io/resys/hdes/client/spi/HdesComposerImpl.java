@@ -158,7 +158,7 @@ public class HdesComposerImpl implements HdesComposer {
 
   private ComposerState state(StoreState source) {
     // create envir
-    final var envir = ComposerEntityMapper.toEnvir(client.envir(), source).build();
+    final var envir = ComposerEntityMapper.toEnvir(client.envir().tagName(source.getTagName()), source).build();
     
     // map envir
     final var builder = ImmutableComposerState.builder();

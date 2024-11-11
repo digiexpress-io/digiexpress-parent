@@ -1,5 +1,7 @@
 package io.thestencil.site.handlers;
 
+import java.time.ZoneOffset;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.thestencil.client.api.StencilClient;
@@ -31,13 +33,15 @@ public class SiteHandlerContext {
   private final StencilClient content;
   private final String servicePath;
   private final ObjectMapper objectMapper;
+  private final ZoneOffset offset;
   
-  public SiteHandlerContext(StencilComposer client, StencilClient content, ObjectMapper objectMapper, String servicePath) {
+  public SiteHandlerContext(StencilComposer client, StencilClient content, ObjectMapper objectMapper, String servicePath, ZoneOffset offset) {
     super();
     this.client = client;
     this.content = content;
     this.servicePath = servicePath;
     this.objectMapper = objectMapper;
+    this.offset = offset;
   }
   
   public StencilClient getContent() {
@@ -54,5 +58,9 @@ public class SiteHandlerContext {
 
   public String getServicePath() {
     return servicePath;
+  }
+
+  public ZoneOffset getOffset() {
+    return offset;
   }
 }

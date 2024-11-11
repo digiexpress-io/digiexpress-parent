@@ -17,7 +17,8 @@
 -- limitations under the License.
 -- #L%
 ---
-  create sequence REVINFO_SEQ start with 1 increment by 50;
+
+    create sequence REVINFO_SEQ start with 1 increment by 50;
 
     create table comment (
         id bigserial not null,
@@ -33,19 +34,25 @@
 
     create table process (
         id bigserial not null,
+        article_name varchar(255),
         created timestamp(6) not null,
         expires_at timestamp(6),
         expires_in_seconds bigint,
         flow_body jsonb,
+        flow_name varchar(255),
         form_body jsonb,
-        input_context_id varchar(255),
-        input_parent_context_id varchar(255),
+        form_name varchar(255),
+        form_tag_name varchar(255),
+        parent_article_name varchar(255),
         questionnaire_id varchar(255),
         status varchar(255) check (status in ('CREATED','ANSWERING','ANSWERED','IN_PROGRESS','WAITING','COMPLETED','REJECTED','WAITING_FOR_SYNC')),
-        task_id varchar(255),
+        stencil_tag_name varchar(255),
+        task_id bigint,
         updated timestamp(6) not null,
         user_id varchar(255),
         workflow_name varchar(255) not null,
+        workflow_tag_name varchar(255),
+        wrench_tag_name varchar(255),
         primary key (id)
     );
 

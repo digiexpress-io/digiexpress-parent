@@ -79,9 +79,9 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private AttachmentsContext visitAttachments(ProcessInstance process) {
     final List<AttachmentCommands.Attachment> processAttachments = attachmentsCommands.query().processId(process.getId().toString());
-    final List<AttachmentCommands.Attachment> taskAttachments = process.getTask() == null ? 
+    final List<AttachmentCommands.Attachment> taskAttachments = process.getTaskId() == null ? 
       Collections.emptyList() : 
-      attachmentsCommands.query().taskId(process.getTask().toString());
+      attachmentsCommands.query().taskId(process.getTaskId().toString());
     return new AttachmentsContext(processAttachments, taskAttachments);
   }
   
@@ -91,7 +91,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
     return ImmutableAttachment.builder()
         .id(id)
         .processId(process.getId().toString())
-        .taskId(Optional.ofNullable(process.getTask()).map(e -> e.toString()).orElse(null))
+        .taskId(Optional.ofNullable(process.getTaskId()).map(e -> e.toString()).orElse(null))
         .name(source.getName())
         .created(source.getCreated().toString())
         .size(source.getSize())
@@ -100,7 +100,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   
   private TasksContext visitTasks(List<ProcessInstance> processes, String userId) {
-    final var taskIds = processes.stream().filter(t -> t.getTask() != null).map(t -> t.getTask()).toList();
+    final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
     final var unreadTasks = taskRepository.findUnreadExternalTasks(userId);
     final var allTasks = taskRepository.findAllTasksId(taskIds);    
     
@@ -125,12 +125,12 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private UserMessagesContext visitUserActionMessages(ProcessInstance process, TasksContext tasks) {
     
     // task not created yet
-    if(process.getTask() == null) {
+    if(process.getTaskId() == null) {
       return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
     }
     final var user = authClient.getCustomer();
     
-    final var task = tasks.getTasksById().get(process.getTask());
+    final var task = tasks.getTasksById().get(process.getTaskId());
     var lastUpdate = process.getUpdated();
     final var userMessages = new ArrayList<UserMessage>();
     for(final var msg : task.getComments()) {
@@ -154,7 +154,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private UserAction visitUserAction(ProcessInstance process, TasksContext tasks) {
     final var messages = visitUserActionMessages(process, tasks);
-    final var task =  Optional.ofNullable(process.getTask())
+    final var task =  Optional.ofNullable(process.getTaskId())
         .map(taskId -> tasks.getTasksById().get(taskId));
     final var taskRef = task
         .map(t -> t.getTaskRef())
@@ -166,14 +166,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
     
     return ImmutableUserAction.builder()
         .id(process.getId().toString())
-        .taskId(Optional.ofNullable(process.getTask()).map(e -> e.toString()).orElse(null))
+        .taskId(Optional.ofNullable(process.getTaskId()).map(e -> e.toString()).orElse(null))
         .status(process.getStatus().name())
         .created(process.getCreated())
         .updated(process.getUpdated())
         .name(process.getWorkflowName())
-        .inputContextId(process.getInputContextId())
-        .inputParentContextId(process.getInputParentContextId())
-        .formId(process.getQuestionnaire())
+        .inputContextId(process.getArticleName())
+        .inputParentContextId(process.getParentArticleName())
+        .formId(process.getQuestionnaireId())
         .formInProgress(process.getStatus() == ProcessStatus.ANSWERING || process.getStatus() == ProcessStatus.CREATED)        
         .taskRef(taskRef)
         .taskStatus(task.map(t -> t.getStatus().name()).orElse(null))

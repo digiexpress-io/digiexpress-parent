@@ -21,6 +21,7 @@ package io.thestencil.staticontent;
  */
 
 import java.nio.file.Path;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 import io.quarkus.runtime.annotations.ConfigItem;
@@ -46,6 +47,12 @@ public class StaticContentConfig {
    */
   @ConfigItem(defaultValue = "en")
   String defaultLocale;
+  
+  /**
+   * Server offset
+   */
+  @ConfigItem(defaultValue = "+2")  
+  ZoneOffset offset;
   
   /**
    * Artifact from where to search

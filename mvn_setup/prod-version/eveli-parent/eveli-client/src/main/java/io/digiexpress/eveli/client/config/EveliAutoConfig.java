@@ -29,6 +29,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -163,8 +164,13 @@ public class EveliAutoConfig {
   }
 
   @Bean
-  public DialobCallbackController dialobCallbackController(ThreadPoolTaskScheduler submitTaskScheduler, ProcessClient processClient, DialobClient dialobClient) {
-    return new DialobCallbackController(submitTaskScheduler, processClient, dialobClient);
+  public DialobCallbackController dialobCallbackController(
+      ThreadPoolTaskScheduler submitTaskScheduler, 
+      ProcessClient processClient, 
+      DialobClient dialobClient,
+      ObjectMapper objectMapper) {
+    
+    return new DialobCallbackController(submitTaskScheduler, processClient, dialobClient, objectMapper);
   }
   
 

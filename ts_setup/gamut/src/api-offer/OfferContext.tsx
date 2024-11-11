@@ -17,6 +17,7 @@ export const OfferProvider: React.FC<{
 }> = (props) => {
   const data = usePopulateContext(props);
 
+
   return React.useMemo(() => {
 
     const contextValue: OfferApi.OfferContextType = {

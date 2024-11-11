@@ -28,15 +28,12 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerListenerBuildItem;
-import io.quarkus.bootstrap.model.AppArtifact;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.ExecutionTime;
@@ -46,10 +43,10 @@ import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
 import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
-import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.deployment.pkg.builditem.CurateOutcomeBuildItem;
 import io.quarkus.deployment.util.FileUtil;
 import io.quarkus.deployment.util.WebJarUtil;
+import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.vertx.http.deployment.HttpRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
@@ -57,7 +54,9 @@ import io.quarkus.vertx.http.deployment.devmode.NotFoundPageDisplayableEndpointB
 import io.thestencil.client.api.Markdowns;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.vertx.core.Handler;
+import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.inject.Inject;
 
 public class StaticContentProcessor {
   
@@ -97,10 +96,11 @@ public class StaticContentProcessor {
     final var client = StencilClientImpl.builder().defaultObjectMapper().inmemory().build()
         .sites().source(buildItem.getContent())
         .imagePath(buildItem.getUiPath())
-        .created(System.currentTimeMillis());
+        .created(System.currentTimeMillis())
+        .tagName(buildItem.getContent().getTagName());
     final var content = client.build();
     final var contentValues = content.getSites().entrySet().stream()
-        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        .collect(Collectors.toMap(e -> e.getKey(), e -> Json.encode(e.getValue())));
     
     if(!contentValues.containsKey(config.defaultLocale)) {
       throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
@@ -110,7 +110,7 @@ public class StaticContentProcessor {
       LOGGER.debug("Supported locales: '" + String.join(", ", contentValues.keySet()) + "'");
     }
     buildItems.produce(AdditionalBeanBuildItem.builder().setUnremovable().addBeanClass(StaticContentBeanFactory.class).build());
-    beans.produce(new BeanContainerListenerBuildItem(recorder.listener(content, config.defaultLocale)));
+    beans.produce(new BeanContainerListenerBuildItem(recorder.listener(contentValues, config.defaultLocale)));
   }
   
   @BuildStep
@@ -268,7 +268,7 @@ public class StaticContentProcessor {
         throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
       }
       
-      final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().json(site, false).build();
+      final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().offset(config.offset).json(site, false).build();
       final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath);
       buildProducer.produce(new StaticContentBuildItem(tempPath.toAbsolutePath().toString(), frontendPath, md));
       displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(frontendPath + "/"), "Zoe Static Content"));

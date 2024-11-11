@@ -45,14 +45,14 @@ import io.thestencil.client.api.ImmutableLinkArticlePage;
 import io.thestencil.client.api.ImmutableLinkMutator;
 import io.thestencil.client.api.ImmutableLocaleMutator;
 import io.thestencil.client.api.ImmutableSiteState;
+import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.ImmutableTemplateMutator;
 import io.thestencil.client.api.ImmutableWorkflowArticlePage;
 import io.thestencil.client.api.ImmutableWorkflowMutator;
 import io.thestencil.client.api.MigrationBuilder.Sites;
-import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.api.StencilClient.VersionInfo;
+import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.api.UpdateBuilder.PageMutator;
-import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.spi.composer.HandlerStatusCodes;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -349,7 +349,7 @@ public class HandlerComposer extends HandlerTemplate {
     final var client = ctx.getClient();    
     Sites site = null;
     try {
-      site = objectMapper.readValue(body, SitesBean.class);
+      site = objectMapper.readValue(body, ImmutableSites.class);
       
       if(site == null || site.getSites() == null  || site.getSites().isEmpty()) {
         final var md = client

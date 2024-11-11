@@ -49,7 +49,7 @@ public class AttachmentDownloadQueryImpl implements AttachmentDownloadQuery {
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     try {
-      final var taskId = process.getTask();    
+      final var taskId = process.getTaskId();    
       final var attachments = taskId == null ?
           attachmentCommands.url().encodePath(filename).processId(actionId) : 
           attachmentCommands.url().encodePath(filename).taskId(taskId.toString());

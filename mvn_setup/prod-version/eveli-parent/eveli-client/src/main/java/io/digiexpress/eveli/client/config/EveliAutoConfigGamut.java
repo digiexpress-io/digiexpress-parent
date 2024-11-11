@@ -71,11 +71,13 @@ public class EveliAutoConfigGamut {
         
         attachmentCommands, 
         dialobCommands,
-        eveliContext.getAssets(), 
         authClient,
+        eveliAssetProps.getTimezoneOffset(),
+        
         eveliContext.getSiteEnvir(),
-        eveliAssetProps.getTimezoneOffset()
-        );
+        eveliContext.getProgramEnvir(),
+        eveliContext.getWorkflowEnvir()
+    );
   }
   
   @Bean

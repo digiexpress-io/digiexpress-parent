@@ -1,5 +1,7 @@
 package io.thestencil.site;
 
+import java.time.ZoneOffset;
+
 /*-
  * #%L
  * quarkus-stencil-ide-services
@@ -32,4 +34,11 @@ public class RuntimeConfig {
    */
   @ConfigItem
   RepoConfig repo;
+  
+  /**
+   * Server offset
+   */
+  @ConfigItem(defaultValue = "+2")  
+  ZoneOffset offset;
+  
 }

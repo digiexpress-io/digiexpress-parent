@@ -40,7 +40,7 @@ public class DryRunVisitor {
 
   public ComposerEntity<?> visit(StoreState source, UpdateEntity entity) {
     // create envir
-    final var envirBuilder = client.envir();
+    final var envirBuilder = client.envir().tagName(source.getTagName());
     source.getDecisions().values().stream()
       .filter(e -> !e.getId().equals(entity.getId()))
       .forEach(v -> envirBuilder.addCommand().id(v.getId()).decision(v).build());

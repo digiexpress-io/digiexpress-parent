@@ -58,40 +58,68 @@ public class ProcessEntity {
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
 	private Long id;
 
-  @Column(name="workflow_name", nullable=false)
-  private String workflowName;
-  
   @Column(name="status")
   @Enumerated(EnumType.STRING)
 	private ProcessStatus status;
-	
-  @Column(name="questionnaire_id")
-  private String questionnaire;
-  
-  @Column(name="task_id")
-  private String task;
-  
-  @Column(name="input_context_id")
-  private String inputContextId;
-  
-  @Column(name="input_parent_context_id")
-  private String inputParentContextId;
-  
-  @Column(name="user_id")
-  private String userId;
   
   @Column(name="created", nullable = false, updatable = false)
   private LocalDateTime created;
 
   @Column(name="updated", nullable = false)
   private LocalDateTime updated;
+
   
+  // expiration 
   @Column(name="expires_at")
   private LocalDateTime expiresAt;
 
   @Column(name="expires_in_seconds")
-  private Long expiresInSeconds;
+  private Long expiresInSeconds;  
+
   
+  // entity links
+  @Column(name="questionnaire_id")
+  private String questionnaireId;
+
+  @Column(name="task_id")
+  private Long taskId;
+  
+  @Column(name="user_id")
+  private String userId;
+
+  
+  // execution context links
+  @Column(name="workflow_name", nullable=false)
+  private String workflowName;
+  
+  @Column(name="article_name")
+  private String articleName;
+  
+  @Column(name="parent_article_name")
+  private String parentArticleName;
+  
+  @Column(name="flow_name")
+  private String flowName;
+
+  @Column(name="form_name")
+  private String formName;
+
+  
+  // Asset links
+  @Column(name="form_tag_name")
+  private String formTagName;
+  
+  @Column(name="stencil_tag_name")
+  private String stencilTagName;
+  
+  @Column(name="wrench_tag_name")
+  private String wrenchTagName;
+  
+  @Column(name="workflow_tag_name")
+  private String workflowTagName;
+  
+  
+  // execution context
   @Basic(fetch = FetchType.LAZY)
   @Column(name = "form_body")
   @JdbcTypeCode(SqlTypes.JSON)

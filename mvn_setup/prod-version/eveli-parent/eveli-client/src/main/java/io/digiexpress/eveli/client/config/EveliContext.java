@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.config;
 import java.util.function.Supplier;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.thestencil.client.api.MigrationBuilder.Sites;
@@ -39,4 +40,5 @@ public class EveliContext {
   private final EveliAssetClient assets;
   private final Supplier<ProgramEnvir> programEnvir;
   private final Supplier<Sites> siteEnvir;
+  private final Supplier<WorkflowTag> workflowEnvir;
 }

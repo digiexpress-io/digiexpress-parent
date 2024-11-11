@@ -99,7 +99,7 @@ public class SiteProducer {
     final var composer = new StencilComposerImpl(client);
 
     // create repo if not present
-    return new SiteHandlerContext(composer, client, objectMapper, servicePath);
+    return new SiteHandlerContext(composer, client, objectMapper, servicePath, runtimeConfig.offset);
   }
   
   public static String cleanPath(String value) {

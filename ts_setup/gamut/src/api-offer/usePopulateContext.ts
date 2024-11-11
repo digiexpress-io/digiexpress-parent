@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToOffer, mapToOfferData } from './mappers';
+import { useSite } from '../api-site';
 
 
 
@@ -24,6 +25,7 @@ export interface PopulateOfferContext {
 }
 
 export function usePopulateContext(props: UsePropulateProps): PopulateOfferContext {
+  const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
   const { getOffers, options } = props;
   const { staleTime, queryKey } = options;
@@ -43,9 +45,9 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // Create new offer and reload after that
   const createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer> = React.useCallback(async (request) => {
-    const newOffer: OfferApi.Offer = await props.createOffer(request).then(resp => resp.json()).then(mapToOffer);
+    const newOffer: OfferApi.Offer = await props.createOffer(request).then(resp => resp.json()).then(data => mapToOffer(data, site));
     return refetch().then(() => newOffer);
-  }, [refetch, props.createOffer]);
+  }, [refetch, props.createOffer, site]);
 
 
 
@@ -66,7 +68,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   }, [isInitialLoadDone, processes]);
 
   const isContextLoaded = (isInitialLoadDone || !isPending);
-  const offerData = mapToOfferData(processes ?? []);
+  const offerData = mapToOfferData(processes ?? [], site);
 
 
 

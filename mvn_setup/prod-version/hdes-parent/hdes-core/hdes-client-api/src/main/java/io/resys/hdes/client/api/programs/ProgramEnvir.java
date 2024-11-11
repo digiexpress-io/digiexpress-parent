@@ -38,7 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Value.Immutable
-public interface ProgramEnvir {  
+public interface ProgramEnvir {
+  String getTagName();
   Map<String, ProgramWrapper<?, ?>> getValues();
   Map<String, ProgramWrapper<AstTag, TagProgram>> getTagsByName();
   Map<String, ProgramWrapper<AstFlow, FlowProgram>> getFlowsByName();

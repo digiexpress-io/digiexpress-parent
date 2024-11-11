@@ -77,7 +77,7 @@ public class PortalAccessValidatorImpl implements PortalAccessValidator {
   
 
   protected ProcessClient.ProcessInstance getProcessFromTask(String taskId) {
-    return processClient.queryInstances().findOneByTaskId(taskId).orElse(null);
+    return processClient.queryInstances().findOneByTaskId(Long.parseLong(taskId)).orElse(null);
   }
   
   @Override

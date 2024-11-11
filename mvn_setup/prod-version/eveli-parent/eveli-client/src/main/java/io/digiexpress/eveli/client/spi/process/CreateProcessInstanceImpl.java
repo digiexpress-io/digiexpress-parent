@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.client.spi.process;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /*-
  * #%L
@@ -39,32 +38,55 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
 
   private final ProcessRepository processRepository;
   
-  private String questionnaire;
+  private String questionnaireId;
   private String userId;
   private String workflowName;
-  private String inputContextId;
-  private String inputParentContextId;
+  private String articleName;
+  private String parentArticleName;
   private LocalDateTime expiresAt;
   private Long expiresInSeconds;
   
+  
+  private String formName;
+  private String flowName;
+
+  private String formTagName;
+  private String stencilTagName;
+  private String wrenchTagName;
+  private String workflowTagName;
+  
+  
   public ProcessInstance create() {
     
-    ProcessAssert.notNull(questionnaire, () -> "questionnaire must be defined!");
+    ProcessAssert.notNull(questionnaireId, () -> "questionnaireId must be defined!");
     ProcessAssert.notNull(userId, () -> "userId must be defined!");
     ProcessAssert.notNull(workflowName, () -> "workflowName must be defined!");
-    ProcessAssert.notNull(inputContextId, () -> "inputContextId must be defined!");
-    ProcessAssert.notNull(inputParentContextId, () -> "inputParentContextId must be defined!");
+    ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
+    ProcessAssert.notNull(formName, () -> "formName must be defined!");
+    ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
+    
     
     final var entity = processRepository.save(new ProcessEntity()
       .setExpiresAt(expiresAt)
-      .setQuestionnaire(questionnaire)
-      .setUserId(userId)
       .setStatus(ProcessStatus.CREATED)
-      .setWorkflowName(workflowName)
-      .setInputContextId(inputContextId)
       .setExpiresInSeconds(expiresInSeconds)
       .setExpiresAt(expiresAt)
-      .setInputParentContextId(inputParentContextId));
+      
+      .setQuestionnaireId(questionnaireId)
+      .setUserId(userId)
+      
+      .setWorkflowName(workflowName)
+      .setArticleName(articleName)
+      .setParentArticleName(parentArticleName)
+      .setFormName(formName)
+      .setFlowName(flowName)
+      
+      .setFormTagName(formTagName)
+      .setStencilTagName(stencilTagName)
+      .setWrenchTagName(wrenchTagName)
+      .setWorkflowTagName(workflowTagName)
+      );
+
     return map(entity);
   }
 
@@ -73,17 +95,25 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
     return ImmutableProcessInstance.builder()
       .id(entity.getId())
       .status(entity.getStatus())
-      .workflowName(entity.getWorkflowName())
-      .questionnaire(entity.getQuestionnaire())
-      .task(Optional.ofNullable(entity.getTask()).map(Long::parseLong).orElse(null))
+      .questionnaireId(entity.getQuestionnaireId())
+      .taskId(entity.getTaskId())
       .userId(entity.getUserId())
       .created(entity.getCreated())
       .updated(entity.getUpdated())
-      .inputContextId(entity.getInputContextId())
-      .inputParentContextId(entity.getInputParentContextId())
+      
+      .workflowName(entity.getWorkflowName())
+      .articleName(entity.getArticleName())
+      .parentArticleName(entity.getParentArticleName())
+      .formName(entity.getFormName())
+      .flowName(entity.getFlowName())
+      
+      .formTagName(entity.getFormTagName())
+      .stencilTagName(entity.getStencilTagName())
+      .wrenchTagName(entity.getWrenchTagName())
+      .workflowTagName(entity.getWorkflowTagName())
+      
       .expiresInSeconds(entity.getExpiresInSeconds())
       .expiresAt(entity.getExpiresAt())
       .build();
   }
-
 }

@@ -61,7 +61,7 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
     final var customer = authClient.getCustomer().getPrincipal();    
-    final var taskId = process.getTask();
+    final var taskId = process.getTaskId();
     final var commentTask = taskRepository.getOneById(taskId);
     final var entity = new TaskCommentEntity()
         .setTask(commentTask)

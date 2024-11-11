@@ -52,8 +52,9 @@ public class SiteHandler extends HdesResourceHandler {
       String locale = event.request().getParam("locale");
       
       client.query().head()
-      .onItem().transform(state -> ctx.getContent().markdown().json(state, true).build())
+      .onItem().transform(state -> ctx.getContent().markdown().offset(ctx.getOffset()).json(state, true).build())
       .onItem().transform(markdowns -> ctx.getContent().sites()
+          .tagName("dev")
           .imagePath("images")
           .created(System.currentTimeMillis())
           .source(markdowns)

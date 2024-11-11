@@ -3,10 +3,11 @@ import { DateTime } from 'luxon';
 import { Md5 } from 'ts-md5';
 import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
+import { SiteApi } from '../api-site';
 
 
 
-export function mapToOfferData(data: LegacyProcessApi.Process[]): {
+export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.Site | undefined): {
   hash: string;
   offers: readonly OfferApi.Offer[];
 } {
@@ -20,7 +21,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[]): {
       continue;
     }
 
-    const offer = mapToOffer(proc);
+    const offer = mapToOffer(proc, site);
     md5
       .appendStr(proc.id)
       .appendStr(proc.name)
@@ -35,7 +36,26 @@ export function mapToOfferData(data: LegacyProcessApi.Process[]): {
   return { offers: Object.freeze(offers), hash: md5.end() + '' };
 }
 
-export function mapToOffer(data: LegacyProcessApi.Process): OfferApi.Offer {
+export function mapToOffer(data: LegacyProcessApi.Process, site: SiteApi.Site | undefined): OfferApi.Offer {
+
+  const optionalSiteData: { parentPageId: string, pageId: string, productId: string } = { pageId: "", parentPageId: "", productId: "" }
+  if(site) {
+    try {
+      const page = Object.values(site.topics).find(topic => topic.id.substring(4) === data.inputContextId);
+      const parentPage = Object.values(site.topics).find(topic => topic.id.substring(4) === data.inputParentContextId);
+
+      const product = page ? Object.values(site.links)
+        .filter(link => link.type === 'workflow')
+        .find(link => link.value === data.name) : null;
+
+      optionalSiteData.pageId = page?.id ?? "";
+      optionalSiteData.parentPageId = parentPage?.id ?? "";
+      optionalSiteData.productId = product?.id ?? "";
+
+    } catch(error) {
+      console.error("failed to match site data", error)
+    }
+  }
 
 
   return Object.freeze({
@@ -46,7 +66,6 @@ export function mapToOffer(data: LegacyProcessApi.Process): OfferApi.Offer {
 
     id: data.id,
     name: data.name,
-    productId: data.inputContextId,
-    pageId: data.inputPageId
+    ...optionalSiteData
   });
 }

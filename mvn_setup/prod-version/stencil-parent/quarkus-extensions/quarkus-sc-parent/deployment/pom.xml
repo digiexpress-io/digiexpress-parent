@@ -81,6 +81,11 @@
         <configuration>
           <annotationProcessorPaths>
             <path>
+              <groupId>org.immutables</groupId>
+              <artifactId>value</artifactId>
+              <version>${immutables.version}</version>
+            </path>
+            <path>
               <groupId>io.quarkus</groupId>
               <artifactId>quarkus-extension-processor</artifactId>
               <version>${quarkus.version}</version>

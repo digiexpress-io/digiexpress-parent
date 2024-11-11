@@ -1,5 +1,7 @@
 package io.thestencil.staticontent;
 
+import java.util.Map;
+
 /*-
  * #%L
  * quarkus-stencil-sc
@@ -41,18 +43,15 @@ import io.vertx.ext.web.RoutingContext;
 public class StaticContentRecorder {
 
   public BeanContainerListener listener(
-      Sites staticContent,
+      Map<String, String> serializedContent,
       String defaultLocale) {
     
-    final var contentValues = staticContent.getSites().entrySet().stream()
-        .collect(Collectors.toMap(e -> e.getKey(), e -> Json.encode(e.getValue())));
     
     return beanContainer -> {
       StaticContentBeanFactory producer = beanContainer.beanInstance(StaticContentBeanFactory.class);
       producer
         .setDefaultLocale(defaultLocale)
-        .setStaticContent(staticContent)
-        .setSerializedContent(contentValues);
+        .setSerializedContent(serializedContent);
     };
   }
 

@@ -48,7 +48,7 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   }
   @Override
   public Optional<ProcessClient.ProcessInstance> findOneByQuestionnaireId(String questionnaireId) {
-    return processJPA.findByQuestionnaire(questionnaireId).map(CreateProcessInstanceImpl::map);
+    return processJPA.findByQuestionnaireId(questionnaireId).map(CreateProcessInstanceImpl::map);
   }
   @Override
   public List<ProcessClient.ProcessInstance> findAll() {
@@ -57,8 +57,8 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
         .collect(Collectors.toList());
   }
   @Override
-  public Optional<ProcessClient.ProcessInstance> findOneByTaskId(String id) {
-    return processJPA.findByTask(id).map(CreateProcessInstanceImpl::map);
+  public Optional<ProcessClient.ProcessInstance> findOneByTaskId(Long id) {
+    return processJPA.findByTaskId(id).map(CreateProcessInstanceImpl::map);
   }
   @Override
   public List<ProcessClient.ProcessInstance> findAllByUserId(String userId) {

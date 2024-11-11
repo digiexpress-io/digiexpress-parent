@@ -55,6 +55,7 @@ public class StaticContentMigrationTest {
     final var md = builder.build();
     final var sites = client.sites().created(1l).source(md)
         .imagePath("/")
+        .tagName("test")
         .build();
     
     String expected = TestUtils.toString("migration-output.json");

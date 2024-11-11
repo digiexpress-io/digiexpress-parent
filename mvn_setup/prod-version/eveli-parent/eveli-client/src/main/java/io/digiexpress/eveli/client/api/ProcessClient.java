@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
+import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import jakarta.annotation.Nullable;
 
 
@@ -41,21 +42,41 @@ public interface ProcessClient {
   ProcessInstanceStatusBuilder changeInstanceStatus();
   ProcessAuthorizationQuery queryAuthorization();
   CreateProcessInstance createInstance();
-  
   CreateProcessExecutor createExecutor();
   
+  ProcessInstanceBodyBuilder createBodyBuilder();
+  
+  interface ProcessInstanceBodyBuilder {
+    ProcessInstanceBodyBuilder processInstanceId(Long id);
+    ProcessInstanceBodyBuilder formBody(String formBody);
+    ProcessInstanceBodyBuilder flowBody(String flowBody);
+    ProcessInstance build();
+  }
+  
   interface CreateProcessExecutor {
-    void execute(String questionnaireId);
+    CreateProcessExecutor processInstance(ProcessInstance process);
+    FlowResult execute();
   }
   
   interface CreateProcessInstance {
-    CreateProcessInstance questionnaire(String questionnaire);
+    CreateProcessInstance questionnaireId(String questionnaire);
     CreateProcessInstance userId(String userId);
-    CreateProcessInstance workflowName(String name);
     CreateProcessInstance expiresInSeconds(Long expires_in_seconds);
     CreateProcessInstance expiresAt(LocalDateTime expiresAt);
-    CreateProcessInstance inputContextId(String inputContext);
-    CreateProcessInstance inputParentContextId(String inputParentContextId);
+    CreateProcessInstance workflowName(String name);
+    
+    CreateProcessInstance articleName(String articleName);
+    CreateProcessInstance parentArticleName(String parentArticleName);
+    
+
+    CreateProcessInstance formName(String formName);
+    CreateProcessInstance flowName(String flowName);
+
+    CreateProcessInstance formTagName(String formTagName);
+    CreateProcessInstance stencilTagName(String stencilTagName);
+    CreateProcessInstance wrenchTagName(String wrenchTagName);
+    CreateProcessInstance workflowTagName(String workflowTagName);
+    
     ProcessInstance create();
   }
   
@@ -73,7 +94,7 @@ public interface ProcessClient {
   
   interface QueryProcessInstances {
     Optional<ProcessInstance> findOneById(String id);
-    Optional<ProcessInstance> findOneByTaskId(String id);    
+    Optional<ProcessInstance> findOneByTaskId(Long taskId);    
     Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);    
     
     void deleteOneById(String id);
@@ -86,7 +107,7 @@ public interface ProcessClient {
   interface ProcessInstanceStatusBuilder {
     void answered(String id);
     void answeredByQuestionnaire(String questionnaireId, String taskId); // used by assets
-    void taskStatusChange(String taskId, TaskStatus taskStatus);
+    void taskStatusChange(Long taskId, TaskStatus taskStatus);
     void inProgress(String id);
     void completed(String id);
     void rejected(String id);
@@ -98,24 +119,29 @@ public interface ProcessClient {
   @JsonDeserialize(as = ImmutableProcessInstance.class)
   interface ProcessInstance {
     Long getId();
-    String getWorkflowName();
     ProcessStatus getStatus();
-    String getQuestionnaire();
-    @Nullable
-    Long getTask();
-    @Nullable
-    String getUserId();
     LocalDateTime getCreated();
     LocalDateTime getUpdated();
-    @Nullable
-    String getInputContextId();
-    @Nullable
-    String getInputParentContextId();
     
     @Nullable LocalDateTime getExpiresAt();
+    @Nullable Long getExpiresInSeconds();
     
-    @Nullable
-    Long getExpiresInSeconds();
+    String getWorkflowName();
+    @Nullable String getFormName();
+    @Nullable String getFlowName();
+    @Nullable String getArticleName();
+    @Nullable String getParentArticleName();
+    
+    // Entity links
+    @Nullable String getQuestionnaireId();
+    @Nullable Long getTaskId();    
+    @Nullable String getUserId();
+
+    // Asset links
+    String getFormTagName();
+    String getStencilTagName();
+    String getWrenchTagName();
+    String getWorkflowTagName();
   }
   
 

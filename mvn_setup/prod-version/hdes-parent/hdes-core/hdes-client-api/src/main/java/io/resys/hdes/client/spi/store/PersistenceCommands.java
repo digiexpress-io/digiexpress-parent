@@ -124,7 +124,7 @@ public class PersistenceCommands implements ThenaConfig.Commands {
           }
           
 
-          final var builder = ImmutableStoreState.builder();
+          final var builder = ImmutableStoreState.builder().tagName(config.getHeadName());
           if(state.getObjects() == null) {
             return builder.build(); 
           }

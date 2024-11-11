@@ -21,32 +21,31 @@ package io.digiexpress.eveli.client.spi.process;
  */
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessExecutor;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
+import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @Slf4j
 @RequiredArgsConstructor
+@Data @Accessors(fluent = true)
 public class CreateProcessExecutorImpl implements CreateProcessExecutor {
   
   
@@ -56,77 +55,33 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
   private final TransactionWrapper ts;
   private final EveliAssetClient workflowCommands;
   
-
+  private ProcessInstance instance;
+  
   @Override
-  public void execute(String dialobSessionId) {
-    ts.execute(em -> executeWorkflow(dialobSessionId));
+  public CreateProcessExecutor processInstance(ProcessInstance process) {
+    this.instance = process;
+    return this;
   }
-  private void executeWorkflow(String dialobSessionId) {
-    FlowResult run;
+  
+  @Override
+  public FlowResult execute() {
+    TaskAssert.notNull(instance, () -> "process instance must be defined!");
+    return ts.map(em -> executeWorkflow());
+  }
+  
+  private FlowResult executeWorkflow() {
+
     final var flowInput = new HashMap<String, Serializable>();
-    Optional<ProcessInstance> processData = Optional.empty();
-    Optional<Entity<Workflow>> wfData = Optional.empty();
-    log.info("Hdes commands: dialob session completion for id: {}", dialobSessionId);
-    try {
-      processData = processCommands.get().findOneByQuestionnaireId(dialobSessionId);
-      if (processData.isEmpty()) {
-        log.warn("Hdes commands: No process data for dialob session: {}", dialobSessionId);
-      } else {
-        wfData = workflowCommands.queryBuilder().findOneWorkflowByName(processData.get().getWorkflowName()).await().atMost(Duration.ofMinutes(1));
-        if (wfData.isEmpty()) {
-          throw new RuntimeException("Missing workflow with name " + processData.get().getWorkflowName());
-        }
-        flowInput.put("questionnaireId", dialobSessionId);
-        flowInput.put("workflowName", processData.get().getWorkflowName());
-        run = hdesClient.executor(programEnvir.get())
-            .inputMap(flowInput)
-            .flow(wfData.get().getBody().getFlowName())
-            .andGetBody();
-        if (log.isDebugEnabled()){
-          // this version prints out all input/output, could contain sensitive data
-          log.debug("Hdes commands: flow for questionnaire: {}, status: {}, output {}", dialobSessionId, run.getStatus(), run.getLogs());
-        }
-        else if (run.getStatus() == FlowExecutionStatus.ERROR) {
-          log.error("Hdes commands: completed flow for questionnaire: {}, status: {}, output {}", dialobSessionId, run.getStatus(), getRunOutput(run));
-        }
-        else {
-          // info level without sensitive data, just status
-          log.info("Hdes commands: completed flow for questionnaire: {}, status: {}", dialobSessionId, run.getStatus());
-        }
-
-      }
-    } catch (RuntimeException e) {
-      log.warn(new StringBuilder()
-          .append("Hdes commands: error in execution:")
-          .append("  - flow: ").append(wfData.map(w -> w.getBody().getFlowName()).orElse("undefined"))
-          .append("  - formName: ").append(wfData.map(w -> w.getBody().getFormName()).orElse("undefined"))
-          .append("  - formTag: ").append(wfData.map(w -> w.getBody().getFormTag()).orElse("undefined"))
-          .append("  - input: ").append(hdesClient.mapper().toJson(flowInput))
-          .append("  - error: ").append(e.getMessage())
-          .toString(), e);
-      throw e;
-    }
-
+    flowInput.put("questionnaireId", instance.getQuestionnaireId());
+    flowInput.put("workflowName", instance.getWorkflowName());
+    
+    final FlowResult run = hdesClient.executor(programEnvir.get())
+        .inputMap(flowInput)
+        .flow(instance.getFlowName())
+        .andGetBody();
+    
+    return run;
   }
-  
-  private Object getRunOutput(FlowResult run) {
-    StringBuilder builder = new StringBuilder("[");
-    run.getLogs().forEach(logEntry->{
-      builder.append("FlowResultLog {id=").append(logEntry.getId())
-      .append(", status=").append(logEntry.getStatus())
-      .append(", start=").append(logEntry.getStart())
-      .append(", end=").append(logEntry.getEnd())
-      .append(", errors=").append(logEntry.getErrors())
-      .append("},");
-    });
-    // remove last comma
-    if (builder.length() > 1) {
-      builder.setLength(builder.length()-1);
-    }
-    builder.append("]");
-    return builder.toString();
-  }
-  
   
   public interface TransactionWrapper {  
     void execute(Consumer<EntityManager> supplier);
@@ -154,5 +109,7 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
       return supplier.apply(entityManager);
     }
   }
+
+
 
 }

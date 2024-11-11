@@ -36,13 +36,13 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableImageResource;
 import io.thestencil.client.api.ImmutableMarkdown;
 import io.thestencil.client.api.ImmutableMarkdowns;
+import io.thestencil.client.api.ImmutableSites;
 import io.thestencil.client.api.ImmutableStencilConfig;
 import io.thestencil.client.api.Markdowns;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.api.StencilStore;
-import io.thestencil.client.spi.beans.SitesBean;
 import io.thestencil.client.spi.staticontent.support.ParserAssert;
 import io.thestencil.client.spi.staticontent.visitors.CSVLinksVisitor;
 import io.thestencil.client.spi.staticontent.visitors.ImmutableLinkData;
@@ -151,7 +151,7 @@ public class StencilClientImpl implements StencilClient {
         ParserAssert.isTrue(jsonOfSiteState == null || fromFiles == null, () -> "json or md files both can't be provided!");
         
         if(fromFiles != null) {
-          return fromFiles.build();
+          return fromFiles.tagName("md-files").build();
         }
         return this.jsonOfSiteState;
       }
@@ -164,6 +164,7 @@ public class StencilClientImpl implements StencilClient {
       private String imageUrl;
       private Long created;
       private Markdowns markdowns;
+      private String tagName;
       @Override
       public SitesBuilder source(Markdowns markdowns) {
         this.markdowns = markdowns;
@@ -172,6 +173,11 @@ public class StencilClientImpl implements StencilClient {
       @Override
       public SitesBuilder imagePath(String imagePath) {
         this.imageUrl = imagePath;
+        return this;
+      }
+      @Override
+      public SitesBuilder tagName(String tagName) {
+        this.tagName = tagName;
         return this;
       }
       @Override
@@ -194,6 +200,7 @@ public class StencilClientImpl implements StencilClient {
         ParserAssert.notEmpty(imageUrl, () -> "imageUrl can't be empty!");
         ParserAssert.notNull(created, () -> "created can't be empty!");
         ParserAssert.notNull(markdowns, () -> "markdowns can't be empty!");
+        ParserAssert.notNull(tagName, () -> "tagName can't be empty!");
 
         markdowns.getValues()
         .forEach(value -> topic(builder -> builder
@@ -225,9 +232,10 @@ public class StencilClientImpl implements StencilClient {
         final var content = visited.getSites().stream().collect(
           Collectors.toMap(e -> e.getLocale(), e -> e)
         );
-        return SitesBean.builder()
+        return ImmutableSites.builder()
             .created(created)
             .sites(content)
+            .tagName(tagName)
             .build();
       }
     };

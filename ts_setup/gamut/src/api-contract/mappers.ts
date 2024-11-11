@@ -4,10 +4,11 @@ import { Md5 } from 'ts-md5';
 import { ContractApi } from './contract-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
 import { OfferApi } from '../api-offer';
+import { SiteApi } from '../api-site';
 
 
 
-export function mapToContractData(data: LegacyProcessApi.Process[]): {
+export function mapToContractData(data: LegacyProcessApi.Process[], site: SiteApi.Site | undefined): {
   hash: string;
   contracts: readonly ContractApi.Contract[];
 } {
@@ -19,7 +20,7 @@ export function mapToContractData(data: LegacyProcessApi.Process[]): {
     if (!proc.taskId) {
       continue;
     }
-    const contract = mapToContract(proc);
+    const contract = mapToContract(proc, site);
     md5
       .appendStr(proc.id)
       .appendStr(proc.taskStatus ?? '')
@@ -46,7 +47,7 @@ export function mapToContractData(data: LegacyProcessApi.Process[]): {
   return { contracts: Object.freeze(contracts), hash: md5.end() + '' };
 }
 
-function mapToContract(data: LegacyProcessApi.Process): ContractApi.Contract {
+function mapToContract(data: LegacyProcessApi.Process, site: SiteApi.Site | undefined): ContractApi.Contract {
   const docs: readonly ContractApi.ContractDocument[] = Object.freeze(data.attachments.map(({ id, name, size, created }) => Object.freeze({
     id,
     name,
@@ -61,7 +62,7 @@ function mapToContract(data: LegacyProcessApi.Process): ContractApi.Contract {
     reviewUri: data.reviewUri!,
     documents: docs,
     product: {} as any,
-    offer: OfferApi.mapper(data),
+    offer: OfferApi.mapper(data, site),
 
     booking: undefined,
     created: DateTime.fromISO(data.taskCreated!),

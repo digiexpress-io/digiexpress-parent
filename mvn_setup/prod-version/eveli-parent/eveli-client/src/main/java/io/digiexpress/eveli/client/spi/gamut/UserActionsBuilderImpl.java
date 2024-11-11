@@ -20,20 +20,20 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
+import org.apache.groovy.parser.antlr4.util.StringUtils;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.rest.IdAndRevision;
-import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
@@ -42,6 +42,7 @@ import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.iam.api.ImmutableUserAction;
@@ -56,8 +57,12 @@ import lombok.experimental.Accessors;
 public class UserActionsBuilderImpl implements UserActionBuilder {
   private final ProcessClient hdesCommands;  
   private final DialobClient dialobCommands;
-  private final EveliAssetClient assetClient;
   private final Supplier<Sites> siteEnvir;
+  private final Supplier<ProgramEnvir> programEnvir;
+  private final Supplier<WorkflowTag> workflowEnvir;
+  
+  
+  
   private final CrmClient auth;
   private final ZoneOffset offset;
   
@@ -99,7 +104,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    final var stencilService = siteEnvir.get().getSites().get(clientLocale).getLinks().get(actionId);
+    final var stencilSite = siteEnvir.get();
+    final var stencilService = stencilSite.getSites().get(clientLocale).getLinks().get(actionId);
     
     
     if(stencilService == null) {
@@ -107,31 +113,42 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .append("Can't find stencil service by id: '").append(actionId).append("'!")
           .toString());
     }
-    
-    final var expiresInSeconds = ChronoUnit.SECONDS.between(Instant.now().atOffset(offset).toLocalDateTime(), stencilService.getEndDate());
-    if(expiresInSeconds <= 0) {
+
+    final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS.between(Instant.now().atOffset(offset).toLocalDateTime(), stencilService.getEndDate());
+    if(expiresInSeconds != null && expiresInSeconds <= 0) {
       throw new WorkflowNotFoundException(new StringBuilder()
           .append("Can't find stencil service by id: '").append(actionId).append("'!")
           .toString());
     }
     
-    
-    final Workflow workflow = assetClient.queryBuilder().findOneWorkflowByName(stencilService.getValue())
-        .await().atMost(Duration.ofMinutes(1))
-        .map(e -> e.getBody())
+    final var wkEnvir = workflowEnvir.get();
+    final Workflow workflow = wkEnvir.getEntries().stream()
+        .filter(w -> w.getName().equals(stencilService.getValue()))
+        .findFirst()
         .orElseThrow(() -> new WorkflowNotFoundException(new StringBuilder()
         .append("Can't find workflow by name: '").append(clientLocale).append("'!")
         .toString()));
-
-    final var sessionId = visitForm(request, workflow).getId();    
+    
+    final var sessionId = visitForm(request, workflow).getId();
+    
     final var process = hdesCommands.createInstance()
-        .questionnaire(sessionId)
+        .questionnaireId(sessionId)
         .userId(request.getIdentity())
-        .workflowName(workflow.getName())
-        .inputContextId(request.getInputContextId())
-        .inputParentContextId(request.getInputParentContextId())
         .expiresInSeconds(expiresInSeconds)
         .expiresAt(stencilService.getEndDate())
+        
+        .workflowName(workflow.getName())
+        .articleName(request.getInputContextId())
+        .parentArticleName(request.getInputParentContextId())
+        .flowName(workflow.getFlowName())
+        .formName(workflow.getFormName())
+        
+        .formTagName(workflow.getFormTag())
+        .stencilTagName(stencilSite.getTagName())
+        .wrenchTagName(programEnvir.get().getTagName())
+        .workflowTagName(wkEnvir.getName())
+        
+        
         .create();
 
     return ImmutableUserAction.builder()
@@ -140,9 +157,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .created(process.getCreated())
         .updated(process.getUpdated())
         .name(process.getWorkflowName())
-        .inputContextId(process.getInputContextId())
-        .inputParentContextId(process.getInputParentContextId())
-        .formId(process.getQuestionnaire())
+        .inputContextId(visitArticleName(process.getArticleName()))
+        .inputParentContextId(process.getParentArticleName())
+        .formId(process.getQuestionnaireId())
         .formInProgress(true)
         .viewed(true)
         
@@ -153,6 +170,16 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .build();
   }
 
+  private String visitArticleName(String articleName) {
+    if(StringUtils.isEmpty(articleName)) {
+      return null;
+    }
+    if(articleName.charAt(3) == '_') {
+      return articleName.substring(4);      
+    }
+    // no ordering
+    return articleName;
+  }
   
   private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
     final var formBuilder = dialobCommands.createSession()
@@ -196,8 +223,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     final var company = user.getRepresentedCompany();
     
     final var init = ImmutableInitUserAction.builder()
-        .inputContextId(inputContextId)
-        .inputParentContextId(inputParentContextId)
+        .inputContextId(visitArticleName(inputContextId))
+        .inputParentContextId(visitArticleName(inputParentContextId))
         .workflowName(actionId)
         .protectionOrder(user.getProtectionOrder())
         .language(clientLocale);

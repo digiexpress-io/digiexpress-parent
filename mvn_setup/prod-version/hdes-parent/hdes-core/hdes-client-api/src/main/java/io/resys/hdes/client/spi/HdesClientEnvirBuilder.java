@@ -35,6 +35,7 @@ public class HdesClientEnvirBuilder implements EnvirBuilder {
   private final ProgramEnvirFactory factory;
   private final HdesTypesMapper defs;
   private ProgramEnvir envir;
+  private String tagName;
   
   public HdesClientEnvirBuilder(ProgramEnvirFactory factory, HdesTypesMapper defs) {
     super();
@@ -143,8 +144,13 @@ public class HdesClientEnvirBuilder implements EnvirBuilder {
     return this;
   }
   @Override
+  public EnvirBuilder tagName(String tagName) {
+    this.tagName = tagName;
+    return this;
+  }
+  @Override
   public ProgramEnvir build() {
-    return factory.add(envir).build();
+    return factory.add(envir).tagName(tagName).build();
   }
 
 }

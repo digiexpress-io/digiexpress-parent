@@ -56,7 +56,7 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     
     
     final var customer = authClient.getCustomer();
-    final var taskId = process.getTask();
+    final var taskId = process.getTaskId();
     final var comments = commentRepository.findByTaskIdAndExternalTrue(taskId).stream()
         .map(comment -> visitUserMessage(comment, customer))
         .toList();

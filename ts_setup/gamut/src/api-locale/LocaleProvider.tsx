@@ -46,10 +46,22 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = () => {
-  let locale = 'en';
 
-  // filter empty elements to avoid empty first element when pathname starts with '/'
-  const [, , selectedLocale] = window.location.pathname.split('\/').filter(pathElement=>pathElement);
+  let selectedLocale = '';
+
+  let nextIsLocale = false;
+  for(const path of window.location.pathname.split('\/')) {
+    if(path === 'secured' || path === 'public ') {
+      nextIsLocale = true
+      continue;
+    }
+    if(nextIsLocale) {
+      selectedLocale = path;
+      break;
+    }
+  }
+
+  let locale = 'en';
   if (selectedLocale) {
     locale = selectedLocale;
   }

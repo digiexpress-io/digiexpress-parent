@@ -47,6 +47,7 @@ public interface StencilClient {
     SitesBuilder imagePath(String imagePath);
     SitesBuilder created(long created);    
     SitesBuilder source(Markdowns markdowns);
+    SitesBuilder tagName(String tagName);
     Sites build();
   }
   

@@ -2,9 +2,9 @@ package io.thestencil.site.pg.test;
 
 /*-
  * #%L
- * quarkus-stencil-sc-deployment
+ * quarkus-stencil-site-pg-deployment
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,6 @@ package io.thestencil.site.pg.test;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import jakarta.inject.Inject;
-
-import org.apache.commons.io.IOUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -38,6 +32,7 @@ import io.restassured.RestAssured;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+import jakarta.inject.Inject;
 
 
 //-Djava.util.logging.manager=org.jboss.logmanager.LogManager
@@ -76,14 +71,4 @@ public class SiteExtensionTests {
     defaultLocale.prettyPrint();
     defaultLocale.then().statusCode(200);
   }
-  
-  public static String getSite() {
-    try {
-      return IOUtils.toString(SiteExtensionTests.class.getClassLoader().getResource("site.json"), StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-
 }

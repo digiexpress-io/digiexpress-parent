@@ -7,6 +7,7 @@ import { LegacyProcessApi } from '../api-legacy-processes';
 
 
 import { mapToContractData } from './mappers'
+import { useSite } from '../api-site';
 
 
 
@@ -24,6 +25,7 @@ export interface PopulateContractContext {
 }
 
 export function usePopulateContext(props: UsePropulateProps): PopulateContractContext {
+  const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
   const { getContracts, options } = props;
   const { staleTime, queryKey } = options;
@@ -37,17 +39,17 @@ export function usePopulateContext(props: UsePropulateProps): PopulateContractCo
       .then((data: LegacyProcessApi.Process[]) => data),
   });
 
-  const contractData = mapToContractData(processes ?? []);
+  const contractData = mapToContractData(processes ?? [], site);
 
   // Create new contract and reload after that
   const appendContractAttachment: (contractId: ContractApi.ContractId, files: FileList) => Promise<ContractApi.Contract> = React.useCallback(async (contractId, files) => {
     await props.appendContractAttachment(contractId, files);
     return refetch()
-      .then((refetched) => mapToContractData(refetched.data ?? [])
+      .then((refetched) => mapToContractData(refetched.data ?? [], site)
         .contracts
         .find(c => c.id === contractId)!);
 
-  }, [refetch, props.appendContractAttachment]);
+  }, [refetch, props.appendContractAttachment, site]);
 
   // Reload all data
   const refresh: () => Promise<void> = React.useCallback(async () => {

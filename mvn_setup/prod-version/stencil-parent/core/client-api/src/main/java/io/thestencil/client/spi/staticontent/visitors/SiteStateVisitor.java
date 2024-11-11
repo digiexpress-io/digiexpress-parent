@@ -84,7 +84,7 @@ public class SiteStateVisitor {
       result.addAllLinks(visitWorkflows(link));
     }
     
-    return result.build();
+    return result.tagName(entity.getName()).build();
   }
   
   private boolean isWorkflowEnabled(Entity<Workflow> link) {

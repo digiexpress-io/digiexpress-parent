@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -36,6 +35,7 @@ import io.restassured.RestAssured;
 
 
 //-Djava.util.logging.manager=org.jboss.logmanager.LogManager
+
 public class SiteJsonExtensionTests {
   @RegisterExtension
   final static QuarkusUnitTest config = new QuarkusUnitTest()

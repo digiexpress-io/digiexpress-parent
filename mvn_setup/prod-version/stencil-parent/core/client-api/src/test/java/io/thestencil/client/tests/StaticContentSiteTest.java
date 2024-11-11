@@ -41,6 +41,7 @@ public class StaticContentSiteTest {
     final var content = client
         .sites().imagePath("/images").created(1l)
         .source(md)
+        .tagName("test")
         .build();
     
     String expected = TestUtils.toString("content.json");
@@ -55,6 +56,7 @@ public class StaticContentSiteTest {
     final var content = client
         .sites().imagePath("/images").created(1l)
         .source(md)
+        .tagName("test")
         .build();
     
     String expected = TestUtils.toString("contentDevMode.json");

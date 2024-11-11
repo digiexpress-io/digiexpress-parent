@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.config;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -32,6 +33,9 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetState;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
+import io.digiexpress.eveli.assets.api.ImmutableWorkflowTag;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
@@ -118,12 +122,14 @@ public class EveliAutoConfigAssets {
 
   @Bean
   public EveliContext eveliContext(
+      AuthClient auth,
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context
     ) {
     
+    final var liveContent = "live content:"+ auth.getUser().getPrincipal().getUsername();
     final var datasourceConfig = datasourceUrl.split(":");
     final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
 
@@ -177,7 +183,7 @@ public class EveliAutoConfigAssets {
 
     final Supplier<ProgramEnvir> programEnvir = () -> {
       final var state = wrenchClient.store().query().get().await().atMost(Duration.ofMinutes(1));
-      return ComposerEntityMapper.toEnvir(wrenchClient.envir(), state).build();          
+      return ComposerEntityMapper.toEnvir(wrenchClient.envir().tagName(liveContent), state).build();          
     };
 
     final Supplier<Sites> siteEnvir = () -> {
@@ -189,12 +195,13 @@ public class EveliAutoConfigAssets {
               .imagePath("images")
               .created(System.currentTimeMillis())
               .source(markdowns)
+              .tagName(liveContent)
               .build());
       
       return stencilState.await().atMost(Duration.ofMinutes(1));
     };
     
-
+    
     final var assetClient = EveliAssetsClientImpl.builder()
         .config((builder) -> builder
             .client(DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build())
@@ -213,7 +220,20 @@ public class EveliAutoConfigAssets {
             .authorProvider(() -> "junit-test"))
             
         .build();
-    
+    final Supplier<WorkflowTag> workflowEnvir = () -> {
+      
+      final AssetState state = assetClient.queryBuilder().head().await().atMost(Duration.ofMinutes(1));
+      
+      final var release = ImmutableWorkflowTag.builder()
+            .name(liveContent)
+            .description("live dev")
+            .created(LocalDateTime.now())
+            .user(auth.getUser().getPrincipal().getUsername())
+            .parentCommit(state.getCommit())
+            .entries(state.getWorkflows().values().stream().map(e -> e.getBody()).toList())
+            .build();
+      return release;
+    };
 
     final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
     final var createdWrench = wrenchClient.store().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
@@ -250,6 +270,7 @@ public class EveliAutoConfigAssets {
         .programEnvir(programEnvir)
         .siteEnvir(siteEnvir)
         .assets(assetClient)
+        .workflowEnvir(workflowEnvir)
         .build();
   }
   

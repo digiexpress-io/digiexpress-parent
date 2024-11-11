@@ -49,7 +49,7 @@ public class EveliDbSchemaGen {
     .build();
   
   @Test
-  //@Disabled
+  @Disabled
   public void test() throws Exception {
     final var metadata = new MetadataSources(PROPS);
     

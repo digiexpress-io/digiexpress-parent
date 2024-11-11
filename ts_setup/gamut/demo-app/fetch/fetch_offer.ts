@@ -7,8 +7,8 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
 
     const id = superTestForm ?? request.productId;
     const locale = request.locale;
-    const inputContextId = request.productId;
-    const inputParentContextId = request.productGroupId;
+    const inputContextId = request.pageId;
+    const inputParentContextId = request.parentPageId ?? "";
 
     const query = `${url}?id=${id}&locale=${locale}&inputContextId=${inputContextId}&inputParentContextId=${inputParentContextId}`;
 

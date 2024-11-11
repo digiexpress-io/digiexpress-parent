@@ -30,6 +30,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface Markdowns {
+  String getTagName();
   List<Markdown> getValues();
   List<ImageResource> getImages();
   List<LinkResource> getLinks();

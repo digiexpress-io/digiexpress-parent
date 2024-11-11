@@ -71,7 +71,7 @@ public class HdesInMemoryStore implements HdesStore {
       default: continue;
       }
     }
-    this.state = builder.build();
+    this.state = builder.tagName("dev").build();
     this.branchName = Optional.empty();
   }
 
@@ -87,7 +87,7 @@ public class HdesInMemoryStore implements HdesStore {
         default: continue;
       }
     }
-    this.state = builder.build();
+    this.state = builder.tagName(branchName).build();
     this.branchName = Optional.ofNullable(branchName);
   }
 

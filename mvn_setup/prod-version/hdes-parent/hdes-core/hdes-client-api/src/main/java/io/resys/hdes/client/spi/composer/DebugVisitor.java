@@ -47,7 +47,7 @@ public class DebugVisitor {
     HdesAssert.isTrueOrBadRequest(entity.getInput() != null || entity.getInputCSV() != null, () -> "input or inputCSV must be defined!");
     HdesAssert.isTrueOrBadRequest(entity.getInput() == null || entity.getInputCSV() == null, () -> "input and inputCSV can't be both defined!");
 
-    final var envir = ComposerEntityMapper.toEnvir(client.envir(), state).build();
+    final var envir = ComposerEntityMapper.toEnvir(client.envir().tagName("test"), state).build();
     final var runnable = envir.getValues().get(entity.getId());
     HdesAssert.notFound(runnable, () -> "Entity was not found by id: '" + entity.getId() + "'!");
     HdesAssert.isTrueOrBadRequest(runnable.getStatus() == ProgramStatus.UP, () -> "Program status: '" + runnable.getStatus() + "' is not runnable!");

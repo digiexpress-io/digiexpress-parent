@@ -26,9 +26,12 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.dialob.api.proto.Action;
 import io.dialob.api.proto.Actions;
 import io.dialob.api.questionnaire.Questionnaire;
+import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -44,12 +47,32 @@ public class DialobCallbackController {
   private final ThreadPoolTaskScheduler submitTaskScheduler;
   private final ProcessClient processClient;
   private final DialobClient dialobClient;
+  private final ObjectMapper objectMapper;
   
   @Scheduled(fixedRate = 15, timeUnit = TimeUnit.SECONDS)
   public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnswered()) {
       try {
-        processClient.createExecutor().execute(instance.getQuestionnaire());
+        final var questionnaire = dialobClient.getQuestionnaireById(instance.getQuestionnaireId());
+        if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
+          log.warn("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
+          continue;
+        }
+        
+        processClient.createBodyBuilder()
+        .processInstanceId(instance.getId())
+        .formBody(objectMapper.writeValueAsString(questionnaire))
+        .build();
+        
+        
+        final var flow = processClient.createExecutor().processInstance(instance).execute();
+        
+        
+        processClient.createBodyBuilder()
+        .processInstanceId(instance.getId())
+        .flowBody(objectMapper.writeValueAsString(flow))
+        .build();
+        
       } catch(Exception e) {
         log.error("Failed to run flow for process instance: {}, e: {}!", instance.getId(), e.getMessage(), e);
       }
@@ -80,7 +103,6 @@ public class DialobCallbackController {
         if(questionnaire.unwrap().getMetadata().getStatus() != Questionnaire.Metadata.Status.COMPLETED) {
           log.warn("Skipping session sync because questionnaire {} status is {}", event.getSessionId(), questionnaire.unwrap().getMetadata().getStatus());          
         }
-        
         
         final var completed = actions.getActions().stream().filter(action -> action.getType() == Action.Type.COMPLETE).findFirst().isPresent();
         if(completed) {
