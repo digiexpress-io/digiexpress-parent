@@ -20,15 +20,17 @@ package io.thestencil.quarkus.ide.services;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 
+@ConfigMapping
 @ConfigRoot(name = IDEServicesRecorder.FEATURE_BUILD_ITEM)
-public class IDEServicesConfig {
+public interface IDEServicesConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "stencil-composer-services")
-  String servicePath;
+  @WithDefault("stencil-composer-services")
+  String servicePath();
 }

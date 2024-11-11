@@ -20,10 +20,6 @@ package io.thestencil.quarkus.useractions.deployment;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
 import io.quarkus.arc.deployment.BeanContainerListenerBuildItem;
@@ -38,13 +34,7 @@ import io.quarkus.vertx.http.deployment.BodyHandlerBuildItem;
 import io.quarkus.vertx.http.deployment.HttpRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
 import io.quarkus.vertx.http.deployment.devmode.NotFoundPageDisplayableEndpointBuildItem;
-import io.thestencil.iam.api.ImmutableAttachment;
-import io.thestencil.iam.api.ImmutableAttachmentData;
-import io.thestencil.iam.api.ImmutableAttachmentDownloadUrl;
-import io.thestencil.iam.api.ImmutableAuthorizationAction;
-import io.thestencil.iam.api.ImmutableUserAction;
-import io.thestencil.iam.api.ImmutableUserMessage;
-import io.thestencil.iam.api.ImmutableUserTask;
+import io.thestencil.iam.api.*;
 import io.thestencil.iam.spi.integrations.ImmutableProcessesInit;
 import io.thestencil.iam.spi.integrations.ImmutableUserActionReplyInit;
 import io.thestencil.quarkus.useractions.RuntimeConfig;
@@ -52,6 +42,10 @@ import io.thestencil.quarkus.useractions.UserActionsProducer;
 import io.thestencil.quarkus.useractions.UserActionsRecorder;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 
@@ -167,7 +161,7 @@ public class UserActionsProcessor {
       HttpRootPathBuildItem httpRootPathBuildItem,
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
     
-    final var servicePath = cleanPath(config.servicePath);
+    final var servicePath = cleanPath(config.servicePath());
     final var buildItem = new UserActionsBuildItem(
         servicePath, 
         servicePath + "/fill", 

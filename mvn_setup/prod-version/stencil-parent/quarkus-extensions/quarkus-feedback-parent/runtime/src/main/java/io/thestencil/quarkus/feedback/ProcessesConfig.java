@@ -23,31 +23,30 @@ package io.thestencil.quarkus.feedback;
 
 import io.quarkus.runtime.annotations.ConfigGroup;
 import io.quarkus.runtime.annotations.ConfigItem;
+import io.smallrye.config.WithDefault;
 
 @ConfigGroup
-public class ProcessesConfig {
+public interface ProcessesConfig {
   
   /**
    * backend host
    */
-  @ConfigItem
-  String host;
+  String host();
   
   /**
    * backend path
    */
-  @ConfigItem
-  String path;
+  String path();
 
   /**
    * protocol: http (default) or https
    */
-  @ConfigItem(defaultValue = "http")
-  String protocol;
+  @WithDefault("http")
+  String protocol();
 
   /**
    * port: default is 80
    */
-  @ConfigItem(defaultValue = "80")
-  Integer port;
+  @WithDefault("80")
+  Integer port();
 }

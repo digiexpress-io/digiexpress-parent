@@ -20,16 +20,18 @@ package io.thestencil.quarkus.iam.deployment;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.thestencil.quarkus.iam.IAMRecorder;
 
+@ConfigMapping
 @ConfigRoot(name = IAMRecorder.FEATURE_BUILD_ITEM)
-public class IAMConfig {
+public interface IAMConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "portal-app/iam")
-  String servicePath;
+  @WithDefault("portal-app/iam")
+  String servicePath();
 }

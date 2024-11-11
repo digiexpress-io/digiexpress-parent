@@ -25,20 +25,22 @@ import java.time.ZoneOffset;
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 
-@ConfigRoot(phase = ConfigPhase.RUN_TIME, name = SiteRecorder.FEATURE_BUILD_ITEM)
-public class RuntimeConfig {
+@ConfigMapping(prefix = "quarkus." + SiteRecorder.FEATURE_BUILD_ITEM)
+@ConfigRoot(phase = ConfigPhase.RUN_TIME)
+public interface RuntimeConfig {
 
   /**
    * Configuration for working repository
    */
-  @ConfigItem
-  RepoConfig repo;
+  RepoConfig repo();
   
   /**
    * Server offset
    */
-  @ConfigItem(defaultValue = "+2")  
-  ZoneOffset offset;
+  @WithDefault("+2")
+  ZoneOffset offset();
   
 }

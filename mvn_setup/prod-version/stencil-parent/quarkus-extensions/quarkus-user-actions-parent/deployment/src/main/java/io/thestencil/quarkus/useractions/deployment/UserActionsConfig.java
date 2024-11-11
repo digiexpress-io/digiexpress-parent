@@ -20,17 +20,19 @@ package io.thestencil.quarkus.useractions.deployment;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.thestencil.quarkus.useractions.UserActionsRecorder;
 
 
+@ConfigMapping
 @ConfigRoot(name = UserActionsRecorder.FEATURE_BUILD_ITEM)
-public class UserActionsConfig {
+public interface UserActionsConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "portal-app/user-actions")
-  String servicePath;
+  @WithDefault("portal-app/user-actions")
+  String servicePath();
 }

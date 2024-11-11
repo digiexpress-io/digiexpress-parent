@@ -152,7 +152,7 @@ public class FeedbackProcessor {
       HttpRootPathBuildItem httpRootPathBuildItem,
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
     
-    final var servicePath = cleanPath(config.servicePath);
+    final var servicePath = cleanPath(config.servicePath());
     final var buildItem = new FeedbackBuildItem(
         servicePath, 
         servicePath + "/fill",

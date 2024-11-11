@@ -45,7 +45,6 @@ import io.quarkus.deployment.builditem.LiveReloadBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
 import io.quarkus.deployment.pkg.builditem.CurateOutcomeBuildItem;
 import io.quarkus.deployment.util.FileUtil;
-import io.quarkus.deployment.util.WebJarUtil;
 import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.vertx.http.deployment.HttpRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
@@ -84,11 +83,11 @@ public class StaticContentProcessor {
       BuildProducer<BeanContainerListenerBuildItem> beans) {
 
     
-    if(config.siteJson.isPresent() && config.webjar.isPresent()) {
+    if(config.siteJson().isPresent() && config.webjar().isPresent()) {
       throw new ConfigurationException("siteJson and webjar both can't be defined, define only one of them!"); 
     }
 
-    if(config.siteJson.isEmpty() && config.webjar.isEmpty()) {
+    if(config.siteJson().isEmpty() && config.webjar().isEmpty()) {
       throw new ConfigurationException("siteJson and webjar both are empty, define one of them!"); 
     }
     
@@ -100,17 +99,17 @@ public class StaticContentProcessor {
         .tagName(buildItem.getContent().getTagName());
     final var content = client.build();
     final var contentValues = content.getSites().entrySet().stream()
-        .collect(Collectors.toMap(e -> e.getKey(), e -> Json.encode(e.getValue())));
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> Json.encode(e.getValue())));
     
-    if(!contentValues.containsKey(config.defaultLocale)) {
-      throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
+    if(!contentValues.containsKey(config.defaultLocale())) {
+      throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale() + "'!");
     }
     
     if(LOGGER.isDebugEnabled()) {
       LOGGER.debug("Supported locales: '" + String.join(", ", contentValues.keySet()) + "'");
     }
     buildItems.produce(AdditionalBeanBuildItem.builder().setUnremovable().addBeanClass(StaticContentBeanFactory.class).build());
-    beans.produce(new BeanContainerListenerBuildItem(recorder.listener(contentValues, config.defaultLocale)));
+    beans.produce(new BeanContainerListenerBuildItem(recorder.listener(contentValues, config.defaultLocale())));
   }
   
   @BuildStep
@@ -124,11 +123,11 @@ public class StaticContentProcessor {
     Handler<RoutingContext> handler = recorder.staticContentHandler();
 
     routes.produce(httpRoot.routeBuilder()
-        .route(config.servicePath)
+        .route(config.servicePath())
         .handler(handler)
         .build());
     routes.produce(httpRoot.routeBuilder()
-        .route(config.servicePath + "/*")
+        .route(config.servicePath() + "/*")
         .handler(handler)
         .build());
   }
@@ -151,12 +150,12 @@ public class StaticContentProcessor {
     
     
 
-    if(this.config.siteJson.isPresent()) {
+    if(this.config.siteJson().isPresent()) {
       staticJSONContent(recorder, buildProducer, generatedResources, nativeImage, nonApplicationRootPathBuildItem, curateOutcomeBuildItem, liveReloadBuildItem, httpRootPathBuildItem, displayableEndpoints);
       return;
     }
    
-    if(this.config.webjar.isPresent()) {
+    if(this.config.webjar().isPresent()) {
       staticWebjarContent(recorder, buildProducer, generatedResources, nativeImage, nonApplicationRootPathBuildItem, curateOutcomeBuildItem, liveReloadBuildItem, httpRootPathBuildItem, displayableEndpoints);
       return;
     }
@@ -177,9 +176,9 @@ public class StaticContentProcessor {
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
 
     
-    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath), "Zoe Static Content From Webjar"));
+    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath()), "Zoe Static Content From Webjar"));
     
-    final String[] fragments = config.webjar.get().split(":");
+    final String[] fragments = config.webjar().get().split(":");
     final String webjarGroupId = fragments[0];
     final String webjarArtifactId = fragments[1];
     final String webjarPrefix = "META-INF/resources/webjars/" + webjarArtifactId + "/";
@@ -204,7 +203,7 @@ public class StaticContentProcessor {
         }
       });
 
-      final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath);
+      final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath());
       buildProducer.produce(new StaticContentBuildItem(tempPath.toAbsolutePath().toString(), frontendPath, builder.build()));
       displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(frontendPath + "/"), "Zoe Static Content From Webjar"));
 
@@ -219,7 +218,7 @@ public class StaticContentProcessor {
       
     
     // native image
-    final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath);
+    final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath());
     final Map<String, byte[]> files = WebJarUtil.copyResourcesForProduction(curateOutcomeBuildItem, artifact, webjarPrefix + artifact.getVersion());
     final var builder = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown();
     
@@ -255,8 +254,8 @@ public class StaticContentProcessor {
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
 
     
-    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath), "Zoe Static Content From JSON"));
-    Path tempPath = this.config.siteJson.get();
+    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath()), "Zoe Static Content From JSON"));
+    Path tempPath = this.config.siteJson().get();
     
     // dev envir    
     if (launch.getLaunchMode().isDevOrTest()) {
@@ -268,8 +267,8 @@ public class StaticContentProcessor {
         throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
       }
       
-      final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().offset(config.offset).json(site, false).build();
-      final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath);
+      final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().offset(config.offset()).json(site, false).build();
+      final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath());
       buildProducer.produce(new StaticContentBuildItem(tempPath.toAbsolutePath().toString(), frontendPath, md));
       displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(frontendPath + "/"), "Zoe Static Content"));
       return;

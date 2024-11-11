@@ -20,18 +20,10 @@ package io.thestencil.site;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.UUID;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Singleton;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
@@ -42,6 +34,12 @@ import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.thestencil.site.handlers.SiteHandlerContext;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.pgclient.PgPool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @ApplicationScoped
 public class SiteProducer {
@@ -81,8 +79,8 @@ public class SiteProducer {
         .config((builder) -> builder
             .client(docDb)
             .objectMapper(objectMapper)
-            .repoName(runtimeConfig.repo.repoName)
-            .headName(runtimeConfig.repo.headName)
+            .repoName(runtimeConfig.repo().repoName)
+            .headName(runtimeConfig.repo().headName)
             .deserializer(deserializer)
             .serializer((entity) -> {
               try {
@@ -99,7 +97,7 @@ public class SiteProducer {
     final var composer = new StencilComposerImpl(client);
 
     // create repo if not present
-    return new SiteHandlerContext(composer, client, objectMapper, servicePath, runtimeConfig.offset);
+    return new SiteHandlerContext(composer, client, objectMapper, servicePath, runtimeConfig.offset());
   }
   
   public static String cleanPath(String value) {

@@ -20,9 +20,6 @@ package io.thestencil.site.pg;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
 import io.quarkus.arc.deployment.BeanContainerListenerBuildItem;
@@ -43,6 +40,9 @@ import io.thestencil.site.SiteProducer;
 import io.thestencil.site.SiteRecorder;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -125,7 +125,7 @@ public class SiteProcessor {
       HttpRootPathBuildItem httpRootPathBuildItem,
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
     
-    final var servicePath = cleanPath(config.servicePath);
+    final var servicePath = cleanPath(config.servicePath());
     final var buildItem = SiteBuildItem.builder(servicePath).build();
     
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(servicePath), "Stencil Postgre Site"));

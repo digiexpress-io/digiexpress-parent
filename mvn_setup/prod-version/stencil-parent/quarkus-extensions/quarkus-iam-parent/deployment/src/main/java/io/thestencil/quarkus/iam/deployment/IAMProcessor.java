@@ -97,11 +97,11 @@ public class IAMProcessor {
     Handler<RoutingContext> handler = recorder.iamHandler(buildItem.getLivenessPath(), buildItem.getRolesPath());
 
     routes.produce(httpRoot.routeBuilder()
-        .route(config.servicePath)
+        .route(config.servicePath())
         .handler(handler)
         .build());
     routes.produce(httpRoot.routeBuilder()
-        .route(config.servicePath + "/*")
+        .route(config.servicePath() + "/*")
         .handler(handler)
         .build());
   }
@@ -129,13 +129,13 @@ public class IAMProcessor {
       HttpRootPathBuildItem httpRootPathBuildItem,
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
 
-    final var userPath = httpRootPathBuildItem.resolvePath(config.servicePath);
-    final var livenessPath = httpRootPathBuildItem.resolvePath(config.servicePath + "/liveness");
-    final var rolesPath = httpRootPathBuildItem.resolvePath(config.servicePath + "/roles");
+    final var userPath = httpRootPathBuildItem.resolvePath(config.servicePath());
+    final var livenessPath = httpRootPathBuildItem.resolvePath(config.servicePath() + "/liveness");
+    final var rolesPath = httpRootPathBuildItem.resolvePath(config.servicePath() + "/roles");
     
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(userPath, "User IAM"));
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(livenessPath, "User IAM Liveness"));
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(rolesPath, "User IAM Roles"));
-    buildProducer.produce(new IAMBuildItem(config.servicePath, livenessPath, rolesPath));
+    buildProducer.produce(new IAMBuildItem(config.servicePath(), livenessPath, rolesPath));
   }
 }

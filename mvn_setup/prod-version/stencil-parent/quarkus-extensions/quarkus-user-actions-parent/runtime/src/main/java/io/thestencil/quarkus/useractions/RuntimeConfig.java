@@ -21,45 +21,42 @@ package io.thestencil.quarkus.useractions;
  */
 
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 
+@ConfigMapping
 @ConfigRoot(phase = ConfigPhase.RUN_TIME, name = UserActionsRecorder.FEATURE_BUILD_ITEM)
-public class RuntimeConfig {
+public interface RuntimeConfig {
   /**
    * Default locale for creating forms
    */
-  @ConfigItem(defaultValue = "fi")
-  String defaultLocale;
+  @WithDefault("fi")
+  String defaultLocale();
   
   /**
    * Configuration for process management backend
    */
-  @ConfigItem
-  ProcessesConfig processes;
+  ProcessesConfig processes();
 
   /**
    * Configuration for files management backend
    */
-  @ConfigItem
-  AttachmentsConfig attachments;
+  AttachmentsConfig attachments();
   
   /**
    * Configuration for tasks management backend
    */
-  @ConfigItem
-  TasksConfig tasks;
+  TasksConfig tasks();
   
   /**
    * Configuration for form filling backend
    */
-  @ConfigItem
-  FillConfig fill;
+  FillConfig fill();
 
   /**
    * Configuration for form api backend
    */  
-  @ConfigItem
-  ReviewConfig review;
+  ReviewConfig review();
 }

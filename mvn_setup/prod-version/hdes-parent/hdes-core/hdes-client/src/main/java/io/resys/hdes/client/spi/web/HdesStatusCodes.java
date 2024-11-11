@@ -21,29 +21,28 @@ package io.resys.hdes.client.spi.web;
  */
 
 
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.vertx.core.http.HttpHeaders;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
-
 public class HdesStatusCodes {
   private static final Logger LOGGER = LoggerFactory.getLogger(HdesStatusCodes.class);
   public static void catch404(String id, HttpServerResponse response) {
     
     // Log error
-    String log = new StringBuilder().append("Token not found with id: ").append(id).toString();
+    String log = "Token not found with id: " + id;
     String hash = exceptionHash(log);
-    LOGGER.error(hash + " - " + log);
+    LOGGER.error("{} - {}", hash, log);
     
     Map<String, String> msg = new HashMap<>();
     msg.put("appcode", hash);

@@ -20,16 +20,18 @@ package io.thestencil.site.pg;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.thestencil.site.SiteRecorder;
 
+@ConfigMapping
 @ConfigRoot(name = SiteRecorder.FEATURE_BUILD_ITEM)
-public class SiteConfig {
+public interface SiteConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "stencil-sites")
-  String servicePath;
+  @WithDefault("stencil-sites")
+  String servicePath();
 }

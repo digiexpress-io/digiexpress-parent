@@ -20,17 +20,19 @@ package io.thestencil.quarkus.feedback.deployment;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.thestencil.quarkus.feedback.FeedbackRecorder;
 
 
+@ConfigMapping
 @ConfigRoot(name = FeedbackRecorder.FEATURE_BUILD_ITEM)
-public class FeedbackConfig {
+public interface FeedbackConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "portal-app/feedback")
-  String servicePath;
+  @WithDefault("portal-app/feedback")
+  String servicePath();
 }

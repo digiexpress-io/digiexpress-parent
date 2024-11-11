@@ -20,16 +20,14 @@ package io.thestencil.quarkus.feedback;
  * #L%
  */
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-
-import org.eclipse.microprofile.jwt.JsonWebToken;
-
 import io.thestencil.iam.api.ImmutableRemoteIntegration;
 import io.thestencil.iam.spi.integrations.UserActionsClientDefault;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @ApplicationScoped
 public class FeedbackProducer {
@@ -63,7 +61,7 @@ public class FeedbackProducer {
     final var client = UserActionsClientDefault.builder()
       .config(b -> b
         .webClient(webClient)
-        .defaultLanguage(runtimeConfig.defaultLocale)
+        .defaultLanguage(runtimeConfig.defaultLocale())
         .servicePath(servicePath)
         .fillPath(fillPath)
         
@@ -74,10 +72,10 @@ public class FeedbackProducer {
         .authorizationsPath("authorizationsPath/disabled")
         
 
-        .processes(ImmutableRemoteIntegration.builder().host(cleanPath(runtimeConfig.processes.host)).path(cleanPath(runtimeConfig.processes.path))
-            .protocol(runtimeConfig.processes.protocol).port(runtimeConfig.processes.port).build())
-        .fill(ImmutableRemoteIntegration.builder().host(cleanPath(runtimeConfig.fill.host)).path(cleanPath(runtimeConfig.fill.path))
-            .protocol(runtimeConfig.fill.protocol).port(runtimeConfig.fill.port).build())
+        .processes(ImmutableRemoteIntegration.builder().host(cleanPath(runtimeConfig.processes().host())).path(cleanPath(runtimeConfig.processes().path()))
+            .protocol(runtimeConfig.processes().protocol()).port(runtimeConfig.processes().port()).build())
+        .fill(ImmutableRemoteIntegration.builder().host(cleanPath(runtimeConfig.fill().host())).path(cleanPath(runtimeConfig.fill().path()))
+            .protocol(runtimeConfig.fill().protocol()).port(runtimeConfig.fill().port()).build())
 
         
         
@@ -87,13 +85,13 @@ public class FeedbackProducer {
     return new FeedbackContext(
         client, 
         allowedPath,
-        runtimeConfig.allowed,
-        runtimeConfig.userName, 
-        runtimeConfig.userId,
-        runtimeConfig.firstName, 
-        runtimeConfig.lastName,
-        runtimeConfig.email, 
-        runtimeConfig.address
+        runtimeConfig.allowed(),
+        runtimeConfig.userName(),
+        runtimeConfig.userId(),
+        runtimeConfig.firstName(),
+        runtimeConfig.lastName(),
+        runtimeConfig.email(),
+        runtimeConfig.address()
     );
   }
   

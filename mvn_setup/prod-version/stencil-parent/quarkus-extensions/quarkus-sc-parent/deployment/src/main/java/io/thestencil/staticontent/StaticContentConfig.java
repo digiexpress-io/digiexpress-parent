@@ -20,51 +20,51 @@ package io.thestencil.staticontent;
  * #L%
  */
 
+import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
+
 import java.nio.file.Path;
 import java.time.ZoneOffset;
 import java.util.Optional;
 
-import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConfigRoot;
-
+@ConfigMapping
 @ConfigRoot(name = StaticContentProcessor.FEATURE_BUILD_ITEM)
-public class StaticContentConfig {
+public interface StaticContentConfig {
   
   /**
    * Static content routing path
    */
-  @ConfigItem(defaultValue = "portal-app/site")
-  String servicePath;
+  @WithDefault("portal-app/site")
+  String servicePath();
   
   /**
    * Static content for accessing images
    */
-  @ConfigItem(defaultValue = "portal-app/site/images")
-  String imagePath;
+  @WithDefault("portal-app/site/images")
+  String imagePath();
   
   /**
    * Default locale and not found locale for site contents
    */
-  @ConfigItem(defaultValue = "en")
-  String defaultLocale;
+  @WithDefault("en")
+  String defaultLocale();
   
   /**
    * Server offset
    */
-  @ConfigItem(defaultValue = "+2")  
-  ZoneOffset offset;
+  @WithDefault("+2")
+  ZoneOffset offset();
   
   /**
    * Artifact from where to search
    */
-  @ConfigItem
-  Optional<Path> siteJson;
-  
+  Optional<Path> siteJson();
+
   /**
    * Artifact from where to search
    * groupId:artifactId
    * io.resys.client.portal:static-content
    */
-  @ConfigItem
-  Optional<String> webjar;
+  Optional<String> webjar();
 }

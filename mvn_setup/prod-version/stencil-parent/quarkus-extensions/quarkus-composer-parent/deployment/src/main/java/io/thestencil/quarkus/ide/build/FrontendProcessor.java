@@ -52,11 +52,11 @@ public class FrontendProcessor {
   FrontendConfig config;
 
   String getWebjarRoot() {
-    return config.webjarRoot.orElseGet(() -> "META-INF/resources/webjars/" + config.artifactId + "/" + config.stencilComposerVersion);
+    return config.webjarRoot().orElseGet(() -> "META-INF/resources/webjars/" + config.artifactId() + "/" + config.stencilComposerVersion());
   }
 
   GACT getGACT() {
-    return new GACT(config.groupId, config.artifactId, "", "jar");
+    return new GACT(config.groupId(), config.artifactId(), "", "jar");
   }
 
   @BuildStep
@@ -109,11 +109,11 @@ public class FrontendProcessor {
               if ("index.html".equals(fileName)) {
                 // Inject configuration into index page
                 var newIndex = IndexFactory.builder()
-                        .frontend(httpRootPathBuildItem.resolvePath(config.servicePath))
-                        .locked(config.locked)
-                        .oidc(config.oidcPath.orElse(null))
-                        .status(config.statusPath.orElse(null))
-                        .server(httpRootPathBuildItem.resolvePath(config.serverPath))
+                        .frontend(httpRootPathBuildItem.resolvePath(config.servicePath()))
+                        .locked(config.locked())
+                        .oidc(config.oidcPath().orElse(null))
+                        .status(config.statusPath().orElse(null))
+                        .server(httpRootPathBuildItem.resolvePath(config.serverPath()))
                         .index(stream.readAllBytes())
                         .build();
                 stream = new ByteArrayInputStream(newIndex);
@@ -134,8 +134,8 @@ public class FrontendProcessor {
     buildProducer.produce(new HdesUIBuildItem(
             finalDestination,
             "/static",
-            config.servicePath));
-    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(config.servicePath, "Stencil Composer"));
+            config.servicePath()));
+    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(config.servicePath(), "Stencil Composer"));
   }
 
 }

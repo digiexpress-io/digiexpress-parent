@@ -100,8 +100,8 @@ public class IDEServicesProducer {
         .config((builder) -> builder
             .client(docDb)
             .objectMapper(objectMapper)
-            .repoName(runtimeConfig.repo.repoName)
-            .headName(runtimeConfig.repo.headName)
+            .repoName(runtimeConfig.repo().repoName)
+            .headName(runtimeConfig.repo().headName)
             .deserializer(deserializer)
             .serializer((entity) -> {
               try {

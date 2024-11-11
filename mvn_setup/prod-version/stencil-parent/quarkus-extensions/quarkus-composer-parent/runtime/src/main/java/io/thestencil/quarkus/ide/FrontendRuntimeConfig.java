@@ -22,7 +22,9 @@ package io.thestencil.quarkus.ide;
 
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
 
-@ConfigRoot(phase = ConfigPhase.RUN_TIME, name = FrontendRecorder.FEATURE_BUILD_ITEM)
-public class FrontendRuntimeConfig {
+@ConfigMapping(prefix = "quarkus." + FrontendRecorder.FEATURE_BUILD_ITEM)
+@ConfigRoot(phase = ConfigPhase.RUN_TIME)
+public interface FrontendRuntimeConfig {
 }

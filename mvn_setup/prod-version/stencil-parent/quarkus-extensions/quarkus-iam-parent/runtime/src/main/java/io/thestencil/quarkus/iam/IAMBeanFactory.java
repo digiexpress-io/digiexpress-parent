@@ -20,13 +20,6 @@ package io.thestencil.quarkus.iam;
  * #L%
  */
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
-import org.eclipse.microprofile.jwt.JsonWebToken;
-
 import io.quarkus.arc.DefaultBean;
 import io.thestencil.iam.api.IAMClient;
 import io.thestencil.iam.api.ImmutableRemoteIntegration;
@@ -34,6 +27,11 @@ import io.thestencil.iam.spi.suomi.IAMClientSuomi;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @ApplicationScoped
 public class IAMBeanFactory {
@@ -60,16 +58,16 @@ public class IAMBeanFactory {
   public IAMClient iamClient(Vertx vertx) {
     final var webClient = WebClient.create(vertx, new WebClientOptions());
     final var personSecurityProxy = ImmutableRemoteIntegration.builder()
-        .host(cleanPath(runtimeConfig.personSecurityProxy.host))
-        .path(cleanPath(runtimeConfig.personSecurityProxy.path))
-        .port(runtimeConfig.personSecurityProxy.port)
-        .protocol(runtimeConfig.personSecurityProxy.protocol)
+        .host(cleanPath(runtimeConfig.personSecurityProxy().host))
+        .path(cleanPath(runtimeConfig.personSecurityProxy().path))
+        .port(runtimeConfig.personSecurityProxy().port)
+        .protocol(runtimeConfig.personSecurityProxy().protocol)
         .build();
     final var companySecurityProxy = ImmutableRemoteIntegration.builder()
-        .host(cleanPath(runtimeConfig.companySecurityProxy.host))
-        .path(cleanPath(runtimeConfig.companySecurityProxy.path))
-        .port(runtimeConfig.companySecurityProxy.port)
-        .protocol(runtimeConfig.companySecurityProxy.protocol)
+        .host(cleanPath(runtimeConfig.companySecurityProxy().host))
+        .path(cleanPath(runtimeConfig.companySecurityProxy().path))
+        .port(runtimeConfig.companySecurityProxy().port)
+        .protocol(runtimeConfig.companySecurityProxy().protocol)
         .build();
     
     return IAMClientSuomi.builder()

@@ -175,7 +175,7 @@ public class IDEServicesProcessor {
       HttpRootPathBuildItem httpRootPathBuildItem,
       BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
     
-    final var servicePath = cleanPath(config.servicePath);
+    final var servicePath = cleanPath(config.servicePath());
     final var buildItem = IDEServicesBuildItem.builder(servicePath)
         .articlesPath("articles")
         .pagesPath("pages")

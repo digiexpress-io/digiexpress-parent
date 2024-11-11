@@ -20,16 +20,16 @@ package io.thestencil.quarkus.ide.services;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
 
+@ConfigMapping
 @ConfigRoot(phase = ConfigPhase.RUN_TIME, name = IDEServicesRecorder.FEATURE_BUILD_ITEM)
-public class RuntimeConfig {
+public interface RuntimeConfig {
 
   /**
    * Configuration for working repository
    */
-  @ConfigItem
-  RepoConfig repo;
+  RepoConfig repo();
 }

@@ -20,68 +20,66 @@ package io.thestencil.quarkus.ide.build;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithDefault;
 import io.thestencil.quarkus.ide.FrontendRecorder;
 
 import java.util.Optional;
 
-@ConfigRoot(name = FrontendRecorder.FEATURE_BUILD_ITEM)
-public class FrontendConfig {
+@ConfigMapping(prefix = "quarkus." + FrontendRecorder.FEATURE_BUILD_ITEM)
+@ConfigRoot
+public interface FrontendConfig {
 
   /**
    * Stencil IDE ui group id. Needed to locate resources from webjar
    */
-  @ConfigItem(defaultValue = "io.digiexpress")
-  String groupId;
+  @WithDefault("io.digiexpress")
+  String groupId();
 
   /**
    * Stencil IDE ui artifact id. Needed to locate resources from webjar
    */
-  @ConfigItem(defaultValue = "stencil-composer-integration")
-  String artifactId;
+  @WithDefault("stencil-composer-integration")
+  String artifactId();
 
   /**
    * Stencil IDE ui resource path inside jar
    */
-  @ConfigItem
-  Optional<String> webjarRoot;
+  Optional<String> webjarRoot();
 
   /**
    * IDE routing path
    */
-  @ConfigItem(defaultValue = "portal-app")
-  String servicePath;
+  @WithDefault("portal-app")
+  String servicePath();
 
   /**
    * Stencil IDE ui version. Needed to locate resources from webjar
    */
-  @ConfigItem(defaultValue = "${quarkus.application.version}")
-  String stencilComposerVersion;
+  @WithDefault("${quarkus.application.version}")
+  String stencilComposerVersion();
 
   /**
    * IDE backend server path
    */
-  @ConfigItem
-  String serverPath;
+  String serverPath();
 
   /**
    * Locks the IDE, edit/view disabled
    */
-  @ConfigItem(defaultValue = "false")
-  Boolean locked;
+  @WithDefault("false")
+  Boolean locked();
   
   /**
    * OIDC login path
    * "/oauth2/authorization/oidcprovider"
    */
-  @ConfigItem
-  Optional<String> oidcPath;
+  Optional<String> oidcPath();
   
   /**
    * OIDC status ping path 
    */
-  @ConfigItem
-  Optional<String> statusPath; 
+  Optional<String> statusPath();
   
 }
