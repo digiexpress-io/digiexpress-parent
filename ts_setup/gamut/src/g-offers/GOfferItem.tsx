@@ -4,7 +4,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
-import { GConfirm, GDate, GDateProps, GFlex } from '../';
+import { GConfirm, GDate, GDateProps, GFlex, useOffers } from '../';
 import { GOfferItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
 
 
@@ -25,6 +25,7 @@ export interface GOfferItemProps {
 export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const offers = useOffers();
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -33,7 +34,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     name: MUI_NAME,
   });
 
-  const { created, updated, name, slotProps = {} } = props;
+  const { created, updated, name, offerId, slotProps = {} } = props;
   const ownerState = {
     ...props,
     dateVariant: slotProps.date?.variant ?? 'relative'
@@ -44,11 +45,18 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     setConfirmOpen(prev => !prev)
   }
 
+  function handleDeleteOffer(offerId: string) {
+    offers.cancelOffer(offerId);
+    setConfirmOpen(prev => !prev);
+  }
+
+
 
   return (<>
     <GConfirm
       open={confirmOpen}
       onClose={handleCancelConfirm}
+      onDelete={() => handleDeleteOffer(offerId)}
       cancelItemName={props.name}
       cancelItemMeta={<>
         {intl.formatMessage({ id: 'gamut.forms.lastModified' })}

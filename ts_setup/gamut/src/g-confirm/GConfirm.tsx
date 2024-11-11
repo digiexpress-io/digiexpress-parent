@@ -11,6 +11,7 @@ export interface GConfirmProps {
   cancelButton: string,
   deleteButton: string,
   onClose: () => void;
+  onDelete?: () => void;
   open: boolean;
 
   component?: GOverridableComponent<GConfirmProps>
@@ -23,7 +24,7 @@ export const GConfirm: React.FC<GConfirmProps> = (initProps) => {
     name: MUI_NAME,
   });
 
-  const { onClose, open, title, cancelItemName, cancelItemMeta, content, cancelButton, deleteButton, component } = props;
+  const { onClose, onDelete, open, title, cancelItemName, cancelItemMeta, content, cancelButton, deleteButton, component } = props;
   const classes = useUtilityClasses(props);
   const Root = component ?? GConfirmRoot
 
@@ -45,7 +46,7 @@ export const GConfirm: React.FC<GConfirmProps> = (initProps) => {
 
       <DialogActions>
         <Button variant='outlined' onClick={onClose}>{cancelButton}</Button>
-        <Button className={classes.delete} variant='contained' color='error' onClick={onClose}>{deleteButton}</Button>
+        <Button className={classes.delete} variant='contained' color='error' onClick={onDelete}>{deleteButton}</Button>
       </DialogActions>
     </Root>)
 }

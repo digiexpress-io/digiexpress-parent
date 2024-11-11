@@ -33,7 +33,7 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
 
   const fetchDelete: OfferApi.CancelOfferFetchDELETE = async (offer) => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(url, {
+    const response = await window.fetch(`${url}/${offer.id}`, {
       method: 'DELETE',
       headers: undefined,
       credentials: undefined,
