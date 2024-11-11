@@ -21,9 +21,6 @@ quarkus:
       max-body-size: 102400K
       max-header-size: 102400K
       max-chunk-size: 102400K
-  
-  resteasy-reactive:
-    output-buffer-size: 16384000
 
   vertx:
     keep-alive-time: PT10.000S
@@ -31,6 +28,8 @@ quarkus:
   native:
     resources:
       includes: asset_sysconfig_flat.json
+  rest:
+    output-buffer-size: 16384000
 # DO NOT bother, with this, transactions area leaked via PgPool, some data is visible some is not.
 #  datasource: 
 #    db-kind: postgresql 
