@@ -4,9 +4,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
-import { GConfirm, GDate, GDateProps, GFlex, useOffers } from '../';
+import { GConfirm, GDate, GDateProps, GFlex, useOffers, OfferApi } from '../';
 import { GOfferItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
-
 
 
 export interface GOfferItemProps {
@@ -14,7 +13,7 @@ export interface GOfferItemProps {
   created: DateTime;
   updated: DateTime;
   offerId: string;
-  onOpen: (offerId: string) => void;
+  onOpen: (offer: OfferApi.Offer) => void;
   onCancel: (offerId: string) => void;
   slotProps?: {
     date?: Partial<GDateProps>
@@ -26,7 +25,6 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const offers = useOffers();
-
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const props = useThemeProps({
@@ -34,14 +32,14 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     name: MUI_NAME,
   });
 
-  const { created, updated, name, offerId, slotProps = {} } = props;
+  const { created, updated, name, offerId, slotProps = {}, onOpen } = props;
   const ownerState = {
     ...props,
     dateVariant: slotProps.date?.variant ?? 'relative'
   }
 
 
-  function handleCancelConfirm() {
+  function handleToggleDialog() {
     setConfirmOpen(prev => !prev)
   }
 
@@ -50,12 +48,10 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
     setConfirmOpen(prev => !prev);
   }
 
-
-
   return (<>
     <GConfirm
       open={confirmOpen}
-      onClose={handleCancelConfirm}
+      onClose={handleToggleDialog}
       onDelete={() => handleDeleteOffer(offerId)}
       cancelItemName={props.name}
       cancelItemMeta={<>
@@ -73,7 +69,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
       <GFlex variant='body'>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={5} xl={4}>
-            <Typography>{name}</Typography>
+            <Typography onClick={() => onOpen(offers.getOffer(offerId)!)}>{name}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={2} xl={3}>
@@ -99,7 +95,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
-            <Button startIcon={<DeleteForeverIcon />} className={classes.cancel} onClick={handleCancelConfirm}>
+            <Button startIcon={<DeleteForeverIcon />} className={classes.cancel} onClick={handleToggleDialog}>
               <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
             </Button>
           </Grid>

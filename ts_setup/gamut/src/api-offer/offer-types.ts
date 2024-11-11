@@ -22,8 +22,8 @@ export declare namespace OfferApi {
     formUri: string;
     formId: string;
 
-    //productId: string;
-    productGroupId: string;
+    productId: string;
+    pageId: string;
   }
 
 

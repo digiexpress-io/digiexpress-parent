@@ -27,8 +27,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[]): {
       .appendStr(proc.formId)
       .appendStr(proc.formUri)
       .appendStr(proc.created)
-      .appendStr(proc.updated ?? '')
-      .appendStr(offer.productGroupId);
+      .appendStr(proc.updated ?? '');
 
     offers.push(offer);
   }
@@ -37,10 +36,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[]): {
 }
 
 export function mapToOffer(data: LegacyProcessApi.Process): OfferApi.Offer {
-  const productGroupId = (
-    (data.inputParentContextId ? '' : data.inputParentContextId + '/') +
-    data.inputContextId
-  );
+
 
   return Object.freeze({
     created: DateTime.fromISO(data.created),
@@ -50,6 +46,7 @@ export function mapToOffer(data: LegacyProcessApi.Process): OfferApi.Offer {
 
     id: data.id,
     name: data.name,
-    productGroupId
+    productId: data.inputContextId,
+    pageId: data.inputPageId
   });
 }

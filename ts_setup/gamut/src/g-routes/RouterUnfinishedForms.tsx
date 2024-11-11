@@ -15,6 +15,7 @@ import {
   GAppBar,
   GUserOverviewMenu,
   GOffers,
+  OfferApi,
 } from '../';
 
 
@@ -54,6 +55,19 @@ export const RouterUnfinishedForms: React.FC<RouterUnfinishedFormsProps> = (prop
     })
   }
 
+  function handleOnOpenOffer(offer: OfferApi.Offer) {
+
+    const offerId = offer.id;
+    const pageId = offer.pageId;
+    const productId = offer.productId;
+
+    nav({
+      from: '/secured/$locale/views/$viewId',
+      params: { offerId, pageId, productId },
+      to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+    })
+  }
+
 
   return (
     <GShell>
@@ -84,7 +98,7 @@ export const RouterUnfinishedForms: React.FC<RouterUnfinishedFormsProps> = (prop
               ),
               left: () => (<>
                 <Divider />
-                <GOffers />
+                <GOffers slotProps={{ item: { onOpen: handleOnOpenOffer } }} />
               </>
               )
             }}
