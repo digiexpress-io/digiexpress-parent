@@ -10,22 +10,22 @@ import { FormattedMessage } from 'react-intl';
 const regexp_starts_with = new RegExp('^# .');
 
 const isValidTitle = (value?: string) => {
-  if(!value) {
+  if (!value) {
     return false;
   }
-  if(regexp_starts_with.test(value)) {
+  if (regexp_starts_with.test(value)) {
     return true;
   }
-  
+
   const start = value.indexOf("# ");
-  if(start < 0) {
+  if (start < 0) {
     return false;
   }
-  
-  const cleaned = start === 0 ? 
-    value : 
+
+  const cleaned = start === 0 ?
+    value :
     value.substring(0, start).replaceAll("\n", "") + value.substring(start);
-  return regexp_starts_with.test(cleaned); 
+  return regexp_starts_with.test(cleaned);
 }
 
 const templateCommand = (template: StencilApi.Template): ICommand => ({
@@ -54,7 +54,7 @@ const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: Stenc
       name: 'templates',
       groupName: 'templates',
       buttonProps: { 'aria-label': 'Insert Template' },
-      icon: (<div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center', color: 'blue'}}>T</div>)
+      icon: (<div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center', color: 'blue' }}>T</div>)
     }),
     commands.group([commands.title1, commands.title2, commands.title3, commands.title4, commands.title5, commands.title6], {
       name: 'title',
@@ -85,6 +85,9 @@ type PageComposerProps = {
   locale2?: StencilApi.LocaleId,
 }
 
+
+
+
 const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, locale2 }) => {
   const theme = useTheme();
   const { actions, session } = Composer.useComposer();
@@ -100,62 +103,64 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
   const value2 = page2 ? (session.pages[page2.id] ? session.pages[page2.id].value : page2.body.content) : undefined;
   const articleName = session.getArticleName(articleId);
 
-  const handleChange = (props: {page?: StencilApi.Page, value?: string}) => {
-    const {page, value} = props;
-    if(!page) {
+  const handleChange = (props: { page?: StencilApi.Page, value?: string }) => {
+    const { page, value } = props;
+    if (!page) {
       return;
     }
     actions.handlePageUpdate(page.id, value ? value : "");
-    
+
     // validate
     const containsTitle = isValidTitle(value);
-    
+
     // everything ok
-    if(containsTitle) {
+    if (containsTitle) {
       closeSnackbar(page.id);
       const next = new Set<StencilApi.PageId>(errors);
       next.delete(page.id)
       setErrors(next);
       return;
     }
-    
+
     // already reported
-    if(errors.has(page.id)) {
+    if (errors.has(page.id)) {
       return;
     }
 
     //there is an error
     const locale = view.getPageById(page.id).locale.body.value;
-    const error = <FormattedMessage id={'snack.page.missingTitle'} values={{locale, articleName: articleName.name}}/>;
+    const error = <FormattedMessage id={'snack.page.missingTitle'} values={{ locale, articleName: articleName.name }} />;
     setErrors(new Set<StencilApi.PageId>(errors).add(page.id));
     enqueueSnackbar(error, { variant: 'warning', persist: true, key: page.id });
-    
+
   }
 
   if (value2 === undefined || !page2) {
-    return (
-      <div>
-        <MDEditor key={1} value={value1} onChange={(value) => handleChange({page: page1, value})} toolbarHeight={40}
+    return (<>
+      <Box data-color-mode="light" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
+        <MDEditor key={1} value={value1} onChange={(value) => handleChange({ page: page1, value })} toolbarHeight={40}
           commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
-      </div>
+      </Box>
+    </>
     );
   }
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap">
-      <Box flex="1" sx={{ paddingRight: 1 }}>
-        <MDEditor key={2} value={value1} onChange={(value) => handleChange({page: page1, value})}
+
+      <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
+        <MDEditor key={2} value={value1} onChange={(value) => handleChange({ page: page1, value })}
           commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
 
       </Box>
-      <Box flex="1">
-        <MDEditor key={3} value={value2} onChange={(value) => handleChange({page: page2, value})}
+      <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
+        <MDEditor key={3} value={value2} onChange={(value) => handleChange({ page: page2, value })}
           commands={getMdCommands(session.site.locales[page2.body.locale], theme.palette.page.dark, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
