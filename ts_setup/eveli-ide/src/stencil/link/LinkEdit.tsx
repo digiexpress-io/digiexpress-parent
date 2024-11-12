@@ -100,9 +100,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
         items={articles.map((article) => ({
           id: article.id,
           value: (<>
-            <Burger.Checkbox checked={articleId.indexOf(article.id) > -1}
-
-            />
+            <Burger.Checkbox checked={articleId.indexOf(article.id) > -1} />
             <ListItemText primary={article.value} />
           </>)
         }

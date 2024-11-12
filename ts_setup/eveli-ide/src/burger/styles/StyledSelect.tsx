@@ -18,7 +18,7 @@ const StyledFormControl = styled(FormControl)<FormControlProps>(({ theme }) => (
 
 interface StyledSelectProps<T> {
   label: string;
-  items: { id: string, value: string | React.ReactChild, sx?: SxProps<Theme> }[];
+  items: { id: string, value: string | React.ReactNode, sx?: SxProps<Theme> }[];
   selected: T;
   disabled?: boolean;
   helperText?: string;
@@ -49,14 +49,14 @@ const StyledSelect: React.FC<StyledSelectProps<string>> = (props) => {
 const StyledSelectMultiple: React.FC<{
   multiline?: boolean;
   open?: boolean;
-  helpers?: { id: string, value: string | React.ReactChild, sx?: SxProps<Theme> }[];
+  helpers?: { id: string, value: string | React.ReactNode, sx?: SxProps<Theme> }[];
   renderValue?: (values: string[]) => React.ReactNode;
 } & StyledSelectProps<string[]>> = (props) => {
   const title = <FormattedMessage id={props.label} />;
   return (
     <StyledFormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
-      <Select
+      <Select 
         multiple={true}
         multiline={props.multiline}
         disabled={props.disabled}
