@@ -1,5 +1,6 @@
 on:
   workflow_call: # Enables manual triggering
+
   pull_request:
     paths:
       - 'mvn_setup/alpha-version/**'
@@ -11,7 +12,8 @@ on:
       - 'mvn_setup/alpha-version/**'
     branches:
       - dev
-
+permissions:
+  id-token: write
 name: Build backend snapshot 
 jobs:
   build:
