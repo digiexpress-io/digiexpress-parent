@@ -35,7 +35,6 @@ jobs:
       run: |
         cd ./mvn_setup/alpha-version
         ./mvnw -B clean install
-        mvn_setup/alpha-version/
         echo "image_id=${QUARKUS_CONTAINER_IMAGE_REGISTRY}/${QUARKUS_CONTAINER_IMAGE_GROUP}/digiexpress-app@$(cat digiexpress-app/target/jib-image.digest)" >> "$GITHUB_OUTPUT"
       env:
         QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
