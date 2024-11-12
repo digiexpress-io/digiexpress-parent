@@ -60,7 +60,7 @@ jobs:
               const coredemo = require('@actions/core')
               // On automatically created `github.token` "aud" claim is a string.
               // Kubernetes requires "aud" to be array of strings instead.
-              let id_token = await coredemo.getIDToken(['${{github.server_url}}/${{github.repository.owner}}'])
+              let id_token = await coredemo.getIDToken(['${{github.server_url}}/${{github.repository_owner}}'])
               coredemo.setOutput('id_token', id_token)
       - name: Install kubectl
         uses: azure/setup-kubectl@v4
