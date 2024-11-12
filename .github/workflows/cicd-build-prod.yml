@@ -1,0 +1,44 @@
+on:
+  workflow_dispatch: # Enables manual triggering
+
+  pull_request:
+    paths:
+      - 'mvn_setup/prod-version/**'
+    branches:
+      - dev
+
+  push:
+    paths:
+      - 'mvn_setup/prod-version/**'
+    branches:
+      - dev
+permissions:
+  id-token: write
+name: Build backend snapshot (prod)
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'maven'
+    - id: build
+      name: Maven build
+      run: |
+        cd ./mvn_setup/prod-version
+        ./mvnw -B clean install
+      env:
+        QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
+        QUARKUS_CONTAINER_IMAGE_BUILD: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+        QUARKUS_CONTAINER_IMAGE_PUSH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+        QUARKUS_CONTAINER_IMAGE_GROUP: ${{ github.repository_owner }}
+        QUARKUS_CONTAINER_IMAGE_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+        QUARKUS_CONTAINER_IMAGE_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+        QUARKUS_CONTAINER_IMAGE_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+        QUARKUS_CONTAINER_IMAGE_ADDITIONAL_TAGS: "${{ github.event_name != 'pull_request' && github.ref_name || 'pull_request' }},latest"
