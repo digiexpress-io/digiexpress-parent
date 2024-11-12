@@ -16,6 +16,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      image_id: ${{ steps.build.outputs.image_id }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -25,12 +27,14 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
         cache: 'maven'
-    - name: Maven build
+    - id: build
+      name: Maven build
       run: |
         cd ./mvn_setup/alpha-version
         ./mvnw -B clean install
+        mvn_setup/alpha-version/
+        echo "image_id=${QUARKUS_CONTAINER_IMAGE_REGISTRY}/${QUARKUS_CONTAINER_IMAGE_GROUP}/digiexpress-app@$(cat digiexpress-app/target/jib-image.digest)" >> "$GITHUB_OUTPUT"
       env:
-        CI: true
         QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
         QUARKUS_CONTAINER_IMAGE_BUILD: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
         QUARKUS_CONTAINER_IMAGE_PUSH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
@@ -39,3 +43,32 @@ jobs:
         QUARKUS_CONTAINER_IMAGE_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
         QUARKUS_CONTAINER_IMAGE_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
         QUARKUS_CONTAINER_IMAGE_ADDITIONAL_TAGS: "${{ github.event_name != 'pull_request' && github.ref_name || 'pull_request' }},latest"
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.11.1 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
+        with:
+          script: |
+              const coredemo = require('@actions/core')
+              // On automatically created `github.token` "aud" claim is a string.
+              // Kubernetes requires "aud" to be array of strings instead.
+              let id_token = await coredemo.getIDToken(['${{github.server_url}}/${{github.repository.owner}}'])
+              coredemo.setOutput('id_token', id_token)
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+      - name: Update image
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBE_TOKEN: ${{ steps.idtoken.outputs.id_token }}
+          IMAGE_ID: ${{needs.build.outputs.image_id}}
+        run: |
+          mkdir $HOME/.kube
+          echo $KUBECONFIG > $HOME/.kube/config.tpl
+          envsubst < $HOME/.kube/config.tpl > $HOME/.kube/config
+          kubectl set image deployment/digiexpress digiexpress=$IMAGE_ID
