@@ -9,8 +9,8 @@ server:
   error:
     include-stacktrace: never
 
-logging.level.org.springframework.web: DEBUG
-logging.level.org.springframework.boot: DEBUG
+logging.level.org.springframework.web: INFO
+logging.level.org.springframework.boot: INFO
 
 
 
