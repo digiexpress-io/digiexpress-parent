@@ -66,11 +66,15 @@ jobs:
         uses: azure/setup-kubectl@v4
       - name: Update image
         env:
-          KUBECONFIG_FILE: ${{ secrets.KUBECONFIG }}
+          KUBE_HOST: ${{ secrets.KUBE_HOST }}
+          KUBE_CERTIFICATE: ${{ secrets.KUBE_CERTIFICATE }}
           KUBE_TOKEN: ${{ steps.idtoken.outputs.id_token }}
           IMAGE_ID: ${{needs.build.outputs.image_id}}
         run: |
-          mkdir $HOME/.kube
-          echo $KUBECONFIG_FILE > $HOME/.kube/config.tpl
-          envsubst < $HOME/.kube/config.tpl > $HOME/.kube/config
+          mkdir -p $HOME/.kube/
+          echo "$KUBE_CERTIFICATE" > $HOME/.kube/certificate
+          kubectl config set-cluster default --server=${KUBE_HOST} --certificate-authority=$HOME/.kube/certificate > /dev/null
+          kubectl config set-credentials default --token="${KUBE_TOKEN}"
+          kubectl config set-context default --cluster=default --namespace=default --user=default > /dev/null
+          kubectl config use-context default > /dev/null
           kubectl set image deployment/digiexpress digiexpress=$IMAGE_ID
