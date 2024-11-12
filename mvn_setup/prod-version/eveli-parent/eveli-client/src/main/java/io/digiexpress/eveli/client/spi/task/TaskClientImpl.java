@@ -91,7 +91,7 @@ public class TaskClientImpl implements TaskClient {
       public Task deleteTask(Long taskId) {
         TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
         TaskAssert.notEmpty("userEmail", () -> "userEmail can't be empty!");
-        return new DeleteOneTask(userId, userEmail, taskRepository, notificator, taskAccessRepository).delete(taskId);
+        return new DeleteOneTask(userId, userEmail, taskRepository, notificator, jdbcTemplate).delete(taskId);
       }
     };
   }

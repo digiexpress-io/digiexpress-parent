@@ -20,9 +20,16 @@ package io.digiexpress.eveli.client.spi.task;
  * #L%
  */
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ConnectionCallback;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.JdbcUtils;
+
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -30,15 +37,42 @@ import lombok.RequiredArgsConstructor;
 public class DeleteOneTask {
   private final String userId;
   private final String email;
+  
   private final TaskRepository taskRepository;
   private final TaskNotificator notificator;
-  private final TaskAccessRepository taskAccessRepository;
+  private final JdbcTemplate jdbcTemplate;
+  
   
   public TaskClient.Task delete(long taskId) {
-
+    return jdbcTemplate.execute(new ConnectionCallback<TaskClient.Task>() {
+      @Override
+      public TaskClient.Task doInConnection(Connection con) throws SQLException, DataAccessException {
+        final var result = PaginateTasksImpl.map(taskRepository.getOneById(taskId));
+        
+        con.setAutoCommit(false);
+        
+        
+        final var access = con.prepareStatement("delete from task_access where task_id = ?");
+        access.setLong(1, taskId);
+        try {
+          access.execute();
+        } finally {
+          JdbcUtils.closeStatement(access);
+        }
+        
+        final var task = con.prepareStatement("delete from task where id = ?");
+        task.setLong(1, taskId);
+        try {
+          task.execute();
+        } finally {
+          JdbcUtils.closeStatement(access);
+        }
+        
+        con.commit();
+        return result;
+      }
+    });
     
-    final var current = taskRepository.getOneById(taskId);
-    taskRepository.deleteById(taskId);
-    return PaginateTasksImpl.map(current);
+    
   }
 }

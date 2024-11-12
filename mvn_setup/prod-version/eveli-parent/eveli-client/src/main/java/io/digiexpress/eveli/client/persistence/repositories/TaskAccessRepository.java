@@ -28,5 +28,5 @@ import io.digiexpress.eveli.client.persistence.entities.TaskAccessId;
 
 @Repository
 public interface TaskAccessRepository extends CrudRepository<TaskAccessEntity, TaskAccessId> {
-	
+
 }

@@ -90,9 +90,7 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
   @Query(value="select distinct t.id from task t inner join task_roles ar on t.id =ar.task_id left join task_access ta on t.id = ta.task_id and ta.user_id=:user_id left join comment c on c.task_id = t.id where (ta.task_id is null or c.created > ta.updated) and ar.assigned_roles in :roles", nativeQuery = true)
   List<Long> findUnreadTasksByRole(@Param("user_id") String userName, @Param("roles") List<String> roles);
 
-  
-  
-  void deleteById(@Param("id") Long id);
+
   TaskEntity save(TaskEntity task);
   
   /*
