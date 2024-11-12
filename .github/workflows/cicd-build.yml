@@ -66,11 +66,11 @@ jobs:
         uses: azure/setup-kubectl@v4
       - name: Update image
         env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG_FILE: ${{ secrets.KUBECONFIG }}
           KUBE_TOKEN: ${{ steps.idtoken.outputs.id_token }}
           IMAGE_ID: ${{needs.build.outputs.image_id}}
         run: |
           mkdir $HOME/.kube
-          echo $KUBECONFIG > $HOME/.kube/config.tpl
+          echo $KUBECONFIG_FILE > $HOME/.kube/config.tpl
           envsubst < $HOME/.kube/config.tpl > $HOME/.kube/config
           kubectl set image deployment/digiexpress digiexpress=$IMAGE_ID
