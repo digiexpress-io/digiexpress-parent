@@ -10,7 +10,7 @@ import {
   useThemeInfra,
   GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
   GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
-} from './useThemeInfra';
+} from './useUtilityClasses';
 
 
 
