@@ -1,10 +1,12 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
+
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../context';
-import { Box } from '@mui/material';
+import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
 
 
 const selectSub = { ml: 2, color: "article.dark" }
@@ -25,7 +27,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
   const handleUpdate = () => {
     const entity: StencilApi.ArticleMutator = { articleId: article.id, name, parentId, order, links: undefined, workflows: undefined, devMode };
     service.update().article(entity).then(_success => {
-      enqueueSnackbar(message, {variant: 'success'});
+      enqueueSnackbar(message, { variant: 'success' });
       onClose();
       actions.handleLoadSite();
     });
@@ -50,28 +52,42 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
       sx: article.body.parentId ? selectSub : undefined
     }));
 
-  return (<Burger.Dialog open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
-    title="article.edit.title"
-    submit={{ title: "button.update", onClick: handleUpdate, disabled: !name }}>
-    <>
-      <Burger.Select label="article.edit.parent" onChange={setParentId}
-        selected={parentId ? parentId : ''}
-        items={articles}
-        empty={{ id: "", label: "article.composer.parent.unselected" }}
-      />
-      <Burger.NumberField label="order" helperText="article.edit.orderhelper" placeholder={100} value={order} onChange={setOrder} />
-      <Burger.TextField label="article.name" required value={name} onChange={setName} />
-      <Box maxWidth="50%" sx={{ ml: 1 }}>
-        <Burger.Switch
-          checked={devMode ? devMode : false}
-          helperText="article.devmode.helper"
-          label="article.devmode"
-          onChange={setDevMode}
+  return (
+    <Burger.Dialog open={true} onClose={onClose}
+      backgroundColor="uiElements.main"
+      title="article.edit.title"
+      submit={{ title: "button.update", onClick: handleUpdate, disabled: !name }}>
+      <>
+        <Burger.Select label="article.edit.parent" onChange={setParentId}
+          selected={parentId ? parentId : ''}
+          items={articles}
+          empty={{ id: "", label: "article.composer.parent.unselected" }}
         />
-      </Box>
-    </>
-  </Burger.Dialog>);
+
+        <Box display='flex' alignItems='center'>
+          <Box>
+            <Burger.NumberField label="article.order" helperText='article.composer.orderhelper'
+              onChange={setOrder}
+              value={order}
+              placeholder={400}
+            />
+          </Box>
+          <Box sx={{ width: '10%' }}>
+            <ArticleOrderNumberViewer />
+          </Box>
+        </Box>
+
+        <Burger.TextField label="article.name" required value={name} onChange={setName} />
+        <Box maxWidth="50%" sx={{ ml: 1 }}>
+          <Burger.Switch
+            checked={devMode ? devMode : false}
+            helperText="article.devmode.helper"
+            label="article.devmode"
+            onChange={setDevMode}
+          />
+        </Box>
+      </>
+    </Burger.Dialog>);
 }
 
 export { ArticleEdit }

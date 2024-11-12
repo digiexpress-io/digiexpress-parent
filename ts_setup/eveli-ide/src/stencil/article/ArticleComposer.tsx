@@ -1,66 +1,17 @@
 import React from 'react';
-import { Box, IconButton, Popover, Typography, Tooltip, ListItem } from '@mui/material';
+import { Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
 
 import { Composer, StencilApi } from '../context';
-import PageviewOutlinedIcon from '@mui/icons-material/PageviewOutlined';
+import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
+
 import { FormattedMessage } from 'react-intl';
 
 const DUMMY_ID = "none-selected"
 
 
-const OrderNumberTooltip: React.FC<{}> = () => {
-  const { session } = Composer.useComposer();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-
-  const handlePopover = (event: React.MouseEvent<any>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
-  return (<>
-    <Tooltip title={<FormattedMessage id="article.order.view" />}>
-      <IconButton sx={{ ml: 2, color: 'uiElements.main' }} onClick={handlePopover}>
-        <PageviewOutlinedIcon fontSize="large" />
-      </IconButton>
-    </Tooltip>
-
-    <Popover
-      sx={{ ml: 2 }}
-      open={open}
-      onClose={handlePopoverClose}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      transformOrigin={{
-        vertical: 'center',
-        horizontal: 'left',
-      }}
-    >
-
-      <Typography variant='body2' sx={{ p: 1 }}>
-        {session.articles
-          .map(view => view.article)
-          .sort((l0, l1) => l0.body.order - l1.body.order)
-          .map(({ id, body }) => (
-           <ListItem key={id} sx={ body.parentId ? { ml: 2, color: 'article.dark', pb: 1,  } : {pb: 1} }>{`${body.order} - ${body.name}`}</ListItem>
-          ))}
-      </Typography>
-    </Popover>
-  </>
-  )
-
-}
 
 
 const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -71,13 +22,13 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [order, setOrder] = React.useState(0);
   const [parentId, setParentId] = React.useState("");
   const [devMode, setDevMode] = React.useState<boolean>(false);
-    
+
   const handleCreate = () => {
     const entity: StencilApi.CreateArticle = { name, parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
 
     service.create().article(entity).then(success => {
       console.log(success)
-      enqueueSnackbar(message, {variant: 'success'});
+      enqueueSnackbar(message, { variant: 'success' });
       onClose();
       actions.handleLoadSite();
     });
@@ -100,10 +51,10 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             .map(view => view.article)
             .map(({ id, body }) => ({
               id,
-              value: (<Box sx={ body.parentId ? { ml: 2, color: 'article.dark' } : undefined }>{`${body.order} - ${body.name}`}</Box>)
+              value: (<Box sx={body.parentId ? { ml: 2, color: 'article.dark' } : undefined}>{`${body.order} - ${body.name}`}</Box>)
             }))}
         />
-        <Box display='flex'>
+        <Box display='flex' alignItems='center'>
           <Box>
             <Burger.NumberField label="article.order" helperText='article.composer.orderhelper'
               onChange={setOrder}
@@ -111,8 +62,8 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               placeholder={400}
             />
           </Box>
-          <Box sx={{width: '10%'}}>
-            <OrderNumberTooltip />
+          <Box sx={{ width: '10%' }}>
+            <ArticleOrderNumberViewer />
           </Box>
         </Box>
         <Burger.TextField label="article.name" required
