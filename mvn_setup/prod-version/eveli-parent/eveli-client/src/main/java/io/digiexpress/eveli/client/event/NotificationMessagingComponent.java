@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.event;
 
 import java.util.HashSet;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -73,9 +72,11 @@ public class NotificationMessagingComponent implements TaskNotificator {
               addedAssignedRoles(newTask.getAssignedRoles());
         }
         else if (!newTask.getAssignedRoles().equals(previous.getAssignedRoles())) {
+          var addedRoles = new HashSet<>(newTask.getAssignedRoles());
+          addedRoles.removeAll(previous.getAssignedRoles());
           builder = builder.taskEventType(TaskEventType.TASK_GROUP_ASSIGNMENT_CHANGE).
               previousAssignedRoles(previous.getAssignedRoles()).
-              addedAssignedRoles(new HashSet<String>(CollectionUtils.removeAll(newTask.getAssignedRoles(), previous.getAssignedRoles())));
+              addedAssignedRoles(addedRoles);
         }
       }
       TaskEvent event = builder.build();

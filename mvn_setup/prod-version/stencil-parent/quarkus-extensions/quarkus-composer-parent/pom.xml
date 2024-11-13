@@ -7,15 +7,10 @@
     <artifactId>stencil-quarkus-extensions</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
-
-  <artifactId>quarkus-stencil-composer-parent</artifactId>
   <packaging>pom</packaging>
-
-
+  <artifactId>quarkus-stencil-composer-parent</artifactId>
   <modules>
     <module>deployment</module>
     <module>runtime</module>
   </modules>
-
-
 </project>
