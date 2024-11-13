@@ -4,7 +4,7 @@ quarkus:
     level: INFO
     category: 
       io.resys.thena.tasks.dev.app:
-        level: DEBUG
+        level: INFO
       io.resys.thena.tasks.dev.app.security:
         level: WARN
     console:  
@@ -66,11 +66,11 @@ tenant:
       level: WARN
       category:
         io.resys.thena.tasks.dev.app:
-          level: DEBUG
+          level: INFO
         io.resys.thena.tasks.dev.app.security:
           level: WARN
         org.jboss.resteasy.reactive.server.handlers.RequestDeserializeHandler: 
-          level: DEBUG
+          level: INFO
       console:  
         json: false
 
@@ -80,4 +80,4 @@ tenant:
       level: ERROR
       category:
         io.resys.thena.tasks.dev.app:
-          level: DEBUG
+          level: INFO
