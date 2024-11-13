@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.IOUtils;
-import org.graalvm.polyglot.HostAccess.Export;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -222,10 +221,5 @@ public class TaskTestCase {
     final var expected = toExpectedFile(expectedFileName);
     Assertions.assertEquals(expected, actualJson);
     
-  }
-  public void assertEquals(String expectedFileName, Export actual) {
-    final var expected = toExpectedFile(expectedFileName);
-    final var actualJson = JsonObject.mapFrom(actual).encodePrettily();
-    Assertions.assertEquals(expected, actualJson);
   }
 }
