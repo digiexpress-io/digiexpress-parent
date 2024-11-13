@@ -31,7 +31,7 @@ public class PgProfile implements QuarkusTestProfile {
     return Map.of(
         "quarkus.datasource.db-kind", "pg",
         "quarkus.datasource.reactive.max-size", "20",
-        "quarkus.datasource.devservices.image-name", "postgres:15.2-alpine"
+        "quarkus.datasource.devservices.image-name", "postgres:17"
         );
   }
 
