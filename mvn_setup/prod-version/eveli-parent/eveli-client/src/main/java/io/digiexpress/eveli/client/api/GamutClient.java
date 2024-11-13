@@ -112,7 +112,7 @@ public interface GamutClient {
   @JsonSerialize(as = ImmutableReplayToInit.class)
   @JsonDeserialize(as = ImmutableReplayToInit.class)
   interface ReplayToInit {
-    String getReplyToId();
+    String getSubjectId();
     String getText();
   }
   

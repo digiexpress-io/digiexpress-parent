@@ -38,13 +38,21 @@ export declare namespace CommsApi {
     isMyMessage: boolean;
   }
 
+  export interface ReplyTo {
+    subjectId: SubjectId;
+    text: string;
+  }
+
   export type GetSubjectsFetchGET = () => Promise<Response>;
+  export type ReplyToFetchPOST = (comment: ReplyTo) => Promise<Response>;
 
   export interface CommsContextType {
     subjects: readonly Subject[];
     isPending: boolean;
     subjectStats: { exchanges: number },
     getSubject(contractId: SubjectId): Subject | undefined;
+
+    replyTo(comment: ReplyTo): Subject; 
     refresh(): Promise<void>;
   }
 }

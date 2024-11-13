@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.config;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -186,10 +187,11 @@ public class EveliAutoConfigAssets {
       return ComposerEntityMapper.toEnvir(wrenchClient.envir().tagName(liveContent), state).build();          
     };
 
+    
     final Supplier<Sites> siteEnvir = () -> {
       final var stencilState = stencilClient.getStore().query().head()
           .onItem().transform(state -> stencilClient.markdown()
-              .offset(assetProps.getTimezoneOffset())
+              .offset(ZoneOffset.ofHours(assetProps.getTimezoneOffset()))
               .json(state, true).build())
           .onItem().transform(markdowns -> stencilClient.sites()
               .imagePath("images")

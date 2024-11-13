@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.ZoneOffset;
+
 /*-
  * #%L
  * eveli-client
@@ -72,7 +74,7 @@ public class EveliAutoConfigGamut {
         attachmentCommands, 
         dialobCommands,
         authClient,
-        eveliAssetProps.getTimezoneOffset(),
+        ZoneOffset.ofHours(eveliAssetProps.getTimezoneOffset()),
         
         eveliContext.getSiteEnvir(),
         eveliContext.getProgramEnvir(),

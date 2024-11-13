@@ -13,6 +13,7 @@ export const CommsProvider: React.FC<{
   children: React.ReactNode;
   options: { staleTime: number, queryKey: string };
   getSubjects: CommsApi.GetSubjectsFetchGET;
+  replyTo: CommsApi.ReplyToFetchPOST;
 }> = (props) => {
   const data = usePopulateContext(props);
 
@@ -24,6 +25,7 @@ export const CommsProvider: React.FC<{
       isPending: data.isPending,
       subjectStats: Object.freeze({ exchanges: exchanges.length }),
       getSubject: (id) => data.subjects.find((subject) => subject.id === id),
+      replyTo: data.replyTo, 
       refresh: data.refresh,
     };
 

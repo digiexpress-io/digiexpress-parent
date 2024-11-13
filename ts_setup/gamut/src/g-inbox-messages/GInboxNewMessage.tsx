@@ -17,7 +17,6 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
   const intl = useIntl();
 
 
-
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,

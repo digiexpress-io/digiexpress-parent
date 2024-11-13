@@ -11,7 +11,18 @@ export function createSubjectFetch(url: (string | undefined) = '/portal/secured/
     });
     return response;
   }
-  return { fetchGet };
+
+  const fetchPost: CommsApi.ReplyToFetchPOST = async (replyTo) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(url + '/' + replyTo.subjectId + '/messages', {
+      method: 'POST',
+      headers: undefined,
+      credentials: undefined,
+      body: JSON.stringify(replyTo)
+    });
+    return response;
+  }
+  return { fetchGet, fetchPost };
 }
 
 

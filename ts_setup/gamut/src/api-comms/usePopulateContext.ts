@@ -11,12 +11,14 @@ export interface UsePropulateProps {
   children: React.ReactNode;
   options: { staleTime: number, queryKey: string };
   getSubjects: CommsApi.GetSubjectsFetchGET;
+  replyTo: CommsApi.ReplyToFetchPOST;
 }
 
 export interface PopulateCommsContext {
   subjects: readonly CommsApi.Subject[];
   isPending: boolean;
   refresh(): Promise<void>;
+  //replyTo(comment: CommsApi.ReplyTo): () => Promise<void>
 }
 
 export function usePopulateContext(props: UsePropulateProps): PopulateCommsContext {
@@ -24,7 +26,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
 
 
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
-  const { getSubjects, options } = props;
+  const { getSubjects, replyTo: replyToFetch, options } = props;
   const { staleTime, queryKey } = options;
 
   // tanstack query config
@@ -44,6 +46,17 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
   }, [refetch]);
 
 
+  const replyTo = (comment: CommsApi.ReplyTo) => React.useCallback(async () => {
+    return replyToFetch(comment)
+      .then((resp) => resp.json())
+      .then((body) => {
+        console.log(body);
+
+        return refresh();
+      });
+  }, [replyToFetch]);
+
+
   // track initial loading
   React.useEffect(() => {
     if (isInitialLoadDone) {
@@ -59,6 +72,6 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
 
   // cache the end result
   return React.useMemo(() => {
-    return { subjects: subjectData?.subjects ?? [], isPending: !isContextLoaded, refresh };
-  }, [subjectData?.hash, isContextLoaded, refresh]);
+    return { subjects: subjectData?.subjects ?? [], isPending: !isContextLoaded, refresh, replyTo };
+  }, [subjectData?.hash, isContextLoaded, refresh, replyTo]);
 }
