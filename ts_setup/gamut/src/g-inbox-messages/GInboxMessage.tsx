@@ -35,7 +35,7 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
           {isMyMessage ? <Avatar className={classes.msgItemMyMessage}>{firstInitial}</Avatar> :
             <Avatar className={classes.msgItemTheirMessage}>{firstInitial}</Avatar>}
           <Typography>
-            {senderName ? senderName : intl.formatMessage({ id: 'gamut.inbox.message.sender-name.org-user' })} 
+            {senderName ? senderName : intl.formatMessage({ id: 'cust.inbox.message.sender-name.org-user' })} 
           </Typography>
         </Grid>
 

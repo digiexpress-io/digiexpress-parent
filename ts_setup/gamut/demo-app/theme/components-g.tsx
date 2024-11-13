@@ -200,6 +200,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GInbox: {},
   GInboxMessages: {},
+  GInboxMessageNotAllowed: {},
   GInboxAttachments: {},
   GInboxFormReview: {},
 

@@ -21,6 +21,7 @@ import { GTooltipClassKey, GTooltipProps } from '../g-tooltip';
 import { GInboxClassKey, GInboxProps } from '../g-inbox';
 import { GInboxAttachmentsClassKey, GInboxAttachmentsProps } from '../g-inbox-attachments';
 import { GInboxMessagesClassKey, GInboxMessagesProps } from '../g-inbox-messages';
+import { GInboxMessageNotAllowed, GInboxMessageNotAllowedProps } from '../g-inbox-messages';
 import { GInboxFormReviewClassKey, GInboxFormReviewProps } from '../g-inbox-form-review';
 
 import { GLocalesClassKey, GLocalesProps } from '../g-locales';
@@ -113,6 +114,7 @@ export interface GComponentsPropsList {
   GInboxMessages: GInboxMessagesProps;
   GInboxAttachments: GInboxAttachmentsProps;
   GInboxFormReview: GInboxFormReviewProps;
+  GInboxMessageNotAllowed: GInboxMessageNotAllowedProps;
 
   GLinks: GLinksProps;
   GLinkHyper: GLinkHyperProps;
@@ -177,6 +179,8 @@ export interface GComponentNameToClassKey {
 
   GInbox: GInboxClassKey;
   GInboxMessages: GInboxMessagesClassKey;
+  GInboxMessageNotAllowed: GInboxMessagesClassKey;
+
   GInboxAttachments: GInboxAttachmentsClassKey;
   GInboxFormReview: GInboxFormReviewClassKey;
 
@@ -331,6 +335,11 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GInboxMessages'];
     styleOverrides?: GComponentsOverrides<Theme>['GInboxMessages'];
     variants?: GComponentsVariants['GInboxMessages'];
+  },
+  GInboxMessageNotAllowed?: {
+    defaultProps?: GComponentsProps['GInboxMessageNotAllowed'];
+    styleOverrides?: GComponentsOverrides<Theme>['GInboxMessageNotAllowed'];
+    variants?: GComponentsVariants['GInboxMessageNotAllowed'];
   },
   GInboxAttachments?: {
     defaultProps?: GComponentsProps['GInboxAttachments'];

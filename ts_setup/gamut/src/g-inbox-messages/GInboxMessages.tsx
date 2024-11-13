@@ -8,8 +8,10 @@ import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review'
 import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
 import { GInboxNewMessageProps, GInboxNewMessage } from './GInboxNewMessage';
 import { GInboxMessage, GInboxMessageProps } from './GInboxMessage';
+import { GInboxMessageNotAllowed } from './GInboxMessageNotAllowed';
 
 import { useComms, CommsApi } from '../api-comms';
+import { useContracts } from '../api-contract';
 
 
 
@@ -41,6 +43,8 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const { getSubject } = useComms();
   const subject = getSubject(props.subjectId);
   const { replyTo } = useComms();
+  const { getContract } = useContracts();
+
 
   function handleReplyTo(subjectId: CommsApi.SubjectId, text: string) {
     replyTo({ subjectId, text });
@@ -49,6 +53,8 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   if (!subject) {
     return <></>;
   }
+
+  const contract = getContract(subject?.id);
 
 
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
@@ -89,9 +95,14 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
           ))}
         </div>
 
-        <div className={classes.newMessage}>
-          <NewMessage subjectName={subject.name} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
-        </div>
+
+        {contract?.status === 'COMPLETED' || contract?.status === 'REJECTED' ?
+          (<div className={classes.msgNotAllowedRoot}><GInboxMessageNotAllowed /></div>) : (
+            <div className={classes.newMessage}>
+              <NewMessage subjectName={subject.name} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
+            </div>
+          )}
+
       </>
 
     </GInboxMessagesRoot>

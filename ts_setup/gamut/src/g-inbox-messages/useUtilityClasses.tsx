@@ -25,6 +25,12 @@ export interface GInboxMessagesClasses {
   newMsgSenderName: string;
   newMsgAddButton: string;
   newMsgCancelButton: string;
+
+  msgNotAllowedRoot: string;
+  msgNotAllowedContent: string;
+  msgNotAllowedContentSpacing: string;
+  msgNotAllowedContentFlex: string;
+  msgNotAllowedIcon: string;
 }
 export type GInboxMessagesClassKey = keyof GInboxMessagesClasses;
 
@@ -54,6 +60,13 @@ export const GInboxMessagesRoot = styled("div", {
       styles.newMsgSenderName,
       styles.newMsgAddButton,
       styles.newMsgCancelButton,
+
+      styles.msgNotAllowedRoot,
+      styles.msgNotAllowedContent,
+      styles.msgNotAllowedContentSpacing,
+      styles.msgNotAllowedContentFlex,
+      styles.msgNotAllowedIcon
+
     ];
   },
 })(({ theme }) => {
@@ -113,6 +126,33 @@ export const GInboxMessagesRoot = styled("div", {
       component: 'span'
     },
     // ------
+
+    '.GInboxMessages-msgNotAllowedRoot': {
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+    },
+
+    '.GInboxMessages-msgNotAllowedContentSpacing': {
+      padding: theme.spacing(1),
+    },
+
+    '.GInboxMessages-msgNotAllowedContent': {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    },
+
+    '.GInboxMessages-msgNotAllowedIcon': {
+      color: theme.palette.primary.main,
+      marginRight: theme.spacing(2)
+    },
+
+    '.GInboxMessages-msgNotAllowedContentFlex': {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(1)
+
+    },
 
     '.GInboxMessages-newMsgRoot': {
       display: 'flex',
@@ -248,6 +288,25 @@ export const GInboxNewMessageRoot = styled(Paper, {
   };
 });
 
+export const GInboxMessageNotAllowedRoot = styled(Paper, {
+  name: MUI_NAME,
+  slot: 'MessageNotAllowed',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.msgNotAllowedRoot,
+      styles.msgNotAllowedContent,
+      styles.msgNotAllowedContentSpacing,
+      styles.msgNotAllowedContentFlex,
+      styles.msgNotAllowedIcon
+    ];
+  },
+})(({ theme }) => {
+  return {
+
+  };
+});
+
+
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
@@ -270,6 +329,12 @@ export const useUtilityClasses = () => {
     newMsgSenderName: ['newMsgSenderName'],
     newMsgAddButton: ['newMsgAddButton'],
     newMsgCancelButton: ['newMsgCancelButton'],
+
+    msgNotAllowedRoot: ['msgNotAllowedRoot'],
+    msgNotAllowedContent: ['msgNotAllowedContent'],
+    msgNotAllowedContentSpacing: ['msgNotAllowedContentSpacing'],
+    msgNotAllowedContentFlex: ['msgNotAllowedContentFlex'],
+    msgNotAllowedIcon: ['msgNotAllowedIcon']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

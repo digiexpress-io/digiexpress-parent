@@ -3,7 +3,9 @@ export const fi = {
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 
-  'gamut.inbox.message.sender-name.org-user': 'Info desk at Life Digital',
+  'cust.inbox.message.sender-name.org-user': 'Info desk at Life Digital',
+  'cust.phone': 'Phone: 123 456 7890',
+  'cust.email': 'info@lifeDigital.com',
 
 
   // -------------------- CUSTOMER FOOTER --------------------------
@@ -162,6 +164,10 @@ export const fi = {
   'gamut.inbox.newMessage.replyingTo': 'Replying to: ',
   'gamut.inbox.newMessage.sendNew': 'Send a new message',
   'gamut.inbox.newMessage.replyingTo.subject': 'Subject: ',
+
+  'gamut.inbox.newMessage.notAllowed1': 'This form has been fully processed, and new messages can no longer be sent.',
+  'gamut.inbox.newMessage.notAllowed2': 'We apologize for the inconvenience.',
+  'gamut.inbox.newMessage.notAllowed.questions': 'Please contact us by phone or email with further questions.',
 
   'gamut.subjectMessage.title': 'Messages regarding {subject}',
 
