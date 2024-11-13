@@ -18,7 +18,7 @@ export interface PopulateCommsContext {
   subjects: readonly CommsApi.Subject[];
   isPending: boolean;
   refresh(): Promise<void>;
-  //replyTo(comment: CommsApi.ReplyTo): () => Promise<void>
+  replyTo(comment: CommsApi.ReplyTo): Promise<void>
 }
 
 export function usePopulateContext(props: UsePropulateProps): PopulateCommsContext {
@@ -46,6 +46,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
   }, [refetch]);
 
 
+  /* ORIGINAL
   const replyTo = (comment: CommsApi.ReplyTo) => React.useCallback(async () => {
     return replyToFetch(comment)
       .then((resp) => resp.json())
@@ -56,6 +57,19 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
       });
   }, [replyToFetch]);
 
+  */
+
+  const replyTo: (comment: CommsApi.ReplyTo) => Promise<void> = React.useCallback(async (comment) => {
+    return replyToFetch(comment)
+      .then((resp) => resp.json())
+      .then((body: CommsApi.Subject) => {
+        console.log(body);
+        refresh();
+        return;
+      })
+
+
+  }, [replyToFetch, refresh]);
 
   // track initial loading
   React.useEffect(() => {

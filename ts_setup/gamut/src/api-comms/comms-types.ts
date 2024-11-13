@@ -52,7 +52,7 @@ export declare namespace CommsApi {
     subjectStats: { exchanges: number },
     getSubject(contractId: SubjectId): Subject | undefined;
 
-    replyTo(comment: ReplyTo): Subject; 
+    replyTo(comment: ReplyTo): Promise<void>; 
     refresh(): Promise<void>;
   }
 }
