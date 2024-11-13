@@ -163,8 +163,8 @@ export const TasksTable: React.FC<Props> =
             <Box display="flex" alignItems="center" justifyContent="space-between">
               {link}
               <Box display="flex">
-                <LockIcon color='secondary' fontSize='small' />
-                <MessageIcon color='secondary' fontSize='small' />
+                <LockIcon color='secondary' fontSize='small' sx={{ marginLeft: 1 }} />
+                <MessageIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
               </Box>
             </Box>
           )
@@ -172,7 +172,7 @@ export const TasksTable: React.FC<Props> =
           return (
             <Box display="flex" alignItems="center" justifyContent="space-between">
               {link}
-              <MessageIcon fontSize='small' color='secondary' />
+              <MessageIcon fontSize='small' color='primary' sx={{ marginLeft: 1 }} />
             </Box>
           )
         }
@@ -181,7 +181,7 @@ export const TasksTable: React.FC<Props> =
         return (
           <Box display="flex" alignItems="center" justifyContent="space-between">
             {link}
-            <LockIcon color='secondary' fontSize='small' />
+            <LockIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
           </Box>
         )
       }
@@ -228,7 +228,8 @@ export const TasksTable: React.FC<Props> =
           headerStyle: { fontWeight: 'bold' },
           defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'subject')?.value || "",
           render: data => <TaskLink title={(data.subject || '') + ' ' + (data.taskRef || '') || '-'} address={`/ui/tasks/task/${data.id}`} id={data.id} keywords={data?.keyWords} />,
-          hidden: tableRef.current?.state.columns.find((column: any) => column.field === "subject").hidden
+          hidden: tableRef.current?.state.columns.find((column: any) => column.field === "subject").hidden,
+
         },
         {
           title: intl.formatMessage({ id: 'spoTasksTableHeader.clientName' }),
