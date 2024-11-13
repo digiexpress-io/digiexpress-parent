@@ -1,6 +1,4 @@
 on:
-  workflow_dispatch: # Enables manual triggering
-
   pull_request:
     paths:
       - 'mvn_setup/alpha-version/**'
@@ -17,6 +15,7 @@ permissions:
 name: Build backend snapshot 
 jobs:
   build:
+    if: github.event_name != 'pull_request'
     name: Build
     runs-on: ubuntu-latest
     outputs:
