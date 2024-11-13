@@ -3,6 +3,8 @@ export const fi = {
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 
+  'gamut.inbox.message.sender-name.org-user': 'Info desk at Life Digital',
+
 
   // -------------------- CUSTOMER FOOTER --------------------------
 

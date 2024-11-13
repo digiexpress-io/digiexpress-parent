@@ -3,6 +3,8 @@ export const en = {
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 
+  'gamut.inbox.message.sender-name.org-user': 'Info desk at Life Digital',
+
 
   // -------------------- CUSTOMER FOOTER --------------------------
 
@@ -39,6 +41,7 @@ export const en = {
   'gamut.noValueIndicator': '-',
   'gamut.textSeparator': ': ',
   'gamut.loading': 'Your content is on the way',
+
 
   // ------------------- GAMUT PUBLIC ----------------------
 

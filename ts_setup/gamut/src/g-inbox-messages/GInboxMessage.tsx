@@ -1,6 +1,8 @@
 import React from 'react';
 import { Avatar, Grid, Typography, useThemeProps } from '@mui/material';
 import { DateTime } from 'luxon';
+import { useIntl } from 'react-intl';
+
 import { GDate } from '../g-date';
 import { GInboxMessageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
@@ -14,6 +16,7 @@ export interface GInboxMessageProps {
 }
 
 export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
+  const intl = useIntl();
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -22,9 +25,8 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
   const classes = useUtilityClasses();
   const { created, commentText, senderName, isMyMessage = {} } = props;
 
-
-
   const firstInitial = senderName.substring(0, 1);
+
 
   return (
     <GInboxMessageRoot className={classes.msgItemRoot}>
@@ -33,7 +35,7 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
           {isMyMessage ? <Avatar className={classes.msgItemMyMessage}>{firstInitial}</Avatar> :
             <Avatar className={classes.msgItemTheirMessage}>{firstInitial}</Avatar>}
           <Typography>
-            {senderName}
+            {senderName ? senderName : intl.formatMessage({ id: 'gamut.inbox.message.sender-name.org-user' })} 
           </Typography>
         </Grid>
 
