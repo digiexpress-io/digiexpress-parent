@@ -9,7 +9,7 @@ import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachment
 import { GInboxNewMessageProps, GInboxNewMessage } from './GInboxNewMessage';
 import { GInboxMessage, GInboxMessageProps } from './GInboxMessage';
 
-import { useComms } from '../api-comms';
+import { useComms, CommsApi } from '../api-comms';
 
 
 
@@ -40,10 +40,16 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const classes = useUtilityClasses();
   const { getSubject } = useComms();
   const subject = getSubject(props.subjectId);
+  const { replyTo } = useComms();
+
+  function handleReplyTo(subjectId: CommsApi.SubjectId, text: string) {
+    replyTo({ subjectId, text });
+  }
 
   if (!subject) {
     return <></>;
   }
+
 
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
   const Message: React.ElementType<GInboxMessageProps> = props.slots?.message ?? GInboxMessage;
@@ -84,7 +90,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         </div>
 
         <div className={classes.newMessage}>
-          <NewMessage subjectName={subject.name} />
+          <NewMessage subjectName={subject.name} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
         </div>
       </>
 

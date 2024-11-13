@@ -16,7 +16,7 @@ export function createSubjectFetch(url: (string | undefined) = '/portal/secured/
     // await new Promise((res) => setTimeout(() => { }, 2000));
     const response = await window.fetch(url + '/' + replyTo.subjectId + '/messages', {
       method: 'POST',
-      headers: undefined,
+      headers: { 'Content-Type': 'application/json' },
       credentials: undefined,
       body: JSON.stringify(replyTo)
     });

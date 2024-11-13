@@ -156,8 +156,14 @@ export const GInboxMessagesRoot = styled("div", {
         color: theme.palette.error.main,
         borderColor: theme.palette.error.dark,
         backgroundColor: alpha(theme.palette.error.main, 0.2)
-      }
+      },
+      ':disabled': {
+        color: theme.palette.text.disabled,
+        borderColor: theme.palette.text.disabled,
+        cursor: 'not-allowed'
+      },
     },
+
     '& .GInboxMessages-newMsgAddButton .MuiButton-root': {},
 
     '.GInboxMessages-msgItemRoot': {
