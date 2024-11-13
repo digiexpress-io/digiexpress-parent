@@ -93,7 +93,7 @@ export const fi = {
   'gamut.forms.started': 'Started',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'In progress',
-  'gamut.forms.status.NEW': 'Käsittelyä ei ole vielä aloitettu',
+  'gamut.forms.status.NEW': 'Processing starts soon',
   'gamut.forms.status.COMPLETED': 'Completed',
   'gamut.forms.status.REJECTED': 'Rejected',
   'gamut.forms.lastModified': 'Last modified',
