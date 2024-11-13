@@ -21,28 +21,15 @@ package io.digiexpress.eveli.assets.tests.util;
  */
 
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.dialob.api.form.Form;
-import io.dialob.api.form.FormTag;
-import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobProxy;
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.models.Repo;
 import io.resys.thena.docdb.spi.ClientCollections;
@@ -50,8 +37,16 @@ import io.resys.thena.docdb.spi.ClientState;
 import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
 import io.resys.thena.docdb.spi.pgsql.PgErrors;
 import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
 import lombok.extern.java.Log;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Log
@@ -70,6 +65,7 @@ public class PgTestTemplate {
   
   @BeforeEach
   public void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
@@ -80,6 +76,16 @@ public class PgTestTemplate {
   
   @AfterEach
   public void tearDown() {
+  }
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+            .onFailure()
+            .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+            .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
   }
 
   public DocDB getClient() {

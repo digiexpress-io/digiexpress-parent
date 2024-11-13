@@ -20,6 +20,13 @@ package io.thestencil.site.pg.test;
  * #L%
  */
 
+import io.quarkus.test.QuarkusUnitTest;
+import io.restassured.RestAssured;
+import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.docdb.spi.pgsql.PgErrors;
+import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.vertx.mutiny.sqlclient.Pool;
+import jakarta.inject.Inject;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -27,12 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
-import io.restassured.RestAssured;
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
-import jakarta.inject.Inject;
+import java.time.Duration;
 
 
 //-Djava.util.logging.manager=org.jboss.logmanager.LogManager
@@ -57,13 +59,23 @@ public class SiteExtensionTests {
     this.setUp();
   }
   private void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
         .errorHandler(new PgErrors())
         .build();
   }
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+            .onFailure()
+            .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+            .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
   
   @Test
   public void getUIOnRoot() {

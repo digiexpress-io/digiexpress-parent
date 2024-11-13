@@ -1,14 +1,10 @@
 package io.thestencil.client.tests.util;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /*-
  * #%L
- * thena-docdb-pgsql
+ * stencil-client-api
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,16 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * #L%
  */
 
-import jakarta.inject.Inject;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.resys.thena.docdb.api.DocDB;
 import io.resys.thena.docdb.api.actions.RepoActions.RepoResult;
 import io.resys.thena.docdb.api.models.Repo;
@@ -47,6 +37,14 @@ import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.mutiny.sqlclient.Pool;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PgTestTemplate {
   private DocDB client;
@@ -62,6 +60,7 @@ public class PgTestTemplate {
   
   @BeforeEach
   public void setUp() {
+    waitUntilPostgresqlAcceptsConnections(pgPool);
     this.client = DocDBFactorySql.create()
         .db("junit")
         .client(pgPool)
@@ -69,7 +68,17 @@ public class PgTestTemplate {
         .build();
     this.client.repo().create().name("junit").build();
   }
-  
+
+  private void waitUntilPostgresqlAcceptsConnections(Pool pool) {
+    // On some platforms there may be some delay before postgresql starts to respond.
+    // Try until postgresql connection is successfully opened.
+    var connection = pool.getConnection()
+            .onFailure()
+            .retry().withBackOff(Duration.ofMillis(10), Duration.ofSeconds(3)).atMost(20)
+            .await().atMost(Duration.ofSeconds(60));
+    connection.closeAndForget();
+  }
+
   @AfterEach
   public void tearDown() {
   }
