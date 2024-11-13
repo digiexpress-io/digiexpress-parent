@@ -19,24 +19,23 @@ package io.thestencil.quarkus.ide.test;
  * limitations under the License.
  * #L%
  */
+
+import io.quarkus.test.QuarkusUnitTest;
+import io.restassured.RestAssured;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
-import io.restassured.RestAssured;
-
-
-//-Djava.util.logging.manager=org.jboss.logmanager.LogManager
 public class ExtensionTests {
   @RegisterExtension
   final static QuarkusUnitTest config = new QuarkusUnitTest()
     .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
-      .addAsResource(new StringAsset(
-          "quarkus.stencil-composer.server-path=PM\r\n"
-          ), "application.properties")
+      .addAsResource(new StringAsset("""
+        quarkus.stencil-composer.server-path=PM
+        """),
+        "application.properties")
     );
 
   @Test

@@ -1,12 +1,10 @@
 package io.thestencil.quarkus.ide.services.tests;
 
-import static org.hamcrest.Matchers.matchesPattern;
-
 /*-
  * #%L
- * quarkus-stencil-ide-services-deployment
+ * quarkus-stencil-composer-pg-deployment
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +20,13 @@ import static org.hamcrest.Matchers.matchesPattern;
  * #L%
  */
 
-import java.util.Arrays;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.quarkus.test.QuarkusUnitTest;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.thestencil.client.api.*;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import org.hamcrest.Matchers;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -32,28 +35,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Arrays;
 
-import io.quarkus.test.QuarkusUnitTest;
-import io.restassured.RestAssured;
-import io.restassured.common.mapper.TypeRef;
-import io.restassured.response.Response;
-import io.thestencil.client.api.ImmutableArticle;
-import io.thestencil.client.api.ImmutableArticleMutator;
-import io.thestencil.client.api.ImmutableCreateArticle;
-import io.thestencil.client.api.ImmutableCreateLink;
-import io.thestencil.client.api.ImmutableCreateLocale;
-import io.thestencil.client.api.ImmutableCreatePage;
-import io.thestencil.client.api.ImmutableCreateRelease;
-import io.thestencil.client.api.ImmutableCreateWorkflow;
-import io.thestencil.client.api.ImmutableEntity;
-import io.thestencil.client.api.ImmutableLinkMutator;
-import io.thestencil.client.api.ImmutableLocaleLabel;
-import io.thestencil.client.api.ImmutableLocaleMutator;
-import io.thestencil.client.api.ImmutablePageMutator;
-import io.thestencil.client.api.ImmutableWorkflowMutator;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
+import static org.hamcrest.Matchers.matchesPattern;
 
 
 //-Djava.util.logging.manager=org.jboss.logmanager.LogManager
@@ -61,10 +45,12 @@ public class IdeServicesTests extends PgSqlDbConfig {
   @RegisterExtension
   final static QuarkusUnitTest config = new QuarkusUnitTest()
     .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
-      .addAsResource(new StringAsset(
-          "quarkus.stencil-composer-pg.repo.repo-name=test-assets\r\n" +
-          "quarkus.stencil-composer-pg.service-path=stencil-ide-services\r\n"
-          ), "application.properties")
+      .addAsResource(new StringAsset("""
+          quarkus.stencil-composer-pg.repo.repo-name=test-assets
+          quarkus.stencil-composer-pg.service-path=stencil-ide-services
+          """
+          ),
+              "application.properties")
     );
 
   @Test

@@ -20,35 +20,30 @@ package io.resys.thena.docdb.spi.pgsql;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.resys.thena.docdb.spi.ErrorHandler;
 import io.vertx.pgclient.PgException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PgErrors implements ErrorHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(PgErrors.class);
   
   public boolean notFound(Throwable e) {
-    if(e instanceof PgException) {
-      PgException ogre = (PgException) e;
-      
+    if(e instanceof PgException ogre) {
       return "42P01".equals(ogre.getCode());
     }
     return false;
   }
   
   public boolean duplicate(Throwable e) {
-    if(e instanceof PgException) {
-      PgException ogre = (PgException) e;
-      
+    if(e instanceof PgException ogre) {
       return "23505".equals(ogre.getCode());
     }
     return false;
   }
   
   public void deadEnd(String additionalMsg, Throwable e) {
-    LOGGER.error(additionalMsg + System.lineSeparator() + e.getMessage(), e);
+    LOGGER.error("{}{}{}", additionalMsg, System.lineSeparator(), e.getMessage(), e);
   }
   
   public void deadEnd(String additionalMsg) {

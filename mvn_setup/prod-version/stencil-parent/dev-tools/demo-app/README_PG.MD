@@ -1,8 +1,13 @@
-# build
+## Build native package
+
+```shell
 mvn package -Pnative
 docker build -f src/main/docker/Dockerfile.native -t demo-app:1 .
+```
 
-# create db via shell
+# Create database via shell
+
+```sql
 create database my_stencil encoding 'UTF8' lc_collate='fi_FI.UTF8' lc_ctype='fi_FI.UTF8' template template0;
 revoke connect on database my_stencil from public;
 create user my_stencil;
@@ -14,7 +19,7 @@ password: my_stencil_password
 GRANT ALL ON SCHEMA public TO my_stencil;
 ALTER DATABASE my_database OWNER TO my_stencil;
 ALTER DATABASE my_stencil OWNER TO my_stencil;
-
+```
 
 ## Extensions
 
@@ -24,7 +29,7 @@ ALTER DATABASE my_stencil OWNER TO my_stencil;
 
 ## Extension configurations
 
-```
+```yaml
 quarkus:
 
   stencil-composer:
@@ -47,21 +52,33 @@ quarkus:
 
 
 # run locally
+
+```shell
 docker run -i --rm -p 8080:8080 demo-app:1
+```
+
 ## run using maven
+
+```shell
 mvn compile quarkus:dev
+```
+
 
 ## pg - start postgre db if it's not running
+
+```shell
 docker-compose -f dev-tools/demo-app/src/main/resources/docker/stack-pg.yml up -d
+```
+
 http://localhost:8091/
 
+## default postgres port
 
-## default postgre port
 5432
 
 ## Drop table 
 
- `localhost:8091`  
+ `localhost:8091`
  
  Drop order:
  
