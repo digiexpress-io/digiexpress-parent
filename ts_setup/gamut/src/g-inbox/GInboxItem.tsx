@@ -14,6 +14,7 @@ export interface GInboxItemProps {
   subTitle: string;
   senderName: string;
   sentAt: DateTime;
+  contractStatus: string;
   onClick: (subjectId: string) => void;
 }
 
@@ -23,7 +24,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const { title, subTitle, senderName, sentAt, onClick, id } = props;
+  const { title, subTitle, senderName, sentAt, onClick, id, contractStatus } = props;
   const classes = useUtilityClasses();
 
   return (
@@ -49,6 +50,12 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
       <Grid item className={classes.itemLayout}>
         {props.children}
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={12} lg={12} xl={12} className={classes.itemSentAt}>
+        <Typography>
+          {contractStatus}
+        </Typography>
       </Grid>
 
     </GInboxItemRoot>

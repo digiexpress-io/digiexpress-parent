@@ -6,8 +6,12 @@ import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
 import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
 
-import { useComms } from '../api-comms';
-import { useIam } from '../api-iam';
+import { CommsApi, useComms } from '../api-comms';
+import { IamApi, useIam } from '../api-iam';
+import { useContracts } from '../api-contract';
+
+import { IntlShape, useIntl } from 'react-intl';
+
 
 
 export interface GInboxProps {
@@ -28,6 +32,7 @@ export interface GInboxProps {
 
 
 export const GInbox: React.FC<GInboxProps> = (initProps) => {
+  const intl = useIntl();
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -35,6 +40,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { subjects } = useComms();
+  const { getContract } = useContracts();
   const iam = useIam();
 
 
@@ -42,17 +48,34 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
 
+  const getSenderName = (subject: CommsApi.Subject, iam: IamApi.IamBackendContextType, intl: IntlShape): string => {
+    switch (true) {
+      case iam.user !== undefined && Boolean(iam.user.userId):
+        return (iam.user.userId);
+      case subject.lastExchange === undefined:
+        return (intl.formatMessage({ id: 'gamut.inbox.noMessages' }));
+      case subject.lastExchange?.userName === '' || subject.lastExchange?.userName === undefined:
+        return (intl.formatMessage({ id: 'cust.inbox.message.sender-name.org-user' }));
+      default:
+        return subject.lastExchange.userName;
+    }
+  };
+
   return (
     <GInboxRoot className={classes.root}>
-      {subjects.map((subject) => (
-        <InboxItem
+      {subjects.map((subject) => {
+        const contractId = subject.contractId;
+        const contract = getContract(contractId);
+
+        return (<InboxItem
           id={subject.id}
           key={subject.id}
           onClick={props.slotProps.item.onClick!}
-          senderName={subject.lastExchange?.userName ?? iam.user?.userId ?? ''}
+          senderName={getSenderName(subject, iam, intl)}
           sentAt={subject.lastExchange?.created ?? subject.created}
           title={subject.name}
           subTitle={subject.lastExchange?.commentText ?? ''}
+          contractStatus={contract?.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
         >
           <FormReview
             key={subject.id}
@@ -70,7 +93,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
               onClick={props.slotProps.attachment.onClick!}
             />
           ))}
-        </InboxItem>
-      ))}
+        </InboxItem>)
+      })}
     </GInboxRoot>)
 }

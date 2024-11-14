@@ -84,6 +84,9 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         </div>
 
         <Divider />
+        <Box className={classes.title}>
+          <Typography><FormattedMessage id='gamut.inbox.messages.title' /></Typography>
+        </Box>
         <div className={classes.messages}>
           {subject?.exchange.map((exchange) => (
             <Message commentText={exchange.commentText}
@@ -102,7 +105,6 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
               <NewMessage subjectName={subject.name} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
             </div>
           )}
-
       </>
 
     </GInboxMessagesRoot>

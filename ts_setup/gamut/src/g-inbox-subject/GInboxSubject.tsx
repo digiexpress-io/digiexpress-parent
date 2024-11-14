@@ -75,6 +75,7 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
         </div>
 
         <Divider />
+
         <div className={classes.messages}>
 
           {subject?.exchange.map((exchange) => (
@@ -91,9 +92,6 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
           <NewMessage subjectName={subject.name} />
         </div>
       </>
-
-
-
 
     </GInboxSubjectRoot>
   )
