@@ -131,6 +131,8 @@ export const fi = {
   'gamut.forms.answer.date.placeholder.minute': 'mm',
   'gamut.forms.answer.boolean.yes': 'Yes',
   'gamut.forms.answer.boolean.no': 'No',
+  'gamut.forms.unfinished.none': 'You do not have any unfinished forms',
+  'gamut.forms.awaitingDecision.none': 'You do not have any forms awaiting a decision',
 
   'gamut.forms.page.selection.start': 'Start',
   'gamut.forms.page.selection.complete': 'Complete',

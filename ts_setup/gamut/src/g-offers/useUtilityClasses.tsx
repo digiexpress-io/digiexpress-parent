@@ -1,8 +1,7 @@
-import { generateUtilityClass, styled } from '@mui/material';
+import { alpha, darken, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOfferItemProps } from './GOfferItem';
 import { GOffersProps } from './GOffers';
-
 
 export const MUI_NAME = 'GOffers';
 
@@ -11,6 +10,7 @@ export interface GOffersClasses {
   started: string;
   lastModified: string;
   cancel: string;
+  noOffers: string
 }
 
 export type GOffersClassKey = keyof GOffersClasses;
@@ -21,6 +21,8 @@ export const useUtilityClasses = () => {
     started: ['started'],
     lastModified: ['lastModified'],
     cancel: ['cancel'],
+    header: ['header'],
+    noOffers: ['noOffers']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -35,6 +37,7 @@ export const GOfferItemRoot = styled("div", {
       styles.started,
       styles.lastModified,
       styles.cancel,
+      styles.header,
     ];
   },
 })<{ ownerState: GOfferItemProps }>(({ theme, ownerState }) => {
@@ -52,6 +55,11 @@ export const GOfferItemRoot = styled("div", {
       color: theme.palette.error.main,
       padding: 0
     },
+    '& .GOffers-header': {
+      fontWeight: 'bold',
+      fontVariant: 'h1'
+    },
+
   };
 });
 
@@ -62,9 +70,20 @@ export const GOffersRoot = styled("div", {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
+      styles.header,
+      styles.noOffers
     ];
   },
 })<{ ownerState: GOffersProps }>(({ theme }) => {
   return {
+    '& .GOffers-noOffers.MuiPaper-root.MuiAlert-root': {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      backgroundColor: alpha(theme.palette.info.main, 0.1),
+      color: darken(theme.palette.info.main, 0.6),
+      '.MuiAlert-icon': {
+        color: theme.palette.info.dark,
+      }
+    }
   };
 });
