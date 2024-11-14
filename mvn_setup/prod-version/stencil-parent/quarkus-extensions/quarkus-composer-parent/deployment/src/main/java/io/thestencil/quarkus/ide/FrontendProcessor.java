@@ -9,9 +9,9 @@ package io.thestencil.quarkus.ide;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,50 +20,41 @@ package io.thestencil.quarkus.ide;
  * #L%
  */
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.Map;
-
-import jakarta.inject.Inject;
-
-import org.apache.commons.codec.binary.Hex;
-
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerListenerBuildItem;
-import io.quarkus.bootstrap.model.AppArtifact;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
-import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 import io.quarkus.deployment.builditem.LaunchModeBuildItem;
-import io.quarkus.deployment.builditem.LiveReloadBuildItem;
-import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
-import io.quarkus.runtime.configuration.ConfigurationException;
-import io.quarkus.deployment.pkg.builditem.CurateOutcomeBuildItem;
-import io.quarkus.deployment.util.WebJarUtil;
-import io.quarkus.vertx.http.deployment.BodyHandlerBuildItem;
+import io.quarkus.maven.dependency.GACT;
 import io.quarkus.vertx.http.deployment.HttpRootPathBuildItem;
-import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
 import io.quarkus.vertx.http.deployment.devmode.NotFoundPageDisplayableEndpointBuildItem;
+import io.quarkus.vertx.http.deployment.webjar.WebJarBuildItem;
+import io.quarkus.vertx.http.deployment.webjar.WebJarResourcesFilter;
+import io.quarkus.vertx.http.deployment.webjar.WebJarResultsBuildItem;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
+import java.util.Optional;
+
+@Slf4j
 public class FrontendProcessor {
   private static final String WEBJAR_GROUP_ID = "io.digiexpress";
   private static final String WEBJAR_ARTIFACT_ID = "stencil-composer-integration";
   private static final String WEBJAR_PREFIX = "META-INF/resources/webjars/" + WEBJAR_ARTIFACT_ID + "/";
-  private static final String FINAL_DESTINATION = "META-INF/portal-files";
+  private static final GACT WEBJAR_ARTIFACT_KEY = new GACT(WEBJAR_GROUP_ID, WEBJAR_ARTIFACT_ID, "", "jar");
 
-  
   @Inject
   private LaunchModeBuildItem launch;
-  
+
   FrontendConfig config;
-  
+
   @BuildStep
   FeatureBuildItem feature() {
     return new FeatureBuildItem(FrontendRecorder.FEATURE_BUILD_ITEM);
@@ -72,118 +63,67 @@ public class FrontendProcessor {
   @BuildStep
   @Record(ExecutionTime.STATIC_INIT)
   void backendBeans(
-      FrontendRecorder recorder,
-      BuildProducer<AdditionalBeanBuildItem> buildItems,
-      BuildProducer<BeanContainerListenerBuildItem> beans) {
-
+          FrontendRecorder recorder,
+          BuildProducer<AdditionalBeanBuildItem> buildItems,
+          BuildProducer<BeanContainerListenerBuildItem> beans) {
     buildItems.produce(AdditionalBeanBuildItem.builder().setUnremovable().addBeanClass(FrontendBeanFactory.class).build());
     beans.produce(new BeanContainerListenerBuildItem(recorder.listener()));
   }
-  
+
   @BuildStep
   @Record(ExecutionTime.RUNTIME_INIT)
   public void frontendHandler(
-    FrontendRecorder recorder,
-    HttpRootPathBuildItem httpRoot,
-    BuildProducer<RouteBuildItem> routes,
-    HdesUIBuildItem buildItem,
-    FrontendConfig uiConfig,
-    BodyHandlerBuildItem body) throws Exception {
-    
-    Handler<RoutingContext> handler = recorder.uiHandler(buildItem.getUiFinalDestination(), buildItem.getUiPath(), buildItem.getHash());
-        routes.produce(httpRoot.routeBuilder()
-        .route(uiConfig.servicePath)
-        .handler(handler)
-        .build());
-    routes.produce(httpRoot.routeBuilder()
-        .route(uiConfig.servicePath + "/*")
-        .handler(handler)
-        .build());
+          Optional<HdesUIBuildItem> buildItem,
+          FrontendRecorder recorder,
+          HttpRootPathBuildItem httpRoot,
+          BuildProducer<RouteBuildItem> routes
+  ) {
+    buildItem.ifPresent(bi -> {
+      Handler<RoutingContext> handler = recorder.staticContentHandler(bi.getStaticContentLocation());
+      routes.produce(httpRoot.routeBuilder()
+              .route(bi.getContextPath())
+              .handler(handler)
+              .build());
+      routes.produce(httpRoot.routeBuilder()
+              .route(bi.getContextPath() + "/*")
+              .handler(handler)
+              .build());
+    });
   }
-  
+
   @BuildStep
-  @Record(ExecutionTime.STATIC_INIT)
-  public void frontendBeans(
-      FrontendRecorder recorder,
-      BuildProducer<HdesUIBuildItem> buildProducer,
-      
-      BuildProducer<GeneratedResourceBuildItem> generatedResources,
-      BuildProducer<NativeImageResourceBuildItem> nativeImage,
-      
-      NonApplicationRootPathBuildItem nonApplicationRootPathBuildItem,
-      CurateOutcomeBuildItem curateOutcomeBuildItem,
-      
-      LiveReloadBuildItem liveReloadBuildItem,
-      HttpRootPathBuildItem httpRootPathBuildItem,
-      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
-
-    final String hash = Hex.encodeHexString(LocalDateTime.now().toString().getBytes(StandardCharsets.UTF_8), true);
-    
-    final var artifact = WebJarUtil.getAppArtifact(curateOutcomeBuildItem, WEBJAR_GROUP_ID, WEBJAR_ARTIFACT_ID);    
-    if (launch.getLaunchMode().isDevOrTest()) {
-      
-      Path tempPath = WebJarUtil
-          .copyResourcesForDevOrTest(liveReloadBuildItem, curateOutcomeBuildItem, launch, artifact, WEBJAR_PREFIX + artifact.getVersion(), false);
-      
-      // Update index.html
-      Path index = tempPath.resolve("index.html");
-      final String frontendPath = httpRootPathBuildItem.resolvePath(config.servicePath);
-      
-      WebJarUtil.updateFile(index, IndexFactory.builder()
-        .frontend(frontendPath)
-        .locked(config.locked)
-        .oidc(config.oidcPath.orElse(null))
-        .status(config.statusPath.orElse(null))
-        .server(httpRootPathBuildItem.resolvePath(config.serverPath))
-        .index(index)
-        .build());
-      
-      buildProducer.produce(new HdesUIBuildItem(tempPath.toAbsolutePath().toString(), frontendPath, hash));
-      displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(frontendPath + "/"), "Stencil Composer"));
-
-      // Handle live reload of branding files
-      if (liveReloadBuildItem.isLiveReload() && !liveReloadBuildItem.getChangedResources().isEmpty()) {
-          WebJarUtil.hotReloadBrandingChanges(
-              curateOutcomeBuildItem, launch, artifact,
-                  liveReloadBuildItem.getChangedResources());
-      }
-    
-    } else {
-      final String frontendPath = httpRootPathBuildItem.resolvePath(config.servicePath);
-      Map<String, byte[]> files = WebJarUtil.copyResourcesForProduction(curateOutcomeBuildItem, artifact, WEBJAR_PREFIX + artifact.getVersion());
-
-      boolean indexReplaced = false; 
-      for (Map.Entry<String, byte[]> file : files.entrySet()) {
-        String fileName = file.getKey();
-        byte[] content;
-        if (fileName.endsWith("index.html")) {
-          content = IndexFactory.builder()
-              .frontend(frontendPath)
-              .locked(config.locked)
-              .server(config.serverPath)
-              .oidc(config.oidcPath.orElse(null))
-              .status(config.statusPath.orElse(null))
-              .index(file.getValue())
-              .build();
-          indexReplaced = true;
-        } else {
-          content = file.getValue();
-        }
-        
-        fileName = FINAL_DESTINATION + "/" + fileName;
-        generatedResources.produce(new GeneratedResourceBuildItem(fileName, content));
-        nativeImage.produce(new NativeImageResourceBuildItem(fileName));
-      }
-      
-      if(!indexReplaced) {
-        throw new ConfigurationException(new StringBuilder("Failed to create stencil-ide index.html, ")
-            .append("artifact = ").append(artifact).append(System.lineSeparator()).append(",")
-            .append("path = ").append(frontendPath).append("!")
-            .append("final destination = ").append(FINAL_DESTINATION).append("!")
-            .toString());
-      }
-      
-      buildProducer.produce(new HdesUIBuildItem(FINAL_DESTINATION, frontendPath, hash));
-    }
+  WebJarBuildItem updateIndex(HttpRootPathBuildItem httpRootPathBuildItem) {
+    return WebJarBuildItem.builder()
+            .artifactKey(WEBJAR_ARTIFACT_KEY) // Locate known webjar
+            .root(WEBJAR_PREFIX + config.stencilComposerVersion)
+            .onlyCopyNonArtifactFiles(false)
+            .filter((fileName, stream) -> {
+              boolean changed = false;
+              if ("index.html".equals(fileName)) {
+                // Inject configuration into index page
+                var newIndex = IndexFactory.builder()
+                        .frontend(httpRootPathBuildItem.resolvePath(config.servicePath))
+                        .locked(config.locked)
+                        .oidc(config.oidcPath.orElse(null))
+                        .status(config.statusPath.orElse(null))
+                        .server(httpRootPathBuildItem.resolvePath(config.serverPath))
+                        .index(stream.readAllBytes())
+                        .build();
+                stream = new ByteArrayInputStream(newIndex);
+                changed = true;
+              }
+              return new WebJarResourcesFilter.FilterResult(stream, changed);
+            })
+            .build();
   }
+
+  @BuildStep
+  public void registerStaticEndpoints(WebJarResultsBuildItem webJarResultsBuildItem,
+                                      BuildProducer<HdesUIBuildItem> buildProducer,
+                                      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) {
+    var webJar = webJarResultsBuildItem.byArtifactKey(WEBJAR_ARTIFACT_KEY);
+    buildProducer.produce(new HdesUIBuildItem(webJar.getFinalDestination(), config.servicePath));
+    displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(config.servicePath, "Stencil Composer"));
+  }
+
 }

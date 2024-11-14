@@ -21,28 +21,15 @@ package io.thestencil.quarkus.ide;
  */
 
 import io.quarkus.builder.item.SimpleBuildItem;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public final class HdesUIBuildItem extends SimpleBuildItem {
-  private final String projectsUiFinalDestination;
-  private final String projectsUiPath;
-  private final String hash;
 
-  public HdesUIBuildItem(String projectsUiFinalDestination, String projectsUiPath, String hash) {
-    super();
-    this.projectsUiFinalDestination = projectsUiFinalDestination;
-    this.projectsUiPath = projectsUiPath;
-    this.hash = hash;
-  }
+  private final String staticContentLocation;
 
-  public String getUiFinalDestination() {
-    return projectsUiFinalDestination;
-  }
+  private final String contextPath;
 
-  public String getUiPath() {
-    return projectsUiPath;
-  }
-
-  public String getHash() {
-    return hash;
-  }
 }

@@ -72,7 +72,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/classes/META-INF/resources/webjars/${project.artifactId}/${project.version}</outputDirectory>
+              <outputDirectory>${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}</outputDirectory>
               <resources>
                 <resource>
                   <directory>${basedir}/build</directory>
@@ -108,8 +108,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
-
   </build>
 </project>

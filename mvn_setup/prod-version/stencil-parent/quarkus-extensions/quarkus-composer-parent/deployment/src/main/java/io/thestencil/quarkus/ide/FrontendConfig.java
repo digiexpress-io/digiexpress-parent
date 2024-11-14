@@ -35,7 +35,13 @@ public class FrontendConfig {
    */
   @ConfigItem(defaultValue = "portal-app")
   String servicePath;
-  
+
+  /**
+   * Stencil IDE ui version. Needed to locate resources from webjar
+   */
+  @ConfigItem(defaultValue = "${quarkus.application.version}")
+  String stencilComposerVersion;
+
   /**
    * IDE backend server path
    */

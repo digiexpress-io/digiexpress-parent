@@ -20,15 +20,12 @@ package io.thestencil.quarkus.ide;
  * #L%
  */
 
-import java.util.function.Function;
-
 import io.quarkus.arc.runtime.BeanContainerListener;
 import io.quarkus.runtime.annotations.Recorder;
-import io.thestencil.quarkus.ide.handlers.UiStaticHandler;
 import io.vertx.core.Handler;
-import io.vertx.ext.web.Route;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.FileSystemAccess;
+import io.vertx.ext.web.handler.StaticHandler;
 
 @Recorder
 public class FrontendRecorder {
@@ -40,16 +37,9 @@ public class FrontendRecorder {
     };
   }
 
-  public Handler<RoutingContext> uiHandler(String destination, String uiPath, String hash) {
-    return new UiStaticHandler(destination, uiPath, hash);
-  }
-
-  public Function<Router, Route> routeFunction(String rootPath, Handler<RoutingContext> bodyHandler) {
-    return new Function<Router, Route>() {
-      @Override
-      public Route apply(Router router) {
-        return router.route(rootPath).handler(bodyHandler);
-      }
-    };
+  public Handler<RoutingContext> staticContentHandler(String location) {
+    return StaticHandler.create(FileSystemAccess.ROOT, location)
+            .setIndexPage("index.html")
+            .setDefaultContentEncoding("UTF-8");
   }
 }
