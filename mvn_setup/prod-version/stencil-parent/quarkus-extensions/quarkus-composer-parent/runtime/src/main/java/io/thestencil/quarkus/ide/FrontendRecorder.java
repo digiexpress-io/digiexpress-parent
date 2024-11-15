@@ -39,11 +39,8 @@ public class FrontendRecorder {
   public static final String FEATURE_BUILD_ITEM = "stencil-composer";
 
   public BeanContainerListener listener() {
-    return beanContainer -> {
-      FrontendBeanFactory producer = beanContainer.beanInstance(FrontendBeanFactory.class);
-    };
+    return beanContainer -> beanContainer.beanInstance(FrontendBeanFactory.class);
   }
-
 
   public Handler<RoutingContext> indexPageHandler(String contextPath, Handler<RoutingContext> staticContentHandler) {
     final var indexPath = contextPath + "/index.html";

@@ -51,7 +51,7 @@ public class ExtensionTests {
     response.body(containsString("url: '/PM'"));
     var scriptSrc = response.extract().body().htmlPath().getString("**.findAll { it.@type == 'module' }.@src");
     scriptSrc = Path.of("/portal-app/" + scriptSrc).normalize().toString();
-    // Make sure we do not get html page...
+    // Assert we do not get html page...
     RestAssured.when().get(scriptSrc).then().statusCode(200).body(not(startsWith("<!DOCTYPE html>")));
   }
 
