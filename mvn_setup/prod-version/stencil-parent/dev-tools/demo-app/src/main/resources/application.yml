@@ -3,10 +3,10 @@ quarkus:
     cors: true
 
   log:
-    level: DEBUG
+    level: INFO
     category: 
       io.resys:
-        level: DEBUG
+        level: INFO
 
   stencil-composer:
     server-path: /q/ide-services
@@ -42,6 +42,6 @@ quarkus:
       level: INFO
       category: 
         io.thestencil:
-          level: DEBUG
+          level: INFO
         io.resys:
-          level: DEBUG
+          level: INFO

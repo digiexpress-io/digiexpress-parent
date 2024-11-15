@@ -8,3 +8,5 @@ build/
 .factorypath
 .project
 .idea/
+*.iml
+*.swp
