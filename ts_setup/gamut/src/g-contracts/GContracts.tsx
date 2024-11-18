@@ -35,6 +35,8 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
 
   const Item: React.ElementType<GContractItemProps> = props.slots?.item ?? GContractItem;
 
+  console.log(contracts)
+
   function mapToItem(contract: ContractApi.Contract): GContractItemProps & { key: string } {
     return {
       key: contract.id,
@@ -65,11 +67,11 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
         </Grid>
       </GFlex>
 
+
       {contracts
         .filter(props.filter)
         .map(mapToItem)
-        .map(contract => (<Item {...contract}/>))}
-
+        .map(contract => (<Item {...contract} />))}
     </Root>)
 }
 

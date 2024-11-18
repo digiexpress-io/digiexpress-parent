@@ -23,7 +23,6 @@ export const GInboxSubjectMessage: React.FC<GInboxSubjectMessageProps> = (initPr
   const { created, commentText, senderName, isMyMessage = {} } = props;
 
 
-
   const firstInitial = senderName.substring(0, 1);
 
   return (

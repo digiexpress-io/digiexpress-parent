@@ -1,6 +1,7 @@
 import React from 'react';
 import { useThemeProps } from '@mui/system';
 import { useUtilityClasses, GInboxRoot, MUI_NAME } from './useUtilityClasses';
+import { IntlShape, useIntl } from 'react-intl';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
@@ -9,8 +10,8 @@ import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachment
 import { CommsApi, useComms } from '../api-comms';
 import { IamApi, useIam } from '../api-iam';
 import { useContracts } from '../api-contract';
+import { DateTime } from 'luxon';
 
-import { IntlShape, useIntl } from 'react-intl';
 
 
 
@@ -40,9 +41,13 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { subjects } = useComms();
-  const { getContract } = useContracts();
+  const { getContract, contractStats } = useContracts();
   const iam = useIam();
 
+  const awaiting = contractStats.awaitingDecision;
+  const decided = contractStats.decided;
+  console.log("awaiting", awaiting)
+  console.log("decided", decided)
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
@@ -63,37 +68,48 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
   return (
     <GInboxRoot className={classes.root}>
-      {subjects.map((subject) => {
-        const contractId = subject.contractId;
-        const contract = getContract(contractId);
+      {subjects
+        .map((subject) => {
+          const contract = getContract(subject.contractId);
+          return {
+            ...subject,
+            contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
+          };
+        })
+        .sort((a, b) => new Date(b.contractUpdated).getTime() - new Date(a.contractUpdated).getTime())
+        .map((subject) => {
+          const contractId = subject.contractId;
+          const contract = getContract(contractId);
 
-        return (<InboxItem
-          id={subject.id}
-          key={subject.id}
-          onClick={props.slotProps.item.onClick!}
-          senderName={getSenderName(subject, iam, intl)}
-          sentAt={subject.lastExchange?.created ?? subject.created}
-          title={subject.name}
-          subTitle={subject.lastExchange?.commentText ?? ''}
-          contractStatus={contract?.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
-        >
-          <FormReview
+          console.log("contract", contract);
+
+          return (<InboxItem
+            id={subject.id}
             key={subject.id}
-            name={subject.name}
-            subjectId={subject.id}
-            onClick={props.slotProps.formReview.onClick!}
-          />
-
-          {subject.documents.map((doc) => (
-            <Attachments
-              key={doc.id}
+            onClick={props.slotProps.item.onClick!}
+            senderName={getSenderName(subject, iam, intl)}
+            sentAt={subject.lastExchange?.created ?? subject.created}
+            title={subject.name}
+            subTitle={subject.lastExchange?.commentText ?? ''}
+            contractStatus={contract && contract.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
+          >
+            <FormReview
+              key={subject.id}
+              name={subject.name}
               subjectId={subject.id}
-              attachmentId={doc.id}
-              name={doc.name}
-              onClick={props.slotProps.attachment.onClick!}
+              onClick={props.slotProps.formReview.onClick!}
             />
-          ))}
-        </InboxItem>)
-      })}
+
+            {subject.documents.map((doc) => (
+              <Attachments
+                key={doc.id}
+                subjectId={subject.id}
+                attachmentId={doc.id}
+                name={doc.name}
+                onClick={props.slotProps.attachment.onClick!}
+              />
+            ))}
+          </InboxItem>)
+        })}
     </GInboxRoot>)
 }
