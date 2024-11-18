@@ -1,12 +1,10 @@
-package io.thestencil.quarkus.ide;
-
-import java.util.Optional;
+package io.thestencil.quarkus.ide.build;
 
 /*-
  * #%L
- * quarkus-stencil-ide-deployment
+ * quarkus-stencil-composer-deployment
  * %%
- * Copyright (C) 2021 Copyright 2021 ReSys OÜ
+ * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +20,49 @@ import java.util.Optional;
  * #L%
  */
 
-import io.quarkus.runtime.annotations.ConfigDocSection;
-
 import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigRoot;
+import io.thestencil.quarkus.ide.FrontendRecorder;
+
+import java.util.Optional;
 
 @ConfigRoot(name = FrontendRecorder.FEATURE_BUILD_ITEM)
 public class FrontendConfig {
-  
+
+  /**
+   * Stencil IDE ui group id. Needed to locate resources from webjar
+   */
+  @ConfigItem(defaultValue = "io.digiexpress")
+  String groupId;
+
+  /**
+   * Stencil IDE ui artifact id. Needed to locate resources from webjar
+   */
+  @ConfigItem(defaultValue = "stencil-composer-integration")
+  String artifactId;
+
+  /**
+   * Stencil IDE ui resource path inside jar
+   */
+  @ConfigItem
+  Optional<String> webjarRoot;
+
   /**
    * IDE routing path
    */
   @ConfigItem(defaultValue = "portal-app")
   String servicePath;
-  
+
+  /**
+   * Stencil IDE ui version. Needed to locate resources from webjar
+   */
+  @ConfigItem(defaultValue = "${quarkus.application.version}")
+  String stencilComposerVersion;
+
   /**
    * IDE backend server path
    */
   @ConfigItem
-  @ConfigDocSection
   String serverPath;
 
   /**

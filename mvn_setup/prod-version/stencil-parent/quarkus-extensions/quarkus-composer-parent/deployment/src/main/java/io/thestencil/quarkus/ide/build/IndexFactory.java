@@ -1,4 +1,4 @@
-package io.thestencil.quarkus.ide;
+package io.thestencil.quarkus.ide.build;
 
 /*-
  * #%L
@@ -108,7 +108,7 @@ public class IndexFactory {
       return (indexFileContent
           .replaceAll("/portal/", newPath)
           .replaceAll("https://portalconfig/", newHref.toString())
-          .replaceFirst("const portalconfig=\\{\\}", newConfig.toString())
+          .replaceFirst("const portalconfig=\\{}", newConfig.toString())
           + "<!-- NEW - PATH: " + newPath + newConfig + "-->")
           .getBytes(StandardCharsets.UTF_8);
     }

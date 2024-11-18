@@ -1,4 +1,4 @@
-package io.thestencil.quarkus.ide;
+package io.thestencil.quarkus.ide.build;
 
 /*-
  * #%L

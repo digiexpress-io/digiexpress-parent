@@ -1,8 +1,8 @@
-package io.thestencil.quarkus.ide.handlers;
+package io.thestencil.quarkus.ide.build;
 
 /*-
  * #%L
- * quarkus-stencil-ide
+ * quarkus-stencil-ide-deployment
  * %%
  * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
@@ -20,19 +20,18 @@ package io.thestencil.quarkus.ide.handlers;
  * #L%
  */
 
-import io.vertx.core.Handler;
-import io.vertx.core.http.HttpHeaders;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.RoutingContext;
+import io.quarkus.builder.item.SimpleBuildItem;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class NoEndpointHandler implements Handler<RoutingContext> {
-  private static final String CONTENT_TYPE = "text/plain; charset=UTF-8";
-  private static final String MESSAGE = "";
+@Getter
+@AllArgsConstructor
+public final class HdesUIBuildItem extends SimpleBuildItem {
 
-  @Override
-  public void handle(RoutingContext event) {
-    HttpServerResponse response = event.response();
-    response.headers().set(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE);
-    response.setStatusCode(404).end(MESSAGE);
-  }
+  private final String staticContentLocation;
+
+  private final String staticContentPath;
+
+  private final String contextPath;
+
 }
