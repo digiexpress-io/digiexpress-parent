@@ -4,7 +4,7 @@ on:
   #     - 'mvn_setup/prod-version/**'
   #   branches:
   #     - dev
-  workflow_call: # Enables manual triggering
+  workflow_dispatch: # Enables manual triggering
 
 permissions:
   contents: write
