@@ -9,9 +9,9 @@ package io.digiexpress.eveli.dialob.spi;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,59 +20,60 @@ package io.digiexpress.eveli.dialob.spi;
  * #L%
  */
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-
 import io.digiexpress.eveli.dialob.api.DialobProxy;
 import io.digiexpress.eveli.dialob.spi.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.*;
 
+import java.util.Collections;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class DialobProxyImpl implements DialobProxy {
 
   private final DialobService dialobService;
-  
+
   @Override
   public ResponseEntity<String> sessionPost(String sessionId, String body) {
+    if (invalidSessionId(sessionId)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
     final var headers = new HttpHeaders();
-    
-    final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+    final var requestEntity = new HttpEntity<>(body, headers);
     try {
-      ResponseEntity<String> response = dialobService.getSessions().exchange("/"+ sessionId, HttpMethod.POST, requestEntity, String.class);
-      return response;
+      return dialobService.getSessions().exchange("/"+ sessionId, HttpMethod.POST, requestEntity, String.class);
     } catch (Exception e) {
       throw new DialobException(e.getMessage(), e);
     }
   }
 
   @Override
-  public ResponseEntity<String> sessionGet(String sessionId) {            
+  public ResponseEntity<String> sessionGet(String sessionId) {
+    if (invalidSessionId(sessionId)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
     try {
-      
-      ResponseEntity<String> response = dialobService.getSessions().getForEntity("/" + sessionId, String.class);
-      return response;
+      return dialobService.getSessions().getForEntity("/" + sessionId, String.class);
     } catch (Exception e) {
       throw new DialobException(e.getMessage(), e);
     }
   }
+
   @Override
   public ResponseEntity<String> formRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers) {
-    
     final var reqHeaders = new HttpHeaders();
-    
     headers.entrySet().stream()
       .filter(entry ->
         entry.getKey().equals(HttpHeaderNames.CONTENT_TYPE.toString()) ||
         entry.getKey().equals(HttpHeaderNames.ACCEPT.toString())
       )
-      .forEach((entry) -> reqHeaders.put(entry.getKey(), Arrays.asList(entry.getValue())));
-    return dialobService.getForms().exchange(path, method, new HttpEntity<String>(body, reqHeaders), String.class);
+      .forEach((entry) -> reqHeaders.put(entry.getKey(), Collections.singletonList(entry.getValue())));
+    return dialobService.getForms().exchange(path, method, new HttpEntity<>(body, reqHeaders), String.class);
   }
+
+  static boolean invalidSessionId(String sessionId) {
+    return sessionId == null || !sessionId.matches("[a-fA-F0-9-_]+");
+  }
+
 }

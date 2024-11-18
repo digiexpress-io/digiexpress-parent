@@ -58,7 +58,7 @@ public class AssetsDialobController {
   private final ObjectMapper objectMapper;
 
 
-  @RequestMapping(path="/proxy/api/forms/**", produces = "application/json; charset=UTF-8")
+  @RequestMapping(path="/proxy/api/forms/**", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> proxy(
       HttpServletRequest request, 
       @RequestBody(required = false) String body,
