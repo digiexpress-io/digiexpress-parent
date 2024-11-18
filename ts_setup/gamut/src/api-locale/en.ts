@@ -84,8 +84,6 @@ export const en = {
   'gamut.search.popover.allLinks': 'All links',
   'gamut.search.popover.allServices': 'All services',
 
-  'gamut.search.popover.resultsCount': 'Results: {count}',
-
   // ------------------- GAMUT ARTICLES  -----------------------
 
   'gamut.article.pagelinks.forms.title': 'Forms',
