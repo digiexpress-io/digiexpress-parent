@@ -1,14 +1,14 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2 } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
 import { useAnchor } from './useAnchor';
-import { GPopoverButton } from '../';
+import { GLinkFormUnsecured, GPopoverButton } from '../';
 import { useUtilityClasses, GPopoverSearchRoot, GSearchMuiPopover, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
-
+import { GLinkHyper } from '../';
 
 
 export interface GPopoverSearchProps {
@@ -37,28 +37,28 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
   const classes = useUtilityClasses(props);
   const { views } = useSite();
-  const [formNames, setFormNames] = React.useState<string[] | undefined>();
+  const [forms, setForms] = React.useState<SiteApi.TopicLink[] | undefined>();
   const [phoneNumbers, setPhoneNumbers] = React.useState<string[] | undefined>();
-  const [topicNames, setTopicNames] = React.useState<string[] | undefined>();
-  const [linkNames, setLinkNames] = React.useState<string[] | undefined>();
+  const [topics, setTopics] = React.useState<SiteApi.TopicView[] | undefined>();
+  const [links, setLinks] = React.useState<SiteApi.TopicLink[] | undefined>();
 
 
   function findAllUniqueFormNames() {
-    const formNames = Object.values(views)
+    const forms = Object.values(views)
       .flatMap(topicView => topicView.links
         .filter((l) => l.type === 'workflow')
-        .map((l) => l.name));
-    const uniqueFormNames = [...new Set(formNames)];
-    setFormNames(uniqueFormNames);
+        .map((form) => form));
+    const uniqueFormNames = [...new Map(forms.map(form => [form.name, form])).values()];
+    setForms(uniqueFormNames);
   }
 
   function findAllUniqueLinkNames() {
     const links = Object.values(views)
       .flatMap(topicView => topicView.links)
       .filter((link) => link.type === 'external' || link.type === 'internal')
-      .map((link) => link.name);
-    const uniqueLinkNames = [...new Set(links)];
-    setLinkNames(uniqueLinkNames);
+      .map((link) => link);
+    const uniqueLinkNames = [...new Map(links.map(link => [link.name, link])).values()];
+    setLinks(uniqueLinkNames);
   }
 
   function findAllPhoneNumbers() {
@@ -71,16 +71,15 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
   function findAllTopics() {
     const topics = Object.values(views)
-      .flatMap(topicView => topicView.name)
-      .map((t) => t);
-    setTopicNames(topics);
+      .map((topic) => topic);
+    setTopics(topics);
   }
 
   const handleChipClick = (type: 'forms' | 'phones' | 'topics' | 'links') => {
-    setFormNames(undefined);
+    setForms(undefined);
     setPhoneNumbers(undefined);
-    setTopicNames(undefined);
-    setLinkNames(undefined);
+    setTopics(undefined);
+    setLinks(undefined);
 
     if (type === 'forms') {
       findAllUniqueFormNames();
@@ -104,18 +103,16 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
         icon={<SearchIcon />}
       />
       <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open}>
-        <Grid2 spacing={1} sx={{ alignItems: 'center' }}>
-          <Grid2 size={{ lg: 3 }}>
+        <Grid2 sx={{ alignItems: 'center' }}>
+
+          <Grid2 size={{ lg: 12, xl: 12 }} display='flex' alignItems='center' gap={3}>
+            <TextField className={classes.inputField} placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })} />
             <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
           </Grid2>
 
-          <Grid2 size={{ lg: 9 }}>
-            <TextField className={classes.inputField} placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })} />
-          </Grid2>
+          <Grid2 size={{ lg: 3, xl: 3 }} />
 
-          <Grid2 size={{ lg: 3 }} />
-
-          <Grid2 size={{ lg: 9 }}>
+          <Grid2 size={{ lg: 9, xl: 9 }} sx={{ mt: 1 }}>
             <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })} onClick={() => handleChipClick('forms')} sx={{ mx: 0.5 }} />
             <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })} onClick={() => handleChipClick('phones')} sx={{ mx: 0.5 }} />
             <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })} onClick={() => handleChipClick('topics')} sx={{ mx: 0.5 }} />
@@ -125,11 +122,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
         <Grid2>
           <Grid2 size={{ lg: 3, xl: 3 }} />
-          <Grid2 size={{ lg: 9 }} sx={{ mt: 3 }}>
-            {formNames && formNames.map((form, index) => <Typography key={index}>{form}</Typography>)}
+          <Grid2 size={{ lg: 9, xl: 9 }} sx={{ mt: 3 }}>
+            {forms && forms.map((form, index) => <GLinkFormUnsecured key={index} label={form.name} value={form.value} onClick={() => { console.log('form', form.name) }} />)}
             {phoneNumbers && phoneNumbers.map((phone, index) => <Typography key={index}>{phone}</Typography>)}
-            {topicNames && topicNames.map((topic, index) => <Typography key={index}>{topic}</Typography>)}
-            {linkNames && linkNames.map((link, index) => <Typography key={index}>{link}</Typography>)}
+            {topics && topics.map((topic, index) => <Typography key={index}>{topic.name}</Typography>)}
+            {links && links.map((link, index) => <GLinkHyper label={link.name} value={link.value} key={index} />)}
           </Grid2>
         </Grid2>
       </GSearchMuiPopover>
