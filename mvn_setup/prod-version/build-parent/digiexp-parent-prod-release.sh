@@ -52,9 +52,6 @@ git tag -a ${RELEASE_VERSION} -m "release ${RELEASE_VERSION}"
 
 run_build
  
-./mvnw versions:set -DnewVersion=${PROJECT_VERSION}
-git commit -am "Prepare ${NEXT_RELEASE_VERSION} development"
-git push
 git push origin ${RELEASE_VERSION}
 
 echo "### Version ${RELEASE_VERSION} release build" >> $GITHUB_STEP_SUMMARY
