@@ -120,6 +120,7 @@ export const GLayoutRoot = styled('div', {
     '& .GLayout-buttonRow': {
       [theme.breakpoints.down('md')]: {
         display: 'flex',
+        justifyContent: 'center',
         width: '100%',
       },
 

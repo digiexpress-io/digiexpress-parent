@@ -56,10 +56,8 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
       <Toolbar className={GShellClassName}>
         <GLayout variant={'toolbar-n-rows-2-columns'}>
           <GLogo variant='black_lg' onClick={handleClick} />
-          <div className={classes.buttons}>
-            <GLocales value={props.locale} onClick={props.onLocale} />
-            {iam.authType === 'ANON' ? <GLogin /> : <GLogout /> }
-          </div>
+          <GLocales value={props.locale} onClick={props.onLocale} />
+          {iam.authType === 'ANON' ? <GLogin /> : <GLogout />}
           <>
             {Nav && <Nav />}
           </>

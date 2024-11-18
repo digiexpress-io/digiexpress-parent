@@ -29,6 +29,7 @@ export const GPopoverTopicsRoot = styled('div', {
       styles.root,
       styles.topics,
       styles.topicsLayout,
+      styles.popover
     ];
   },
 })(({ theme }) => {

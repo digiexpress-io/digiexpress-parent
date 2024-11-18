@@ -71,11 +71,12 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
             sx={{
               [theme.breakpoints.down('md')]: {
                 justifyContent: 'center',
+                gap: theme.spacing(1),
               },
               position: 'relative',
               backgroundImage: `url(${city1})`,
               backgroundSize: 'cover',
-              alignContent: 'space-evenly',
+              alignContent: 'center',
               display: 'flex',
               flexWrap: 'wrap',
               padding: 1,
