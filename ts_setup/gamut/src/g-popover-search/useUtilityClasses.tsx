@@ -7,8 +7,16 @@ export const MUI_NAME = 'GPopoverSearch';
 export interface GPopoverSearchClasses {
   root: string;
   title: string;
-  inputFieldContainer: string;
+  titleContainer: string;
+
+  layoutContainer: string;
+
+  quickSearch: string;
+  quickSearchFilterItem: string;
+
+  resultsContainer: string;
   inputField: string;
+  inputFieldContainer: string;
 }
 
 export type GPopoverSearchClassKey = keyof GPopoverSearchClasses;
@@ -17,6 +25,11 @@ export const useUtilityClasses = (ownerState: GPopoverSearchProps) => {
   const slots = {
     root: ['root'],
     title: ['title'],
+    titleContainer: ['titleContainer'],
+    layoutContainer: ['layoutContainer'],
+    quickSearch: ['quickSearch'],
+    quickSearchFilterItem: ['quickSearchFilterItem'],
+    resultsContainer: ['resultsContainer'],
     inputField: ['inputField'],
     inputFieldContainer: ['inputFieldContainer'],
   };
@@ -47,12 +60,18 @@ export const GSearchMuiPopover = styled(Popover, {
     return [
       styles.root,
       styles.title,
+      styles.titleContainer,
+      styles.layoutContainer,
+      styles.quickSearch,
+      styles.quickSearchFilterItem,
+      styles.resultsContainer,
       styles.inputField,
       styles.inputFieldContainer,
     ];
   },
 })(({ theme }) => {
   return {
+
     '& .GPopoverSearch-inputFieldContainer': {
       display: 'flex',
       justifyContent: 'center',
@@ -66,6 +85,25 @@ export const GSearchMuiPopover = styled(Popover, {
       ...theme.typography.h4,
       marginRight: theme.spacing(1),
       textAlign: 'right'
+    },
+    '& .GPopoverSearch-titleContainer': {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 3
+    },
+    '& .GPopoverSearch-layoutContainer': {
+      padding: theme.spacing(3)
+    },
+    '& .GPopoverSearch-quickSearch': {
+      marginTop: theme.spacing(2)
+    },
+    '& .GPopoverSearch-quickSearchFilterItem': {
+      marginLeft: theme.spacing(0.5),
+      marginRight: theme.spacing(0.5)
+    },
+    '& .GPopoverSearch-resultsContainer': {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2)
     },
     '& .MuiPopover-paper': {
       minWidth: '100%',

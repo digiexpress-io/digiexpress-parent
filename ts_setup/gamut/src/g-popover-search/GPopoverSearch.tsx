@@ -34,9 +34,9 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
   const intl = useIntl();
   const anchor = useAnchor();
-
   const classes = useUtilityClasses(props);
   const { views } = useSite();
+
   const [forms, setForms] = React.useState<SiteApi.TopicLink[] | undefined>();
   const [phoneNumbers, setPhoneNumbers] = React.useState<string[] | undefined>();
   const [topics, setTopics] = React.useState<SiteApi.TopicView[] | undefined>();
@@ -98,37 +98,35 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
   return (
     <Root className={classes.root} ownerState={props}>
-      <GPopoverButton onClick={anchor.onClick}
-        label={<FormattedMessage id='gamut.buttons.search' />}
-        icon={<SearchIcon />}
-      />
+      <GPopoverButton onClick={anchor.onClick} label={<FormattedMessage id='gamut.buttons.search' />} icon={<SearchIcon />} />
       <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open}>
-        <Grid2 sx={{ alignItems: 'center' }}>
-
-          <Grid2 size={{ lg: 12, xl: 12 }} display='flex' alignItems='center' gap={3}>
+        <div className={classes.layoutContainer}>
+          <Grid2>
+            <Grid2 size={{ lg: 12, xl: 12 }} className={classes.titleContainer}>
             <TextField className={classes.inputField} placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })} />
             <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
           </Grid2>
 
           <Grid2 size={{ lg: 3, xl: 3 }} />
 
-          <Grid2 size={{ lg: 9, xl: 9 }} sx={{ mt: 1 }}>
-            <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })} onClick={() => handleChipClick('forms')} sx={{ mx: 0.5 }} />
-            <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })} onClick={() => handleChipClick('phones')} sx={{ mx: 0.5 }} />
-            <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })} onClick={() => handleChipClick('topics')} sx={{ mx: 0.5 }} />
-            <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })} onClick={() => handleChipClick('links')} sx={{ mx: 0.5 }} />
+            <Grid2 size={{ lg: 9, xl: 9 }} className={classes.quickSearch}>
+              <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })} onClick={() => handleChipClick('forms')} className={classes.quickSearchFilterItem} />
+              <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })} onClick={() => handleChipClick('phones')} className={classes.quickSearchFilterItem} />
+              <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })} onClick={() => handleChipClick('topics')} className={classes.quickSearchFilterItem} />
+              <Chip label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })} onClick={() => handleChipClick('links')} className={classes.quickSearchFilterItem} />
           </Grid2>
         </Grid2>
 
         <Grid2>
           <Grid2 size={{ lg: 3, xl: 3 }} />
-          <Grid2 size={{ lg: 9, xl: 9 }} sx={{ mt: 3 }}>
+            <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer}>
             {forms && forms.map((form, index) => <GLinkFormUnsecured key={index} label={form.name} value={form.value} onClick={() => { console.log('form', form.name) }} />)}
             {phoneNumbers && phoneNumbers.map((phone, index) => <Typography key={index}>{phone}</Typography>)}
             {topics && topics.map((topic, index) => <Typography key={index}>{topic.name}</Typography>)}
             {links && links.map((link, index) => <GLinkHyper label={link.name} value={link.value} key={index} />)}
           </Grid2>
         </Grid2>
+        </div>
       </GSearchMuiPopover>
 
     </Root>
