@@ -20,12 +20,12 @@ package io.thestencil.staticontent;
  * #L%
  */
 
-import java.util.Map;
-
 import io.quarkus.arc.DefaultBean;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
+
+import java.util.Map;
 
 @ApplicationScoped
 public class StaticContentBeanFactory {
@@ -45,7 +45,7 @@ public class StaticContentBeanFactory {
   @Produces
   @Singleton
   @DefaultBean
-  public StaticContentContext staticContentContext() {
-    return new StaticContentContext(serializedContent, defaultLocale);
+  public ContentProvider inMemoryContentProvider() {
+    return new InMemoryContentProvider(serializedContent, defaultLocale);
   }
 }

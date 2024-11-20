@@ -22,9 +22,9 @@ package io.thestencil.staticontent.handlers;
 
 import io.quarkus.security.identity.CurrentIdentityAssociation;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
-import io.quarkus.vertx.web.Route.HttpMethod;
-import io.thestencil.staticontent.StaticContentContext;
+import io.thestencil.staticontent.ContentProvider;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 
@@ -37,19 +37,19 @@ public class SiteResourceHandler extends HdesResourceHandler {
   }
 
   @Override
-  protected void handleResource(RoutingContext event, HttpServerResponse response, StaticContentContext ctx) {
-    
-    
-    switch (HttpMethod.valueOf(event.request().method().name())) {
-    case GET:
+  protected void handleResource(RoutingContext event, HttpServerResponse response, ContentProvider contentProvider) {
+    if (HttpMethod.GET.equals(event.request().method())) {
       String locale = event.request().getParam("locale");
-      String defs = ctx.getContentValue(locale);
-      response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-      response.end(defs);
-      break;
-    default:
-      catch404("no-supported", ctx, response);
-      break;
+      response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
+      String content = contentProvider.getContentValue(locale);
+      if (content == null) {
+        response.setStatusCode(404).end();
+        return;
+      }
+      response.end(content);
+    } else {
+      // 405 Method not allowed
+      response.setStatusCode(405).end();
     }
   }
 }

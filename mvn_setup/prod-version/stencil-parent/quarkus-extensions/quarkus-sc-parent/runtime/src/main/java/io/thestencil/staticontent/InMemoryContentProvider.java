@@ -20,25 +20,25 @@ package io.thestencil.staticontent;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+@Slf4j
+public class InMemoryContentProvider implements ContentProvider {
 
-public class StaticContentContext {
-  private static final Logger LOGGER = LoggerFactory.getLogger(StaticContentContext.class.getName());
-  
   private final Map<String, String> contentValue;
+
   private final String defaultLocale;
-  
-  
-  public StaticContentContext(
+
+  public InMemoryContentProvider(
       Map<String, String> contentValue,
       String defaultLocale) {
     super();
     this.contentValue = contentValue;
     this.defaultLocale = defaultLocale;
   }
+
   public String getContentValue(String queryLocale) {
     final String usedLocale;
     if(queryLocale != null && contentValue.containsKey(queryLocale)) {
@@ -48,11 +48,7 @@ public class StaticContentContext {
     }
     final String result = contentValue.get(usedLocale);
     
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("STATIC CONTENT query,"
-          + " query locale: '" + queryLocale + "',"
-          + " used locale: '" + usedLocale + "'");
-    }
+    log.debug("STATIC CONTENT query, query locale: '{}', used locale: '{}'", queryLocale, usedLocale);
     return result;
   }
 }

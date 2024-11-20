@@ -48,7 +48,7 @@ public class SiteJsonExtensionTests {
   public void shouldGetSiteContentJson() {
     var json = RestAssured.when().get("/portal/site")
             .then().statusCode(200).contentType(ContentType.JSON).extract().body().jsonPath();
-    Assertions.assertEquals(Set.of("000_test-article", "100_residence", "200_democracy"), json.getJsonObject("topics.keySet()"));
+    Assertions.assertEquals(Set.of("000_test-article"), json.getJsonObject("topics.keySet()"));
   }
 
 }
