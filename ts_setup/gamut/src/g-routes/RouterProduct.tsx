@@ -5,7 +5,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import {
   GShell,
   GFooter,
-  GAppBar,
   GLayout,
   useSite,
   useOffers,
@@ -20,27 +19,24 @@ import { SiteApi } from '../api-site';
 
 
 export interface RouterProductProps {
-  productId: string, pageId: string, locale: string
+  productId: string,
+  pageId: string,
+  locale: string
 }
 
 export const RouterProduct: React.FC<RouterProductProps> = (props) => {
-  const nav = useNavigate();
   const anon = useIam();
   const site = useSite();
-
 
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)!
   const anonymousUser = anon.authType === 'ANON';
-
   const ownerState = {
     topic,
     topicLink,
     anonymousUser,
     locale: props.locale
   }
-
-
 
   return (
     <GShell drawerOpen={false}>
@@ -55,8 +51,8 @@ export const RouterProduct: React.FC<RouterProductProps> = (props) => {
           <GLayout variant='fill-session-start-end'
             slots={{
               breadcrumbs: () => (anonymousUser ? <AnonBreadcrumbs ownerState={ownerState} /> : <ProductBreadcrumbs ownerState={ownerState} />),
-              topTitle: () => <TopTitle ownerState={ownerState} />,
-              center: () => <Center ownerState={ownerState} />
+              topTitle: () => <ProductTitle ownerState={ownerState} />,
+              center: () => <StartProductForm ownerState={ownerState} />
             }}>
 
           </GLayout>
@@ -80,7 +76,7 @@ interface RouterProductOwnerState {
   }
 }
 
-const Center: React.FC<RouterProductOwnerState> = (props) => {
+const StartProductForm: React.FC<RouterProductOwnerState> = (props) => {
   const nav = useNavigate();
   const offers = useOffers();
   const intl = useIntl();
@@ -125,7 +121,7 @@ const Center: React.FC<RouterProductOwnerState> = (props) => {
   </>)
 }
 
-const TopTitle: React.FC<RouterProductOwnerState> = (props) => {
+const ProductTitle: React.FC<RouterProductOwnerState> = (props) => {
   const { topicLink } = props.ownerState;
   const intl = useIntl();
   return (
@@ -193,7 +189,6 @@ const AnonBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
     nav({
       from: '/public/$locale',
       params: { locale },
-
       to: '/public/$locale',
     })
   }

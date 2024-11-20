@@ -46,12 +46,12 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = () => {
-
+  console.log("resolving locale");
   let selectedLocale = '';
 
   let nextIsLocale = false;
   for(const path of window.location.pathname.split('\/')) {
-    if(path === 'secured' || path === 'public ') {
+    if (path === 'secured' || path === 'public') {
       nextIsLocale = true
       continue;
     }

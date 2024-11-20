@@ -50,6 +50,13 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
     })
   }
 
+  function handleUnSecureLink(pageId: string, productId: string) {
+    nav({
+      params: { productId, pageId, locale },
+      to: '/public/$locale/pages/$pageId/products/$productId',
+    })
+  }
+
   return (
     <>
       <Toolbar className={GShellClassName} >
@@ -67,8 +74,7 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
       <main role='main'>
         <Container>
 
-          <Box
-            sx={{
+          <Box sx={{
               [theme.breakpoints.down('md')]: {
                 justifyContent: 'center',
                 gap: theme.spacing(1),
@@ -86,7 +92,7 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
           >
 
             <GPopoverTopics onTopic={handleTopicChange} />
-            <GPopoverSearch onTopic={handleTopicChange} />
+            <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
           </Box>
 
           {/*<GForm variant="general-message">1dfe0a3eef10f0306171f85b37a15209</GForm> */}

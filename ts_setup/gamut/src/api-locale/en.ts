@@ -42,6 +42,7 @@ export const en = {
   'gamut.services': 'Services',
   'gamut.bookings': 'Calendar reservations',
   'gamut.noValueIndicator': '-',
+  'gamut.noValueIndicatorColon': ': ',
   'gamut.textSeparator': ': ',
   'gamut.loading': 'Your content is on the way',
 
