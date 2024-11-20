@@ -20,18 +20,6 @@ package io.thestencil.staticontent;
  * #L%
  */
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerListenerBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
@@ -48,7 +36,6 @@ import io.quarkus.deployment.util.FileUtil;
 import io.quarkus.deployment.util.WebJarUtil;
 import io.quarkus.runtime.configuration.ConfigurationException;
 import io.quarkus.vertx.http.deployment.HttpRootPathBuildItem;
-import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
 import io.quarkus.vertx.http.deployment.devmode.NotFoundPageDisplayableEndpointBuildItem;
 import io.thestencil.client.api.Markdowns;
@@ -57,11 +44,20 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
 public class StaticContentProcessor {
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(StaticContentProcessor.class);
-  
+
   private static final String FINAL_DESTINATION = "META-INF/stencil-sc-files";
   public static final String FEATURE_BUILD_ITEM = "stencil-sc";
   
@@ -106,8 +102,8 @@ public class StaticContentProcessor {
       throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
     }
     
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Supported locales: '" + String.join(", ", contentValues.keySet()) + "'");
+    if(log.isDebugEnabled()) {
+      log.debug("Supported locales: '{}'", String.join(", ", contentValues.keySet()));
     }
     buildItems.produce(AdditionalBeanBuildItem.builder().setUnremovable().addBeanClass(StaticContentBeanFactory.class).build());
     beans.produce(new BeanContainerListenerBuildItem(recorder.listener(contentValues, config.defaultLocale)));
@@ -119,7 +115,7 @@ public class StaticContentProcessor {
     StaticContentRecorder recorder,
     HttpRootPathBuildItem httpRoot,
     BuildProducer<RouteBuildItem> routes,
-    StaticContentConfig config) throws Exception {
+    StaticContentConfig config) {
     
     Handler<RoutingContext> handler = recorder.staticContentHandler();
 
@@ -134,15 +130,12 @@ public class StaticContentProcessor {
   }
   
   @BuildStep
-  @Record(ExecutionTime.STATIC_INIT)
   public void staticContent(
-      StaticContentRecorder recorder,
       BuildProducer<StaticContentBuildItem> buildProducer,
       
       BuildProducer<GeneratedResourceBuildItem> generatedResources,
       BuildProducer<NativeImageResourceBuildItem> nativeImage,
-      
-      NonApplicationRootPathBuildItem nonApplicationRootPathBuildItem,
+
       CurateOutcomeBuildItem curateOutcomeBuildItem,
       
       LiveReloadBuildItem liveReloadBuildItem,
@@ -152,24 +145,22 @@ public class StaticContentProcessor {
     
 
     if(this.config.siteJson.isPresent()) {
-      staticJSONContent(recorder, buildProducer, generatedResources, nativeImage, nonApplicationRootPathBuildItem, curateOutcomeBuildItem, liveReloadBuildItem, httpRootPathBuildItem, displayableEndpoints);
+      staticJSONContent(buildProducer, httpRootPathBuildItem, displayableEndpoints);
       return;
     }
    
     if(this.config.webjar.isPresent()) {
-      staticWebjarContent(recorder, buildProducer, generatedResources, nativeImage, nonApplicationRootPathBuildItem, curateOutcomeBuildItem, liveReloadBuildItem, httpRootPathBuildItem, displayableEndpoints);
+      staticWebjarContent(buildProducer, generatedResources, nativeImage, curateOutcomeBuildItem, liveReloadBuildItem, httpRootPathBuildItem, displayableEndpoints);
       return;
     }
   }
   
   public void staticWebjarContent(
-      StaticContentRecorder recorder,
       BuildProducer<StaticContentBuildItem> buildProducer,
       
       BuildProducer<GeneratedResourceBuildItem> generatedResources,
       BuildProducer<NativeImageResourceBuildItem> nativeImage,
-      
-      NonApplicationRootPathBuildItem nonApplicationRootPathBuildItem,
+
       CurateOutcomeBuildItem curateOutcomeBuildItem,
       
       LiveReloadBuildItem liveReloadBuildItem,
@@ -241,20 +232,10 @@ public class StaticContentProcessor {
   }
   
   public void staticJSONContent(
-      StaticContentRecorder recorder,
       BuildProducer<StaticContentBuildItem> buildProducer,
-      
-      BuildProducer<GeneratedResourceBuildItem> generatedResources,
-      BuildProducer<NativeImageResourceBuildItem> nativeImage,
-      
-      NonApplicationRootPathBuildItem nonApplicationRootPathBuildItem,
-      CurateOutcomeBuildItem curateOutcomeBuildItem,
-      
-      LiveReloadBuildItem liveReloadBuildItem,
       HttpRootPathBuildItem httpRootPathBuildItem,
-      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
-
-    
+      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints)
+  {
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath), "Zoe Static Content From JSON"));
     Path tempPath = this.config.siteJson.get();
     
@@ -286,9 +267,6 @@ public class StaticContentProcessor {
     } catch(IOException e) {
       throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
     }
-
-    String fileName = tempPath.toFile().getName().toString();
-    fileName = FINAL_DESTINATION + "/" + fileName;
     final Markdowns md = StencilClientImpl.builder().defaultObjectMapper().inmemory().build().markdown().json(site, false).build();
     buildProducer.produce(new StaticContentBuildItem(FINAL_DESTINATION, frontendPath, md));
   }
