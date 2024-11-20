@@ -9,9 +9,9 @@ package io.thestencil.staticontent.test;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,45 +20,35 @@ package io.thestencil.staticontent.test;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
+import io.quarkus.test.QuarkusUnitTest;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
-import io.restassured.RestAssured;
-
-
-//-Djava.util.logging.manager=org.jboss.logmanager.LogManager
+import java.util.Set;
 
 public class SiteJsonExtensionTests {
   @RegisterExtension
   final static QuarkusUnitTest config = new QuarkusUnitTest()
     .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
-      .addAsResource(new StringAsset(getSite()), "site.json")
-      .addAsResource(new StringAsset(
-          "quarkus.stencil-sc.site-json=site.json\r\n" +
-          "quarkus.stencil-sc.service-path=portal/site\r\n" +
-          ""), "application.properties")
+      .addAsResource(new ClassLoaderAsset("site.json"), "site.json")
+      .addAsResource(new StringAsset("""
+          quarkus.stencil-sc.site-json=site.json
+          quarkus.stencil-sc.service-path=portal/site
+          """), "application.properties")
     );
 
   @Test
-  public void getUIOnRoot() {
-    final var defaultLocale = RestAssured.when().get("/portal/site");
-    defaultLocale.prettyPrint();
-    defaultLocale.then().statusCode(200);
+  public void shouldGetSiteContentJson() {
+    var json = RestAssured.when().get("/portal/site")
+            .then().statusCode(200).contentType(ContentType.JSON).extract().body().jsonPath();
+    Assertions.assertEquals(Set.of("000_test-article", "100_residence", "200_democracy"), json.getJsonObject("topics.keySet()"));
   }
-  
-  public static String getSite() {
-    try {
-      return IOUtils.toString(SiteJsonExtensionTests.class.getClassLoader().getResource("site.json"), StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
+
 }

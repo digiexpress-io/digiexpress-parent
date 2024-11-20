@@ -20,31 +20,34 @@ package io.thestencil.staticontent.test;
  * #L%
  */
 
+import io.quarkus.test.QuarkusUnitTest;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import io.quarkus.test.QuarkusUnitTest;
-import io.restassured.RestAssured;
+import java.util.Set;
 
-//-Djava.util.logging.manager=org.jboss.logmanager.LogManager
 public class WebJarExtensionTests {
 
   @RegisterExtension
   final static QuarkusUnitTest config = new QuarkusUnitTest()
     .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
-      .addAsResource(new StringAsset(
-          "quarkus.stencil-sc.webjar=io.digiexpress:quarkus-stencil-sc-testcontent\r\n" +
-          "quarkus.stencil-sc.service-path=portal/site\r\n" +
-          ""), "application.properties")
+      .addAsResource(new StringAsset("""
+          quarkus.stencil-sc.webjar=io.digiexpress:quarkus-stencil-sc-testcontent
+          quarkus.stencil-sc.service-path=portal/site
+          """), "application.properties")
     );
 
   @Test
-  public void getUIOnRoot() {
-    final var defaultLocale = RestAssured.when().get("/portal/site");
-    defaultLocale.prettyPrint();
-    defaultLocale.then().statusCode(200);
+  public void shouldGetSiteContentJson() {
+    var json = RestAssured.when().get("/portal/site")
+            .then().statusCode(200).contentType(ContentType.JSON).extract().body().jsonPath();
+    Assertions.assertEquals(Set.of("000_index", "100_residence", "200_democracy"), json.getJsonObject("topics.keySet()"));
   }
+
 }
