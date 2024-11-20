@@ -40,7 +40,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -83,7 +82,7 @@ public abstract class HdesResourceHandler implements Handler<RoutingContext> {
       try {
         handleResource(event, response, contentProvider);
       } catch (Exception e) {
-        respond422(e, response);
+        respond500(e, response);
       }
      return; 
     }
@@ -99,27 +98,13 @@ public abstract class HdesResourceHandler implements Handler<RoutingContext> {
     }
   }
   
-  public static void respond404(String id, HttpServerResponse response) {
-    
-    // Log error
-    String hash = exceptionHash("Token not found with id: " + id);
-    log.error("{} - Token not found with id: {}", hash, id);
-    
-    Map<String, String> msg = new HashMap<>();
-    msg.put("appcode", hash);
-    
-    response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
-    response.setStatusCode(404);
-    response.end( Json.encode(msg) );
-  }
-  
-  public static void respond422(Throwable throwable, HttpServerResponse response) {
+  public static void respond500(Throwable throwable, HttpServerResponse response) {
     // Log error
     String hash = exceptionHash(ExceptionUtils.getStackTrace(throwable));
     log.error("{} - Error", hash, throwable);
     
     response.headers().set(HttpHeaders.CONTENT_TYPE, "application/json");
-    response.setStatusCode(422);
+    response.setStatusCode(500);
     response.end( Json.encode(Map.of("appcode", hash)) );
   }
 

@@ -28,16 +28,16 @@ import jakarta.inject.Singleton;
 import java.util.Map;
 
 @ApplicationScoped
-public class StaticContentBeanFactory {
+public class InMemoryContentProviderBeanFactory {
   
   private Map<String, String> serializedContent;
   private String defaultLocale;
   
-  public StaticContentBeanFactory setDefaultLocale(String defaultLocale) {
+  public InMemoryContentProviderBeanFactory setDefaultLocale(String defaultLocale) {
     this.defaultLocale = defaultLocale;
     return this;
   }
-  public StaticContentBeanFactory setSerializedContent(Map<String, String> serializedContent) {
+  public InMemoryContentProviderBeanFactory setSerializedContent(Map<String, String> serializedContent) {
     this.serializedContent = serializedContent;
     return this;
   }
