@@ -53,6 +53,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -157,17 +158,13 @@ public class StaticContentProcessor {
   
   public void staticWebjarContent(
       BuildProducer<StaticContentBuildItem> buildProducer,
-      
       BuildProducer<GeneratedResourceBuildItem> generatedResources,
       BuildProducer<NativeImageResourceBuildItem> nativeImage,
-
       CurateOutcomeBuildItem curateOutcomeBuildItem,
-      
       LiveReloadBuildItem liveReloadBuildItem,
       HttpRootPathBuildItem httpRootPathBuildItem,
-      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception {
-
-    
+      BuildProducer<NotFoundPageDisplayableEndpointBuildItem> displayableEndpoints) throws Exception
+  {
     displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(config.servicePath), "Zoe Static Content From Webjar"));
     
     final String[] fragments = config.webjar.get().split(":");
@@ -242,9 +239,8 @@ public class StaticContentProcessor {
     // dev envir    
     if (launch.getLaunchMode().isDevOrTest()) {
       String site;
-      try {
-        final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString());
-        site = IOUtils.toString(stream, StandardCharsets.UTF_8);        
+      try(final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString());) {
+        site = IOUtils.toString(Objects.requireNonNull(stream, () -> "Couldn't find classpath resource " + tempPath), StandardCharsets.UTF_8);
       } catch(IOException e) {
         throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
       }
@@ -255,15 +251,13 @@ public class StaticContentProcessor {
       displayableEndpoints.produce(new NotFoundPageDisplayableEndpointBuildItem(httpRootPathBuildItem.resolvePath(frontendPath + "/"), "Zoe Static Content"));
       return;
     } 
-    
-    
+
     // native image
     final String frontendPath = httpRootPathBuildItem.resolvePath(config.imagePath);
     final String site;
     
-    try {
-      final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString());
-      site = IOUtils.toString(stream, StandardCharsets.UTF_8);
+    try(final var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tempPath.toString())) {
+      site = IOUtils.toString(Objects.requireNonNull(stream, () -> "Couldn't find classpath resource " + tempPath), StandardCharsets.UTF_8);
     } catch(IOException e) {
       throw new ConfigurationException("Failed to read file: '" + tempPath + "'!");
     }
