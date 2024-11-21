@@ -145,7 +145,7 @@ export const GLayout: React.FC<GLayoutProps> = (initProps) => {
           return (
             <React.Fragment key={index}>
               <GLayoutRow className={classes.toolbar}>
-                <div>{row.left}</div>
+                <div >{row.left}</div>
                 <Box flexGrow={1} />
                 <div className={classes.buttonRow}>{row.right}</div>
               </GLayoutRow>
