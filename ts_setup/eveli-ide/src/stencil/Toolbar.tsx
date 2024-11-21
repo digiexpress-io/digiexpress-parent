@@ -4,6 +4,8 @@ import { useSnackbar } from 'notistack';
 import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom'
+
 import * as Burger from '@/burger';
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -11,7 +13,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 import { Composer, StencilApi } from './context';
 import { LocaleFilter } from './explorer/filter';
@@ -39,16 +41,18 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
   const drawerCtx = Burger.useDrawer();
   const secondaryCtx = Burger.useSecondary();
-  
+
   const drawerOpen = drawerCtx.session.drawer;
   const tabsActions = tabsCtx.actions;
   const secondaryActions = secondaryCtx.actions;
-  
-  
+
+
 
   const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
   const article = active ? composer.site.articles[active.id] : undefined;
@@ -58,6 +62,10 @@ const Toolbar: React.FC<{}> = () => {
 
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
+  function handleBacktoTasks() {
+    navigate('/ui/tasks');
+  }
+
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
 
     if (newValue === 'toolbar.save' && articlePagesView && article) {
@@ -66,7 +74,7 @@ const Toolbar: React.FC<{}> = () => {
       }
       const update: StencilApi.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
       composer.service.update().pages(update).then(success => {
-        enqueueSnackbar(message, {variant: 'success'});
+        enqueueSnackbar(message, { variant: 'success' });
         composer.actions.handlePageUpdateRemove(success.map(p => p.id));
       }).then(() => {
         composer.actions.handleLoadSite();
@@ -117,7 +125,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          {/*<StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} /> */}
+          <StyledTab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} />
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />

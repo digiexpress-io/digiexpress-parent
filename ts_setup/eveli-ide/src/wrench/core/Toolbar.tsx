@@ -1,18 +1,18 @@
 import React from 'react';
 
-import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
-import { styled } from "@mui/material/styles";
-
+import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
-import { useSnackbar } from 'notistack';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 import * as Burger from '@/burger';
 import { Composer } from './context';
@@ -39,6 +39,8 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Toolbar: React.FC<{}> = () => {
+  const navigate = useNavigate();
+
   const composer = Composer.useComposer();
   const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
@@ -49,6 +51,10 @@ const Toolbar: React.FC<{}> = () => {
   const drawerOpen = drawer.session.drawer;
   React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
   
+
+  function handleBacktoTasks() {
+    navigate('/ui/tasks');
+  }
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
@@ -94,7 +100,7 @@ const Toolbar: React.FC<{}> = () => {
 
     } else if (newValue === 'toolbar.expand') {
       drawer.actions.handleDrawerOpen(!drawerOpen)
-    }
+    } 
   };
 
 
@@ -115,7 +121,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          {/*<StyledTab value='feedback' icon={<FeedbackOutlinedIcon />} /> */}
+          <StyledTab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} /> 
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
