@@ -10,8 +10,6 @@ import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachment
 import { CommsApi, useComms } from '../api-comms';
 import { IamApi, useIam } from '../api-iam';
 import { useContracts } from '../api-contract';
-import { DateTime } from 'luxon';
-
 
 
 
@@ -41,13 +39,9 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { subjects } = useComms();
-  const { getContract, contractStats } = useContracts();
+  const { getContract } = useContracts();
   const iam = useIam();
 
-  const awaiting = contractStats.awaitingDecision;
-  const decided = contractStats.decided;
-  console.log("awaiting", awaiting)
-  console.log("decided", decided)
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
@@ -71,6 +65,8 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
       {subjects
         .map((subject) => {
           const contract = getContract(subject.contractId);
+          console.log("name", contract?.offer)
+
           return {
             ...subject,
             contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
@@ -80,8 +76,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
-
-          console.log("contract", contract);
 
           return (<InboxItem
             id={subject.id}

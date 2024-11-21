@@ -34,8 +34,6 @@ export const RouterOfferSummary: React.FC<{
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)
 
-  console.log(topic.links)
-
   const anonymousUser = anon.authType === 'ANON';
   const buttonBackToMsg = anonymousUser ? 'gamut.public.forms.summary.button.backToServicesHome' : 'gamut.forms.summary.button.back-to-overview';
 
