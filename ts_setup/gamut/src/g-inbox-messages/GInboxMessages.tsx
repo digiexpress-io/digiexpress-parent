@@ -80,7 +80,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
       </Box>
       <>
         <div className={classes.header}>
-          <FormReview name={offerName} onClick={props.slotProps.formReview.onClick!} subjectId={subject.id} />
+          <FormReview formName={offerName} formId={contract.offer.formId} />
 
           {subject?.documents.map((doc) => (
             <Attachments name={doc.name}

@@ -83,6 +83,7 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
     name: data.name,
     contractId: data.taskId!,
     product: {} as any,
+    formId: data.formId,
     documents,
     exchange,
     lastExchange,

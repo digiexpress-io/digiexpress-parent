@@ -9,7 +9,7 @@ import { useDialob } from './DialobContext'
 
 export function useFormStore(props: {id: string}): DialobApi.FormStore {
   const { id } = props;
-  const { fetchGet, fetchPost, syncWait } = useDialob();
+  const { fetchActionGet, fetchActionPost, syncWait } = useDialob();
   const [pending, setPending] = React.useState(true);
   const [form, setState] = React.useState(new FormImpl(id, new ActionVisitor().withActions([])));
 
@@ -20,8 +20,8 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
   }, []);
 
   const queue = React.useMemo(
-    () => new ActionsQueue({id, syncWait: syncWait || 250, error: [], fetchGet, fetchPost, sync: [syncListener]}), 
-    [id, syncWait, syncListener, fetchGet, fetchPost]);
+    () => new ActionsQueue({ id, syncWait: syncWait || 250, error: [], fetchActionGet, fetchActionPost, sync: [syncListener] }),
+    [id, syncWait, syncListener, fetchActionGet, fetchActionPost]);
 
   React.useEffect(() => {
     queue.pull().then(() => setPending(false));

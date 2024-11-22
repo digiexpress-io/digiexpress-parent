@@ -1,9 +1,9 @@
 import { DialobApi } from "@dxs-ts/gamut";
 
 
-export function createDialobFetch(url: (string | undefined) = '/portal/secured/actions/fill') {
-  const fetchPost: DialobApi.FetchPOST = async (sessionId: string, actions: DialobApi.Action[], rev: number) => {
-    const response = await window.fetch(`${url}/${sessionId}`, {
+export function createDialobFetch(url: (string | undefined) = '/portal/secured/actions') {
+  const fetchActionPost: DialobApi.FetchActionPOST = async (sessionId: string, actions: DialobApi.Action[], rev: number) => {
+    const response = await window.fetch(`${url}/fill/${sessionId}`, {
       method: 'POST',
       body: JSON.stringify({ rev, actions }),
       headers: undefined,
@@ -12,15 +12,25 @@ export function createDialobFetch(url: (string | undefined) = '/portal/secured/a
     return response;
   }
 
-  const fetchGet: DialobApi.FetchGET = async (sessionId: string) => {
+  const fetchActionGet: DialobApi.FetchActionGET = async (sessionId: string) => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(`${url}/${sessionId}`, {
+    const response = await window.fetch(`${url}/fill/${sessionId}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,
     });
     return response;
   }
-  return { fetchGet, fetchPost };
+
+  const fetchReviewGet: DialobApi.FetchReviewGET = async (sessionId: string) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(`${url}/review/${sessionId}`, {
+      method: 'GET',
+      headers: undefined,
+      credentials: undefined,
+    });
+    return response;
+  }
+  return { fetchActionGet, fetchActionPost, fetchReviewGet };
 }
 

@@ -5,8 +5,8 @@ export interface ActionsQueueOptions {
   syncWait: number;
   sync: EventHandler<ActionsQueueSyncEvent>[];
   error: EventHandler<ActionsQueueErrorEvent>[];
-  fetchPost: DialobApi.FetchPOST;
-  fetchGet: DialobApi.FetchGET;
+  fetchActionPost: DialobApi.FetchActionPOST;
+  fetchActionGet: DialobApi.FetchActionGET;
 }
 
 export interface ActionsQueueResponse {
@@ -46,7 +46,7 @@ export class ActionsQueue {
   public async pull(): Promise<void> {
     try {
       await this.runSyncFn(async () => {
-        const response = await this.options.fetchGet(this.id);
+        const response = await this.options.fetchActionGet(this.id);
         if (!response.ok) {
           throw new ActionsQueueRequestError('Failure during fetch', response.status);
         }
@@ -125,7 +125,7 @@ export class ActionsQueue {
     this.syncQueueImmediately = false;
     try {
       await this.runSyncFn(async () => {
-        const response = await this.options.fetchPost(this.id, syncedActions, this.rev);
+        const response = await this.options.fetchActionPost(this.id, syncedActions, this.rev);
         if (!response.ok) {
           throw new ActionsQueueRequestError('Failure during fetch', response.status);
         }

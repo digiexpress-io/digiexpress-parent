@@ -1,5 +1,8 @@
 export const en = {
 
+  "booleanValue.true": "Yes",
+  "booleanValue.false": "No",
+
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 

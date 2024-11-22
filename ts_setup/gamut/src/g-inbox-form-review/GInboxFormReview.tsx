@@ -1,13 +1,15 @@
 import React from 'react';
-import { Avatar, Chip, useThemeProps } from '@mui/material';
+import { Avatar, Chip, useThemeProps, Dialog, Button, DialogTitle } from '@mui/material';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { FormattedMessage } from 'react-intl';
+
 import { GInboxFormReviewRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { GFormReview } from '../g-form-review';
 
 
 export interface GInboxFormReviewProps {
-  name: string;
-  subjectId: string;
-  onClick: (subjectId: string) => void;
+  formName: string;
+  formId: string;
 }
 
 
@@ -16,19 +18,45 @@ export const GInboxFormReview: React.FC<GInboxFormReviewProps> = (initProps) => 
     props: initProps,
     name: MUI_NAME,
   });
-  const { name, onClick, subjectId } = props;
+  const { formName, formId } = props;
   const classes = useUtilityClasses();
+  const [openReview, setOpenReview] = React.useState(false);
+
+  function handleOpenReview() {
+    setOpenReview(true)
+  }
+
+  function handleCloseReview() {
+    setOpenReview(false)
+  }
 
   return (
     <GInboxFormReviewRoot className={classes.root}>
-      <Chip onClick={() => onClick(subjectId)}
+      <Chip onClick={handleOpenReview}
         className={classes.reviewItem}
-        label={name}
+        label={formName}
         avatar={
           <Avatar className={classes.reviewAvatar}>
             <DescriptionOutlinedIcon className={classes.reviewIcon} />
           </Avatar>}
       />
+
+      <Dialog
+        onClose={handleCloseReview}
+        open={openReview}
+        sx={{ display: 'flex', flexDirection: 'column', color: 'blue' }}
+        maxWidth='lg'
+      >
+        <DialogTitle>
+          <FormattedMessage id='dialob.review.title' />
+        </DialogTitle>
+
+        <GFormReview formId={formId} />
+
+        <Button variant='outlined' onClick={handleCloseReview} sx={{ mb: 1 }}>
+          <FormattedMessage id='dialob.review.close' />
+        </Button>
+      </Dialog>
     </GInboxFormReviewRoot>
   )
 }

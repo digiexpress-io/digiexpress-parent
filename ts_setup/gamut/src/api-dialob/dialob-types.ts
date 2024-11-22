@@ -91,13 +91,14 @@ export declare namespace DialobApi {
   }
 
   // Web methods
-  export type FetchPOST = (sessionId: string, actions: Action[], rev: number) => Promise<Response>
-  export type FetchGET = (sessionId: string) => Promise<Response>
-
+  export type FetchActionPOST = (sessionId: string, actions: Action[], rev: number) => Promise<Response>
+  export type FetchActionGET = (sessionId: string) => Promise<Response>
+  export type FetchReviewGET = (sessionId: string) => Promise<Response>
 
   export interface DialobContextType {
-    fetchPost: FetchPOST;
-    fetchGet: FetchGET;
+    fetchActionPost: FetchActionPOST;
+    fetchActionGet: FetchActionGET;
+    fetchReviewGet: FetchReviewGET
     syncWait?: number | undefined;
   }
 

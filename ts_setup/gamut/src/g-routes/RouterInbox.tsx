@@ -62,10 +62,6 @@ export const RouterInbox: React.FC<RouterInboxProps> = ({ locale, viewId }) => {
 
   }
 
-  function handleFormReviewClick(subjectId: string) {
-
-  }
-
   return (
     <GShell>
       <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleClick('user-overview')} viewId={viewId} />
@@ -99,8 +95,8 @@ export const RouterInbox: React.FC<RouterInboxProps> = ({ locale, viewId }) => {
                 <Divider />
                 <GInbox slotProps={{
                   attachment: { onClick: handleAttachmentClick },
-                  formReview: { onClick: handleFormReviewClick },
-                  item: { onClick: handleSubjectClick }
+                  item: { onClick: handleSubjectClick },
+                  formReview: {}
                 }}
                 />
 

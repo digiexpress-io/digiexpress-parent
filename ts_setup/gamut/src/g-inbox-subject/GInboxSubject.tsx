@@ -71,7 +71,7 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
       </Box>
       <>
         <div className={classes.header}>
-          <FormReview name={subject.name} onClick={props.slotProps.formReview.onClick!} subjectId={subject.id} />
+          <FormReview formName={subject.name} formId={subject.formId} />
 
           {subject?.documents.map((doc) => (
             <div className={classes.attachments}>

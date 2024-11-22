@@ -109,7 +109,7 @@ export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, 
 
                   <GInboxMessages subjectId={subject.id}
                     slotProps={{
-                      formReview: { onClick: handleFormReviewClick },
+                      formReview: {},
                       attachments: { onClick: handleAttachmentClick },
                       message: {},
                       newMessage: {}

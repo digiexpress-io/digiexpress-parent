@@ -38,7 +38,7 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const bookingFetch = createBookingFetch();
 
 
-  return (<DialobProvider fetchGet={dialobFetch.fetchGet} fetchPost={dialobFetch.fetchPost}>
+  return (<DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
 
       <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>

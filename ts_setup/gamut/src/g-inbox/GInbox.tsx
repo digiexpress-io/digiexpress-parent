@@ -95,10 +95,8 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
             contractStatus={contract && contract.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
           >
             <FormReview
-              key={subject.id}
-              name={offerName}
-              subjectId={subject.id}
-              onClick={props.slotProps.formReview.onClick!}
+              formName={offerName}
+              formId={subject.formId}
             />
 
             {subject.documents.map((doc) => (

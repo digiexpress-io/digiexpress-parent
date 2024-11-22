@@ -1,5 +1,7 @@
 export const fi = {
 
+  "booleanValue.true": "Yes",
+  "booleanValue.false": "No",
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 

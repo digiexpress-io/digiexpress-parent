@@ -15,6 +15,7 @@ export declare namespace CommsApi {
     created: DateTime;
     contractId: string; // contract id
     product: ProductApi.Product;
+    formId: string;
     name: string;
     exchange: readonly Message[]; // all messages, ordered by created asc
     lastExchange?: Message; // THE LAST message chronologically 

@@ -23,6 +23,7 @@ import java.time.Duration;
  */
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -91,8 +92,10 @@ public class GamutUserActionsController {
     return resp; 
   }
   @GetMapping(value="/review/{sessionId}")
-  public ResponseEntity<String> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().sessionGet(sessionId);
+  public ResponseEntity<?> reviewProxyGet(@PathVariable("sessionId") String sessionId) {
+    final var session = dialob.getQuestionnaireById(sessionId);
+    final var form = dialob.getFormById(session.getMetadata().getFormId());
+    return ResponseEntity.ok(Map.of("session", session, "form", form));
   }
 
   @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
