@@ -26,7 +26,8 @@ export const OfferProvider: React.FC<{
       getOffer: (id) => data.offers.find((offer) => offer.id === id),
       refresh: data.refresh,
       createOffer: data.createOffer,
-      cancelOffer: data.cancelOffer
+      cancelOffer: data.cancelOffer,
+      getLocalisedOfferName: data.getLocalisedOfferName
     };
 
     return (<OfferContext.Provider value={contextValue}>{props.children}</OfferContext.Provider>);

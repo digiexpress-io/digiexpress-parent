@@ -6,7 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 
-import { GAppBar, GFooter, GInboxMessages, GLayout, GShell, GShellClassName, GUserOverviewMenu, GUserOverviewMenuView, useComms } from '../';
+import { GAppBar, GFooter, GInboxMessages, GLayout, GShell, GShellClassName, GUserOverviewMenu, GUserOverviewMenuView, useComms, useContracts, useOffers, useSite } from '../';
 
 
 export interface RouterInboxSubjectProps {
@@ -18,6 +18,9 @@ export interface RouterInboxSubjectProps {
 export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, subjectId, viewId }) => {
 
   const { getSubject } = useComms();
+  const { site } = useSite();
+  const { getContract } = useContracts();
+  const { getLocalisedOfferName, getOffer } = useOffers();
   const theme = useTheme();
   const intl = useIntl();
 
@@ -41,19 +44,22 @@ export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, 
     })
   }
 
-  function handleAttachmentClick(subjectId: string, attachmentId: string) {
+  function handleAttachmentClick(subjectId: string, attachmentId: string) { }
+  function handleFormReviewClick(subjectId: string) { }
 
-  }
-
-  function handleFormReviewClick(subjectId: string) {
-
-  }
-
-  const subject = getSubject(subjectId)!;
+  const subject = getSubject(subjectId);
 
   if (!subject) {
     return <>...</>
   }
+
+  const contract = getContract(subject.contractId);
+
+  if (!site || !contract) {
+    return <>...</>
+  }
+
+  const offerName = getLocalisedOfferName(site, contract?.offer.name);
 
   return (
     <GShell>
@@ -92,7 +98,7 @@ export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, 
                     </Avatar>
 
                     <React.Fragment key={subject.id}>
-                      <Typography variant='h1'>{subject.name}</Typography>
+                      <Typography variant='h1'>{offerName}</Typography>
                     </React.Fragment>
                   </Box>
                 </>

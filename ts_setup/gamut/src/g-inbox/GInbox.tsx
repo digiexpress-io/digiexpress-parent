@@ -10,6 +10,8 @@ import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachment
 import { CommsApi, useComms } from '../api-comms';
 import { IamApi, useIam } from '../api-iam';
 import { useContracts } from '../api-contract';
+import { useSite } from '../api-site';
+import { useOffers } from '../api-offer';
 
 
 
@@ -40,8 +42,10 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   const classes = useUtilityClasses();
   const { subjects } = useComms();
   const { getContract } = useContracts();
+  const { getLocalisedOfferName } = useOffers();
   const iam = useIam();
 
+  const { site } = useSite();
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
@@ -65,7 +69,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
       {subjects
         .map((subject) => {
           const contract = getContract(subject.contractId);
-          console.log("name", contract?.offer)
 
           return {
             ...subject,
@@ -76,6 +79,10 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
+          if (!site || !contract) {
+            return <>no links</>
+          }
+          const offerName = getLocalisedOfferName(site, contract?.offer.name!)
 
           return (<InboxItem
             id={subject.id}
@@ -83,13 +90,13 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
             onClick={props.slotProps.item.onClick!}
             senderName={getSenderName(subject, iam, intl)}
             sentAt={subject.lastExchange?.created ?? subject.created}
-            title={subject.name}
+            title={offerName}
             subTitle={subject.lastExchange?.commentText ?? ''}
             contractStatus={contract && contract.status ? intl.formatMessage({ id: `gamut.forms.status.${contract.status}` }) : 'status unknown'}
           >
             <FormReview
               key={subject.id}
-              name={subject.name}
+              name={offerName}
               subjectId={subject.id}
               onClick={props.slotProps.formReview.onClick!}
             />

@@ -7,6 +7,8 @@ import { GContractsRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses
 import { GContractItem, GContractItemProps } from './GContractItem';
 import { useComms } from '../api-comms';
 import { GOverridableComponent } from '../g-override';
+import { useOffers } from '../api-offer';
+import { useSite } from '../api-site';
 
 
 export interface GContractsProps {
@@ -31,18 +33,21 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { contracts } = useContracts();
+  const { site } = useSite();
+  const { getLocalisedOfferName } = useOffers();
   const { getSubject } = useComms();
 
   const Item: React.ElementType<GContractItemProps> = props.slots?.item ?? GContractItem;
 
-  console.log(contracts)
-
   function mapToItem(contract: ContractApi.Contract): GContractItemProps & { key: string } {
+
+    const offerName = getLocalisedOfferName(site!, contract.offer.name);
+
     return {
       key: contract.id,
       exchangeId: contract.exchangeId,
       color: props.slotProps?.item?.color,
-      name: contract.offer.name,
+      name: offerName,
       lastModified: contract.updated!,
       status: contract.status,
       documents: contract.documents.length,

@@ -12,6 +12,8 @@ import { GInboxMessageNotAllowed } from './GInboxMessageNotAllowed';
 
 import { useComms, CommsApi } from '../api-comms';
 import { useContracts } from '../api-contract';
+import { useOffers } from '../api-offer';
+import { useSite } from '../api-site';
 
 
 
@@ -41,9 +43,13 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { getSubject } = useComms();
-  const subject = getSubject(props.subjectId);
+  const { getLocalisedOfferName } = useOffers();
+  const { site } = useSite();
   const { replyTo } = useComms();
   const { getContract } = useContracts();
+
+  const subject = getSubject(props.subjectId);
+
 
 
   function handleReplyTo(subjectId: CommsApi.SubjectId, text: string) {
@@ -55,7 +61,10 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   }
 
   const contract = getContract(subject?.id);
-
+  if (!site || !contract) {
+    return <>...no site / contract</>
+  }
+  const offerName = getLocalisedOfferName(site, contract?.offer.name);
 
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
   const Message: React.ElementType<GInboxMessageProps> = props.slots?.message ?? GInboxMessage;
@@ -71,7 +80,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
       </Box>
       <>
         <div className={classes.header}>
-          <FormReview name={subject.name} onClick={props.slotProps.formReview.onClick!} subjectId={subject.id} />
+          <FormReview name={offerName} onClick={props.slotProps.formReview.onClick!} subjectId={subject.id} />
 
           {subject?.documents.map((doc) => (
             <Attachments name={doc.name}
@@ -102,7 +111,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         {contract?.status === 'COMPLETED' || contract?.status === 'REJECTED' ?
           (<div className={classes.msgNotAllowedRoot}><GInboxMessageNotAllowed /></div>) : (
             <div className={classes.newMessage}>
-              <NewMessage subjectName={subject.name} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
+              <NewMessage offerName={offerName} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} />
             </div>
           )}
       </>

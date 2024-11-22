@@ -10,6 +10,9 @@ import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review'
 import { GInboxSubjectNewMessageProps, GInboxSubjectNewMessage } from './GInboxSubjectNewMessage';
 import { GInboxSubjectMessage, GInboxSubjectMessageProps } from './GInboxSubjectMessage';
 import { useComms } from '../api-comms';
+import { useOffers } from '../api-offer';
+import { useSite } from '../api-site';
+import { useContracts } from '../api-contract';
 
 
 
@@ -39,12 +42,20 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
 
   const classes = useUtilityClasses();
   const { getSubject } = useComms();
+  const { getLocalisedOfferName } = useOffers();
+  const { getContract } = useContracts();
+  const { site } = useSite();
 
   const subject = getSubject(props.subjectId);
 
   if (!subject) {
     return <></>;
   }
+  const contract = getContract(subject.contractId);
+  if (!site || !contract) {
+    return <></>;
+  }
+  const offerName = getLocalisedOfferName(site, contract?.offer.name);
 
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
   const Messages: React.ElementType<GInboxSubjectMessageProps> = props.slots?.messages ?? GInboxSubjectMessage;
@@ -64,7 +75,7 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
 
           {subject?.documents.map((doc) => (
             <div className={classes.attachments}>
-              <Attachments name={doc.name}
+              <Attachments name={offerName}
                 subjectId={subject.id}
                 attachmentId={doc.id}
                 onClick={() => { }}

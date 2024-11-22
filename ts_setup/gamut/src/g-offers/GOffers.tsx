@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Grid, Typography, useThemeProps } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { GFlex, OfferApi, useOffers } from '../';
+import { GFlex, OfferApi, useOffers, useSite } from '../';
 import { GOffersRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
 import { GOfferItemProps, GOfferItem } from './GOfferItem';
 import { GOverridableComponent } from '../g-override';
@@ -20,7 +20,8 @@ export interface GOffersProps {
 
 export const GOffers: React.FC<GOffersProps> = (initProps) => {
   const intl = useIntl();
-  const { offers, cancelOffer } = useOffers();
+  const { offers, cancelOffer, getLocalisedOfferName } = useOffers();
+  const { site } = useSite();
   const classes = useUtilityClasses();
 
   const props = useThemeProps({
@@ -35,11 +36,13 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
 
   const Item: React.ElementType<GOfferItemProps> = props.slots?.item ?? GOfferItem;
   function mapToItem(offer: OfferApi.Offer): GOfferItemProps & { key: string } {
+    const offerName = getLocalisedOfferName(site!, offer.name);
+
     return {
       key: offer.id,
       created: offer.created,
       updated: offer.updated,
-      name: offer.name,
+      name: offerName,
       offerId: offer.id,
       onOpen: props.slotProps?.item?.onOpen ?? ((offer: OfferApi.Offer) => { console.log("Do nothing on offer", offer) }),
       onCancel: props.slotProps?.item?.onCancel ?? cancelOffer,

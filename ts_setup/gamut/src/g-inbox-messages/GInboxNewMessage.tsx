@@ -9,7 +9,7 @@ import { GInboxNewMessageRoot, MUI_NAME, useUtilityClasses } from './useUtilityC
 
 export interface GInboxNewMessageProps {
   senderName?: string;
-  subjectName: string;
+  offerName: string;
   minRows?: number | undefined;
   onReplyTo: (messageText: string) => void;
 }
@@ -19,8 +19,6 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
 
   const [messageText, setMessageText] = React.useState('');
   const emptyMessage = messageText.trim() === '';
-
-
 
   const props = useThemeProps({
     props: initProps,
@@ -50,7 +48,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           <Typography className={classes.newMsgSenderName}>
             {intl.formatMessage({ id: 'gamut.inbox.newMessage.sendNew' })}
           </Typography>}
-        <Typography>{intl.formatMessage({ id: 'gamut.inbox.newMessage.replyingTo.subject' })}{props.subjectName}</Typography>
+        <Typography>{intl.formatMessage({ id: 'gamut.inbox.newMessage.replyingTo.subject' })}{props.offerName}</Typography>
       </div>
 
       <TextField multiline minRows={ownerState.minRows}

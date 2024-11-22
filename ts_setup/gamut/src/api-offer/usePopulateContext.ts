@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToOffer, mapToOfferData } from './mappers';
-import { useSite } from '../api-site';
+import { SiteApi, useSite } from '../api-site';
 
 
 
@@ -21,6 +21,7 @@ export interface PopulateOfferContext {
   isPending: boolean;
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
+  getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
   refresh(): Promise<void>;
 }
 
@@ -41,6 +42,11 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
       }),
   });
 
+  // Get the offer (form) name based on the topic link
+  const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string): string => {
+    const linkName: string = Object.values(site.links).find(link => link.value === workflowName)?.name!;
+    return linkName;
+  };
 
 
   // Create new offer and reload after that
@@ -84,6 +90,6 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // cache the end result
   return React.useMemo(() => {
-    return { offers: offerData?.offers ?? [], isPending: !isContextLoaded, createOffer, refresh, cancelOffer };
-  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer]);
+    return { offers: offerData?.offers ?? [], isPending: !isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName };
+  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName]);
 }

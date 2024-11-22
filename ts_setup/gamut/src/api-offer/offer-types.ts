@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
 
-
 import {
   mapToOffer
 } from './mappers'
+import { SiteApi } from "../api-site";
 
 
 export namespace OfferApi {
@@ -47,6 +47,7 @@ export declare namespace OfferApi {
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;
     getOffer(offerId: OfferId): Offer | undefined;
+    getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
     refresh(): Promise<void>;
   }
 }
