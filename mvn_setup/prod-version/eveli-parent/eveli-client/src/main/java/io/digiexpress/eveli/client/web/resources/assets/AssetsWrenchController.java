@@ -60,7 +60,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/rest/api/assets/wrench")
+@RequestMapping("/worker/rest/api/assets/wrench")
 @RequiredArgsConstructor
 public class AssetsWrenchController {
   private final HdesComposer composer;

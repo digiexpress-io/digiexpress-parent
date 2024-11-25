@@ -42,7 +42,7 @@ export const CreateWorkflowTagDialog: React.FC<CreateWorkflowTagDialogProps> = (
 
   const handleSubmit = (workflowReleaseCommand: { name: string, description: string }): void => {
     let method = 'POST';
-    let url = `${serviceUrl}rest/api/assets/workflows/tags`;
+    let url = `${serviceUrl}worker/rest/api/assets/workflows/tags`;
 
     session.cFetch(`${url}`, {
       method: method,

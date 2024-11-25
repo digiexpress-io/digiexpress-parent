@@ -36,7 +36,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
   const [paging, setPaging] = useState<any>();
 
   const getTasks = (page=0, size=20):Promise<QueryResult<Task>> => {
-    return session.cFetch(`${serviceUrl}rest/api/worker/tasks?page=${page}&size=${size}`)
+    return session.cFetch(`${serviceUrl}worker/rest/api/tasks?page=${page}&size=${size}`)
       .then(response => response.json())
       .then(json=>{
         return {
@@ -48,7 +48,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
   }
 
   const getTask = (taskId:any) => {
-    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}`)
+    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/${taskId}`)
     .then(response => response.json())
     .then(task => {
       if (task.dueDate) {
@@ -59,7 +59,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
   }
   const saveTask = (task:Task) => {
     let method = 'POST';
-    let url = `${serviceUrl}rest/api/worker/tasks`;
+    let url = `${serviceUrl}worker/rest/api/tasks`;
     if (task.id) {
       method = 'PUT';
       url = url + "/" + task.id;
@@ -80,7 +80,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
     .then(response => response.json());
   }
   const deleteTask = (taskId:any) => {
-    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/${taskId}`, 
+    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/${taskId}`, 
       {method: 'DELETE'})
     .then(response=>{
       if (!response.ok) {
@@ -97,7 +97,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
     if (!task.id) {
       return Promise.resolve();
     }
-    const commentsUrl = `${serviceUrl}rest/api/worker/tasks/${task.id}/comments`;
+    const commentsUrl = `${serviceUrl}worker/rest/api/tasks/${task.id}/comments`;
     
     return session.cFetch(commentsUrl)
     .then(response => {
@@ -115,7 +115,7 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
       userName: userInfo.user.name,
       source: CommentSource.FRONTDESK
     };
-    let url = `${serviceUrl}rest/api/worker/comments`;
+    let url = `${serviceUrl}worker/rest/api/comments`;
     return session.cFetch(url, {method: 'POST',
       body: JSON.stringify(savingComment)
     })

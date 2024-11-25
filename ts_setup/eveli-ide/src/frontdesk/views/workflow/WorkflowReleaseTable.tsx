@@ -29,7 +29,7 @@ export const WorkflowReleaseTable: React.FC = () => {
 
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: workflows, refresh: refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${serviceUrl}rest/api/assets/workflows/tags`);
+  const { response: workflows, refresh: refreshWorkflowReleases } = useFetch<WorkflowRelease[]>(`${serviceUrl}worker/rest/api/assets/workflows/tags`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
   const [workflowRelease, setWorkflowRelease] = useState<WorkflowRelease | null>(null);

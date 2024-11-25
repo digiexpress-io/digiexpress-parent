@@ -6,7 +6,7 @@ import { useConfig } from '../../context/ConfigContext';
 
 export const WorkflowView: React.FC = () => {
   const { serviceUrl } = useConfig();
-  const { response: workflows, refresh: refreshWorkflows } = useFetch<Workflow[]>(`${serviceUrl}rest/api/assets/workflows`);
+  const { response: workflows, refresh: refreshWorkflows } = useFetch<Workflow[]>(`${serviceUrl}worker/rest/api/assets/workflows`);
 
   return (
     <WorkflowTable workflows={workflows} refreshWorkflows={refreshWorkflows} />

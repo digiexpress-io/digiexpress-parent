@@ -114,13 +114,14 @@ const StyledFileField: React.FC<StyledInputFieldProps<string>> = (props) => {
   );
 }
 
-const StyledTextField: React.FC<StyledInputFieldProps<string>> = (props) => {
-  const { onChange, onEnter, label, value, required, placeholder, helperText, disabled, errorMessage, error } = props;
+const StyledTextField: React.FC<StyledInputFieldProps<string> & { type?: React.InputHTMLAttributes<unknown>['type']}> = (props) => {
+  const { onChange, onEnter, label, value, required, placeholder, helperText, disabled, errorMessage, error, type } = props;
   return (
     <>
       <StyledInputLabel><FormattedMessage id={label} /></StyledInputLabel>
       <TextFieldRoot
         fullWidth
+        type={type}
         disabled={disabled}
         variant="outlined"
         required={required}

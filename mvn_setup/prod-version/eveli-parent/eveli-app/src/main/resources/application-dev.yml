@@ -43,3 +43,5 @@ eveli.assets.timezoneOffset: +2
 eveli.dialob.enabled: true
 eveli.dialob.service-url: http://localhost:9000
 eveli.dialob.api-key:
+  
+  

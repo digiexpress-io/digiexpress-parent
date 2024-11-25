@@ -80,7 +80,7 @@ export const TasksView: React.FC = () => {
       columns.filter((column: any) => !column.hidden)
     );
 
-    return session.cFetch(`${serviceUrl}rest/api/worker/tasks?${queryString}`)
+    return session.cFetch(`${serviceUrl}worker/rest/api/tasks?${queryString}`)
     .then(response => response.json())
     .then(json=>{
       return {
@@ -92,7 +92,7 @@ export const TasksView: React.FC = () => {
   }
 
   const loadNewTasks = () => {
-    return session.cFetch(`${serviceUrl}rest/api/worker/tasks/unread`)
+    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/unread`)
     .then(response => response.json())
     .then(json=>{
       return json;

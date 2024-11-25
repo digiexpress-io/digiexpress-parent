@@ -6,6 +6,7 @@
     <artifactId>digiexpress-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
+
   <artifactId>digiexpress-build-parent</artifactId>
   <packaging>pom</packaging>
 
@@ -18,44 +19,51 @@
 
     <resource.plugin.version>3.3.1</resource.plugin.version>
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
-    <surefire.plugin.version>3.5.2</surefire.plugin.version>
+    <surefire.plugin.version>3.3.1</surefire.plugin.version>
 
     <spring-cloud-gcp.version>3.4.0</spring-cloud-gcp.version>
 
-    <spring.security.version>6.3.4</spring.security.version>
+    <spring.security.version>6.3.3</spring.security.version>
     <spring.boot.version>3.3.4</spring.boot.version>
-    <jackson.version>2.17.3</jackson.version>
+    <spring.version>6.1.13</spring.version>
+    <spring.cloud.version>2023.0.3</spring.cloud.version>
+    
+    <jackson.version>2.17.2</jackson.version>
 
-    <jandex.version>3.1.8</jandex.version>
+    <jandex.version>3.1.5</jandex.version>
     <quarkus.version>3.8.6</quarkus.version>
     <lombok.version>1.18.34</lombok.version>
 
     <hbvalidator.version>6.0.23.Final</hbvalidator.version>
-    <logback.version>1.5.12</logback.version>
-    <slf4j.version>2.0.16</slf4j.version>
+    <logback.version>1.5.8</logback.version>
+    <slf4j.version>1.7.36</slf4j.version>
 
-    <eirslett.version>1.15.0</eirslett.version>
+    <eirslett.version>1.12.0</eirslett.version>
     <immutables.version>2.10.1</immutables.version>
     <findbugs.version>3.0.2</findbugs.version>
     <ehcache.version>3.10.8</ehcache.version>
-    <guava.version>33.3.1-jre</guava.version>
-    <groovy.version>3.0.23</groovy.version>
+    <guava.version>33.3.0-jre</guava.version>
+    <groovy.version>3.0.22</groovy.version>
     <jgit.version>5.13.3.202401111512-r</jgit.version>
 
     <jsonassert.version>1.5.3</jsonassert.version>
 
-    <commons-io.version>2.17.0</commons-io.version>
-    <commons-csv.version>1.12.0</commons-csv.version>
+    <commons-io.version>2.16.1</commons-io.version>
+    <commons-csv.version>1.11.0</commons-csv.version>
     <commons-codec.version>1.17.1</commons-codec.version>
     <commons-lang.version>3.17.0</commons-lang.version>
-    <commons-validator.version>1.9.0</commons-validator.version>
+    <commons-collections.version>4.4</commons-collections.version>
+    <commons-validator.version>1.7</commons-validator.version>
     <dialob.version>3.0.1</dialob.version>
     <flexmark.version>0.62.2</flexmark.version>
 
+  
+    <flapdoodle.version>3.0.0</flapdoodle.version>
+    
     <pnpm.version>v8.6.12</pnpm.version>
     <node.version>v18.18.2</node.version>
     
-    <modelmapper.version>3.2.1</modelmapper.version>
+    <modelmapper.version>3.0.0</modelmapper.version>
     
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
@@ -68,9 +76,16 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
         <configuration>
+          <argLine>
+            --add-opens java.base/java.lang=ALL-UNNAMED 
+            --add-opens java.base/java.io=ALL-UNNAMED 
+            --add-opens java.base/java.util=ALL-UNNAMED 
+            --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+          </argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <quarkus.log.level>INFO</quarkus.log.level>
+            <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -214,8 +229,29 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.slf4j</groupId>
-      <artifactId>slf4j-jboss-logmanager</artifactId>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -314,6 +350,11 @@
         <version>${commons-lang.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${commons-collections.version}</version>
+      </dependency>
+      <dependency>
         <groupId>commons-validator</groupId>
         <artifactId>commons-validator</artifactId>
         <version>${commons-validator.version}</version>
@@ -343,11 +384,24 @@
 
       <!-- spring -->
       <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <type>pom</type>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <type>pom</type>
         <scope>import</scope>
         <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <type>pom</type>
+        <scope>import</scope>
+        <version>${spring.cloud.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
@@ -379,6 +433,14 @@
         <scope>test</scope>
         <version>${jsonassert.version}</version>
       </dependency>
+      <dependency>
+        <groupId>de.flapdoodle.embed</groupId>
+        <artifactId>de.flapdoodle.embed.mongo</artifactId>
+        <scope>test</scope>
+        <version>${flapdoodle.version}</version>
+      </dependency>
+
+
     </dependencies>
   </dependencyManagement>
 </project>

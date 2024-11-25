@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/api/assets/deployments")
+@RequestMapping("/worker/rest/api/assets/deployments")
 @Slf4j
 public class AssetsDeploymentController {
   private static final Duration timeout = Duration.ofMillis(10000);

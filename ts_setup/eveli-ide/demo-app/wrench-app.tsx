@@ -10,8 +10,6 @@ const init = {
   url: "http://localhost:8081/assets", //spring-app
 };
 
-console.log("INIT", init);
-
 const store = new WrenchClient.DefaultStore(init);
 
 const getLocale = () => {

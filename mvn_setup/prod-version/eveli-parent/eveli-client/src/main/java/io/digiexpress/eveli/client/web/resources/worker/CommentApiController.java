@@ -20,10 +20,6 @@ package io.digiexpress.eveli.client.web.resources.worker;
  * #L%
  */
 
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,33 +39,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Transactional
-@RequestMapping("/rest/api/worker")
+@RequestMapping("/worker/rest/api/comments")
 @Slf4j
 @RequiredArgsConstructor
 public class CommentApiController
 {
   private final TaskClient taskClient;
   private final AuthClient securityClient;
-  private final TaskAccessRepository taskAccessRepository;
-  private final TaskRepository taskRepository;
-  
-  @GetMapping(value="/tasks/{id}/comments")
-  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") Long id)
-  {
-    final var authentication = securityClient.getUser();
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
-    final var comments = taskClient.queryComments().findAllByTaskId(id);
- 
-    return new ResponseEntity<>(comments, HttpStatus.OK);
-  }
 
-  @GetMapping("/comments/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") Long id) 
   {
     return ResponseEntity.ok(taskClient.queryComments().getOneById(id));
   }
   
-  @PostMapping("/comments")
+  @PostMapping
   public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
   {
     final var worker = securityClient.getUser().getPrincipal();

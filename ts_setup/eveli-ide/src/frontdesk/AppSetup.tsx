@@ -51,13 +51,13 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   const { serviceUrl } = useConfig();
 
   if (isWrench) {
-    const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: serviceUrl + "rest/api/assets/wrench" }));
+    const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: serviceUrl + "worker/rest/api/assets/wrench" }));
     return (
       <IntlProvider locale='en' messages={wrenchIntl.en}>
         <WrenchComposer service={service} />
       </IntlProvider>)
   } else if (isStencil) {
-    const service = StencilClient.service({ config: { url: serviceUrl + "rest/api/assets/stencil" } });
+    const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil" } });
 
     return (
       <IntlProvider locale='en' messages={stencilIntl.en}>

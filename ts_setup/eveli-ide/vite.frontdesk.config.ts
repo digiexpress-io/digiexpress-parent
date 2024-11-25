@@ -55,7 +55,13 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           secure: false,
         }, 
 
-        '/rest/api/': {
+        '/worker/rest/api/': {
+          target: 'http://localhost:8080',
+          changeOrigin: false,
+          secure: false,
+        },
+
+        '/login-gatway/worker': {
           target: 'http://localhost:8080',
           changeOrigin: false,
           secure: false,

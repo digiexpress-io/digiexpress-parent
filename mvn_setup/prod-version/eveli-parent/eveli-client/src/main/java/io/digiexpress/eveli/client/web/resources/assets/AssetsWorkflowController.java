@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @RestController
-@RequestMapping("/rest/api/assets/workflows")
+@RequestMapping("/worker/rest/api/assets/workflows")
 @RequiredArgsConstructor
 @Slf4j
 public class AssetsWorkflowController {

@@ -83,9 +83,9 @@ public class EveliAutoConfig {
   }
   @Bean 
   public CommentApiController commentApiController(
-      TaskClient taskClient, AuthClient security, TaskAccessRepository taskAccessRepository, TaskRepository taskRepository) {
+      TaskClient taskClient, AuthClient security) {
     
-    return new CommentApiController(taskClient, security, taskAccessRepository, taskRepository);
+    return new CommentApiController(taskClient, security);
   }
   
   @Bean 
@@ -105,8 +105,8 @@ public class EveliAutoConfig {
   }
 
   @Bean 
-  public TaskApiController taskApiController(AuthClient security, TaskClient taskClient) {
-    return new TaskApiController(security, taskClient);
+  public TaskApiController taskApiController(AuthClient security, TaskClient taskClient, TaskAccessRepository taskAccessRepository, TaskRepository taskRepository) {
+    return new TaskApiController(security, taskClient, taskAccessRepository, taskRepository);
   }
   
   

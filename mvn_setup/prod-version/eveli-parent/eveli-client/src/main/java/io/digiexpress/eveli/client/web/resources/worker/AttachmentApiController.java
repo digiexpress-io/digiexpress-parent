@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/rest/api/worker")
+@RequestMapping("/worker/rest/api")
 @Slf4j
 @RequiredArgsConstructor
 /**

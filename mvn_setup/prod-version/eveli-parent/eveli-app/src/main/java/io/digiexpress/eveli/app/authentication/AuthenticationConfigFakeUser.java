@@ -1,6 +1,7 @@
-package io.digiexpress.eveli.app;
+package io.digiexpress.eveli.app.authentication;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,10 @@ import org.springframework.context.annotation.Configuration;
  */
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
@@ -37,17 +41,58 @@ import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
-import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
-import io.digiexpress.eveli.client.spi.crm.SpringJwtCrmClient;
 
 
 
 
+/**
+ * Fake impl. for testing locally logged in user configuration
+ */
 @Configuration
-public class SecurityProvider  {
+@Profile("fake-user")
+public class AuthenticationConfigFakeUser  {
   
   @Bean
-  @Profile("fake-user")
+  public AuthenticationManager authenticationManager() {
+    return new AuthenticationManager() {
+      @Override
+      public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        return new Authentication() {
+          @Override
+          public String getName() {
+            return null;
+          }
+          @Override
+          public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+          }
+          @Override
+          public boolean isAuthenticated() {
+            return true;
+          }
+          @Override
+          public Object getPrincipal() {
+            return null;
+          }
+          @Override
+          public Object getDetails() {
+            return null;
+          }
+          @Override
+          public Object getCredentials() {
+            return null;
+          }
+          @Override
+          public Collection<? extends GrantedAuthority> getAuthorities() {
+            return null;
+          }
+        };
+      }
+    };
+  }
+
+
+  
+  @Bean
   public AuthClient authClientFakeUser() {
     return new AuthClient() {
       @Override
@@ -62,8 +107,6 @@ public class SecurityProvider  {
                 .build())
             .build();
       }
-
-
       @Override
       public Liveness getLiveness() {
         // TODO Auto-generated method stub
@@ -73,7 +116,6 @@ public class SecurityProvider  {
   }
   
   @Bean
-  @Profile("fake-user")
   public CrmClient crm() {
     return new CrmClient() {
       @Override
@@ -109,17 +151,5 @@ public class SecurityProvider  {
             .build();
       }
     };
-  }
-  
-  
-  @Bean
-  @Profile("jwt")
-  public SpringJwtAuthClient authClientJwt() {
-    return new SpringJwtAuthClient();
-  }
-  @Bean
-  @Profile("jwt")
-  public SpringJwtCrmClient crmClientJwt() {
-    return new SpringJwtCrmClient(new RestTemplate(), "");
   }
 }

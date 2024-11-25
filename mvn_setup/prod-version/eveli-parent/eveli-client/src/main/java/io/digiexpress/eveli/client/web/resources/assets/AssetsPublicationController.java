@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/api/assets/publications")
+@RequestMapping("/worker/rest/api/assets/publications")
 @Slf4j
 public class AssetsPublicationController {
   private static final Duration timeout = Duration.ofMillis(10000);

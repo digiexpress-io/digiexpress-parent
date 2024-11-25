@@ -1,13 +1,13 @@
 import en from './en';
 import fi from './fi';
 import sv from './sv';
-import anyTaskMessages from './messages.json';
+import { messages } from './messages';
 
 
 export const frontdeskIntl: { [key: string]: any } = {
-  en: { ...anyTaskMessages.en, ...en, },
-  fi: { ...anyTaskMessages.fi, ...fi, },
-  sv: { ...anyTaskMessages.sv, ...sv, }
+  en: { ...messages.en, ...en, },
+  fi: { ...messages.fi, ...fi, },
+  sv: { ...messages.sv, ...sv, }
 };
 
 

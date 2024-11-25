@@ -22,7 +22,7 @@ import { TableHeader } from '../../components/TableHeader';
 export const DialobFormsView: React.FC = () => {
   const { serviceUrl, dialobComposerUrl } = useConfig();
 
-  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>(`${serviceUrl}rest/api/assets/dialob`);
+  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>(`${serviceUrl}worker/rest/api/assets/dialob`);
   const [selectedForm, setSelectedForm] = useState<DialobFormEntry | undefined>();
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);

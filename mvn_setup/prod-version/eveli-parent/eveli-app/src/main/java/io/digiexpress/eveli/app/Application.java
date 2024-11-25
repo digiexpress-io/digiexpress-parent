@@ -28,7 +28,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
@@ -37,13 +39,22 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
+
+
+@EnableWebSocket
+@EnableWebSecurity 
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableAsync
 @EnableScheduling // DialobCallbackController
 @Slf4j
-@Import(value = { EveliAutoConfigDB.class, EveliAutoConfigAssets.class, EveliAutoConfig.class, DialobAutoConfig.class,
-    EveliAutoConfigGamut.class })
+@Import(value = { 
+    EveliAutoConfigDB.class, 
+    EveliAutoConfigAssets.class, 
+    EveliAutoConfig.class, 
+    DialobAutoConfig.class,
+    EveliAutoConfigGamut.class 
+})
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[] { Application.class }, args);
@@ -52,8 +63,7 @@ public class Application {
   @EventListener
   public void handleContextRefresh(ContextRefreshedEvent event) {
     final var applicationContext = event.getApplicationContext();
-    final var requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping",
-        RequestMappingHandlerMapping.class);
+    final var requestMappingHandlerMapping = applicationContext.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
 
     final var newLog = new ApplicationConfigLogger().log(requestMappingHandlerMapping);
     log.info(newLog);

@@ -72,7 +72,7 @@ export const TaskContainer: React.FC<Props> = (props) => {
     }
   }
   const pdfTaskLinkCallback = (link: TaskLink, taskId: number) => {
-    let url = `${serviceUrl}rest/api/worker/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
+    let url = `${serviceUrl}worker/rest/api/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
     window.open(url);
   }
 

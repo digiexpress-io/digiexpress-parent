@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,8 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
+import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
+import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +58,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/rest/api/worker")
+@RequestMapping("/worker/rest/api/tasks")
 @Slf4j
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
   
-  @GetMapping("/tasks")
+  private final TaskAccessRepository taskAccessRepository;
+  private final TaskRepository taskRepository;
+  
+  
+  @GetMapping
   @Transactional(readOnly = true)
   public ResponseEntity<Page<Task>> taskSearch(
       @RequestParam(name="subject", defaultValue = "") String subject, 
@@ -91,7 +98,7 @@ public class TaskApiController {
     return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll());
   }
 
-  @GetMapping("/tasks/{id}")
+  @GetMapping("/{id}")
   @Transactional(readOnly = true)
   public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
     
@@ -112,7 +119,7 @@ public class TaskApiController {
     return ResponseEntity.status(403).build();
   }
 
-  @PostMapping(path = "/tasks")
+  @PostMapping
   @Transactional
   public ResponseEntity<TaskClient.Task> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
@@ -122,7 +129,7 @@ public class TaskApiController {
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
   }
   
-  @PutMapping("/tasks/{id}")
+  @PutMapping("/{id}")
   @Transactional
   public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") Long id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
@@ -133,7 +140,7 @@ public class TaskApiController {
 
   }
 
-  @DeleteMapping("/tasks/{id}")
+  @DeleteMapping("/{id}")
   @Transactional
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTask(@PathVariable("id") Long id) {
@@ -143,7 +150,7 @@ public class TaskApiController {
         .deleteTask(id);
   }
   
-  @GetMapping(value="/tasks/unread")
+  @GetMapping(value="/unread")
   public ResponseEntity<Collection<Long>> getUnreadTasks() {
     final var worker = securityClient.getUser().getPrincipal();
     
@@ -158,11 +165,21 @@ public class TaskApiController {
         .findAll());
   }
   
+  @GetMapping(value="/{id}/comments")
+  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
+    final var comments = taskClient.queryComments().findAllByTaskId(id);
+ 
+    return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
+  
   @Data
   @AllArgsConstructor
   private static class KeyWordsResponse { List<String> keyWords; }
   
-  @GetMapping("/tasks/keywords")
+  @GetMapping("/keywords")
   @Transactional(readOnly = true)
   public ResponseEntity<KeyWordsResponse> getKeyWords() {
     return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryKeywords().findAllKeywords()));

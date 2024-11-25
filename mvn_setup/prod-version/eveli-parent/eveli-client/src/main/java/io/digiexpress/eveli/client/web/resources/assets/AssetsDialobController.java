@@ -50,7 +50,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/rest/api/assets/dialob")
+@RequestMapping(path = "/worker/rest/api/assets/dialob")
 @RequiredArgsConstructor
 public class AssetsDialobController {
   
@@ -66,7 +66,7 @@ public class AssetsDialobController {
   ) {
     
     final var query = request.getQueryString();
-    final var path = request.getServletPath().substring(39);
+    final var path = request.getServletPath().substring(46);
     final var method = HttpMethod.valueOf(request.getMethod());
     
     return dialobCommands.createProxy().formRequest(path, query, method, body, headers);

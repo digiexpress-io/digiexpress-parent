@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.crm;
+package io.digiexpress.eveli.client.spi.auth;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -223,6 +223,7 @@ public class SpringJwtCrmClient implements CrmClient {
     return value == null ? "" : value; 
   }
 
+  @SuppressWarnings("unchecked")
   private String getRepresentedId(Jwt principal) {
     Map<String, Object> map = (Map<String, Object>) Optional.ofNullable(principal).map(p->p.getClaims()).map(c->c.get("representedPerson")).orElse(null);
     if (map != null) {

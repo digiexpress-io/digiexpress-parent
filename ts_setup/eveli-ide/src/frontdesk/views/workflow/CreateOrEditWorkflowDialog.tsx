@@ -36,7 +36,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
   const intl = useIntl();
 
   const { serviceUrl } = useConfig();
-  const { response: flows } = useFetch<string[]>(`${serviceUrl}rest/api/assets/wrench/flow-names`);
+  const { response: flows } = useFetch<string[]>(`${serviceUrl}worker/rest/api/assets/wrench/flow-names`);
 
   const session = useContext(SessionRefreshContext);
   const { enqueueSnackbar } = useSnackbar();
@@ -47,7 +47,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
 
   const handleSubmit = (workflowCommand: Workflow): void => {
     let method = 'POST';
-    let url = `${serviceUrl}rest/api/assets/workflows`;
+    let url = `${serviceUrl}worker/rest/api/assets/workflows`;
 
     if (workflowCommand.id) {
       method = 'PUT';

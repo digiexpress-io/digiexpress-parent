@@ -43,7 +43,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
     };
 
     const getForm = (formId: string) => {
-      let url = `${serviceUrl}rest/api/assets/dialob/proxy/forms/${formId}`;
+      let url = `${serviceUrl}worker/rest/api/assets/dialob/proxy/forms/${formId}`;
       return session.cFetch(`${url}`,{
         method: 'GET',
         headers: {
@@ -60,7 +60,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
       });
     }
     const saveForm = (form: Partial<DialobForm>) => {
-      let url = `${serviceUrl}rest/api/assets/dialob/proxy/forms/`;
+      let url = `${serviceUrl}worker/rest/api/assets/dialob/proxy/forms/`;
       return session.cFetch(`${url}`,{
         method: 'POST',
         headers: {

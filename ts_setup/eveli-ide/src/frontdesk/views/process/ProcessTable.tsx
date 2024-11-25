@@ -23,7 +23,7 @@ export const ProcessTable: React.FC = () => {
 
   const loadProcesses = (query: Query<Process>): Promise<QueryResult<Process>> => {
     let queryString = createQueryString(query, tableState.columns);
-    return session.cFetch(`${config.serviceUrl}rest/api/worker/processes?${queryString}`, {
+    return session.cFetch(`${config.serviceUrl}worker/rest/api/processes?${queryString}`, {
       headers: {
         'Accept': 'application/json'
       },

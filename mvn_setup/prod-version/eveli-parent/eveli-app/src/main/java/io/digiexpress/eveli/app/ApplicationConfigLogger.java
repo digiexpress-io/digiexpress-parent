@@ -115,7 +115,6 @@ public class ApplicationConfigLogger {
       }  
     }
     return groups.stream()
-        .filter(endpoint -> !(endpoint.equals("/rest") || endpoint.equals("/rest/api")))
         .filter(endpoint -> {
           return entries.stream().filter(e -> e.getPath().equals(endpoint)).count() == 0 ||
               endpoint.split("\\/").length == 2;
@@ -143,11 +142,17 @@ public class ApplicationConfigLogger {
 
   private void createGroupedLogEntries() {
     
-    for(final var groupPath : extractGroups()) {
+    final var allGroups = extractGroups();
+    
+    for(final var groupPath : allGroups) {
       
       log_msg.append("  ").append(groupPath).append(":").append(LN);
       
-      entries.stream().filter(e -> e.getPath().startsWith(groupPath))
+      entries.stream()
+        .filter(e -> allGroups.stream()
+            .filter(longer -> longer.length() > groupPath.length())
+            .filter(longer -> e.getPath().startsWith(longer)).findFirst().isEmpty())
+        .filter(e -> e.getPath().startsWith(groupPath))
         .forEach(entry -> {
           log_msg
             .append(greenColor)

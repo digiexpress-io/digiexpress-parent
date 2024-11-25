@@ -39,13 +39,13 @@ import lombok.RequiredArgsConstructor;
  * Rest controller to handle external requests from admin UI.
  */
 @RestController
-@RequestMapping("/rest/api/worker")
+@RequestMapping("/worker/rest/api/processes")
 @RequiredArgsConstructor
 public class ProcessApiController {
   protected final ProcessClient client;
 
   @Transactional
-  @GetMapping("/processes")
+  @GetMapping
   public ResponseEntity<Page<ProcessClient.ProcessInstance>> processesSearch(
       @RequestParam(name="workflow.name", defaultValue= "") String name, 
       @RequestParam(name="status", required = false) List<String> status,

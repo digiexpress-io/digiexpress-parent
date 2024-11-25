@@ -43,9 +43,9 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const { serviceUrl } = useConfig()
 
   const session = useContext(SessionRefreshContext);
-  const { response: workflowTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/workflow-tags`);
-  const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/wrench-tags`);
-  const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}rest/api/assets/any-tags/stencil-tags`);
+  const { response: workflowTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/workflow-tags`);
+  const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/wrench-tags`);
+  const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/stencil-tags`);
 
   const handleClose = () => {
     setOpen(false);
@@ -53,7 +53,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
   const handleSubmit = (assetReleaseCommand: PublicationInit): void => {
     let method = 'POST';
-    let url = `${serviceUrl}rest/api/assets/publications`;
+    let url = `${serviceUrl}worker/rest/api/assets/publications`;
 
     let init: PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
