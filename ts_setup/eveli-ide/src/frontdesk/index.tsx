@@ -10,7 +10,6 @@ import { DATE_LOCALE_MAP } from './intl/datelocalization';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
-import { FeedbackProvider } from './context/FeedbackContext';
 import { AppSetup } from './AppSetup';
 import { LocaleSelectContextProvider, useLocaleSelect } from './context';
 
@@ -52,11 +51,9 @@ export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
 
   return (
     <ConfigContextProvider path={configUrl}>
-      <FeedbackProvider>
-        <LocaleSelectContextProvider locale={defaultLocale}>
-          <WithLocale />
-        </LocaleSelectContextProvider>
-      </FeedbackProvider>
+      <LocaleSelectContextProvider locale={defaultLocale}>
+        <WithLocale />
+      </LocaleSelectContextProvider>
     </ConfigContextProvider>
   );
 }

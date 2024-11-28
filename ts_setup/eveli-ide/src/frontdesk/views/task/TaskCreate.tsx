@@ -14,6 +14,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
+import { useNavigate } from "react-router-dom";
+
 
 import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
 import { StatusComponent } from '../../components/task/Status';
@@ -188,6 +190,17 @@ type State = {
 }
 
 const minLength = 3;
+
+
+const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) => {
+  const navigate = useNavigate();
+
+  function handleFeedback() {
+    navigate(`/feedback/${taskId}`);
+  }
+
+  return (<Burger.SecondaryButton label='task.form.reply' onClick={handleFeedback} />);
+}
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
   formRef = React.createRef<any>();
@@ -434,6 +447,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     {editTask.keyWords && editTask.keyWords.length > 0 && (
                       <Box display='flex' alignItems='center'>
                         <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: </InputLabel>
+
                         <Chip
                           label={this.getTaskKeywords(editTask).includes('Manual') ? formatMessage({ id: 'Internal' }) : formatMessage({ id: 'CustomerCreated' })}
                           color='primary'
@@ -442,7 +456,10 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       </Box>
                     )}
                     {(!editTask.keyWords || editTask.keyWords.length === 0) && (
-                      <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: -</InputLabel>
+                      <Box display='flex' gap={1}>
+                        <Burger.PrimaryButton label='task.form.review' onClick={() => { }} />
+                        <FeedbackButton taskId={editTask.id} />
+                      </Box>
                     )}
                   </Grid2>
                 </Grid2>

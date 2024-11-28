@@ -5,14 +5,14 @@ import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 import * as Burger from '@/burger';
-import { LocaleSelect } from './explorer';
+
 
 
 
 const StyledToolbarButton = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
-  margin: theme.spacing(1.5),
+  margin: theme.spacing(2),
   ':hover': {
     cursor: 'pointer'
   },
@@ -36,13 +36,7 @@ const StyledToolbar = styled(Box)(({ theme }) => ({
 export const Toolbar: React.FC<{}> = () => {
   const drawerCtx = Burger.useDrawer();
   const drawerOpen = drawerCtx.session.drawer;
-  //const context = React.useContext(FeedbackContext);
 
-  /*
-  const openFeedback = () => {
-    context.open();
-  }
-  */
   const toggleDrawer = () => {
     drawerCtx.actions.handleDrawerOpen(!drawerOpen);
   };
@@ -53,9 +47,6 @@ export const Toolbar: React.FC<{}> = () => {
         <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
         <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
         {/*TODO Feedback still needed??  */}
-        { /*<StyledToolbarButton onClick={openFeedback}><FeedbackOutlinedIcon /></StyledToolbarButton> */}
-        <LocaleSelect />
-        {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
       </StyledToolbar>
     </>
   );

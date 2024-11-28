@@ -7,3 +7,4 @@ export type { HdesApi } from './wrench';
 export { StencilComposer, StencilClient, stencilIntl } from './stencil';
 export { WrenchComposer, WrenchClient, wrenchIntl } from './wrench';
 export { Frontdesk, frontdeskIntl } from './frontdesk';
+export { FeedbackComposer } from './feedback';
