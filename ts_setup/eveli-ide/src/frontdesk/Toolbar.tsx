@@ -12,7 +12,7 @@ import { LocaleSelect } from './explorer';
 const StyledToolbarButton = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
-  margin: theme.spacing(1.5),
+  margin: theme.spacing(2),
   ':hover': {
     cursor: 'pointer'
   },

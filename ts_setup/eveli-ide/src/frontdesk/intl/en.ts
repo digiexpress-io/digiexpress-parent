@@ -133,6 +133,7 @@ const en = {
   "Internal": "Internal",
 
   'task.role.assignedAllUsers': 'All users',
+  "task.feedback.published": "Published reply",
 
   'confirm.close.title': 'Confirmation required',
   'confirm.unsavedChanges': 'Unsaved changes will be lost, do you want to continue?',

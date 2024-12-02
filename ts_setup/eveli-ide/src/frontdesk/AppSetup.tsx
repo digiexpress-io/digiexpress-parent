@@ -28,6 +28,7 @@ import { Toolbar } from './Toolbar';
 import { frontdeskIntl } from './intl'
 import { stencilIntl } from '../stencil'
 import { wrenchIntl } from '../wrench'
+import { feedbackIntl } from '../feedback';
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -68,7 +69,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
         <StencilComposer service={service} />
       </IntlProvider>)
   } else if (isFeedback) {
-    return (<IntlProvider locale='en' messages={stencilIntl.en}>
+    return (<IntlProvider locale='en' messages={feedbackIntl.en}>
       <FeedbackComposer />
     </IntlProvider>);
   }

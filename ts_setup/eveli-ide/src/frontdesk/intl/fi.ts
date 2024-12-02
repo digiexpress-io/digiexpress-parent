@@ -122,6 +122,8 @@ const fi = {
   'taskDialog.clientIdentificator': 'Asiakas',
   'taskDialog.assignedUserEmail': 'Käyttäjän sähköposti',
   'task.editRoles': 'Tehtäväryhmät',
+  "task.feedback.published": "Julkaistu vastaus",
+
 
   // for task labels
   'Questionnaire': 'Lomake',

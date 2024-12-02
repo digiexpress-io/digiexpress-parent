@@ -46,7 +46,6 @@ export const Toolbar: React.FC<{}> = () => {
       <StyledToolbar>
         <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
         <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
-        {/*TODO Feedback still needed??  */}
       </StyledToolbar>
     </>
   );

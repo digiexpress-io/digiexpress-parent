@@ -3,6 +3,8 @@ import { alpha, Box, styled, SxProps, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+
 import { useNavigate } from 'react-router-dom';
 
 import { useIntl } from 'react-intl';
@@ -19,25 +21,13 @@ const iconSize: SxProps = {
 
 const menuItems: MenuItemProps[] = [
   { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
+  { id: 'menu.feedback-list', to: '/feedback/list', icon: <FormatListNumberedIcon sx={iconSize} /> },
 
 ]
 
 // --------- Frame.tsx ----------
 const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
 
-
-
-const ExplorerSecondaryButtons: React.FC = () => {
-  return (
-    <Box display='flex' marginTop='auto' justifyContent='center'>
-      <Burger.PrimaryButton label='explorer.logout'
-        sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
-        onClick={() => window.location.href = `${HOST_URL}/oauth2/authorization/oidcprovider`}
-      />
-    </Box>
-
-  )
-}
 
 
 export const Explorer: React.FC<{}> = () => {
@@ -96,7 +86,6 @@ export const Secondary: React.FC = () => {
       <Box display="flex" flexDirection='column' flexGrow={1}>
         <Explorer />
       </Box>
-      <ExplorerSecondaryButtons />
     </Box>
   </>
   )

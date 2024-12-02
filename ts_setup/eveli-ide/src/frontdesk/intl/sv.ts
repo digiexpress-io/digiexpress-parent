@@ -133,6 +133,7 @@ const sv = {
   "Internal": "Intern",
 
   'task.role.assignedAllUsers': 'Alla användare',
+  "task.feedback.published": "Publicerat svar",
 
   'confirm.close.title': 'Bekräftelse krävs',
   'confirm.unsavedChanges': 'Osparade ändringar kommer att gå förlorade, vill du fortsätta?',

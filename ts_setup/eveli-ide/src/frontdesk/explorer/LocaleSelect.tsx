@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, MenuItem, Button, Typography, useTheme } from '@mui/material';
+import { Menu, MenuItem, Button, Typography, useTheme, Box } from '@mui/material';
 import { useLocaleSelect } from '../context';
 import { frontdeskIntl } from '../intl';
 import { useIntl } from 'react-intl';
@@ -26,7 +26,7 @@ export const LocaleSelect: React.FC = () => {
 
   return (
     <div>
-      <Button variant='text' onClick={handleClick}>
+      <Box onClick={handleClick} sx={{ px: 0, py: 1, justifySelf: 'center', cursor: 'pointer' }}>
         <Typography sx={{
           textTransform: 'uppercase',
           fontWeight: 'bold',
@@ -35,7 +35,7 @@ export const LocaleSelect: React.FC = () => {
         >
           {locale}
         </Typography>
-      </Button>
+      </Box>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleSelect}>
         {availableLocales.map((value, index) => (

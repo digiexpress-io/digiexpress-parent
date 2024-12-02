@@ -26,7 +26,12 @@
     "baseUrl": "src",
     "paths": {
       "@dxs-ts/eveli-ide": ["../src/index.ts"],
-      "@/burger": ["../src/burger/index.ts"]
+      "@/burger": [
+        "../src/burger/index.ts"
+      ],
+      "@/feedback": [
+        "../src/feedback/index.tsx"
+      ],
     }
   },
   "include": [
