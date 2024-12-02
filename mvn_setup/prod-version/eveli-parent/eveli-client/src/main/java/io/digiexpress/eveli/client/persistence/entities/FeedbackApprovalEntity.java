@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.persistence.entities;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -72,10 +72,10 @@ public class FeedbackApprovalEntity {
   private Integer starRating;    // rating from 1-5: 1 = thumbs down, 5 = thumbs up
   
   @Column(name="created_on_date", nullable = false, updatable = false)
-  private LocalDateTime createdOnDate;
+  private ZonedDateTime createdOnDate;
 
   @Column(name="updated_on_date", nullable = false)
-  private LocalDateTime updatedOnDate;
+  private ZonedDateTime updatedOnDate;
   
   
   

@@ -123,7 +123,7 @@ public class TaskApiController {
   @Transactional
   public ResponseEntity<TaskClient.Task> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var newTask = taskClient.commandTaskBuilder()
+    final var newTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .createTask(command);
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
@@ -133,7 +133,7 @@ public class TaskApiController {
   @Transactional
   public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") Long id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var modifiedTask = taskClient.commandTaskBuilder()
+    final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .modifyTask(id, command);
     return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
@@ -145,7 +145,7 @@ public class TaskApiController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTask(@PathVariable("id") Long id) {
     final var worker = securityClient.getUser().getPrincipal();
-    taskClient.commandTaskBuilder()
+    taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .deleteTask(id);
   }

@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
 
@@ -41,6 +42,8 @@ public interface ProcessClient {
   QueryProcessInstances queryInstances();
   ProcessInstanceStatusBuilder changeInstanceStatus();
   ProcessAuthorizationQuery queryAuthorization();
+  ProcessQuestionnaireQuery queryProcessQuestionnaire();
+  
   CreateProcessInstance createInstance();
   CreateProcessExecutor createExecutor();
   
@@ -102,6 +105,10 @@ public interface ProcessClient {
     List<ProcessInstance> findAllAnswered();
     List<ProcessInstance> findAllExpired();
     List<ProcessInstance> findAllByUserId(String userId);    
+  }
+  
+  interface ProcessQuestionnaireQuery {
+    Optional<JsonObject> findOneByTaskId(Long taskId);    
   }
 
   interface ProcessInstanceStatusBuilder {

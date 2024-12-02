@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.persistence.entities;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import org.hibernate.envers.Audited;
@@ -81,14 +81,16 @@ public class FeedbackReplyEntity {
   private String localizedSubLabel;
   
   @Column(name="created_on_date", nullable = false, updatable = false)
-  private LocalDateTime createdOnDate;
+  private ZonedDateTime createdOnDate;
 
   @Column(name="updated_on_date", nullable = false)
-  private LocalDateTime updatedOnDate;
+  private ZonedDateTime updatedOnDate;
 
   @Column(name="updated_by", nullable = false)
   private String updatedBy;  
   
+  @Column(name="created_by", nullable = false)
+  private String createdBy;    
   
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="category_id", foreignKey = @ForeignKey(name = "fk_reply_to_category"))

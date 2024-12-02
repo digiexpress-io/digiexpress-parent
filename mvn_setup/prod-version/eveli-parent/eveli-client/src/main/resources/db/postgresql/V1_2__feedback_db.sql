@@ -17,27 +17,27 @@
 -- limitations under the License.
 -- #L%
 ---
+
     create table feedback_approval (
         id bigserial not null,
         category_id bigint not null,
-        created_on_date timestamp(6) not null,
+        created_on_date timestamp(6) with time zone not null,
         reply_id bigint,
         source_id varchar(255) not null,
         star_rating integer not null,
-        updated_on_date timestamp(6) not null,
+        updated_on_date timestamp(6) with time zone not null,
         primary key (id),
         unique (category_id, reply_id, source_id)
     );
 
     create table feedback_category (
         id bigserial not null,
-        created_by_process_id varchar(255) not null,
         created_by_user_id varchar(255) not null,
-        created_on_date timestamp(6) not null,
+        created_on_date timestamp(6) with time zone not null,
         label varchar(255) not null,
         origin varchar(255) not null,
         sub_label varchar(255),
-        updated_on_date timestamp(6) not null,
+        updated_on_date timestamp(6) with time zone not null,
         primary key (id),
         unique (label, sub_label, origin)
     );
@@ -46,13 +46,14 @@
         id bigserial not null,
         category_id bigint not null,
         content TEXT not null,
-        created_on_date timestamp(6) not null,
+        created_by varchar(255) not null,
+        created_on_date timestamp(6) with time zone not null,
         locale varchar(255) not null,
         localized_label varchar(255) not null,
         localized_sub_label varchar(255),
         source_id varchar(255),
         updated_by varchar(255) not null,
-        updated_on_date timestamp(6) not null,
+        updated_on_date timestamp(6) with time zone not null,
         primary key (id)
     );
 
@@ -62,15 +63,17 @@
         revtype smallint,
         category_id bigint,
         content TEXT,
-        created_on_date timestamp(6),
+        created_by varchar(255),
+        created_on_date timestamp(6) with time zone,
         locale varchar(255),
         localized_label varchar(255),
         localized_sub_label varchar(255),
         source_id varchar(255),
         updated_by varchar(255),
-        updated_on_date timestamp(6),
+        updated_on_date timestamp(6) with time zone,
         primary key (id, rev)
     );
+
 
     alter table if exists feedback_approval 
        add constraint fk_approval_to_category 

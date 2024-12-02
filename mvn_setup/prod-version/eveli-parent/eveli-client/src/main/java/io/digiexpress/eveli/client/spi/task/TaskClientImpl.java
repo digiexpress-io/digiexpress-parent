@@ -60,7 +60,7 @@ public class TaskClientImpl implements TaskClient {
   }
 
   @Override
-  public TaskCommandBuilder commandTaskBuilder() {
+  public TaskCommandBuilder taskBuilder() {
     return new TaskCommandBuilder() {
       private String userId, userEmail;
       @Override
@@ -71,26 +71,26 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public TaskComment createTaskComment(CreateTaskCommentCommand command) {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        TaskAssert.notEmpty("userEmail", () -> "userEmail can't be empty!");
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
         return new CreateOneTaskComment(userId, userEmail, taskRepository, commentRepository, notificator, taskAccessRepository).create(command);
       }
       @Override
       public Task createTask(CreateTaskCommand command) {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        TaskAssert.notEmpty("userEmail", () -> "userEmail can't be empty!");
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
         return new CreateOneTask(userId, taskRepository, taskRefGenerator, notificator, taskAccessRepository).create(command);
       }
       @Override
       public Task modifyTask(Long taskId, ModifyTaskCommand command) {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        TaskAssert.notEmpty("userEmail", () -> "userEmail can't be empty!");
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
         return new ModifyOneTask(userId, userEmail, taskRepository, notificator, taskAccessRepository).modify(taskId, command);
       }
       @Override
       public Task deleteTask(Long taskId) {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        TaskAssert.notEmpty("userEmail", () -> "userEmail can't be empty!");
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
         return new DeleteOneTask(userId, userEmail, taskRepository, notificator, jdbcTemplate).delete(taskId);
       }
     };

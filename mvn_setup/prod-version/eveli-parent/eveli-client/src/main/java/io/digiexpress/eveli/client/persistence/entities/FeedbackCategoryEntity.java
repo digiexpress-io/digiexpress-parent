@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.persistence.entities;
  * #L%
  */
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -68,17 +68,14 @@ public class FeedbackCategoryEntity {
   @Column(name="origin", nullable = false, updatable = false)
   private String origin;                // Can be related to a customer question, or a stencil article
   
-  @Column(name="created_by_process_id", nullable = false, updatable = false)
-  private String createdByProcessId;    // The process id from which this reply was generated
-  
   @Column(name="created_by_user_id", nullable = false, updatable = false)
   private String createdByUserId;       // The user who wrote and approved the feedback
   
   @Column(name="created_on_date", nullable = false, updatable = false)
-  private LocalDateTime createdOnDate;
+  private ZonedDateTime createdOnDate;
 
   @Column(name="updated_on_date", nullable = false)
-  private LocalDateTime updatedOnDate;
+  private ZonedDateTime updatedOnDate;
   
   
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
