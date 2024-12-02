@@ -11,6 +11,7 @@ import { Toolbar } from './Toolbar';
 
 import feedbackIntl from './intl';
 import { FeedbackOneTask } from './feedbackOneTask';
+import { FeedbackAllTasks } from './feedbackAllTasks';
 
 
 
@@ -36,7 +37,7 @@ export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
   return (<Routes>
     <Route element={<StartComposer />}>
       <Route path='/feedback/:taskId' element={<FeedbackOneTask taskId={taskId} workerReplies={[]} />} />
-      <Route path='/feedback/list' element={<>list of feedback</>} />
+      <Route path='/feedback/all-tasks' element={<FeedbackAllTasks taskId={taskId} workerReplies={[]} />} />
       <Route path='/feedback' element={<>feedback loading...</>} />
     </Route>
   </Routes>)

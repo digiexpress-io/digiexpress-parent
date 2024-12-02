@@ -21,7 +21,7 @@ const iconSize: SxProps = {
 
 const menuItems: MenuItemProps[] = [
   { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
-  { id: 'menu.feedback-list', to: '/feedback/list', icon: <FormatListNumberedIcon sx={iconSize} /> },
+  { id: 'menu.feedbackAllTasks', to: '/feedback/all-tasks', icon: <FormatListNumberedIcon sx={iconSize} /> },
 
 ]
 

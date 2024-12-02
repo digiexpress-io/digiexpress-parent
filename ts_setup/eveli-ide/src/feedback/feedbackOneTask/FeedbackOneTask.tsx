@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Divider, TextField, Typography } from '@mui/material';
+import { Divider, TextField, Typography } from '@mui/material';
 import { Comment, CommentSource } from '../../frontdesk/types/task/Comment';
 
 import * as Burger from '@/burger';
@@ -31,6 +31,7 @@ export const FeedbackOneTask: React.FC<FeedbackOneTaskProps> = ({ taskId, worker
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h1'>Public reply to customer feedback</Typography>
+        <Typography variant='body2'>Feedback id: 13</Typography>
         <Typography variant='body2'>Source task id: {taskId}</Typography>
         <Typography variant='body2'>Form name: "Send feedback"</Typography>
         <Typography variant='body2'>Date feedback received from customer: "09/12/2024"</Typography>
@@ -56,8 +57,8 @@ export const FeedbackOneTask: React.FC<FeedbackOneTaskProps> = ({ taskId, worker
           value={comments}
         />
       </div>
-      <Burger.SecondaryButton onClick={() => console.log('cancel')} label='Cancel' />
-      <Burger.PrimaryButton onClick={handlePublish} label='Publish' />
+      <Burger.SecondaryButton onClick={() => console.log('cancel')} label='button.cancel' />
+      <Burger.PrimaryButton onClick={handlePublish} label='button.publish' />
     </>
   )
 }

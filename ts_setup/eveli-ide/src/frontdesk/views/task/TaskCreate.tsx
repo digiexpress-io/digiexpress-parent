@@ -202,7 +202,7 @@ const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) =>
     navigate(`/feedback/${taskId}`);
   }
 
-  return (<Burger.SecondaryButton label='task.form.reply' onClick={handleFeedback} />);
+  return (<Burger.SecondaryButton label='task.form.feedback.manage' onClick={handleFeedback} />);
 }
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
