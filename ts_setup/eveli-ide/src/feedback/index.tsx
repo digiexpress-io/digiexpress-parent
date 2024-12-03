@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SnackbarProvider } from 'notistack';
+
 import { Route, Outlet, Routes, useParams } from 'react-router-dom';
 
 import { Composer } from '../stencil/context';
@@ -10,10 +10,12 @@ import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
 import feedbackIntl from './intl';
-import { FeedbackOneTask } from './feedbackOneTask';
+import { UpsertOneFeedback } from './upsert-one-feedback';
 import { FeedbackAllTasks } from './feedbackAllTasks';
 
 
+
+export * from './feedback-api';
 
 const composer: BurgerApi.App<Composer.ContextType> = {
   id: "feedback-composer",
@@ -34,14 +36,20 @@ interface FeedbackComposerProps {
 
 export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
   const { taskId } = useParams<{ taskId: string }>();
+  function handleOnComplete() {
+
+  }
+
+
   return (<Routes>
     <Route element={<StartComposer />}>
-      <Route path='/feedback/:taskId' element={<FeedbackOneTask taskId={taskId} workerReplies={[]} />} />
-      <Route path='/feedback/all-tasks' element={<FeedbackAllTasks taskId={taskId} workerReplies={[]} />} />
+      <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} />} />
+      <Route path='/feedback/all-tasks' element={<FeedbackAllTasks />} />
       <Route path='/feedback' element={<>feedback loading...</>} />
     </Route>
   </Routes>)
 }
 
-export { feedbackIntl, FeedbackOneTask };
+
+export { feedbackIntl, UpsertOneFeedback };
 

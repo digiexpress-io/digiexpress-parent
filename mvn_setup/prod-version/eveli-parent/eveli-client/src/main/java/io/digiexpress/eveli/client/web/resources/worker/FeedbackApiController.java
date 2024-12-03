@@ -1,5 +1,11 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+
 /*-
  * #%L
  * eveli-client
@@ -23,6 +29,8 @@ package io.digiexpress.eveli.client.web.resources.worker;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +42,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FeedbackApiController {
 
+  private final FeedbackClient feedbackClient;
   
+
+  @GetMapping
+  public ResponseEntity<List<Feedback>> findAllFeedback()
+  {
+    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
+    return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+  }
   
 }

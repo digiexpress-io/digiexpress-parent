@@ -39,8 +39,8 @@ import { useAttachmentConfig } from '../../context/AttachmentContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
 import * as Yup from 'yup';
 
-import { FeedbackOneTask } from '@/feedback';
 import * as Burger from '@/burger';
+import { TaskFeedback } from './TaskFeedback';
 
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -510,7 +510,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <FeedbackOneTask taskId={editTask.id! + ''} workerReplies={comments} />
+                        <TaskFeedback taskId={editTask.id! + ''} />
                       </AccordionDetails>
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />

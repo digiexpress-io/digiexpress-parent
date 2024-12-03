@@ -182,7 +182,8 @@ public class TaskApiController {
   @GetMapping(value="/{id}/feedback-templates")
   public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("id") Long id)
   {
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString());
+    final var authentication = securityClient.getUser();
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(template, HttpStatus.OK);
   }
   @PostMapping(value="/{id}/feedback")

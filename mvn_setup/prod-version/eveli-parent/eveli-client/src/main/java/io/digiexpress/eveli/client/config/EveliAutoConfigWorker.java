@@ -34,10 +34,11 @@ import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
-import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
+import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
+import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -86,5 +87,9 @@ public class EveliAutoConfigWorker {
   @Bean 
   public EmailNotificationController emailNotificationController(EveliPropsEmail emailProps) {
     return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
+  }
+  @Bean 
+  public FeedbackApiController feedbackApiController(FeedbackClient feedbackClient) {
+    return new FeedbackApiController(feedbackClient);
   }
 }

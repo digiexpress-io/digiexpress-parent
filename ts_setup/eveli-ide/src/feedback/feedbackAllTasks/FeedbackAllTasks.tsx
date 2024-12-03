@@ -1,13 +1,9 @@
 import React from 'react';
-import { Box, Chip, Divider, FormControl, FormControlLabel, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
-import { Comment, CommentSource } from '../../frontdesk/types/task/Comment';
+import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 
 import * as Burger from '@/burger';
+import { useFeedback } from '../feedback-api';
 
-export interface FeedbackAllTasksProps {
-  taskId: string | undefined;
-  workerReplies: Comment[];
-}
 
 
 // need two filters -- one for category and one for sub-category or type
@@ -26,7 +22,18 @@ const subCategories = [
 ]
 
 
-export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ taskId, workerReplies }) => {
+export interface FeedbackAllTasksProps {
+
+}
+export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ }) => {
+  const { findAllFeedback } = useFeedback();
+
+  React.useEffect(() => {
+    findAllFeedback().then(data => console.log(data));
+  }, []);
+
+  const workerReplies = [];
+
   const [category, setCategory] = React.useState<string[]>([]);
   const [subCategory, setSubCategory] = React.useState<string[]>([]);
 

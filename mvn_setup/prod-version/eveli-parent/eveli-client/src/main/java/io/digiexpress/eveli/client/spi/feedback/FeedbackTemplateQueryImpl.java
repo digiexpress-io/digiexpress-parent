@@ -57,7 +57,7 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
   
   
   @Override
-  public FeedbackTemplate getOneByTaskId(String taskId) {
+  public FeedbackTemplate getOneByTaskId(String taskId, String userId) {
     final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId));
     final var comments = taskClient.queryComments().findAllByTaskId(task.getId());
     
@@ -92,6 +92,8 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
         
         .subLabelKey(extract.map(e -> e.getSubLabelKey()).orElse("-"))
         .subLabelValue(extract.map(e -> e.getSubLabelValue()).orElse("-"))
+        
+        .userId(userId)
         
         .build();
   }

@@ -2,16 +2,8 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useStat
 import { useFetch } from '../hooks/useFetch';
 
 export interface Config {
-
-  //api?: string;
-  //tasksApiUrl?: string; // api/tasks/v1
-
-
   serviceUrl?: string;
-
   dialobComposerUrl?: string;
-
-  feedbackKey?: string;
   taskDeleteGroups?: string[];
   taskAdminGroups?: string[];
   appVersion?: string;

@@ -44,7 +44,7 @@ public interface FeedbackClient {
    * Extract task/questionnaire data and map it to possible feedback 
    */
   interface FeedbackTemplateQuery {
-    FeedbackTemplate getOneByTaskId(String taskId);
+    FeedbackTemplate getOneByTaskId(String taskId, String userId);
   }
 
   /**
@@ -152,6 +152,8 @@ public interface FeedbackClient {
     String getOrigin();
     String getContent();
     String getLocale();
+    
+    String getUserId();
     
     Questionnaire getQuestionnaire();
     List<String> getReplys(); 

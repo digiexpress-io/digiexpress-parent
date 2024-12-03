@@ -40,7 +40,7 @@ public class FeedbackTest extends FeedbackEnirSetup {
   @Test
   void run() {
     final var taskId = setupTasks.generateOneTask();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId);
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "");
     final var feedback = feedbackClient.createOneFeedback(ImmutableCreateFeedbackCommand.builder()
         .content(template.getContent())
         
