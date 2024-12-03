@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /*-
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
@@ -40,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GamutSiteController {
   
   private final Supplier<Sites> siteEnvir;
+  private final FeedbackClient feedback;
 
   @GetMapping
   public LocalizedSite getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
@@ -54,6 +58,10 @@ public class GamutSiteController {
           .build();
     }
     return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
-    
+  }
+  
+  @GetMapping(path = "feedback")
+  public List<Feedback> findAllFeedback() {
+    return feedback.queryFeedbacks().findAll();
   }
 }
