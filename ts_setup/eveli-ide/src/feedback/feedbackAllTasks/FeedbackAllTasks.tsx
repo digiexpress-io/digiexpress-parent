@@ -2,7 +2,9 @@ import React from 'react';
 import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { useFeedback } from '../feedback-api';
+import { FeedbackApi, useFeedback } from '../feedback-api';
+import { intlFormat } from 'date-fns';
+import { useIntl } from 'react-intl';
 
 
 
@@ -25,14 +27,17 @@ const subCategories = [
 export interface FeedbackAllTasksProps {
 
 }
-export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ }) => {
+
+export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
+  const intl = useIntl();
   const { findAllFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>();
 
   React.useEffect(() => {
-    findAllFeedback().then(data => console.log(data));
+    findAllFeedback()
+      .then(data => setFeedback(data));
   }, []);
 
-  const workerReplies = [];
 
   const [category, setCategory] = React.useState<string[]>([]);
   const [subCategory, setSubCategory] = React.useState<string[]>([]);
@@ -59,16 +64,16 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ }) => {
 
   return (
     <div style={{ padding: 10 }}>
-      <Typography variant='h1'>All feedback</Typography>
+      <Typography variant='h1'>{intl.formatMessage({ id: 'feedback.all' })}</Typography>
 
       <Box display='flex' mb={3} gap={1} alignItems='end'>
         <Box width='25%'>
-          <Burger.TextField label='feedback.search' onChange={() => { }} value='Enter a feedback id' />
+          <Burger.TextField label='feedback.search' onChange={() => { }} value={intl.formatMessage({ id: 'feedback.search.placeholder' })} />
         </Box>
 
         <Box width='75%'>
           <FormControl sx={{ width: '45%', marginRight: 1 }}>
-            <Typography fontWeight='bold'>Filter by Category</Typography>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.category' })}</Typography>
             <Select
               sx={{ padding: 0 }}
               value={category}
@@ -92,7 +97,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ }) => {
           </FormControl>
 
           <FormControl sx={{ width: '45%' }}>
-            <Typography fontWeight='bold'>Filter by Subcategory</Typography>
+            <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.subCategory' })}</Typography>
             <Select
               sx={{ padding: 0 }}
               value={subCategory}
@@ -119,110 +124,33 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ }) => {
       </Box>
 
       <List dense disablePadding>
-        <ListItem dense disableGutters>
-          <ListItemButton>
-            <Box display='flex' gap={3} width='100%'>
-              <Box minWidth='10%' maxWidth='10%'>
-                <Typography variant='caption' fontWeight={500}>Feedback id</Typography>
-                <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}> 17637480807647-03</Typography>
-              </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500}>Category</Typography>
-                <Typography>Parks and recreation</Typography>
-              </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500} >Sub-category</Typography>
-                <Typography>Children's playground</Typography>
-              </Box>
-              <Box>
-                <Typography variant='caption' fontWeight={500} >Modified</Typography>
-                <Typography>11.12.2024</Typography>
-              </Box>
-              <Box width='10%'>
-                <Typography variant='caption' fontWeight={500} >Published?</Typography>
-                <Typography>{workerReplies.length ? 'YES' : 'NO'}</Typography>
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                UNPUB
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                DELETE
-              </Box>
-            </Box>
-          </ListItemButton>
-        </ListItem>
 
-        <Divider />
-
-        <ListItem dense disableGutters>
-          <ListItemButton>
-            <Box display='flex' gap={3} width='100%'>
-              <Box minWidth='10%' maxWidth='10%'>
-                <Typography variant='caption' fontWeight={500}>Feedback id</Typography>
-                <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>2</Typography>
+        {feedback ? feedback.map((feedback) => (<>
+          <ListItem dense disableGutters>
+            <ListItemButton>
+              <Box display='flex' gap={3} width='100%'>
+                <Box width='35%'>
+                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>
+                  <Typography>{feedback.labelValue}</Typography>
+                </Box>
+                <Box width='35%'>
+                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.subCategory' })}</Typography>
+                  <Typography>{feedback.subLabelValue}</Typography>
+                </Box>
+                <Box width='15%'>
+                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.createdBy' })}</Typography>
+                  <Typography>{feedback.createdBy}</Typography>
+                </Box>
+                <Box width='15%'>
+                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.updatedBy' })}</Typography>
+                  <Typography>{feedback.updatedBy}</Typography>
+                </Box>
               </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500}>Category</Typography>
-                <Typography>Public swimming pools</Typography>
-              </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500}>Sub-category</Typography>
-                <Typography>Maintenance and hygeine</Typography>
-              </Box>
-              <Box>
-                <Typography variant='caption' fontWeight={500}>Modified</Typography>
-                <Typography>09.12.2024</Typography>
-              </Box>
-              <Box width='10%'>
-                <Typography variant='caption' fontWeight={500}>Published?</Typography>
-                <Typography>{workerReplies.length ? 'YES' : 'NO'}</Typography>
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                UNPUB
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                DELETE
-              </Box>
-            </Box>
-          </ListItemButton>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem dense disableGutters>
-          <ListItemButton>
-            <Box display='flex' gap={3} width='100%'>
-              <Box minWidth='10%' maxWidth='10%'>
-                <Typography variant='caption' fontWeight={500}>Feedback id</Typography>
-                <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>3172647899</Typography>
-              </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500}>Category</Typography>
-                <Typography>Gym rental facilities</Typography>
-              </Box>
-              <Box width='35%'>
-                <Typography variant='caption' fontWeight={500}>Sub-category</Typography>
-                <Typography>Quality of services</Typography>
-              </Box>
-              <Box>
-                <Typography variant='caption' fontWeight={500}>Modified</Typography>
-                <Typography>03.12.2024</Typography>
-              </Box>
-              <Box width='10%'>
-                <Typography variant='caption' fontWeight={500}>Published?</Typography>
-                <Typography>{workerReplies.length ? 'YES' : 'NO'}</Typography>
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                UNPUB
-              </Box>
-              <Box width='5%' height='100%' alignSelf='center'>
-                DELETE
-              </Box>
-            </Box>
-          </ListItemButton>
-        </ListItem>
-
-        <Divider />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </>
+        )) : <>{intl.formatMessage({ id: 'feedback.none' })}</>}
 
       </List>
 
