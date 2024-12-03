@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { Box, Chip, Divider, FormControl, FormControlLabel, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import { Comment, CommentSource } from '../../frontdesk/types/task/Comment';
 
 import * as Burger from '@/burger';
@@ -12,24 +12,39 @@ export interface FeedbackAllTasksProps {
 
 // need two filters -- one for category and one for sub-category or type
 
-const names = [
+const categories = [
   'Public pools',
   'Parks and recreation',
   'School services',
   'Community events',
-  'Published',
-  'Has reply',
 ];
+
+const subCategories = [
+  'Cleanliness and hygine',
+  'Changing facilities',
+  'Customer service'
+]
 
 
 export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ taskId, workerReplies }) => {
-  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [category, setCategory] = React.useState<string[]>([]);
+  const [subCategory, setSubCategory] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+  const handleChangeCategory = (event: SelectChangeEvent<typeof category>) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setCategory(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+  const handleChangeSubCategory = (event: SelectChangeEvent<typeof category>) => {
+    const {
+      target: { value },
+    } = event;
+    setSubCategory(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -43,23 +58,22 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ taskId, work
         <Box width='25%'>
           <Burger.TextField label='feedback.search' onChange={() => { }} value='Enter a feedback id' />
         </Box>
+
         <Box width='75%'>
-          <FormControl sx={{ width: '100%' }}>
+          <FormControl sx={{ width: '45%', marginRight: 1 }}>
+            <Typography fontWeight='bold'>Filter by Category</Typography>
             <Select
               sx={{ padding: 0 }}
-              multiple
-              value={personName}
-              onChange={handleChange}
+              value={category}
+              onChange={handleChangeCategory}
               input={<TextField select sx={{ padding: 0 }} />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} sx={{ margin: 0 }} />
-                  ))}
+                  {selected.map((value) => (<>{value}</>))}
                 </Box>
               )}
             >
-              {names.map((name) => (
+              {categories.map((name) => (
                 <MenuItem
                   key={name}
                   value={name}
@@ -70,6 +84,29 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = ({ taskId, work
             </Select>
           </FormControl>
 
+          <FormControl sx={{ width: '45%' }}>
+            <Typography fontWeight='bold'>Filter by Subcategory</Typography>
+            <Select
+              sx={{ padding: 0 }}
+              value={subCategory}
+              onChange={handleChangeSubCategory}
+              input={<TextField select sx={{ padding: 0 }} />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (<>{value}</>))}
+                </Box>
+              )}
+            >
+              {subCategories.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
         </Box>
       </Box>
