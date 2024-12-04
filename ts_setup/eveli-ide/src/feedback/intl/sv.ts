@@ -15,6 +15,12 @@ const sv = {
   'feedback.search.filter.category': 'Filter by category',
   'feedback.search.filter.subCategory': 'Filter by sub-category',
 
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.myReply': 'Reply to customer',
+
   'button.cancel': 'Cancel',
   'button.publish': 'Publish'
 }

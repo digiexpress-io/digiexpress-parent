@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
 import * as Burger from '@/burger';
 import { FeedbackApi, useFeedback } from '../feedback-api';
-import { useIntl } from 'react-intl';
+import { IndicatorPublished } from '../indicator-published';
 
 
 
@@ -24,11 +26,12 @@ const subCategories = [
 
 
 export interface FeedbackAllTasksProps {
-
+  taskId: string
 }
 
 export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
   const intl = useIntl();
+  const navigate = useNavigate();
   const { findAllFeedback } = useFeedback();
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>();
 
@@ -60,6 +63,12 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
       typeof value === 'string' ? value.split(',') : value,
     );
   };
+
+  function handleFeedbackNav(taskId: string) {
+    console.log(taskId)
+    navigate(`/feedback/${taskId}`);
+
+  }
 
   return (
     <div style={{ padding: 10 }}>
@@ -126,8 +135,11 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
 
         {feedback ? feedback.map((feedback) => (<>
           <ListItem dense disableGutters>
-            <ListItemButton>
+            <ListItemButton onClick={() => handleFeedbackNav(feedback.sourceId)}>
               <Box display='flex' gap={3} width='100%'>
+                <Box width='6%' alignContent='center'>
+                  <IndicatorPublished />
+                </Box>
                 <Box width='35%'>
                   <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>
                   <Typography>{feedback.labelValue}</Typography>
@@ -136,11 +148,11 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
                   <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.subCategory' })}</Typography>
                   <Typography>{feedback.subLabelValue}</Typography>
                 </Box>
-                <Box width='15%'>
+                <Box width='13%'>
                   <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.createdBy' })}</Typography>
                   <Typography>{feedback.createdBy}</Typography>
                 </Box>
-                <Box width='15%'>
+                <Box width='13%'>
                   <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.updatedBy' })}</Typography>
                   <Typography>{feedback.updatedBy}</Typography>
                 </Box>

@@ -1,16 +1,14 @@
 import React from 'react';
 import { alpha, Box, styled, SxProps, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view';
-
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 
 import { useNavigate } from 'react-router-dom';
-
 import { useIntl } from 'react-intl';
 
-import * as Burger from '@/burger';
 import { MenuItem, MenuItemProps } from './MenuItem';
+
 
 
 
@@ -21,7 +19,7 @@ const iconSize: SxProps = {
 
 const menuItems: MenuItemProps[] = [
   { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
-  { id: 'menu.feedbackAllTasks', to: '/feedback/all-tasks', icon: <FormatListNumberedIcon sx={iconSize} /> },
+  { id: 'menu.feedbackAllTasks', to: '/feedback', icon: <FormatListNumberedIcon sx={iconSize} /> },
 
 ]
 

@@ -7,5 +7,5 @@ export const TaskFeedback: React.FC<{ taskId: string }> = ({ taskId }) => {
 
   }
 
-  return (<UpsertOneFeedback taskId={taskId} onComplete={handleFeedbackComplete} />);
+  return (<UpsertOneFeedback taskId={taskId} onComplete={handleFeedbackComplete} viewType='FRONTDESK_TASK_VIEW' />);
 }
