@@ -155,6 +155,13 @@ const sv = {
   'feedback.close': 'Avbryt',
   'feedback.send': 'Skicka',
 
+  'feedback.noFeedback.info1': 'No available feedback to publish!',
+  'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
+  'feedback.category': 'Luokka',
+  'feedback.subCategory': 'Alaluokka',
+  'feedback.myReply': 'Vastaa asiakkaalle',
+
   'help.title': 'Anvisningar',
 
   'attachmentView.title': 'Attachments',

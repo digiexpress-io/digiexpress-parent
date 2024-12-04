@@ -10,6 +10,7 @@ const fi = {
   'feedback.subCategory': 'Subcategory',
   'feedback.createdBy': 'Created by',
   'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
   'feedback.search': 'Search',
   'feedback.search.placeholder': 'Feedback, process, or task id',
   'feedback.search.filter.category': 'Filter by category',

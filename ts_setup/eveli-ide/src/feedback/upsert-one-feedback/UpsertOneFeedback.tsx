@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Box, CircularProgress, Divider, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, TextField, Typography, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
@@ -15,6 +15,7 @@ export interface UpsertOneFeedbackProps {
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, onComplete, viewType }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const intl = useIntl();
 
   const { getOneTemplate, createOneFeedback } = useFeedback();
@@ -67,40 +68,46 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, on
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
 
-        <Box display='flex' alignItems='center'>
-          <Typography variant='h3' fontWeight='bold' mr={3}>Public reply to customer feedback</Typography>
-          <IndicatorPublished size='LARGE' />
-        </Box>
-        <Divider sx={{ my: 2 }} />
-
         {
           viewType === 'FEEDBACK_EDITOR_VIEW' &&
           <>
+            <Box display='flex' alignItems='center'>
+              <Typography variant='h3' fontWeight='bold' mr={3}>Public reply to customer feedback</Typography>
+              <IndicatorPublished size='LARGE' />
+            </Box>
+            <Divider sx={{ my: 2 }} />
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{taskId}</Typography>
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{template?.questionnaire.metadata.label}</Typography>
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}{template?.questionnaire.metadata.completed}</Typography>
+            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}Amanda McDuff</Typography>
+            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}11.12.2024</Typography>
+            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}John Smith</Typography>
+
+
+
             <Divider sx={{ my: 2 }} />
+            <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
           </>
         }
 
-        <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{command.labelValue},</Typography>
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{command.subLabelValue}</Typography>
         <Typography mt={2}>{command.content}</Typography>
 
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
         {reply ? (
-        <TextField onChange={(e) => setReply(e.target.value)}
-          sx={{ mb: 3 }}
-          multiline
-          minRows={4}
-          placeholder='Write a reply here'
+          <TextField onChange={(e) => setReply(e.target.value)}
+            sx={{ mb: 3 }}
+            multiline
+            minRows={4}
+            placeholder='Write a reply here'
             value={reply}
           />
-        ) : (
-          <Typography variant='body2' fontStyle='italic'>
-            Before publishing, you must first send an external comment to the customer. Then, you can publish that comment.
-          </Typography>)
+        ) : (<Box p={2}>
+          <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info1' })}</Typography>
+          <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info2' })}</Typography>
+        </Box>
+        )
         }
 
       </div>

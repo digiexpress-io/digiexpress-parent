@@ -140,6 +140,7 @@ const classes = {
     }
   },
   accordionTitle: {
+    fontWeight: 'bolder',
     width: "max-content",
     mr: 2
   },

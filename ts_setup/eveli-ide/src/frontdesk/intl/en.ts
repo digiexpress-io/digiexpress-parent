@@ -154,6 +154,12 @@ const en = {
   'feedback.sendScreenshot': 'Send screenshot',
   'feedback.close': 'Close',
   'feedback.send': 'Send',
+  'feedback.category': 'Category',
+  'feedback.subCategory': 'Subcategory',
+  'feedback.myReply': 'Reply to customer',
+  'feedback.noFeedback.info1': 'No available feedback to publish!',
+  'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
 
   'help.title': 'Help',
   
