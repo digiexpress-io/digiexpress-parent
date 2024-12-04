@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, Divider, TextField, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress, Divider, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
@@ -69,7 +69,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, on
 
         <Box display='flex' alignItems='center'>
           <Typography variant='h3' fontWeight='bold' mr={3}>Public reply to customer feedback</Typography>
-          <IndicatorPublished />
+          <IndicatorPublished size='LARGE' />
         </Box>
         <Divider sx={{ my: 2 }} />
 
@@ -89,13 +89,20 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, on
         <Typography mt={2}>{command.content}</Typography>
 
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
+        {reply ? (
         <TextField onChange={(e) => setReply(e.target.value)}
           sx={{ mb: 3 }}
           multiline
           minRows={4}
           placeholder='Write a reply here'
-          value={reply}
-        />
+            value={reply}
+          />
+        ) : (
+          <Typography variant='body2' fontStyle='italic'>
+            Before publishing, you must first send an external comment to the customer. Then, you can publish that comment.
+          </Typography>)
+        }
+
       </div>
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />

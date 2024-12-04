@@ -12,6 +12,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 import { useNavigate } from "react-router-dom";
@@ -41,6 +42,7 @@ import * as Yup from 'yup';
 
 import * as Burger from '@/burger';
 import { TaskFeedback } from './TaskFeedback';
+import { IndicatorPublished } from '../../../feedback/indicator-published';
 
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -507,7 +509,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Typography sx={classes.accordionTitle}>
                           <FormattedMessage id="task.feedback.published" />
                         </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'><SupportAgentIcon /></Badge>
+                        {/* <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='success'><SupportAgentIcon /></Badge> */}
+                        <Badge badgeContent={<IndicatorPublished size='SMALL' />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
                         <TaskFeedback taskId={editTask.id! + ''} />
