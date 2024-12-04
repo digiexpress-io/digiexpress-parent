@@ -32,6 +32,8 @@ const sv = {
   'menu.services': 'Tjänster',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalender',
+  'menu.feedback': 'Feedback',
+
 
   'front.intro.title': 'Välkommen!',
   
@@ -43,6 +45,7 @@ const sv = {
   'profile.app.version': "Applikationsversion:",
 
   'button.cancel' : 'Avbryt',
+  'button.publish': 'Publicera',
   'button.accept' : 'Acceptera',
   'button.edit' : 'Öppna',
   'button.close' : 'Stäng',

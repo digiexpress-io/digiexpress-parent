@@ -32,6 +32,8 @@ const fi = {
   'menu.services': 'Palvelut',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalenteri',
+  'menu.feedback': 'Palaute',
+
 
   'front.intro.title': 'Tervetuloa!',
   
@@ -43,6 +45,7 @@ const fi = {
   'profile.app.version': "Sovellusversio:",
 
   'button.cancel' : 'Peruuta',
+  'button.publish': 'Julkaista',
   'button.accept' : 'Hyväksy',
   'button.edit' : 'Avaa',
   'button.close' : 'Sulje',

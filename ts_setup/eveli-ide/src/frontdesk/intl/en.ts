@@ -32,6 +32,7 @@ const en = {
   'menu.services': 'Services',
   'menu.content': 'Stencil',
   'menu.calendar': 'Calendar',
+  'menu.feedback': 'Feedback',
 
   'front.intro.title': 'Welcome!',
 
@@ -43,6 +44,7 @@ const en = {
   'profile.app.version': "Application version:",
 
   'button.cancel' : 'Cancel',
+  'button.publish': 'Publish',
   'button.accept' : 'Accept',
   'button.edit' : 'Edit',
   'button.close' : 'Close',

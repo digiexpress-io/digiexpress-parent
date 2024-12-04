@@ -44,8 +44,8 @@ export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
   return (<Routes>
     <Route element={<StartComposer />}>
       <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} />} />
-      <Route path='/feedback/all-tasks' element={<FeedbackAllTasks />} />
-      <Route path='/feedback' element={<>feedback loading...</>} />
+      <Route path='/feedback/all-tasks' element={<FeedbackAllTasks />} /> //TODO streamline these two /feedback URLs
+      <Route path='/feedback' element={<FeedbackAllTasks />} />
     </Route>
   </Routes>)
 }

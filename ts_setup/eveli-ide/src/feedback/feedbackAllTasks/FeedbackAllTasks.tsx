@@ -3,7 +3,6 @@ import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Se
 
 import * as Burger from '@/burger';
 import { FeedbackApi, useFeedback } from '../feedback-api';
-import { intlFormat } from 'date-fns';
 import { useIntl } from 'react-intl';
 
 

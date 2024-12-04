@@ -52,7 +52,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, on
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
-        <Typography variant='h1'>Public reply to customer feedback</Typography>
+        <Typography variant='h2'>Public reply to customer feedback</Typography>
         <Typography variant='body2'>Source task id: {taskId}</Typography>
         <Typography variant='body2'>Form name: {template?.questionnaire.metadata.label}</Typography>
         <Typography variant='body2'>Date feedback received from customer: {template?.questionnaire.metadata.completed}</Typography>

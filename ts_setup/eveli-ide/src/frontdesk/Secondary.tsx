@@ -12,6 +12,7 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -37,6 +38,8 @@ const menuItems: MenuItemProps[] = [
   { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} /> },
   { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} /> },
   { id: 'menu.content', to: '/ui/content', icon: <MenuBookIcon sx={iconSize} /> },
+  { id: 'menu.feedback', to: '/feedback', icon: <ThumbUpAltIcon sx={iconSize} /> },
+
   //TODO Calendar still needed??  
   //{ id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> }, 
   { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
