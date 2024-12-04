@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, Divider, TextField, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Divider, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
@@ -15,7 +15,6 @@ export interface UpsertOneFeedbackProps {
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, onComplete, viewType }) => {
   const navigate = useNavigate();
-  const theme = useTheme();
   const intl = useIntl();
 
   const { getOneTemplate, createOneFeedback } = useFeedback();
