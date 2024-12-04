@@ -44,6 +44,7 @@ public interface DialobClient {
   
   
   Questionnaire getQuestionnaireById(String questionnaireId);
+  Questionnaire getQuestionnaireAndMetaById(String questionnaireId);
   Dialob getDialobById(String questionnaireId);
   
   void completeSession(String questionnaireId);

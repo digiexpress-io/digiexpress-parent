@@ -1,7 +1,10 @@
 package io.digiexpress.eveli.dialob.spi;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*-
  * #%L
@@ -35,14 +38,23 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormItem;
 import io.dialob.api.form.FormTag;
 import io.dialob.api.form.FormTag.Type;
+import io.dialob.api.form.FormValueSet;
+import io.dialob.api.form.FormValueSetEntry;
 import io.dialob.api.form.ImmutableFormTag;
+import io.dialob.api.proto.ImmutableValueSet;
+import io.dialob.api.proto.ImmutableValueSetEntry;
+import io.dialob.api.proto.ValueSet;
+import io.dialob.api.questionnaire.Answer;
+import io.dialob.api.questionnaire.ImmutableQuestionnaire;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.dialob.api.DialobProxy;
 import io.digiexpress.eveli.dialob.spi.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -53,6 +65,8 @@ public class DialobClientImpl implements DialobClient {
   
   private final ObjectMapper objectMapper;
   private final DialobService dialobService;
+  
+  private static String LOOKUP = "__MOD_";
   
   @Override
   public DialobSessionBuilderImpl createSession() {
@@ -209,5 +223,103 @@ public class DialobClientImpl implements DialobClient {
       
       return new DialobClientImpl(objectMapper, dialobService);
     }
+  }
+
+  @Override
+  public Questionnaire getQuestionnaireAndMetaById(String questionnaireId) {
+
+    
+    
+    final var questionnaire = getQuestionnaireById(questionnaireId);
+    final var form = getFormById(questionnaire.getMetadata().getFormId());
+    final var valuesets = form.getValueSets().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    
+    // re-map answers with form data
+    final var answers = questionnaire.getAnswers().stream()
+    .map(answer -> {
+      final var meta = form.getData().get(answer.getId());
+      final var valueset = meta.getValueSetId() == null ? null : valuesets.get(meta.getValueSetId());
+  
+      final Optional<FormValueSetEntry> valuesetEntry = valueset == null ? Optional.empty() : valueset.getEntries().stream().filter(entry -> entry.getId().equals(answer.getValue())).findFirst();    
+      return new AnswerAndValueSet(answer, meta, Optional.ofNullable(valueset), valuesetEntry);
+    })
+    .collect(Collectors.toList());
+    
+    
+    // group answers by value set id
+    final var answerValueSets = answers.stream()
+        .filter(a -> a.getValueSet().isPresent() && a.getValueSetEntry().isPresent())
+        .collect(Collectors.groupingBy(a -> a.getValueSet().get().getId()));
+    
+    // apply corrections to value set 
+    final var correctedValueSets = new ArrayList<ValueSet>();
+    for(final var valueSet : questionnaire.getValueSets()) {
+      final var mods = answerValueSets.get(valueSet.getId());
+      final ValueSet merged = merge(valueSet, mods, questionnaire);
+      correctedValueSets.add(merged);
+    }
+    
+    // add answer meta data
+    try {
+      for(final var answer : answers) {
+        correctedValueSets.add(ImmutableValueSet.builder()
+            .id(LOOKUP + answer.getItem().getId())
+            .addEntries(LOOKUP, objectMapper.writeValueAsString(answer.getItem()))
+            .build());
+      }
+    } catch(Exception e) {
+      // ignore failure on purpose
+    }
+    
+    return ImmutableQuestionnaire.builder().from(questionnaire).valueSets(correctedValueSets).build();
+  }
+  
+  public static FormItem LOOKUP(Answer answer, Questionnaire q, ObjectMapper om) {
+    try {
+      final var valueset = q.getValueSets().stream().filter(p -> p.getId().equals(LOOKUP + answer.getId())).findFirst().get();
+      final var formItem = valueset.getEntries().iterator().next().getValue();
+      return om.readValue(formItem, FormItem.class);
+    } catch(Exception e) {
+      // ignore failure on purpose
+      
+      return null;
+    }
+  }
+
+  private ValueSet merge(ValueSet valueset, List<AnswerAndValueSet> valuesetCorrections, Questionnaire questionnaire) {
+    if(valuesetCorrections == null) {
+      return valueset;
+    }
+    
+    final var correction = ImmutableValueSet.builder().from(valueset);
+    final var existing = valueset.getEntries().stream().map(e -> e.getKey()).toList();
+    for(final var corrections : valuesetCorrections) {
+      final var key = corrections.getAnswer().getValue().toString();
+      if(existing.contains(key)) {
+        continue;
+      }
+      
+      final var labels = corrections.getValueSetEntry().get().getLabel();
+      
+      for(final var label : labels.entrySet()) {
+        correction.addEntries(ImmutableValueSetEntry.builder()
+            .key(label.getKey())
+            .value(label.getValue())
+            .build());
+      }
+    }
+    
+    return correction.build();
+  }
+  
+  
+  @RequiredArgsConstructor
+  @Data
+  private static class AnswerAndValueSet {
+    private final Answer answer;
+    private final FormItem item;
+    private final Optional<FormValueSet> valueSet;
+    private final Optional<FormValueSetEntry> valueSetEntry; 
+    
   }
 }

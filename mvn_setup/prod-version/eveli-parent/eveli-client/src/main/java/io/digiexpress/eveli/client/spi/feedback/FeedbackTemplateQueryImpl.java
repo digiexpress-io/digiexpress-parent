@@ -22,6 +22,9 @@ package io.digiexpress.eveli.client.spi.feedback;
 
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
+import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplateQuery;
@@ -43,9 +46,10 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
   
   @FunctionalInterface
   public interface QuestionnaireCategoryExtractor {
-    Optional<QuestionnaireCategoryExtract> apply(Questionnaire q);
+    Optional<QuestionnaireCategoryExtract> apply(Questionnaire q, Form form);
   }
 
+  @Value.Immutable
   public interface QuestionnaireCategoryExtract {
     String getLabelKey();
     String getLabelValue();
@@ -76,7 +80,7 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
       .map(this::formatReply)
       .toList();
     
-    final var extract = extractor.apply(questionnaire);
+    final var extract = extractor.apply(questionnaire, null);
     
     return ImmutableFeedbackTemplate.builder()
         .addAllReplys(replys)

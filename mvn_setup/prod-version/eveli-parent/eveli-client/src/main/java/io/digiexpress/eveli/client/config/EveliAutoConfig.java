@@ -84,10 +84,11 @@ public class EveliAutoConfig {
   public FeedbackClient feedbackClient(
       TaskClient taskClient,
       ProcessClient processClient,
-      JdbcTemplate jdbc
+      JdbcTemplate jdbc,
+      ObjectMapper om
   ) {
     
-    final var extractor = new QuestionnaireCategoryExtractorImpl();
+    final var extractor = new QuestionnaireCategoryExtractorImpl(om);
     return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc);
   }
   @Bean

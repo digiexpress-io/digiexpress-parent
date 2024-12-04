@@ -81,9 +81,6 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = ({ taskId, on
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}Amanda McDuff</Typography>
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}11.12.2024</Typography>
             <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}John Smith</Typography>
-
-
-
             <Divider sx={{ my: 2 }} />
             <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
           </>

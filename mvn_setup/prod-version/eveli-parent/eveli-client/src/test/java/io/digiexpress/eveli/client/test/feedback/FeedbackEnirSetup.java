@@ -39,6 +39,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
@@ -95,6 +96,7 @@ public class FeedbackEnirSetup {
     @Autowired CommentRepository commentRepository;
     @Autowired EntityManager entityManager;
     @Autowired ProcessRepository processJPA;
+    @Autowired ObjectMapper objectMapper;
   
     @Bean
     public SetupTask setupTask(ProcessClient processClient) {    
@@ -113,7 +115,7 @@ public class FeedbackEnirSetup {
     public FeedbackClient feedbackClient(ProcessClient processClient) {
       final var ref = new TaskRefGenerator(entityManager);
       final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
-      return new FeedbackClientImpl(taskClient, processClient, new QuestionnaireCategoryExtractorImpl(), jdbcTemplate);
+      return new FeedbackClientImpl(taskClient, processClient, new QuestionnaireCategoryExtractorImpl(objectMapper), jdbcTemplate);
     }
   }
   
