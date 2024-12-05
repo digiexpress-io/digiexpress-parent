@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import * as Burger from '@/burger';
 import { FeedbackApi, useFeedback } from '../feedback-api';
-import { IndicatorPublished } from '../indicator-published';
+import { StatusIndicator } from '../status-indicator';
 
 
 
@@ -138,7 +138,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
             <ListItemButton onClick={() => handleFeedbackNav(feedback.sourceId)}>
               <Box display='flex' gap={3} width='100%'>
                 <Box width='6%' alignContent='center'>
-                  <IndicatorPublished size='LARGE' />
+                  <StatusIndicator size='LARGE' taskId={feedback.sourceId} />
                 </Box>
                 <Box width='35%'>
                   <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>

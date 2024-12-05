@@ -42,7 +42,7 @@ import * as Yup from 'yup';
 
 import * as Burger from '@/burger';
 import { TaskFeedback } from './TaskFeedback';
-import { IndicatorPublished } from '../../../feedback/indicator-published';
+import { StatusIndicator } from '../../../feedback/status-indicator';
 
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -511,7 +511,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                           <FormattedMessage id="task.feedback.published" />
                         </Typography>
                         {/* <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='success'><SupportAgentIcon /></Badge> */}
-                        <Badge badgeContent={<IndicatorPublished size='SMALL' />}><SupportAgentIcon /></Badge>
+                        <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
                         <TaskFeedback taskId={editTask.id! + ''} />

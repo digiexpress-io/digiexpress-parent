@@ -51,7 +51,6 @@ public class FeedbackTest extends FeedbackEnirSetup {
         .subLabelKey(template.getSubLabelKey())
         .subLabelValue(template.getSubLabelValue())
         
-        .content(template.getContent())
         .locale(template.getLocale())
         .origin(template.getOrigin())
         
@@ -59,6 +58,8 @@ public class FeedbackTest extends FeedbackEnirSetup {
         .userId("super-user")
 
         .build());
+    
+    System.out.println(template.getContent());
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");

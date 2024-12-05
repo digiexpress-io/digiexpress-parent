@@ -37,6 +37,7 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
         .then(resp => resp.json());
     }
 
+
     // return all methods
     return {
       getOneTemplate, createOneFeedback, findAllFeedback

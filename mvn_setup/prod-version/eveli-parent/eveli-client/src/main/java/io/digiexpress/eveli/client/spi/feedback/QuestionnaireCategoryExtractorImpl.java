@@ -44,45 +44,61 @@ import lombok.RequiredArgsConstructor;
 public class QuestionnaireCategoryExtractorImpl implements QuestionnaireCategoryExtractor {
 
   private List<String> main = Arrays.asList("mainList");
-  private List<String> sub = Arrays.asList("cityServiceGroup", "preschoolEducationGroup", "cityServiceMainList");
+  private List<String> sub = Arrays.asList("cityServiceGroup", "preschoolEducationGroup", "cityServiceMainList", 
+      "constructionMainList", "youthServiceMainList", "exerciseMainList", "schoolMainList", "employmentImmigrationMainList", 
+      "freeTimeCultureMainList", "preschoolMainList", "communicationMainList", "cooperationMainList");
+  
+  private List<String> text = Arrays.asList("feedBackTxt");
   
   private final ObjectMapper objectMapper;
   
   @Override
   public Optional<QuestionnaireCategoryExtract> apply(Questionnaire q, Form form) {
-    final var mainAnswer = q.getAnswers().stream().filter(a -> main.contains(a.getId())).map(a -> proxyAnswer(q, a)).findFirst();
-    final var subAnswer = q.getAnswers().stream().filter(a -> sub.contains(a.getId())).map(a -> proxyAnswer(q, a)).findFirst();
+    final var mainGroup = q.getAnswers().stream().filter(a -> main.contains(a.getId())).map(a -> proxyAnswer(q, a)).findFirst();
+    final var subGroup = q.getAnswers().stream().filter(a -> sub.contains(a.getId())).map(a -> proxyAnswer(q, a)).findFirst();
+    final var customerText = q.getAnswers().stream().filter(a -> text.contains(a.getId())).map(a -> proxyAnswer(q, a)).findFirst();
     
-    if(mainAnswer.isEmpty()) {
+    if(mainGroup.isEmpty() || customerText.isEmpty()) {
       return Optional.empty();      
     }
 
-    
 
-    
     return Optional.of(ImmutableQuestionnaireCategoryExtract.builder()
-      .labelKey(mainAnswer.get().getAnswer().getValue().toString())
-      .labelValue(mainAnswer.get().getValueSetLabel().orElse(""))
+      .labelKey(mainGroup.get().getAnswer().getValue().toString())
+      .labelValue(mainGroup.get().getValueSetLabel().orElse(""))
       
-      .subLabelKey(subAnswer.map(e -> e.getAnswer().getValue().toString()).orElse(null))
-      .subLabelValue(subAnswer.map(e -> e.getValueSetLabel().orElse(null)).orElse(null))
+      .subLabelKey(subGroup.map(e -> e.getAnswer().getValue().toString()).orElse(null))
+      .subLabelValue(subGroup.map(e -> e.getValueSetLabel().orElse(null)).orElse(null))
       
       .content(new StringBuilder()
-          .append(formatFormItem(mainAnswer.get(), q))
-          .append(subAnswer.map(e -> formatFormItem(e, q)).orElse(""))
+          .append(formatSelection(mainGroup.get(), q))
+          .append(subGroup.map(e -> formatSelection(e, q)).orElse(""))
+          .append(formatText(customerText.get(), q))
           .toString())
       
       .build());
   }
   
   
-  private String formatFormItem(ProxyAnswer proxyAnswer, Questionnaire q) {
+  private String formatText(ProxyAnswer proxyAnswer, Questionnaire q) {
+    final var lang = q.getMetadata().getLanguage();
+    final var question = proxyAnswer.getFormItem().getLabel().get(lang);
+    final var answer = proxyAnswer.getAnswer().getValue().toString();
+    return new StringBuilder()
+      .append("#### ").append(question).append("  ").append(System.lineSeparator())
+      .append(answer).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
+
+    .toString();
+  }
+  
+  private String formatSelection(ProxyAnswer proxyAnswer, Questionnaire q) {
     final var lang = q.getMetadata().getLanguage();
     final var question = proxyAnswer.getFormItem().getLabel().get(lang);
     final var answer = proxyAnswer.getValueSetLabel().orElse("");
     
     return new StringBuilder()
-    .append("## ").append(question).append(": ").append(answer).append(false).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
+    .append("#### ").append(question).append("  ").append(System.lineSeparator())
+    .append(answer).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
 
     .toString();
   }

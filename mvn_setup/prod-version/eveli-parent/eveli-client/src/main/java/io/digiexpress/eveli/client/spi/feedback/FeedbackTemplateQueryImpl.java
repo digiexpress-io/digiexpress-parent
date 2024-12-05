@@ -86,7 +86,6 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
         .addAllReplys(replys)
         .questionnaire(questionnaire)
         .processId(process.get().getId().toString())
-        .content(formatContent(extract))
         
         .locale(questionnaire.getMetadata().getLanguage())
         .origin(questionnaire.getClass().getSimpleName().toUpperCase())
@@ -98,28 +97,12 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
         .subLabelValue(extract.map(e -> e.getSubLabelValue()).orElse("-"))
         
         .userId(userId)
+        .content(extract.map(e -> e.getContent()).orElse("-"))
         
         .build();
   }
   
   
-  private String formatContent(Optional<QuestionnaireCategoryExtract> extract) {
-    if(extract.isPresent() && extract.get().getContent() != null) {
-      return extract.get().getContent();
-    }
-    
-    
-    return new StringBuilder()
-        .append("## ").append(extract.map(e -> e.getLabelValue()).orElse("- ")).append("  ")
-        .append(System.lineSeparator())
-        .append(System.lineSeparator())
-
-        .append("## ").append(extract.map(e -> e.getSubLabelValue()).orElse("- ")).append("  ")
-        .append(System.lineSeparator())
-        .append(System.lineSeparator())
-        
-        .toString();
-  }
   
   private String formatReply(TaskComment comment) {
     return new StringBuilder()

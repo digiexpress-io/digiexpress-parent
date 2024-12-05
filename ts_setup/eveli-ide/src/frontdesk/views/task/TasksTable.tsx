@@ -2,7 +2,7 @@ import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } f
 import { Box, IconButton, Link } from '@mui/material';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
 import LockIcon from '@mui/icons-material/Lock';
-import MessageIcon from '@mui/icons-material/Message';
+import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -164,7 +164,7 @@ export const TasksTable: React.FC<Props> =
               {link}
               <Box display="flex">
                 <LockIcon color='secondary' fontSize='small' sx={{ marginLeft: 1 }} />
-                <MessageIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
+                <EmojiPeopleOutlinedIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
               </Box>
             </Box>
           )
@@ -172,7 +172,7 @@ export const TasksTable: React.FC<Props> =
           return (
             <Box display="flex" alignItems="center" justifyContent="space-between">
               {link}
-              <MessageIcon fontSize='small' color='primary' sx={{ marginLeft: 1 }} />
+              <EmojiPeopleOutlinedIcon fontSize='small' color='primary' sx={{ marginLeft: 1 }} />
             </Box>
           )
         }
