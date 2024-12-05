@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateFeedbackCommand;
+import io.digiexpress.eveli.client.api.ImmutableUpsertFeedbackRankingCommand;
 
 
 
@@ -61,5 +62,68 @@ public class FeedbackTest extends FeedbackEnirSetup {
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
+    
+    // rate feedback as thumbs down    
+    {
+      final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
+          ImmutableUpsertFeedbackRankingCommand.builder()
+          .customerId("BOB")
+          .rating(1)
+          .replyIdOrCategoryId(feedback.getId())
+          .build());
+      
+      Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
+      
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+        .filter(e -> e.getId().equals(feedback.getId()))
+        .findFirst()
+        .get();
+      
+      Assertions.assertEquals(1, ratedFeedback.getThumbsDownCount());
+      Assertions.assertEquals(0, ratedFeedback.getThumbsUpCount());
+    }
+    
+    // rate feedback as thumbs up
+    {
+      final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
+          ImmutableUpsertFeedbackRankingCommand.builder()
+          .customerId("BOB")
+          .rating(5)
+          .replyIdOrCategoryId(feedback.getId())
+          .build());
+      
+      Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
+      
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+        .filter(e -> e.getId().equals(feedback.getId()))
+        .findFirst()
+        .get();
+      
+      Assertions.assertEquals(0, ratedFeedback.getThumbsDownCount());
+      Assertions.assertEquals(1, ratedFeedback.getThumbsUpCount());
+    }
+    
+    // remove rating
+    {
+      final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
+          ImmutableUpsertFeedbackRankingCommand.builder()
+          .customerId("BOB")
+          .rating(null)
+          .replyIdOrCategoryId(feedback.getId())
+          .build());
+      
+      Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
+      
+      final var ratedFeedback = feedbackClient.queryFeedbacks().findAll().stream()
+        .filter(e -> e.getId().equals(feedback.getId()))
+        .findFirst()
+        .get();
+      
+      Assertions.assertEquals(0, ratedFeedback.getThumbsDownCount());
+      Assertions.assertEquals(0, ratedFeedback.getThumbsUpCount());
+    }
+    
+    final var history = feedbackClient.queryHistory().findAll();
+    Assertions.assertEquals(4, history.size());
   }
 }

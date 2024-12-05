@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -35,16 +37,16 @@ public class FeedbackClientImpl implements FeedbackClient {
   private final ProcessClient processClient;
   private final QuestionnaireCategoryExtractor extractor;
   private final JdbcTemplate jdbc;
+  private final FeedbackWithHistory feedbackWithHistory;
   
   @Override
   public Feedback createOneFeedback(CreateFeedbackCommand command) {
-    return new CreateOneFeedbackReplyImpl(jdbc).apply(command);
+    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory).apply(command);
   }
 
   @Override
   public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command) {
-    // TODO Auto-generated method stub
-    return null;
+    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory).execute(command);
   }
 
   @Override
@@ -56,4 +58,16 @@ public class FeedbackClientImpl implements FeedbackClient {
   public FeedbackTemplateQuery queryTemplate() {
     return new FeedbackTemplateQueryImpl(taskClient, processClient, extractor);
   }
+  
+  @Override
+  public FeedbackHistoryQuery queryHistory() {
+    return new FeedbackHistoryQueryImpl(jdbc);
+  }
+  
+  @Override
+  public List<Feedback> deleteAll(DeleteReplyCommand command) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

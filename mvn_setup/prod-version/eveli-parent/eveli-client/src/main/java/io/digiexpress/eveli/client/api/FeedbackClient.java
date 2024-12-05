@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.api;
 
+import java.time.ZonedDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -35,9 +37,13 @@ public interface FeedbackClient {
   
   Feedback createOneFeedback(CreateFeedbackCommand command);
   FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command);
+  List<Feedback> deleteAll(DeleteReplyCommand command);
+  
   
   FeedbackQuery queryFeedbacks();
-  FeedbackTemplateQuery queryTemplate();  
+  FeedbackTemplateQuery queryTemplate();
+  
+  FeedbackHistoryQuery queryHistory();
 
   
   /**
@@ -51,11 +57,16 @@ public interface FeedbackClient {
    * Query/delete feedback
    */
   interface FeedbackQuery {
-    List<Feedback> findAll();    
-    List<Feedback> deleteById(List<String> feedbackId);
-    Feedback getOneById(long id);
+    List<Feedback> findAll();
+    Feedback getOneById(String id);
   }
   
+  /**
+   * Get the commands with what the data was created in the first place
+   */
+  interface FeedbackHistoryQuery {
+    List<FeedbackHistoryEvent> findAll();
+  }
   
   
   
@@ -88,10 +99,22 @@ public interface FeedbackClient {
   @JsonDeserialize(as = ImmutableUpsertFeedbackRankingCommand.class)
   @Value.Immutable
   interface UpsertFeedbackRankingCommand {
-    String getReplyId();
+    String getReplyIdOrCategoryId();
     String getCustomerId();
     
     @Nullable Integer getRating(); // null is remove vote 
+  }
+  
+  
+  /**
+   * Command to rank the feedback, aka thumbs down/up
+   */
+  @JsonSerialize(as = ImmutableDeleteReplyCommand.class)
+  @JsonDeserialize(as = ImmutableDeleteReplyCommand.class)
+  @Value.Immutable
+  interface DeleteReplyCommand {
+    List<Long> getReplyIds();
+    String getUserId();
   }
   
   
@@ -103,6 +126,7 @@ public interface FeedbackClient {
   @Value.Immutable
   interface Feedback {
     String getId();
+    String getCategoryId();
     
     String getLabelKey();
     String getLabelValue();
@@ -129,7 +153,8 @@ public interface FeedbackClient {
   @Value.Immutable
   interface FeedbackRating {
     String getId();
-    String getFeedbackId();
+    @Nullable String getReplyId();
+    String getCategoryId();
     String getCustomerId(); //obscure id for customer, should not be able to identify the person
     int getRating(); // score 1-5
   }
@@ -159,4 +184,19 @@ public interface FeedbackClient {
     List<String> getReplys(); 
   }
 
+  
+  @JsonSerialize(as = ImmutableFeedbackHistoryEvent.class)
+  @JsonDeserialize(as = ImmutableFeedbackHistoryEvent.class)
+  @Value.Immutable
+  interface FeedbackHistoryEvent {
+    String getId();
+    String getCommitId();
+    String getCategoryId();
+    @Nullable String getRatingId();
+    @Nullable String getReplyId();
+    String getJsonBodyType();
+    String getJsonBody();
+    ZonedDateTime getCreatedOnDate();
+    String getCreatedBy();
+  }
 }

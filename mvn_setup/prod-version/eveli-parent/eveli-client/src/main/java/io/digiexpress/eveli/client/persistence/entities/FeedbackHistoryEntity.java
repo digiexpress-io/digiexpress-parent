@@ -22,74 +22,55 @@ package io.digiexpress.eveli.client.persistence.entities;
 
 import java.time.ZonedDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Entity
-@Table(name="feedback_approval", 
-uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"category_id", "reply_id", "source_id"})
-})
+@Table(name="feedback_history")
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Getter
 @Setter
 @Accessors(chain=true)
-public class FeedbackApprovalEntity {
-
+public class FeedbackHistoryEntity {
+  
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
   @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
   private String id;
+
+  @Column(name="commit_id", nullable = false)
+  private String commitId;
   
-  @Column(name="category_id", columnDefinition = "UUID", nullable = false, insertable = false, updatable = false)
+  @Column(name="rating_id", nullable = true)
+  private String ratingId;
+  
+  @Column(name="category_id", nullable = true)
   private String categoryId;
 
-  @Column(name="reply_id", columnDefinition = "UUID", nullable = true, insertable = false, updatable = false)
+  @Column(name="reply_id", nullable = true)
   private String replyId;
+
+
+  @Column(name="json_body_type", nullable = false)
+  private String jsonBodyType;
   
-  @Column(name="source_id", nullable = false, updatable = false)
-  private String sourceId;       // external id that identifies the user in GDPR-friendly manner. Cannot contain any personal data.
-  
-  @Column(name="star_rating", nullable = false)
-  private Integer starRating;    // rating from 1-5: 1 = thumbs down, 5 = thumbs up
+  @Column(name="json_body", nullable = false, columnDefinition = "JSONB")
+  private String jsonBody;
   
   @Column(name="created_on_date", nullable = false, updatable = false)
   private ZonedDateTime createdOnDate;
-
-  @Column(name="updated_on_date", nullable = false)
-  private ZonedDateTime updatedOnDate;
   
-  
-  
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="reply_id", foreignKey = @ForeignKey(name = "fk_approval_to_reply"))
-  @JsonBackReference
-  @ToString.Exclude
-  private FeedbackReplyEntity reply;
-  
-  
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name="category_id", foreignKey = @ForeignKey(name = "fk_approval_to_category"))
-  @JsonBackReference
-  @ToString.Exclude
-  private FeedbackCategoryEntity category;
-
+  @Column(name="created_by", nullable = false)
+  private String createdBy;
 }

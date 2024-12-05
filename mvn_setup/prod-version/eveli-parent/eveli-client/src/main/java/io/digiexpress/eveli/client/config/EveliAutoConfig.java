@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +47,7 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.feedback.QuestionnaireCategoryExtractorImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
@@ -85,11 +87,14 @@ public class EveliAutoConfig {
       TaskClient taskClient,
       ProcessClient processClient,
       JdbcTemplate jdbc,
-      ObjectMapper om
+      ObjectMapper om,
+      TransactionTemplate tx
   ) {
     
     final var extractor = new QuestionnaireCategoryExtractorImpl(om);
-    return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc);
+    final var history = new FeedbackWithHistory(tx, jdbc, om);
+    return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc, history);
+
   }
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {

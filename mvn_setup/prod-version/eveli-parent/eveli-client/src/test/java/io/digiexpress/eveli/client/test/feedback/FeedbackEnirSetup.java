@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -55,6 +56,7 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.feedback.QuestionnaireCategoryExtractorImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -97,7 +99,8 @@ public class FeedbackEnirSetup {
     @Autowired EntityManager entityManager;
     @Autowired ProcessRepository processJPA;
     @Autowired ObjectMapper objectMapper;
-  
+    @Autowired TransactionTemplate tx;
+
     @Bean
     public SetupTask setupTask(ProcessClient processClient) {    
       final var ref = new TaskRefGenerator(entityManager);
@@ -115,7 +118,9 @@ public class FeedbackEnirSetup {
     public FeedbackClient feedbackClient(ProcessClient processClient) {
       final var ref = new TaskRefGenerator(entityManager);
       final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
-      return new FeedbackClientImpl(taskClient, processClient, new QuestionnaireCategoryExtractorImpl(objectMapper), jdbcTemplate);
+      final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
+      return new FeedbackClientImpl(taskClient, processClient, new QuestionnaireCategoryExtractorImpl(objectMapper), jdbcTemplate, feedbackWithHistory);
+
     }
   }
   

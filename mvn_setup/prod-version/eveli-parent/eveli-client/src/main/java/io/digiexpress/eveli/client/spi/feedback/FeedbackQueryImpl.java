@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -81,25 +82,19 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
   
   @Override
-  public Feedback getOneById(long id) {
-    return jdbc.query(SELECT_REPLY + " WHERE feedback_reply.id = ?", (PreparedStatement ps) -> ps.setLong(1, id), (ResultSet rs) -> {
+  public Feedback getOneById(String id) {
+    return jdbc.query(SELECT_REPLY + " WHERE feedback_reply.id = ?", (PreparedStatement ps) -> ps.setObject(1, UUID.fromString(id)), (ResultSet rs) -> {
       if(rs.next()) {
         return map(rs);
       }    
       throw ProcessAssert.fail(() -> "can't find feedback reply by id = '" + id + "'");
     });
   }
-
-  @Override
-  public List<Feedback> deleteById(List<String> feedbackId) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   
   private Feedback map(ResultSet rs) throws SQLException {
     return  ImmutableFeedback.builder()
-        .id(String.valueOf(rs.getLong("id")))
+        .id(rs.getString("id"))
+        .categoryId(rs.getString("category_id"))
         .labelKey(rs.getString("label_key"))
         .subLabelKey(rs.getString("sub_label_key"))
         .origin(rs.getString("origin"))

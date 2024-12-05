@@ -23,7 +23,6 @@ package io.digiexpress.eveli.client.persistence.entities;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
-import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -48,7 +47,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Entity
-@Audited
 @Table(name="feedback_reply")
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
@@ -58,12 +56,12 @@ import lombok.experimental.Accessors;
 public class FeedbackReplyEntity {
   
   @Id
-  @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-  @Column(columnDefinition = "bigint")
-  private Long id;
+  @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
+  @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
+  private String id;
 
-  @Column(name="category_id", nullable = false, insertable = false, updatable = false, columnDefinition = "bigint")
-  private Long categoryId; 
+  @Column(name="category_id", columnDefinition = "UUID", nullable = false, insertable = false, updatable = false)
+  private String categoryId; 
   
   @Column(name="content", columnDefinition = "TEXT", nullable = false)
   private String content;                    // combined markdown from dialob and worker

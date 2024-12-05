@@ -17,12 +17,11 @@
 -- limitations under the License.
 -- #L%
 ---
-
-    create table feedback_approval (
-        id bigserial not null,
-        category_id bigint not null,
+create table feedback_approval (
+        id UUID DEFAULT gen_random_uuid() not null,
+        category_id UUID not null,
         created_on_date timestamp(6) with time zone not null,
-        reply_id bigint,
+        reply_id UUID,
         source_id varchar(255) not null,
         star_rating integer not null,
         updated_on_date timestamp(6) with time zone not null,
@@ -31,7 +30,7 @@
     );
 
     create table feedback_category (
-        id bigserial not null,
+        id UUID DEFAULT gen_random_uuid() not null,
         created_by_user_id varchar(255) not null,
         created_on_date timestamp(6) with time zone not null,
         label varchar(255) not null,
@@ -42,9 +41,22 @@
         unique (label, sub_label, origin)
     );
 
+    create table feedback_history (
+        id UUID DEFAULT gen_random_uuid() not null,
+        category_id varchar(255),
+        commit_id varchar(255) not null,
+        created_by varchar(255) not null,
+        created_on_date timestamp(6) with time zone not null,
+        json_body JSONB not null,
+        json_body_type varchar(255) not null,
+        rating_id varchar(255),
+        reply_id varchar(255),
+        primary key (id)
+    );
+
     create table feedback_reply (
-        id bigserial not null,
-        category_id bigint not null,
+        id UUID DEFAULT gen_random_uuid() not null,
+        category_id UUID not null,
         content TEXT not null,
         created_by varchar(255) not null,
         created_on_date timestamp(6) with time zone not null,
@@ -56,24 +68,6 @@
         updated_on_date timestamp(6) with time zone not null,
         primary key (id)
     );
-
-    create table feedback_reply_aud (
-        id bigint not null,
-        rev integer not null,
-        revtype smallint,
-        category_id bigint,
-        content TEXT,
-        created_by varchar(255),
-        created_on_date timestamp(6) with time zone,
-        locale varchar(255),
-        localized_label varchar(255),
-        localized_sub_label varchar(255),
-        source_id varchar(255),
-        updated_by varchar(255),
-        updated_on_date timestamp(6) with time zone,
-        primary key (id, rev)
-    );
-
 
     alter table if exists feedback_approval 
        add constraint fk_approval_to_category 
@@ -89,8 +83,3 @@
        add constraint fk_reply_to_category 
        foreign key (category_id) 
        references feedback_category;
-
-    alter table if exists feedback_reply_aud 
-       add constraint FKi3jp43qmxrjylyfgjixp30pqp 
-       foreign key (rev) 
-       references REVINFO;

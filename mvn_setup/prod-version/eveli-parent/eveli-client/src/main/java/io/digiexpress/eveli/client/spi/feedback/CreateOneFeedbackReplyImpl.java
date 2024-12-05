@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.UUID;
 
 import org.flywaydb.core.internal.jdbc.JdbcUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,19 +39,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateOneFeedbackReplyImpl {
   private final JdbcTemplate jdbc;
+  private final FeedbackWithHistory withHistory;
   
   public Feedback apply(CreateFeedbackCommand command) {
-    final var id = jdbc.execute((Connection conn) -> doInConnection(conn, command));
+    return withHistory.withHistory(history -> {
+      final var id = jdbc.execute((Connection conn) -> doInConnection(conn, command));
+      final var created = new FeedbackQueryImpl(jdbc).getOneById(id);
+      history.append(command, created);
+      return created;
+    });
     
-    return new FeedbackQueryImpl(jdbc).getOneById(id);
+    
   }
 
-  private final long doInConnection(Connection connection, CreateFeedbackCommand command) throws SQLException {
+  private final String doInConnection(Connection connection, CreateFeedbackCommand command) throws SQLException {
     connection.setAutoCommit(false);
     connection.beginRequest();
     try {
+      
       final var categoryId = getOrCreateCategory(connection, command);
       final var feedback = createReply(categoryId, command);
+      
       connection.commit();
       connection.endRequest();
       
@@ -64,8 +73,8 @@ public class CreateOneFeedbackReplyImpl {
   }
   
   
- private Long createReply(long categoryId, CreateFeedbackCommand command) {
-   
+ private String createReply(String categoryId, CreateFeedbackCommand command) {
+   final var now = java.sql.Timestamp.from(Instant.now());
    return jdbc.execute((Connection connection) -> connection.prepareStatement(
 """
 
@@ -86,15 +95,15 @@ VALUES
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
-     categeoryStm.setLong(1, categoryId);
+     categeoryStm.setObject(1, UUID.fromString(categoryId));
      categeoryStm.setString(2, command.getContent());
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
      categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
      categeoryStm.setString(6, command.getProcessId());
      
-     categeoryStm.setObject(7, java.sql.Timestamp.from(Instant.now()));
-     categeoryStm.setObject(8, java.sql.Timestamp.from(Instant.now()));
+     categeoryStm.setObject(7, now);
+     categeoryStm.setObject(8, now);
      
      categeoryStm.setString(9, command.getUserId());
      categeoryStm.setString(10, command.getUserId());
@@ -102,7 +111,7 @@ VALUES
      categeoryStm.execute();
      final var rs = categeoryStm.getGeneratedKeys();
      rs.next();
-     final var id = rs.getLong(1);
+     final var id = rs.getString(1);
      rs.close();
      return id;
   });
@@ -112,7 +121,7 @@ VALUES
  }
   
   
- private long getOrCreateCategory(Connection parent, CreateFeedbackCommand command) throws SQLException {
+ private String getOrCreateCategory(Connection parent, CreateFeedbackCommand command) throws SQLException {
     ProcessAssert.notEmpty(command.getLabelKey(), () -> "labelKey can't be empty!");
     ProcessAssert.notEmpty(command.getOrigin(), () -> "origin can't be empty!");
     ProcessAssert.notEmpty(command.getProcessId(), () -> "processId can't be empty!");
@@ -159,7 +168,7 @@ SELECT id FROM feedback_category WHERE label = ? and COALESCE(sub_label, '') = C
     ps.setString(2, labelSubKey);
   }, (ResultSet rs) -> {
     while(rs.next()) {
-      return rs.getLong(1);
+      return rs.getString(1);
     }
     throw ProcessAssert.fail(() -> "can't find category by label = '" + labelKey + "'");
   });

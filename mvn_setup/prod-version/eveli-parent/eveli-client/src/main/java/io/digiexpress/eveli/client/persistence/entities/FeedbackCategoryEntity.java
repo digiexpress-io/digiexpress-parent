@@ -55,9 +55,9 @@ import lombok.experimental.Accessors;
 public class FeedbackCategoryEntity {
 
   @Id
-  @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-  @Column(columnDefinition = "bigint")
-  private Long id;
+  @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
+  @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
+  private String id;
   
   @Column(name="label", nullable = false)
   private String label;                 // A selection from a dialob or a stencil article
