@@ -27,6 +27,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
@@ -35,53 +36,45 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
 
 @Configuration
-public class AuthorizationConfig {
+public class JWTAuthorizationConfig {
 
 //Worker security filter
  @Bean
- @Profile("!jwt")
+ @Profile("jwt")
  public SecurityFilterChain workerSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
-     AuthenticationManager authenticationManager) throws Exception {
+     AuthenticationManager authenticationManager,
+     JwtIssuerAuthenticationManagerResolver resolver) throws Exception {
    
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/worker/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
      .csrf(Customizer.withDefaults())
-     .httpBasic(Customizer.withDefaults())
-     .formLogin(form -> form
-         .loginPage("/login-worker")
-         .permitAll()
-     )
      .authenticationManager(authenticationManager)
+     .oauth2ResourceServer(oauth2->
+     oauth2.authenticationManagerResolver(resolver))
      .build();
  }
  
  // Customer security filter
  @Bean
- @Profile("!jwt")
+ @Profile("jwt")
  public SecurityFilterChain portalSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
-     AuthenticationManager authenticationManager) throws Exception {
+     AuthenticationManager authenticationManager,
+     JwtIssuerAuthenticationManagerResolver resolver) throws Exception {
    
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/portal/secured/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
      .csrf(Customizer.withDefaults())
-     .httpBasic(Customizer.withDefaults())
-     .formLogin(form -> form
-         .loginPage("/login-customer")
-         .permitAll()
-     )
      .authenticationManager(authenticationManager)
+     .oauth2ResourceServer(oauth2->
+       oauth2.authenticationManagerResolver(resolver))
      .build();
  }
  
-  
-  @Bean
-  public SpringSecurityPolicy authorization(AuthClient auth, CrmClient crm) {
-    return new SpringSecurityPolicy(auth, crm);
-  }
+
 }

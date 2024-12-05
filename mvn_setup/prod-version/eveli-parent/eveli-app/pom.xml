@@ -60,6 +60,10 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-gateway-mvc</artifactId>
     </dependency>
@@ -99,9 +103,6 @@
             <artifactId>jib-maven-plugin</artifactId>
             <version>${jib-maven-plugin.version}</version>
             <configuration>
-              <from>
-                <image>docker.resys.io/docker/java-runtime:17-amzn</image>
-              </from>
               <to>
                 <image>${docker-registry.url}/${project.artifactId}:${image-build.version}</image>
               </to>
