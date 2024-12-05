@@ -17,7 +17,7 @@
 -- limitations under the License.
 -- #L%
 ---
-create table feedback_approval (
+ create table feedback_approval (
         id UUID DEFAULT gen_random_uuid() not null,
         category_id UUID not null,
         created_on_date timestamp(6) with time zone not null,
@@ -83,3 +83,4 @@ create table feedback_approval (
        add constraint fk_reply_to_category 
        foreign key (category_id) 
        references feedback_category;
+

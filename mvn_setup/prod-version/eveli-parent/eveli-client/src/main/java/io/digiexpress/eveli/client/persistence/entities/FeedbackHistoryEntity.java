@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -47,6 +48,7 @@ public class FeedbackHistoryEntity {
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
   @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
+  @Convert(converter = HibernateUUIDConverter.class)
   private String id;
 
   @Column(name="commit_id", nullable = false)

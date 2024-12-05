@@ -15,9 +15,10 @@ export interface SiteBackendContextType {
   site?: SiteApi.Site;
   views: Record<SiteApi.TopicId, SiteApi.TopicView>
   locale: SiteApi.LocaleCode;
+  feedback: SiteApi.Feedback[];
   pending: boolean;
 }
-export const SiteBackendContext = React.createContext< SiteBackendContextType>({ pending: true, locale: 'en', views: {} });
+export const SiteBackendContext = React.createContext< SiteBackendContextType>({ pending: true, locale: 'en', views: {}, feedback: [] });
 
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
@@ -58,8 +59,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   }, [fetchSiteGet, fetchFeedbackGet, selectedLocale]);
 
   const contextValue:  SiteBackendContextType = React.useMemo(() => {
-    return Object.freeze({ site, views, pending, locale: selectedLocale });
-  }, [site, views, pending, selectedLocale]);
+    return Object.freeze({ site, views, pending, locale: selectedLocale, feedback });
+  }, [site, views, pending, selectedLocale, feedback]);
 
   if(pending) {
     return <></>

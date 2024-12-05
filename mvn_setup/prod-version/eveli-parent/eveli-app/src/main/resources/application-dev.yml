@@ -3,13 +3,6 @@ spring:
   jpa:
     showSql: false
     generateDdl: false
-    hibernate:
-      ddlAuto: "validate"
-      autoQuoteKeyword: true
-      connection:
-        useUnicode: true
-        characterEncoding: 'UTF-8'
-        charSet: 'UTF-8'
   flyway:
     enabled: true
     locations: classpath:db/postgresql

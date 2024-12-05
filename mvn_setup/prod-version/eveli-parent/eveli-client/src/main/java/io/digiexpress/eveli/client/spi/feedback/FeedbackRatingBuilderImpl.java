@@ -169,12 +169,12 @@ FROM
   feedback_approval 
 WHERE 
   category_id = ?
-  and COALESCE(reply_id::varchar, '') = COALESCE(?, '')
   and source_id = ?
+  and COALESCE(reply_id::text, '') = COALESCE(?::text, '')
 """, (PreparedStatement ps) -> {
       ps.setObject(1, UUID.fromString(categoryId));
-      ps.setString(2, replyId.orElse(null));
-      ps.setString(3, customerId);
+      ps.setString(2, customerId);
+      ps.setObject(3, replyId.map(UUID::fromString).orElse(null));
     }, (ResultSet rs) -> {
       if(rs.next()) {
         return Optional.of(rs.getString(1));
