@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.persistence.entities;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 import org.hibernate.envers.NotAudited;
 
@@ -32,7 +33,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -59,12 +59,10 @@ public class FeedbackReplyEntity {
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
   @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
-  @Convert(converter = HibernateUUIDConverter.class)
-  private String id;
+  private UUID id;
 
   @Column(name="category_id", columnDefinition = "UUID", nullable = false, insertable = false, updatable = false)
-  @Convert(converter = HibernateUUIDConverter.class)
-  private String categoryId; 
+  private UUID categoryId; 
   
   @Column(name="content", columnDefinition = "TEXT", nullable = false)
   private String content;                    // combined markdown from dialob and worker

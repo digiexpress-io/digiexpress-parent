@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.persistence.entities;
  */
 
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -28,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -58,16 +58,13 @@ public class FeedbackApprovalEntity {
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
   @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
-  @Convert(converter = HibernateUUIDConverter.class)
-  private String id;
+  private UUID id;
   
   @Column(name="category_id", columnDefinition = "UUID", nullable = false, insertable = false, updatable = false)
-  @Convert(converter = HibernateUUIDConverter.class)
-  private String categoryId;
+  private UUID categoryId;
 
   @Column(name="reply_id", columnDefinition = "UUID", nullable = true, insertable = false, updatable = false)
-  @Convert(converter = HibernateUUIDConverter.class)
-  private String replyId;
+  private UUID replyId;
   
   @Column(name="source_id", nullable = false, updatable = false)
   private String sourceId;       // external id that identifies the user in GDPR-friendly manner. Cannot contain any personal data.
