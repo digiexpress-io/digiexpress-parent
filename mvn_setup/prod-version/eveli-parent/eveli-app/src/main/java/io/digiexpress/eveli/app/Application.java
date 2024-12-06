@@ -36,6 +36,7 @@ import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
+import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +54,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliAutoConfigAssets.class, 
     EveliAutoConfig.class, 
     DialobAutoConfig.class,
-    EveliAutoConfigGamut.class 
+    EveliAutoConfigGamut.class,
+    EveliAutoConfigWorker.class
 })
 public class Application {
   public static void main(String[] args) throws Exception {

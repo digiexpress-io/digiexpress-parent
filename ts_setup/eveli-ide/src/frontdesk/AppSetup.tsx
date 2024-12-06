@@ -21,13 +21,14 @@ import * as Burger from '@/burger';
 import { BurgerApi } from '@/burger';
 import { StencilComposer, StencilClient } from '../stencil';
 import { WrenchComposer, WrenchClient } from '../wrench';
+import { FeedbackComposer } from '../feedback';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
 import { frontdeskIntl } from './intl'
 import { stencilIntl } from '../stencil'
 import { wrenchIntl } from '../wrench'
-import { FeedbackProvider } from './context/FeedbackContext';
+import { feedbackIntl } from '../feedback';
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -48,6 +49,9 @@ const frontdeskApp: BurgerApi.App<{}> = {
 const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   const isWrench = useMatch({ path: '/wrench/ide' })
   const isStencil = useMatch({ path: '/ui/content' })
+  const isFeedback = useMatch({ path: '/feedback', end: false })
+
+
   const { serviceUrl } = useConfig();
 
   if (isWrench) {
@@ -56,6 +60,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
       <IntlProvider locale='en' messages={wrenchIntl.en}>
         <WrenchComposer service={service} />
       </IntlProvider>)
+
   } else if (isStencil) {
     const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil" } });
 
@@ -63,16 +68,19 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
       <IntlProvider locale='en' messages={stencilIntl.en}>
         <StencilComposer service={service} />
       </IntlProvider>)
+  } else if (isFeedback) {
+    return (
+      <IntlProvider locale='en' messages={feedbackIntl.en}>
+        <FeedbackComposer />
+      </IntlProvider>);
   }
 
   return (
-    <FeedbackProvider>
-      <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
-        <TaskSessionContext>
-          <Burger.Provider children={[frontdeskApp]} drawerOpen />
-        </TaskSessionContext>
-      </IntlProvider>
-    </FeedbackProvider>
+    <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
+      <TaskSessionContext>
+        <Burger.Provider children={[frontdeskApp]} drawerOpen />
+      </TaskSessionContext>
+    </IntlProvider>
 
   );
 }
@@ -111,6 +119,8 @@ export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
       <Route path='/ui/help' element={<HelpView />} />
       <Route path='/ui/dashboard' element={<DashboardView />} />
 
+      <Route path='/feedback/:taskId' element={<>feedback for task loading...</>} />
+      <Route path='/feedback' element={<>feedback loading...</>} />
       <Route path='/wrench/ide' element={<>wrench loading...</>} />
       <Route path='/ui/content' element={<>stencil loading...</>} />
     </Route>

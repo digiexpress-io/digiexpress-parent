@@ -6,14 +6,13 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 import * as Burger from '@/burger';
 import { LocaleSelect } from './explorer';
-import { FeedbackContext } from './context/FeedbackContext';
 
 
 
 const StyledToolbarButton = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
-  margin: theme.spacing(1.5),
+  margin: theme.spacing(2),
   ':hover': {
     cursor: 'pointer'
   },

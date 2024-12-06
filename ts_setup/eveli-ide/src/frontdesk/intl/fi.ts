@@ -32,6 +32,8 @@ const fi = {
   'menu.services': 'Palvelut',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalenteri',
+  'menu.feedback': 'Palaute',
+
 
   'front.intro.title': 'Tervetuloa!',
   
@@ -43,6 +45,7 @@ const fi = {
   'profile.app.version': "Sovellusversio:",
 
   'button.cancel' : 'Peruuta',
+  'button.publish': 'Julkaista',
   'button.accept' : 'Hyväksy',
   'button.edit' : 'Avaa',
   'button.close' : 'Sulje',
@@ -122,6 +125,8 @@ const fi = {
   'taskDialog.clientIdentificator': 'Asiakas',
   'taskDialog.assignedUserEmail': 'Käyttäjän sähköposti',
   'task.editRoles': 'Tehtäväryhmät',
+  "task.feedback.published": "Julkaistu vastaus",
+
 
   // for task labels
   'Questionnaire': 'Lomake',
@@ -144,12 +149,29 @@ const fi = {
 
   'feedback.button': 'Lähetä palautetta',
   'feedback.thanks': 'Kiitos palautteestasi!',
-  'feedback.title': 'Lähetä palautetta',
+  'feedback.create.title': 'Create public reply to customer feedback',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Kuvaus',
   'feedback.name': 'Nimesi',
   'feedback.sendScreenshot': 'Lähetä ruutukaappaus',
   'feedback.close': 'Peru',
   'feedback.send': 'Lähetä',
+
+  'feedback.category': 'Category',
+  'feedback.subCategory': 'Subcategory',
+  'feedback.myReply': 'Reply to customer',
+  'feedback.noFeedback.info1': 'No reply to publish!',
+  'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
+
 
   'help.title': 'Ohjeet',
 

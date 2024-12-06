@@ -3,25 +3,19 @@ import { Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { UserContextProvider } from './context/UserContext';
-import { ConfigContextProvider } from './context/ConfigContext';
+import { ConfigContextProvider, useConfig } from './context/ConfigContext';
 import { IAPSessionRefreshContext } from './context/SessionRefreshContext';
 
 import { DATE_LOCALE_MAP } from './intl/datelocalization';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
-import { FeedbackProvider } from './context/FeedbackContext';
 import { AppSetup } from './AppSetup';
 import { LocaleSelectContextProvider, useLocaleSelect } from './context';
+import { FeedbackProvider, FeedbackApi } from '../feedback';
 
 
 export { frontdeskIntl } from './intl';
-
-
-export interface FrontdeskProps {
-  defaultLocale?: string | undefined;
-  configUrl?: string | undefined;
-}
 
 
 
@@ -47,16 +41,60 @@ const WithLocale: React.FC = () => {
   )
 }
 
+const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+  const { serviceUrl } = useConfig();
+
+  const fetchFeedbackGET: FeedbackApi.FetchFeedbackGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
+  const fetchFeedbackPOST: FeedbackApi.FetchFeedbackPOST = async (taskId, command) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/tasks/${taskId}/feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+      body: JSON.stringify(command)
+    });
+    return response;
+  }
+
+  const fetchTemplateGET: FeedbackApi.FetchTemplateGET = async (taskId) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/tasks/${taskId}/feedback-templates`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
+
+  return (
+    <FeedbackProvider fetchFeedbackGET={fetchFeedbackGET} fetchFeedbackPOST={fetchFeedbackPOST} fetchTemplateGET={fetchTemplateGET}>
+      {children}
+    </FeedbackProvider>
+  );
+}
+
+
+export interface FrontdeskProps {
+  defaultLocale?: string | undefined;
+  configUrl?: string | undefined;
+}
+
 export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
   const { defaultLocale = 'en', configUrl = '/config' } = initProps;
 
   return (
     <ConfigContextProvider path={configUrl}>
-      <FeedbackProvider>
-        <LocaleSelectContextProvider locale={defaultLocale}>
-          <WithLocale />
-        </LocaleSelectContextProvider>
-      </FeedbackProvider>
+      <LocaleSelectContextProvider locale={defaultLocale}>
+        <WithFeedback><WithLocale /></WithFeedback>
+      </LocaleSelectContextProvider>
     </ConfigContextProvider>
   );
 }

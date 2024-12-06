@@ -64,6 +64,12 @@ and status in('CREATED', 'ANSWERING')
 """)
   List<ProcessEntity> findAllByExpiration();
   
+  @Query(nativeQuery = true, value=
+"""
+SELECT form_body FROM process 
+WHERE task_id = :taskId and form_body is not null
+""")
+  Optional<String> findQuestionnaireByTaskId(Long taskId);
   
   void deleteById(@Param("id") Long id);
   ProcessEntity save(ProcessEntity entity);

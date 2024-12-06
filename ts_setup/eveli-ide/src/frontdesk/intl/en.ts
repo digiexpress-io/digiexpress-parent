@@ -32,6 +32,7 @@ const en = {
   'menu.services': 'Services',
   'menu.content': 'Stencil',
   'menu.calendar': 'Calendar',
+  'menu.feedback': 'Feedback',
 
   'front.intro.title': 'Welcome!',
 
@@ -43,6 +44,9 @@ const en = {
   'profile.app.version': "Application version:",
 
   'button.cancel' : 'Cancel',
+  'button.delete': 'Delete this feedback',
+  'button.unpublish': 'Unpublish this feedback',
+  'button.publish': 'Publish',
   'button.accept' : 'Accept',
   'button.edit' : 'Edit',
   'button.close' : 'Close',
@@ -133,6 +137,7 @@ const en = {
   "Internal": "Internal",
 
   'task.role.assignedAllUsers': 'All users',
+  "task.feedback.published": "Published reply",
 
   'confirm.close.title': 'Confirmation required',
   'confirm.unsavedChanges': 'Unsaved changes will be lost, do you want to continue?',
@@ -145,12 +150,27 @@ const en = {
 
   'feedback.button': 'Send feedback',
   'feedback.thanks': 'Thank you for your feedback!',
-  'feedback.title': 'Send feedback',
+  'feedback.create.title': 'Create public reply to customer feedback',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Description',
   'feedback.name': 'Your name',
   'feedback.sendScreenshot': 'Send screenshot',
   'feedback.close': 'Close',
   'feedback.send': 'Send',
+  'feedback.category': 'Category',
+  'feedback.subCategory': 'Subcategory',
+  'feedback.myReply': 'Reply to customer',
+  'feedback.noFeedback.info1': 'No reply to publish!',
+  'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
 
   'help.title': 'Help',
   

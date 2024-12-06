@@ -12,6 +12,7 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +23,7 @@ import { MenuItem, MenuItemProps } from './explorer';
 import { useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Feedback } from './components/Feedback';
-import { FeedbackContext } from './context/FeedbackContext';
+
 
 
 const iconSize: SxProps = {
@@ -38,6 +38,8 @@ const menuItems: MenuItemProps[] = [
   { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} /> },
   { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} /> },
   { id: 'menu.content', to: '/ui/content', icon: <MenuBookIcon sx={iconSize} /> },
+  { id: 'menu.feedback', to: '/feedback', icon: <ThumbUpAltIcon sx={iconSize} /> },
+
   //TODO Calendar still needed??  
   //{ id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> }, 
   { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
@@ -62,14 +64,11 @@ const ExplorerSecondaryButtons: React.FC = () => {
 
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const context = React.useContext(FeedbackContext);
 
   const handleMenuItemClick = (to?: string) => {
     if (to) {
       navigate(to);
-    } else {
-      context.open();
-    }
+    } 
   };
 
   return (<>
@@ -120,7 +119,6 @@ export const Secondary: React.FC = () => {
       <Box display="flex" flexDirection='column' flexGrow={1}>
         <Explorer />
       </Box>
-      <Feedback />
       <ExplorerSecondaryButtons />
     </Box>
   </>

@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,32 +35,25 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.iam.PortalAccessValidator;
-import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
+import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
+import io.digiexpress.eveli.client.spi.feedback.QuestionnaireCategoryExtractorImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.DialobCallbackController;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
-import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
-import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
-import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
-import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
-import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
-import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
-import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import jakarta.persistence.EntityManager;
 
@@ -75,45 +69,7 @@ import jakarta.persistence.EntityManager;
     EveliPropsTask.class
 })
 public class EveliAutoConfig {
-
-
-  @Bean 
-  public AttachmentApiController attachmentApiController(ProcessClient processClient, AuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
-    return new AttachmentApiController(attachments, taskClient, security, processClient);
-  }
-  @Bean 
-  public CommentApiController commentApiController(
-      TaskClient taskClient, AuthClient security) {
-    
-    return new CommentApiController(taskClient, security);
-  }
   
-  @Bean 
-  public EmailNotificationController emailNotificationController(EveliPropsEmail emailProps) {
-    return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
-  }
-
-  @Bean 
-  public PrintoutController printoutController(
-      AuthClient authClient,  
-      RestTemplate restTemplate,
-      DialobClient dialobClient,
-      TaskClient taskClient,
-      EveliPropsPrintout printoutConfig
-  ) {
-    return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
-  }
-
-  @Bean 
-  public TaskApiController taskApiController(AuthClient security, TaskClient taskClient, TaskAccessRepository taskAccessRepository, TaskRepository taskRepository) {
-    return new TaskApiController(security, taskClient, taskAccessRepository, taskRepository);
-  }
-  
-  
-  @Bean 
-  public ProcessApiController processApiController(ProcessClient client) {
-    return new ProcessApiController(client);
-  }
   @Bean 
   public TaskNotificator taskNotificator() {
     return new NotificationMessagingComponent();
@@ -124,33 +80,40 @@ public class EveliAutoConfig {
   }
   @Bean
   public RestTemplate restTemplate() {
-      return new RestTemplate();
+    return new RestTemplate();
+  }
+  @Bean
+  public FeedbackClient feedbackClient(
+      TaskClient taskClient,
+      ProcessClient processClient,
+      JdbcTemplate jdbc,
+      ObjectMapper om,
+      TransactionTemplate tx
+  ) {
+    
+    final var extractor = new QuestionnaireCategoryExtractorImpl(om);
+    final var history = new FeedbackWithHistory(tx, jdbc, om);
+    return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc, history);
+
   }
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {
-      return new SpringTransactionWrapper(entityManager);
+    return new SpringTransactionWrapper(entityManager);
   }
   @Bean
-  public PortalAccessValidator portalAccessValidator(ProcessClient client) {
-      return new PortalAccessValidatorImpl(client);
-  }  
-  @Bean
   public TaskRefGenerator taskRefGenerator(EntityManager client) {
-      return new TaskRefGenerator(client);
+    return new TaskRefGenerator(client);
   }  
   
   @Bean 
   public TaskClient taskClient(
-
       TaskRepository taskRepository,
       TaskNotificator taskNotificator,      
       TaskRefGenerator taskRefGenerator,
       JdbcTemplate jdbcTemplate,
       
       TaskAccessRepository taskAccessRepository,
-      CommentRepository commentRepository
-      
-  ) {
+      CommentRepository commentRepository) {
   
     return new TaskClientImpl(jdbcTemplate, taskRepository, taskRefGenerator, taskNotificator, taskAccessRepository, commentRepository);
   }

@@ -41,12 +41,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
+import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -63,10 +68,10 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
+  private final FeedbackClient feedbackClient;
   
   private final TaskAccessRepository taskAccessRepository;
   private final TaskRepository taskRepository;
-  
   
   @GetMapping
   @Transactional(readOnly = true)
@@ -123,7 +128,7 @@ public class TaskApiController {
   @Transactional
   public ResponseEntity<TaskClient.Task> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var newTask = taskClient.commandTaskBuilder()
+    final var newTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .createTask(command);
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
@@ -133,7 +138,7 @@ public class TaskApiController {
   @Transactional
   public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") Long id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var modifiedTask = taskClient.commandTaskBuilder()
+    final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .modifyTask(id, command);
     return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
@@ -145,7 +150,7 @@ public class TaskApiController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTask(@PathVariable("id") Long id) {
     final var worker = securityClient.getUser().getPrincipal();
-    taskClient.commandTaskBuilder()
+    taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .deleteTask(id);
   }
@@ -173,6 +178,22 @@ public class TaskApiController {
     final var comments = taskClient.queryComments().findAllByTaskId(id);
  
     return new ResponseEntity<>(comments, HttpStatus.OK);
+  }
+  @GetMapping(value="/{id}/feedback-templates")
+  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("id") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    return new ResponseEntity<>(template, HttpStatus.OK);
+  }
+  @PostMapping(value="/{id}/feedback")
+  public ResponseEntity<Feedback> createFeedback(@PathVariable("id") Long id, @RequestBody CreateFeedbackCommand command)
+  {
+    TaskAssert.isTrue(
+        securityClient.getUser().getPrincipal().getUsername().equals(command.getUserId()), 
+        () -> "userId can't be anybody else then the logged in user!");
+    final var feedback = feedbackClient.createOneFeedback(command);
+    return new ResponseEntity<>(feedback, HttpStatus.OK);
   }
   
   @Data

@@ -48,7 +48,7 @@ public class AuthorizationConfig {
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/worker/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
-     .csrf(Customizer.withDefaults())
+     .csrf(t -> t.disable())
      .httpBasic(Customizer.withDefaults())
      .formLogin(form -> form
          .loginPage("/login-worker")
@@ -69,7 +69,7 @@ public class AuthorizationConfig {
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/portal/secured/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
-     .csrf(Customizer.withDefaults())
+     .csrf(t -> t.disable())
      .httpBasic(Customizer.withDefaults())
      .formLogin(form -> form
          .loginPage("/login-customer")

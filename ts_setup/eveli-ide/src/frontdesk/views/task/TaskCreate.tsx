@@ -11,9 +11,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
+import { useNavigate } from "react-router-dom";
+
 
 import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
 import { StatusComponent } from '../../components/task/Status';
@@ -36,7 +39,11 @@ import { Comment } from '../../types/task/Comment';
 import { useAttachmentConfig } from '../../context/AttachmentContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
 import * as Yup from 'yup';
+
 import * as Burger from '@/burger';
+import { TaskFeedback } from './TaskFeedback';
+import { StatusIndicator } from '../../../feedback/status-indicator';
+
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
   const taskId = editTask.id;
@@ -133,6 +140,7 @@ const classes = {
     }
   },
   accordionTitle: {
+    fontWeight: 'bolder',
     width: "max-content",
     mr: 2
   },
@@ -188,6 +196,17 @@ type State = {
 }
 
 const minLength = 3;
+
+
+const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) => {
+  const navigate = useNavigate();
+
+  function handleFeedback() {
+    navigate(`/feedback/${taskId}`);
+  }
+
+  return (<Burger.SecondaryButton label='task.form.feedback.manage' onClick={handleFeedback} />);
+}
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
   formRef = React.createRef<any>();
@@ -434,6 +453,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     {editTask.keyWords && editTask.keyWords.length > 0 && (
                       <Box display='flex' alignItems='center'>
                         <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: </InputLabel>
+
                         <Chip
                           label={this.getTaskKeywords(editTask).includes('Manual') ? formatMessage({ id: 'Internal' }) : formatMessage({ id: 'CustomerCreated' })}
                           color='primary'
@@ -441,82 +461,102 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         />
                       </Box>
                     )}
-                    {(!editTask.keyWords || editTask.keyWords.length === 0) && (
-                      <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: -</InputLabel>
-                    )}
+
                   </Grid2>
                 </Grid2>
               </Paper>
 
-              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
-                <Grid2 container spacing={2}>
-                  <Grid2 size={{ xs: 12 }}>
-                    {editTask.id && externalThreads ?
-                      <Accordion>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1bh-content"
-                          id="panel1bh-header"
-                          sx={classes.accordionSummary}
-                        >
-                          <Typography sx={classes.accordionTitle}>
-                            <FormattedMessage id="externalComments" />
-                          </Typography>
-                          <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
-                            <ChatBubbleOutlineIcon />
-                          </Badge>
-                        </AccordionSummary>
-                        <AccordionDetails sx={classes.accordionDetails}>
-                          <CommentThread
-                            task={editTask}
-                            isExternalThread={true}
-                            comments={comments}
-                            loadData={reloadComments}
-                            isThreaded={false}
-                          />
 
-                        </AccordionDetails>
-                      </Accordion>
-                      : <NewTaskAccordianMsg id='task.comments.external.createTask' />
-                    }
-                  </Grid2>
-                  <Grid2 size={{ xs: 12 }}>
-                    {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
-                  </Grid2>
-                  <Grid2 size={{ xs: 12 }}>
-                    {editTask.id ?
-                      <Accordion>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1bh-content"
-                          id="panel1bh-header"
-                          sx={classes.accordionSummary}
-                        >
-                          <Typography sx={classes.accordionTitle}>
-                            <FormattedMessage id="internalComments" />
-                          </Typography>
-                          <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
-                            <ChatBubbleOutlineIcon />
-                          </Badge>
-                        </AccordionSummary>
-                        <AccordionDetails sx={classes.accordionDetails}>
+              <Grid2 container spacing={2}>
+                <Grid2 size={{ xs: 12 }}>
+                  {editTask.id && externalThreads ?
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1bh-content"
+                        id="panel1bh-header"
+                        sx={classes.accordionSummary}
+                      >
+                        <Typography sx={classes.accordionTitle}>
+                          <FormattedMessage id="externalComments" />
+                        </Typography>
+                        <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
+                          <ChatBubbleOutlineIcon />
+                        </Badge>
+                      </AccordionSummary>
+                      <AccordionDetails sx={classes.accordionDetails}>
+                        <CommentThread
+                          task={editTask}
+                          isExternalThread={true}
+                          comments={comments}
+                          loadData={reloadComments}
+                          isThreaded={false}
+                        />
 
-                          <CommentThread
-                            task={editTask}
-                            isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
-                            comments={comments}
-                            loadData={reloadComments}
-                            isThreaded={true}
-                          />
-
-                        </AccordionDetails>
-                      </Accordion>
-                      : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
-                  </Grid2>
+                      </AccordionDetails>
+                    </Accordion>
+                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
+                  }
                 </Grid2>
-              </Paper>
+                <Grid2 size={{ xs: 12 }}>
+                  {editTask.id && externalThreads ?
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1bh-content"
+                        id="panel1bh-header"
+                      //sx={classes.accordionSummary}
+                      >
+                        <Typography sx={classes.accordionTitle}>
+                          <FormattedMessage id="task.feedback.published" />
+                        </Typography>
+                        {/* <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='success'><SupportAgentIcon /></Badge> */}
+                        <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
+                      </AccordionSummary>
+                      <AccordionDetails sx={classes.accordionDetails}>
+                        <TaskFeedback taskId={editTask.id! + ''} />
+                      </AccordionDetails>
+                    </Accordion>
+                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
+                  }
+                </Grid2>
+                <Grid2 size={{ xs: 12 }}>
+                  {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
+                </Grid2>
+                <Grid2 size={{ xs: 12 }}>
+                  {editTask.id ?
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1bh-content"
+                        id="panel1bh-header"
+                        sx={classes.accordionSummary}
+                      >
+                        <Typography sx={classes.accordionTitle}>
+                          <FormattedMessage id="internalComments" />
+                        </Typography>
+                        <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
+                          <ChatBubbleOutlineIcon />
+                        </Badge>
+                      </AccordionSummary>
+                      <AccordionDetails sx={classes.accordionDetails}>
 
-              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
+                        <CommentThread
+                          task={editTask}
+                          isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
+                          comments={comments}
+                          loadData={reloadComments}
+                          isThreaded={true}
+                        />
+
+                      </AccordionDetails>
+                    </Accordion>
+                    : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
+                </Grid2>
+              </Grid2>
+
+
+              <Paper elevation={2} sx={{ p: 2, mb: 2, mt: 2 }}>
                 <Grid2 container spacing={2} alignItems="top">
                   {!!groups.length &&
                     <Grid2 size={{ xs: 12, md: 6 }}>
@@ -618,6 +658,12 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                 <Paper elevation={2} sx={{ padding: 1, marginRight: 2 }}>
                   <Stack direction="row" spacing={1} justifyContent='flex-end'>
                     <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={'taskButton.cancel'} />
+                    {(!editTask.keyWords || editTask.keyWords.length === 0) && (
+                      <Box display='flex' gap={1}>
+                        <Burger.SecondaryButton label='task.form.review' onClick={() => { }} />
+                        <FeedbackButton taskId={editTask.id} />
+                      </Box>
+                    )}
                     {!readonly && <Burger.PrimaryButton disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label='taskButton.accept' />}
                   </Stack>
                 </Paper>

@@ -39,7 +39,7 @@ public interface TaskClient {
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
   QueryUnreadUserTasks queryUnreadUserTasks();
-  TaskCommandBuilder commandTaskBuilder();
+  TaskCommandBuilder taskBuilder();
   
   QueryTaskComments queryComments();
   QueryTaskKeywords queryKeywords();

@@ -50,10 +50,13 @@ public class EveliDbSchemaGen {
   
   @Test
   @Disabled
-  public void test() throws Exception {
+  public void taskDb() throws Exception {
     final var metadata = new MetadataSources(PROPS);
     
     for (Class<?> clazz : getClasses(TaskEntity.class.getPackageName())) {
+      if(!clazz.getSimpleName().toLowerCase().contains("task") && !clazz.getSimpleName().toLowerCase().contains("process")) {
+        continue;
+      }
       metadata.addAnnotatedClass(clazz);
     }
     
@@ -66,6 +69,29 @@ public class EveliDbSchemaGen {
             metadata.buildMetadata());
   }
   
+  
+  @Test
+  @Disabled
+  public void feedbackDb() throws Exception {
+    final var metadata = new MetadataSources(PROPS);
+    
+    for (Class<?> clazz : getClasses(TaskEntity.class.getPackageName())) {
+      if(!clazz.getSimpleName().toLowerCase().contains("feedback")) {
+        continue;
+      }
+      metadata.addAnnotatedClass(clazz);
+    }
+    
+    new SchemaExport()
+      
+        .setDelimiter(";")
+        .setFormat(true)
+        
+        .execute(
+            EnumSet.of(TargetType.STDOUT), 
+            SchemaExport.Action.CREATE, 
+            metadata.buildMetadata());
+  }
   
   @SuppressWarnings("rawtypes")
   private List<Class> getClasses(String packageName) throws Exception {

@@ -9,7 +9,8 @@ export declare namespace SiteApi {
   export type BlobId = string;
   export type TopicLinkType = "phone" | "dialob" | "internal" | "external" | "workflow" | string;
 
-  export type FetchGET = (locale: LocaleCode) => Promise<Response>;
+  export type FetchSiteGET = (locale: LocaleCode) => Promise<Response>;
+  export type FetchFeedbackGET = (locale: LocaleCode) => Promise<Response>;
 
   // internal stencil data structure - needs conversion
   export interface Site {
@@ -80,5 +81,26 @@ export declare namespace SiteApi {
     internalExternal: TopicLink[];
     phones: TopicLink[];
     workflows: TopicLink[];
+  }
+  export interface Feedback {
+    id: string;
+      
+    labelKey: string;
+    labelValue: string;
+    
+    subLabelKey: string | undefined;
+    subLabelValue: string | undefined;
+    
+    sourceId: string;
+    origin: string;
+    
+    updatedBy: string;
+    createdBy: string;
+    
+    content: string;
+    locale: string;
+    
+    thumbsUpCount: number; // round rating to thumbs up
+    thumbsDownCount: number; // round rating to thumbs down
   }
 }

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * eveli-client
@@ -25,9 +27,11 @@ import java.util.function.Supplier;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,6 +72,15 @@ public class ProcessClientImpl implements ProcessClient {
   @Override
   public ProcessInstanceBodyBuilder createBodyBuilder() {
     return new ProcessInstanceBodyBuilderImpl(processJPA);
+  }
+  @Override
+  public ProcessQuestionnaireQuery queryProcessQuestionnaire() {
+    return new ProcessQuestionnaireQuery() {
+      @Override
+      public Optional<JsonObject> findOneByTaskId(Long taskId) {
+        ProcessAssert.notNull(taskId, () -> "taskId must be defined!");    
+        return processJPA.findQuestionnaireByTaskId(taskId).map(json -> new JsonObject(json));
+      }
+    };
   }  
-
 }

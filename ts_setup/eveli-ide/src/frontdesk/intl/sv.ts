@@ -32,6 +32,8 @@ const sv = {
   'menu.services': 'Tjänster',
   'menu.content': 'Stencil',
   'menu.calendar': 'Kalender',
+  'menu.feedback': 'Feedback',
+
 
   'front.intro.title': 'Välkommen!',
   
@@ -43,6 +45,7 @@ const sv = {
   'profile.app.version': "Applikationsversion:",
 
   'button.cancel' : 'Avbryt',
+  'button.publish': 'Publicera',
   'button.accept' : 'Acceptera',
   'button.edit' : 'Öppna',
   'button.close' : 'Stäng',
@@ -133,6 +136,7 @@ const sv = {
   "Internal": "Intern",
 
   'task.role.assignedAllUsers': 'Alla användare',
+  "task.feedback.published": "Publicerat svar",
 
   'confirm.close.title': 'Bekräftelse krävs',
   'confirm.unsavedChanges': 'Osparade ändringar kommer att gå förlorade, vill du fortsätta?',
@@ -144,12 +148,29 @@ const sv = {
 
   'feedback.button': 'Skicka respons',
   'feedback.thanks': 'Tack för din respons!',
-  'feedback.title': 'Skicka respons',
+  'feedback.create.title': 'Create public reply to customer feedback',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Beskrivning',
   'feedback.name': 'Ditt namn',
   'feedback.sendScreenshot': 'Skicka en skärmdump',
   'feedback.close': 'Avbryt',
   'feedback.send': 'Skicka',
+
+  'feedback.noFeedback.info1': 'No reply to publish!',
+  'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
+  'feedback.category': 'Luokka',
+  'feedback.subCategory': 'Alaluokka',
+  'feedback.myReply': 'Vastaa asiakkaalle',
+
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
 
   'help.title': 'Anvisningar',
 

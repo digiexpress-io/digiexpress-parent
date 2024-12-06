@@ -53,7 +53,7 @@ public class DialobCallbackController {
   public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnswered()) {
       try {
-        final var questionnaire = dialobClient.getQuestionnaireById(instance.getQuestionnaireId());
+        final var questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
         if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
           log.warn("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
           continue;

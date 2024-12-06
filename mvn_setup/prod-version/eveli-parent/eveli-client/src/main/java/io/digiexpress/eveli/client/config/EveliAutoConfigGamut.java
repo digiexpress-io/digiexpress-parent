@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -94,8 +95,8 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutSiteController gamutSiteController(EveliContext eveliContext) {
-    return new GamutSiteController(eveliContext.getSiteEnvir());
+  public GamutSiteController gamutSiteController(EveliContext eveliContext, FeedbackClient feedback) {
+    return new GamutSiteController(eveliContext.getSiteEnvir(), feedback);
   }
   
   @Bean

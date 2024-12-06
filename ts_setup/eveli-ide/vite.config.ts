@@ -21,7 +21,7 @@ export default defineConfig((props) => {
   } else if (frontdeskMode) {
     console.log('Frontdesk mode');
     return serveFrontdesk(props);
-  }
+  } 
 
   return buildProd(props);
 });

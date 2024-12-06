@@ -57,7 +57,7 @@ public class CommentApiController
   public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
   {
     final var worker = securityClient.getUser().getPrincipal();
-    final var newComment = taskClient.commandTaskBuilder()
+    final var newComment = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .createTaskComment(command);
     return new ResponseEntity<>(newComment, HttpStatus.CREATED);

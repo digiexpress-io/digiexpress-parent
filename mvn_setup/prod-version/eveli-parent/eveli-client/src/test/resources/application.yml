@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    showSql: false
+    generateDdl: false
+    hibernate:
+      ddlAuto: "create"
+      autoQuoteKeyword: true
+      connection:
+        useUnicode: true
+        characterEncoding: 'UTF-8'
+        charSet: 'UTF-8'
+  flyway:
+    enabled: true
+    locations: classpath:db/postgresql
+    validate-on-migrate: true
+
+  

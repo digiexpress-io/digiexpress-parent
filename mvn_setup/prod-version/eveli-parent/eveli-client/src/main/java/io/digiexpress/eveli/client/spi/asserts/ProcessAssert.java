@@ -28,6 +28,12 @@ public class ProcessAssert {
       throw new ProcessException(getMessage(message));
     }
   }
+  public static ProcessException fail(Supplier<String> message) {
+    return new ProcessException(getMessage(message));
+  }
+  public static ProcessException fail(Exception e) {
+    return new ProcessException(e.getMessage(), e);
+  }
   public static void notEmpty(String object, Supplier<String> message) {
     if (object == null || object.isBlank()) {
       throw new ProcessException(getMessage(message));
