@@ -52,7 +52,7 @@ public class AuthenticationConfigJWT {
   private String publicKeyValue;
   @Value("${app.jwt.issuer}")
   private String issuer;
-  @Value("${app.jwt.portal.public-key-value:#{null}}")
+  @Value("${app.jwt.portal.public-key-value}")
   private String portalPublicKeyValue;
   @Value("${app.jwt.portal.issuer}")
   private String portalIssuer;
