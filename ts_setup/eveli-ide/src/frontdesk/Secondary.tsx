@@ -46,23 +46,19 @@ const menuItems: MenuItemProps[] = [
 ]
 
 // --------- Frame.tsx ----------
-const ENV_TYPE: 'prod' | 'test' = (process.env.VITE_ENV_TYPE || 'test') as any;
-const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
-
-
 
 const ExplorerSecondaryButtons: React.FC = () => {
+  const config = useConfig();
   return (
     <Box display='flex' marginTop='auto' justifyContent='center'>
       <Burger.PrimaryButton label='explorer.logout'
         sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
-        onClick={() => window.location.href = `${HOST_URL}/oauth2/authorization/oidcprovider`}
+        onClick={() => window.location.href = config.loginUrl || '/oauth2/authorization/oidcprovider'}
       />
     </Box>
 
   )
 }
-
 
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -113,24 +109,7 @@ const ExplorerTitleBar = styled(Box)(({ theme }) => ({
 
 export const Secondary: React.FC = () => {
 
-  const ENV_TYPE = process.env.VITE_ENV_TYPE || 'test';
-  /* TODO: need admin role here*/
-  const isTestEnv = ENV_TYPE !== 'prod';
-  const config = useConfig();
-  const userInfo = useUserInfo();
   const intl = useIntl();
-
-
-  const isTaskAdmin = () => {
-    if (config.taskAdminGroups?.length) {
-      if (userInfo.hasRole(...config.taskAdminGroups)) {
-        return true;
-      }
-      return false;
-    }
-    return true;
-  }
-  const showDashboard = isTestEnv || isTaskAdmin();
 
   return (<>
     <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
