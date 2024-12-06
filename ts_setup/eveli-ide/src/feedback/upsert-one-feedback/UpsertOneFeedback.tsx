@@ -6,7 +6,6 @@ import { UpdateOneFeedback } from './UpdateOneFeedback';
 export interface UpsertOneFeedbackProps {
   taskId: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
-  viewType: 'FRONTDESK_TASK_VIEW' | 'FEEDBACK_EDITOR_VIEW';
 }
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
@@ -17,9 +16,9 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     findAllFeedback()
       .then(resp => resp)
       .then((resp) => setFeedbacks(resp));
-  }, [])
+  }, [props.taskId])
 
-  const feedbackExists = feedbacks?.find(f => f.id === props.taskId);
+  const feedbackExists = feedbacks?.find(f => f.sourceId === props.taskId);
 
 
   if (feedbackExists) {

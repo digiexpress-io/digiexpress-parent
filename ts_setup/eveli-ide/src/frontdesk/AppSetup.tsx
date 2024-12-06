@@ -69,9 +69,10 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
         <StencilComposer service={service} />
       </IntlProvider>)
   } else if (isFeedback) {
-    return (<IntlProvider locale='en' messages={feedbackIntl.en}>
-      <FeedbackComposer />
-    </IntlProvider>);
+    return (
+      <IntlProvider locale='en' messages={feedbackIntl.en}>
+        <FeedbackComposer />
+      </IntlProvider>);
   }
 
   return (

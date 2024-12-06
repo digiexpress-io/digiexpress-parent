@@ -148,7 +148,8 @@ const sv = {
 
   'feedback.button': 'Skicka respons',
   'feedback.thanks': 'Tack för din respons!',
-  'feedback.title': 'Skicka respons',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Beskrivning',
   'feedback.name': 'Ditt namn',
   'feedback.sendScreenshot': 'Skicka en skärmdump',
@@ -161,6 +162,14 @@ const sv = {
   'feedback.category': 'Luokka',
   'feedback.subCategory': 'Alaluokka',
   'feedback.myReply': 'Vastaa asiakkaalle',
+
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
 
   'help.title': 'Anvisningar',
 

@@ -36,19 +36,23 @@ interface FeedbackComposerProps {
 
 export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
   const { taskId } = useParams<{ taskId: string }>();
-  console.log("taskId", taskId)
 
   function handleOnComplete() {
 
   }
 
+  React.useEffect(() => {
+    console.log("taskId loaded", taskId)
+  }, [taskId])
 
-  return (<Routes>
-    <Route element={<StartComposer />}>
-      <Route path='/feedback' element={<FeedbackAllTasks taskId={taskId!} />} />
-      <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} viewType='FEEDBACK_EDITOR_VIEW' />} />
-    </Route>
-  </Routes>)
+
+  return (
+    <Routes>
+      <Route element={<StartComposer />}>
+        <Route path='/feedback' element={<FeedbackAllTasks />} />
+        <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} />} />
+      </Route>
+    </Routes>)
 }
 
 

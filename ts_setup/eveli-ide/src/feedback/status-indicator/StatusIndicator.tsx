@@ -20,7 +20,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
       .then((resp) => setFeedbacks(resp));
   }, [])
 
-  const feedbackExists = feedbacks?.find(f => f.id === props.taskId);
+  const feedbackExists = feedbacks?.find(f => f.sourceId === props.taskId);
 
   if (!feedbackExists && props.size === 'SMALL') {
     return (

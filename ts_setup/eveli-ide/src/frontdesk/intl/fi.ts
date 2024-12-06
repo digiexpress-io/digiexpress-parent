@@ -149,7 +149,8 @@ const fi = {
 
   'feedback.button': 'Lähetä palautetta',
   'feedback.thanks': 'Kiitos palautteestasi!',
-  'feedback.title': 'Lähetä palautetta',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Kuvaus',
   'feedback.name': 'Nimesi',
   'feedback.sendScreenshot': 'Lähetä ruutukaappaus',
@@ -161,6 +162,15 @@ const fi = {
   'feedback.myReply': 'Reply to customer',
   'feedback.noFeedback.info1': 'No reply to publish!',
   'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
+
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
+
 
   'help.title': 'Ohjeet',
 

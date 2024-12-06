@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, Divider, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, TextField, Typography, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
@@ -11,12 +11,12 @@ import { StatusIndicator } from '../status-indicator';
 export interface UpdateOneFeedbackProps {
   taskId: string;
   onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
-  viewType: 'FRONTDESK_TASK_VIEW' | 'FEEDBACK_EDITOR_VIEW';
 }
 
-export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, onComplete, viewType }) => {
+export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, onComplete }) => {
   const navigate = useNavigate();
   const intl = useIntl();
+  const theme = useTheme();
 
   const { getOneTemplate, createOneFeedback, findAllFeedback } = useFeedback();
 
@@ -32,9 +32,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       .then((resp) => setFeedbacks(resp));
   }, [])
 
-  const feedback = feedbacks?.find(f => f.id === taskId);
+  const feedback = feedbacks?.find(f => f.sourceId === taskId);
 
-  console.log(feedback)
 
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
@@ -77,61 +76,47 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   }
 
   return (
-    <>
-      <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
+      <Box display='flex' alignItems='center'>
+        <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
+        <StatusIndicator size='LARGE' taskId={taskId} />
+      </Box>
 
-        {
-          viewType === 'FEEDBACK_EDITOR_VIEW' &&
-          <>
-            <Box display='flex' alignItems='center'>
-              <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
-              <StatusIndicator size='LARGE' taskId={taskId} />
-            </Box>
-            <Divider sx={{ my: 2 }} />
+      <Divider sx={{ my: 2 }} />
 
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{taskId}</Typography>
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback?.origin}</Typography>
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}{template?.questionnaire.metadata.completed}</Typography>
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback?.createdBy}</Typography>
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}UPDATED DATE</Typography>
-            <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback?.updatedBy}</Typography>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
-          </>
-        }
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{feedback?.sourceId}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback?.origin}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}{template?.questionnaire.metadata.completed}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback?.createdBy}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}UPDATED DATE</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback?.updatedBy}</Typography>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback?.labelValue}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback?.subLabelValue}</Typography>
+      <Typography mt={2}><ReactMarkdown>{feedback?.content}</ReactMarkdown></Typography>
 
-        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback?.labelValue}</Typography>
-        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback?.subLabelValue}</Typography>
-        <Typography mt={2}><ReactMarkdown>{feedback?.content}</ReactMarkdown></Typography>
-
-        <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
-        {reply ? (
-          <TextField onChange={(e) => setReply(e.target.value)}
-            sx={{ mb: 3 }}
-            multiline
-            minRows={4}
-            placeholder='Write a reply here'
-            value={reply}
-          />
-        ) : (<Box p={2}>
-          <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info1' })}</Typography>
-          <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info2' })}</Typography>
-        </Box>
-        )
-        }
-
-      </div>
+      <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
+      {reply ? (
+        <TextField onChange={(e) => setReply(e.target.value)}
+          sx={{ mb: 3 }}
+          multiline
+          minRows={4}
+          placeholder='Write a reply here'
+          value={reply}
+        />
+      ) : (<Box p={2}>
+        <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info1' })}</Typography>
+        <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info2' })}</Typography>
+      </Box>
+      )
+      }
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />
-
-        {viewType === 'FEEDBACK_EDITOR_VIEW' &&
-          <>
-            <Burger.SecondaryButton onClick={handleCancel} label='button.delete' />
-            <Burger.SecondaryButton onClick={handleCancel} label='button.unpublish' />
-          </>
-        }
+        <Burger.SecondaryButton onClick={handleCancel} label='button.delete' />
+        <Burger.SecondaryButton onClick={handleCancel} label='button.unpublish' />
         <Burger.PrimaryButton onClick={handlePublish} label='button.publish' />
       </Box>
-    </>
+    </div>
   )
 }

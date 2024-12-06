@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,12 +26,13 @@ const subCategories = [
 
 
 export interface FeedbackAllTasksProps {
-  taskId: string
 }
 
-export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
+export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
   const intl = useIntl();
   const navigate = useNavigate();
+  const theme = useTheme();
+
   const { findAllFeedback } = useFeedback();
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>();
 
@@ -71,7 +72,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
   }
 
   return (
-    <div style={{ padding: 10 }}>
+    <Box padding={theme.spacing(3)}>
       <Typography variant='h1'>{intl.formatMessage({ id: 'feedback.all' })}</Typography>
 
       <Box display='flex' mb={3} gap={1} alignItems='end'>
@@ -164,10 +165,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = (props) => {
         )) : <>{intl.formatMessage({ id: 'feedback.none' })}</>}
 
       </List>
-
-
-
-    </div >
+    </Box>
 
   )
 }

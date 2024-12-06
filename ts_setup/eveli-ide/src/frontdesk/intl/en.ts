@@ -148,7 +148,8 @@ const en = {
 
   'feedback.button': 'Send feedback',
   'feedback.thanks': 'Thank you for your feedback!',
-  'feedback.title': 'Send feedback',
+  'feedback.title': 'Public reply to customer feedback',
+  'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Description',
   'feedback.name': 'Your name',
   'feedback.sendScreenshot': 'Send screenshot',
@@ -160,6 +161,13 @@ const en = {
   'feedback.noFeedback.info1': 'No reply to publish!',
   'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
 
+  'feedback.customerFeedback': 'Customer feedback',
+  'feedback.sourceTaskId': 'Source task id',
+  'feedback.formName': 'Form name',
+  'feedback.dateReceived': 'Date received from customer',
+  'feedback.createdBy': 'Created by',
+  'feedback.updatedBy': 'Updated by',
+  'feedback.updated': 'Last updated',
 
   'help.title': 'Help',
   
