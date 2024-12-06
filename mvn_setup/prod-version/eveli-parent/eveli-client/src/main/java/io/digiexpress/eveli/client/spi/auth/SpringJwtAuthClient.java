@@ -66,7 +66,7 @@ public class SpringJwtAuthClient implements AuthClient {
   @Override
   public Liveness getLiveness() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    final Jwt token = (Jwt) authentication.getCredentials();
+    final Jwt token = (Jwt) authentication.getPrincipal();
     
     final var now = LocalDateTime.now();
     final var then = LocalDateTime.ofInstant(token.getExpiresAt(), ZoneId.systemDefault());
