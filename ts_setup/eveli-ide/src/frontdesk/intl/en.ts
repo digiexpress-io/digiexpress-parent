@@ -44,6 +44,8 @@ const en = {
   'profile.app.version': "Application version:",
 
   'button.cancel' : 'Cancel',
+  'button.delete': 'Delete this feedback',
+  'button.unpublish': 'Unpublish this feedback',
   'button.publish': 'Publish',
   'button.accept' : 'Accept',
   'button.edit' : 'Edit',
