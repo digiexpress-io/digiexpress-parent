@@ -149,6 +149,7 @@ const fi = {
 
   'feedback.button': 'Lähetä palautetta',
   'feedback.thanks': 'Kiitos palautteestasi!',
+  'feedback.create.title': 'Create public reply to customer feedback',
   'feedback.title': 'Public reply to customer feedback',
   'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Kuvaus',

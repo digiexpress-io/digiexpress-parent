@@ -68,6 +68,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
+        <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
+
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{template?.labelValue},</Typography>
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{template?.subLabelValue}</Typography>
         <Typography mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Typography>

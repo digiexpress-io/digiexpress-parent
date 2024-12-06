@@ -148,6 +148,7 @@ const sv = {
 
   'feedback.button': 'Skicka respons',
   'feedback.thanks': 'Tack för din respons!',
+  'feedback.create.title': 'Create public reply to customer feedback',
   'feedback.title': 'Public reply to customer feedback',
   'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Beskrivning',

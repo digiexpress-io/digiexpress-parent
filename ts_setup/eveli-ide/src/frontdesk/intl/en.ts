@@ -148,6 +148,7 @@ const en = {
 
   'feedback.button': 'Send feedback',
   'feedback.thanks': 'Thank you for your feedback!',
+  'feedback.create.title': 'Create public reply to customer feedback',
   'feedback.title': 'Public reply to customer feedback',
   'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.description': 'Description',

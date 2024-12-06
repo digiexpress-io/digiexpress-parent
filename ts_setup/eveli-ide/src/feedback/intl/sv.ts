@@ -5,6 +5,7 @@ const sv = {
   'menu.feedbackAllTasks': 'All feedback',
 
   'feedback.title': 'Public reply to customer feedback',
+  'feedback.create.title': 'Create public reply to customer feedback',
   'feedback.update.title': 'Edit public reply to customer feedback',
   'feedback.all': 'All feedback',
   'feedback.none': 'No feedback available',
