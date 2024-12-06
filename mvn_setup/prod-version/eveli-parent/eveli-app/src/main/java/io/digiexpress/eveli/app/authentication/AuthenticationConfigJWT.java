@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.app.authentication;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
@@ -48,15 +47,6 @@ import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
 @Configuration
 @Profile("jwt")
 public class AuthenticationConfigJWT {
-  @Bean
-  public SpringJwtAuthClient authClientJwt() {
-    return new SpringJwtAuthClient();
-  }
-
-  @Bean
-  public SpringJwtCrmClient crmClientJwt() {
-    return new SpringJwtCrmClient(new RestTemplate(), "");
-  }
 
   @Value("${app.jwt.public-key-value}")
   private String publicKeyValue;
@@ -66,7 +56,16 @@ public class AuthenticationConfigJWT {
   private String portalPublicKeyValue;
   @Value("${app.jwt.portal.issuer}")
   private String portalIssuer;
+  
+  @Bean
+  public SpringJwtAuthClient authClientJwt() {
+    return new SpringJwtAuthClient();
+  }
 
+  @Bean
+  public SpringJwtCrmClient crmClientJwt() {
+    return new SpringJwtCrmClient(new RestTemplate(), "");
+  }
 
   @Bean
   JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
