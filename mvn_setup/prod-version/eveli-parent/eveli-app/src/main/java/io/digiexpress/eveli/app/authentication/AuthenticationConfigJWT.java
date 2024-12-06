@@ -2,15 +2,9 @@ package io.digiexpress.eveli.app.authentication;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,12 +30,10 @@ import org.springframework.context.annotation.Configuration;
  */
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.converter.RsaKeyConverters;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -54,42 +46,34 @@ import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
 import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
 
 @Configuration
+@Profile("jwt")
 public class AuthenticationConfigJWT {
   @Bean
-  @Profile("jwt")
   public SpringJwtAuthClient authClientJwt() {
     return new SpringJwtAuthClient();
   }
 
   @Bean
-  @Profile("jwt")
   public SpringJwtCrmClient crmClientJwt() {
     return new SpringJwtCrmClient(new RestTemplate(), "");
   }
 
-  @Value("${app.jwt.secret}")
-  private String secret;
+  @Value("${app.jwt.public-key-value}")
+  private String publicKeyValue;
   @Value("${app.jwt.issuer}")
   private String issuer;
-  @Value("${app.jwt.portal.publicKey:#{null}}")
-  private Resource portalPublicKey;
   @Value("${app.jwt.portal.public-key-value:#{null}}")
   private String portalPublicKeyValue;
   @Value("${app.jwt.portal.issuer}")
   private String portalIssuer;
 
-  private final String PORTAL_USER_ROLE = "SCOPE_PortalUser";
 
   @Bean
   JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
     Map<String, AuthenticationManager> decoders;
-    try {
-      decoders = Map.of(issuer, authenticationManager(jwtDecoder(), jwtAuthenticationConverter()), portalIssuer,
-          authenticationManager(jwtPortalDecoder(), jwtPortalAuthenticationConverter()));
-      return new JwtIssuerAuthenticationManagerResolver(decoders::get);
-    } catch (IOException e) {
-      throw new RuntimeException("Error in decoder creation", e);
-    }
+    decoders = Map.of(issuer, authenticationManager(jwtDecoder(publicKeyValue), jwtAuthenticationConverter()), portalIssuer,
+        authenticationManager(jwtDecoder(portalPublicKeyValue), jwtPortalAuthenticationConverter()));
+    return new JwtIssuerAuthenticationManagerResolver(decoders::get);
   }
 
   @Bean
@@ -116,9 +100,6 @@ public class AuthenticationConfigJWT {
     return jwtAuthenticationConverter;
   }
 
-  private SecretKey createSecretKey() {
-    return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
-  }
 
   private AuthenticationManager authenticationManager(JwtDecoder decoder, JwtAuthenticationConverter converter) {
     JwtAuthenticationProvider provider = new JwtAuthenticationProvider(decoder);
@@ -128,22 +109,11 @@ public class AuthenticationConfigJWT {
     return new ProviderManager(provider);
   }
 
-  private JwtDecoder jwtDecoder() {
-    SecretKey key = createSecretKey();
-    return NimbusJwtDecoder.withSecretKey(key).macAlgorithm(MacAlgorithm.HS512).build();
-  }
-
-  private JwtDecoder jwtPortalDecoder() throws IOException {
-    RSAPublicKey rsaPublicKey;
-    if (StringUtils.isNotBlank(portalPublicKeyValue)) {
-      rsaPublicKey = RsaKeyConverters.x509()
-          .convert(new ByteArrayInputStream(portalPublicKeyValue.replace("\\n", "\n").getBytes()));
-    } else {
-      try (InputStream is = portalPublicKey.getInputStream()) {
-        rsaPublicKey = RsaKeyConverters.x509().convert(new ByteArrayInputStream(is.readAllBytes()));
-      }
-    }
+  private JwtDecoder jwtDecoder(String publicKeyValue) {
+    RSAPublicKey rsaPublicKey = RsaKeyConverters.x509()
+          .convert(new ByteArrayInputStream(publicKeyValue.replace("\\n", "\n").getBytes()));
     return NimbusJwtDecoder.withPublicKey(rsaPublicKey)
         .signatureAlgorithm(org.springframework.security.oauth2.jose.jws.SignatureAlgorithm.RS256).build();
   }
+
 }
