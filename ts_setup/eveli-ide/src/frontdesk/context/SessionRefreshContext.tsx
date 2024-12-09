@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { cFetch, CFetchOptions, dataLinkDelete, dataLinkFetch } from '../util/cFetch';
+import { useConfig } from './ConfigContext';
 
 /**
  * Context which opens login window if api request returns 401.
@@ -17,18 +18,15 @@ export interface SessionRefresh {
 }
 
 
-const IAP_REFRESH: boolean | undefined = process.env.VITE_IAP_REFRESH as any;
-const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
-
 var iapSessionRefreshWindow: Window | null = null;
 var updateStarted = false;
 
-function startSessionUpdate() {
+function startSessionUpdate(loginUrl: string) {
   if (iapSessionRefreshWindow == null && !updateStarted) {
     updateStarted = true;
     let positionX = window.screenX + 30;
     let positionY = window.screenY + 30;
-    iapSessionRefreshWindow = window.open(`${HOST_URL}/oauth2/authorization/oidcprovider`, "_blank", `height=600,width=400,left=${positionX},top=${positionY}`);
+    iapSessionRefreshWindow = window.open(loginUrl, "_blank", `height=600,width=400,left=${positionX},top=${positionY}`);
   }
   return false;
 }
@@ -66,8 +64,8 @@ function checkSessionRefresh() {
 
 type refreshIAPSession = () => Promise<void>;
 
-function userRefreshIAPSession(): Promise<void> {
-  startSessionUpdate();
+function userRefreshIAPSession(loginUrl: string): Promise<void> {
+  startSessionUpdate(loginUrl);
   return checkSessionRefresh();
 }
 
@@ -119,11 +117,13 @@ function dataLinkDeleteReauth(refreshIAPSession: refreshIAPSession, url: string,
 export const SessionRefreshContext = React.createContext<SessionRefresh>(DefaultSessionRefresh);
 
 export const IAPSessionRefreshContext: React.FC<PropsWithChildren> = ({ children }) => {
-  const cFetchBound = cFetchReauth.bind(null, userRefreshIAPSession);
-  const dataLinkFetchBound = dataLinkFetchReauth.bind(null, userRefreshIAPSession);
-  const dataLinkDeleteBound = dataLinkDeleteReauth.bind(null, userRefreshIAPSession);
+  const context = useConfig();
+  const sessionRefreshFunction = userRefreshIAPSession.bind(null, context.loginUrl || '/oauth2/authorization/oidcprovider');
+  const cFetchBound = cFetchReauth.bind(null, sessionRefreshFunction);
+  const dataLinkFetchBound = dataLinkFetchReauth.bind(null, sessionRefreshFunction);
+  const dataLinkDeleteBound = dataLinkDeleteReauth.bind(null, sessionRefreshFunction);
 
-  if (IAP_REFRESH === true) {
+  if (!!context.loginAutoRefresh) {
     return (
       <SessionRefreshContext.Provider value={{
         cFetch: cFetchBound,

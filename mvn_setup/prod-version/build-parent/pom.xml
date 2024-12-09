@@ -67,6 +67,8 @@
     
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
+    
+    <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
   </properties>
 
   <build>
