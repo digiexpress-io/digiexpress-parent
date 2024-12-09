@@ -73,7 +73,6 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
 
       <main role='main'>
         <Container>
-
           <Box sx={{
               [theme.breakpoints.down('md')]: {
                 justifyContent: 'center',
@@ -95,7 +94,6 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
             <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
           </Box>
 
-          {/*<GForm variant="general-message">1dfe0a3eef10f0306171f85b37a15209</GForm> */}
           <GArticle>{landingTopic}</GArticle>
         </Container>
       </main>

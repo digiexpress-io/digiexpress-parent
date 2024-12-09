@@ -30,9 +30,6 @@ export const RouterServiceSelected: React.FC<RouterServiceSelectedProps> = ({ lo
   const topics = Object.values(views);
   const topic = topics.find((a) => a.topic.id === serviceId);
 
-  console.log(topic?.links)
-
-
   const nav = useNavigate();
   function handleLocale(locale: string) {
     nav({

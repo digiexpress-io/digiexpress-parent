@@ -5,6 +5,8 @@ import { GLogoClassKey, GLogoProps } from '../g-logo';
 
 import { GAppBarClassKey, GAppBarProps } from '../g-app-bar';
 import { GArticleClassKey, GArticleProps } from '../g-article';
+import { GArticleFeedbackClassKey, GArticleFeedbackProps } from '../g-article-feedback';
+
 
 import { GPopoverButtonClassKey, GPopoverButtonProps } from '../g-popover-button';
 import { GPopoverTopicsClassKey, GPopoverTopicsProps } from '../g-popover-topics';
@@ -80,6 +82,7 @@ declare module "@mui/material" {
 export interface GComponentsPropsList {
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
+  GArticleFeedback: GArticleFeedbackProps;
   GBookings: GBookingsProps;
 
   GPopoverButton: GPopoverButtonProps;
@@ -146,6 +149,7 @@ export interface GComponentsPropsList {
 export interface GComponentNameToClassKey {
   GAppBar: GAppBarClassKey;
   GArticle: GArticleClassKey;
+  GArticleFeedback: GArticleFeedbackClassKey;
   GBookings: GBookingsClassKey;
   GPopoverButton: GPopoverButtonClassKey;
   GPopoverSearch: GPopoverSearchClassKey;
@@ -220,6 +224,11 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GArticle'];
     styleOverrides?: GComponentsOverrides<Theme>['GArticle'];
     variants?: GComponentsVariants['GArticle'];
+  },
+  GArticleFeedback?: {
+    defaultProps?: GComponentsProps['GArticleFeedback'];
+    styleOverrides?: GComponentsOverrides<Theme>['GArticleFeedback'];
+    variants?: GComponentsVariants['GArticleFeedback'];
   },
   GBookings?: {
     defaultProps?: GComponentsProps['GBookings'];

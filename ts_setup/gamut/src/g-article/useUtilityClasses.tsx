@@ -20,8 +20,8 @@ export type GArticleClassKey = keyof GArticleClasses;
 export const useUtilityClasses = (ownerState: GArticleProps) => {
   const slots = {
     root: ['root'],
-    page: ['page'],
     content: ['content'],
+    page: ['page'],
     pageLinks: ['pageLinks'],
     pageBottom: ['pageBottom']
   };
@@ -46,12 +46,17 @@ export const GArticleRoot = styled("div", {
   },
 })<{ ownerState: GArticleProps }>(({ theme }) => {
   return {
-    display: 'flex',
-    flexGrow: 1,
-    padding: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
+
+
+    '& .GArticle-content': {
+      display: 'flex',
+      flexGrow: 1,
+      padding: theme.spacing(2),
+      [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+      },
     },
+
     '& .GArticle-page': {
       [theme.breakpoints.up('md')]: {
         width: '70%',
@@ -68,6 +73,8 @@ export const GArticleRoot = styled("div", {
         width: '100%'
       }
 
+    },
+    '& .GArticle-pageBottom': {
     }
   };
 });

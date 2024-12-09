@@ -37,6 +37,7 @@ spring.datasource.password: "password123"
 
 eveli.task.adminsearch: true
 eveli.assets.timezoneOffset: +2
+eveli.assets.importDeployment: /Users/olevmutso/Development/init_v_1-2.json
 
 
 # dialob related config
