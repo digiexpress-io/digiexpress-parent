@@ -65,6 +65,7 @@ public class FeedbackTest extends FeedbackEnirSetup {
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
+    Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().size() == 1, "Can't find created feedback");
     final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(taskId);
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
     
