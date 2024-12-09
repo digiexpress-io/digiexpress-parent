@@ -106,6 +106,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .sourceId(rs.getString("source_id"))
         .createdBy(rs.getString("created_by"))
         .updatedBy(rs.getString("updated_by"))
+        .updatedOnDate(rs.getString("updated_on_date"))
         .content(rs.getString("content"))
         .locale(rs.getString("locale"))
         .build();

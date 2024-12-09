@@ -138,6 +138,7 @@ public interface FeedbackClient {
     String getOrigin();
     
     String getUpdatedBy();
+    String getUpdatedOnDate();
     String getCreatedBy();
     
     String getContent();

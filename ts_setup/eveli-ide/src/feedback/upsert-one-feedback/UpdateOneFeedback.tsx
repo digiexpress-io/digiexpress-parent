@@ -35,7 +35,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
   const feedback = feedbacks?.find(f => f.sourceId === taskId);
 
-
+  console.log(feedbacks)
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
 
@@ -91,7 +91,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback.origin}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}<Burger.DateTimeFormatter timestamp={template?.questionnaire.metadata.completed} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback.createdBy}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}UPDATED DATE</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<Burger.DateTimeFormatter timestamp={feedback.updatedOnDate} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
       <Divider sx={{ my: 2 }} />
       <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>

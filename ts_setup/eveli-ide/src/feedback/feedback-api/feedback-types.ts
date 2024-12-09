@@ -30,6 +30,7 @@ export declare namespace FeedbackApi {
     subLabelValue: string | undefined;
 
     updatedBy: string;
+    updatedOnDate: string;
     createdBy: string;
 
     thumbsUpCount: number;
