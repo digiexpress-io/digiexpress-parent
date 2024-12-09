@@ -27,7 +27,8 @@
     "react-markdown": "^9.0.1",
     "vis-react": "^0.5.1",
     "yaml": "^2.6.0",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "@uiw/react-md-editor": "^4.0.4"
   },
   "peerDependencies": {
     "@dialob/dashboard-material": "^1.2.3",
