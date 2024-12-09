@@ -51,7 +51,7 @@ public class SpringJwtAuthClient implements AuthClient {
           .build();
     }
     
-    final Jwt token = (Jwt) authentication.getCredentials();
+    final Jwt token = (Jwt) authentication.getPrincipal();
     return ImmutableUser.builder()
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()

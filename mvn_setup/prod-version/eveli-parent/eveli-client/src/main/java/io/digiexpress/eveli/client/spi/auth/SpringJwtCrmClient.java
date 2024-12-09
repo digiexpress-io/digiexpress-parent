@@ -83,7 +83,7 @@ public class SpringJwtCrmClient implements CrmClient {
   @Override
   public Liveness getLiveness() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    final Jwt token = (Jwt) authentication.getCredentials();
+    final Jwt token = (Jwt) authentication.getPrincipal();
     
     final var now = LocalDateTime.now();
     final var then = LocalDateTime.ofInstant(token.getExpiresAt(), ZoneId.systemDefault());
@@ -111,7 +111,7 @@ public class SpringJwtCrmClient implements CrmClient {
           .build();
     }
     
-    final Jwt token = (Jwt) authentication.getCredentials();
+    final Jwt token = (Jwt) authentication.getPrincipal();
     final var principal = toCustomer(token);
     
     final CustomerType type;
