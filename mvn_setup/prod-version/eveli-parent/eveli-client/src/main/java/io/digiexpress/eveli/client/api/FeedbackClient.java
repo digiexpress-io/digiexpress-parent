@@ -23,6 +23,7 @@ import java.time.ZonedDateTime;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -59,6 +60,7 @@ public interface FeedbackClient {
   interface FeedbackQuery {
     List<Feedback> findAll();
     Feedback getOneById(String id);
+    Optional<Feedback> findOneById(String taskIdOrFeedbackId);
   }
   
   /**

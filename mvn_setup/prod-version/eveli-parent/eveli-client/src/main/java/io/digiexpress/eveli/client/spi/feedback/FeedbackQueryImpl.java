@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -110,5 +111,27 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .content(rs.getString("content"))
         .locale(rs.getString("locale"))
         .build();
+  }
+
+  @Override
+  public Optional<Feedback> findOneById(String taskIdOrFeedbackId) {
+    return jdbc.query(SELECT_REPLY + 
+"""
+WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?
+""", (PreparedStatement ps) -> {
+      
+      try {
+        ps.setObject(1, UUID.fromString(taskIdOrFeedbackId));
+      } catch(IllegalArgumentException e) {
+        ps.setObject(1, null);
+      }
+      ps.setString(2, taskIdOrFeedbackId);
+      
+    }, (ResultSet rs) -> {
+      if(rs.next()) {
+        return Optional.of(map(rs));
+      }    
+      return Optional.empty();
+    });
   }
 }

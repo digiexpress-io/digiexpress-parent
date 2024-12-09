@@ -45,8 +45,8 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const { serviceUrl } = useConfig();
 
-  const fetchFeedbackGET: FeedbackApi.FetchFeedbackGET = async () => {
-    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback`, {
+  const fetchFeedbackGET: FeedbackApi.FetchFeedbackGET = async (taskId) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback${taskId ? '/' + taskId : ''}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: undefined,

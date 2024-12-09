@@ -7,7 +7,7 @@ export declare namespace FeedbackApi {
 
   export type FetchTemplateGET = (id: TaskId) => Promise<Response>;
   export type FetchFeedbackPOST = (id: TaskId, command: CreateFeedbackCommand) => Promise<Response>;
-  export type FetchFeedbackGET = () => Promise<Response>;
+  export type FetchFeedbackGET = (id?: TaskId) => Promise<Response>;
 
   export type ProcessId = string;
   export type UserId = string;

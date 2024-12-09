@@ -52,4 +52,11 @@ public class FeedbackApiController {
     return new ResponseEntity<>(feedbacks, HttpStatus.OK);
   }
   
+  @GetMapping("/{taskIdOrFeedbackId}")
+  public ResponseEntity<List<Feedback>> getOneFeedback()
+  {
+    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
+    return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+  }
+  
 }

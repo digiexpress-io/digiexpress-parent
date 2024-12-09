@@ -5,6 +5,7 @@ export interface FeedbackContextType {
   getOneTemplate: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.FeedbackTemplate>;
   createOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.CreateFeedbackCommand) => Promise<FeedbackApi.Feedback>;
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
+  getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
 }
 
 export const FeedbackContext = React.createContext<FeedbackContextType>({} as any);
@@ -37,10 +38,14 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
         .then(resp => resp.json());
     }
 
+    function getOneFeedback(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.Feedback> {
+      return props.fetchFeedbackGET(taskId)
+        .then(resp => resp.json());
+    }
 
     // return all methods
     return {
-      getOneTemplate, createOneFeedback, findAllFeedback
+      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback
     };
   }, [props.fetchFeedbackGET, props.fetchFeedbackPOST, props.fetchTemplateGET]);
 

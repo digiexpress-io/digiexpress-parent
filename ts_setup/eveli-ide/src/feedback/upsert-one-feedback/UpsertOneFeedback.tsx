@@ -9,18 +9,16 @@ export interface UpsertOneFeedbackProps {
 }
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
-  const { findAllFeedback } = useFeedback();
-  const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback[]>();
+  const { getOneFeedback } = useFeedback();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
 
   React.useEffect(() => {
-    findAllFeedback()
+    getOneFeedback(props.taskId)
       .then(resp => resp)
-      .then((resp) => setFeedbacks(resp));
+      .then((resp) => setFeedback(resp));
   }, [props.taskId])
 
-  const feedbackExists = feedbacks?.find(f => f.sourceId === props.taskId);
-
-
+  const feedbackExists = feedback ? true : false;
   if (feedbackExists) {
     return (<UpdateOneFeedback  {...props} />)
   }
