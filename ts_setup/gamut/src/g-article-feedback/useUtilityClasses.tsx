@@ -57,6 +57,9 @@ export const GArticleFeedbackRoot = styled("div", {
     '& .GArticleFeedback-pagination .MuiToolbar-root': {
       paddingLeft: 0
     },
+    '& .GArticleFeedback-pagination .MuiInputBase-root': {
+      width: "unset"
+    },
     '& .GArticleFeedback-filledRow': {
       cursor: 'pointer'
     },
