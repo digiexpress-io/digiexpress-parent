@@ -1,91 +1,43 @@
 import React from 'react';
-import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, TextField, Typography, useTheme } from '@mui/material';
+import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import * as Burger from '@/burger';
-import { FeedbackApi, useFeedback } from '../feedback-api';
+import { useFeedback } from '../feedback-api';
 import { StatusIndicator } from '../status-indicator';
+import { FeedbackReducer } from './FeedbackReducer';
 
 
 
-// need two filters -- one for category and one for sub-category or type
-
-const categories = [
-  'Public pools',
-  'Parks and recreation',
-  'School services',
-  'Community events',
-];
-
-const subCategories = [
-  'Cleanliness and hygine',
-  'Changing facilities',
-  'Customer service'
-]
-
-
-export interface FeedbackAllTasksProps {
-}
+export interface FeedbackAllTasksProps { }
 
 export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
-
   const { findAllFeedback } = useFeedback();
-  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>([]);
-  const [filteredFeedback, setFilteredFeedback] = React.useState<FeedbackApi.Feedback[]>([]);
-  const [searchString, setSearchString] = React.useState('');
+  const [state, setState] = React.useState(new FeedbackReducer({ data: [] }));
 
 
   React.useEffect(() => {
-    findAllFeedback()
-      .then(data => {
-        setFeedback(data)
-        setFilteredFeedback(data)
-      });
+    findAllFeedback().then(data => setState(prev => prev.withData(data)));
   }, []);
 
 
-  const [category, setCategory] = React.useState<string[]>([]);
-  const [subCategory, setSubCategory] = React.useState<string[]>([]);
+  function handleSearch(searchString: string) {
+    setState(prev => prev.withSearchBy(searchString))
+  }
 
+  function handleChangeCategory(event: SelectChangeEvent<string>) {
+    const { value } = event.target;
+    setState(prev => prev.withFilterByCategory(value))
+  }
 
-
-  const handleSearch = (searchString: string) => {
-    setSearchString(searchString);
-
-    if (searchString.trim() === '') {
-      setFilteredFeedback(feedback);
-    } else {
-      const filteredItems = feedback.filter((item) =>
-        item.sourceId.toLowerCase().includes(searchString.toLowerCase())
-      );
-      setFilteredFeedback(filteredItems);
-    }
-  };
-
-
-  const handleChangeCategory = (event: SelectChangeEvent<typeof category>) => {
-    const {
-      target: { value },
-    } = event;
-    setCategory(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-
-  const handleChangeSubCategory = (event: SelectChangeEvent<typeof category>) => {
-    const {
-      target: { value },
-    } = event;
-    setSubCategory(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+  function handleChangeSubCategory(event: SelectChangeEvent<string>) {
+    const { value } = event.target;
+    setState(prev => prev.withFilterBySubCategory(value))
+  }
 
   function handleFeedbackNav(taskId: string) {
     console.log(taskId)
@@ -99,28 +51,18 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
 
       <Box display='flex' mb={3} gap={1} alignItems='end'>
         <Box width='25%'>
-          <Burger.TextField label='feedback.search' onChange={handleSearch} value={searchString} placeholder={intl.formatMessage({ id: 'feedback.search.placeholder' })} />
+          <Burger.TextField label='feedback.search' onChange={handleSearch} value={state.searchBy ?? ''} placeholder={intl.formatMessage({ id: 'feedback.search.placeholder' })} />
         </Box>
 
         <Box width='75%'>
           <FormControl sx={{ width: '45%', marginRight: 1 }}>
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.category' })}</Typography>
-            <Select
-              sx={{ padding: 0 }}
-              value={category}
+            <Select sx={{ padding: 0 }}
+              value={state.filterByCategory ?? ''}
               onChange={handleChangeCategory}
-              input={<TextField select sx={{ padding: 0 }} />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (<>{value}</>))}
-                </Box>
-              )}
             >
-              {categories.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                >
+              {state.categories.map((name) => (
+                <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
@@ -129,25 +71,17 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
 
           <FormControl sx={{ width: '45%' }}>
             <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.subCategory' })}</Typography>
-            <Select
-              sx={{ padding: 0 }}
-              value={subCategory}
+            <Select sx={{ padding: 0 }}
+              value={state.filterBySubCategory ?? ''}
               onChange={handleChangeSubCategory}
-              input={<TextField select sx={{ padding: 0 }} />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (<>{value}</>))}
-                </Box>
-              )}
             >
-              {subCategories.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                >
+
+              {state.subcategories.map((name) => (
+                <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
               ))}
+
             </Select>
           </FormControl>
 
@@ -156,34 +90,35 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
 
       <List dense disablePadding>
 
-        {filteredFeedback ? filteredFeedback.map((feedback) => (<>
-          <ListItem dense disableGutters>
-            <ListItemButton onClick={() => handleFeedbackNav(feedback.sourceId)}>
-              <Box display='flex' gap={3} width='100%'>
-                <Box width='6%' alignContent='center'>
-                  <StatusIndicator size='LARGE' taskId={feedback.sourceId} />
+        {state.visibleRows.length ? state.visibleRows.map((feedback) => (
+          <React.Fragment key={feedback.id}>
+            <ListItem dense disableGutters>
+              <ListItemButton onClick={() => handleFeedbackNav(feedback.sourceId)}>
+                <Box display='flex' gap={3} width='100%'>
+                  <Box width='6%' alignContent='center'>
+                    <StatusIndicator size='LARGE' taskId={feedback.sourceId} />
+                  </Box>
+                  <Box width='35%'>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>
+                    <Typography>{feedback.labelValue}</Typography>
+                  </Box>
+                  <Box width='35%'>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.subCategory' })}</Typography>
+                    <Typography>{feedback.subLabelValue}</Typography>
+                  </Box>
+                  <Box width='13%'>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.createdBy' })}</Typography>
+                    <Typography>{feedback.createdBy}</Typography>
+                  </Box>
+                  <Box width='13%'>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.updatedBy' })}</Typography>
+                    <Typography>{feedback.updatedBy}</Typography>
+                  </Box>
                 </Box>
-                <Box width='35%'>
-                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>
-                  <Typography>{feedback.labelValue}</Typography>
-                </Box>
-                <Box width='35%'>
-                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.subCategory' })}</Typography>
-                  <Typography>{feedback.subLabelValue}</Typography>
-                </Box>
-                <Box width='13%'>
-                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.createdBy' })}</Typography>
-                  <Typography>{feedback.createdBy}</Typography>
-                </Box>
-                <Box width='13%'>
-                  <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.updatedBy' })}</Typography>
-                  <Typography>{feedback.updatedBy}</Typography>
-                </Box>
-              </Box>
-            </ListItemButton>
-          </ListItem>
-          <Divider />
-        </>
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
         )) : <>{intl.formatMessage({ id: 'feedback.none' })}</>}
 
       </List>
