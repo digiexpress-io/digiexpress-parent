@@ -31,6 +31,9 @@ export declare namespace FeedbackApi {
 
     updatedBy: string;
     createdBy: string;
+
+    thumbsUpCount: number;
+    thumbsDownCount: number;
   }
 
   export interface FeedbackTemplate {

@@ -172,6 +172,8 @@ const fi = {
   'feedback.updatedBy': 'Updated by',
   'feedback.updated': 'Last updated',
 
+  'feedback.notPublished': 'This feedback is not published',
+  'feedback.isPublished': 'This feedback is published and publicly viewable',
 
   'help.title': 'Ohjeet',
 

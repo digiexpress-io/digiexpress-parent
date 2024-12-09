@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import * as Burger from '@/burger';
 import { useFeedback, FeedbackApi } from '../feedback-api';
 import { StatusIndicator } from '../status-indicator';
+import { ApprovalCount } from '../approval-count';
 
 export interface UpdateOneFeedbackProps {
   taskId: string;
@@ -71,8 +72,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
-  if (!command) {
-    return <CircularProgress />
+  if (!command || !feedback) {
+    return (<CircularProgress />)
   }
 
   return (
@@ -80,20 +81,22 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       <Box display='flex' alignItems='center'>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
         <StatusIndicator size='LARGE' taskId={taskId} />
+        <Box flexGrow={1} />
+        <ApprovalCount approvalCount={feedback.thumbsUpCount} disapprovalCount={feedback.thumbsDownCount} />
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{feedback?.sourceId}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback?.origin}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{feedback.sourceId}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback.origin}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}{template?.questionnaire.metadata.completed}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback?.createdBy}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback.createdBy}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}UPDATED DATE</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback?.updatedBy}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
       <Divider sx={{ my: 2 }} />
       <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback?.labelValue}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback?.subLabelValue}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback.labelValue}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback.subLabelValue}</Typography>
       <Typography mt={2}><ReactMarkdown>{feedback?.content}</ReactMarkdown></Typography>
 
       <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>

@@ -20,10 +20,14 @@ const en = {
   'feedback.search.filter.subCategory': 'Filter by sub-category',
 
   'feedback.customerFeedback': 'Customer feedback',
+  'feedback.customerApprovals': 'Customer approvals',
   'feedback.sourceTaskId': 'Source task id',
   'feedback.formName': 'Form name',
   'feedback.dateReceived': 'Date received from customer',
   'feedback.myReply': 'Reply to customer',
+
+  'feedback.notPublished': 'This feedback is not published',
+  'feedback.isPublished': 'This feedback is published and publicly viewable',
 
   'feedback.noFeedback.info1': 'No reply to publish!',
   'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
