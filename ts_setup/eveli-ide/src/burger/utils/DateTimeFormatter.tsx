@@ -7,8 +7,8 @@ interface DateTimeFormatProps {
 
 const formatDateTime = (timestamp: string | undefined) => {
     if (timestamp) {
-      const date = new Date(timestamp);
-      return moment.utc(date).local().format('DD/MM/YYYY HH:mm:ss');
+        const date = new Date(timestamp);
+        return moment.utc(date).local().format('DD.MM.YYYY HH:mm:ss');
     }
     return "";
 }

@@ -89,7 +89,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{feedback.sourceId}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback.origin}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}{template?.questionnaire.metadata.completed}</Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}<Burger.DateTimeFormatter timestamp={template?.questionnaire.metadata.completed} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback.createdBy}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}UPDATED DATE</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
