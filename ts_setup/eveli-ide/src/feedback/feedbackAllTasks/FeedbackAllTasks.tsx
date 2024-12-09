@@ -61,10 +61,13 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
               value={state.filterByCategory ?? ''}
               onChange={handleChangeCategory}
             >
+              <MenuItem value={''}>{intl.formatMessage({ id: 'feedback.filter.selectNone' })}</MenuItem>
+
               {state.categories.map((name) => (
                 <MenuItem key={name} value={name}>
                   {name}
                 </MenuItem>
+
               ))}
             </Select>
           </FormControl>
@@ -75,6 +78,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
               value={state.filterBySubCategory ?? ''}
               onChange={handleChangeSubCategory}
             >
+              <MenuItem value={''}>{intl.formatMessage({ id: 'feedback.filter.selectNone' })}</MenuItem>
 
               {state.subcategories.map((name) => (
                 <MenuItem key={name} value={name}>

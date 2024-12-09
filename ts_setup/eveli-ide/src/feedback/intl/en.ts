@@ -18,6 +18,7 @@ const en = {
   'feedback.search.placeholder': 'Feedback, process, or task id',
   'feedback.search.filter.category': 'Filter by category',
   'feedback.search.filter.subCategory': 'Filter by sub-category',
+  'feedback.filter.selectNone': 'None',
 
   'feedback.customerFeedback': 'Customer feedback',
   'feedback.customerApprovals': 'Customer approvals',
