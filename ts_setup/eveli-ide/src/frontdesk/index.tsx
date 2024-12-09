@@ -73,9 +73,18 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     return response;
   }
 
+  const fetchFeedbackDELETE: FeedbackApi.FetchFeedbackDELETE = async (taskId) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback/${taskId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
 
   return (
-    <FeedbackProvider fetchFeedbackGET={fetchFeedbackGET} fetchFeedbackPOST={fetchFeedbackPOST} fetchTemplateGET={fetchTemplateGET}>
+    <FeedbackProvider fetchFeedbackGET={fetchFeedbackGET} fetchFeedbackPOST={fetchFeedbackPOST} fetchTemplateGET={fetchTemplateGET} fetchFeedbackDELETE={fetchFeedbackDELETE}>
       {children}
     </FeedbackProvider>
   );

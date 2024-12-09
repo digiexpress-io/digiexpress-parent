@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /*-
  * #%L
@@ -29,8 +31,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class FeedbackApiController {
-
+  private final AuthClient securityClient;
   private final FeedbackClient feedbackClient;
   
 
@@ -53,10 +57,27 @@ public class FeedbackApiController {
   }
   
   @GetMapping("/{taskIdOrFeedbackId}")
-  public ResponseEntity<List<Feedback>> getOneFeedback()
+  public ResponseEntity<Feedback> getOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
   {
-    final var feedbacks = feedbackClient.queryFeedbacks().findAll();
-    return new ResponseEntity<>(feedbacks, HttpStatus.OK);
+    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
+    if(feedback.isEmpty()) {
+     return ResponseEntity.notFound().build(); 
+    }
+    
+    return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
   }
   
+  @DeleteMapping("/{taskIdOrFeedbackId}")
+  public ResponseEntity<Feedback> deleteOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
+  {
+    final var feedback = feedbackClient.queryFeedbacks().findOneById(id);
+    if(feedback.isEmpty()) {
+      return ResponseEntity.notFound().build(); 
+    }
+    feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
+        .addReplyIds(feedback.get().getId())
+        .userId(securityClient.getUser().getPrincipal().getUsername())
+        .build());
+    return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+  }
 }

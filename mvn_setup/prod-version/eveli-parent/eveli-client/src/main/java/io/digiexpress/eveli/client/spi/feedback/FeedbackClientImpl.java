@@ -66,8 +66,7 @@ public class FeedbackClientImpl implements FeedbackClient {
   
   @Override
   public List<Feedback> deleteAll(DeleteReplyCommand command) {
-    // TODO Auto-generated method stub
-    return null;
+    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory).execute(command);
   }
 
 }

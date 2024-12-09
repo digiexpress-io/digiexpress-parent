@@ -6,6 +6,7 @@ export interface FeedbackContextType {
   createOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.CreateFeedbackCommand) => Promise<FeedbackApi.Feedback>;
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
+  deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
 }
 
 export const FeedbackContext = React.createContext<FeedbackContextType>({} as any);
@@ -17,6 +18,7 @@ export interface FeedbackProviderProps {
   fetchTemplateGET: FeedbackApi.FetchTemplateGET;
   fetchFeedbackPOST: FeedbackApi.FetchFeedbackPOST;
   fetchFeedbackGET: FeedbackApi.FetchFeedbackGET;
+  fetchFeedbackDELETE: FeedbackApi.FetchFeedbackDELETE;
 }
 export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
@@ -43,9 +45,14 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
         .then(resp => resp.json());
     }
 
+    function deleteOneFeedback(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.Feedback> {
+      return props.fetchFeedbackDELETE(taskId)
+        .then(resp => resp.json());
+    }
+
     // return all methods
     return {
-      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback
+      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback
     };
   }, [props.fetchFeedbackGET, props.fetchFeedbackPOST, props.fetchTemplateGET]);
 

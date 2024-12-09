@@ -19,7 +19,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const intl = useIntl();
   const theme = useTheme();
 
-  const { getOneTemplate, createOneFeedback, findAllFeedback } = useFeedback();
+  const { getOneTemplate, createOneFeedback, findAllFeedback, deleteOneFeedback } = useFeedback();
 
   const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback[]>();
   const [command, setCommand] = React.useState<FeedbackApi.CreateFeedbackCommand>();
@@ -35,7 +35,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
   const feedback = feedbacks?.find(f => f.sourceId === taskId);
 
-  console.log(feedbacks)
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
 
@@ -65,10 +64,10 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     }
   }
 
-  function handleCancel() {
-    if (template) {
-      setReply(template.replys.join("\r\n\r\n"));
-    }
+  function handleDelete() {
+    deleteOneFeedback(taskId).then(feedback => {
+      onComplete(feedback);
+    });
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
@@ -86,11 +85,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Box>
 
       <Divider sx={{ my: 2 }} />
-
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.sourceTaskId' })}{': '}{feedback.sourceId}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.formName' })}{': '}{feedback.origin}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}<Burger.DateTimeFormatter timestamp={template?.questionnaire.metadata.completed} /></Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.createdBy' })}{': '}{feedback.createdBy}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<Burger.DateTimeFormatter timestamp={feedback.updatedOnDate} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
       <Divider sx={{ my: 2 }} />
@@ -115,10 +110,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       )
       }
       <Box display='flex' gap={1}>
-        <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />
-        <Burger.SecondaryButton onClick={handleCancel} label='button.delete' />
-        <Burger.SecondaryButton onClick={handleCancel} label='button.unpublish' />
-        <Burger.PrimaryButton onClick={handlePublish} label='button.publish' />
+        <Burger.SecondaryButton onClick={handleDelete} label='button.delete' />
+        <Burger.PrimaryButton onClick={handlePublish} label='button.update' />
       </Box>
     </div>
   )

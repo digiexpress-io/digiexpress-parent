@@ -13,16 +13,16 @@ export interface StatusIndicatorProps {
 export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   const theme = useTheme();
   const intl = useIntl();
-  const { findAllFeedback } = useFeedback();
-  const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback[]>();
+  const { getOneFeedback } = useFeedback();
+  const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback>();
 
   React.useEffect(() => {
-    findAllFeedback()
+    getOneFeedback(props.taskId + '')
       .then(resp => resp)
       .then((resp) => setFeedbacks(resp));
   }, [])
 
-  const feedbackExists = feedbacks?.find(f => f.sourceId === props.taskId);
+  const feedbackExists = feedbacks ? true : false;
 
   if (!feedbackExists && props.size === 'SMALL') {
     return (

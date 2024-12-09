@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.test.feedback;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * eveli-client
@@ -27,6 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateFeedbackCommand;
+import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
 import io.digiexpress.eveli.client.api.ImmutableUpsertFeedbackRankingCommand;
 
 
@@ -129,5 +132,15 @@ public class FeedbackTest extends FeedbackEnirSetup {
     
     final var history = feedbackClient.queryHistory().findAll();
     Assertions.assertEquals(4, history.size());
+    
+    
+    feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
+        .userId("userId")
+        .replyIds(Arrays.asList(taskId))
+        .build());
+    
+    
+    Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
+    
   }
 }

@@ -115,7 +115,7 @@ public interface FeedbackClient {
   @JsonDeserialize(as = ImmutableDeleteReplyCommand.class)
   @Value.Immutable
   interface DeleteReplyCommand {
-    List<Long> getReplyIds();
+    List<String> getReplyIds();
     String getUserId();
   }
   

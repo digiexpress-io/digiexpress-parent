@@ -89,7 +89,7 @@ public class EveliAutoConfigWorker {
     return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
   }
   @Bean 
-  public FeedbackApiController feedbackApiController(FeedbackClient feedbackClient) {
-    return new FeedbackApiController(feedbackClient);
+  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
+    return new FeedbackApiController(authClient, feedbackClient);
   }
 }
