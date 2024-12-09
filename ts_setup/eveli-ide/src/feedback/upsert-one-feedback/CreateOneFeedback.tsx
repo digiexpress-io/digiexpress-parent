@@ -70,7 +70,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
 
-        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{template?.labelValue},</Typography>
+        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{template?.labelValue}</Typography>
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{template?.subLabelValue}</Typography>
         <Typography mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Typography>
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
@@ -93,7 +93,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
       </div>
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />
-        <Burger.PrimaryButton onClick={handlePublish} label='button.publish' />
+        <Burger.PrimaryButton onClick={handlePublish} label='button.publish' disabled={!reply} />
       </Box>
     </>
   )

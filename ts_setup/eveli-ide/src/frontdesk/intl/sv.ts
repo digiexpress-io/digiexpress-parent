@@ -165,6 +165,7 @@ const sv = {
   'feedback.myReply': 'Vastaa asiakkaalle',
 
   'feedback.customerFeedback': 'Customer feedback',
+  'feedback.customerApprovals': 'Customer approvals',
   'feedback.sourceTaskId': 'Source task id',
   'feedback.formName': 'Form name',
   'feedback.dateReceived': 'Date received from customer',

@@ -34,16 +34,38 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
   const theme = useTheme();
 
   const { findAllFeedback } = useFeedback();
-  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback[]>([]);
+  const [filteredFeedback, setFilteredFeedback] = React.useState<FeedbackApi.Feedback[]>([]);
+  const [searchString, setSearchString] = React.useState('');
+
 
   React.useEffect(() => {
     findAllFeedback()
-      .then(data => setFeedback(data));
+      .then(data => {
+        setFeedback(data)
+        setFilteredFeedback(data)
+      });
   }, []);
 
 
   const [category, setCategory] = React.useState<string[]>([]);
   const [subCategory, setSubCategory] = React.useState<string[]>([]);
+
+
+
+  const handleSearch = (searchString: string) => {
+    setSearchString(searchString);
+
+    if (searchString.trim() === '') {
+      setFilteredFeedback(feedback);
+    } else {
+      const filteredItems = feedback.filter((item) =>
+        item.sourceId.toLowerCase().includes(searchString.toLowerCase())
+      );
+      setFilteredFeedback(filteredItems);
+    }
+  };
+
 
   const handleChangeCategory = (event: SelectChangeEvent<typeof category>) => {
     const {
@@ -77,7 +99,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
 
       <Box display='flex' mb={3} gap={1} alignItems='end'>
         <Box width='25%'>
-          <Burger.TextField label='feedback.search' onChange={() => { }} value={intl.formatMessage({ id: 'feedback.search.placeholder' })} />
+          <Burger.TextField label='feedback.search' onChange={handleSearch} value={searchString} placeholder={intl.formatMessage({ id: 'feedback.search.placeholder' })} />
         </Box>
 
         <Box width='75%'>
@@ -134,7 +156,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
 
       <List dense disablePadding>
 
-        {feedback ? feedback.map((feedback) => (<>
+        {filteredFeedback ? filteredFeedback.map((feedback) => (<>
           <ListItem dense disableGutters>
             <ListItemButton onClick={() => handleFeedbackNav(feedback.sourceId)}>
               <Box display='flex' gap={3} width='100%'>

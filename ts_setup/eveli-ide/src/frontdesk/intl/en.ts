@@ -165,6 +165,7 @@ const en = {
   'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
 
   'feedback.customerFeedback': 'Customer feedback',
+  'feedback.customerApprovals': 'Customer approvals',
   'feedback.sourceTaskId': 'Source task id',
   'feedback.formName': 'Form name',
   'feedback.dateReceived': 'Date received from customer',
