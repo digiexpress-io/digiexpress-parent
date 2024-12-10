@@ -75,6 +75,7 @@ export const GArticleRoot = styled("div", {
 
     },
     '& .GArticle-pageBottom': {
+      padding: theme.spacing(2),
     }
   };
 });

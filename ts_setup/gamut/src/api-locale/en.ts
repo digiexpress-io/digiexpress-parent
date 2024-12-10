@@ -233,5 +233,6 @@ export const en = {
     'gamut.feedback.table.sorted.asc': 'Sorted ascending',
     'gamut.feedback.table.topic': 'Topic',
     'gamut.feedback.table.subtopic': 'Sub topic',
+    'gamut.feedback.table.title': 'Feedback'
 }
 

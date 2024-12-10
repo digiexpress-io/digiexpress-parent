@@ -21,7 +21,7 @@ export interface GArticleFeedbackProps {
 }
 
 function isEnabled(view: SiteApi.TopicView) {
-  return view.id === '000_index';
+  return true;//view.id === '000_index';
 }
 
 export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => {
@@ -91,13 +91,16 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <TableCell align='right' padding='none'>
                 <FormattedMessage id='gamut.feedback.table.xx2'/>
               </TableCell>
+
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
+          
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
               <TableRow hover tabIndex={-1} key={row.id} onClick={(event) => handleOnRowClick(row)} className={classes.filledRow}>
                 <TableCell component="th" scope="row" padding="none">{row.labelValue}</TableCell>
-                <TableCell align="right">{row.subLabelValue}</TableCell>
+                <TableCell align="left" padding="none">{row.subLabelValue}</TableCell>
                 <TableCell align="right">{"xx1"}</TableCell>
                 <TableCell align="right">{"xx2"}</TableCell>
                 <TableCell align="right"><GArticleFeedbackVote feedback={row}/></TableCell>

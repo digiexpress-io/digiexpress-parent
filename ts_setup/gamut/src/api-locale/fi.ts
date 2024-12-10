@@ -222,6 +222,13 @@ export const fi = {
 
   // -------------------- SERVICES SELECT -------------------------
 
-  'gamut.services.subtitle': 'Select or search for a service to view available forms'
+  'gamut.services.subtitle': 'Select or search for a service to view available forms',
+
+  // -------------------- FEEDBACK SELECT -------------------------
+  'gamut.feedback.table.sorted.desc': 'Sorted descending',
+  'gamut.feedback.table.sorted.asc': 'Sorted ascending',
+  'gamut.feedback.table.topic': 'Topic',
+  'gamut.feedback.table.subtopic': 'Sub topic',
+  'gamut.feedback.table.title': 'Feedback'
 }
 

@@ -44,13 +44,16 @@ export const GArticleFeedbackRoot = styled("div", {
 })<{ ownerState: GArticleFeedbackProps & { reducer: GFeedbackTableArticleReducerProps } }>(({ theme, ownerState }) => {
   const enabled = (ownerState.enabled && ownerState.children && ownerState.enabled(ownerState.children)) ?? false;
   const { reducer } = ownerState;
-  return {
-    display: enabled ? undefined : 'hidden',
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
 
-    '& .GArticleFeedback-root': {
+
+  return {
+    display: enabled ? undefined : 'none',
+
+    '& .MuiTableContainer-root': {
+      paddingLeft: theme.spacing(5),
+      paddingRight: theme.spacing(5),
     },
+
     '& .GArticleFeedback-emptyRow': {
       height: 33 * reducer[0].emptyRows
     },
@@ -71,7 +74,8 @@ export const GArticleFeedbackRoot = styled("div", {
       paddingLeft: 0
     },
     '& .GArticleFeedback-toolbar .MuiTypography-root': {
-      flex: '1 1 100%' 
+      flex: '1 1 100%',
+      ...theme.typography.h3
     }
   };
 });

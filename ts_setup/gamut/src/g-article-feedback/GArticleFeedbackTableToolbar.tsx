@@ -6,18 +6,15 @@ import { FormattedMessage } from 'react-intl';
 
 
 
-export const GArticleFeedbackTableToolbar: React.FC<{ className: string}> = (props) => {
+export const GArticleFeedbackTableToolbar: React.FC<{ className: string }> = (props) => {
   return (
     <Toolbar className={props.className}>
-      <Typography component='div' variant='h6'>
-        <FormattedMessage id='gamut.feedback.table.title'/>
-      </Typography>
+      <Typography component='div'><FormattedMessage id='gamut.feedback.table.title'/></Typography>
       <Tooltip title="Filter list">
         <IconButton>
           <FilterListIcon />
         </IconButton>
       </Tooltip>
-
     </Toolbar>
   );
 }
