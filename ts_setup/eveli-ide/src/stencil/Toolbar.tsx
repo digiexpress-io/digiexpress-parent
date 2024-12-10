@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 
 import * as Burger from '@/burger';
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
@@ -41,7 +41,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
@@ -63,7 +63,7 @@ const Toolbar: React.FC<{}> = () => {
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
   function handleBacktoTasks() {
-    navigate('/ui/tasks');
+    //navigate('/ui/tasks');
   }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
