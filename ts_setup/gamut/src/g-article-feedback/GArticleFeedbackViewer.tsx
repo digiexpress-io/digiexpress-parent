@@ -18,13 +18,9 @@ interface GArticleFeedbackViewerProps {
 export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (props) => {
   const intl = useIntl();
 
-  console.log("feedback", props.feedback)
-
   if (!props.feedback) {
     return (<>...Loading</>)
   }
-
-  console.log("replyText", props.feedback.replyText)
 
   return (
     <Dialog open={props.open} onClose={props.onClose} className={props.className} maxWidth='lg' fullWidth>
@@ -37,7 +33,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
       </DialogTitle>
       <DialogContent>
         <GMarkdown>{props.feedback.content}</GMarkdown>
-        <Typography>Our reply</Typography>
+        <Typography>Organization reply</Typography>
         <GMarkdown>{props.feedback.replyText}</GMarkdown>
 
       </DialogContent>

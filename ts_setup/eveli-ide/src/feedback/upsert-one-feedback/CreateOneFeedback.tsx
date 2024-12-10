@@ -22,8 +22,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   const [template, setTemplate] = React.useState<FeedbackApi.FeedbackTemplate>();
   const [reply, setReply] = React.useState<string>('');
 
-  console.log("Template", template?.replys)
-
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
 
@@ -49,7 +47,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   function handlePublish() {
     if (command) {
       createOneFeedback(taskId, command).then(feedback => {
-        console.log("feedback reply text", reply)
         onComplete(feedback);
       });
     }
