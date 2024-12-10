@@ -34,7 +34,8 @@ const fi = {
   'feedback.noFeedback.info2': 'Please send an external comment to customer, then you can publish the external comment.',
 
   'button.cancel': 'Cancel',
-  'button.publish': 'Publish'
+  'button.publish': 'Publish',
+  'button.delete': 'Delete this feedback',
 }
 
 

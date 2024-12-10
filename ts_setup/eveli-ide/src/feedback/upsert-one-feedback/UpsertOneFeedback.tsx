@@ -5,7 +5,7 @@ import { UpdateOneFeedback } from './UpdateOneFeedback';
 
 export interface UpsertOneFeedbackProps {
   taskId: string;
-  onComplete: (createdFeedback: FeedbackApi.Feedback) => void;
+  onComplete: (upsertedFeedback: FeedbackApi.Feedback) => void;
 }
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
@@ -13,14 +13,22 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
 
   React.useEffect(() => {
-    getOneFeedback(props.taskId)
-      .then(resp => resp)
-      .then((resp) => setFeedback(resp));
+    getOneFeedback(props.taskId).then(setFeedback);
   }, [props.taskId])
 
-  const feedbackExists = feedback ? true : false;
-  if (feedbackExists) {
-    return (<UpdateOneFeedback  {...props} />)
+
+  function handleOnComplete(upsertedFeedback: FeedbackApi.Feedback) {
+    getOneFeedback(props.taskId).then((resp) => {
+      setFeedback(resp)
+      props.onComplete(upsertedFeedback);
+    });
   }
-  return (<CreateOneFeedback {...props} />);
+
+  const ownerState = {...props, onComplete: handleOnComplete};
+  const feedbackExists = feedback ? true : false;
+
+  if (feedbackExists) {
+    return (<UpdateOneFeedback  {...ownerState} />)
+  }
+  return (<CreateOneFeedback {...ownerState} />);
 }

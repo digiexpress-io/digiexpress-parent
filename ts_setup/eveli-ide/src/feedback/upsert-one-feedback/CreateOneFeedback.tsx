@@ -62,9 +62,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   if (!command) {
     return <CircularProgress />
   }
-
-
-
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
@@ -72,7 +69,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{template?.labelValue}</Typography>
         <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{template?.subLabelValue}</Typography>
-        <Typography mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Typography>
+        <Box component='span' mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Box>
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 
         {reply ? (

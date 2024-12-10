@@ -42,7 +42,12 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
     function getOneFeedback(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.Feedback> {
       return props.fetchFeedbackGET(taskId)
-        .then(resp => resp.json());
+        .then(resp => {
+          if(resp.ok) {
+            return resp.json();
+          }
+          return undefined;
+        });
     }
 
     function deleteOneFeedback(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.Feedback> {
