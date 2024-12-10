@@ -1,6 +1,5 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
-import java.util.Arrays;
 import java.util.List;
 
 /*-
@@ -42,13 +41,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class QuestionnaireCategoryExtractorImpl implements QuestionnaireCategoryExtractor {
-
-  private List<String> main = Arrays.asList("mainList");
-  private List<String> sub = Arrays.asList("cityServiceGroup", "preschoolEducationGroup", "cityServiceMainList", 
-      "constructionMainList", "youthServiceMainList", "exerciseMainList", "schoolMainList", "employmentImmigrationMainList", 
-      "freeTimeCultureMainList", "preschoolMainList", "communicationMainList", "cooperationMainList");
-  
-  private List<String> text = Arrays.asList("feedBackTxt");
+  private final List<String> main;
+  private final List<String> sub;
+  private final List<String> text;
+  private final List<String> title;
+  private final List<String> username;
+  private final List<String> usernameAllowed;
   
   private final ObjectMapper objectMapper;
   

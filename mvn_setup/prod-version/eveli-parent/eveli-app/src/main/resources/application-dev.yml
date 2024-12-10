@@ -44,5 +44,11 @@ eveli.assets.importDeployment: /Users/olevmutso/Development/init_v_1-2.json
 eveli.dialob.enabled: true
 eveli.dialob.service-url: http://localhost:9000
 eveli.dialob.api-key:
-  
-  
+
+# feedback  
+eveli.dialob.enabled: true
+eveli.feedback.forms: palautteet
+eveli.feedback.category-main: mainList
+eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServiceMainList, constructionMainList, youthServiceMainList, exerciseMainList, schoolMainList, employmentImmigrationMainList, freeTimeCultureMainList, preschoolMainList, communicationMainList, cooperationMainList
+eveli.feedback.question-title: title
+eveli.feedback.question: feedBackTxt

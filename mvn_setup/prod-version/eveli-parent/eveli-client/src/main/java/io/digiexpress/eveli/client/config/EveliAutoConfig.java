@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -64,7 +66,8 @@ import jakarta.persistence.EntityManager;
     EveliProps.class, 
     EveliPropsAssets.class,  
     EveliPropsEmail.class, 
-    EveliPropsGamut.class, 
+    EveliPropsGamut.class,
+    EveliPropsFeedback.class,
     EveliPropsPrintout.class,
     EveliPropsTask.class
 })
@@ -88,10 +91,18 @@ public class EveliAutoConfig {
       ProcessClient processClient,
       JdbcTemplate jdbc,
       ObjectMapper om,
-      TransactionTemplate tx
+      TransactionTemplate tx,
+      EveliPropsFeedback feedbackProps
   ) {
     
-    final var extractor = new QuestionnaireCategoryExtractorImpl(om);
+    final List<String> main = feedbackProps.getCategoryMain();
+    final List<String> sub = feedbackProps.getCategorySub();
+    final List<String> text = feedbackProps.getQuestion();
+    final List<String> title = feedbackProps.getQuestionTitle();
+    final List<String> username = feedbackProps.getUsername();
+    final List<String> usernameAllowed = feedbackProps.getUsernameAllowed();
+    
+    final var extractor = new QuestionnaireCategoryExtractorImpl(main, sub, text, title, username, usernameAllowed, om);
     final var history = new FeedbackWithHistory(tx, jdbc, om);
     return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc, history);
 

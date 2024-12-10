@@ -22,6 +22,9 @@ package io.digiexpress.eveli.client.test.feedback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
@@ -119,7 +122,22 @@ public class FeedbackEnirSetup {
       final var ref = new TaskRefGenerator(entityManager);
       final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
       final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
-      return new FeedbackClientImpl(taskClient, processClient, new QuestionnaireCategoryExtractorImpl(objectMapper), jdbcTemplate, feedbackWithHistory);
+      
+      final List<String> main = Arrays.asList("mainList");
+      final List<String> sub = Arrays.asList("cityServiceGroup", "preschoolEducationGroup", "cityServiceMainList", 
+          "constructionMainList", "youthServiceMainList", "exerciseMainList", "schoolMainList", "employmentImmigrationMainList", 
+          "freeTimeCultureMainList", "preschoolMainList", "communicationMainList", "cooperationMainList");
+      final List<String> text = Arrays.asList("feedBackTxt");
+      
+
+      final List<String> title = Collections.emptyList();
+      final List<String> username = Collections.emptyList();
+      final List<String> usernameAllowed = Collections.emptyList();
+      
+      
+      return new FeedbackClientImpl(taskClient, processClient, 
+          new QuestionnaireCategoryExtractorImpl(main, sub, text, title, username, usernameAllowed, objectMapper), 
+          jdbcTemplate, feedbackWithHistory);
 
     }
   }
