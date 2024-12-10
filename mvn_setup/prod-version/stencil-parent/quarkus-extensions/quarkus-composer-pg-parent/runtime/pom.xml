@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>quarkus-stencil-composer-pg-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.125</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>quarkus-stencil-composer-pg</artifactId>
