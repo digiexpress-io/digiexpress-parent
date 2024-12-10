@@ -57,7 +57,7 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
   @Override
   public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
     final var path = context.getRequest().getServletPath();
-    log.debug("Authorization check for path: {}, user authenticated: {}", path, authClient.getUser().isAuthenticated());
+    log.debug("Authorization check for path: {}, auth user: {}, portal user: {}", path, authClient.getUser(), crmClient.getCustomer());
     // LOGIN/LOGOUT
     if( path.equals(PORTAL_LOGIN_PATH) ||
         path.equals(WORKER_LOGIN_PATH) || 
