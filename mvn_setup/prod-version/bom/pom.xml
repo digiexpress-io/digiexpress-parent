@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>digiexpress-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.123</version>
   </parent>
 
   <artifactId>digiexpress-bom</artifactId>
