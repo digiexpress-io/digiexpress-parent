@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -32,15 +33,13 @@ import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class SpringJwtAuthClient implements AuthClient {
 
   @Override
   public User getUser() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated()) {
+    if(!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableUser.builder()
           .isAuthenticated(false)
           .principal(ImmutableUserPrincipal.builder()

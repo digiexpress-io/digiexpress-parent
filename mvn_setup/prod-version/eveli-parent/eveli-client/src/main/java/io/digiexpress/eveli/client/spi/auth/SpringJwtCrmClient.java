@@ -34,6 +34,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
@@ -96,7 +97,7 @@ public class SpringJwtCrmClient implements CrmClient {
   @Override
   public Customer getCustomer() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated()) {
+    if(!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableCustomer.builder()
           .type(CustomerType.ANON)
           .principal(ImmutableCustomerPrincipal.builder()
