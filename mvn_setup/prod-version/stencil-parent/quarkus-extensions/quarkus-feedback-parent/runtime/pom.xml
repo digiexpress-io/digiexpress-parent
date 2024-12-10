@@ -4,7 +4,7 @@
   <parent>
     <artifactId>quarkus-stencil-feedback-parent</artifactId>
     <groupId>io.digiexpress</groupId>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.124</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>quarkus-stencil-feedback</artifactId>

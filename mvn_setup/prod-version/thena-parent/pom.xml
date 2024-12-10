@@ -5,7 +5,7 @@
     <groupId>io.digiexpress</groupId>
     <artifactId>digiexpress-build-parent</artifactId>
     <relativePath>../build-parent/pom.xml</relativePath>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.124</version>
   </parent>
 
   <artifactId>thena-parent</artifactId>
