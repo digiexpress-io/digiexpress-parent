@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>quarkus-stencil-iam-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.132</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>quarkus-stencil-iam</artifactId>

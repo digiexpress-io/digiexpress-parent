@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>eveli-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>4.278.132</version>
   </parent>
   <artifactId>eveli-assets</artifactId>
   
