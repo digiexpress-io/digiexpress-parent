@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider, Outlet, useMatch } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
 
@@ -30,13 +30,24 @@ const config: StencilApi.StoreConfig = {
 };
 console.log("Stencil config", config);
 
+const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const basename = '';
+  return <RouterProvider router={createBrowserRouter(createRoutesFromElements(children), { basename })} />
+}
+
+
+
+
 ReactDOM.render(
   <IntlProvider locale={locale} messages={stencilIntl[locale]}>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={siteTheme}>
-        <StencilComposer 
-          service={StencilClient.service({config})} 
-          locked={portalconfig?.server.locked}/>
+<StartRouter>
+  <Route path='/' element={<StencilComposer 
+            service={StencilClient.service({config})} 
+            locked={portalconfig?.server.locked}/>}>    
+  </Route>
+</StartRouter>
       </ThemeProvider>
     </StyledEngineProvider>
   </IntlProvider>

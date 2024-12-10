@@ -23,7 +23,7 @@ quarkus:
 
   datasource:
     db-kind: postgresql 
-    username: my_stencil
+    username: eveli-app
     password: password123
     reactive:
       max-size: 3
