@@ -70,6 +70,9 @@ public class FeedbackReplyEntity {
   @Column(name="content", columnDefinition = "TEXT", nullable = false)
   private String content;                    // combined markdown from dialob and worker
   
+  @Column(name="reply_text", columnDefinition = "TEXT", nullable = false)
+  private String replyText;                  // worker reply
+  
   @Column(name="locale", nullable = false)
   private String locale;                     // intended language of the content
   

@@ -9,6 +9,7 @@ import { useUtilityClasses, GArticleFeedbackRoot, MUI_NAME } from './useUtilityC
 import { GArticleFeedbackTableHead } from './GArticleFeedbackTableHead';
 import { GArticleFeedbackVote } from './GArticleFeedbackVote';
 import { GArticleFeedbackTableToolbar } from './GArticleFeedbackTableToolbar';
+import { GArticleFeedbackViewer } from './GArticleFeedbackViewer';
 
 
 export interface GArticleFeedbackProps {
@@ -25,6 +26,9 @@ function isEnabled(view: SiteApi.TopicView) {
 }
 
 export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => {
+  const [feedbackViewerOpen, setFeedbackViewerOpen] = React.useState(false);
+  const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.Feedback | undefined>();
+
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
@@ -57,7 +61,8 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   const Root = props.component ?? GArticleFeedbackRoot;
 
   function handleOnRowClick(feedback: SiteApi.Feedback) {
-
+    setSelectedFeedback(feedback);
+    setFeedbackViewerOpen(true);
   }
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -69,13 +74,23 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   }
 
 
-  return (
+  return (<>
+    <GArticleFeedbackViewer
+      open={feedbackViewerOpen}
+      onClose={() => setFeedbackViewerOpen(false)}
+      feedback={selectedFeedback}
+      className={classes.feedbackViewer}
+    />
     <Root ownerState={ownerState} className={classes.root}>
       <GArticleFeedbackTableToolbar className={classes.toolbar}/>
       <TableContainer>
         <Table size='small'>
           <TableHead>
             <TableRow>
+              <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
+                <FormattedMessage id='gamut.feedback.table.topicTitle' />
+              </GArticleFeedbackTableHead>
+
               <GArticleFeedbackTableHead cellName='labelValue' ownerState={reducer}>
                 <FormattedMessage id='gamut.feedback.table.topic'/>
               </GArticleFeedbackTableHead>
@@ -83,10 +98,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
                 <FormattedMessage id='gamut.feedback.table.subtopic'/>
               </GArticleFeedbackTableHead>
-
-              <TableCell align='right' padding='none'>
-                <FormattedMessage id='gamut.feedback.table.xx1'/>
-              </TableCell>
 
               <TableCell align='right' padding='none'>
                 <FormattedMessage id='gamut.feedback.table.xx2'/>
@@ -98,12 +109,12 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
           
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
-              <TableRow hover tabIndex={-1} key={row.id} onClick={(event) => handleOnRowClick(row)} className={classes.filledRow}>
+              <TableRow hover tabIndex={-1} key={row.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
+                <TableCell component="th" scope="row" padding="none">Customer title</TableCell>
                 <TableCell component="th" scope="row" padding="none">{row.labelValue}</TableCell>
                 <TableCell align="left" padding="none">{row.subLabelValue}</TableCell>
-                <TableCell align="right">{"xx1"}</TableCell>
                 <TableCell align="right">{"xx2"}</TableCell>
-                <TableCell align="right"><GArticleFeedbackVote feedback={row}/></TableCell>
+                <TableCell align="right"><GArticleFeedbackVote className={classes.vote} feedback={row} readOnly /></TableCell>
               </TableRow>))
             }
             {reducer[0].emptyRows > 0 && (
@@ -124,5 +135,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage} />
     </Root>
+  </>
   )
 }

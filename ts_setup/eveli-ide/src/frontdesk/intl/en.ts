@@ -46,6 +46,7 @@ const en = {
   'button.cancel' : 'Cancel',
   'button.delete': 'Delete this feedback',
   'button.unpublish': 'Unpublish this feedback',
+  'button.update': 'Update',
   'button.publish': 'Publish',
   'button.accept' : 'Accept',
   'button.edit' : 'Edit',

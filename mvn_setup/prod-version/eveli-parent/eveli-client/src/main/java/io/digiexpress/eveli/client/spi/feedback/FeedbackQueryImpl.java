@@ -56,7 +56,8 @@ SELECT
   feedback_reply.updated_by,
   feedback_reply.created_by,
   feedback_reply.reporter_names,
-  
+  feedback_reply.reply_text,
+    
   feedback_category.label as label_key,
   feedback_category.sub_label as sub_label_key,
   feedback_category.origin,
@@ -93,7 +94,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
-    return  ImmutableFeedback.builder()
+    return ImmutableFeedback.builder()
         .id(rs.getString("id"))
         .categoryId(rs.getString("category_id"))
         .labelKey(rs.getString("label_key"))
@@ -110,6 +111,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .updatedOnDate(rs.getString("updated_on_date"))
         .content(rs.getString("content"))
         .locale(rs.getString("locale"))
+        .replyText(rs.getString("reply_text"))
         .build();
   }
 

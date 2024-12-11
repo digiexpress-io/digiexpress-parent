@@ -59,9 +59,9 @@ public class FeedbackTest extends FeedbackEnirSetup {
         
         .processId(template.getProcessId())
         .userId("super-user")
-        
         .reporterNames(template.getReporterNames())
         
+        .reply("super-reply-by-worker")
         .build());
     
     Assertions.assertEquals("same,vimes", template.getReporterNames());

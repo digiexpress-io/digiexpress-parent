@@ -26,7 +26,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const [template, setTemplate] = React.useState<FeedbackApi.FeedbackTemplate>();
   const [reply, setReply] = React.useState<string>('');
 
-
   React.useEffect(() => {
     findAllFeedback()
       .then(resp => resp)
@@ -34,6 +33,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   }, [])
 
   const feedback = feedbacks?.find(f => f.sourceId === taskId);
+
 
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
@@ -47,7 +47,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         processId: template.processId,
         userId: template.userId,
         subLabelKey: template.subLabelKey,
-        subLabelValue: template.subLabelValue
+        subLabelValue: template.subLabelValue,
+        reply
       });
 
       setTemplate(template);

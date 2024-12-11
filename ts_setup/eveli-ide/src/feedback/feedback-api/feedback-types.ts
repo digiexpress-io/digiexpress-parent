@@ -23,6 +23,8 @@ export declare namespace FeedbackApi {
 
     origin: string;
     content: string;
+    replyText: string;
+
     locale: string;
 
     labelKey: string;
@@ -66,6 +68,7 @@ export declare namespace FeedbackApi {
 
     origin: string;
     content: string;
+    reply: string;
     locale: string;
 
     labelKey: string;

@@ -17,7 +17,8 @@
 -- limitations under the License.
 -- #L%
 ---
- create table feedback_approval (
+
+  create table feedback_approval (
         id UUID DEFAULT gen_random_uuid() not null,
         category_id UUID not null,
         created_on_date timestamp(6) with time zone not null,
@@ -64,6 +65,7 @@
         localized_label varchar(255) not null,
         localized_sub_label varchar(255),
         reporter_names varchar(255),
+        reply_text TEXT not null,
         source_id varchar(255),
         updated_by varchar(255) not null,
         updated_on_date timestamp(6) with time zone not null,

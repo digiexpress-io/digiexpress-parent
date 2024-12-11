@@ -98,6 +98,7 @@ export declare namespace SiteApi {
     createdBy: string;
     
     content: string;
+    replyText: string;
     locale: string;
     
     thumbsUpCount: number; // round rating to thumbs up

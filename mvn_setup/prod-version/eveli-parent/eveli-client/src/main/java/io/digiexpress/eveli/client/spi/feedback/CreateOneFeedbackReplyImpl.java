@@ -90,6 +90,7 @@ INSERT INTO feedback_reply
   updated_by,
   created_by,
   reporter_names
+  reply_text
 )
 VALUES
 (?,?,?,?,?,?,?,?,?,?,?)
@@ -109,6 +110,8 @@ VALUES
      categeoryStm.setString(9, command.getUserId());
      categeoryStm.setString(10, command.getUserId());
      categeoryStm.setString(11, command.getReporterNames());
+     categeoryStm.setString(12, command.getReply());
+
     
      categeoryStm.execute();
      final var rs = categeoryStm.getGeneratedKeys();

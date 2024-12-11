@@ -3,7 +3,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '../api-variants';
 import { GArticleFeedbackProps } from './GArticleFeedback';
 import { GFeedbackTableArticleReducerProps } from './GArticleFeedbackTableReducer';
-import { maxWidth } from '@mui/system';
 
 
 export const MUI_NAME = 'GArticleFeedback';
@@ -23,7 +22,9 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     filledRow: ['filledRow'],
     pagination: ['pagination'],
     noData: ['noData'],
-    toolbar: ['toolbar']
+    toolbar: ['toolbar'],
+    vote: ['vote'],
+    feedbackViewer: ['feedbackViewer']
     
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -69,13 +70,29 @@ export const GArticleFeedbackRoot = styled("div", {
     '& .GArticleFeedback-noData': {
       'text-align': 'center'
     },
-
     '& .GArticleFeedback-toolbar': {
       paddingLeft: 0
     },
     '& .GArticleFeedback-toolbar .MuiTypography-root': {
       flex: '1 1 100%',
       ...theme.typography.h3
-    }
+    },
+    '& .GArticleFeedback-vote .MuiTypography-root': {
+      ...theme.typography.body2
+    },
+    '& .GArticleFeedback-vote .MuiSvgIcon-root': {
+      fontSize: 'medium'
+    },
+    '& .GArticleFeedback-vote': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'end',
+      gap: theme.spacing(1)
+    },
+
+    '& .GArticleFeedback-feedbackViewer': {
+
+
+    },
   };
 });

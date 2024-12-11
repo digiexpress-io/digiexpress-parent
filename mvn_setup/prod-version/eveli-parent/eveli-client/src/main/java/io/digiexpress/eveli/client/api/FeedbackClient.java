@@ -92,6 +92,7 @@ public interface FeedbackClient {
     
     String getOrigin();
     String getContent();
+    String getReply();
     String getLocale();
   }
   
@@ -147,6 +148,7 @@ public interface FeedbackClient {
     String getCreatedBy();
     
     String getContent();
+    String getReplyText();
     String getLocale();
 
     

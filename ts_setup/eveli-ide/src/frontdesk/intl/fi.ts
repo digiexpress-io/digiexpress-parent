@@ -50,6 +50,7 @@ const fi = {
   'button.edit' : 'Avaa',
   'button.close' : 'Sulje',
   'button.reject' : 'Hylkää',
+  'button.update': 'Update',
   'button.send': 'Lähetä',
   'button.dismiss': 'Sulje',
   'button.editRoles': 'Muokkaa',
