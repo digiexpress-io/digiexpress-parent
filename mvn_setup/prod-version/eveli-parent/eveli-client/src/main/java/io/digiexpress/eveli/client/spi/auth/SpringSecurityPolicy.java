@@ -33,9 +33,11 @@ import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
+@Slf4j
 public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthorizationContext> {
   
   private final AuthClient authClient;
@@ -55,18 +57,20 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
   @Override
   public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
     final var path = context.getRequest().getServletPath();
-    
+    log.debug("Authorization check for path: {}, auth user: {}, portal user: {}", path, authClient.getUser(), crmClient.getCustomer());
     // LOGIN/LOGOUT
     if( path.equals(PORTAL_LOGIN_PATH) ||
         path.equals(WORKER_LOGIN_PATH) || 
         
         path.equals(PORTAL_LOGOUT_PATH) ||
         path.equals(WORKER_LOGOUT_PATH)) {
+      log.debug("Login/logout path, authorized");
       return new AuthorizationDecision(true);    
     }
 
     // worker side
     if(path.startsWith(WORKER_PATH) && authClient.getUser().isAuthenticated()) {
+      log.debug("Worker REST API path, user authenticated, authorized");
       return new AuthorizationDecision(true);      
     }
     
@@ -77,7 +81,7 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
             CustomerType. REP_PERSON,
             CustomerType.AUTH_CUSTOMER)
         .contains(crmClient.getCustomer().getType())) {
-
+      log.debug("Portal IAM path, user authenticated, authorized");
       return new AuthorizationDecision(true);    
     }
 
@@ -88,15 +92,16 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
             CustomerType. REP_PERSON,
             CustomerType.AUTH_CUSTOMER)
         .contains(crmClient.getCustomer().getType())) {
-
+      log.debug("Portal REST API path, user authenticated, authorized");
       return new AuthorizationDecision(true);    
     }
 
     // anybody can access portal site
     if(path.equals(SITE_PATH)) {
+      log.debug("Portal path, authorized");
       return new AuthorizationDecision(true);    
     }
-    
+    log.debug("No match, not authorized");
     return new AuthorizationDecision(false);
   }
 }

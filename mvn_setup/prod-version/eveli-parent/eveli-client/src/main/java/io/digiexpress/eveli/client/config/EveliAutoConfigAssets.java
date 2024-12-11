@@ -123,14 +123,13 @@ public class EveliAutoConfigAssets {
 
   @Bean
   public EveliContext eveliContext(
-      AuthClient auth,
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context
     ) {
     
-    final var liveContent = "live content:"+ auth.getUser().getPrincipal().getUsername();
+    final var liveContent = "live content:" + context.getApplicationName();
     final var datasourceConfig = datasourceUrl.split(":");
     final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
 
@@ -230,7 +229,7 @@ public class EveliAutoConfigAssets {
             .name(liveContent)
             .description("live dev")
             .created(LocalDateTime.now())
-            .user(auth.getUser().getPrincipal().getUsername())
+            .user(context.getApplicationName())
             .parentCommit(state.getCommit())
             .entries(state.getWorkflows().values().stream().map(e -> e.getBody()).toList())
             .build();

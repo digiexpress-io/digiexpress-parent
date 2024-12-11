@@ -8,6 +8,8 @@ export interface Config {
   taskAdminGroups?: string[];
   appVersion?: string;
   modifiableAssets?: boolean; //enable releases and other asset operations
+  loginUrl?: string;
+  loginAutoRefresh?: boolean;
 }
 
 const INITIAL_CONFIG: Config = {};
