@@ -55,7 +55,7 @@ SELECT
   feedback_reply.updated_on_date,
   feedback_reply.updated_by,
   feedback_reply.created_by,
-  
+  feedback_reply.reporter_names,
   
   feedback_category.label as label_key,
   feedback_category.sub_label as sub_label_key,
@@ -101,7 +101,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .origin(rs.getString("origin"))
         .thumbsUpCount(rs.getInt("thumbs_up_count"))
         .thumbsDownCount(rs.getInt("thumbs_down_count"))
-        
+        .reporterNames(rs.getString("reporter_names"))
         .labelValue(rs.getString("localized_label"))
         .subLabelValue(rs.getString("localized_sub_label"))
         .sourceId(rs.getString("source_id"))

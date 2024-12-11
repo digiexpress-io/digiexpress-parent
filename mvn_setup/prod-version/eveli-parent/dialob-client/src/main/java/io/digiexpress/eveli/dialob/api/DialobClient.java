@@ -25,10 +25,12 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormItem;
 import io.dialob.api.form.FormTag;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
+
 
 public interface DialobClient {
 
@@ -49,6 +51,7 @@ public interface DialobClient {
   
   void completeSession(String questionnaireId);
   
+  ProxyAnswer proxyAnswer(Questionnaire q, Answer answer);
   
   
   // Wrapper object, shorthand name for simplicity
@@ -71,5 +74,13 @@ public interface DialobClient {
     DialobSessionBuilder addContext(String id, Serializable value);
     DialobSessionBuilder addAnswer(String id, Serializable value);
     IdAndRevision build();
+  }
+  
+  
+  @lombok.Data @lombok.Builder
+  public static class ProxyAnswer {
+    private final Answer answer;
+    private final FormItem formItem;
+    private final Optional<String> valueSetLabel;
   }
 }

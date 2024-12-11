@@ -31,15 +31,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.questionnaire.Questionnaire;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import jakarta.annotation.Nullable;
 
 public interface FeedbackClient {
 
-  
   Feedback createOneFeedback(CreateFeedbackCommand command);
   FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command);
   List<Feedback> deleteAll(DeleteReplyCommand command);
-  
+  FeedbackQuestionnaireQuery queryQuestionnaire();
   
   FeedbackQuery queryFeedbacks();
   FeedbackTemplateQuery queryTemplate();
@@ -52,6 +52,7 @@ public interface FeedbackClient {
    */
   interface FeedbackTemplateQuery {
     FeedbackTemplate getOneByTaskId(String taskId, String userId);
+    Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId);
   }
 
   /**
@@ -84,6 +85,7 @@ public interface FeedbackClient {
     
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
+    @Nullable String getReporterNames();
     
     String getProcessId();
     String getUserId();
@@ -135,6 +137,7 @@ public interface FeedbackClient {
     
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
+    @Nullable String getReporterNames(); // nullable if there is no user consent, separated by ','
     
     String getSourceId();
     String getOrigin();
@@ -145,7 +148,7 @@ public interface FeedbackClient {
     
     String getContent();
     String getLocale();
-    
+
     
     int getThumbsUpCount(); // round rating to thumbs up
     int getThumbsDownCount(); // round rating to thumbs down
@@ -185,6 +188,7 @@ public interface FeedbackClient {
     
     Questionnaire getQuestionnaire();
     List<String> getReplys(); 
+    @Nullable String getReporterNames();
   }
 
   
@@ -202,4 +206,39 @@ public interface FeedbackClient {
     ZonedDateTime getCreatedOnDate();
     String getCreatedBy();
   }
+  
+  
+  interface FeedbackQuestionnaireQuery {
+    Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId);
+  }
+  
+  interface FeedbackQuestionnaire {
+    boolean getEnabled();
+    
+    String getLabelKey();
+    String getLabelValue();
+    
+    String getSubLabelKey();
+    String getSubLabelValue();
+    String getContent();
+
+    List<String> getReplys();
+    
+    Questionnaire getQuestionnaire();
+    ProcessInstance getProcessInstance();
+    @Nullable String getReporterNames();
+  }
+  
+  @Value.Immutable
+  interface QuestionnaireCategoryExtract {
+    boolean getEnabled();
+    
+    String getLabelKey();
+    String getLabelValue();
+    
+    @Nullable String getSubLabelKey();
+    @Nullable String getSubLabelValue();
+    @Nullable String getContent();
+  }
+
 }

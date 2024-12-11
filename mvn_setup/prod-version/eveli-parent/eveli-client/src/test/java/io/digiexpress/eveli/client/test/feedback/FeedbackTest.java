@@ -59,15 +59,20 @@ public class FeedbackTest extends FeedbackEnirSetup {
         
         .processId(template.getProcessId())
         .userId("super-user")
-
+        
+        .reporterNames(template.getReporterNames())
+        
         .build());
     
+    Assertions.assertEquals("same,vimes", template.getReporterNames());
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
     Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().size() == 1, "Can't find created feedback");
     final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(taskId);
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
+    
+    Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
     
     
     

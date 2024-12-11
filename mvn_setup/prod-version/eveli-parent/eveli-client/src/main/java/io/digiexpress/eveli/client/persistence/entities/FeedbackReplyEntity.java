@@ -92,7 +92,10 @@ public class FeedbackReplyEntity {
   private String updatedBy;  
   
   @Column(name="created_by", nullable = false)
-  private String createdBy;    
+  private String createdBy;  
+  
+  @Column(name="reporter_names", nullable = true)
+  private String reporterNames;  
   
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="category_id", foreignKey = @ForeignKey(name = "fk_reply_to_category"))

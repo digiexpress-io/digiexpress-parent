@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -185,6 +186,13 @@ public class TaskApiController {
     final var authentication = securityClient.getUser();
     final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(template, HttpStatus.OK);
+  }
+  @GetMapping(value="/{id}/feedback-enabled")
+  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("id") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    final var template = feedbackClient.queryTemplate().findOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
   }
   @PostMapping(value="/{id}/feedback")
   public ResponseEntity<Feedback> createFeedback(@PathVariable("id") Long id, @RequestBody CreateFeedbackCommand command)

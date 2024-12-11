@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.ImmutableFeedback;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
@@ -62,6 +63,17 @@ public class GamutSiteController {
   
   @GetMapping(path = "feedback")
   public List<Feedback> findAllFeedback() {
-    return feedback.queryFeedbacks().findAll();
+    return feedback.queryFeedbacks()
+        .findAll()
+        .stream()
+        .map(entry -> (Feedback) ImmutableFeedback.builder()
+            .from(entry)
+            // no need to leak internal ids/user-ids
+            .createdBy("")
+            .updatedBy("")
+            .sourceId("")
+            .origin("") 
+            .build()
+        ).toList();
   }
 }

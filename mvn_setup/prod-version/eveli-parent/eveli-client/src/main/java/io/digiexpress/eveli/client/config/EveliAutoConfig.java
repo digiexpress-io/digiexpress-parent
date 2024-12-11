@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-import java.util.List;
-
 /*-
  * #%L
  * eveli-client
@@ -50,7 +48,6 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
-import io.digiexpress.eveli.client.spi.feedback.QuestionnaireCategoryExtractorImpl;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.DialobCallbackController;
@@ -92,19 +89,11 @@ public class EveliAutoConfig {
       JdbcTemplate jdbc,
       ObjectMapper om,
       TransactionTemplate tx,
-      EveliPropsFeedback feedbackProps
+      EveliPropsFeedback feedbackProps,
+      DialobClient dialobClient
   ) {
-    
-    final List<String> main = feedbackProps.getCategoryMain();
-    final List<String> sub = feedbackProps.getCategorySub();
-    final List<String> text = feedbackProps.getQuestion();
-    final List<String> title = feedbackProps.getQuestionTitle();
-    final List<String> username = feedbackProps.getUsername();
-    final List<String> usernameAllowed = feedbackProps.getUsernameAllowed();
-    
-    final var extractor = new QuestionnaireCategoryExtractorImpl(main, sub, text, title, username, usernameAllowed, om);
     final var history = new FeedbackWithHistory(tx, jdbc, om);
-    return new FeedbackClientImpl(taskClient, processClient, extractor, jdbc, history);
+    return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps);
 
   }
   @Bean

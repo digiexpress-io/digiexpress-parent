@@ -28,16 +28,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.spi.feedback.FeedbackTemplateQueryImpl.QuestionnaireCategoryExtractor;
+import io.digiexpress.eveli.client.config.EveliPropsFeedback;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FeedbackClientImpl implements FeedbackClient {
   private final TaskClient taskClient;
   private final ProcessClient processClient;
-  private final QuestionnaireCategoryExtractor extractor;
+  private final DialobClient dialobClient;
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory feedbackWithHistory;
+  private final EveliPropsFeedback configProps;
   
   @Override
   public Feedback createOneFeedback(CreateFeedbackCommand command) {
@@ -53,10 +55,15 @@ public class FeedbackClientImpl implements FeedbackClient {
   public FeedbackQuery queryFeedbacks() {
     return new FeedbackQueryImpl(jdbc);
   }
+  
+  @Override
+  public FeedbackQuestionnaireQuery queryQuestionnaire() {
+    return new FeedbackQuestionnaireQueryImpl(taskClient, dialobClient, processClient, configProps);
+  }
 
   @Override
   public FeedbackTemplateQuery queryTemplate() {
-    return new FeedbackTemplateQueryImpl(taskClient, processClient, extractor);
+    return new FeedbackTemplateQueryImpl(queryQuestionnaire());
   }
   
   @Override

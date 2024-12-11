@@ -88,10 +88,11 @@ INSERT INTO feedback_reply
   created_on_date,
   updated_on_date,
   updated_by,
-  created_by
+  created_by,
+  reporter_names
 )
 VALUES
-(?,?,?,?,?,?,?,?,?,?)
+(?,?,?,?,?,?,?,?,?,?,?)
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
@@ -107,6 +108,7 @@ VALUES
      
      categeoryStm.setString(9, command.getUserId());
      categeoryStm.setString(10, command.getUserId());
+     categeoryStm.setString(11, command.getReporterNames());
     
      categeoryStm.execute();
      final var rs = categeoryStm.getGeneratedKeys();
