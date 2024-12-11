@@ -89,11 +89,11 @@ INSERT INTO feedback_reply
   updated_on_date,
   updated_by,
   created_by,
-  reporter_names
+  reporter_names,
   reply_text
 )
 VALUES
-(?,?,?,?,?,?,?,?,?,?,?)
+(?,?,?,?,?,?,?,?,?,?,?,?)
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
