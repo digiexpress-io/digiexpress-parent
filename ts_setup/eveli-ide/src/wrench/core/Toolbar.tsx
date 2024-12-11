@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
@@ -39,7 +39,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 
 const Toolbar: React.FC<{}> = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const drawer = Burger.useDrawer();
@@ -53,7 +53,7 @@ const Toolbar: React.FC<{}> = () => {
   
 
   function handleBacktoTasks() {
-    navigate('/ui/tasks');
+    //navigate('/ui/tasks');
   }
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";

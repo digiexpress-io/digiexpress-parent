@@ -15,6 +15,7 @@ import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 
 import { siteTheme, WrenchComposer, WrenchClient, wrenchIntl, HdesApi } from '@dxs-ts/eveli-ide';
+import '@dxs-ts/eveli-ide/build/style.css';
 
 
 
