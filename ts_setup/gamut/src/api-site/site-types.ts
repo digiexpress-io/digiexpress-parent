@@ -96,7 +96,8 @@ export declare namespace SiteApi {
     
     updatedBy: string;
     createdBy: string;
-    
+    updatedOnDate: string;
+
     content: string;
     replyText: string;
     locale: string;

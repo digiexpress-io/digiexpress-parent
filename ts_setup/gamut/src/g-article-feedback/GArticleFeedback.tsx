@@ -10,7 +10,8 @@ import { GArticleFeedbackTableHead } from './GArticleFeedbackTableHead';
 import { GArticleFeedbackVote } from './GArticleFeedbackVote';
 import { GArticleFeedbackTableToolbar } from './GArticleFeedbackTableToolbar';
 import { GArticleFeedbackViewer } from './GArticleFeedbackViewer';
-
+import { DateTime } from 'luxon';
+import { useLocale } from '../api-locale';
 
 export interface GArticleFeedbackProps {
   children: SiteApi.TopicView | undefined;
@@ -28,6 +29,7 @@ function isEnabled(view: SiteApi.TopicView) {
 export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => {
   const [feedbackViewerOpen, setFeedbackViewerOpen] = React.useState(false);
   const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.Feedback | undefined>();
+  const { locale } = useLocale();
 
   const props = useThemeProps({
     props: initProps,
@@ -99,9 +101,9 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
                 <FormattedMessage id='gamut.feedback.table.subtopic'/>
               </GArticleFeedbackTableHead>
 
-              <TableCell align='right' padding='none'>
-                <FormattedMessage id='gamut.feedback.table.xx2'/>
-              </TableCell>
+              <GArticleFeedbackTableHead cellName='updatedOnDate' ownerState={reducer}>
+                <FormattedMessage id='gamut.feedback.table.updatedOnDate' />
+              </GArticleFeedbackTableHead>
 
               <TableCell></TableCell>
             </TableRow>
@@ -112,8 +114,11 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <TableRow hover tabIndex={-1} key={row.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
                 <TableCell component="th" scope="row" padding="none">Customer title</TableCell>
                 <TableCell component="th" scope="row" padding="none">{row.labelValue}</TableCell>
-                <TableCell align="left" padding="none">{row.subLabelValue}</TableCell>
-                <TableCell align="right">{"xx2"}</TableCell>
+                <TableCell component="th" scope="row" align="left" padding="none">{row.subLabelValue}</TableCell>
+                <TableCell component="th" scope="row" align="left" padding="none">
+                  {DateTime.fromJSDate(new Date(row.updatedOnDate))
+                    .setLocale(locale)
+                    .toLocaleString(DateTime.DATE_SHORT)}</TableCell>
                 <TableCell align="right"><GArticleFeedbackVote className={classes.vote} feedback={row} readOnly /></TableCell>
               </TableRow>))
             }

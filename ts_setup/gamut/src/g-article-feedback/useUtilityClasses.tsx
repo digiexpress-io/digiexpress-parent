@@ -68,7 +68,7 @@ export const GArticleFeedbackRoot = styled("div", {
       cursor: 'pointer'
     },
     '& .GArticleFeedback-noData': {
-      'text-align': 'center'
+      'textAlign': 'center'
     },
     '& .GArticleFeedback-toolbar': {
       paddingLeft: 0

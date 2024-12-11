@@ -79,7 +79,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
       <Box display='flex' alignItems='center'>
-        <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
+        <Typography variant='h3' fontWeight='bold' mr={1}>{intl.formatMessage({ id: 'feedback.update.title' })}</Typography>
         <StatusIndicator size='LARGE' taskId={taskId} />
         <Box flexGrow={1} />
         <ApprovalCount approvalCount={feedback.thumbsUpCount} disapprovalCount={feedback.thumbsDownCount} />

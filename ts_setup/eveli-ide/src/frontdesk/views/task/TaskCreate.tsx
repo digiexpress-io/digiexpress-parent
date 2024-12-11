@@ -510,7 +510,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Typography sx={classes.accordionTitle}>
                           <FormattedMessage id="task.feedback.published" />
                         </Typography>
-                        {/* <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='success'><SupportAgentIcon /></Badge> */}
                         <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
