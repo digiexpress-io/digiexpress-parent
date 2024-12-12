@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -42,10 +41,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
-import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
-import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
@@ -68,7 +63,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
-  private final FeedbackClient feedbackClient;
   
   private final TaskAccessRepository taskAccessRepository;
   private final TaskRepository taskRepository;
@@ -179,26 +173,7 @@ public class TaskApiController {
  
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
-  @GetMapping(value="/{id}/feedback-templates")
-  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("id") Long id)
-  {
-    final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
-    return new ResponseEntity<>(template, HttpStatus.OK);
-  }
-  @GetMapping(value="/{id}/feedback-enabled")
-  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("id") Long id)
-  {
-    final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().findOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
-    return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
-  }
-  @PostMapping(value="/{id}/feedback")
-  public ResponseEntity<Feedback> createFeedback(@PathVariable("id") Long id, @RequestBody CreateFeedbackCommand command)
-  {
-    final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
-    return new ResponseEntity<>(feedback, HttpStatus.OK);
-  }
+
   
   @Data
   @AllArgsConstructor

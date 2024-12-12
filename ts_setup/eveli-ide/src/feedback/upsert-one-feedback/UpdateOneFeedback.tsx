@@ -19,50 +19,34 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const intl = useIntl();
   const theme = useTheme();
 
-  const { getOneTemplate, createOneFeedback, findAllFeedback, deleteOneFeedback } = useFeedback();
+  const { modifyOneFeedback, getOneFeedback, deleteOneFeedback } = useFeedback();
 
-  const [feedbacks, setFeedbacks] = React.useState<FeedbackApi.Feedback[]>();
-  const [command, setCommand] = React.useState<FeedbackApi.CreateFeedbackCommand>();
-  const [template, setTemplate] = React.useState<FeedbackApi.FeedbackTemplate>();
+  const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [reply, setReply] = React.useState<string>('');
 
   React.useEffect(() => {
-    findAllFeedback()
+    getOneFeedback(taskId)
       .then(resp => resp)
-      .then((resp) => setFeedbacks(resp));
+      .then((resp) => {
+
+        setFeedback(resp);
+        setReply(resp.replyText);
+      });
   }, [])
 
-  const feedback = feedbacks?.find(f => f.sourceId === taskId);
-
-
-  React.useEffect(() => {
-    getOneTemplate(taskId!).then(template => {
-
-      setCommand({
-        content: template.content,
-        labelKey: template.labelKey,
-        labelValue: template.labelValue,
-        locale: template.locale,
-        origin: template.origin,
-        processId: template.processId,
-        userId: template.userId,
-        subLabelKey: template.subLabelKey,
-        subLabelValue: template.subLabelValue,
-        reply
-      });
-
-      setTemplate(template);
-      setReply(template.replys.join("\r\n\r\n"));
-    });
-
-  }, []);
 
   function handlePublish() {
-    if (command) {
-      createOneFeedback(taskId, command).then(feedback => {
-        onComplete(feedback);
-      });
+    if (!feedback) {
+      return;
     }
+
+    const command: FeedbackApi.ModifyOneFeedbackReplyCommand = {
+      id: feedback.id,
+      commandType: 'MODIFY_ONE_FEEDBACK_REPLY',
+      reply: reply
+    };
+    modifyOneFeedback(taskId, command).then(onComplete);
+
   }
 
   function handleDelete() {
@@ -72,7 +56,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     navigate(`/ui/tasks/task/${taskId}`);
   }
 
-  if (!command || !feedback) {
+  if (!feedback) {
     return (<CircularProgress />)
   }
 
@@ -86,17 +70,16 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Box>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.dateReceived' })}{': '}<Burger.DateTimeFormatter timestamp={template?.questionnaire.metadata.completed} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<Burger.DateTimeFormatter timestamp={feedback.updatedOnDate} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
       <Divider sx={{ my: 2 }} />
       <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback.labelValue}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback.subLabelValue}</Typography>
-      <Box component='span' mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Box>
+      <Box component='span' mt={2}><ReactMarkdown>{feedback.content}</ReactMarkdown></Box>
 
       <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
-      {reply ? (
+
         <TextField onChange={(e) => setReply(e.target.value)}
           sx={{ mb: 3 }}
           multiline
@@ -104,12 +87,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
           placeholder='Write a reply here'
           value={reply}
         />
-      ) : (<Box p={2}>
-        <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info1' })}</Typography>
-        <Typography variant='body2' fontStyle='italic'>{intl.formatMessage({ id: 'feedback.noFeedback.info2' })}</Typography>
-      </Box>
-      )
-      }
+
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleDelete} label='button.delete' />
         <Burger.PrimaryButton onClick={handlePublish} label='button.update' />

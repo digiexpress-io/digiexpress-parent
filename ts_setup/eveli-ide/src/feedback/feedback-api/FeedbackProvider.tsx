@@ -4,6 +4,7 @@ import { FeedbackApi } from './feedback-types';
 export interface FeedbackContextType {
   getOneTemplate: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.FeedbackTemplate>;
   createOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.CreateFeedbackCommand) => Promise<FeedbackApi.Feedback>;
+  modifyOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.ModifyOneFeedbackCommand) => Promise<FeedbackApi.Feedback>;
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
   deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
@@ -16,6 +17,7 @@ export const FeedbackContext = React.createContext<FeedbackContextType>({} as an
 export interface FeedbackProviderProps {
   children: React.ReactNode;
   fetchTemplateGET: FeedbackApi.FetchTemplateGET;
+  fetchFeedbackPUT: FeedbackApi.FetchFeedbackPUT;
   fetchFeedbackPOST: FeedbackApi.FetchFeedbackPOST;
   fetchFeedbackGET: FeedbackApi.FetchFeedbackGET;
   fetchFeedbackDELETE: FeedbackApi.FetchFeedbackDELETE;
@@ -26,18 +28,19 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
   const contextValue: FeedbackContextType = React.useMemo(() => {
 
     function getOneTemplate(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.FeedbackTemplate> {
-      return props.fetchTemplateGET(taskId)
-        .then(resp => resp.json());
+      return props.fetchTemplateGET(taskId).then(resp => resp.json());
     }
 
     function createOneFeedback(taskId: FeedbackApi.TaskId, body: FeedbackApi.CreateFeedbackCommand): Promise<FeedbackApi.Feedback> {
-      return props.fetchFeedbackPOST(taskId, body)
-        .then(resp => resp.json());
+      return props.fetchFeedbackPOST(taskId, body).then(resp => resp.json());
+    }
+
+    function modifyOneFeedback(taskId: FeedbackApi.TaskId, body: FeedbackApi.ModifyOneFeedbackCommand): Promise<FeedbackApi.Feedback> {
+      return props.fetchFeedbackPUT(taskId, body).then(resp => resp.json());
     }
 
     function findAllFeedback(): Promise<FeedbackApi.Feedback[]> {
-      return props.fetchFeedbackGET()
-        .then(resp => resp.json());
+      return props.fetchFeedbackGET().then(resp => resp.json());
     }
 
     function getOneFeedback(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.Feedback> {
@@ -55,9 +58,10 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
         .then(resp => resp.json());
     }
 
+
     // return all methods
     return {
-      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback
+      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback, modifyOneFeedback
     };
   }, [props.fetchFeedbackGET, props.fetchFeedbackPOST, props.fetchTemplateGET]);
 

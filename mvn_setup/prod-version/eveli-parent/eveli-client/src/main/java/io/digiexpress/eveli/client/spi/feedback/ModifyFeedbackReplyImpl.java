@@ -28,8 +28,8 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
-import io.digiexpress.eveli.client.api.FeedbackClient.ModifyFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyFeedbackCommandType;
+import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackReplyCommand;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class ModifyFeedbackReplyImpl {
   private final FeedbackWithHistory withHistory;
   private final String userId;
 
-  public Feedback apply(ModifyFeedbackCommand command) {
+  public Feedback apply(ModifyOneFeedbackCommand command) {
     final var beforeUpdate = new FeedbackQueryImpl(jdbc).findOneById(command.getId());
     final var replyId = beforeUpdate.get().getId();
     
@@ -51,7 +51,7 @@ public class ModifyFeedbackReplyImpl {
     });
   }
 
-  private Feedback applyCommand(ModifyFeedbackCommand command, String replyId) {
+  private Feedback applyCommand(ModifyOneFeedbackCommand command, String replyId) {
     
     if(command.getCommandType() == ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY) {
       return modifyReply((ModifyOneFeedbackReplyCommand) command, replyId);

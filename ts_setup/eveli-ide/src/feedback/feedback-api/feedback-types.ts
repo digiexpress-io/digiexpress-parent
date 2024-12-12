@@ -7,6 +7,7 @@ export declare namespace FeedbackApi {
 
   export type FetchTemplateGET = (id: TaskId) => Promise<Response>;
   export type FetchFeedbackPOST = (id: TaskId, command: CreateFeedbackCommand) => Promise<Response>;
+  export type FetchFeedbackPUT = (id: TaskId, command: ModifyOneFeedbackCommand) => Promise<Response>;
   export type FetchFeedbackGET = (id?: TaskId) => Promise<Response>;
   export type FetchFeedbackDELETE = (id?: TaskId) => Promise<Response>;
 
@@ -76,4 +77,13 @@ export declare namespace FeedbackApi {
     subLabelKey?: string | undefined;
     subLabelValue?: string | undefined;
   }
+
+  export interface ModifyOneFeedbackCommand { }
+  export interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
+    id: string;
+    commandType: 'MODIFY_ONE_FEEDBACK_REPLY';
+    reply: string;
+  }
+
+
 }

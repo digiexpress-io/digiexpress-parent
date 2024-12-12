@@ -117,6 +117,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
 
   @Override
   public Optional<Feedback> findOneById(String taskIdOrFeedbackId) {
+    ProcessAssert.notNull(taskIdOrFeedbackId, () -> "taskIdOrFeedbackId mus be defined!");
     return jdbc.query(SELECT_REPLY + 
 """
 WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?

@@ -77,7 +77,7 @@ public class FeedbackClientImpl implements FeedbackClient {
   }
 
   @Override
-  public Feedback modifyOneFeedback(ModifyFeedbackCommand commands, String userId) {
+  public Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
     return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
   }
 

@@ -41,7 +41,7 @@ public interface FeedbackClient {
 
   Feedback createOneFeedback(CreateFeedbackCommand command, String userId);
   FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId);
-  Feedback modifyOneFeedback(ModifyFeedbackCommand commands, String userId);
+  Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId);
   
   List<Feedback> deleteAll(DeleteReplyCommand command, String userId);
   FeedbackQuestionnaireQuery queryQuestionnaire();
@@ -99,15 +99,16 @@ public interface FeedbackClient {
     String getLocale();
   }
   
-  
   @JsonTypeInfo(
       use = JsonTypeInfo.Id.NAME,
       include = JsonTypeInfo.As.PROPERTY,
-      property = "commandType")
+      property = "commandType", 
+      visible = true
+      )
   @JsonSubTypes({
     @Type(value = ImmutableModifyOneFeedbackReplyCommand.class, name = "MODIFY_ONE_FEEDBACK_REPLY")
   })
-  interface ModifyFeedbackCommand {
+  interface ModifyOneFeedbackCommand {
     String getId();
     ModifyFeedbackCommandType getCommandType();
   }
@@ -122,8 +123,10 @@ public interface FeedbackClient {
   @JsonSerialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
   @JsonDeserialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
   @Value.Immutable
-  interface ModifyOneFeedbackReplyCommand extends ModifyFeedbackCommand {
+  interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
     String getReply();
+    @Value.Default
+    @Override default ModifyFeedbackCommandType getCommandType() { return ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY; }
   }
   
   

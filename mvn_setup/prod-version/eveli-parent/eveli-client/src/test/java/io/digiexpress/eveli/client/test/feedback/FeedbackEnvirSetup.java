@@ -25,19 +25,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,23 +67,9 @@ import lombok.RequiredArgsConstructor;
 @ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
 public class FeedbackEnvirSetup {
 
-  @Container
-  @ServiceConnection
-  static final PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:17");
-
   
   private static final Faker FAKER = new Faker(new Locale("fi-FI"));
-  
-  @BeforeAll
-  static void beforeAll() {
-    CONTAINER.start();
-  }
 
-  @AfterAll
-  static void afterAll() {
-    CONTAINER.stop();
-  }
-  
   
   @Configuration
   public static class FeedbackEnvirSetupConfig {
@@ -102,6 +83,7 @@ public class FeedbackEnvirSetup {
     @Autowired ObjectMapper objectMapper;
     @Autowired TransactionTemplate tx;
 
+    
     @Bean
     public SetupTask setupTask(ProcessClient processClient) {    
       final var ref = new TaskRefGenerator(entityManager);
@@ -171,7 +153,7 @@ public class FeedbackEnvirSetup {
         .flowName("no-flow-name")
         .formName("no-form-name")
         .workflowName("no-workflow")
-        .questionnaireId(formBody.getString("_id"))
+        .questionnaireId(formBody.getString("_id") + task.getId())
         .userId(FAKER.idNumber().ssnValid())
       
         
