@@ -13,7 +13,7 @@ export function mapToOfferData(data: LegacyProcessApi.Process[], site: SiteApi.S
 } {
   const md5 = new Md5();
   const offers: OfferApi.Offer[] = [];
-
+console.log(data);
   for (const proc of data) {
     if (!(proc.status === 'CREATED' 
       //|| proc.status === 'ANSWERED'

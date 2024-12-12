@@ -37,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CreateOneTaskComment {
   private final String userId;
-  private final String email;
   private final TaskRepository taskRepository;
   private final CommentRepository commentRepository;
   private final TaskNotificator notificator;
