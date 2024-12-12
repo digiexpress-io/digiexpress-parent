@@ -42,17 +42,18 @@ import lombok.RequiredArgsConstructor;
 public class FeedbackRatingBuilderImpl {
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory withHistory;
+  private final String userId;
   
   public FeedbackRating execute(UpsertFeedbackRankingCommand command) {
     return withHistory.withHistory(history -> {
       final var upserted = upsert(command);
-      history.append(command, upserted);
+      history.append(command, upserted, userId);
       return upserted;
     });
   }
   
   private FeedbackRating upsert(UpsertFeedbackRankingCommand command) {
-    final var customerId = DigestUtils.md5Hex(command.getCustomerId()).toUpperCase();
+    final var customerId = DigestUtils.md5Hex(userId).toUpperCase();
     
     String categoryId = getCategoryId(command).orElse(null);
     Optional<String> replyId = Optional.empty();

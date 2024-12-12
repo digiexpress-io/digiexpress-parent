@@ -28,14 +28,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.ModifyFeedbackCommandType;
 import io.digiexpress.eveli.client.api.ImmutableCreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.digiexpress.eveli.client.api.ImmutableModifyOneFeedbackReplyCommand;
 import io.digiexpress.eveli.client.api.ImmutableUpsertFeedbackRankingCommand;
 
 
 
 @SpringBootTest
-public class FeedbackTest extends FeedbackEnirSetup {
+public class FeedbackTest extends FeedbackEnvirSetup {
 
 
   @Autowired SetupTask setupTasks;
@@ -58,11 +60,10 @@ public class FeedbackTest extends FeedbackEnirSetup {
         .origin(template.getOrigin())
         
         .processId(template.getProcessId())
-        .userId("super-user")
         .reporterNames(template.getReporterNames())
         
         .reply("super-reply-by-worker")
-        .build());
+        .build(), "super-user");
     
     Assertions.assertEquals("same,vimes", template.getReporterNames());
     
@@ -80,10 +81,9 @@ public class FeedbackTest extends FeedbackEnirSetup {
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(1)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -100,10 +100,9 @@ public class FeedbackTest extends FeedbackEnirSetup {
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(5)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -120,10 +119,9 @@ public class FeedbackTest extends FeedbackEnirSetup {
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(null)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -141,12 +139,55 @@ public class FeedbackTest extends FeedbackEnirSetup {
     
     
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
-        .userId("userId")
         .replyIds(Arrays.asList(taskId))
-        .build());
+        .build(), "userId");
     
     
     Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
+  }
+  
+  
+  
+  @Test
+  void testReplyUpdate() {
+    final var taskId = setupTasks.generateOneTask();
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(taskId, "");
+    final var feedback = feedbackClient.createOneFeedback(ImmutableCreateFeedbackCommand.builder()
+        .content(template.getContent())
+        
+        .labelKey(template.getLabelKey())
+        .labelValue(template.getLabelValue())
+        
+        .subLabelKey(template.getSubLabelKey())
+        .subLabelValue(template.getSubLabelValue())
+        
+        .locale(template.getLocale())
+        .origin(template.getOrigin())
+        
+        .processId(template.getProcessId())
+        .reporterNames(template.getReporterNames())
+        
+        .reply("Proletariat John here, replying to you")
+        .build(), "user-john");
     
+    Assertions.assertEquals(1, feedbackClient.queryFeedbacks().findAll().size());
+    
+    {
+      final var updatedReply = feedbackClient.modifyOneFeedback(
+          ImmutableModifyOneFeedbackReplyCommand.builder()
+          .id(feedback.getId())
+          .commandType(ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY)
+          .reply("This is my updated reply from John")
+          .build(), "JOHN");
+      
+      Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");
+      
+      final var afterUpdate = feedbackClient.queryFeedbacks().findAll().stream()
+        .filter(e -> e.getId().equals(feedback.getId()))
+        .findFirst()
+        .get();
+      
+      Assertions.assertEquals("This is my updated reply from John", afterUpdate.getReplyText());
+    }
   }
 }

@@ -27,6 +27,9 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -36,9 +39,11 @@ import jakarta.annotation.Nullable;
 
 public interface FeedbackClient {
 
-  Feedback createOneFeedback(CreateFeedbackCommand command);
-  FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command);
-  List<Feedback> deleteAll(DeleteReplyCommand command);
+  Feedback createOneFeedback(CreateFeedbackCommand command, String userId);
+  FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId);
+  Feedback modifyOneFeedback(ModifyFeedbackCommand commands, String userId);
+  
+  List<Feedback> deleteAll(DeleteReplyCommand command, String userId);
   FeedbackQuestionnaireQuery queryQuestionnaire();
   
   FeedbackQuery queryFeedbacks();
@@ -70,8 +75,7 @@ public interface FeedbackClient {
   interface FeedbackHistoryQuery {
     List<FeedbackHistoryEvent> findAll();
   }
-  
-  
+
   
   /**
    * Command to create feedback
@@ -88,12 +92,38 @@ public interface FeedbackClient {
     @Nullable String getReporterNames();
     
     String getProcessId();
-    String getUserId();
     
     String getOrigin();
     String getContent();
     String getReply();
     String getLocale();
+  }
+  
+  
+  @JsonTypeInfo(
+      use = JsonTypeInfo.Id.NAME,
+      include = JsonTypeInfo.As.PROPERTY,
+      property = "commandType")
+  @JsonSubTypes({
+    @Type(value = ImmutableModifyOneFeedbackReplyCommand.class, name = "MODIFY_ONE_FEEDBACK_REPLY")
+  })
+  interface ModifyFeedbackCommand {
+    String getId();
+    ModifyFeedbackCommandType getCommandType();
+  }
+  
+  enum ModifyFeedbackCommandType {
+    MODIFY_ONE_FEEDBACK_REPLY
+  }
+  
+  /**
+   * Command to for worker to change feedback
+   */
+  @JsonSerialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
+  @JsonDeserialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
+  @Value.Immutable
+  interface ModifyOneFeedbackReplyCommand extends ModifyFeedbackCommand {
+    String getReply();
   }
   
   
@@ -105,7 +135,6 @@ public interface FeedbackClient {
   @Value.Immutable
   interface UpsertFeedbackRankingCommand {
     String getReplyIdOrCategoryId();
-    String getCustomerId();
     
     @Nullable Integer getRating(); // null is remove vote 
   }
@@ -119,7 +148,6 @@ public interface FeedbackClient {
   @Value.Immutable
   interface DeleteReplyCommand {
     List<String> getReplyIds();
-    String getUserId();
   }
   
   

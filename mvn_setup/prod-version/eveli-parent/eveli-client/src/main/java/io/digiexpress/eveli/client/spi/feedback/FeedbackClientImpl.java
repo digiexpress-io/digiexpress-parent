@@ -42,13 +42,13 @@ public class FeedbackClientImpl implements FeedbackClient {
   private final EveliPropsFeedback configProps;
   
   @Override
-  public Feedback createOneFeedback(CreateFeedbackCommand command) {
-    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory).apply(command);
+  public Feedback createOneFeedback(CreateFeedbackCommand command, String userId) {
+    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command);
   }
 
   @Override
-  public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command) {
-    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory).execute(command);
+  public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
+    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
   }
 
   @Override
@@ -72,8 +72,13 @@ public class FeedbackClientImpl implements FeedbackClient {
   }
   
   @Override
-  public List<Feedback> deleteAll(DeleteReplyCommand command) {
-    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory).execute(command);
+  public List<Feedback> deleteAll(DeleteReplyCommand command, String userId) {
+    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
+  }
+
+  @Override
+  public Feedback modifyOneFeedback(ModifyFeedbackCommand commands, String userId) {
+    return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
   }
 
 }

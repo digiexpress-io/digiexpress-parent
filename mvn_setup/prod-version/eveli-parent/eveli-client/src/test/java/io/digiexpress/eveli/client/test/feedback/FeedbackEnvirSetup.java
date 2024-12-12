@@ -69,8 +69,8 @@ import lombok.RequiredArgsConstructor;
 
 @Testcontainers
 @EnableAutoConfiguration
-@ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnirSetup.FeedbackEnirSetupConfig.class })
-public class FeedbackEnirSetup {
+@ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
+public class FeedbackEnvirSetup {
 
   @Container
   @ServiceConnection
@@ -91,7 +91,7 @@ public class FeedbackEnirSetup {
   
   
   @Configuration
-  public static class FeedbackEnirSetupConfig {
+  public static class FeedbackEnvirSetupConfig {
     @MockBean TaskNotificator notificator;
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired TaskRepository taskRepository;
@@ -190,7 +190,7 @@ public class FeedbackEnirSetup {
   
   public static String fileToString(String resource) {
     try {
-      return IOUtils.toString(FeedbackEnirSetup.class.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
+      return IOUtils.toString(FeedbackEnvirSetup.class.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }

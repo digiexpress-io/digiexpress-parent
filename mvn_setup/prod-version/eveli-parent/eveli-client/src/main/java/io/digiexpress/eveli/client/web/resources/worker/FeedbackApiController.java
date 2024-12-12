@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 /*-
  * #%L
@@ -34,7 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackReplyCommand;
 import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,8 +79,14 @@ public class FeedbackApiController {
     }
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
         .addReplyIds(feedback.get().getId())
-        .userId(securityClient.getUser().getPrincipal().getUsername())
-        .build());
+        .build(), securityClient.getUser().getPrincipal().getUsername());
     return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+  }
+  
+  @PutMapping("/{taskIdOrFeedbackId}")
+  public ResponseEntity<Feedback> modifyOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody ModifyOneFeedbackReplyCommand body)
+  {
+    final var feedback = feedbackClient.modifyOneFeedback(body, securityClient.getUser().getPrincipal().getUsername());
+    return new ResponseEntity<>(feedback, HttpStatus.OK);
   }
 }

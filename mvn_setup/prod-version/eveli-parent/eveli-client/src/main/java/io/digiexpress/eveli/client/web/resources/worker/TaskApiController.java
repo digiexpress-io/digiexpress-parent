@@ -52,7 +52,6 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -197,10 +196,7 @@ public class TaskApiController {
   @PostMapping(value="/{id}/feedback")
   public ResponseEntity<Feedback> createFeedback(@PathVariable("id") Long id, @RequestBody CreateFeedbackCommand command)
   {
-    TaskAssert.isTrue(
-        securityClient.getUser().getPrincipal().getUsername().equals(command.getUserId()), 
-        () -> "userId can't be anybody else then the logged in user!");
-    final var feedback = feedbackClient.createOneFeedback(command);
+    final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
     return new ResponseEntity<>(feedback, HttpStatus.OK);
   }
   
