@@ -64,7 +64,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SpringJwtCrmClient implements CrmClient {
   private final RestTemplate rest;
-  private final String serviceUrl;
+  private final String serviceUrlCompany;
+  private final String serviceUrlPerson;
   
   @Override
   public CustomerRoles getCustomerRoles() {
@@ -75,10 +76,15 @@ public class SpringJwtCrmClient implements CrmClient {
     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
     headers.set("cookie", cookie);
     final HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
+    
+    
+    final var isPerson = getCustomer().getType() == CustomerType.REP_PERSON;
+    final var serviceUrl = isPerson ? serviceUrlPerson : serviceUrlCompany;
+    
     final var uri = UriComponentsBuilder.fromHttpUrl(serviceUrl).build().toUri();
     
     final var entity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
-    return getRoles(entity, getCustomer().getType() == CustomerType.REP_PERSON);
+    return getRoles(entity, isPerson);
   }
 
   @Override

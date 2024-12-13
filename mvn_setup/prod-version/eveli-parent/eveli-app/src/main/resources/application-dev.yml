@@ -53,3 +53,9 @@ eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServ
 eveli.feedback.question-title: feedBackTitle
 eveli.feedback.question: feedBackTxt
 eveli.feedback.username-allowed: publicAnswerAllowed
+
+# jwt linked crm from security proxy
+eveli.crm.enabled: false
+eveli.crm.host: 
+eveli.crm.service-path-company:
+eveli.crm.service-path-person:
