@@ -1,5 +1,7 @@
 import React from 'react';
 import { useThemeProps, Table, TableContainer, TableCell, TableHead, TableRow, TableBody, TablePagination, Typography } from '@mui/material';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { FormattedMessage } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
@@ -7,7 +9,6 @@ import { GOverridableComponent } from '../g-override';
 import { GFeedbackTableArticleReducer } from './GArticleFeedbackTableReducer';
 import { useUtilityClasses, GArticleFeedbackRoot, MUI_NAME } from './useUtilityClasses';
 import { GArticleFeedbackTableHead } from './GArticleFeedbackTableHead';
-import { GArticleFeedbackVote } from './GArticleFeedbackVote';
 import { GArticleFeedbackTableToolbar } from './GArticleFeedbackTableToolbar';
 import { GArticleFeedbackViewer } from './GArticleFeedbackViewer';
 import { DateTime } from 'luxon';
@@ -27,8 +28,7 @@ function isEnabled(view: SiteApi.TopicView) {
 }
 
 export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => {
-  const [feedbackViewerOpen, setFeedbackViewerOpen] = React.useState(false);
-  const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.Feedback | undefined>();
+  const [selectedFeedback, setSelectedFeedback] = React.useState<SiteApi.CustomerFeedback | undefined>();
   const { locale } = useLocale();
 
   const props = useThemeProps({
@@ -57,14 +57,15 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
     ...slots,
     enabled: props.enabled ?? isEnabled,
     reducer,
-    noData: feedback.length === 0
+    noData: feedback.length === 0,
+    feedbackId: selectedFeedback?.feedback.id,
+    isViewFeedback: selectedFeedback?.feedback.id ? true : false
   }
   const topic: SiteApi.TopicView | undefined = props.children;
   const Root = props.component ?? GArticleFeedbackRoot;
 
-  function handleOnRowClick(feedback: SiteApi.Feedback) {
+  function handleOnRowClick(feedback: SiteApi.CustomerFeedback) {
     setSelectedFeedback(feedback);
-    setFeedbackViewerOpen(true);
   }
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -76,13 +77,13 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   }
 
 
+
+
   return (<>
-    <GArticleFeedbackViewer
-      open={feedbackViewerOpen}
-      onClose={() => setFeedbackViewerOpen(false)}
-      feedback={selectedFeedback}
-      className={classes.feedbackViewer}
-    />
+    {
+      ownerState.isViewFeedback && ownerState.feedbackId &&
+      <GArticleFeedbackViewer className={classes.feedbackViewer} feedbackId={ownerState.feedbackId} onClose={() => setSelectedFeedback(undefined)} />
+    }
     <Root ownerState={ownerState} className={classes.root}>
       <GArticleFeedbackTableToolbar className={classes.toolbar}/>
       <TableContainer>
@@ -111,15 +112,21 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
           
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
-              <TableRow hover tabIndex={-1} key={row.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
+              <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
                 <TableCell component="th" scope="row" padding="none">Customer title</TableCell>
-                <TableCell component="th" scope="row" padding="none">{row.labelValue}</TableCell>
-                <TableCell component="th" scope="row" align="left" padding="none">{row.subLabelValue}</TableCell>
+                <TableCell component="th" scope="row" padding="none">{row.feedback.labelValue}</TableCell>
+                <TableCell component="th" scope="row" align="left" padding="none">{row.feedback.subLabelValue}</TableCell>
                 <TableCell component="th" scope="row" align="left" padding="none">
-                  {DateTime.fromJSDate(new Date(row.updatedOnDate))
+                  {DateTime.fromJSDate(new Date(row.feedback.updatedOnDate))
                     .setLocale(locale)
-                    .toLocaleString(DateTime.DATE_SHORT)}</TableCell>
-                <TableCell align="right"><GArticleFeedbackVote className={classes.vote} feedback={row} readOnly /></TableCell>
+                    .toLocaleString(DateTime.DATE_SHORT)}
+                </TableCell>
+                <TableCell align="right">
+                  <div className={classes.vote}>
+                    <ThumbDownIcon fontSize='small' /><Typography>{row.feedback.thumbsDownCount}</Typography>
+                    <ThumbUpIcon fontSize='small' /><Typography>{row.feedback.thumbsUpCount}</Typography>
+                  </div>
+                </TableCell>
               </TableRow>))
             }
             {reducer[0].emptyRows > 0 && (

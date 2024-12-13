@@ -81,4 +81,14 @@ public class FeedbackClientImpl implements FeedbackClient {
     return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
   }
 
+  @Override
+  public CustomerFeedbackQuery queryCustomerFeedbacks() {
+    return new CustomerFeedbackQueryImpl(jdbc);
+  }
+
+  @Override
+  public FeedbackRatingQuery queryFeedbackRatings() {
+    return new FeedbackRatingQueryImpl(jdbc);
+  }
+
 }

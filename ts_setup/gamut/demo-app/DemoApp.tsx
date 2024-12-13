@@ -82,7 +82,11 @@ export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) =
             fetchUserLivenessGET={iamFetch.fetchUserLivenessGET}
             fetchUserProductsGET={iamFetch.fetchUserProductsGET}
             fetchUserRolesGET={iamFetch.fetchUserRolesGET}>
-            <SiteBackendProvider fetchSiteGet={siteFetch.fetchSiteGet} fetchFeedbackGet={siteFetch.fetchFeedbackGet}>
+            <SiteBackendProvider
+              fetchSiteGet={siteFetch.fetchSiteGet}
+              fetchFeedbackGet={siteFetch.fetchFeedbackGet}
+              fetchFeedbackRatingPut={siteFetch.fetchFeedbackRatingPut}>
+
               <AuthSetup>{children}</AuthSetup>
             </SiteBackendProvider>
           </IamBackendProvider>

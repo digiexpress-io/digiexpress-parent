@@ -123,6 +123,15 @@ public class FeedbackTest extends FeedbackEnvirSetup {
       Assertions.assertEquals(1, ratedFeedback.getThumbsUpCount());
     }
     
+    // Query customer rating
+    {
+      final var ratedFeedback = feedbackClient.queryCustomerFeedbacks().findAllByCustomerId("BOB").stream()
+          .findFirst()
+          .get();
+      Assertions.assertEquals(1, ratedFeedback.getFeedback().getThumbsUpCount());
+      Assertions.assertEquals("355938CFE3B73A624297591972D27C01", ratedFeedback.getRating().getCustomerId());
+    }
+    
     // remove rating
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(

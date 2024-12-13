@@ -45,8 +45,10 @@ public interface FeedbackClient {
   
   List<Feedback> deleteAll(DeleteReplyCommand command, String userId);
   FeedbackQuestionnaireQuery queryQuestionnaire();
-  
+
+  CustomerFeedbackQuery queryCustomerFeedbacks();
   FeedbackQuery queryFeedbacks();
+  FeedbackRatingQuery queryFeedbackRatings();
   FeedbackTemplateQuery queryTemplate();
   
   FeedbackHistoryQuery queryHistory();
@@ -58,6 +60,17 @@ public interface FeedbackClient {
   interface FeedbackTemplateQuery {
     FeedbackTemplate getOneByTaskId(String taskId, String userId);
     Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId);
+  }
+  
+  interface CustomerFeedbackQuery {
+    List<CustomerFeedback> findAll();
+    List<CustomerFeedback> findAllByCustomerId(String customerId);
+  }
+  
+  interface FeedbackRatingQuery {
+    List<FeedbackRating> findAllByCustomerId(String customerId);    
+    FeedbackRating getOneById(String ratingId);
+
   }
 
   /**
@@ -186,6 +199,18 @@ public interface FeedbackClient {
     int getThumbsUpCount(); // round rating to thumbs up
     int getThumbsDownCount(); // round rating to thumbs down
   }
+  
+  /**
+   * Based on logged in users
+   */
+  @JsonSerialize(as = ImmutableCustomerFeedback.class)
+  @JsonDeserialize(as = ImmutableCustomerFeedback.class)
+  @Value.Immutable
+  interface CustomerFeedback {
+    Feedback getFeedback();
+    @Nullable FeedbackRating getRating();
+  }
+  
   
   @JsonSerialize(as = ImmutableFeedbackRating.class)
   @JsonDeserialize(as = ImmutableFeedbackRating.class)

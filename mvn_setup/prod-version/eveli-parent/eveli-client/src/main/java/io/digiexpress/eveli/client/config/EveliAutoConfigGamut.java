@@ -95,8 +95,8 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutSiteController gamutSiteController(EveliContext eveliContext, FeedbackClient feedback) {
-    return new GamutSiteController(eveliContext.getSiteEnvir(), feedback);
+  public GamutSiteController gamutSiteController(EveliContext eveliContext, FeedbackClient feedback, CrmClient crm) {
+    return new GamutSiteController(eveliContext.getSiteEnvir(), feedback, crm);
   }
   
   @Bean

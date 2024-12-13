@@ -5,6 +5,7 @@ export interface FeedbackContextType {
   getOneTemplate: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.FeedbackTemplate>;
   createOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.CreateFeedbackCommand) => Promise<FeedbackApi.Feedback>;
   modifyOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.ModifyOneFeedbackCommand) => Promise<FeedbackApi.Feedback>;
+  rankOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.UpsertFeedbackRankingCommand) => Promise<FeedbackApi.Feedback>;
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
   deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
@@ -39,6 +40,10 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
       return props.fetchFeedbackPUT(taskId, body).then(resp => resp.json());
     }
 
+    function rankOneFeedback(taskId: FeedbackApi.TaskId, body: FeedbackApi.UpsertFeedbackRankingCommand): Promise<FeedbackApi.Feedback> {
+      return props.fetchFeedbackPUT(taskId, body).then(resp => resp.json());
+    }
+
     function findAllFeedback(): Promise<FeedbackApi.Feedback[]> {
       return props.fetchFeedbackGET().then(resp => resp.json());
     }
@@ -61,7 +66,7 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
     // return all methods
     return {
-      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback, modifyOneFeedback
+      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback, modifyOneFeedback, rankOneFeedback
     };
   }, [props.fetchFeedbackGET, props.fetchFeedbackPOST, props.fetchTemplateGET]);
 
