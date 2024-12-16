@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import javax.json.JsonString;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,6 +41,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
@@ -63,28 +65,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class SpringJwtCrmClient implements CrmClient {
-  private final RestTemplate rest;
+  private final String hostUrl;
   private final String serviceUrlCompany;
   private final String serviceUrlPerson;
   
   @Override
   public CustomerRoles getCustomerRoles() {
-    final var request = getCurrentHttpRequest();
-    final var cookie = request.getHeader("cookie");
-    
-    final var headers = new HttpHeaders();
-    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    headers.set("cookie", cookie);
-    final HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
-    
-    
-    final var isPerson = getCustomer().getType() == CustomerType.REP_PERSON;
-    final var serviceUrl = isPerson ? serviceUrlPerson : serviceUrlCompany;
-    
-    final var uri = UriComponentsBuilder.fromHttpUrl(serviceUrl).build().toUri();
-    
-    final var entity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
-    return getRoles(entity, isPerson);
+    if (StringUtils.isNotEmpty(hostUrl)) {
+      final var rest = new RestTemplate();
+      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(hostUrl));
+      final var request = getCurrentHttpRequest();
+      final var cookie = request.getHeader("cookie");
+      
+      final var headers = new HttpHeaders();
+      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+      headers.set("cookie", cookie);
+      final HttpEntity<String> requestEntity = new HttpEntity<String>(null, headers);
+      
+      
+      final var isPerson = getCustomer().getType() == CustomerType.REP_PERSON;
+      final var serviceUrl = isPerson ? serviceUrlPerson : serviceUrlCompany;
+      
+      final var uri = UriComponentsBuilder.fromHttpUrl(serviceUrl).build().toUri();
+      
+      final var entity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+      return getRoles(entity, isPerson);
+    }
+    else {
+      return ImmutableCustomerRoles.builder().identifier("").username("").build();
+    }
   }
 
   @Override

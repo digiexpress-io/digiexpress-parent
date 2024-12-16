@@ -58,7 +58,7 @@ public class AuthenticationConfigJWT {
   @Value("${app.jwt.portal.issuer}")
   private String portalIssuer;
   
-  @Value("${eveli.crm.host}")
+  @Value("${eveli.crm.host:#{null}")
   private String crmHost;
 
   @Value("${eveli.crm.service-path-company:gw/api/hpa/authorizationList}")
@@ -73,11 +73,8 @@ public class AuthenticationConfigJWT {
 
   @Bean
   public SpringJwtCrmClient crmClientJwt() {
-    final var restTemplate = new RestTemplate();
-    if(crmHost != null && !crmHost.trim().isEmpty()) {
-      restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(crmHost));
-    }
-    return new SpringJwtCrmClient(restTemplate, crmPathCompany, crmPathPerson);
+
+    return new SpringJwtCrmClient(crmHost, crmPathCompany, crmPathPerson);
   }
 
   @Bean
