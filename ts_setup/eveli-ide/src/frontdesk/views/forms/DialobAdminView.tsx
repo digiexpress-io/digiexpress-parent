@@ -15,7 +15,7 @@ export const DialobAdminView: React.FC = () => {
     if (serviceUrl) {
       return {
         csrf: undefined,
-        dialobApiUrl: serviceUrl + 'worker/rest/api/assets/dialob/proxy',
+        dialobApiUrl: serviceUrl + 'dialob',
         setLoginRequired: () => { },
         setTechnicalError: () => { },
         language: intl.locale
