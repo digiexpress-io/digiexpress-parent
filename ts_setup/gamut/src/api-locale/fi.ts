@@ -236,7 +236,9 @@ export const fi = {
   'gamut.feedback.vote.notHelpful': 'No, this was not helpful',
   'gamut.feedback.vote.yesHelpful': 'Yes, this was helpful',
 
-  'gamut.feedback.updatedOnDate': 'Updated date'
+  'gamut.feedback.updatedOnDate': 'Updated date',
+  'gamut.feedback.feedbackViewerTitle': 'Customer feedback',
+  'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply'
 
 }
 
