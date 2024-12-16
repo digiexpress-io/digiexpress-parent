@@ -31,12 +31,12 @@ import com.google.common.hash.Hashing;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
-import io.digiexpress.eveli.client.api.GamutClient.Attachment;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
-import io.digiexpress.eveli.client.api.ImmutableAttachment;
+import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
@@ -69,13 +69,13 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   }
 
   @Override
-  public List<Attachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException {
+  public List<UserActionAttachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     
     final var process = processRepository.queryInstances().findOneById(actionId)
         .orElseThrow(() -> new ProcessNotFoundException("Process not found by id: " + actionId + "!"));
     
-    final var result = new ArrayList<Attachment>();
+    final var result = new ArrayList<UserActionAttachment>();
     for(final var file : this.attachments) {
       final var att = visitAttachment(process, file);
       result.add(att);
@@ -85,7 +85,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   }
 
   
-  private Attachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
+  private UserActionAttachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
     final var taskId = process.getTaskId();
     final var filename = file.getName();
     final Optional<AttachmentUpload> uploadUrl = taskId == null ?
@@ -96,7 +96,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
       throw new AttachmentUploadUrlException("Can't create upload url for: " + filename + "!");
     }
 
-    return ImmutableAttachment.builder()
+    return ImmutableUserActionAttachment.builder()
         .id(attachmentId(filename, process))
         .created(LocalDateTime.now().toString())
         .size(0L)

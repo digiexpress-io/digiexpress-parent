@@ -33,9 +33,9 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
-import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
+import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
@@ -85,10 +85,10 @@ public class UserActionsQueryImpl implements UserActionQuery {
     return new AttachmentsContext(processAttachments, taskAttachments);
   }
   
-  private ImmutableAttachment visitAttachment(ProcessInstance process, AttachmentCommands.Attachment source) {
+  private ImmutableUserActionAttachment visitAttachment(ProcessInstance process, AttachmentCommands.Attachment source) {
     final var id = UserAttachmentBuilderImpl.attachmentId(source.getName(), process);
     
-    return ImmutableAttachment.builder()
+    return ImmutableUserActionAttachment.builder()
         .id(id)
         .processId(process.getId().toString())
         .taskId(Optional.ofNullable(process.getTaskId()).map(e -> e.toString()).orElse(null))

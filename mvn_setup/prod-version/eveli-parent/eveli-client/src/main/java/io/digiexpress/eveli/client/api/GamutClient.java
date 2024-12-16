@@ -78,7 +78,7 @@ public interface GamutClient {
   interface UserAttachmentBuilder {
     UserAttachmentBuilder actionId(String actionId);
     UserAttachmentBuilder addAll(List<UserAttachmentUploadInit> init);
-    List<Attachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException;
+    List<UserActionAttachment> createMany() throws ProcessNotFoundException, AttachmentUploadUrlException;
   }
   
   interface UserMessagesQuery {
@@ -157,7 +157,7 @@ public interface GamutClient {
     
     Boolean getViewed();
     List<UserMessage> getMessages();
-    List<Attachment> getAttachments();
+    List<UserActionAttachment> getAttachments();
     Boolean getFormInProgress();
   }
   
@@ -184,10 +184,10 @@ public interface GamutClient {
   }
   
 
-  @JsonSerialize(as = ImmutableAttachment.class)
-  @JsonDeserialize(as = ImmutableAttachment.class)
+  @JsonSerialize(as = ImmutableUserActionAttachment.class)
+  @JsonDeserialize(as = ImmutableUserActionAttachment.class)
   @Value.Immutable
-  interface Attachment {
+  interface UserActionAttachment {
     String getId();
     String getName();
     String getStatus();
