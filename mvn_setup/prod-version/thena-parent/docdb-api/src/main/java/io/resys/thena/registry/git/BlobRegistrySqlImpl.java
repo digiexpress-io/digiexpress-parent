@@ -285,35 +285,56 @@ WHERE blobs.value LIKE $1
     final var props = new LinkedList<>();
     final var where = new SqlStatement();
     int paramIndex = 1;
+   
+    
+    
     for(final var entry : criteria) {
       if(paramIndex > 1) {
         where.append(" AND ").ln();
       }
-      // TODO:: null value props
-      props.add(entry.getKey());
+      
+      // target field
+      where.append("blobs.value");
+      
+      var nextedIndex = 0;
+      for(final var nestedProp : entry.getKey().split("\\.")) {
+        if(nextedIndex++ > 0) {
+          where.append(" -> $").append(String.valueOf(paramIndex++));
+        }
+        
+        // TODO:: null value props
+        props.add(nestedProp.trim());
+        
+      }
+    
+      
       if(entry.getType() == MatchCriteriaType.EQUALS) {
         props.add(getCriteriaValue(entry));
-        where.append("blobs.value -> ")
-          .append(getCriteriaField(entry, paramIndex++))
+        where
+          .append(" -> ")
+          .append(getFieldIndex(entry, paramIndex++))
           .append(" = $")
           .append(String.valueOf(paramIndex++)).ln();
 
       } else if(entry.getType() == MatchCriteriaType.GTE && entry.getTargetDate() != null) {
         props.add(getCriteriaValue(entry));
-        where.append("blobs.value ->> ")
-          .append(getCriteriaField(entry, paramIndex++))
+        where.append("blobs.value")
+          .append(" ->> ")
+          .append(getFieldIndex(entry, paramIndex++))
           .append(" <= $")
           .append(String.valueOf(paramIndex++)).append("").ln();
         
       } else if(entry.getType() == MatchCriteriaType.LIKE && entry.getValue() != null)  {
         props.add("%"+ entry.getValue() + "%");
-        where.append("blobs.value ->> $")
+        where
+        .append(" ->> $")
         .append(String.valueOf(paramIndex++))
         .append(" like $")
         .append(String.valueOf(paramIndex++)).ln();
         
       } else if(entry.getType() == MatchCriteriaType.NOT_NULL)  {
-        where.append("blobs.value ->> $")
+        where
+        .append(" ->> $")
         .append(String.valueOf(paramIndex++))
         .append(" is not null").ln();
         
@@ -321,6 +342,7 @@ WHERE blobs.value LIKE $1
         throw new RuntimeException("Criteria type: " + JsonArray.of(criteria) + " not supported!");
       }
     }
+    
   
     return new WhereSqlFragment(where.toString(), props);
   }
@@ -333,15 +355,6 @@ WHERE blobs.value LIKE $1
       return criteria.getTargetDate().format(ISO_LOCAL_DATE_TIME);
     }
     return criteria.getValue();
-  }
-  
-  private static String getCriteriaField(MatchCriteria criteria, int fieldIndex) {
-    RepoAssert.isTrue(criteria.getValue() != null || criteria.getTargetDate() != null, () -> "Criteria must define value! But was: " + JsonObject.mapFrom(criteria));
-    
-    if(criteria.getTargetDate() != null) {
-      return "$" + String.valueOf(fieldIndex) + "";
-    }
-    return "$" + String.valueOf(fieldIndex);
   }
   
   @Override
@@ -428,5 +441,11 @@ WHERE blobs.value LIKE $1
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getBlobs()).append(";").ln()
         .build()).build();
+  }
+  
+  
+  private static String getFieldIndex(MatchCriteria criteria, int fieldIndex) {
+    RepoAssert.isTrue(criteria.getValue() != null || criteria.getTargetDate() != null, () -> "Criteria must define value! But was: " + JsonObject.mapFrom(criteria));
+    return "$" + String.valueOf(fieldIndex);
   }
 }

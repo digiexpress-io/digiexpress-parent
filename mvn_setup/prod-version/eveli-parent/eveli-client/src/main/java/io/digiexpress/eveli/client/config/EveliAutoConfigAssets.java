@@ -192,7 +192,7 @@ public class EveliAutoConfigAssets {
             .objectMapper(objectMapper)
             .serializer((entity) -> {
               try {
-                return objectMapper.writeValueAsString(entity);
+                return new JsonObject(objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
