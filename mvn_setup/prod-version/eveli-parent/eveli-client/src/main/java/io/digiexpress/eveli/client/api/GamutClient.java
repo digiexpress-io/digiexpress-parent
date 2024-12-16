@@ -1,25 +1,7 @@
 package io.digiexpress.eveli.client.api;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.immutables.value.Value;
@@ -28,10 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
-import io.thestencil.iam.api.UserActionsClient.Attachment;
-import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -123,6 +102,86 @@ public interface GamutClient {
     private final String responseBody;    
   }
   
+  
+
+  
+  @JsonSerialize(as = ImmutableUserAction.class)
+  @JsonDeserialize(as = ImmutableUserAction.class)
+  @Value.Immutable
+  interface UserAction {
+    String getId();
+    String getName();
+    String getStatus();
+    String getReviewUri();
+    String getMessagesUri();
+    String getFormUri();
+    String getFormId();
+    LocalDateTime getCreated();
+    LocalDateTime getUpdated();
+    
+    @Nullable String getInputContextId();
+    @Nullable String getInputParentContextId();
+    
+
+    @Nullable
+    String getTaskId();
+    @Nullable
+    String getTaskRef();
+    @Nullable
+    String getTaskStatus();
+    @Nullable
+    ZonedDateTime getTaskCreated();
+    @Nullable
+    ZonedDateTime getTaskUpdated();
+    
+    
+    Boolean getViewed();
+    List<UserMessage> getMessages();
+    List<Attachment> getAttachments();
+    Boolean getFormInProgress();
+  }
+  
+  @JsonSerialize(as = ImmutableUserMessage.class)
+  @JsonDeserialize(as = ImmutableUserMessage.class)
+  @Value.Immutable
+  interface UserMessage {
+    String getId();
+    String getCreated();
+    String getCommentText();
+    String getUserName();
+    @Nullable
+    String getReplyToId();
+    @Nullable
+    String getTaskId();
+  }
+  
+  
+  @JsonSerialize(as = ImmutableAttachmentDownloadUrl.class)
+  @JsonDeserialize(as = ImmutableAttachmentDownloadUrl.class)
+  @Value.Immutable
+  interface AttachmentDownloadUrl {
+    String getDownload();
+  }
+  
+
+  @JsonSerialize(as = ImmutableAttachment.class)
+  @JsonDeserialize(as = ImmutableAttachment.class)
+  @Value.Immutable
+  interface Attachment {
+    String getId();
+    String getName();
+    String getStatus();
+    Long getSize();
+    String getCreated();
+    
+    @Nullable
+    String getUpload();
+    @Nullable
+    String getProcessId();
+    @Nullable
+    String getTaskId();
+    
+  }
   
   public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;

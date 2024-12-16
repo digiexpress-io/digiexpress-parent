@@ -1,7 +1,0 @@
-[
-  {
-    "id": null,
-    "value": "id: objects\r\n\r\ninputs:\r\n  fundAnswers:\r\n    required: false\r\n    type: OBJECT\r\n    \r\ntasks:\r\n  - fundEval:\r\n      id: fundEval\r\n      then: end\r\n      decisionTable:\r\n        ref: fundEval\r\n        collection: false\r\n        inputs: fundAnswers\r\n",
-    "type": "SET_BODY"
-  }
-]

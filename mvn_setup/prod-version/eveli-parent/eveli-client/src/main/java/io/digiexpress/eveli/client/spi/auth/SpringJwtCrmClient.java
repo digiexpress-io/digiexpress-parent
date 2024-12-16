@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.List;
 /*-
  * #%L
  * eveli-client
@@ -27,8 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.json.JsonString;
-
+import org.immutables.value.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,6 +42,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
@@ -52,10 +55,10 @@ import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedPerson;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
-import io.thestencil.iam.api.ImmutableUserRoles;
-import io.thestencil.iam.api.ImmutableUserRolesPrincipal;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
+import jakarta.json.JsonString;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -323,4 +326,17 @@ public class SpringJwtCrmClient implements CrmClient {
         .addAllRoles(userRoles.getRoles())
         .build();
   }
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableUserRoles.class) @JsonDeserialize(as = ImmutableUserRoles.class)
+  interface UserRoles {
+    List<String> getRoles();
+    @Nullable
+    UserRolesPrincipal getPrincipal(); 
+  }
+  @Value.Immutable @JsonSerialize(as = ImmutableUserRolesPrincipal.class) @JsonDeserialize(as = ImmutableUserRolesPrincipal.class)
+  interface UserRolesPrincipal {
+    String getIdentifier();
+    String getName();
+  }
+  
 }

@@ -31,15 +31,15 @@ import com.google.common.hash.Hashing;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
+import io.digiexpress.eveli.client.api.GamutClient.Attachment;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
+import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.thestencil.iam.api.ImmutableAttachment;
-import io.thestencil.iam.api.UserActionsClient.Attachment;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;

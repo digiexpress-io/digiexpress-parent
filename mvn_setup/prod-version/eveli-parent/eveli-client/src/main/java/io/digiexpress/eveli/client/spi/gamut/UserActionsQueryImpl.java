@@ -30,18 +30,18 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
+import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
+import io.digiexpress.eveli.client.api.ImmutableAttachment;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
+import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.thestencil.iam.api.ImmutableAttachment;
-import io.thestencil.iam.api.ImmutableUserAction;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

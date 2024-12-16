@@ -1,25 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -52,18 +32,18 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.hdes.client.spi.store.ThenaStore;
+import io.resys.thena.storesql.DbStateSqlImpl;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
@@ -165,14 +145,14 @@ public class EveliAutoConfigAssets {
     
     final var stencilClient = new StencilClientImpl(StencilStoreImpl.builder()
         .config((builder) -> builder
-            .client(DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build())
+            .client(DbStateSqlImpl.create().client(pgPool).build())
             .objectMapper(objectMapper)
             .repoName("stencil-assets")
             .headName("main")
             .deserializer(new ZoeDeserializer(objectMapper))
             .serializer((entity) -> {
               try {
-                return objectMapper.writeValueAsString(entity);
+                return new JsonObject(objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
@@ -205,7 +185,7 @@ public class EveliAutoConfigAssets {
     
     final var assetClient = EveliAssetsClientImpl.builder()
         .config((builder) -> builder
-            .client(DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build())
+            .client(DbStateSqlImpl.create().client(pgPool).build())
             .repoName("eveli-assets")
             .headName("main")
             .deserializer(new EveliAssetsDeserializer(objectMapper))

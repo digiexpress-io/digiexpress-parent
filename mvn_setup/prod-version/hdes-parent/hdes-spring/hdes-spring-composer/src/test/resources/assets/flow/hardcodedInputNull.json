@@ -1,7 +1,0 @@
-[
-  {
-    "id": null,
-    "value": "id: hardcodedInputNull\r\n\r\ninputs:\r\n  myInputParam:\r\n    required: false\r\n    type: STRING\r\n    \r\ntasks:\r\n  - TestService:\r\n      id: testService\r\n      then: end\r\n      service:\r\n        ref: TestService\r\n        collection: false\r\n        inputs:\r\n          name:",
-    "type": "SET_BODY"
-  }
-]

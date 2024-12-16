@@ -1,0 +1,39 @@
+
+Members
+  - id: 1    commitId: 2
+    membername: sam vimes
+    email: sam.vimes@digiexpress.io
+    externalId: captain-of-the-guard
+
+Parties
+  - id: 3    commitId: 4
+    parentId: null
+    partyName: captains
+    partyDescription: group for all the captains of the guard
+    externalId: one-man-group
+
+Memberships
+  - id: 3    commitId: 4
+    partyName: captains
+    partyDescription: group for all the captains of the guard
+    externalId: one-man-group
+
+Rights
+  - id: 5    commitId: 6
+    rightName: jailer
+    rightDescription: role for all jailers
+    externalId: role for all the guardsmen
+  - id: 7    commitId: 8
+    rightName: detective
+    rightDescription: role for all the detective doing investigations and things
+    externalId: role for all the detective
+
+Member rights
+
+Party rights
+  - id: 9    commitId: 4
+    partyId: 3
+    rightId: 5
+  - id: 10    commitId: 4
+    partyId: 3
+    rightId: 7

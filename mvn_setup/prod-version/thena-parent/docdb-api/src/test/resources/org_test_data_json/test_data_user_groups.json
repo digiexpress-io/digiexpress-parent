@@ -1,0 +1,562 @@
+[
+  {
+    "group_external_id": "1",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "1",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "21"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "44"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "2",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "22",
+    "user_external_id": "21"
+  },
+  {
+    "group_external_id": "22",
+    "user_external_id": "21"
+  },
+  {
+    "group_external_id": "22",
+    "user_external_id": "44"
+  },
+  {
+    "group_external_id": "22",
+    "user_external_id": "48"
+  },
+  {
+    "group_external_id": "35",
+    "user_external_id": "21"
+  },
+  {
+    "group_external_id": "35",
+    "user_external_id": "44"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "74",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "75",
+    "user_external_id": "58"
+  },
+  {
+    "group_external_id": "76",
+    "user_external_id": "58"
+  },
+  {
+    "group_external_id": "77",
+    "user_external_id": "58"
+  },
+  {
+    "group_external_id": "77",
+    "user_external_id": "90"
+  },
+  {
+    "group_external_id": "78",
+    "user_external_id": "58"
+  },
+  {
+    "group_external_id": "81",
+    "user_external_id": "90"
+  },
+  {
+    "group_external_id": "82",
+    "user_external_id": "90"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "142"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "86",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "87",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "89",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "89",
+    "user_external_id": "130"
+  },
+  {
+    "group_external_id": "89",
+    "user_external_id": "144"
+  },
+  {
+    "group_external_id": "90",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "90",
+    "user_external_id": "105"
+  },
+  {
+    "group_external_id": "90",
+    "user_external_id": "130"
+  },
+  {
+    "group_external_id": "90",
+    "user_external_id": "144"
+  },
+  {
+    "group_external_id": "91",
+    "user_external_id": "105"
+  },
+  {
+    "group_external_id": "91",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "91",
+    "user_external_id": "143"
+  },
+  {
+    "group_external_id": "92",
+    "user_external_id": "105"
+  },
+  {
+    "group_external_id": "92",
+    "user_external_id": "143"
+  },
+  {
+    "group_external_id": "93",
+    "user_external_id": "112"
+  },
+  {
+    "group_external_id": "94",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "94",
+    "user_external_id": "130"
+  },
+  {
+    "group_external_id": "94",
+    "user_external_id": "144"
+  },
+  {
+    "group_external_id": "95",
+    "user_external_id": "144"
+  },
+  {
+    "group_external_id": "108",
+    "user_external_id": "112"
+  },
+  {
+    "group_external_id": "108",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "114",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "114",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "115",
+    "user_external_id": "142"
+  },
+  {
+    "group_external_id": "116",
+    "user_external_id": "142"
+  },
+  {
+    "group_external_id": "137",
+    "user_external_id": "142"
+  },
+  {
+    "group_external_id": "138",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "138",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "146",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "146",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "149",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "153",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "153",
+    "user_external_id": "236"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "89"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "175"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "159",
+    "user_external_id": "274"
+  },
+  {
+    "group_external_id": "160",
+    "user_external_id": "130"
+  },
+  {
+    "group_external_id": "160",
+    "user_external_id": "131"
+  },
+  {
+    "group_external_id": "160",
+    "user_external_id": "236"
+  },
+  {
+    "group_external_id": "170",
+    "user_external_id": "87"
+  },
+  {
+    "group_external_id": "170",
+    "user_external_id": "236"
+  },
+  {
+    "group_external_id": "180",
+    "user_external_id": "130"
+  },
+  {
+    "group_external_id": "180",
+    "user_external_id": "236"
+  },
+  {
+    "group_external_id": "180",
+    "user_external_id": "238"
+  },
+  {
+    "group_external_id": "182",
+    "user_external_id": "249"
+  },
+  {
+    "group_external_id": "182",
+    "user_external_id": "268"
+  },
+  {
+    "group_external_id": "182",
+    "user_external_id": "291"
+  },
+  {
+    "group_external_id": "183",
+    "user_external_id": "268"
+  },
+  {
+    "group_external_id": "183",
+    "user_external_id": "270"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "2"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "4"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "16"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "80"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "153"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "260"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "184",
+    "user_external_id": "290"
+  },
+  {
+    "group_external_id": "185",
+    "user_external_id": "249"
+  },
+  {
+    "group_external_id": "185",
+    "user_external_id": "268"
+  },
+  {
+    "group_external_id": "185",
+    "user_external_id": "291"
+  },
+  {
+    "group_external_id": "186",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "186",
+    "user_external_id": "231"
+  },
+  {
+    "group_external_id": "186",
+    "user_external_id": "273"
+  },
+  {
+    "group_external_id": "186",
+    "user_external_id": "289"
+  },
+  {
+    "group_external_id": "187",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "187",
+    "user_external_id": "87"
+  },
+  {
+    "group_external_id": "188",
+    "user_external_id": "7"
+  },
+  {
+    "group_external_id": "188",
+    "user_external_id": "87"
+  }
+]

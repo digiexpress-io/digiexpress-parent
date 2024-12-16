@@ -1,0 +1,131 @@
+
+Docs
+  - 2: bobs-ssn-id
+
+Branches
+  - branch name: main
+    branch id: 3
+    doc id: 2
+    commit id: 4
+    {"last_name":"flop","first_name":"bob"}
+  - branch name: dev
+    branch id: 5
+    doc id: 2
+    commit id: 6
+    {"last_name":"used to be -> flop-2","branch new content":"something in here"}
+
+Commands
+  - commands for doc: 2
+    commands id: 7
+    branch id: 3
+    value: [{"some_cool_command":"create_customer"}]
+
+
+Commits
+  - id: 4
+    doc id: 2, branch id: 3, parent: 8, message: created first entry, author: jane.doe@morgue.com
+  - commit log:
+commit: 4, tenant: 1
+author: jane.doe@morgue.com, message: created first entry
+ | created
+  + added new: 3 entries
+  + 2::DOC
+    {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"4","createdWithCommitId":"4","ownerId":null,"parentId":null,"meta":null}
+  + 3::DOC_BRANCH_PATCH
+    {"id":"3","patchValue":[{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
+  + 7::DOC_COMMANDS
+    {"id":"7","commitId":"4","docId":"2","branchId":"3","createdBy":"jane.doe@morgue.com","commands":[{"some_cool_command":"create_customer"}]}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 9
+    doc id: 2, branch id: 5, parent: 4, message: created branch entry, author: jane.doe@morgue.com
+  - commit log:
+commit: 9, tenant: 1
+author: jane.doe@morgue.com, message: created branch entry
+ | created
+  + added new: 1 entries
+  + 5::DOC_BRANCH_PATCH
+    {"id":"5","patchValue":[{"op":"add","path":"/created-branch-command","value":"branch the customer for some reason"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+  - id: 10
+    doc id: 2, branch id: 11, parent: 4, message: changed meta for doc, author: jane.doe@morgue.com
+  - commit log:
+commit: 10, tenant: 1
+author: jane.doe@morgue.com, message: changed meta for doc
+ | created
+  + added new: 2 entries
+  + 3::DOC_BRANCH_PATCH
+    {"id":"3","patchValue":[],"docType":"DOC_BRANCH_PATCH"}
+  + 5::DOC_BRANCH_PATCH
+    {"id":"5","patchValue":[],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 1 entries
+  +- 2::DOC
+   -  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"4","createdWithCommitId":"4","ownerId":null,"parentId":null,"meta":null}
+   +  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"10","createdWithCommitId":"4","ownerId":null,"parentId":null,"meta":{"super cool field 1":"cool meta about the document"}}
+   diff: commitId :: 4 -> 10
+   diff: meta :: null -> {"super cool field 1":"cool meta about the document"}
+
+
+  - id: 6
+    doc id: 2, branch id: 5, parent: 9, message: edited dev branch, author: jane.doe@morgue.com
+  - commit log:
+commit: 6, tenant: 1
+author: jane.doe@morgue.com, message: edited dev branch
+ | created
+  + added new: 1 entries
+  + 5::DOC_BRANCH_PATCH
+    {"id":"5","patchValue":[{"op":"remove","path":"/created-branch-command"},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}],"docType":"DOC_BRANCH_PATCH"}
+
+ | deleted
+  - deleted: 0 entries
+
+ | merged
+  +- merged: 0 entries
+
+
+
+Logs
+  - id: 12::DOC
+    log patch: null    log before: null    log after: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"4","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"4"}
+  - id: 13::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"4","branchName":"main","createdWithCommitId":"4"}
+  - id: 14::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 15::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"7","docId":"2","branchId":"3","commands":[{"some_cool_command":"create_customer"}],"commitId":"4","createdBy":"jane.doe@morgue.com"}
+  - id: 16::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"5","docId":"2","value":{},"status":"IN_FORCE","commitId":"9","branchName":"dev","createdWithCommitId":"9"}
+  - id: 17::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/created-branch-command","value":"branch the customer for some reason"}]    log before: null    log after: null
+  - id: 18::DOC
+    log patch: null    log before: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"4","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"4"}    log after: {"id":"2","meta":{"super cool field 1":"cool meta about the document"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"10","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"4"}
+  - id: 19::DOC_BRANCH
+    log patch: null    log before: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"4","branchName":"main","createdWithCommitId":"4"}    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"4","branchName":"main","createdWithCommitId":"4"}
+  - id: 20::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 21::DOC_BRANCH
+    log patch: null    log before: {"id":"5","docId":"2","value":{},"status":"IN_FORCE","commitId":"9","branchName":"dev","createdWithCommitId":"9"}    log after: {"id":"5","docId":"2","value":{},"status":"IN_FORCE","commitId":"9","branchName":"dev","createdWithCommitId":"9"}
+  - id: 22::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 23::DOC_BRANCH
+    log patch: null    log before: {"id":"5","docId":"2","value":{},"status":"IN_FORCE","commitId":"9","branchName":"dev","createdWithCommitId":"9"}    log after: {"id":"5","docId":"2","value":{},"status":"IN_FORCE","commitId":"6","branchName":"dev","createdWithCommitId":"9"}
+  - id: 24::DOC_BRANCH_PATCH
+    log patch: [{"op":"remove","path":"/created-branch-command"},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}]    log before: null    log after: null

@@ -26,7 +26,9 @@ import java.util.Optional;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.CrmClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
+import io.digiexpress.eveli.client.api.ImmutableUserMessage;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -34,8 +36,6 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
-import io.thestencil.iam.api.ImmutableUserMessage;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
 import lombok.RequiredArgsConstructor;
 
 

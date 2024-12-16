@@ -27,6 +27,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
+import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -36,8 +37,6 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.thestencil.client.api.MigrationBuilder.Sites;
-import io.thestencil.iam.api.ImmutableUserAction;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
 
 

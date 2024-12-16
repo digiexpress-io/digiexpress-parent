@@ -13,8 +13,6 @@
   <name>hdes</name>
 
   <modules>
-    <module>hdes-core</module>
-    <module>hdes-spring</module>
-    <module>hdes-dev</module>
+    <module>hdes-client-api</module>
   </modules>
 </project>
