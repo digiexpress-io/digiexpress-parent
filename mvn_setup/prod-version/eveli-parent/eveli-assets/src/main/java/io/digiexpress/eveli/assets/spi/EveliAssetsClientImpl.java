@@ -30,7 +30,8 @@ import io.digiexpress.eveli.assets.spi.builders.CrudBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.QueryBuilderImpl;
 import io.digiexpress.eveli.assets.spi.exceptions.AssetsAssert;
 import io.digiexpress.eveli.assets.spi.exceptions.RepoException;
-import io.resys.thena.docdb.api.actions.RepoActions;
+import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.entities.Tenant.StructureType;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -74,9 +75,10 @@ public class EveliAssetsClientImpl implements EveliAssetClient {
       public Uni<EveliAssetClient> create() {
         AssetsAssert.notNull(repoName, () -> "repoName must be defined!");
         final var client = config.getClient();
-        final var newRepo = client.repo().create().name(repoName).build();
+        final var newRepo = client.tenants().commit().name(repoName, StructureType.git).build();
+        
         return newRepo.onItem().transform((repoResult) -> {
-          if(repoResult.getStatus() != RepoActions.RepoStatus.OK) {
+          if(repoResult.getStatus() != CommitStatus.OK) {
             throw new RepoException("Can't create repository with name: '"  + repoName + "'!", repoResult); 
           }
           return build();
@@ -95,9 +97,9 @@ public class EveliAssetsClientImpl implements EveliAssetClient {
       public Uni<Boolean> createIfNot() {
         final var client = config.getClient();
         
-        return client.repo().query().id(config.getRepoName()).get().onItem().transformToUni(repo -> {
+        return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.repo().create().name(config.getRepoName()).build().onItem().transform(newRepo -> true); 
+            return client.tenants().commit().name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> true);
           }
           return Uni.createFrom().item(false);
         });

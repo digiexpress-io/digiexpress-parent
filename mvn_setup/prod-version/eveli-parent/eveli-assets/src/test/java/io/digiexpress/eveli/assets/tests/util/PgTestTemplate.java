@@ -1,5 +1,13 @@
 package io.digiexpress.eveli.assets.tests.util;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
+
 /*-
  * #%L
  * eveli-assets
@@ -25,33 +33,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.resys.thena.docdb.api.DocDB;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientCollections;
-import io.resys.thena.docdb.spi.ClientState;
-import io.resys.thena.docdb.spi.DocDBPrettyPrinter;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.thena.api.ThenaClient;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.spi.DbState;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.structures.git.GitPrinter;
+import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
 import jakarta.inject.Inject;
-import lombok.extern.java.Log;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.atomic.AtomicInteger;
+import lombok.extern.slf4j.Slf4j;
 
 
-@Log
+
+@Slf4j
 public class PgTestTemplate {
-  private DocDB client;
+  private ThenaClient client;
   
   @Inject
   io.vertx.mutiny.pgclient.PgPool pgPool;
@@ -66,12 +71,11 @@ public class PgTestTemplate {
   @BeforeEach
   public void setUp() {
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.client = DocDBFactorySql.create()
+    this.client = DbStateSqlImpl.create()
         .db("junit")
         .client(pgPool)
-        .errorHandler(new PgErrors())
         .build();
-    this.client.repo().create().name("junit").build();
+    this.client.tenants().commit().name("junit", StructureType.git).build();
   }
   
   @AfterEach
@@ -88,41 +92,41 @@ public class PgTestTemplate {
     connection.closeAndForget();
   }
 
-  public DocDB getClient() {
+  public ThenaClient getClient() {
     return client;
   }
   
-  public ClientState createState() {
-    final var ctx = ClientCollections.defaults("junit");
-    return DocDBFactorySql.state(ctx, pgPool, new PgErrors());
+  public DbState createState() {
+    final var ctx = TenantTableNames.defaults("junit");
+    return DbStateSqlImpl.create(ctx, pgPool);
   }
   
-  public void printRepo(Repo repo) {
-    final String result = new DocDBPrettyPrinter(createState()).print(repo);
-    System.out.println(result);
+  public void printRepo(Tenant repo) {
+    final String result = new GitPrinter(createState()).print(repo);
+    log.debug(result);
   }
   
   public void prettyPrint(String repoId) {
-    Repo repo = getClient().repo().query().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1));
+    Tenant repo = getClient().git(repoId).tenants().get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    Repo repo = getClient().repo().query().id(repoId).get()
-        .await().atMost(Duration.ofMinutes(1));
+    Tenant repo = getClient().git(repoId).tenants().get()
+        .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = new TestExporter(createState()).print(repo);
     return result;
   }
 
   
   public EveliAssetsComposerImpl getPersistence(String repoId) {
-    final DocDB client = getClient();
+    final ThenaClient client = getClient();
     
     // create project
-    final var repo = getClient().repo().create()
-        .name(repoId)
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name(repoId, StructureType.git)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.info("Repo created: " + repo);
@@ -140,7 +144,7 @@ public class PgTestTemplate {
             .objectMapper(PgTestTemplate.objectMapper)
             .serializer((entity) -> {
               try {
-                return PgTestTemplate.objectMapper.writeValueAsString(entity);
+                return new JsonObject(PgTestTemplate.objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }

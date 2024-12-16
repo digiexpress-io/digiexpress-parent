@@ -2,9 +2,9 @@ package io.digiexpress.eveli.assets.spi.exceptions;
 
 /*-
  * #%L
- * eveli-assets
+ * stencil-persistence
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ package io.digiexpress.eveli.assets.spi.exceptions;
 import java.util.List;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.models.Message;
-
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.QueryEnvelope;
 
 
 public class QueryException extends RuntimeException {
@@ -35,7 +34,7 @@ public class QueryException extends RuntimeException {
   private final EntityType type;
   private final List<Message> commit;
   
-  public QueryException(String entityId, EntityType type, ObjectsResult<?> commit) {
+  public QueryException(String entityId, EntityType type, QueryEnvelope<?> commit) {
     super(msg(entityId, type, commit.getMessages()));
     this.entityId = entityId;
     this.type = type;

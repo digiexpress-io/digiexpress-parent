@@ -2,9 +2,9 @@ package io.digiexpress.eveli.assets.spi.exceptions;
 
 /*-
  * #%L
- * eveli-assets
+ * stencil-persistence
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,14 @@ package io.digiexpress.eveli.assets.spi.exceptions;
  * #L%
  */
 
-
 import java.util.List;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObjects;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.models.Message;
-
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.envelope.Message;
+import io.resys.thena.api.envelope.QueryEnvelope;
 
 
 public class DeleteException extends RuntimeException {
@@ -39,13 +37,13 @@ public class DeleteException extends RuntimeException {
   private final EntityType type;
   private final List<Message> commit;
   
-  public DeleteException(String entityId, EntityType type, ObjectsResult<BlobObjects> commit) {
+  public DeleteException(String entityId, EntityType type, QueryEnvelope<GitPullActions.PullObjects> commit) {
     super(msg(entityId, type, commit.getMessages()));
     this.entityId = entityId;
     this.type = type;
     this.commit = commit.getMessages();
   }
-  public DeleteException(Entity<?> entity, CommitResult commit) {
+  public DeleteException(Entity<?> entity, CommitResultEnvelope commit) {
     super(msg(entity.getId(), entity.getType(), commit.getMessages()));
     this.entityId = entity.getId();
     this.type = entity.getType();

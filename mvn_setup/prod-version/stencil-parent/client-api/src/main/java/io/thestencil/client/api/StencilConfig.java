@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.GitPullActions;
-import io.resys.thena.api.actions.GitPullActions.PullObject;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient.Entity;

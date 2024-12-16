@@ -36,8 +36,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.resys.thena.docdb.api.actions.ObjectsActions.BlobObject;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
+import io.resys.thena.api.actions.GitPullActions;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.smallrye.mutiny.Uni;
 
 
@@ -180,7 +180,7 @@ public interface EveliAssetClient {
     
   @Value.Immutable
   interface EntityState<T extends EntityBody> {
-    ObjectsResult<BlobObject> getSrc();
+    QueryEnvelope<GitPullActions.PullObject> getSrc();
     Entity<T> getEntity();
   }
 
