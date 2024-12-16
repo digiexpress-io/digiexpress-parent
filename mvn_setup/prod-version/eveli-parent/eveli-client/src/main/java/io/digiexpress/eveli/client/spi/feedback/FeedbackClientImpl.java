@@ -28,35 +28,42 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.spi.feedback.FeedbackTemplateQueryImpl.QuestionnaireCategoryExtractor;
+import io.digiexpress.eveli.client.config.EveliPropsFeedback;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FeedbackClientImpl implements FeedbackClient {
   private final TaskClient taskClient;
   private final ProcessClient processClient;
-  private final QuestionnaireCategoryExtractor extractor;
+  private final DialobClient dialobClient;
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory feedbackWithHistory;
+  private final EveliPropsFeedback configProps;
   
   @Override
-  public Feedback createOneFeedback(CreateFeedbackCommand command) {
-    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory).apply(command);
+  public Feedback createOneFeedback(CreateFeedbackCommand command, String userId) {
+    return new CreateOneFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(command);
   }
 
   @Override
-  public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command) {
-    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory).execute(command);
+  public FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId) {
+    return new FeedbackRatingBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
   }
 
   @Override
   public FeedbackQuery queryFeedbacks() {
     return new FeedbackQueryImpl(jdbc);
   }
+  
+  @Override
+  public FeedbackQuestionnaireQuery queryQuestionnaire() {
+    return new FeedbackQuestionnaireQueryImpl(taskClient, dialobClient, processClient, configProps);
+  }
 
   @Override
   public FeedbackTemplateQuery queryTemplate() {
-    return new FeedbackTemplateQueryImpl(taskClient, processClient, extractor);
+    return new FeedbackTemplateQueryImpl(queryQuestionnaire());
   }
   
   @Override
@@ -65,8 +72,23 @@ public class FeedbackClientImpl implements FeedbackClient {
   }
   
   @Override
-  public List<Feedback> deleteAll(DeleteReplyCommand command) {
-    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory).execute(command);
+  public List<Feedback> deleteAll(DeleteReplyCommand command, String userId) {
+    return new FeedbackRatingDeleteBuilderImpl(jdbc, feedbackWithHistory, userId).execute(command);
+  }
+
+  @Override
+  public Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId) {
+    return new ModifyFeedbackReplyImpl(jdbc, feedbackWithHistory, userId).apply(commands);
+  }
+
+  @Override
+  public CustomerFeedbackQuery queryCustomerFeedbacks() {
+    return new CustomerFeedbackQueryImpl(jdbc);
+  }
+
+  @Override
+  public FeedbackRatingQuery queryFeedbackRatings() {
+    return new FeedbackRatingQueryImpl(jdbc);
   }
 
 }

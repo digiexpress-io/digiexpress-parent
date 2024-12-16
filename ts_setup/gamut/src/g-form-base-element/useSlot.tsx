@@ -31,7 +31,7 @@ export const UNDEFINED_SELECTION_VALUE = '_undefined_';
 export type GFormBaseSlot<P> = [React.ElementType<P>, P]
 
 export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
-  const { actionItem: element, formStore: store, onAfterComplete} = props;
+  const { actionItem: element, formStore: store} = props;
 
   const { variant } = getSlotVariant(element, store);
   const intl = useIntl();
@@ -194,7 +194,6 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
 
     function onComplete() {
       store.complete();
-      onAfterComplete();
     }
   
     const result: [React.ElementType, GFormPageProps] = [GFormPage, {

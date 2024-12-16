@@ -22,25 +22,17 @@ package io.digiexpress.eveli.client.test.feedback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +44,7 @@ import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
+import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -60,9 +53,9 @@ import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
-import io.digiexpress.eveli.client.spi.feedback.QuestionnaireCategoryExtractorImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
+import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -71,29 +64,15 @@ import lombok.RequiredArgsConstructor;
 
 @Testcontainers
 @EnableAutoConfiguration
-@ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnirSetup.FeedbackEnirSetupConfig.class })
-public class FeedbackEnirSetup {
-
-  @Container
-  @ServiceConnection
-  static final PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:17");
+@ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
+public class FeedbackEnvirSetup {
 
   
   private static final Faker FAKER = new Faker(new Locale("fi-FI"));
-  
-  @BeforeAll
-  static void beforeAll() {
-    CONTAINER.start();
-  }
 
-  @AfterAll
-  static void afterAll() {
-    CONTAINER.stop();
-  }
-  
   
   @Configuration
-  public static class FeedbackEnirSetupConfig {
+  public static class FeedbackEnvirSetupConfig {
     @MockBean TaskNotificator notificator;
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired TaskRepository taskRepository;
@@ -104,6 +83,7 @@ public class FeedbackEnirSetup {
     @Autowired ObjectMapper objectMapper;
     @Autowired TransactionTemplate tx;
 
+    
     @Bean
     public SetupTask setupTask(ProcessClient processClient) {    
       final var ref = new TaskRefGenerator(entityManager);
@@ -122,22 +102,19 @@ public class FeedbackEnirSetup {
       final var ref = new TaskRefGenerator(entityManager);
       final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
       final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
-      
-      final List<String> main = Arrays.asList("mainList");
-      final List<String> sub = Arrays.asList("cityServiceGroup", "preschoolEducationGroup", "cityServiceMainList", 
-          "constructionMainList", "youthServiceMainList", "exerciseMainList", "schoolMainList", "employmentImmigrationMainList", 
-          "freeTimeCultureMainList", "preschoolMainList", "communicationMainList", "cooperationMainList");
-      final List<String> text = Arrays.asList("feedBackTxt");
-      
+      final var dialobClient = new DialobClientImpl(objectMapper, null);
+      final var configProps = new EveliPropsFeedback();
 
-      final List<String> title = Collections.emptyList();
-      final List<String> username = Collections.emptyList();
-      final List<String> usernameAllowed = Collections.emptyList();
+      configProps.setForms("palautteet");
+      configProps.setCategoryMain("mainList");
+      configProps.setCategorySub("cityServiceGroup, preschoolEducationGroup, cityServiceMainList, constructionMainList, youthServiceMainList, exerciseMainList, schoolMainList, employmentImmigrationMainList, freeTimeCultureMainList, preschoolMainList, communicationMainList, cooperationMainList");
+
+      configProps.setQuestion("feedBackTxt");
+      configProps.setQuestionTitle("feedBackTitle");
+      configProps.setUsername("FirstNames, LastName");
+      configProps.setUsernameAllowed("publicAnswerAllowed");
       
-      
-      return new FeedbackClientImpl(taskClient, processClient, 
-          new QuestionnaireCategoryExtractorImpl(main, sub, text, title, username, usernameAllowed, objectMapper), 
-          jdbcTemplate, feedbackWithHistory);
+      return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbcTemplate, feedbackWithHistory, configProps);
 
     }
   }
@@ -176,7 +153,7 @@ public class FeedbackEnirSetup {
         .flowName("no-flow-name")
         .formName("no-form-name")
         .workflowName("no-workflow")
-        .questionnaireId(formBody.getString("_id"))
+        .questionnaireId(formBody.getString("_id") + task.getId())
         .userId(FAKER.idNumber().ssnValid())
       
         
@@ -195,7 +172,7 @@ public class FeedbackEnirSetup {
   
   public static String fileToString(String resource) {
     try {
-      return IOUtils.toString(FeedbackEnirSetup.class.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
+      return IOUtils.toString(FeedbackEnvirSetup.class.getClassLoader().getResource(resource), StandardCharsets.UTF_8);
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }

@@ -70,6 +70,9 @@ public class FeedbackReplyEntity {
   @Column(name="content", columnDefinition = "TEXT", nullable = false)
   private String content;                    // combined markdown from dialob and worker
   
+  @Column(name="reply_text", columnDefinition = "TEXT", nullable = false)
+  private String replyText;                  // worker reply
+  
   @Column(name="locale", nullable = false)
   private String locale;                     // intended language of the content
   
@@ -92,7 +95,10 @@ public class FeedbackReplyEntity {
   private String updatedBy;  
   
   @Column(name="created_by", nullable = false)
-  private String createdBy;    
+  private String createdBy;  
+  
+  @Column(name="reporter_names", nullable = true)
+  private String reporterNames;  
   
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="category_id", foreignKey = @ForeignKey(name = "fk_reply_to_category"))

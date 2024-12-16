@@ -27,21 +27,28 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.questionnaire.Questionnaire;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import jakarta.annotation.Nullable;
 
 public interface FeedbackClient {
 
+  Feedback createOneFeedback(CreateFeedbackCommand command, String userId);
+  FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command, String userId);
+  Feedback modifyOneFeedback(ModifyOneFeedbackCommand commands, String userId);
   
-  Feedback createOneFeedback(CreateFeedbackCommand command);
-  FeedbackRating modifyOneFeedbackRank(UpsertFeedbackRankingCommand command);
-  List<Feedback> deleteAll(DeleteReplyCommand command);
-  
-  
+  List<Feedback> deleteAll(DeleteReplyCommand command, String userId);
+  FeedbackQuestionnaireQuery queryQuestionnaire();
+
+  CustomerFeedbackQuery queryCustomerFeedbacks();
   FeedbackQuery queryFeedbacks();
+  FeedbackRatingQuery queryFeedbackRatings();
   FeedbackTemplateQuery queryTemplate();
   
   FeedbackHistoryQuery queryHistory();
@@ -52,6 +59,18 @@ public interface FeedbackClient {
    */
   interface FeedbackTemplateQuery {
     FeedbackTemplate getOneByTaskId(String taskId, String userId);
+    Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId);
+  }
+  
+  interface CustomerFeedbackQuery {
+    List<CustomerFeedback> findAll();
+    List<CustomerFeedback> findAllByCustomerId(String customerId);
+  }
+  
+  interface FeedbackRatingQuery {
+    List<FeedbackRating> findAllByCustomerId(String customerId);    
+    FeedbackRating getOneById(String ratingId);
+
   }
 
   /**
@@ -69,8 +88,7 @@ public interface FeedbackClient {
   interface FeedbackHistoryQuery {
     List<FeedbackHistoryEvent> findAll();
   }
-  
-  
+
   
   /**
    * Command to create feedback
@@ -84,13 +102,44 @@ public interface FeedbackClient {
     
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
+    @Nullable String getReporterNames();
     
     String getProcessId();
-    String getUserId();
     
     String getOrigin();
     String getContent();
+    String getReply();
     String getLocale();
+  }
+  
+  @JsonTypeInfo(
+      use = JsonTypeInfo.Id.NAME,
+      include = JsonTypeInfo.As.PROPERTY,
+      property = "commandType", 
+      visible = true
+      )
+  @JsonSubTypes({
+    @Type(value = ImmutableModifyOneFeedbackReplyCommand.class, name = "MODIFY_ONE_FEEDBACK_REPLY")
+  })
+  interface ModifyOneFeedbackCommand {
+    String getId();
+    ModifyFeedbackCommandType getCommandType();
+  }
+  
+  enum ModifyFeedbackCommandType {
+    MODIFY_ONE_FEEDBACK_REPLY
+  }
+  
+  /**
+   * Command to for worker to change feedback
+   */
+  @JsonSerialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
+  @JsonDeserialize(as = ImmutableModifyOneFeedbackReplyCommand.class)
+  @Value.Immutable
+  interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
+    String getReply();
+    @Value.Default
+    @Override default ModifyFeedbackCommandType getCommandType() { return ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY; }
   }
   
   
@@ -102,7 +151,6 @@ public interface FeedbackClient {
   @Value.Immutable
   interface UpsertFeedbackRankingCommand {
     String getReplyIdOrCategoryId();
-    String getCustomerId();
     
     @Nullable Integer getRating(); // null is remove vote 
   }
@@ -116,7 +164,6 @@ public interface FeedbackClient {
   @Value.Immutable
   interface DeleteReplyCommand {
     List<String> getReplyIds();
-    String getUserId();
   }
   
   
@@ -135,6 +182,7 @@ public interface FeedbackClient {
     
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
+    @Nullable String getReporterNames(); // nullable if there is no user consent, separated by ','
     
     String getSourceId();
     String getOrigin();
@@ -144,12 +192,25 @@ public interface FeedbackClient {
     String getCreatedBy();
     
     String getContent();
+    String getReplyText();
     String getLocale();
-    
+
     
     int getThumbsUpCount(); // round rating to thumbs up
     int getThumbsDownCount(); // round rating to thumbs down
   }
+  
+  /**
+   * Based on logged in users
+   */
+  @JsonSerialize(as = ImmutableCustomerFeedback.class)
+  @JsonDeserialize(as = ImmutableCustomerFeedback.class)
+  @Value.Immutable
+  interface CustomerFeedback {
+    Feedback getFeedback();
+    @Nullable FeedbackRating getRating();
+  }
+  
   
   @JsonSerialize(as = ImmutableFeedbackRating.class)
   @JsonDeserialize(as = ImmutableFeedbackRating.class)
@@ -185,6 +246,7 @@ public interface FeedbackClient {
     
     Questionnaire getQuestionnaire();
     List<String> getReplys(); 
+    @Nullable String getReporterNames();
   }
 
   
@@ -202,4 +264,39 @@ public interface FeedbackClient {
     ZonedDateTime getCreatedOnDate();
     String getCreatedBy();
   }
+  
+  
+  interface FeedbackQuestionnaireQuery {
+    Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId);
+  }
+  
+  interface FeedbackQuestionnaire {
+    boolean getEnabled();
+    
+    String getLabelKey();
+    String getLabelValue();
+    
+    String getSubLabelKey();
+    String getSubLabelValue();
+    String getContent();
+
+    List<String> getReplys();
+    
+    Questionnaire getQuestionnaire();
+    ProcessInstance getProcessInstance();
+    @Nullable String getReporterNames();
+  }
+  
+  @Value.Immutable
+  interface QuestionnaireCategoryExtract {
+    boolean getEnabled();
+    
+    String getLabelKey();
+    String getLabelValue();
+    
+    @Nullable String getSubLabelKey();
+    @Nullable String getSubLabelValue();
+    @Nullable String getContent();
+  }
+
 }

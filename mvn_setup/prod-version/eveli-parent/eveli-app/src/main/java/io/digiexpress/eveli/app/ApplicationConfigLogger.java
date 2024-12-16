@@ -153,6 +153,7 @@ public class ApplicationConfigLogger {
             .filter(longer -> longer.length() > groupPath.length())
             .filter(longer -> e.getPath().startsWith(longer)).findFirst().isEmpty())
         .filter(e -> e.getPath().startsWith(groupPath))
+        .sorted((a1, a2) -> a1.getPath().compareTo(a2.getPath()))
         .forEach(entry -> {
           log_msg
             .append(greenColor)

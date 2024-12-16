@@ -32,7 +32,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
-import io.digiexpress.eveli.client.api.ImmutableFeedbackRating;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
 import lombok.Builder;
 import lombok.Data;
@@ -42,17 +41,26 @@ import lombok.RequiredArgsConstructor;
 public class FeedbackRatingBuilderImpl {
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory withHistory;
+  private final String userId;
   
   public FeedbackRating execute(UpsertFeedbackRankingCommand command) {
     return withHistory.withHistory(history -> {
       final var upserted = upsert(command);
-      history.append(command, upserted);
+      history.append(command, upserted, userId);
       return upserted;
     });
   }
   
+  private FeedbackRating getRatingById(String ratingId) {
+    return new FeedbackRatingQueryImpl(jdbc).getOneById(ratingId);
+  }
+  
+  public static String maskCustomer(String customerId) {
+    return DigestUtils.md5Hex(customerId).toUpperCase();
+  }
+  
   private FeedbackRating upsert(UpsertFeedbackRankingCommand command) {
-    final var customerId = DigestUtils.md5Hex(command.getCustomerId()).toUpperCase();
+    final var customerId = maskCustomer(userId);
     
     String categoryId = getCategoryId(command).orElse(null);
     Optional<String> replyId = Optional.empty();
@@ -182,41 +190,6 @@ WHERE
       return Optional.<String>empty();
     });
   }
-  
-  
-  private FeedbackRating getRatingById(String ratingId) {
-
-    // find existing record
-    return jdbc.query(
-"""
-SELECT 
-  id,
-  category_id,
-  reply_id,
-  source_id,
-  star_rating,
-  created_on_date,
-  updated_on_date
-FROM 
-  feedback_approval 
-WHERE 
-  id = ?
-""", (PreparedStatement ps) -> {
-      ps.setObject(1, UUID.fromString(ratingId));
-    }, (ResultSet rs) -> {
-      if(rs.next()) {
-         return ImmutableFeedbackRating.builder()
-             .customerId(rs.getString("source_id"))
-             .categoryId(rs.getString("category_id"))
-             .replyId(rs.getObject("reply_id") == null ? null : rs.getString("reply_id"))
-             .id(rs.getString("id"))
-             .rating(rs.getInt("star_rating"))
-             .build();
-      }
-      throw ProcessAssert.fail(() -> "Can't find feedback_rating by id: '" + ratingId + "'!");
-    });
-  }
-  
   
   
   private Optional<String> getCategoryId(UpsertFeedbackRankingCommand command) {

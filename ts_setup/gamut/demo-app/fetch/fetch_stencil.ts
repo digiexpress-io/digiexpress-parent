@@ -18,5 +18,16 @@ export function createSiteFetch(url: (string | undefined) = '/portal/site') {
     });
     return response;
   }
-  return { fetchSiteGet, fetchFeedbackGet };
+
+  const fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT = async (body) => {
+    const response = await window.fetch(`${url}/feedback`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+      body: JSON.stringify(body),
+    });
+    return response;
+  }
+
+  return { fetchSiteGet, fetchFeedbackGet, fetchFeedbackRatingPut };
 }

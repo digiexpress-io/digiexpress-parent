@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query'
 import { SiteApi } from './site-types';
 import { SiteCache } from './site-reducer';
 import { useLocale } from '../api-locale';
@@ -7,6 +8,7 @@ import { useLocale } from '../api-locale';
 export interface  SiteBackendProviderProps {
   fetchSiteGet: SiteApi.FetchSiteGET;
   fetchFeedbackGet: SiteApi.FetchFeedbackGET;
+  fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT
   children: React.ReactNode;
 }
 
@@ -15,54 +17,66 @@ export interface SiteBackendContextType {
   site?: SiteApi.Site;
   views: Record<SiteApi.TopicId, SiteApi.TopicView>
   locale: SiteApi.LocaleCode;
-  feedback: SiteApi.Feedback[];
+  feedback: SiteApi.CustomerFeedback[];
   pending: boolean;
+  voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void>;
 }
-export const SiteBackendContext = React.createContext< SiteBackendContextType>({ pending: true, locale: 'en', views: {}, feedback: [] });
+export const SiteBackendContext = React.createContext<SiteBackendContextType>({
+  pending: true,
+  locale: 'en',
+  views: {},
+  feedback: [],
+  voteOnReply: (() => { }) as any
+});
 
+const staleTime = 15000;
+const refetchInterval = staleTime;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
   const { locale: selectedLocale } = useLocale();
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])
   const fetchFeedbackGet: SiteApi.FetchFeedbackGET = React.useMemo(() => props.fetchFeedbackGet, [props.fetchFeedbackGet])
-  const [site, setSite] = React.useState<SiteApi.Site>();
-  const [feedback, setFeedback] = React.useState<SiteApi.Feedback[]>([]);
-  const [pending, setPending] = React.useState<boolean>(true);
-  const [views, setViews] = React.useState<Record<SiteApi.TopicId, SiteApi.TopicView>>({});
+  const fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT = React.useMemo(() => props.fetchFeedbackRatingPut, [props.fetchFeedbackRatingPut])
 
-  // load site
-  React.useEffect(() => {
-    setPending(true);
-
-    // fetch site
-    fetchSiteGet(selectedLocale).then(async response => {
+  // tanstack query config
+  const siteQuery = useQuery({
+    staleTime, refetchInterval,
+    queryKey: ['sites', selectedLocale],
+    queryFn: () => fetchSiteGet(selectedLocale).then(async response => {
       if (!response.ok) {
         throw new SiteRequestError('Failure during fetch', response.status);
       }
+      const site: SiteApi.Site = await response.json();
+      return { site, views: new SiteCache(site).topics }
+    }),
+  });
 
-      const site = await response.json();
-      if (site) {
-        setSite(site);
-        setViews(new SiteCache(site).topics);
-      }
-      setPending(false);
-    })
-
-    fetchFeedbackGet(selectedLocale).then(async response => {
+  const feedbackQuery = useQuery({
+    staleTime, refetchInterval,
+    queryKey: ['feedback', selectedLocale],
+    queryFn: () => fetchFeedbackGet(selectedLocale).then(async response => {
       if (!response.ok) {
         throw new SiteRequestError('Failure during fetch', response.status);
       }
-      const feedback = await response.json();
-      setFeedback(feedback);
-    })
+      const feedback: SiteApi.CustomerFeedback[] = await response.json();
+      return feedback
+    }),
+  });
 
-  }, [fetchSiteGet, fetchFeedbackGet, selectedLocale]);
 
-  const contextValue:  SiteBackendContextType = React.useMemo(() => {
-    return Object.freeze({ site, views, pending, locale: selectedLocale, feedback });
-  }, [site, views, pending, selectedLocale, feedback]);
+  const views = siteQuery.data?.views;
+  const site = siteQuery.data?.site;
+  const pending = siteQuery.isPending;
+  const feedback = siteQuery.isPending ? [] : (feedbackQuery.data ?? []);
 
-  if(pending) {
+  const contextValue: SiteBackendContextType = React.useMemo(() => {
+    function voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void> {
+      return fetchFeedbackRatingPut(body).then(_data => feedbackQuery.refetch()).then(_junk => { });
+    }
+    return Object.freeze({ site, views: views ?? {}, pending, locale: selectedLocale, feedback, voteOnReply });
+  }, [site, views, pending, selectedLocale, feedback, fetchFeedbackRatingPut]);
+
+  if (siteQuery.isPending) {
     return <></>
   }
 

@@ -5,12 +5,14 @@ export namespace SiteApi {
 export declare namespace SiteApi {
   export type LocaleCode = string;
   export type TopicId = string;
+  export type FeedbackId = string;
   export type TopicLinkId = string;
   export type BlobId = string;
   export type TopicLinkType = "phone" | "dialob" | "internal" | "external" | "workflow" | string;
 
   export type FetchSiteGET = (locale: LocaleCode) => Promise<Response>;
   export type FetchFeedbackGET = (locale: LocaleCode) => Promise<Response>;
+  export type FetchFeedbackRatingPUT = (command: UpsertFeedbackRankingCommand) => Promise<Response>;
 
   // internal stencil data structure - needs conversion
   export interface Site {
@@ -82,25 +84,40 @@ export declare namespace SiteApi {
     phones: TopicLink[];
     workflows: TopicLink[];
   }
-  export interface Feedback {
+
+  export interface CustomerFeedback {
+    feedback: Feedback;
+    rating: FeedbackRating | undefined;
+  }
+  export interface FeedbackRating {
     id: string;
+    replyId: string | undefined;
+    categoryId: string;
+    customerId: string;
+    rating: number; // score 1-5
+  }
+  export interface Feedback {
+    id: FeedbackId;
       
     labelKey: string;
     labelValue: string;
     
     subLabelKey: string | undefined;
     subLabelValue: string | undefined;
-    
-    sourceId: string;
-    origin: string;
-    
-    updatedBy: string;
-    createdBy: string;
-    
+
+    updatedOnDate: string;
+
     content: string;
+    replyText: string;
     locale: string;
     
     thumbsUpCount: number; // round rating to thumbs up
     thumbsDownCount: number; // round rating to thumbs down
   }
+
+  export interface UpsertFeedbackRankingCommand {
+    replyIdOrCategoryId: string;
+    rating: 1 | 5 | undefined;
+  }
+
 }

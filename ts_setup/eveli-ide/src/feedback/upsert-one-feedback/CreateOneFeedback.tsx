@@ -34,7 +34,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         processId: template.processId,
         userId: template.userId,
         subLabelKey: template.subLabelKey,
-        subLabelValue: template.subLabelValue
+        subLabelValue: template.subLabelValue,
+        reply: template.replys.toString()
       });
 
       setTemplate(template);

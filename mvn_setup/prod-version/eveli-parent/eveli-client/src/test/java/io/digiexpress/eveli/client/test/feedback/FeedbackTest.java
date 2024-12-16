@@ -1,6 +1,9 @@
 package io.digiexpress.eveli.client.test.feedback;
 
+import java.sql.SQLException;
 import java.util.Arrays;
+
+import org.junit.jupiter.api.AfterEach;
 
 /*-
  * #%L
@@ -23,9 +26,13 @@ import java.util.Arrays;
  */
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateFeedbackCommand;
@@ -35,12 +42,15 @@ import io.digiexpress.eveli.client.api.ImmutableUpsertFeedbackRankingCommand;
 
 
 @SpringBootTest
-public class FeedbackTest extends FeedbackEnirSetup {
-
+public class FeedbackTest extends FeedbackEnvirSetup {
 
   @Autowired SetupTask setupTasks;
   @Autowired FeedbackClient feedbackClient;
-
+  @Container @ServiceConnection static PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:17");
+  @BeforeEach void beforeAll() { CONTAINER.start(); }
+  @AfterEach void afterAll() throws SQLException { CONTAINER.stop(); }
+  
+  
   @Test
   void run() {
     final var taskId = setupTasks.generateOneTask();
@@ -58,10 +68,12 @@ public class FeedbackTest extends FeedbackEnirSetup {
         .origin(template.getOrigin())
         
         .processId(template.getProcessId())
-        .userId("super-user")
-
-        .build());
+        .reporterNames(template.getReporterNames())
+        
+        .reply("super-reply-by-worker")
+        .build(), "super-user");
     
+    Assertions.assertEquals("same,vimes", template.getReporterNames());
     
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
@@ -69,16 +81,17 @@ public class FeedbackTest extends FeedbackEnirSetup {
     final var queryFeedbackById = feedbackClient.queryFeedbacks().findOneById(taskId);
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
     
+    Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
+    
     
     
     // rate feedback as thumbs down    
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(1)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -95,10 +108,9 @@ public class FeedbackTest extends FeedbackEnirSetup {
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(5)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -111,14 +123,22 @@ public class FeedbackTest extends FeedbackEnirSetup {
       Assertions.assertEquals(1, ratedFeedback.getThumbsUpCount());
     }
     
+    // Query customer rating
+    {
+      final var ratedFeedback = feedbackClient.queryCustomerFeedbacks().findAllByCustomerId("BOB").stream()
+          .findFirst()
+          .get();
+      Assertions.assertEquals(1, ratedFeedback.getFeedback().getThumbsUpCount());
+      Assertions.assertEquals("355938CFE3B73A624297591972D27C01", ratedFeedback.getRating().getCustomerId());
+    }
+    
     // remove rating
     {
       final var feedbackRating = feedbackClient.modifyOneFeedbackRank(
           ImmutableUpsertFeedbackRankingCommand.builder()
-          .customerId("BOB")
           .rating(null)
           .replyIdOrCategoryId(feedback.getId())
-          .build());
+          .build(), "BOB");
       
       Assertions.assertNotNull(feedbackRating, "Can't find created feedback rating");
       
@@ -136,12 +156,10 @@ public class FeedbackTest extends FeedbackEnirSetup {
     
     
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
-        .userId("userId")
         .replyIds(Arrays.asList(taskId))
-        .build());
+        .build(), "userId");
     
     
     Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
-    
   }
 }

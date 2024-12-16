@@ -55,8 +55,9 @@ SELECT
   feedback_reply.updated_on_date,
   feedback_reply.updated_by,
   feedback_reply.created_by,
-  
-  
+  feedback_reply.reporter_names,
+  feedback_reply.reply_text,
+    
   feedback_category.label as label_key,
   feedback_category.sub_label as sub_label_key,
   feedback_category.origin,
@@ -93,7 +94,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
-    return  ImmutableFeedback.builder()
+    return ImmutableFeedback.builder()
         .id(rs.getString("id"))
         .categoryId(rs.getString("category_id"))
         .labelKey(rs.getString("label_key"))
@@ -101,7 +102,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .origin(rs.getString("origin"))
         .thumbsUpCount(rs.getInt("thumbs_up_count"))
         .thumbsDownCount(rs.getInt("thumbs_down_count"))
-        
+        .reporterNames(rs.getString("reporter_names"))
         .labelValue(rs.getString("localized_label"))
         .subLabelValue(rs.getString("localized_sub_label"))
         .sourceId(rs.getString("source_id"))
@@ -110,11 +111,13 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .updatedOnDate(rs.getString("updated_on_date"))
         .content(rs.getString("content"))
         .locale(rs.getString("locale"))
+        .replyText(rs.getString("reply_text"))
         .build();
   }
 
   @Override
   public Optional<Feedback> findOneById(String taskIdOrFeedbackId) {
+    ProcessAssert.notNull(taskIdOrFeedbackId, () -> "taskIdOrFeedbackId mus be defined!");
     return jdbc.query(SELECT_REPLY + 
 """
 WHERE feedback_reply.id = ? OR feedback_reply.source_id = ?

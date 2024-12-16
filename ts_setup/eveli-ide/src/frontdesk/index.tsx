@@ -55,7 +55,7 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }
 
   const fetchFeedbackPOST: FeedbackApi.FetchFeedbackPOST = async (taskId, command) => {
-    const response = await window.fetch(`${serviceUrl}worker/rest/api/tasks/${taskId}/feedback`, {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback/${taskId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: undefined,
@@ -64,8 +64,18 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     return response;
   }
 
+  const fetchFeedbackPUT: FeedbackApi.FetchFeedbackPUT = async (taskId, command) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback/${taskId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+      body: JSON.stringify(command)
+    });
+    return response;
+  }
+
   const fetchTemplateGET: FeedbackApi.FetchTemplateGET = async (taskId) => {
-    const response = await window.fetch(`${serviceUrl}worker/rest/api/tasks/${taskId}/feedback-templates`, {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback/${taskId}/templates`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: undefined,
@@ -84,7 +94,12 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 
   return (
-    <FeedbackProvider fetchFeedbackGET={fetchFeedbackGET} fetchFeedbackPOST={fetchFeedbackPOST} fetchTemplateGET={fetchTemplateGET} fetchFeedbackDELETE={fetchFeedbackDELETE}>
+    <FeedbackProvider
+      fetchFeedbackGET={fetchFeedbackGET}
+      fetchFeedbackPOST={fetchFeedbackPOST}
+      fetchFeedbackPUT={fetchFeedbackPUT}
+      fetchTemplateGET={fetchTemplateGET}
+      fetchFeedbackDELETE={fetchFeedbackDELETE}>
       {children}
     </FeedbackProvider>
   );

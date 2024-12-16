@@ -28,10 +28,12 @@ import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -93,7 +95,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().article(body));
   }
   @DeleteMapping("/articles/{id}") 
-  public Uni<Entity<Article>> deleteArticle(String id) {
+  public Uni<Entity<Article>> deleteArticle(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().article(id));
   }
   @PostMapping("/migrations") 
@@ -129,7 +131,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().link(body));
   }
   @DeleteMapping("/links/{id}") 
-  public Uni<Entity<Link>> deleteLink(String linkId, String articleId) {
+  public Uni<Entity<Link>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId") String articleId) {
     if(articleId == null || articleId.isEmpty()) {
       return getClient().onItem().transformToUni(composer -> composer.delete().link(linkId));
     } 
@@ -148,7 +150,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().workflow(body));
   }
   @DeleteMapping("/workflows/{id}") 
-  public Uni<Entity<Workflow>> deleteWorkflow(String linkId, String articleId) {
+  public Uni<Entity<Workflow>> deleteWorkflow(@PathVariable("id") String linkId,  @RequestParam(name = "articleId") String articleId) {
     if(articleId == null || articleId.isEmpty()) {
       return getClient().onItem().transformToUni(composer -> composer.delete().workflow(linkId));
     } 
@@ -166,7 +168,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().locale(body));
   }
   @DeleteMapping("/locales/{id}") 
-  public Uni<Entity<Locale>> deleteLocale(String id) {
+  public Uni<Entity<Locale>> deleteLocale(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().locale(id));
   }
   @PostMapping("/pages") 
@@ -178,7 +180,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().pages(new ArrayList<>(body)));
   }
   @DeleteMapping("/pages/{id}") 
-  public Uni<Entity<Page>> deletePage(String id) {
+  public Uni<Entity<Page>> deletePage(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().page(id));
   }
   @PostMapping("/templates") 
@@ -190,7 +192,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().template(body));
   }
   @DeleteMapping("/templates/{id}") 
-  public Uni<Entity<Template>> deleteTemplate(String id) {
+  public Uni<Entity<Template>> deleteTemplate(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().template(id));
   }
   @PostMapping("/releases") 
@@ -198,11 +200,11 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.create().release(body));
   }
   @GetMapping("/releases/{id}") 
-  public Uni<SiteState> getRelease(String id) {
+  public Uni<SiteState> getRelease(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.query().release(id));
   }
   @DeleteMapping("/releases/{id}") 
-  public Uni<Entity<Release>> deleteRelease(String id) {
+  public Uni<Entity<Release>> deleteRelease(@PathVariable("id") String id) {
     return getClient().onItem().transformToUni(composer -> composer.delete().release(id));
   }
   

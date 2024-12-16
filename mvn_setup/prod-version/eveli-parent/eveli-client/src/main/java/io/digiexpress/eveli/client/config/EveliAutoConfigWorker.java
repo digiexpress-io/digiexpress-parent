@@ -24,6 +24,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
@@ -74,7 +76,7 @@ public class EveliAutoConfigWorker {
       TaskAccessRepository taskAccessRepository, 
       TaskRepository taskRepository) {
     
-    return new TaskApiController(security, taskClient, feedback, taskAccessRepository, taskRepository);
+    return new TaskApiController(security, taskClient, taskAccessRepository, taskRepository);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {
@@ -89,7 +91,7 @@ public class EveliAutoConfigWorker {
     return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
   }
   @Bean 
-  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
-    return new FeedbackApiController(authClient, feedbackClient);
+  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient, ObjectMapper objectMapper) {
+    return new FeedbackApiController(authClient, feedbackClient, objectMapper);
   }
 }

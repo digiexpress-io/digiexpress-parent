@@ -40,6 +40,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
 import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
@@ -57,6 +58,14 @@ public class AuthenticationConfigJWT {
   @Value("${app.jwt.portal.issuer}")
   private String portalIssuer;
   
+  @Value("${eveli.crm.host}")
+  private String crmHost;
+
+  @Value("${eveli.crm.service-path-company:gw/api/hpa/authorizationList}")
+  private String crmPathCompany;
+  @Value("${eveli.crm.service-path-person:gw/api/ypa/organizationRoles}")
+  private String crmPathPerson;
+  
   @Bean
   public SpringJwtAuthClient authClientJwt() {
     return new SpringJwtAuthClient();
@@ -64,7 +73,11 @@ public class AuthenticationConfigJWT {
 
   @Bean
   public SpringJwtCrmClient crmClientJwt() {
-    return new SpringJwtCrmClient(new RestTemplate(), "");
+    final var restTemplate = new RestTemplate();
+    if(crmHost != null && !crmHost.trim().isEmpty()) {
+      restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(crmHost));
+    }
+    return new SpringJwtCrmClient(restTemplate, crmPathCompany, crmPathPerson);
   }
 
   @Bean

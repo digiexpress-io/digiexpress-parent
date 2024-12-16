@@ -31,86 +31,101 @@ import { Route as SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryI
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PublicLocaleRoute = PublicLocaleImport.update({
+  id: '/public/$locale',
   path: '/public/$locale',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PublicLocaleIndexRoute = PublicLocaleIndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
 
 const SecuredLocaleViewsViewIdRoute = SecuredLocaleViewsViewIdImport.update({
+  id: '/secured/$locale/views/$viewId',
   path: '/secured/$locale/views/$viewId',
   getParentRoute: () => rootRoute,
 } as any)
 
 const PublicLocalePagesPageIdRoute = PublicLocalePagesPageIdImport.update({
+  id: '/pages/$pageId',
   path: '/pages/$pageId',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
 
 const SecuredLocaleViewsViewIdIndexRoute =
   SecuredLocaleViewsViewIdIndexImport.update({
+    id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleViewsViewIdRoute,
   } as any)
 
 const PublicLocalePagesPageIdIndexRoute =
   PublicLocalePagesPageIdIndexImport.update({
+    id: '/',
     path: '/',
     getParentRoute: () => PublicLocalePagesPageIdRoute,
   } as any)
 
 const SecuredLocaleViewsViewIdSubjectIdRoute =
   SecuredLocaleViewsViewIdSubjectIdImport.update({
+    id: '/$subjectId',
     path: '/$subjectId',
     getParentRoute: () => SecuredLocaleViewsViewIdRoute,
   } as any)
 
 const SecuredLocalePagesPageIdProductsProductIdRoute =
   SecuredLocalePagesPageIdProductsProductIdImport.update({
+    id: '/secured/$locale/pages/$pageId/products/$productId',
     path: '/secured/$locale/pages/$pageId/products/$productId',
     getParentRoute: () => rootRoute,
   } as any)
 
 const PublicLocalePagesPageIdProductsProductIdRoute =
   PublicLocalePagesPageIdProductsProductIdImport.update({
+    id: '/products/$productId',
     path: '/products/$productId',
     getParentRoute: () => PublicLocalePagesPageIdRoute,
   } as any)
 
 const SecuredLocalePagesPageIdProductsProductIdIndexRoute =
   SecuredLocalePagesPageIdProductsProductIdIndexImport.update({
+    id: '/',
     path: '/',
     getParentRoute: () => SecuredLocalePagesPageIdProductsProductIdRoute,
   } as any)
 
 const PublicLocalePagesPageIdProductsProductIdIndexRoute =
   PublicLocalePagesPageIdProductsProductIdIndexImport.update({
+    id: '/',
     path: '/',
     getParentRoute: () => PublicLocalePagesPageIdProductsProductIdRoute,
   } as any)
 
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute =
   SecuredLocalePagesPageIdProductsProductIdOffersOfferIdImport.update({
+    id: '/offers/$offerId',
     path: '/offers/$offerId',
     getParentRoute: () => SecuredLocalePagesPageIdProductsProductIdRoute,
   } as any)
 
 const PublicLocalePagesPageIdProductsProductIdOffersOfferIdRoute =
   PublicLocalePagesPageIdProductsProductIdOffersOfferIdImport.update({
+    id: '/offers/$offerId',
     path: '/offers/$offerId',
     getParentRoute: () => PublicLocalePagesPageIdProductsProductIdRoute,
   } as any)
 
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute =
   SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexImport.update({
+    id: '/',
     path: '/',
     getParentRoute: () =>
       SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,
@@ -118,6 +133,7 @@ const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdIndexRoute =
 
 const SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryRoute =
   SecuredLocalePagesPageIdProductsProductIdOffersOfferIdSummaryImport.update({
+    id: '/summary',
     path: '/summary',
     getParentRoute: () =>
       SecuredLocalePagesPageIdProductsProductIdOffersOfferIdRoute,

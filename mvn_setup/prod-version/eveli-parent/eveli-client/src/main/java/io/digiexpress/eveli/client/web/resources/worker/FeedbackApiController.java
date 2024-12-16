@@ -1,12 +1,16 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /*-
  * #%L
@@ -31,9 +35,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
+import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.ImmutableDeleteReplyCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedbackApiController {
   private final AuthClient securityClient;
   private final FeedbackClient feedbackClient;
+  private final ObjectMapper objectMapper;
   
 
   @GetMapping
@@ -55,7 +65,6 @@ public class FeedbackApiController {
     final var feedbacks = feedbackClient.queryFeedbacks().findAll();
     return new ResponseEntity<>(feedbacks, HttpStatus.OK);
   }
-  
   @GetMapping("/{taskIdOrFeedbackId}")
   public ResponseEntity<Feedback> getOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
   {
@@ -66,7 +75,19 @@ public class FeedbackApiController {
     
     return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
   }
-  
+  @PutMapping(value = "/{taskIdOrFeedbackId}", consumes = "application/json")
+  public ResponseEntity<Feedback> modifyOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody ModifyOneFeedbackCommand body) 
+  {
+    // spring quirks
+    final var feedback = feedbackClient.modifyOneFeedback(body, securityClient.getUser().getPrincipal().getUsername());
+    return new ResponseEntity<>(feedback, HttpStatus.OK);
+  }
+  @PostMapping(value="/{taskIdOrFeedbackId}")
+  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") Long id, @RequestBody CreateFeedbackCommand command)
+  {
+    final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
+    return new ResponseEntity<>(feedback, HttpStatus.OK);
+  }
   @DeleteMapping("/{taskIdOrFeedbackId}")
   public ResponseEntity<Feedback> deleteOneFeedback(@PathVariable("taskIdOrFeedbackId") String id)
   {
@@ -76,8 +97,25 @@ public class FeedbackApiController {
     }
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
         .addReplyIds(feedback.get().getId())
-        .userId(securityClient.getUser().getPrincipal().getUsername())
-        .build());
+        .build(), securityClient.getUser().getPrincipal().getUsername());
     return new ResponseEntity<>(feedback.get(), HttpStatus.OK);
+  }
+  
+  
+  
+  @GetMapping(value="/{taskIdOrFeedbackId}/templates")
+  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    return new ResponseEntity<>(template, HttpStatus.OK);
+  }
+  
+  @GetMapping(value="/{taskIdOrFeedbackId}/enabled")
+  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    final var template = feedbackClient.queryTemplate().findOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
   }
 }

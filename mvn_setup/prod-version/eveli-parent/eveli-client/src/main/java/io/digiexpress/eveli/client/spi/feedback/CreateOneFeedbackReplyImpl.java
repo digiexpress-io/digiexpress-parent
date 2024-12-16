@@ -40,12 +40,13 @@ import lombok.RequiredArgsConstructor;
 public class CreateOneFeedbackReplyImpl {
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory withHistory;
+  private final String userId;
   
   public Feedback apply(CreateFeedbackCommand command) {
     return withHistory.withHistory(history -> {
       final var id = jdbc.execute((Connection conn) -> doInConnection(conn, command));
       final var created = new FeedbackQueryImpl(jdbc).getOneById(id);
-      history.append(command, created);
+      history.append(command, created, userId);
       return created;
     });
     
@@ -88,10 +89,12 @@ INSERT INTO feedback_reply
   created_on_date,
   updated_on_date,
   updated_by,
-  created_by
+  created_by,
+  reporter_names,
+  reply_text
 )
 VALUES
-(?,?,?,?,?,?,?,?,?,?)
+(?,?,?,?,?,?,?,?,?,?,?,?)
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
@@ -105,8 +108,11 @@ VALUES
      categeoryStm.setObject(7, now);
      categeoryStm.setObject(8, now);
      
-     categeoryStm.setString(9, command.getUserId());
-     categeoryStm.setString(10, command.getUserId());
+     categeoryStm.setString(9, userId);
+     categeoryStm.setString(10, userId);
+     categeoryStm.setString(11, command.getReporterNames());
+     categeoryStm.setString(12, command.getReply());
+
     
      categeoryStm.execute();
      final var rs = categeoryStm.getGeneratedKeys();
@@ -125,7 +131,7 @@ VALUES
     ProcessAssert.notEmpty(command.getLabelKey(), () -> "labelKey can't be empty!");
     ProcessAssert.notEmpty(command.getOrigin(), () -> "origin can't be empty!");
     ProcessAssert.notEmpty(command.getProcessId(), () -> "processId can't be empty!");
-    ProcessAssert.notEmpty(command.getUserId(), () -> "user id can't be empty!");
+    ProcessAssert.notEmpty(userId, () -> "user id can't be empty!");
     
     final var labelKey = command.getLabelKey().trim().toUpperCase();
     final var labelSubKey = command.getSubLabelKey().isBlank() ? null : command.getSubLabelKey().trim().toUpperCase();
@@ -150,7 +156,7 @@ ON CONFLICT DO NOTHING
   categeoryStm.setString(1, labelKey);
   categeoryStm.setString(2, labelSubKey);
   categeoryStm.setString(3, command.getOrigin());
-  categeoryStm.setString(4, command.getUserId());
+  categeoryStm.setString(4, userId);
   categeoryStm.setObject(5, java.sql.Timestamp.from(Instant.now()));
   categeoryStm.setObject(6, java.sql.Timestamp.from(Instant.now()));
 

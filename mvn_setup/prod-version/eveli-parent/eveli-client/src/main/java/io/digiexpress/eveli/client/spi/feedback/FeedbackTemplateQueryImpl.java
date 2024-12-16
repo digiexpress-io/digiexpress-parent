@@ -22,95 +22,57 @@ package io.digiexpress.eveli.client.spi.feedback;
 
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
-import io.dialob.api.form.Form;
-import io.dialob.api.questionnaire.Questionnaire;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaire;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireQuery;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackTemplateQuery;
 import io.digiexpress.eveli.client.api.ImmutableFeedbackTemplate;
-import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
+  private final FeedbackQuestionnaireQuery query;
 
-  private final TaskClient taskClient;
-  private final ProcessClient processClient;
-  private final QuestionnaireCategoryExtractor extractor;
-  
-  @FunctionalInterface
-  public interface QuestionnaireCategoryExtractor {
-    Optional<QuestionnaireCategoryExtract> apply(Questionnaire q, Form form);
+  @Override
+  public Optional<FeedbackTemplate> findOneByTaskId(String taskId, String userId) {
+    final var questionnaire = query.findOneFromTaskById(taskId);
+    if(questionnaire.isPresent()) {
+      return Optional.of(map(questionnaire.get(), taskId, userId));  
+    }
+    return Optional.empty();
   }
-
-  @Value.Immutable
-  public interface QuestionnaireCategoryExtract {
-    String getLabelKey();
-    String getLabelValue();
-    
-    @Nullable String getSubLabelKey();
-    @Nullable String getSubLabelValue();
-    @Nullable String getContent();
-  }
-  
   
   @Override
   public FeedbackTemplate getOneByTaskId(String taskId, String userId) {
-    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId));
-    final var comments = taskClient.queryComments().findAllByTaskId(task.getId());
-    
-    final var process = processClient.queryInstances().findOneByTaskId(task.getId());
-    ProcessAssert.isTrue(process.isPresent(), () -> "Process must be synced!");
-    
-    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(task.getId());
-    ProcessAssert.isTrue(processQuestionnaire.isPresent(), () -> "Questionnaire must be synced!");
-    
-    final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-    
-    
-    final var replys = comments.stream()
-      .filter(reply -> Boolean.TRUE.equals(reply.getExternal()))
-      .sorted((s1, s2) -> s1.getCreated().compareTo(s2.getCreated()))
-      .map(this::formatReply)
-      .toList();
-    
-    final var extract = extractor.apply(questionnaire, null);
-    
+    final var questionnaire = query.findOneFromTaskById(taskId);
+    ProcessAssert.isTrue(questionnaire.isPresent(), () -> "Process must be synced and form enabled for feedback!");
+    return map(questionnaire.get(), taskId, userId);
+  }
+  
+  
+  public FeedbackTemplate map(FeedbackQuestionnaire questionnaire, String taskId, String userId) {
     return ImmutableFeedbackTemplate.builder()
-        .addAllReplys(replys)
-        .questionnaire(questionnaire)
-        .processId(process.get().getId().toString())
+        .addAllReplys(questionnaire.getReplys())
+        .questionnaire(questionnaire.getQuestionnaire())
+        .processId(questionnaire.getProcessInstance().getId().toString())
+
+        .reporterNames(questionnaire.getReporterNames())
         
-        .locale(questionnaire.getMetadata().getLanguage())
+        .locale(questionnaire.getQuestionnaire().getMetadata().getLanguage())
         .origin(questionnaire.getClass().getSimpleName().toUpperCase())
 
-        .labelKey(extract.map(e -> e.getLabelKey()).orElse("-"))
-        .labelValue(extract.map(e -> e.getLabelValue()).orElse("-"))
+        .labelKey(questionnaire.getLabelKey())
+        .labelValue(questionnaire.getLabelValue())
         
-        .subLabelKey(extract.map(e -> e.getSubLabelKey()).orElse("-"))
-        .subLabelValue(extract.map(e -> e.getSubLabelValue()).orElse("-"))
+        .subLabelKey(questionnaire.getSubLabelKey())
+        .subLabelValue(questionnaire.getSubLabelValue())
         
         .userId(userId)
-        .content(extract.map(e -> e.getContent()).orElse("-"))
+        .content(questionnaire.getContent())
         
         .build();
   }
-  
-  
-  
-  private String formatReply(TaskComment comment) {
-    return new StringBuilder()
-      .append(comment.getCommentText()).append("  ")
-      .append(System.lineSeparator())
-      .append(System.lineSeparator())
-      .toString();
-    
-  }
-  
+
 }

@@ -228,7 +228,15 @@ export const fi = {
   'gamut.feedback.table.sorted.desc': 'Sorted descending',
   'gamut.feedback.table.sorted.asc': 'Sorted ascending',
   'gamut.feedback.table.topic': 'Topic',
+  'gamut.feedback.table.updatedOnDate': 'Date',
   'gamut.feedback.table.subtopic': 'Sub topic',
-  'gamut.feedback.table.title': 'Feedback'
+  'gamut.feedback.table.title': 'Feedback',
+  'gamut.feedback.table.topicTitle': 'Title',
+  'gamut.feedback.vote.title': 'Was this answer helpful?',
+  'gamut.feedback.vote.notHelpful': 'No, this was not helpful',
+  'gamut.feedback.vote.yesHelpful': 'Yes, this was helpful',
+
+  'gamut.feedback.updatedOnDate': 'Updated date'
+
 }
 

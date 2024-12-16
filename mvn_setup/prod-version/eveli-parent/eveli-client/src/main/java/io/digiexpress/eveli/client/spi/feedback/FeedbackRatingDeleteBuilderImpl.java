@@ -36,11 +36,12 @@ import lombok.RequiredArgsConstructor;
 public class FeedbackRatingDeleteBuilderImpl {
   private final JdbcTemplate jdbc;
   private final FeedbackWithHistory withHistory;
+  private final String userId;
   
   public List<Feedback> execute(DeleteReplyCommand command) {
     return withHistory.withHistory(history -> {
       final var upserted = deleteAll(command);
-      history.append(command, upserted);
+      history.append(command, upserted, userId);
       return upserted;
     });
   }

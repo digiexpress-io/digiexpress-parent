@@ -36,6 +36,7 @@ const fi = {
   'button.cancel': 'Cancel',
   'button.publish': 'Publish',
   'button.delete': 'Delete this feedback',
+  'button.update': 'Update',
 }
 
 

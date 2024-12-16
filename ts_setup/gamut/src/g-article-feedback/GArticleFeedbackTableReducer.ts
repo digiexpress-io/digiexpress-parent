@@ -31,12 +31,12 @@ export class GFeedbackTableArticleReducer {
   private _orderBy: keyof SiteApi.Feedback;
   private _page: number;
   private _rowsPerPage: number;
-  private _data: SiteApi.Feedback[];
+  private _data: SiteApi.CustomerFeedback[];
   private _emptyRows: number;
-  private _visibleRows: SiteApi.Feedback[];
+  private _visibleRows: SiteApi.CustomerFeedback[];
 
   public constructor(props: {
-    data: SiteApi.Feedback[],
+    data: SiteApi.CustomerFeedback[],
     order: GFeedbackTableArticleOrder | undefined,
     orderBy: keyof SiteApi.Feedback,
     page: number | undefined,
@@ -84,7 +84,7 @@ export class GFeedbackTableArticleReducer {
     });
   }
 
-  withData(data: SiteApi.Feedback[]) {
+  withData(data: SiteApi.CustomerFeedback[]) {
     return new GFeedbackTableArticleReducer({
       order: this._order,
       orderBy: this._orderBy,

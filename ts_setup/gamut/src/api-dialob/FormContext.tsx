@@ -20,6 +20,16 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
   const store = useFormStore({ id });
   const contextValue = React.useMemo(() => Object.freeze({ store, variant, onAfterComplete }), [store, variant, onAfterComplete])
 
+  React.useEffect(() => {
+    if(store.pending) {
+      return;
+    }
+
+    if(store.form.state.completed) {
+      contextValue.onAfterComplete(); //complete signal from backend is received
+    }
+  }, [store, contextValue]);
+
   return (<FormContext.Provider value={contextValue}>{props.children}</FormContext.Provider>);
 }
 

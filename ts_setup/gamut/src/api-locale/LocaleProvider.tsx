@@ -46,7 +46,6 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = () => {
-  console.log("resolving locale");
   let selectedLocale = '';
 
   let nextIsLocale = false;

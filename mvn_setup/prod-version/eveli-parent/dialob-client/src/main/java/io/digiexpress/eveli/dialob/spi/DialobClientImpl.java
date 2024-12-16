@@ -69,6 +69,32 @@ public class DialobClientImpl implements DialobClient {
   private static String LOOKUP = "__MOD_";
   
   @Override
+  public ProxyAnswer proxyAnswer(Questionnaire q, Answer answer) {
+    final var formItem = DialobClientImpl.LOOKUP(answer, q, objectMapper);
+    final var valueSetLabel = Optional.ofNullable(formItem.getValueSetId())
+      .map(vsId -> {
+        
+        final var v = q.getValueSets().stream().filter(vs -> vs.getId().equals(vsId))
+            .findFirst();
+
+        if(v.isEmpty()) {
+          return null;
+        }
+        
+        final var entry = v.get().getEntries().stream()
+            .filter(e -> e.getKey().equals(q.getMetadata().getLanguage()))
+            .findFirst();
+        
+        return entry.get().getValue();
+      });
+    
+    return ProxyAnswer.builder()
+        .valueSetLabel(valueSetLabel)
+        .formItem(formItem)
+        .answer(answer)
+        .build();
+  }
+  @Override
   public DialobSessionBuilderImpl createSession() {
     return new DialobSessionBuilderImpl(objectMapper, dialobService);
   }
@@ -320,6 +346,5 @@ public class DialobClientImpl implements DialobClient {
     private final FormItem item;
     private final Optional<FormValueSet> valueSet;
     private final Optional<FormValueSetEntry> valueSetEntry; 
-    
   }
 }

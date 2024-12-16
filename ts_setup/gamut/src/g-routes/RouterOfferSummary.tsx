@@ -14,7 +14,8 @@ import {
   GLayout,
   useSite,
   GLogo,
-  useIam
+  useIam,
+  useOffers
 } from '../';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -27,6 +28,7 @@ export const RouterOfferSummary: React.FC<{
   locale: string;
 }> = (props) => {
 
+  const { refresh } = useOffers();
   const nav = useNavigate();
   const intl = useIntl();
   const anon = useIam();
@@ -46,6 +48,7 @@ export const RouterOfferSummary: React.FC<{
       })
     }
     else {
+      refresh();
       nav({
         from: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
         params: { viewId: 'user-overview' },

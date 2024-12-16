@@ -35,7 +35,9 @@ const en = {
 
   'button.cancel': 'Cancel',
   'button.publish': 'Publish',
-  'button.delete': 'Delete this feedback'
+  'button.delete': 'Delete this feedback',
+  'button.unpublish': 'Unpublish this feedback',
+  'button.update': 'Update',
 }
 
 export default en;

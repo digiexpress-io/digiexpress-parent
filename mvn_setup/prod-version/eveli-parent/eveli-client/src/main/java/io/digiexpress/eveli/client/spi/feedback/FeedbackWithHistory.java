@@ -32,6 +32,7 @@ import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.DeleteReplyCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
+import io.digiexpress.eveli.client.api.FeedbackClient.ModifyOneFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import lombok.RequiredArgsConstructor;
 
@@ -57,9 +58,10 @@ public class FeedbackWithHistory {
   }
   
   public interface FeedbackWithHistoryBuilder {
-    FeedbackWithHistoryBuilder append(UpsertFeedbackRankingCommand command, FeedbackRating rating);
-    FeedbackWithHistoryBuilder append(CreateFeedbackCommand command, Feedback feedback);
-    FeedbackWithHistoryBuilder append(DeleteReplyCommand command, List<Feedback> feedback);
+    FeedbackWithHistoryBuilder append(UpsertFeedbackRankingCommand command, FeedbackRating rating, String userId);
+    FeedbackWithHistoryBuilder append(CreateFeedbackCommand command, Feedback feedback, String userId);
+    FeedbackWithHistoryBuilder append(ModifyOneFeedbackCommand command, Feedback feedback, String userId);
+    FeedbackWithHistoryBuilder append(DeleteReplyCommand command, List<Feedback> feedback, String userId);
     void close();
   }
 }
