@@ -65,11 +65,8 @@ import lombok.RequiredArgsConstructor;
 @Testcontainers
 @EnableAutoConfiguration
 @ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
-public class FeedbackEnvirSetup {
-
-  
+public class FeedbackEnvirSetup {  
   private static final Faker FAKER = new Faker(new Locale("fi-FI"));
-
   
   @Configuration
   public static class FeedbackEnvirSetupConfig {
