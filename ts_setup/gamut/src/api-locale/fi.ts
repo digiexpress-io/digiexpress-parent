@@ -1,32 +1,32 @@
 export const fi = {
 
-  "booleanValue.true": "Yes",
-  "booleanValue.false": "No",
+  "booleanValue.true": "Kyllä",
+  "booleanValue.false": "Ei",
 
   // -------------------- START CUSTOMER-SPECIFIC --------------------------
 
-  'cust.inbox.message.sender-name.org-user': 'Info desk',
+  'cust.inbox.message.sender-name.org-user': 'Tuki',
   'cust.phone': 'Phone: 123 456 7890',
   'cust.email': 'info@lifeDigital.com',
 
 
   // -------------------- CUSTOMER FOOTER --------------------------
 
-  'footer.column2.title': 'OrganisationName here',
-  'footer.column2.subtitle': 'The service brings together all the digital transaction services offered by OrganisationName.',
+  'footer.column2.title': 'Demo organisaatio',
+  'footer.column2.subtitle': 'Palvelut joiden kehittämisestä ja ylläpidosta vastaa demo organisaatio',
 
-  'footer.column3.title': 'Quick links',
-  'footer.column3.link.acessibility': 'Accessibility statement',
-  'footer.column3.link.dataProtection': 'Data protection',
-  'footer.column3.link.feedback': 'Feedback and development ideas',
-  'footer.column3.link.siteInfo': 'Information about the site',
-  'footer.column3.link.newsletter': 'Subscribe to the newsletter',
+  'footer.column3.title': 'Linkit',
+  'footer.column3.link.acessibility': 'Saavutettavuusseloste',
+  'footer.column3.link.dataProtection': 'Tietosuoja',
+  'footer.column3.link.feedback': 'Palautteet',
+  'footer.column3.link.siteInfo': 'Lisätietoa verkkosivustosta',
+  'footer.column3.link.newsletter': 'Tilaa uutiskirje',
 
   'footer.column4.title': 'OrganisationName info',
-  'footer.column4.email': 'Email: info@OrganisationName.com',
-  'footer.column4.phone': 'Phone: 123 456 7890',
-  'footer.column4.address': 'Visiting address: 1234 Any Street, MyTown',
-  'footer.column4.postalCode': 'Postal code: 12345',
+  'footer.column4.email': 'Sähköposti: info@OrganisationName.com',
+  'footer.column4.phone': 'Puhelinumero: 123 456 7890',
+  'footer.column4.address': 'Käyntiosoite: 1234 Any Street, MyTown',
+  'footer.column4.postalCode': 'Postinumero: 12345',
 
   // --------------------END CUSTOMER-SPECIFIC --------------------------
 
@@ -38,31 +38,31 @@ export const fi = {
 
   // ------------------- GAMUT GENERAL ----------------------
 
-  'gamut.forms': 'Forms',
-  'gamut.new-messages': 'New messages',
-  'gamut.services': 'Services',
-  'gamut.bookings': 'Calendar reservations',
+  'gamut.forms': 'Lomakkeet',
+  'gamut.new-messages': 'Uusi viesti',
+  'gamut.services': 'Palvelut',
+  'gamut.bookings': 'Kalenteri varaus',
   'gamut.noValueIndicator': '-',
   'gamut.noValueIndicatorColon': ': ',
   'gamut.textSeparator': ': ',
-  'gamut.loading': 'Your content is on the way',
+  'gamut.loading': 'Sivua ladataan',
 
   // ------------------- GAMUT PUBLIC ----------------------
 
-  'gamut.public.servicesHome': 'Services home',
-  'gamut.public.forms.summary.button.backToServicesHome': 'Back to Services Home',
+  'gamut.public.servicesHome': 'Palvelut kotisivu',
+  'gamut.public.forms.summary.button.backToServicesHome': 'Palaa palvelujen kotisivulle',
 
   // ------------------- GAMUT GENERAL BUTTONS --------------
-  'gamut.buttons.login': 'Log in',
-  'gamut.buttons.logout': 'Log out',
-  'gamut.buttons.search': 'Search',
-  'gamut.buttons.cancel': 'Cancel',
-  'gamut.buttons.select': 'Select',
-  'gamut.buttons.close': 'Close',
-  'gamut.buttons.reply': 'Reply',
-  'gamut.buttons.delete': 'Delete',
-  'gamut.buttons.serviceSelect': 'Browse our services',
-  'gamut.buttons.attachment.add': 'Add attachment',
+  'gamut.buttons.login': 'Kirjaudu sisään',
+  'gamut.buttons.logout': 'Kirjaudu ulos',
+  'gamut.buttons.search': 'Etsi',
+  'gamut.buttons.cancel': 'Peruuta',
+  'gamut.buttons.select': 'Valitse',
+  'gamut.buttons.close': 'Sulje',
+  'gamut.buttons.reply': 'Vastaa',
+  'gamut.buttons.delete': 'Poiste',
+  'gamut.buttons.serviceSelect': 'Selaa palveluja',
+  'gamut.buttons.attachment.add': 'Lisää liite',
 
   // ------------------- GAMUT LOCALES ----------------------
 
@@ -72,23 +72,23 @@ export const fi = {
 
   // ------------------- GAMUT SEARCH -----------------------
 
-  'gamut.search.placeholder': 'Search our services',
-  'gamut.search.popover.title': 'Search our site',
-  'gamut.search.popover.input.placeholder': 'What are you looking for?',
-  'gamut.search.popover.result.chip.form': 'Form',
-  'gamut.search.popover.result.chip.link': 'Link',
-  'gamut.search.popover.result.chip.phone': 'Phone',
-  'gamut.search.popover.result.chip.content': 'Content',
+  'gamut.search.placeholder': 'Hae palvelu',
+  'gamut.search.popover.title': 'Etsi sivustolta',
+  'gamut.search.popover.input.placeholder': 'Mitä olet hakemassa?',
+  'gamut.search.popover.result.chip.form': 'Lomake',
+  'gamut.search.popover.result.chip.link': 'Linkki',
+  'gamut.search.popover.result.chip.phone': 'Puhelin',
+  'gamut.search.popover.result.chip.content': 'Sisältö',
 
-  'gamut.search.popover.allForms': 'All forms',
-  'gamut.search.popover.allPhones': 'All phone numbers',
-  'gamut.search.popover.allLinks': 'All links',
-  'gamut.search.popover.allServices': 'All services',
+  'gamut.search.popover.allForms': 'Kaikki lomakkeet',
+  'gamut.search.popover.allPhones': 'Kaikki puhelinnumerot',
+  'gamut.search.popover.allLinks': 'Kaikki linkit',
+  'gamut.search.popover.allServices': 'Kaikki palvelut',
 
   // ------------------- GAMUT ARTICLES  -----------------------
 
-  'gamut.article.pagelinks.forms.title': 'Forms',
-  'gamut.article.pagelinks.otherlinks.title': 'Links',
+  'gamut.article.pagelinks.forms.title': 'Lomakkeet',
+  'gamut.article.pagelinks.otherlinks.title': 'Linkit',
 
   // -------------------- GAMUT FORMS ---------------------------
 
