@@ -96,7 +96,11 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     final Date now = new Date();
     return dataFormat.format(now) + DATE_NUMBER_SEPARATOR_DEFAULT + nextVal;
   }
-
+  @Override
+  public NewMission questionnaireId(String questionnaireId) {
+    this.mission.questionnaireId(questionnaireId);
+    return this;
+  }
   @Override
   public NewMission title(String title) {
     this.mission.title(title);

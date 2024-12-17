@@ -36,6 +36,7 @@ public interface ThenaGrimNewObject {
   interface NewMission {
     NewMission title(String title);
     NewMission description(String description);
+    NewMission questionnaireId(String questionnaireId);
     
     NewMission parentId(@Nullable String parentId);
     NewMission reporterId(@Nullable String reporterId);    
