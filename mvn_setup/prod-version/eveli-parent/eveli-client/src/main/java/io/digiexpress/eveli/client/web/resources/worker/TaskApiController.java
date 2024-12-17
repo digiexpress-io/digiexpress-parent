@@ -168,7 +168,7 @@ public class TaskApiController {
   }
   
   @GetMapping(value="/{id}/comments")
-  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") Long id)
+  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
   {
     final var authentication = securityClient.getUser();
     new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
