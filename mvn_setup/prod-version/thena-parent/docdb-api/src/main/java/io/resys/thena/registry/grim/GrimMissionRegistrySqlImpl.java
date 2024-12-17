@@ -52,8 +52,29 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   public ThenaSqlClient.Sql dropTable() {
     return ImmutableSql.builder().value(new SqlStatement()
         .append("DROP TABLE ").append(options.getGrimMission()).append(";").ln()
+        .append("DROP SEQUENCE ").append(options.getGrimMissionRef()).append(";").ln()
         .build()).build();
   }
+  @Override
+  public Sql getNextRefSequence() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement()
+        .append("select nextval('").append(options.getGrimMissionRef()).append("')")
+        .build())
+        .build();
+  }
+
+  @Override
+  public SqlTuple getNextRefSequence(long howMany) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("select nextval('").append(options.getGrimMissionRef()).append("')").ln()
+        .append(" from generate_series(1, $1)")
+        .build())
+        .props(Tuple.of(howMany))
+        .build();
+  }
+  
   @Override
   public ThenaSqlClient.Sql findAll() {
     return ImmutableSql.builder()
@@ -63,9 +84,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
         .append(" updated_tree_commit.created_at  as tree_updated_at,").ln()
-        
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
+
         .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
@@ -94,9 +113,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
         .append(" updated_tree_commit.created_at  as tree_updated_at, ").ln()
-        
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
+
         .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
@@ -128,10 +145,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
         .append(" updated_tree_commit.created_at  as tree_updated_at,").ln()
-        
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
-        .append(" mission_data.data_extension as data_extension ").ln()
+        .append(" mission_data.data_extension     as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
         
@@ -169,13 +183,17 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_start_date,").ln()        
         .append("  mission_due_date,").ln()
         
+        .append("  mission_title,").ln()
+        .append("  mission_description,").ln()
+        
         .append("  archived_at,").ln()
         .append("  archived_status,").ln()
+        .append("  mission_ref,").ln()
         
         .append("  created_commit_id,").ln()
         .append("  updated_tree_commit_id)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)").ln()
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -190,8 +208,13 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getStartDate(),
                 doc.getDueDate(),
                 
+                doc.getTitle(),
+                doc.getDescription(),
+                
                 doc.getArchivedAt(),
                 doc.getArchivedStatus(),
+                
+                doc.getRefId(),
                 
                 doc.getCreatedWithCommitId(),
                 doc.getUpdatedTreeWithCommitId()
@@ -219,9 +242,13 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  archived_status = $10,").ln()
         
         .append("  created_commit_id = $11,").ln()
-        .append("  updated_tree_commit_id = $12").ln()
+        .append("  updated_tree_commit_id = $12,").ln()
         
-        .append(" WHERE id = $13")
+        .append("  mission_title = $13,").ln()
+        .append("  mission_description = $14,").ln()
+        .append("  mission_ref = $15").ln()
+        
+        .append(" WHERE id = $16")
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -240,7 +267,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getCreatedWithCommitId(),
                 doc.getUpdatedTreeWithCommitId(),
                 
-                doc.getId(), 
+                doc.getTitle(),
+                doc.getDescription(),
+                doc.getRefId(),
+                
+                doc.getId()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -259,14 +290,22 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  reporter_id VARCHAR(255),").ln()
     
+    .append("  mission_ref VARCHAR(40),").ln()
     .append("  mission_status VARCHAR(100),").ln()
     .append("  mission_priority VARCHAR(100),").ln()
     .append("  mission_start_date DATE,").ln()
     .append("  mission_due_date DATE,").ln()
+    .append("  mission_title TEXT NOT NULL,").ln()
+    .append("  mission_description TEXT,").ln()
     .append("  archived_at TIMESTAMP WITH TIME ZONE,").ln()
     .append("  archived_status VARCHAR(40)").ln()
     
     .append(");").ln()
+    
+    .append("CREATE SEQUENCE ").append(options.getGrimMissionRef()).append(" MINVALUE 1 MAXVALUE 999999 CYCLE;").ln()
+
+    .append("CREATE INDEX ").append(options.getGrimMission()).append("_REF_INDEX")
+    .append(" ON ").append(options.getGrimMission()).append(" (mission_ref);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimMission()).append("_PARENT_INDEX")
     .append(" ON ").append(options.getGrimMission()).append(" (parent_mission_id);").ln()
@@ -292,9 +331,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   @Override
   public Sql createConstraints() {
     return ImmutableSql.builder().value(new SqlStatement()
-    .ln().append("--- constraints for").append(options.getGrimMission()).ln()
-
-    
+    .ln().append("--- constraints for").append(options.getGrimMission()).ln()    
     .build()).build();
   }
 
@@ -308,10 +345,11 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .commitId(row.getString("commit_id"))
           .createdWithCommitId(row.getString("created_commit_id"))
           .updatedTreeWithCommitId(row.getString("updated_tree_commit_id"))
-
+          .title(row.getString("mission_title"))
+          .description(row.getString("mission_description"))
+          .refId(row.getString("commit_id"))
+          
           .transitives(ImmutableGrimMissionTransitives.builder()
-            .title(row.getString("title"))
-            .description(row.getString("description"))
             .dataExtension(row.getJsonObject("data_extension"))
             .updatedAt(row.getOffsetDateTime("updated_at"))
             .createdAt(row.getOffsetDateTime("created_at"))
@@ -333,6 +371,5 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .build();
     };
   }
-
 
 }

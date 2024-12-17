@@ -61,9 +61,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-        
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
         .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ")
@@ -87,9 +84,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
         .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
@@ -116,9 +110,6 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("SELECT objective.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
         .append(" created_commit.created_at       as created_at,").ln()
-
-        .append(" mission_data.title          as title,").ln()
-        .append(" mission_data.description    as description,").ln()
         .append(" mission_data.data_extension as data_extension ").ln()
         
         .append(" FROM ").append(options.getGrimObjective()).append(" as objective ").ln()
@@ -163,9 +154,11 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .append("  mission_id,").ln()
         .append("  objective_status,").ln()
         .append("  objective_start_date,").ln()
+        .append("  objective_title,").ln()
+        .append("  objective_description,").ln()
         .append("  objective_due_date)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -176,6 +169,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
                 doc.getMissionId(),
                 doc.getObjectiveStatus(),
                 doc.getStartDate(),
+                doc.getTitle(),
+                doc.getDescription(),
                 doc.getDueDate()
              }))
             .collect(Collectors.toList()))
@@ -192,8 +187,10 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
 
         .append("  objective_status = $2,").ln()
         .append("  objective_start_date = $3,").ln()
-        .append("  objective_due_date = $4").ln()
-        .append(" WHERE id = $5")
+        .append("  objective_due_date = $4,").ln()
+        .append("  objective_title = $5,").ln()
+        .append("  objective_description = $6").ln()
+        .append(" WHERE id = $7")
         .build())
         .props(objective.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -201,6 +198,8 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
                 doc.getObjectiveStatus(),
                 doc.getStartDate(),
                 doc.getDueDate(),
+                doc.getTitle(),
+                doc.getDescription(),
                 
                 doc.getId(), 
              }))
@@ -218,7 +217,9 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
     .append("  objective_status VARCHAR(100),").ln()
     .append("  objective_start_date DATE,").ln()
-    .append("  objective_due_date DATE").ln()
+    .append("  objective_due_date DATE,").ln()
+    .append("  objective_title TEXT NOT NULL,").ln()
+    .append("  objective_description TEXT").ln()
     .append(");").ln()
     
     .append("CREATE INDEX ").append(options.getGrimObjective()).append("_CREATED_INDEX")
@@ -256,10 +257,11 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
           .commitId(row.getString("commit_id"))
           .missionId(row.getString("mission_id"))
           .createdWithCommitId(row.getString("created_commit_id"))
+          .title(row.getString("objective_title"))
+          .description(row.getString("objective_description"))
+          
           
           .transitives(ImmutableGrimObjectiveTransitives.builder()
-            .title(row.getString("title"))
-            .description(row.getString("description"))
             .dataExtension(row.getJsonObject("data_extension"))
             .updatedAt(row.getOffsetDateTime("updated_at"))
             .createdAt(row.getOffsetDateTime("created_at"))

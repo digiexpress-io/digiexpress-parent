@@ -135,11 +135,9 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .append("  goal_id,").ln()
         .append("  remark_id,").ln()
         
-        .append("  title,").ln()
-        .append("  description,").ln()
         .append("  data_extension)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
         .build())
         .props(labels.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -150,9 +148,7 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveId(),
                 doc.getRelation() == null ? null : doc.getRelation().getObjectiveGoalId(),
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
-                
-                doc.getTitle(),
-                doc.getDescription(),
+
                 doc.getDataExtension()
              }))
             .collect(Collectors.toList()))
@@ -165,16 +161,12 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
         .append("UPDATE ").append(options.getGrimMissionData())
         .append(" SET").ln()
         .append("  commit_id = $1,").ln()
-        .append("  title = $2,").ln()
-        .append("  description = $3,").ln()
-        .append("  data_extension = $4").ln()
-        .append(" WHERE id = $5")
+        .append("  data_extension = $2").ln()
+        .append(" WHERE id = $3")
         .build())
         .props(data.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(),
-                doc.getTitle(),
-                doc.getDescription(),
                 doc.getDataExtension(),
                 doc.getId(), 
              }))
@@ -190,8 +182,6 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
     .append("  commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     
-    .append("  title TEXT NOT NULL,").ln()
-    .append("  description TEXT NOT NULL,").ln()
     .append("  data_extension JSONB,").ln()
     
     .append("  mission_id VARCHAR(40) NOT NULL,").ln()
@@ -267,8 +257,6 @@ public class GrimMissionDataRegistrySqlImpl implements GrimMissionDataRegistry {
           .createdWithCommitId(row.getString("created_commit_id"))
           
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
-          .title(row.getString("title"))
-          .description(row.getString("description"))
           .dataExtension(row.getJsonObject("data_extension"))
           .build();
     };

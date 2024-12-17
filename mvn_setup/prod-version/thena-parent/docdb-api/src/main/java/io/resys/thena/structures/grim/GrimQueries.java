@@ -22,6 +22,7 @@ package io.resys.thena.structures.grim;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
@@ -37,12 +38,18 @@ public interface GrimQueries {
   ThenaDataSource getDataSource();
   InternalMissionQuery missions();
   CommitViewerQuery commitViewer();
+  InternalMissionSequence missionSequences();
   
   interface CommitViewerQuery {
     Multi<GrimAnyObject> findAnyObjects(Collection<AnyObjectCriteria> commits);
     Multi<GrimCommitViewer> findAllViewersByUsed(String userId, String usedBy, Collection<String> commits);
   }
 
+  interface InternalMissionSequence {
+    Uni<Long> nextVal();
+    Uni<List<Long>> nextVal(long howMany);
+  }
+  
   
   interface InternalMissionQuery {
     

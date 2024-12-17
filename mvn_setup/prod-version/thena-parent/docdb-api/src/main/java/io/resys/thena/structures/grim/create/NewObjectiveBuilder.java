@@ -66,6 +66,8 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .id(objectiveId)
+        .title("")
+        .description("")
         ;
     this.childRel = ImmutableGrimOneOfRelations.builder()
         .objectiveId(objectiveId)
@@ -76,9 +78,7 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
-        .relation(childRel)
-        .title("")
-        .description("");
+        .relation(childRel);
   }
   @Override
   public void build() {
@@ -87,12 +87,12 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
 
   @Override
   public NewObjective title(String title) {
-    this.objectiveMeta.title(title);
+    this.objective.title(title);
     return this;
   }
   @Override
   public NewObjective description(String description) {
-    this.objectiveMeta.description(description);
+    this.objective.description(description);
     return this;
   }
   @Override
@@ -132,18 +132,20 @@ public class NewObjectiveBuilder implements ThenaGrimNewObject.NewObjective {
     final var data = this.objectiveMeta.build();
     final var objective = this.objective
         .transitives(ImmutableGrimObjectiveTransitives.builder()
-            .title(data.getTitle())
-            .description(data.getDescription())
             .createdAt(createdAt)
             .updatedAt(createdAt)
             .build())
         .build();
     
     logger.add(objective);
-    logger.add(data);
+
     
     this.batch.addObjectives(objective);
-    this.batch.addData(data);
+    
+    if(data.getDataExtension() != null) {
+      this.batch.addData(data);
+      logger.add(data);
+    }
     
     return this.batch.build();
   }

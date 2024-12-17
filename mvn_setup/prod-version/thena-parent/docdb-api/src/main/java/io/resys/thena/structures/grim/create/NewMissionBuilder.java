@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim.create;
 
+import java.text.SimpleDateFormat;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -23,6 +25,7 @@ package io.resys.thena.structures.grim.create;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -57,11 +60,14 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final ImmutableGrimMissionData.Builder missionMeta;
   private final OffsetDateTime createdAt = OffsetDateTime.now();
   
+  private static final String DATE_NUMBER_SEPARATOR_DEFAULT = "-";
+  private static final SimpleDateFormat dataFormat = new SimpleDateFormat("yyyyMM");
+  
   private ImmutableGrimBatchMissions.Builder next;
   private Consumer<GrimMissionContainer> handleNewState;
   private boolean built;
   
-  public NewMissionBuilder(GrimCommitBuilder logger) {
+  public NewMissionBuilder(GrimCommitBuilder logger, long nextVal) {
     super();
     this.next = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
@@ -73,25 +79,32 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
         .id(missionId)
         .commitId(commitId)
         .updatedTreeWithCommitId(commitId)
-        .createdWithCommitId(commitId);
+        .createdWithCommitId(commitId)
+        .title("")
+        .description("")
+        .refId(generateTaskRef(nextVal));
     this.missionMeta = ImmutableGrimMissionData.builder()
       .id(OidUtils.gen())
       .createdWithCommitId(logger.getCommitId())
       .commitId(commitId)
-      .missionId(missionId)
-      .title("")
-      .description("");
+      .missionId(missionId);
+        
     this.logger = logger;
+  }
+  
+  public String generateTaskRef(long nextVal) {
+    final Date now = new Date();
+    return dataFormat.format(now) + DATE_NUMBER_SEPARATOR_DEFAULT + nextVal;
   }
 
   @Override
   public NewMission title(String title) {
-    this.missionMeta.title(title);
+    this.mission.title(title);
     return this;
   }
   @Override
   public NewMission description(String description) {
-    this.missionMeta.description(description);
+    this.mission.description(description);
     return this;
   }
   @Override
@@ -200,8 +213,6 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     final var data = this.missionMeta.build();
     final var mission = this.mission
         .transitives(ImmutableGrimMissionTransitives.builder()
-            .title(data.getTitle())
-            .description(data.getDescription())
             .createdAt(createdAt)
             .updatedAt(createdAt)
             .treeUpdatedAt(createdAt)
@@ -209,10 +220,12 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
         .build();
     
     logger.add(mission);
-    logger.add(data);
     
     next.addMissions(mission);
-    next.addData(data);
+    if(data.getDataExtension() != null) {
+      logger.add(data);
+      next.addData(data);
+    }
     final var batch = next.build();
     
     onNewState(batch);

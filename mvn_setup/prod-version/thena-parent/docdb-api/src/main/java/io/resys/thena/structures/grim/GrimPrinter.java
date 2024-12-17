@@ -170,6 +170,7 @@ public class GrimPrinter {
         for(final var data : item.getObjectives().values().stream()
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getTitle(), b.getTitle())
                 .compare(a.getObjectiveStatus()+ "", b.getObjectiveStatus()+ "")
                 .compare(a.getStartDate()+ "", b.getStartDate()+ "")
                 .compare(a.getDueDate()+ "", b.getDueDate()+ "")
@@ -182,6 +183,7 @@ public class GrimPrinter {
         for(final var data : item.getGoals().values().stream()
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
+                .compare(a.getTitle(), b.getTitle())
                 .compare(a.getGoalStatus() + "", b.getGoalStatus()+ "")
                 .compare(a.getStartDate()+ "", b.getStartDate()+ "")
                 .compare(a.getDueDate()+ "", b.getDueDate()+ "")
@@ -219,7 +221,6 @@ public class GrimPrinter {
         for(final var data : item.getData().values().stream()
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
-                .compare(a.getTitle(), b.getTitle())
                 .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
                 .result())
             .toList()) {

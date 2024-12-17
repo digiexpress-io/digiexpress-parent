@@ -30,6 +30,8 @@ import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import jakarta.annotation.Nullable;
 
+
+// user inputed "comment" text that can be connected to the most of entities
 @Value.Immutable
 public interface GrimRemark extends IsGrimObject, ThenaTable {
   String getId();
@@ -39,9 +41,12 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   @Nullable String getParentId();
   @Nullable GrimRemarkTransitives getTransitives();
   
-  String getRemarkText();
-  @Nullable String getRemarkStatus();
-  String getReporterId();
+  String getRemarkText(); // user inputed free text
+  String getReporterId(); // user who inputed it
+  @Nullable String getRemarkStatus(); // optional status ie... open/approved, not mandatory, can be empty for most implementation
+  @Nullable String getRemarkType();   // optional type ie. internal / external 
+  @Nullable String getRemarkSource(); // comment origin ie. frontoffice/backoffice
+  
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };

@@ -33,6 +33,8 @@ import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
+
+
 @Value.Immutable
 public interface GrimMission extends IsGrimObject, ThenaTable {
   String getId();
@@ -43,16 +45,24 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   @Transient @JsonIgnore
   @Nullable GrimMissionTransitives getTransitives();
   
-  @Nullable String getParentMissionId();
-  @Nullable String getExternalId();
-  @Nullable String getMissionStatus();
-  @Nullable String getMissionPriority();
-  @Nullable String getReporterId();
-  @Nullable LocalDate getStartDate();
-  @Nullable LocalDate getDueDate();
-
-  @Nullable OffsetDateTime getArchivedAt();
-  @Nullable String getArchivedStatus();
+  @Nullable String getParentMissionId(); // parent-child connection
+  @Nullable String getExternalId(); // optional id if linked with external system
+  @Nullable String getQuestionnaireId(); // dialob form
+  String getRefId(); // user friendly id
+  
+  @Nullable String getMissionStatus(); // smth like completed, open, new rejected etc...
+  @Nullable String getMissionPriority(); // super important, low etc...
+  
+  @Nullable LocalDate getStartDate(); // when the task is supposed to start
+  @Nullable LocalDate getDueDate(); // when the task is supposed to be completed
+  
+  @Nullable String getReporterId(); // who reported id, probably should be SSN(not the greatest) in our case
+  @Nullable String getDescription(); // free form description
+  String getTitle(); // task title
+  
+  @Nullable OffsetDateTime getCompletedAt(); // when we completed it
+  @Nullable OffsetDateTime getArchivedAt(); // when we archived it
+  @Nullable String getArchivedStatus(); // on the way to be archived or is already archived
   
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
   
@@ -61,8 +71,6 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
     OffsetDateTime getCreatedAt(); // Transitive from commit table
     OffsetDateTime getUpdatedAt(); // Transitive from commit table
     OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
-    String getTitle(); //Transitive from data table
-    String getDescription(); //Transitive from data table
     @Nullable JsonObject getDataExtension();
   }
 }

@@ -86,7 +86,10 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
   }
 
   private Uni<ManyMissionsEnvelope> doInTx(GrimState tx) {
-    return createRequest(tx).onItem().transformToUni(request -> createResponse(tx, request))
+    return 
+        tx.query().missionSequences().nextVal(this.missions.size())
+        .onItem().transformToUni(nextVal -> createRequest(tx, nextVal))
+        .onItem().transformToUni(request -> createResponse(tx, request))
         .onFailure(CreateManyMissionException.class).recoverWithItem(ex -> {
           final CreateOneMissionException error = (CreateOneMissionException) ex;          
           return ImmutableManyMissionsEnvelope.builder()
@@ -121,7 +124,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
     });
   }
   
-  private Uni<GrimBatchMissions> createRequest(GrimState tx) {
+  private Uni<GrimBatchMissions> createRequest(GrimState tx, List<Long> nextVal) {
   
     final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
@@ -144,6 +147,8 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
       next = next.withCommits(parentCommit);
     }
     
+    final var sequences = nextVal.iterator();
+    
     for(final var entry : this.missions) {
       
       final var logger = new GrimCommitBuilder(tenantId, 
@@ -157,7 +162,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
             .build()
       );
       
-      final var newMission = new NewMissionBuilder(logger);
+      final var newMission = new NewMissionBuilder(logger, sequences.next());
       entry.accept(newMission);
       final var created = newMission.close();
       

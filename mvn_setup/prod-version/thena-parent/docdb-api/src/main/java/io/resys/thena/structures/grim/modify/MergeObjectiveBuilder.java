@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableMap;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimMissionData;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimObjective;
@@ -55,6 +56,7 @@ import io.resys.thena.structures.grim.create.NewGoalBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLinkBuilder;
 import io.resys.thena.structures.grim.create.NewRemarkBuilder;
+import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 
 public class MergeObjectiveBuilder implements MergeObjective {
@@ -84,16 +86,27 @@ public class MergeObjectiveBuilder implements MergeObjective {
             .filter(d -> d.getRelation() != null)
             .filter(d -> d.getRelation().getRelationType() == GrimRelationType.OBJECTIVE)
             .filter(d -> d.getRelation().getObjectiveId().equals(current.getId()))
-            .findFirst().get());
+            .findFirst().orElseGet(() -> {
+              
+              final GrimMissionData data = ImmutableGrimMissionData.builder()
+                .id(OidUtils.gen())
+                .createdWithCommitId(logger.getCommitId())
+                .commitId(logger.getCommitId())
+                .missionId(missionId)
+                .relation(childRel)
+                .build();
+              
+              return data;
+            }));
   }
   @Override
   public MergeObjective title(String title) {
-    this.nextObjectiveMeta.title(title);
+    this.nextObjective.title(title);
     return this;
   }
   @Override
   public MergeObjective description(String description) {
-    this.nextObjectiveMeta.description(description);
+    this.nextObjective.description(description);
     return this;
   }
   @Override
@@ -261,14 +274,25 @@ public class MergeObjectiveBuilder implements MergeObjective {
     {
       var data = this.nextObjectiveMeta.build();
       final var previous = this.container.getData().get(data.getId());
-      final var isModified = !data.equals(previous);
-      if(isModified) {
+      final var isModified = previous != null && !data.equals(previous) && data.getDataExtension() != null;
+      final var isInsert = previous == null && data.getDataExtension() != null;
+      final var isDelete = previous != null && data.getDataExtension() == null;
+      
+      if(isDelete) {
+        logger.rm(previous);
+        batch.addDeleteData(previous);
+        
+      } if(isModified) {
         data = ImmutableGrimMissionData.builder()
             .from(data)
             .commitId(this.logger.getCommitId())
             .build();
         logger.merge(previous, data);
         batch.addUpdateData(data);
+        
+      } else if(isInsert) {
+        logger.add(data);
+        batch.addData(data);
       }
     }
     

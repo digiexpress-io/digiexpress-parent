@@ -66,6 +66,8 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .objectiveId(objectiveId)
+        .title("")
+        .description("")
         .id(goalId)
         ;
     this.childRel = ImmutableGrimOneOfRelations.builder()
@@ -77,9 +79,7 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .createdWithCommitId(logger.getCommitId())
         .commitId(logger.getCommitId())
         .missionId(missionId)
-        .relation(childRel)
-        .title("")
-        .description("");
+        .relation(childRel);
   }
   @Override
   public void build() {
@@ -88,12 +88,12 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
 
   @Override
   public NewGoal title(String title) {
-    this.objectiveMeta.title(title);
+    this.goal.title(title);
     return this;
   }
   @Override
   public NewGoal description(String description) {
-    this.objectiveMeta.description(description);
+    this.goal.description(description);
     return this;
   }
   @Override
@@ -126,8 +126,6 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
     final var data = this.objectiveMeta.build();
     final var goal = this.goal
         .transitives(ImmutableGrimObjectiveGoalTransitives.builder()
-            .title(data.getTitle())
-            .description(data.getDescription())
             .missionId(missionId)
             .createdAt(createdAt)
             .updatedAt(createdAt)
@@ -135,11 +133,12 @@ public class NewGoalBuilder implements ThenaGrimNewObject.NewGoal {
         .build();
     
     logger.add(goal);
-    logger.add(data);
     
     this.batch.addGoals(goal);
-    this.batch.addData(data);
-    
+    if(data.getDataExtension() != null) {
+      this.logger.add(data);
+      this.batch.addData(data);
+    }
     return this.batch.build();
   }
 }

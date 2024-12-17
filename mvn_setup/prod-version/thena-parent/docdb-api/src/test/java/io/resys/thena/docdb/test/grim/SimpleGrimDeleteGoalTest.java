@@ -174,7 +174,7 @@ public class SimpleGrimDeleteGoalTest extends DbTestTemplate {
     .modifyMission(newMission.getMission().getId(), (modifyMission) -> {
 
       final var goalToDelete = newMission.getGoals().values().stream()
-          .filter(e -> e.getTransitives().getTitle().equals("kitchen"))
+          .filter(e -> e.getTitle().equals("kitchen"))
           .findFirst().get();
       
       modifyMission

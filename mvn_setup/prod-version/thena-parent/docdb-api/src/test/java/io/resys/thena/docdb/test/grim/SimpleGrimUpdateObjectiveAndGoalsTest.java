@@ -117,8 +117,8 @@ public class SimpleGrimUpdateObjectiveAndGoalsTest extends DbTestTemplate {
     
     final var newMission = createMission(repo);
     final var remarkToModify = newMission.getRemarks().values().stream().filter(e -> e.getRemarkText().equals("Created main task for building a house!")).findFirst().get();
-    final var goalToModify = newMission.getGoals().values().stream().filter(e -> e.getTransitives().getTitle().equals("kitchen")).findFirst().get();
-    final var objectiveToModify = newMission.getObjectives().values().stream().filter(e -> e.getTransitives().getTitle().equals("interior design ideas")).findFirst().get();
+    final var goalToModify = newMission.getGoals().values().stream().filter(e -> e.getTitle().equals("kitchen")).findFirst().get();
+    final var objectiveToModify = newMission.getObjectives().values().stream().filter(e -> e.getTitle().equals("interior design ideas")).findFirst().get();
     
     getClient().grim(repo).commit().modifyManyMissions()
     .commitMessage("forgot to add comments to things")

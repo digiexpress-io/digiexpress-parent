@@ -33,6 +33,14 @@ import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
+/*
+*  miniature task in the in the task hierarchy that can be assigned
+*  mission/level-1 (main task)
+*        |
+*        * objective/level-2 (sub task)
+*                  |
+*                  * n - goals/level-3 (sub sub task)
+*/
 @Value.Immutable
 public interface GrimObjective extends IsGrimObject, ThenaTable {
   String getId();
@@ -46,13 +54,14 @@ public interface GrimObjective extends IsGrimObject, ThenaTable {
   @Nullable String getObjectiveStatus();
   @Nullable LocalDate getStartDate();
   @Nullable LocalDate getDueDate();
+  @Nullable String getDescription(); // free form description
+  String getTitle(); // task title
+  
     
   @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_OBJECTIVE; };
   
   @Value.Immutable
   interface GrimObjectiveTransitives {
-    @Nullable String getTitle();             // Transitive from data table
-    @Nullable String getDescription();       // Transitive from data table
     @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table
     @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
     @Nullable JsonObject getDataExtension(); // Transitive from data table

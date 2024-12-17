@@ -53,6 +53,7 @@ import io.resys.thena.structures.grim.create.NewAssignmentBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLinkBuilder;
 import io.resys.thena.structures.grim.create.NewRemarkBuilder;
+import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 
 public class MergeGoalBuilder implements MergeGoal {
@@ -82,16 +83,24 @@ public class MergeGoalBuilder implements MergeGoal {
             .filter(d -> d.getRelation() != null)
             .filter(d -> d.getRelation().getRelationType() == GrimRelationType.GOAL)
             .filter(d -> d.getRelation().getObjectiveGoalId().equals(current.getId()))
-            .findFirst().get());
+            .findFirst().orElseGet(() -> {
+              return ImmutableGrimMissionData.builder()
+                .id(OidUtils.gen())
+                .createdWithCommitId(logger.getCommitId())
+                .commitId(logger.getCommitId())
+                .missionId(missionId)
+                .relation(childRel)
+                .build();
+            }));
   }
   @Override
   public MergeGoal title(String title) {
-    this.nextGoalMeta.title(title);
+    this.nextGoal.title(title);
     return this;
   }
   @Override
   public MergeGoal description(String description) {
-    this.nextGoalMeta.description(description);
+    this.nextGoal.description(description);
     return this;
   }
   @Override
@@ -275,14 +284,25 @@ public class MergeGoalBuilder implements MergeGoal {
     {
       var data = this.nextGoalMeta.build();
       final var previous = this.container.getData().get(data.getId());
-      final var isModified = !data.equals(previous);
-      if(isModified) {
+      final var isModified = previous != null && !data.equals(previous) && data.getDataExtension() != null;
+      final var isInsert = previous == null && data.getDataExtension() != null;
+      final var isDelete = previous != null && data.getDataExtension() == null;
+      
+      if(isDelete) {
+        logger.rm(previous);
+        batch.addDeleteData(previous);
+        
+      } if(isModified) {
         data = ImmutableGrimMissionData.builder()
             .from(data)
             .commitId(this.logger.getCommitId())
             .build();
         logger.merge(previous, data);
         batch.addUpdateData(data);
+        
+      } else if(isInsert) {
+        logger.add(data);
+        batch.addData(data);
       }
     }
     

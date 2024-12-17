@@ -82,7 +82,9 @@ public class CreateOneMissionsImpl implements CreateOneMission {
   }
 
   private Uni<OneMissionEnvelope> doInTx(GrimState tx) {
-    return createRequest(tx).onItem().transformToUni(request -> createResponse(tx, request))
+    return tx.query().missionSequences().nextVal().onItem()
+        .transformToUni(nextVal -> createRequest(tx, nextVal))
+        .onItem().transformToUni(request -> createResponse(tx, request))
         .onFailure(CreateOneMissionException.class).recoverWithItem(ex -> {
           final CreateOneMissionException error = (CreateOneMissionException) ex;          
           return ImmutableOneMissionEnvelope.builder()
@@ -116,8 +118,7 @@ public class CreateOneMissionsImpl implements CreateOneMission {
     });
   }
   
-  private Uni<GrimBatchMissions> createRequest(GrimState tx) {
-  
+  private Uni<GrimBatchMissions> createRequest(GrimState tx, Long nextVal) {
     final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
@@ -138,7 +139,7 @@ public class CreateOneMissionsImpl implements CreateOneMission {
           .build()
     );
     
-    final var newMission = new NewMissionBuilder(logger);
+    final var newMission = new NewMissionBuilder(logger, nextVal);
     this.mission.accept(newMission);
     final var created = newMission.close();
     
