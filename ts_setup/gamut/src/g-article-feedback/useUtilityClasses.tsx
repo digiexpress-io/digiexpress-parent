@@ -9,7 +9,6 @@ export const MUI_NAME = 'GArticleFeedback';
 
 export interface GArticleFeedbackClasses {
   root: string;
-
 }
 
 export type GArticleFeedbackClassKey = keyof GArticleFeedbackClasses;
@@ -25,8 +24,8 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     toolbar: ['toolbar'],
     vote: ['vote'],
     feedbackViewer: ['feedbackViewer']
-    
   };
+
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
@@ -91,7 +90,6 @@ export const GArticleFeedbackRoot = styled("div", {
     },
 
     '& .GArticleFeedback-feedbackViewer': {
-
 
     },
   };

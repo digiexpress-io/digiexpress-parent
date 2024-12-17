@@ -14,6 +14,33 @@ import { GArticleFeedbackViewer } from './GArticleFeedbackViewer';
 import { DateTime } from 'luxon';
 import { useLocale } from '../api-locale';
 
+
+
+const startMarker = "#### Otsikko";
+const endMarker = "####";
+function parseCustomerTitle(content: string): React.ReactElement {
+  const contentLines = content.split("\n");
+
+  let customerTitle: string[] = [];
+  let continueParsing = false;
+
+  for (const line of contentLines) {
+    if (line.includes(startMarker)) {
+      continueParsing = true;
+    } else if (line.includes(endMarker) && continueParsing) {
+      continueParsing = false;
+      break;
+    }
+    if (continueParsing) {
+      let cleanLine = line.includes(startMarker) ? line.replace(startMarker, "").trim() : line;
+      cleanLine = cleanLine.split(",").join("");
+      customerTitle.push(cleanLine);
+    }
+  }
+
+  return (<Typography variant='body2'>{customerTitle.join("\n")}</Typography>)
+}
+
 export interface GArticleFeedbackProps {
   children: SiteApi.TopicView | undefined;
   enabled?: (view: SiteApi.TopicView) => boolean;
@@ -61,7 +88,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
     feedbackId: selectedFeedback?.feedback.id,
     isViewFeedback: selectedFeedback?.feedback.id ? true : false
   }
-  const topic: SiteApi.TopicView | undefined = props.children;
   const Root = props.component ?? GArticleFeedbackRoot;
 
   function handleOnRowClick(feedback: SiteApi.CustomerFeedback) {
@@ -78,14 +104,13 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
 
 
 
-
   return (<>
     {
       ownerState.isViewFeedback && ownerState.feedbackId &&
       <GArticleFeedbackViewer className={classes.feedbackViewer} feedbackId={ownerState.feedbackId} onClose={() => setSelectedFeedback(undefined)} />
     }
     <Root ownerState={ownerState} className={classes.root}>
-      <GArticleFeedbackTableToolbar className={classes.toolbar}/>
+      <GArticleFeedbackTableToolbar className={classes.toolbar} />
       <TableContainer>
         <Table size='small'>
           <TableHead>
@@ -95,11 +120,11 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               </GArticleFeedbackTableHead>
 
               <GArticleFeedbackTableHead cellName='labelValue' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.topic'/>
+                <FormattedMessage id='gamut.feedback.table.topic' />
               </GArticleFeedbackTableHead>
 
               <GArticleFeedbackTableHead cellName='subLabelValue' ownerState={reducer}>
-                <FormattedMessage id='gamut.feedback.table.subtopic'/>
+                <FormattedMessage id='gamut.feedback.table.subtopic' />
               </GArticleFeedbackTableHead>
 
               <GArticleFeedbackTableHead cellName='updatedOnDate' ownerState={reducer}>
@@ -109,11 +134,11 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          
+
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
               <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
-                <TableCell component="th" scope="row" padding="none">Customer title</TableCell>
+                <TableCell component="th" scope="row" padding="none">{parseCustomerTitle(row.feedback.content)}</TableCell>
                 <TableCell component="th" scope="row" padding="none">{row.feedback.labelValue}</TableCell>
                 <TableCell component="th" scope="row" align="left" padding="none">{row.feedback.subLabelValue}</TableCell>
                 <TableCell component="th" scope="row" align="left" padding="none">
@@ -132,10 +157,11 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
             {reducer[0].emptyRows > 0 && (
               <TableRow className={classes.emptyRow}>
                 <TableCell colSpan={5} className={ownerState.noData ? classes.noData : undefined}>
-                  {ownerState.noData && <Typography><FormattedMessage id='gamut.feedback.table.nodata'/></Typography>}
+                  {ownerState.noData && <Typography><FormattedMessage id='gamut.feedback.table.nodata' /></Typography>}
                 </TableCell>
               </TableRow>)}
           </TableBody>
+
         </Table>
       </TableContainer>
       <TablePagination component='div'

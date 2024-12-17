@@ -75,6 +75,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     
     Assertions.assertEquals("same,vimes", template.getReporterNames());
     
+    
     final var queryFeedback = feedbackClient.queryFeedbacks().findAll().stream().filter(e -> e.getId().equals(feedback.getId())).findFirst();
     Assertions.assertTrue(queryFeedback.isPresent(), "Can't find created feedback");
     Assertions.assertTrue(feedbackClient.queryFeedbacks().findAll().size() == 1, "Can't find created feedback");
@@ -158,7 +159,6 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     feedbackClient.deleteAll(ImmutableDeleteReplyCommand.builder()
         .replyIds(Arrays.asList(taskId))
         .build(), "userId");
-    
     
     Assertions.assertEquals(0, feedbackClient.queryFeedbacks().findAll().size());
   }

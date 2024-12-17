@@ -45,7 +45,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
       <DialogTitle>
         <Box display='flex'>
           <div>
-            <Typography variant='h3'>Customer feedback title</Typography>
+            <Typography variant='h3'>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerTitle' })}</Typography>
             <Typography>
               {intl.formatMessage({ id: 'gamut.feedback.updatedOnDate' })}
               {intl.formatMessage({ id: 'gamut.textSeparator' })}
@@ -81,7 +81,7 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
       <DialogContent>
         <GMarkdown>{feedback.feedback.content}</GMarkdown>
         <Divider sx={{ my: 2 }} />
-        <Typography fontWeight='bold' mb={2}>Organization reply</Typography>
+        <Typography fontWeight='bold' mb={2}>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}</Typography>
         <GMarkdown>{feedback.feedback.replyText}</GMarkdown>
       </DialogContent>
       <DialogActions>
