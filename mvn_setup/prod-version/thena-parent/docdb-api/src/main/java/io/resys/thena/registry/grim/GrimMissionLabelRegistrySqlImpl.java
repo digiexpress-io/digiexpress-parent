@@ -62,6 +62,18 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .build();
   }
   @Override
+  public ThenaSqlClient.Sql findAllUniqueForMissions() {
+    return ImmutableSql.builder()
+        .value(new SqlStatement()
+        .append("SELECT distinct(label_type, label_value, label_body) FROM ").append(options.getGrimMissionLabel()).ln()
+        .append(" WHERE mission_id is not null").ln()
+        .append(" AND objective_id is null").ln()
+        .append(" AND goal_id is null").ln()
+        .append(" AND remark_id is null").ln()
+        .build())
+        .build();
+  }
+  @Override
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()

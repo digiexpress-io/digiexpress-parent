@@ -97,7 +97,7 @@ public interface ProcessClient {
   
   interface QueryProcessInstances {
     Optional<ProcessInstance> findOneById(String id);
-    Optional<ProcessInstance> findOneByTaskId(Long taskId);    
+    Optional<ProcessInstance> findOneByTaskId(String taskId);    
     Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);    
     
     void deleteOneById(String id);
@@ -108,7 +108,7 @@ public interface ProcessClient {
   }
   
   interface ProcessQuestionnaireQuery {
-    Optional<JsonObject> findOneByTaskId(Long taskId);    
+    Optional<JsonObject> findOneByTaskId(String taskId);    
   }
 
   interface ProcessInstanceStatusBuilder {

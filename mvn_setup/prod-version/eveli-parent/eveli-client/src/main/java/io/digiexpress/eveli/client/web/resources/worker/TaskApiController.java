@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -66,6 +68,7 @@ public class TaskApiController {
   
   private final TaskAccessRepository taskAccessRepository;
   private final TaskRepository taskRepository;
+  private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
   @Transactional(readOnly = true)
@@ -102,7 +105,7 @@ public class TaskApiController {
   public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
     
     final var worker = securityClient.getUser();
-    final var task = taskClient.queryTasks().getOneById(id);
+    final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
     
     
     if (worker.getPrincipal().isAdmin()) {
@@ -124,7 +127,7 @@ public class TaskApiController {
     final var worker = securityClient.getUser().getPrincipal();
     final var newTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .createTask(command);
+        .createTask(command).await().atMost(timeout);
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
   }
   
@@ -134,7 +137,7 @@ public class TaskApiController {
     final var worker = securityClient.getUser().getPrincipal();
     final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .modifyTask(id, command);
+        .modifyTask(id, command).await().atMost(timeout);
     return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
 
   }
@@ -156,12 +159,12 @@ public class TaskApiController {
     if (worker.isAdmin()) {
       return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
           .userId(worker.getUsername())
-          .findAll());
+          .findAll().await().atMost(timeout));
     } 
     return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
         .userId(worker.getUsername())
         .requireAnyRoles(worker.getRoles())
-        .findAll());
+        .findAll().await().atMost(timeout));
   }
   
   @GetMapping(value="/{id}/comments")
@@ -169,7 +172,7 @@ public class TaskApiController {
   {
     final var authentication = securityClient.getUser();
     new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
-    final var comments = taskClient.queryComments().findAllByTaskId(id);
+    final var comments = taskClient.queryComments().findAllByTaskId(id).await().atMost(timeout);
  
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
@@ -182,6 +185,6 @@ public class TaskApiController {
   @GetMapping("/keywords")
   @Transactional(readOnly = true)
   public ResponseEntity<KeyWordsResponse> getKeyWords() {
-    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryKeywords().findAllKeywords()));
+    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryKeywords().findAllKeywords().await().atMost(timeout)));
   }
 }

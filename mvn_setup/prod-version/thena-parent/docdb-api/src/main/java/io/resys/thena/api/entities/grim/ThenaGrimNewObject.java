@@ -47,6 +47,8 @@ public interface ThenaGrimNewObject {
     NewMission priority(@Nullable String priority);
     
     // nested builders
+    NewMission addViewer(Consumer<NewCommitViewer> viewer);
+    
     NewMission addAssignees(Consumer<NewAssignment> assignment);
     NewMission addLabels(Consumer<NewLabel> label);
     NewMission addLink(Consumer<NewLink> link);
@@ -114,6 +116,12 @@ public interface ThenaGrimNewObject {
     NewRemark remarkStatus(@Nullable String remarkStatus);
     NewRemark reporterId(String reporterId);
     NewRemark addAssignees(Consumer<NewAssignment> assignment);
+    void build(); 
+  }
+  
+  // support interface inside of callback
+  interface NewCommitViewer {
+    NewCommitViewer userId(String userId);
     void build(); 
   }
 }

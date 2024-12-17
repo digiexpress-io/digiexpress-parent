@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.comms;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -49,6 +51,7 @@ public class PrintoutController {
   private final DialobClient dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;
+  private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping(value = {"/pdf"}, produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> printQuestionnaire(
@@ -60,7 +63,7 @@ public class PrintoutController {
       
       
       log.debug("PDF printout request user has roles: {}", worker.getRoles());
-      final var task = client.queryTasks().getOneById(taskId);
+      final var task = client.queryTasks().getOneById(taskId).await().atMost(timeout);
       
       if(!worker.isAdmin() && !worker.isAccessGranted(task.getAssignedRoles())) {
         log.warn("Task with ID {} not found or no roles access for printout, returning 404", taskId);

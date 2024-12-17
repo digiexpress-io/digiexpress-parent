@@ -55,7 +55,7 @@ public interface TaskClient {
   }
   
   interface QueryTaskComments {
-    Uni<List<TaskComment>> findAllByTaskId(long taskId);
+    Uni<List<TaskComment>> findAllByTaskId(String taskId);
     Uni<TaskComment> getOneById(long commentId);
   }
   
@@ -164,15 +164,15 @@ public interface TaskClient {
   @Value.Immutable
   interface Task {
     // null on new task
-    Long getId();
+    String getId();
     ZonedDateTime getCreated();
-    ZonedDateTime getUpdated();
+    @Nullable ZonedDateTime getUpdated();
     String getUpdaterId();
     
     String getTaskRef(); // Task reference, semantic ID for task.
     TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
-    Integer getVersion();
+    String getVersion();
 
     // optional props
     @Nullable String getQuestionnaireId();

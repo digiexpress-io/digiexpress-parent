@@ -23,6 +23,7 @@ package io.resys.thena.api.entities.grim;
 import java.beans.Transient;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.immutables.value.Value;
 
@@ -71,6 +72,9 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
     OffsetDateTime getCreatedAt(); // Transitive from commit table
     OffsetDateTime getUpdatedAt(); // Transitive from commit table
     OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
+    String getTreeUpdatedBy(); // Transitive from commit table
     @Nullable JsonObject getDataExtension();
+    List<GrimAssignment> getAssignments();
+    
   }
 }

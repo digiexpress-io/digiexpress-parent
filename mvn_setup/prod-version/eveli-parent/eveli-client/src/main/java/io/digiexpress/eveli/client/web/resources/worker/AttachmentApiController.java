@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
  */
 
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,7 @@ public class AttachmentApiController {
   private final TaskClient taskClient;  
   private final AuthClient securityClient;
   private final ProcessClient processClient;
+  private static final Duration timeout = Duration.ofMillis(10000);
   
   /**
    * Returns list of task attachments. 
@@ -146,7 +148,7 @@ public class AttachmentApiController {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
     
-    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId));
+    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId)).await().atMost(timeout);
     if(!authentication.getPrincipal().isAdmin() && !authentication.getPrincipal().isAccessGranted(task.getAssignedRoles())) {
       log.warn("Access to task {} disabled for roles {} or task not found", taskId, roles);
       return false;

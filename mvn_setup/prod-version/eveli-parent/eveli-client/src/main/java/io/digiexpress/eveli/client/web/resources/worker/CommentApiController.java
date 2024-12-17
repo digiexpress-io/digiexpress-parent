@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -46,11 +48,12 @@ public class CommentApiController
 {
   private final TaskClient taskClient;
   private final AuthClient securityClient;
-
+  private static final Duration timeout = Duration.ofMillis(10000);
+  
   @GetMapping("/{id}")
   public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") Long id) 
   {
-    return ResponseEntity.ok(taskClient.queryComments().getOneById(id));
+    return ResponseEntity.ok(taskClient.queryComments().getOneById(id).await().atMost(timeout));
   }
   
   @PostMapping
@@ -59,7 +62,8 @@ public class CommentApiController
     final var worker = securityClient.getUser().getPrincipal();
     final var newComment = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .createTaskComment(command);
+        .createTaskComment(command).await().atMost(timeout);
+    
     return new ResponseEntity<>(newComment, HttpStatus.CREATED);
   }
 }
