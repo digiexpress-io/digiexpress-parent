@@ -6,9 +6,10 @@ export const MUI_NAME = 'GInboxFormReview';
 
 export interface GInboxFormReviewClasses {
   root: string,
-  formReview: string,
-  formReviewIcon: string,
-  formReviewAvatar: string,
+  review: string,
+  reviewIcon: string,
+  reviewAvatar: string,
+  reviewTitle: string
 }
 export type GInboxFormReviewClassKey = keyof GInboxFormReviewClasses;
 
@@ -18,6 +19,8 @@ export const useUtilityClasses = () => {
     reviewItem: ['reviewItem'],
     reviewIcon: ['reviewIcon'],
     reviewAvatar: ['reviewAvatar'],
+    reviewTitle: ['reviewTitle'],
+    closeButton: ['closeButton']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -33,6 +36,8 @@ export const GInboxFormReviewRoot = styled("div", {
       styles.reviewItem,
       styles.reviewIcon,
       styles.reviewAvatar,
+      styles.reviewTitle,
+      styles.closeButton
     ];
   },
 })(({ theme }) => {
@@ -51,6 +56,13 @@ export const GInboxFormReviewRoot = styled("div", {
     '.GInboxFormReview-reviewIcon': {
       fontSize: '15px',
       color: alpha(theme.palette.text.primary, 0.9)
+    },
+    '.GInboxFormReview-reviewTitle': { //TODO
+      ...theme.typography.h1
+    },
+    '.GInboxFormReview-closeButton': {
+      marginBottom: theme.spacing(2),
+      width: '20ch'
     },
   };
 });

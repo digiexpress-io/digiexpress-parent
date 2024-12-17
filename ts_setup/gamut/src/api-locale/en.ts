@@ -242,7 +242,12 @@ export const en = {
 
   'gamut.feedback.updatedOnDate': 'Updated date',
   'gamut.feedback.feedbackViewerTitle': 'Customer feedback',
-  'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply'
+  'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply',
+
+  // ----------------------- DIALOB REVIEW -------------------------
+
+  'dialob.review.title': 'Form review',
+  'dialob.review.button.close': 'Close',
 
 }
 
