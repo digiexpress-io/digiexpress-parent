@@ -96,7 +96,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .id(entity.getId())
       .status(entity.getStatus())
       .questionnaireId(entity.getQuestionnaireId())
-      .taskId(entity.getTaskId())
+      .taskId(String.valueOf(entity.getTaskId()))
       .userId(entity.getUserId())
       .created(entity.getCreated())
       .updated(entity.getUpdated())

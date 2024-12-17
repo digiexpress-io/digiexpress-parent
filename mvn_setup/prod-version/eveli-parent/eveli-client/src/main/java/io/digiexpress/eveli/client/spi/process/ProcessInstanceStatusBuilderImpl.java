@@ -37,7 +37,7 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
   public void answeredByQuestionnaire(String questionnaireId, String taskId) {
     final var process = processJPA.findByQuestionnaireId(questionnaireId);
     if (process.isPresent()) {
-      processJPA.save(process.get().setStatus(ProcessStatus.ANSWERED).setTaskId(Long.parseLong(taskId)));
+      processJPA.save(process.get().setStatus(ProcessStatus.ANSWERED).setTaskId(taskId));
     } else {
       log.warn("No process for questionnaire id {}, ignoring.", questionnaireId);
     }
@@ -59,7 +59,7 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
     setStatus(id, ProcessStatus.ANSWERED);
   }
   @Override
-  public void taskStatusChange(Long taskId, TaskStatus taskStatus) {
+  public void taskStatusChange(String taskId, TaskStatus taskStatus) {
     final var process = processJPA.findByTaskId(taskId);
     if (process.isPresent()) {
       final var entity = process.get();

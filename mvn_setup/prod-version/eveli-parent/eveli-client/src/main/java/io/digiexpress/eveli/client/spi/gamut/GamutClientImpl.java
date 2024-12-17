@@ -108,7 +108,7 @@ public class GamutClientImpl implements GamutClient {
           throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
         }
         
-        processInstanceClient.queryInstances().deleteOneById(actionId);
+        processInstanceClient.queryInstances().deleteOneById(process.getId());
       
         return ImmutableUserAction.builder()
             .id(process.getId().toString())

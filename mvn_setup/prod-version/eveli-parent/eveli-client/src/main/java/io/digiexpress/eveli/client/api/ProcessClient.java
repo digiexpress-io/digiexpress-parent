@@ -100,7 +100,7 @@ public interface ProcessClient {
     Optional<ProcessInstance> findOneByTaskId(String taskId);    
     Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);    
     
-    void deleteOneById(String id);
+    void deleteOneById(Long id);
     List<ProcessInstance> findAll();
     List<ProcessInstance> findAllAnswered();
     List<ProcessInstance> findAllExpired();
@@ -114,7 +114,7 @@ public interface ProcessClient {
   interface ProcessInstanceStatusBuilder {
     void answered(String id);
     void answeredByQuestionnaire(String questionnaireId, String taskId); // used by assets
-    void taskStatusChange(Long taskId, TaskStatus taskStatus);
+    void taskStatusChange(String taskId, TaskStatus taskStatus);
     void inProgress(String id);
     void completed(String id);
     void rejected(String id);
@@ -141,7 +141,7 @@ public interface ProcessClient {
     
     // Entity links
     @Nullable String getQuestionnaireId();
-    @Nullable Long getTaskId();    
+    @Nullable String getTaskId();    
     @Nullable String getUserId();
 
     // Asset links

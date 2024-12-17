@@ -34,7 +34,7 @@ import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
   Optional<ProcessEntity> findByQuestionnaireId(String questionnaireId);
-  Optional<ProcessEntity> findByTaskId(Long taskId);
+  Optional<ProcessEntity> findByTaskId(String taskId);
   Optional<ProcessEntity> findById(Long id);
   
   @Query(value=
@@ -69,7 +69,7 @@ and status in('CREATED', 'ANSWERING')
 SELECT form_body FROM process 
 WHERE task_id = :taskId and form_body is not null
 """)
-  Optional<String> findQuestionnaireByTaskId(Long taskId);
+  Optional<String> findQuestionnaireByTaskId(String taskId);
   
   void deleteById(@Param("id") Long id);
   ProcessEntity save(ProcessEntity entity);
