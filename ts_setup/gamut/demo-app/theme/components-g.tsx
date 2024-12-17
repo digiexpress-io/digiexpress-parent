@@ -176,6 +176,18 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
       })
     }
   },
+
+  GArticleFeedback: {
+    defaultProps: {
+      enabled(view) { //010_anna_palautetta
+        if (view.id.endsWith('anna_palautetta')) {
+          return true;
+        }
+        return false;
+      },
+    }
+  },
+
   GUserOverviewMenu: {},
   GUserOverviewDetail: {},
   GUserOverview: {},
