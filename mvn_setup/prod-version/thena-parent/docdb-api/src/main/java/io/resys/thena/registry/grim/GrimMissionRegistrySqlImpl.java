@@ -189,11 +189,12 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  archived_at,").ln()
         .append("  archived_status,").ln()
         .append("  mission_ref,").ln()
+        .append("  questionnaire_id,").ln()
         
         .append("  created_commit_id,").ln()
         .append("  updated_tree_commit_id)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -215,6 +216,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getArchivedStatus(),
                 
                 doc.getRefId(),
+                doc.getQuestionnaireId(),
                 
                 doc.getCreatedWithCommitId(),
                 doc.getUpdatedTreeWithCommitId()
@@ -246,9 +248,10 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         
         .append("  mission_title = $13,").ln()
         .append("  mission_description = $14,").ln()
-        .append("  mission_ref = $15").ln()
+        .append("  mission_ref = $15,").ln()
+        .append("  questionnaire_id = $16").ln()
         
-        .append(" WHERE id = $16")
+        .append(" WHERE id = $17")
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -271,6 +274,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getDescription(),
                 doc.getRefId(),
                 
+                doc.getQuestionnaireId(),
+                
                 doc.getId()
              }))
             .collect(Collectors.toList()))
@@ -286,6 +291,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("  created_commit_id VARCHAR(40) NOT NULL,").ln()
     .append("  updated_tree_commit_id VARCHAR(40) NOT NULL,").ln()
     
+    .append("  questionnaire_id VARCHAR(40),")
     .append("  parent_mission_id VARCHAR(40),").ln()
     .append("  external_id VARCHAR(40) UNIQUE,").ln()
     .append("  reporter_id VARCHAR(255),").ln()
@@ -306,6 +312,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
 
     .append("CREATE INDEX ").append(options.getGrimMission()).append("_REF_INDEX")
     .append(" ON ").append(options.getGrimMission()).append(" (mission_ref);").ln()
+    
+    .append("CREATE INDEX ").append(options.getGrimMission()).append("_QUESTIONNAIRE_ID_INDEX")
+    .append(" ON ").append(options.getGrimMission()).append(" (questionnaire_id);").ln()
     
     .append("CREATE INDEX ").append(options.getGrimMission()).append("_PARENT_INDEX")
     .append(" ON ").append(options.getGrimMission()).append(" (parent_mission_id);").ln()
@@ -348,6 +357,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .title(row.getString("mission_title"))
           .description(row.getString("mission_description"))
           .refId(row.getString("commit_id"))
+          .questionnaireId(row.getString("questionnaire_id"))
           
           .transitives(ImmutableGrimMissionTransitives.builder()
             .dataExtension(row.getJsonObject("data_extension"))
