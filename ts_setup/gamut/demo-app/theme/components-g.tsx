@@ -179,11 +179,8 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GArticleFeedback: {
     defaultProps: {
-      enabled(view) { //010_anna_palautetta
-        if (view.id.endsWith('anna_palautetta')) {
-          return true;
-        }
-        return false;
+      enabled(view) { //015_Palaute
+        return view.id.toLowerCase().endsWith('palaute');
       },
     }
   },
