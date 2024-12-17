@@ -61,7 +61,11 @@ public class NewAssignmentBuilder implements ThenaGrimNewObject.NewAssignment {
     this.next.assignee(assignee);
     return this;
   }
-
+  @Override
+  public NewAssignment assigneeContact(String assignmeeContact) {
+    this.next.assigneeContact(assignmeeContact);
+    return this;
+  }
   @Override
   public NewAssignment assignmentType(String assignmentType) {
     this.next.assignmentType(assignmentType);
@@ -93,6 +97,4 @@ public class NewAssignmentBuilder implements ThenaGrimNewObject.NewAssignment {
     this.logger.add(built);
     return built;
   }
-
-
 }

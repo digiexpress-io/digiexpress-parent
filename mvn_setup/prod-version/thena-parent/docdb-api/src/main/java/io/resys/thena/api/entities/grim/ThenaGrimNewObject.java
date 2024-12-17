@@ -61,6 +61,7 @@ public interface ThenaGrimNewObject {
   interface NewAssignment {
     NewAssignment assignee(String assignee);
     NewAssignment assignmentType(String assignmentType);
+    NewAssignment assigneeContact(@Nullable String assignmeeContact);
     void build();
   }  
   // support interface inside of callback

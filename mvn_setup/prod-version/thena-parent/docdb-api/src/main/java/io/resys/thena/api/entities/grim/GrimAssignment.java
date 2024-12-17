@@ -35,6 +35,8 @@ public interface GrimAssignment extends IsGrimObject, ThenaTable {
   String getMissionId();
   String getAssignee();
   String getAssignmentType();
+  @Nullable String getAssigneeContact();
+  
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
   default boolean isMatch(String targetId) {

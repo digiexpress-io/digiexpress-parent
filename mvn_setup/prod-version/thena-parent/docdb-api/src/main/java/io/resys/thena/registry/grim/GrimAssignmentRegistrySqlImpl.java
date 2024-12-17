@@ -116,9 +116,10 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
         .append("  goal_id,").ln()
         .append("  remark_id, ").ln()
         .append("  assignee, ").ln()
-        .append("  assignment_type)").ln()
+        .append("  assignment_type,").ln()
+        .append("  assignee_contact)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(asssignments.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -130,6 +131,7 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
                 doc.getAssignee(),
                 doc.getAssignmentType(),
+                doc.getAssigneeContact()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -150,6 +152,8 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
 
     .append("  assignee VARCHAR(255) NOT NULL,").ln()
     .append("  assignment_type VARCHAR(100) NOT NULL,").ln()
+    .append("  assignee_contact TEXT,").ln()
+    
     .append("  UNIQUE NULLS NOT DISTINCT(mission_id, objective_id, goal_id, remark_id, assignee, assignment_type)").ln()
     
     .append(");").ln()
@@ -214,6 +218,7 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
           .missionId(row.getString("mission_id"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           
+          .assigneeContact(row.getString("assignee_contact"))
           .assignee(row.getString("assignee"))
           .assignmentType(row.getString("assignment_type"))
           .build();
