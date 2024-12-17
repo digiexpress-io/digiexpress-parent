@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
 public interface TaskClient {
@@ -47,29 +48,29 @@ public interface TaskClient {
   
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
-    Task createTask(CreateTaskCommand command);
-    Task modifyTask(Long taskId, ModifyTaskCommand command);
-    Task deleteTask(Long taskId);
-    TaskComment createTaskComment(CreateTaskCommentCommand command);
+    Uni<Task> createTask(CreateTaskCommand command);
+    Uni<Task> modifyTask(Long taskId, ModifyTaskCommand command);
+    Uni<Task> deleteTask(Long taskId);
+    Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
   }
   
   interface QueryTaskComments {
-    List<TaskComment> findAllByTaskId(long taskId);
-    TaskComment getOneById(long commentId);
+    Uni<List<TaskComment>> findAllByTaskId(long taskId);
+    Uni<TaskComment> getOneById(long commentId);
   }
   
   interface QueryTaskKeywords {
-    List<String> findAllKeywords();
+    Uni<List<String>> findAllKeywords();
   }
   
   interface QueryUnreadUserTasks {
     QueryUnreadUserTasks userId(String userId);
     QueryUnreadUserTasks requireAnyRoles(List<String> roles);
-    List<Long> findAll();
+    Uni<List<Long>> findAll();
   }
   
   interface QueryTasks {
-    Task getOneById(long taskId);
+    Uni<Task> getOneById(long taskId);
   }
   
   interface PaginateTasks {
