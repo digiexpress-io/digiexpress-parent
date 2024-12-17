@@ -41,7 +41,7 @@ export const fi = {
   'gamut.forms': 'Lomakkeet',
   'gamut.new-messages': 'Uusi viesti',
   'gamut.services': 'Palvelut',
-  'gamut.bookings': 'Kalenteri varaus',
+  'gamut.bookings': 'Kalenterivaraus',
   'gamut.noValueIndicator': '-',
   'gamut.noValueIndicatorColon': ': ',
   'gamut.textSeparator': ': ',
@@ -60,7 +60,7 @@ export const fi = {
   'gamut.buttons.select': 'Valitse',
   'gamut.buttons.close': 'Sulje',
   'gamut.buttons.reply': 'Vastaa',
-  'gamut.buttons.delete': 'Poiste',
+  'gamut.buttons.delete': 'Poista',
   'gamut.buttons.serviceSelect': 'Selaa palveluja',
   'gamut.buttons.attachment.add': 'Lisää liite',
 
