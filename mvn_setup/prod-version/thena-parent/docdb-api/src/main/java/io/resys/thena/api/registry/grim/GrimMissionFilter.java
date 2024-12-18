@@ -33,25 +33,18 @@ import jakarta.annotation.Nullable;
 public interface GrimMissionFilter {
   Optional<List<String>> getMissionIds();
   List<GrimLinkFilter> getLinks();
+  List<GrimAssignmentFilter> getAssignments();
+  List<String> getStatus();
+  List<String> getPriority();
   
   @Nullable GrimArchiveQueryType getArchived();
   @Nullable LocalDate getFromCreatedOrUpdated();
-  
-  List<GrimAssignmentFilter> getAssignments();
-  
-  @Nullable String getReporterId();
+  @Nullable String getLikeReporterId();
   @Nullable String getLikeTitle();
   @Nullable String getLikeDescription();
-
-  List<String> getStatus();
-  List<String> getPriority();
   @Nullable Boolean getOverdue(); // return tasks that are overdue
   
-  // TODO
-  @Nullable String getLikeRole(); // find task assigned to the role
-  List<String> getRequireAnyRoles(); // secondary role filter, must contain at least one of these
-   
-  
+
   @Value.Immutable
   interface GrimAssignmentFilter {
     String getAssignmentType();

@@ -113,7 +113,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   }
   @Override
   public InternalMissionQuery likeReporterId(String reporterId) {
-    this.builder.reporterId(reporterId);
+    this.builder.likeReporterId(reporterId);
     return this;
   }
   @Override
