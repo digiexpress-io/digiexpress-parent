@@ -26,20 +26,20 @@ import {
   createSubjectFetch
 } from './fetch';
 
+const staleTime = 5 * 1000;
+const processesQueryKey = 'legacy-processes';
+
+
+const iamFetch = createIamFetch();
+const siteFetch = createSiteFetch();
+const dialobFetch = createDialobFetch();
+const offerFetch = createOfferFetch();
+const contractFetch = createContractFetch();
+const subjectFetch = createSubjectFetch();
+const bookingFetch = createBookingFetch();
 
 const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const staleTime = 5 * 1000;
-  const processesQueryKey = 'legacy-processes';
-
-  const dialobFetch = createDialobFetch();
-  const offerFetch = createOfferFetch();
-  const contractFetch = createContractFetch();
-  const subjectFetch = createSubjectFetch();
-  const bookingFetch = createBookingFetch();
-
-
   return (<DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
-
       <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
@@ -55,18 +55,13 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<>{children}</>)
 }
-
-
 const AuthSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const iam = useIam();
   return (iam.authType === 'ANON' ? <PublicSetup>{children}</PublicSetup> : <SecuredSetup>{children}</SecuredSetup>)
 }
 
-
 export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = new QueryClient()
-  const iamFetch = createIamFetch();
-  const siteFetch = createSiteFetch();
 
   const liveness = 60000;
   function handleExpire() {

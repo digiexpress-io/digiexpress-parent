@@ -1,9 +1,9 @@
 import React from 'react';
-import { useThemeProps } from '@mui/system';
+import { Box, useThemeProps } from '@mui/system';
 import { CircularProgress } from '@mui/material';
 import { useDialobReview } from '../api-dialob';
 
-import { GFormReviewRoot, MUI_NAME } from './useUtilityClasses';
+import { GFormReviewRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { DEFAULT_ITEM_CONFIG, GFormReviewQuestionnaire, GFormReviewContext, GFormReviewContextType, ItemconfigType } from '../g-form-review-components';
 
 
@@ -13,14 +13,17 @@ export interface GFormReviewProps {
 }
 export const GFormReview: React.FC<GFormReviewProps> = (initProps) => {
   const { isPending, review } = useDialobReview({ id: initProps.formId })
-
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
   });
+  const classes = useUtilityClasses();
 
   if (isPending) {
-    return <CircularProgress />;
+    return (
+      <Box className={classes.loader}>
+        <CircularProgress />
+      </Box>);
   }
 
   if (!review) {

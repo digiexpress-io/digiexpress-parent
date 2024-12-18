@@ -40,7 +40,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
 
   // tanstack query config
   const siteQuery = useQuery({
-    staleTime, refetchInterval,
+    staleTime,
+    refetchInterval,
     queryKey: ['sites', selectedLocale],
     queryFn: () => fetchSiteGet(selectedLocale).then(async response => {
       if (!response.ok) {
@@ -52,7 +53,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   });
 
   const feedbackQuery = useQuery({
-    staleTime, refetchInterval,
+    staleTime,
+    refetchInterval,
     queryKey: ['feedback', selectedLocale],
     queryFn: () => fetchFeedbackGet(selectedLocale).then(async response => {
       if (!response.ok) {
@@ -76,11 +78,12 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     return Object.freeze({ site, views: views ?? {}, pending, locale: selectedLocale, feedback, voteOnReply });
   }, [site, views, pending, selectedLocale, feedback, fetchFeedbackRatingPut]);
 
+
   if (siteQuery.isPending) {
-    return <></>
+    return (<>Loading for the first time ...</>)
   }
 
-  return (<SiteBackendContext.Provider value={contextValue}>{props.children}</ SiteBackendContext.Provider>);
+  return (<SiteBackendContext.Provider value={contextValue}>{props.children}</SiteBackendContext.Provider>);
 }
 
 class SiteRequestError extends Error {

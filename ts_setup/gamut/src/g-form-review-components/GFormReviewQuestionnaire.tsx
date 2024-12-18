@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid } from '@mui/material';
+import { Grid2 } from '@mui/material';
 import { GFormReviewContext } from './GFormReviewContext';
 import type { ItemProps } from './componentTypes';
 
@@ -14,8 +14,8 @@ export const GFormReviewQuestionnaire: React.FC<QuestionnaireItemProps> = ({ ite
   const dC = useContext(GFormReviewContext);;
   const items = item.items ? item.items.map(id => dC.createItem(id, null, true)) : null;
   return (
-    <Grid container spacing={1}>
+    <Grid2>
       {items}
-    </Grid>
+    </Grid2>
   );
 }

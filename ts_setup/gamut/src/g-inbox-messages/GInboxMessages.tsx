@@ -49,22 +49,16 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const { getContract } = useContracts();
 
   const subject = getSubject(props.subjectId);
+  const contract = subject ? getContract(subject.id) : undefined;
+  const offerName = site && contract ? getLocalisedOfferName(site, contract.offer.name) : '';
 
-
+  if (!subject || !site || !contract) {
+    return <>...no site / contract</>
+  }
 
   function handleReplyTo(subjectId: CommsApi.SubjectId, text: string) {
     replyTo({ subjectId, text });
   }
-
-  if (!subject) {
-    return <></>;
-  }
-
-  const contract = getContract(subject?.id);
-  if (!site || !contract) {
-    return <>...no site / contract</>
-  }
-  const offerName = getLocalisedOfferName(site, contract?.offer.name);
 
   const FormReview: React.ElementType<GInboxFormReviewProps> = props.slots?.formReview ?? GInboxFormReview;
   const Message: React.ElementType<GInboxMessageProps> = props.slots?.message ?? GInboxMessage;

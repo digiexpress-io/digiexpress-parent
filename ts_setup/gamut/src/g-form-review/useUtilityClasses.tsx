@@ -12,6 +12,7 @@ export type GFormReviewClassKey = keyof GFormReviewClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    loader: ['loader']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -24,10 +25,17 @@ export const GFormReviewRoot = styled("div", {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
+      styles.loader
     ];
   },
 })(({ theme }) => {
   return {
+
+    '.GFormReview-loader': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center' //TODO
+    }
 
   };
 });

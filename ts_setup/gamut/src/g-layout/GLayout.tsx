@@ -24,6 +24,7 @@ export interface GLayoutProps {
 }
 
 export const GLayout: React.FC<GLayoutProps> = (initProps) => {
+
   const themeProps = useThemeProps({
     props: initProps,
     name: MUI_NAME,
