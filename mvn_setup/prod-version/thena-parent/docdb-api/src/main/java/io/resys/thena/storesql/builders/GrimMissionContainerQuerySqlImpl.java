@@ -81,8 +81,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
     return this;
   }
   @Override
-  public InternalMissionQuery addAssignment(String assignmentType, String assignmentValue) {
-    builder.addAssignments(ImmutableGrimAssignmentFilter.builder().assignmentType(assignmentType).assignmentValue(assignmentValue).build());
+  public InternalMissionQuery addAssignment(String assignmentType, boolean isExact, List<String> assignmentValue) {
+    builder.addAssignments(ImmutableGrimAssignmentFilter.builder().isExact(isExact).assignmentType(assignmentType).assignmentValue(assignmentValue).build());
     return this;
   }
   @Override
@@ -97,12 +97,22 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
     return this;
   }
   @Override
+  public InternalMissionQuery status(String ...status) {
+    this.builder.addStatus(status);
+    return this;
+  }
+  @Override
+  public InternalMissionQuery priority(String ...priority) {
+    this.builder.addPriority(priority);
+    return this;
+  }
+  @Override
   public InternalMissionQuery archived(GrimArchiveQueryType includeArchived) {
     this.builder.archived(includeArchived);
     return this;
   }
   @Override
-  public InternalMissionQuery reporterId(String reporterId) {
+  public InternalMissionQuery likeReporterId(String reporterId) {
     this.builder.reporterId(reporterId);
     return this;
   }
@@ -119,6 +129,11 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   @Override
   public InternalMissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated) {
     this.builder.fromCreatedOrUpdated(fromCreatedOrUpdated);
+    return this;
+  }
+  @Override
+  public InternalMissionQuery overdue(Boolean overdue) {
+    this.builder.overdue(overdue);
     return this;
   }
   @Override

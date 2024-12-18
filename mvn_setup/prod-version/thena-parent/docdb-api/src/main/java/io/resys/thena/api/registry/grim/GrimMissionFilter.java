@@ -42,12 +42,12 @@ public interface GrimMissionFilter {
   @Nullable String getReporterId();
   @Nullable String getLikeTitle();
   @Nullable String getLikeDescription();
-  
-  
-  // TODO
+
   List<String> getStatus();
   List<String> getPriority();
-  @Nullable String getDueDate();
+  @Nullable Boolean getOverdue(); // return tasks that are overdue
+  
+  // TODO
   @Nullable String getLikeRole(); // find task assigned to the role
   List<String> getRequireAnyRoles(); // secondary role filter, must contain at least one of these
    
@@ -55,7 +55,8 @@ public interface GrimMissionFilter {
   @Value.Immutable
   interface GrimAssignmentFilter {
     String getAssignmentType();
-    String getLikeAssignmentValue(); 
+    boolean isExact();
+    List<String> getAssignmentValue(); 
   }
   
   @Value.Immutable

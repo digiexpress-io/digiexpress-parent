@@ -22,6 +22,7 @@ package io.resys.thena.structures.grim.actions;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions;
@@ -35,6 +36,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.smallrye.mutiny.tuples.Tuple3;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -49,13 +51,17 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   }
   @Override
   public MissionQuery missionQuery() {
-    final var assignments = new ArrayList<Tuple2<String, String>>();
+    final var assignments = new ArrayList<Tuple3<String, Boolean, List<String>>>();
     final var links = new ArrayList<Tuple2<String, String>>();
     return new MissionQuery() {
       private String usedBy, usedFor, reporterId, likeTitle, likeDescription;
       private List<String> ids;
+      private List<String> status;
+      private List<String> priority;
       private GrimArchiveQueryType includeArchived;
       private LocalDate fromCreatedOrUpdated;
+      private Boolean overdue;
+      
       @Override
       public MissionQuery addMissionId(List<String> ids) {
         if(this.ids == null) {
@@ -65,8 +71,28 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return this;
       }
       @Override
-      public MissionQuery addAssignment(String assignementType, String assignmentId) {
-        assignments.add(Tuple2.of(assignementType, assignmentId));
+      public MissionQuery addAssignment(String assignementType, boolean exact, List<String> assignmentId) {
+        assignments.add(Tuple3.of(assignementType, exact, assignmentId));
+        return this;
+      }
+      @Override
+      public MissionQuery addAssignment(String assignementType, boolean exact, String...assignmentId) {
+        return addAssignment(assignementType, exact, Arrays.asList(assignmentId));
+      }
+      @Override
+      public MissionQuery status(List<String> status) {
+        if(this.status == null) {
+          this.status = new ArrayList<>();
+        }
+        this.status.addAll(status);
+        return this;
+      }
+      @Override
+      public MissionQuery priority(List<String> priority) {
+        if(this.priority == null) {
+          this.priority = new ArrayList<>();
+        }
+        this.priority.addAll(priority);
         return this;
       }
       @Override
@@ -86,8 +112,13 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return this;
       }
       @Override
-      public MissionQuery reporterId(String reporterId) {
+      public MissionQuery likeReporterId(String reporterId) {
         this.reporterId = reporterId;
+        return this;
+      }
+      @Override
+      public MissionQuery overdue(Boolean overdue) {
+        this.overdue = overdue;
         return this;
       }
       @Override
@@ -112,15 +143,22 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           if(usedBy != null) {
             query.viewer(usedBy, usedFor);
           }
+          if(this.status != null) {
+            query.status(this.status.toArray(new String[] {}));
+          }
+          if(this.priority != null) {
+            query.priority(this.priority.toArray(new String[] {}));
+          }
           
-          assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
+          assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2(), e.getItem3()));
           links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
           return query
-              .reporterId(reporterId)
+              .likeReporterId(reporterId)
               .archived(includeArchived)
               .fromCreatedOrUpdated(fromCreatedOrUpdated)
               .likeDescription(likeDescription)
               .likeTitle(likeTitle)
+              .overdue(overdue)
               .getById(missionIdOrExtId).onItem().transform(items -> 
             ImmutableQueryEnvelope.<GrimMissionContainer>builder()
               .repo(state.getDataSource().getTenant())
@@ -141,14 +179,22 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           if(this.ids != null) {
             query.missionId(this.ids.toArray(new String[] {}));
           }
+          if(this.status != null) {
+            query.status(this.status.toArray(new String[] {}));
+          }
+          if(this.priority != null) {
+            query.priority(this.priority.toArray(new String[] {}));
+          }
+          
           links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
-          assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2()));
+          assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2(), e.getItem3()));
           return query
-              .reporterId(reporterId)
+              .likeReporterId(reporterId)
               .archived(includeArchived)
               .fromCreatedOrUpdated(fromCreatedOrUpdated)
               .likeDescription(likeDescription)
               .likeTitle(likeTitle)
+              .overdue(overdue)
               .findAll().collect().asList().onItem().transform(items -> 
                 ImmutableQueryEnvelopeList.<GrimMissionContainer>builder()
                   .repo(state.getDataSource().getTenant())

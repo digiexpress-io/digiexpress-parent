@@ -57,10 +57,14 @@ public interface GrimQueries {
     InternalMissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
     InternalMissionQuery archived(GrimArchiveQueryType includeArchived); // true to exclude any tasks with archiveAt date present
     InternalMissionQuery missionId(String ...missionId); // multiple will be OR
-    InternalMissionQuery addAssignment(String assignmentType, String assignmentValue); // multiple will be OR
+    InternalMissionQuery addAssignment(String assignmentType, boolean isExact, List<String> assignmentValue); // multiple will be OR
     InternalMissionQuery addLink(String linkType, String linkValue); // multiple will be OR
     
-    InternalMissionQuery reporterId(String reporterId);
+    InternalMissionQuery status(String ...status);
+    InternalMissionQuery priority(String ...priority);
+    InternalMissionQuery overdue(Boolean overdue);
+    
+    InternalMissionQuery likeReporterId(String reporterId);
     InternalMissionQuery likeTitle(String likeTitle);
     InternalMissionQuery likeDescription(String likeDescription);
     InternalMissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);

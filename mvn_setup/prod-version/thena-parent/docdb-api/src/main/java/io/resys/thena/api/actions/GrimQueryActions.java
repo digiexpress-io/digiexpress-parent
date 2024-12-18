@@ -40,15 +40,24 @@ public interface GrimQueryActions {
   }
   
   interface MissionQuery {
-    MissionQuery addAssignment(String assignementType, String assignmentId);
+    MissionQuery addAssignment(String assignementType, boolean exact, List<String> assignmentId);
+    MissionQuery addAssignment(String assignementType, boolean exact, String... assignmentId);
+    
+    
+    
     MissionQuery addLink(String linkType, String extId);
     MissionQuery viewer(String userBy, String usedFor);
     MissionQuery addMissionId(List<String> ids);
     MissionQuery archived(GrimArchiveQueryType includeArchived);
     
-    MissionQuery reporterId(String reporterId);
+    MissionQuery status(List<String> status);
+    MissionQuery priority(List<String> priority);
+    MissionQuery overdue(Boolean overdue);
+    
+    MissionQuery likeReporterId(String reporterId);
     MissionQuery likeTitle(String likeTitle);
     MissionQuery likeDescription(String likeDescription);
+    
     MissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);
     
     Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);

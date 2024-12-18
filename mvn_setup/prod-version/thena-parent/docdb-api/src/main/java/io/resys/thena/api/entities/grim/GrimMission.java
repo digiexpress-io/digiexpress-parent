@@ -41,7 +41,7 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();
-  String getUpdatedTreeWithCommitId();
+  @Nullable String getUpdatedTreeWithCommitId();
   
   @Transient @JsonIgnore
   @Nullable GrimMissionTransitives getTransitives();
@@ -70,9 +70,9 @@ public interface GrimMission extends IsGrimObject, ThenaTable {
   @Value.Immutable
   interface GrimMissionTransitives {
     OffsetDateTime getCreatedAt(); // Transitive from commit table
-    OffsetDateTime getUpdatedAt(); // Transitive from commit table
-    OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
-    String getTreeUpdatedBy(); // Transitive from commit table
+    @Nullable OffsetDateTime getUpdatedAt(); // Transitive from commit table
+    @Nullable OffsetDateTime getTreeUpdatedAt(); // Transitive from commit table
+    @Nullable String getTreeUpdatedBy(); // Transitive from commit table
     @Nullable JsonObject getDataExtension();
     List<GrimAssignment> getAssignments();
     
