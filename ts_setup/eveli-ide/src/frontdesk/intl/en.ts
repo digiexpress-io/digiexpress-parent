@@ -3,6 +3,7 @@ const en = {
   //----------------START NEW-------------------------
   'explorer.title': 'DigiExpress Task Management',
   'explorer.logout': 'Log out',
+  'explorer.login': 'Log in',
   'explorer.feedback': 'Send feedback',
 
   // ---------------END NEW --------------------------

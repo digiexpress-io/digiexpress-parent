@@ -51,11 +51,14 @@ const menuItems: MenuItemProps[] = [
 
 const ExplorerSecondaryButtons: React.FC = () => {
   const config = useConfig();
+  const userInfo = useUserInfo();
+  const label = userInfo.isAuthenticated() ? 'explorer.logout' : 'explorer.login';
+  const location = userInfo.isAuthenticated() ? config.logoutUrl || '/logout' : config.loginUrl || '/oauth2/authorization/oidcprovider';
   return (
     <Box display='flex' marginTop='auto' justifyContent='center'>
-      <Burger.PrimaryButton label='explorer.logout'
+      <Burger.PrimaryButton label={label}
         sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
-        onClick={() => window.location.href = config.loginUrl || '/oauth2/authorization/oidcprovider'}
+        onClick={() => window.location.href = location}
       />
     </Box>
 

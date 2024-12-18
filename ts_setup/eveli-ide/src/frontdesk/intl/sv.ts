@@ -3,6 +3,7 @@ const sv = {
   //----------------START NEW-------------------------
   'explorer.title': 'DigiExpress Task Management',
   'explorer.logout': 'Logga ut',
+  'explorer.login': 'Logga in',
   'explorer.feedback': 'Skicka feedback',
 
   // ---------------END NEW --------------------------

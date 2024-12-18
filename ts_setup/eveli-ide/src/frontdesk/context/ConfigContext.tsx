@@ -10,6 +10,7 @@ export interface Config {
   modifiableAssets?: boolean; //enable releases and other asset operations
   loginUrl?: string;
   loginAutoRefresh?: boolean;
+  logoutUrl?: string;
 }
 
 const INITIAL_CONFIG: Config = {};
