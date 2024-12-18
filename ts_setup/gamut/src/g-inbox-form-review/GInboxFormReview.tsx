@@ -56,8 +56,8 @@ export const GInboxFormReview: React.FC<GInboxFormReviewProps> = (initProps) => 
         </DialogTitle>
         <Divider />
 
-        <DialogContent>
-          <GFormReview formId={formId} />
+        <DialogContent className={classes.content}>
+          {!formId ? <>LOADING</> : <GFormReview formId={formId} />}
         </DialogContent>
 
         <Button variant='contained' className={classes.closeButton} onClick={handleCloseReview}>

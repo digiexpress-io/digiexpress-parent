@@ -30,11 +30,10 @@ export const GFormReviewRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
+    display: 'flex',
 
     '.GFormReview-loader': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center' //TODO
+
     }
 
   };
