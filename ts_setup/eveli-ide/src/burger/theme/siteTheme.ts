@@ -86,8 +86,8 @@ const palette = {
   },
   explorer: {
     main: 'rgb(17, 24, 39)', // background colour, dark grey-black
-    dark: '',
-    light: '',
+    dark: 'rgb(255, 255, 255)',
+    light: 'rgb(18, 24, 40)',
     contrastText: 'rgb(17, 24, 39)'
   },
   explorerItem: {
@@ -99,7 +99,7 @@ const palette = {
   mainContent: {
     main: 'rgb(249, 250, 252)', // primary bg colour for behind content boxes, light gray
     dark: 'rgb(18, 24, 40)', // primary content text, dark gray/black
-    light: 'rgb(255, 255, 255) ', // primary content bg colour, white
+    light: 'rgb(255, 255, 255)', // primary content bg colour, white
     contrastText: 'rgb(101, 116, 139)' // secondary content text, medium gray
   },
   uiElements: {
@@ -111,7 +111,7 @@ const palette = {
   table: {
     main: '#F3F4F6', // table header gray
     dark: '#e8eaed', // table header darker gray
-    light: '',
+    light: 'rgba(80, 72, 229, 0.04)',
     contrastText: '#F3F4F6'
   },
   article: {
