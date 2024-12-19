@@ -1,6 +1,6 @@
 
 import {
-  GFormReviewPage, GFormReviewGroup, GFormReviewDateItem,
+  GFormReviewPage, GFormReviewGroup, GFormReviewDate,
   GFormReviewTime, GFormReviewText, GFormReviewBoolean, GFormReviewChoice,
   GFormReviewMultiChoice, GFormReviewNote, GFormReviewDecimal, GFormReviewSurveyGroup, GFormReviewRowGroup
 } from './';
@@ -79,7 +79,7 @@ export const DEFAULT_ITEM_CONFIG: ItemconfigType = {
     },
     {
       matcher: item => item.type === 'date',
-      component: GFormReviewDateItem,
+      component: GFormReviewDate,
       answerRequired: true,
       childrenRequired: false
     },

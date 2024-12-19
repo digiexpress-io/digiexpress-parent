@@ -45,7 +45,7 @@ export class GFormReviewContextType {
     }
     return string;
   }
-
+  // CONTEXT -------------------------------------------------------------
   private replaceVariable(varName: string) {
     let questionnaireValue = this.questionnaire.context.find(context => context.id === varName);
     if (questionnaireValue) {
@@ -61,9 +61,11 @@ export class GFormReviewContextType {
     }
   }
 
+
   public substituteVariables(string: string) {
     return string.replace(/\{(.+?)\}/g, (_match, p1) => { return this.trim(this.replaceVariable(p1)) });
   }
+  // TODO END-------------------------------------------------------------
 
   public getAnswer(itemId: string, answerId: string | null = null): any | null {
     let aID = answerId ? answerId : itemId;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, useThemeProps } from '@mui/system';
+import { useThemeProps } from '@mui/system';
 import { CircularProgress } from '@mui/material';
 import { useDialobReview } from '../api-dialob';
 
@@ -21,9 +21,9 @@ export const GFormReview: React.FC<GFormReviewProps> = (initProps) => {
 
   if (isPending) {
     return (
-      <Box className={classes.loader}>
+      <div className={classes.loader}>
         <CircularProgress />
-      </Box>);
+      </div>);
   }
 
   if (!review) {

@@ -1,60 +1,17 @@
 import React from 'react';
-import { Avatar, Box, Breadcrumbs, Container, Divider, Drawer, Link, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Breadcrumbs, Divider, Link, Typography, useTheme } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import HomeIcon from '@mui/icons-material/Home';
 
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 
-import {
-  CommsApi, ContractApi, GAppBar, GFooter,
-  GInboxMessages, GLayout, GShell, GShellClassName, GUserOverviewMenu, GUserOverviewMenuView,
-  useComms, useContracts, useOffers, useSite
-} from '../';
-
-
-export interface RouterInboxSubjectProps {
-  locale: string;
-  viewId: GUserOverviewMenuView;
-  subjectId: string;
-}
-
-export const RouterInboxSubject: React.FC<RouterInboxSubjectProps> = ({ locale, subjectId, viewId }) => {
-
-  const nav = useNavigate();
-  const ownerState = useOwnerState(subjectId);
-  const slots = React.useMemo(() => (
-    ownerState.isPending ?
-      {} :
-      {
-        breadcrumbs: () => <Bread ownerState={ownerState} />,
-        topTitle: () => <Top ownerState={ownerState} />,
-        left: () => <Left ownerState={ownerState} />
-      }
-  ), [ownerState]);
-
-  function handleLocale(locale: string) {
-    nav({
-      from: '/secured/$locale/views/$viewId',
-      params: { locale },
-      to: '/secured/$locale/views/$viewId',
-    })
-  }
-
-  return (
-    <GShell>
-      <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => ownerState.onNav('user-overview')} viewId={viewId} />
-      <Drawer variant='permanent' open={false} className={GShellClassName}>
-        <GUserOverviewMenu onClick={ownerState.onNav} defaultView='inbox' />
-      </Drawer>
-      <main role='main'>
-        <Container><GLayout variant='secured-1-row-1-column' slots={slots} /></Container>
-      </main>
-      <footer role='footer'><GFooter /></footer>
-    </GShell >
-  );
-}
-
+import { GUserOverviewMenuView } from '../../g-user-overview-menu';
+import { GInboxMessages } from '../../g-inbox-messages';
+import { CommsApi, useComms } from '../../api-comms';
+import { ContractApi, useContracts } from '../../api-contract';
+import { useSite } from '../../api-site';
+import { useOffers } from '../../api-offer';
 
 type OwnerState = (OwnerStateLoaded | OwnerStatePending)
 type OwnerStateTemplate = {
@@ -65,7 +22,7 @@ type OwnerStateTemplate = {
 type OwnerStateLoaded = OwnerStateTemplate & { isPending: false, subject: CommsApi.Subject, contract: ContractApi.Contract, offerName: string }
 type OwnerStatePending = OwnerStateTemplate & { isPending: true, subject: undefined, contract: undefined, offerName: undefined }
 
-function useOwnerState(subjectId: string): OwnerState {
+export function useOwnerState(subjectId: string): OwnerState {
   const { getSubject } = useComms();
   const { site } = useSite();
   const { getContract } = useContracts();
@@ -110,7 +67,7 @@ function useOwnerState(subjectId: string): OwnerState {
 
 
 
-const Bread: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
+export const Bread: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
   const intl = useIntl();
   const { subject, onNav } = ownerState;
 
@@ -126,7 +83,7 @@ const Bread: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
   )
 }
 
-const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
+export const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
   const theme = useTheme();
   const { offerName } = ownerState;
   return (
@@ -147,7 +104,7 @@ const Top: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
 }
 
 
-const Left: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
+export const Left: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
   function handleAttachmentClick(subjectId: string, attachmentId: string) { }
 
   const { subjectId } = ownerState;
@@ -163,4 +120,3 @@ const Left: React.FC<{ ownerState: OwnerStateLoaded }> = ({ ownerState }) => {
     />
   </>)
 }
-

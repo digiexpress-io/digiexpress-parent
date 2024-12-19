@@ -220,7 +220,23 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GLinkFormSecured: {},
   GLinkFormUnsecured: {},
 
-  GLinksPage: {}
+  GLinksPage: {},
 
+  // ---------------------- DIALOB REVIEW ------------------------
+  GFormReviewBoolean: {},
+  GFormReviewChoice: {},
+  GFormReviewDate: {},
+  GFormReviewMultiChoice: {},
+  GFormReviewDecimal: {},
+  GFormReviewGroup: {},
+  GFormReviewItem: {},
+  GFormReviewNote: {},
+  GFormReviewPage: {},
+  GFormReviewQuestionnaire: {},
+  GFormReviewRowGroup: {},
+  GFormReviewSurvey: {},
+  GFormReviewSurveyGroup: {},
+  GFormReviewText: {},
+  GFormReviewTime: {}
 }
 

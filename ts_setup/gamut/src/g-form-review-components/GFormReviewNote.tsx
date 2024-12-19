@@ -1,29 +1,23 @@
 import React from 'react';
-import { generateUtilityClass, Grid2, styled, useThemeProps } from '@mui/material';
+import { generateUtilityClass, styled, useThemeProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
-import { GFormReviewContext } from './GFormReviewContext';
 import type { ItemProps } from './componentTypes';
+import { GFormReviewContext } from './GFormReviewContext';
+import { GMarkdown } from '../g-md';
 
 
 
-const MUI_NAME = 'GFormReviewQuestionnaire';
+const MUI_NAME = 'GFormReviewNote';
 
-export interface GFormReviewQuestionnaireClasses {
+export interface GFormReviewNoteClasses {
   root: string;
 }
 
-export type GFormReviewQuestionnaireClassKey = keyof GFormReviewQuestionnaireClasses;
+export type GFormReviewNoteClassKey = keyof GFormReviewNoteClasses;
 
 
-export interface QuestionnaireItemProps extends ItemProps {
-  title: string;
-  item: {
-    items?: string[];
-  };
-}
-
-export const GFormReviewQuestionnaire: React.FC<QuestionnaireItemProps> = (initProps) => {
+export const GFormReviewNote: React.FC<ItemProps> = (initProps) => {
   const dC = React.useContext(GFormReviewContext);
 
   const props = useThemeProps({
@@ -32,16 +26,15 @@ export const GFormReviewQuestionnaire: React.FC<QuestionnaireItemProps> = (initP
   });
   const classes = useUtilityClasses(props);
 
-  const items = props.item.items ? props.item.items.map(id => dC.createItem(id, null, true)) : null;
-  const Root = props.component ?? GFormReviewQuestionnaireRoot;
+  const label = dC.getTranslated(props.item.label);
+
+  const Root = props.component ?? GFormReviewNoteRoot;
   return (
     <Root className={classes.root} ownerState={props}>
-      {items}
+      <GMarkdown children={dC.substituteVariables(label)} />
     </Root>
   );
 }
-
-
 
 
 const useUtilityClasses = (ownerState: ItemProps) => {
@@ -54,7 +47,7 @@ const useUtilityClasses = (ownerState: ItemProps) => {
 }
 
 
-const GFormReviewQuestionnaireRoot = styled(Grid2, {
+const GFormReviewNoteRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -65,6 +58,6 @@ const GFormReviewQuestionnaireRoot = styled(Grid2, {
 })(({ theme }) => {
   return {
 
-
   };
 });
+

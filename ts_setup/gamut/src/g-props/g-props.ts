@@ -22,8 +22,8 @@ import { GTooltipClassKey, GTooltipProps } from '../g-tooltip';
 
 import { GInboxClassKey, GInboxProps } from '../g-inbox';
 import { GInboxAttachmentsClassKey, GInboxAttachmentsProps } from '../g-inbox-attachments';
-import { GInboxMessagesClassKey, GInboxMessagesProps } from '../g-inbox-messages';
 import { GInboxMessageNotAllowed, GInboxMessageNotAllowedProps } from '../g-inbox-messages';
+import { GInboxMessagesClassKey, GInboxMessagesProps } from '../g-inbox-messages';
 import { GInboxFormReviewClassKey, GInboxFormReviewProps } from '../g-inbox-form-review';
 
 import { GLocalesClassKey, GLocalesProps } from '../g-locales';
@@ -69,6 +69,26 @@ import { GAuthUnRepPersonProps, GAuthUnRepPersonClassKey } from '../g-auth-un-re
 import { GAuthRepCompanyProps, GAuthRepCompanyClassKey } from '../g-auth-rep-company';
 import { GAuthRepPersonProps, GAuthRepPersonClassKey } from '../g-auth-rep-person';
 
+import type { ItemProps, GroupItemProps, PageItemProps, QuestionnaireItemProps, SurveyProps } from '../g-form-review-components';
+import {
+  GFormReviewBooleanClassKey,
+  GFormReviewChoiceClassKey,
+  GFormReviewDateClassKey,
+  GFormReviewDecimalClassKey,
+  GFormReviewGroupClassKey,
+  GFormReviewItemClassKey,
+  GFormReviewMultiChoiceClassKey,
+  GFormReviewNoteClassKey,
+  GFormReviewPageClassKey,
+  GFormReviewQuestionnaireClassKey,
+  GFormReviewRowGroupClassKey,
+  GFormReviewSurveyClassKey,
+  GFormReviewSurveyGroupClassKey,
+  GFormReviewTextClassKey,
+  GFormReviewTimeClassKey
+} from '../g-form-review-components';
+
+
 
 declare module "@mui/material" {
   export interface Components<Theme = unknown> extends GComponents<Theme> { }
@@ -80,6 +100,22 @@ declare module "@mui/material" {
  * MUI theme integration
  */
 export interface GComponentsPropsList {
+  GFormReviewBoolean: ItemProps;
+  GFormReviewChoice: ItemProps;
+  GFormReviewDate: ItemProps;
+  GFormReviewDecimal: ItemProps;
+  GFormReviewGroup: GroupItemProps;
+  GFormReviewItem: ItemProps;
+  GFormReviewNote: ItemProps;
+  GFormReviewPage: PageItemProps;
+  GFormReviewQuestionnaire: QuestionnaireItemProps;
+  GFormReviewRowGroup: ItemProps;
+  GFormReviewSurvey: SurveyProps;
+  GFormReviewSurveyGroup: ItemProps;
+  GFormReviewText: ItemProps;
+  GFormReviewTime: ItemProps;
+  GFormReviewMultiChoice: ItemProps;
+
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
   GArticleFeedback: GArticleFeedbackProps;
@@ -131,8 +167,6 @@ export interface GComponentsPropsList {
 
   GMarkdown: GMarkdownProps;
 
-  // ----------------------- COMPLETED UNTIL HERE ---------------------------
-
   GShell: GShellProps;
 
   GSearchList: GSearchListProps;
@@ -147,6 +181,24 @@ export interface GComponentsPropsList {
 }
 
 export interface GComponentNameToClassKey {
+
+  GFormReviewBoolean: GFormReviewBooleanClassKey;
+  GFormReviewChoice: GFormReviewChoiceClassKey;
+  GFormReviewDate: GFormReviewDateClassKey;
+  GFormReviewDecimal: GFormReviewDecimalClassKey;
+  GFormReviewGroup: GFormReviewGroupClassKey;
+  GFormReviewItem: GFormReviewItemClassKey;
+  GFormReviewNote: GFormReviewNoteClassKey;
+  GFormReviewPage: GFormReviewPageClassKey;
+  GFormReviewQuestionnaire: GFormReviewQuestionnaireClassKey;
+  GFormReviewRowGroup: GFormReviewRowGroupClassKey;
+  GFormReviewSurvey: GFormReviewSurveyClassKey;
+  GFormReviewSurveyGroup: GFormReviewSurveyGroupClassKey;
+  GFormReviewText: GFormReviewTextClassKey;
+  GFormReviewTime: GFormReviewTimeClassKey;
+  GFormReviewMultiChoice: GFormReviewMultiChoiceClassKey;
+
+
   GAppBar: GAppBarClassKey;
   GArticle: GArticleClassKey;
   GArticleFeedback: GArticleFeedbackClassKey;
@@ -198,8 +250,6 @@ export interface GComponentNameToClassKey {
 
   GMarkdown: GMarkdownClassKey;
 
-  // ----------------------- COMPLETED UNTIL HERE ---------------------------
-
   GFormBase: GFormBaseClassKey;
   GShell: GShellClassKey;
 
@@ -215,6 +265,84 @@ export interface GComponentNameToClassKey {
 }
 
 export interface GComponents<Theme = unknown> {
+
+  GFormReviewBoolean?: {
+    defaultProps?: GComponentsProps['GFormReviewBoolean'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewBoolean'];
+    variants?: GComponentsVariants['GFormReviewBoolean'];
+  },
+  GFormReviewChoice?: {
+    defaultProps?: GComponentsProps['GFormReviewChoice'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewChoice'];
+    variants?: GComponentsVariants['GFormReviewChoice'];
+  },
+  GFormReviewDate?: {
+    defaultProps?: GComponentsProps['GFormReviewDate'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewDate'];
+    variants?: GComponentsVariants['GFormReviewDate'];
+  },
+  GFormReviewMultiChoice?: {
+    defaultProps?: GComponentsProps['GFormReviewMultiChoice'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewMultiChoice'];
+    variants?: GComponentsVariants['GFormReviewMultiChoice'];
+  },
+  GFormReviewDecimal?: {
+    defaultProps?: GComponentsProps['GFormReviewDecimal'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewDecimal'];
+    variants?: GComponentsVariants['GFormReviewDecimal'];
+  },
+  GFormReviewGroup?: {
+    defaultProps?: GComponentsProps['GFormReviewGroup'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewGroup'];
+    variants?: GComponentsVariants['GFormReviewGroup'];
+  },
+  GFormReviewItem?: {
+    defaultProps?: GComponentsProps['GFormReviewItem'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewItem'];
+    variants?: GComponentsVariants['GFormReviewItem'];
+  },
+  GFormReviewNote?: {
+    defaultProps?: GComponentsProps['GFormReviewNote'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewNote'];
+    variants?: GComponentsVariants['GFormReviewNote'];
+  },
+  GFormReviewPage?: {
+    defaultProps?: GComponentsProps['GFormReviewPage'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewPage'];
+    variants?: GComponentsVariants['GFormReviewPage'];
+  },
+  GFormReviewQuestionnaire?: {
+    defaultProps?: GComponentsProps['GFormReviewQuestionnaire'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewQuestionnaire'];
+    variants?: GComponentsVariants['GFormReviewQuestionnaire'];
+  },
+  GFormReviewRowGroup?: {
+    defaultProps?: GComponentsProps['GFormReviewRowGroup'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewRowGroup'];
+    variants?: GComponentsVariants['GFormReviewRowGroup'];
+  },
+  GFormReviewSurvey?: {
+    defaultProps?: GComponentsProps['GFormReviewSurvey'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewSurvey'];
+    variants?: GComponentsVariants['GFormReviewSurvey'];
+  },
+  GFormReviewSurveyGroup?: {
+    defaultProps?: GComponentsProps['GFormReviewSurveyGroup'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewSurveyGroup'];
+    variants?: GComponentsVariants['GFormReviewSurveyGroup'];
+  },
+  GFormReviewText?: {
+    defaultProps?: GComponentsProps['GFormReviewText'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewText'];
+    variants?: GComponentsVariants['GFormReviewText'];
+  },
+  GFormReviewTime?: {
+    defaultProps?: GComponentsProps['GFormReviewTime'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormReviewTime'];
+    variants?: GComponentsVariants['GFormReviewTime'];
+  },
+
+
   GAppBar?: {
     defaultProps?: GComponentsProps['GAppBar'];
     styleOverrides?: GComponentsOverrides<Theme>['GAppBar'];

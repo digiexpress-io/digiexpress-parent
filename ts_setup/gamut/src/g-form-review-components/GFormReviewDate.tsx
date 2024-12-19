@@ -1,29 +1,23 @@
 import React from 'react';
-import { generateUtilityClass, Grid2, styled, useThemeProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { generateUtilityClass, styled, useThemeProps } from '@mui/material';
+import { FormattedDate } from 'react-intl';
 
-import { GFormReviewContext } from './GFormReviewContext';
 import type { ItemProps } from './componentTypes';
+import { GFormReviewContext } from './GFormReviewContext';
+import { GFormReviewItem } from './GFormReviewItem';
 
 
+const MUI_NAME = 'GFormReviewDate';
 
-const MUI_NAME = 'GFormReviewQuestionnaire';
-
-export interface GFormReviewQuestionnaireClasses {
+export interface GFormReviewDateClasses {
   root: string;
 }
 
-export type GFormReviewQuestionnaireClassKey = keyof GFormReviewQuestionnaireClasses;
+export type GFormReviewDateClassKey = keyof GFormReviewDateClasses;
 
 
-export interface QuestionnaireItemProps extends ItemProps {
-  title: string;
-  item: {
-    items?: string[];
-  };
-}
-
-export const GFormReviewQuestionnaire: React.FC<QuestionnaireItemProps> = (initProps) => {
+export const GFormReviewDate: React.FC<ItemProps> = (initProps) => {
   const dC = React.useContext(GFormReviewContext);
 
   const props = useThemeProps({
@@ -32,16 +26,20 @@ export const GFormReviewQuestionnaire: React.FC<QuestionnaireItemProps> = (initP
   });
   const classes = useUtilityClasses(props);
 
-  const items = props.item.items ? props.item.items.map(id => dC.createItem(id, null, true)) : null;
-  const Root = props.component ?? GFormReviewQuestionnaireRoot;
+  const answer = dC.getAnswer(props.item.id, props.answerId);
+  if (answer === null) {
+    return null;
+  }
+
+  const Root = props.component ?? GFormReviewDateRoot;
   return (
     <Root className={classes.root} ownerState={props}>
-      {items}
+      <GFormReviewItem label={dC.getTranslated(props.item.label)}>
+        <FormattedDate value={answer} />
+      </GFormReviewItem>
     </Root>
   );
 }
-
-
 
 
 const useUtilityClasses = (ownerState: ItemProps) => {
@@ -54,7 +52,7 @@ const useUtilityClasses = (ownerState: ItemProps) => {
 }
 
 
-const GFormReviewQuestionnaireRoot = styled(Grid2, {
+const GFormReviewDateRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {

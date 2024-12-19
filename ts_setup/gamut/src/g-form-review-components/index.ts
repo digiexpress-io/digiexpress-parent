@@ -1,15 +1,24 @@
-export { GFormReviewPage } from './Page';
-export { GFormReviewGroup } from './Group';
-export { GFormReviewText } from './Text';
-export { GFormReviewBoolean } from './Boolean';
-export { GFormReviewChoice } from './Choice';
-export { GFormReviewMultiChoice } from './MultiChoice';
-export { GFormReviewNote } from './Note';
-export { GFormReviewRowGroup } from './RowGroup';
-export { GFormReviewDateItem } from './DateItem';
-export { GFormReviewTime } from './Time';
-export { GFormReviewDecimal } from './Decimal';
-export { GFormReviewSurveyGroup } from './SurveyGroup';
+export * from './GFormReviewBoolean';
+export * from './GFormReviewChoice';
+export * from './GFormReviewMultiChoice';
+export * from './GFormReviewGroup';
+export * from './GFormReviewDecimal';
+export * from './GFormReviewQuestionnaire';
+export * from './GFormReviewDate';
+export * from './GFormReviewNote';
+export * from './GFormReviewRowGroup';
+export * from './GFormReviewPage';
+export * from './GFormReviewSurvey';
+export * from './GFormReviewSurveyGroup';
+export * from './GFormReviewText';
+export * from './GFormReviewTime';
+export * from './GFormReviewItem';
+
 export { DEFAULT_ITEM_CONFIG } from './itemConfig';
-export { GFormReviewQuestionnaire } from './GFormReviewQuestionnaire';
-export * from './GFormReviewContext' 
+export * from './GFormReviewContext';
+
+export type { GroupItemProps } from './GFormReviewGroup';
+export type { PageItemProps } from './GFormReviewPage';
+export type { SurveyProps } from './GFormReviewSurvey';
+export type { QuestionnaireItemProps } from './GFormReviewQuestionnaire';
+export type { ItemProps } from './componentTypes';
