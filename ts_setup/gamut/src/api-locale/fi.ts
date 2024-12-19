@@ -67,7 +67,7 @@ export const fi = {
   // ------------------- GAMUT LOCALES ----------------------
 
   'gamut.locale.en': 'Englanti',
-  'gamut.locale.fi': 'Suomi,
+  'gamut.locale.fi': 'Suomi',
   'gamut.locale.sv': 'Ruotsi',
 
   // ------------------- GAMUT SEARCH -----------------------
