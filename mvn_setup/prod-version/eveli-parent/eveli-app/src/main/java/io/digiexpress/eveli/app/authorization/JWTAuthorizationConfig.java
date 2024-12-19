@@ -27,6 +27,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
@@ -46,8 +47,8 @@ public class JWTAuthorizationConfig {
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/worker/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
-     .csrf(Customizer.withDefaults())
-     .authenticationManager(authenticationManager)
+     .csrf(customizer->customizer.disable())
+     .sessionManagement(customizer-> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
      .oauth2ResourceServer(oauth2->
      oauth2.authenticationManagerResolver(resolver))
      .build();
@@ -65,8 +66,8 @@ public class JWTAuthorizationConfig {
    return http
      .securityMatchers(matcher -> matcher.requestMatchers("/portal/secured/**"))
      .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
-     .csrf(Customizer.withDefaults())
-     .authenticationManager(authenticationManager)
+     .csrf(customizer->customizer.disable())
+     .sessionManagement(customizer-> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
      .oauth2ResourceServer(oauth2->
        oauth2.authenticationManagerResolver(resolver))
      .build();
