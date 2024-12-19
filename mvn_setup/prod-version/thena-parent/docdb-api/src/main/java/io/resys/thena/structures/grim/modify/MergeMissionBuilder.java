@@ -48,12 +48,14 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.MergeLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.ImmutableGrimBatchMissions;
 import io.resys.thena.structures.grim.commitlog.GrimCommitBuilder;
 import io.resys.thena.structures.grim.create.NewAssignmentBuilder;
+import io.resys.thena.structures.grim.create.NewMissionCommitViewerBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLabelBuilder;
 import io.resys.thena.structures.grim.create.NewMissionLinkBuilder;
 import io.resys.thena.structures.grim.create.NewObjectiveBuilder;
@@ -292,7 +294,7 @@ public class MergeMissionBuilder implements MergeMission {
         .commands(commandToAppend)
         .commitId(logger.getCommitId())
         .missionId(missionId)
-        .createdAt(OffsetDateTime.now())
+        .createdAt(logger.getCreatedAt())
         .id(OidUtils.gen())
         .build());
     return this;
@@ -305,7 +307,14 @@ public class MergeMissionBuilder implements MergeMission {
     this.batch.from(built);
     return this;
   }
-
+  @Override
+  public MergeMission addViewer(Consumer<NewMissionCommitViewer> viewer) {
+    final var delegate = new NewMissionCommitViewerBuilder(logger.getCreatedAt(), missionId, logger.getCommitId());
+    viewer.accept(delegate);
+    final var viewed = delegate.close();
+    this.batch.addCommitViewers(viewed);
+    return this;
+  }
   @Override
   public MergeMission modifyGoal(String goalId, Consumer<MergeGoal> mergeGoal) {
     final var currentGoal = container.getGoals().get(goalId);
@@ -515,4 +524,5 @@ public class MergeMissionBuilder implements MergeMission {
     
     return batch.build();
   }
+
 }

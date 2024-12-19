@@ -135,9 +135,11 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         
         .append("  reporter_id,").ln()
         .append("  remark_status,").ln()
+        .append("  remark_type,").ln()
+        .append("  remark_source,").ln()
         .append("  remark_text)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)").ln()
         .build())
         .props(remarks.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -153,6 +155,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
                     
                 doc.getReporterId(),
                 doc.getRemarkStatus(),
+                doc.getRemarkType(),
+                doc.getRemarkSource(),
                 doc.getRemarkText(),
              }))
             .collect(Collectors.toList()))
@@ -202,6 +206,10 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
     
     .append("  reporter_id VARCHAR(255) NOT NULL,").ln()
     .append("  remark_status VARCHAR(100),").ln()
+    
+    .append("  remark_type VARCHAR(100),").ln()
+    .append("  remark_source VARCHAR(100),").ln()
+    
     .append("  remark_text TEXT NOT NULL").ln()
     
     

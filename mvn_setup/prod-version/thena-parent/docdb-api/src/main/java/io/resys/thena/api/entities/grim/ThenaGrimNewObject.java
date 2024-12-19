@@ -47,7 +47,7 @@ public interface ThenaGrimNewObject {
     NewMission priority(@Nullable String priority);
     
     // nested builders
-    NewMission addViewer(Consumer<NewCommitViewer> viewer);
+    NewMission addViewer(Consumer<NewMissionCommitViewer> viewer);
     
     NewMission addAssignees(Consumer<NewAssignment> assignment);
     NewMission addLabels(Consumer<NewLabel> label);
@@ -114,14 +114,17 @@ public interface ThenaGrimNewObject {
     NewRemark parentId(@Nullable String parentId);
     NewRemark remarkText(String remarkText);
     NewRemark remarkStatus(@Nullable String remarkStatus);
+    NewRemark remarkSource(@Nullable String remarkSource);
+    NewRemark remarkType(@Nullable String remarkType);
     NewRemark reporterId(String reporterId);
     NewRemark addAssignees(Consumer<NewAssignment> assignment);
     void build(); 
   }
   
   // support interface inside of callback
-  interface NewCommitViewer {
-    NewCommitViewer userId(String userId);
+  interface NewMissionCommitViewer {
+    NewMissionCommitViewer userId(String userId);
+    NewMissionCommitViewer usedFor(String usedFor);
     void build(); 
   }
 }

@@ -41,6 +41,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.resys.thena.structures.BatchStatus;
@@ -66,6 +67,7 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private ImmutableGrimBatchMissions.Builder next;
   private Consumer<GrimMissionContainer> handleNewState;
   private boolean built;
+  
   
   public NewMissionBuilder(GrimCommitBuilder logger, long nextVal) {
     super();
@@ -139,6 +141,14 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   @Override
   public NewMission priority(String priority) {
     this.mission.missionPriority(priority);
+    return this;
+  }
+  @Override
+  public NewMission addViewer(Consumer<NewMissionCommitViewer> viewer) {
+    final var delegate = new NewMissionCommitViewerBuilder(createdAt, missionId, commitId);
+    viewer.accept(delegate);
+    final var viewed = delegate.close();
+    this.next.addCommitViewers(viewed);
     return this;
   }
   @Override

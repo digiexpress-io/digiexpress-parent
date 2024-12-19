@@ -56,6 +56,8 @@ public class GrimMissionSqlFilterBuilder {
       builder.append(" mission.id = ANY($").append(index++).append(")").ln();
       params.add(filter.getMissionIds().get().toArray());
     }
+    
+    // archive filter
     if(GrimArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
       and.get();
       builder.append(" mission.archived_at is NOT NULL").ln();      
@@ -63,6 +65,38 @@ public class GrimMissionSqlFilterBuilder {
       and.get();
       builder.append(" mission.archived_at is NULL").ln();
     }
+    
+    // viewer filter
+    if(filter.getNotViewedByUser() != null || filter.getNotViewedByUsage() != null) {
+      and.get();
+      builder
+      .append("  NOT EXISTS(").ln()
+      .append("    SELECT id FROM ").append(options.getGrimCommitViewer()).append(" AS viewer_filter").ln()
+      .append("    WHERE viewer_filter.mission_id = mission.id").ln();
+
+      if(filter.getNotViewedByUsage() != null) {
+        builder.append("      AND LOWER(used_for) = $").append(index++).ln();
+        params.add(filter.getNotViewedByUsage().toLowerCase());
+      }
+      if(filter.getNotViewedByUser() != null) {
+        builder.append("      AND LOWER(used_by) = $").append(index++).ln();
+        params.add(filter.getNotViewedByUser().toLowerCase());
+      }
+      builder.append("  )");
+    }
+    
+    // external comment filter
+    if(filter.getAtLeastOneRemarkWithType() != null) {
+      and.get();
+      builder
+      .append("  EXISTS(").ln()
+      .append("    SELECT id FROM ").append(options.getGrimRemark()).append(" AS remark_type_filter").ln()
+      .append("    WHERE remark_type_filter.mission_id = mission.id").ln()
+      .append("    AND remark_type_filter.remark_type = $").append(index++).ln()
+      .append("  )");
+      params.add(filter.getAtLeastOneRemarkWithType().toLowerCase());
+    }
+    
     
     // created/updated
     if(filter.getFromCreatedOrUpdated() != null) {

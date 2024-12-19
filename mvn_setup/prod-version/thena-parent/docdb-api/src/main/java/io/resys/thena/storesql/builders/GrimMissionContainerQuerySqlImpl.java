@@ -57,9 +57,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   private final Collection<GrimDocType> docsToExclude = new LinkedHashSet<>();
   private final ImmutableGrimMissionFilter.Builder builder = ImmutableGrimMissionFilter.builder();
   private ImmutableGrimMissionFilter filter;
-  private String usedBy, usedFor;
   private List<String> missionIds;
-  
+  private String includeViewerUserId, includeViewerUsedFor;
   
   public GrimMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
@@ -81,6 +80,12 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
     return this;
   }
   @Override
+  public InternalMissionQuery includeViewer(String usedBy, String usedFor) {
+    this.includeViewerUserId = usedBy; 
+    this.includeViewerUsedFor = usedFor; 
+    return this;
+  }
+  @Override
   public InternalMissionQuery addAssignment(String assignmentType, boolean isExact, List<String> assignmentValue) {
     builder.addAssignments(ImmutableGrimAssignmentFilter.builder().isExact(isExact).assignmentType(assignmentType).assignmentValue(assignmentValue).build());
     return this;
@@ -91,9 +96,8 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
     return this;
   }
   @Override
-  public InternalMissionQuery viewer(String usedBy, String usedFor) {
-    this.usedBy = usedBy;
-    this.usedFor = usedFor;
+  public InternalMissionQuery notViewed(String usedBy, String usedFor) {
+    this.builder.notViewedByUser(usedBy).notViewedByUsage(usedFor);
     return this;
   }
   @Override
@@ -134,6 +138,11 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   @Override
   public InternalMissionQuery overdue(Boolean overdue) {
     this.builder.overdue(overdue);
+    return this;
+  }
+  @Override
+  public InternalMissionQuery atLeastOneRemarkWithType(String remarkType) {
+    this.builder.atLeastOneRemarkWithType(remarkType);
     return this;
   }
   @Override
@@ -414,7 +423,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   }
   
   private Uni<GrimMissionContainer> findAllViewers() {
-    if(docsToExclude.contains(GrimDocType.GRIM_COMMIT_VIEWER) || usedBy == null || usedFor == null) {
+    if(docsToExclude.contains(GrimDocType.GRIM_COMMIT_VIEWER) || includeViewerUsedFor == null || includeViewerUserId == null) {
       return Uni.createFrom().item(ImmutableGrimMissionContainer.builder().build());
     }
     if(this.missionIds == null) {
@@ -436,7 +445,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
           );
     }
     
-    final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(this.missionIds, usedBy, usedFor);
+    final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(this.missionIds, includeViewerUserId, includeViewerUsedFor);
     if(log.isDebugEnabled()) {
       log.debug("User findAllViewers query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
@@ -453,4 +462,5 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
             .build()
         );
   }
+
 }

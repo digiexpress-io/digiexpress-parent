@@ -40,23 +40,34 @@ public interface GrimQueryActions {
   }
   
   interface MissionQuery {
+    // filter missions based on to what is the assignment, 
+    // assignmentId parameter is used with OR filter
+    // multiple calls addAssignment are treated as AND filter
     MissionQuery addAssignment(String assignementType, boolean exact, List<String> assignmentId);
     MissionQuery addAssignment(String assignementType, boolean exact, String... assignmentId);
     
     
     
     MissionQuery addLink(String linkType, String extId);
-    MissionQuery viewer(String userBy, String usedFor);
-    MissionQuery addMissionId(List<String> ids);
     MissionQuery archived(GrimArchiveQueryType includeArchived);
     
-    MissionQuery status(List<String> status);
-    MissionQuery priority(List<String> priority);
-    MissionQuery overdue(Boolean overdue);
+    MissionQuery addMissionId(List<String> ids); // include only data for given missions
+    MissionQuery status(List<String> status); // any of the following statuses, empty list = filter not used
+    MissionQuery priority(List<String> priority); // any of the following priority, empty list = filter not used
+    MissionQuery overdue(Boolean overdue); // include the tasks where dueDate > current_date
     
     MissionQuery likeReporterId(String reporterId);
     MissionQuery likeTitle(String likeTitle);
     MissionQuery likeDescription(String likeDescription);
+    
+    
+    MissionQuery atLeastOneRemarkWithType(String remarkType); // mission must contain at least 1 remark with type
+    
+    MissionQuery notViewed(String userBy, String usedFor); // include only missions that have not been viewed
+    MissionQuery notViewed(String usedFor); // include only missions that have no views for given purpose
+    
+    MissionQuery includeViewer(String userBy, String usedFor); //include viewer information
+    
     
     MissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);
     

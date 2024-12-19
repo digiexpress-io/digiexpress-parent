@@ -33,6 +33,7 @@ import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriter
 import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 
 public interface GrimQueries {
   ThenaDataSource getDataSource();
@@ -53,7 +54,9 @@ public interface GrimQueries {
   
   interface InternalMissionQuery {
     
-    InternalMissionQuery viewer(String userId, String usedBy);
+    InternalMissionQuery notViewed(@Nullable String userId, String usedFor);
+    InternalMissionQuery includeViewer(String usedBy, String usedFor);
+    
     InternalMissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
     InternalMissionQuery archived(GrimArchiveQueryType includeArchived); // true to exclude any tasks with archiveAt date present
     InternalMissionQuery missionId(String ...missionId); // multiple will be OR
@@ -63,6 +66,7 @@ public interface GrimQueries {
     InternalMissionQuery status(String ...status);
     InternalMissionQuery priority(String ...priority);
     InternalMissionQuery overdue(Boolean overdue);
+    InternalMissionQuery atLeastOneRemarkWithType(String remarkType);
     
     InternalMissionQuery likeReporterId(String reporterId);
     InternalMissionQuery likeTitle(String likeTitle);

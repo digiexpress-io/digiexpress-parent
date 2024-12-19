@@ -99,7 +99,16 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.next.reporterId(reporterId);
     return this;
   }
-
+  @Override
+  public NewRemark remarkSource(String remarkSource) {
+    this.next.remarkSource(remarkSource);
+    return this;
+  }
+  @Override
+  public NewRemark remarkType(String remarkType) {
+    this.next.remarkType(remarkType);
+    return this;
+  }
   @Override
   public NewRemark parentId(String parentId) {
     RepoAssert.isTrue(parentId == null || all_remarks.containsKey(parentId), () -> "Can't find parent remark by id: '" +  parentId + "'!");

@@ -34,6 +34,7 @@ import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewAssignment;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewLink;
+import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewObjective;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewRemark;
 import io.vertx.core.json.JsonObject;
@@ -71,6 +72,8 @@ public interface ThenaGrimMergeObject {
     MergeMission modifyGoal(String goalId, Consumer<MergeGoal> goal);
     MergeMission modifyObjective(String objectiveId, Consumer<MergeObjective> objective);
     MergeMission modifyRemark(String remarkId, Consumer<MergeRemark> objective);
+    
+    MergeMission addViewer(Consumer<NewMissionCommitViewer> viewer);
     
     MergeMission removeGoal(String goalId);
     MergeMission removeObjective(String objectiveId);

@@ -54,7 +54,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
     final var assignments = new ArrayList<Tuple3<String, Boolean, List<String>>>();
     final var links = new ArrayList<Tuple2<String, String>>();
     return new MissionQuery() {
-      private String usedBy, usedFor, reporterId, likeTitle, likeDescription;
+      private String reporterId, likeTitle, likeDescription;
       private List<String> ids;
       private List<String> status;
       private List<String> priority;
@@ -62,6 +62,32 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       private LocalDate fromCreatedOrUpdated;
       private Boolean overdue;
       
+      private String atLeastOneRemarkWithType;
+      private String notViewedUsedBy, notViewedUsedFor;
+      private String includeViewerUserId, includeViewerUsedFor;
+      
+      @Override
+      public MissionQuery atLeastOneRemarkWithType(String atLeastOneRemarkWithType) {
+        this.atLeastOneRemarkWithType = atLeastOneRemarkWithType;
+        return this;
+      }
+      @Override
+      public MissionQuery notViewed(String usedBy, String usedFor) {
+        this.notViewedUsedBy = RepoAssert.notEmpty(usedBy, () -> "usedBy can't be empty!"); 
+        this.notViewedUsedFor = RepoAssert.notEmpty(usedFor, () -> "usedFor can't be empty!"); 
+        return this;
+      }
+      @Override
+      public MissionQuery includeViewer(String usedBy, String usedFor) {
+        this.includeViewerUserId = RepoAssert.notEmpty(usedBy, () -> "usedBy can't be empty!"); 
+        this.includeViewerUsedFor = RepoAssert.notEmpty(usedFor, () -> "usedFor can't be empty!"); 
+        return this;
+      }
+      @Override
+      public MissionQuery notViewed(String usedFor) {
+        this.notViewedUsedFor = RepoAssert.notEmpty(usedFor, () -> "usedFor can't be empty!"); 
+        return this;
+      }
       @Override
       public MissionQuery addMissionId(List<String> ids) {
         if(this.ids == null) {
@@ -101,12 +127,6 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
         return this;
       }
       @Override
-      public MissionQuery viewer(String usedBy, String usedFor) {
-        this.usedBy = RepoAssert.notEmpty(usedBy, () -> "usedBy can't be empty!"); 
-        this.usedFor = RepoAssert.notEmpty(usedFor, () -> "usedFor can't be empty!"); 
-        return this;
-      }
-      @Override
       public MissionQuery archived(GrimArchiveQueryType includeArchived) {
         this.includeArchived = includeArchived;
         return this;
@@ -140,9 +160,6 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       public Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId) {
         return state.toGrimState(repoId).onItem().transformToUni(state -> {
           final var query = state.query().missions();
-          if(usedBy != null) {
-            query.viewer(usedBy, usedFor);
-          }
           if(this.status != null) {
             query.status(this.status.toArray(new String[] {}));
           }
@@ -159,6 +176,9 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
               .likeDescription(likeDescription)
               .likeTitle(likeTitle)
               .overdue(overdue)
+              .notViewed(notViewedUsedBy, notViewedUsedFor)
+              .atLeastOneRemarkWithType(atLeastOneRemarkWithType)
+              .includeViewer(includeViewerUserId, includeViewerUsedFor)
               .getById(missionIdOrExtId).onItem().transform(items -> 
             ImmutableQueryEnvelope.<GrimMissionContainer>builder()
               .repo(state.getDataSource().getTenant())
@@ -173,9 +193,6 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       public Uni<QueryEnvelopeList<GrimMissionContainer>> findAll() {
         return state.toGrimState(repoId).onItem().transformToUni(state -> {
           final var query = state.query().missions();
-          if(usedBy != null) {
-            query.viewer(usedBy, usedFor);
-          }
           if(this.ids != null) {
             query.missionId(this.ids.toArray(new String[] {}));
           }
@@ -195,6 +212,9 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
               .likeDescription(likeDescription)
               .likeTitle(likeTitle)
               .overdue(overdue)
+              .atLeastOneRemarkWithType(atLeastOneRemarkWithType)
+              .notViewed(notViewedUsedBy, notViewedUsedFor)
+              .includeViewer(includeViewerUserId, includeViewerUsedFor)
               .findAll().collect().asList().onItem().transform(items -> 
                 ImmutableQueryEnvelopeList.<GrimMissionContainer>builder()
                   .repo(state.getDataSource().getTenant())
@@ -204,7 +224,6 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           );
         });
       }
-
     };
   }
 }

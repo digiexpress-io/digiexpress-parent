@@ -192,7 +192,7 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     final var missionWithViewedData = getClient().grim(repo).find().missionQuery()
-        .viewer("john.doe@morgue.com", "tracing")
+        .includeViewer("john.doe@morgue.com", "tracing")
         .get(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     
@@ -201,11 +201,11 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     { // try to duplicate
     getClient().grim(repo).find().missionQuery()
-        .viewer("john.doe@morgue.com", "tracing")
+        .includeViewer("john.doe@morgue.com", "tracing")
         .get(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     final var missionWithViewedData = getClient().grim(repo).find().missionQuery()
-        .viewer("john.doe@morgue.com", "tracing")
+        .includeViewer("john.doe@morgue.com", "tracing")
         .get(newMission.getMission().getId())
         .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(1, missionWithViewedData.getObjects().getViews().size());
