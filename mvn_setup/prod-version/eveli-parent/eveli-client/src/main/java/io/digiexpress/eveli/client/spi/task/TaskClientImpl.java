@@ -89,16 +89,22 @@ public class TaskClientImpl implements TaskClient {
         return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
       }
       @Override
-      public Uni<Task> addWorkerCommitViewer(String taskId, String userId) {
+      public Uni<Task> addWorkerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId));
+      }
+      @Override
+      public Uni<Task> addCustomerCommitViewer(String taskId) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId));
       }
     };
   }
 
   @Override
-  public QueryTaskComments queryComments() {
+  public QueryTaskComments queryTaskComments() {
     return new QueryTaskComments() {
       @Override
       public Uni<TaskComment> getOneById(String commentId) {
@@ -112,7 +118,7 @@ public class TaskClientImpl implements TaskClient {
   }
 
   @Override
-  public QueryTaskKeywords queryKeywords() {
+  public QueryTaskKeywords queryTaskKeywords() {
     return new QueryTaskKeywords() {
       @Override
       public Uni<List<String>> findAllKeywords() {

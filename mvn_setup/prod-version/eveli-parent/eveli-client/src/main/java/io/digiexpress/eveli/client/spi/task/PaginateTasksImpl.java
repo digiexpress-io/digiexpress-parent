@@ -127,14 +127,15 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
           .map(PaginateTasksImpl::map);
     } else {
       return
-          .addAssignment("worker", false, "Sam-from-the")
-          .likeReporterId("jane.doe@housing.com")
-          .likeTitle("houSe")
+          /*
+          .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
+          .likeReporterId(clientIdentificator)
+          .likeTitle(subject)
           .likeDescription("the bEst")
-          .status(Arrays.asList("new", "open"))
-          .priority(Arrays.asList("high", "low"))
-          .overdue(false) // do not return overdue tasks
-          
+          .status(status)
+          .priority(priority)
+          .overdue(dueDate == null ? dueDate.isEmpty() : false) // do not return overdue tasks
+          */
           
           
           

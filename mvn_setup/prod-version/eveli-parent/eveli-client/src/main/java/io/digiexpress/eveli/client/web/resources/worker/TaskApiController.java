@@ -169,7 +169,7 @@ public class TaskApiController {
       .addWorkerCommitViewer(id, authentication.getPrincipal().getUsername())
       .await().atMost(timeout);
     
-    final var comments = taskClient.queryComments().findAllByTaskId(id).await().atMost(timeout);
+    final var comments = taskClient.queryTaskComments().findAllByTaskId(id).await().atMost(timeout);
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 
@@ -181,6 +181,6 @@ public class TaskApiController {
   @GetMapping("/keywords")
   @Transactional(readOnly = true)
   public ResponseEntity<KeyWordsResponse> getKeyWords() {
-    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryKeywords().findAllKeywords().await().atMost(timeout)));
+    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryTaskKeywords().findAllKeywords().await().atMost(timeout)));
   }
 }

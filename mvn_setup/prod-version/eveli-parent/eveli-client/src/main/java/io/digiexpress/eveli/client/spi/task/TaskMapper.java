@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.client.spi.task;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class TaskMapper {
   
   public static final String COMMENT_EXTERNAL = "EXTERNAL";
   public static final String COMMENT_INTERNAL = "INTERNAL";
-  
+  public static final Duration atMost = Duration.ofSeconds(30);
   
   public static ZonedDateTime toZoned(OffsetDateTime input) {
     if(input == null) {

@@ -42,8 +42,8 @@ public interface TaskClient {
   QueryUnreadUserTasks queryUnreadUserTasks();
   TaskCommandBuilder taskBuilder();
   
-  QueryTaskComments queryComments();
-  QueryTaskKeywords queryKeywords();
+  QueryTaskComments queryTaskComments();
+  QueryTaskKeywords queryTaskKeywords();
   
   
   interface TaskCommandBuilder {
@@ -51,12 +51,14 @@ public interface TaskClient {
     Uni<Task> createTask(CreateTaskCommand command);
     Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
     Uni<Task> deleteTask(String taskId);
-    Uni<Task> addWorkerCommitViewer(String taskId, String userId);
+    Uni<Task> addWorkerCommitViewer(String taskId);
+    Uni<Task> addCustomerCommitViewer(String taskId);
     Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
   }
   
   interface QueryTaskComments {
     Uni<List<TaskComment>> findAllByTaskId(String taskId);
+    Uni<List<TaskComment>> findAllByReporterId(String reporterId);
     Uni<TaskComment> getOneById(String commentId);
   }
   

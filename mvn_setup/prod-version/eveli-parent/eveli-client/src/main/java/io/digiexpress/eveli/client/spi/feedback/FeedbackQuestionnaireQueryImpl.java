@@ -53,7 +53,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
   @Override
   public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId) {
     final var task = taskClient.queryTasks().getOneById(taskId).await().atMost(atMost);
-    final var comments = taskClient.queryComments().findAllByTaskId(task.getId()).await().atMost(atMost);
+    final var comments = taskClient.queryTaskComments().findAllByTaskId(task.getId()).await().atMost(atMost);
 
     final var process = processClient.queryInstances().findOneByTaskId(task.getId());
     if(process.isEmpty()) {

@@ -35,7 +35,7 @@ public class AddWorkerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<T
     if(envelope.getStatus() == CommitResultStatus.OK) {
       return envelope;
     }
-    throw TaskException.builder("ADD_ONE_TASK_VIEWER_FAIL").add(config, envelope).build(); 
+    throw TaskException.builder("ADD_ONE_TASK_WORKER_VIEWER_FAIL").add(config, envelope).build(); 
   }
 
   @Override

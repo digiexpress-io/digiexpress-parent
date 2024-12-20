@@ -53,7 +53,7 @@ public class CommentApiController
   @GetMapping("/{id}")
   public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") String id) 
   {
-    return ResponseEntity.ok(taskClient.queryComments().getOneById(id).await().atMost(timeout));
+    return ResponseEntity.ok(taskClient.queryTaskComments().getOneById(id).await().atMost(timeout));
   }
   
   @PostMapping
