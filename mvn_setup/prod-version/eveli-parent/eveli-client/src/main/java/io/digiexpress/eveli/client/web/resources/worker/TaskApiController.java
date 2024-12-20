@@ -166,7 +166,8 @@ public class TaskApiController {
   {
     final var authentication = securityClient.getUser();
     taskClient.taskBuilder()
-      .addWorkerCommitViewer(id, authentication.getPrincipal().getUsername())
+      .userId(authentication.getPrincipal().getUsername(), null)
+      .addWorkerCommitViewer(id)
       .await().atMost(timeout);
     
     final var comments = taskClient.queryTaskComments().findAllByTaskId(id).await().atMost(timeout);
