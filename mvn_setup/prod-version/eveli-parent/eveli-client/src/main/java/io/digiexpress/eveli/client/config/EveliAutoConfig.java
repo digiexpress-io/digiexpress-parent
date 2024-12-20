@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /*-
  * #%L
  * eveli-client
@@ -41,20 +43,23 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.DialobCallbackController;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
+import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.resys.thena.storesql.DbStateSqlImpl;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.SslMode;
+import io.vertx.sqlclient.PoolOptions;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -68,7 +73,14 @@ import jakarta.persistence.EntityManager;
     EveliPropsPrintout.class,
     EveliPropsTask.class
 })
+@Slf4j
 public class EveliAutoConfig {
+  @Value("${spring.datasource.url}")
+  private String datasourceUrl;
+  @Value("${spring.datasource.username}")
+  private String datasourceUsername;
+  @Value("${spring.datasource.password}")
+  private String datasourcePassword;
   
   @Bean 
   public TaskNotificator taskNotificator() {
@@ -103,12 +115,51 @@ public class EveliAutoConfig {
 
   
   @Bean 
-  public TaskClient taskClient(TaskNotificator taskNotificator) {
-  
-    return new TaskClientImpl(jdbcTemplate, taskRepository, taskRefGenerator, taskNotificator, taskAccessRepository, commentRepository);
+  public TaskClient taskClient(TaskNotificator taskNotificator, io.vertx.mutiny.pgclient.PgPool pgPool) {    
+    final var config = ImmutableTaskStoreConfig.builder()
+        .tenantName("task-tenant")
+        .client(DbStateSqlImpl.create().client(pgPool).build())
+        .build();
+    final var store = new TaskStoreImpl(config);
+    return new TaskClientImpl(taskNotificator, store);
   }
   
+  @Bean
+  public io.vertx.mutiny.pgclient.PgPool pgPool() {
+    final var datasourceConfig = datasourceUrl.split(":");
+    final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
+
+    
+    final var pgHost = datasourceConfig[2].substring(2);
+    final var pgPort = Integer.parseInt(portAndDb[0]);
+    final var pgDb = portAndDb[1];
+    final var sslMode = SslMode.ALLOW;
+    
+    final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
+        new PgConnectOptions()
+          .setHost(pgHost)
+          .setPort(pgPort)
+          .setDatabase(pgDb)
+          .setUser(datasourceUsername)
+          .setPassword(datasourcePassword)
+          .setSslMode(sslMode), 
+        new PoolOptions().setMaxSize(5));
+    
+    final var msg = new StringBuilder("\r\n")
+    .append("  parsed-datasource-url: ").append(datasourceUrl).append("\r\n")
+    .append("  pgHost: ").append(pgHost).append("\r\n")
+    .append("  pgPort: ").append(pgPort).append("\r\n")
+    .append("  pgDb: ").append(pgDb).append("\r\n")
+    .append("  sslMode: ").append(sslMode).append("\r\n");
+    
+    log.info(msg.toString());
+    
+    
+    return pgPool;
+    
+  }
   
+
   @Bean
   public Jackson2ObjectMapperBuilderCustomizer jacksonConfig() {
       return builder -> builder

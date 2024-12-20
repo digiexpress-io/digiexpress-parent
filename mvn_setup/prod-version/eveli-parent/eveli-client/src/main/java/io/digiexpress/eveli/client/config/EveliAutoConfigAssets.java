@@ -27,7 +27,6 @@ import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,9 +63,6 @@ import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.SslMode;
-import io.vertx.sqlclient.PoolOptions;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -74,13 +70,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {
-  
-  @Value("${spring.datasource.url}")
-  private String datasourceUrl;
-  @Value("${spring.datasource.username}")
-  private String datasourceUsername;
-  @Value("${spring.datasource.password}")
-  private String datasourcePassword;
   
   // TODO @Value("${app.version}")
   private String version = "alpha";
@@ -126,28 +115,12 @@ public class EveliAutoConfigAssets {
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
-      ApplicationContext context
+      ApplicationContext context,
+      io.vertx.mutiny.pgclient.PgPool pgPool
     ) {
     
     final var liveContent = "live content:" + context.getApplicationName();
-    final var datasourceConfig = datasourceUrl.split(":");
-    final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
 
-    
-    final var pgHost = datasourceConfig[2].substring(2);
-    final var pgPort = Integer.parseInt(portAndDb[0]);
-    final var pgDb = portAndDb[1];
-    final var sslMode = SslMode.ALLOW;
-    
-    final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
-        new PgConnectOptions()
-          .setHost(pgHost)
-          .setPort(pgPort)
-          .setDatabase(pgDb)
-          .setUser(datasourceUsername)
-          .setPassword(datasourcePassword)
-          .setSslMode(sslMode), 
-        new PoolOptions().setMaxSize(5));
     
     final var wrenchClient = HdesClientImpl.builder()
         .store(ThenaStore.builder()
@@ -242,13 +215,7 @@ public class EveliAutoConfigAssets {
     
     
     final var msg = new StringBuilder("\r\n")
-      .append("Creating asset DB:").append("\r\n")
-      .append("  parsed-datasource-url: ").append(datasourceUrl).append("\r\n")
-      .append("  pgHost: ").append(pgHost).append("\r\n")
-      .append("  pgPort: ").append(pgPort).append("\r\n")
-      .append("  pgDb: ").append(pgDb).append("\r\n")
-      .append("  sslMode: ").append(sslMode).append("\r\n")
-      
+      .append("Creating assets DB-s:").append("\r\n")
       .append("  workflows: ").append("\r\n")
       .append("    created-db: ").append(createdAssets).append("\r\n")
       .append("    connected-to-repo: ").append(assetClient.getConfig().getRepoName()).append("\r\n")
@@ -256,7 +223,6 @@ public class EveliAutoConfigAssets {
       .append("  wrench: ").append("\r\n")
       .append("    created-db: ").append(createdWrench).append("\r\n")
       .append("    connected-to-repo: ").append(wrenchClient.store().getRepoName()).append("\r\n")
-      
       
       .append("  stencil: ").append("\r\n")
       .append("    created-db: ").append(createdStencil).append("\r\n")

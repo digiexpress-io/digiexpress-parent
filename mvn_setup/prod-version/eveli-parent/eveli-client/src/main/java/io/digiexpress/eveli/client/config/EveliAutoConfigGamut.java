@@ -34,9 +34,7 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.gamut.GamutClientImpl;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutFeedbackController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
@@ -54,10 +52,8 @@ public class EveliAutoConfigGamut {
   @Bean
   public GamutClient gamutClient(
       ProcessClient processRepository,
-      TaskRepository taskRepository,
-      CommentRepository commentRepository,
-      TaskAccessRepository taskAccessRepository,
-      
+
+      TaskClient taskclient,
       AttachmentCommands attachmentCommands,
       EveliContext eveliContext,
       EveliPropsAssets eveliAssetProps, 
@@ -68,9 +64,7 @@ public class EveliAutoConfigGamut {
     
     return new GamutClientImpl(
         processRepository, 
-        taskRepository, 
-        commentRepository, 
-        taskAccessRepository, 
+        taskclient, 
         
         attachmentCommands, 
         dialobCommands,

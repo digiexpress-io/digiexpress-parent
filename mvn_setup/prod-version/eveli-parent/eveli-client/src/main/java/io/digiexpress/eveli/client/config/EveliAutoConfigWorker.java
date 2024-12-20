@@ -24,8 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
@@ -33,8 +31,6 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
@@ -72,11 +68,9 @@ public class EveliAutoConfigWorker {
   public TaskApiController taskApiController(
       FeedbackClient feedback,
       AuthClient security, 
-      TaskClient taskClient, 
-      TaskAccessRepository taskAccessRepository, 
-      TaskRepository taskRepository) {
+      TaskClient taskclient) {
     
-    return new TaskApiController(security, taskClient, taskAccessRepository, taskRepository);
+    return new TaskApiController(security, taskclient);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {
@@ -91,7 +85,7 @@ public class EveliAutoConfigWorker {
     return new EmailNotificationController(emailProps, new EmailFilter(emailProps));
   }
   @Bean 
-  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient, ObjectMapper objectMapper) {
-    return new FeedbackApiController(authClient, feedbackClient, objectMapper);
+  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
+    return new FeedbackApiController(authClient, feedbackClient);
   }
 }

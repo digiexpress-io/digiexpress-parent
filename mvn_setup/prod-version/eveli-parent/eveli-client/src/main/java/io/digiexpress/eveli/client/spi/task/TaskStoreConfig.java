@@ -27,7 +27,6 @@ import io.smallrye.mutiny.Uni;
 public interface TaskStoreConfig {
   ThenaClient getClient();
   String getTenantName();
-  TaskAuthorProvider getAuthor();
   
   @FunctionalInterface
   interface TaskAuthorProvider {
