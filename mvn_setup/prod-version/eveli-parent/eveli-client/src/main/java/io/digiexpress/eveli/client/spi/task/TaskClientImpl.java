@@ -137,10 +137,7 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<List<String>> findAll() {
         TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        if(roles.isEmpty()) {
-          return taskRepository.findUnreadTasks(userId);
-        } 
-        return taskRepository.findUnreadTasksByRole(userId, roles);
+        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles));
       }
     };
   }
