@@ -72,6 +72,7 @@ public interface TaskClient {
   
   interface QueryTasks {
     Uni<Task> getOneById(String taskId);
+    Uni<List<Task>> findAll(List<String> taskId);
   }
   
   interface PaginateTasks {

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -37,12 +39,11 @@ import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.Task;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -55,6 +56,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private final TaskClient taskClient;
   private final CrmClient authClient;
   private final AttachmentCommands attachmentsCommands;
+  private final Duration atMost = Duration.ofSeconds(30);
   
   @Override
   public List<UserAction> findAll() {
@@ -102,8 +104,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private TasksContext visitTasks(List<ProcessInstance> processes, String userId) {
     final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
-    final var unreadTasks = taskRepository.findUnreadExternalTasks(userId);
-    final var allTasks = taskRepository.findAllTasksId(taskIds);    
+    final var unreadTasks = taskClient.queryUnreadUserTasks().userId(userId).findAll().await().atMost(atMost);
+    final var allTasks = taskClient.queryTasks().findAll(taskIds).await().atMost(atMost);    
     
     return new TasksContext(
         allTasks.stream().collect(Collectors.toMap(e -> e.getId(), e -> e)), 
@@ -204,8 +206,8 @@ public class UserActionsQueryImpl implements UserActionQuery {
   @Data
   @RequiredArgsConstructor
   private static class TasksContext {
-    private final Map<Long, TaskEntity> tasksById;
-    private final List<Long> unreadTaskIds;
+    private final Map<String, Task> tasksById;
+    private final List<String> unreadTaskIds;
   }
   
   
