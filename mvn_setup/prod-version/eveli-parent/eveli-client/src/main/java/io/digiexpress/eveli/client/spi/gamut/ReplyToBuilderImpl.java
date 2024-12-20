@@ -28,6 +28,7 @@ import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
@@ -44,9 +45,7 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final ProcessClient processRepository;
-  private final CommentRepository commentRepository;
-  private final TaskRepository taskRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   private final CrmClient authClient;
   private String actionId;
   private ReplayToInit from;

@@ -35,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
@@ -56,8 +54,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedbackApiController {
   private final AuthClient securityClient;
   private final FeedbackClient feedbackClient;
-  private final ObjectMapper objectMapper;
-  
 
   @GetMapping
   public ResponseEntity<List<Feedback>> findAllFeedback()

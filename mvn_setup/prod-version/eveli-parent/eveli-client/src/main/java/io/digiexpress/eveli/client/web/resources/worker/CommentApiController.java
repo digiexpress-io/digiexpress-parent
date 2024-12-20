@@ -51,7 +51,7 @@ public class CommentApiController
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping("/{id}")
-  public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") Long id) 
+  public ResponseEntity<TaskClient.TaskComment> getCommentById(@PathVariable("id") String id) 
   {
     return ResponseEntity.ok(taskClient.queryComments().getOneById(id).await().atMost(timeout));
   }

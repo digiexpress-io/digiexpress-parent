@@ -24,7 +24,6 @@ import java.time.Duration;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +46,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -65,9 +62,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
-  
-  private final TaskAccessRepository taskAccessRepository;
-  private final TaskRepository taskRepository;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
@@ -133,7 +127,7 @@ public class TaskApiController {
   
   @PutMapping("/{id}")
   @Transactional
-  public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") Long id, @RequestBody TaskClient.ModifyTaskCommand command) {
+  public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
     final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
@@ -153,7 +147,7 @@ public class TaskApiController {
   }
   
   @GetMapping(value="/unread")
-  public ResponseEntity<Collection<Long>> getUnreadTasks() {
+  public ResponseEntity<Collection<String>> getUnreadTasks() {
     final var worker = securityClient.getUser().getPrincipal();
     
     if (worker.isAdmin()) {
@@ -171,9 +165,11 @@ public class TaskApiController {
   public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
   {
     final var authentication = securityClient.getUser();
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
+    taskClient.taskBuilder()
+      .addWorkerCommitViewer(id, authentication.getPrincipal().getUsername())
+      .await().atMost(timeout);
+    
     final var comments = taskClient.queryComments().findAllByTaskId(id).await().atMost(timeout);
- 
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 

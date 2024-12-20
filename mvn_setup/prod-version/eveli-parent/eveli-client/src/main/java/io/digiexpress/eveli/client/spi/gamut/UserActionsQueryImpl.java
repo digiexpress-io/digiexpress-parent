@@ -37,6 +37,7 @@ import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ImmutableUserActionAttachment;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
@@ -51,7 +52,7 @@ import lombok.RequiredArgsConstructor;
 public class UserActionsQueryImpl implements UserActionQuery {
   
   private final ProcessClient hdesCommands;
-  private final TaskRepository taskRepository;
+  private final TaskClient taskClient;
   private final CrmClient authClient;
   private final AttachmentCommands attachmentsCommands;
   

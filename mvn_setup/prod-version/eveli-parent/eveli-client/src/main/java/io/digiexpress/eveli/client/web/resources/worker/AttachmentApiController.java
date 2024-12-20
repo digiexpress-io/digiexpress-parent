@@ -148,7 +148,7 @@ public class AttachmentApiController {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
     
-    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId)).await().atMost(timeout);
+    final var task = taskClient.queryTasks().getOneById(taskId).await().atMost(timeout);
     if(!authentication.getPrincipal().isAdmin() && !authentication.getPrincipal().isAccessGranted(task.getAssignedRoles())) {
       log.warn("Access to task {} disabled for roles {} or task not found", taskId, roles);
       return false;

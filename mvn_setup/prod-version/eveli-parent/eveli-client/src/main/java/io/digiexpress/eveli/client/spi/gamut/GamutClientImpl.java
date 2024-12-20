@@ -30,6 +30,7 @@ import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
@@ -43,9 +44,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GamutClientImpl implements GamutClient {
   private final ProcessClient processInstanceClient;
-  private final TaskRepository taskRepository;
-  private final CommentRepository commentRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
@@ -69,12 +68,12 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(processInstanceClient, taskRepository, authClient, attachmentsCommands);
+    return new UserActionsQueryImpl(processInstanceClient, taskClient, authClient, attachmentsCommands);
   }
 
   @Override
   public UserMessagesQuery userMessagesQuery() {
-    return new UserMessagesQueryImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
+    return new UserMessagesQueryImpl(processInstanceClient, taskClient, authClient);
   }
 
   @Override
@@ -84,7 +83,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
+    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient);
   }
 
   @Override

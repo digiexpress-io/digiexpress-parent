@@ -30,6 +30,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
 import io.digiexpress.eveli.client.api.ImmutableUserMessage;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
@@ -42,9 +43,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserMessagesQueryImpl implements UserMessagesQuery {
   private final ProcessClient processRepository;
-  private final CommentRepository commentRepository;
-  private final TaskRepository taskRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   private final CrmClient authClient;
   
   @Override
