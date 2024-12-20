@@ -28,20 +28,22 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.PaginateTasks;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTasksVisitor<List<TaskClient.Task>> {
+public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTasksVisitor<Page<TaskClient.Task>> {
 
   private final TaskStore ctx;
   
@@ -109,7 +111,12 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
   }
 
   @Override
-  public Page<Task> findAll() {
+  public Uni<Page<Task>> findAll() {
+    return ctx.getConfig().accept(this);
+  }
+  
+  @Override
+  public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
     TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
     if (this.status.isEmpty()) {
       this.status.addAll(Arrays.asList(TaskStatus.values()));
@@ -145,32 +152,17 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
           priorities, requireAnyRoles, likeExpression(role), dueDate, pageable)
           .map(PaginateTasksImpl::map);
     }
+    return null;
   }
-  
-  private String likeExpression(String value) {
-    return "%" + value.toLowerCase() + "%";
+  @Override
+  public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
+    // TODO Auto-generated method stub
+    return null;
   }
-  
-  
-  public static Task map(TaskEntity task) {
-    return ImmutableTask.builder()
-      .version(task.getVersion())
-      .assignedUser(task.getAssignedUser())
-      .assignedUserEmail(task.getAssignedUserEmail())
-      .clientIdentificator(task.getClientIdentificator())
-      .completed(task.getCompleted())
-      .created(task.getCreated())
-      .description(task.getDescription())
-      .dueDate(task.getDueDate())
-      .id(task.getId())
-      .questionnaireId(task.getQuestionnanireId())
-      .priority(task.getPriority())
-      .status(task.getStatus())
-      .subject(task.getSubject())
-      .taskRef(task.getTaskRef())
-      .updated(task.getUpdated())
-      .updaterId(task.getUpdaterId())
-      .build();
+  @Override
+  public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
+    // TODO Auto-generated method stub
+    return null;
   }
   
 }

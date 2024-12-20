@@ -52,6 +52,26 @@ public class TaskMapper {
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))
       .findFirst();
+    /* JPA version
+    
+    return ImmutableTask.builder()
+        .version(task.getVersion())
+        .assignedUser(task.getAssignedUser())
+        .assignedUserEmail(task.getAssignedUserEmail())
+        .clientIdentificator(task.getClientIdentificator())
+        .completed(task.getCompleted())
+        .created(task.getCreated())
+        .description(task.getDescription())
+        .dueDate(task.getDueDate())
+        .id(task.getId())
+        .questionnaireId(task.getQuestionnanireId())
+        .priority(task.getPriority())
+        .status(task.getStatus())
+        .subject(task.getSubject())
+        .taskRef(task.getTaskRef())
+        .updated(task.getUpdated())
+        .updaterId(task.getUpdaterId())
+        .build();*/
     
     final var task = ImmutableTask.builder()
       .version(commited.getCommitId())

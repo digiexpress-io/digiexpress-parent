@@ -89,9 +89,9 @@ public class TaskApiController {
         .page(pageable);
     
     if (worker.getPrincipal().isAdmin()) {
-      return ResponseEntity.ok(query.findAll());
+      return ResponseEntity.ok(query.findAll().await().atMost(timeout));
     }
-    return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll());
+    return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll().await().atMost(timeout));
   }
 
   @GetMapping("/{id}")

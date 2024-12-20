@@ -88,7 +88,7 @@ public interface TaskClient {
     PaginateTasks role(@Nullable String role); // find task assigned to the role
     
     PaginateTasks requireAnyRoles(List<String> roles); // secondary role filter, must contain at least one of these
-    Page<Task> findAll();
+    Uni<Page<Task>> findAll();
   }
   
 
