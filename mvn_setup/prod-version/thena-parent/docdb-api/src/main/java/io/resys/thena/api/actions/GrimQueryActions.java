@@ -34,8 +34,10 @@ import io.smallrye.mutiny.Uni;
 
 
 public interface GrimQueryActions {
-  MissionLabelQuery missionLabelQuery();
+
   MissionQuery missionQuery();
+  MissionLabelQuery missionLabelQuery();
+  MissionRemarkQuery missionRemarkQuery();
   CommitViewersQuery commitViewersQuery();
   
   interface CommitViewersQuery {
@@ -44,6 +46,12 @@ public interface GrimQueryActions {
   
   interface MissionLabelQuery {
     Uni<List<GrimUniqueMissionLabel>> findAllUnique();
+  }
+  
+  // find all remark related data
+  interface MissionRemarkQuery {
+    Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId);    
+    Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId);
   }
   
   interface MissionQuery {

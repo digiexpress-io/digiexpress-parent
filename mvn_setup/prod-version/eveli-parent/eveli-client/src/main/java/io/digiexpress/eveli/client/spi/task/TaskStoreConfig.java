@@ -15,8 +15,10 @@ import io.resys.thena.api.actions.GrimCommitActions.ModifyManyMissions;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
+import io.resys.thena.api.actions.GrimQueryActions.MissionRemarkQuery;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 
@@ -47,6 +49,26 @@ public interface TaskStoreConfig {
     final var prefilled = grim.find().missionQuery();
     
     final Uni<QueryEnvelopeList<GrimMissionContainer>> query = visitor.start(grim, prefilled).findAll();
+    return query
+        .onItem().transform(envelope -> visitor.visitEnvelope(grim, envelope))
+        .onItem().transformToUni(ref -> visitor.end(grim, ref));
+  }
+  
+  
+  /**
+   * Visitor for SINGLE task comment(s) QUERIES
+   */
+  interface QueryOneTaskCommentsVisitor<T> {
+    Uni<QueryEnvelope<GrimMissionContainer>> start(GrimStructuredTenant config, MissionRemarkQuery builder);
+    @Nullable GrimMissionContainer visitEnvelope(GrimStructuredTenant config, QueryEnvelope<GrimMissionContainer> envelope);
+    Uni<T> end(GrimStructuredTenant config, @Nullable GrimMissionContainer commit);    
+  }
+    
+  default <T> Uni<T> accept(QueryOneTaskCommentsVisitor<T> visitor) {
+    final var grim = getClient().grim(getTenantName());
+    final var prefilled = grim.find().missionRemarkQuery();
+    
+    final Uni<QueryEnvelope<GrimMissionContainer>> query = visitor.start(grim, prefilled);
     return query
         .onItem().transform(envelope -> visitor.visitEnvelope(grim, envelope))
         .onItem().transformToUni(ref -> visitor.end(grim, ref));

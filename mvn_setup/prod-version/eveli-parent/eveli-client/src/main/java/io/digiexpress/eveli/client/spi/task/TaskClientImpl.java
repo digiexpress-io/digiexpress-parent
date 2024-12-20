@@ -90,15 +90,13 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryTaskComments queryComments() {
     return new QueryTaskComments() {
-      
       @Override
-      public TaskComment getOneById(long commentId) {
-        return commentRepository.findById(commentId).map(CreateOneTaskComment::map).get();
+      public Uni<TaskComment> getOneById(String commentId) {
+        return ctx.getConfig().accept(new GetOneTaskCommentByIdVisitor(commentId));
       }
-      
       @Override
-      public List<TaskComment> findAllByTaskId(long taskId) {
-        return commentRepository.findByTaskId(taskId).stream().map(CreateOneTaskComment::map).toList();
+      public Uni<List<TaskComment>> findAllByTaskId(String taskId) {        
+        return ctx.getConfig().accept(new FindAllTaskCommentsByTaskIdVisitor(taskId));
       }
     };
   }

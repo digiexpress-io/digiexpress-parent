@@ -113,6 +113,18 @@ public class TaskException extends RuntimeException {
       return this;
     }
     
+    public Builder add(GrimStructuredTenant config, QueryEnvelope<?> envelope) {
+      msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
+      .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
+      .addAllArgs(envelope.getMessages().stream() .map(message -> {
+        if(message.getException() != null) {
+          surpressed.add(message.getException());
+        }
+        return message.getText();
+      }).collect(Collectors.toList()));
+      return this;
+    }
+    
     public Builder add(GrimStructuredTenant config, ManyMissionsEnvelope envelope) {
       msg.id(envelope.getRepoId() == null ? config.getTenantId(): envelope.getRepoId())
       .value(envelope.getRepoId() == null ? config.getTenantId(): envelope.getRepoId())
