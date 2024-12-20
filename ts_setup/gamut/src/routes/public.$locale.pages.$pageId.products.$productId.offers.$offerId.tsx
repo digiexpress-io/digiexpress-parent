@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterOffer } from '../g-routes';
+import { GRouterOffer } from '../g-router-offer';
 import { useOffers } from '../api-offer';
 
 
@@ -26,7 +26,7 @@ function ChooseComponent(props: { locale: string, offerId: string, productId: st
   }
 
 
-  return (<RouterOffer 
+  return (<GRouterOffer 
     formId={props.formId}
     offerId={props.offerId} 
     productId={props.productId} 
