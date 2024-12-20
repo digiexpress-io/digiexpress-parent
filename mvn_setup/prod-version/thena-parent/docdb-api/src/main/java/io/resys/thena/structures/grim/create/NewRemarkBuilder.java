@@ -80,8 +80,9 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
   }
   
   @Override
-  public void build() {
+  public String build() {
     this.built = true;
+    return this.remarkId;
   }
   @Override
   public NewRemark remarkText(String remarkText) {
@@ -115,8 +116,6 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
     this.next.parentId(parentId);
     return this;
   }
-
-
   @Override
   public NewRemark addAssignees(Consumer<NewAssignment> assignment) {
     final var all_assignments = this.batch.build().getAssignments().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));

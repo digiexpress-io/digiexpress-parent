@@ -27,6 +27,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -59,8 +60,8 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private final String missionId;
   private final String commitId;
   private final ImmutableGrimMissionData.Builder missionMeta;
-  private final OffsetDateTime createdAt = OffsetDateTime.now();
-  
+  private final OffsetDateTime createdAt;
+  private final String author;
   private static final String DATE_NUMBER_SEPARATOR_DEFAULT = "-";
   private static final SimpleDateFormat dataFormat = new SimpleDateFormat("yyyyMM");
   
@@ -69,12 +70,14 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   private boolean built;
   
   
-  public NewMissionBuilder(GrimCommitBuilder logger, long nextVal) {
+  public NewMissionBuilder(GrimCommitBuilder logger, long nextVal, String author) {
     super();
     this.next = ImmutableGrimBatchMissions.builder()
         .tenantId(logger.getTenantId())
         .status(BatchStatus.OK)
         .log("");
+    this.author = author;
+    this.createdAt = logger.getCreatedAt();
     this.commitId = logger.getCommitId();
     this.missionId = OidUtils.gen();
     this.mission = ImmutableGrimMission.builder()
@@ -230,6 +233,8 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
             .createdAt(createdAt)
             .updatedAt(createdAt)
             .treeUpdatedAt(createdAt)
+            .treeUpdatedBy(author)
+            .dataExtension(Optional.ofNullable(data.getDataExtension()).orElse(null))
             .build())
         .build();
     

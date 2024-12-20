@@ -93,8 +93,8 @@ public interface TaskClient {
   @Value.Immutable
   interface CreateTaskCommentCommand {
     @Nullable Boolean getExternal();
-    @Nullable Long getReplyToId();
-    Long getTaskId();
+    @Nullable String getReplyToId();
+    String getTaskId();
     String getCommentText();
     TaskCommentSource getSource(); 
   }
@@ -197,14 +197,14 @@ public interface TaskClient {
   @Value.Immutable
   interface TaskComment {
     // null on new
-    @Nullable Long getId();
+    @Nullable String getId();
     @Nullable ZonedDateTime getCreated();
     
     @Nullable Boolean getExternal();
     @Nullable String getUserName();
-    @Nullable Long getReplyToId();
+    @Nullable String getReplyToId();
     
-    Long getTaskId();
+    String getTaskId();
     String getCommentText();
     TaskCommentSource getSource(); 
   }

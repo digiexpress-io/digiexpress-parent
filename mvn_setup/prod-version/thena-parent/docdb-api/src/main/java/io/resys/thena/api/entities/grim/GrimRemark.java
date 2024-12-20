@@ -53,6 +53,7 @@ public interface GrimRemark extends IsGrimObject, ThenaTable {
   
   @Value.Immutable
   interface GrimRemarkTransitives {
+    String getCreatedBy(); // Transitive from commit table
     OffsetDateTime getCreatedAt(); // Transitive from commit table
     OffsetDateTime getUpdatedAt(); // Transitive from commit table
   }

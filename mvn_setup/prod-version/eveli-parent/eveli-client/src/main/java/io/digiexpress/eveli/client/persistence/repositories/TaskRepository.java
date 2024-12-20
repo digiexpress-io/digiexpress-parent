@@ -33,7 +33,7 @@ import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
 
 @Repository
 public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, Long> {
-  
+  /*
   TaskEntity getOneById(Long id);
   
   @Query(value=
@@ -93,7 +93,7 @@ public interface TaskRepository extends PagingAndSortingRepository<TaskEntity, L
 
   TaskEntity save(TaskEntity task);
   
-  /*
+  
   @Query(value="select new io.digiexpress.task.entity.TaskStatusStatistics(count(status), status) from Task t group by status")
   List<TaskStatusStatistics> getTaskStatusStatistics();
   

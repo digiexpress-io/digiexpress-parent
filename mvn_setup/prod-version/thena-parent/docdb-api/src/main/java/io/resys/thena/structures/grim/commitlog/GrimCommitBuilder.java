@@ -41,6 +41,7 @@ public class GrimCommitBuilder {
   private final ImmutableGrimBatchMissions.Builder next;
   private final GrimCommitLogger logger;
   private final OffsetDateTime createdAt;
+  
   public GrimCommitBuilder(String tenantId, GrimCommit commit) {
     super();
     this.commitId = commit.getCommitId();

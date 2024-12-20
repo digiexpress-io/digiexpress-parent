@@ -100,20 +100,10 @@ public class EveliAutoConfig {
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {
     return new SpringTransactionWrapper(entityManager);
   }
-  @Bean
-  public TaskRefGenerator taskRefGenerator(EntityManager client) {
-    return new TaskRefGenerator(client);
-  }  
+
   
   @Bean 
-  public TaskClient taskClient(
-      TaskRepository taskRepository,
-      TaskNotificator taskNotificator,      
-      TaskRefGenerator taskRefGenerator,
-      JdbcTemplate jdbcTemplate,
-      
-      TaskAccessRepository taskAccessRepository,
-      CommentRepository commentRepository) {
+  public TaskClient taskClient(TaskNotificator taskNotificator) {
   
     return new TaskClientImpl(jdbcTemplate, taskRepository, taskRefGenerator, taskNotificator, taskAccessRepository, commentRepository);
   }

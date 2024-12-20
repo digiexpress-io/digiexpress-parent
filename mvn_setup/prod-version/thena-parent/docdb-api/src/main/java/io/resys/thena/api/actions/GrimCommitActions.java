@@ -28,8 +28,10 @@ import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -102,7 +104,10 @@ public interface GrimCommitActions {
     String getRepoId();
     CommitResultStatus getStatus();
     List<Message> getMessages();
+    
     @Nullable GrimMission getMission();
+    List<GrimAssignment> getAssignments(); // assignments that are linked to mission 
+    List<GrimRemark> getRemarks(); // remarks that are linked to mission
   }
   
   @Value.Immutable

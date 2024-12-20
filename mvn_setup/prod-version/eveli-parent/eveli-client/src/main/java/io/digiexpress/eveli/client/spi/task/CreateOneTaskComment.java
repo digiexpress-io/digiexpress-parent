@@ -1,86 +1,78 @@
 package io.digiexpress.eveli.client.spi.task;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.Optional;
-
-import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommentCommand;
-import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
+import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
+import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
+import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CreateOneTaskComment {
+public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<TaskClient.TaskComment> {
   private final String userId;
-  private final TaskRepository taskRepository;
-  private final CommentRepository commentRepository;
   private final TaskNotificator notificator;
-  private final TaskAccessRepository taskAccessRepository;
+  private final CreateTaskCommentCommand command;
   
-  public TaskClient.TaskComment create(CreateTaskCommentCommand command) {
-
-    final var task = taskRepository.getOneById(command.getTaskId());
-    final var replyTo = Optional.ofNullable(command.getReplyToId()).map(replyToId -> commentRepository.findById(replyToId).get());
+  private String createdRemarkId;
+  
+  private void createTaskComment(CreateTaskCommentCommand command, MergeMission merge) {
+    final var remarkType = Boolean.TRUE.equals(command.getExternal()) ? TaskMapper.COMMENT_EXTERNAL : TaskMapper.COMMENT_INTERNAL;
+    final var usedFor = command.getSource() == TaskCommentSource.FRONTDESK ? TaskMapper.VIEWER_WORKER : TaskMapper.VIEWER_CUSTOMER;
     
-    final var entity = new TaskCommentEntity()
-      .setCommentText(command.getCommentText())
-      .setUserName(userId)
-      .setExternal(command.getExternal())
-      .setSource(command.getSource())
-      .setTask(task)
-      .setReplyTo(replyTo.orElse(null));
-
-    
-    final var savedComment = commentRepository.save(entity);
-    final var immutable = CreateOneTaskComment.map(savedComment);
-    
-    // TODO
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(task.getId(), Optional.of(task), userId);
-    
-    // TODO
-    if (savedComment.getExternal()) {
-      final var taskModel = PaginateTasksImpl.map(task);
-      notificator.sendNewCommentNotificationToClient(immutable, taskModel);
-    }
-    return immutable;
+    merge.addRemark(createComment -> {
+      // create new comment
+      final var remarkId = createComment
+        .remarkText(command.getCommentText())
+        .reporterId(userId)
+        .remarkType(remarkType)
+        .remarkSource(command.getSource().name())
+        .parentId(command.getReplyToId())
+        .build();
+      
+      // internally store new comment id
+      setRemarkId(remarkId);
+    })
+    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).build())
+    .build();
   }
   
-  
-  public static TaskComment map(io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity task) {
-    return ImmutableTaskComment.builder()
-        .id(task.getId())
-        .created(task.getCreated())
-        .commentText(task.getCommentText())
-        .userName(task.getUserName())
-        .replyToId(Optional.ofNullable(task.getReplyTo()).map(r -> r.getId()).orElse(null)) // probably bad idea, lazy relations
-        .taskId(task.getTask().getId()) // probably bad idea, lazy relations
-        .external(task.getExternal())
-        .source(task.getSource())
-        .build();
+  private void setRemarkId(String remarkId) {
+    this.createdRemarkId = remarkId;
+  }
+
+  @Override
+  public ModifyOneMission start(GrimStructuredTenant config, ModifyOneMission builder) {
+    builder.missionId(command.getTaskId()).modifyMission(merge -> createTaskComment(command, merge));
+    return builder
+        .commitAuthor(userId)
+        .commitMessage("Creating tasks by: " + CreateOneTask.class.getSimpleName());
+  }
+
+  @Override
+  public OneMissionEnvelope visitEnvelope(GrimStructuredTenant config, OneMissionEnvelope envelope) {
+    if(envelope.getStatus() == CommitResultStatus.OK) {
+      return envelope;
+    }
+    throw TaskException.builder("CREATE_TASK_COMMENT_SAVE_FAIL").add(config, envelope).build(); 
+  }
+
+  @Override
+  public Uni<TaskClient.TaskComment> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
+    final var createdRemark = commited.getRemarks().stream()
+        .filter(r -> r.getId().equals(createdRemarkId))
+        .findFirst().get();
+    
+    final var comment = TaskMapper.map(createdRemark);
+    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments());
+    
+    if (comment.getExternal()) {
+      notificator.sendNewCommentNotificationToClient(comment, task);
+    }
+    return Uni.createFrom().item(comment);
   }
 }

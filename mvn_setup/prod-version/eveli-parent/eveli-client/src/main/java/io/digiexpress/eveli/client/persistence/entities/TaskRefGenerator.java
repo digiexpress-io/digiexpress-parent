@@ -27,7 +27,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import lombok.RequiredArgsConstructor;
 
-
+/*
 @RequiredArgsConstructor
 public class TaskRefGenerator {
   
@@ -46,4 +46,4 @@ public class TaskRefGenerator {
     final var nextvalValue = (Long) nextvalQuery.setFlushMode(FlushModeType.COMMIT).getSingleResult();
     return dataFormat.format(now) + DATE_NUMBER_SEPARATOR_DEFAULT + nextvalValue;
   }
-}
+}*/

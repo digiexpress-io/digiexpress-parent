@@ -39,6 +39,7 @@ import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionData;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeGoal;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
@@ -71,17 +72,25 @@ public class MergeMissionBuilder implements MergeMission {
   private final ImmutableGrimBatchMissions.Builder batch;
   private final ImmutableGrimMission.Builder nextMission;
   private final ImmutableGrimMissionData.Builder nextMissionMeta;
+  private final ImmutableGrimMissionTransitives.Builder nextTransitives;
   private final String missionId;
   private Consumer<GrimMissionContainer> handleCurrentState;
   private boolean built;
   
-  public MergeMissionBuilder(GrimMissionContainer container, GrimCommitBuilder logger) {
+  public MergeMissionBuilder(GrimMissionContainer container, GrimCommitBuilder logger, String author) {
     super();
+    
+    final var start = container.getMissions().values().iterator().next();
+    
+    this.nextTransitives = ImmutableGrimMissionTransitives.builder()
+        .from(start.getTransitives())
+        .treeUpdatedAt(logger.getCreatedAt())
+        .treeUpdatedBy(author);
+    
     this.container = container;
     this.logger = logger;
     this.batch = ImmutableGrimBatchMissions.builder().tenantId(logger.getTenantId()).log("").status(BatchStatus.OK);
-    this.nextMission = ImmutableGrimMission.builder()
-        .from(container.getMissions().values().iterator().next());
+    this.nextMission = ImmutableGrimMission.builder().from(start);
     this.missionId = container.getMissions().values().iterator().next().getId();
     this.nextMissionMeta = ImmutableGrimMissionData.builder()
         .from(container
@@ -472,6 +481,7 @@ public class MergeMissionBuilder implements MergeMission {
     }
     
     
+    
     // mission meta merge
     {
       var data = this.nextMissionMeta.build();
@@ -483,7 +493,7 @@ public class MergeMissionBuilder implements MergeMission {
       if(isDelete) {
         logger.rm(previous);
         batch.addDeleteData(previous);
-        
+        nextTransitives.dataExtension(null);
       } if(isModified) {
         data = ImmutableGrimMissionData.builder()
             .from(data)
@@ -491,17 +501,19 @@ public class MergeMissionBuilder implements MergeMission {
             .build();
         logger.merge(previous, data);
         batch.addUpdateData(data);
+        nextTransitives.dataExtension(data.getDataExtension());
         
       } else if(isInsert) {
         logger.add(data);
         batch.addData(data);
+        nextTransitives.dataExtension(data.getDataExtension());
       }
       
     }
     
     // mission merge
     {
-      var mission = this.nextMission.build();
+      var mission = this.nextMission.transitives(nextTransitives.build()).build();
       final var previous = this.container.getMissions().get(mission.getId());
       final var isModified = !mission.equals(previous);
       

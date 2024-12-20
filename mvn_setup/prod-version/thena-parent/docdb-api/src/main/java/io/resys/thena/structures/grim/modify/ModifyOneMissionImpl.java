@@ -157,10 +157,12 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
           .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
           .findAll().collect().asList()
           .onItem().transform(container -> {
-            
+            final var item = container.iterator().next();
             return ImmutableOneMissionEnvelope.builder()
               .repoId(tenantId)
-              .mission(container.iterator().next().getMission())
+              .mission(item.getMission())
+              .addAllRemarks(item.getRemarks().values())
+              .addAllAssignments(item.getAssignments().values())
               .addAllMessages(rsp.getMessages())
               .status(BatchStatus.mapStatus(rsp.getStatus()))
               .build();
@@ -200,7 +202,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
           .build()
     );
     
-    final var mergeMission = new MergeMissionBuilder(container, logger);
+    final var mergeMission = new MergeMissionBuilder(container, logger, author);
     this.mission.accept(mergeMission);
     final var created = mergeMission.close();
     

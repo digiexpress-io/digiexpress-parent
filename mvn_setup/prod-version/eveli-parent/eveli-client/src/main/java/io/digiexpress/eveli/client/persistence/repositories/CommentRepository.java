@@ -33,7 +33,7 @@ import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
 @Repository
 public interface CommentRepository extends CrudRepository<TaskCommentEntity, Long> {
 	
-  
+  /*
   TaskCommentEntity getOneById(Long id);
 	
 	Collection<TaskCommentEntity> findByTaskId(Long id);
@@ -49,5 +49,5 @@ left join process on(process.task_id::bigint = comment.task_id)
 where comment.external = true and process.user_id = :userName
 """)
   List<TaskCommentEntity> findAllByUserId(@Param("userName") String userName);
-  
+  */
 }

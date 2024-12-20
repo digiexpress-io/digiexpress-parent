@@ -111,6 +111,8 @@ public class CreateOneMissionsImpl implements CreateOneMission {
       final OneMissionEnvelope result = ImmutableOneMissionEnvelope.builder()
           .repoId(tenantId)
           .mission(rsp.getMissions().iterator().next())
+          .addAllRemarks(request.getRemarks())
+          .addAllAssignments(request.getAssignments())
           .addAllMessages(rsp.getMessages())
           .status(BatchStatus.mapStatus(rsp.getStatus()))
           .build();
@@ -139,7 +141,7 @@ public class CreateOneMissionsImpl implements CreateOneMission {
           .build()
     );
     
-    final var newMission = new NewMissionBuilder(logger, nextVal);
+    final var newMission = new NewMissionBuilder(logger, nextVal, author);
     this.mission.accept(newMission);
     final var created = newMission.close();
     

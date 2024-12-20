@@ -118,7 +118,7 @@ public interface ThenaGrimNewObject {
     NewRemark remarkType(@Nullable String remarkType);
     NewRemark reporterId(String reporterId);
     NewRemark addAssignees(Consumer<NewAssignment> assignment);
-    void build(); 
+    String build();  // returns generated remark id
   }
   
   // support interface inside of callback
