@@ -11,7 +11,5 @@ export * from './RouterUserOverview';
 export * from './RouterOffer';
 export * from './RouterOfferSummary';
 
-export * from './RouterInbox';
-export * from './RouterInboxMessages';
 export * from './RouterBookings';
 export * from './RouterProduct';

@@ -4,10 +4,11 @@ import {
   RouterServices,
   RouterUnfinishedForms, RouterFormsAwaitingDecision, RouterFormsWithDecision,
   RouterUserOverview,
-  RouterInbox,
   RouterBookings,
   RouterServiceSelect
 } from '../g-routes';
+
+import { GRouterInbox } from '../g-router-inbox';
 
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
 import { useLocale } from '../api-locale';
@@ -42,7 +43,7 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
   } else if (viewId === 'with-decision') {
     return <RouterFormsWithDecision locale={locale} viewId={viewId} />
   } else if (viewId === 'inbox') {
-    return <RouterInbox locale={locale} viewId={viewId} />
+    return <GRouterInbox locale={locale} viewId={viewId} />
   } else if (viewId === 'bookings') {
     return <RouterBookings locale={locale} viewId={viewId} />
   } else if (viewId === 'service-select') {
