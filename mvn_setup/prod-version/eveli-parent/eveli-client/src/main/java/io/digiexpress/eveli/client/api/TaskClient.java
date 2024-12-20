@@ -66,7 +66,7 @@ public interface TaskClient {
   interface QueryUnreadUserTasks {
     QueryUnreadUserTasks userId(String userId);
     QueryUnreadUserTasks requireAnyRoles(List<String> roles);
-    Uni<List<Long>> findAll();
+    Uni<List<String>> findAll();
   }
   
   interface QueryTasks {

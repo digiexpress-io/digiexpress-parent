@@ -24,6 +24,7 @@ import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.storesql.builders.CommitViewerQuerySqlImpl;
 import io.resys.thena.storesql.builders.GrimMissionContainerQuerySqlImpl;
+import io.resys.thena.storesql.builders.InternalMissionLabelSqlImpl;
 import io.resys.thena.storesql.builders.InternalMissionSequenceSqlImpl;
 import io.resys.thena.structures.grim.GrimQueries;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,9 @@ public class GrimQueriesSqlImpl implements GrimQueries {
   public InternalMissionSequence missionSequences() {
     return new InternalMissionSequenceSqlImpl(dataSource);
   }
+  @Override
+  public InternalMissionLabelQuery missionLabels() {
+    return new InternalMissionLabelSqlImpl(dataSource);
+  }
+
 }

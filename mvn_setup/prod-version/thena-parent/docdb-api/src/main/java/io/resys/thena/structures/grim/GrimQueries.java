@@ -27,6 +27,7 @@ import java.util.List;
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriteria;
@@ -38,6 +39,7 @@ import jakarta.annotation.Nullable;
 public interface GrimQueries {
   ThenaDataSource getDataSource();
   InternalMissionQuery missions();
+  InternalMissionLabelQuery missionLabels();
   CommitViewerQuery commitViewer();
   InternalMissionSequence missionSequences();
   
@@ -50,7 +52,10 @@ public interface GrimQueries {
     Uni<Long> nextVal();
     Uni<List<Long>> nextVal(long howMany);
   }
-  
+
+  interface InternalMissionLabelQuery {
+    Uni<List<GrimUniqueMissionLabel>> findAllUnique();
+  }    
   
   interface InternalMissionQuery {
     

@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
+import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -42,4 +43,6 @@ public interface GrimMissionLabelRegistry extends ThenaRegistryService<GrimMissi
   ThenaSqlClient.Sql dropTable();
   
   Function<io.vertx.mutiny.sqlclient.Row, GrimMissionLabel> defaultMapper();
+  
+  Function<io.vertx.mutiny.sqlclient.Row, GrimUniqueMissionLabel> uniqueLabelMapper();
 }

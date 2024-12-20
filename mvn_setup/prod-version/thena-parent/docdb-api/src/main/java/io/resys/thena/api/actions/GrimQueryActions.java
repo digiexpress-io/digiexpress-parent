@@ -24,7 +24,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
@@ -32,11 +34,16 @@ import io.smallrye.mutiny.Uni;
 
 
 public interface GrimQueryActions {
+  MissionLabelQuery missionLabelQuery();
   MissionQuery missionQuery();
   CommitViewersQuery commitViewersQuery();
   
   interface CommitViewersQuery {
     Uni<QueryEnvelopeList<GrimCommitViewer>> findAll();
+  }
+  
+  interface MissionLabelQuery {
+    Uni<List<GrimUniqueMissionLabel>> findAllUnique();
   }
   
   interface MissionQuery {
@@ -46,7 +53,8 @@ public interface GrimQueryActions {
     MissionQuery addAssignment(String assignementType, boolean exact, List<String> assignmentId);
     MissionQuery addAssignment(String assignementType, boolean exact, String... assignmentId);
     
-    
+    // optimization, exclude explicitly doc-s that we don't need 
+    MissionQuery excludeDocs(GrimDocType... docs);
     
     MissionQuery addLink(String linkType, String extId);
     MissionQuery archived(GrimArchiveQueryType includeArchived);
@@ -73,6 +81,7 @@ public interface GrimQueryActions {
     
     Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();
+
   }
   
   enum GrimArchiveQueryType {

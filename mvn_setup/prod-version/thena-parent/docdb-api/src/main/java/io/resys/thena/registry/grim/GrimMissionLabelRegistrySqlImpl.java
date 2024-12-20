@@ -25,7 +25,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
+import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionLabel;
+import io.resys.thena.api.entities.grim.ImmutableGrimUniqueMissionLabel;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimMissionLabelRegistry;
 import io.resys.thena.datasource.ImmutableSql;
@@ -235,4 +237,15 @@ public class GrimMissionLabelRegistrySqlImpl implements GrimMissionLabelRegistry
         .build();
   }
 
+  @Override
+  public Function<Row, GrimUniqueMissionLabel> uniqueLabelMapper() {
+    return (row) -> {
+      
+      return ImmutableGrimUniqueMissionLabel.builder()
+          .labelType(row.getString("label_type"))
+          .labelValue(row.getString("label_value"))
+          .labelBody(row.getJsonObject("label_body"))
+          .build();
+    };
+  }
 }

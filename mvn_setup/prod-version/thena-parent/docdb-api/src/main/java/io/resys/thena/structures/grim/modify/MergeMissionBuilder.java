@@ -155,6 +155,11 @@ public class MergeMissionBuilder implements MergeMission {
     return this;
   }
   @Override
+  public MergeMission completedAt(OffsetDateTime completedAt) {
+    this.nextMission.completedAt(completedAt);
+    return this;
+  }
+  @Override
   public <T> MergeMission setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
     // clear old
     final var intermed = this.batch.build()
@@ -557,5 +562,4 @@ public class MergeMissionBuilder implements MergeMission {
   public GrimMissionContainer getCurrentState() {
     return container;
   }
-
 }

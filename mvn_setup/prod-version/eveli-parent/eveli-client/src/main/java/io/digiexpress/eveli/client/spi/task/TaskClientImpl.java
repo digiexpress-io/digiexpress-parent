@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -46,7 +47,8 @@ public class TaskClientImpl implements TaskClient {
     return new QueryTasks() {
       @Override
       public Uni<Task> getOneById(String taskId) {
-        return PaginateTasksImpl.map(taskRepository.getOneById(taskId));
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new GetOneTaskByIdVisitor(taskId));
       }
     };
   }
@@ -105,14 +107,16 @@ public class TaskClientImpl implements TaskClient {
   public QueryTaskKeywords queryKeywords() {
     return new QueryTaskKeywords() {
       @Override
-      public List<String> findAllKeywords() {
-
-        final var result = new ArrayList<String>();
-        jdbcTemplate.query(
-            "SELECT distinct key_words from task_keywords order by 1",
-            (rs, rowNum) -> rs.getString(1)
-        ).forEach(keyword -> result.add(keyword));
-        return Collections.unmodifiableList(result);
+      public Uni<List<String>> findAllKeywords() {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        final Uni<List<String>> items = grim.find()
+            .missionLabelQuery().findAllUnique()
+            .map(e -> new ArrayList<>(e.stream()
+                .map(x -> x.getLabelValue())
+                .collect(Collectors.toSet()))
+            );
+        return items;
       }
     };
   }
@@ -133,7 +137,7 @@ public class TaskClientImpl implements TaskClient {
         return this;
       }
       @Override
-      public List<Long> findAll() {
+      public Uni<List<String>> findAll() {
         TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
         if(roles.isEmpty()) {
           return taskRepository.findUnreadTasks(userId);

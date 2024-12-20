@@ -26,7 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions;
+import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -58,6 +60,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       private List<String> ids;
       private List<String> status;
       private List<String> priority;
+      private List<GrimDocType> docs;
       private GrimArchiveQueryType includeArchived;
       private LocalDate fromCreatedOrUpdated;
       private Boolean overdue;
@@ -65,6 +68,12 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       private String atLeastOneRemarkWithType;
       private String notViewedUsedBy, notViewedUsedFor;
       private String includeViewerUserId, includeViewerUsedFor;
+      
+      @Override
+      public MissionQuery excludeDocs(GrimDocType ...docs) {
+        this.docs = Arrays.asList(docs);
+        return this;
+      }
       
       @Override
       public MissionQuery atLeastOneRemarkWithType(String atLeastOneRemarkWithType) {
@@ -167,6 +176,10 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
             query.priority(this.priority.toArray(new String[] {}));
           }
           
+          if(docs != null && !docs.isEmpty()) {
+            query.excludeDocs(docs.toArray(new GrimDocType[] {}));
+          }
+          
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2(), e.getItem3()));
           links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
           return query
@@ -202,7 +215,9 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
           if(this.priority != null) {
             query.priority(this.priority.toArray(new String[] {}));
           }
-          
+          if(docs != null && !docs.isEmpty()) {
+            query.excludeDocs(docs.toArray(new GrimDocType[] {}));
+          }
           links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
           assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2(), e.getItem3()));
           return query
@@ -223,6 +238,16 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
                   .build()
           );
         });
+      }
+    };
+  }
+
+  @Override
+  public MissionLabelQuery missionLabelQuery() {
+    return new MissionLabelQuery() {
+      @Override
+      public Uni<List<GrimUniqueMissionLabel>> findAllUnique() {
+        return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionLabels().findAllUnique());
       }
     };
   }
