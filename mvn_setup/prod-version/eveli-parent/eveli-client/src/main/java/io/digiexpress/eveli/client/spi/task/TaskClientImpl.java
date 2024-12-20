@@ -137,7 +137,7 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<List<String>> findAll() {
         TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles));
+        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles, TaskMapper.VIEWER_WORKER));
       }
     };
   }

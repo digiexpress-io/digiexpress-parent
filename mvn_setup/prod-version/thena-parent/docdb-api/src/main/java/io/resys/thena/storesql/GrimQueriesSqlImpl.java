@@ -22,9 +22,10 @@ package io.resys.thena.storesql;
 
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
-import io.resys.thena.storesql.builders.CommitViewerQuerySqlImpl;
-import io.resys.thena.storesql.builders.GrimMissionContainerQuerySqlImpl;
+import io.resys.thena.storesql.builders.InternalViewerQuerySqlImpl;
+import io.resys.thena.storesql.builders.InternalMissionContainerQuerySqlImpl;
 import io.resys.thena.storesql.builders.InternalMissionLabelSqlImpl;
+import io.resys.thena.storesql.builders.InternalMissionRemarkQuerySqlImpl;
 import io.resys.thena.storesql.builders.InternalMissionSequenceSqlImpl;
 import io.resys.thena.structures.grim.GrimQueries;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +41,11 @@ public class GrimQueriesSqlImpl implements GrimQueries {
   }
   @Override
   public InternalMissionQuery missions() {
-    return new GrimMissionContainerQuerySqlImpl(dataSource);
+    return new InternalMissionContainerQuerySqlImpl(dataSource);
   }
   @Override
-  public CommitViewerQuery commitViewer() {
-    return new CommitViewerQuerySqlImpl(dataSource);
+  public InternalCommitViewerQuery commitViewer() {
+    return new InternalViewerQuerySqlImpl(dataSource);
   }
   @Override
   public InternalMissionSequence missionSequences() {
@@ -53,6 +54,10 @@ public class GrimQueriesSqlImpl implements GrimQueries {
   @Override
   public InternalMissionLabelQuery missionLabels() {
     return new InternalMissionLabelSqlImpl(dataSource);
+  }
+  @Override
+  public InternalMissionRemarkQuery missionRemarks() {
+    return new InternalMissionRemarkQuerySqlImpl(dataSource);
   }
 
 }

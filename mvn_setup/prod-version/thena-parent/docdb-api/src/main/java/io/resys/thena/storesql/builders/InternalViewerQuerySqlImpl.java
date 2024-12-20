@@ -30,18 +30,18 @@ import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriteria;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.structures.grim.GrimQueries.CommitViewerQuery;
+import io.resys.thena.structures.grim.GrimQueries.InternalCommitViewerQuery;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class CommitViewerQuerySqlImpl implements CommitViewerQuery {
+public class InternalViewerQuerySqlImpl implements InternalCommitViewerQuery {
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public CommitViewerQuerySqlImpl(ThenaSqlDataSource dataSource) {
+  public InternalViewerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
     this.registry = dataSource.getRegistry().grim();

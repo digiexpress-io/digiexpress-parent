@@ -30,6 +30,7 @@ import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
+import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriteria;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
@@ -40,14 +41,19 @@ public interface GrimQueries {
   ThenaDataSource getDataSource();
   InternalMissionQuery missions();
   InternalMissionLabelQuery missionLabels();
-  CommitViewerQuery commitViewer();
+  InternalCommitViewerQuery commitViewer();
   InternalMissionSequence missionSequences();
+  InternalMissionRemarkQuery missionRemarks();
   
-  interface CommitViewerQuery {
+  interface InternalCommitViewerQuery {
     Multi<GrimAnyObject> findAnyObjects(Collection<AnyObjectCriteria> commits);
     Multi<GrimCommitViewer> findAllViewersByUsed(String userId, String usedBy, Collection<String> commits);
   }
-
+  
+  interface InternalMissionRemarkQuery {
+    Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId);    
+    Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId);
+  }
   interface InternalMissionSequence {
     Uni<Long> nextVal();
     Uni<List<Long>> nextVal(long howMany);
@@ -72,6 +78,7 @@ public interface GrimQueries {
     InternalMissionQuery priority(String ...priority);
     InternalMissionQuery overdue(Boolean overdue);
     InternalMissionQuery atLeastOneRemarkWithType(String remarkType);
+    InternalMissionQuery atLeastOneRemarkWithAnyType(Boolean includeAny);
     
     InternalMissionQuery likeReporterId(String reporterId);
     InternalMissionQuery likeTitle(String likeTitle);

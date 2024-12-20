@@ -78,6 +78,7 @@ public interface GrimQueryActions {
     
     
     MissionQuery atLeastOneRemarkWithType(String remarkType); // mission must contain at least 1 remark with type
+    MissionQuery atLeastOneRemarkWithAnyType(); // mission must contain at least 1 remark with any type
     
     MissionQuery notViewed(String userBy, String usedFor); // include only missions that have not been viewed
     MissionQuery notViewed(String usedFor); // include only missions that have no views for given purpose

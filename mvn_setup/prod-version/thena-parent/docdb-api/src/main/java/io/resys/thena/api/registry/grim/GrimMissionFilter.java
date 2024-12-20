@@ -44,6 +44,8 @@ public interface GrimMissionFilter {
   @Nullable String getLikeDescription();
   @Nullable Boolean getOverdue(); // return tasks that are overdue
   @Nullable String getAtLeastOneRemarkWithType();
+  @Nullable Boolean getAtLeastOneRemarkWithAnyType();
+  
   @Nullable String getNotViewedByUser();
   @Nullable String getNotViewedByUsage();
 

@@ -66,6 +66,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       private Boolean overdue;
       
       private String atLeastOneRemarkWithType;
+      private Boolean atLeastOneRemarkWithAnyType;
       private String notViewedUsedBy, notViewedUsedFor;
       private String includeViewerUserId, includeViewerUsedFor;
       
@@ -78,6 +79,11 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       @Override
       public MissionQuery atLeastOneRemarkWithType(String atLeastOneRemarkWithType) {
         this.atLeastOneRemarkWithType = atLeastOneRemarkWithType;
+        return this;
+      }
+      @Override
+      public MissionQuery atLeastOneRemarkWithAnyType() {
+        this.atLeastOneRemarkWithAnyType = Boolean.TRUE;
         return this;
       }
       @Override
@@ -191,6 +197,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
               .overdue(overdue)
               .notViewed(notViewedUsedBy, notViewedUsedFor)
               .atLeastOneRemarkWithType(atLeastOneRemarkWithType)
+              .atLeastOneRemarkWithAnyType(atLeastOneRemarkWithAnyType)
               .includeViewer(includeViewerUserId, includeViewerUsedFor)
               .getById(missionIdOrExtId).onItem().transform(items -> 
             ImmutableQueryEnvelope.<GrimMissionContainer>builder()
@@ -228,6 +235,7 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
               .likeTitle(likeTitle)
               .overdue(overdue)
               .atLeastOneRemarkWithType(atLeastOneRemarkWithType)
+              .atLeastOneRemarkWithAnyType(atLeastOneRemarkWithAnyType)
               .notViewed(notViewedUsedBy, notViewedUsedFor)
               .includeViewer(includeViewerUserId, includeViewerUsedFor)
               .findAll().collect().asList().onItem().transform(items -> 
@@ -242,12 +250,30 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
     };
   }
 
+  // plain delegate
   @Override
   public MissionLabelQuery missionLabelQuery() {
     return new MissionLabelQuery() {
       @Override
       public Uni<List<GrimUniqueMissionLabel>> findAllUnique() {
         return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionLabels().findAllUnique());
+      }
+    };
+  }
+  
+  // plain delegate
+  @Override
+  public MissionRemarkQuery missionRemarkQuery() {
+    return new MissionRemarkQuery() {
+      
+      @Override
+      public Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId) {
+        return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionRemarks().getOneByRemarkId(remarkId));
+      }
+      
+      @Override
+      public Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId) {
+        return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionRemarks().findAllByMissionId(missionId));
       }
     };
   }

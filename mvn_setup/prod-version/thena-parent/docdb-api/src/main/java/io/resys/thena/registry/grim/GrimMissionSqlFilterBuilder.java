@@ -97,6 +97,16 @@ public class GrimMissionSqlFilterBuilder {
       params.add(filter.getAtLeastOneRemarkWithType().toLowerCase());
     }
     
+    // external comment ANY filter
+    if(Boolean.TRUE.equals(filter.getAtLeastOneRemarkWithAnyType())) {
+      and.get();
+      builder
+      .append("  EXISTS(").ln()
+      .append("    SELECT id FROM ").append(options.getGrimRemark()).append(" AS remark_type_filter").ln()
+      .append("    WHERE remark_type_filter.mission_id = mission.id").ln().ln()
+      .append("  )");
+    }
+    
     
     // created/updated
     if(filter.getFromCreatedOrUpdated() != null) {

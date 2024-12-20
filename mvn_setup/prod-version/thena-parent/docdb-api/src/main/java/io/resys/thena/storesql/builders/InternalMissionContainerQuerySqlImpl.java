@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMissionQuery {
+public class InternalMissionContainerQuerySqlImpl implements GrimQueries.InternalMissionQuery {
 
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
@@ -60,7 +60,7 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   private List<String> missionIds;
   private String includeViewerUserId, includeViewerUsedFor;
   
-  public GrimMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
+  public InternalMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
     this.registry = dataSource.getRegistry().grim();
@@ -143,6 +143,11 @@ public class GrimMissionContainerQuerySqlImpl implements GrimQueries.InternalMis
   @Override
   public InternalMissionQuery atLeastOneRemarkWithType(String remarkType) {
     this.builder.atLeastOneRemarkWithType(remarkType);
+    return this;
+  }
+  @Override
+  public InternalMissionQuery atLeastOneRemarkWithAnyType(Boolean includeAny) {
+    this.builder.atLeastOneRemarkWithAnyType(includeAny);
     return this;
   }
   @Override
