@@ -3,47 +3,14 @@ package io.digiexpress.eveli.client.spi.task;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-/*-
- * #%L
- * thena-tasks-client
- * %%
- * Copyright (C) 2021 - 2023 Copyright 2021 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.digiexpress.eveli.client.spi.task.TaskStoreConfig.TaskAuthorProvider;
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
-import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -51,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskStoreImpl implements TaskStore {
   private final TaskStoreConfig config;
   
-
   @Override
   public TaskStore withTenantId(String repoId) {
     return new TaskStoreImpl(ImmutableTaskStoreConfig.builder().from(config).tenantName(repoId).build());
@@ -136,92 +102,5 @@ public class TaskStoreImpl implements TaskStore {
         .tenantName(repoName)
         .build());
     
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Slf4j
-  @Accessors(fluent = true, chain = true)
-  @Getter(AccessLevel.NONE)
-  @Data
-  public static class Builder {
-    private String repoName;
-    private ObjectMapper objectMapper;
-    private TaskAuthorProvider authorProvider;
-    private io.vertx.mutiny.pgclient.PgPool pgPool;
-    private String pgHost;
-    private String pgDb;
-    private Integer pgPort;
-    private String pgUser;
-    private String pgPass;
-    private Integer pgPoolSize;
-    
-    private TaskAuthorProvider getAuthorProvider() {
-      return this.authorProvider == null ? ()-> "not-configured" : this.authorProvider;
-    } 
-    
-    public TaskStoreImpl build() {
-      RepoAssert.notNull(repoName, () -> "repoName must be defined!");
-    
-      if(log.isDebugEnabled()) {
-        log.debug("""
-          Configuring Thena:
-            repoName: {}
-            objectMapper: {}
-            gidProvider: {}
-            authorProvider: {}
-            pgPool: {}
-            pgPoolSize: {}
-            pgHost: {}
-            pgPort: {}
-            pgDb: {}
-            pgUser: {}
-            pgPass: {}
-          """,
-          this.repoName,
-          this.objectMapper == null ? "configuring" : "provided",
-          this.authorProvider == null ? "configuring" : "provided",
-          this.pgPool == null ? "configuring" : "provided",
-          this.pgPoolSize,
-          this.pgHost,
-          this.pgPort,
-          this.pgDb,
-          this.pgUser == null ? "null" : "***",
-          this.pgPass == null ? "null" : "***");
-      }
-
-      final ThenaClient thena;
-      if(pgPool == null) {
-        RepoAssert.notNull(pgHost, () -> "pgHost must be defined!");
-        RepoAssert.notNull(pgPort, () -> "pgPort must be defined!");
-        RepoAssert.notNull(pgDb, () -> "pgDb must be defined!");
-        RepoAssert.notNull(pgUser, () -> "pgUser must be defined!");
-        RepoAssert.notNull(pgPass, () -> "pgPass must be defined!");
-        RepoAssert.notNull(pgPoolSize, () -> "pgPoolSize must be defined!");
-        
-        final PgConnectOptions connectOptions = new PgConnectOptions()
-            .setHost(pgHost)
-            .setPort(pgPort)
-            .setDatabase(pgDb)
-            .setUser(pgUser)
-            .setPassword(pgPass);
-        final PoolOptions poolOptions = new PoolOptions()
-            .setMaxSize(pgPoolSize);
-        
-        final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(connectOptions, poolOptions);
-        
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
-      } else {
-        thena = DbStateSqlImpl.create().client(pgPool).db(repoName).build();
-      }
-      
-      final var config = ImmutableTaskStoreConfig.builder()
-          .client(thena).tenantName(repoName)
-          .author(getAuthorProvider())
-          .build();
-      return new TaskStoreImpl(config);
-    }
   }
 }
