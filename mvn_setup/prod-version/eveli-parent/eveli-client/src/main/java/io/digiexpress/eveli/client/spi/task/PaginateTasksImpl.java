@@ -29,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import io.digiexpress.eveli.client.api.ImmutableTask;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.PaginateTasks;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
@@ -40,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaginateTasksImpl implements PaginateTasks {
+public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTasksVisitor<List<TaskClient.Task>> {
 
   private final TaskStore ctx;
   
@@ -125,7 +126,19 @@ public class PaginateTasksImpl implements PaginateTasks {
           statuses, priorities, likeExpression(role), dueDate, pageable)
           .map(PaginateTasksImpl::map);
     } else {
-      return taskRepository.searchTasks(
+      return
+          .addAssignment("worker", false, "Sam-from-the")
+          .likeReporterId("jane.doe@housing.com")
+          .likeTitle("houSe")
+          .likeDescription("the bEst")
+          .status(Arrays.asList("new", "open"))
+          .priority(Arrays.asList("high", "low"))
+          .overdue(false) // do not return overdue tasks
+          
+          
+          
+          
+          taskRepository.searchTasks(
           likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
           statuses, 
           priorities, requireAnyRoles, likeExpression(role), dueDate, pageable)

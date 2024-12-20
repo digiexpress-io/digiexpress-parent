@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.spi.task;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +48,11 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Task> getOneById(String taskId) {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         return ctx.getConfig().accept(new GetOneTaskByIdVisitor(taskId));
+      }
+      @Override
+      public Uni<List<Task>> findAll(List<String> taskIds) {
+        TaskAssert.notNull(taskIds, () -> "taskIds can't be empty!");
+        return ctx.getConfig().accept(new FindAllTaskByIdsVisitor(taskIds));
       }
     };
   }
@@ -83,6 +87,12 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
         return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
+      }
+      @Override
+      public Uni<Task> addWorkerCommitViewer(String taskId, String userId) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId));
       }
     };
   }
