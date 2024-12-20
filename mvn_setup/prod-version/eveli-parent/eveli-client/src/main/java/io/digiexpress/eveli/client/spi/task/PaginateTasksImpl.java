@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaginateTasksImpl implements PaginateTasks {
 
-  private final TaskRepository taskRepository;
+  private final TaskStore ctx;
   
   private Pageable pageable;
   private String subject = ""; 

@@ -40,7 +40,7 @@ public class TaskClientImpl implements TaskClient {
   
   @Override
   public PaginateTasks paginateTasks() {
-    return new PaginateTasksImpl(taskRepository);
+    return new PaginateTasksImpl(ctx);
   }
   @Override
   public QueryTasks queryTasks() {
