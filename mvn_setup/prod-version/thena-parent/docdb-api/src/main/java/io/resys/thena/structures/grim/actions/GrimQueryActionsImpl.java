@@ -268,12 +268,26 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
       
       @Override
       public Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId) {
-        return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionRemarks().getOneByRemarkId(remarkId));
+        return state.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.query().missionRemarks().getOneByRemarkId(remarkId))
+            .onItem().transform(items -> 
+              ImmutableQueryEnvelope.<GrimMissionContainer>builder()
+                .repo(state.getDataSource().getTenant())
+                .status(QueryEnvelopeStatus.OK)
+                .objects(items)
+                .build());
       }
       
       @Override
       public Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId) {
-        return state.toGrimState(repoId).onItem().transformToUni(state -> state.query().missionRemarks().findAllByMissionId(missionId));
+        return state.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.query().missionRemarks().findAllByMissionId(missionId))
+            .onItem().transform(items -> 
+              ImmutableQueryEnvelope.<GrimMissionContainer>builder()
+                .repo(state.getDataSource().getTenant())
+                .status(QueryEnvelopeStatus.OK)
+                .objects(items)
+                .build());
       }
     };
   }

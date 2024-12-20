@@ -40,7 +40,7 @@ public class InternalMissionLabelSqlImpl implements GrimQueries.InternalMissionL
         .execute()
         .onItem()
         .transformToMulti(RowSet::toMulti).collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next mission ref sequence!")));
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find mission labels!")));
   }
 
 }

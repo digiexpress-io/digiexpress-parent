@@ -30,7 +30,6 @@ import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
-import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriteria;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.smallrye.mutiny.Multi;
@@ -51,8 +50,8 @@ public interface GrimQueries {
   }
   
   interface InternalMissionRemarkQuery {
-    Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId);    
-    Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId);
+    Uni<GrimMissionContainer> getOneByRemarkId(String remarkId);    
+    Uni<GrimMissionContainer> findAllByMissionId(String missionId);
   }
   interface InternalMissionSequence {
     Uni<Long> nextVal();
