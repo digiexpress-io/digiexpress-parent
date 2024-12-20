@@ -52,6 +52,7 @@ public interface GrimQueries {
   interface InternalMissionRemarkQuery {
     Uni<GrimMissionContainer> getOneByRemarkId(String remarkId);    
     Uni<GrimMissionContainer> findAllByMissionId(String missionId);
+    Uni<GrimMissionContainer> findAllByReporterId(String reporterId);
   }
   interface InternalMissionSequence {
     Uni<Long> nextVal();

@@ -32,6 +32,7 @@ public interface GrimRemarkRegistry extends ThenaRegistryService<GrimRemark, io.
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   
+  ThenaSqlClient.SqlTuple findAllByReporterId(String reporterId);
   ThenaSqlClient.SqlTuple findAllByMissionId(String missionId);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimRemark> remarks);

@@ -289,6 +289,18 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
                 .objects(items)
                 .build());
       }
+
+      @Override
+      public Uni<QueryEnvelope<GrimMissionContainer>> findAllByReporterId(String reporterId) {
+        return state.toGrimState(repoId)
+            .onItem().transformToUni(state -> state.query().missionRemarks().findAllByReporterId(reporterId))
+            .onItem().transform(items -> 
+              ImmutableQueryEnvelope.<GrimMissionContainer>builder()
+                .repo(state.getDataSource().getTenant())
+                .status(QueryEnvelopeStatus.OK)
+                .objects(items)
+                .build());
+      }
     };
   }
 }

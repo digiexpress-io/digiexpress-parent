@@ -71,4 +71,28 @@ public class InternalMissionRemarkQuerySqlImpl implements InternalMissionRemarkQ
         })
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_REMARK)));
   }
+
+  @Override
+  public Uni<GrimMissionContainer> findAllByReporterId(String reporterId) {
+    final var sql = registry.remarks().findAllByReporterId(reporterId);
+    if(log.isDebugEnabled()) {
+      log.debug("InternalMissionRemarkQuerySqlImpl findAllByReporterId query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.remarks().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(rows -> {
+          final var builder = ImmutableGrimMissionContainer.builder();
+          for(final var row : rows) {
+            builder.putRemarks(row.getId(), row);
+          }
+
+          final GrimMissionContainer result = builder.build();          
+          return result;
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_REMARK)));
+  }
 }

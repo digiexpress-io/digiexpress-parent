@@ -116,6 +116,31 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .build();
   }
   @Override
+  public ThenaSqlClient.SqlTuple findAllByReporterId(String reporterId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT remark.*,").ln()
+        .append(" updated_commit.created_at       as updated_at,").ln()
+        .append(" created_commit.created_at       as created_at").ln()
+
+        .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = remark.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = remark.created_commit_id)").ln()
+
+        .append(" LEFT JOIN ").append(options.getGrimMission()).append(" as mission").ln()
+        .append(" ON(mission.id = remark.mission_id)").ln()
+
+        
+        .append(" WHERE mission.reporter_id = $1").ln() 
+        .build())
+        .props(Tuple.of(reporterId))
+        .build();
+  }
+  @Override
   public SqlTuple findAllByMissionIds(GrimMissionFilter filter) {
     final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
     return ImmutableSqlTuple.builder()
