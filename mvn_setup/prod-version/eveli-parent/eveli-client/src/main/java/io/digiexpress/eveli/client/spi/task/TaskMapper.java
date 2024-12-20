@@ -46,7 +46,7 @@ public class TaskMapper {
   }
   
   
-  public static TaskClient.Task map(GrimMission commited, Collection<GrimAssignment> assignments) {
+  public static TaskClient.Task map(GrimMission commited, Collection<GrimAssignment> assignments, Collection<GrimRemark> remarks) {
 
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))
@@ -73,6 +73,8 @@ public class TaskMapper {
       .assignedUser(assignee.map(e -> e.getAssignee()).orElse(null))
       .assignedUserEmail(assignee.map(e -> e.getAssigneeContact()).orElse(null))
 
+      .comments(remarks.stream().map(TaskMapper::map).toList())
+      
       .build();
     
     return task;

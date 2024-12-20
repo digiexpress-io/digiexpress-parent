@@ -191,6 +191,8 @@ public interface TaskClient {
 
     List<String> getKeyWords();
     Set<String> getAssignedRoles();
+    
+    List<TaskComment> getComments();
   }
   
   

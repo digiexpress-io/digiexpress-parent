@@ -29,8 +29,7 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
               GrimDocType.GRIM_COMMIT, 
               GrimDocType.GRIM_COMMIT_VIEWER, 
               GrimDocType.GRIM_OBJECTIVE,
-              GrimDocType.GRIM_OBJECTIVE_GOAL,
-              GrimDocType.GRIM_REMARK);
+              GrimDocType.GRIM_OBJECTIVE_GOAL);
   }
 
   @Override
@@ -54,6 +53,6 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
   @Override
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var container = commit.iterator().next();
-    return Uni.createFrom().item(TaskMapper.map(container.getMission(), container.getAssignments().values()));
+    return Uni.createFrom().item(TaskMapper.map(container.getMission(), container.getAssignments().values(), container.getRemarks().values()));
   }
 }

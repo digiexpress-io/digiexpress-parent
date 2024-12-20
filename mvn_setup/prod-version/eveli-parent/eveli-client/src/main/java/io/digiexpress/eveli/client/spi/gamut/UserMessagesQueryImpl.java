@@ -31,10 +31,8 @@ import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
 import io.digiexpress.eveli.client.api.ImmutableUserMessage;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +73,7 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     return comments;
   }
   
-  public static UserMessage visitUserMessage(TaskCommentEntity msg, Customer customer) {
+  public static UserMessage visitUserMessage(TaskComment msg, Customer customer) {
     final var replyToId = Optional.ofNullable(msg.getReplyTo()).map(replay -> replay.getId().toString()).orElse(null);
     final var userMsg = ImmutableUserMessage.builder()
         .id(msg.getId().toString())

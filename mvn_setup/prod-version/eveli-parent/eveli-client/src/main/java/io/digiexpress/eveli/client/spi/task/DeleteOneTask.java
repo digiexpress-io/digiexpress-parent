@@ -19,7 +19,10 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
   private TaskClient.Task previousVersion;
   
   public void archiveTasks(MergeMission merge) {
-    previousVersion = TaskMapper.map(merge.getCurrentState().getMission(), merge.getCurrentState().getAssignments().values());
+    previousVersion = TaskMapper.map(
+        merge.getCurrentState().getMission(), 
+        merge.getCurrentState().getAssignments().values(), 
+        merge.getCurrentState().getRemarks().values());
     
     merge
     .archivedAt(OffsetDateTime.now())
@@ -48,7 +51,7 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments());
+    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
     return Uni.createFrom().item(task);
   }
 }

@@ -105,7 +105,7 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
 
   @Override
   public Uni<Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments());
+    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
     notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }

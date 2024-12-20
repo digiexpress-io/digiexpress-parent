@@ -50,7 +50,10 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
   private TaskClient.Task previousVersion;
   
   public void modify(ModifyTaskCommand command, MergeMission merge) {
-    previousVersion = TaskMapper.map(merge.getCurrentState().getMission(), merge.getCurrentState().getAssignments().values());
+    previousVersion = TaskMapper.map(
+        merge.getCurrentState().getMission(), 
+        merge.getCurrentState().getAssignments().values(),
+        merge.getCurrentState().getRemarks().values());
     
     merge
       // overwrite assignees
@@ -105,7 +108,7 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments());
+    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
     notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }
