@@ -8,7 +8,5 @@ export * from './RouterFormsWithDecision';
 export * from './RouterUnsecured';
 export * from './RouterUserOverview';
 
-export * from './RouterOfferSummary';
-
 export * from './RouterBookings';
 export * from './RouterProduct';

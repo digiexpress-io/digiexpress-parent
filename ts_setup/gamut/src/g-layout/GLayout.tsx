@@ -84,7 +84,7 @@ export const GLayout: React.FC<GLayoutProps> = (initProps) => {
       </Root>)
   }
 
-  else if (themeProps.variant === 'fill-session-start-end') {
+  else if (themeProps.variant === 'fill-session-start-end') { //TODO is this variant needed anymore?
     const Center: React.ElementType = themeProps.slots?.center ?? (() => <></>);
     const TopTitle: React.ElementType = themeProps.slots?.topTitle ?? (() => <></>);
     const Breadcrumbs: React.ElementType = themeProps.slots?.breadcrumbs ?? (() => <></>);

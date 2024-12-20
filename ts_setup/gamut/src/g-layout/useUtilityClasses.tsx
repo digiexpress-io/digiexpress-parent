@@ -72,6 +72,8 @@ export const GLayoutRoot = styled('div', {
     '& .GLayout-oneColContent': {
       padding: 'unset'
     },
+
+
     '& .GLayout-fillSessionStartEndLayout': {
       justifyContent: 'center'
     },

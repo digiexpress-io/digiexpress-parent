@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterOfferSummary } from '../g-routes';
+import { GRouterOfferSummary } from '../g-router-offer-summary';
 
 
 
@@ -10,5 +10,5 @@ export const Route = createFileRoute('/secured/$locale/pages/$pageId/products/$p
 
 function Component() {
   const { locale, offerId, productId, pageId } = Route.useParams();
-  return <RouterOfferSummary locale={locale} offerId={offerId} productId={productId} pageId={pageId} />
+  return <GRouterOfferSummary locale={locale} offerId={offerId} productId={productId} pageId={pageId} />
 }
