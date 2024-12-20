@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -37,6 +38,7 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -115,6 +117,49 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
     return ctx.getConfig().accept(this);
   }
   
+  /**
+
+  @Query(value=
+      "select distinct t from TaskEntity t join t.assignedRoles r left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
+      " and priority in :priority" +
+      " and status in :status" +
+      " and lower(coalesce(r2, '')) like :searchRole" +
+      " and r in :roles" +
+      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
+  Page<TaskEntity> searchTasks(
+      @Param("subject") String subject, 
+      @Param("clientIdentificator") String clientIdentificator, 
+      @Param("assignedUser") String assignedUser, 
+      @Param("status") List<Integer> status,
+      @Param("priority") List<Integer> priority,
+      @Param("roles") List<String> roles,
+      @Param("searchRole") String searchRole,
+      @Param("dueDate") String dueDate,
+      Pageable page);
+  
+  @Query(value=
+      "select distinct t from TaskEntity t left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
+      " and priority in :priority" +
+      " and status in :status" +
+      " and lower(coalesce(r2, '')) like :searchRole" +
+      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
+  Page<TaskEntity> searchTasksAdmin(
+      @Param("subject") String subject,  
+      @Param("clientIdentificator") String clientIdentificator,
+      @Param("assignedUser") String assignedUser,
+      @Param("status") List<Integer> status,
+      @Param("priority") List<Integer> priority,
+      @Param("searchRole") String searchRole,
+      @Param("dueDate") String dueDate,
+      Pageable page);
+
+   */
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
     TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
@@ -124,45 +169,62 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
     if (priority.isEmpty()) {
       this.priority.addAll(Arrays.asList(TaskPriority.values()));
     }
-    final var statuses = this.status.stream().map(el-> el.ordinal()).collect(Collectors.toList());
-    final var priorities = this.priority.stream().map(el-> el.ordinal()).collect(Collectors.toList());
+    final var statuses = this.status.stream().map(el-> el.name()).collect(Collectors.toList());
+    final var priorities = this.priority.stream().map(el-> el.name()).collect(Collectors.toList());
 
     if (requireAnyRoles == null) {
-      return taskRepository.searchTasksAdmin(
-          likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
-          statuses, priorities, likeExpression(role), dueDate, pageable)
-          .map(PaginateTasksImpl::map);
-    } else {
-      return
-          /*
-          .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
-          .likeReporterId(clientIdentificator)
-          .likeTitle(subject)
-          .likeDescription("the bEst")
-          .status(status)
-          .priority(priority)
-          .overdue(dueDate == null ? dueDate.isEmpty() : false) // do not return overdue tasks
-          */
-          
-          
-          
-          taskRepository.searchTasks(
-          likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
-          statuses, 
-          priorities, requireAnyRoles, likeExpression(role), dueDate, pageable)
-          .map(PaginateTasksImpl::map);
+      return builder
+      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
+      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role)
+      .likeReporterId(clientIdentificator)
+      .likeTitle(subject)
+      .likeDescription("the bEst")
+      .status(statuses)
+      .priority(priorities)
+      .overdue(dueDate == null ? !dueDate.isEmpty() : false) // do not return overdue tasks
+      ;
     }
-    return null;
+    return builder
+      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
+      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role)
+      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles)
+      .likeReporterId(clientIdentificator)
+      .likeTitle(subject)
+      .likeDescription("the bEst")
+      .status(statuses)
+      .priority(priorities)
+      .overdue(dueDate == null ? !dueDate.isEmpty() : false) // do not return overdue tasks
+      ;
   }
   @Override
   public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
-    // TODO Auto-generated method stub
-    return null;
+    if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
+      throw TaskException.builder("PAGINATE_TASKS_FAIL")
+        .add(config, envelope)
+
+        .build();
+    }
+    final var result = envelope.getObjects();
+    if(result == null) {
+      throw TaskException.builder("PAGINATE_TASKS_NOT_FOUND")   
+        .add(config, envelope)
+        .build();
+    }
+    return result;
   }
   @Override
-  public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
-    // TODO Auto-generated method stub
-    return null;
+  public Uni<Page<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
+    final var tasks = commit.stream()
+        .map(container -> TaskMapper.map(
+            container.getMission(), 
+            container.getAssignments().values(), 
+            container.getRemarks().values()))
+        .toList();
+    
+    final Page<Task> page = new PageImpl<Task>(tasks);
+    
+    return Uni.createFrom().item((Object) page)
+        .map(e -> (Page<Task>) e);
   }
   
 }
