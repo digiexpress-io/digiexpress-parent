@@ -2,7 +2,7 @@ package io.digiexpress.eveli.client.spi.task;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Collection;
 
 import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
@@ -46,7 +46,7 @@ public class TaskMapper {
   }
   
   
-  public static TaskClient.Task map(GrimMission commited, List<GrimAssignment> assignments) {
+  public static TaskClient.Task map(GrimMission commited, Collection<GrimAssignment> assignments) {
 
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))

@@ -44,6 +44,8 @@ public interface ThenaGrimMergeObject {
   
   interface MergeMission {
     MergeMission onCurrentState(Consumer<GrimMissionContainer> handleCurrentState);
+    GrimMissionContainer getCurrentState();
+    
     MergeMission title(String title);
     MergeMission description(String description);
     
@@ -55,6 +57,9 @@ public interface ThenaGrimMergeObject {
     MergeMission startDate(@Nullable LocalDate startDate);
     MergeMission dueDate(@Nullable LocalDate dueDate);
     MergeMission priority(@Nullable String priority);
+    
+    MergeMission completedAt(@Nullable OffsetDateTime completedAt);
+    
     
     // nested builders
     <T> MergeMission setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> assignment);

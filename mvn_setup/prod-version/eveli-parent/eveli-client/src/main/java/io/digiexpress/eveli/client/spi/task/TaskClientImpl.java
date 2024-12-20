@@ -24,26 +24,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
-  private final JdbcTemplate jdbcTemplate;
-  private final TaskRepository taskRepository;
-  private final TaskRefGenerator taskRefGenerator;
   private final TaskNotificator notificator;
-  private final TaskAccessRepository taskAccessRepository;
-  private final CommentRepository commentRepository;
+  private final TaskStore ctx;
+  
   
   @Override
   public PaginateTasks paginateTasks() {
@@ -53,7 +45,7 @@ public class TaskClientImpl implements TaskClient {
   public QueryTasks queryTasks() {
     return new QueryTasks() {
       @Override
-      public Task getOneById(long taskId) {
+      public Uni<Task> getOneById(String taskId) {
         return PaginateTasksImpl.map(taskRepository.getOneById(taskId));
       }
     };
@@ -70,28 +62,25 @@ public class TaskClientImpl implements TaskClient {
         return this;
       }
       @Override
-      public TaskComment createTaskComment(CreateTaskCommentCommand command) {
+      public Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new CreateOneTaskComment(userId, taskRepository, commentRepository, notificator, taskAccessRepository).create(command);
+        return ctx.getConfig().accept(new CreateOneTaskComment(userId, notificator, command));
       }
       @Override
-      public Task createTask(CreateTaskCommand command) {
+      public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new CreateOneTask(userId, taskRepository, taskRefGenerator, notificator, taskAccessRepository).create(command);
+        return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command));
       }
       @Override
-      public Task modifyTask(Long taskId, ModifyTaskCommand command) {
+      public Uni<Task> modifyTask(String taskId, ModifyTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new ModifyOneTask(userId, userEmail, taskRepository, notificator, taskAccessRepository).modify(taskId, command);
+        return ctx.getConfig().accept(new ModifyOneTask(userId, userEmail, notificator, taskId, command));
       }
       @Override
-      public Task deleteTask(Long taskId) {
+      public Uni<Task> deleteTask(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new DeleteOneTask(userId, userEmail, taskRepository, notificator, jdbcTemplate).delete(taskId);
+        return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
       }
     };
   }

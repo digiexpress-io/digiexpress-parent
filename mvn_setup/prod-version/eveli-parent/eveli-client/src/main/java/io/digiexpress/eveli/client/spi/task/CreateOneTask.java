@@ -92,7 +92,7 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
     builder.mission(newMission -> createTask(command, newMission));
     return builder
         .commitAuthor(userId)
-        .commitMessage("Creating tasks by: " + CreateOneTask.class.getSimpleName());
+        .commitMessage("Creating task by: " + CreateOneTask.class.getSimpleName());
   }
 
   @Override

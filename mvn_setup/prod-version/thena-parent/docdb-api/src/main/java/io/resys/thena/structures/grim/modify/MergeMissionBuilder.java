@@ -22,9 +22,11 @@ package io.resys.thena.structures.grim.modify;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -164,10 +166,12 @@ public class MergeMissionBuilder implements MergeMission {
     final var all_assignments = new HashMap<String, GrimAssignment>();
     
     // delete old
-    this.batch.addAllDeleteAssignments(container.getAssignments().values().stream()
+    final var toBeDeleted = new ArrayList<>(container.getAssignments().values().stream()
         .filter(a -> a.getRelation() == null)
         .filter(e -> e.getAssignmentType().equals(assigneeType))
         .toList());
+
+
     
     // add new
     for(final var replacement : replacments) {
@@ -175,12 +179,25 @@ public class MergeMissionBuilder implements MergeMission {
       
       final var builder = new NewAssignmentBuilder(logger, missionId, null, Collections.unmodifiableMap(all_assignments));
       assignment.accept(builder);
-
       final var built = builder.close();
-      all_assignments.put(built.getId(), built);
-      this.batch.addAssignments(built);
-
+      
+      // previous version exists and is exactly the same
+      final var previous = toBeDeleted.stream()
+          .filter(a -> a.getAssignmentType().equals(built.getAssignmentType()))
+          .filter(a -> a.getAssignee().equals(built.getAssignee()))
+          .filter(a -> Objects.equals(a.getAssigneeContact(), built.getAssigneeContact()))
+          .findFirst();
+      
+      if(previous.isPresent()) {
+        toBeDeleted.remove(previous.get());
+      } else {
+        all_assignments.put(built.getId(), built);
+        this.batch.addAssignments(built);        
+      }
     }
+    
+    this.batch.addAllDeleteAssignments(toBeDeleted);
+    
     return this;
   }
 
@@ -535,6 +552,10 @@ public class MergeMissionBuilder implements MergeMission {
     }
     
     return batch.build();
+  }
+  @Override
+  public GrimMissionContainer getCurrentState() {
+    return container;
   }
 
 }

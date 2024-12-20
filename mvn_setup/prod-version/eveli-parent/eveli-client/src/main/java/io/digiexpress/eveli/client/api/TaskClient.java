@@ -49,14 +49,14 @@ public interface TaskClient {
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
     Uni<Task> createTask(CreateTaskCommand command);
-    Uni<Task> modifyTask(Long taskId, ModifyTaskCommand command);
-    Uni<Task> deleteTask(Long taskId);
+    Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
+    Uni<Task> deleteTask(String taskId);
     Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
   }
   
   interface QueryTaskComments {
     Uni<List<TaskComment>> findAllByTaskId(String taskId);
-    Uni<TaskComment> getOneById(long commentId);
+    Uni<TaskComment> getOneById(String commentId);
   }
   
   interface QueryTaskKeywords {
@@ -70,7 +70,7 @@ public interface TaskClient {
   }
   
   interface QueryTasks {
-    Uni<Task> getOneById(long taskId);
+    Uni<Task> getOneById(String taskId);
   }
   
   interface PaginateTasks {
