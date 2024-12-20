@@ -52,6 +52,7 @@ public interface GrimQueryActions {
   interface MissionRemarkQuery {
     Uni<QueryEnvelope<GrimMissionContainer>> getOneByRemarkId(String remarkId);    
     Uni<QueryEnvelope<GrimMissionContainer>> findAllByMissionId(String missionId);
+    Uni<QueryEnvelope<GrimMissionContainer>> findAllByReporterId(String reporterId);
   }
   
   interface MissionQuery {

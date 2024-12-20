@@ -116,7 +116,7 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public Uni<List<TaskComment>> findAllByReporterId(String reporterId) {
-        return ctx.getConfig().accept(new FindAllTaskCommentsByReporterIdVisitor(reporterId));
+        return ctx.getConfig().accept(new FindAllExternalTaskCommentsByReporterIdVisitor(reporterId));
       }
     };
   }

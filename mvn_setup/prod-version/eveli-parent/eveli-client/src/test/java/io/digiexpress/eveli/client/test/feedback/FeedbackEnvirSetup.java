@@ -72,9 +72,6 @@ public class FeedbackEnvirSetup {
   public static class FeedbackEnvirSetupConfig {
     @MockBean TaskNotificator notificator;
     @Autowired JdbcTemplate jdbcTemplate;
-    @Autowired TaskRepository taskRepository;
-    @Autowired TaskAccessRepository taskAccessRepository;
-    @Autowired CommentRepository commentRepository;
     @Autowired EntityManager entityManager;
     @Autowired ProcessRepository processJPA;
     @Autowired ObjectMapper objectMapper;
