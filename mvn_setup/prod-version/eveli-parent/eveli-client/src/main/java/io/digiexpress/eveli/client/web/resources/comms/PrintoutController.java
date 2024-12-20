@@ -55,7 +55,7 @@ public class PrintoutController {
   
   @GetMapping(value = {"/pdf"}, produces = MediaType.APPLICATION_PDF_VALUE)
   public ResponseEntity<byte[]> printQuestionnaire(
-      @RequestParam(required = false, value = "taskId")Long taskId, 
+      @RequestParam(required = false, value = "taskId")String taskId, 
       @RequestParam(required = false, value = "questionnaireId")String questionnaireId) {
     
     try {

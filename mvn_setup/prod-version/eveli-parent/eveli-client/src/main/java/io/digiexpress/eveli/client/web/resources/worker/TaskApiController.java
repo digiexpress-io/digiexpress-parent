@@ -102,7 +102,7 @@ public class TaskApiController {
 
   @GetMapping("/{id}")
   @Transactional(readOnly = true)
-  public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
+  public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
     
     final var worker = securityClient.getUser();
     final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
@@ -145,7 +145,7 @@ public class TaskApiController {
   @DeleteMapping("/{id}")
   @Transactional
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTask(@PathVariable("id") Long id) {
+  public void deleteTask(@PathVariable("id") String id) {
     final var worker = securityClient.getUser().getPrincipal();
     taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
