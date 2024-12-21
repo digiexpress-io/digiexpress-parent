@@ -105,6 +105,7 @@ public interface FeedbackClient {
     @Nullable String getReporterNames();
     
     String getProcessId();
+    String getTaskId();
     
     String getOrigin();
     String getContent();
@@ -238,6 +239,7 @@ public interface FeedbackClient {
     @Nullable String getSubLabelValue();
     
     String getProcessId();
+    String getTaskId();
     String getOrigin();
     String getContent();
     String getLocale();

@@ -1,8 +1,6 @@
 package io.digiexpress.eveli.client.test.feedback;
 
-import java.sql.SQLException;
-
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 
 /*-
  * #%L
@@ -25,7 +23,7 @@ import org.junit.jupiter.api.AfterEach;
  */
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,8 +45,9 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
   @Autowired FeedbackClient feedbackClient;
   
   @Container @ServiceConnection static PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:17");
-  @BeforeEach void beforeAll() { CONTAINER.start(); }
-  @AfterEach void afterAll() throws SQLException { CONTAINER.stop(); }
+  
+  @BeforeAll static void beforeAll() { start(CONTAINER); }
+  @AfterAll static void afterAll() { end(); }
   
   @Test
   void testReplyUpdate() {

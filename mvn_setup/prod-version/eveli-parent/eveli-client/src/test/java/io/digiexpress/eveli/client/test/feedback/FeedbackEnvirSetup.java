@@ -22,39 +22,40 @@ package io.digiexpress.eveli.client.test.feedback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.javafaker.Faker;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommand;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
+import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
-import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
+import io.digiexpress.eveli.client.test.BaseEnvir;
+import io.digiexpress.eveli.client.test.task.TaskEnvirSetup;
 import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
@@ -65,8 +66,20 @@ import lombok.RequiredArgsConstructor;
 @Testcontainers
 @EnableAutoConfiguration
 @ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
-public class FeedbackEnvirSetup {  
-  private static final Faker FAKER = new Faker(new Locale("fi-FI"));
+public abstract class FeedbackEnvirSetup {
+
+  private static PostgreSQLContainer<?> CONTAINER;
+  private static AtomicInteger TEST_INDEX = new AtomicInteger(0);
+  
+  
+  public static void start(PostgreSQLContainer<?> container) {
+    CONTAINER = container;
+    CONTAINER.start();
+  }  
+  public static void end() {
+    CONTAINER.stop();
+  }  
+  
   
   @Configuration
   public static class FeedbackEnvirSetupConfig {
@@ -76,12 +89,17 @@ public class FeedbackEnvirSetup {
     @Autowired ProcessRepository processJPA;
     @Autowired ObjectMapper objectMapper;
     @Autowired TransactionTemplate tx;
+    @Autowired ApplicationEventPublisher publisher;
 
+    @Bean
+    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+      final var repoId = "test-task-client-" + TEST_INDEX.incrementAndGet();
+      final var setup = new TaskEnvirSetup(CONTAINER, new TaskEventPublisher(publisher), repoId);
+      return setup.getTaskClient();
+    }
     
     @Bean
-    public SetupTask setupTask(ProcessClient processClient) {    
-      final var ref = new TaskRefGenerator(entityManager);
-      final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
+    public SetupTask setupTask(ProcessClient processClient, TaskClient taskClient) {    
       return new SetupTask(taskClient, processClient);
     }
 
@@ -92,9 +110,7 @@ public class FeedbackEnvirSetup {
     }
     
     @Bean
-    public FeedbackClient feedbackClient(ProcessClient processClient) {
-      final var ref = new TaskRefGenerator(entityManager);
-      final var taskClient = new TaskClientImpl(jdbcTemplate, taskRepository, ref, notificator, taskAccessRepository, commentRepository);
+    public FeedbackClient feedbackClient(ProcessClient processClient, TaskClient taskClient) {
       final var feedbackWithHistory = new FeedbackWithHistory(tx, jdbcTemplate, objectMapper);
       final var dialobClient = new DialobClientImpl(objectMapper, null);
       final var configProps = new EveliPropsFeedback();
@@ -116,24 +132,25 @@ public class FeedbackEnvirSetup {
   
   @RequiredArgsConstructor
   public static class SetupTask {
-    private final TaskClientImpl taskClient;
+    private final TaskClient taskClient;
     private final ProcessClient processClient;
     
     @Transactional
     public String generateOneTask() {
-      final var user = FAKER.starTrek().character();
+      final var user = BaseEnvir.FAKER.starTrek().character();
       final var email = user+"@resys.io";
       final var task = taskClient.taskBuilder()
         .userId(user, email)
         .createTask(ImmutableCreateTaskCommand.builder()
-        .subject(FAKER.book().title())
-        .build());
+        .subject(BaseEnvir.FAKER.book().title())
+        // debugging delay
+        .build()).await().atMost(Duration.ofMinutes(5));
       
       final var comment = taskClient.taskBuilder()
         .userId(user, email)
         .createTaskComment(ImmutableCreateTaskCommentCommand.builder()
             .external(true)
-            .commentText(FAKER.chuckNorris().fact())
+            .commentText(BaseEnvir.FAKER.chuckNorris().fact())
             .taskId(task.getId())
             .source(TaskCommentSource.FRONTDESK)
             .build());
@@ -148,7 +165,7 @@ public class FeedbackEnvirSetup {
         .formName("no-form-name")
         .workflowName("no-workflow")
         .questionnaireId(formBody.getString("_id") + task.getId())
-        .userId(FAKER.idNumber().ssnValid())
+        .userId(BaseEnvir.FAKER.idNumber().ssnValid())
       
         
         .formTagName("dev")
@@ -171,4 +188,6 @@ public class FeedbackEnvirSetup {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
+
+
 }

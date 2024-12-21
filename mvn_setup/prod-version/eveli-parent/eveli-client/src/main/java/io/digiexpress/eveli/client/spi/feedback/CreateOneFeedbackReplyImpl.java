@@ -103,7 +103,7 @@ VALUES
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
      categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
-     categeoryStm.setString(6, command.getProcessId());
+     categeoryStm.setString(6, command.getTaskId());
      
      categeoryStm.setObject(7, now);
      categeoryStm.setObject(8, now);
