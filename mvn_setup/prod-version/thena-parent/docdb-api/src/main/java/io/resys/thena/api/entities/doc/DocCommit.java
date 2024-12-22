@@ -25,10 +25,10 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.resys.thena.api.entities.TenantEntity;
 
 @Value.Immutable
-public interface DocCommit extends DocEntity, ThenaTable {
+public interface DocCommit extends DocEntity, TenantEntity {
   String getId();
   String getDocId();
   Optional<String> getParent();

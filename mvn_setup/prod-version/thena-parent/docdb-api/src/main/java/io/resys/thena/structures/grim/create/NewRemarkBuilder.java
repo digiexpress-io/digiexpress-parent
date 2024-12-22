@@ -71,6 +71,7 @@ public class NewRemarkBuilder implements ThenaGrimNewObject.NewRemark {
         .transitives(ImmutableGrimRemarkTransitives.builder()
             .updatedAt(logger.getCreatedAt())
             .createdAt(logger.getCreatedAt())
+            .createdBy(logger.getAuthor())
             .build());
     
     this.batch = ImmutableGrimBatchMissions.builder()

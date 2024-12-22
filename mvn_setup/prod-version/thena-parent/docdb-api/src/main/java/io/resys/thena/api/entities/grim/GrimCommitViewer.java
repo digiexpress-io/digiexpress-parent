@@ -6,12 +6,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.resys.thena.api.envelope.ThenaContainer;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 @Value.Immutable
-public interface GrimCommitViewer extends IsGrimObject, ThenaTable, ThenaContainer {
+public interface GrimCommitViewer extends IsGrimObject, TenantEntity, ThenaContainer {
   String getId();
   String getCommitId();
   String getMissionId();

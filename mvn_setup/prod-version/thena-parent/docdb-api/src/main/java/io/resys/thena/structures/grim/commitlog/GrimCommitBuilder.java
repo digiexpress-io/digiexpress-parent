@@ -37,10 +37,12 @@ import io.vertx.core.json.JsonObject;
 public class GrimCommitBuilder {
   private final String tenantId;
   private final String commitId;
+  private final String author;
   private final ImmutableGrimCommit.Builder commit;
   private final ImmutableGrimBatchMissions.Builder next;
   private final GrimCommitLogger logger;
   private final OffsetDateTime createdAt;
+  
   
   public GrimCommitBuilder(String tenantId, GrimCommit commit) {
     super();
@@ -53,6 +55,7 @@ public class GrimCommitBuilder {
         .log("");
     this.logger = new GrimCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
+    this.author = commit.getCommitAuthor();
   }
   public String getTenantId() {
     return tenantId;
@@ -104,5 +107,8 @@ public class GrimCommitBuilder {
   public GrimCommitBuilder withMissionId(String missionId) {
     this.commit.missionId(missionId);
     return this;
+  }
+  public String getAuthor() {
+    return author;
   }
 }

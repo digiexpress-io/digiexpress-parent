@@ -24,12 +24,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface GrimAssignment extends IsGrimObject, ThenaTable {
+public interface GrimAssignment extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();
   String getMissionId();

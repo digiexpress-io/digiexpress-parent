@@ -162,7 +162,7 @@ public class CreateManyMissionsImpl implements CreateManyMissions {
             .build()
       );
       
-      final var newMission = new NewMissionBuilder(logger, sequences.next(), author);
+      final var newMission = new NewMissionBuilder(logger, sequences.next());
       entry.accept(newMission);
       final var created = newMission.close();
       

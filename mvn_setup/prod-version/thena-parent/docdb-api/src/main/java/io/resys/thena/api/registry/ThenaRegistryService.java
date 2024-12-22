@@ -22,13 +22,10 @@ package io.resys.thena.api.registry;
 
 import java.util.function.Function;
 
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.datasource.ThenaSqlClient;
 
-public interface ThenaRegistryService<T extends ThenaTable, R> {
-  // marker interface
-  interface ThenaTable {}
-  
+public interface ThenaRegistryService<T extends TenantEntity, R> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple getById(String id);
   

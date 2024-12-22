@@ -29,12 +29,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface Doc extends DocEntity, IsDocObject, ThenaTable {
+public interface Doc extends DocEntity, IsDocObject, TenantEntity {
   enum DocStatus { IN_FORCE, ARCHIVED }
   
   String getId();

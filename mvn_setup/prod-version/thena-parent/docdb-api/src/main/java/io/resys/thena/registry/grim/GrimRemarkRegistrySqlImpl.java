@@ -60,7 +60,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
+        .append(" created_commit.commit_author    as created_by").ln()
 
         .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
         
@@ -79,8 +80,9 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
-
+        .append(" created_commit.created_at       as created_at,").ln()
+        .append(" created_commit.commit_author    as created_by").ln()
+        
         .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
         
         .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
@@ -100,7 +102,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
+        .append(" created_commit.commit_author    as created_by").ln()
 
         .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
         
@@ -121,7 +124,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
+        .append(" created_commit.commit_author    as ").ln()
 
         .append(" FROM ").append(options.getGrimRemark()).append(" as remark ")
         
@@ -147,7 +151,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
         .value(new SqlStatement()
         .append("SELECT remark.*,").ln()
         .append(" updated_commit.created_at       as updated_at,").ln()
-        .append(" created_commit.created_at       as created_at").ln()
+        .append(" created_commit.created_at       as created_at,").ln()
+        .append(" created_commit.commit_author    as created_by").ln()
 
         .append(" FROM ").append(options.getGrimRemark()).append(" as remark ").ln()
         
@@ -328,6 +333,7 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
           .transitives(ImmutableGrimRemarkTransitives.builder()
             .updatedAt(row.getOffsetDateTime("updated_at"))
             .createdAt(row.getOffsetDateTime("created_at"))
+            .createdBy(row.getString("created_by"))
             .build()
           )
         

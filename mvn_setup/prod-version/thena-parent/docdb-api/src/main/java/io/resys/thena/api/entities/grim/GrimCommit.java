@@ -4,11 +4,11 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.resys.thena.api.entities.TenantEntity;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface GrimCommit extends ThenaTable {
+public interface GrimCommit extends TenantEntity {
   String getCommitId();
   @Nullable String getParentCommitId();  
   @Nullable String getMissionId();

@@ -28,8 +28,8 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
@@ -43,7 +43,7 @@ import jakarta.annotation.Nullable;
  *                  * n - goals/level-3 (sub sub task)
  */
 @Value.Immutable
-public interface GrimObjectiveGoal extends IsGrimObject, ThenaTable {
+public interface GrimObjectiveGoal extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();  

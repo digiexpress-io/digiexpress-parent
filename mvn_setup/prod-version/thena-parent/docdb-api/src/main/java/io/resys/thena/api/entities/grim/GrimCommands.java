@@ -7,12 +7,12 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface GrimCommands extends IsGrimObject, ThenaTable {
+public interface GrimCommands extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();
   OffsetDateTime getCreatedAt(); // transitive from commit

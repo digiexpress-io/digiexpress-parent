@@ -141,7 +141,7 @@ public class CreateOneMissionsImpl implements CreateOneMission {
           .build()
     );
     
-    final var newMission = new NewMissionBuilder(logger, nextVal, author);
+    final var newMission = new NewMissionBuilder(logger, nextVal);
     this.mission.accept(newMission);
     final var created = newMission.close();
     

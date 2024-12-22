@@ -23,12 +23,14 @@ package io.resys.thena.api.actions;
 import java.time.LocalDate;
 import java.util.List;
 
+import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.QueryEnvelopePage;
 import io.smallrye.mutiny.Uni;
 
 
@@ -86,13 +88,35 @@ public interface GrimQueryActions {
     
     MissionQuery includeViewer(String userBy, String usedFor); //include viewer information
     
-    
     MissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);
     
     Uni<QueryEnvelope<GrimMissionContainer>> get(String missionIdOrExtId);
     Uni<QueryEnvelopeList<GrimMissionContainer>> findAll();
+    
+    
+    Uni<QueryEnvelopePage<GrimMissionContainer>> paginate(PageQuery<MissionOrderByType> pageQuery);
 
   }
+  
+  enum MissionOrderByType {
+    MISSION_ID, 
+    
+    MISSION_CREATED_AT,
+    MISSION_COMPLETED_AT,
+    MISSION_ARCHIVED_AT,
+    MISSION_TREE_UPDATED_AT,
+    
+    MISSION_START_DATE,
+    MISSION_DUE_DATE,
+
+    MISSION_STATUS,
+    MISSION_PRIORITY,
+    
+    MISSION_REF_ID,
+    MISSION_TITLE,
+    MISSION_DESC
+  }
+  
   
   enum GrimArchiveQueryType {
     ALL, ONLY_ARCHIVED, ONLY_IN_FORCE

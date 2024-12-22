@@ -21,9 +21,12 @@ package io.resys.thena.registry.grim;
  */
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
+import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
@@ -191,6 +194,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         
         .append("  mission_title,").ln()
         .append("  mission_description,").ln()
+        .append("  mission_completed_at,").ln()
         
         .append("  archived_at,").ln()
         .append("  archived_status,").ln()
@@ -200,7 +204,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  created_commit_id,").ln()
         .append("  updated_tree_commit_id)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)").ln()
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -217,6 +221,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 
                 doc.getTitle(),
                 doc.getDescription(),
+                doc.getCompletedAt(),
                 
                 doc.getArchivedAt(),
                 doc.getArchivedStatus(),
@@ -256,8 +261,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_description = $14,").ln()
         .append("  mission_ref = $15,").ln()
         .append("  questionnaire_id = $16").ln()
+        .append("  mission_completed_at = $17").ln()
         
-        .append(" WHERE id = $17")
+        .append(" WHERE id = $18")
         .build())
         .props(mission.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -281,6 +287,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
                 doc.getRefId(),
                 
                 doc.getQuestionnaireId(),
+                
+                doc.getCompletedAt(),
                 
                 doc.getId()
              }))
@@ -309,6 +317,8 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
     .append("  mission_due_date DATE,").ln()
     .append("  mission_title TEXT NOT NULL,").ln()
     .append("  mission_description TEXT,").ln()
+    .append("  mission_completed_at TIMESTAMP WITH TIME ZONE,").ln()
+    
     .append("  archived_at TIMESTAMP WITH TIME ZONE,").ln()
     .append("  archived_status VARCHAR(40)").ln()
     
@@ -388,5 +398,70 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .build();
     };
   }
+  @Override
+  public SqlTuple count(GrimMissionFilter filter) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT COUNT(mission.id) as mission_count").ln()
+        
+        .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = mission.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = mission.created_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_tree_commit").ln()
+        .append(" ON(updated_tree_commit.commit_id = mission.updated_tree_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
 
+        .append(where.getValue()) 
+        .build())
+        .props(where.getProps())
+        .build();
+  }
+  @Override
+  public SqlTuple findAllIdentifiers(GrimMissionFilter filter, List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit) {
+    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
+    final var sorting = new GrimMissionSqlSortingBuilder(options).orderBy(orderBy);
+    
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT mission.id as mission_id").ln()
+        
+        .append(" FROM ").append(options.getGrimMission()).append(" as mission ").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_commit").ln()
+        .append(" ON(updated_commit.commit_id = mission.commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as created_commit").ln()
+        .append(" ON(created_commit.commit_id = mission.created_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as updated_tree_commit").ln()
+        .append(" ON(updated_tree_commit.commit_id = mission.updated_tree_commit_id)").ln()
+        
+        .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
+        .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
+
+        .append(where.getValue()) 
+        .append(sorting.getValue())
+        
+        .append(" LIMIT ").append(String.valueOf(limit)).append(" OFFSET ").append(String.valueOf(offset)).ln()
+        
+        .build())
+        .props(where.getProps())
+        .build();
+  }
+  @Override
+  public Function<Row, Long> countMapper() {
+    return (row) -> row.getLong("mission_count");
+  }
+  @Override
+  public Function<Row, String> idMapper() {
+    return (row) -> row.getString("mission_id");
+  }
 }

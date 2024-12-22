@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
+import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -199,6 +201,43 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
       return built.groupByMission();
     }).onItem().transformToMulti(e -> Multi.createFrom().items(e.stream()));
   }
+  @Override
+  public Uni<List<String>> findAllIdentifiers(List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit) {
+    this.filter = builder.missionIds(Optional.ofNullable(missionIds)).build();
+    final var sql = registry.missions().findAllIdentifiers(filter, orderBy, offset, limit);
+    if(log.isDebugEnabled()) {
+      log.debug("Mission findAllIdentifiers query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.missions().idMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti).collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find all identifiers '%s'!", GrimDocType.GRIM_MISSION)));
+  }
+  @Override
+  public Uni<Long> count() {
+    this.filter = builder.missionIds(Optional.ofNullable(missionIds)).build();
+    final var sql = registry.missions().count(filter);
+    if(log.isDebugEnabled()) {
+      log.debug("Mission count query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.missions().countMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform(e -> {
+          // return just the count
+          final var it = e.iterator();
+          return it.next();
+        })
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't count '%s'!", GrimDocType.GRIM_MISSION))
+        );
+  }
   
   
   private Uni<GrimMissionContainer> findAllCommits() {
@@ -208,7 +247,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.commits().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllCommits query, with props: {} \r\n{}", 
+      log.debug("Mission findAllCommits query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -230,7 +269,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     // query ASSIGNMENTS by mission id
     final var sql = registry.assignments().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllAssignments query, with props: {} \r\n{}", 
+      log.debug("Mission findAllAssignments query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -252,7 +291,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     
     final var sql = registry.goals().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllGoals query, with props: {} \r\n{}", 
+      log.debug("Mission findAllGoals query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -274,7 +313,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.missionData().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllData query, with props: {} \r\n{}", 
+      log.debug("Mission findAllData query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -296,7 +335,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.objectives().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllObjectives query, with props: {} \r\n{}", 
+      log.debug("Mission findAllObjectives query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -319,7 +358,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.remarks().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllRemarks query, with props: {} \r\n{}", 
+      log.debug("Mission findAllRemarks query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -342,7 +381,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.missionLinks().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllLinks query, with props: {} \r\n{}", 
+      log.debug("Mission findAllLinks query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -365,7 +404,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
 
     final var sql = registry.missions().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllMissions query, with props: {} \r\n{}", 
+      log.debug("Mission findAllMissions query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -388,7 +427,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     
     final var sql = registry.missionLabels().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllMissionLabels query, with props: {} \r\n{}", 
+      log.debug("Mission findAllMissionLabels query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -411,7 +450,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     
     final var sql = registry.commands().findAllByMissionIds(filter);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllCommands query, with props: {} \r\n{}", 
+      log.debug("Mission findAllCommands query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -434,7 +473,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     if(this.missionIds == null) {
       final var sql = registry.commitViewers().findAll();
       if(log.isDebugEnabled()) {
-        log.debug("User findAllViewers query, with props: {} \r\n{}", 
+        log.debug("Mission findAllViewers query, with props: {} \r\n{}", 
             "",
             sql.getValue());
       }
@@ -452,7 +491,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     
     final var sql = registry.commitViewers().findAllByMissionIdsUsedByAndCommit(this.missionIds, includeViewerUserId, includeViewerUsedFor);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllViewers query, with props: {} \r\n{}", 
+      log.debug("Mission findAllViewers query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -467,5 +506,4 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
             .build()
         );
   }
-
 }

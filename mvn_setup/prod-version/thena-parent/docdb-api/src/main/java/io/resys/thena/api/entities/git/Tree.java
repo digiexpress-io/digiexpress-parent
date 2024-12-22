@@ -24,13 +24,13 @@ import java.util.Map;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.git.GitEntity.IsGitObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 
 // World state 
 @Value.Immutable
 public
-interface Tree extends IsGitObject, GitEntity, ThenaTable {
+interface Tree extends IsGitObject, GitEntity, TenantEntity {
   // resource name - blob id
   Map<String, TreeValue> getValues();
 }

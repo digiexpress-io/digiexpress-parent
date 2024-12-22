@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
+import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
+import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
@@ -84,8 +86,11 @@ public interface GrimQueries {
     InternalMissionQuery likeTitle(String likeTitle);
     InternalMissionQuery likeDescription(String likeDescription);
     InternalMissionQuery fromCreatedOrUpdated(LocalDate fromCreatedOrUpdated);
-
+    
+    
+    Uni<List<String>> findAllIdentifiers(List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit);
     Multi<GrimMissionContainer> findAll();
     Uni<GrimMissionContainer> getById(String missionId);
+    Uni<Long> count();
   }
 }

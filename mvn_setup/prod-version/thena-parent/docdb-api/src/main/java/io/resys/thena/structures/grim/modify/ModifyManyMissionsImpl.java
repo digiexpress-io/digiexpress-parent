@@ -216,7 +216,7 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
           .build()
     );
     
-    final var mergeMission = new MergeMissionBuilder(container, logger, author);
+    final var mergeMission = new MergeMissionBuilder(container, logger);
     this.missions.get(missionId).accept(mergeMission);
     final var created = mergeMission.close();
     

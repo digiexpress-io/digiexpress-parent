@@ -26,11 +26,11 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
+import io.resys.thena.api.entities.TenantEntity;
 import io.vertx.core.json.JsonObject;
 
 @Value.Immutable
-public interface OrgCommitTree extends ThenaOrgObject, ThenaTable {
+public interface OrgCommitTree extends ThenaOrgObject, TenantEntity {
 
   String getId();
   String getCommitId();

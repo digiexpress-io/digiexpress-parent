@@ -202,7 +202,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
           .build()
     );
     
-    final var mergeMission = new MergeMissionBuilder(container, logger, author);
+    final var mergeMission = new MergeMissionBuilder(container, logger);
     this.mission.accept(mergeMission);
     final var created = mergeMission.close();
     

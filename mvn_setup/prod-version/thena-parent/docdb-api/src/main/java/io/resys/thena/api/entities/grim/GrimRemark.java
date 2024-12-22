@@ -26,14 +26,14 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
-import io.resys.thena.api.registry.ThenaRegistryService.ThenaTable;
 import jakarta.annotation.Nullable;
 
 
 // user inputed "comment" text that can be connected to the most of entities
 @Value.Immutable
-public interface GrimRemark extends IsGrimObject, ThenaTable {
+public interface GrimRemark extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();
   String getCreatedWithCommitId();
