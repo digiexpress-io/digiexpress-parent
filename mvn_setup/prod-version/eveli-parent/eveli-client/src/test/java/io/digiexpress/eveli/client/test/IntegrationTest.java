@@ -34,14 +34,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * #L%
  */
 
-import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
+import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 
 
 @Testcontainers
 @SpringBootTest
 @EnableAutoConfiguration
-@ContextConfiguration(classes = {EveliAutoConfigDB.class, IntegrationTest.IntegrationTestConfig.class})
+@ContextConfiguration(classes = {EveliAutoConfigJpa.class, IntegrationTest.IntegrationTestConfig.class})
 public class IntegrationTest {
 
   @Autowired

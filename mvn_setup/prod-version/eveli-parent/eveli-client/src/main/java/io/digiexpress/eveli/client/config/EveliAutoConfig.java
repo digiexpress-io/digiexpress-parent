@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Value;
 
 /*-
@@ -111,9 +113,7 @@ public class EveliAutoConfig {
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {
     return new SpringTransactionWrapper(entityManager);
-  }
-
-  
+  }  
   @Bean 
   public TaskClient taskClient(TaskNotificator taskNotificator, io.vertx.mutiny.pgclient.PgPool pgPool) {    
     final var config = ImmutableTaskStoreConfig.builder()
@@ -121,6 +121,7 @@ public class EveliAutoConfig {
         .client(DbStateSqlImpl.create().client(pgPool).build())
         .build();
     final var store = new TaskStoreImpl(config);
+    store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     return new TaskClientImpl(taskNotificator, store);
   }
   

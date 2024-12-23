@@ -50,7 +50,7 @@ public class TaskStoreImpl implements TaskStore {
   @Override public TaskStoreConfig getConfig() { return config; }
   @Override public TaskTenantQuery query() {
     return new TaskTenantQuery() {
-      private String tenantName;
+      private String tenantName = config.getTenantName();
       @Override public TaskTenantQuery tenantName(String tenantName) { this.tenantName = tenantName; return this; }
       @Override public Uni<TaskStore> create() { return createRepo(tenantName); }
       @Override public TaskStore build() { return createClientStore(tenantName); }

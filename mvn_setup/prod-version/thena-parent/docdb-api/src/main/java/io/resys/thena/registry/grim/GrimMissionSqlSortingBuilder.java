@@ -124,13 +124,14 @@ public class GrimMissionSqlSortingBuilder {
         case MISSION_PRIORITY: this.orderBy.append("  mission.mission_priority"); break;        
         
         case MISSION_ARCHIVED_AT: this.orderBy.append("  mission.archived_at"); break;
-        case MISSION_CREATED_AT: this.orderBy.append("  created_at"); break;
+        case MISSION_CREATED_AT: this.orderBy.append("  created_commit.created_at"); break;
         case MISSION_DESC: this.orderBy.append("  mission.mission_description"); break;
         case MISSION_DUE_DATE: this.orderBy.append("  mission.mission_due_date"); break;
 
 
         case MISSION_START_DATE: this.orderBy.append("  mission.mission_start_date"); break;
         case MISSION_STATUS: this.orderBy.append("  mission.mission_status"); break;
+        case MISSION_REPORTER_ID: this.orderBy.append("  mission.reporter_id"); break;
         case MISSION_TITLE: this.orderBy.append("  mission.mission_title"); break;
         case MISSION_TREE_UPDATED_AT: this.orderBy.append("  tree_updated_at"); break;
         

@@ -46,7 +46,7 @@ import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
-import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
+import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
@@ -65,7 +65,7 @@ import lombok.RequiredArgsConstructor;
 
 @Testcontainers
 @EnableAutoConfiguration
-@ContextConfiguration(classes = { EveliAutoConfigDB.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
+@ContextConfiguration(classes = { EveliAutoConfigJpa.class, FeedbackEnvirSetup.FeedbackEnvirSetupConfig.class })
 public abstract class FeedbackEnvirSetup {
 
   private static PostgreSQLContainer<?> CONTAINER;

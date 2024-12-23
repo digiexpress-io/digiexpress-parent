@@ -42,6 +42,8 @@ import io.resys.thena.api.entities.ImmutablePageQuery;
 import io.resys.thena.api.entities.ImmutablePageSorting;
 import io.resys.thena.api.entities.ImmutablePageSortingOrder;
 import io.resys.thena.api.entities.PageQuery;
+import io.resys.thena.api.entities.PageQuery.PageSortDirection;
+import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
@@ -145,19 +147,23 @@ public class PaginateTasksImpl implements PaginateTasks {
   }
   
   private PageQuery.PageSortingOrder<MissionOrderByType> sortOrder(Order order) {
-    MissionOrderByType type = null;
+    final ImmutablePageSortingOrder.Builder<MissionOrderByType> type = ImmutablePageSortingOrder
+        .<MissionOrderByType>builder()
+        .direction(PageSortDirection.valueOf(order.getDirection().name()));
+    
     switch (order.getProperty()) {
-      case "": {
-        type = MissionOrderByType.MISSION_ID; break;
-      }
+      case "priority": type.property(MissionOrderByType.MISSION_PRIORITY); break;
+      case "status": type.property(MissionOrderByType.MISSION_STATUS); break;
+      case "dueDate": type.property(MissionOrderByType.MISSION_DUE_DATE); break;
+      case "created": type.property(MissionOrderByType.MISSION_CREATED_AT); break;
+      case "clientIdentificator": type.property(MissionOrderByType.MISSION_REPORTER_ID); break;
+      case "assignedUser": type.property(MissionOrderByType.MISSION_ASSIGNMENT_VALUE).propertyType(assignedUser); break;
+      case "subject": type.property(MissionOrderByType.MISSION_TITLE).propertyType(assignedUser); break;
+      
       default: throw new IllegalArgumentException("Unexpected value: " + order.getProperty());
     }
-    
-    
-    return ImmutablePageSortingOrder.<MissionOrderByType>builder()
-        .direction(PageQuery.PageSortDirection.valueOf(order.getDirection().name()))
-        .property(type)
-        .build();
+
+    return type.build();
   }
   /**
 
@@ -223,7 +229,7 @@ public class PaginateTasksImpl implements PaginateTasks {
       .likeDescription("the bEst")
       .status(statuses)
       .priority(priorities)
-      .overdue(dueDate == null ? !dueDate.isEmpty() : false) // do not return overdue tasks
+      .overdue(dueDate == null ? false: !dueDate.isEmpty()) // do not return overdue tasks
       ;
     }
     return builder
@@ -235,7 +241,7 @@ public class PaginateTasksImpl implements PaginateTasks {
       .likeDescription("the bEst")
       .status(statuses)
       .priority(priorities)
-      .overdue(dueDate == null ? !dueDate.isEmpty() : false) // do not return overdue tasks
+      .overdue(dueDate == null ? false: !dueDate.isEmpty()) // do not return overdue tasks
       ;
   }
 

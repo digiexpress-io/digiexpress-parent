@@ -34,6 +34,6 @@ import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 @EnableTransactionManagement
 @EntityScan(basePackageClasses = { ProcessEntity.class })
 @EnableJpaRepositories(basePackageClasses = { ProcessRepository.class })
-public class EveliAutoConfigDB {
+public class EveliAutoConfigJpa {
   
 }
