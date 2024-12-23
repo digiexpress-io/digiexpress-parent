@@ -141,6 +141,26 @@ public class PaginateMissionsTest extends DbTestTemplate {
       Assertions.assertEquals(2, pagination.getTotalPages());
       Assertions.assertEquals(1, pagination.getCurrentPageNumber());
     }
+    
+    
+    
+    // 18 results per page - on page 2
+    {
+      final var pagination =getClient().grim(repo).find().missionQuery().paginate(ImmutablePageQuery.<MissionOrderByType>builder()
+          .offset(18)
+          .pageSize(18)
+          .pageNumber(0)
+          .sort(sort(
+              sortBy(PageSortDirection.ASC, MissionOrderByType.MISSION_ID),
+              sortBy(PageSortDirection.ASC, MissionOrderByType.MISSION_ASSIGNMENT_VALUE, "role")
+          ))
+          .build())
+      .await().atMost(Duration.ofMinutes(5));
+      Assertions.assertEquals(30, pagination.getTotalObjectsOnPages());
+      Assertions.assertEquals(12, pagination.getCurrentPageObjects().size());
+      Assertions.assertEquals(2, pagination.getTotalPages());
+      Assertions.assertEquals(1, pagination.getCurrentPageNumber());
+    }
   }
   
   @SafeVarargs
@@ -157,6 +177,13 @@ public class PaginateMissionsTest extends DbTestTemplate {
         .build();
   }
   
+  public ImmutablePageSortingOrder<MissionOrderByType> sortBy(PageSortDirection direction, MissionOrderByType type, String propType) {
+    return ImmutablePageSortingOrder.<MissionOrderByType>builder()
+        .direction(direction)
+        .property(type)
+        .propertyType(propType)
+        .build();
+  }
   private void createTestData(TenantCommitResult repo) {
     
     final var builder = getClient().grim(repo).commit()

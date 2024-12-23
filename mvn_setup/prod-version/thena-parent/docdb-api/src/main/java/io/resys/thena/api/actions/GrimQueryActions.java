@@ -114,7 +114,8 @@ public interface GrimQueryActions {
     
     MISSION_REF_ID,
     MISSION_TITLE,
-    MISSION_DESC
+    MISSION_DESC,
+    MISSION_ASSIGNMENT_VALUE
   }
   
   

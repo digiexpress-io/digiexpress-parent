@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import jakarta.annotation.Nullable;
+
 
 @Value.Immutable
 public interface PageQuery<P> {
@@ -21,6 +23,7 @@ public interface PageQuery<P> {
   interface PageSortingOrder<P> {
     PageSortDirection getDirection();
     P getProperty();
+    @Nullable String getPropertyType();
   }
   
   enum PageSortDirection { ASC, DESC }
