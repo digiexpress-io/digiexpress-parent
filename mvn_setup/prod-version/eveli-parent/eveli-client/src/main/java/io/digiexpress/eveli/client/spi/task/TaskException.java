@@ -33,6 +33,7 @@ import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.QueryEnvelopePage;
 import io.resys.thena.spi.ExMessageFormatter;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
 import io.resys.thena.spi.ImmutableDocumentExceptionMsg;
@@ -102,6 +103,18 @@ public class TaskException extends RuntimeException {
     private final List<Throwable> surpressed = new ArrayList<>();
 
     public Builder add(GrimStructuredTenant config, QueryEnvelopeList<?> envelope) {
+      msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
+      .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
+      .addAllArgs(envelope.getMessages().stream() .map(message -> {
+        if(message.getException() != null) {
+          surpressed.add(message.getException());
+        }
+        return message.getText();
+      }).collect(Collectors.toList()));
+      return this;
+    }
+    
+    public Builder add(GrimStructuredTenant config, QueryEnvelopePage<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getTenantId(): envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
       .addAllArgs(envelope.getMessages().stream() .map(message -> {

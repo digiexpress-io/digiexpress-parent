@@ -28,24 +28,29 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Order;
 
-import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.PaginateTasks;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
+import io.resys.thena.api.entities.ImmutablePageQuery;
+import io.resys.thena.api.entities.ImmutablePageSorting;
+import io.resys.thena.api.entities.ImmutablePageSortingOrder;
+import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
-import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.api.envelope.QueryEnvelopePage;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTasksVisitor<Page<TaskClient.Task>> {
+public class PaginateTasksImpl implements PaginateTasks {
 
   private final TaskStore ctx;
   
@@ -114,9 +119,46 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
 
   @Override
   public Uni<Page<Task>> findAll() {
-    return ctx.getConfig().accept(this);
+    final var config = ctx.getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    final var prefilled = grim.find().missionQuery();
+    
+    final Uni<QueryEnvelopePage<GrimMissionContainer>> query = start(grim, prefilled)
+        .paginate(pageQuery());
+    return query
+        .onItem().transform(envelope -> visitEnvelope(grim, envelope))
+        .onItem().transformToUni(ref -> end(grim, ref));
   }
   
+  private PageQuery<MissionOrderByType> pageQuery() {
+    final var offset = pageable.getOffset();
+    final var limit = pageable.getPageSize();
+    final var pageNumber = pageable.getPageNumber();
+    final var orders = pageable.getSort().get().map(this::sortOrder).toList();
+    
+    return ImmutablePageQuery.<MissionOrderByType>builder()
+        .offset(offset)
+        .pageSize(limit)
+        .pageNumber(pageNumber)
+        .sort(ImmutablePageSorting.<MissionOrderByType>builder().orders(orders).build())
+        .build();
+  }
+  
+  private PageQuery.PageSortingOrder<MissionOrderByType> sortOrder(Order order) {
+    MissionOrderByType type = null;
+    switch (order.getProperty()) {
+      case "": {
+        type = MissionOrderByType.MISSION_ID; break;
+      }
+      default: throw new IllegalArgumentException("Unexpected value: " + order.getProperty());
+    }
+    
+    
+    return ImmutablePageSortingOrder.<MissionOrderByType>builder()
+        .direction(PageQuery.PageSortDirection.valueOf(order.getDirection().name()))
+        .property(type)
+        .build();
+  }
   /**
 
   @Query(value=
@@ -160,7 +202,7 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
       Pageable page);
 
    */
-  @Override
+
   public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
     TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
     if (this.status.isEmpty()) {
@@ -196,35 +238,34 @@ public class PaginateTasksImpl implements PaginateTasks, TaskStoreConfig.QueryTa
       .overdue(dueDate == null ? !dueDate.isEmpty() : false) // do not return overdue tasks
       ;
   }
-  @Override
-  public List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
+
+  
+  public QueryEnvelopePage<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopePage<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
       throw TaskException.builder("PAGINATE_TASKS_FAIL")
         .add(config, envelope)
-
         .build();
     }
-    final var result = envelope.getObjects();
+    final var result = envelope.getCurrentPageObjects();
     if(result == null) {
       throw TaskException.builder("PAGINATE_TASKS_NOT_FOUND")   
         .add(config, envelope)
         .build();
     }
-    return result;
+    return envelope;
   }
-  @Override
-  public Uni<Page<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
-    final var tasks = commit.stream()
+
+  @SuppressWarnings("unchecked")
+  public Uni<Page<Task>> end(GrimStructuredTenant config, QueryEnvelopePage<GrimMissionContainer> commit) {
+    final var tasks = commit.getCurrentPageObjects().stream()
         .map(container -> TaskMapper.map(
             container.getMission(), 
             container.getAssignments().values(), 
             container.getRemarks().values()))
         .toList();
     
-    final Page<Task> page = new PageImpl<Task>(tasks);
-    
-    return Uni.createFrom().item((Object) page)
-        .map(e -> (Page<Task>) e);
+    final Page<Task> page = new PageImpl<Task>(tasks, pageable, commit.getTotalObjectsOnPages());
+    return Uni.createFrom().item((Object) page).map(e -> (Page<Task>) e);
   }
   
 }
