@@ -25,6 +25,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstCommand;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
+
 import org.immutables.value.Value;
 
 import javax.annotation.Nullable;
@@ -61,7 +63,7 @@ public interface HdesStore {
     StoreRepoBuilder headName(String headName);
     Uni<HdesStore> create();    
     HdesStore build();
-    Uni<Boolean> createIfNot();
+    Uni<Tuple2<Boolean, HdesStore>> createIfNot();
   }
   
   interface HistoryQuery {

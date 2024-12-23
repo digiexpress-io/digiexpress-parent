@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
 import io.thestencil.client.api.StencilClient.EntityType;
@@ -87,7 +88,7 @@ public interface StencilStore {
     StoreRepoBuilder headName(String headName);
     Uni<StencilStore> create();    
     StencilStore build();
-    Uni<Boolean> createIfNot();
+    Uni<Tuple2<Boolean, StencilStore>> createIfNot();
   }
   
 }

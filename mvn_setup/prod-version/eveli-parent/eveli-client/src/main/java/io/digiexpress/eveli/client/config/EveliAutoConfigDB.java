@@ -25,15 +25,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 
 
 
 @Configuration
 @EnableTransactionManagement
-@EntityScan(basePackageClasses = { TaskEntity.class })
-@EnableJpaRepositories(basePackageClasses = { TaskRepository.class })
+@EntityScan(basePackageClasses = { ProcessEntity.class })
+@EnableJpaRepositories(basePackageClasses = { ProcessRepository.class })
 public class EveliAutoConfigDB {
   
 }

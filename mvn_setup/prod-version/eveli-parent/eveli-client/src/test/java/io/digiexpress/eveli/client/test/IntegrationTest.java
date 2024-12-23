@@ -1,5 +1,19 @@
 package io.digiexpress.eveli.client.test;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 /*-
  * #%L
  * eveli-client
@@ -21,20 +35,7 @@ package io.digiexpress.eveli.client.test;
  */
 
 import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
 
 
 @Testcontainers
@@ -44,7 +45,7 @@ import java.sql.SQLException;
 public class IntegrationTest {
 
   @Autowired
-  TaskRepository taskRepository;
+  ProcessRepository taskRepository;
 
   public static class IntegrationTestConfig {
     @Bean

@@ -256,8 +256,8 @@ public class HdesClientImpl implements HdesClient {
   @Override
   public ClientRepoBuilder repo() {
     return new ClientRepoBuilder() {
-      private String repoName;
-      private String headName;
+      private String repoName = store.getRepoName();
+      private String headName = store.getHeadName();
       @Override
       public ClientRepoBuilder repoName(String repoName) {
         this.repoName = repoName;
@@ -271,9 +271,9 @@ public class HdesClientImpl implements HdesClient {
       @Override
       public Uni<HdesClient> create() {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
-        return store().repo().repoName(repoName).headName(headName).create()
-            .onItem().transform(newStore -> {
-              return new HdesClientImpl(defs, newStore, ast, 
+        return store().repo().repoName(repoName).headName(headName).createIfNot()
+            .onItem().transform(tuple -> {
+              return new HdesClientImpl(defs, tuple.getItem2(), ast, 
                   new HdesClientConfigImpl(
                       config.getFlowVisitors(),
                       config.getCache().withName(repoName), 

@@ -251,33 +251,33 @@ public class StencilClientImpl implements StencilClient {
   @Override
   public ClientRepoBuilder repo() {
     return new ClientRepoBuilder() {
-    private String repoName;
-    private String headName;
-    @Override
-    public ClientRepoBuilder repoName(String repoName) {
-      this.repoName = repoName;
-      return this;
-    }
-    @Override
-    public ClientRepoBuilder headName(String headName) {
-      this.headName = headName;
-      return this;
-    }
-    @Override
-    public Uni<StencilClient> create() {
-      StencilAssert.notNull(repoName, () -> "repoName must be defined!");
-      return store.repo().repoName(repoName).headName(headName).create()
-          .onItem().transform(newConfig -> {
-            return new StencilClientImpl(newConfig);
-          });
-    }
-    @Override
-    public StencilClient build() {
-      StencilAssert.notNull(repoName, () -> "repoName must be defined!");
-      final var newConfig = store.repo().repoName(repoName).headName(headName).build();
-      return new StencilClientImpl(newConfig);
-    }
-  };
+      private String repoName = store.getRepoName();
+      private String headName = store.getHeadName();
+      @Override
+      public ClientRepoBuilder repoName(String repoName) {
+        this.repoName = repoName;
+        return this;
+      }
+      @Override
+      public ClientRepoBuilder headName(String headName) {
+        this.headName = headName;
+        return this;
+      }
+      @Override
+      public Uni<StencilClient> create() {
+        StencilAssert.notNull(repoName, () -> "repoName must be defined!");
+        return store.repo().repoName(repoName).headName(headName).createIfNot()
+            .onItem().transform(newConfig -> {
+              return new StencilClientImpl(newConfig.getItem2());
+            });
+      }
+      @Override
+      public StencilClient build() {
+        StencilAssert.notNull(repoName, () -> "repoName must be defined!");
+        final var newConfig = store.repo().repoName(repoName).headName(headName).build();
+        return new StencilClientImpl(newConfig);
+      }
+    };
   }
 
   @Override

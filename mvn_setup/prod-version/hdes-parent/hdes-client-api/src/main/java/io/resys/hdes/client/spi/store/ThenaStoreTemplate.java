@@ -37,6 +37,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 
 public abstract class ThenaStoreTemplate extends PersistenceCommands implements HdesStore {
   public ThenaStoreTemplate(ThenaConfig config) {
@@ -96,14 +97,15 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
             .build());
       }
       @Override
-      public Uni<Boolean> createIfNot() {
+      public Uni<Tuple2<Boolean, HdesStore>> createIfNot() {
         final var client = config.getClient();
         
         return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
           if(repo == null) {
-            return client.tenants().commit().name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> true); 
+            return client.tenants().commit().name(config.getRepoName(), StructureType.git).build()
+                .onItem().transform(newRepo -> Tuple2.of(true, build())); 
           }
-          return Uni.createFrom().item(false);
+          return Uni.createFrom().item(Tuple2.of(true, build()));
         });
       }
     };

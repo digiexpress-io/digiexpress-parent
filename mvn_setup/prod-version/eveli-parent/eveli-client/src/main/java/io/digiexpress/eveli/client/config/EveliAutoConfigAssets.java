@@ -210,8 +210,8 @@ public class EveliAutoConfigAssets {
     };
 
     final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
-    final var createdWrench = wrenchClient.store().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
-    final var createdStencil = stencilClient.getStore().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
+    final var createdWrench = wrenchClient.repo().create().await().atMost(Duration.ofSeconds(5));
+    final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
     
     
     final var msg = new StringBuilder("\r\n")
