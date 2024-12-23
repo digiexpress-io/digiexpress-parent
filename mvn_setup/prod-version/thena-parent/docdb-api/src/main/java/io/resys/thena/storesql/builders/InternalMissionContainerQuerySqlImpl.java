@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -214,7 +215,14 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
         .mapping(registry.missions().idMapper())
         .execute(sql.getProps())
         .onItem()
-        .transformToMulti(RowSet::toMulti).collect().asList()
+        .transform(rowset -> {
+          final var it = rowset.iterator();
+          final var result = new ArrayList<String>();
+          while(it.hasNext()) {
+            result.add(it.next());
+          }
+          return Collections.unmodifiableList(result);
+        })
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find all identifiers for pagination '%s'!", GrimDocType.GRIM_MISSION)));
   }
   @Override
