@@ -1,5 +1,7 @@
 package io.resys.thena.registry.grim;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -426,8 +428,9 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   }
   @Override
   public SqlTuple findAllIdentifiers(GrimMissionFilter filter, List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit) {
-    final var where = new GrimMissionSqlFilterBuilder(options).where(filter);
-    final var sorting = new GrimMissionSqlSortingBuilder(options).orderBy(orderBy);
+    final var params = new ArrayList<Object>();
+    final var where = new GrimMissionSqlFilterBuilder(options, params).where(filter);
+    final var sorting = new GrimMissionSqlSortingBuilder(options, params, offset, limit).orderBy(orderBy);
     
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
@@ -447,13 +450,13 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append(" LEFT JOIN ").append(options.getGrimMissionData()).append(" as mission_data").ln()
         .append(" ON(mission_data.mission_id = mission.id and objective_id is null and goal_id is null and remark_id is null)").ln()
 
-        .append(where.getValue()) 
-        .append(sorting.getValue())
+        .append(sorting.getOrderByJoins().getValue())
         
-        .append(" LIMIT ").append(String.valueOf(limit)).append(" OFFSET ").append(String.valueOf(offset)).ln()
+        .append(where.getValue()) 
+        .append(sorting.getOrderByClause().getValue())
         
         .build())
-        .props(where.getProps())
+        .props(Tuple.from(params))
         .build();
   }
   @Override

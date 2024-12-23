@@ -37,6 +37,12 @@ public class SqlStatement {
     }
     return this;
   }
+  
+  public SqlStatement appendAtStart(String value) {
+    result.insert(0, value+"\n");
+    return this;
+  }
+  
   public SqlStatement ln() {
     result.append("\n");
     return this;

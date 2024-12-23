@@ -215,7 +215,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
         .execute(sql.getProps())
         .onItem()
         .transformToMulti(RowSet::toMulti).collect().asList()
-        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find all identifiers '%s'!", GrimDocType.GRIM_MISSION)));
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find all identifiers for pagination '%s'!", GrimDocType.GRIM_MISSION)));
   }
   @Override
   public Uni<Long> count() {

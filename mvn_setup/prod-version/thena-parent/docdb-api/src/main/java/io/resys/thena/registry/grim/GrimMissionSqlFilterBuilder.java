@@ -23,7 +23,7 @@ package io.resys.thena.registry.grim;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.function.Supplier;
+import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
@@ -32,24 +32,36 @@ import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+
 public class GrimMissionSqlFilterBuilder {
+
   private final TenantTableNames options;
+  private final List<Object> params;
+  private final SqlStatement builder = new SqlStatement();
+  private int index;
   
+  public GrimMissionSqlFilterBuilder(TenantTableNames options) {
+    super();
+    this.options = options;
+    this.params = new ArrayList<Object>();
+    this.index = 1;
+  }
   
-  public SqlTuple where(GrimMissionFilter filter) {
-    int index = 1;
-    final var params = new ArrayList<Object>();
-    final var builder = new SqlStatement();
-    final Supplier<Void> and = () -> {
-      if(!builder.isEmpty()) {
-        builder.ln().append(" AND ");
-      }
-      return null;
-    };
-    
+  public GrimMissionSqlFilterBuilder(TenantTableNames options, List<Object> params) {
+    super();
+    this.options = options;
+    this.params = params;
+    this.index = params.size() + 1;
+  }
+  
+  private void and() {
+    if(!builder.isEmpty()) {
+      builder.ln().append(" AND ");
+    }
+  }
+  
+  public SqlTuple where(GrimMissionFilter filter) {    
     
     // by id
     if(filter.getMissionIds().isPresent()) {
@@ -59,16 +71,16 @@ public class GrimMissionSqlFilterBuilder {
     
     // archive filter
     if(GrimArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
-      and.get();
+      and();
       builder.append(" mission.archived_at is NOT NULL").ln();      
     } else if(GrimArchiveQueryType.ONLY_IN_FORCE.equals(filter.getArchived())) {
-      and.get();
+      and();
       builder.append(" mission.archived_at is NULL").ln();
     }
     
     // viewer filter
     if(filter.getNotViewedByUser() != null || filter.getNotViewedByUsage() != null) {
-      and.get();
+      and();
       builder
       .append("  NOT EXISTS(").ln()
       .append("    SELECT id FROM ").append(options.getGrimCommitViewer()).append(" AS viewer_filter").ln()
@@ -87,7 +99,7 @@ public class GrimMissionSqlFilterBuilder {
     
     // external comment filter
     if(filter.getAtLeastOneRemarkWithType() != null) {
-      and.get();
+      and();
       builder
       .append("  EXISTS(").ln()
       .append("    SELECT id FROM ").append(options.getGrimRemark()).append(" AS remark_type_filter").ln()
@@ -99,7 +111,7 @@ public class GrimMissionSqlFilterBuilder {
     
     // external comment ANY filter
     if(Boolean.TRUE.equals(filter.getAtLeastOneRemarkWithAnyType())) {
-      and.get();
+      and();
       builder
       .append("  EXISTS(").ln()
       .append("    SELECT id FROM ").append(options.getGrimRemark()).append(" AS remark_type_filter").ln()
@@ -110,7 +122,7 @@ public class GrimMissionSqlFilterBuilder {
     
     // created/updated
     if(filter.getFromCreatedOrUpdated() != null) {
-      and.get();
+      and();
       builder
       .append(" (")
       .append("  exists(")
@@ -135,7 +147,7 @@ public class GrimMissionSqlFilterBuilder {
       for(final var assignment: filter.getAssignments()) {
         final var operator = assignment.isExact() ? "=" : "LIKE";
         
-        and.get();
+        and();
         builder
         .append("  EXISTS(").ln()
         .append("    SELECT id FROM ").append(options.getGrimAssignment()).append(" AS assignment_filter").ln()
@@ -154,7 +166,7 @@ public class GrimMissionSqlFilterBuilder {
     
     // link
     if(!filter.getLinks().isEmpty()) {
-      and.get();
+      and();
       builder
       .append("  exists(").ln()
       .append("    select id from ").append(options.getGrimMissionLink()).append(" as link_filter").ln()
@@ -178,21 +190,21 @@ public class GrimMissionSqlFilterBuilder {
     
     // reporter
     if(filter.getLikeReporterId() != null) {
-      and.get();
+      and();
       builder.append(" LOWER(mission.reporter_id) = $").append(index++).ln();
       params.add(filter.getLikeReporterId().toLowerCase());
     }
     
     // title
     if(filter.getLikeTitle() != null) {
-      and.get();
+      and();
       builder.append(" LOWER(mission.mission_title) like $").append(index++).ln();
       params.add("%" + filter.getLikeTitle().toLowerCase() + "%");
     }
     
     // description
     if(filter.getLikeDescription() != null) {
-      and.get();
+      and();
       builder.append(" LOWER(mission.mission_description) like $").append(index++).ln();
       params.add("%" + filter.getLikeDescription().toLowerCase() + "%");
     }
@@ -200,20 +212,20 @@ public class GrimMissionSqlFilterBuilder {
     
     // status
     if(!filter.getStatus().isEmpty()) {
-      and.get();
+      and();
       builder.append(" LOWER(mission.mission_status) = ANY($").append(index++).append(")").ln();
       params.add(filter.getStatus().stream().map(String::toLowerCase).toArray());
     }
     // priority
     if(!filter.getPriority().isEmpty()) {
-      and.get();
+      and();
       builder.append(" LOWER(mission.mission_priority) = ANY($").append(index++).append(")").ln();
       params.add(filter.getPriority().stream().map(String::toLowerCase).toArray());
     }
     
     // overdue
     if(Boolean.FALSE.equals(filter.getOverdue())) {
-      and.get();
+      and();
       builder.append(" mission.mission_due_date < CURRENT_DATE").ln();
     }
     
