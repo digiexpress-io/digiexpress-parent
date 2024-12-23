@@ -56,7 +56,7 @@ public class SearchMissionsTest extends DbTestTemplate {
   public void createAndUpdateMission() {
     // create project
     TenantCommitResult repo = getClient().tenants().commit()
-        .name("SearchMissions-1", StructureType.grim)
+        .name("SearchMissions-2", StructureType.grim)
         .build()
         .await().atMost(Duration.ofMinutes(1));
     log.debug("created repo {}", repo);

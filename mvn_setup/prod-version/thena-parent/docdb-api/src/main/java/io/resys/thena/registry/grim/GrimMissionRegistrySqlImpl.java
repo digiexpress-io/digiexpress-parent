@@ -262,7 +262,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
         .append("  mission_title = $13,").ln()
         .append("  mission_description = $14,").ln()
         .append("  mission_ref = $15,").ln()
-        .append("  questionnaire_id = $16").ln()
+        .append("  questionnaire_id = $16,").ln()
         .append("  mission_completed_at = $17").ln()
         
         .append(" WHERE id = $18")

@@ -57,8 +57,8 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
   @Override
   public StoreRepoBuilder repo() {
     return new StoreRepoBuilder() {
-      private String repoName;
-      private String headName;
+      private String repoName = config.getRepoName();
+      private String headName = config.getHeadName();
       @Override
       public StoreRepoBuilder repoName(String repoName) {
         this.repoName = repoName;
@@ -100,9 +100,9 @@ public abstract class ThenaStoreTemplate extends PersistenceCommands implements 
       public Uni<Tuple2<Boolean, HdesStore>> createIfNot() {
         final var client = config.getClient();
         
-        return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
-          if(repo == null) {
-            return client.tenants().commit().name(config.getRepoName(), StructureType.git).build()
+        return client.git(repoName).tenants().get().onItem().transformToUni(repo -> {
+          if(repo.getRepo() == null) {
+            return client.tenants().commit().name(repoName, StructureType.git).build()
                 .onItem().transform(newRepo -> Tuple2.of(true, build())); 
           }
           return Uni.createFrom().item(Tuple2.of(true, build()));

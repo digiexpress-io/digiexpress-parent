@@ -69,6 +69,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
         .reporterNames(template.getReporterNames())
         
         .reply("Proletariat John here, replying to you")
+        .taskId(taskId)
         .build(), "user-john");
     
     Assertions.assertEquals(1, feedbackClient.queryFeedbacks().findAll().size());

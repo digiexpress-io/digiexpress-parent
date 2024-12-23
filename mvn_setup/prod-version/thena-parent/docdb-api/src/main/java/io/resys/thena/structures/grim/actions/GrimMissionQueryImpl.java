@@ -23,6 +23,7 @@ package io.resys.thena.structures.grim.actions;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
@@ -271,6 +272,13 @@ public class GrimMissionQueryImpl implements MissionQuery {
     }
     return query
         .missionId(missionIdentifiers.toArray(new String[] {}))
-        .findAll().collect().asList();
+        .findAll().collect().asList()
+        .onItem().transform(items -> {
+          final var result = new ArrayList<GrimMissionContainer>(items);
+          result.sort((a, b) -> Integer.compare(
+              missionIdentifiers.indexOf(a.getMission().getId()), 
+              missionIdentifiers.indexOf(b.getMission().getId())));
+          return Collections.unmodifiableList(result);
+        });
   } 
 }
