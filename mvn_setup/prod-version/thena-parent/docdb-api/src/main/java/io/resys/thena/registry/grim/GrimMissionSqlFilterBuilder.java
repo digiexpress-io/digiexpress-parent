@@ -191,8 +191,8 @@ public class GrimMissionSqlFilterBuilder {
     // reporter
     if(filter.getLikeReporterId() != null) {
       and();
-      builder.append(" LOWER(mission.reporter_id) = $").append(index++).ln();
-      params.add(filter.getLikeReporterId().toLowerCase());
+      builder.append(" LOWER(mission.reporter_id) like $").append(index++).ln();
+      params.add("%" + filter.getLikeReporterId().toLowerCase() + "%");
     }
     
     // title

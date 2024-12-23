@@ -137,7 +137,7 @@ public interface TaskClient {
   interface ModifyTaskCommand {
     @Nullable TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
-    @Nullable Integer getVersion();
+    @Nullable String getVersion();
 
     @Nullable String getDescription();
     @Nullable String getClientIdentificator();

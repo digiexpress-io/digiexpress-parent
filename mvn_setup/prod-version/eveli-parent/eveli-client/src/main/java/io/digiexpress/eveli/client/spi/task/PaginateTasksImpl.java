@@ -43,7 +43,6 @@ import io.resys.thena.api.entities.ImmutablePageSorting;
 import io.resys.thena.api.entities.ImmutablePageSortingOrder;
 import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.PageQuery.PageSortDirection;
-import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
@@ -157,7 +156,7 @@ public class PaginateTasksImpl implements PaginateTasks {
       case "dueDate": type.property(MissionOrderByType.MISSION_DUE_DATE); break;
       case "created": type.property(MissionOrderByType.MISSION_CREATED_AT); break;
       case "clientIdentificator": type.property(MissionOrderByType.MISSION_REPORTER_ID); break;
-      case "assignedUser": type.property(MissionOrderByType.MISSION_ASSIGNMENT_VALUE).propertyType(assignedUser); break;
+      case "assignedUser": type.property(MissionOrderByType.MISSION_ASSIGNMENT_VALUE).propertyType(TaskMapper.ASSIGNMENT_TYPE_TASK_USER); break;
       case "subject": type.property(MissionOrderByType.MISSION_TITLE).propertyType(assignedUser); break;
       
       default: throw new IllegalArgumentException("Unexpected value: " + order.getProperty());
@@ -220,28 +219,29 @@ public class PaginateTasksImpl implements PaginateTasks {
     final var statuses = this.status.stream().map(el-> el.name()).collect(Collectors.toList());
     final var priorities = this.priority.stream().map(el-> el.name()).collect(Collectors.toList());
 
+    if(!(assignedUser == null || assignedUser.trim().isEmpty())) {
+      builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser);
+    }
+    if(!(role == null || role.trim().isEmpty())) {
+      builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role);
+    }
+    
     if (requireAnyRoles == null) {
       return builder
-      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
-      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role)
-      .likeReporterId(clientIdentificator)
-      .likeTitle(subject)
-      .likeDescription("the bEst")
-      .status(statuses)
-      .priority(priorities)
-      .overdue(dueDate == null ? false: !dueDate.isEmpty()) // do not return overdue tasks
+          .status(statuses)
+          .priority(priorities)
+          .likeTitle(subject)
+          .likeReporterId(clientIdentificator)
+          .overdue(dueDate == null ? null : !dueDate.isEmpty()) // do not return overdue tasks  null = true
       ;
     }
     return builder
-      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser)
-      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role)
-      .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles)
-      .likeReporterId(clientIdentificator)
-      .likeTitle(subject)
-      .likeDescription("the bEst")
-      .status(statuses)
-      .priority(priorities)
-      .overdue(dueDate == null ? false: !dueDate.isEmpty()) // do not return overdue tasks
+        .status(statuses)
+        .priority(priorities)
+        .likeTitle(subject)
+        .likeReporterId(clientIdentificator)
+        .overdue(dueDate == null ? null : !dueDate.isEmpty()) // do not return overdue tasks null = true
+        .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles)
       ;
   }
 

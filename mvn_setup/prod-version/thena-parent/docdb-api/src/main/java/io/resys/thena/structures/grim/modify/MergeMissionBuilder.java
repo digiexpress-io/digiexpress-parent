@@ -164,8 +164,11 @@ public class MergeMissionBuilder implements MergeMission {
     // clear old
     final var intermed = this.batch.build()
         .getAssignments().stream()
-        .filter(a -> a.getRelation() != null)
-        .filter(e -> !e.getAssignmentType().equals(assigneeType))
+        .filter(a -> a.getRelation() != null || (
+            a.getRelation() == null &&
+            !a.getAssignmentType().equals(assigneeType)
+        ))
+
         .toList();
     this.batch.assignments(intermed);
     final var all_assignments = new HashMap<String, GrimAssignment>();
@@ -211,8 +214,10 @@ public class MergeMissionBuilder implements MergeMission {
     // clear old
     final var intermed = this.batch.build()
         .getMissionLabels().stream()
-        .filter(a -> a.getRelation() != null)
-        .filter(e -> !e.getLabelType().equals(labelType))
+        .filter(a -> a.getRelation() != null || (
+            a.getRelation() == null &&
+            !a.getLabelType().equals(labelType)
+        ))
         .toList();
     this.batch.missionLabels(intermed);
     final var all_mission_label = new HashMap<String, GrimMissionLabel>();
@@ -243,8 +248,10 @@ public class MergeMissionBuilder implements MergeMission {
     // clear old
     final var intermed = this.batch.build()
         .getLinks().stream()
-        .filter(a -> a.getRelation() != null)
-        .filter(a -> !a.getLinkType().equals(linkType))
+        .filter(a -> a.getRelation() != null|| (
+            a.getRelation() == null &&
+            !a.getLinkType().equals(linkType)
+        ))
         .toList();
     this.batch.links(intermed);
     final var all_links = new HashMap<String, GrimMissionLink>();
