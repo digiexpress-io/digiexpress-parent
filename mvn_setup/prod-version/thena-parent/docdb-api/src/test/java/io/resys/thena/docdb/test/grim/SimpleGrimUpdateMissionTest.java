@@ -231,13 +231,13 @@ author: jane.doe@morgue.com, message: batching tests
   + 24::GRIM_ASSIGNMENT
     {"id":"24","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"14","relationType":"GOAL"}}
   + 14::GRIM_OBJECTIVE_GOAL
-    {"id":"14","commitId":"4","createdWithCommitId":"4","objectiveId":"12","goalStatus":null,"startDate":[2023,1,2],"dueDate":[2023,2,1],"description":"kitcher plan goes here!","title":"kitchen"}
+    {"id":"14","commitId":"4","createdWithCommitId":"4","objectiveId":"12","goalStatus":null,"startDate":"2023-01-02","dueDate":"2023-02-01","description":"kitcher plan goes here!","title":"kitchen"}
   + 13::GRIM_OBJECTIVE_GOAL
     {"id":"13","commitId":"4","createdWithCommitId":"4","objectiveId":"12","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
   + 12::GRIM_OBJECTIVE
-    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":[2023,1,1],"dueDate":[2024,1,1],"description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas"}
+    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas"}
   + 5::GRIM_MISSION
-    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":[2020,5,1],"dueDate":[2020,6,1],"reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
+    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
 
  | deleted
   - deleted: 0 entries
@@ -261,12 +261,10 @@ author: jane.doe@morgue.com, message: forgot to add comments to things
  | merged
   +- merged: 1 entries
   +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":[2020,5,1],"dueDate":[2020,6,1],"reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"5","commitId":"7","createdWithCommitId":"4","updatedTreeWithCommitId":"7","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":[2020,5,1],"dueDate":[2020,6,1],"reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
+   -  {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
+   +  {"id":"5","commitId":"7","createdWithCommitId":"4","updatedTreeWithCommitId":"7","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
    diff: commitId :: 4 -> 7
    diff: updatedTreeWithCommitId :: 4 -> 7
-   diff: startDate :: [2020, 5, 1] -> [2020,5,1]
-   diff: dueDate :: [2020, 6, 1] -> [2020,6,1]
 
 
 commit: 9, tenant: 1
@@ -280,12 +278,12 @@ author: jane.doe@morgue.com, message: changed the title
  | merged
   +- merged: 1 entries
   +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"7","createdWithCommitId":"4","updatedTreeWithCommitId":"7","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":[2020,5,1],"dueDate":[2020,6,1],"reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
+   -  {"id":"5","commitId":"7","createdWithCommitId":"4","updatedTreeWithCommitId":"7","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
    +  {"id":"5","commitId":"9","createdWithCommitId":"4","updatedTreeWithCommitId":"9","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"11","missionStatus":"OPEN","missionPriority":"HIGH","startDate":null,"dueDate":null,"reporterId":"jane.doe@morgue.com","description":"Basic house plans for customer","title":"House plans for customer #198CC","completedAt":null,"archivedAt":null,"archivedStatus":null}
    diff: commitId :: 7 -> 9
    diff: updatedTreeWithCommitId :: 7 -> 9
-   diff: startDate :: [2020, 5, 1] -> null
-   diff: dueDate :: [2020, 6, 1] -> null
+   diff: startDate :: 2020-05-01 -> null
+   diff: dueDate :: 2020-06-01 -> null
    diff: reporterId :: jane.doe@housing.com -> jane.doe@morgue.com
    diff: description :: The best house ever -> Basic house plans for customer
    diff: title :: my first mission to build a house -> House plans for customer #198CC

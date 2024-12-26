@@ -30,9 +30,9 @@ import com.google.common.collect.ComparisonChain;
 
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
+import io.resys.thena.jackson.QuarkusJacksonJsonCodec;
 import io.resys.thena.spi.DbState;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.json.jackson.DatabindCodec;
 
 public class GrimPrinter {
   private final DbState state;
@@ -108,7 +108,7 @@ public class GrimPrinter {
         return null;
       }
       try {
-        final var id = DatabindCodec.mapper().writeValueAsString(input);
+        final var id = QuarkusJacksonJsonCodec.mapper().writeValueAsString(input);
         if(!isStatic) {
           return id.toString();
         }

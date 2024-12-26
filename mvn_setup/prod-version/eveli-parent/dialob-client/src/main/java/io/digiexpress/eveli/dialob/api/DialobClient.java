@@ -22,6 +22,7 @@ package io.digiexpress.eveli.dialob.api;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import io.dialob.api.form.Form;
@@ -42,6 +43,7 @@ public interface DialobClient {
   Form getFormById(String formId);
   Optional<Form> findOneFormById(String formId);
   
+  List<FormTag> findAllFormTags(String formName);
   Form getFormByNameAndTag(String formName, String formTag);
   
   

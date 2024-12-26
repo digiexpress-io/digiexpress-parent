@@ -2,6 +2,7 @@ package io.digiexpress.eveli.dialob.spi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -149,7 +150,14 @@ public class DialobClientImpl implements DialobClient {
   }
   @Override
   public Form getFormByNameAndTag(String formName, String formTag) {
-    return dialobService.getForms().getForObject("/" + formName + "/tags/" + formTag, Form.class);
+    final var uri = "/" + formName + "/tags/" + formTag;
+    return dialobService.getForms().getForObject(uri, Form.class);
+  }
+  @Override
+  public List<FormTag> findAllFormTags(String formName) {
+    final var uri = "/" + formName + "/tags";
+    final var tags = dialobService.getForms().getForObject(uri, FormTag[].class);
+    return Arrays.asList(tags);
   }
   @Override
   public Optional<Form> findOneFormById(String formId) {
@@ -254,8 +262,6 @@ public class DialobClientImpl implements DialobClient {
   @Override
   public Questionnaire getQuestionnaireAndMetaById(String questionnaireId) {
 
-    
-    
     final var questionnaire = getQuestionnaireById(questionnaireId);
     final var form = getFormById(questionnaire.getMetadata().getFormId());
     final var valuesets = form.getValueSets().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));

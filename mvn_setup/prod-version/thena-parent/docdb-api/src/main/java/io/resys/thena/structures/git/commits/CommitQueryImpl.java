@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CommitQueryImpl implements CommitQuery {
   private final DbState state;
   private final List<MatchCriteria> blobCriteria = new ArrayList<>();
-  private String projectName;
+  private final String projectName;
   private String branchNameOrCommitOrTag; //refOrCommitOrTag
   private boolean docsIncluded;
   

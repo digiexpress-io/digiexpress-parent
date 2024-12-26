@@ -60,7 +60,7 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
         .build();
     }
     final var result = envelope.getObjects();
-    if(result == null || result.isEmpty()) {
+    if(result == null) {
       throw TaskException.builder("GET_TASKS_BY_IDS_NOT_FOUND")   
         .add(config, envelope)
         .add((callback) -> callback.addArgs(taskId.toString()))

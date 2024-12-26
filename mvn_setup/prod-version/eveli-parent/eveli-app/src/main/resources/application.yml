@@ -28,6 +28,9 @@ management:
 #logging.org.springframework.http: INFO
 #logging.level.org.springframework.boot: INFO
 
+logging.level.io.vertx.core.impl.btc.BlockedThreadChecker: OFF
+logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
+
 
 # DB config
 spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli_app"

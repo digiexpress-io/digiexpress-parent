@@ -98,7 +98,7 @@ public class EveliAssetsClientImpl implements EveliAssetClient {
         final var client = config.getClient();
         
         return client.git(config.getRepoName()).tenants().get().onItem().transformToUni(repo -> {
-          if(repo == null) {
+          if(repo.getRepo() == null) {
             return client.tenants().commit().name(config.getRepoName(), StructureType.git).build().onItem().transform(newRepo -> true);
           }
           return Uni.createFrom().item(false);

@@ -72,6 +72,6 @@ public class CommitActionsImpl implements GitCommitActions {
   }
   @Override
   public CommitQuery commitQuery() {
-    return new CommitQueryImpl(state);
+    return new CommitQueryImpl(state, repoId);
   }
 }

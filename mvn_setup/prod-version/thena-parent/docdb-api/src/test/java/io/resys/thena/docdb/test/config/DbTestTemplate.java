@@ -13,15 +13,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantTableNames;
-import io.resys.thena.jackson.VertexExtModule;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.git.GitPrinter;
@@ -29,8 +24,6 @@ import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.json.jackson.DatabindCodec;
-import io.vertx.core.json.jackson.VertxModule;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
@@ -99,16 +92,6 @@ public class DbTestTemplate {
     replacements.clear();
   	connectToDebugDb();
     waitUntilPostgresqlAcceptsConnections(pgPool);
-
-    final var modules = new com.fasterxml.jackson.databind.Module[] {
-      new JavaTimeModule(), 
-      new Jdk8Module(), 
-      new GuavaModule(),
-      new VertxModule(),
-      new VertexExtModule()
-    };
-    DatabindCodec.mapper().registerModules(modules);
-    DatabindCodec.prettyMapper().registerModules(modules);
 
     this.client = DbStateSqlImpl.create().db("junit").client(pgPool).build();
     if(callback != null) {
