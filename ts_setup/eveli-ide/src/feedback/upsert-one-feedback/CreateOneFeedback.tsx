@@ -32,6 +32,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         locale: template.locale,
         origin: template.origin,
         processId: template.processId,
+        taskId: template.taskId,
         userId: template.userId,
         subLabelKey: template.subLabelKey,
         subLabelValue: template.subLabelValue,
