@@ -219,6 +219,7 @@ public class PaginateTasksImpl implements PaginateTasks {
     final var statuses = this.status.stream().map(el-> el.name()).collect(Collectors.toList());
     final var priorities = this.priority.stream().map(el-> el.name()).collect(Collectors.toList());
 
+    
     if(!(assignedUser == null || assignedUser.trim().isEmpty())) {
       builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser);
     }
@@ -226,23 +227,17 @@ public class PaginateTasksImpl implements PaginateTasks {
       builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role);
     }
     
+    builder
+      .status(statuses)
+      .priority(priorities)
+      .likeTitle(subject)
+      .likeReporterId(clientIdentificator)
+      .overdue(dueDate == null ? null : !dueDate.isEmpty()); // false = mission.mission_due_date < CURRENT_DATE 
+    
     if (requireAnyRoles == null) {
-      return builder
-          .status(statuses)
-          .priority(priorities)
-          .likeTitle(subject)
-          .likeReporterId(clientIdentificator)
-          .overdue(dueDate == null ? null : !dueDate.isEmpty()) // do not return overdue tasks  null = true
-      ;
+      return builder;
     }
-    return builder
-        .status(statuses)
-        .priority(priorities)
-        .likeTitle(subject)
-        .likeReporterId(clientIdentificator)
-        .overdue(dueDate == null ? null : !dueDate.isEmpty()) // do not return overdue tasks null = true
-        .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles)
-      ;
+    return builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles);
   }
 
   

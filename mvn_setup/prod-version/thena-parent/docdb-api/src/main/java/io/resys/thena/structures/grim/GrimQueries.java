@@ -78,7 +78,7 @@ public interface GrimQueries {
     
     InternalMissionQuery status(String ...status);
     InternalMissionQuery priority(String ...priority);
-    InternalMissionQuery overdue(Boolean overdue);
+    InternalMissionQuery overdue(Boolean overdue);// false = mission.mission_due_date < CURRENT_DATE
     InternalMissionQuery atLeastOneRemarkWithType(String remarkType);
     InternalMissionQuery atLeastOneRemarkWithAnyType(Boolean includeAny);
     

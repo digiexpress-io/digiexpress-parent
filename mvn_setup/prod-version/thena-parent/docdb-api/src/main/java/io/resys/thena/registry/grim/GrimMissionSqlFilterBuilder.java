@@ -224,7 +224,7 @@ public class GrimMissionSqlFilterBuilder {
     }
     
     // overdue
-    if(Boolean.FALSE.equals(filter.getOverdue())) {
+    if(Boolean.TRUE.equals(filter.getOverdue())) {
       and();
       builder.append(" mission.mission_due_date < CURRENT_DATE").ln();
     }
