@@ -374,7 +374,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .updatedTreeWithCommitId(row.getString("updated_tree_commit_id"))
           .title(row.getString("mission_title"))
           .description(row.getString("mission_description"))
-          .refId(row.getString("commit_id"))
+          .refId(row.getString("mission_ref"))
           .questionnaireId(row.getString("questionnaire_id"))
           
           .transitives(ImmutableGrimMissionTransitives.builder()

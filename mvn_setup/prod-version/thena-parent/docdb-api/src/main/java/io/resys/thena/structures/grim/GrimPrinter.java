@@ -163,10 +163,13 @@ public class GrimPrinter {
               ).result())
           .toList()) {
         
-
+        
         final var mission = item.getMissions().values().iterator().next();      
         result.append("Mission: ").append(ID.apply(mission.getId())).append(System.lineSeparator());
 
+        ID.apply(mission.getRefId());
+        
+        
         for(final var data : item.getObjectives().values().stream()
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
