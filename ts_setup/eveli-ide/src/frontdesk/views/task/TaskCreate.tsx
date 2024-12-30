@@ -513,7 +513,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <TaskFeedback taskId={editTask.id! + ''} />
+                        <TaskFeedback taskId={editTask.id! + ''} reload={comments?.length}/>
                       </AccordionDetails>
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />

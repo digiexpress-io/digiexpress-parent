@@ -50,7 +50,7 @@ export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
     <Routes>
       <Route element={<StartComposer />}>
         <Route path='/feedback' element={<FeedbackAllTasks />} />
-        <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} />} />
+        <Route path='/feedback/:taskId' element={<UpsertOneFeedback taskId={taskId!} onComplete={handleOnComplete} reload={0} />} />
       </Route>
     </Routes>)
 }

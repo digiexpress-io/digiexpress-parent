@@ -6,6 +6,7 @@ import { UpdateOneFeedback } from './UpdateOneFeedback';
 
 export interface UpsertOneFeedbackProps {
   taskId: string;
+  reload: number;
   onComplete: (upsertedFeedback: FeedbackApi.Feedback) => void;
 }
 
@@ -15,6 +16,8 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   const [enabled, setEnabled] = React.useState<true | false | undefined>();
 
   React.useEffect(() => {
+    setEnabled(undefined);
+
     isTaskFeedbackEnabled(props.taskId).then((enabled) => {
 
       if(enabled) {
@@ -22,9 +25,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
       }
       setEnabled(enabled);
     });
-
-    ;
-  }, [props.taskId])
+  }, [props.taskId, props.reload])
 
 
   function handleOnComplete(upsertedFeedback: FeedbackApi.Feedback) {
@@ -34,7 +35,7 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     });
   }
 
-  const ownerState = {...props, onComplete: handleOnComplete, enabled};
+  const ownerState = {...props, onComplete: handleOnComplete, enabled, version: props.reload};
   const feedbackExists = feedback ? true : false;
 
   if(ownerState.enabled === undefined) {
