@@ -245,6 +245,8 @@ const fi = {
   'dialobForm.error.invalidFormName': 'Väärä ID',
   'dialobForm.dialog.deleteQuestion': 'Haluatko poistaa lomakkeen "{formName}"?',
   'dialobForm.heading.deleteDialog':'Lomakkeen poisto',
+
+  'feedback.notenabled': 'Feedback is not enabled for this task',
 };
 
 export default fi;

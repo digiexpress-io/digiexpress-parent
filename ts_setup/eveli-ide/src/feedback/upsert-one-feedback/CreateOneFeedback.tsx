@@ -35,11 +35,11 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         userId: template.userId,
         subLabelKey: template.subLabelKey,
         subLabelValue: template.subLabelValue,
-        reply: template.replys.toString()
+        reply: template.replys?.toString()
       });
 
       setTemplate(template);
-      setReply(template.replys.join("\r\n\r\n"));
+      setReply(template.replys?.join("\r\n\r\n"));
     });
 
   }, []);

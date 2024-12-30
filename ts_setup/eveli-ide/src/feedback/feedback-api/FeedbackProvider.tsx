@@ -8,6 +8,7 @@ export interface FeedbackContextType {
   rankOneFeedback: (taskId: FeedbackApi.TaskId, body: FeedbackApi.UpsertFeedbackRankingCommand) => Promise<FeedbackApi.Feedback>;
   findAllFeedback: () => Promise<FeedbackApi.Feedback[]>;
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
+  isTaskFeedbackEnabled: (taskId: FeedbackApi.TaskId) => Promise<true | false>;
   deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
 }
 
@@ -18,6 +19,7 @@ export const FeedbackContext = React.createContext<FeedbackContextType>({} as an
 export interface FeedbackProviderProps {
   children: React.ReactNode;
   fetchTemplateGET: FeedbackApi.FetchTemplateGET;
+  fetchTemplateEnabledGET: FeedbackApi.FetchTemplateEnabledGET;
   fetchFeedbackPUT: FeedbackApi.FetchFeedbackPUT;
   fetchFeedbackPOST: FeedbackApi.FetchFeedbackPOST;
   fetchFeedbackGET: FeedbackApi.FetchFeedbackGET;
@@ -27,6 +29,10 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
   // create the context 
   const contextValue: FeedbackContextType = React.useMemo(() => {
+
+    function isTaskFeedbackEnabled(taskId: FeedbackApi.TaskId): Promise<true | false> {
+      return props.fetchTemplateEnabledGET(taskId).then(resp => resp.json()).then(json => json.enabled);
+    }
 
     function getOneTemplate(taskId: FeedbackApi.TaskId): Promise<FeedbackApi.FeedbackTemplate> {
       return props.fetchTemplateGET(taskId).then(resp => resp.json());
@@ -66,9 +72,23 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
 
     // return all methods
     return {
-      getOneTemplate, createOneFeedback, findAllFeedback, getOneFeedback, deleteOneFeedback, modifyOneFeedback, rankOneFeedback
+      getOneTemplate, 
+      createOneFeedback, 
+      findAllFeedback, 
+      getOneFeedback, 
+      deleteOneFeedback, 
+      modifyOneFeedback, 
+      rankOneFeedback,
+      isTaskFeedbackEnabled
     };
-  }, [props.fetchFeedbackGET, props.fetchFeedbackPOST, props.fetchTemplateGET]);
+  }, [
+   props.fetchTemplateGET,
+   props.fetchTemplateEnabledGET,
+   props.fetchFeedbackPUT,
+   props.fetchFeedbackPOST,
+   props.fetchFeedbackGET,
+   props.fetchFeedbackDELETE,
+  ]);
 
   return (<FeedbackContext.Provider value={contextValue}>{props.children}</FeedbackContext.Provider>);
 }

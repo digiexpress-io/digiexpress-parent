@@ -92,6 +92,14 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     return response;
   }
 
+  const fetchTemplateEnabledGET: FeedbackApi.FetchTemplateEnabledGET = async (taskId) => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/feedback/${taskId}/enabled`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
 
   return (
     <FeedbackProvider
@@ -99,7 +107,8 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchFeedbackPOST={fetchFeedbackPOST}
       fetchFeedbackPUT={fetchFeedbackPUT}
       fetchTemplateGET={fetchTemplateGET}
-      fetchFeedbackDELETE={fetchFeedbackDELETE}>
+      fetchFeedbackDELETE={fetchFeedbackDELETE}
+      fetchTemplateEnabledGET={fetchTemplateEnabledGET}>
       {children}
     </FeedbackProvider>
   );
