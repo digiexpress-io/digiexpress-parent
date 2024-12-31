@@ -79,7 +79,7 @@ public class FeedbackApiController {
     return new ResponseEntity<>(feedback, HttpStatus.OK);
   }
   @PostMapping(value="/{taskIdOrFeedbackId}")
-  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") Long id, @RequestBody CreateFeedbackCommand command)
+  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody CreateFeedbackCommand command)
   {
     final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
     return new ResponseEntity<>(feedback, HttpStatus.OK);
@@ -100,18 +100,18 @@ public class FeedbackApiController {
   
   
   @GetMapping(value="/{taskIdOrFeedbackId}/templates")
-  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") Long id)
+  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") String id)
   {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(id, authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(template, HttpStatus.OK);
   }
   
   @GetMapping(value="/{taskIdOrFeedbackId}/enabled")
-  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") Long id)
+  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") String id)
   {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().findOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    final var template = feedbackClient.queryTemplate().findOneByTaskId(id, authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
   }
 }
