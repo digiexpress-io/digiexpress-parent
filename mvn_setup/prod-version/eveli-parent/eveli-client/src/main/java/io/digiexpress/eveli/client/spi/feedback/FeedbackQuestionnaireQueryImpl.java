@@ -144,7 +144,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     @Override
     public String getContent() {
       return new StringBuilder()
-          .append(formatSelection(getMainCat().get()))
+          .append(getMainCat().map(e->formatSelection(e)).orElse(""))
           .append(getSubCat().map(e -> formatSelection(e)).orElse(""))
           .append(getTitle().map(e -> formatText(e)).orElse("- no title -"))
           .append(getQuestion().map(e -> formatText(e)).orElse("- no question -"))
