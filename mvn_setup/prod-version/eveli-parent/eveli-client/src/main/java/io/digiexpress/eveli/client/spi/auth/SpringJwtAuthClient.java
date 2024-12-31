@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.auth;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -39,7 +40,7 @@ public class SpringJwtAuthClient implements AuthClient {
   @Override
   public User getUser() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+    if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableUser.builder()
           .isAuthenticated(false)
           .principal(ImmutableUserPrincipal.builder()
@@ -79,7 +80,7 @@ public class SpringJwtAuthClient implements AuthClient {
   private String getEmail(Jwt principal) {
     String email = "";
     if (principal != null) {
-      email = principal.getClaimAsString("email");
+      email = Objects.toString(principal.getClaimAsString("email"), "");
     }
     return email;
   }
