@@ -10,11 +10,21 @@ export declare namespace IamApi {
     userId: string;
     firstName: string;
     lastName: string;
-
+    contact: Contact;
     representedPerson: RepresentedPerson | undefined;
     representedCompany: RepresentedCompany | undefined;
   }
 
+  export interface ContactAddress {
+    street: string;
+    locality: string;
+    postalCode: string;
+    country: string;
+  }
+  export interface Contact {
+    email: string;
+    address?: ContactAddress;
+  }
   export interface UserRoles {
     roles: string[];
     principal: object;
