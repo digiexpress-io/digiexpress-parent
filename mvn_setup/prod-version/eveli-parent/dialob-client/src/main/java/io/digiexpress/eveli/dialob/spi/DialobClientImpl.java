@@ -156,6 +156,11 @@ public class DialobClientImpl implements DialobClient {
     return dialobService.getForms().getForObject("/" + taggedFormId, Form.class);
   }
   @Override
+  public FormTag getFormTag(String formName, String formTag) {
+    final var uri = "/" + formName + "/tags/" + formTag;
+    return dialobService.getForms().getForObject(uri, FormTag.class);
+  }
+  @Override
   public List<FormTag> findAllFormTags(String formName) {
     final var uri = "/" + formName + "/tags";
     final var tags = dialobService.getForms().getForObject(uri, FormTag[].class);

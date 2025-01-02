@@ -35,6 +35,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.dialob.api.form.Form;
+import io.dialob.api.form.FormTag;
 import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
@@ -156,9 +157,12 @@ public class PgTestTemplate {
 
     final var dialobClient = Mockito.mock(DialobClient.class);
     final var form = Mockito.mock(Form.class);
+    final var formTag = Mockito.mock(FormTag.class);
     
     Mockito.when(form.getId()).thenReturn("mock-form");
+    Mockito.when(formTag.getFormId()).thenReturn("mock-form");
     Mockito.when(dialobClient.getFormByNameAndTag(Mockito.anyString(), Mockito.anyString())).thenReturn(form);    
+    Mockito.when(dialobClient.getFormTag(Mockito.anyString(), Mockito.anyString())).thenReturn(formTag);    
     
     return new EveliAssetsComposerImpl(store, null, null, dialobClient);
   }

@@ -44,6 +44,7 @@ public interface DialobClient {
   Optional<Form> findOneFormById(String formId);
   
   List<FormTag> findAllFormTags(String formName);
+  FormTag getFormTag(String formName, String formTag);
   Form getFormByNameAndTag(String formName, String formTag);
   
   
@@ -85,4 +86,5 @@ public interface DialobClient {
     private final FormItem formItem;
     private final Optional<String> valueSetLabel;
   }
+
 }
