@@ -27,6 +27,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,7 +95,19 @@ public class AssetsWorkflowController {
     final var entity = composer.update().workflow(workflow).await().atMost(timeout);
     return new ResponseEntity<>(entity, HttpStatus.OK);
   }
-  
+
+  @DeleteMapping("/{id}")
+  @Transactional
+  public ResponseEntity<Entity<Workflow>> delete(@PathVariable("id") String id) {
+    final var previousWorkflow = composer.workflowQuery().findOneById(id)
+        .await().atMost(timeout);
+    
+    if(previousWorkflow.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    final var entity = composer.delete().workflow(id).await().atMost(timeout);
+    return new ResponseEntity<>(entity, HttpStatus.OK);
+  }
   
   
   @GetMapping("/tags")
@@ -124,5 +137,15 @@ public class AssetsWorkflowController {
       return ResponseEntity.notFound().build();
     }
     return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
+  }
+  
+  @DeleteMapping("/tags/{id}")
+  public ResponseEntity<Entity<WorkflowTag>> deleteById(@PathVariable("id") String name) {
+    final var workflowRelease = composer.workflowTagQuery().findOneByName(name).await().atMost(timeout);
+    if(workflowRelease.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    final var entity = composer.delete().workflowTag(workflowRelease.get().getId()).await().atMost(timeout);
+    return new ResponseEntity<>(entity, HttpStatus.OK);
   }
 }
