@@ -1,0 +1,46 @@
+package io.digiexpress.thena.mq.client.spi.persistence;
+
+import io.digiexpress.thena.mq.client.api.persistence.BindingRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.ChannelRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.DeliveryAttemptRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.DeliveryRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.MessageRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.QueueRegistry;
+import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
+import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
+import io.digiexpress.thena.mq.client.sql.BindingRegistrySqlImpl;
+import io.digiexpress.thena.mq.client.sql.ChannelRegistrySqlImpl;
+import io.digiexpress.thena.mq.client.sql.DeliveryAttemptRegistrySqlImpl;
+import io.digiexpress.thena.mq.client.sql.DeliveryRegistrySqlImpl;
+import io.digiexpress.thena.mq.client.sql.MessageRegistrySqlImpl;
+import io.digiexpress.thena.mq.client.sql.QueueRegistrySqlImpl;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
+
+@Getter @Accessors(fluent = true)
+public class ThenaMqTableRegistryImpl implements ThenaMqTableRegistry {
+  private final ThenaMqTableNames options;
+  private final ChannelRegistry channel;
+  private final QueueRegistry queue;
+  private final MessageRegistry message;
+  private final BindingRegistry binding;
+  private final DeliveryRegistry delivery;
+  private final DeliveryAttemptRegistry deliveryAttempt;
+  
+  public ThenaMqTableRegistryImpl(ThenaMqTableNames options) {
+    super();
+    this.options = options;
+    this.channel = new ChannelRegistrySqlImpl(options);
+    this.queue = new QueueRegistrySqlImpl(options);
+    this.message = new MessageRegistrySqlImpl(options);
+    this.binding = new BindingRegistrySqlImpl(options);
+    this.delivery = new DeliveryRegistrySqlImpl(options);
+    this.deliveryAttempt = new DeliveryAttemptRegistrySqlImpl(options);
+  }
+
+  @Override
+  public ThenaMqTableRegistry withChannel(ThenaMqTableNames options) {
+    return new ThenaMqTableRegistryImpl(options);
+  }
+}

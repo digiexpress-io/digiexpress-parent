@@ -145,7 +145,7 @@ public class DbStateSqlImpl implements DbState {
 
   public static DbStateSqlImpl create(TenantTableNames names, io.vertx.mutiny.sqlclient.Pool client) {
     final var pool = new ThenaSqlPoolVertx(client);
-    final var errorHandler = new PgErrors(names);
+    final var errorHandler = new PgErrors();
     final var dataSource = new ThenaSqlDataSourceImpl(
         "", names, pool, errorHandler, 
         Optional.empty(),
@@ -177,7 +177,7 @@ public class DbStateSqlImpl implements DbState {
       
       
       final var ctx = TenantTableNames.defaults(db);
-      this.errorHandler = new PgErrors(ctx);
+      this.errorHandler = new PgErrors();
       
       final Function<TenantTableNames, ThenaRegistry> registry = this.registry == null ? Builder::defaultRegistry : this.registry;
       final var pool = new ThenaSqlPoolVertx(client);
