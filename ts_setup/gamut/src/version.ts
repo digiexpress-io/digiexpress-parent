@@ -1,1 +1,1 @@
-export const version = '1.0.26';export const build_time = '20/12/2024 13:40:14';
+export const version = '1.0.27';export const build_time = '04/01/2025 15:46:21';
