@@ -17,6 +17,7 @@ import {
   useComms,
   useSite,
   CommsApi,
+  useIam,
 } from '../';
 
 
@@ -30,6 +31,7 @@ export const RouterUserOverview: React.FC<RouterUserOverviewProps> = ({ locale, 
   const { contractStats } = useContracts();
   const { offers } = useOffers();
   const { subjects } = useComms();
+  const iam = useIam();
   const nav = useNavigate();
 
   const { views } = useSite();
@@ -90,10 +92,10 @@ export const RouterUserOverview: React.FC<RouterUserOverviewProps> = ({ locale, 
                   decidedForms={contractStats.decided}
                   newMessages={unreadMessages.length}
                   bookings={0}
-                  userName={'Antero Asiakas'}
-                  userAddress={'1234 Pine street'}
-                  userCityAndCountry={'Helsinki, Finland'}
-                  userZipcode={'7688DF-A'}
+                  userName={[iam.user?.firstName, iam.user?.lastName].join(' ')}
+                  userAddress={iam.user?.contact.address?.street || ''}
+                  userCityAndCountry={[iam.user?.contact.address?.locality, iam.user?.contact.address?.country].join(',') }
+                  userZipcode={iam.user?.contact.address?.postalCode || ''}
                 />
               )
             }} />
