@@ -40,7 +40,7 @@ public class SpringJwtAuthClient implements AuthClient {
   @Override
   public User getUser() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+    if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableUser.builder()
           .isAuthenticated(false)
           .principal(ImmutableUserPrincipal.builder()

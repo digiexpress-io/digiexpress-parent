@@ -112,7 +112,7 @@ public class SpringJwtCrmClient implements CrmClient {
   @Override
   public Customer getCustomer() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
-    if(!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+    if(authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
       return ImmutableCustomer.builder()
           .type(CustomerType.ANON)
           .principal(ImmutableCustomerPrincipal.builder()
