@@ -2,6 +2,7 @@ package io.digiexpress.eveli.dialob.spi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +48,7 @@ import io.dialob.api.form.ImmutableFormTag;
 import io.dialob.api.proto.ImmutableValueSet;
 import io.dialob.api.proto.ImmutableValueSetEntry;
 import io.dialob.api.proto.ValueSet;
+import io.dialob.api.proto.ValueSetEntry;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.ImmutableQuestionnaire;
 import io.dialob.api.questionnaire.Questionnaire;
@@ -68,6 +70,13 @@ public class DialobClientImpl implements DialobClient {
   
   private static String LOOKUP = "__MOD_";
   
+  private static final Comparator<ValueSetEntry> langComparator = new Comparator<ValueSetEntry>() {
+    @Override
+    public int compare(ValueSetEntry o1, ValueSetEntry o2) {
+      return o1.getKey().compareTo(o2.getKey());
+    }
+  };
+  
   @Override
   public ProxyAnswer proxyAnswer(Questionnaire q, Answer answer) {
     final var formItem = DialobClientImpl.LOOKUP(answer, q, objectMapper);
@@ -84,6 +93,15 @@ public class DialobClientImpl implements DialobClient {
         final var entry = v.get().getEntries().stream()
             .filter(e -> e.getKey().equals(q.getMetadata().getLanguage()))
             .findFirst();
+        
+        if(entry.isEmpty()) {
+          final String anyValue = v.get().getEntries().stream()
+              .sorted(langComparator)
+              .findFirst()
+              .map(e -> e.getValue())
+              .orElse("locale value missing for: " + answer.getValue());
+          return anyValue;
+        }
         
         return entry.get().getValue();
       });
