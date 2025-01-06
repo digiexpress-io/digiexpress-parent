@@ -28,4 +28,8 @@ public class ThenaMqClientImpl implements ThenaMqClient {
     final var nextState = state.withChannel(channel);
     return new ThenaMqClientImpl(nextState);
   }
+  @Override
+  public MessageBuilder messageBuilder() {
+    return new MessageBuilderImpl(state);
+  }
 }

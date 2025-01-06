@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -72,6 +73,7 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1))
       .getChannel();
   
+    // create queue with 2 consumers
     final var queue = getClient().withChannel(channel)
       .queueBuilder()
       .appId("test-app")
@@ -82,5 +84,28 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .addConsumer(worker -> worker.consumerName("consumer-2").build(worker2))
       .build()
       .await().atMost(Duration.ofMinutes(1));
+    
+    // publish things ... to the queue
+    getClient().withChannel(channel)
+      .messageBuilder()
+      .comment("my first msg")
+      .createdBy("test user")
+      .appId("test-app")
+      .queueIdOrName("super queue")
+      
+      .routingKey("user-data-processor")
+      
+      .bodyType("user-data")
+      .bodyId("ssn1")
+      .bodyValue(new JsonObject())
+      
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
+    
+    
+    // Route the message
+
+    
+    // Deliver the message to the consumers
   }
 }

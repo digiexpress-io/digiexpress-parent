@@ -57,7 +57,7 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
                 doc.getQueueId(),
                 doc.getRoutingKey(), 
                 doc.getRoutingProps(),
-                doc.getRoutingTopics(),
+                doc.getRoutingTopics().toArray(),
                 doc.getRoutingStatus().name(),
                 doc.getRoutingLog(),
                 
@@ -87,7 +87,10 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .append("  queue_id       VARCHAR(40) NOT NULL,").ln()
         .append("  routing_key    TEXT NOT NULL,").ln()
         .append("  routing_props  JSONB,").ln()
+        .append("  routing_log    JSONB,").ln()
         .append("  routing_topics VARCHAR(255)[] NOT NULL,").ln()
+        .append("  routing_status VARCHAR(100) NOT NULL,").ln()
+        
         .append("  comment        TEXT NOT NULL,").ln()
         .append("  created_by     TEXT NOT NULL,").ln()
         

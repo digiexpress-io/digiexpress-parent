@@ -16,4 +16,16 @@ public interface ThenaMqEnvelope<T> {
   @Nullable T getObject(); // Operation result
   
   enum OperationStatus { OK, ERROR, CONFLICT, NO_CHANGES }
+  
+  
+  default <K> ThenaMqEnvelope<K> copy() {
+    return ImmutableThenaMqEnvelope.<K>builder()
+      .channelId(getChannelId())
+      .operationStatus(getOperationStatus())
+      .operationLogs(getOperationLogs())
+      .channel(getChannel())
+      .build();
+  }
+  
+  
 }
