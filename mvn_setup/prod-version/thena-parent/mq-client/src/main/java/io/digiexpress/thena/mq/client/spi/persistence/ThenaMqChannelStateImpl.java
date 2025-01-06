@@ -40,10 +40,10 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   @Override
   public Uni<ThenaMqChannelState> withChannel(String channelId) {
     return queryChannels().getByNameOrId(channelId).onItem().transformToUni(channel -> {
-      if(channel == null) {
+      if(channel.isEmpty()) {
         return channelNotFound(channelId);
       }
-      return Uni.createFrom().item(withChannel(channel));
+      return Uni.createFrom().item(withChannel(channel.get()));
     });
   }
 
@@ -75,17 +75,17 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
       tablesCreate
         .append(reg.channel().createTable().getValue())
         .append(reg.queue().createTable().getValue())
-        .append(reg.binding().createTable().getValue())
         .append(reg.delivery().createTable().getValue())
         .append(reg.deliveryAttempt().createTable().getValue())
         .append(reg.message().createTable().getValue())
+        .append(reg.queueConsumer().createTable().getValue())
         
         .append(reg.channel().createConstraints().getValue())
         .append(reg.queue().createConstraints().getValue())
-        .append(reg.binding().createConstraints().getValue())
         .append(reg.delivery().createConstraints().getValue())
         .append(reg.deliveryAttempt().createConstraints().getValue())
         .append(reg.message().createConstraints().getValue())
+        .append(reg.queueConsumer().createConstraints().getValue())
         .toString();
       
       if(log.isDebugEnabled()) {
@@ -109,16 +109,23 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   }
   
   @Override
-  public Uni<ChannelBatch> batchMany(ChannelBatch output) {
-    // TODO Auto-generated method stub
-    return null;
+  public Uni<ChannelBatch> batchMany(ChannelBatch input) {
+    return new InternalChannelBatchImpl(dataSource).execute(input);
   }
   @Override
   public InternalThenaMqContainersQuery queryContainers() {
     // TODO Auto-generated method stub
     return null;
   }
-
+  @Override
+  public InternalQueueConsumerQuery queryQueueConsumer() {
+    return new InternalQueueConsumerQueryImpl(dataSource);
+  }
+  @Override
+  public InternalQueueQuery queryQueues() {
+    return new InternalQueueQueryImpl(dataSource);
+  }
+  
   private <T> Uni<T> channelNotFound(String tenantId) {
     return queryChannels().findAll().collect().asList().onItem().transform(repos -> {
       final var ex = ChannelException.builder().notChannelWithName(tenantId, repos).getText();
@@ -175,6 +182,4 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
       return new ThenaMqClientImpl(state);
     }
   }
-
-
 }

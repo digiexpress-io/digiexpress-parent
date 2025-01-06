@@ -26,6 +26,7 @@ import java.time.Duration;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
+import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,24 @@ public class CreateOneChannelTest extends DbTestTemplate {
 
   @Test
   public void createOneChannelWithOneQueue() {
+    
+    final var worker1 = new ThenaMqConsumer() {
+      @Override
+      public MessageResponse accept(MessageHeader header, MessageBody body) {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    };
+    
+    final var worker2 = new ThenaMqConsumer() {
+      @Override
+      public MessageResponse accept(MessageHeader header, MessageBody body) {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    };
+    
+    
     final var channel = getClient()
       .channelBuilder()
       .channelName("test_1")
@@ -53,14 +72,14 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1))
       .getChannel();
   
-
     final var queue = getClient().withChannel(channel)
       .queueBuilder()
+      .appId("test-app")
       .queueName("super queue")
       .createdBy("tester@tester")
       .comment("queue for test case")
-      .addConsumer(worker -> worker.consumerName("consumer-1").build(null))
-      .addConsumer(worker -> worker.consumerName("consumer-2").build(null))
+      .addConsumer(worker -> worker.consumerName("consumer-1").build(worker1))
+      .addConsumer(worker -> worker.consumerName("consumer-2").build(worker2))
       .build()
       .await().atMost(Duration.ofMinutes(1));
   }

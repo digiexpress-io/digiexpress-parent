@@ -36,11 +36,11 @@ public class ChannelBuilderImpl implements ChannelBuilder {
     
     return state.queryChannels().getByNameOrId(channelName)
         .onItem().transformToUni(found -> {
-          if(found == null) {
+          if(found.isEmpty()) {
             return state.queryChannels().findAll().collect().asList()
                 .onItem().transformToUni(this::createChannel);
           }
-          return Uni.createFrom().item(found);
+          return Uni.createFrom().item(found.get());
         })
         .onItem().transform(channel -> ImmutableThenaMqEnvelope.<Channel>builder()
             .operationStatus(OperationStatus.OK)

@@ -1,11 +1,13 @@
 package io.digiexpress.thena.mq.client.sql;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.digiexpress.thena.mq.client.api.entities.ImmutablePublishedMessage;
-import io.digiexpress.thena.mq.client.api.entities.PublishedMessage;
+import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
 import io.digiexpress.thena.mq.client.api.persistence.MessageRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
 import io.resys.thena.datasource.ImmutableSql;
@@ -42,19 +44,23 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTupleList insertMany(List<PublishedMessage> users) {
+  public ThenaSqlClient.SqlTupleList insertMany(List<QueueMessage> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getMessages())
-        .append(" (id, queue_id, routing_key, routing_props, comment, created_by, created_at, expires_at, starts_at, body_id, body_type, body_value)").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)").ln()
+        .append(" (id, queue_id, routing_key, routing_props, routing_topics, routing_status, routing_log, comment, created_by, created_at, expires_at, starts_at, body_id, body_type, body_value)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getQueueId(),
                 doc.getRoutingKey(), 
-                doc.getRoutingProps(), 
+                doc.getRoutingProps(),
+                doc.getRoutingTopics(),
+                doc.getRoutingStatus().name(),
+                doc.getRoutingLog(),
+                
                 doc.getComment(),
                 doc.getCreatedBy(), 
                 
@@ -81,6 +87,7 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .append("  queue_id       VARCHAR(40) NOT NULL,").ln()
         .append("  routing_key    TEXT NOT NULL,").ln()
         .append("  routing_props  JSONB,").ln()
+        .append("  routing_topics VARCHAR(255)[] NOT NULL,").ln()
         .append("  comment        TEXT NOT NULL,").ln()
         .append("  created_by     TEXT NOT NULL,").ln()
         
@@ -132,13 +139,16 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
   }
 
   @Override
-  public Function<Row, PublishedMessage> defaultMapper() {
-    return row -> ImmutablePublishedMessage.builder()
+  public Function<Row, QueueMessage> defaultMapper() {
+    return row -> ImmutableQueueMessage.builder()
           .id(row.getString("id"))
           .queueId(row.getString("queue_id"))
           
           .routingKey(row.getString("routing_key"))
           .routingProps(row.getJsonObject("routing_props"))
+          .routingTopics(Arrays.asList(row.getArrayOfStrings("routing_topics")))
+          .routingStatus(RoutingStatus.valueOf(row.getString("routing_status")))
+          .routingLog(row.getJsonObject("routing_log"))
 
           .comment(row.getString("comment"))
           .createdBy(row.getString("created_by"))

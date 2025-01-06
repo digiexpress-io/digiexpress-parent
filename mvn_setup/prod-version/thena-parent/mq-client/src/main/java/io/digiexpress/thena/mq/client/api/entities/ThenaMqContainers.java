@@ -12,7 +12,7 @@ public interface ThenaMqContainers {
   Map<String, Delivery> getDeliveries();    
   Map<String, DeliveryAttempt> getDeliveryAttempts();
   Map<String, Binding> getBindings();
-  Map<String, PublishedMessage> getPublishedMessages();
+  Map<String, QueueMessage> getPublishedMessages();
   Map<String, Queue> getQueues();
   Map<String, Channel> getChannels();
 }

@@ -55,7 +55,7 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getDeliveryId(), 
-                doc.getDeliveryStatus().name(), 
+                doc.getStatus().name(), 
                 doc.getCreatedAt(), 
                 doc.getUpdatedAt(), 
                 doc.getAckComment(), 
@@ -75,7 +75,7 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
-                doc.getDeliveryStatus(), 
+                doc.getStatus(), 
                 doc.getUpdatedAt(), 
                 doc.getAckComment(),
                 doc.getAckError(),
@@ -136,7 +136,8 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
   public Function<Row, DeliveryAttempt> defaultMapper() {
     return row -> ImmutableDeliveryAttempt.builder()
         .id(row.getString("id"))
-        .deliveryStatus(DeliveryStatus.valueOf(row.getString("delivery_status")))
+        .deliveryId(row.getString("delivery_id"))
+        .status(DeliveryStatus.valueOf(row.getString("delivery_status")))
         .createdAt(row.getOffsetDateTime("created_at"))
         .updatedAt(row.getOffsetDateTime("updated_at"))
         

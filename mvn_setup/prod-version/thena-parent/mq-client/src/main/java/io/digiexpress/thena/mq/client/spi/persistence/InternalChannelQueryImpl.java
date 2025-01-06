@@ -1,5 +1,7 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import java.util.Optional;
+
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.InternalChannelQuery;
@@ -26,7 +28,7 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
   }
 
   @Override
-  public Uni<Channel> getByNameOrId(String nameOrId) {
+  public Uni<Optional<Channel>> getByNameOrId(String nameOrId) {
     final var sql = dataSource.getRegistry().channel().getById(nameOrId);
     
     if(log.isDebugEnabled()) {
@@ -42,11 +44,11 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
         .transform((RowSet<Channel> rowset) -> {
           final var it = rowset.iterator();
           if(it.hasNext()) {
-            return it.next();
+            return Optional.ofNullable(it.next());
           }
-          return null;
+          return Optional.<Channel>empty();
         })
-        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Optional.<Channel>empty())
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'CHANNEL' by 'name' or 'id'!", sql, e)));
   }
   
@@ -81,7 +83,6 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
       final var tablesDrop = new StringBuilder()
         .append(reg.deliveryAttempt().dropTable().getValue())
         .append(reg.delivery().dropTable().getValue())
-        .append(reg.binding().dropTable().getValue())
         .append(reg.message().dropTable().getValue())
         .append(reg.queue().dropTable().getValue());     
       

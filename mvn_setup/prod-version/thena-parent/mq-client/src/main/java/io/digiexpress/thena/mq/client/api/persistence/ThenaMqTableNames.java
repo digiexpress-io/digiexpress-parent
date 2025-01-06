@@ -34,7 +34,7 @@ public abstract class ThenaMqTableNames {
 
   public abstract String getQueues();
   public abstract String getMessages();
-  public abstract String getBindings();
+  public abstract String getQueueConsumers();
   public abstract String getDelivery();
   public abstract String getDeliveryAttempt();
 
@@ -48,7 +48,7 @@ public abstract class ThenaMqTableNames {
 
       .queues((          prefix + DEFAULTS.getQueues()).toUpperCase())
       .messages((        prefix + DEFAULTS.getMessages()).toUpperCase())
-      .bindings((        prefix + DEFAULTS.getBindings()).toUpperCase())
+      .queueConsumers((  prefix + DEFAULTS.getQueueConsumers()).toUpperCase())
       .delivery((        prefix + DEFAULTS.getDelivery()).toUpperCase())
       .deliveryAttempt(( prefix + DEFAULTS.getDeliveryAttempt()).toUpperCase())
       
@@ -63,9 +63,9 @@ public abstract class ThenaMqTableNames {
 
         .queues("THENAMQ_QUEUES")
         .messages("THENAMQ_MESSAGES")
-        .bindings("THENAMQ_BINDINGS")
-        .delivery("THENAMQ_DELIVERY")
-        .deliveryAttempt("THENAMQ_DELIVERY_ATTEMPT")
+        .queueConsumers("THENAMQ_QUEUES_CONSUMERS")
+        .delivery("THENAMQ_DELIVERIES")
+        .deliveryAttempt("THENAMQ_DELIVERY_ATTEMPTS")
 
         .build();
   }

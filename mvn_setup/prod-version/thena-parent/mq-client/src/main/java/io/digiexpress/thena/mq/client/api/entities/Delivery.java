@@ -25,7 +25,7 @@ public interface Delivery extends ThenaMqEntity {
   interface DeliveryAttempt extends ThenaMqEntity {
     String getId();
     String getDeliveryId();
-    DeliveryStatus getDeliveryStatus();
+    DeliveryStatus getStatus();
     
     OffsetDateTime getCreatedAt();
     @Nullable OffsetDateTime getUpdatedAt();
@@ -33,13 +33,12 @@ public interface Delivery extends ThenaMqEntity {
     @Nullable String getAckComment();
     @Nullable JsonObject getAckError();
     @Nullable DeliveryAckValue getAckValue();
-    
   }
   
   enum DeliveryStatus {
-    STARTED, ERROR, COMPLETED
+    STARTED, COMPLETED
   }
   enum DeliveryAckValue {
-    OK, ERROR 
+    OK, ERROR
   }
 }

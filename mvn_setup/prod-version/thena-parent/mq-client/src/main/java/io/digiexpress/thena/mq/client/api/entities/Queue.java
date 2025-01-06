@@ -11,4 +11,7 @@ public interface Queue extends ThenaMqEntity {
   String getCreatedBy();
   String getComment();
   String getQueueName();
+  
+
+
 }

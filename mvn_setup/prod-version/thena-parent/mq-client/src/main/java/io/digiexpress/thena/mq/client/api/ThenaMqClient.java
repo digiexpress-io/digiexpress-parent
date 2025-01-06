@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.api;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Channel;
@@ -27,6 +28,7 @@ public interface ThenaMqClient {
     QueueBuilder queueName(String queueName);
     QueueBuilder comment(String comment);
     QueueBuilder createdBy(String createdBy);
+    QueueBuilder appId(String appId);
     QueueBuilder addConsumer(Consumer<ConsumerBuilder> worker);
     Uni<ThenaMqEnvelope<Queue>> build();
   }
@@ -36,6 +38,8 @@ public interface ThenaMqClient {
   }
   interface ConsumerBuilder {
     ConsumerBuilder consumerName(String consumerName);
+    ConsumerBuilder routingTopics(List<String> topics);
+    ConsumerBuilder routingKey(String routingKey);
     void build(ThenaMqConsumer worker);
   }
 }
