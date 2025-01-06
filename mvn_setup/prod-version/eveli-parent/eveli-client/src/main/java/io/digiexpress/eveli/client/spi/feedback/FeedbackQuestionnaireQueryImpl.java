@@ -141,11 +141,25 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     public String getContent() {
       return new StringBuilder()
           .append(getTitle().map(e -> formatText(e)).orElse("- no title -"))
-          .append(formatSelection(getMainCat().get()))
+          
+          .append(formatMainCat())
+          
           .append(getSubCat().map(e -> formatSelection(e)).orElse(""))
           .append(getQuestion().map(e -> formatText(e)).orElse("- no question -"))
           .toString();
     }
+    
+
+    private String formatMainCat() {
+      
+      final ProxyAnswer mainCat = getMainCat().orElse(null);
+      if(mainCat == null) {
+        return "- no main category: '" + String.join(",", configProps.getCategoryMain()) + "' -";
+      }
+      
+      return formatSelection(mainCat);
+    }
+    
     @Override    
     public List<String> getReplys() {
       return comments.stream()
