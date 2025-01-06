@@ -33,13 +33,12 @@ logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
 
 
 # DB config
-spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli_app"
-spring.datasource.username: "eveli_app"
+spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli-app"
+spring.datasource.username: "eveli-app"
 spring.datasource.password: "password123"
 
 eveli.task.adminsearch: true
 eveli.assets.timezoneOffset: +2
-
 
 # dialob related config
 eveli.dialob.enabled: true
@@ -51,3 +50,9 @@ eveli.crm.enabled: false
 eveli.crm.host: 
 eveli.crm.service-path-company:
 eveli.crm.service-path-person:
+
+
+app.jwt.public-key-value:
+app.jwt.issuer: "https://frontdesk.digiexpress.io/gateway/issuer"
+app.jwt.portal.public-key-value: 
+app.jwt.portal.issuer: "https://portal.digiexpress.io/gateway/issuer"
