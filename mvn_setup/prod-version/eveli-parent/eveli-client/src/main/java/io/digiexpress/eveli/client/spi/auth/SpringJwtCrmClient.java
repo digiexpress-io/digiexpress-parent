@@ -86,9 +86,7 @@ public class SpringJwtCrmClient implements CrmClient {
       final var isPerson = getCustomer().getType() == CustomerType.REP_PERSON;
       final var serviceUrl = isPerson ? serviceUrlPerson : serviceUrlCompany;
       
-      final var uri = UriComponentsBuilder.fromHttpUrl(serviceUrl).build().toUri();
-      
-      final var entity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+      final var entity = rest.exchange(serviceUrl, HttpMethod.GET, requestEntity, String.class);
       return getRoles(entity, isPerson);
     }
     else {

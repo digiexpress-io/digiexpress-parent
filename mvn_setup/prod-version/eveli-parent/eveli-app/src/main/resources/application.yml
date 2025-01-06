@@ -43,4 +43,8 @@ eveli.dialob.enabled: true
 eveli.dialob.service-url: http://localhost:9000
 eveli.dialob.api-key:
   
-  
+# jwt linked crm from security proxy
+eveli.crm.enabled: false
+eveli.crm.host: 
+eveli.crm.service-path-company:
+eveli.crm.service-path-person:
