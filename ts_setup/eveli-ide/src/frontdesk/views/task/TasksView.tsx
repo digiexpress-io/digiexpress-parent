@@ -86,7 +86,7 @@ export const TasksView: React.FC = () => {
       return {
         data: json.content, // array of data
         page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
-        totalCount: json.numberOfElements // total entries on all the pages combined
+        totalCount: json.totalElements // total entries on all the pages combined
       };
     });
   }
