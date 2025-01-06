@@ -48,3 +48,13 @@ eveli.crm.enabled: false
 eveli.crm.host: 
 eveli.crm.service-path-company:
 eveli.crm.service-path-person:
+  
+# feedback  
+eveli.feedback.enabled: true
+eveli.feedback.forms: palautteet
+eveli.feedback.category-main: mainList
+eveli.feedback.category-sub: cityServiceGroup, preschoolEducationGroup, cityServiceMainList, constructionMainList, youthServiceMainList, exerciseMainList, schoolMainList, employmentImmigrationMainList, freeTimeCultureMainList, preschoolMainList, communicationMainList, cooperationMainList
+eveli.feedback.question-title: feedBackTitle
+eveli.feedback.question: feedBackTxt
+eveli.feedback.username-allowed: publicAnswerAllowed
+  
