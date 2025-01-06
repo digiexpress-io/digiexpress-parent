@@ -244,6 +244,7 @@ const sv = {
   'dialobForm.error.invalidFormName': 'Incorrect ID',
   'dialobForm.dialog.deleteQuestion': 'Do you want to remove form "{formName}"?',
   'dialobForm.heading.deleteDialog':'Remove form',
+  'dialobForm.review.title': 'Form review',
 
   'feedback.notenabled': 'Feedback is not enabled for this task',
 };

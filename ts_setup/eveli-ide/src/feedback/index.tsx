@@ -14,7 +14,7 @@ import { UpsertOneFeedback } from './upsert-one-feedback';
 import { FeedbackAllTasks } from './feedbackAllTasks';
 
 
-
+export { StatusIndicator } from './status-indicator'
 export * from './feedback-api';
 
 const composer: BurgerApi.App<Composer.ContextType> = {

@@ -43,6 +43,7 @@ public class CreateOneTask {
   
   public TaskClient.Task create(CreateTaskCommand commmand) {
     final var newTask = new TaskEntity()
+        .setQuestionnanireId(commmand.getQuestionnaireId())
         .setAssignedUser(commmand.getAssignedUser())
         .setAssignedUserEmail(commmand.getAssignedUserEmail())
         .setClientIdentificator(commmand.getClientIdentificator())
@@ -52,6 +53,8 @@ public class CreateOneTask {
         .setPriority(commmand.getPriority())
         .setStatus(commmand.getStatus() == null ? TaskStatus.NEW: commmand.getStatus())
         .setSubject(commmand.getSubject())
+        .setKeyWords(commmand.getKeyWords())
+        .setAssignedRoles(commmand.getAssignedRoles())
         .setTaskRef(taskRefGenerator.generateTaskRef())
         .setUpdaterId(userId);
     

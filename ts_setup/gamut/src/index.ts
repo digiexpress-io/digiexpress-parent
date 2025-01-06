@@ -42,6 +42,7 @@ export * from './g-link'
 export * from './g-links'
 export * from './g-links-page'
 
+export * from './g-form-review';
 export * from './g-form'
 export * from './g-form-base'
 export * from './g-user-overview-menu'

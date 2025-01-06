@@ -6,7 +6,7 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 
 import { useIntl } from "react-intl";
-import { SiteApi } from "api-site";
+import { SiteApi } from "../api-site";
 
 export const MUI_NAME = 'GRouterOfferSummary';
 

@@ -42,7 +42,8 @@ import * as Yup from 'yup';
 
 import * as Burger from '@/burger';
 import { TaskFeedback } from './TaskFeedback';
-import { StatusIndicator } from '../../../feedback/status-indicator';
+import { StatusIndicator } from '../../../feedback';
+import { DialobReview } from '../../../dialob-review';
 
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -206,6 +207,21 @@ const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) =>
   }
 
   return (<Burger.SecondaryButton label='task.form.feedback.manage' onClick={handleFeedback} />);
+}
+
+const FormReview: React.FC<{ sessionId: string | undefined, taskId: number | undefined }> = ({ sessionId, taskId }) => {
+  const [open, setOpen] = React.useState(false);
+
+  if (!sessionId || !taskId) {
+    return (<></>)
+  }
+
+  return (
+    <>
+      <Burger.SecondaryButton label='task.form.review' onClick={() => setOpen(true)} />
+      {open && <DialobReview taskId={taskId + ""} onClose={() => setOpen(false)} />}
+    </>
+  )
 }
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
@@ -659,7 +675,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={'taskButton.cancel'} />
                     {(!editTask.keyWords || editTask.keyWords.length === 0) && (
                       <Box display='flex' gap={1}>
-                        <Burger.SecondaryButton label='task.form.review' onClick={() => { }} />
+                        <FormReview sessionId={editTask.questionnaireId} taskId={editTask.id} />
                         <FeedbackButton taskId={editTask.id} />
                       </Box>
                     )}

@@ -22,6 +22,7 @@ package io.digiexpress.eveli.client.web.resources.worker;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -47,6 +48,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
 import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
+  private final DialobClient dialobClient;
   
   private final TaskAccessRepository taskAccessRepository;
   private final TaskRepository taskRepository;
@@ -174,6 +177,29 @@ public class TaskApiController {
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 
+  
+  
+  @GetMapping(value="/{id}/reviews")
+  public ResponseEntity<?> getTaskFormReview(@PathVariable("id") Long id)
+  {
+    final var authentication = securityClient.getUser();
+    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
+    final var task = taskClient.queryTasks().getOneById(id);
+ 
+    if(task.getQuestionnaireId() != null) {
+      final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+      final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
+      final var result = Map.of(
+          "form", form,
+          "session", questionnaire
+          );
+      
+      return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    //{ form: any, session: any }
+   
+    return ResponseEntity.notFound().build();
+  }
   
   @Data
   @AllArgsConstructor

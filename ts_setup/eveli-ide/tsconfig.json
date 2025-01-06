@@ -32,10 +32,14 @@
       "@/feedback": [
         "../src/feedback/index.tsx"
       ],
+      "@/gamut": [
+        "../../gamut/src/index.ts"
+      ],
     }
   },
   "include": [
     "src",
+    "../../gamut/src",
     "demo-app"
   ]
 }

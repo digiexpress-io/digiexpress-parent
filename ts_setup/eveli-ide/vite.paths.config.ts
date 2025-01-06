@@ -9,5 +9,5 @@ export const alias = [
   { find: '@dxs-ts/eveli-ide', replacement: toPath('./src')  },
   { find: '@/burger', replacement: toPath('./src/burger') },
   { find: '@/feedback', replacement: toPath('./src/feedback') },
-
+  { find: '@/gamut', replacement: toPath('../gamut/src') },
 ]

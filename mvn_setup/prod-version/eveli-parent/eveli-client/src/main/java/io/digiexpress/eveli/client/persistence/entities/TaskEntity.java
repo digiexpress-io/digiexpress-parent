@@ -167,7 +167,8 @@ public class TaskEntity {
   }
 
 
-  public void setKeyWords(Collection<String> keyWords) {
+  public TaskEntity setKeyWords(Collection<String> keyWords) {
     this.keyWords = keyWords != null ? new HashSet<>(keyWords): null;
+    return this;
   }
 }

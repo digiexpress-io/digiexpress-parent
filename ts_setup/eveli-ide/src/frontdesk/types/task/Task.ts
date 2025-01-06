@@ -35,4 +35,6 @@ export interface Task {
   priorityCode?: number;
   clientIdentificator?: string|null;
   assignedRoles?: string[]|null;
+
+  questionnaireId?: string | undefined;
 }
