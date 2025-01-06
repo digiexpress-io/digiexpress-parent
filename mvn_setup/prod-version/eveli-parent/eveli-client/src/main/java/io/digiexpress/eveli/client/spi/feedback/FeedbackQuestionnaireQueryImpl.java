@@ -123,7 +123,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     }
     @Override
     public String getLabelKey() {
-      return getMainCat().map(e -> e.getAnswer().getValue().toString()).orElse("-");
+      return getMainCat().map(e -> e.getAnswer().getValue()).map(Object::toString).orElse("-");
     }
     @Override
     public String getLabelValue() {
@@ -131,7 +131,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     }
     @Override
     public String getSubLabelKey() {
-      return getSubCat().map(e -> e.getAnswer().getValue()).map(e -> e.toString()).orElse("-");
+      return getSubCat().map(e -> e.getAnswer().getValue()).map(Object::toString).orElse("-");
     }
     @Override
     public String getSubLabelValue() {
@@ -212,7 +212,7 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
     private String formatText(ProxyAnswer proxyAnswer) {
       final var lang = questionnaire.getMetadata().getLanguage();
       final var question = proxyAnswer.getFormItem().getLabel().get(lang);
-      final var answer = proxyAnswer.getAnswer().getValue().toString();
+      final var answer = Optional.ofNullable(proxyAnswer.getAnswer().getValue()).map(Object::toString).orElse("-not-answered-");
       return new StringBuilder()
         .append("#### ").append(question).append("  ").append(System.lineSeparator())
         .append(answer).append("  ").append(System.lineSeparator()).append(System.lineSeparator())
