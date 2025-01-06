@@ -43,7 +43,6 @@ eveli.dialob.enabled: true
 eveli.dialob.service-url: http://localhost:9000
 eveli.dialob.api-key:
   
-  
 # feedback  
 eveli.feedback.enabled: true
 eveli.feedback.forms: palautteet
