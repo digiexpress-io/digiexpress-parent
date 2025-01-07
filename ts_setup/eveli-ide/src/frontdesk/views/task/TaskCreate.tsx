@@ -360,6 +360,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
   handleStatusCallback = async (newValue: string) => {
     if (newValue === "OPEN" && (this.formRef?.current?.values.status === "NEW" || this.formRef?.current?.values.status === undefined)) {
+      console.log('assigned user', this.props?.currentUser, this.formRef)
       await this.formRef.current.setFieldValue("assignedUser", this.props?.currentUser?.name || "");
       await this.formRef.current.setFieldValue("assignedUserEmail", this.props?.currentUser?.email || "");
     }
