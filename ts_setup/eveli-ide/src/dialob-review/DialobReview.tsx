@@ -3,7 +3,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { useIntl } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import { GFormReview, DialobProvider, DialobApi } from '@/gamut';
+import { GFormReview, DialobProvider, DialobApi } from '@dxs-ts/gamut';
 import * as Burger from '@/burger';
 
 

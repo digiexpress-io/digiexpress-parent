@@ -31,7 +31,8 @@
     "@uiw/react-md-editor": "^4.0.4",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-router": "^1.58.7",
-    "@tanstack/store": "^0.4.1"
+    "@tanstack/store": "^0.4.1",
+    "@dxs-ts/gamut": "^1.0.30"
   },
   "peerDependencies": {
     "@dialob/dashboard-material": "^1.2.3",
@@ -56,7 +57,7 @@
     "react-dom": "^18.3.1",
     "react-intl": "^6.8.0",
     "react-router-dom": "^6.27.0",
-    "react-router-prompt": "^0.7.1",
+    "react-router-prompt": "0.7.1",
     "recharts": "^2.13.0"
   },
   "devDependencies": {
