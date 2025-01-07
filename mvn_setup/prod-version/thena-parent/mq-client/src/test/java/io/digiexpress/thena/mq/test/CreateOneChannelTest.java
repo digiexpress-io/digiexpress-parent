@@ -80,8 +80,8 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .queueName("super queue")
       .createdBy("tester@tester")
       .comment("queue for test case")
-      .addConsumer(worker -> worker.consumerName("consumer-1").build(worker1))
-      .addConsumer(worker -> worker.consumerName("consumer-2").build(worker2))
+      .addConsumer(worker -> worker.consumerName("consumer-1").comment("test consumer").build(worker1))
+      .addConsumer(worker -> worker.consumerName("consumer-2").comment("test consumer").build(worker2))
       .build()
       .await().atMost(Duration.ofMinutes(1));
     

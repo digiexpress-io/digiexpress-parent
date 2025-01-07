@@ -62,6 +62,7 @@ public interface ThenaMqClient {
   }
   
   interface ConsumerBuilder {
+    ConsumerBuilder comment(String comment);
     ConsumerBuilder consumerName(String consumerName);
     ConsumerBuilder routingTopics(List<String> topics);
     ConsumerBuilder routingKey(String routingKey);

@@ -51,7 +51,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getQueueConsumers())
         .append(" (id, app_id, consumer_name, qualified_java_name, consumer_status, queue_id, routing_key, routing_topics, created_at, updated_at, comment)").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -62,7 +62,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
                 doc.getConsumerStatus().name(), 
                 doc.getQueueId(), 
                 doc.getRoutingKey(),
-                doc.getRoutingTopics(), 
+                doc.getRoutingTopics().toArray(), 
 
                 doc.getCreatedAt(),
                 doc.getUpdatedAt(),
@@ -85,7 +85,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
                 doc.getQualifiedJavaName(), 
                 doc.getConsumerStatus().name(), 
                 doc.getRoutingKey(), 
-                doc.getRoutingTopics(),
+                doc.getRoutingTopics().toArray(),
                 doc.getComment(),
                 doc.getUpdatedAt(),
                 
@@ -103,12 +103,12 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .append("  FROM ").append(options.getQueueConsumers()).append(" AS consumers ").ln()
         .append("  RIGHT JOIN ").append(options.getQueues()).append(" as queues ON(queues.id = consumers.queue_id)").ln()
         .append("  WHERE ").ln() 
-        .append("    consumers.app_id = $1")
+        .append("    consumers.app_id = $1").ln()
         .append("    AND queues.queue_name = $2").ln() 
         .append(lockForUpdate ? "     FOR UPDATE" : "").ln()  //FOR UPDATE NOWAIT
         
         .build())
-        .props(Tuple.of(queueName, appId))
+        .props(Tuple.of(appId, queueName))
         .build();
   }
   @Override
@@ -123,10 +123,10 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .append("  comment              TEXT NOT NULL,").ln()
         .append("  consumer_status      VARCHAR(100) NOT NULL,").ln()
         .append("  queue_id             VARCHAR(40) NOT NULL,").ln()
-        .append("  routing_key          TEXT NOT NULL,").ln()
+        .append("  routing_key          TEXT,").ln()
         .append("  routing_topics       VARCHAR(255)[] NOT NULL,").ln()
         .append("  created_at           TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
-        .append("  updated_at           TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
+        .append("  updated_at           TIMESTAMP WITH TIME ZONE,").ln()
         
         .append("  UNIQUE(queue_id, app_id, consumer_name)")
         .append(");").ln()
@@ -180,6 +180,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
   public Function<Row, QueueConsumer> defaultMapper() {
     return row -> ImmutableQueueConsumer.builder()
         .id(row.getString("id"))
+        .appId(row.getString("app_id"))
         .consumerName(row.getString("consumer_name"))
         .qualifiedJavaName(row.getString("qualified_java_name"))
         .consumerStatus(QueueConsumerStatus.valueOf(row.getString("consumer_status")))

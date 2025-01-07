@@ -28,6 +28,7 @@ import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -51,6 +52,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     final var consumerBuilder = new ConsumerBuilderImpl();
     worker.accept(consumerBuilder);
     RepoAssert.isTrue(consumerBuilder.completed().isTrue(), () -> "consumer added but #build method not called!");
+    newConsumers.put(consumerBuilder.consumerName(), consumerBuilder);
     return this;
   }
 
@@ -73,28 +75,44 @@ public class QueueBuilderImpl implements QueueBuilder {
           state.queryQueueConsumer().findByQueueNameAndAppId(queueName, appId, true)
         )
         .asTuple()
-        .onItem().transformToUni(input -> {
-          final var queue = visitQueue(input.getItem1());
-          final var consumers = visitQueueConsumers(queue, input.getItem2());
-          
-          return state.batchMany(batch
-              .log(batchLog.toString())
-              .channelId(state.getDataSource().getChannel().getId())
-              .build())
-              .onItem().transform(junk -> queue);
-        })
-        .onItem().transform(queue -> ImmutableThenaMqEnvelope
-            .<Queue>builder()
-            .operationStatus(OperationStatus.OK)
-            .channel(state.getDataSource().getChannel())
-            .channelId(state.getDataSource().getChannel().getId())
-            .object(queue)
-            .build()
-        )
+        .onItem().transformToUni(input -> visitBatch(state, input))
     );
   
   }
 
+  
+  private Uni<ThenaMqEnvelope<Queue>> visitBatch(ThenaMqChannelState state, Tuple2<Optional<Queue>, List<QueueConsumer>> input) {
+    final var queue = visitQueue(input.getItem1());
+    final var consumers = visitQueueConsumers(queue, input.getItem2());
+    
+    final var request = batch
+      .log(batchLog.toString())
+      .channelId(state.getDataSource().getChannel().getId())
+      .build();
+    
+    return state.batchMany(request).onItem().transform(resp -> {
+          
+      if(resp.getBatchStatus() == OperationStatus.ERROR) {
+        return ImmutableThenaMqEnvelope
+            .<Queue>builder()
+            .operationStatus(resp.getBatchStatus())
+            .channel(state.getDataSource().getChannel())
+            .channelId(state.getDataSource().getChannel().getId())
+            .object(queue)
+            .operationLogs(resp.getLogs())
+            .build();
+      }
+         
+      return ImmutableThenaMqEnvelope
+        .<Queue>builder()
+        .operationStatus(OperationStatus.OK)
+        .channel(state.getDataSource().getChannel())
+        .channelId(state.getDataSource().getChannel().getId())
+        .object(queue)
+        .build();
+      
+    });
+  }
 
   private Queue visitQueue(Optional<Queue> foundQueue) {
     final var queue = foundQueue.orElseGet(() -> {
@@ -137,7 +155,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     
     // add all the new ones
     newConsumers.forEach((name, current) -> {
-      final var nextState = visitNewQueueConsumers(current);
+      final var nextState = visitNewQueueConsumers(current, queue);
       activeConsumers.add(nextState);
     });
 
@@ -165,9 +183,11 @@ public class QueueBuilderImpl implements QueueBuilder {
 
   
   // create new queue
-  private QueueConsumer visitNewQueueConsumers(ConsumerBuilderImpl current) {
+  private QueueConsumer visitNewQueueConsumers(ConsumerBuilderImpl current, Queue queue) {
     final var nextState = ImmutableQueueConsumer.builder()
         .id(OidUtils.gen())
+        .queueId(queue.getId())
+        .comment(current.comment())
         .consumerStatus(QueueConsumerStatus.ENABLED)
         .routingTopics(Optional.ofNullable(current.routingTopics).orElse(Collections.emptyList()))
         .qualifiedJavaName(current.getClass().getPackageName() + "." + current.getClass().getName())
@@ -203,6 +223,7 @@ public class QueueBuilderImpl implements QueueBuilder {
   private static class ConsumerBuilderImpl implements ConsumerBuilder {
     private String routingKey;
     private String consumerName;
+    private String comment;
     private List<String> routingTopics;
     private ThenaMqConsumer thenaMqConsumer;
     private final MutableBoolean completed = new MutableBoolean(false);
@@ -210,7 +231,8 @@ public class QueueBuilderImpl implements QueueBuilder {
     @Override
     public void build(ThenaMqConsumer worker) {
       RepoAssert.notNull(worker, () -> "worker must be defined!");
-      RepoAssert.notEmpty(consumerName, () -> "consumerName must be defined!");     
+      RepoAssert.notEmpty(consumerName, () -> "consumerName must be defined!");
+      RepoAssert.notEmpty(comment, () -> "comment must be defined!");
       this.completed.setTrue();
       this.thenaMqConsumer = worker;
     }

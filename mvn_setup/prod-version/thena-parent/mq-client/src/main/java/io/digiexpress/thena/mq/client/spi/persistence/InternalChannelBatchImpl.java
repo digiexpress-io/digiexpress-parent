@@ -24,17 +24,20 @@ package io.digiexpress.thena.mq.client.spi.persistence;
 
 import java.util.List;
 
+import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableLog;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqDataSource;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j(topic = ThenaMqLogConstants.SHOW_SQL)
 public class InternalChannelBatchImpl {
   private final ThenaMqDataSource wrapper;
   private final ThenaMqTableRegistry registry;
@@ -104,17 +107,37 @@ public class InternalChannelBatchImpl {
         .transform(row -> successOutput(inputBatch, "Queues inserted, number of inserted entries: " + + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(inputBatch, "Failed to insert queues \r\n" + inputBatch.getNewQueues(), e));
 
+    
+    if(log.isDebugEnabled()) {
+
+      log.debug(new StringBuilder()
+        .append(System.lineSeparator())
+        .append("Thena MQ batch TX").append(System.lineSeparator())
+        .append(toLog(ins_queues))
+      
+        .append(toLog(ins_published_messages))
+        .append(toLog(ins_queue_consumer))
+        
+        .append(toLog(ins_deliveries))
+        .append(toLog(ins_delivery_attempts))
+  
+        .append(toLog(update_queue_consumer))
+        .append(toLog(update_deliveries))
+        .append(toLog(update_delivery_attempts)).toString()
+      );
+    }
+
     return Uni.combine().all()
     		.unis(
-    		    upd_delivery_uni,
-    		    upd_delivery_attempt_uni,
-    		    upd_consumer_uni,
-    		    
-    		    ins_delivery_uni,
-    		    ins_delivery_attempts_uni,
-    		    ins_messages_uni,
-    		    ins_consumers_uni,
-    		    ins_queues_uni
+          ins_queues_uni,
+  		    ins_messages_uni,
+  		    ins_consumers_uni,
+          ins_delivery_uni,
+          ins_delivery_attempts_uni,
+  		    
+  		    upd_consumer_uni,
+  		    upd_delivery_uni,
+          upd_delivery_attempt_uni
     		 )
     		.with(ChannelBatch.class, (List<ChannelBatch> items) -> merge(inputBatch, items))
     		.onFailure(ChannelBatchException.class)
@@ -125,6 +148,13 @@ public class InternalChannelBatchImpl {
     		;
   }
 
+  
+  private String toLog(SqlTupleList data) {
+    if(data.getProps().isEmpty()) {
+      return "";
+    }
+    return data.getValue() + data.getPropsDeepString();
+  }
   
   private ChannelBatch merge(ChannelBatch start, List<ChannelBatch> current) {
     final var builder = ImmutableChannelBatch.builder().from(start);

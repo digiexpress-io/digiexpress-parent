@@ -53,7 +53,7 @@ public class DbTestTemplate {
 
   private final Map<String, String> replacements = new HashMap<>();
   
-  private boolean STORE_TO_DEBUG_DB = false;
+  private boolean STORE_TO_DEBUG_DB = true;
   private ThenaMqClient client;
   private String db;
   private Channel channel;
@@ -65,11 +65,11 @@ public class DbTestTemplate {
   	}
   	
   	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_mq_db")
+  			.setDatabase("eveli-app")
         .setHost("localhost")
-        .setPort(5432)
-        .setUser("postgres")
-        .setPassword("postgres");
+        .setPort(5433)
+        .setUser("eveli-app")
+        .setPassword("password123");
     final var poolOptions = new PoolOptions().setMaxSize(6);
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
   }
