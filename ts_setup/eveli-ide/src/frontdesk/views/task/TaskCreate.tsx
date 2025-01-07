@@ -360,7 +360,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
   handleStatusCallback = async (newValue: string) => {
     if (newValue === "OPEN" && (this.formRef?.current?.values.status === "NEW" || this.formRef?.current?.values.status === undefined)) {
-      console.log('assigned user', this.props?.currentUser, this.formRef)
       await this.formRef.current.setFieldValue("assignedUser", this.props?.currentUser?.name || "");
       await this.formRef.current.setFieldValue("assignedUserEmail", this.props?.currentUser?.email || "");
     }
@@ -371,7 +370,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     const { formatMessage } = this.props.intl;
     const readonly = (editTask.status === TaskStatus.COMPLETED ||
       editTask.status === TaskStatus.REJECTED);
-
     return (
       <Formik
         initialValues={{
@@ -602,9 +600,11 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         getOptionLabel={option => (typeof option === "string") ? option : option.userName}
                         value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
                         onInputChange={(event, newInputValue) => {
-                          if (newInputValue !== values.assignedUser) {
-                            setFieldValue("assignedUserEmail", this.state.userList.find(el => el.userName === newInputValue)?.userEmail || '');
+
+                          if (newInputValue === values.assignedUser) {
+                            return;
                           }
+                          setFieldValue("assignedUserEmail", this.state.userList.find(el => el.userName === newInputValue)?.userEmail || '');
                           setFieldValue("assignedUser", newInputValue);
                         }}
                         renderInput={(params) => (

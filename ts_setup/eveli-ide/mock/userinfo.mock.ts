@@ -13,6 +13,9 @@ export default defineMock({
 
   body: {
     authenticated: true,
-    authorized: true
+    authorized: true,
+    userId: 'vorst x viiner',
+    email: 'super user @ super dot things',
+    name: 'Carrot Top'
   }
 })
