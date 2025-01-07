@@ -56,7 +56,7 @@ public class SpringJwtAuthClient implements AuthClient {
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()
             .isAdmin(true)
-            .username(authentication.getName())
+            .username(getUserName(token))
             .email(getEmail(token))
             .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
             .build())
@@ -83,5 +83,14 @@ public class SpringJwtAuthClient implements AuthClient {
       email = Objects.toString(principal.getClaimAsString("email"), "");
     }
     return email;
+  }
+  
+  private String getUserName(Jwt principal) {
+    String userName = "";
+    if(principal != null) {
+      userName = Objects.toString(principal.getClaimAsString("name"), "");
+    }
+    return userName;
+      
   }
 }
