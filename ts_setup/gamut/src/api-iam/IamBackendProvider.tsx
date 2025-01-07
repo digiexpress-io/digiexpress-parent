@@ -88,7 +88,7 @@ async function getUser(props: IamBackendProviderProps): Promise<IamApi.User | un
   try {
     const user = await props.fetchUserGET();
     if(user.ok) {
-      return user.json();
+      return user.json().then(json=>json.principal);
     }
     return undefined;
   } catch(error) {
