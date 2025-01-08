@@ -235,6 +235,7 @@ export const fi = {
   'gamut.feedback.vote.title': 'Was this answer helpful?',
   'gamut.feedback.vote.notHelpful': 'No, this was not helpful',
   'gamut.feedback.vote.yesHelpful': 'Yes, this was helpful',
+  'gamut.feedback.vote.loginReq': 'You must be logged in to rate feedback',
 
   'gamut.feedback.updatedOnDate': 'Updated date',
   'gamut.feedback.feedbackViewerTitle': 'Customer feedback',
