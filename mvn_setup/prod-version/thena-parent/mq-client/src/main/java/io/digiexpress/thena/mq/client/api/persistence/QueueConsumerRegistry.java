@@ -11,8 +11,8 @@ public interface QueueConsumerRegistry extends ThenaMqRegistryTemplate<QueueCons
   ThenaSqlClient.SqlTupleList insertMany(List<QueueConsumer> queue);
   ThenaSqlClient.SqlTupleList updateMany(List<QueueConsumer> queue);
   ThenaSqlClient.SqlTuple deleteById(String id);  // matches by external_id or id
-  ThenaSqlClient.SqlTuple findAllByQueueNameAndAppId(String queueName, String appId, boolean lockForUpdate);
-  
+  ThenaSqlClient.SqlTuple findAllByAppId(String appId, boolean lockForUpdate);
+  ThenaSqlClient.Sql findAllEnabled();  
   
   @Override ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();

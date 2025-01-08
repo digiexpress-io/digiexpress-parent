@@ -1,7 +1,6 @@
 package io.digiexpress.thena.mq.client.api.entities;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 import org.immutables.value.Value;
 
@@ -19,12 +18,7 @@ public interface QueueConsumer extends ThenaMqEntity {
   
   String getQualifiedJavaName();
   String getComment();
-    
-  // header routing
-  @Nullable String getRoutingKey();
-  List<String> getRoutingTopics();
-  String getQueueId();
-  
+  String getRoutingKey();
   
   enum QueueConsumerStatus {
     ENABLED, DISABLED

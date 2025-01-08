@@ -2,7 +2,6 @@ package io.digiexpress.thena.mq.client.spi;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     return state.withChannelTransaction(scope, state -> 
         Uni.combine().all().unis(
           state.queryQueues().findByQueueName(queueName),
-          state.queryQueueConsumer().findByQueueNameAndAppId(queueName, appId, true)
+          state.queryQueueConsumer().findAllByAppId(appId, true)
         )
         .asTuple()
         .onItem().transformToUni(input -> visitBatch(state, input))
@@ -143,7 +142,7 @@ public class QueueBuilderImpl implements QueueBuilder {
       // new VS existing in DB
       if(newConsumers.containsKey(consumerName)) {
         final var currentState = newConsumers.get(consumerName);
-        final var nextState = visitExistigQueueConsumers(prev, currentState);
+        final var nextState = visitExistigQueueConsumers(prev, currentState, queue);
         newConsumers.remove(consumerName);
         activeConsumers.add(nextState);
         continue;
@@ -164,12 +163,11 @@ public class QueueBuilderImpl implements QueueBuilder {
 
 
   // enable and update existing consumer
-  private QueueConsumer visitExistigQueueConsumers(QueueConsumer prev, ConsumerBuilderImpl current) {
+  private QueueConsumer visitExistigQueueConsumers(QueueConsumer prev, ConsumerBuilderImpl current, Queue queue) {
     final var nextState = ImmutableQueueConsumer.builder().from(prev)
         .consumerStatus(QueueConsumerStatus.ENABLED)
-        .routingTopics(Optional.ofNullable(current.routingTopics).orElse(Collections.emptyList()))
         .qualifiedJavaName(current.getClass().getPackageName() + "." + current.getClass().getName())
-        .routingKey(current.routingKey())
+        .routingKey(Optional.ofNullable(current.routingKey()).orElse(queue.getQueueName()))
         .build();
     
     if(nextState.equals(ImmutableQueueConsumer.builder().from(prev).build())) {
@@ -186,12 +184,10 @@ public class QueueBuilderImpl implements QueueBuilder {
   private QueueConsumer visitNewQueueConsumers(ConsumerBuilderImpl current, Queue queue) {
     final var nextState = ImmutableQueueConsumer.builder()
         .id(OidUtils.gen())
-        .queueId(queue.getId())
         .comment(current.comment())
         .consumerStatus(QueueConsumerStatus.ENABLED)
-        .routingTopics(Optional.ofNullable(current.routingTopics).orElse(Collections.emptyList()))
         .qualifiedJavaName(current.getClass().getPackageName() + "." + current.getClass().getName())
-        .routingKey(current.routingKey())
+        .routingKey(Optional.ofNullable(current.routingKey()).orElse(queue.getQueueName()))
         .createdAt(OffsetDateTime.now())
         .consumerName(current.consumerName())
         .appId(appId)
@@ -224,7 +220,6 @@ public class QueueBuilderImpl implements QueueBuilder {
     private String routingKey;
     private String consumerName;
     private String comment;
-    private List<String> routingTopics;
     private ThenaMqConsumer thenaMqConsumer;
     private final MutableBoolean completed = new MutableBoolean(false);
     

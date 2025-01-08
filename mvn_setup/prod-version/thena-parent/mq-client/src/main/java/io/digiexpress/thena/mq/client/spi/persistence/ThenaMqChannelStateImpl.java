@@ -61,6 +61,10 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   public InternalChannelQuery queryChannels() {
     return new InternalChannelQueryImpl(dataSource);
   }
+  @Override
+  public InternalMessageQuery queryMessages() {
+    return new InternalMessageQueryImpl(dataSource);
+  }  
   
   @Override
   public Uni<Channel> insertOne(final Channel newRepo) {

@@ -1,8 +1,6 @@
 package io.digiexpress.thena.mq.client.spi;
 
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.MessageBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
@@ -37,8 +35,6 @@ public class MessageBuilderImpl implements MessageBuilder {
   private String queueIdOrName;
   
   private String routingKey;
-  private JsonObject routingProps;
-  private List<String> routingTopics;
   
   private String comment;
   private String createdBy;
@@ -114,16 +110,14 @@ public class MessageBuilderImpl implements MessageBuilder {
     
     return ImmutableQueueMessage.builder()
       .id(OidUtils.gen())
-      .queueId(queue.getId())
       .routingKey(routingKey)
-      .routingProps(routingProps == null ? new JsonObject() : routingProps)
-      .routingTopics(routingTopics == null ? Collections.emptyList() : routingTopics)
       .routingStatus(RoutingStatus.RESOLVING_ROUTING)
       .routingLog(new JsonObject())
   
       .comment(comment)
       .createdBy(createdBy)
   
+      
       .createdAt(createdAt)
       .expiresAt(expiresAt)
       .startsAt(startsAt)

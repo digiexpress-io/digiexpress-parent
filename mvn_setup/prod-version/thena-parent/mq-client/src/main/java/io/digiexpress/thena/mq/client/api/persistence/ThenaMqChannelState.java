@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.api.persistence;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +15,10 @@ import io.digiexpress.thena.mq.client.api.entities.Log;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqContainers;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
+import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -40,13 +43,18 @@ public interface ThenaMqChannelState {
   InternalQueueQuery queryQueues();
   InternalQueueConsumerQuery queryQueueConsumer();
   InternalThenaMqContainersQuery queryContainers();
+  InternalMessageQuery queryMessages();
+  
 
   interface InternalQueueConsumerQuery {
-    Uni<List<QueueConsumer>> findByQueueNameAndAppId(String queueName, String appId, boolean lockForUpdate);
+    Uni<List<QueueConsumer>> findAllByAppId(String appId, boolean lockForUpdate);
+    
+    Uni<List<QueueConsumer>> findAllEnabled();
   }
   
   interface InternalQueueQuery {
     Uni<Optional<Queue>> findByQueueName(String queueName);
+    Uni<List<Queue>> findAll();
   }
 
   interface InternalThenaMqContainersQuery {
@@ -59,6 +67,11 @@ public interface ThenaMqChannelState {
     Uni<Void> delete();
     Uni<Channel> delete(Channel newRepo);
   }
+  
+  interface InternalMessageQuery {
+    Uni<List<QueueMessage>> findAllByRoutingStatus(RoutingStatus status, boolean lockForUpdate);
+  }
+  
   
   
   @FunctionalInterface
@@ -73,6 +86,7 @@ public interface ThenaMqChannelState {
   }
   
   
+  
   @Value.Immutable
   interface ChannelBatch {
     List<Delivery> getNewDeliveries();
@@ -85,6 +99,7 @@ public interface ThenaMqChannelState {
     List<Delivery> getUpdateDeliveries();
     List<DeliveryAttempt> getUpdateDeliveryAttempts();
     List<QueueConsumer> getUpdateQueueConsumer();
+    List<QueueMessage> getUpdatePublishedMessages();
     
     OperationStatus getBatchStatus();
     String getChannelId();
@@ -98,6 +113,7 @@ public interface ThenaMqChannelState {
         this.getUpdateDeliveries().isEmpty()  &&
         this.getUpdateDeliveryAttempts().isEmpty()  &&
         this.getUpdateQueueConsumer().isEmpty()  &&
+        this.getUpdatePublishedMessages().isEmpty()  &&
           
         this.getNewQueueConsumer().isEmpty() &&
         this.getNewDeliveries().isEmpty() &&
@@ -105,6 +121,33 @@ public interface ThenaMqChannelState {
         this.getNewPublishedMessages().isEmpty() &&
         this.getNewQueues().isEmpty();
     }
+    
+    default ChannelBatch merge(ChannelBatch next) {
+      final var start = this;
+      if(next == null) {
+        return start;
+      }
+      
+      RepoAssert.isTrue(next.getChannelId().equals(start.getChannelId()), () -> "batch channelId-s must match for merging operations!");
+      
+      final var status = Arrays.asList(start.getBatchStatus(), next.getBatchStatus());
+      final Optional<OperationStatus> isError = status.contains(OperationStatus.ERROR) ? Optional.of(OperationStatus.ERROR) : Optional.empty();
+      final Optional<OperationStatus> isConflict = status.contains(OperationStatus.CONFLICT) ? Optional.of(OperationStatus.CONFLICT) : Optional.empty();
+      final Optional<OperationStatus> isNoChanges = start.getBatchStatus().equals(next.getBatchStatus()) && next.getBatchStatus().equals(OperationStatus.NO_CHANGES)
+          ? Optional.of(OperationStatus.NO_CHANGES) : Optional.empty();
+      
+      final var nextStatus = isError.or(() -> isConflict).or(() -> isNoChanges).orElse(OperationStatus.OK);
+      
+      return ImmutableChannelBatch.builder()
+          .from(start)
+          .from(next)
+          .log(String.join(System.lineSeparator(), start.getLog(), next.getLog()))
+          .batchStatus(nextStatus)
+          .build();
+      
+    }
+    
+    
   }
   
 }

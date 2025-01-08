@@ -104,7 +104,14 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     
     // Route the message
-
+    getClient().withChannel(channel)
+      .bindingBuilder()
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
+    // get hanging messages
+    // get available routes
+    // match
+    //.build();
     
     // Deliver the message to the consumers
   }

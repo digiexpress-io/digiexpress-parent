@@ -32,4 +32,8 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   public MessageBuilder messageBuilder() {
     return new MessageBuilderImpl(state);
   }
+  @Override
+  public BindingBuilder bindingBuilder() {
+    return new BindingBuilderImpl(state);
+  }
 }

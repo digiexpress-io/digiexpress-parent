@@ -60,14 +60,13 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
           "", 
           sql.getValue());
     }
-    
     return getClient().preparedQuery(sql.getValue())
-        .mapping(dataSource.getRegistry().channel().defaultMapper())
-    .execute()
-    .onItem()
-    .transformToMulti((RowSet<Channel> rowset) -> Multi.createFrom().iterable(rowset))
-    .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
-    .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'CHANNEL'-s!", sql, e)));
+      .mapping(dataSource.getRegistry().channel().defaultMapper())
+      .execute()
+      .onItem()
+      .transformToMulti((RowSet<Channel> rowset) -> Multi.createFrom().iterable(rowset))
+      .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
+      .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'CHANNEL'-s!", sql, e)));
   }
   
   

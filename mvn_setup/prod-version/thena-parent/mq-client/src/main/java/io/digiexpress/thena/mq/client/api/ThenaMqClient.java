@@ -4,9 +4,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
+import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.digiexpress.thena.mq.client.api.entities.Routing.Router;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -17,11 +19,17 @@ public interface ThenaMqClient {
   QueueBuilder queueBuilder();
   ChannelBuilder channelBuilder();
   MessageBuilder messageBuilder();
+  BindingBuilder bindingBuilder();
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
+
   
-  
+  interface BindingBuilder {
+    BindingBuilder addRouters(List<Router> routers);
+    Uni<ThenaMqEnvelope<Binding>> build();
+  }
+
   interface ChannelBuilder {
     ChannelBuilder channelName(String channelName);
     ChannelBuilder comment(String comment);
@@ -43,10 +51,16 @@ public interface ThenaMqClient {
     MessageBuilder appId(String appId); // user provided app id(how do you identify your app?)
     MessageBuilder queueIdOrName(String queueIdOrName);
     
-    MessageBuilder routingKey(@Nullable String routingKey);
-    MessageBuilder routingProps(@Nullable JsonObject routingProps);
-    MessageBuilder routingTopics(@Nullable List<String> routingTopics);
     
+    /** rabbitmq matching
+        * (star) can substitute for exactly one word.
+        # (hash) can substitute for zero or more words.
+        ReceiveLogsTopic "kern.*" "*.critical"
+        ReceiveLogsTopic "*.critical"
+        EmitLogTopic "kern.critical" "A critical kernel error"
+     */
+    MessageBuilder routingKey(@Nullable String routingKey);
+
     MessageBuilder comment(String comment);
     MessageBuilder createdBy(String createdBy);
 
@@ -64,7 +78,6 @@ public interface ThenaMqClient {
   interface ConsumerBuilder {
     ConsumerBuilder comment(String comment);
     ConsumerBuilder consumerName(String consumerName);
-    ConsumerBuilder routingTopics(List<String> topics);
     ConsumerBuilder routingKey(String routingKey);
     void build(ThenaMqConsumer worker);
   }
