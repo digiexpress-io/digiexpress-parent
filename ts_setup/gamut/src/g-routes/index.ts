@@ -9,4 +9,3 @@ export * from './RouterUnsecured';
 export * from './RouterUserOverview';
 
 export * from './RouterBookings';
-export * from './RouterProduct';

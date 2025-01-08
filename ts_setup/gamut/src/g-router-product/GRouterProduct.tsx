@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Breadcrumbs, Link, Typography, Button, Box, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SaveIcon from '@mui/icons-material/Save';
 import {
@@ -17,14 +17,15 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 import { SiteApi } from '../api-site';
 
+import { GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot, GRouterProductRoot, GRouterProductTitleRoot, useUtilityClasses } from './useUtilityClasses';
 
-export interface RouterProductProps {
+export interface GRouterProductProps {
   productId: string,
   pageId: string,
   locale: string
 }
 
-export const RouterProduct: React.FC<RouterProductProps> = (props) => {
+export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const anon = useIam();
   const site = useSite();
 
@@ -48,26 +49,27 @@ export const RouterProduct: React.FC<RouterProductProps> = (props) => {
 
       <main role='main'>
         <Container>
-          <GLayout variant='fill-session-start-end'
-            slots={{
-              breadcrumbs: () => (anonymousUser ? <AnonBreadcrumbs ownerState={ownerState} /> : <ProductBreadcrumbs ownerState={ownerState} />),
-              topTitle: () => <ProductTitle ownerState={ownerState} />,
-              center: () => <StartProductForm ownerState={ownerState} />
-            }}>
-
-          </GLayout>
+          <GRouterProductRoot>
+            <GLayout variant='fill-session-start-end'
+              slots={{
+                breadcrumbs: () => (anonymousUser ? <AnonBreadcrumbs ownerState={ownerState} /> : <ProductBreadcrumbs ownerState={ownerState} />),
+                topTitle: () => <ProductTitle ownerState={ownerState} />,
+                center: () => <StartProductForm ownerState={ownerState} />
+              }}>
+            </GLayout>
+          </GRouterProductRoot>
         </Container>
       </main>
 
       <footer role='footer'>
         <GFooter />
       </footer>
-    </GShell>
+    </GShell >
   );
 }
 
 
-interface RouterProductOwnerState {
+interface GRouterProductOwnerState {
   ownerState: {
     topic: SiteApi.TopicView;
     topicLink: SiteApi.TopicLink;
@@ -76,7 +78,7 @@ interface RouterProductOwnerState {
   }
 }
 
-const StartProductForm: React.FC<RouterProductOwnerState> = (props) => {
+const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   const nav = useNavigate();
   const offers = useOffers();
   const intl = useIntl();
@@ -89,6 +91,7 @@ const StartProductForm: React.FC<RouterProductOwnerState> = (props) => {
   // article links
   const parentPageId = topic.parent?.id ?? undefined;
   const pageId = topic.id;
+
 
 
   function handleCancelOffer() {
@@ -121,27 +124,31 @@ const StartProductForm: React.FC<RouterProductOwnerState> = (props) => {
   </>)
 }
 
-const ProductTitle: React.FC<RouterProductOwnerState> = (props) => {
+const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   const { topicLink } = props.ownerState;
   const intl = useIntl();
+
+  const classes = useUtilityClasses();
+
   return (
-    <Box display='flex' flexDirection='column'>
-      <Typography variant='h1' textAlign='center' marginBottom='20px'>{intl.formatMessage({ id: 'gamut.forms.filling.welcome' })}</Typography>
-      <Typography variant='h3'>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink.name}</Typography>
+    <GRouterProductTitleRoot>
+      <Typography className={classes.productTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.welcome' })}</Typography>
+      <Typography className={classes.productSubTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink.name}</Typography>
 
       <List disablePadding dense>
-        <ListItem dense>
+        <ListItem>
           <ListItemIcon><SaveIcon color='primary' /></ListItemIcon>
           <ListItemText>
-            <Typography variant='body1'>{intl.formatMessage({ id: 'gamut.forms.filling.start.info1' })}</Typography>
+            <Typography className={classes.productBodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.start.info1' })}</Typography>
           </ListItemText>
         </ListItem>
       </List>
-    </Box>)
+    </GRouterProductTitleRoot>
+  )
 }
 
 
-const ProductBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
+const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
   const { topic, topicLink } = props.ownerState;
   const intl = useIntl();
   const nav = useNavigate();
@@ -162,7 +169,7 @@ const ProductBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
   }
 
   return (
-    <Breadcrumbs>
+    <GRouterProductBreadcrumbsRoot>
       <Link onClick={handleUserOverview}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
@@ -176,10 +183,10 @@ const ProductBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
       <Typography>
         {topicLink.name}
       </Typography>
-    </Breadcrumbs>)
+    </GRouterProductBreadcrumbsRoot>)
 }
 
-const AnonBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
+const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
   const { topic, topicLink } = props.ownerState;
   const intl = useIntl();
   const nav = useNavigate();
@@ -193,7 +200,7 @@ const AnonBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
     })
   }
   return (
-    <Breadcrumbs>
+    <GRouterProductAnonBreadcrumbsRoot>
       <Link onClick={() => handleHomePage(locale)}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.public.servicesHome' })}
@@ -204,5 +211,5 @@ const AnonBreadcrumbs: React.FC<RouterProductOwnerState> = (props) => {
       <Typography>
         {topicLink.name}
       </Typography>
-    </Breadcrumbs>)
+    </GRouterProductAnonBreadcrumbsRoot>)
 }

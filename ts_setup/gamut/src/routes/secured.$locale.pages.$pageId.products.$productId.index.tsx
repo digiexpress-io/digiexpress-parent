@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { RouterProduct } from '../g-routes';
+import { GRouterProduct } from '../g-router-product';
 
 
 
@@ -14,5 +14,5 @@ function Component() {
 }
 
 function ChooseComponent(props: { locale: string, productId: string, pageId: string }) {
-  return (<RouterProduct productId={props.productId} locale={props.locale} pageId={props.pageId} />)
+  return (<GRouterProduct productId={props.productId} locale={props.locale} pageId={props.pageId} />)
 }

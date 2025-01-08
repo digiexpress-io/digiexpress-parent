@@ -44,7 +44,7 @@ export declare namespace FeedbackApi {
     thumbsDownCount: number;
   }
 
-  interface FeedbackRating {
+  export interface FeedbackRating {
     id: string;
     replyId: ReplyId | undefined;
     categoryId: CategoryId;
@@ -53,7 +53,7 @@ export declare namespace FeedbackApi {
   }
 
   export interface FeedbackTemplate {
-    processId: ProcessId;
+    taskId: TaskId;
     userId: UserId;
 
     origin: string;
@@ -75,7 +75,7 @@ export declare namespace FeedbackApi {
   }
 
   export interface CreateFeedbackCommand {
-    processId: ProcessId;
+    taskId: TaskId;
     userId: UserId;
 
     origin: string;

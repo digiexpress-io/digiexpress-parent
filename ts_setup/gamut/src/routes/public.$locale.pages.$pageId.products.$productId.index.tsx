@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterProduct } from '../g-routes'
+import { GRouterProduct } from '../g-router-product'
 
 export const Route = createFileRoute(
   '/public/$locale/pages/$pageId/products/$productId/',
@@ -24,7 +24,7 @@ function ChooseComponent(props: {
   pageId: string
 }) {
   return (
-    <RouterProduct
+    <GRouterProduct
       productId={props.productId}
       pageId={props.pageId}
       locale={props.locale}
