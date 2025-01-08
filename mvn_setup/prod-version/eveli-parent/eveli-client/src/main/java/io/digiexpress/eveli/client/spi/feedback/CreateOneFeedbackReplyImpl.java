@@ -103,7 +103,7 @@ VALUES
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
      categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());
-     categeoryStm.setString(6, command.getProcessId());
+     categeoryStm.setString(6, command.getTaskId());
      
      categeoryStm.setObject(7, now);
      categeoryStm.setObject(8, now);
@@ -130,7 +130,7 @@ VALUES
  private String getOrCreateCategory(Connection parent, CreateFeedbackCommand command) throws SQLException {
     ProcessAssert.notEmpty(command.getLabelKey(), () -> "labelKey can't be empty!");
     ProcessAssert.notEmpty(command.getOrigin(), () -> "origin can't be empty!");
-    ProcessAssert.notEmpty(command.getProcessId(), () -> "processId can't be empty!");
+    ProcessAssert.notEmpty(command.getTaskId(), () -> "processId can't be empty!");
     ProcessAssert.notEmpty(userId, () -> "user id can't be empty!");
     
     final var labelKey = command.getLabelKey().trim().toUpperCase();

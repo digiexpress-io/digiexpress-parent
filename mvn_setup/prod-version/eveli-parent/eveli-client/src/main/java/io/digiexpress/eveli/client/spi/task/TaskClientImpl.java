@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -55,6 +56,10 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Task getOneById(long taskId) {
         return PaginateTasksImpl.map(taskRepository.getOneById(taskId));
+      }
+      @Override
+      public Optional<Task> findOneById(long taskId) {
+        return taskRepository.findOneById(taskId).map(PaginateTasksImpl::map);
       }
     };
   }

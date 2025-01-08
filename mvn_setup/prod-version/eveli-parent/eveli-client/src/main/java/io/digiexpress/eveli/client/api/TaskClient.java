@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.api;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.immutables.value.Value;
@@ -70,6 +71,7 @@ public interface TaskClient {
   
   interface QueryTasks {
     Task getOneById(long taskId);
+    Optional<Task> findOneById(long taskId);
   }
   
   interface PaginateTasks {

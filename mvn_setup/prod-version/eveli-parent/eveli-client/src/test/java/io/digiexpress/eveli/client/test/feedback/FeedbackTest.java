@@ -67,7 +67,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         .locale(template.getLocale())
         .origin(template.getOrigin())
         
-        .processId(template.getProcessId())
+        .taskId(taskId)
         .reporterNames(template.getReporterNames())
         
         .reply("super-reply-by-worker")

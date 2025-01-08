@@ -29,7 +29,6 @@ import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireQuery
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.config.EveliPropsFeedback;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -47,28 +46,25 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
   private final EveliPropsFeedback configProps;
   
   @Override
-  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId) {
-    final var task = taskClient.queryTasks().getOneById(Long.parseLong(taskId));
-    final var comments = taskClient.queryComments().findAllByTaskId(task.getId());
-
-    final var process = processClient.queryInstances().findOneByTaskId(task.getId());
+  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskIdString) {
+    final var taskId = Long.parseLong(taskIdString);
+    final var comments = taskClient.queryComments().findAllByTaskId(taskId);
+    final var process = processClient.queryInstances().findOneByTaskId(taskId);
     if(process.isEmpty()) {
       return Optional.empty();
     }
 
-    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(task.getId());
+    final var processQuestionnaire = processClient.queryProcessQuestionnaire().findOneByTaskId(taskId);
     if(processQuestionnaire.isEmpty()) {
       return Optional.empty();
     }
 
     final var questionnaire = processQuestionnaire.get().mapTo(Questionnaire.class);
-    return Optional.of(new FeedbackQuestionnaireImpl(task, dialobClient, process.get(), comments, questionnaire, configProps));
+    return Optional.of(new FeedbackQuestionnaireImpl(dialobClient, process.get(), comments, questionnaire, configProps));
   }
 
   @RequiredArgsConstructor
   public static class FeedbackQuestionnaireImpl implements FeedbackQuestionnaire {
-    @SuppressWarnings("unused")
-    private final Task task;
     private final DialobClient dialobClient;
     private final ProcessInstance process;
     private final List<TaskComment> comments;
