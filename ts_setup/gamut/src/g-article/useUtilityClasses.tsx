@@ -59,8 +59,9 @@ export const GArticleRoot = styled("div", {
 
     '& .GArticle-page': {
       [theme.breakpoints.up('md')]: {
+        paddingRight: theme.spacing(3),
         width: '70%',
-      },
+      }
     },
     '& .GArticle-pageLinks': {
       [theme.breakpoints.up('md')]: {

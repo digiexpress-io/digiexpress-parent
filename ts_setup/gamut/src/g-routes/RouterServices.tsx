@@ -8,16 +8,15 @@ import { useIntl } from 'react-intl';
 import {
   GShell,
   GLayout,
-  GLinksPage,
   GFooter,
   GShellClassName,
   SiteApi,
   GAppBar,
   useSite,
-  GMarkdown,
   GServices,
   GServicesSearch,
-  GUserOverviewMenuView
+  GUserOverviewMenuView,
+  GArticle
 } from '../';
 
 
@@ -68,7 +67,7 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
       </Drawer>
       <main role='main'>
         <Container>
-          <GLayout variant='secured-1-row-2-columns' slots={{
+          <GLayout variant='secured-1-row-1-column' slots={{
             breadcrumbs: () => (
               <Breadcrumbs>
                 <Link onClick={() => handleClick('user-overview')}>
@@ -83,8 +82,7 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
                 </Typography>
               </Breadcrumbs>
             ),
-            left: () => (topic ? <GMarkdown children={topic.blob?.value} /> : <></>),
-            right: () => <GLinksPage children={topic} />
+            left: () => (topic ? <GArticle>{topic}</GArticle> : <></>)
           }} />
         </Container>
       </main>
