@@ -48,8 +48,8 @@ eveli.dialob.api-key:
 # jwt linked crm from security proxy
 eveli.crm.enabled: false
 eveli.crm.host: 
-eveli.crm.service-path-company:
-eveli.crm.service-path-person:
+eveli.crm.service-path-company: gw/api/ypa/organizationRoles
+eveli.crm.service-path-person: gw/api/hpa/authorizationList
 
 
 app.jwt.public-key-value:
