@@ -2,11 +2,8 @@ package io.digiexpress.eveli.dialob.spi;
 
 import java.io.IOException;
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.Comparator;
-=======
 import java.util.Arrays;
->>>>>>> refs/heads/alpha
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

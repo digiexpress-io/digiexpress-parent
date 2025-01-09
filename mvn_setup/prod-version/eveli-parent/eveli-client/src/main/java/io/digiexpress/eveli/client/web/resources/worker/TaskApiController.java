@@ -64,6 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
+  private final DialobClient dialobClient;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
@@ -179,11 +180,9 @@ public class TaskApiController {
   
   
   @GetMapping(value="/{id}/reviews")
-  public ResponseEntity<?> getTaskFormReview(@PathVariable("id") Long id)
+  public ResponseEntity<?> getTaskFormReview(@PathVariable("id") String id)
   {
-    final var authentication = securityClient.getUser();
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
-    final var task = taskClient.queryTasks().getOneById(id);
+    final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
  
     if(task.getQuestionnaireId() != null) {
       final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
@@ -192,7 +191,6 @@ public class TaskApiController {
           "form", form,
           "session", questionnaire
           );
-      
       return new ResponseEntity<>(result, HttpStatus.OK);
     }
     //{ form: any, session: any }

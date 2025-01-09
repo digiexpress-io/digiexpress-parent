@@ -68,9 +68,10 @@ public class EveliAutoConfigWorker {
   public TaskApiController taskApiController(
       FeedbackClient feedback,
       AuthClient security, 
-      TaskClient taskclient) {
+      TaskClient taskclient, 
+      DialobClient dialobClient) {
     
-    return new TaskApiController(security, taskclient);
+    return new TaskApiController(security, taskclient, dialobClient);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {
