@@ -21,30 +21,25 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.util.List;
-import java.util.Optional;
 
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.CrmClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
+import io.digiexpress.eveli.client.api.ImmutableUserMessage;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskComment;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
-import io.thestencil.iam.api.ImmutableUserMessage;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class UserMessagesQueryImpl implements UserMessagesQuery {
   private final ProcessClient processRepository;
-  private final CommentRepository commentRepository;
-  private final TaskRepository taskRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   private final CrmClient authClient;
   
   @Override
@@ -57,12 +52,19 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     
     final var customer = authClient.getCustomer();
     final var taskId = process.getTaskId();
-    final var comments = commentRepository.findByTaskIdAndExternalTrue(taskId).stream()
+    final var comments = taskClient.queryTaskComments()
+        .findAllByTaskId(taskId)
+        .await().atMost(TaskMapper.atMost)
+        .stream()
+        .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
         .map(comment -> visitUserMessage(comment, customer))
         .toList();
-    final var task = taskRepository.getOneById(taskId);
     
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(taskId, Optional.of(task),  customer.getPrincipal().getUsername());
+    taskClient.taskBuilder()
+      .userId(customer.getPrincipal().getUsername(), null)
+      .addCustomerCommitViewer(taskId)
+      .await().atMost(TaskMapper.atMost);
+    
     
     return comments;
   }
@@ -70,17 +72,21 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
   @Override
   public List<UserMessage> findAllByUserId() {
     final var customer = authClient.getCustomer();
-    final var comments = commentRepository.findAllByUserId(customer.getPrincipal().getId()).stream()
+    final var comments = taskClient.queryTaskComments()
+        .findAllByReporterId(customer.getPrincipal().getUsername())
+        .await().atMost(TaskMapper.atMost)
+        .stream()
+        .filter(comment -> Boolean.TRUE.equals(comment.getExternal()))
         .map(comment -> visitUserMessage(comment, customer))
         .toList();
     return comments;
   }
   
-  public static UserMessage visitUserMessage(TaskCommentEntity msg, Customer customer) {
-    final var replyToId = Optional.ofNullable(msg.getReplyTo()).map(replay -> replay.getId().toString()).orElse(null);
+  public static UserMessage visitUserMessage(TaskComment msg, Customer customer) {
+    final var replyToId = msg.getReplyToId();
     final var userMsg = ImmutableUserMessage.builder()
         .id(msg.getId().toString())
-        .taskId(msg.getTask().getId().toString())
+        .taskId(msg.getTaskId())
         .replyToId(replyToId)
         .created(msg.getCreated().toString())
         .userName(UserMessagesQueryImpl.visitMessageUserName(msg, customer))
@@ -90,7 +96,7 @@ public class UserMessagesQueryImpl implements UserMessagesQuery {
     return userMsg;
   }
 
-  public static String visitMessageUserName(TaskCommentEntity entity, Customer customer) {
+  public static String visitMessageUserName(TaskComment entity, Customer customer) {
     
     final var user = customer.getPrincipal();
     

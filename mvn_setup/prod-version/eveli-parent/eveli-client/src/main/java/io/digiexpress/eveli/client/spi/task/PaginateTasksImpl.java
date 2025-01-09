@@ -26,23 +26,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Order;
 
-import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.TaskClient.PaginateTasks;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
+import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
+import io.resys.thena.api.entities.ImmutablePageQuery;
+import io.resys.thena.api.entities.ImmutablePageSorting;
+import io.resys.thena.api.entities.ImmutablePageSortingOrder;
+import io.resys.thena.api.entities.PageQuery;
+import io.resys.thena.api.entities.PageQuery.PageSortDirection;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.QueryEnvelopePage;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class PaginateTasksImpl implements PaginateTasks {
 
-  private final TaskRepository taskRepository;
+  private final TaskStore ctx;
   
   private Pageable pageable;
   private String subject = ""; 
@@ -108,7 +119,96 @@ public class PaginateTasksImpl implements PaginateTasks {
   }
 
   @Override
-  public Page<Task> findAll() {
+  public Uni<Page<Task>> findAll() {
+    final var config = ctx.getConfig();
+    final var grim = config.getClient().grim(config.getTenantName());
+    final var prefilled = grim.find().missionQuery();
+    
+    final Uni<QueryEnvelopePage<GrimMissionContainer>> query = start(grim, prefilled)
+        .paginate(pageQuery());
+    return query
+        .onItem().transform(envelope -> visitEnvelope(grim, envelope))
+        .onItem().transformToUni(ref -> end(grim, ref));
+  }
+  
+  private PageQuery<MissionOrderByType> pageQuery() {
+    final var offset = pageable.getOffset();
+    final var limit = pageable.getPageSize();
+    final var pageNumber = pageable.getPageNumber();
+    final var orders = pageable.getSort().get().map(this::sortOrder).toList();
+    
+    return ImmutablePageQuery.<MissionOrderByType>builder()
+        .offset(offset)
+        .pageSize(limit)
+        .pageNumber(pageNumber)
+        .sort(ImmutablePageSorting.<MissionOrderByType>builder().orders(orders).build())
+        .build();
+  }
+  
+  private PageQuery.PageSortingOrder<MissionOrderByType> sortOrder(Order order) {
+    final ImmutablePageSortingOrder.Builder<MissionOrderByType> type = ImmutablePageSortingOrder
+        .<MissionOrderByType>builder()
+        .direction(PageSortDirection.valueOf(order.getDirection().name()));
+    
+    switch (order.getProperty()) {
+      case "priority": type.property(MissionOrderByType.MISSION_PRIORITY); break;
+      case "status": type.property(MissionOrderByType.MISSION_STATUS); break;
+      case "dueDate": type.property(MissionOrderByType.MISSION_DUE_DATE); break;
+      case "created": type.property(MissionOrderByType.MISSION_CREATED_AT); break;
+      case "clientIdentificator": type.property(MissionOrderByType.MISSION_REPORTER_ID); break;
+      case "assignedUser": type.property(MissionOrderByType.MISSION_ASSIGNMENT_VALUE).propertyType(TaskMapper.ASSIGNMENT_TYPE_TASK_USER); break;
+      case "subject": type.property(MissionOrderByType.MISSION_TITLE).propertyType(assignedUser); break;
+      
+      default: throw new IllegalArgumentException("Unexpected value: " + order.getProperty());
+    }
+
+    return type.build();
+  }
+  /**
+
+  @Query(value=
+      "select distinct t from TaskEntity t join t.assignedRoles r left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
+      " and priority in :priority" +
+      " and status in :status" +
+      " and lower(coalesce(r2, '')) like :searchRole" +
+      " and r in :roles" +
+      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
+  Page<TaskEntity> searchTasks(
+      @Param("subject") String subject, 
+      @Param("clientIdentificator") String clientIdentificator, 
+      @Param("assignedUser") String assignedUser, 
+      @Param("status") List<Integer> status,
+      @Param("priority") List<Integer> priority,
+      @Param("roles") List<String> roles,
+      @Param("searchRole") String searchRole,
+      @Param("dueDate") String dueDate,
+      Pageable page);
+  
+  @Query(value=
+      "select distinct t from TaskEntity t left join t.assignedRoles r2 where " +
+      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
+      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
+      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
+      " and priority in :priority" +
+      " and status in :status" +
+      " and lower(coalesce(r2, '')) like :searchRole" +
+      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
+  Page<TaskEntity> searchTasksAdmin(
+      @Param("subject") String subject,  
+      @Param("clientIdentificator") String clientIdentificator,
+      @Param("assignedUser") String assignedUser,
+      @Param("status") List<Integer> status,
+      @Param("priority") List<Integer> priority,
+      @Param("searchRole") String searchRole,
+      @Param("dueDate") String dueDate,
+      Pageable page);
+
+   */
+
+  public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
     TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
     if (this.status.isEmpty()) {
       this.status.addAll(Arrays.asList(TaskStatus.values()));
@@ -116,47 +216,57 @@ public class PaginateTasksImpl implements PaginateTasks {
     if (priority.isEmpty()) {
       this.priority.addAll(Arrays.asList(TaskPriority.values()));
     }
-    final var statuses = this.status.stream().map(el-> el.ordinal()).collect(Collectors.toList());
-    final var priorities = this.priority.stream().map(el-> el.ordinal()).collect(Collectors.toList());
+    final var statuses = this.status.stream().map(el-> el.name()).collect(Collectors.toList());
+    final var priorities = this.priority.stream().map(el-> el.name()).collect(Collectors.toList());
 
-    if (requireAnyRoles == null) {
-      return taskRepository.searchTasksAdmin(
-          likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
-          statuses, priorities, likeExpression(role), dueDate, pageable)
-          .map(PaginateTasksImpl::map);
-    } else {
-      return taskRepository.searchTasks(
-          likeExpression(subject), likeExpression(clientIdentificator), likeExpression(assignedUser),
-          statuses, 
-          priorities, requireAnyRoles, likeExpression(role), dueDate, pageable)
-          .map(PaginateTasksImpl::map);
+    
+    if(!(assignedUser == null || assignedUser.trim().isEmpty())) {
+      builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, assignedUser);
     }
+    if(!(role == null || role.trim().isEmpty())) {
+      builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role);
+    }
+    
+    builder
+      .status(statuses)
+      .priority(priorities)
+      .likeTitle(subject)
+      .likeReporterId(clientIdentificator)
+      .overdue(dueDate == null ? null : !dueDate.isEmpty()); // false = mission.mission_due_date < CURRENT_DATE 
+    
+    if (requireAnyRoles == null) {
+      return builder;
+    }
+    return builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, requireAnyRoles);
   }
+
   
-  private String likeExpression(String value) {
-    return "%" + value.toLowerCase() + "%";
+  public QueryEnvelopePage<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopePage<GrimMissionContainer> envelope) {
+    if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
+      throw TaskException.builder("PAGINATE_TASKS_FAIL")
+        .add(config, envelope)
+        .build();
+    }
+    final var result = envelope.getCurrentPageObjects();
+    if(result == null) {
+      throw TaskException.builder("PAGINATE_TASKS_NOT_FOUND")   
+        .add(config, envelope)
+        .build();
+    }
+    return envelope;
   }
-  
-  
-  public static Task map(TaskEntity task) {
-    return ImmutableTask.builder()
-      .version(task.getVersion())
-      .assignedUser(task.getAssignedUser())
-      .assignedUserEmail(task.getAssignedUserEmail())
-      .clientIdentificator(task.getClientIdentificator())
-      .completed(task.getCompleted())
-      .created(task.getCreated())
-      .description(task.getDescription())
-      .dueDate(task.getDueDate())
-      .id(task.getId())
-      .questionnaireId(task.getQuestionnanireId())
-      .priority(task.getPriority())
-      .status(task.getStatus())
-      .subject(task.getSubject())
-      .taskRef(task.getTaskRef())
-      .updated(task.getUpdated())
-      .updaterId(task.getUpdaterId())
-      .build();
+
+  @SuppressWarnings("unchecked")
+  public Uni<Page<Task>> end(GrimStructuredTenant config, QueryEnvelopePage<GrimMissionContainer> commit) {
+    final var tasks = commit.getCurrentPageObjects().stream()
+        .map(container -> TaskMapper.map(
+            container.getMission(), 
+            container.getAssignments().values(), 
+            container.getRemarks().values()))
+        .toList();
+    
+    final Page<Task> page = new PageImpl<Task>(tasks, pageable, commit.getTotalObjectsOnPages());
+    return Uni.createFrom().item((Object) page).map(e -> (Page<Task>) e);
   }
   
 }

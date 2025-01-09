@@ -26,12 +26,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
-import io.resys.thena.docdb.api.DocDB;
+import io.resys.thena.api.ThenaClient;
+import io.vertx.core.json.JsonObject;
 
 
 @Value.Immutable
 public interface EveliAssetClientConfig {
-  DocDB getClient();
+  ThenaClient getClient();
   String getRepoName();
   String getHeadName();
   AuthorProvider getAuthorProvider();
@@ -52,7 +53,7 @@ public interface EveliAssetClientConfig {
   
   @FunctionalInterface
   interface Serializer {
-    String toString(Entity<?> entity);
+    JsonObject toString(Entity<?> entity);
   }
   
   interface Deserializer {

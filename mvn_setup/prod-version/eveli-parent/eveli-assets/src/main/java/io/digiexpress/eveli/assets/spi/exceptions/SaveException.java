@@ -2,9 +2,9 @@ package io.digiexpress.eveli.assets.spi.exceptions;
 
 /*-
  * #%L
- * eveli-assets
+ * stencil-persistence
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,28 +20,25 @@ package io.digiexpress.eveli.assets.spi.exceptions;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitResult;
-
-
+import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
 
 public class SaveException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final List<Entity<?>> entity = new ArrayList<>();
-  private final CommitResult commit;
+  private final CommitResultEnvelope commit;
   
-  public SaveException(Entity<?> entity, CommitResult commit) {
+  public SaveException(Entity<?> entity, CommitResultEnvelope commit) {
     super(msg(Arrays.asList(entity), commit));
     this.entity.add(entity);
     this.commit = commit;
   }
-  public SaveException(List<Entity<?>> entity, CommitResult commit) {
+  public SaveException(List<Entity<?>> entity, CommitResultEnvelope commit) {
     super(msg(entity, commit));
     this.entity.addAll(entity);
     this.commit = commit;
@@ -50,11 +47,11 @@ public class SaveException extends RuntimeException {
   public List<Entity<?>> getEntity() {
     return entity;
   }
-  public CommitResult getCommit() {
+  public CommitResultEnvelope getCommit() {
     return commit;
   }
   
-  private static String msg(List<Entity<?>> entity, CommitResult commit) {
+  private static String msg(List<Entity<?>> entity, CommitResultEnvelope commit) {
     StringBuilder messages = new StringBuilder();
     for(var msg : commit.getMessages()) {
       messages

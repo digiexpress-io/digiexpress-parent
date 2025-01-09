@@ -152,7 +152,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   
   public static Entity<Workflow> workflow(CreateWorkflow init, AssetState state, EveliAssetClient client, DialobClient dialobClient) {
 
-    final var form = dialobClient.getFormByNameAndTag(init.getFormName(), init.getFormTag());
+    final var formTag = dialobClient.getFormTag(init.getFormName(), init.getFormTag());
     
     
     final var gid = client.getConfig().getGidProvider().getNextId();
@@ -161,7 +161,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
         .formName(init.getFormName())
         .formTag(init.getFormTag())
         .flowName(init.getFlowName())
-        .formId(form.getId())
+        .formId(formTag.getFormId())
         .updated(ZonedDateTime.now(ZoneId.of("UTC")))
         .build();
     final Entity<Workflow> entity = ImmutableEntity.<Workflow>builder()

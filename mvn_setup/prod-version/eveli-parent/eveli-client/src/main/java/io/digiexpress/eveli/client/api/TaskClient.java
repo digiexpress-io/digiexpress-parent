@@ -33,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 
 public interface TaskClient {
@@ -42,35 +43,39 @@ public interface TaskClient {
   QueryUnreadUserTasks queryUnreadUserTasks();
   TaskCommandBuilder taskBuilder();
   
-  QueryTaskComments queryComments();
-  QueryTaskKeywords queryKeywords();
+  QueryTaskComments queryTaskComments();
+  QueryTaskKeywords queryTaskKeywords();
   
   
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
-    Task createTask(CreateTaskCommand command);
-    Task modifyTask(Long taskId, ModifyTaskCommand command);
-    Task deleteTask(Long taskId);
-    TaskComment createTaskComment(CreateTaskCommentCommand command);
+    Uni<Task> createTask(CreateTaskCommand command);
+    Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
+    Uni<Task> deleteTask(String taskId);
+    Uni<Task> addWorkerCommitViewer(String taskId);
+    Uni<Task> addCustomerCommitViewer(String taskId);
+    Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
   }
   
   interface QueryTaskComments {
-    List<TaskComment> findAllByTaskId(long taskId);
-    TaskComment getOneById(long commentId);
+    Uni<List<TaskComment>> findAllByTaskId(String taskId);
+    Uni<List<TaskComment>> findAllByReporterId(String reporterId);
+    Uni<TaskComment> getOneById(String commentId);
   }
   
   interface QueryTaskKeywords {
-    List<String> findAllKeywords();
+    Uni<List<String>> findAllKeywords();
   }
   
   interface QueryUnreadUserTasks {
     QueryUnreadUserTasks userId(String userId);
     QueryUnreadUserTasks requireAnyRoles(List<String> roles);
-    List<Long> findAll();
+    Uni<List<String>> findAll();
   }
   
   interface QueryTasks {
-    Task getOneById(long taskId);
+    Uni<Task> getOneById(String taskId);
+    Uni<List<Task>> findAll(List<String> taskId);
     Optional<Task> findOneById(long taskId);
   }
   
@@ -85,7 +90,7 @@ public interface TaskClient {
     PaginateTasks role(@Nullable String role); // find task assigned to the role
     
     PaginateTasks requireAnyRoles(List<String> roles); // secondary role filter, must contain at least one of these
-    Page<Task> findAll();
+    Uni<Page<Task>> findAll();
   }
   
 
@@ -94,8 +99,8 @@ public interface TaskClient {
   @Value.Immutable
   interface CreateTaskCommentCommand {
     @Nullable Boolean getExternal();
-    @Nullable Long getReplyToId();
-    Long getTaskId();
+    @Nullable String getReplyToId();
+    String getTaskId();
     String getCommentText();
     TaskCommentSource getSource(); 
   }
@@ -134,7 +139,7 @@ public interface TaskClient {
   interface ModifyTaskCommand {
     @Nullable TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
-    @Nullable Integer getVersion();
+    @Nullable String getVersion();
 
     @Nullable String getDescription();
     @Nullable String getClientIdentificator();
@@ -165,15 +170,15 @@ public interface TaskClient {
   @Value.Immutable
   interface Task {
     // null on new task
-    Long getId();
+    String getId();
     ZonedDateTime getCreated();
-    ZonedDateTime getUpdated();
+    @Nullable ZonedDateTime getUpdated();
     String getUpdaterId();
     
     String getTaskRef(); // Task reference, semantic ID for task.
     TaskStatus getStatus();
     @Nullable ZonedDateTime getCompleted();
-    Integer getVersion();
+    String getVersion();
 
     // optional props
     @Nullable String getQuestionnaireId();
@@ -190,6 +195,8 @@ public interface TaskClient {
 
     List<String> getKeyWords();
     Set<String> getAssignedRoles();
+    
+    List<TaskComment> getComments();
   }
   
   
@@ -198,14 +205,14 @@ public interface TaskClient {
   @Value.Immutable
   interface TaskComment {
     // null on new
-    @Nullable Long getId();
+    @Nullable String getId();
     @Nullable ZonedDateTime getCreated();
     
     @Nullable Boolean getExternal();
     @Nullable String getUserName();
-    @Nullable Long getReplyToId();
+    @Nullable String getReplyToId();
     
-    Long getTaskId();
+    String getTaskId();
     String getCommentText();
     TaskCommentSource getSource(); 
   }

@@ -24,10 +24,10 @@ import java.net.URISyntaxException;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadQuery;
+import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.ImmutableAttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.thestencil.iam.api.ImmutableAttachmentDownloadUrl;
-import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;

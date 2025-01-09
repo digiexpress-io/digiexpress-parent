@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
+import org.immutables.value.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,27 +39,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.digiexpress.eveli.client.api.GamutClient;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
+import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
+import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
+import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.thestencil.iam.api.ImmutableAuthorizationAction;
-import io.thestencil.iam.api.UserActionsClient.Attachment;
-import io.thestencil.iam.api.UserActionsClient.AttachmentDownloadUrl;
-import io.thestencil.iam.api.UserActionsClient.AuthorizationAction;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +78,14 @@ public class GamutUserActionsController {
   private final DialobClient dialob;
   private final ProcessClient hdes;
   private final FeedbackClient feedback;
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableAuthorizationAction.class)
+  @JsonDeserialize(as = ImmutableAuthorizationAction.class)
+  interface AuthorizationAction {
+    List<String> getUserRoles();
+    List<String> getAllowedProcessNames();
+  }
   
 
   @GetMapping(value="/fill/{sessionId}")
@@ -146,7 +156,7 @@ public class GamutUserActionsController {
   }
   
   @PostMapping(value="{actionId}/attachments")
-  public ResponseEntity<List<Attachment>> createAttachments(@PathVariable("actionId") String actionId, @RequestBody List<UserAttachmentUploadInit> raw) {
+  public ResponseEntity<List<UserActionAttachment>> createAttachments(@PathVariable("actionId") String actionId, @RequestBody List<UserAttachmentUploadInit> raw) {
     try {
       return new ResponseEntity<>(gamutClient.userAttachmentBuilder().actionId(actionId).addAll(raw).createMany(), HttpStatus.CREATED);
     } catch (ProcessNotFoundException e) {

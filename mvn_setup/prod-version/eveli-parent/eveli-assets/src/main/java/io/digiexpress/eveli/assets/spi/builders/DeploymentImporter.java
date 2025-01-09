@@ -54,25 +54,49 @@ public class DeploymentImporter {
     final var newWorkflows = new ArrayList<Workflow>();
     deployment.getDialobTag().forEach(form -> {
       //final var exists = dialob.findOneFormById(form.getName()).isPresent();
-
       final var workflow = deployment.getWorkflowTag().getEntries().stream().filter(e -> e.getFormName().equals(form.getName())).findFirst().get();
-      
-      final var newForm = dialob.createForm(form);        
-      final var newTag = dialob.createTag(newForm.getName(), workflow.getFormTag());
 
+      final var tags = dialob.findAllFormTags(form.getName()).stream()
+          .filter(e -> e.getName().equals(workflow.getFormTag()))
+          .findFirst();
+      
+
+      final io.dialob.api.form.FormTag newTag;
+      if(tags.isEmpty()) {
+        dialob.createForm(form);        
+        newTag = dialob.createTag(form.getName(), workflow.getFormTag());        
+      } else {
+        newTag = tags.get();
+      }
+      
       newWorkflows.add(ImmutableWorkflow.builder()
           .from(workflow)
           .formId(newTag.getFormId())
-          .build());  
+          .build());
+        
+      newWorkflows.add(ImmutableWorkflow.builder()
+          .from(workflow)
+          .formId(newTag.getFormId())
+          .build());
+        
+      
     });
     
     
     
-    final var wrenchImport = new HdesComposerImpl(wrench).importTag(deployment.getWrenchTag());
-    final var stencilImport = new StencilComposerImpl(stencil).migration().importData(deployment.getStencilTag());
+    final var wrenchImport = wrench.repo()
+        .create()
+        .onItem().transformToUni(junk -> new HdesComposerImpl(wrench).importTag(deployment.getWrenchTag()));
+    final var stencilImport = stencil.repo()
+        .create()
+        .onItem().transformToUni(junk -> new StencilComposerImpl(stencil).migration().importData(deployment.getStencilTag()));
     
     
-    final var workflowImport = eveliAssets.repoBuilder().createIfNot().onItem().transformToUni(junk -> {
+    final var workflowImport = eveliAssets.repoBuilder()
+        .repoName(eveliAssets.getConfig().getRepoName())
+        .headName(eveliAssets.getConfig().getHeadName())
+        .createIfNot()
+        .onItem().transformToUni(junk -> {
       final var workflows = newWorkflows.stream().map(body -> {
         final var gid = eveliAssets.getConfig().getGidProvider().getNextId();
         final Entity<Workflow> entity = ImmutableEntity.<Workflow>builder()

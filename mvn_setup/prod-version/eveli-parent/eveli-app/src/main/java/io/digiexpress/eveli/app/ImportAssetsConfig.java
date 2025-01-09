@@ -27,6 +27,8 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +46,7 @@ import io.resys.hdes.client.api.HdesClient;
 import io.thestencil.client.api.StencilClient;
 
 @RestController
-@RequestMapping("init")
+@RequestMapping("/worker/rest/api/init")
 public class ImportAssetsConfig {
 
   @Autowired EveliPropsAssets config;
@@ -57,6 +59,19 @@ public class ImportAssetsConfig {
     
     final var importData = objectMapper.readValue(new File(config.getImportDeployment()), Deployment.class);
     
+    
+    final HdesClient wrench = eveliContext.getWrench();
+    final StencilClient stencil = eveliContext.getStencil();
+    final EveliAssetClient eveliAssets = eveliContext.getAssets();
+    new DeploymentImporter(dialobClient, wrench, stencil, eveliAssets).importData(importData).await().atMost(Duration.ofMinutes(5));
+    
+    return ResponseEntity.ok("imported");
+  }
+  
+  @PostMapping
+  public ResponseEntity<String> initAssets(@RequestBody Deployment importData) 
+      throws StreamReadException, DatabindException, IOException 
+  {
     
     final HdesClient wrench = eveliContext.getWrench();
     final StencilClient stencil = eveliContext.getStencil();

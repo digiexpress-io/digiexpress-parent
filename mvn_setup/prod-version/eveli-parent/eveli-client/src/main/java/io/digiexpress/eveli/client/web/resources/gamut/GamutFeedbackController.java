@@ -39,10 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
+import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -34,7 +34,7 @@ import org.hibernate.tool.schema.TargetType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.digiexpress.eveli.client.persistence.entities.TaskEntity;
+import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 
 
 
@@ -53,7 +53,7 @@ public class EveliDbSchemaGen {
   public void taskDb() throws Exception {
     final var metadata = new MetadataSources(PROPS);
     
-    for (Class<?> clazz : getClasses(TaskEntity.class.getPackageName())) {
+    for (Class<?> clazz : getClasses(ProcessEntity.class.getPackageName())) {
       if(!clazz.getSimpleName().toLowerCase().contains("task") && !clazz.getSimpleName().toLowerCase().contains("process")) {
         continue;
       }
@@ -75,7 +75,7 @@ public class EveliDbSchemaGen {
   public void feedbackDb() throws Exception {
     final var metadata = new MetadataSources(PROPS);
     
-    for (Class<?> clazz : getClasses(TaskEntity.class.getPackageName())) {
+    for (Class<?> clazz : getClasses(ProcessEntity.class.getPackageName())) {
       if(!clazz.getSimpleName().toLowerCase().contains("feedback")) {
         continue;
       }

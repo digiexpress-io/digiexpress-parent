@@ -36,21 +36,21 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
-import io.resys.thena.docdb.api.models.Objects.TreeValue;
-import io.resys.thena.docdb.api.models.Repo;
-import io.resys.thena.docdb.spi.ClientState;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.TreeValue;
+import io.resys.thena.spi.DbState;
 
 
 
 public class TestExporter {
-  private final ClientState state;
+  private final DbState state;
 
-  public TestExporter(ClientState state) {
+  public TestExporter(DbState state) {
     super();
     this.state = state;
   }
 
-  public String print(Repo repo) {
+  public String print(Tenant repo) {
     final Map<String, String> replacements = new HashMap<>();
     final Function<String, String> ID = (id) -> {
       if(replacements.containsKey(id)) {
@@ -61,7 +61,7 @@ public class TestExporter {
       return next;
     };
 
-    final var ctx = state.withRepo(repo);
+    final var ctx = state.toGitState(repo);
     
     StringBuilder result = new StringBuilder();
 
@@ -78,7 +78,7 @@ public class TestExporter {
     .append("Refs").append(System.lineSeparator());
     
     ctx.query().refs()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - ")
       .append(ID.apply(item.getCommit())).append(": ").append(item.getName())
@@ -108,7 +108,7 @@ public class TestExporter {
     .append("Commits").append(System.lineSeparator());
     
     ctx.query().commits()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - id: ").append(ID.apply(item.getId()))
       .append(System.lineSeparator())
@@ -126,7 +126,7 @@ public class TestExporter {
     .append("Trees").append(System.lineSeparator());
     
     ctx.query().trees()
-    .find().onItem()
+    .findAll().onItem()
     .transform(src -> {
       
       final var items = new ArrayList<TreeValue>(src.getValues().values());
@@ -159,7 +159,7 @@ public class TestExporter {
     .append("Blobs").append(System.lineSeparator());
     
     ctx.query().blobs()
-    .find().onItem()
+    .findAll().onItem()
     .transform(item -> {
       result.append("  - ").append(ID.apply(item.getId())).append(": ").append(replaceContent(item.getValue().encode(), replacements)).append(System.lineSeparator());
       return item;

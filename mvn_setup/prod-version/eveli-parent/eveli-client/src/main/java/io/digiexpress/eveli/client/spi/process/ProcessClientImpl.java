@@ -77,7 +77,7 @@ public class ProcessClientImpl implements ProcessClient {
   public ProcessQuestionnaireQuery queryProcessQuestionnaire() {
     return new ProcessQuestionnaireQuery() {
       @Override
-      public Optional<JsonObject> findOneByTaskId(Long taskId) {
+      public Optional<JsonObject> findOneByTaskId(String taskId) {
         ProcessAssert.notNull(taskId, () -> "taskId must be defined!");    
         return processJPA.findQuestionnaireByTaskId(taskId).map(json -> new JsonObject(json));
       }

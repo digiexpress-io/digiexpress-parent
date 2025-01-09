@@ -53,6 +53,7 @@ export declare namespace FeedbackApi {
   }
 
   export interface FeedbackTemplate {
+    processId: ProcessId;
     taskId: TaskId;
     userId: UserId;
 
@@ -75,6 +76,7 @@ export declare namespace FeedbackApi {
   }
 
   export interface CreateFeedbackCommand {
+    processId: ProcessId;
     taskId: TaskId;
     userId: UserId;
 

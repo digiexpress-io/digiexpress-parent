@@ -34,7 +34,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
-import io.digiexpress.eveli.client.config.EveliAutoConfigDB;
+import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling // DialobCallbackController
 @Slf4j
 @Import(value = { 
-    EveliAutoConfigDB.class, 
+    EveliAutoConfigJpa.class, 
     EveliAutoConfigAssets.class, 
     EveliAutoConfig.class, 
     DialobAutoConfig.class,

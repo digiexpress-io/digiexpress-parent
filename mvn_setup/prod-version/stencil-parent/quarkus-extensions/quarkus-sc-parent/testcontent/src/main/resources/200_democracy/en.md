@@ -1,4 +1,0 @@
-# Democracy
-content
-
-#### nested

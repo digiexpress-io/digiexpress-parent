@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.feedback;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -44,12 +46,15 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
   private final DialobClient dialobClient;
   private final ProcessClient processClient;
   private final EveliPropsFeedback configProps;
+  private final static Duration atMost = Duration.ofMinutes(1);
+  
   
   @Override
-  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskIdString) {
-    final var taskId = Long.parseLong(taskIdString);
-    final var comments = taskClient.queryComments().findAllByTaskId(taskId);
-    final var process = processClient.queryInstances().findOneByTaskId(taskId);
+  public Optional<FeedbackQuestionnaire> findOneFromTaskById(String taskId) {
+    final var task = taskClient.queryTasks().getOneById(taskId).await().atMost(atMost);
+    final var comments = taskClient.queryTaskComments().findAllByTaskId(task.getId()).await().atMost(atMost);
+
+    final var process = processClient.queryInstances().findOneByTaskId(task.getId());
     if(process.isEmpty()) {
       return Optional.empty();
     }

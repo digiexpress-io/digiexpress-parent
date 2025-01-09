@@ -20,16 +20,16 @@ package io.digiexpress.eveli.assets.spi.exceptions;
  * #L%
  */
 
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsResult;
-import io.resys.thena.docdb.api.actions.ObjectsActions.RefObjects;
+import io.resys.thena.api.actions.GitBranchActions;
+import io.resys.thena.api.envelope.QueryEnvelope;
 
 public class RefException extends RuntimeException {
   private static final long serialVersionUID = 7190168525508589141L;
   
   private final String entity;
-  private final ObjectsResult<RefObjects> commit;
+  private final QueryEnvelope<GitBranchActions.BranchObjects> commit;
   
-  public RefException(String entity, ObjectsResult<RefObjects> commit) {
+  public RefException(String entity, QueryEnvelope<GitBranchActions.BranchObjects> commit) {
     super(msg(entity, commit));
     this.entity = entity;
     this.commit = commit;
@@ -38,11 +38,11 @@ public class RefException extends RuntimeException {
   public String getEntity() {
     return entity;
   }
-  public ObjectsResult<RefObjects> getCommit() {
+  public QueryEnvelope<GitBranchActions.BranchObjects> getCommit() {
     return commit;
   }
   
-  private static String msg(String entity, ObjectsResult<RefObjects> commit) {
+  private static String msg(String entity, QueryEnvelope<GitBranchActions.BranchObjects> commit) {
     StringBuilder messages = new StringBuilder();
     for(var msg : commit.getMessages()) {
       messages

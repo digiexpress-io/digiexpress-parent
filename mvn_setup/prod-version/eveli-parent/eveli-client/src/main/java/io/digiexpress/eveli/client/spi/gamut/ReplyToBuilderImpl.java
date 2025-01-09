@@ -20,21 +20,17 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import java.util.Optional;
-
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
+import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
+import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
-import io.digiexpress.eveli.client.persistence.entities.TaskCommentEntity;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.digiexpress.eveli.client.web.resources.worker.TaskControllerBase;
-import io.thestencil.iam.api.UserActionsClient.UserMessage;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -44,9 +40,7 @@ import lombok.experimental.Accessors;
 @Data @Accessors(fluent = true)
 public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final ProcessClient processRepository;
-  private final CommentRepository commentRepository;
-  private final TaskRepository taskRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   private final CrmClient authClient;
   private String actionId;
   private ReplayToInit from;
@@ -62,20 +56,18 @@ public class ReplyToBuilderImpl implements ReplyToBuilder {
     
     final var customer = authClient.getCustomer().getPrincipal();    
     final var taskId = process.getTaskId();
-    final var commentTask = taskRepository.getOneById(taskId);
-    final var entity = new TaskCommentEntity()
-        .setTask(commentTask)
-        .setUserName(customer.getUsername())
-        .setCommentText(from.getText())
-        .setExternal(true)
-        .setSource(TaskCommentSource.PORTAL);
     
-    final var isUnread = taskRepository.findUnreadExternalTasks(customer.getUsername()).contains(taskId);
-    final var savedComment = commentRepository.save(entity);
+   final var savedComment = taskClient.taskBuilder()
+       .userId(customer.getUsername(), null)
+       .createTaskComment(ImmutableCreateTaskCommentCommand.builder()
+        .taskId(taskId)
+        .commentText(from.getText())
+        .external(true)
+        .source(TaskCommentSource.PORTAL)
+        .build())
+       .await().atMost(TaskMapper.atMost);
+    ;
     
-    if(!isUnread) {
-      new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(taskId, Optional.of(commentTask), customer.getUsername());
-    }
     return UserMessagesQueryImpl.visitUserMessage(savedComment, authClient.getCustomer());
   }
 

@@ -27,9 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskEvent.TaskEventType;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationMessagingComponent implements TaskNotificator {
   
   @Autowired(required=false)

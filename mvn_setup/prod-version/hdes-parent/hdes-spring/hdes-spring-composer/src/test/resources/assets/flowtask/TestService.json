@@ -1,7 +1,0 @@
-[
-  {
-    "id": null,
-    "value": "package io.resys.wrench.assets.bundle.groovy;\r\nimport java.io.Serializable;\r\nimport io.resys.hdes.client.api.programs.DecisionProgram;\r\nimport io.resys.hdes.client.api.programs.FlowProgram;\r\nimport io.resys.hdes.client.api.programs.ServiceProgram;\r\nimport io.resys.hdes.client.api.ast.AstFlow;\r\nimport io.resys.hdes.client.api.ast.AstDecision;\r\nimport io.resys.hdes.client.api.ast.AstService;\r\nimport io.resys.hdes.client.api.programs.DecisionProgram.DecisionResult;\r\nimport io.resys.hdes.client.api.programs.DecisionProgram.DecisionLog;\r\nimport io.resys.hdes.client.api.programs.FlowProgram.FlowResult;\r\nimport io.resys.hdes.client.api.programs.FlowProgram.FlowResultLog;\r\nimport io.resys.hdes.client.api.programs.ServiceProgram.ServiceResult;\r\nimport io.resys.hdes.client.api.programs.Program.ProgramContext;\r\nimport io.resys.hdes.client.api.programs.ServiceData;\r\nimport io.resys.hdes.client.api.ast.AstBody.AstBodyType;\r\n\r\n                  \r\npublic class TestService {\r\n  \r\n  public Output execute(Input input, ProgramContext ctx) {\r\n    Output result = new Output();\r\n    result.res = input.name;\r\n    return result;\r\n  }\r\n  \r\n  @ServiceData\r\n  public static class Input implements Serializable {\r\n    String name;\r\n  }\r\n  \r\n  @ServiceData\r\n  public static class Output implements Serializable {\r\n    String res;\r\n  }\r\n  \r\n}\r\n",
-    "type": "SET_BODY"
-  }
-]

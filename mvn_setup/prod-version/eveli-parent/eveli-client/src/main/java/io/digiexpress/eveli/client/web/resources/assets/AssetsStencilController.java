@@ -131,7 +131,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().link(body));
   }
   @DeleteMapping("/links/{id}") 
-  public Uni<Entity<Link>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId") String articleId) {
+  public Uni<Entity<Link>> deleteLink(@PathVariable("id") String linkId, @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
       return getClient().onItem().transformToUni(composer -> composer.delete().link(linkId));
     } 
@@ -150,7 +150,7 @@ public class AssetsStencilController {
     return getClient().onItem().transformToUni(composer -> composer.update().workflow(body));
   }
   @DeleteMapping("/workflows/{id}") 
-  public Uni<Entity<Workflow>> deleteWorkflow(@PathVariable("id") String linkId,  @RequestParam(name = "articleId") String articleId) {
+  public Uni<Entity<Workflow>> deleteWorkflow(@PathVariable("id") String linkId,  @RequestParam(name = "articleId", required = false) String articleId) {
     if(articleId == null || articleId.isEmpty()) {
       return getClient().onItem().transformToUni(composer -> composer.delete().workflow(linkId));
     } 

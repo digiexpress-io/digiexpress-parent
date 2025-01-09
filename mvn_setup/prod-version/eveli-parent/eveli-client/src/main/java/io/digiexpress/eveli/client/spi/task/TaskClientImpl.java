@@ -21,45 +21,38 @@ package io.digiexpress.eveli.client.spi.task;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
-import io.digiexpress.eveli.client.persistence.entities.TaskRefGenerator;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
-  private final JdbcTemplate jdbcTemplate;
-  private final TaskRepository taskRepository;
-  private final TaskRefGenerator taskRefGenerator;
   private final TaskNotificator notificator;
-  private final TaskAccessRepository taskAccessRepository;
-  private final CommentRepository commentRepository;
+  private final TaskStore ctx;
+  
   
   @Override
   public PaginateTasks paginateTasks() {
-    return new PaginateTasksImpl(taskRepository);
+    return new PaginateTasksImpl(ctx);
   }
   @Override
   public QueryTasks queryTasks() {
     return new QueryTasks() {
       @Override
-      public Task getOneById(long taskId) {
-        return PaginateTasksImpl.map(taskRepository.getOneById(taskId));
+      public Uni<Task> getOneById(String taskId) {
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new GetOneTaskByIdVisitor(taskId));
       }
       @Override
-      public Optional<Task> findOneById(long taskId) {
-        return taskRepository.findOneById(taskId).map(PaginateTasksImpl::map);
+      public Uni<List<Task>> findAll(List<String> taskIds) {
+        TaskAssert.notNull(taskIds, () -> "taskIds can't be empty!");
+        return ctx.getConfig().accept(new FindAllTaskByIdsVisitor(taskIds));
       }
     };
   }
@@ -75,60 +68,73 @@ public class TaskClientImpl implements TaskClient {
         return this;
       }
       @Override
-      public TaskComment createTaskComment(CreateTaskCommentCommand command) {
+      public Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new CreateOneTaskComment(userId, taskRepository, commentRepository, notificator, taskAccessRepository).create(command);
+        return ctx.getConfig().accept(new CreateOneTaskComment(userId, notificator, command));
       }
       @Override
-      public Task createTask(CreateTaskCommand command) {
+      public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new CreateOneTask(userId, taskRepository, taskRefGenerator, notificator, taskAccessRepository).create(command);
+        return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command));
       }
       @Override
-      public Task modifyTask(Long taskId, ModifyTaskCommand command) {
+      public Uni<Task> modifyTask(String taskId, ModifyTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new ModifyOneTask(userId, userEmail, taskRepository, notificator, taskAccessRepository).modify(taskId, command);
+        return ctx.getConfig().accept(new ModifyOneTask(userId, userEmail, notificator, taskId, command));
       }
       @Override
-      public Task deleteTask(Long taskId) {
+      public Uni<Task> deleteTask(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         //TaskAssert.notEmpty(userEmail, () -> "userEmail can't be empty!");
-        return new DeleteOneTask(userId, userEmail, taskRepository, notificator, jdbcTemplate).delete(taskId);
+        return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
+      }
+      @Override
+      public Uni<Task> addWorkerCommitViewer(String taskId) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId));
+      }
+      @Override
+      public Uni<Task> addCustomerCommitViewer(String taskId) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId));
       }
     };
   }
 
   @Override
-  public QueryTaskComments queryComments() {
+  public QueryTaskComments queryTaskComments() {
     return new QueryTaskComments() {
-      
       @Override
-      public TaskComment getOneById(long commentId) {
-        return commentRepository.findById(commentId).map(CreateOneTaskComment::map).get();
+      public Uni<TaskComment> getOneById(String commentId) {
+        return ctx.getConfig().accept(new GetOneTaskCommentByIdVisitor(commentId));
       }
-      
       @Override
-      public List<TaskComment> findAllByTaskId(long taskId) {
-        return commentRepository.findByTaskId(taskId).stream().map(CreateOneTaskComment::map).toList();
+      public Uni<List<TaskComment>> findAllByTaskId(String taskId) {        
+        return ctx.getConfig().accept(new FindAllTaskCommentsByTaskIdVisitor(taskId));
+      }
+      @Override
+      public Uni<List<TaskComment>> findAllByReporterId(String reporterId) {
+        return ctx.getConfig().accept(new FindAllExternalTaskCommentsByReporterIdVisitor(reporterId));
       }
     };
   }
 
   @Override
-  public QueryTaskKeywords queryKeywords() {
+  public QueryTaskKeywords queryTaskKeywords() {
     return new QueryTaskKeywords() {
       @Override
-      public List<String> findAllKeywords() {
-
-        final var result = new ArrayList<String>();
-        jdbcTemplate.query(
-            "SELECT distinct key_words from task_keywords order by 1",
-            (rs, rowNum) -> rs.getString(1)
-        ).forEach(keyword -> result.add(keyword));
-        return Collections.unmodifiableList(result);
+      public Uni<List<String>> findAllKeywords() {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        final Uni<List<String>> items = grim.find()
+            .missionLabelQuery().findAllUnique()
+            .map(e -> new ArrayList<>(e.stream()
+                .map(x -> x.getLabelValue())
+                .collect(Collectors.toSet()))
+            );
+        return items;
       }
     };
   }
@@ -149,12 +155,9 @@ public class TaskClientImpl implements TaskClient {
         return this;
       }
       @Override
-      public List<Long> findAll() {
+      public Uni<List<String>> findAll() {
         TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        if(roles.isEmpty()) {
-          return taskRepository.findUnreadTasks(userId);
-        } 
-        return taskRepository.findUnreadTasksByRole(userId, roles);
+        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles, TaskMapper.VIEWER_WORKER));
       }
     };
   }

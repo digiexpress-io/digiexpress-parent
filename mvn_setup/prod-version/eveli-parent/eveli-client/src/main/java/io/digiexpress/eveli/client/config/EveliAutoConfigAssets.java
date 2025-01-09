@@ -27,7 +27,6 @@ import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,21 +51,18 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.ThenaStore;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
-import io.resys.thena.docdb.spi.pgsql.PgErrors;
-import io.resys.thena.docdb.sql.DocDBFactorySql;
+import io.resys.hdes.client.spi.store.ThenaStore;
+import io.resys.thena.storesql.DbStateSqlImpl;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.SslMode;
-import io.vertx.sqlclient.PoolOptions;
+import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -74,13 +70,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {
-  
-  @Value("${spring.datasource.url}")
-  private String datasourceUrl;
-  @Value("${spring.datasource.username}")
-  private String datasourceUsername;
-  @Value("${spring.datasource.password}")
-  private String datasourcePassword;
   
   // TODO @Value("${app.version}")
   private String version = "alpha";
@@ -126,28 +115,12 @@ public class EveliAutoConfigAssets {
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
-      ApplicationContext context
+      ApplicationContext context,
+      io.vertx.mutiny.pgclient.PgPool pgPool
     ) {
     
     final var liveContent = "live content:" + context.getApplicationName();
-    final var datasourceConfig = datasourceUrl.split(":");
-    final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
 
-    
-    final var pgHost = datasourceConfig[2].substring(2);
-    final var pgPort = Integer.parseInt(portAndDb[0]);
-    final var pgDb = portAndDb[1];
-    final var sslMode = SslMode.ALLOW;
-    
-    final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
-        new PgConnectOptions()
-          .setHost(pgHost)
-          .setPort(pgPort)
-          .setDatabase(pgDb)
-          .setUser(datasourceUsername)
-          .setPassword(datasourcePassword)
-          .setSslMode(sslMode), 
-        new PoolOptions().setMaxSize(5));
     
     final var wrenchClient = HdesClientImpl.builder()
         .store(ThenaStore.builder()
@@ -165,14 +138,14 @@ public class EveliAutoConfigAssets {
     
     final var stencilClient = new StencilClientImpl(StencilStoreImpl.builder()
         .config((builder) -> builder
-            .client(DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build())
+            .client(DbStateSqlImpl.create().client(pgPool).build())
             .objectMapper(objectMapper)
             .repoName("stencil-assets")
             .headName("main")
             .deserializer(new ZoeDeserializer(objectMapper))
             .serializer((entity) -> {
               try {
-                return objectMapper.writeValueAsString(entity);
+                return new JsonObject(objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
@@ -205,14 +178,14 @@ public class EveliAutoConfigAssets {
     
     final var assetClient = EveliAssetsClientImpl.builder()
         .config((builder) -> builder
-            .client(DocDBFactorySql.create().client(pgPool).errorHandler(new PgErrors()).build())
+            .client(DbStateSqlImpl.create().client(pgPool).build())
             .repoName("eveli-assets")
             .headName("main")
             .deserializer(new EveliAssetsDeserializer(objectMapper))
             .objectMapper(objectMapper)
             .serializer((entity) -> {
               try {
-                return objectMapper.writeValueAsString(entity);
+                return new JsonObject(objectMapper.writeValueAsString(entity));
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
@@ -237,18 +210,12 @@ public class EveliAutoConfigAssets {
     };
 
     final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
-    final var createdWrench = wrenchClient.store().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
-    final var createdStencil = stencilClient.getStore().repo().createIfNot().await().atMost(Duration.ofSeconds(5));
+    final var createdWrench = wrenchClient.repo().create().await().atMost(Duration.ofSeconds(5));
+    final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
     
     
     final var msg = new StringBuilder("\r\n")
-      .append("Creating asset DB:").append("\r\n")
-      .append("  parsed-datasource-url: ").append(datasourceUrl).append("\r\n")
-      .append("  pgHost: ").append(pgHost).append("\r\n")
-      .append("  pgPort: ").append(pgPort).append("\r\n")
-      .append("  pgDb: ").append(pgDb).append("\r\n")
-      .append("  sslMode: ").append(sslMode).append("\r\n")
-      
+      .append("Creating assets DB-s:").append("\r\n")
       .append("  workflows: ").append("\r\n")
       .append("    created-db: ").append(createdAssets).append("\r\n")
       .append("    connected-to-repo: ").append(assetClient.getConfig().getRepoName()).append("\r\n")
@@ -256,7 +223,6 @@ public class EveliAutoConfigAssets {
       .append("  wrench: ").append("\r\n")
       .append("    created-db: ").append(createdWrench).append("\r\n")
       .append("    connected-to-repo: ").append(wrenchClient.store().getRepoName()).append("\r\n")
-      
       
       .append("  stencil: ").append("\r\n")
       .append("    created-db: ").append(createdStencil).append("\r\n")

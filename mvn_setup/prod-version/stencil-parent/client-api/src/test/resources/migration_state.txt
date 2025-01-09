@@ -1,0 +1,54 @@
+
+Repo
+  - id: 1, rev: 2
+    name: migration-test
+
+Refs
+  - 3: stencil-main
+
+Tags
+
+Commits
+  - id: 3
+    tree: 4, parent: , message: batch created: '18', updated: '0', deleted: '0'
+
+Trees
+  - id: 4
+    5: ARTICLE-2
+    6: ARTICLE-5
+    7: ARTICLE-8
+    8: LINK-10
+    9: LINK-7
+    10: LOCALE-1
+    11: LOCALE-11
+    12: LOCALE-15
+    13: PAGE-12
+    14: PAGE-13
+    15: PAGE-14
+    16: PAGE-16
+    17: PAGE-17
+    18: PAGE-18
+    19: PAGE-3
+    20: PAGE-6
+    21: PAGE-9
+    22: WORKFLOW-4
+
+Blobs
+  - 20: {"id":"PAGE-6","body":{"locale":"LOCALE-1","article":"ARTICLE-5","content":"# Tervetuloa\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 17: {"id":"PAGE-17","body":{"locale":"LOCALE-15","article":"ARTICLE-5","content":"# Welcome \ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 21: {"id":"PAGE-9","body":{"locale":"LOCALE-1","article":"ARTICLE-8","content":"# Demokratia\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 18: {"id":"PAGE-18","body":{"locale":"LOCALE-15","article":"ARTICLE-8","content":"# Democracy\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 16: {"id":"PAGE-16","body":{"locale":"LOCALE-15","article":"ARTICLE-2","content":"# Residence\ncontent\n\n#### nested"},"type":"PAGE"}
+  - 14: {"id":"PAGE-13","body":{"locale":"LOCALE-11","article":"ARTICLE-5","content":"# Välkommen\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 15: {"id":"PAGE-14","body":{"locale":"LOCALE-11","article":"ARTICLE-8","content":"# Demokrati\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 22: {"id":"WORKFLOW-4","body":{"value":"General message","labels":[{"locale":"LOCALE-1","labelValue":"workflow LINK IN FI"},{"locale":"LOCALE-11","labelValue":"workflow LINK IN SV"},{"locale":"LOCALE-15","labelValue":"workflow LINK IN EN"}],"articles":["ARTICLE-5","ARTICLE-8","ARTICLE-2"]},"type":"WORKFLOW"}
+  - 5: {"id":"ARTICLE-2","body":{"name":"residence","order":100,"parentId":null},"type":"ARTICLE"}
+  - 8: {"id":"LINK-10","body":{"value":"https://www.some.site.com/","labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FIN for DEM"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for DEM"}],"articles":["ARTICLE-8"],"contentType":"internal"},"type":"LINK"}
+  - 19: {"id":"PAGE-3","body":{"locale":"LOCALE-1","article":"ARTICLE-2","content":"# Asuminen\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 10: {"id":"LOCALE-1","body":{"value":"fi","enabled":true},"type":"LOCALE"}
+  - 6: {"id":"ARTICLE-5","body":{"name":"index","order":0,"parentId":null},"type":"ARTICLE"}
+  - 7: {"id":"ARTICLE-8","body":{"name":"democracy","order":200,"parentId":null},"type":"ARTICLE"}
+  - 13: {"id":"PAGE-12","body":{"locale":"LOCALE-11","article":"ARTICLE-2","content":"# Boende\ncontent\n\n#### nested\n"},"type":"PAGE"}
+  - 11: {"id":"LOCALE-11","body":{"value":"sv","enabled":true},"type":"LOCALE"}
+  - 9: {"id":"LINK-7","body":{"value":"+357 786767","labels":[{"locale":"LOCALE-1","labelValue":"TEXT IN FI for INDEX"},{"locale":"LOCALE-11","labelValue":"TEXT IN SV for INDEX"},{"locale":"LOCALE-15","labelValue":"TEXT IN EN for INDEX"}],"articles":["ARTICLE-5"],"contentType":"phone"},"type":"LINK"}
+  - 12: {"id":"LOCALE-15","body":{"value":"en","enabled":true},"type":"LOCALE"}

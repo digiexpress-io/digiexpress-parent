@@ -28,15 +28,17 @@ management:
 #logging.org.springframework.http: INFO
 #logging.level.org.springframework.boot: INFO
 
+logging.level.io.vertx.core.impl.btc.BlockedThreadChecker: OFF
+logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
+
 
 # DB config
-spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli_app"
-spring.datasource.username: "eveli_app"
+spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli-app"
+spring.datasource.username: "eveli-app"
 spring.datasource.password: "password123"
 
 eveli.task.adminsearch: true
 eveli.assets.timezoneOffset: +2
-
 
 # dialob related config
 eveli.dialob.enabled: true
@@ -46,8 +48,8 @@ eveli.dialob.api-key:
 # jwt linked crm from security proxy
 eveli.crm.enabled: false
 eveli.crm.host: 
-eveli.crm.service-path-company:
-eveli.crm.service-path-person:
+eveli.crm.service-path-company: gw/api/ypa/organizationRoles
+eveli.crm.service-path-person: gw/api/hpa/authorizationList
   
 # feedback  
 eveli.feedback.enabled: true
@@ -58,3 +60,7 @@ eveli.feedback.question-title: feedBackTitle
 eveli.feedback.question: feedBackTxt
 eveli.feedback.username-allowed: publicAnswerAllowed
   
+app.jwt.public-key-value:
+app.jwt.issuer: "https://frontdesk.digiexpress.io/gateway/issuer"
+app.jwt.portal.public-key-value: 
+app.jwt.portal.issuer: "https://portal.digiexpress.io/gateway/issuer"

@@ -82,7 +82,7 @@ public class ProcessEntity {
   private String questionnaireId;
 
   @Column(name="task_id")
-  private Long taskId;
+  private String taskId;
   
   @Column(name="user_id")
   private String userId;

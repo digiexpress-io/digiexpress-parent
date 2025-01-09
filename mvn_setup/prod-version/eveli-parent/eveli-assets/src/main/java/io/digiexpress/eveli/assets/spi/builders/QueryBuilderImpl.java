@@ -40,13 +40,14 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetClientConfig;
 import io.digiexpress.eveli.assets.api.ImmutableAssetState;
 import io.digiexpress.eveli.assets.spi.exceptions.QueryException;
-import io.resys.thena.docdb.api.actions.ObjectsActions.MatchCriteria;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
-import io.resys.thena.docdb.api.models.Objects.Blob;
-import io.resys.thena.docdb.api.models.Objects.Tree;
+import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Tree;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.spi.exceptions.RefException;
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
@@ -56,24 +57,23 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @SuppressWarnings("unchecked")
   public <T extends EntityBody> Uni<List<Entity<T>>> findAnyById(List<String> ids, EntityType type) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
-    .blobNames(ids)
-    .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", type.name())))
-    .list().onItem()
-    .transform(state -> {
-      if(state.getStatus() != ObjectsStatus.OK) {
-        throw new QueryException(String.join(",", ids), type, state);  
-      }
-      
+      .git(config.getRepoName())
+      .pull().pullQuery()
+      .branchNameOrCommitOrTag(config.getHeadName())
+      .docId(ids)
 
-
-      return state.getObjects().getBlob().stream()
-        .map(blob -> (Entity<T>) config.getDeserializer().fromString(type, blob.getValue().encode()))
-        .collect(Collectors.toList());
-      
-    });
+      .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", type.name())))
+      .findAll().onItem()
+      .transform(state -> {
+        if(state.getStatus() != QueryEnvelopeStatus.OK) {
+          throw new QueryException(String.join(",", ids), type, state);  
+        }
+  
+        return state.getObjects().getBlob().stream()
+          .map(blob -> (Entity<T>) config.getDeserializer().fromString(type, blob.getValue().encode()))
+          .collect(Collectors.toList());
+        
+      });
   }
 
   @Override
@@ -109,13 +109,13 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @Override
   public Uni<Optional<Entity<Publication>>> findOnePublicationByName(String name) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
+    .git(config.getRepoName())
+    .pull().pullQuery()
+    .branchNameOrCommitOrTag(config.getHeadName())
     .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.PUBLICATION.name()), MatchCriteria.equalsTo("body.name", name)))
-    .list().onItem()
+    .findAll().onItem()
     .transform(state -> {
-      if(state.getStatus() != ObjectsStatus.OK) {
+      if(state.getStatus() != QueryEnvelopeStatus.OK) {
         throw new QueryException("failed to find any publication", EntityType.PUBLICATION, state);  
       }
 
@@ -130,13 +130,14 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @Override
   public Uni<Optional<Entity<Workflow>>> findOneWorkflowById(String id) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
-    .blobName(id)
-    .list().onItem()
+    .git(config.getRepoName())
+    .pull().pullQuery()
+    .branchNameOrCommitOrTag(config.getHeadName())
+    .docId(id)
+
+    .findAll().onItem()
     .transform(state -> {
-      if(state.getStatus() != ObjectsStatus.OK) {
+      if(state.getStatus() != QueryEnvelopeStatus.OK) {
         throw new QueryException("failed to find any workflows", EntityType.WORKFLOW, state);  
       }
 
@@ -151,13 +152,13 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @Override
   public Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
+    .git(config.getRepoName())
+    .pull().pullQuery()
+    .branchNameOrCommitOrTag(config.getHeadName())
     .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.WORKFLOW.name()), MatchCriteria.equalsTo("body.name", name)))
-    .list().onItem()
+    .findAll().onItem()
     .transform(state -> {
-      if(state.getStatus() != ObjectsStatus.OK) {
+      if(state.getStatus() != QueryEnvelopeStatus.OK) {
         throw new QueryException("failed to find any workflows", EntityType.WORKFLOW, state);  
       }
 
@@ -172,13 +173,13 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @Override
   public Uni<Optional<Entity<WorkflowTag>>> findOneWorkflowTagByName(String name) {
     return config.getClient()
-    .objects().blobState()
-    .repo(config.getRepoName())
-    .anyId(config.getHeadName())
+    .git(config.getRepoName())
+    .pull().pullQuery()
+    .branchNameOrCommitOrTag(config.getHeadName())
     .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.WORKFLOW_TAG.name()), MatchCriteria.equalsTo("body.name", name)))
-    .list().onItem()
+    .findAll().onItem()
     .transform(state -> {
-      if(state.getStatus() != ObjectsStatus.OK) {
+      if(state.getStatus() != QueryEnvelopeStatus.OK) {
         throw new QueryException("failed to find any workflow tags", EntityType.WORKFLOW_TAG, state);  
       }
 
@@ -195,7 +196,10 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   @Override
   public Uni<AssetState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();
-    return config.getClient().repo().query().id(config.getRepoName()).get().onItem()
+    return config.getClient()        
+      .git(config.getRepoName())
+      .branch().branchQuery().branchName(config.getHeadName())
+      .get().onItem()
       .transformToUni(repo -> {
         if(repo == null) {
          return Uni.createFrom().item(ImmutableAssetState.builder()
@@ -205,13 +209,17 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
         }
       
         return config.getClient()
-            .objects().refState()
-            .repo(config.getRepoName())
-            .ref(config.getHeadName())
-            .blobs(true)
-            .build().onItem()
+            
+            .git(config.getRepoName())
+            .branch()
+            .branchQuery()
+            .branchName(config.getHeadName())
+            .docsIncluded()
+            .get()
+            
+            .onItem()
             .transform(state -> {
-              if(state.getStatus() == ObjectsStatus.ERROR) {
+              if(state.getStatus() == QueryEnvelopeStatus.ERROR) {
                 throw new RefException(siteName, state);
               }
 
@@ -224,8 +232,8 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
               }
               
               final var commit = state.getObjects().getCommit();
-              final var tree = state.getObjects().getTree();
               final var blobs = state.getObjects().getBlobs();
+              final var tree = state.getObjects().getTree();
               final var builder = mapTree(tree, blobs, config);
               return builder
                   .commit(commit.getId())

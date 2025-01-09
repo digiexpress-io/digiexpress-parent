@@ -40,11 +40,6 @@
       <!-- client -->
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
         <artifactId>hdes-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -53,18 +48,9 @@
         <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-composer-ui</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+
 
       <!-- store -->
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-store-git</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>hdes-store-thena</artifactId>
@@ -72,72 +58,11 @@
       </dependency>
 
 
-      <!-- spring -->
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-spring-env</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-spring-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>stencil-composer-integration</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>stencil-client-api</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>stencil-iam-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-composer</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-composer-pg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-site-pg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-sc</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-user-actions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-feedback</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
-        <artifactId>quarkus-stencil-iam</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-   
-
     </dependencies>
   </dependencyManagement>
 </project>

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -23,7 +25,6 @@ package io.digiexpress.eveli.client.web.resources.worker;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,8 +47,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,10 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskApiController {    
   private final AuthClient securityClient;
   private final TaskClient taskClient;
-  private final DialobClient dialobClient;
-  
-  private final TaskAccessRepository taskAccessRepository;
-  private final TaskRepository taskRepository;
+  private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
   @Transactional(readOnly = true)
@@ -95,17 +91,17 @@ public class TaskApiController {
         .page(pageable);
     
     if (worker.getPrincipal().isAdmin()) {
-      return ResponseEntity.ok(query.findAll());
+      return ResponseEntity.ok(query.findAll().await().atMost(timeout));
     }
-    return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll());
+    return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll().await().atMost(timeout));
   }
 
   @GetMapping("/{id}")
   @Transactional(readOnly = true)
-  public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
+  public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
     
     final var worker = securityClient.getUser();
-    final var task = taskClient.queryTasks().getOneById(id);
+    final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
     
     
     if (worker.getPrincipal().isAdmin()) {
@@ -127,17 +123,17 @@ public class TaskApiController {
     final var worker = securityClient.getUser().getPrincipal();
     final var newTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .createTask(command);
+        .createTask(command).await().atMost(timeout);
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
   }
   
   @PutMapping("/{id}")
   @Transactional
-  public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") Long id, @RequestBody TaskClient.ModifyTaskCommand command) {
+  public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
     final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .modifyTask(id, command);
+        .modifyTask(id, command).await().atMost(timeout);
     return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
 
   }
@@ -145,7 +141,7 @@ public class TaskApiController {
   @DeleteMapping("/{id}")
   @Transactional
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTask(@PathVariable("id") Long id) {
+  public void deleteTask(@PathVariable("id") String id) {
     final var worker = securityClient.getUser().getPrincipal();
     taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
@@ -153,27 +149,30 @@ public class TaskApiController {
   }
   
   @GetMapping(value="/unread")
-  public ResponseEntity<Collection<Long>> getUnreadTasks() {
+  public ResponseEntity<Collection<String>> getUnreadTasks() {
     final var worker = securityClient.getUser().getPrincipal();
     
     if (worker.isAdmin()) {
       return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
           .userId(worker.getUsername())
-          .findAll());
+          .findAll().await().atMost(timeout));
     } 
     return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
         .userId(worker.getUsername())
         .requireAnyRoles(worker.getRoles())
-        .findAll());
+        .findAll().await().atMost(timeout));
   }
   
   @GetMapping(value="/{id}/comments")
-  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") Long id)
+  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
   {
     final var authentication = securityClient.getUser();
-    new TaskControllerBase(taskAccessRepository).registerUserTaskAccess(id, Optional.of(taskRepository.getOneById(id)), authentication.getPrincipal().getUsername());
-    final var comments = taskClient.queryComments().findAllByTaskId(id);
- 
+    taskClient.taskBuilder()
+      .userId(authentication.getPrincipal().getUsername(), null)
+      .addWorkerCommitViewer(id)
+      .await().atMost(timeout);
+    
+    final var comments = taskClient.queryTaskComments().findAllByTaskId(id).await().atMost(timeout);
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
 
@@ -208,6 +207,6 @@ public class TaskApiController {
   @GetMapping("/keywords")
   @Transactional(readOnly = true)
   public ResponseEntity<KeyWordsResponse> getKeyWords() {
-    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryKeywords().findAllKeywords()));
+    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryTaskKeywords().findAllKeywords().await().atMost(timeout)));
   }
 }

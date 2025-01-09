@@ -27,26 +27,21 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
+import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
-import io.digiexpress.eveli.client.persistence.repositories.CommentRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskAccessRepository;
-import io.digiexpress.eveli.client.persistence.repositories.TaskRepository;
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.thestencil.client.api.MigrationBuilder.Sites;
-import io.thestencil.iam.api.ImmutableUserAction;
-import io.thestencil.iam.api.UserActionsClient.UserAction;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class GamutClientImpl implements GamutClient {
   private final ProcessClient processInstanceClient;
-  private final TaskRepository taskRepository;
-  private final CommentRepository commentRepository;
-  private final TaskAccessRepository taskAccessRepository;
+  private final TaskClient taskClient;
   
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
@@ -70,12 +65,12 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionQuery userActionQuery() {
-    return new UserActionsQueryImpl(processInstanceClient, taskRepository, authClient, attachmentsCommands);
+    return new UserActionsQueryImpl(processInstanceClient, taskClient, authClient, attachmentsCommands);
   }
 
   @Override
   public UserMessagesQuery userMessagesQuery() {
-    return new UserMessagesQueryImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
+    return new UserMessagesQueryImpl(processInstanceClient, taskClient, authClient);
   }
 
   @Override
@@ -85,7 +80,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(processInstanceClient, commentRepository, taskRepository, taskAccessRepository, authClient);
+    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient);
   }
 
   @Override
@@ -109,7 +104,7 @@ public class GamutClientImpl implements GamutClient {
           throw new ProcessCantBeDeletedException("Can't delete process with answered questionnaire, id: " + actionId);
         }
         
-        processInstanceClient.queryInstances().deleteOneById(actionId);
+        processInstanceClient.queryInstances().deleteOneById(process.getId());
       
         return ImmutableUserAction.builder()
             .id(process.getId().toString())

@@ -31,6 +31,7 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
+import io.digiexpress.eveli.assets.spi.builders.DeleteBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.DeploymentBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.UpdateBuilderImpl;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -63,8 +64,7 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
 
   @Override
   public DeleteBuilder delete() {
-    // TODO Auto-generated method stub
-    return null;
+    return new DeleteBuilderImpl(client);
   }
 
   @Override

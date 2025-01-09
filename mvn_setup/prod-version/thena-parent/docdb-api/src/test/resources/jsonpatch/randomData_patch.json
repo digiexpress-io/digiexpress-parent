@@ -1,0 +1,60 @@
+[
+  {
+    "op": "replace",
+    "path": "/isActive",
+    "value": false
+  },
+  {
+    "op": "replace",
+    "path": "/age",
+    "value": 39
+  },
+  {
+    "op": "remove",
+    "path": "/registered"
+  },
+  {
+    "op": "remove",
+    "path": "/longitude"
+  },
+  {
+    "op": "move",
+    "from": "/tags/4",
+    "path": "/tags/0"
+  },
+  {
+    "op": "move",
+    "from": "/tags/5",
+    "path": "/tags/1"
+  },
+  {
+    "op": "move",
+    "from": "/tags/6",
+    "path": "/tags/2"
+  },
+  {
+    "op": "move",
+    "from": "/friends/2",
+    "path": "/friends/0"
+  },
+  {
+    "op": "replace",
+    "path": "/friends/2/id",
+    "value": 5
+  },
+  {
+    "op": "replace",
+    "path": "/friends/2/name",
+    "value": "Olivia England"
+  },
+  {
+    "op": "replace",
+    "path": "/greeting",
+    "value": "Hello, Travis Pena! You have -7 unread messages."
+  },
+  {
+    "op": "replace",
+    "path": "/favoriteFruit",
+    "value": "bananaBig"
+  }
+]

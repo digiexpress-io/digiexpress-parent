@@ -35,8 +35,8 @@ import io.digiexpress.eveli.assets.api.ImmutableEntityState;
 import io.digiexpress.eveli.assets.spi.exceptions.DeleteException;
 import io.digiexpress.eveli.assets.spi.exceptions.QueryException;
 import io.digiexpress.eveli.assets.spi.exceptions.SaveException;
-import io.resys.thena.docdb.api.actions.CommitActions.CommitStatus;
-import io.resys.thena.docdb.api.actions.ObjectsActions.ObjectsStatus;
+import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -46,14 +46,16 @@ public class CrudBuilderImpl implements CrudBuilder {
 
   @Override
   public <T extends EntityBody> Uni<Entity<T>> delete(Entity<T> toBeDeleted) {
-    return config.getClient().commit().head()
-        .head(config.getRepoName(), config.getHeadName())
+    return config.getClient()
+        .git(config.getRepoName())
+        .commit().commitBuilder()
+        .branchName(config.getHeadName())
         .message("delete type: '" + toBeDeleted.getType() + "', with id: '" + toBeDeleted.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .remove(toBeDeleted.getId())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return toBeDeleted;
           }
           throw new DeleteException(toBeDeleted, commit);
@@ -63,13 +65,13 @@ public class CrudBuilderImpl implements CrudBuilder {
   @Override
   public <T extends EntityBody> Uni<EntityState<T>> get(String blobId, EntityType type) {
     return config.getClient()
-        .objects().blobState()
-        .repo(config.getRepoName())
-        .anyId(config.getHeadName())
-        .blobName(blobId)
+        .git(config.getRepoName())
+        .pull().pullQuery()
+        .branchNameOrCommitOrTag(config.getHeadName())
+        .docId(blobId)
         .get().onItem()
         .transform(state -> {
-          if(state.getStatus() != ObjectsStatus.OK) {
+          if(state.getStatus() != QueryEnvelopeStatus.OK) {
             throw new QueryException(blobId, type, state);  
           }
           Entity<T> start = config.getDeserializer()
@@ -84,14 +86,16 @@ public class CrudBuilderImpl implements CrudBuilder {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> save(Entity<T> toBeSaved) {
-    return config.getClient().commit().head()
-      .head(config.getRepoName(), config.getHeadName())
+    return config.getClient()
+      .git(config.getRepoName())
+      .commit().commitBuilder()
+      .branchName(config.getHeadName())
       .message("update type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
-      .parentIsLatest()
+      .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
       .append(toBeSaved.getId(), config.getSerializer().toString(toBeSaved))
       .build().onItem().transform(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return toBeSaved;
         }
         throw new SaveException(toBeSaved, commit);
@@ -100,14 +104,16 @@ public class CrudBuilderImpl implements CrudBuilder {
   
   @Override
   public <T extends EntityBody> Uni<Entity<T>> create(Entity<T> toBeSaved) {
-    return config.getClient().commit().head()
-      .head(config.getRepoName(), config.getHeadName())
+    return config.getClient()
+      .git(config.getRepoName())
+      .commit().commitBuilder()
+      .branchName(config.getHeadName())
       .message("create type: '" + toBeSaved.getType() + "', with id: '" + toBeSaved.getId() + "'")
-      .parentIsLatest()
+      .latestCommit()
       .author(config.getAuthorProvider().getAuthor())
       .append(toBeSaved.getId(), config.getSerializer().toString(toBeSaved))
       .build().onItem().transform(commit -> {
-        if(commit.getStatus() == CommitStatus.OK) {
+        if(commit.getStatus() == CommitResultStatus.OK) {
           return toBeSaved;
         }
         throw new SaveException(toBeSaved, commit);
@@ -116,7 +122,11 @@ public class CrudBuilderImpl implements CrudBuilder {
 
   @Override
   public Uni<List<Entity<?>>> saveAll(List<Entity<?>> entities) {
-    final var commitBuilder = config.getClient().commit().head().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient()
+        .git(config.getRepoName())
+        .commit().commitBuilder()
+        .branchName(config.getHeadName());
+    
     final Entity<?> first = entities.iterator().next();
     
     for(final var target : entities) {
@@ -125,10 +135,10 @@ public class CrudBuilderImpl implements CrudBuilder {
     
     return commitBuilder
         .message("update type: '" + first.getType() + "', with id: '" + first.getId() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return entities;
           }
           throw new SaveException(first, commit);
@@ -142,7 +152,10 @@ public class CrudBuilderImpl implements CrudBuilder {
     }
     
     final List<Entity<?>> all = new ArrayList<Entity<?>>();
-    final var commitBuilder = config.getClient().commit().head().head(config.getRepoName(), config.getHeadName());
+    final var commitBuilder = config.getClient()
+        .git(config.getRepoName())
+        .commit().commitBuilder()
+        .branchName(config.getHeadName());
 
     for(final var target : batch.getToBeDeleted()) {
       commitBuilder.remove(target.getId());
@@ -162,10 +175,10 @@ public class CrudBuilderImpl implements CrudBuilder {
             " created: '" + batch.getToBeCreated().size() + "',"+
             " updated: '" + batch.getToBeSaved().size() + "',"+
             " deleted: '" + batch.getToBeDeleted().size() + "'")
-        .parentIsLatest()
+        .latestCommit()
         .author(config.getAuthorProvider().getAuthor())
         .build().onItem().transform(commit -> {
-          if(commit.getStatus() == CommitStatus.OK) {
+          if(commit.getStatus() == CommitResultStatus.OK) {
             return Collections.unmodifiableList(all);
           }
           throw new SaveException(all, commit);

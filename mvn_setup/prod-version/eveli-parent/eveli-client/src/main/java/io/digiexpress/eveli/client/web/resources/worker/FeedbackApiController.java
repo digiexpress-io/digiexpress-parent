@@ -35,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
@@ -56,8 +54,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FeedbackApiController {
   private final AuthClient securityClient;
   private final FeedbackClient feedbackClient;
-  private final ObjectMapper objectMapper;
-  
 
   @GetMapping
   public ResponseEntity<List<Feedback>> findAllFeedback()
@@ -83,7 +79,7 @@ public class FeedbackApiController {
     return new ResponseEntity<>(feedback, HttpStatus.OK);
   }
   @PostMapping(value="/{taskIdOrFeedbackId}")
-  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") Long id, @RequestBody CreateFeedbackCommand command)
+  public ResponseEntity<Feedback> createOneFeedback(@PathVariable("taskIdOrFeedbackId") String id, @RequestBody CreateFeedbackCommand command)
   {
     final var feedback = feedbackClient.createOneFeedback(command, securityClient.getUser().getPrincipal().getUsername());
     return new ResponseEntity<>(feedback, HttpStatus.OK);
@@ -104,18 +100,18 @@ public class FeedbackApiController {
   
   
   @GetMapping(value="/{taskIdOrFeedbackId}/templates")
-  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") Long id)
+  public ResponseEntity<FeedbackTemplate> getTaskFeedbackTemplate(@PathVariable("taskIdOrFeedbackId") String id)
   {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().getOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    final var template = feedbackClient.queryTemplate().getOneByTaskId(id, authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(template, HttpStatus.OK);
   }
   
   @GetMapping(value="/{taskIdOrFeedbackId}/enabled")
-  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") Long id)
+  public ResponseEntity<?> getTaskFeedbackEnabled(@PathVariable("taskIdOrFeedbackId") String id)
   {
     final var authentication = securityClient.getUser();
-    final var template = feedbackClient.queryTemplate().findOneByTaskId(id.toString(), authentication.getPrincipal().getUsername());
+    final var template = feedbackClient.queryTemplate().findOneByTaskId(id, authentication.getPrincipal().getUsername());
     return new ResponseEntity<>(Map.of("enabled", template.isPresent()), HttpStatus.OK);
   }
 }
