@@ -23,7 +23,8 @@ import {
   createIamFetch,
   createOfferFetch,
   createSiteFetch,
-  createSubjectFetch
+  createSubjectFetch,
+  createAuthFeedbackFetch
 } from './fetch';
 
 const staleTime = 5 * 1000;
@@ -37,9 +38,16 @@ const offerFetch = createOfferFetch();
 const contractFetch = createContractFetch();
 const subjectFetch = createSubjectFetch();
 const bookingFetch = createBookingFetch();
+const authFeedbackFetch = createAuthFeedbackFetch();
 
 const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (<DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
+  return (
+    <SiteBackendProvider
+      fetchSiteGet={siteFetch.fetchSiteGet}
+      fetchFeedbackGet={authFeedbackFetch.fetchFeedbackGet}
+      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
+
+      <DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
       <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
@@ -49,11 +57,19 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           </CommsProvider>
         </ContractProvider>
       </OfferProvider>
-  </DialobProvider>)
+      </DialobProvider>
+    </SiteBackendProvider >)
 }
 
 const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (<>{children}</>)
+  return (
+    <SiteBackendProvider
+      fetchSiteGet={siteFetch.fetchSiteGet}
+      fetchFeedbackGet={siteFetch.fetchFeedbackGet}
+      fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
+      {children}
+    </SiteBackendProvider>
+  )
 }
 const AuthSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const iam = useIam();
@@ -77,13 +93,8 @@ export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) =
             fetchUserLivenessGET={iamFetch.fetchUserLivenessGET}
             fetchUserProductsGET={iamFetch.fetchUserProductsGET}
             fetchUserRolesGET={iamFetch.fetchUserRolesGET}>
-            <SiteBackendProvider
-              fetchSiteGet={siteFetch.fetchSiteGet}
-              fetchFeedbackGet={siteFetch.fetchFeedbackGet}
-              fetchFeedbackRatingPut={siteFetch.fetchFeedbackRatingPut}>
 
-              <AuthSetup>{children}</AuthSetup>
-            </SiteBackendProvider>
+            <AuthSetup>{children}</AuthSetup>
           </IamBackendProvider>
         </DemoTheme>
       </LocaleProvider>

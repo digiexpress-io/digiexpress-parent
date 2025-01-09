@@ -1,10 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
-
-import org.springframework.http.ResponseEntity;
 
 /*-
  * #%L
@@ -27,17 +24,12 @@ import org.springframework.http.ResponseEntity;
  */
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
-import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
@@ -52,7 +44,6 @@ public class GamutSiteController {
   
   private final Supplier<Sites> siteEnvir;
   private final FeedbackClient feedback;
-  private final CrmClient crmClient;
 
   @GetMapping
   public LocalizedSite getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
@@ -71,27 +62,8 @@ public class GamutSiteController {
   
   @GetMapping(path = "feedback")
   public List<CustomerFeedback> findAllFeedback() {
-    if(crmClient.getCustomer().getType() == CustomerType.ANON) {
-      return feedback.queryCustomerFeedbacks().findAll();
-    }
-    return feedback.queryCustomerFeedbacks().findAllByCustomerId(crmClient.getCustomer().getPrincipal().getUsername());
+    return feedback.queryCustomerFeedbacks().findAll();
   }
   
-  
-  @PutMapping(path = "feedback")
-  public ResponseEntity<?> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
-    if(crmClient.getCustomer().getType() == CustomerType.ANON) {
-      return ResponseEntity.badRequest().body(Map.of(
-          "customer", crmClient.getCustomer(),
-          "errorCode", "no-auth"));
-    }
-    
-    final var isValid = upsert.getRating() == null || upsert.getRating() == 1 || upsert.getRating() == 5;
-    if(isValid) {
-      return ResponseEntity.ok(feedback.modifyOneFeedbackRank(upsert, crmClient.getCustomer().getPrincipal().getUsername()));      
-    }
-    return ResponseEntity.badRequest().body(Map.of(
-        "errorCode", "invalid-body"));
 
-  }
 }

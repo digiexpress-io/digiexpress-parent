@@ -1,6 +1,30 @@
-import { CommsApi, ContractApi } from "@dxs-ts/gamut";
+import { CommsApi, ContractApi, SiteApi } from "@dxs-ts/gamut";
 
 
+
+export function createAuthFeedbackFetch(url: (string | undefined) = '/portal/secured/actions') {
+  const fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT = async (body) => {
+    const response = await window.fetch(`${url}/feedback`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+      body: JSON.stringify(body),
+    });
+    return response;
+  }
+  const fetchFeedbackGet: SiteApi.FetchSiteGET = async (locale: string) => {
+    const response = await window.fetch(`${url}/feedback?locale=${locale}`, {
+      method: 'GET',
+      headers: undefined,
+      credentials: undefined,
+    });
+    return response;
+  }
+
+  return {
+    fetchFeedbackRatingPut, fetchFeedbackGet
+  };
+}
 export function createSubjectFetch(url: (string | undefined) = '/portal/secured/actions') {
   const fetchGet: CommsApi.GetSubjectsFetchGET = async () => {
     // await new Promise((res) => setTimeout(() => { }, 2000));

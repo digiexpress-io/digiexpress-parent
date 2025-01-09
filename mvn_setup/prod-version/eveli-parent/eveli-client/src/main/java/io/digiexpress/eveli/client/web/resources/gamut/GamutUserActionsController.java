@@ -32,12 +32,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.FeedbackClient;
+import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
+import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
@@ -71,6 +75,7 @@ public class GamutUserActionsController {
   private final CrmClient authClient;
   private final DialobClient dialob;
   private final ProcessClient hdes;
+  private final FeedbackClient feedback;
   
 
   @GetMapping(value="/fill/{sessionId}")
@@ -103,6 +108,23 @@ public class GamutUserActionsController {
   public ResponseEntity<List<UserMessage>> getMessages() {
     return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByUserId());
   }
+  
+  
+  @PutMapping(path = "/feedback")
+  public ResponseEntity<?> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
+    final var isValid = upsert.getRating() == null || upsert.getRating() == 1 || upsert.getRating() == 5;
+    if(isValid) {
+      return ResponseEntity.ok(feedback.modifyOneFeedbackRank(upsert, authClient.getCustomer().getPrincipal().getUsername()));      
+    }
+    return ResponseEntity.badRequest().body(Map.of(
+        "errorCode", "invalid-body"));
+  }
+  
+  @GetMapping(path = "/feedback")
+  public List<CustomerFeedback> findAllFeedback(@RequestParam(name = "locale") String locale) {
+    return feedback.queryCustomerFeedbacks().findAllByCustomerId(authClient.getCustomer().getPrincipal().getUsername());
+  }
+  
   @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
   @GetMapping(value="{actionId}/messages")
   public ResponseEntity<List<UserMessage>> getMessages(@PathVariable("actionId") String actionId) {
