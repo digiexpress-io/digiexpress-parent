@@ -67,25 +67,7 @@ public interface ThenaSqlClient {
     Tuple getProps();
     
     default String getPropsDeepString() {
-      StringBuilder sb = new StringBuilder();
-      sb.append("[");
-      final int size = getProps().size();
-      for (int i = 0; i < size; i++) {
-        final var value = getProps().getValue(i);
-        if(value instanceof String[]) {
-          final var unwrapped = (String[]) value;
-          sb.append("[")
-          .append(String.join(",", unwrapped))
-          .append("]");   
-        } else {
-          sb.append(value);
-        }
-  
-        if (i + 1 < size)
-          sb.append(",");
-      }
-      sb.append("]");
-      return sb.toString();
+      return ThenaSqlClient.getPropsDeepString(getProps());
     }
     
     default SqlTupleFailed failed(Throwable t, String message, Object ...args) {
@@ -101,5 +83,39 @@ public interface ThenaSqlClient {
     default SqlTupleListFailed failed(Throwable t, String message, Object ...args) {
       return new SqlTupleListFailed(message.formatted(args), this, t);
     }
+    
+    default String getPropsDeepString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("{");
+      final int size = getProps().size();
+      for (int i = 0; i < size; i++) {
+        sb.append(System.lineSeparator())
+          .append(i).append(": ").append(ThenaSqlClient.getPropsDeepString(getProps().get(i))); 
+      }
+      sb.append(System.lineSeparator()).append("}");
+      return sb.toString();
+    }
+  }
+  
+  static String getPropsDeepString(Tuple props) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    final int size = props.size();
+    for (int i = 0; i < size; i++) {
+      final var value = props.getValue(i);
+      if(value instanceof String[]) {
+        final var unwrapped = (String[]) value;
+        sb.append("[")
+        .append(String.join(",", unwrapped))
+        .append("]");   
+      } else {
+        sb.append(value);
+      }
+
+      if (i + 1 < size)
+        sb.append(",");
+    }
+    sb.append("]");
+    return sb.toString();
   }
 }
