@@ -1,4 +1,6 @@
-package io.resys.thena.datasource;
+package io.digiexpress.thena.mq.client.spi.persistence;
+
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -22,67 +24,71 @@ package io.resys.thena.datasource;
 
 import java.util.Optional;
 
-import io.resys.thena.api.entities.ImmutableTenant;
-import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.api.entities.Tenant.StructureType;
-import io.resys.thena.api.registry.ThenaRegistry;
+import io.digiexpress.thena.mq.client.api.entities.Channel;
+import io.digiexpress.thena.mq.client.api.entities.ImmutableChannel;
+import io.digiexpress.thena.mq.client.api.persistence.ThenaMqDataSource;
+import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
+import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
+import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.ThenaSqlPool;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 
-public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
-  private final Tenant tenant;
-  private final TenantTableNames tenantTableNames;
+public class ThenaMqDataSourceImpl implements ThenaMqDataSource {
+  private final Channel tenant;
+  private final ThenaMqTableNames tenantTableNames;
   private final ThenaSqlPool pool;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   private final Optional<ThenaSqlClient> tx;
-  private final ThenaRegistry registry;
+  private final ThenaMqTableRegistry registry;
   private final boolean isTenantLoaded;
   
-  public ThenaSqlDataSourceImpl(
-      Tenant tenant, 
-      TenantTableNames tenantTableNames, 
+  public ThenaMqDataSourceImpl(
+      Channel tenant, 
+      ThenaMqTableNames tenantTableNames, 
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx,
-      ThenaRegistry registry) {
+      ThenaMqTableRegistry registry) {
     super();
     this.tenant = tenant;
-    this.tenantTableNames = tenantTableNames.toRepo(tenant);
-    this.registry = registry.withTenant(this.tenantTableNames);
+    this.tenantTableNames = tenantTableNames.toChannel(tenant);
+    this.registry = registry.withChannel(this.tenantTableNames);
     this.errorHandler = errorHandler;
     this.pool = pool;
     this.tx = tx;
     this.isTenantLoaded = !tenant.getId().equals("") && !tenant.getPrefix().equals("");
   }
   
-  public ThenaSqlDataSourceImpl(
+  public ThenaMqDataSourceImpl(
       String tenant, 
-      TenantTableNames tenantTableNames, 
+      ThenaMqTableNames tenantTableNames, 
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx, 
-      ThenaRegistry registry) {
+      ThenaMqTableRegistry registry) {
     super();
     this.isTenantLoaded = false;
-    this.tenant = ImmutableTenant.builder()
-        .name(tenant)
-        .type(StructureType.git)
+    this.tenant = ImmutableChannel.builder()
+        .channelName(tenant)
+        .createdAt(OffsetDateTime.now())
+        .createdBy("")
+        .comment("")
         .id("")
-        .rev("")
         .prefix("")
         .build();
-    this.tenantTableNames = tenantTableNames.toRepo(this.tenant);
+    this.tenantTableNames = tenantTableNames.toChannel(this.tenant);
     this.errorHandler = errorHandler;
-    this.registry = registry.withTenant(this.tenantTableNames);
+    this.registry = registry.withChannel(this.tenantTableNames);
     this.pool = pool;
     this.tx = tx;
   }
   
   @Override
-  public Tenant getTenant() {
+  public Channel getChannel() {
     return tenant;
   }
   @Override
-  public TenantTableNames getTenantTableNames() {
+  public ThenaMqTableNames getChannelTableNames() {
     return tenantTableNames;
   }
   @Override
@@ -98,8 +104,8 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     return tx;
   }
   @Override
-  public ThenaSqlDataSource withTenant(Tenant tenant) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, registry);
+  public ThenaMqDataSourceImpl withChannel(Channel tenant) {
+    return new ThenaMqDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, registry);
   }
 
   @Override
@@ -108,16 +114,16 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   }
 
   @Override
-  public ThenaSqlDataSource withTx(ThenaSqlClient tx) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), registry);
+  public ThenaMqDataSourceImpl withTx(ThenaSqlClient tx) {
+    return new ThenaMqDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), registry);
   }
 
   @Override
-  public boolean isTenantLoaded() {
+  public boolean isChannelLoaded() {
     return isTenantLoaded;
   }
   @Override
-  public ThenaRegistry getRegistry() {
+  public ThenaMqTableRegistry getRegistry() {
     return registry;
   }
 }

@@ -4,7 +4,7 @@ package io.resys.thena.storesql;
  * #%L
  * thena-docdb-api
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package io.resys.thena.storesql;
  * #L%
  */
 
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.vertx.pgclient.PgException;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class PgErrors implements ThenaSqlDataSourceErrorHandler {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
   
   public boolean notFound(Throwable e) {
     if(e instanceof PgException) {
@@ -118,9 +115,4 @@ public class PgErrors implements ThenaSqlDataSourceErrorHandler {
   	
     log.error(msg, e);
 	}
-
-  @Override
-  public ThenaSqlDataSourceErrorHandler withOptions(TenantTableNames options) {
-    return new PgErrors(options);
-  }
 }

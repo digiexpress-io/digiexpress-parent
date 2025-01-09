@@ -21,7 +21,6 @@ package io.resys.thena.datasource;
  */
 
 public interface ThenaSqlDataSourceErrorHandler {
-  ThenaSqlDataSourceErrorHandler withOptions(TenantTableNames options);
   boolean notFound(Throwable e);
   boolean duplicate(Throwable e);
   boolean isLocked(Throwable e);
