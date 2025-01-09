@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,6 @@ import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
-import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackRating;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
@@ -79,16 +79,19 @@ public class GamutSiteController {
   
   
   @PutMapping(path = "feedback")
-  public ResponseEntity<FeedbackRating> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
+  public ResponseEntity<?> updateFeedback(@RequestBody UpsertFeedbackRankingCommand upsert) {
     if(crmClient.getCustomer().getType() == CustomerType.ANON) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body(Map.of(
+          "customer", crmClient.getCustomer(),
+          "errorCode", "no-auth"));
     }
     
     final var isValid = upsert.getRating() == null || upsert.getRating() == 1 || upsert.getRating() == 5;
     if(isValid) {
       return ResponseEntity.ok(feedback.modifyOneFeedbackRank(upsert, crmClient.getCustomer().getPrincipal().getUsername()));      
     }
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(Map.of(
+        "errorCode", "invalid-body"));
 
   }
 }
