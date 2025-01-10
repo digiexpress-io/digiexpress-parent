@@ -19,6 +19,7 @@ import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -50,21 +51,38 @@ public class ConsumerVisitor {
     final var consumer = consumers.get(delivery.getConsumerId());
     final var consumerImpl = config.getConsumer(consumer);
     final var msg = messages.get(delivery.getMessageId());
-    final var resp = consumerImpl.accept(msg);
     
-    
-    builder
-      .addNewDeliveryAttempts(ImmutableDeliveryAttempt.builder()
+    try {
+      final var resp = consumerImpl.accept(msg);
+      
+      builder
+        .addNewDeliveryAttempts(ImmutableDeliveryAttempt.builder()
+            .id(OidUtils.gen())
+            .createdAt(now)
+            .deliveryId(delivery.getId())
+            .consumerStatus(resp.getAck())
+            .build())
+        .addUpdateDeliveries(ImmutableDelivery.builder()
+            .from(delivery)
+            .completedAt(now)
+            .status(DeliveryStatus.COMPLETED)
+            .build());
+    } catch(Exception e) {
+      builder
+        .addNewDeliveryAttempts(ImmutableDeliveryAttempt.builder()
           .id(OidUtils.gen())
           .createdAt(now)
           .deliveryId(delivery.getId())
-          .consumerStatus(resp.getAck())
-          .build())
-      .addUpdateDeliveries(ImmutableDelivery.builder()
-          .from(delivery)
-          .completedAt(now)
           .status(DeliveryStatus.COMPLETED)
+          .consumerStatus(null)
+          .consumerError(JsonObject
+              .of(
+                  "error", e.getMessage(),
+                  "stack", e.getStackTrace()
+              )
+          )
           .build());
+    }
   }
   
   public static ConsumerVisitorBuilder builder() {

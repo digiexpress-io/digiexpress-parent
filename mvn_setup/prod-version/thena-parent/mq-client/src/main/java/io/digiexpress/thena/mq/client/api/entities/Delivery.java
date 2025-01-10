@@ -27,11 +27,8 @@ public interface Delivery extends ThenaMqEntity {
   interface DeliveryAttempt extends ThenaMqEntity {
     String getId();
     String getDeliveryId();
-    DeliveryStatus getStatus();
     
     OffsetDateTime getCreatedAt();
-    @Nullable OffsetDateTime getUpdatedAt();
-    
     @Nullable String getConsumerComment();
     @Nullable JsonObject getConsumerError();
     @Nullable MessageResponseStatus getConsumerStatus();
