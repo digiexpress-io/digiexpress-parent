@@ -3,6 +3,7 @@ package io.digiexpress.thena.mq.client.spi;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.DeliveryBuilder;
+import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
@@ -28,11 +29,12 @@ import lombok.experimental.Accessors;
 public class DeliveryBuilderImpl implements DeliveryBuilder {
   private final ThenaMqChannelState state;
   
-  private String appId;
+  private ThenaMqConsumerConfig config;
   
   @Override
   public Uni<ThenaMqEnvelope<Delivery>> build() {
-    RepoAssert.notEmpty(appId, () -> "appId can't be empty!");
+    RepoAssert.notNull(config, () -> "config can't be null!");
+    RepoAssert.notEmpty(config.getAppId(), () -> "appId can't be empty!");
     
     final ChannelTxScope scope = ImmutableChannelTxScope.builder()
         .channelId(state.getDataSource().getChannel().getChannelName())
@@ -41,18 +43,21 @@ public class DeliveryBuilderImpl implements DeliveryBuilder {
         .build();
     
     return state.withChannelTransaction(scope, tx -> Uni.combine().all().unis(
-          tx.queryQueueConsumer().findAllEnabled(appId),
-          tx.queryMessages().findAllByAppIdAndDeliveryStatus(appId, DeliveryStatus.OPEN),
-          tx.queryDeliveries().findAllByAppIdAndStatus(appId, DeliveryStatus.OPEN, true)
+          tx.queryQueueConsumer().findAllEnabled(config.getAppId()),
+          tx.queryMessages().findAllByAppIdAndDeliveryStatus(config.getAppId(), DeliveryStatus.OPEN),
+          tx.queryDeliveries().findAllByAppIdAndStatus(config.getAppId(), DeliveryStatus.OPEN, true)
       )
       .asTuple()
-      .onItem().transformToUni(tuple -> request(tuple))
+      .onItem().transformToUni(tuple -> request(tx, tuple))
       .onItem().transform(req -> response(req))
     );
   }
 
-  private Uni<ChannelBatch> request(Tuple3<List<QueueConsumer>, List<QueueMessage>, List<Delivery>> input) {
-    final var builder = ImmutableChannelBatch.builder();
+  private Uni<ChannelBatch> request(ThenaMqChannelState state, Tuple3<List<QueueConsumer>, List<QueueMessage>, List<Delivery>> input) {
+    final var builder = ImmutableChannelBatch.builder()
+        .channelId(state.getDataSource().getChannel().getId())
+        .batchStatus(OperationStatus.OK)
+        .log("");
     return Uni.createFrom().item(builder.build());
   }
   

@@ -132,7 +132,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
     });
 
     
-    return ThenaMqConsumerConfigImpl.from(activeConsumers);
+    return ThenaMqConsumerConfigImpl.from(appId, activeConsumers);
   }
 
 

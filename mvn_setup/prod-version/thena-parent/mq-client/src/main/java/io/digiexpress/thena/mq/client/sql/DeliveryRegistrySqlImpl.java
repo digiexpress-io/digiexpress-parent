@@ -65,7 +65,7 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDelivery())
         .append(" (id, message_id, queue_id, consumer_id, status, created_at, starts_at, expires_at, completed_at)").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7,$8)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 

@@ -75,7 +75,7 @@ public class InternalQueueConsumerQueryImpl implements InternalQueueConsumerQuer
     
     return dataSource.getClient().preparedQuery(sql.getValue())
         .mapping(dataSource.getRegistry().queueConsumer().defaultMapper())
-        .execute()
+        .execute(sql.getProps())
         .onItem()
         .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
         .onFailure().invoke(e -> dataSource.getErrorHandler()

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ThenaMqConsumerConfigImpl implements ThenaMqConsumerConfig {
+  private final String appId;
   private final Map<String, Tuple2<QueueConsumer, ThenaMqConsumer>> consumers;
   
   @Override
@@ -21,8 +22,13 @@ public class ThenaMqConsumerConfigImpl implements ThenaMqConsumerConfig {
     return null;
   }
   
-  public static ThenaMqConsumerConfigImpl from(List<Tuple2<QueueConsumer, ThenaMqConsumer>> input) {
+  public static ThenaMqConsumerConfigImpl from(String appId, List<Tuple2<QueueConsumer, ThenaMqConsumer>> input) {
     final var consumers = input.stream().collect(Collectors.toMap(e -> e.getItem1().getConsumerName(), e -> e));
-    return new ThenaMqConsumerConfigImpl(consumers);
+    return new ThenaMqConsumerConfigImpl(appId, consumers);
+  }
+
+  @Override
+  public String getAppId() {
+    return appId;
   }
 }

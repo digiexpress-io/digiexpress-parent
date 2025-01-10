@@ -118,6 +118,7 @@ public class CreateOneChannelTest extends DbTestTemplate {
     // Deliver the message to the consumers
     getClient().withChannel(channel)
     .deliveryBuilder()
+    .config(consumers.getObject())
     .build()
     .await().atMost(Duration.ofMinutes(1));
   
