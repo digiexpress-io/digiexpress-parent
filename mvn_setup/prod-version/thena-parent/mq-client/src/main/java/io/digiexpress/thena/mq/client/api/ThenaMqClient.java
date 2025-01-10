@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
+import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
@@ -18,10 +19,17 @@ public interface ThenaMqClient {
   ChannelBuilder channelBuilder();
   MessageBuilder messageBuilder();
   BindingBuilder bindingBuilder();
+  ConsumerConfigBuilder consumerConfigBuilder();
+  DeliveryBuilder deliveryBuilder();
+  
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
+  
+  interface DeliveryBuilder {
+    Uni<ThenaMqEnvelope<Delivery>> build();
+  }
   
   interface BindingBuilder {
     //BindingBuilder addRouters(List<Router> routers);
@@ -40,15 +48,13 @@ public interface ThenaMqClient {
     QueueBuilder queueName(String queueName); // identify the queue
     QueueBuilder comment(String comment); // describe the queue
     QueueBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    QueueBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    QueueBuilder addConsumer(Consumer<ConsumerBuilder> worker);
     Uni<ThenaMqEnvelope<Queue>> build();
   }
   
-  interface AppConfigBuilder {
-    QueueBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    QueueBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    QueueBuilder addConsumer(Consumer<ConsumerBuilder> worker);
+  interface ConsumerConfigBuilder {
+    ConsumerConfigBuilder createdBy(String createdBy); // identify who or what is creating the queue
+    ConsumerConfigBuilder appId(String appId); // user provided app id(how do you identify your app?)
+    ConsumerConfigBuilder addConsumer(Consumer<ConsumerBuilder> worker);
     Uni<ThenaMqEnvelope<ThenaMqConsumerConfig>> build();
   }
   

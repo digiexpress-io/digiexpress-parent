@@ -76,14 +76,22 @@ public class CreateOneChannelTest extends DbTestTemplate {
     // create queue with 2 consumers
     final var queue = getClient().withChannel(channel)
       .queueBuilder()
-      .appId("test-app")
+
       .queueName("super queue")
       .createdBy("tester@tester")
       .comment("queue for test case")
-      .addConsumer(worker -> worker.consumerName("consumer-1").comment("test consumer").build(worker1))
-      .addConsumer(worker -> worker.consumerName("consumer-2").comment("test consumer").build(worker2))
       .build()
       .await().atMost(Duration.ofMinutes(1));
+
+    final var consumers = getClient().withChannel(channel)
+      .consumerConfigBuilder()
+      .appId("test-app")
+      .createdBy("tester@tester")
+      .addConsumer(worker -> worker.routingKey("super queue").consumerName("consumer-1").comment("test consumer").build(worker1))
+      .addConsumer(worker -> worker.routingKey("super queue").consumerName("consumer-2").comment("test consumer").build(worker2))
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
+    
     
     // publish things ... to the queue
     getClient().withChannel(channel)
@@ -107,11 +115,12 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .await().atMost(Duration.ofMinutes(1));
     
     
-    // get hanging messages
-    // get available routes
-    // match
-    //.build();
-    
     // Deliver the message to the consumers
+    getClient().withChannel(channel)
+    .deliveryBuilder()
+    .build()
+    .await().atMost(Duration.ofMinutes(1));
+  
+    
   }
 }
