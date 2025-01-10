@@ -203,7 +203,6 @@ public class ChannelPrinter {
     
     result
       .append("  - ").append(ID.apply(data.getId())).append("::").append(System.lineSeparator())
-      .append("    delivery status: ").append(data.getStatus()).append(System.lineSeparator())
       .append("    ack comment: ").append(data.getConsumerComment()).append(System.lineSeparator())
       .append("    ack error: ").append(data.getConsumerError()).append(System.lineSeparator())
       .append("    ack error: ").append(data.getConsumerStatus()).append(System.lineSeparator())

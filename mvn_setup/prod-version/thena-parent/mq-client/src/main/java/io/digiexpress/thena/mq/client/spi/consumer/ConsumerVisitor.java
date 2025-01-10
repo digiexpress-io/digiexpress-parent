@@ -73,7 +73,6 @@ public class ConsumerVisitor {
           .id(OidUtils.gen())
           .createdAt(now)
           .deliveryId(delivery.getId())
-          .status(DeliveryStatus.COMPLETED)
           .consumerStatus(null)
           .consumerError(JsonObject
               .of(

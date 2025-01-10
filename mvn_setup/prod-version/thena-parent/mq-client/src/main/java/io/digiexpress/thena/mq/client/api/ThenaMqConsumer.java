@@ -19,8 +19,6 @@ public interface ThenaMqConsumer {
   enum MessageResponseStatus {
     OK, ERROR
   }
-  
-
 
   interface MessageBody {
     JsonObject getValue();
