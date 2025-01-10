@@ -18,8 +18,7 @@ public class ThenaMqConsumerConfigImpl implements ThenaMqConsumerConfig {
   
   @Override
   public ThenaMqConsumer getConsumer(QueueConsumer consumer) {
-    // TODO Auto-generated method stub
-    return null;
+    return consumers.get(consumer.getConsumerName()).getItem2();
   }
   
   public static ThenaMqConsumerConfigImpl from(String appId, List<Tuple2<QueueConsumer, ThenaMqConsumer>> input) {

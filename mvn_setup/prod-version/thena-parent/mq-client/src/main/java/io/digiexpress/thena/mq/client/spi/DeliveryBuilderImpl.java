@@ -16,6 +16,7 @@ import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelTxScope;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelTxScope;
+import io.digiexpress.thena.mq.client.spi.consumer.ConsumerVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple3;
@@ -58,6 +59,15 @@ public class DeliveryBuilderImpl implements DeliveryBuilder {
         .channelId(state.getDataSource().getChannel().getId())
         .batchStatus(OperationStatus.OK)
         .log("");
+    
+    ConsumerVisitor.builder()
+    .config(config)
+    .channel(state.getDataSource().getChannel())
+    .deliveries(input.getItem3())
+    .consumers(input.getItem1())
+    .messages(input.getItem2())
+    .build().accept();
+    
     return Uni.createFrom().item(builder.build());
   }
   

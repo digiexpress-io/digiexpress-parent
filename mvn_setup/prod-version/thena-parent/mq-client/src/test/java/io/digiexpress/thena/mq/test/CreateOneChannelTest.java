@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.vertx.core.json.JsonObject;
@@ -49,7 +50,7 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     final var worker1 = new ThenaMqConsumer() {
       @Override
-      public MessageResponse accept(MessageHeader header, MessageBody body) {
+      public MessageResponse accept(QueueMessage msg) {
         // TODO Auto-generated method stub
         return null;
       }
@@ -57,7 +58,7 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     final var worker2 = new ThenaMqConsumer() {
       @Override
-      public MessageResponse accept(MessageHeader header, MessageBody body) {
+      public MessageResponse accept(QueueMessage msg) {
         // TODO Auto-generated method stub
         return null;
       }
