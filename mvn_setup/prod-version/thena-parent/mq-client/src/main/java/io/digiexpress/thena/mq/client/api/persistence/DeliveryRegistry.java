@@ -12,7 +12,7 @@ public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.v
   ThenaSqlClient.SqlTupleList updateMany(List<Delivery> docs);
   ThenaSqlClient.SqlTupleList insertMany(List<Delivery> docs);
   
-  @Override ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
+  @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.Sql createTable();
   @Override ThenaSqlClient.Sql createConstraints();

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.persistence.MessageRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
 import io.resys.thena.datasource.ImmutableSql;
@@ -34,7 +34,7 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -46,12 +46,12 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
   }
 
   @Override
-  public SqlTuple findAllByRoutingStatus(RoutingStatus status, boolean lockForUpdate) {
+  public SqlTuple findAllByStatus(QueueMessageStatus status, boolean lockForUpdate) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT messages.* ").ln()
         .append("FROM ").append(options.getMessages()).append(" AS messages ").ln()
-        .append("WHERE messages.routing_status = $1 ").ln()
+        .append("WHERE messages.status = $1 ").ln()
         .append(lockForUpdate ? "FOR UPDATE" : "").ln()  //FOR UPDATE NOWAIT
         
         .build())
@@ -63,13 +63,12 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getMessages())
-        .append(" SET routing_status = $1, routing_log = $2, updated_at = $3")
-        .append(" WHERE id = $4")
+        .append(" SET status = $1, updated_at = $2")
+        .append(" WHERE id = $3")
         .build())
         .props(docs.stream()
             .map(doc -> Tuple.from(new Object[]{ 
-                doc.getRoutingStatus().name(), 
-                doc.getRoutingLog(),
+                doc.getStatus().name(), 
                 doc.getUpdatedAt(),
                 doc.getId() 
              }))
@@ -81,15 +80,14 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getMessages())
-        .append(" (id, routing_key, routing_status, routing_log, comment, created_by, created_at, expires_at, starts_at, body_id, body_type, body_value)").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)").ln()
+        .append(" (id, routing_key, status, comment, created_by, created_at, expires_at, starts_at, body_id, body_type, body_value)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getRoutingKey(), 
-                doc.getRoutingStatus().name(),
-                doc.getRoutingLog(),
+                doc.getStatus().name(),
                 
                 doc.getComment(),
                 doc.getCreatedBy(), 
@@ -116,7 +114,7 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .append("  id             VARCHAR(40) PRIMARY KEY,").ln()
         .append("  routing_key    TEXT NOT NULL,").ln()
         .append("  routing_log    JSONB,").ln()
-        .append("  routing_status VARCHAR(100) NOT NULL,").ln()
+        .append("  status         VARCHAR(100) NOT NULL,").ln()
         
         .append("  comment        TEXT NOT NULL,").ln()
         .append("  created_by     TEXT NOT NULL,").ln()
@@ -166,8 +164,7 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
           .id(row.getString("id"))
           
           .routingKey(row.getString("routing_key"))
-          .routingStatus(RoutingStatus.valueOf(row.getString("routing_status")))
-          .routingLog(row.getJsonObject("routing_log"))
+          .status(QueueMessageStatus.valueOf(row.getString("status")))
 
           .comment(row.getString("comment"))
           .createdBy(row.getString("created_by"))

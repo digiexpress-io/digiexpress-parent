@@ -85,11 +85,12 @@ public interface ThenaSqlClient {
     }
     
     default String getPropsDeepString() {
-      StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder(System.lineSeparator());
       sb.append("{");
       final int size = getProps().size();
       for (int i = 0; i < size; i++) {
         sb.append(System.lineSeparator())
+          .append("  ")
           .append(i).append(": ").append(ThenaSqlClient.getPropsDeepString(getProps().get(i))); 
       }
       sb.append(System.lineSeparator()).append("}");

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAckValue;
+import io.digiexpress.thena.mq.client.api.ThenaMqConsumer.MessageResponseStatus;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableDeliveryAttempt;
@@ -33,7 +33,7 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -48,7 +48,7 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDeliveryAttempt())
-        .append(" (id, delivery_id, delivery_status, created_at, updated_at, ack_comment, ack_error, ack_value)").ln()
+        .append(" (id, delivery_id, delivery_status, created_at, updated_at, consumer_comment, consumer_error, consumer_status)").ln()
         .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(users.stream()
@@ -58,9 +58,9 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
                 doc.getStatus().name(), 
                 doc.getCreatedAt(), 
                 doc.getUpdatedAt(), 
-                doc.getAckComment(), 
-                doc.getAckError(),
-                doc.getAckValue()
+                doc.getConsumerComment(), 
+                doc.getConsumerError(),
+                doc.getConsumerStatus()
              }))
             .collect(Collectors.toList()))
         .build();
@@ -70,16 +70,16 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("UPDATE ").append(options.getDeliveryAttempt())
-        .append(" SET delivery_status = $1, updated_at = $2, ack_comment = $3, ack_error = $4, ack_value = $5 ")
+        .append(" SET delivery_status = $1, updated_at = $2, consumer_comment = $3, consumer_error = $4, consumer_status = $5 ")
         .append(" WHERE id = $6")
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getStatus(), 
                 doc.getUpdatedAt(), 
-                doc.getAckComment(),
-                doc.getAckError(),
-                doc.getAckValue(),
+                doc.getConsumerComment(),
+                doc.getConsumerError(),
+                doc.getConsumerStatus(),
                 doc.getId() 
              }))
             .collect(Collectors.toList()))
@@ -98,9 +98,9 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .append("  created_at   TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
         .append("  updated_at   TIMESTAMP WITH TIME ZONE,").ln()
         
-        .append("  ack_comment  TEXT,").ln()
-        .append("  ack_error    JSONB,").ln()
-        .append("  ack_value    VARCHAR(100)").ln()
+        .append("  consumer_comment  TEXT,").ln()
+        .append("  consumer_error    JSONB,").ln()
+        .append("  consumer_status   VARCHAR(100)").ln()
 
         .append(");").ln()
 
@@ -141,9 +141,9 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .createdAt(row.getOffsetDateTime("created_at"))
         .updatedAt(row.getOffsetDateTime("updated_at"))
         
-        .ackComment(row.getString("ack_comment"))
-        .ackError(row.getJsonObject("ack_error"))
-        .ackValue(DeliveryAckValue.valueOf(row.getString("ack_value")))
+        .consumerComment(row.getString("consumer_comment"))
+        .consumerError(row.getJsonObject("consumer_error"))
+        .consumerStatus(MessageResponseStatus.valueOf(row.getString("consumer_status")))
         .build();
   }
 }

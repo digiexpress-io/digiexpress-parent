@@ -35,7 +35,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()

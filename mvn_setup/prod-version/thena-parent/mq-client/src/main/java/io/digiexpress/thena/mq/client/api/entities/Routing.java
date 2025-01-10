@@ -4,10 +4,9 @@ import java.util.List;
 
 
 public interface Routing {  
-  interface Router {}
   
   @FunctionalInterface
-  interface MessageToQueueRouter extends Router {
+  interface MessageToQueueRouter {
     List<Queue> apply(
         Channel channel, 
         QueueMessage message, 
@@ -15,10 +14,15 @@ public interface Routing {
   }
 
   @FunctionalInterface
-  interface ConsumerToQueueRouter extends Router {
+  interface ConsumerToQueueRouter {
     List<Queue> apply(
         Channel channel, 
         QueueConsumer consumer, 
         List<Queue> queues);
+  }
+  
+  
+  interface Route {
+    boolean isMatch(String routingKey);
   }
 }

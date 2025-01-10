@@ -3,7 +3,6 @@ package io.digiexpress.thena.mq.client.api;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAckValue;
 import io.vertx.core.json.JsonObject;
 
 @FunctionalInterface
@@ -14,7 +13,11 @@ public interface ThenaMqConsumer {
   interface MessageResponse {
     Optional<String> getComment();
     Optional<ConsumerWorkerError> getError();
-    DeliveryAckValue getAck();
+    MessageResponseStatus getAck();
+  }
+  
+  enum MessageResponseStatus {
+    OK, ERROR
   }
   
   interface MessageHeader {

@@ -1,13 +1,14 @@
 package io.digiexpress.thena.mq.client.spi;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.MessageBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
@@ -110,9 +111,8 @@ public class MessageBuilderImpl implements MessageBuilder {
     
     return ImmutableQueueMessage.builder()
       .id(OidUtils.gen())
-      .routingKey(routingKey)
-      .routingStatus(RoutingStatus.RESOLVING_ROUTING)
-      .routingLog(new JsonObject())
+      .routingKey(Optional.ofNullable(routingKey).orElse(queue.getQueueName()))
+      .status(QueueMessageStatus.RESOLVING_ROUTING)
   
       .comment(comment)
       .createdBy(createdBy)

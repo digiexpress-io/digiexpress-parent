@@ -29,7 +29,7 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
 
   @Override
   public Uni<Optional<Channel>> getByNameOrId(String nameOrId) {
-    final var sql = dataSource.getRegistry().channel().getById(nameOrId);
+    final var sql = dataSource.getRegistry().channel().getByIdOrName(nameOrId);
     
     if(log.isDebugEnabled()) {
       log.debug("InternalChannelQueryImpl.getByNameOrId query, with props: {} \r\n{}", 

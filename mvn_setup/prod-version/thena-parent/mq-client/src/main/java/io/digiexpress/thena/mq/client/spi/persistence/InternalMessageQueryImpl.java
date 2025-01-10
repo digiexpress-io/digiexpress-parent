@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.InternalMessageQuery;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
@@ -21,8 +21,8 @@ public class InternalMessageQueryImpl implements InternalMessageQuery {
   private final ThenaMqDataSource dataSource;
   
   @Override
-  public Uni<List<QueueMessage>> findAllByRoutingStatus(RoutingStatus status, boolean lockForUpdate) {
-    final var sql = dataSource.getRegistry().message().findAllByRoutingStatus(status, lockForUpdate);
+  public Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate) {
+    final var sql = dataSource.getRegistry().message().findAllByStatus(status, lockForUpdate);
     
     if(log.isDebugEnabled()) {
       log.debug("InternalMessageQueryImpl.findAllByRoutingStatus query, with props: {} \r\n{}", 

@@ -93,8 +93,6 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .appId("test-app")
       .queueIdOrName("super queue")
       
-      .routingKey("user-data-processor")
-      
       .bodyType("user-data")
       .bodyId("ssn1")
       .bodyValue(new JsonObject())

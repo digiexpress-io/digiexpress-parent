@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
@@ -15,7 +16,7 @@ import io.digiexpress.thena.mq.client.api.entities.Log;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqContainers;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.resys.thena.support.RepoAssert;
@@ -69,7 +70,7 @@ public interface ThenaMqChannelState {
   }
   
   interface InternalMessageQuery {
-    Uni<List<QueueMessage>> findAllByRoutingStatus(RoutingStatus status, boolean lockForUpdate);
+    Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
   }
   
   
@@ -94,7 +95,8 @@ public interface ThenaMqChannelState {
     List<QueueMessage> getNewPublishedMessages();
     List<Queue> getNewQueues();
     List<QueueConsumer> getNewQueueConsumer();
-
+    List<Binding> getNewBindings();
+    
     
     List<Delivery> getUpdateDeliveries();
     List<DeliveryAttempt> getUpdateDeliveryAttempts();

@@ -83,6 +83,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
         .append(reg.deliveryAttempt().createTable().getValue())
         .append(reg.message().createTable().getValue())
         .append(reg.queueConsumer().createTable().getValue())
+        .append(reg.binding().createTable().getValue())
         
         .append(reg.channel().createConstraints().getValue())
         .append(reg.queue().createConstraints().getValue())
@@ -90,6 +91,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
         .append(reg.deliveryAttempt().createConstraints().getValue())
         .append(reg.message().createConstraints().getValue())
         .append(reg.queueConsumer().createConstraints().getValue())
+        .append(reg.binding().createConstraints().getValue())
         .toString();
       
       if(log.isDebugEnabled()) {

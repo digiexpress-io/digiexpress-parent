@@ -1,14 +1,12 @@
 package io.digiexpress.thena.mq.client.api;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.Routing.Router;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -26,7 +24,7 @@ public interface ThenaMqClient {
 
   
   interface BindingBuilder {
-    BindingBuilder addRouters(List<Router> routers);
+    //BindingBuilder addRouters(List<Router> routers);
     Uni<ThenaMqEnvelope<Binding>> build();
   }
 

@@ -7,7 +7,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface ThenaMqRegistryTemplate<T extends ThenaMqEntity, R> {
   ThenaSqlClient.Sql findAll();
-  ThenaSqlClient.SqlTuple getById(String id);
+  ThenaSqlClient.SqlTuple getByIdOrName(String id);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

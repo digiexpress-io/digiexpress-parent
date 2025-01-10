@@ -22,7 +22,7 @@ public class InternalQueueQueryImpl implements InternalQueueQuery {
   
   @Override
   public Uni<Optional<Queue>> findByQueueName(String queueName) {
-    final var sql = dataSource.getRegistry().queue().getById(queueName);
+    final var sql = dataSource.getRegistry().queue().getByIdOrName(queueName);
     
     if(log.isDebugEnabled()) {
       log.debug("InternalQueueQueryImpl.findByQueueName query, with props: {} \r\n{}", 

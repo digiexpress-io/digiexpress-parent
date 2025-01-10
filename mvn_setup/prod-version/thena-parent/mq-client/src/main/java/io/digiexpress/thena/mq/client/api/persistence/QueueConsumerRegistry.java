@@ -14,7 +14,7 @@ public interface QueueConsumerRegistry extends ThenaMqRegistryTemplate<QueueCons
   ThenaSqlClient.SqlTuple findAllByAppId(String appId, boolean lockForUpdate);
   ThenaSqlClient.Sql findAllEnabled();  
   
-  @Override ThenaSqlClient.SqlTuple getById(String id);  // matches by external_id or id
+  @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.Sql createTable();
   @Override ThenaSqlClient.Sql createConstraints();

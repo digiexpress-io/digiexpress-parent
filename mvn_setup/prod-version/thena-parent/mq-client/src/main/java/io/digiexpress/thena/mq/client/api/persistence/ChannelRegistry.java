@@ -12,7 +12,7 @@ public interface ChannelRegistry extends ThenaMqRegistryTemplate<Channel, io.ver
   ThenaSqlClient.SqlTuple insertOne(Channel docs);
   ThenaSqlClient.SqlTupleList updateMany(List<Channel> docs);
   
-  @Override ThenaSqlClient.SqlTuple getById(String idOrName);  // matches by external_id or id
+  @Override ThenaSqlClient.SqlTuple getByIdOrName(String idOrName);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();
   @Override ThenaSqlClient.Sql createTable();
   @Override ThenaSqlClient.Sql createConstraints();

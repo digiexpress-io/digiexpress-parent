@@ -32,7 +32,7 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
