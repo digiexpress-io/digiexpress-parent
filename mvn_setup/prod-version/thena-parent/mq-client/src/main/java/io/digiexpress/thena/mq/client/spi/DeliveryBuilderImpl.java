@@ -10,6 +10,7 @@ import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
+import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelTxScope;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
@@ -43,25 +44,16 @@ public class DeliveryBuilderImpl implements DeliveryBuilder {
           tx.queryQueueConsumer().findAllEnabled(appId),
           tx.queryMessages().findAllByAppIdAndDeliveryStatus(appId, DeliveryStatus.OPEN),
           tx.queryDeliveries().findAllByAppIdAndStatus(appId, DeliveryStatus.OPEN, true)
-      ).asTuple()
+      )
+      .asTuple()
       .onItem().transformToUni(tuple -> request(tuple))
       .onItem().transform(req -> response(req))
     );
   }
 
   private Uni<ChannelBatch> request(Tuple3<List<QueueConsumer>, List<QueueMessage>, List<Delivery>> input) {
-    final var msg = createMsg();
-    final ChannelTxScope scope = ImmutableChannelTxScope.builder()
-        .channelId(state.getDataSource().getChannel().getChannelName())
-        .commitAuthor("MessageBuilderImpl")
-        .commitMessage("publishing message via builder")
-        .build();
-    
-    return state.withChannelTransaction(scope, tx -> tx.batchMany(batch
-        .addNewPublishedMessages(msg)
-        .log(batchLog.toString())
-        .channelId(state.getDataSource().getChannel().getId())
-        .build()));
+    final var builder = ImmutableChannelBatch.builder();
+    return Uni.createFrom().item(builder.build());
   }
   
   private ThenaMqEnvelope<Delivery> response(ChannelBatch batch) {
@@ -79,7 +71,7 @@ public class DeliveryBuilderImpl implements DeliveryBuilder {
         .channel(state.getDataSource().getChannel())
         .operationStatus(batch.getBatchStatus())
         .operationLogs(batch.getLogs())
-        .object(batch.getNewPublishedMessages().iterator().next())
+        .object(null)
         .build();
   }
   
