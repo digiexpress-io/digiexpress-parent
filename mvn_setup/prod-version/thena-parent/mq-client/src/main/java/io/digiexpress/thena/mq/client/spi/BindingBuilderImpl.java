@@ -4,7 +4,6 @@ import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.BindingBuilder;
 import io.digiexpress.thena.mq.client.api.entities.Binding;
-import io.digiexpress.thena.mq.client.api.entities.ImmutableBinding;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
@@ -66,7 +65,6 @@ public class BindingBuilderImpl implements BindingBuilder {
         .build();
     return new RoutingVisitor().accept(request);
   }
-
   
   private ThenaMqEnvelope<Binding> bindingOk(ChannelBatch rsp, ThenaMqChannelState tx) {
     return ImmutableThenaMqEnvelope
