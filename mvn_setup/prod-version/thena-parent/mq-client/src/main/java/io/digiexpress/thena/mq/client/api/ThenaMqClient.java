@@ -46,9 +46,6 @@ public interface ThenaMqClient {
   }
   
   interface MessageBuilder {
-    MessageBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    MessageBuilder queueIdOrName(String queueIdOrName);
-    
     
     /** rabbitmq matching
         * (star) can substitute for exactly one word.
@@ -57,7 +54,7 @@ public interface ThenaMqClient {
         ReceiveLogsTopic "*.critical"
         EmitLogTopic "kern.critical" "A critical kernel error"
      */
-    MessageBuilder routingKey(@Nullable String routingKey);
+    MessageBuilder routingKey(String routingKey);
 
     MessageBuilder comment(String comment);
     MessageBuilder createdBy(String createdBy);

@@ -88,10 +88,9 @@ public class CreateOneChannelTest extends DbTestTemplate {
     // publish things ... to the queue
     getClient().withChannel(channel)
       .messageBuilder()
+      .routingKey("super queue")
       .comment("my first msg")
       .createdBy("test user")
-      .appId("test-app")
-      .queueIdOrName("super queue")
       
       .bodyType("user-data")
       .bodyId("ssn1")
