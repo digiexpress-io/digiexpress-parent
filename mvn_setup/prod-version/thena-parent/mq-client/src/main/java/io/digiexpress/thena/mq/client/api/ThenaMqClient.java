@@ -45,6 +45,21 @@ public interface ThenaMqClient {
     Uni<ThenaMqEnvelope<Queue>> build();
   }
   
+  interface AppConfigBuilder {
+    QueueBuilder createdBy(String createdBy); // identify who or what is creating the queue
+    QueueBuilder appId(String appId); // user provided app id(how do you identify your app?)
+    QueueBuilder addConsumer(Consumer<ConsumerBuilder> worker);
+    Uni<ThenaMqEnvelope<ThenaMqConsumerConfig>> build();
+  }
+  
+  interface ConsumerBuilder {
+    ConsumerBuilder comment(String comment);
+    ConsumerBuilder consumerName(String consumerName);
+    ConsumerBuilder routingKey(String routingKey);
+    void build(ThenaMqConsumer worker);
+  }
+  
+  
   interface MessageBuilder {
     
     /** rabbitmq matching
@@ -70,10 +85,5 @@ public interface ThenaMqClient {
     Uni<ThenaMqEnvelope<QueueMessage>> build();
   }
   
-  interface ConsumerBuilder {
-    ConsumerBuilder comment(String comment);
-    ConsumerBuilder consumerName(String consumerName);
-    ConsumerBuilder routingKey(String routingKey);
-    void build(ThenaMqConsumer worker);
-  }
+
 }

@@ -147,9 +147,6 @@ public interface ThenaMqChannelState {
           .batchStatus(nextStatus)
           .build();
       
-    }
-    
-    
+    }    
   }
-  
 }

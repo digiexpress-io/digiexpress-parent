@@ -105,6 +105,8 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .bindingBuilder()
       .build()
       .await().atMost(Duration.ofMinutes(1));
+    
+    
     // get hanging messages
     // get available routes
     // match
