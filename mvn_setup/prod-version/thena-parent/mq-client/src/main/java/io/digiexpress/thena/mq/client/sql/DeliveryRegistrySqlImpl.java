@@ -13,6 +13,7 @@ import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -43,11 +44,27 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .build();
   }
   @Override
+  public SqlTuple findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT deliveries.* ").ln()
+        .append(" FROM ").append(options.getDelivery()).append(" AS deliveries").ln()
+        .append(" LEFT JOIN ").append(options.getQueueConsumers()).append(" AS consumers").ln()
+        .append(" ON(deliveries.consumer_id = consumers.id)").ln()
+        .append(" WHERE deliveries.status = $1 AND consumers.app_id = $2").ln()
+        .append(lockForUpdate ? "FOR UPDATE" : "").ln()  //FOR UPDATE NOWAIT
+        
+        .build())
+        .props(Tuple.of(status, appId))
+        .build();
+  }
+  
+  @Override
   public ThenaSqlClient.SqlTupleList insertMany(List<Delivery> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDelivery())
-        .append(" (id, message_id, queue_id, status, created_at, starts_at, expires_at, completed_at)").ln()
+        .append(" (id, message_id, queue_id, consumer_id, status, created_at, starts_at, expires_at, completed_at)").ln()
         .append(" VALUES($1, $2, $3, $4, $5, $6, $7,$8)").ln()
         .build())
         .props(users.stream()
@@ -55,6 +72,7 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
                 doc.getId(), 
                 doc.getMessageId(),
                 doc.getQueueId(),
+                doc.getConsumerId(),
                 doc.getStatus().name(), 
                 doc.getCreatedAt(), 
                 doc.getStartsAt(), 
@@ -90,6 +108,7 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .append("  id             VARCHAR(40) PRIMARY KEY,").ln()
         .append("  message_id     VARCHAR(40) NOT NULL,").ln()
         .append("  queue_id       VARCHAR(40) NOT NULL,").ln()
+        .append("  consumer_id    VARCHAR(40) NOT NULL,").ln()
         .append("  status         VARCHAR(100) NOT NULL,").ln()
         .append("  created_at     TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
         .append("  starts_at      TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
@@ -106,6 +125,12 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
 
         .append("CREATE INDEX IF NOT EXISTS ").append(options.getDelivery()).append("_QUEUE_INDEX")
         .append(" ON ").append(options.getDelivery()).append(" (queue_id);").ln()
+
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getDelivery()).append("_STATUS_INDEX")
+        .append(" ON ").append(options.getDelivery()).append(" (status);").ln()
+
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getDelivery()).append("_CONSUMER_INDEX")
+        .append(" ON ").append(options.getDelivery()).append(" (consumer_id);").ln()
         
         .build()).build();
   }
@@ -124,7 +149,11 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .append("  ADD CONSTRAINT ").append(options.getDelivery()).append("_QUEUE_FK").ln()
         .append("  FOREIGN KEY (queue_id)").ln()
         .append("  REFERENCES ").append(options.getQueues()).append(" (id);").ln()
-        
+
+        .append("ALTER TABLE ").append(options.getDelivery()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getDelivery()).append("_CON_FK").ln()
+        .append("  FOREIGN KEY (consumer_id)").ln()
+        .append("  REFERENCES ").append(options.getQueueConsumers()).append(" (id);").ln()
         
         .build())
         .build();
@@ -144,6 +173,7 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .messageId(row.getString("message_id"))
         .status(DeliveryStatus.valueOf(row.getString("status")))
         .queueId(row.getString("queue_id"))
+        .consumerId(row.getString("consumer_id"))
         .createdAt(row.getOffsetDateTime("created_at"))
         .startsAt(row.getOffsetDateTime("starts_at"))
         .expiresAt(row.getOffsetDateTime("expires_at"))

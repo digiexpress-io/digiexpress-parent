@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -12,6 +13,7 @@ public interface MessageRegistry extends ThenaMqRegistryTemplate<QueueMessage, i
   ThenaSqlClient.SqlTupleList insertMany(List<QueueMessage> docs);
   ThenaSqlClient.SqlTupleList updateMany(List<QueueMessage> docs);
   ThenaSqlClient.SqlTuple findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
+  ThenaSqlClient.SqlTuple findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status) ;
   
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id

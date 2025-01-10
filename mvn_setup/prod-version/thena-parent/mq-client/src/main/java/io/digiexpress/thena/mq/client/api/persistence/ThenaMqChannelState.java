@@ -12,6 +12,7 @@ import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.Log;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
@@ -45,12 +46,17 @@ public interface ThenaMqChannelState {
   InternalQueueConsumerQuery queryQueueConsumer();
   InternalThenaMqContainersQuery queryContainers();
   InternalMessageQuery queryMessages();
+  InternalDeliveryQuery queryDeliveries();
   
 
+  interface InternalDeliveryQuery {
+    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);    
+  }
+  
   interface InternalQueueConsumerQuery {
     Uni<List<QueueConsumer>> findAllByAppId(String appId, boolean lockForUpdate);
-    
     Uni<List<QueueConsumer>> findAllEnabled();
+    Uni<List<QueueConsumer>> findAllEnabled(String appId);
   }
   
   interface InternalQueueQuery {
@@ -71,9 +77,8 @@ public interface ThenaMqChannelState {
   
   interface InternalMessageQuery {
     Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
+    Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status);
   }
-  
-  
   
   @FunctionalInterface
   interface ChannelTransaction<R> {

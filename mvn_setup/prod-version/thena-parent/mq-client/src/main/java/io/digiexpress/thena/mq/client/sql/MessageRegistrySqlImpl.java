@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
@@ -58,6 +59,22 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .props(Tuple.of(status))
         .build();
   }
+  
+  @Override
+  public SqlTuple findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT distinct(messages.*) ").ln()
+        .append(" FROM ").append(options.getMessages()).append(" AS messages").ln()
+        .append(" RIGHT JOIN ").append(options.getDelivery()).append(" AS deliveries").ln()
+        .append(" ON(messages.id = deliveries.message_id)")
+        .append(" WHERE deliveries.status = $1 ").ln()
+
+        .build())
+        .props(Tuple.of(status))
+        .build();
+  }
+  
   @Override
   public SqlTupleList updateMany(List<QueueMessage> docs) {
     return ImmutableSqlTupleList.builder()
@@ -181,4 +198,5 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
           .build()
     ;
   }
+
 }

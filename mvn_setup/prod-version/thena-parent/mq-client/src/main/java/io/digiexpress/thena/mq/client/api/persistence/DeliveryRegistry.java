@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.resys.thena.datasource.ThenaSqlClient;
 
 public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.vertx.mutiny.sqlclient.Row> {
@@ -11,6 +12,8 @@ public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.v
   
   ThenaSqlClient.SqlTupleList updateMany(List<Delivery> docs);
   ThenaSqlClient.SqlTupleList insertMany(List<Delivery> docs);
+  
+  ThenaSqlClient.SqlTuple findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();

@@ -28,6 +28,7 @@ public interface ThenaMqClient {
 
   
   interface DeliveryBuilder {
+    DeliveryBuilder appId(String appId);
     Uni<ThenaMqEnvelope<Delivery>> build();
   }
   

@@ -3,6 +3,7 @@ package io.digiexpress.thena.mq.client.spi.persistence;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.InternalMessageQuery;
@@ -36,5 +37,23 @@ public class InternalMessageQueryImpl implements InternalMessageQuery {
         .onItem()
         .transformToUni((RowSet<QueueMessage> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'QUEUE_MESSAGE' by 'routing_status'!", sql, e)));
+  }
+
+  @Override
+  public Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status) {
+    final var sql = dataSource.getRegistry().message().findAllByAppIdAndDeliveryStatus(appId, status);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalMessageQueryImpl.findAllByAppIdAndDeliveryStatus query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().message().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<QueueMessage> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'QUEUE_MESSAGE' by 'app_id' and 'delivery.status'!", sql, e)));
   }
 }
