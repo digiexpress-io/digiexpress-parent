@@ -1,4 +1,4 @@
-package io.digiexpress.thena.mq.client.spi.consumer;
+package io.digiexpress.thena.mq.client.spi.visitors;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
-import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableDelivery;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableDeliveryAttempt;

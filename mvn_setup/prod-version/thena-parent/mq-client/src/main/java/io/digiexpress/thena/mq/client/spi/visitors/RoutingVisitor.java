@@ -1,4 +1,4 @@
-package io.digiexpress.thena.mq.client.spi.routing;
+package io.digiexpress.thena.mq.client.spi.visitors;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -18,18 +18,22 @@ import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
+import io.digiexpress.thena.mq.client.api.entities.Routing.ConsumerToQueueRouter;
+import io.digiexpress.thena.mq.client.api.entities.Routing.MessageToQueueRouter;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
+import io.digiexpress.thena.mq.client.api.routing.Router;
 import io.resys.thena.support.OidUtils;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RoutingVisitor {
+public class RoutingVisitor implements  MessageToQueueRouter, ConsumerToQueueRouter {
+  
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder()
       .batchStatus(OperationStatus.OK)
       .log("Building channel changes with RoutingVisitor");
-  private final RoutingKeyImpl routingKey = new RoutingKeyImpl();
+  
   private final OffsetDateTime now = OffsetDateTime.now();
   private Map<String, Queue> queueById;
   private Map<String, QueueMessage> queueMessagesById; 
@@ -51,7 +55,7 @@ public class RoutingVisitor {
   
   private void visitMessage(RoutingRequest request, QueueMessage msg) {
     final var channel = request.getChannel();
-    final var matchedQueues = routingKey.apply(channel, msg, request.getQueues());
+    final var matchedQueues = apply(channel, msg, request.getQueues());
     final var bindings = matchedQueues.stream().map(queue -> ImmutableBinding.builder()
         .status(BindingStatus.OPEN)
         .createdAt(now)
@@ -76,7 +80,7 @@ public class RoutingVisitor {
     final var currentState = this.batch.build();
 
     final var deliveries = currentState.getNewBindings().stream()
-      .filter(b -> !routingKey.apply(channel, consumer, Arrays.asList(queueById.get(b.getQueueId()))).isEmpty())
+      .filter(b -> !apply(channel, consumer, Arrays.asList(queueById.get(b.getQueueId()))).isEmpty())
       .map(b -> {
         final var msgId = queueMessagesById.get(b.getMessageId());
         return ImmutableDelivery.builder()
@@ -95,52 +99,27 @@ public class RoutingVisitor {
     this.batch.addAllNewDeliveries(deliveries);
   }
   
+  
+  @Override
+  public List<Queue> apply(Channel channel, QueueMessage message, List<Queue> queues) {
+    return queues.stream().filter(queue -> Router.builder()
+        .routingKey(message.getRoutingKey())
+        .queueName(queue.getQueueName())
+        .isMatch()).toList();
+  }
+  @Override
+  public List<Queue> apply(Channel channel, QueueConsumer consumer, List<Queue> queues) {
+    return queues.stream().filter(queue -> Router.builder()
+        .routingKey(consumer.getRoutingKey())
+        .queueName(queue.getQueueName())
+        .isMatch()).toList();
+  }
+  
   @Value.Immutable
   public interface RoutingRequest {
-    List<QueueMessage> getMessage();
     Channel getChannel();
+    List<QueueMessage> getMessage();
     List<QueueConsumer> getConsumers();
     List<Queue> getQueues();
   }
-  
-  /*
-  ChannelBatch merged = ImmutableChannelBatch.builder()
-      .log("Performing binding with: " + RoutingVisitor.class + ", for: " + input.getItem1().size() + " messages")
-      .batchStatus(OperationStatus.OK)
-      .channelId(tx.getDataSource().getChannel().getId())
-      .build();
-  
-  for(final var message : input.getItem1()) {
-    final var request = ImmutableRoutingRequest.builder()
-      .channel(tx.getDataSource().getChannel())
-      .message(message)
-      .addAllConsumers(input.getItem2())
-      .addAllQueues(input.getItem3())
-      .addAllRouters(routers)
-      .build();
-    
-    merged = merged.merge(new RoutingVisitor().accept(request));
-    
-      /*
-  @Override
-  public List<Queue> apply(Channel channel, QueueMessage message, List<Queue> queues, List<QueueConsumer> consumers) {
-    final var msg_to_queue = queues.stream().filter(q -> isQueueMatch(q, message)).toList();
-    final var queue_to_consumer = consumers.stream().filter(consumer -> isQueueMatch(message, consumer)).toList();
-    
-    
-    final var queue = queues.stream().filter(e -> e.getId().equals(message.getQueueId())).findFirst()
-        .orElseThrow(() -> {
-          final var knownQueues = String.join(",", queues.stream().map(q -> q.getQueueName() + "/" + q.getId()).toList());
-          return RepoAssert.fail("Can't find queue with id: '" + message.getQueueId() + "', known queues: " + knownQueues + "!");
-        });
-    
-    return ImmutableRouting.builder()
-        .addAllQueueConsumers(matches)
-        .queue(queue)
-        .build();
-  }
-*/
-
-
-  
 }

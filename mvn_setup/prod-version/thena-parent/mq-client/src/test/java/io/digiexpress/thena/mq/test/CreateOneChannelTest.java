@@ -26,6 +26,7 @@ import java.time.Duration;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
+import io.digiexpress.thena.mq.client.api.ImmutableMessageResponse;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.quarkus.test.junit.QuarkusTest;
@@ -51,16 +52,20 @@ public class CreateOneChannelTest extends DbTestTemplate {
     final var worker1 = new ThenaMqConsumer() {
       @Override
       public MessageResponse accept(QueueMessage msg) {
-        // TODO Auto-generated method stub
-        return null;
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("success by worker 1")
+            .build();
       }
     };
     
     final var worker2 = new ThenaMqConsumer() {
       @Override
       public MessageResponse accept(QueueMessage msg) {
-        // TODO Auto-generated method stub
-        return null;
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("success by worker 2")
+            .build();
       }
     };
     
@@ -77,7 +82,6 @@ public class CreateOneChannelTest extends DbTestTemplate {
     // create queue with 2 consumers
     final var queue = getClient().withChannel(channel)
       .queueBuilder()
-
       .queueName("super queue")
       .createdBy("tester@tester")
       .comment("queue for test case")
@@ -115,13 +119,12 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .build()
       .await().atMost(Duration.ofMinutes(1));
     
-    
     // Deliver the message to the consumers
     getClient().withChannel(channel)
-    .deliveryBuilder()
-    .config(consumers.getObject())
-    .build()
-    .await().atMost(Duration.ofMinutes(1));
+      .deliveryBuilder()
+      .config(consumers.getObject())
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
   
     
   }

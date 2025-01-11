@@ -2,6 +2,8 @@ package io.digiexpress.thena.mq.client.api;
 
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.vertx.core.json.JsonObject;
 
@@ -9,7 +11,7 @@ import io.vertx.core.json.JsonObject;
 public interface ThenaMqConsumer {
   MessageResponse accept(QueueMessage msg);
   
-    
+  @Value.Immutable
   interface MessageResponse {
     Optional<String> getComment();
     Optional<ConsumerWorkerError> getError();

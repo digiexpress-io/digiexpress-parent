@@ -11,12 +11,11 @@ import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
-import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelTxScope;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelTxScope;
-import io.digiexpress.thena.mq.client.spi.consumer.ConsumerVisitor;
+import io.digiexpress.thena.mq.client.spi.visitors.ConsumerVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple3;
@@ -55,20 +54,16 @@ public class DeliveryBuilderImpl implements DeliveryBuilder {
   }
 
   private Uni<ChannelBatch> request(ThenaMqChannelState state, Tuple3<List<QueueConsumer>, List<QueueMessage>, List<Delivery>> input) {
-    final var builder = ImmutableChannelBatch.builder()
-        .channelId(state.getDataSource().getChannel().getId())
-        .batchStatus(OperationStatus.OK)
-        .log("");
-    
-    ConsumerVisitor.builder()
-    .config(config)
-    .channel(state.getDataSource().getChannel())
-    .deliveries(input.getItem3())
-    .consumers(input.getItem1())
-    .messages(input.getItem2())
-    .build().accept();
-    
-    return Uni.createFrom().item(builder.build());
+
+    final var batch = ConsumerVisitor.builder()
+      .config(config)
+      .channel(state.getDataSource().getChannel())
+      .deliveries(input.getItem3())
+      .consumers(input.getItem1())
+      .messages(input.getItem2())
+      .build()
+      .accept();
+    return state.batchMany(batch);
   }
   
   private ThenaMqEnvelope<Delivery> response(ChannelBatch batch) {

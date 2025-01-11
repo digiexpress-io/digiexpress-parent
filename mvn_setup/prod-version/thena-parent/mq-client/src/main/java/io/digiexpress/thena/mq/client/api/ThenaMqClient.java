@@ -42,6 +42,7 @@ public interface ThenaMqClient {
     ChannelBuilder comment(String comment);
     ChannelBuilder createdBy(String createdBy);
     ChannelBuilder externalId(String externalId);
+    ChannelBuilder addQueue(QueueBuilder queueBuilder);
     Uni<ThenaMqEnvelope<Channel>> build();
   }
   

@@ -48,7 +48,7 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getDeliveryAttempt())
         .append(" (id, delivery_id, created_at, consumer_comment, consumer_error, consumer_status)").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 

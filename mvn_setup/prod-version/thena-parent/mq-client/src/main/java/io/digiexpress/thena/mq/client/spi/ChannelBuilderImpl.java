@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.ChannelBuilder;
+import io.digiexpress.thena.mq.client.api.ThenaMqClient.QueueBuilder;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableChannel;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
@@ -48,6 +49,13 @@ public class ChannelBuilderImpl implements ChannelBuilder {
             .channelId(channel.getId())
             .build()
       );
+  }
+  
+
+  @Override
+  public ChannelBuilder addQueue(QueueBuilder queueBuilder) {
+    // TODO Auto-generated method stub
+    return this;
   }
   
   private Uni<Channel> createChannel(List<Channel> channels) {
