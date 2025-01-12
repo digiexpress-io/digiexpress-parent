@@ -50,7 +50,7 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
         .remarkText(command.getCommentText())
         .reporterId(userId)
         .remarkType(remarkType)
-        .remarkSource(command.getSource().name())
+        .remarkSource((command.getSource() == TaskCommentSource.FRONTDESK ? TaskCommentSource.FRONTDESK : TaskCommentSource.PORTAL).name())
         .parentId(command.getReplyToId())
         .build();
       

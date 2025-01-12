@@ -343,7 +343,8 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
           .remarkText(row.getString("remark_text"))
           .remarkStatus(row.getString("remark_status"))
           .reporterId(row.getString("reporter_id"))
-          
+          .remarkType(row.getString("remark_type"))
+          .remarkSource(row.getString("remark_source"))
           .relation(GrimRegistrySqlImpl.toRelations(objectiveId, goalId, remarkId))
           .build();
     };

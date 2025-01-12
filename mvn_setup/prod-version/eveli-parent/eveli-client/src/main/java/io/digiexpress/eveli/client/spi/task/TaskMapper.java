@@ -25,9 +25,12 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.ImmutableTaskComment;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
@@ -62,7 +65,7 @@ public class TaskMapper {
         .replyToId(remark.getParentId()) // probably bad idea, lazy relations
         .taskId(remark.getMissionId()) // probably bad idea, lazy relations
         .external(COMMENT_EXTERNAL.equals(remark.getRemarkType()))
-        .source(TaskClient.TaskCommentSource.valueOf(remark.getRemarkSource()))
+        .source(StringUtils.equals(TaskClient.TaskCommentSource.FRONTDESK.name(), remark.getRemarkSource()) ? TaskCommentSource.FRONTDESK : TaskCommentSource.PORTAL)
         .build();
   }
   
