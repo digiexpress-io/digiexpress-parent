@@ -3,7 +3,7 @@ package io.digiexpress.thena.mq.client.spi;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.DeliveryBuilder;
-import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
 public class DeliveryBuilderImpl implements DeliveryBuilder {
   private final ThenaMqChannelState state;
   
-  private ThenaMqConsumerConfig config;
+  private ThenaMqAppConfig config;
   
   @Override
   public Uni<ThenaMqEnvelope<Delivery>> build() {

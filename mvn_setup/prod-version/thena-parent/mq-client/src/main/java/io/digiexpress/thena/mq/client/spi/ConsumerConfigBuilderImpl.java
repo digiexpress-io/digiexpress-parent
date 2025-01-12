@@ -12,7 +12,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.ConsumerBuilder;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.ConsumerConfigBuilder;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
-import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
@@ -53,7 +53,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
   }
 
   @Override
-  public Uni<ThenaMqEnvelope<ThenaMqConsumerConfig>> build() {
+  public Uni<ThenaMqEnvelope<ThenaMqAppConfig>> build() {
     RepoAssert.notEmpty(appId, () -> "appId must be defined!");
     
     final var scope = ImmutableChannelTxScope.builder()
@@ -70,7 +70,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
   
 
   
-  private Uni<ThenaMqEnvelope<ThenaMqConsumerConfig>> visitBatch(ThenaMqChannelState state, List<QueueConsumer> input) {
+  private Uni<ThenaMqEnvelope<ThenaMqAppConfig>> visitBatch(ThenaMqChannelState state, List<QueueConsumer> input) {
   
     final var consumers = visitQueueConsumers(input);
     final var request = batch
@@ -82,7 +82,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
           
       if(resp.getBatchStatus() == OperationStatus.ERROR) {
         return ImmutableThenaMqEnvelope
-            .<ThenaMqConsumerConfig>builder()
+            .<ThenaMqAppConfig>builder()
             .operationStatus(resp.getBatchStatus())
             .channel(state.getDataSource().getChannel())
             .channelId(state.getDataSource().getChannel().getId())
@@ -93,7 +93,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
        
       
       return ImmutableThenaMqEnvelope
-        .<ThenaMqConsumerConfig>builder()
+        .<ThenaMqAppConfig>builder()
         .operationStatus(OperationStatus.OK)
         .channel(state.getDataSource().getChannel())
         .channelId(state.getDataSource().getChannel().getId())
@@ -104,7 +104,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
   }
 
   // sync existing queue
-  private ThenaMqConsumerConfig visitQueueConsumers(List<QueueConsumer> foundAppConsumers) {
+  private ThenaMqAppConfig visitQueueConsumers(List<QueueConsumer> foundAppConsumers) {
 
     final var activeConsumers = new ArrayList<Tuple2<QueueConsumer, ThenaMqConsumer>>();
     

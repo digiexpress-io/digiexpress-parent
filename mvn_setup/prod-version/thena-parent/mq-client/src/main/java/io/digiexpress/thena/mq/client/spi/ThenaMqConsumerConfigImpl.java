@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
-import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class ThenaMqConsumerConfigImpl implements ThenaMqConsumerConfig {
+public class ThenaMqConsumerConfigImpl implements ThenaMqAppConfig {
   private final String appId;
   private final Map<String, Tuple2<QueueConsumer, ThenaMqConsumer>> consumers;
   

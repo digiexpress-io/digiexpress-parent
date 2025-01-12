@@ -7,6 +7,7 @@ import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
+import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.smallrye.mutiny.Uni;
@@ -18,7 +19,6 @@ public interface ThenaMqClient {
   ChannelBuilder channelBuilder();
   MessageBuilder messageBuilder();
   BindingBuilder bindingBuilder();
-  ConsumerConfigBuilder consumerConfigBuilder();
   DeliveryBuilder deliveryBuilder();
   
   
@@ -27,7 +27,7 @@ public interface ThenaMqClient {
 
   
   interface DeliveryBuilder {
-    DeliveryBuilder config(ThenaMqConsumerConfig config);
+    DeliveryBuilder config(ThenaMqAppConfig config);
     Uni<ThenaMqEnvelope<Delivery>> build();
   }
   
@@ -39,10 +39,11 @@ public interface ThenaMqClient {
   interface ChannelBuilder {
     ChannelBuilder channelName(String channelName);
     ChannelBuilder comment(String comment);
-    ChannelBuilder createdBy(String createdBy);// identify who or what is creating the channel and/or queues
+    ChannelBuilder appId(String createdBy);// app-id, identify who or what is creating the channel and/or queues
     ChannelBuilder externalId(String externalId);
     ChannelBuilder addQueue(Consumer<QueueBuilder> queueBuilder);
-    Uni<ThenaMqEnvelope<Channel>> build();
+    ChannelBuilder addConsumer(Consumer<ConsumerBuilder> consumerBuilder);
+    Uni<ThenaMqEnvelope<ThenaMqAppConfig>> build();
   }
 
   interface QueueBuilder {
@@ -51,18 +52,11 @@ public interface ThenaMqClient {
     Queue build();
   }
   
-  interface ConsumerConfigBuilder {
-    ConsumerConfigBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    ConsumerConfigBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    ConsumerConfigBuilder addConsumer(Consumer<ConsumerBuilder> worker);
-    Uni<ThenaMqEnvelope<ThenaMqConsumerConfig>> build();
-  }
-  
   interface ConsumerBuilder {
     ConsumerBuilder comment(String comment);
     ConsumerBuilder consumerName(String consumerName);
     ConsumerBuilder routingKey(String routingKey);
-    void build(ThenaMqConsumer worker);
+    QueueConsumer build(ThenaMqConsumer worker);
   }
   
   

@@ -70,32 +70,30 @@ public class CreateOneChannelTest extends DbTestTemplate {
     };
     
     
-    final var channel = getClient()
+    final var config = getClient()
       .channelBuilder()
       .channelName("test_1")
       .comment("channel for junit test")
-      .createdBy("tester@tester")
+      .appId("tester@tester")
       .addQueue(b -> b
           .queueName("super queue")
           .comment("queue for test case")
           .build())
+      .addConsumer(worker -> worker
+          .routingKey("super queue")
+          .consumerName("consumer-1")
+          .comment("test consumer")
+          .build(worker1))
+      .addConsumer(worker -> worker
+          .routingKey("super queue")
+          .consumerName("consumer-2")
+          .comment("test consumer")
+          .build(worker2))
       .build()
-      .await().atMost(Duration.ofMinutes(1))
-      .getChannel();
-  
-
-    final var consumers = getClient().withChannel(channel)
-      .consumerConfigBuilder()
-      .appId("test-app")
-      .createdBy("tester@tester")
-      .addConsumer(worker -> worker.routingKey("super queue").consumerName("consumer-1").comment("test consumer").build(worker1))
-      .addConsumer(worker -> worker.routingKey("super queue").consumerName("consumer-2").comment("test consumer").build(worker2))
-      .build()
-      .await().atMost(Duration.ofMinutes(1));
-    
+      .await().atMost(Duration.ofMinutes(1));    
     
     // publish things ... to the queue
-    getClient().withChannel(channel)
+    getClient().withChannel(config.getChannel())
       .messageBuilder()
       .routingKey("super queue")
       .comment("my first msg")
@@ -110,15 +108,15 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     
     // Route the message
-    getClient().withChannel(channel)
+    getClient().withChannel(config.getChannel())
       .bindingBuilder()
       .build()
       .await().atMost(Duration.ofMinutes(1));
     
     // Deliver the message to the consumers
-    getClient().withChannel(channel)
+    getClient().withChannel(config.getChannel())
       .deliveryBuilder()
-      .config(consumers.getObject())
+      .config(config.getObject())
       .build()
       .await().atMost(Duration.ofMinutes(1));
   

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.digiexpress.thena.mq.client.api.ThenaMqConsumerConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
@@ -29,7 +29,7 @@ public class ConsumerVisitor {
   private final Map<String, QueueConsumer> consumers; 
   private final Map<String, QueueMessage> messages;
   private final List<Delivery> deliveries;
-  private final ThenaMqConsumerConfig config;
+  private final ThenaMqAppConfig config;
   private final Channel channel;
   private final ImmutableChannelBatch.Builder builder = ImmutableChannelBatch.builder();
   private final StringBuilder log = new StringBuilder();
@@ -92,7 +92,7 @@ public class ConsumerVisitor {
     private List<QueueConsumer> consumers; 
     private List<QueueMessage> messages;
     private List<Delivery> deliveries;
-    private ThenaMqConsumerConfig config;
+    private ThenaMqAppConfig config;
     private Channel channel;
     
     public ConsumerVisitor build() {
