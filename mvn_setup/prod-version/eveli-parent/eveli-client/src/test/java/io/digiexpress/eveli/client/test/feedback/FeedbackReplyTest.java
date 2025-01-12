@@ -65,7 +65,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
         .locale(template.getLocale())
         .origin(template.getOrigin())
         
-        .taskId(taskId)
+        .processId(template.getProcessId())
         .reporterNames(template.getReporterNames())
         
         .reply("Proletariat John here, replying to you")
