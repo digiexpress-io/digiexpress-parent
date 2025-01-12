@@ -9,10 +9,8 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import io.digiexpress.thena.mq.client.api.ThenaMqClient.ConsumerBuilder;
-import io.digiexpress.thena.mq.client.api.ThenaMqClient.ConsumerConfigBuilder;
-import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
@@ -33,7 +31,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
-public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
+public class ConsumerConfigBuilderImpl {
   private final ThenaMqChannelState state;
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.OK);
   private final StringBuilder batchLog = new StringBuilder();
@@ -43,8 +41,8 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
   private String createdBy;  
 
 
-  @Override
-  public ConsumerConfigBuilderImpl addConsumer(Consumer<ConsumerBuilder> worker) {
+
+  public ConsumerConfigBuilderImpl addConsumer(Consumer<ConsumerBuilderImpl> worker) {
     final var consumerBuilder = new ConsumerBuilderImpl();
     worker.accept(consumerBuilder);
     RepoAssert.isTrue(consumerBuilder.completed().isTrue(), () -> "consumer added but #build method not called!");
@@ -52,7 +50,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
     return this;
   }
 
-  @Override
+
   public Uni<ThenaMqEnvelope<ThenaMqAppConfig>> build() {
     RepoAssert.notEmpty(appId, () -> "appId must be defined!");
     
@@ -132,7 +130,7 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
     });
 
     
-    return ThenaMqConsumerConfigImpl.from(appId, activeConsumers);
+    return ThenaMqConsumerConfigImpl.from(appId, state.getDataSource().getChannel(), activeConsumers);
   }
 
 
@@ -190,14 +188,13 @@ public class ConsumerConfigBuilderImpl implements ConsumerConfigBuilder {
   }
   
   @Getter @Setter @Accessors(fluent = true)
-  private static class ConsumerBuilderImpl implements ConsumerBuilder {
+  private static class ConsumerBuilderImpl {
     private String routingKey;
     private String consumerName;
     private String comment;
     private ThenaMqConsumer thenaMqConsumer;
     private final MutableBoolean completed = new MutableBoolean(false);
     
-    @Override
     public void build(ThenaMqConsumer worker) {
       RepoAssert.notNull(worker, () -> "worker must be defined!");
       RepoAssert.notEmpty(consumerName, () -> "consumerName must be defined!");

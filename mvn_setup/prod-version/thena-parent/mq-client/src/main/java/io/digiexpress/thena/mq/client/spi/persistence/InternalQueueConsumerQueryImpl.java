@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
@@ -37,6 +38,7 @@ public class InternalQueueConsumerQueryImpl implements InternalQueueConsumerQuer
         .execute(sql.getProps())
         .onItem()
         .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
         .onFailure().invoke(e -> dataSource.getErrorHandler()
             .deadEnd(new SqlTupleFailed("Can't find 'QUEUE_CONSUMER' by 'app_id'!", sql, e)));
   }

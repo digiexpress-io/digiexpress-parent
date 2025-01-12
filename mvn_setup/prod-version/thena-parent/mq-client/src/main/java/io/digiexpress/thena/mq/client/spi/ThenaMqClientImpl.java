@@ -33,10 +33,6 @@ public class ThenaMqClientImpl implements ThenaMqClient {
     return new BindingBuilderImpl(state);
   }
   @Override
-  public ConsumerConfigBuilder consumerConfigBuilder() {
-    return new ConsumerConfigBuilderImpl(state);
-  }
-  @Override
   public DeliveryBuilder deliveryBuilder() {
     return new DeliveryBuilderImpl(state);
   }
