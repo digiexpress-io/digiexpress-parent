@@ -57,7 +57,6 @@ public class ChannelBuilderImpl implements ChannelBuilder {
               .channel(channel)
               .channelId(channel.getId())
               .build();
-          
           return Uni.createFrom().item(result);
         })
       .onFailure().recoverWithItem(t -> {
