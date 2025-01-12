@@ -74,19 +74,15 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .channelBuilder()
       .channelName("test_1")
       .comment("channel for junit test")
-      .createdBy("quarrkus test runner")
+      .createdBy("tester@tester")
+      .addQueue(b -> b
+          .queueName("super queue")
+          .comment("queue for test case")
+          .build())
       .build()
       .await().atMost(Duration.ofMinutes(1))
       .getChannel();
   
-    // create queue with 2 consumers
-    final var queue = getClient().withChannel(channel)
-      .oneQueueBuilder()
-      .queueName("super queue")
-      .createdBy("tester@tester")
-      .comment("queue for test case")
-      .build()
-      .await().atMost(Duration.ofMinutes(1));
 
     final var consumers = getClient().withChannel(channel)
       .consumerConfigBuilder()

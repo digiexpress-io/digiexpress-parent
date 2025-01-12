@@ -50,20 +50,20 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j(topic = ThenaMqLogConstants.SHOW_SQL)
-public class ChannelBatchVisitor {
+public class ChannelBatchToSqlVisitor {
   private final ThenaMqDataSource wrapper;
   private final ThenaMqTableRegistry registry;
   private final ThenaSqlClient tx;
   private final StringBuilder txLog = new StringBuilder();
   
-  public ChannelBatchVisitor(ThenaMqDataSource dataSource) {
+  public ChannelBatchToSqlVisitor(ThenaMqDataSource dataSource) {
     this.wrapper = dataSource;
     this.registry = dataSource.getRegistry();
     this.tx = wrapper.getClient();
     RepoAssert.isTrue(this.wrapper.getTx().isPresent(), () -> "Transaction must be started!");
   }
 
-  public Uni<ChannelBatch> execute(ChannelBatch inputBatch) {
+  public Uni<ChannelBatch> accept(ChannelBatch inputBatch) {
     return Uni.combine().all()
     		.unis(
     		  visitCreateChannel(inputBatch.getNewChannel()),
@@ -173,36 +173,44 @@ public class ChannelBatchVisitor {
   }
 
   private Uni<ChannelBatch> visitInsertChannel(Optional<Channel> channel) {
+    final var batch = ImmutableChannelBatch.builder()
+        .channelId(wrapper.getChannel().getId())
+        .log("");
+    
     if(channel.isEmpty()) {
-      return Uni.createFrom().nothing();
+      return Uni.createFrom().item(batch.batchStatus(OperationStatus.NO_CHANGES).build());
     }
     
     final var tx = wrapper.getClient();
     final var sql = registry.channel().insertOne(channel.get());
     
-    final var batch = ImmutableChannelBatch.builder()
-        .channelId(wrapper.getChannel().getId())
-        .batchStatus(OperationStatus.OK)
-        .log("");
+
     
     final var type = Channel.class;
     
     return tx.preparedQuery(sql.getValue()).execute(sql.getProps()).onItem()
       .transform(row -> {
         final var text = "Inserted " + (row == null ? 0 : row.rowCount()) + " "  + type.getSimpleName() + " entries";
-        final ChannelBatch result = batch.addLogs(ImmutableLog.builder().text(text).build()).build();
+        final ChannelBatch result = batch.batchStatus(OperationStatus.OK).addLogs(ImmutableLog.builder().text(text).build()).build();
         return result;
       })
       .onFailure().transform(t -> {
         final var text = "Failed to insert " + sql.getProps().size() + " "  + type.getSimpleName() + " entries";
-        return new ChannelBatchException(batch.build(), text, t);
+        return new ChannelBatchException(batch.batchStatus(OperationStatus.ERROR).build(), text, t);
       });
       
   }
   
   private Uni<ChannelBatch> visitCreateChannel(Optional<Channel> channel) {
+    final var batch = ImmutableChannelBatch.builder()
+        .channelId(wrapper.getChannel().getId())
+        .log("");
+    
+    
     if(channel.isEmpty()) {
-      return Uni.createFrom().nothing();
+      return Uni.createFrom().item(batch
+          .batchStatus(OperationStatus.NO_CHANGES)
+          .build());
     }
     
     final var tx = wrapper.getClient();
@@ -223,20 +231,15 @@ public class ChannelBatchVisitor {
       .append(registry.queueConsumer().createConstraints().getValue())
       .append(registry.binding().createConstraints().getValue())
       .toString();
-    
-    final var batch = ImmutableChannelBatch.builder()
-        .channelId(wrapper.getChannel().getId())
-        .batchStatus(OperationStatus.OK)
-        .log("");
 
     return tx.query(tablesCreate.toString()).execute().onItem().transform(row -> {
       final var text = "Created " + (row == null ? 0 : row.rowCount()) + " tables";
-      final ChannelBatch result = batch.addLogs(ImmutableLog.builder().text(text).build()).build();
+      final ChannelBatch result = batch.batchStatus(OperationStatus.OK).addLogs(ImmutableLog.builder().text(text).build()).build();
       return result;
     })
     .onFailure().transform(t -> {
       final var text = "Failed to create tables";
-      return new ChannelBatchException(batch.build(), text, t);
+      return new ChannelBatchException(batch.batchStatus(OperationStatus.ERROR).build(), text, t);
     });
 
   }
@@ -270,7 +273,6 @@ public class ChannelBatchVisitor {
     this.txLog
       .append(System.lineSeparator())
       .append("--- processing ").append(sql.getProps().size()).append(" entries of type: '").append(type.getSimpleName()).append("'")
-      .append(System.lineSeparator())
       .append(sql.getPropsDeepString()).append(System.lineSeparator())
       .append(sql.getValue()).append(System.lineSeparator());
   }

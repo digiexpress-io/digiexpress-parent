@@ -3,7 +3,6 @@ package io.digiexpress.thena.mq.client.spi;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import io.digiexpress.thena.mq.client.api.ThenaMqClient.OneQueueBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueue;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
@@ -21,7 +20,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
-public class QueueBuilderImpl implements OneQueueBuilder {
+public class QueueBuilderImpl {
   private final ThenaMqChannelState state;
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.OK);
   private final StringBuilder batchLog = new StringBuilder();
@@ -30,13 +29,11 @@ public class QueueBuilderImpl implements OneQueueBuilder {
   private String comment;
   private String createdBy;
   
-  @Override
   public Uni<ThenaMqEnvelope<Queue>> build() {
     RepoAssert.notEmpty(comment, () -> "comment must be defined!");
     RepoAssert.notEmpty(createdBy, () -> "createdBy must be defined!");
     RepoAssert.notEmpty(queueName, () -> "queueName must be defined!");
 
-    
     final var scope = ImmutableChannelTxScope.builder()
         .channelId(state.getDataSource().getChannel().getId())
         .commitAuthor(createdBy)
@@ -49,7 +46,6 @@ public class QueueBuilderImpl implements OneQueueBuilder {
     );
   
   }
-
   
   private Uni<ThenaMqEnvelope<Queue>> visitBatch(ThenaMqChannelState state, Optional<Queue> inputQueue) {
     final var queue = visitQueue(inputQueue);

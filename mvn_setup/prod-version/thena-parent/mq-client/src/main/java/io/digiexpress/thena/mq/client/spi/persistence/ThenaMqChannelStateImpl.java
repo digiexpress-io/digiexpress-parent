@@ -14,7 +14,7 @@ import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
 import io.digiexpress.thena.mq.client.spi.ChannelException;
 import io.digiexpress.thena.mq.client.spi.ThenaMqClientImpl;
-import io.digiexpress.thena.mq.client.spi.visitors.ChannelBatchVisitor;
+import io.digiexpress.thena.mq.client.spi.visitors.ChannelBatchToSqlVisitor;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.storesql.PgErrors;
@@ -51,7 +51,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   @Override
   public <R> Uni<R> withChannelTransaction(ChannelTxScope scope, ChannelTransaction<R> callback) {
     return withChannel(scope.getChannelId()).onItem().transformToUni(state -> dataSource.getPool().withTransaction(conn -> {
-        final var ongoingTx = dataSource.withTx(conn);
+        final var ongoingTx = state.getDataSource().withTx(conn);
         final var nextStateWithTx = new ThenaMqChannelStateImpl(ongoingTx);
         return callback.apply(nextStateWithTx);
       })
@@ -91,7 +91,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   
   @Override
   public Uni<ChannelBatch> batchMany(ChannelBatch input) {
-    return new ChannelBatchVisitor(dataSource).execute(input);
+    return new ChannelBatchToSqlVisitor(dataSource).accept(input);
   }
   @Override
   public InternalThenaMqContainersQuery queryContainers() {
@@ -108,7 +108,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   }
   
   private <T> Uni<T> channelNotFound(String tenantId) {
-    return queryChannels().findAll().collect().asList().onItem().transform(repos -> {
+    return queryChannels().findAll().onItem().transform(repos -> {
       final var ex = ChannelException.builder().notChannelWithName(tenantId, repos).getText();
       log.error(ex);
       throw new ChannelException(ex);

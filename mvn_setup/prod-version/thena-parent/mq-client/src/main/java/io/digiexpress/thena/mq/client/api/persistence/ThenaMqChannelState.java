@@ -22,7 +22,6 @@ import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStat
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqContainers;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.resys.thena.support.RepoAssert;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaMqChannelState {
@@ -71,7 +70,7 @@ public interface ThenaMqChannelState {
   
   interface InternalChannelQuery {
     Uni<Optional<Channel>> getByNameOrId(String nameOrId); // channel is null if there is no entity for given criteria
-    Multi<Channel> findAll();
+    Uni<List<Channel>> findAll();
     Uni<Void> delete();
     Uni<Channel> delete(Channel newRepo);
   }

@@ -1,7 +1,6 @@
 package io.digiexpress.thena.mq.client.api;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
@@ -16,8 +15,6 @@ import jakarta.annotation.Nullable;
 
 public interface ThenaMqClient {
 
-  ManyQueuesBuilder manyQueuesBuilder();
-  OneQueueBuilder oneQueueBuilder();
   ChannelBuilder channelBuilder();
   MessageBuilder messageBuilder();
   BindingBuilder bindingBuilder();
@@ -42,23 +39,16 @@ public interface ThenaMqClient {
   interface ChannelBuilder {
     ChannelBuilder channelName(String channelName);
     ChannelBuilder comment(String comment);
-    ChannelBuilder createdBy(String createdBy);
+    ChannelBuilder createdBy(String createdBy);// identify who or what is creating the channel and/or queues
     ChannelBuilder externalId(String externalId);
-    ChannelBuilder addQueues(Consumer<ManyQueuesBuilder> queueBuilder);
+    ChannelBuilder addQueue(Consumer<QueueBuilder> queueBuilder);
     Uni<ThenaMqEnvelope<Channel>> build();
   }
-  
-  interface ManyQueuesBuilder {
-    ManyQueuesBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    ManyQueuesBuilder addQueue(OneQueueBuilder queueBuilder);
-    Uni<ThenaMqEnvelope<List<Queue>>> build();
-  }
-  
-  interface OneQueueBuilder {
-    OneQueueBuilder queueName(String queueName); // identify the queue
-    OneQueueBuilder comment(String comment); // describe the queue
-    OneQueueBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    Uni<ThenaMqEnvelope<Queue>> build();
+
+  interface QueueBuilder {
+    QueueBuilder queueName(String queueName); // identify the queue
+    QueueBuilder comment(String comment); // describe the queue
+    Queue build();
   }
   
   interface ConsumerConfigBuilder {
