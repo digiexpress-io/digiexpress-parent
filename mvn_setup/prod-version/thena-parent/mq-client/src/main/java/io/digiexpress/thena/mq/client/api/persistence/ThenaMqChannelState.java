@@ -8,18 +8,20 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
+import io.digiexpress.thena.mq.client.api.entities.ImmutableLog;
 import io.digiexpress.thena.mq.client.api.entities.Log;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqContainers;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.resys.thena.support.RepoAssert;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface ThenaMqChannelState {
@@ -44,12 +46,17 @@ public interface ThenaMqChannelState {
   InternalQueueConsumerQuery queryQueueConsumer();
   InternalThenaMqContainersQuery queryContainers();
   InternalMessageQuery queryMessages();
+  InternalDeliveryQuery queryDeliveries();
   
 
+  interface InternalDeliveryQuery {
+    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);    
+  }
+  
   interface InternalQueueConsumerQuery {
     Uni<List<QueueConsumer>> findAllByAppId(String appId, boolean lockForUpdate);
-    
     Uni<List<QueueConsumer>> findAllEnabled();
+    Uni<List<QueueConsumer>> findAllEnabled(String appId);
   }
   
   interface InternalQueueQuery {
@@ -63,16 +70,15 @@ public interface ThenaMqChannelState {
   
   interface InternalChannelQuery {
     Uni<Optional<Channel>> getByNameOrId(String nameOrId); // channel is null if there is no entity for given criteria
-    Multi<Channel> findAll();
+    Uni<List<Channel>> findAll();
     Uni<Void> delete();
     Uni<Channel> delete(Channel newRepo);
   }
   
   interface InternalMessageQuery {
-    Uni<List<QueueMessage>> findAllByRoutingStatus(RoutingStatus status, boolean lockForUpdate);
+    Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
+    Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status);
   }
-  
-  
   
   @FunctionalInterface
   interface ChannelTransaction<R> {
@@ -94,12 +100,15 @@ public interface ThenaMqChannelState {
     List<QueueMessage> getNewPublishedMessages();
     List<Queue> getNewQueues();
     List<QueueConsumer> getNewQueueConsumer();
-
+    List<Binding> getNewBindings();
+    Optional<Channel> getNewChannel();
+    
     
     List<Delivery> getUpdateDeliveries();
     List<DeliveryAttempt> getUpdateDeliveryAttempts();
     List<QueueConsumer> getUpdateQueueConsumer();
     List<QueueMessage> getUpdatePublishedMessages();
+    
     
     OperationStatus getBatchStatus();
     String getChannelId();
@@ -145,9 +154,48 @@ public interface ThenaMqChannelState {
           .batchStatus(nextStatus)
           .build();
       
+    }   
+    
+    default ChannelBatch merge(List<ChannelBatch> current) {
+      final var start = this;
+      final var builder = ImmutableChannelBatch.builder().from(start);
+      final var log = new StringBuilder(start.getLog());
+      var status = start.getBatchStatus();
+      for(final var value : current) {
+        if(value == null) {
+          continue;
+        }
+        
+        if(status != OperationStatus.ERROR) {
+          status = value.getBatchStatus();
+        }
+        log.append("\r\n\r\n").append(value.getLog());
+        builder.addAllLogs(value.getLogs());
+      }
+      
+      return builder.batchStatus(status).build();
+    }
+  }
+  
+  public static class ChannelBatchException extends RuntimeException {
+    private static final long serialVersionUID = -7251738425609399151L;
+    private final ChannelBatch batch;
+    
+    public ChannelBatchException(ChannelBatch current, String msg, Throwable t) {
+      this.batch = ImmutableChannelBatch.builder()
+          .from(current)
+          .batchStatus(OperationStatus.ERROR)
+          .addLogs(ImmutableLog.builder().text(msg).exception(t).build())
+          .addLogs(ImmutableLog.builder().text(t.getMessage()).build())
+          .build(); 
     }
     
-    
+    public ChannelBatchException(ChannelBatch batch) {
+      this.batch = batch;
+    }
+    public ChannelBatch getBatch() {
+      return batch;
+    }
   }
   
 }

@@ -1,5 +1,7 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
@@ -29,7 +31,7 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
 
   @Override
   public Uni<Optional<Channel>> getByNameOrId(String nameOrId) {
-    final var sql = dataSource.getRegistry().channel().getById(nameOrId);
+    final var sql = dataSource.getRegistry().channel().getByIdOrName(nameOrId);
     
     if(log.isDebugEnabled()) {
       log.debug("InternalChannelQueryImpl.getByNameOrId query, with props: {} \r\n{}", 
@@ -53,7 +55,7 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
   }
   
   @Override
-  public Multi<Channel> findAll() {
+  public Uni<List<Channel>> findAll() {
     final var sql = this.dataSource.getRegistry().channel().findAll();
     if(log.isDebugEnabled()) {
       log.debug("InternalChannelQueryImpl.findAll, with props: {} \r\n{}", 
@@ -65,7 +67,8 @@ public class InternalChannelQueryImpl implements InternalChannelQuery {
       .execute()
       .onItem()
       .transformToMulti((RowSet<Channel> rowset) -> Multi.createFrom().iterable(rowset))
-      .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
+      .collect().asList()
+      .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
       .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'CHANNEL'-s!", sql, e)));
   }
   

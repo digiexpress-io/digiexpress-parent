@@ -5,9 +5,8 @@ import java.time.OffsetDateTime;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.MessageBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
-import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
@@ -30,9 +29,6 @@ public class MessageBuilderImpl implements MessageBuilder {
   private final OffsetDateTime now = OffsetDateTime.now();
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.OK);
   private final StringBuilder batchLog = new StringBuilder();
-  private String appId;
-  
-  private String queueIdOrName;
   
   private String routingKey;
   
@@ -50,24 +46,11 @@ public class MessageBuilderImpl implements MessageBuilder {
   
   @Override
   public Uni<ThenaMqEnvelope<QueueMessage>> build() {
-
-    return new QueueBuilderImpl(state)
-        .appId(appId)
-        .comment("Auto-created with the message")
-        .createdBy(createdBy)
-        .queueName(queueIdOrName)
-        .build().onItem().transformToUni(env -> {
-          if(env.getOperationStatus() == OperationStatus.ERROR) {
-            return Uni.createFrom().item(env.<QueueMessage>copy());
-          }
-          
-          final Queue queue = env.getObject();
-          return request(queue).onItem().transform(resp -> response(queue, resp));
-        });
+    return request().onItem().transform(resp -> response(resp));
   }
   
-  private Uni<ChannelBatch> request(Queue queue) {
-    final var msg = createMsg(queue);
+  private Uni<ChannelBatch> request() {
+    final var msg = createMsg();
     final ChannelTxScope scope = ImmutableChannelTxScope.builder()
         .channelId(state.getDataSource().getChannel().getChannelName())
         .commitAuthor("MessageBuilderImpl")
@@ -81,7 +64,7 @@ public class MessageBuilderImpl implements MessageBuilder {
         .build()));
   }
   
-  private ThenaMqEnvelope<QueueMessage> response(Queue queue, ChannelBatch batch) {
+  private ThenaMqEnvelope<QueueMessage> response(ChannelBatch batch) {
     if(batch.getBatchStatus() == OperationStatus.ERROR) {
       return ImmutableThenaMqEnvelope.<QueueMessage>builder()
           .channelId(state.getDataSource().getChannel().getId())
@@ -100,19 +83,21 @@ public class MessageBuilderImpl implements MessageBuilder {
         .build();
   }
   
-  private QueueMessage createMsg(Queue queue) {
+  private QueueMessage createMsg() {
     final var createdAt = this.createdAt == null ? now : this.createdAt;
     final var startsAt = this.startsAt == null ? now : this.startsAt;
     final var expiresAt = this.expiresAt == null ? now : this.expiresAt;
     
     RepoAssert.isTrue(startsAt.isEqual(createdAt) || startsAt.isAfter(createdAt), () -> "message can't start before createdAt()");
     RepoAssert.isTrue(expiresAt.isEqual(now) || expiresAt.isAfter(startsAt), () -> "message can't expire before startsAt()");
+    RepoAssert.notEmpty(routingKey, () -> "routingKey can't be empty!");
+    
+    
     
     return ImmutableQueueMessage.builder()
       .id(OidUtils.gen())
       .routingKey(routingKey)
-      .routingStatus(RoutingStatus.RESOLVING_ROUTING)
-      .routingLog(new JsonObject())
+      .status(QueueMessageStatus.RESOLVING_ROUTING)
   
       .comment(comment)
       .createdBy(createdBy)

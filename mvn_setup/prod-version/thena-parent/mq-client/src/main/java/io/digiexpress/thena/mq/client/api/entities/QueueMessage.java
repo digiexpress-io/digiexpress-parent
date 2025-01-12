@@ -12,25 +12,22 @@ public interface QueueMessage extends ThenaMqEntity {
   String getId();
   String getRoutingKey();
   
-  RoutingStatus getRoutingStatus();
-  JsonObject getRoutingLog();
-  
-
   String getComment();
   String getCreatedBy();
 
   OffsetDateTime getCreatedAt();
   OffsetDateTime getExpiresAt();
   OffsetDateTime getStartsAt();
-  
-  @Nullable OffsetDateTime getUpdatedAt();
 
+  
   String getBodyId();
   String getBodyType();
   JsonObject getBodyValue();
   
-  
-  enum RoutingStatus {
+  @Nullable OffsetDateTime getUpdatedAt();
+  QueueMessageStatus getStatus();
+
+  enum QueueMessageStatus {
     RESOLVING_ROUTING, ROUTING_COMPLETED
   }
 }

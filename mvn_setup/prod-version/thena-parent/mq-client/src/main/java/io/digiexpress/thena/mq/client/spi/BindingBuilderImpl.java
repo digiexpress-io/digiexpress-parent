@@ -1,25 +1,22 @@
 package io.digiexpress.thena.mq.client.spi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.BindingBuilder;
 import io.digiexpress.thena.mq.client.api.entities.Binding;
-import io.digiexpress.thena.mq.client.api.entities.ImmutableBinding;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.QueueMessage.RoutingStatus;
-import io.digiexpress.thena.mq.client.api.entities.Routing.Router;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage.QueueMessageStatus;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelTxScope;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.ChannelTxScope;
-import io.digiexpress.thena.mq.client.spi.routing.ImmutableRoutingRequest;
-import io.digiexpress.thena.mq.client.spi.routing.RoutingVisitor;
+import io.digiexpress.thena.mq.client.spi.visitors.ImmutableRoutingRequest;
+import io.digiexpress.thena.mq.client.spi.visitors.RoutingVisitor;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple3;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class BindingBuilderImpl implements BindingBuilder {
   
   private final ThenaMqChannelState state;
-  private final List<Router> routers = new ArrayList<>();
-  
-  @Override
-  public BindingBuilder addRouters(List<Router> routers) {
-    routers.addAll(routers);
-    return this;
-  }
 
   @Override
   public Uni<ThenaMqEnvelope<Binding>> build() {
@@ -50,7 +40,7 @@ public class BindingBuilderImpl implements BindingBuilder {
 
   private Uni<ThenaMqEnvelope<Binding>> doInTx(ThenaMqChannelState tx) {
     return Uni.combine().all().unis(
-        tx.queryMessages().findAllByRoutingStatus(RoutingStatus.RESOLVING_ROUTING, true),
+        tx.queryMessages().findAllByStatus(QueueMessageStatus.RESOLVING_ROUTING, true),
         tx.queryQueueConsumer().findAllEnabled(),
         tx.queryQueues().findAll()    
     ).asTuple()
@@ -72,11 +62,9 @@ public class BindingBuilderImpl implements BindingBuilder {
         .message(input.getItem1())
         .addAllConsumers(input.getItem2())
         .addAllQueues(input.getItem3())
-        .addAllRouters(routers)
         .build();
     return new RoutingVisitor().accept(request);
   }
-
   
   private ThenaMqEnvelope<Binding> bindingOk(ChannelBatch rsp, ThenaMqChannelState tx) {
     return ImmutableThenaMqEnvelope
@@ -84,7 +72,7 @@ public class BindingBuilderImpl implements BindingBuilder {
       .operationStatus(rsp.getBatchStatus())
       .channel(tx.getDataSource().getChannel())
       .channelId(tx.getDataSource().getChannel().getId())
-      .object(ImmutableBinding.builder().build())
+      .object(null)
       .operationLogs(rsp.getLogs())
       .build();
   }

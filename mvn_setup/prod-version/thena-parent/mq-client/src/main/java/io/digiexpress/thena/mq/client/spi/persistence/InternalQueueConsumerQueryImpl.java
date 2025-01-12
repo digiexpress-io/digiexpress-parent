@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
@@ -37,6 +38,7 @@ public class InternalQueueConsumerQueryImpl implements InternalQueueConsumerQuer
         .execute(sql.getProps())
         .onItem()
         .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
         .onFailure().invoke(e -> dataSource.getErrorHandler()
             .deadEnd(new SqlTupleFailed("Can't find 'QUEUE_CONSUMER' by 'app_id'!", sql, e)));
   }
@@ -60,5 +62,25 @@ public class InternalQueueConsumerQueryImpl implements InternalQueueConsumerQuer
         .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
         .onFailure().invoke(e -> dataSource.getErrorHandler()
             .deadEnd(new SqlFailed("Can't find enabled 'QUEUE_CONSUMER'-s!", sql, e)));
+  }
+
+
+  @Override
+  public Uni<List<QueueConsumer>> findAllEnabled(String appId) {
+    final var sql = dataSource.getRegistry().queueConsumer().findAllEnabledByAppId(appId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalQueueConsumerQueryImpl.findAllEnabled query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().queueConsumer().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler()
+            .deadEnd(new SqlTupleFailed("Can't find enabled 'QUEUE_CONSUMER'-s by appId!", sql, e)));
   }
 }

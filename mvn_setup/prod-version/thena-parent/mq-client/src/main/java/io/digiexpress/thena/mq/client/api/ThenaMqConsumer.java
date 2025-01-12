@@ -1,32 +1,25 @@
 package io.digiexpress.thena.mq.client.api;
 
-import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAckValue;
+import org.immutables.value.Value;
+
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.vertx.core.json.JsonObject;
 
 @FunctionalInterface
 public interface ThenaMqConsumer {
-  MessageResponse accept(MessageHeader header, MessageBody body);
+  MessageResponse accept(QueueMessage msg);
   
-    
+  @Value.Immutable
   interface MessageResponse {
     Optional<String> getComment();
     Optional<ConsumerWorkerError> getError();
-    DeliveryAckValue getAck();
+    MessageResponseStatus getAck();
   }
   
-  interface MessageHeader {
-    String getBodyType();
-    String getRoutingKey();
-    
-    String getPublisherId();
-    String getPublisherBodyId();
-    
-    OffsetDateTime getPublishedAt();
-    Optional<OffsetDateTime> getExpiresAt();
-    Optional<OffsetDateTime> getStartsAt();
+  enum MessageResponseStatus {
+    OK, ERROR
   }
 
   interface MessageBody {

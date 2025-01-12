@@ -1,14 +1,14 @@
 package io.digiexpress.thena.mq.client.api;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
+import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
+import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
-import io.digiexpress.thena.mq.client.api.entities.Routing.Router;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -16,41 +16,51 @@ import jakarta.annotation.Nullable;
 
 public interface ThenaMqClient {
 
-  QueueBuilder queueBuilder();
   ChannelBuilder channelBuilder();
   MessageBuilder messageBuilder();
   BindingBuilder bindingBuilder();
+  DeliveryBuilder deliveryBuilder();
+  
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
   
+  interface DeliveryBuilder {
+    DeliveryBuilder config(ThenaMqAppConfig config);
+    Uni<ThenaMqEnvelope<Delivery>> build();
+  }
+  
   interface BindingBuilder {
-    BindingBuilder addRouters(List<Router> routers);
+    //BindingBuilder addRouters(List<Router> routers);
     Uni<ThenaMqEnvelope<Binding>> build();
   }
 
   interface ChannelBuilder {
     ChannelBuilder channelName(String channelName);
     ChannelBuilder comment(String comment);
-    ChannelBuilder createdBy(String createdBy);
+    ChannelBuilder appId(String createdBy);// app-id, identify who or what is creating the channel and/or queues
     ChannelBuilder externalId(String externalId);
-    Uni<ThenaMqEnvelope<Channel>> build();
+    ChannelBuilder addQueue(Consumer<QueueBuilder> queueBuilder);
+    ChannelBuilder addConsumer(Consumer<ConsumerBuilder> consumerBuilder);
+    Uni<ThenaMqEnvelope<ThenaMqAppConfig>> build();
   }
-  
+
   interface QueueBuilder {
     QueueBuilder queueName(String queueName); // identify the queue
     QueueBuilder comment(String comment); // describe the queue
-    QueueBuilder createdBy(String createdBy); // identify who or what is creating the queue
-    QueueBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    QueueBuilder addConsumer(Consumer<ConsumerBuilder> worker);
-    Uni<ThenaMqEnvelope<Queue>> build();
+    Queue build();
   }
   
+  interface ConsumerBuilder {
+    ConsumerBuilder comment(String comment);
+    ConsumerBuilder consumerName(String consumerName);
+    ConsumerBuilder routingKey(String routingKey);
+    QueueConsumer build(ThenaMqConsumer worker);
+  }
+  
+  
   interface MessageBuilder {
-    MessageBuilder appId(String appId); // user provided app id(how do you identify your app?)
-    MessageBuilder queueIdOrName(String queueIdOrName);
-    
     
     /** rabbitmq matching
         * (star) can substitute for exactly one word.
@@ -59,7 +69,7 @@ public interface ThenaMqClient {
         ReceiveLogsTopic "*.critical"
         EmitLogTopic "kern.critical" "A critical kernel error"
      */
-    MessageBuilder routingKey(@Nullable String routingKey);
+    MessageBuilder routingKey(String routingKey);
 
     MessageBuilder comment(String comment);
     MessageBuilder createdBy(String createdBy);
@@ -75,10 +85,5 @@ public interface ThenaMqClient {
     Uni<ThenaMqEnvelope<QueueMessage>> build();
   }
   
-  interface ConsumerBuilder {
-    ConsumerBuilder comment(String comment);
-    ConsumerBuilder consumerName(String consumerName);
-    ConsumerBuilder routingKey(String routingKey);
-    void build(ThenaMqConsumer worker);
-  }
+
 }

@@ -32,6 +32,7 @@ public abstract class ThenaMqTableNames {
   public abstract String getPrefix();
   public abstract String getChannel();
 
+  public abstract String getBindings();
   public abstract String getQueues();
   public abstract String getMessages();
   public abstract String getQueueConsumers();
@@ -47,6 +48,7 @@ public abstract class ThenaMqTableNames {
       .prefix(prefix)
 
       .queues((          prefix + DEFAULTS.getQueues()).toUpperCase())
+      .bindings((        prefix + DEFAULTS.getBindings()).toUpperCase())
       .messages((        prefix + DEFAULTS.getMessages()).toUpperCase())
       .queueConsumers((  prefix + DEFAULTS.getQueueConsumers()).toUpperCase())
       .delivery((        prefix + DEFAULTS.getDelivery()).toUpperCase())
@@ -62,6 +64,7 @@ public abstract class ThenaMqTableNames {
         .prefix("")
 
         .queues("THENAMQ_QUEUES")
+        .bindings("THENAMQ_BINDINGS")
         .messages("THENAMQ_MESSAGES")
         .queueConsumers("THENAMQ_QUEUES_CONSUMERS")
         .delivery("THENAMQ_DELIVERIES")

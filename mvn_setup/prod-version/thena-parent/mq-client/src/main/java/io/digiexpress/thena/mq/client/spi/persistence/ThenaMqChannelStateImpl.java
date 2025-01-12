@@ -6,15 +6,16 @@ import java.util.function.Function;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
+import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
+import io.digiexpress.thena.mq.client.api.persistence.ImmutableChannelBatch;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqDataSource;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
 import io.digiexpress.thena.mq.client.spi.ChannelException;
 import io.digiexpress.thena.mq.client.spi.ThenaMqClientImpl;
+import io.digiexpress.thena.mq.client.spi.visitors.ChannelBatchToSqlVisitor;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
-import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlSchemaFailed;
-import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
 import io.resys.thena.storesql.PgErrors;
 import io.resys.thena.support.RepoAssert;
@@ -50,7 +51,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   @Override
   public <R> Uni<R> withChannelTransaction(ChannelTxScope scope, ChannelTransaction<R> callback) {
     return withChannel(scope.getChannelId()).onItem().transformToUni(state -> dataSource.getPool().withTransaction(conn -> {
-        final var ongoingTx = dataSource.withTx(conn);
+        final var ongoingTx = state.getDataSource().withTx(conn);
         final var nextStateWithTx = new ThenaMqChannelStateImpl(ongoingTx);
         return callback.apply(nextStateWithTx);
       })
@@ -64,57 +65,33 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   @Override
   public InternalMessageQuery queryMessages() {
     return new InternalMessageQueryImpl(dataSource);
-  }  
+  }
+  @Override
+  public InternalDeliveryQuery queryDeliveries() {
+    return new InternalDeliveryQueryImpl(dataSource);
+  }
   
   @Override
   public Uni<Channel> insertOne(final Channel newRepo) {
     final var next = dataSource.withChannel(newRepo);
-    final var reg = next.getRegistry();
     final var pool = next.getPool();
     
     return pool.withTransaction(tx -> {
-      final var tenantInsert = reg.channel().insertOne(newRepo);
-      final var tablesCreate = new StringBuilder();
       
-      tablesCreate
-        .append(reg.channel().createTable().getValue())
-        .append(reg.queue().createTable().getValue())
-        .append(reg.delivery().createTable().getValue())
-        .append(reg.deliveryAttempt().createTable().getValue())
-        .append(reg.message().createTable().getValue())
-        .append(reg.queueConsumer().createTable().getValue())
-        
-        .append(reg.channel().createConstraints().getValue())
-        .append(reg.queue().createConstraints().getValue())
-        .append(reg.delivery().createConstraints().getValue())
-        .append(reg.deliveryAttempt().createConstraints().getValue())
-        .append(reg.message().createConstraints().getValue())
-        .append(reg.queueConsumer().createConstraints().getValue())
-        .toString();
+      final var batch = ImmutableChannelBatch.builder()
+        .batchStatus(OperationStatus.OK)
+        .log("")
+        .channelId(newRepo.getId())
+        .newChannel(newRepo)
+        .build();
       
-      if(log.isDebugEnabled()) {
-        log.debug(new StringBuilder("Creating mq channel: ")
-            .append(System.lineSeparator())
-            .append(tablesCreate.toString())
-            .toString());
-      }
-      
-      final Uni<Void> insert = tx.preparedQuery(tenantInsert.getValue()).execute(tenantInsert.getProps())
-          .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlTupleFailed("Can't insert into 'CHANNEL'!", tenantInsert, e)));
-      final Uni<Void> nested = tx.query(tablesCreate.toString()).execute()
-          .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
-          .onFailure().invoke(e -> next.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't create 'CHANNEL' tables!", tablesCreate.toString(), e)));
-      
-      return nested
-          .onItem().transformToUni((junk) -> insert)
-          .onItem().transform(junk -> newRepo);
+      return batchMany(batch).onItem().transform(junk -> newRepo);
     });
   }
   
   @Override
   public Uni<ChannelBatch> batchMany(ChannelBatch input) {
-    return new InternalChannelBatchImpl(dataSource).execute(input);
+    return new ChannelBatchToSqlVisitor(dataSource).accept(input);
   }
   @Override
   public InternalThenaMqContainersQuery queryContainers() {
@@ -131,7 +108,7 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   }
   
   private <T> Uni<T> channelNotFound(String tenantId) {
-    return queryChannels().findAll().collect().asList().onItem().transform(repos -> {
+    return queryChannels().findAll().onItem().transform(repos -> {
       final var ex = ChannelException.builder().notChannelWithName(tenantId, repos).getText();
       log.error(ex);
       throw new ChannelException(ex);

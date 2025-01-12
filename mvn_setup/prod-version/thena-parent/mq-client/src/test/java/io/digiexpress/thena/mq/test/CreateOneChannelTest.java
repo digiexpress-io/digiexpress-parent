@@ -26,7 +26,9 @@ import java.time.Duration;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
+import io.digiexpress.thena.mq.client.api.ImmutableMessageResponse;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.vertx.core.json.JsonObject;
@@ -49,51 +51,53 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     final var worker1 = new ThenaMqConsumer() {
       @Override
-      public MessageResponse accept(MessageHeader header, MessageBody body) {
-        // TODO Auto-generated method stub
-        return null;
+      public MessageResponse accept(QueueMessage msg) {
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("success by worker 1")
+            .build();
       }
     };
     
     final var worker2 = new ThenaMqConsumer() {
       @Override
-      public MessageResponse accept(MessageHeader header, MessageBody body) {
-        // TODO Auto-generated method stub
-        return null;
+      public MessageResponse accept(QueueMessage msg) {
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("success by worker 2")
+            .build();
       }
     };
     
     
-    final var channel = getClient()
+    final var config = getClient()
       .channelBuilder()
       .channelName("test_1")
       .comment("channel for junit test")
-      .createdBy("quarrkus test runner")
+      .appId("tester@tester")
+      .addQueue(b -> b
+          .queueName("super queue")
+          .comment("queue for test case")
+          .build())
+      .addConsumer(worker -> worker
+          .routingKey("super queue")
+          .consumerName("consumer-1")
+          .comment("test consumer")
+          .build(worker1))
+      .addConsumer(worker -> worker
+          .routingKey("super queue")
+          .consumerName("consumer-2")
+          .comment("test consumer")
+          .build(worker2))
       .build()
-      .await().atMost(Duration.ofMinutes(1))
-      .getChannel();
-  
-    // create queue with 2 consumers
-    final var queue = getClient().withChannel(channel)
-      .queueBuilder()
-      .appId("test-app")
-      .queueName("super queue")
-      .createdBy("tester@tester")
-      .comment("queue for test case")
-      .addConsumer(worker -> worker.consumerName("consumer-1").comment("test consumer").build(worker1))
-      .addConsumer(worker -> worker.consumerName("consumer-2").comment("test consumer").build(worker2))
-      .build()
-      .await().atMost(Duration.ofMinutes(1));
+      .await().atMost(Duration.ofMinutes(1));    
     
     // publish things ... to the queue
-    getClient().withChannel(channel)
+    getClient().withChannel(config.getChannel())
       .messageBuilder()
+      .routingKey("super queue")
       .comment("my first msg")
       .createdBy("test user")
-      .appId("test-app")
-      .queueIdOrName("super queue")
-      
-      .routingKey("user-data-processor")
       
       .bodyType("user-data")
       .bodyId("ssn1")
@@ -104,15 +108,18 @@ public class CreateOneChannelTest extends DbTestTemplate {
     
     
     // Route the message
-    getClient().withChannel(channel)
+    getClient().withChannel(config.getChannel())
       .bindingBuilder()
       .build()
       .await().atMost(Duration.ofMinutes(1));
-    // get hanging messages
-    // get available routes
-    // match
-    //.build();
     
     // Deliver the message to the consumers
+    getClient().withChannel(config.getChannel())
+      .deliveryBuilder()
+      .config(config.getObject())
+      .build()
+      .await().atMost(Duration.ofMinutes(1));
+  
+    
   }
 }

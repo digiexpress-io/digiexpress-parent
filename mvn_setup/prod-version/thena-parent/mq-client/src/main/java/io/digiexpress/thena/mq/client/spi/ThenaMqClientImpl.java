@@ -15,10 +15,6 @@ public class ThenaMqClientImpl implements ThenaMqClient {
     return new ChannelBuilderImpl(state);
   }
   @Override
-  public QueueBuilder queueBuilder() {
-    return new QueueBuilderImpl(state);
-  }
-  @Override
   public Uni<ThenaMqClient> withChannel(String channelIdOrName) {
     // load the channel
     return state.withChannel(channelIdOrName).onItem().transform(nextState -> new ThenaMqClientImpl(nextState));
@@ -35,5 +31,9 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   @Override
   public BindingBuilder bindingBuilder() {
     return new BindingBuilderImpl(state);
+  }
+  @Override
+  public DeliveryBuilder deliveryBuilder() {
+    return new DeliveryBuilderImpl(state);
   }
 }

@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import io.digiexpress.thena.mq.client.api.persistence.BindingRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.ChannelRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.DeliveryAttemptRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.DeliveryRegistry;
@@ -8,6 +9,7 @@ import io.digiexpress.thena.mq.client.api.persistence.QueueConsumerRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.QueueRegistry;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableRegistry;
+import io.digiexpress.thena.mq.client.sql.BindingRegistrySqlImpl;
 import io.digiexpress.thena.mq.client.sql.ChannelRegistrySqlImpl;
 import io.digiexpress.thena.mq.client.sql.DeliveryAttemptRegistrySqlImpl;
 import io.digiexpress.thena.mq.client.sql.DeliveryRegistrySqlImpl;
@@ -23,6 +25,7 @@ public class ThenaMqTableRegistryImpl implements ThenaMqTableRegistry {
   private final ThenaMqTableNames options;
   private final ChannelRegistry channel;
   private final QueueRegistry queue;
+  private final BindingRegistry binding;
   private final QueueConsumerRegistry queueConsumer;
   private final MessageRegistry message;
   private final DeliveryRegistry delivery;
@@ -37,6 +40,7 @@ public class ThenaMqTableRegistryImpl implements ThenaMqTableRegistry {
     this.message = new MessageRegistrySqlImpl(options);
     this.delivery = new DeliveryRegistrySqlImpl(options);
     this.deliveryAttempt = new DeliveryAttemptRegistrySqlImpl(options);
+    this.binding = new BindingRegistrySqlImpl(options);
   }
 
   @Override

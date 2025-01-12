@@ -1,5 +1,6 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class InternalQueueQueryImpl implements InternalQueueQuery {
   
   @Override
   public Uni<Optional<Queue>> findByQueueName(String queueName) {
-    final var sql = dataSource.getRegistry().queue().getById(queueName);
+    final var sql = dataSource.getRegistry().queue().getByIdOrName(queueName);
     
     if(log.isDebugEnabled()) {
       log.debug("InternalQueueQueryImpl.findByQueueName query, with props: {} \r\n{}", 
@@ -60,6 +61,7 @@ public class InternalQueueQueryImpl implements InternalQueueQuery {
         .execute()
         .onItem()
         .transformToUni((RowSet<Queue> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Collections.emptyList())
         .onFailure().invoke(e -> dataSource.getErrorHandler()
             .deadEnd(new SqlFailed("Can't find all 'QUEUE'-s!", sql, e)));
   }

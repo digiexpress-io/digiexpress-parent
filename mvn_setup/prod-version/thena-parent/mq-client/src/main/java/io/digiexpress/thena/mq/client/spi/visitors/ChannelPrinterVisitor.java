@@ -1,4 +1,4 @@
-package io.digiexpress.thena.mq.client.spi;
+package io.digiexpress.thena.mq.client.spi.visitors;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -13,10 +13,10 @@ import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimOneOfRelations;
 import io.resys.thena.jackson.QuarkusJacksonJsonCodec;
 import io.vertx.core.json.JsonObject;
 
-public class ChannelPrinter {
+public class ChannelPrinterVisitor {
   private final ThenaMqChannelState state;
 
-  public ChannelPrinter(ThenaMqChannelState state) {
+  public ChannelPrinterVisitor(ThenaMqChannelState state) {
     super();
     this.state = state;
   } 
@@ -203,10 +203,9 @@ public class ChannelPrinter {
     
     result
       .append("  - ").append(ID.apply(data.getId())).append("::").append(System.lineSeparator())
-      .append("    delivery status: ").append(data.getStatus()).append(System.lineSeparator())
-      .append("    ack comment: ").append(data.getAckComment()).append(System.lineSeparator())
-      .append("    ack error: ").append(data.getAckError()).append(System.lineSeparator())
-      .append("    ack error: ").append(data.getAckValue()).append(System.lineSeparator())
+      .append("    ack comment: ").append(data.getConsumerComment()).append(System.lineSeparator())
+      .append("    ack error: ").append(data.getConsumerError()).append(System.lineSeparator())
+      .append("    ack error: ").append(data.getConsumerStatus()).append(System.lineSeparator())
       ;
   }
   

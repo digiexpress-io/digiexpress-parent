@@ -35,7 +35,7 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .build();
   }
   @Override
-  public ThenaSqlClient.SqlTuple getById(String id) {
+  public ThenaSqlClient.SqlTuple getByIdOrName(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
         .append("SELECT * ").ln()
@@ -52,6 +52,18 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         .append("SELECT * FROM ").append(options.getQueueConsumers())
         .append(" WHERE consumer_status = '").append(QueueConsumerStatus.ENABLED.name()).append("'").ln()
         .build())
+        .build();
+  }
+  @Override
+  public SqlTuple findAllEnabledByAppId(String appId)  {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * FROM ").append(options.getQueueConsumers()).ln()
+        .append("WHERE").ln()
+        .append("  consumer_status = '").append(QueueConsumerStatus.ENABLED.name()).append("'").ln()
+        .append("  AND app_id = $1").ln()
+        .build())
+        .props(Tuple.of(appId))
         .build();
   }
   @Override
@@ -185,5 +197,4 @@ public class QueueConsumerRegistrySqlImpl implements QueueConsumerRegistry {
         
         .build();
   }
-
 }
