@@ -15,7 +15,7 @@ public class ThenaMqClientImpl implements ThenaMqClient {
     return new ChannelBuilderImpl(state);
   }
   @Override
-  public QueueBuilder queueBuilder() {
+  public OneQueueBuilder oneQueueBuilder() {
     return new QueueBuilderImpl(state);
   }
   @Override
@@ -43,5 +43,9 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   @Override
   public DeliveryBuilder deliveryBuilder() {
     return new DeliveryBuilderImpl(state);
+  }
+  @Override
+  public ManyQueuesBuilder manyQueuesBuilder() {
+    return new ManyQueuesBuilderImpl(state);
   }
 }

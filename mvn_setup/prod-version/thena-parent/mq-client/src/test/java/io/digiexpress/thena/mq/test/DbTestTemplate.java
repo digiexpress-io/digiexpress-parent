@@ -15,8 +15,8 @@ import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqTableNames;
-import io.digiexpress.thena.mq.client.spi.ChannelPrinter;
 import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
+import io.digiexpress.thena.mq.client.spi.visitors.ChannelPrinterVisitor;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Pool;
 import io.vertx.pgclient.PgConnectOptions;
@@ -107,7 +107,7 @@ public class DbTestTemplate {
   }
   
   public void printRepo(Channel repo) {
-    final String result = new ChannelPrinter(createState()).print(repo);
+    final String result = new ChannelPrinterVisitor(createState()).print(repo);
     log.debug(result);
   }
   public Channel getRepo() {
@@ -140,7 +140,7 @@ public class DbTestTemplate {
   }
   
   public String toStaticData(Channel client) {    
-    return new ChannelPrinter(createState()).printWithStaticIds(client, replacements);
+    return new ChannelPrinterVisitor(createState()).printWithStaticIds(client, replacements);
   }
   
 }

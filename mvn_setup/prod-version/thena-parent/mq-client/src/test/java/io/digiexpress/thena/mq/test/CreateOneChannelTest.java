@@ -81,7 +81,7 @@ public class CreateOneChannelTest extends DbTestTemplate {
   
     // create queue with 2 consumers
     final var queue = getClient().withChannel(channel)
-      .queueBuilder()
+      .oneQueueBuilder()
       .queueName("super queue")
       .createdBy("tester@tester")
       .comment("queue for test case")

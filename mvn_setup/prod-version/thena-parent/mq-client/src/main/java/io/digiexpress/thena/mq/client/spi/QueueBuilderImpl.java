@@ -3,7 +3,7 @@ package io.digiexpress.thena.mq.client.spi;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
-import io.digiexpress.thena.mq.client.api.ThenaMqClient.QueueBuilder;
+import io.digiexpress.thena.mq.client.api.ThenaMqClient.OneQueueBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueue;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableThenaMqEnvelope;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
-public class QueueBuilderImpl implements QueueBuilder {
+public class QueueBuilderImpl implements OneQueueBuilder {
   private final ThenaMqChannelState state;
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.OK);
   private final StringBuilder batchLog = new StringBuilder();
@@ -84,7 +84,6 @@ public class QueueBuilderImpl implements QueueBuilder {
 
   private Queue visitQueue(Optional<Queue> foundQueue) {
     final var queue = foundQueue.orElseGet(() -> {
-      
       final var newQueue = ImmutableQueue.builder()
           .id(OidUtils.gen())
           .createdAt(OffsetDateTime.now())
