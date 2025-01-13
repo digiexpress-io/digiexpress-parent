@@ -37,7 +37,7 @@
     </dependency>
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>hdes-client</artifactId>
+      <artifactId>hdes-client-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.dialob</groupId>
