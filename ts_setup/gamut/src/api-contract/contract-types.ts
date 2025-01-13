@@ -9,7 +9,7 @@ export namespace ContractApi {
 }
 
 export declare namespace ContractApi {
-  // task exists, form is submitted
+  // process ID
   export type ContractId = string;
 
   export type ContractStatus = (

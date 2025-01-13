@@ -65,7 +65,8 @@ export function createContractFetch(url: (string | undefined) = '/portal/secured
     const uploadUrls: { upload: string, name: string }[] = await window.fetch(
       url + "/attachments?actionId=" + contractId,
       { method: "POST", body: JSON.stringify(body) })
-      .then(resp => resp.json());
+      .then(resp => resp.json()
+      );
 
     for (const url of uploadUrls) {
       const file = filesByName[url.name];
