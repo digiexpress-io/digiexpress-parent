@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /*-
@@ -52,7 +51,6 @@ public class BatchDocTest extends DbTestTemplate {
   }
 
   @Test
-  @Disabled(value="repo value does not match test output file")
   public void batch10Docs() {
     // create project
     // with main branch, commit log na doc id from json
