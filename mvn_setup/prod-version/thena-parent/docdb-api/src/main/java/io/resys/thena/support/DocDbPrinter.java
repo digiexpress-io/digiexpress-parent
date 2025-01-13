@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.collect.ComparisonChain;
+
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.spi.DbState;
 
@@ -152,18 +154,30 @@ public class DocDbPrinter {
     .append("Logs").append(System.lineSeparator());
     
     ctx.query().trees()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ")
-      .append(ID.apply(item.getId())).append("::").append(item.getBodyType()).append(System.lineSeparator())
-      .append("    log patch: ").append(item.getBodyPatch())
-      .append("    log before: ").append(item.getBodyBefore())
-      .append("    log after: ").append(item.getBodyAfter())
-      .append(System.lineSeparator())
-      ;
-      
-      return item;
-    }).collect().asList().await().indefinitely();
+    .findAll()
+    .collect().asList()
+    .onItem()
+    .transform(items -> {
+ 
+      items
+      .stream()
+      .sorted((b, a) -> ComparisonChain.start()
+          .compare(
+              new StringBuilder(ID.apply(a.getId())).append("::").append(a.getBodyType()).toString(), 
+              new StringBuilder(ID.apply(b.getId())).append("::").append(b.getBodyType()).toString()
+          ).result())
+      .forEach(item -> {
+        result.append("  - id: ")
+        .append(ID.apply(item.getId())).append("::").append(item.getBodyType()).append(System.lineSeparator())
+        .append("    log patch: ").append(item.getBodyPatch())
+        .append("    log before: ").append(item.getBodyBefore())
+        .append("    log after: ").append(item.getBodyAfter())
+        .append(System.lineSeparator())
+        ;        
+      });
+
+      return items;
+    }).await().indefinitely();
     
     
     var log = result.toString();
