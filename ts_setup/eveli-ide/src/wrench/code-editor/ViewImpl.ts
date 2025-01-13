@@ -91,7 +91,6 @@ class ViewImpl implements View {
       }
     });
 
-
     editor.setValue(props.src);
     editor.on("changes", (editor: CodeMirror.Editor, changes: CodeMirror.EditorChange[]) => this.onChanges(editor, changes))
     this._editor = editor;
