@@ -72,14 +72,25 @@ public class DocDbPrinter {
     .append("Docs").append(System.lineSeparator());
     
     ctx.query().docs()
-    .findAll().onItem()
-    .transform(item -> {
+    .findAll().collect().asList().onItem()
+    .transform(items -> {
+      
+      items
+      .stream()
+      .sorted((b, a) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getId()), 
+              ID.apply(b.getId())
+          ).result())
+      .forEach(item -> {
+      
       result
         .append("  - ")
         .append(ID.apply(item.getId())).append(": ").append(item.getExternalId())
-        .append(System.lineSeparator());      
-      return item;
-    }).collect().asList().await().indefinitely();
+        .append(System.lineSeparator());
+      });
+      return items;
+    }).await().indefinitely();
 
     
     result
@@ -87,8 +98,18 @@ public class DocDbPrinter {
     .append("Branches").append(System.lineSeparator());
     
     ctx.query().branches()
-    .findAll().onItem()
-    .transform(item -> {
+    .findAll().collect().asList().onItem()
+    .transform(items -> {
+      
+      items
+      .stream()
+      .sorted((b, a) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getId()), 
+              ID.apply(b.getId())
+          ).result())
+      .forEach(item -> {
+      
       result.append("  - branch name: ").append(item.getBranchName())
       .append(System.lineSeparator())
       .append("    branch id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
@@ -97,9 +118,9 @@ public class DocDbPrinter {
       
       .append("    ").append(item.getValue().toString())
       .append(System.lineSeparator());
-      
-      return item;
-    }).collect().asList().await().indefinitely();
+      });
+      return items;
+    }).await().indefinitely();
     
     
     result
@@ -108,19 +129,30 @@ public class DocDbPrinter {
     
     
     ctx.query().commands()
-    .findAll().onItem()
-    .transform(item -> {
+    .findAll().collect().asList().onItem()
+    .transform(items -> {
       
-      result.append("  - commands for doc: ").append(item.getDocId())
-      .append(System.lineSeparator())
-      .append("    commands id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
-      .append("    branch id: ").append(item.getBranchId().orElse("")).append(System.lineSeparator())
-      .append("    value: ").append(item.getCommands()).append(System.lineSeparator())      
-
-      .append(System.lineSeparator());
       
-      return item;
-    }).collect().asList().await().indefinitely();
+      items
+      .stream()
+      .sorted((b, a) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getId()), 
+              ID.apply(b.getId())
+          ).result())
+      .forEach(item -> {
+      
+        result.append("  - commands for doc: ").append(item.getDocId())
+        .append(System.lineSeparator())
+        .append("    commands id: ").append(ID.apply(item.getId())).append(System.lineSeparator())
+        .append("    branch id: ").append(item.getBranchId().orElse("")).append(System.lineSeparator())
+        .append("    value: ").append(item.getCommands()).append(System.lineSeparator())      
+  
+        .append(System.lineSeparator());
+      });
+      
+      return items;
+    }).await().indefinitely();
     
     
     result
@@ -128,25 +160,35 @@ public class DocDbPrinter {
     .append("Commits").append(System.lineSeparator());
     
     ctx.query().commits()
-    .findAll().onItem()
-    .transform(item -> {
-      result.append("  - id: ").append(ID.apply(item.getId()))
-      .append(System.lineSeparator())
-      .append("    doc id: ").append(ID.apply(item.getDocId()))
-      .append(", branch id: ").append(ID.apply(item.getBranchId().orElse(null)))
-      .append(", parent: ").append(ID.apply(item.getParent().orElse("")))
-      .append(", message: ").append(item.getCommitMessage())
-      .append(", author: ").append(item.getCommitAuthor())
-      .append(System.lineSeparator())
+    .findAll().collect().asList().onItem()
+    .transform(items -> {
       
-      .append("  - commit log:").append(System.lineSeparator())
-      .append(item.getCommitLog())
-      .append(System.lineSeparator())
-      .append(System.lineSeparator());
+      items
+      .stream()
+      .sorted((b, a) -> ComparisonChain.start()
+          .compare(
+              ID.apply(a.getId()), 
+              ID.apply(b.getId())
+          ).result())
+      .forEach(item -> {
       
+        result.append("  - id: ").append(ID.apply(item.getId()))
+        .append(System.lineSeparator())
+        .append("    doc id: ").append(ID.apply(item.getDocId()))
+        .append(", branch id: ").append(ID.apply(item.getBranchId().orElse(null)))
+        .append(", parent: ").append(ID.apply(item.getParent().orElse("")))
+        .append(", message: ").append(item.getCommitMessage())
+        .append(", author: ").append(item.getCommitAuthor())
+        .append(System.lineSeparator())
+        
+        .append("  - commit log:").append(System.lineSeparator())
+        .append(item.getCommitLog())
+        .append(System.lineSeparator())
+        .append(System.lineSeparator());
+      });
       
-      return item;
-    }).collect().asList().await().indefinitely();
+      return items;
+    }).await().indefinitely();
     
     
     result
@@ -167,6 +209,7 @@ public class DocDbPrinter {
               new StringBuilder(ID.apply(b.getId())).append("::").append(b.getBodyType()).toString()
           ).result())
       .forEach(item -> {
+        
         result.append("  - id: ")
         .append(ID.apply(item.getId())).append("::").append(item.getBodyType()).append(System.lineSeparator())
         .append("    log patch: ").append(item.getBodyPatch())
