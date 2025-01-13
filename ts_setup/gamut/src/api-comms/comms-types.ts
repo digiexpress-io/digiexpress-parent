@@ -11,9 +11,9 @@ export declare namespace CommsApi {
   export type SubjectId = string;
 
   export interface Subject {
-    id: SubjectId;
+    id: SubjectId; // internally process id
     created: DateTime;
-    contractId: string; // contract id
+    contractId: string; // internally task id
     product: ProductApi.Product;
     formId: string;
     name: string;

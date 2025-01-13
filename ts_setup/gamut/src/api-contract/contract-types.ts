@@ -27,8 +27,8 @@ export declare namespace ContractApi {
   }
 
   export interface Contract {
-    id: ContractId;
-    exchangeId: string;
+    id: ContractId; // task id internally
+    exchangeId: string; // process id
     created: DateTime; // task created
     updated: DateTime | undefined; // task updated
     status: ContractStatus;

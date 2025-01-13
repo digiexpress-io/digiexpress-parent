@@ -79,7 +79,7 @@ function mapToSubject(data: LegacyProcessApi.Process, user: IamApi.User | undefi
   }
 
   return Object.freeze({
-    id: data.taskId!,
+    id: data.id,
     name: data.name,
     contractId: data.taskId!,
     product: {} as any,

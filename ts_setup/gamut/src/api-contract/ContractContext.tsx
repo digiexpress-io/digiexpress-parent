@@ -24,7 +24,7 @@ export const ContractProvider: React.FC<{
       contracts: data.contracts,
       isPending: data.isPending,
       getContract: (id) => {
-        return data.contracts.find((contract) => contract.exchangeId === id);
+        return data.contracts.find((contract) => contract.id === id);
       },
       refresh: data.refresh,
       appendContractAttachment: data.appendContractAttachment,

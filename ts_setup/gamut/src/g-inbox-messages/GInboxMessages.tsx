@@ -49,10 +49,11 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const { getContract } = useContracts();
 
   const subject = getSubject(props.subjectId);
-  const contract = subject ? getContract(subject.id) : undefined;
+  const contract = subject ? getContract(subject.contractId) : undefined;
   const offerName = site && contract ? getLocalisedOfferName(site, contract.offer.name) : '';
 
   if (!subject || !site || !contract) {
+    console.error("no site / contract", { subject, site, contract });
     return <>...no site / contract</>
   }
 

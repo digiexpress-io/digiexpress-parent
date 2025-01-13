@@ -56,8 +56,8 @@ function mapToContract(data: LegacyProcessApi.Process, site: SiteApi.Site | unde
   })));
 
   return Object.freeze({
-    id: data.id,
-    exchangeId: data.taskId!,
+    id: data.taskId!,
+    exchangeId: data.id,
     status: data.taskStatus! as any, 
     reviewUri: data.reviewUri!,
     documents: docs,
