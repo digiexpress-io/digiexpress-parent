@@ -23,7 +23,9 @@ export const ContractProvider: React.FC<{
     const contextValue: ContractApi.ContractContextType = {
       contracts: data.contracts,
       isPending: data.isPending,
-      getContract: (id) => data.contracts.find((contract) => contract.id === id),
+      getContract: (id) => {
+        return data.contracts.find((contract) => contract.exchangeId === id);
+      },
       refresh: data.refresh,
       appendContractAttachment: data.appendContractAttachment,
       contractStats: Object.freeze({ awaitingDecision: awaitingDecision.length, decided: decided.length })

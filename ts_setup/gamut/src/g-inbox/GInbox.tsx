@@ -63,7 +63,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         return subject.lastExchange.userName;
     }
   };
-
   return (
     <GInboxRoot className={classes.root}>
       {subjects
@@ -80,7 +79,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
           if (!site || !contract) {
-            return <></>
+            return <React.Fragment key={contractId}></React.Fragment>
           }
           const offerName = getLocalisedOfferName(site, contract?.offer.name!)
 
