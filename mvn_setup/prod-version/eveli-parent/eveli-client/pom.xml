@@ -39,7 +39,7 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>hdes-client</artifactId>
+      <artifactId>hdes-client-api</artifactId>
       <exclusions>
       	<exclusion>
       		<groupId>org.jboss.slf4j</groupId>
