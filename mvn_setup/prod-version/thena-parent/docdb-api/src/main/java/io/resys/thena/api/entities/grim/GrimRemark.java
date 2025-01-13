@@ -24,8 +24,6 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import jakarta.annotation.Nullable;
@@ -49,7 +47,7 @@ public interface GrimRemark extends IsGrimObject, TenantEntity {
   
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };
   
   @Value.Immutable
   interface GrimRemarkTransitives {

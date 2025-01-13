@@ -68,9 +68,10 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public ThenaSqlClient.SqlTuple getById(String id) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimCommitTree()).ln()
-        .append("  WHERE (id = $1)").ln() 
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
+        .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
+        .append(" WHERE (tree.id = $1)").ln() 
         .build())
         .props(Tuple.of(id))
         .build();
@@ -79,13 +80,28 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   public SqlTuple findAllByCommitIds(List<String> commitId) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getGrimCommitTree()).ln()
-        .append("  WHERE (commit_id = ANY($1))").ln() 
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
+        .append(" FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
+        .append(" RIGHT JOIN ").append(options.getGrimCommit()).append(" as commit").ln()
+        .append(" WHERE (tree.commit_id = ANY($1))").ln() 
         .build())
         .props(Tuple.of(commitId.toArray()))
         .build();    
   }
+  @Override
+  public SqlTuple findAllByMissionIdAndCommitId(String missionId, String commitId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
+        .append("  FROM ").append(options.getGrimCommitTree()).append(" AS tree").ln()
+        .append("  RIGHT JOIN ").append(options.getGrimCommit()).append(" AS commit ON(commit.commit_id = tree.commit_id)").ln() 
+        .append("  WHERE tree.commit_id = $1").ln() 
+        .append("  AND commit.mission_id = $2").ln() 
+        .build())
+        .props(Tuple.of(commitId, missionId))
+        .build();    
+  }
+  
   @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
@@ -99,6 +115,9 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
     .append("  body_before JSONB").ln()
     .append(");").ln()
     
+    .append("CREATE INDEX ").append(options.getGrimCommitTree()).append("_COMMIT_INDEX")
+    .append(" ON ").append(options.getGrimCommitTree()).append(" (commit_id);").ln()
+
     
     .build()).build();
   }
@@ -148,5 +167,4 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
           .build();
     };
   }
-
 }

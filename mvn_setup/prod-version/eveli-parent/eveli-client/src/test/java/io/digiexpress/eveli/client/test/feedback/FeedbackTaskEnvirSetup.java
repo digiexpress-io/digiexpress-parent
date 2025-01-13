@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.test.task;
+package io.digiexpress.eveli.client.test.feedback;
 
 /*-
  * #%L
@@ -47,14 +47,13 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class TaskEnvirSetup {
+public class FeedbackTaskEnvirSetup {
   private final TaskEventPublisher publisher;
   private final ThenaClient dbState;
   private final io.vertx.mutiny.pgclient.PgPool pgPool;
   private final String repoId;
   
-  
-  public TaskEnvirSetup(PostgreSQLContainer<?> cont, TaskEventPublisher publisher, String repoId) {
+  public FeedbackTaskEnvirSetup(PostgreSQLContainer<?> cont, TaskEventPublisher publisher, String repoId) {
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
         new PgConnectOptions()
           .setHost(cont.getHost())
@@ -105,7 +104,7 @@ public class TaskEnvirSetup {
   }
 
   public String toRepoExport(String repoId) {
-    Tenant repo = getDbState().git(repoId).tenants().get()
+    getDbState().git(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = null;//new TestExporter(createState()).print(repo);
     return result;

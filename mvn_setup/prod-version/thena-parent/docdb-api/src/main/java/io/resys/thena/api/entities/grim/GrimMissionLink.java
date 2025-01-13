@@ -24,8 +24,6 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
@@ -45,7 +43,7 @@ public interface GrimMissionLink extends IsGrimObject, TenantEntity {
   
   @Nullable GrimOneOfRelations getRelation(); // one of sub entities
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION_LINKS; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION_LINKS; };
   
   
   @Value.Immutable

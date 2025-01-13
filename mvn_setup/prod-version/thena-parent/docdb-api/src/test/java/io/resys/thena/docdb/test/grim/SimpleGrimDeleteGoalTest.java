@@ -238,37 +238,37 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 16 entries
   + 20::GRIM_MISSION_LABEL
-    {"id":"20","commitId":"4","labelType":"keyword","labelValue":"housing","labelBody":null,"missionId":"5","relation":null}
+    {"id":"20","commitId":"4","labelType":"keyword","labelValue":"housing","labelBody":null,"missionId":"5","relation":null,"docType":"GRIM_MISSION_LABEL"}
   + 21::GRIM_MISSION_LABEL
-    {"id":"21","commitId":"4","labelType":"keyword","labelValue":"roofing","labelBody":null,"missionId":"5","relation":null}
+    {"id":"21","commitId":"4","labelType":"keyword","labelValue":"roofing","labelBody":null,"missionId":"5","relation":null,"docType":"GRIM_MISSION_LABEL"}
   + 19::GRIM_ASSIGNMENT
-    {"id":"19","commitId":"4","missionId":"5","assignee":"sam-from-the-mill","assignmentType":"worker","assigneeContact":null,"relation":null}
+    {"id":"19","commitId":"4","missionId":"5","assignee":"sam-from-the-mill","assignmentType":"worker","assigneeContact":null,"relation":null,"docType":"GRIM_ASSIGNMENT"}
   + 18::GRIM_ASSIGNMENT
-    {"id":"18","commitId":"4","missionId":"5","assignee":"jane-from-the-roofing","assignmentType":"worker","assigneeContact":null,"relation":null}
+    {"id":"18","commitId":"4","missionId":"5","assignee":"jane-from-the-roofing","assignmentType":"worker","assigneeContact":null,"relation":null,"docType":"GRIM_ASSIGNMENT"}
   + 23::GRIM_MISSION_LINKS
-    {"id":"23","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null}
+    {"id":"23","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null,"docType":"GRIM_MISSION_LINKS"}
   + 22::GRIM_MISSION_LINKS
-    {"id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
+    {"id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null,"docType":"GRIM_MISSION_LINKS"}
   + 11::GRIM_REMARK
-    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
+    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null,"docType":"GRIM_REMARK"}
   + 12::GRIM_REMARK
-    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","reporterId":"the.bob.clown","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
+    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","reporterId":"the.bob.clown","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null,"docType":"GRIM_REMARK"}
   + 16::GRIM_ASSIGNMENT
-    {"id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+    {"id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"},"docType":"GRIM_ASSIGNMENT"}
   + 17::GRIM_ASSIGNMENT
-    {"id":"17","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+    {"id":"17","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"},"docType":"GRIM_ASSIGNMENT"}
   + 14::GRIM_ASSIGNMENT
-    {"id":"14","commitId":"4","missionId":"5","assignee":"no-name-worker-3","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"}}
+    {"id":"14","commitId":"4","missionId":"5","assignee":"no-name-worker-3","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"},"docType":"GRIM_ASSIGNMENT"}
   + 15::GRIM_ASSIGNMENT
-    {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"}}
+    {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"},"docType":"GRIM_ASSIGNMENT"}
   + 10::GRIM_OBJECTIVE_GOAL
-    {"id":"10","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":"2023-01-02","dueDate":"2023-02-01","description":"kitcher plan goes here!","title":"kitchen"}
+    {"id":"10","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":"2023-01-02","dueDate":"2023-02-01","description":"kitcher plan goes here!","title":"kitchen","docType":"GRIM_OBJECTIVE_GOAL"}
   + 9::GRIM_OBJECTIVE_GOAL
-    {"id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
+    {"id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom","docType":"GRIM_OBJECTIVE_GOAL"}
   + 8::GRIM_OBJECTIVE
-    {"id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas"}
+    {"id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas","docType":"GRIM_OBJECTIVE"}
   + 5::GRIM_MISSION
-    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
+    {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null,"docType":"GRIM_MISSION"}
 
  | deleted
   - deleted: 0 entries
@@ -285,15 +285,10 @@ author: jane.doe@morgue.com, message: remove remark #1
  | deleted
   - deleted: 1 entries
   - 11::GRIM_REMARK
-    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
+    {"id":"11","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null,"docType":"GRIM_REMARK"}
 
  | merged
-  +- merged: 1 entries
-  +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"4","createdWithCommitId":"4","updatedTreeWithCommitId":"4","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"5","commitId":"24","createdWithCommitId":"4","updatedTreeWithCommitId":"24","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   diff: commitId :: 4 -> 24
-   diff: updatedTreeWithCommitId :: 4 -> 24
+  +- merged: 0 entries
 
 
 commit: 26, tenant: 1
@@ -304,15 +299,10 @@ author: jane.doe@morgue.com, message: remove remark #2
  | deleted
   - deleted: 1 entries
   - 12::GRIM_REMARK
-    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","reporterId":"the.bob.clown","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
+    {"id":"12","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Waiting for results already!","reporterId":"the.bob.clown","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null,"docType":"GRIM_REMARK"}
 
  | merged
-  +- merged: 1 entries
-  +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"24","createdWithCommitId":"4","updatedTreeWithCommitId":"24","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"5","commitId":"26","createdWithCommitId":"4","updatedTreeWithCommitId":"26","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   diff: commitId :: 24 -> 26
-   diff: updatedTreeWithCommitId :: 24 -> 26
+  +- merged: 0 entries
 
 
 commit: 28, tenant: 1
@@ -323,19 +313,14 @@ author: jane.doe@morgue.com, message: remove remark #2
  | deleted
   - deleted: 3 entries
   - 10::GRIM_OBJECTIVE_GOAL
-    {"id":"10","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":"2023-01-02","dueDate":"2023-02-01","description":"kitcher plan goes here!","title":"kitchen"}
+    {"id":"10","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":"2023-01-02","dueDate":"2023-02-01","description":"kitcher plan goes here!","title":"kitchen","docType":"GRIM_OBJECTIVE_GOAL"}
   - 14::GRIM_ASSIGNMENT
-    {"id":"14","commitId":"4","missionId":"5","assignee":"no-name-worker-3","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"}}
+    {"id":"14","commitId":"4","missionId":"5","assignee":"no-name-worker-3","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"},"docType":"GRIM_ASSIGNMENT"}
   - 15::GRIM_ASSIGNMENT
-    {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"}}
+    {"id":"15","commitId":"4","missionId":"5","assignee":"no-name-worker-4","assignmentType":"goal-worker","assigneeContact":null,"relation":{"objectiveId":null,"remarkId":null,"objectiveGoalId":"10","relationType":"GOAL"},"docType":"GRIM_ASSIGNMENT"}
 
  | merged
-  +- merged: 1 entries
-  +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"26","createdWithCommitId":"4","updatedTreeWithCommitId":"26","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"5","commitId":"28","createdWithCommitId":"4","updatedTreeWithCommitId":"28","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   diff: commitId :: 26 -> 28
-   diff: updatedTreeWithCommitId :: 26 -> 28
+  +- merged: 0 entries
 
 
 commit: 30, tenant: 1
@@ -346,21 +331,16 @@ author: jane.doe@morgue.com, message: remove remark #2
  | deleted
   - deleted: 4 entries
   - 8::GRIM_OBJECTIVE
-    {"id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas"}
+    {"id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas","docType":"GRIM_OBJECTIVE"}
   - 9::GRIM_OBJECTIVE_GOAL
-    {"id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom"}
+    {"id":"9","commitId":"4","createdWithCommitId":"4","objectiveId":"8","goalStatus":null,"startDate":null,"dueDate":null,"description":"kitcher plan goes here!","title":"bathroom","docType":"GRIM_OBJECTIVE_GOAL"}
   - 16::GRIM_ASSIGNMENT
-    {"id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+    {"id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"},"docType":"GRIM_ASSIGNMENT"}
   - 17::GRIM_ASSIGNMENT
-    {"id":"17","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+    {"id":"17","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"},"docType":"GRIM_ASSIGNMENT"}
 
  | merged
-  +- merged: 1 entries
-  +- 5::GRIM_MISSION
-   -  {"id":"5","commitId":"28","createdWithCommitId":"4","updatedTreeWithCommitId":"28","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   +  {"id":"5","commitId":"30","createdWithCommitId":"4","updatedTreeWithCommitId":"30","parentMissionId":null,"externalId":null,"questionnaireId":null,"refId":"7","missionStatus":"OPEN","missionPriority":"HIGH","startDate":"2020-05-01","dueDate":"2020-06-01","reporterId":"jane.doe@housing.com","description":"The best house ever","title":"my first mission to build a house","completedAt":null,"archivedAt":null,"archivedStatus":null}
-   diff: commitId :: 28 -> 30
-   diff: updatedTreeWithCommitId :: 28 -> 30
+  +- merged: 0 entries
 
 """, toStaticData(repo.getRepo()));
   }

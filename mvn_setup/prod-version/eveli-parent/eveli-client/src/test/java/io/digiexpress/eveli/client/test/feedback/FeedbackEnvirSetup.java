@@ -55,7 +55,6 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.test.BaseEnvir;
-import io.digiexpress.eveli.client.test.task.TaskEnvirSetup;
 import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.EntityManager;
@@ -94,7 +93,7 @@ public abstract class FeedbackEnvirSetup {
     @Bean
     public TaskClient taskClient(ApplicationEventPublisher publisher) {
       final var repoId = "test-task-client-" + TEST_INDEX.incrementAndGet();
-      final var setup = new TaskEnvirSetup(CONTAINER, new TaskEventPublisher(publisher), repoId);
+      final var setup = new FeedbackTaskEnvirSetup(CONTAINER, new TaskEventPublisher(publisher), repoId);
       return setup.getTaskClient();
     }
     
@@ -146,7 +145,7 @@ public abstract class FeedbackEnvirSetup {
         // debugging delay
         .build()).await().atMost(Duration.ofMinutes(5));
       
-      final var comment = taskClient.taskBuilder()
+      taskClient.taskBuilder()
         .userId(user, email)
         .createTaskComment(ImmutableCreateTaskCommentCommand.builder()
             .external(true)

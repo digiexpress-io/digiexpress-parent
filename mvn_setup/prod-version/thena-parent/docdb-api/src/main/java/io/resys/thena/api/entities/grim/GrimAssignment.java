@@ -22,8 +22,6 @@ package io.resys.thena.api.entities.grim;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import jakarta.annotation.Nullable;
@@ -52,5 +50,5 @@ public interface GrimAssignment extends IsGrimObject, TenantEntity {
     return getRelation().getTargetId().equals(targetId);
   }
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_ASSIGNMENT; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_ASSIGNMENT; };
 }

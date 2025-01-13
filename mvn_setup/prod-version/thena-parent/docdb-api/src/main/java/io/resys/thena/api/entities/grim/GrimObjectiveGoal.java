@@ -59,7 +59,7 @@ public interface GrimObjectiveGoal extends IsGrimObject, TenantEntity {
   String getTitle(); // task title
   
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_OBJECTIVE_GOAL; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_OBJECTIVE_GOAL; };
   
   @Value.Immutable
   interface GrimObjectiveGoalTransitives {

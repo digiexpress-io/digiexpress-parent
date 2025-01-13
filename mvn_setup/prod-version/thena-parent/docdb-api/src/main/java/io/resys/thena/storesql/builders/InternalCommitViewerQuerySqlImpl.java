@@ -36,12 +36,12 @@ import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
-public class InternalViewerQuerySqlImpl implements InternalCommitViewerQuery {
+public class InternalCommitViewerQuerySqlImpl implements InternalCommitViewerQuery {
   private final ThenaSqlDataSource dataSource;
   private final GrimRegistry registry;
   private final ThenaSqlDataSourceErrorHandler errorHandler;
   
-  public InternalViewerQuerySqlImpl(ThenaSqlDataSource dataSource) {
+  public InternalCommitViewerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
     this.registry = dataSource.getRegistry().grim();

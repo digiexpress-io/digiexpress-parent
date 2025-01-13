@@ -64,7 +64,7 @@ public interface GrimMission extends IsGrimObject, TenantEntity {
   @Nullable OffsetDateTime getArchivedAt(); // when we archived it
   @Nullable String getArchivedStatus(); // on the way to be archived or is already archived
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION; };
   
   @Value.Immutable
   interface GrimMissionTransitives {

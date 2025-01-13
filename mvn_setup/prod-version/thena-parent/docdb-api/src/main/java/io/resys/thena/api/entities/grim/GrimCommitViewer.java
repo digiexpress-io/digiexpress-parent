@@ -24,8 +24,6 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.resys.thena.api.envelope.ThenaContainer;
@@ -45,5 +43,5 @@ public interface GrimCommitViewer extends IsGrimObject, TenantEntity, ThenaConta
   String getUsedBy();
   String getUsedFor();
   
-  @JsonIgnore @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_COMMIT_VIEWER; };
+  @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_COMMIT_VIEWER; };
 }

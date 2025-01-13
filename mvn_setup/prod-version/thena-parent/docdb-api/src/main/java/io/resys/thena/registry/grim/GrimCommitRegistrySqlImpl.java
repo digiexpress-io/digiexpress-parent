@@ -75,6 +75,18 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
   }
 
   @Override
+  public SqlTuple getOneByMissionIdAndCommitId(String missionId, String commitId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommit()).ln()
+        .append("  WHERE mission_id = $1 AND commit_id = $2").ln() 
+        .build())
+        .props(Tuple.of(missionId, commitId))
+        .build();
+  }
+
+  @Override
   public SqlTupleList insertAll(Collection<GrimCommit> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
@@ -227,5 +239,4 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .props(where.getProps())
         .build();
   }
-
 }

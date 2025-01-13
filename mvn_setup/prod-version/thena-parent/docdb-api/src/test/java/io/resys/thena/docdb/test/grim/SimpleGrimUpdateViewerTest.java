@@ -211,5 +211,18 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     Assertions.assertEquals(1, missionWithViewedData.getObjects().getViews().size());
     
     }
+    
+    
+    { // try to get commits
+      final var missionId = newMission.getMission().getId();
+      final var currentState = getClient().grim(repo).find().missionQuery()
+          .get(missionId)
+          .await().atMost(Duration.ofMinutes(1));
+      
+      final var currentVersionMinus1 = getClient().grim(repo).find().commitQuery()
+        .findPreviousCommit(missionId, currentState.getObjects().getMission().getCommitId())
+        .await().atMost(Duration.ofMinutes(1));
+    }
+    
   }
 }

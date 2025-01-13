@@ -35,6 +35,8 @@ public interface GrimCommitTreeRegistry extends ThenaRegistryService<GrimCommitT
   ThenaSqlClient.SqlTuple findAllByCommitIds(List<String> commitId);
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommitTree> commits);
   
+  ThenaSqlClient.SqlTuple findAllByMissionIdAndCommitId(String missionId, String commitId);
+  
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
   ThenaSqlClient.Sql dropTable();

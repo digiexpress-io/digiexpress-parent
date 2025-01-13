@@ -22,6 +22,8 @@ package io.resys.thena.structures.grim.commitlog;
 
 import java.time.OffsetDateTime;
 
+import com.google.common.base.Objects;
+
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommit;
@@ -77,10 +79,24 @@ public class GrimCommitBuilder {
     return this;
   }
   public GrimCommitBuilder merge(IsGrimObject previous, IsGrimObject next) {
+    
+    final var a = JsonObject.mapFrom(previous);
+    final var b = JsonObject.mapFrom(next);
+    
+    GrimCommitLogger.SKIP.forEach(key -> {
+      a.remove(key);
+      b.remove(key);
+    });
+    
+    if(Objects.equal(a, b)) {
+      return this;
+    }
+    
+    
     this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
-        .operationType(GrimCommitTreeOperation.ADD)
+        .operationType(GrimCommitTreeOperation.MERGE)
         .bodyBefore(JsonObject.mapFrom(previous))
         .bodyAfter(JsonObject.mapFrom(next))
         .build());

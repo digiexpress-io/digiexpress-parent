@@ -28,6 +28,8 @@ import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.GrimAnyObject;
+import io.resys.thena.api.entities.grim.GrimCommit;
+import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -43,8 +45,19 @@ public interface GrimQueries {
   InternalMissionQuery missions();
   InternalMissionLabelQuery missionLabels();
   InternalCommitViewerQuery commitViewer();
+  InternalCommitTreeQuery commitTree();
+  InternalCommitQuery commit();
   InternalMissionSequence missionSequences();
   InternalMissionRemarkQuery missionRemarks();
+  
+  
+  interface InternalCommitTreeQuery {
+    Uni<List<GrimCommitTree>> findAllByMissionIdAndCommitId(String missionId, String commitId);
+  }
+  
+  interface InternalCommitQuery {
+    Uni<GrimCommit> getOneByMissionIdAndCommitId(String missionId, String commitId);
+  }
   
   interface InternalCommitViewerQuery {
     Multi<GrimAnyObject> findAnyObjects(Collection<AnyObjectCriteria> commits);

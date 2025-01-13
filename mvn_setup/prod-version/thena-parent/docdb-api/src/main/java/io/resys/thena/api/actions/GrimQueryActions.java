@@ -41,6 +41,11 @@ public interface GrimQueryActions {
   MissionLabelQuery missionLabelQuery();
   MissionRemarkQuery missionRemarkQuery();
   CommitViewersQuery commitViewersQuery();
+  MissionCommitQuery commitQuery();
+  
+  interface MissionCommitQuery {
+    Uni<QueryEnvelope<GrimMissionContainer>> findPreviousCommit(String missionId, String currentCommitId);
+  }
   
   interface CommitViewersQuery {
     Uni<QueryEnvelopeList<GrimCommitViewer>> findAll();

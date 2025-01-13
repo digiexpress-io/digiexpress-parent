@@ -21,6 +21,7 @@ package io.resys.thena.structures.grim.commitlog;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.base.Objects;
@@ -41,7 +42,12 @@ public class GrimCommitLogger {
   private final String tenantId;
   private final String commitId;
   private final GrimCommit commit;
-
+  public static List<String> SKIP = Arrays.asList(
+      "commitId",
+      "createdWithCommitId",
+      "updatedTreeWithCommitId");
+  
+  
   private int count_added;
   private int count_deleted;
   private int count_merged;
@@ -49,9 +55,7 @@ public class GrimCommitLogger {
   private final StringBuilder merged = new StringBuilder();
   private final List<IsGrimObject> removed = new ArrayList<>();
     
-  
-  
-  
+
   public GrimCommitLogger(String tenantId, GrimCommit commit) {
     super();
     this.tenantId = tenantId;
@@ -64,6 +68,46 @@ public class GrimCommitLogger {
     added
       .append("  + ").append(entity.getId()).append("::").append(entity.getDocType()).append(System.lineSeparator())
       .append("    ").append(toJson(entity)).append(System.lineSeparator());
+  }
+  public void remove(IsGrimObject entity) {
+    count_deleted++;
+    removed.add(entity);
+  }
+  
+  public void merge(IsGrimObject previous, IsGrimObject next) {
+
+    final var a = toJson(previous);
+    final var b = toJson(next);    
+    final var diff = new StringBuilder();
+    
+    for(final var entries : a.getMap().entrySet()) {
+      final var changedFrom = entries.getValue();
+      final var changedTo = b.getValue(entries.getKey());
+      
+      if(SKIP.contains(entries.getKey()) ) {
+        continue;
+      }
+      
+      if(Objects.equal(changedFrom, changedTo)) {
+        continue;
+      }
+      diff.append("   diff: ").append(entries.getKey())
+        .append(" :: ")
+        .append(changedFrom).append(" -> ").append(changedTo)
+        .append(System.lineSeparator());
+        
+    }
+    
+    if(diff.isEmpty()) {
+      return;
+    }
+    
+    merged
+      .append("  +- ").append(next.getId()).append("::").append(next.getDocType()).append(System.lineSeparator())
+      .append("   -  ").append(a).append(System.lineSeparator())
+      .append("   +  ").append(b).append(System.lineSeparator())
+      .append(diff);
+    count_merged++;
   }
   
   private JsonObject toJson(IsGrimObject entity) {
@@ -83,17 +127,11 @@ public class GrimCommitLogger {
     return JsonObject.mapFrom(entity);
   }
   
-  public void remove(IsGrimObject entity) {
-    count_deleted++;
-    removed.add(entity);
-  }
-  
   @SuppressWarnings({ "incomplete-switch" }) 
   private int compare(IsGrimObject a, IsGrimObject b) {
     if(a.getDocType() != b.getDocType()) {
       return a.getDocType().compareTo(b.getDocType());
     }
-    
     
     switch (a.getDocType()) {
     case GRIM_ASSIGNMENT: {
@@ -128,31 +166,6 @@ public class GrimCommitLogger {
     });;
     
     return result.toString();
-  }
-  
-  public void merge(IsGrimObject previous, IsGrimObject next) {
-    count_merged++;
-    final var a = toJson(previous);
-    final var b = toJson(next);
-    
-    merged
-    .append("  +- ").append(next.getId()).append("::").append(next.getDocType()).append(System.lineSeparator())
-    .append("   -  ").append(a).append(System.lineSeparator())
-    .append("   +  ").append(b).append(System.lineSeparator());
-    
-    
-    for(final var entries : a.getMap().entrySet()) {
-      final var changedFrom = entries.getValue();
-      final var changedTo = b.getValue(entries.getKey());
-      if(Objects.equal(changedFrom, changedTo)) {
-        continue;
-      }
-      merged.append("   diff: ").append(entries.getKey())
-        .append(" :: ")
-        .append(changedFrom).append(" -> ").append(changedTo)
-        .append(System.lineSeparator());
-        
-    }
   }
  
   public String build() {
