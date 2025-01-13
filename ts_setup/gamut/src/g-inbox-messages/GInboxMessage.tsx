@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Grid, Typography, useThemeProps } from '@mui/material';
+import { Avatar, Grid2, Typography, useThemeProps } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
@@ -30,27 +30,27 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
 
   return (
     <GInboxMessageRoot className={classes.msgItemRoot}>
-      <Grid container>
-        <Grid item xs={12} sm={9} md={9} lg={9} xl={9} className={classes.msgItemSender}>
+      <Grid2>
+        <Grid2 size={{ xs: 12, sm: 9, md: 9, lg: 9, xl: 9 }} className={classes.msgItemSender}>
           {isMyMessage ? <Avatar className={classes.msgItemMyMessage}>{firstInitial}</Avatar> :
             <Avatar className={classes.msgItemTheirMessage}>{firstInitial}</Avatar>}
           <Typography>
             {senderName ? senderName : intl.formatMessage({ id: 'cust.inbox.message.sender-name.org-user' })} 
           </Typography>
-        </Grid>
+        </Grid2>
 
-        <Grid item xs={12} sm={3} md={3} lg={3} xl={3} className={classes.msgItemSentat}>
+        <Grid2 size={{ xs: 12, sm: 3, md: 3, lg: 3, xl: 3 }} className={classes.msgItemSentat}>
           <Typography>
             <GDate variant='date-time' date={created} />
           </Typography>
-        </Grid>
+        </Grid2>
 
-        <Grid item xs={12} sm={9} md={9} lg={9} xl={9} className={classes.msgItemCommentText}>
+        <Grid2 size={{ xs: 12, sm: 3, md: 3, lg: 3, xl: 3 }} className={classes.msgItemCommentText}>
           <Typography>
             {commentText}
           </Typography>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </GInboxMessageRoot>
   )
 }
