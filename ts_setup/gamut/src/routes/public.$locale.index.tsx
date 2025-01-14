@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterUnsecured } from '../g-routes';
+import { GRouterUnsecured } from '../g-router-unsecured';
 import { useLocale } from '../api-locale';
 
 
@@ -14,5 +14,5 @@ function Component() {
 
   React.useEffect(() => setLocale(locale), [locale])
 
-  return (<RouterUnsecured pageId='000_index'/>)
+  return (<GRouterUnsecured pageId='000_index' />)
 }

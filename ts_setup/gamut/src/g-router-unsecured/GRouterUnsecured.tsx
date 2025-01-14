@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Stack, Toolbar, Box, useTheme } from '@mui/material';
+import { Container, Stack, Toolbar } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 
 import {
@@ -17,7 +17,8 @@ import {
   useSite,
 } from '../';
 
-import city1 from './city1.jpg'
+import { GRouterUnsecuredRoot } from './useUtilityClasses';
+import { useUtilityClasses } from './useUtilityClasses';
 
 
 const FlexSpacerRow: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -27,10 +28,10 @@ const FlexSpacerRow: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
 const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
   const nav = useNavigate();
-  const theme = useTheme();
   const { locale } = useLocale();
   const { views } = useSite();
-  
+  const classes = useUtilityClasses();
+
   const landingTopic = Object.values(views).find(a => a.id === pageId);
 
   function handleTopicChange(topic: SiteApi.TopicView) {
@@ -70,31 +71,16 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
         </GLayout>
       </Toolbar >
 
-
       <main role='main'>
         <Container>
-          <Box sx={{
-              [theme.breakpoints.down('md')]: {
-                justifyContent: 'center',
-                gap: theme.spacing(1),
-              },
-              position: 'relative',
-              backgroundImage: `url(${city1})`,
-              backgroundSize: 'cover',
-              alignContent: 'center',
-              display: 'flex',
-              flexWrap: 'wrap',
-              padding: 1,
-              height: 400,
-              zIndex: 1,
-            }}
-          >
+          <GRouterUnsecuredRoot className={classes.root}>
+            <div className={classes.menuButtonContainer}>
+              <GPopoverTopics onTopic={handleTopicChange} />
+              <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
+            </div>
 
-            <GPopoverTopics onTopic={handleTopicChange} />
-            <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
-          </Box>
-
-          <GArticle>{landingTopic}</GArticle>
+            <GArticle>{landingTopic}</GArticle>
+          </GRouterUnsecuredRoot>
         </Container>
       </main>
 
@@ -108,10 +94,10 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
 
 
 
-export const RouterUnsecured: React.FC<{pageId: string}> = ({ pageId }) => {
+export const GRouterUnsecured: React.FC<{ pageId: string }> = ({ pageId }) => {
   return (
     <GShell drawerOpen={false}>
-      <Internal pageId={pageId}/>
+      <Internal pageId={pageId} />
     </GShell>
   );
 }

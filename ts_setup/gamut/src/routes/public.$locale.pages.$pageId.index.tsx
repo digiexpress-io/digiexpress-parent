@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterUnsecured } from '../g-routes'
+import { GRouterUnsecured } from '../g-router-unsecured'
 
 export const Route = createFileRoute('/public/$locale/pages/$pageId/')({
   component: Component,
@@ -12,5 +12,5 @@ function Component() {
 }
 
 function ChooseComponent(props: { pageId: string }) {
-  return <RouterUnsecured pageId={props.pageId} />
+  return <GRouterUnsecured pageId={props.pageId} />
 }
