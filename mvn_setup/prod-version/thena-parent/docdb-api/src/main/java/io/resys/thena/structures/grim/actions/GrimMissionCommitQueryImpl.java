@@ -19,10 +19,21 @@ import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimContainerVersion;
+import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionLink;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionLinkTransitives;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjective;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoalTransitives;
+import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveTransitives;
+import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimRemarkTransitives;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
@@ -148,9 +159,153 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
         return;
       }
       
+      // apply changes
       tree.forEach(this::visitOperation);
+      
+      // build transitive data
+      visitMissionTransitives(commit);
+      visitMissionLinkTransitives(commit);
+      visitMissionRemarkTransitives(commit);
+      visitMissionObjectiveTransitives(commit);
+      visitMissionObjectiveGoalTransitives(commit);
+    }
+    
+    private void visitMissionTransitives(GrimCommit commit) {
+      final var nextState = container.getMissions().values().stream().map(e -> {
+        
+        final var dataExtension = container.getData().values().stream()
+            .filter(d -> d.getRelation() == null)
+            .filter(d -> e.getId().equals(d.getMissionId()))
+            .map(d -> d.getDataExtension())
+            .findFirst();
+        
+        final var transitives = ImmutableGrimMissionTransitives.builder()
+            .createdAt(this.commitsById.get(e.getCreatedWithCommitId()).getCreatedAt())
+            .updatedAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .dataExtension(dataExtension.orElse(null))
+            .treeUpdatedAt(commit.getCreatedAt())
+            .treeUpdatedBy(commit.getCommitAuthor())
+            .build();
+        
+        return ImmutableGrimMission.builder()
+            .from(e)
+            .transitives(transitives)
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .missions(nextState)
+          .build();
     }
 
+    private void visitMissionLinkTransitives(GrimCommit commit) {
+      final var nextState = container.getLinks().values().stream().map(e -> {
+
+        final var transitives = ImmutableGrimMissionLinkTransitives.builder()
+            .createdAt(this.commitsById.get(e.getCreatedWithCommitId()).getCreatedAt())
+            .updatedAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .build();
+        
+        return ImmutableGrimMissionLink.builder()
+            .from(e)
+            .transitives(transitives)
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .links(nextState)
+          .build();
+    }
+
+    private void visitMissionRemarkTransitives(GrimCommit commit) {
+      
+      final var nextState = container.getRemarks().values().stream().map(e -> {
+
+        final var transitives = ImmutableGrimRemarkTransitives.builder()
+            .createdBy(this.commitsById.get(e.getCreatedWithCommitId()).getCommitAuthor())
+            .createdAt(this.commitsById.get(e.getCreatedWithCommitId()).getCreatedAt())
+            .updatedAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .build();
+        
+        return ImmutableGrimRemark.builder()
+            .from(e)
+            .transitives(transitives)
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .remarks(nextState)
+          .build();
+    }
+    
+    private void visitMissionObjectiveTransitives(GrimCommit commit) {
+      
+      
+      final var nextState = container.getObjectives().values().stream().map(e -> {
+
+        final var dataExtension = container.getData().values().stream()
+            .filter(d -> d.getRelation() != null)
+            .filter(d -> d.getRelation().getRelationType() == GrimRelationType.OBJECTIVE)
+            .filter(d -> e.getMissionId().equals(d.getMissionId()))
+            .filter(d -> e.getId().equals(d.getRelation().getTargetId()))
+            .map(d -> d.getDataExtension())
+            .findFirst();
+        
+        final var transitives = ImmutableGrimObjectiveTransitives.builder()
+            .createdAt(this.commitsById.get(e.getCreatedWithCommitId()).getCreatedAt())
+            .updatedAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .dataExtension(dataExtension.orElse(null))
+            .build();
+        
+        return ImmutableGrimObjective.builder()
+            .from(e)
+            .transitives(transitives)
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .objectives(nextState)
+          .build();
+    }
+    
+    private void visitMissionObjectiveGoalTransitives(GrimCommit commit) {
+      final var nextState = container.getGoals().values().stream().map(e -> {
+        final var dataExtension = container.getData().values().stream()
+            .filter(d -> d.getRelation() != null)
+            .filter(d -> d.getRelation().getRelationType() == GrimRelationType.GOAL)
+            .filter(d -> commit.getMissionId().equals(d.getMissionId()))
+            .filter(d -> e.getId().equals(d.getRelation().getTargetId()))
+            .map(d -> d.getDataExtension())
+            .findFirst();
+        
+        final var transitives = ImmutableGrimObjectiveGoalTransitives.builder()
+            .missionId(commit.getMissionId())
+            .dataExtension(dataExtension.orElse(null))
+            .createdAt(this.commitsById.get(e.getCreatedWithCommitId()).getCreatedAt())
+            .updatedAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .build();
+        
+        return ImmutableGrimObjectiveGoal.builder()
+            .from(e)
+            .transitives(transitives)
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .goals(nextState)
+          .build();
+    }
+    
     private void visitOperation(GrimCommitTree tree) {
       final var docType = Optional.ofNullable(tree.getBodyAfter())
           .or(() -> Optional.ofNullable(tree.getBodyBefore()))
@@ -171,7 +326,6 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
         case GRIM_COMMANDS: visitCommands(tree); break;
         default: break;
       }
-   
     }
     
     private void visitMission(GrimCommitTree tree) {

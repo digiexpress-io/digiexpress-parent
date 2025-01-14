@@ -81,9 +81,7 @@ public class MergeMissionBuilder implements MergeMission {
   
   public MergeMissionBuilder(GrimMissionContainer container, GrimCommitBuilder logger) {
     super();
-    
     final var start = container.getMissions().values().iterator().next();
-    
     this.nextTransitives = ImmutableGrimMissionTransitives.builder()
         .from(start.getTransitives())
         .treeUpdatedAt(logger.getCreatedAt())

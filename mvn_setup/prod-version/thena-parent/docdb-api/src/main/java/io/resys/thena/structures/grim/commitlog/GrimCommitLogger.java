@@ -44,8 +44,7 @@ public class GrimCommitLogger {
   private final GrimCommit commit;
   public static List<String> SKIP = Arrays.asList(
       "commitId",
-      "createdWithCommitId",
-      "updatedTreeWithCommitId");
+      "createdWithCommitId");
   
   
   private int count_added;
