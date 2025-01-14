@@ -1,5 +1,7 @@
 package io.resys.thena.storesql.builders;
 
+import java.util.List;
+
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -8,6 +10,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.structures.grim.GrimQueries.InternalCommitQuery;
 import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_SQL)
@@ -24,11 +27,11 @@ public class InternalCommitQuerySqlImpl implements InternalCommitQuery {
   }
 
   @Override
-  public Uni<GrimCommit> getOneByMissionIdAndCommitId(String missionId, String commitId) {
+  public Uni<List<GrimCommit>> findAllByMissionId(String missionId) {
     
-    final var sql = registry.commits().getOneByMissionIdAndCommitId(missionId, commitId);
+    final var sql = registry.commits().findAllByMissionId(missionId);
     if(log.isDebugEnabled()) {
-      log.debug("User getOneByMissionIdAndCommitId query, with props: {} \r\n{}", 
+      log.debug("User findAllByMissionId query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
@@ -36,13 +39,8 @@ public class InternalCommitQuerySqlImpl implements InternalCommitQuery {
         .mapping(registry.commits().defaultMapper())
         .execute(sql.getProps())
         .onItem()
-        .transform(rowset -> {
-          final var it = rowset.iterator();
-          if(it.hasNext()) {
-            return it.next();
-          }
-          return null;
-        })
+        .transformToMulti(RowSet::toMulti)
+        .collect().asList()
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)));
   }
 }

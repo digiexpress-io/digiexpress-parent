@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.actions.GrimCommitActions.ManyMissionsEnvelope;
@@ -195,8 +196,9 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
   private GrimBatchMissions createRequest(GrimState tx, GrimMissionContainer container) {
     RepoAssert.isTrue(container.getMissions().size() == 1, () -> "Mission container must be grouped by missions, one mission per container!");
     
-    final var missionId =  container.getMissions().keySet().iterator().next();
     
+    final var mission = container.getMissions().values().iterator().next();
+    final var missionId = mission.getId();
     final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
         .status(BatchStatus.OK)
@@ -212,7 +214,7 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
-          .parentCommitId(parentCommit == null ? null : parentCommit.getCommitId())
+          .parentCommitId(Optional.ofNullable(mission.getUpdatedTreeWithCommitId()).orElse(mission.getCommitId()))
           .build()
     );
     

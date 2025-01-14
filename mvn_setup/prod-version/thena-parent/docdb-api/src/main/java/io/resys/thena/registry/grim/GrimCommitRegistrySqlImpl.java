@@ -85,6 +85,17 @@ public class GrimCommitRegistrySqlImpl implements GrimCommitRegistry {
         .props(Tuple.of(missionId, commitId))
         .build();
   }
+  @Override
+  public SqlTuple findAllByMissionId(String missionId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getGrimCommit()).ln()
+        .append("  WHERE mission_id = $1").ln() 
+        .build())
+        .props(Tuple.of(missionId))
+        .build();
+  }
 
   @Override
   public SqlTupleList insertAll(Collection<GrimCommit> commits) {

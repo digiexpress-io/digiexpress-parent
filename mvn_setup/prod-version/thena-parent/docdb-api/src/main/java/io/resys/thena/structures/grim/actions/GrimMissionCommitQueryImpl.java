@@ -1,14 +1,32 @@
 package io.resys.thena.structures.grim.actions;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GrimQueryActions.MissionCommitQuery;
+import io.resys.thena.api.entities.grim.GrimAssignment;
+import io.resys.thena.api.entities.grim.GrimCommands;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree;
+import io.resys.thena.api.entities.grim.GrimCommitTree.GrimCommitTreeOperation;
+import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionData;
+import io.resys.thena.api.entities.grim.GrimMissionLabel;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
+import io.resys.thena.api.entities.grim.GrimObjective;
+import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
+import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimContainerVersion;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.grim.GrimState;
 import io.smallrye.mutiny.Uni;
@@ -23,29 +41,370 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   private final DbState startingState;
   private final String repoId;
 
-
   @Override
-  public Uni<QueryEnvelope<GrimMissionContainer>> findPreviousCommit(String missionId, String currentCommitId) {
+  public Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId) {
     return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
-
       return visitCommit(tx, missionId, currentCommitId)
           .onItem()
-          .transform(commit -> visitResponse(tx, commit));
+          .transform(commit -> visitResponse(tx, commit, missionId, currentCommitId));
     });
   }
 
-  private Uni<Tuple2<GrimCommit, List<GrimCommitTree>>> visitCommit(GrimState tx, String missionId, String currentCommitId) {
+  private Uni<Tuple2<List<GrimCommit>, List<GrimCommitTree>>> visitCommit(GrimState tx, String missionId, String currentCommitId) {
     return Uni.combine().all().unis(
-      tx.query().commit().getOneByMissionIdAndCommitId(missionId, currentCommitId),
-      tx.query().commitTree().findAllByMissionIdAndCommitId(missionId, currentCommitId)
+      tx.query().commit().findAllByMissionId(missionId),
+      tx.query().commitTree().findAllByMissionId(missionId)
     ).asTuple();
   }
   
-  private QueryEnvelope<GrimMissionContainer> visitResponse(GrimState tx, Tuple2<GrimCommit, List<GrimCommitTree>> commit) {
-    return ImmutableQueryEnvelope.<GrimMissionContainer>builder()
+  private QueryEnvelope<GrimContainerVersion> visitResponse(
+      GrimState tx, 
+      Tuple2<List<GrimCommit>, List<GrimCommitTree>> commit, 
+      String missionId, String currentCommitId) {
+    
+    return ImmutableQueryEnvelope.<GrimContainerVersion>builder()
       .repo(tx.getDataSource().getTenant())
       .status(QueryEnvelopeStatus.OK)
-      .objects(null)
+      .objects(new GrimMissionContainerVersionVisitor(tx, commit.getItem1(), commit.getItem2(), missionId, currentCommitId).accept())
       .build();
+  }
+  
+  
+  private static class GrimMissionContainerVersionVisitor {
+    private final GrimState tx;
+    private final String missionId; 
+    private final String currentCommitId;
+    private final Map<String, GrimCommit> commitsById;
+    private final Map<String, GrimCommit> commitsByParentId;
+    private final Map<String, List<GrimCommitTree>> treesByCommitId;
+    private GrimMissionContainer container;
+    private GrimMissionContainer parentVersion;
+    
+    public GrimMissionContainerVersionVisitor(
+        GrimState tx,
+        List<GrimCommit> commitsById,
+        List<GrimCommitTree> treesByCommitId,
+        String missionId, String currentCommitId) {
+      super();
+      
+      this.tx = tx;
+      this.missionId = missionId;
+      this.currentCommitId = currentCommitId;
+      
+      this.commitsById = commitsById.stream()
+          .collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
+      
+      this.commitsByParentId = commitsById.stream()
+          .collect(Collectors.toMap(e -> Optional.ofNullable(e.getParentCommitId()).orElse(""), e -> e));
+      
+      this.treesByCommitId = treesByCommitId.stream()
+          .collect(Collectors.groupingBy(e -> e.getCommitId()));
+    }
+
+    public GrimContainerVersion accept() {
+      final var tip = commitsById.values().stream()
+          .filter(e -> e.getParentCommitId() == null)
+          .findFirst().orElseThrow(() -> new RepoException("No starting commit for mission!"))
+          ;
+      
+      visitCommit(tip);
+      
+      return ImmutableGrimContainerVersion.builder()
+          .currentCommitId(currentCommitId)
+          .missionId(missionId)
+          .currentVersion(container)
+          .parentVersion(parentVersion)
+          .build();
+    }
+    
+    private void visitCommit(GrimCommit commit) {
+      if(commit.getCommitId().equals(this.currentCommitId)) {
+        parentVersion = container;
+      }
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container == null ? ImmutableGrimMissionContainer.builder().build() : this.container)
+          .putCommits(commit.getCommitId(), commit)
+          .build();
+      
+      visitTree(commit);      
+      if(commit.getCommitId().equals(this.currentCommitId)) {
+        return;
+      }
+      visitNextCommit(commit);
+    }
+    
+    private void visitNextCommit(GrimCommit commit) {
+      final var next = commitsByParentId.get(Optional.ofNullable(commit.getCommitId()).orElse(""));
+      if(next == null) {
+        return;
+      }
+      visitCommit(next);
+    }
+    
+    private void visitTree(GrimCommit commit) {
+      final var tree = treesByCommitId.get(commit.getCommitId());
+      if(tree == null) {
+        return;
+      }
+      
+      tree.forEach(this::visitOperation);
+    }
+
+    private void visitOperation(GrimCommitTree tree) {
+      final var docType = Optional.ofNullable(tree.getBodyAfter())
+          .or(() -> Optional.ofNullable(tree.getBodyBefore()))
+          .map(body -> body.getString("docType"))
+          .map(GrimDocType::valueOf);
+      if(docType.isEmpty()) {
+        return;
+      }
+      switch (docType.get()) {
+        case GRIM_MISSION: visitMission(tree); break;
+        case GRIM_MISSION_LINKS: visitLink(tree); break;
+        case GRIM_MISSION_LABEL: visitLabel(tree); break;
+        case GRIM_REMARK: visitRemark(tree); break;
+        case GRIM_OBJECTIVE: visitObjective(tree); break;
+        case GRIM_OBJECTIVE_GOAL: visitGoal(tree); break;
+        case GRIM_MISSION_DATA: visitData(tree); break;
+        case GRIM_ASSIGNMENT: visitAssignment(tree); break;
+        case GRIM_COMMANDS: visitCommands(tree); break;
+        default: break;
+      }
+   
+    }
+    
+    private void visitMission(GrimCommitTree tree) {
+      final var entity = parse(tree, GrimMission.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putMissions(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .missions(container.getMissions().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putMissions(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .missions(container.getMissions().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    
+    private void visitLabel(GrimCommitTree tree) {
+      final var entity = parse(tree, GrimMissionLabel.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putMissionLabels(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .missionLabels(container.getMissionLabels().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putMissionLabels(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .missionLabels(container.getMissionLabels().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+      
+    }
+    private void visitLink(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimMissionLink.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putLinks(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .links(container.getLinks().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putLinks(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .links(container.getLinks().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+      
+    }
+    private void visitRemark(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimRemark.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putRemarks(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .remarks(container.getRemarks().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putRemarks(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .remarks(container.getRemarks().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    private void visitObjective(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimObjective.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putObjectives(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .objectives(container.getObjectives().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putObjectives(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .objectives(container.getObjectives().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    private void visitGoal(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimObjectiveGoal.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putGoals(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .goals(container.getGoals().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putGoals(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .goals(container.getGoals().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    private void visitData(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimMissionData.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putData(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .data(container.getData().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putData(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .data(container.getData().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    private void visitAssignment(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimAssignment.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putAssignments(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .assignments(container.getAssignments().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putAssignments(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .assignments(container.getAssignments().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    private void visitCommands(GrimCommitTree tree) {
+      
+      final var entity = parse(tree, GrimCommands.class);
+      if(tree.getOperationType() == GrimCommitTreeOperation.ADD) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .putCommands(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.MERGE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .commands(container.getCommands().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .putCommands(entity.getItem2().get().getId(), entity.getItem2().get())
+            .build();
+      } else if(tree.getOperationType() == GrimCommitTreeOperation.REMOVE) {
+        container = ImmutableGrimMissionContainer.builder()
+            .from(container)
+            .commands(container.getCommands().values().stream()
+                .filter(e -> !e.getId().equals(entity.getItem1().get().getId()) )
+                .collect(Collectors.toMap(e -> e.getId(), e -> e)))
+            .build();
+      }
+    }
+    
+    private <T> Tuple2<Optional<T>, Optional<T>> parse(GrimCommitTree tree, Class<T> type) {
+      final var before = Optional.ofNullable(tree.getBodyBefore()).map(b -> b.mapTo(type));
+      final var after =  Optional.ofNullable(tree.getBodyAfter()).map(b -> b.mapTo(type));
+      return Tuple2.of(before, after);
+    }
   }
 }

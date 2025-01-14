@@ -26,11 +26,11 @@ public class InternalCommitTreeQuerySqlImpl implements InternalCommitTreeQuery {
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
-  public Uni<List<GrimCommitTree>> findAllByMissionIdAndCommitId(String missionId, String commitId) {
+  public Uni<List<GrimCommitTree>> findAllByMissionId(String missionId) {
     
-    final var sql = registry.commitTrees().findAllByMissionIdAndCommitId(missionId, commitId);
+    final var sql = registry.commitTrees().findAllByMissionId(missionId);
     if(log.isDebugEnabled()) {
-      log.debug("User findAllByMissionIdAndCommitId query, with props: {} \r\n{}", 
+      log.debug("User findAllByMissionId query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }

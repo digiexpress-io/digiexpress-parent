@@ -31,6 +31,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface GrimCommitRegistry extends ThenaRegistryService<GrimCommit, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAllByIds(Collection<String> id);
+  ThenaSqlClient.SqlTuple findAllByMissionId(String missiontId);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommit> commits);  
   ThenaSqlClient.SqlTuple getById(String id);

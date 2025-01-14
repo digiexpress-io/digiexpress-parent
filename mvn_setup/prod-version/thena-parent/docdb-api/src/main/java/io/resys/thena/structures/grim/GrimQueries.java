@@ -52,11 +52,11 @@ public interface GrimQueries {
   
   
   interface InternalCommitTreeQuery {
-    Uni<List<GrimCommitTree>> findAllByMissionIdAndCommitId(String missionId, String commitId);
+    Uni<List<GrimCommitTree>> findAllByMissionId(String missionId);
   }
   
   interface InternalCommitQuery {
-    Uni<GrimCommit> getOneByMissionIdAndCommitId(String missionId, String commitId);
+    Uni<List<GrimCommit>> findAllByMissionId(String missionId);
   }
   
   interface InternalCommitViewerQuery {

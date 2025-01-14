@@ -209,13 +209,15 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
   }
   @Override
   public NewMission addCommands(List<JsonObject> commandToAppend) {
-    next.addCommands(ImmutableGrimCommands.builder()
+    final var command = ImmutableGrimCommands.builder()
         .commands(commandToAppend)
         .commitId(logger.getCommitId())
         .missionId(missionId)
         .createdAt(createdAt)
         .id(OidUtils.gen())
-        .build());
+        .build();
+    next.addCommands(command);
+    this.logger.add(command);
     return this;
   }
   @Override

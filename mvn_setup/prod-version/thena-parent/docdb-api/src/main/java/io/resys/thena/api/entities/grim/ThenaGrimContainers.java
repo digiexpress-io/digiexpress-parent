@@ -29,13 +29,13 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.resys.thena.api.entities.org.ThenaOrgObjects;
 import io.resys.thena.api.envelope.ThenaContainer;
+import jakarta.annotation.Nullable;
 
 public interface ThenaGrimContainers extends ThenaContainer {
 
   @Value.Immutable
-  interface GrimMissionContainer extends ThenaOrgObjects { 
+  interface GrimMissionContainer extends ThenaGrimContainers { 
     
     Map<String, GrimMission> getMissions();    
     Map<String, GrimMissionLabel> getMissionLabels();
@@ -77,7 +77,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
   
   // world state
   @Value.Immutable
-  interface GrimProjectObjects extends ThenaOrgObjects { 
+  interface GrimProjectObjects extends ThenaGrimContainers { 
     Map<String, GrimMission>  getMissions();
     Map<String, GrimMissionLink> getLinks();
     Map<String, GrimRemark> getRemarks();
@@ -90,5 +90,13 @@ public interface ThenaGrimContainers extends ThenaContainer {
     Map<String, GrimCommitViewer> getCommitViewers();
     Map<String, GrimCommands> getCommands(); 
     
+  }
+  
+  @Value.Immutable
+  interface GrimContainerVersion extends ThenaGrimContainers {
+    String getMissionId(); 
+    String getCurrentCommitId();
+    @Nullable GrimMissionContainer getParentVersion();
+    @Nullable GrimMissionContainer getCurrentVersion();
   }
 }

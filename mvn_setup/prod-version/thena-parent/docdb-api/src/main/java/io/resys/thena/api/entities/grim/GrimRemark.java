@@ -24,12 +24,17 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import jakarta.annotation.Nullable;
 
 
 // user inputed "comment" text that can be connected to the most of entities
+@JsonSerialize(as = ImmutableGrimRemark.class)
+@JsonDeserialize(as = ImmutableGrimRemark.class)
 @Value.Immutable
 public interface GrimRemark extends IsGrimObject, TenantEntity {
   String getId();
@@ -50,6 +55,8 @@ public interface GrimRemark extends IsGrimObject, TenantEntity {
   @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_REMARK; };
   
   @Value.Immutable
+  @JsonSerialize(as = ImmutableGrimRemarkTransitives.class)
+  @JsonDeserialize(as = ImmutableGrimRemarkTransitives.class)
   interface GrimRemarkTransitives {
     String getCreatedBy(); // Transitive from commit table
     OffsetDateTime getCreatedAt(); // Transitive from commit table

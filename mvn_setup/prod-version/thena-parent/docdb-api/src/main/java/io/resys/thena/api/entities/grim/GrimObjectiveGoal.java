@@ -27,6 +27,8 @@ import java.time.OffsetDateTime;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
@@ -42,6 +44,8 @@ import jakarta.annotation.Nullable;
  *                  |
  *                  * n - goals/level-3 (sub sub task)
  */
+@JsonSerialize(as = ImmutableGrimObjectiveGoal.class)
+@JsonDeserialize(as = ImmutableGrimObjectiveGoal.class)
 @Value.Immutable
 public interface GrimObjectiveGoal extends IsGrimObject, TenantEntity {
   String getId();
@@ -62,6 +66,8 @@ public interface GrimObjectiveGoal extends IsGrimObject, TenantEntity {
   @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_OBJECTIVE_GOAL; };
   
   @Value.Immutable
+  @JsonSerialize(as = ImmutableGrimObjectiveGoalTransitives.class)
+  @JsonDeserialize(as = ImmutableGrimObjectiveGoalTransitives.class)
   interface GrimObjectiveGoalTransitives {
     @Nullable String getMissionId(); // transitive resolved using objective
     @Nullable OffsetDateTime getCreatedAt(); // Transitive from commit table

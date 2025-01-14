@@ -46,10 +46,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
   
+  private GrimMissionContainer version_1;
+  private GrimMissionContainer version_2;
+  private GrimMissionContainer version_3;
+  private GrimMissionContainer version_4;
+  private GrimMissionContainer version_5;
+  private GrimMissionContainer version_6;
+  private GrimMissionContainer version_7;
+  private GrimMissionContainer version_8;
+  private GrimMissionContainer version_9;
+  
+  
   private GrimMissionContainer createMission(TenantCommitResult repo) {
-    final var mission = getClient().grim(repo).commit()
+    final var missionId = getClient().grim(repo).commit()
         .createOneMission()
-        .commitMessage("batching tests")
+        .commitMessage("commit#1")
         .commitAuthor("jane.doe@morgue.com")
         .mission((NewMission newMission) -> {
           newMission
@@ -63,69 +74,90 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
             .addCommands(Arrays.asList(JsonObject.of("commandType", "CREATE_TASK")))
             .build();
          
-        }).build()
-        .onItem().transformToUni(resp -> {
-          final var missionId = resp.getMission().getId();
-          return getClient().grim(repo).find().missionQuery().get(missionId);
-        })
+        }).build().await().atMost(Duration.ofMinutes(1)).getMission().getId();
+        
+    version_1 =
+      getClient().grim(repo).find().missionQuery().get(missionId)  
         .onItem().transform(resp -> resp.getObjects())
-        .await().atMost(Duration.ofMinutes(1)).getMission();
-    final var missionId = mission.getId();
-    
+        .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#2")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("housing").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     
+    version_2 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
+    
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#3")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("roofing").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     
+    version_3 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
+    
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#4")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addAssignees(newAssignee -> newAssignee.assignmentType("worker").assignee("sam-from-the-mill").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
     
+    version_4 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
+    
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#5")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addAssignees(newAssignee -> newAssignee.assignmentType("worker").assignee("jane-from-the-roofing").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
-    
+    version_5 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#6")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addLink(newLink -> newLink.linkType("project-plans").linkValue("site.com/plans/1").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
-    
+    version_6 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
 
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#7")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addLink(newLink -> newLink.linkType("permits").linkValue("site.com/permits/5").build()).build())
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
-    
+    version_7 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#8")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission
@@ -135,10 +167,13 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     
     .build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
-    
+    version_8 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("creating commits for viewer")
+    .commitMessage("commit#9")
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission.addObjective(newObjective -> newObjective
@@ -164,7 +199,10 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
         
     ).build()
     .await().atMost(Duration.ofMinutes(1)).getMission();
-   
+    version_9 =
+        getClient().grim(repo).find().missionQuery().get(missionId)  
+          .onItem().transform(resp -> resp.getObjects())
+          .await().atMost(Duration.ofMinutes(1));
     
     return getClient().grim(repo).find().missionQuery().get(missionId).await().atMost(Duration.ofMinutes(1)).getObjects();
   }
@@ -213,15 +251,16 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
     }
     
     
-    { // try to get commits
+    { // DIFF VERSION 1
       final var missionId = newMission.getMission().getId();
-      final var currentState = getClient().grim(repo).find().missionQuery()
-          .get(missionId)
-          .await().atMost(Duration.ofMinutes(1));
+
       
-      final var currentVersionMinus1 = getClient().grim(repo).find().commitQuery()
-        .findPreviousCommit(missionId, currentState.getObjects().getMission().getCommitId())
+      final var version = getClient().grim(repo).find().commitQuery()
+        .findCommit(missionId, version_1.getMission().getCommitId())
         .await().atMost(Duration.ofMinutes(1));
+      
+      Assertions.assertEquals(null, version.getObjects().getParentVersion());
+      Assertions.assertEquals(version_1, version.getObjects().getCurrentVersion());
     }
     
   }

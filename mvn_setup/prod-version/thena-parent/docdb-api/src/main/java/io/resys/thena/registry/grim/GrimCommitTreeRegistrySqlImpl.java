@@ -103,6 +103,20 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
   }
   
   @Override
+  public SqlTuple findAllByMissionId(String missionId) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT tree.*, commit.mission_id as mission_id").ln()
+        .append("  FROM ").append(options.getGrimCommitTree()).append(" AS tree").ln()
+        .append("  RIGHT JOIN ").append(options.getGrimCommit()).append(" AS commit ON(commit.commit_id = tree.commit_id)").ln() 
+        .append("  WHERE commit.mission_id = $1").ln()
+        .build())
+        .props(Tuple.of(missionId))
+        .build();    
+  }
+  
+  
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimCommitTree()).ln()

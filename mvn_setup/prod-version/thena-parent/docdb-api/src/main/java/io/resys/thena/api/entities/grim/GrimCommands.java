@@ -25,10 +25,16 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
 
+
+@JsonSerialize(as = ImmutableGrimCommands.class)
+@JsonDeserialize(as = ImmutableGrimCommands.class)
 @Value.Immutable
 public interface GrimCommands extends IsGrimObject, TenantEntity {
   String getId();

@@ -23,6 +23,8 @@ package io.resys.thena.api.entities.grim;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.annotation.Nullable;
 
@@ -32,6 +34,8 @@ public interface ThenaGrimObject {
   
   //transient object to resolve one of the connections to objective/goal/remark
   @Value.Immutable
+  @JsonSerialize(as = ImmutableGrimOneOfRelations.class)
+  @JsonDeserialize(as = ImmutableGrimOneOfRelations.class)
   interface GrimOneOfRelations {
   
     @Nullable String getObjectiveId();

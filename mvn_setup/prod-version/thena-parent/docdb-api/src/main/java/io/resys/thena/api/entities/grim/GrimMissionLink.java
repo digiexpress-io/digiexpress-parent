@@ -24,11 +24,17 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
 
+
+@JsonSerialize(as = ImmutableGrimMissionLink.class)
+@JsonDeserialize(as = ImmutableGrimMissionLink.class)
 @Value.Immutable
 public interface GrimMissionLink extends IsGrimObject, TenantEntity {
   String getId();
@@ -45,7 +51,8 @@ public interface GrimMissionLink extends IsGrimObject, TenantEntity {
   
   @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_MISSION_LINKS; };
   
-  
+  @JsonSerialize(as = ImmutableGrimMissionLinkTransitives.class)
+  @JsonDeserialize(as = ImmutableGrimMissionLinkTransitives.class)
   @Value.Immutable
   interface GrimMissionLinkTransitives {
     OffsetDateTime getCreatedAt(); // Transitive from commit table

@@ -22,6 +22,7 @@ package io.resys.thena.structures.grim.modify;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
@@ -182,7 +183,8 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
   private GrimBatchMissions createRequest(GrimState tx, GrimMissionContainer container) {
     RepoAssert.isTrue(container.getMissions().size() == 1, () -> "Mission container must be grouped by missions, one mission per container!");
     
-    final var missionId =  container.getMissions().keySet().iterator().next();
+    final var mission = container.getMissions().values().iterator().next();
+    final var missionId = mission.getId();
     
     final var start = ImmutableGrimBatchMissions.builder()
         .tenantId(tenantId)
@@ -199,6 +201,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
           .commitMessage(message)
           .commitLog("")
           .createdAt(createdAt)
+          .parentCommitId(Optional.ofNullable(mission.getUpdatedTreeWithCommitId()).orElse(mission.getCommitId()))
           .build()
     );
     
