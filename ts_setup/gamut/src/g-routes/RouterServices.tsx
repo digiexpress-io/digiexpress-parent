@@ -32,8 +32,36 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
   const intl = useIntl();
 
   const [topic, setTopic] = React.useState<SiteApi.TopicView>(views['000_index']);
-  const topics = Object.values(views);
+  const handleClick: (newViewId: GUserOverviewMenuView | undefined) => void = React.useCallback((newViewId) => {
+    if (!newViewId) { // i.e. --> login/logout buttons
+      return;
+    }
+    nav({
+      from: '/secured/$locale/views/$newViewId',
+      params: { newViewId },
+      to: '/secured/$locale/views/$newViewId',
+    })
+  }, []);
 
+  const Article = React.useCallback(() => (topic ? <GArticle>{topic}</GArticle> : <></>), [topic]);
+  const Nav = React.useCallback(() => {
+    return (<Breadcrumbs>
+      <Link onClick={() => handleClick('user-overview')}>
+        <HomeIcon />
+        {intl.formatMessage({ id: 'gamut.userOverview.home' })}
+      </Link>
+      <Typography>
+        {intl.formatMessage({ id: 'gamut.services' })}
+      </Typography>
+      <Typography>
+        {topic.name}
+      </Typography>
+    </Breadcrumbs>);
+
+  }, [topic, viewId]);
+
+
+  const topics = Object.values(views);
   function handleOnTopic(topic: SiteApi.TopicView) {
     setTopic(topic)
   }
@@ -47,16 +75,6 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
       to: '/secured/$locale/views/$viewId',
     })
   }
-  function handleClick(viewId: GUserOverviewMenuView | undefined) {
-    if (!viewId) { // i.e. --> login/logout buttons
-      return;
-    }
-    nav({
-      from: '/secured/$locale/views/$viewId',
-      params: { viewId },
-      to: '/secured/$locale/views/$viewId',
-    })
-  }
 
   return (
     <GShell>
@@ -67,23 +85,7 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
       </Drawer>
       <main role='main'>
         <Container>
-          <GLayout variant='secured-1-row-1-column' slots={{
-            breadcrumbs: () => (
-              <Breadcrumbs>
-                <Link onClick={() => handleClick('user-overview')}>
-                  <HomeIcon />
-                  {intl.formatMessage({ id: 'gamut.userOverview.home' })}
-                </Link>
-                <Typography>
-                  {intl.formatMessage({ id: 'gamut.services' })}
-                </Typography>
-                <Typography>
-                  {topic.name}
-                </Typography>
-              </Breadcrumbs>
-            ),
-            left: () => (topic ? <GArticle>{topic}</GArticle> : <></>)
-          }} />
+          <GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs: Nav, left: Article }} />
         </Container>
       </main>
       <footer role='footer'>

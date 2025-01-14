@@ -48,7 +48,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   );
 
   if(pending) {
-    return (<>I'am loading...</>);
+    return (<>I'm loading...</>);
   }
 
   return (<IamBackendContext.Provider value={contextValue}>

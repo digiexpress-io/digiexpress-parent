@@ -10,14 +10,15 @@ import { GOverridableComponent } from '../g-override'
 export interface GArticleProps {
   children: SiteApi.TopicView | undefined;
   slots?: {
-    page?: React.ElementType<{ children: SiteApi.TopicView | undefined }>,
-    pageLinks?: React.ElementType<{ children: SiteApi.TopicView | undefined }>;
-    pageBottom?: React.ElementType<{ children: SiteApi.TopicView | undefined }>;
-    pageFeedback?: React.ElementType<{ children: SiteApi.TopicView | undefined }>;
+    page?: GArticleSlot,
+    pageLinks?: GArticleSlot;
+    pageBottom?: GArticleSlot;
+    pageFeedback?: GArticleSlot;
   };
   component?: GOverridableComponent<GArticleProps>;
 }
 
+export type GArticleSlot = React.ElementType<{ children: SiteApi.TopicView | undefined }>;
 
 export const GArticle: React.FC<GArticleProps> = (initProps) => {
   const props = useThemeProps({
@@ -33,10 +34,11 @@ export const GArticle: React.FC<GArticleProps> = (initProps) => {
   }
 
   const topic: SiteApi.TopicView | undefined = props.children;
-  const Page: React.ElementType<{ children: SiteApi.TopicView | undefined }> = slots?.page ?? GPage;
-  const PageLinks: React.ElementType<{ children: SiteApi.TopicView | undefined }> = slots?.pageLinks ?? GLinksPage;
-  const PageBottom: React.ElementType<{ children: SiteApi.TopicView | undefined }> = slots?.pageBottom ?? (() => <div></div>);
-  const PageFeedback: React.ElementType<{ children: SiteApi.TopicView | undefined }> = slots?.pageFeedback ?? GArticleFeedback;
+  const Page: GArticleSlot = slots?.page ?? GPage;
+  const PageLinks: GArticleSlot = slots?.pageLinks ?? GLinksPage;
+  const PageBottom: GArticleSlot = slots?.pageBottom ?? (() => <div></div>);
+  const PageFeedback: GArticleSlot = slots?.pageFeedback ?? GArticleFeedback;
+
   const Root = props.component ?? GArticleRoot;
 
   return (
