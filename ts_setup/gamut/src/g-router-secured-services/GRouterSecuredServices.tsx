@@ -18,18 +18,19 @@ import {
   GUserOverviewMenuView,
   GArticle
 } from '../';
+import { GRouterSecuredServicesBreadcrumbsRoot, GRouterSecuredServicesRoot, useUtilityClasses } from './useUtilityClasses';
 
 
 
-export interface RouterServicesProps {
+export interface GRouterSecuredServicesProps {
   locale: string;
   viewId: GUserOverviewMenuView;
-  
 }
 
-export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }) => {
+export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ locale, viewId }) => {
   const { views } = useSite();
   const intl = useIntl();
+  const classes = useUtilityClasses();
 
   const [topic, setTopic] = React.useState<SiteApi.TopicView>(views['000_index']);
   const handleClick: (newViewId: GUserOverviewMenuView | undefined) => void = React.useCallback((newViewId) => {
@@ -45,19 +46,20 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
 
   const Article = React.useCallback(() => (topic ? <GArticle>{topic}</GArticle> : <></>), [topic]);
   const Nav = React.useCallback(() => {
-    return (<Breadcrumbs>
-      <Link onClick={() => handleClick('user-overview')}>
-        <HomeIcon />
-        {intl.formatMessage({ id: 'gamut.userOverview.home' })}
-      </Link>
-      <Typography>
-        {intl.formatMessage({ id: 'gamut.services' })}
-      </Typography>
-      <Typography>
-        {topic.name}
-      </Typography>
-    </Breadcrumbs>);
-
+    const classes = useUtilityClasses();
+    return (
+      <GRouterSecuredServicesBreadcrumbsRoot className={classes.root}>
+        <Link onClick={() => handleClick('user-overview')}>
+          <HomeIcon />
+          {intl.formatMessage({ id: 'gamut.userOverview.home' })}
+        </Link>
+        <Typography>
+          {intl.formatMessage({ id: 'gamut.services' })}
+        </Typography>
+        <Typography>
+          {topic.name}
+        </Typography>
+      </GRouterSecuredServicesBreadcrumbsRoot>);
   }, [topic, viewId]);
 
 
@@ -85,7 +87,9 @@ export const RouterServices: React.FC<RouterServicesProps> = ({ locale, viewId }
       </Drawer>
       <main role='main'>
         <Container>
-          <GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs: Nav, left: Article }} />
+          <GRouterSecuredServicesRoot className={classes.root}>
+            <GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs: Nav, left: Article }} />
+          </GRouterSecuredServicesRoot>
         </Container>
       </main>
       <footer role='footer'>
