@@ -116,6 +116,7 @@ public class GrimPrinter {
         if(replacements.containsKey(id)) {
           return replacements.get(id);
         }
+
         final var next = "\"OffsetDateTime.now()\"";
         replacements.put(id, next);
         return next;
@@ -208,6 +209,8 @@ public class GrimPrinter {
         for(final var data : item.getCommands().values().stream()
             .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
             .toList()) {
+          
+          DATES.apply(data.getCreatedAt());
           result.append("  - ").append(ID.apply(data.getId())).append("::").append(data.getDocType()).append(System.lineSeparator());
         }
         

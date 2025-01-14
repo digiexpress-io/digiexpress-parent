@@ -18,6 +18,7 @@ import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
 import io.resys.thena.api.entities.grim.ImmutableGrimContainerVersion;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
@@ -163,11 +164,28 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
       tree.forEach(this::visitOperation);
       
       // build transitive data
+      visitMissionCommandTransitives(commit);
       visitMissionTransitives(commit);
       visitMissionLinkTransitives(commit);
       visitMissionRemarkTransitives(commit);
       visitMissionObjectiveTransitives(commit);
       visitMissionObjectiveGoalTransitives(commit);
+    }
+    
+    private void visitMissionCommandTransitives(GrimCommit commit) {
+      final var nextState = container.getCommands().values().stream().map(e -> {
+
+        return ImmutableGrimCommands.builder()
+            .from(e)
+            .createdAt(this.commitsById.get(e.getCommitId()).getCreatedAt())
+            .build();
+      })
+      .collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      container = ImmutableGrimMissionContainer.builder()
+          .from(container)
+          .commands(nextState)
+          .build();
     }
     
     private void visitMissionTransitives(GrimCommit commit) {

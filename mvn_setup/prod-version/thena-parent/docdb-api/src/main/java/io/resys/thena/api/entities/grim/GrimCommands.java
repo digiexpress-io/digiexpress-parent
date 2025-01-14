@@ -25,12 +25,14 @@ import java.util.List;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.resys.thena.api.entities.TenantEntity;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.IsGrimObject;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 
 @JsonSerialize(as = ImmutableGrimCommands.class)
@@ -39,7 +41,7 @@ import io.vertx.core.json.JsonObject;
 public interface GrimCommands extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();
-  OffsetDateTime getCreatedAt(); // transitive from commit
+  @JsonIgnore @Nullable OffsetDateTime getCreatedAt(); // transitive from commit
   String getMissionId();
   List<JsonObject> getCommands();
   
