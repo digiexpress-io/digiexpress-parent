@@ -1,4 +1,4 @@
-import { Breadcrumbs, generateUtilityClass, styled } from "@mui/material";
+import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import city1 from './city1.jpg'
 
@@ -51,22 +51,3 @@ export const GRouterUnsecuredRoot = styled("div", {
     }
   }
 });
-
-
-export const GRouterUnsecuredBreadcrumbsRoot = styled(Breadcrumbs, {
-  name: MUI_NAME,
-  slot: 'UnsecuredBreadcrumbsRoot',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-})(({ theme }) => {
-  return {
-
-  }
-});
-
-
-
-
