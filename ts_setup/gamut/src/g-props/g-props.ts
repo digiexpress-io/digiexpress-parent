@@ -6,6 +6,7 @@ import { GLogoClassKey, GLogoProps } from '../g-logo';
 import { GAppBarClassKey, GAppBarProps } from '../g-app-bar';
 import { GArticleClassKey, GArticleProps } from '../g-article';
 import { GArticleFeedbackClassKey, GArticleFeedbackProps } from '../g-article-feedback';
+import { GArticleFeedbackViewerClassKey, GArticleFeedbackViewerProps } from '../g-article-feedback-viewer';
 
 
 import { GPopoverButtonClassKey, GPopoverButtonProps } from '../g-popover-button';
@@ -119,6 +120,7 @@ export interface GComponentsPropsList {
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
   GArticleFeedback: GArticleFeedbackProps;
+  GArticleFeedbackViewer: GArticleFeedbackViewerProps;
   GBookings: GBookingsProps;
 
   GPopoverButton: GPopoverButtonProps;
@@ -202,6 +204,7 @@ export interface GComponentNameToClassKey {
   GAppBar: GAppBarClassKey;
   GArticle: GArticleClassKey;
   GArticleFeedback: GArticleFeedbackClassKey;
+  GArticleFeedbackViewer: GArticleFeedbackViewerClassKey;
   GBookings: GBookingsClassKey;
   GPopoverButton: GPopoverButtonClassKey;
   GPopoverSearch: GPopoverSearchClassKey;
@@ -357,6 +360,11 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GArticleFeedback'];
     styleOverrides?: GComponentsOverrides<Theme>['GArticleFeedback'];
     variants?: GComponentsVariants['GArticleFeedback'];
+  },
+  GArticleFeedbackViewer?: {
+    defaultProps?: GComponentsProps['GArticleFeedbackViewer'];
+    styleOverrides?: GComponentsOverrides<Theme>['GArticleFeedbackViewer'];
+    variants?: GComponentsVariants['GArticleFeedbackViewer'];
   },
   GBookings?: {
     defaultProps?: GComponentsProps['GBookings'];

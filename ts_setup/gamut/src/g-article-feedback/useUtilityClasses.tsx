@@ -23,7 +23,6 @@ export const useUtilityClasses = (ownerState: GArticleFeedbackProps) => {
     noData: ['noData'],
     toolbar: ['toolbar'],
     vote: ['vote'],
-    feedbackViewer: ['feedbackViewer']
   };
 
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -87,10 +86,6 @@ export const GArticleFeedbackRoot = styled("div", {
       alignItems: 'center',
       justifyContent: 'end',
       gap: theme.spacing(1)
-    },
-
-    '& .GArticleFeedback-feedbackViewer': {
-
     },
   };
 });

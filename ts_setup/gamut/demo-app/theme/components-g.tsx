@@ -191,6 +191,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GAppBar: {},
   GArticle: {},
+  GArticleFeedbackViewer: {},
   GBookings: {},
 
   GPopoverTopics: {},

@@ -9,6 +9,9 @@ export * from './g-popover-topics'
 
 export * from './g-confirm'
 
+export * from './g-article-feedback';
+export * from './g-article-feedback-viewer';
+
 export * from './g-props'
 export * from './g-app-bar'
 export * from './g-divider'

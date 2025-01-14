@@ -10,7 +10,8 @@ import { GFeedbackTableArticleReducer } from './GArticleFeedbackTableReducer';
 import { useUtilityClasses, GArticleFeedbackRoot, MUI_NAME } from './useUtilityClasses';
 import { GArticleFeedbackTableHead } from './GArticleFeedbackTableHead';
 import { GArticleFeedbackTableToolbar } from './GArticleFeedbackTableToolbar';
-import { GArticleFeedbackViewer } from './GArticleFeedbackViewer';
+import { GArticleFeedbackViewer } from '../g-article-feedback-viewer';
+
 import { DateTime } from 'luxon';
 import { useLocale } from '../api-locale';
 
@@ -107,7 +108,7 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
   return (<>
     {
       ownerState.isViewFeedback && ownerState.feedbackId &&
-      <GArticleFeedbackViewer className={classes.feedbackViewer} feedbackId={ownerState.feedbackId} onClose={() => setSelectedFeedback(undefined)} />
+      <GArticleFeedbackViewer feedbackId={ownerState.feedbackId} onClose={() => setSelectedFeedback(undefined)} />
     }
     <Root ownerState={ownerState} className={classes.root}>
       <GArticleFeedbackTableToolbar className={classes.toolbar} />
