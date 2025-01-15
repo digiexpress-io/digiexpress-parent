@@ -32,11 +32,14 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)!
   const anonymousUser = anon.authType === 'ANON';
+  const allowed = true;
+
   const ownerState = {
     topic,
     topicLink,
     anonymousUser,
-    locale: props.locale
+    locale: props.locale,
+    allowed
   }
 
   return (
@@ -74,6 +77,7 @@ interface GRouterProductOwnerState {
     topic: SiteApi.TopicView;
     topicLink: SiteApi.TopicLink;
     anonymousUser: boolean;
+    allowed: boolean;
     locale: string;
   }
 }
@@ -82,11 +86,10 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   const nav = useNavigate();
   const offers = useOffers();
   const intl = useIntl();
-  const anon = useIam();
 
-  const { topicLink, topic, locale } = props.ownerState;
+  const { topicLink, topic, locale, anonymousUser, allowed } = props.ownerState;
   const productId = topicLink.id;
-  const anonymousUser = anon.authType === 'ANON';
+
 
   // article links
   const parentPageId = topic.parent?.id ?? undefined;
@@ -111,16 +114,23 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
 
   function handleCreateOffer() {
     offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
-      nav({
-        params: { locale, pageId, productId, offerId: offer.id },
-        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
-      })
+      if(anonymousUser) {
+        nav({
+          params: { locale, pageId, productId, offerId: offer.id },
+          to: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
+        })
+      } else {
+        nav({
+          params: { locale, pageId, productId, offerId: offer.id },
+          to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+        })
+      }
     })
   }
 
   return (<>
     <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
-    <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
+    { allowed && <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button> }
   </>)
 }
 

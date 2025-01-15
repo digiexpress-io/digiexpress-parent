@@ -32,5 +32,5 @@ import lombok.Data;
 public class EveliPropsGamut {  
   private Boolean enabled;
   private String anonymousUserId;
-  private List<String> allowedActions;
+  private List<String> anonForms;
 }

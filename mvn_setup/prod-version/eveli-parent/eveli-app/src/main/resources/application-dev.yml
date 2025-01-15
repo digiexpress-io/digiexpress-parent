@@ -35,6 +35,9 @@ spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli-app"
 spring.datasource.username: "eveli-app"
 spring.datasource.password: "password123"
 
+# gamut config
+eveli.gamut.anon-forms: palautteet
+
 eveli.task.adminsearch: true
 eveli.assets.timezoneOffset: +2
 eveli.assets.importDeployment: /Users/olevmutso/Development/init_v_1-3.json

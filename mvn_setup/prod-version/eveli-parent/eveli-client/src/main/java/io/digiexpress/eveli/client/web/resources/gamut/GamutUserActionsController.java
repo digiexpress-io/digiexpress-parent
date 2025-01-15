@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.Duration;
+import java.util.Collections;
 
 /*-
  * #%L
@@ -87,7 +88,10 @@ public class GamutUserActionsController {
     List<String> getAllowedProcessNames();
   }
   
-
+  @GetMapping(value="/allowed")
+  public List<String> getAllowed() {
+    return Collections.emptyList(); // not used for logged in user
+  }
   @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
     return dialob.createProxy().sessionGet(sessionId);

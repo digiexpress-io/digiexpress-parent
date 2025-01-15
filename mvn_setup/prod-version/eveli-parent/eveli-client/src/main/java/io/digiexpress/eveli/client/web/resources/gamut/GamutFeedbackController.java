@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.Duration;
+import java.util.Collections;
 
 /*-
  * #%L
@@ -81,15 +82,28 @@ public class GamutFeedbackController {
     return allowedActions;
   }
   
+  @GetMapping
+  public List<UserAction> getActions() {
+    return Collections.emptyList(); // not keeping unauthenticated actions
+  }
+  
+  @PostMapping
   public ResponseEntity<UserAction> kindOfCreateAction(
       @RequestParam("actionId") String actionId,
       @RequestParam("inputContextId") String inputContextId,
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
     
-
-    if(!allowedActions.contains(actionId)) {
-      throw new org.springframework.security.access.AccessDeniedException("actionId: " + actionId + ", not allowed!, Allowed: " + allowedActions + "!");
+    final var meta = gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale).getOne();
+    final var workflow = meta.getWorkflow();
+    final var stencilService = meta.getTopicLink();
+    
+    if(!(
+        allowedActions.contains(workflow.getName()) || 
+        allowedActions.contains(actionId) ||
+        allowedActions.contains(stencilService.getName())
+     )) {
+      throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!, Allowed: " + allowedActions + "!");
     }
     
     try {

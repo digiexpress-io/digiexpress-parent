@@ -14,20 +14,22 @@ export const OfferProvider: React.FC<{
   createOffer: OfferApi.CreateOfferFetchPOST;
   getOffers: OfferApi.GetOffersFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
+  getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }> = (props) => {
   const data = usePopulateContext(props);
-
 
   return React.useMemo(() => {
 
     const contextValue: OfferApi.OfferContextType = {
       offers: data.offers,
       isPending: data.isPending,
+      allowedOffers: data.allowedOffers,
+      
       getOffer: (id) => data.offers.find((offer) => offer.id === id),
       refresh: data.refresh,
       createOffer: data.createOffer,
       cancelOffer: data.cancelOffer,
-      getLocalisedOfferName: data.getLocalisedOfferName
+      getLocalisedOfferName: data.getLocalisedOfferName,
     };
 
     return (<OfferContext.Provider value={contextValue}>{props.children}</OfferContext.Provider>);

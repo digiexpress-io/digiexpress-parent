@@ -40,9 +40,12 @@ export declare namespace OfferApi {
   export type CreateOfferFetchPOST = (request: OfferRequest) => Promise<Response>;
   export type GetOffersFetchGET = () => Promise<Response>;
   export type CancelOfferFetchDELETE = (request: Offer) => Promise<Response>;
+  export type GetAllowedOffersFetchGET = () => Promise<Response>;
+
 
   export interface OfferContextType {
     offers: readonly Offer[];
+    allowedOffers: string[];
     isPending: boolean;
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;

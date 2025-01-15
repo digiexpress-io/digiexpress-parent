@@ -29,7 +29,9 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +49,13 @@ public interface GamutClient {
   AttachmentDownloadQuery attachmentDownloadQuery();
   CancelUserActionBuilder cancelUserActionBuilder();
   UserActionFillEventBuilder fillEvent();
+  UserActionMetaQuery userActionMetaQuery();
   
+  interface UserActionMetaQuery {
+    UserActionMetaQuery locale(String locale);
+    UserActionMetaQuery actionId(String actionId);
+    UserActionMeta getOne();
+  }
   
   interface UserActionFillEventBuilder {
     UserActionFillEventBuilder sessionId(String sessionId);
@@ -98,6 +106,19 @@ public interface GamutClient {
     Uni<UserAction> createOne();
   }
   
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableUserActionMeta.class)
+  @JsonDeserialize(as = ImmutableUserActionMeta.class)
+  interface UserActionMeta {
+    String getActionId();
+    Workflow getWorkflow();
+    TopicLink getTopicLink();
+    @Nullable Long getExpiresInSeconds();
+    
+    
+    String getStencilTagName();
+    String getWorkflowTagName();
+  }
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableUserAttachmentUploadInit.class)

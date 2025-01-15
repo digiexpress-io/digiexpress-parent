@@ -133,4 +133,9 @@ public class GamutClientImpl implements GamutClient {
       }
     };
   }
+
+  @Override
+  public UserActionMetaQuery userActionMetaQuery() {
+    return new UserActionMetaQueryImpl(siteEnvir, programEnvir, workflowEnvir, offset);
+  }
 }

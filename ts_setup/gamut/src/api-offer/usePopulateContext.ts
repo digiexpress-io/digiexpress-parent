@@ -14,11 +14,13 @@ export interface UsePropulateProps {
   createOffer: OfferApi.CreateOfferFetchPOST;
   getOffers: OfferApi.GetOffersFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
+  getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }
 
 export interface PopulateOfferContext {
   offers: readonly OfferApi.Offer[];
   isPending: boolean;
+  allowedOffers: string[];
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
   getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
@@ -28,18 +30,17 @@ export interface PopulateOfferContext {
 export function usePopulateContext(props: UsePropulateProps): PopulateOfferContext {
   const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
-  const { getOffers, options } = props;
+  const { getOffers, getAllowedOffers, options } = props;
   const { staleTime, queryKey } = options;
 
   // tanstack query config
-  const { data: processes, error, refetch, isPending } = useQuery({
+  const { data, error, refetch, isPending } = useQuery({
     staleTime,
     queryKey: [queryKey],
-    queryFn: () => getOffers()
-      .then(data => data.json())
-      .then((data: LegacyProcessApi.Process[]) => {
-        return data;
-      }),
+    queryFn: () =>  Promise.all([
+      getOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data),
+      getAllowedOffers().then(data => data.json()).then((data: string[]) => data),
+    ])
   });
 
   // Get the offer (form) name based on the topic link
@@ -63,6 +64,9 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   }, [refetch]);
 
 
+  const processes = data?.[0];
+  const allowedOffers = data?.[1];
+
   // track initial loading
   React.useEffect(() => {
     if (isInitialLoadDone) {
@@ -76,8 +80,6 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   const isContextLoaded = (isInitialLoadDone || !isPending);
   const offerData = mapToOfferData(processes ?? [], site);
 
-
-
     // Cancel offer
     const cancelOffer: (offerId: OfferApi.OfferId) => Promise<void> = React.useCallback(async (offerId) => {
       const offer: OfferApi.Offer = offerData.offers.find(o => o.id === offerId)!;
@@ -90,6 +92,6 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // cache the end result
   return React.useMemo(() => {
-    return { offers: offerData?.offers ?? [], isPending: !isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName };
-  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName]);
+    return { allowedOffers: allowedOffers ?? [], offers: offerData?.offers ?? [], isPending: !isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName };
+  }, [offerData?.hash, allowedOffers, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName]);
 }

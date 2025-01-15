@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import java.time.Instant;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -85,14 +83,25 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   }
   
   private UserAction createUserAction(Sites site) {
+    
+    final var meta = new UserActionMetaQueryImpl(siteEnvir, programEnvir, workflowEnvir, offset).actionId(actionId).locale(clientLocale).getOne();
+    final var workflow = meta.getWorkflow();
+    final var stencilService = meta.getTopicLink();
+    final var expiresInSeconds = meta.getExpiresInSeconds();
+    
     if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
       final var userRoles = auth.getCustomerRoles().getRoles();  
       final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
-          .build());
+          .build()).getAllowedProcessNames();
       
-       if(!allowed.getAllowedProcessNames().contains(actionId)) {
-         throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed.getAllowedProcessNames() + "!");
+      
+       if(!(
+           allowed.contains(workflow.getName()) || 
+           allowed.contains(actionId) ||
+           allowed.contains(stencilService.getName())
+        )) {
+         throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
        }
     }
     
@@ -104,31 +113,6 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    final var stencilSite = siteEnvir.get();
-    final var stencilService = stencilSite.getSites().get(clientLocale).getLinks().get(actionId);
-    
-    
-    if(stencilService == null) {
-      throw new WorkflowNotFoundException(new StringBuilder()
-          .append("Can't find stencil service by id: '").append(actionId).append("'!")
-          .toString());
-    }
-
-    final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS.between(Instant.now().atOffset(offset).toLocalDateTime(), stencilService.getEndDate());
-    if(expiresInSeconds != null && expiresInSeconds <= 0) {
-      throw new WorkflowNotFoundException(new StringBuilder()
-          .append("Can't find stencil service by id: '").append(actionId).append("'!")
-          .toString());
-    }
-    
-    final var wkEnvir = workflowEnvir.get();
-    final Workflow workflow = wkEnvir.getEntries().stream()
-        .filter(w -> w.getName().equals(stencilService.getValue()))
-        .findFirst()
-        .orElseThrow(() -> new WorkflowNotFoundException(new StringBuilder()
-        .append("Can't find workflow by name: '").append(clientLocale).append("'!")
-        .toString()));
-    
     final var sessionId = visitForm(request, workflow).getId();
     
     final var process = hdesCommands.createInstance()
@@ -144,10 +128,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .formName(workflow.getFormName())
         
         .formTagName(workflow.getFormTag())
-        .stencilTagName(stencilSite.getTagName())
+        .stencilTagName(meta.getStencilTagName())
         .wrenchTagName(programEnvir.get().getTagName())
-        .workflowTagName(wkEnvir.getName())
-        
+        .workflowTagName(meta.getWorkflowTagName())
         
         .create();
 

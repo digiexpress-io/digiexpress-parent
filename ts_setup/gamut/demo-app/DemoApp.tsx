@@ -24,7 +24,8 @@ import {
   createOfferFetch,
   createSiteFetch,
   createSubjectFetch,
-  createAuthFeedbackFetch
+  createAuthFeedbackFetch,
+  createPublicOfferFetch
 } from './fetch';
 
 const staleTime = 5 * 1000;
@@ -35,6 +36,7 @@ const iamFetch = createIamFetch();
 const siteFetch = createSiteFetch();
 const dialobFetch = createDialobFetch();
 const offerFetch = createOfferFetch();
+const publicOfferFetch = createPublicOfferFetch();
 const contractFetch = createContractFetch();
 const subjectFetch = createSubjectFetch();
 const bookingFetch = createBookingFetch();
@@ -48,7 +50,7 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
 
       <DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
-      <OfferProvider cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+      <OfferProvider getAllowedOffers={offerFetch.fetchAllowedGet}  cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
         <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
             <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
@@ -67,7 +69,9 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       fetchSiteGet={siteFetch.fetchSiteGet}
       fetchFeedbackGet={siteFetch.fetchFeedbackGet}
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
-      {children}
+      <OfferProvider getAllowedOffers={publicOfferFetch.fetchAllowedGet} cancelOffer={publicOfferFetch.fetchDelete} createOffer={publicOfferFetch.fetchPost} getOffers={publicOfferFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+        {children}
+      </OfferProvider>
     </SiteBackendProvider>
   )
 }
