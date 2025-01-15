@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar, Alert } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SaveIcon from '@mui/icons-material/Save';
 import {
@@ -132,15 +132,14 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   }
 
   return (<>
-    <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
-    { allowed && <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button> }
+      <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
+      <Button variant='contained' disabled={!allowed} onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
   </>)
 }
 
 const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
-  const { topicLink } = props.ownerState;
+  const { topicLink, allowed } = props.ownerState;
   const intl = useIntl();
-
   const classes = useUtilityClasses();
 
   return (
@@ -155,6 +154,14 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
             <Typography className={classes.productBodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.start.info1' })}</Typography>
           </ListItemText>
         </ListItem>
+        { !allowed && (
+        <ListItem>
+          <ListItemText>
+            <Alert severity='error'>
+              <Typography className={classes.productBodyTextError}>{intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}</Typography>
+            </Alert>
+          </ListItemText>
+        </ListItem>)}
       </List>
     </GRouterProductTitleRoot>
   )

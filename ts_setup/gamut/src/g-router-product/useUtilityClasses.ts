@@ -21,7 +21,8 @@ export const useUtilityClasses = () => {
     root: ['root'],
     productTitle: ['productTitle'],
     productSubTitle: ['productSubTitle'],
-    productBodyText: ['productBodyText']
+    productBodyText: ['productBodyText'],
+    productBodyTextError: ['productBodyTextError']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -55,6 +56,10 @@ export const GRouterProductRoot = styled("div", {
     '.GRouterProduct-productBodyText': {
       ...theme.typography.body1
     },
+    '.GRouterProduct-productBodyTextError': {
+
+    },
+    
   }
 });
 
