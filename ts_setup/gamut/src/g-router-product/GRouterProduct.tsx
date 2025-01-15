@@ -30,10 +30,10 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const site = useSite();
 
   const topic = site.views[props.pageId];
-  const topicLink = topic.links.find(l => l.id === props.productId)!
+  const topicLink = topic.links.find(l => l.id === props.productId)
   const anonymousUser = anon.authType === 'ANON';
-  const allowed = true;
-
+  const anonLink: boolean =  anonymousUser && topicLink?.anon === true;
+  const allowed: boolean = (!anonymousUser || anonLink) && !!topicLink;
   const ownerState = {
     topic,
     topicLink,
@@ -41,7 +41,6 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
     locale: props.locale,
     allowed
   }
-
   return (
     <GShell drawerOpen={false}>
       <Toolbar className={GShellClassName} >
@@ -75,7 +74,7 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
 interface GRouterProductOwnerState {
   ownerState: {
     topic: SiteApi.TopicView;
-    topicLink: SiteApi.TopicLink;
+    topicLink: SiteApi.TopicLink | undefined;
     anonymousUser: boolean;
     allowed: boolean;
     locale: string;
@@ -88,7 +87,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   const intl = useIntl();
 
   const { topicLink, topic, locale, anonymousUser, allowed } = props.ownerState;
-  const productId = topicLink.id;
+  const productId = topicLink?.id;
 
 
   // article links
@@ -113,11 +112,15 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   }
 
   function handleCreateOffer() {
+    if(!productId) {
+      return;
+    }
+
     offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
       if(anonymousUser) {
         nav({
-          params: { locale, pageId, productId, offerId: offer.id },
-          to: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
+          params: { locale, pageId },
+          to: '/public/$locale/pages/$pageId',
         })
       } else {
         nav({
@@ -143,7 +146,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   return (
     <GRouterProductTitleRoot>
       <Typography className={classes.productTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.welcome' })}</Typography>
-      <Typography className={classes.productSubTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink.name}</Typography>
+      <Typography className={classes.productSubTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink?.name ?? "-"}</Typography>
 
       <List disablePadding dense>
         <ListItem>
@@ -191,7 +194,7 @@ const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
         {topic.name}
       </Typography>
       <Typography>
-        {topicLink.name}
+        {topicLink?.name ?? "-"}
       </Typography>
     </GRouterProductBreadcrumbsRoot>)
 }
@@ -219,7 +222,7 @@ const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
         {topic.name}
       </Typography>
       <Typography>
-        {topicLink.name}
+        {topicLink?.name ?? "-"}
       </Typography>
     </GRouterProductAnonBreadcrumbsRoot>)
 }

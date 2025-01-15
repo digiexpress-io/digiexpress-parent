@@ -173,6 +173,7 @@ export declare namespace StencilApi {
       value: string,
       labels: LocaleLabel[],
       devMode?: boolean,
+      anon?: boolean,
       startDate?: string | undefined,
       endDate?: string | undefined,
     }
@@ -184,6 +185,7 @@ export declare namespace StencilApi {
     articles: ArticleId[] | undefined,
     labels: LocaleLabel[] | undefined,
     devMode: boolean | undefined,
+    anon: boolean | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
   }
@@ -243,6 +245,7 @@ export declare namespace StencilApi {
     labels: LocaleLabel[];
     articles: ArticleId[];
     devMode: boolean | undefined;
+    anon: boolean | undefined;
     startDate?: string | undefined;
     endDate?: string | undefined;
   }

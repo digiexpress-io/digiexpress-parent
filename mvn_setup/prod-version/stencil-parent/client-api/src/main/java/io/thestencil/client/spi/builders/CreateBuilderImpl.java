@@ -280,6 +280,7 @@ public class CreateBuilderImpl implements CreateBuilder {
     final var gid = client.getStore().gid(EntityType.WORKFLOW);
     final var workflow = ImmutableWorkflow.builder()
         .devMode(init.getDevMode())
+        .anon(Boolean.TRUE.equals(init.getAnon()))
         .value(init.getValue())
         .startDate(init.getStartDate())
         .endDate(init.getEndDate());

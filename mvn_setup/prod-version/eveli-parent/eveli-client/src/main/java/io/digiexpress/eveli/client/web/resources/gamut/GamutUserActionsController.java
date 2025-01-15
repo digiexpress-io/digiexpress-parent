@@ -1,7 +1,6 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
 import java.time.Duration;
-import java.util.Collections;
 
 /*-
  * #%L
@@ -48,13 +47,13 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
 import io.digiexpress.eveli.client.api.GamutClient;
-import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentDownloadUrl;
 import io.digiexpress.eveli.client.api.GamutClient.AttachmentUploadUrlException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessCantBeDeletedException;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
+import io.digiexpress.eveli.client.api.GamutClient.UserActionAttachment;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAttachmentUploadInit;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
@@ -86,11 +85,6 @@ public class GamutUserActionsController {
   interface AuthorizationAction {
     List<String> getUserRoles();
     List<String> getAllowedProcessNames();
-  }
-  
-  @GetMapping(value="/allowed")
-  public List<String> getAllowed() {
-    return Collections.emptyList(); // not used for logged in user
   }
   @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {

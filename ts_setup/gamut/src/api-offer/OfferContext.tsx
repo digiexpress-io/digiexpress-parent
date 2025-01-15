@@ -15,7 +15,6 @@ export const OfferProvider: React.FC<{
   getAllOffers: OfferApi.GetOffersFetchGET;
   getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
-  getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }> = (props) => {
   const data = usePopulateContext(props);
 
@@ -24,7 +23,6 @@ export const OfferProvider: React.FC<{
     const contextValue: OfferApi.OfferContextType = {
       offers: data.offers,
       isPending: data.isPending,
-      allowedOffers: data.allowedOffers,
       
       getOffer: (id) => data.offers.find((offer) => offer.id === id),
       refresh: data.refresh,

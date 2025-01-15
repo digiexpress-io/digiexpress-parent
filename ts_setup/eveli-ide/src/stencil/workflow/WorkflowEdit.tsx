@@ -25,6 +25,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [startdate, setStartdate] = React.useState<string>(workflow.body.startDate ?? '');
   const [enddate, setEnddate] = React.useState<string>(workflow.body.endDate ?? '');
 
+  const [anon, setAnon] = React.useState(workflow.body.anon);
   const [devMode, setDevMode] = React.useState(workflow.body.devMode);
   const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>(workflow.body.articles);
   const [technicalname, setTechnicalname] = React.useState(workflow.body.value);
@@ -33,12 +34,11 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
   const handleCreate = () => {
-    var offset = new Date().getTimezoneOffset();
-    console.log(offset);
     const entity: StencilApi.WorkflowMutator = { 
       workflowId: workflow.id, 
       value: technicalname, 
       articles: articleId, 
+      anon: anon,
       labels, devMode,
       startDate: startdate ? startdate + ":00" : undefined,
       endDate: enddate ? enddate + ":00": undefined,
@@ -84,6 +84,8 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
         <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
 
+
+
           <Box display="flex">
             <Box flexGrow={1}>
               <Burger.TextField label='services.technicalname' helperText='services.technicalname.description'
@@ -92,6 +94,12 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
                 onChange={setTechnicalname} />
             </Box>
             <Box maxWidth="50%" sx={{ ml: 1 }}>
+              <Burger.Switch
+                checked={anon ? anon : false}
+                onChange={setAnon}
+                helperText={"services.anonmode.helper"}
+                label={"services.anonmode"}
+              />
               <Burger.Switch
                 checked={devMode ? devMode : false}
                 onChange={setDevMode}

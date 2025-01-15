@@ -3,14 +3,14 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "78dbc39e08c171ecedb3d997a98d17e4",
+      "id" : "a6beee0b617bfc1abf5207898903dd37",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
         "000_test-article" : {
           "id" : "000_test-article",
           "name" : "Header 1",
-          "links" : [ "3047608d3761989a2c6ea71cf7cc3ef0", "0d53af3ab209110e87307ff22e90900d" ],
+          "links" : [ "1e1faf180a0118dd54e7a2c30fc145c6", "1da109ba642e1ffd850ea556d836d698" ],
           "headings" : [ {
             "id" : "1",
             "name" : "# Header 1",
@@ -28,25 +28,27 @@
         }
       },
       "links" : {
-        "0d53af3ab209110e87307ff22e90900d" : {
-          "id" : "0d53af3ab209110e87307ff22e90900d",
+        "1da109ba642e1ffd850ea556d836d698" : {
+          "id" : "1da109ba642e1ffd850ea556d836d698",
           "path" : "000_test-article",
           "type" : "workflow",
           "name" : "cool name",
           "value" : "workflow name",
           "global" : true,
           "workflow" : true,
+          "anon" : false,
           "startDate" : null,
           "endDate" : null
         },
-        "3047608d3761989a2c6ea71cf7cc3ef0" : {
-          "id" : "3047608d3761989a2c6ea71cf7cc3ef0",
+        "1e1faf180a0118dd54e7a2c30fc145c6" : {
+          "id" : "1e1faf180a0118dd54e7a2c30fc145c6",
           "path" : "000_test-article",
           "type" : "internal",
           "name" : "description",
           "value" : "www.example.com",
           "global" : false,
           "workflow" : false,
+          "anon" : true,
           "startDate" : null,
           "endDate" : null
         }

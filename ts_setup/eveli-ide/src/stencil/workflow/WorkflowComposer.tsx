@@ -20,6 +20,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   let articleSelectOpen: boolean | undefined;
 
+  const [anon, setAnon] = React.useState<boolean>(false);
   const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>([]);
   const [technicalname, setTechnicalname] = React.useState('');
   const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>([]);
@@ -30,7 +31,11 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleCreate = () => {
     const entity: StencilApi.CreateWorkflow = { 
-      value: technicalname, articles: articleId, devMode, labels,
+      value: technicalname, 
+      articles: articleId, 
+      devMode, 
+      labels,
+      anon,
       startDate: startdate ? startdate + ":00" : undefined,
       endDate: enddate ? enddate + ":00": undefined,
      };
@@ -83,6 +88,13 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 onChange={setTechnicalname} />
             </Box>
             <Box maxWidth="50%" sx={{ ml: 1 }}>
+             <Burger.Switch
+                checked={anon ? anon : false}
+                onChange={setAnon}
+                helperText={"services.anonmode.helper"}
+                label={"services.anonmode"}
+              />
+
               <Burger.Switch
                 checked={devMode}
                 helperText="services.devmode.helper"

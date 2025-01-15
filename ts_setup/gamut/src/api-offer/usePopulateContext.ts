@@ -15,13 +15,11 @@ export interface UsePropulateProps {
   getAllOffers: OfferApi.GetOffersFetchGET;
   getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
-  getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }
 
 export interface PopulateOfferContext {
   offers: readonly OfferApi.Offer[];
   isPending: boolean;
-  allowedOffers: string[];
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
   fetchOffer: (offerId: string) => Promise<OfferApi.Offer>;
@@ -32,17 +30,14 @@ export interface PopulateOfferContext {
 export function usePopulateContext(props: UsePropulateProps): PopulateOfferContext {
   const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
-  const { getAllOffers, getOneOffer, getAllowedOffers, options } = props;
+  const { getAllOffers, getOneOffer, options } = props;
   const { staleTime, queryKey } = options;
 
   // tanstack query config
-  const { data, error, refetch, isPending } = useQuery({
+  const { data: processes, error, refetch, isPending } = useQuery({
     staleTime,
     queryKey: [queryKey],
-    queryFn: () =>  Promise.all([
-      getAllOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data),
-      getAllowedOffers().then(data => data.json()).then((data: string[]) => data),
-    ])
+    queryFn: () => getAllOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data)
   });
 
   // Get the offer (form) name based on the topic link
@@ -71,8 +66,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   }, [refetch]);
 
 
-  const processes = data?.[0];
-  const allowedOffers = data?.[1];
+
 
   // track initial loading
   React.useEffect(() => {
@@ -100,9 +94,8 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   // cache the end result
   return React.useMemo(() => {
     return { 
-      allowedOffers: allowedOffers ?? [], 
       offers: offerData?.offers ?? [], 
       isPending: !isContextLoaded, 
       createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer };
-  }, [offerData?.hash, allowedOffers, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer]);
+  }, [offerData?.hash, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer]);
 }

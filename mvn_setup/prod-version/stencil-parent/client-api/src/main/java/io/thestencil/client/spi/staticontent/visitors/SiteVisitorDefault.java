@@ -260,6 +260,7 @@ public class SiteVisitorDefault implements SiteVisitor {
           .type(link.getType())
           .name(link.getName())
           .value(link.getValue())
+          .anon(link.getAnon())
           .workflow(link.getWorkflow())
           .startDate(link.getStartDate())
           .endDate(link.getEndDate())

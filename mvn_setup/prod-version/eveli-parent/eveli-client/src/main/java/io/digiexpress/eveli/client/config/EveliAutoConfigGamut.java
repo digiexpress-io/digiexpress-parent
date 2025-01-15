@@ -79,8 +79,7 @@ public class EveliAutoConfigGamut {
   
   @Bean
   public GamutFeedbackController gamutFeedbackController(EveliPropsGamut props, GamutClient gamutClient, DialobClient dialobClient) {
-    final List<String> allowedActions = props.getAnonForms() == null ? Collections.emptyList() : props.getAnonForms();
-    return new GamutFeedbackController(gamutClient, dialobClient, allowedActions);
+    return new GamutFeedbackController(gamutClient, dialobClient);
   }
 
   @Bean

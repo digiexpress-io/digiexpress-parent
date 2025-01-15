@@ -127,6 +127,10 @@ public interface UpdateBuilder {
     Boolean getDevMode();
     
     @Nullable
+    Boolean getAnon();
+    
+    
+    @Nullable
     LocalDateTime getStartDate();
     @Nullable
     LocalDateTime getEndDate();

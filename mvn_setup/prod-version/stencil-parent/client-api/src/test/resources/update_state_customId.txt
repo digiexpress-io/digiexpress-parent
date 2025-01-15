@@ -206,10 +206,10 @@ Blobs
   - 44: {"id":"PAGE-8","body":{"locale":"LOCALE-6","article":"ARTICLE-2","content":"# English content"},"type":"PAGE"}
   - 45: {"id":"PAGE-9","body":{"locale":"LOCALE-7","article":"ARTICLE-2","content":"# Finnish content"},"type":"PAGE"}
   - 46: {"id":"LINK-10","body":{"value":"www.example.com","labels":[{"locale":"LOCALE-6","labelValue":"click me"}],"articles":[],"contentType":"internal"},"type":"LINK"}
-  - 47: {"id":"WORKFLOW-11","body":{"value":"Form1","labels":[{"locale":"LOCALE-6","labelValue":"firstForm"}],"articles":[]},"type":"WORKFLOW"}
+  - 47: {"id":"WORKFLOW-11","body":{"anon":false,"value":"Form1","labels":[{"locale":"LOCALE-6","labelValue":"firstForm"}],"articles":[]},"type":"WORKFLOW"}
   - 48: {"id":"TEMPLATE-1","body":{"name":"new name","type":"PAGE","content":"cool content","description":"description"},"type":"TEMPLATE"}
   - 49: {"id":"ARTICLE-2","body":{"name":"Revised Article1","order":300,"parentId":null},"type":"ARTICLE"}
   - 50: {"id":"LOCALE-6","body":{"value":"gb","enabled":false},"type":"LOCALE"}
   - 51: {"id":"PAGE-8","body":{"locale":"LOCALE-6","article":"ARTICLE-2","content":"new content for page1"},"type":"PAGE"}
   - 52: {"id":"LINK-10","body":{"value":"www.wikipedia.com","labels":[{"locale":"LOCALE-7","labelValue":"Don't click me"}],"articles":["ARTICLE-2"],"contentType":"external"},"type":"LINK"}
-  - 53: {"id":"WORKFLOW-11","body":{"value":"revision of firstForm","labels":[{"locale":"LOCALE-7","labelValue":"First form part 2"}],"articles":[]},"type":"WORKFLOW"}
+  - 53: {"id":"WORKFLOW-11","body":{"anon":false,"value":"revision of firstForm","labels":[{"locale":"LOCALE-7","labelValue":"First form part 2"}],"articles":[]},"type":"WORKFLOW"}

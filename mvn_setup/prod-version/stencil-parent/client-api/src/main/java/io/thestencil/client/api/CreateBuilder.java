@@ -156,6 +156,9 @@ public interface CreateBuilder {
     List<LocaleLabel> getLabels();
     @Nullable
     Boolean getDevMode();
+
+    @Nullable
+    Boolean getAnon();
     
     @Nullable
     LocalDateTime getStartDate();

@@ -226,6 +226,7 @@ public class StencilClientImpl implements StencilClient {
               .locale(locale)
               .type(link.getType())
               .name(link.getDesc())
+              .anon(link.getAnon())
               .global(link.getGlobal())
               .value(link.getValue())
               .startDate(link.getStartDate())

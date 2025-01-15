@@ -140,7 +140,9 @@ public class SiteStateVisitor {
             .value(link.getBody().getValue())
             .startDate(link.getBody().getStartDate())
             .endDate(link.getBody().getEndDate())
-            .workflow(true).global(false)
+            .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
+            .workflow(true)
+            .global(false)
             .type(LINK_TYPE_WORKFLOW)
             .build();
         result.add(resource);
@@ -162,6 +164,9 @@ public class SiteStateVisitor {
               .desc(label.getLabelValue())
               .path(visitArticlePath(article))
               .value(link.getBody().getValue())
+              .startDate(link.getBody().getStartDate())
+              .endDate(link.getBody().getEndDate())
+              .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
               .workflow(true).global(true)
               .type(LINK_TYPE_WORKFLOW)
               .build();
@@ -203,7 +208,7 @@ public class SiteStateVisitor {
             .desc(label.getLabelValue())
             .path(visitArticlePath(article))
             .value(link.getBody().getValue())
-            .workflow(false).global(false)
+            .workflow(false).anon(true).global(false)
             .type(link.getBody().getContentType())
             .build();
         result.add(resource);
@@ -225,7 +230,7 @@ public class SiteStateVisitor {
               .desc(label.getLabelValue())
               .path(visitArticlePath(article))
               .value(link.getBody().getValue())
-              .workflow(false).global(true)
+              .workflow(false).anon(true).global(true)
               .type(link.getBody().getContentType())
               .build();
           result.add(resource);

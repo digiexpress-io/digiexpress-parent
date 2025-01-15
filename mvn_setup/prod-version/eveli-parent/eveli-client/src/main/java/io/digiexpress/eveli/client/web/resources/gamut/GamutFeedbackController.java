@@ -57,7 +57,6 @@ public class GamutFeedbackController {
   private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final DialobClient dialob;
-  private final List<String> allowedActions;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -76,10 +75,6 @@ public class GamutFeedbackController {
     } catch (ProcessCantBeDeletedException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-  }
-  @GetMapping(value="/allowed")
-  public List<String> getAllowed() {
-    return allowedActions;
   }
   
   @GetMapping
@@ -104,15 +99,8 @@ public class GamutFeedbackController {
       @RequestParam("actionLocale") String actionLocale) {
     
     final var meta = gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale).getOne();
-    final var workflow = meta.getWorkflow();
-    final var stencilService = meta.getTopicLink();
-    
-    if(!(
-        allowedActions.contains(workflow.getName()) || 
-        allowedActions.contains(actionId) ||
-        allowedActions.contains(stencilService.getName())
-     )) {
-      throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!, Allowed: " + allowedActions + "!");
+    if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
+      throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
     }
     
     try {

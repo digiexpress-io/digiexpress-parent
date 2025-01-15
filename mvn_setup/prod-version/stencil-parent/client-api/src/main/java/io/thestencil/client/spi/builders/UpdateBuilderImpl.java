@@ -354,6 +354,7 @@ public class UpdateBuilderImpl implements UpdateBuilder {
         .from(start)
         .body(ImmutableWorkflow.builder().from(start.getBody())
             .devMode(changes.getDevMode())
+            .anon(Boolean.TRUE.equals(changes.getAnon()))
             .value(changes.getValue())
             .startDate(changes.getStartDate())
             .endDate(changes.getEndDate())

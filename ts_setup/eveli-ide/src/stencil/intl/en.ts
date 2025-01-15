@@ -82,6 +82,11 @@ const en = {
   'services.selected': 'Selected services',
   'services.devmode.helper': 'If Development mode is active, this service will only appear in the development environment for testing. It will not be included in production releases.',
   'services.devmode': 'Development mode',
+
+  'services.anonmode.helper': 'If anonymous mode is active, this service will appear for BOTH anonymous and authenticated users.',
+  'services.anonmode': 'Anonymous mode',
+  
+
   'services.delete': 'Delete service',
   'services.delete.desc': 'Deleting this service will permanently remove it from the application, and all associations with Articles/Pages will be lost.',
 

@@ -47,6 +47,7 @@ export declare namespace SiteApi {
     global?: boolean;
     workflow?: boolean;
     secured?: boolean;
+    anon: boolean | undefined;
     path?: string;
   }
 

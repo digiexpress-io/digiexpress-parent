@@ -41,16 +41,6 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     return response;
   }
 
-  const fetchAllowedGet: OfferApi.GetAllowedOffersFetchGET = async () => {
-    // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(`${url}/allowed`, {
-      method: 'GET',
-      headers: undefined,
-      credentials: undefined,
-    });
-    return response;
-  }
-
   const fetchDelete: OfferApi.CancelOfferFetchDELETE = async (offer) => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
     const response = await window.fetch(`${url}/${offer.id}`, {
@@ -60,7 +50,7 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     });
     return response;
   }
-  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchAllowedGet };
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete };
 }
 
 
@@ -115,14 +105,5 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     return response;
   }
 
-  const fetchAllowedGet: OfferApi.GetAllowedOffersFetchGET = async () => {
-    // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(`${url}/allowed`, {
-      method: 'GET',
-      headers: undefined,
-      credentials: undefined,
-    });
-    return response;
-  }
-  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchAllowedGet };
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete };
 }

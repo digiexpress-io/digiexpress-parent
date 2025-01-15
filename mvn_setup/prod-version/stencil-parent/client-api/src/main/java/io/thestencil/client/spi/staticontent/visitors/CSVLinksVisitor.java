@@ -50,10 +50,12 @@ public class CSVLinksVisitor {
     CSVParser parser = null;
     try {
       parser = new CSVParser(reader, CSVFormat.EXCEL
-          .withHeader()
-          .withCommentMarker('/')
-          .withAllowMissingColumnNames(false)
-          .withIgnoreEmptyLines(true)
+          .builder()
+          .setHeader()
+          .setCommentMarker('/')
+          .setAllowMissingColumnNames(false)
+          .setIgnoreEmptyLines(true)
+          .build()
           );
       
       return visitParser(parser); 
@@ -84,6 +86,7 @@ public class CSVLinksVisitor {
     final var path = record.get("path");
     final var value = record.get("value");
     final var type = visitType(record);
+    final var anon = Boolean.TRUE.toString().equals(record.get("anon"));
     
     return ImmutableLinkResource.builder()
         .id(file +"_row_" + record.getRecordNumber())
@@ -93,6 +96,7 @@ public class CSVLinksVisitor {
         .value(value)
         .type(type)
         .workflow(SiteStateVisitor.LINK_TYPE_WORKFLOW.equals(type))
+        .anon(anon)
         .global(path == null || path.isBlank())
         .build();
   }
