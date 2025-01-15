@@ -66,7 +66,6 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
 
   const { feedback } = useSite();
 
-  console.log(feedback)
   const reducer = React.useState(new GFeedbackTableArticleReducer({
     data: [],
     order: 'asc',

@@ -30,7 +30,8 @@ export const GServicesSearch: React.FC<GServicesSearchProps> = (initProps) => {
     <Root ownerState={ownerState} className={classes.root}>
       <TextField className={classes.input}
         slotProps={{ input: { startAdornment: <SearchIcon className={classes.icon} /> }}}
-        placeholder={intl.formatMessage({ id: props.id })}></TextField>
+        placeholder={intl.formatMessage({ id: props.id })}>
+      </TextField>
     </Root >
   )
 }
