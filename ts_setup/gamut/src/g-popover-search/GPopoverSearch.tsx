@@ -60,8 +60,6 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const [searchString, setSearchString] = React.useState<string>('');
   const [searchResults, setSearchResults] = React.useState<CombinedSearchResults[]>([]);
 
-  console.log(searchResults)
-
   function handleSearchString(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForms(undefined);
     setPhoneNumbers(undefined);
@@ -89,7 +87,6 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
       .flatMap(topicView => topicView.links)
       .filter((link) => link.type === 'external' || link.type === 'internal')
       .filter((link) => link.value.toLowerCase().includes(searchString))
-
 
     const matchingPhones = Object.values(views)
       .flatMap(topicView => topicView.links
@@ -135,7 +132,8 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
       .flatMap(topicView => topicView.links
         .filter((link) => link.type === 'phone'))
       .map(phone => phone);
-    setPhoneNumbers(phones);
+    const uniquePhoneNumbers = [...new Map(phones.map(phone => [phone.value, phone])).values()];
+    setPhoneNumbers(uniquePhoneNumbers);
   }
 
   function findAllTopics() {
@@ -149,6 +147,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     setPhoneNumbers(undefined);
     setTopics(undefined);
     setLinks(undefined);
+    setSearchResults([]);
 
     if (type === 'forms') {
       findAllUniqueFormNames();
@@ -193,9 +192,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
             <Grid2 size={{ lg: 3, xl: 3 }} />
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer}>
               {forms && forms.map((form, index) => <GLinkFormUnsecured key={index} label={form.label} value={form.linkToForm.value}
-                onClick={() => {
-                  props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id })
-                }} />)}
+                onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />)}
               {phoneNumbers && phoneNumbers.map((phone, index) => <GLinkPhone key={index} label={phone.name} value={phone.value} />)}
               {topics && topics.map((topic, index) => <Link key={index} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)}
               {links && links.map((link, index) => <GLinkHyper label={link.name} value={link.value} key={index} />)}
