@@ -35,6 +35,7 @@ export declare namespace FeedbackApi {
     labelValue: string;
     subLabelKey: string | undefined;
     subLabelValue: string | undefined;
+    customerTitle: string | undefined;
 
     updatedBy: string;
     updatedOnDate: string;
@@ -65,6 +66,7 @@ export declare namespace FeedbackApi {
     labelValue: string;
     subLabelKey: string | undefined;
     subLabelValue: string | undefined;
+    customerTitle: string | undefined;
 
     replys: string[];
     questionnaire: {
@@ -89,6 +91,7 @@ export declare namespace FeedbackApi {
     labelValue: string;
     subLabelKey?: string | undefined;
     subLabelValue?: string | undefined;
+    customerTitle: string | undefined;
   }
 
   export interface ModifyOneFeedbackCommand { }

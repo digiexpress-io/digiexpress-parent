@@ -1,10 +1,15 @@
 import { SiteApi } from '../api-site';
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
+
+function getField(target: SiteApi.CustomerFeedback, key: keyof SiteApi.Feedback): any {
+  return target.feedback[key];
+}
+
+function descendingComparator(a: any, b: any, orderBy: any) {
+  if (getField(b, orderBy) < getField(a, orderBy)) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (getField(b, orderBy) > getField(a, orderBy)) {
     return 1;
   }
   return 0;

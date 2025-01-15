@@ -149,7 +149,20 @@ public class FeedbackQuestionnaireQueryImpl implements FeedbackQuestionnaireQuer
           .append(getQuestion().map(e -> formatText(e)).orElse("- no question -"))
           .toString();
     }
-    
+    @Override
+    public String getCustomerTitle() {
+      final var title = getTitle();
+      if(title.isEmpty()) {
+        return null;
+      }
+      
+      final var answer = title.get().getAnswer().getValue();
+      if(answer == null) {
+        return null;
+      }
+
+      return answer.toString();
+    }
 
     private String formatMainCat() {
       

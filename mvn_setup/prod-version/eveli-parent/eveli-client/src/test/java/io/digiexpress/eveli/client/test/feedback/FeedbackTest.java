@@ -69,6 +69,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         .processId(template.getProcessId())
         .taskId(template.getTaskId())
         .reporterNames(template.getReporterNames())
+        .customerTitle(template.getCustomerTitle())
         
         .reply("super-reply-by-worker")
         .build(), "super-user");
@@ -83,7 +84,8 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     Assertions.assertTrue(queryFeedbackById.isPresent(), "Can't find created feedback");
     
     Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
-    
+    Assertions.assertEquals("thanks, was great", queryFeedback.get().getCustomerTitle());
+
     
     
     // rate feedback as thumbs down    

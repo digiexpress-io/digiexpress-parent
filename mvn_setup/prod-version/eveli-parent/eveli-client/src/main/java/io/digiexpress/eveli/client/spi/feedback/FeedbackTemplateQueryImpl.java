@@ -60,6 +60,8 @@ public class FeedbackTemplateQueryImpl implements FeedbackTemplateQuery {
         .taskId(taskId)
         .reporterNames(questionnaire.getReporterNames())
         
+        .customerTitle(questionnaire.getCustomerTitle())
+        
         .locale(questionnaire.getQuestionnaire().getMetadata().getLanguage())
         .origin(questionnaire.getClass().getSimpleName().toUpperCase())
 

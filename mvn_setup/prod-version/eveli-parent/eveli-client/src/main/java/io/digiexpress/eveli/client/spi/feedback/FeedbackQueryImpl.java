@@ -48,7 +48,8 @@ SELECT
   feedback_reply.content,
   feedback_reply.locale,
   feedback_reply.source_id,
-    
+  feedback_reply.customer_title,
+  
   feedback_reply.localized_label,
   feedback_reply.localized_sub_label,
   feedback_reply.created_on_date,
@@ -112,6 +113,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .content(rs.getString("content"))
         .locale(rs.getString("locale"))
         .replyText(rs.getString("reply_text"))
+        .customerTitle(rs.getString("customer_title"))
         .build();
   }
 

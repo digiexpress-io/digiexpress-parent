@@ -105,6 +105,7 @@ export declare namespace SiteApi {
     subLabelKey: string | undefined;
     subLabelValue: string | undefined;
 
+    customerTitle: string | undefined;
     updatedOnDate: string;
 
     content: string;

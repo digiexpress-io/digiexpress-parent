@@ -103,6 +103,7 @@ public interface FeedbackClient {
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
     @Nullable String getReporterNames();
+    @Nullable String getCustomerTitle();
     
     String getProcessId();
     String getTaskId();
@@ -181,6 +182,7 @@ public interface FeedbackClient {
     String getLabelKey();
     String getLabelValue();
     
+    @Nullable String getCustomerTitle();
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
     @Nullable String getReporterNames(); // nullable if there is no user consent, separated by ','
@@ -235,6 +237,7 @@ public interface FeedbackClient {
     String getLabelKey();
     String getLabelValue();
     
+    @Nullable String getCustomerTitle();
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
     
@@ -287,6 +290,7 @@ public interface FeedbackClient {
     Questionnaire getQuestionnaire();
     ProcessInstance getProcessInstance();
     @Nullable String getReporterNames();
+    @Nullable String getCustomerTitle();
   }
   
   @Value.Immutable

@@ -99,6 +99,9 @@ public class FeedbackReplyEntity {
   
   @Column(name="reporter_names", nullable = true)
   private String reporterNames;  
+
+  @Column(name="customer_title", columnDefinition = "TEXT", nullable = true)
+  private String customer_title;  
   
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name="category_id", foreignKey = @ForeignKey(name = "fk_reply_to_category"))
