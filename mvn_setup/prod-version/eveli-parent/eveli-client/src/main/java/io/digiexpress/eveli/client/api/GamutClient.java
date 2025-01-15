@@ -97,11 +97,12 @@ public interface GamutClient {
   
   interface UserActionQuery {
     List<UserAction> findAll();
-    Optional<UserAction> findOneById(String id); // only anon forms can be fetched by id
+    Optional<UserAction> findOneAnonById(String id); // only anon forms can be fetched by id
   }
   
   interface UserActionBuilder {
     UserActionBuilder actionId(String actionId);
+    UserActionBuilder anon(boolean anon);
     UserActionBuilder clientLocale(String clientLocale); 
     UserActionBuilder inputContextId(String inputContextId);
     UserActionBuilder inputParentContextId(String inputParentContextId);

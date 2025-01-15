@@ -12,7 +12,8 @@ export const OfferProvider: React.FC<{
   children: React.ReactNode;
   options: { staleTime: number, queryKey: string };
   createOffer: OfferApi.CreateOfferFetchPOST;
-  getOffers: OfferApi.GetOffersFetchGET;
+  getAllOffers: OfferApi.GetOffersFetchGET;
+  getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
   getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }> = (props) => {
@@ -29,6 +30,7 @@ export const OfferProvider: React.FC<{
       refresh: data.refresh,
       createOffer: data.createOffer,
       cancelOffer: data.cancelOffer,
+      fetchOffer: data.fetchOffer,
       getLocalisedOfferName: data.getLocalisedOfferName,
     };
 

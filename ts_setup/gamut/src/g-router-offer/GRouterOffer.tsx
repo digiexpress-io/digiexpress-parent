@@ -37,8 +37,10 @@ export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
 
   function onAfterComplete() {
     if (anonymousUser) {
-      // TODO::: dont know where 
-      alert('TODO::: route somewhere');
+      nav({
+        from: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
+        to: '/public/$locale/pages/$pageId/products/$productId',
+      })
     }
     else {
       nav({
@@ -47,7 +49,6 @@ export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
       })
     }
   }
-
 
   return (
     <GShell drawerOpen={false}>

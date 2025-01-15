@@ -39,6 +39,7 @@ export declare namespace OfferApi {
 
   export type CreateOfferFetchPOST = (request: OfferRequest) => Promise<Response>;
   export type GetOffersFetchGET = () => Promise<Response>;
+  export type GetOfferFetchGET = (offerId: OfferId) => Promise<Response>;
   export type CancelOfferFetchDELETE = (request: Offer) => Promise<Response>;
   export type GetAllowedOffersFetchGET = () => Promise<Response>;
 
@@ -49,7 +50,7 @@ export declare namespace OfferApi {
     isPending: boolean;
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;
-    fetchOffer: (offerId: OfferId) => Promise<void>;
+    fetchOffer: (offerId: OfferId) => Promise<Offer>;
 
     getOffer(offerId: OfferId): Offer | undefined;
     getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;

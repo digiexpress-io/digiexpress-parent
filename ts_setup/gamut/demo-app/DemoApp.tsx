@@ -25,7 +25,8 @@ import {
   createSiteFetch,
   createSubjectFetch,
   createAuthFeedbackFetch,
-  createPublicOfferFetch
+  createPublicOfferFetch,
+  createPublicDialobFetch
 } from './fetch';
 
 const staleTime = 5 * 1000;
@@ -35,12 +36,14 @@ const processesQueryKey = 'legacy-processes';
 const iamFetch = createIamFetch();
 const siteFetch = createSiteFetch();
 const dialobFetch = createDialobFetch();
+const dialobPublicFetch = createPublicDialobFetch();
 const offerFetch = createOfferFetch();
 const publicOfferFetch = createPublicOfferFetch();
 const contractFetch = createContractFetch();
 const subjectFetch = createSubjectFetch();
 const bookingFetch = createBookingFetch();
 const authFeedbackFetch = createAuthFeedbackFetch();
+
 
 const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -50,15 +53,22 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
 
       <DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
-      <OfferProvider getAllowedOffers={offerFetch.fetchAllowedGet}  cancelOffer={offerFetch.fetchDelete} createOffer={offerFetch.fetchPost} getOffers={offerFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-        <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-        <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
+        <OfferProvider 
+          getAllowedOffers={offerFetch.fetchAllowedGet}
+          cancelOffer={offerFetch.fetchDelete}
+          createOffer={offerFetch.fetchPost} 
+          getOneOffer={offerFetch.fetchOneGet} 
+          getAllOffers={offerFetch.fetchAllGet} 
+          options={{ staleTime, queryKey: processesQueryKey }}>
+          
+          <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+          <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
             <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
               {children}
             </BookingProvider>
-          </CommsProvider>
-        </ContractProvider>
-      </OfferProvider>
+            </CommsProvider>
+          </ContractProvider>
+        </OfferProvider>
       </DialobProvider>
     </SiteBackendProvider >)
 }
@@ -69,9 +79,22 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       fetchSiteGet={siteFetch.fetchSiteGet}
       fetchFeedbackGet={siteFetch.fetchFeedbackGet}
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut}>
-      <OfferProvider getAllowedOffers={publicOfferFetch.fetchAllowedGet} cancelOffer={publicOfferFetch.fetchDelete} createOffer={publicOfferFetch.fetchPost} getOffers={publicOfferFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
-        {children}
-      </OfferProvider>
+      <DialobProvider 
+        fetchActionGet={dialobPublicFetch.fetchActionGet} 
+        fetchActionPost={dialobPublicFetch.fetchActionPost} 
+        fetchReviewGet={dialobPublicFetch.fetchReviewGet}>
+        
+        <OfferProvider 
+          getAllowedOffers={publicOfferFetch.fetchAllowedGet} 
+          cancelOffer={publicOfferFetch.fetchDelete} 
+          createOffer={publicOfferFetch.fetchPost} 
+          getOneOffer={publicOfferFetch.fetchOneGet} 
+          getAllOffers={publicOfferFetch.fetchAllGet} 
+          options={{ staleTime, queryKey: processesQueryKey }}>
+          
+          {children}
+        </OfferProvider>
+      </DialobProvider>
     </SiteBackendProvider>
   )
 }

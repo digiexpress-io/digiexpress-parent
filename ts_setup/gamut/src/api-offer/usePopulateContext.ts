@@ -12,7 +12,8 @@ import { SiteApi, useSite } from '../api-site';
 export interface UsePropulateProps {
   options: { staleTime: number, queryKey: string };
   createOffer: OfferApi.CreateOfferFetchPOST;
-  getOffers: OfferApi.GetOffersFetchGET;
+  getAllOffers: OfferApi.GetOffersFetchGET;
+  getOneOffer: OfferApi.GetOfferFetchGET;
   cancelOffer: OfferApi.CancelOfferFetchDELETE;
   getAllowedOffers: OfferApi.GetAllowedOffersFetchGET;
 }
@@ -23,6 +24,7 @@ export interface PopulateOfferContext {
   allowedOffers: string[];
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
+  fetchOffer: (offerId: string) => Promise<OfferApi.Offer>;
   getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
   refresh(): Promise<void>;
 }
@@ -30,7 +32,7 @@ export interface PopulateOfferContext {
 export function usePopulateContext(props: UsePropulateProps): PopulateOfferContext {
   const { site } = useSite();
   const [isInitialLoadDone, setInitialLoadDone] = React.useState(false);
-  const { getOffers, getAllowedOffers, options } = props;
+  const { getAllOffers, getOneOffer, getAllowedOffers, options } = props;
   const { staleTime, queryKey } = options;
 
   // tanstack query config
@@ -38,7 +40,7 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
     staleTime,
     queryKey: [queryKey],
     queryFn: () =>  Promise.all([
-      getOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data),
+      getAllOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data),
       getAllowedOffers().then(data => data.json()).then((data: string[]) => data),
     ])
   });
@@ -57,6 +59,11 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   }, [refetch, props.createOffer, site]);
 
 
+  // Create new offer and reload after that
+  const fetchOffer: (request: OfferApi.OfferId) => Promise<OfferApi.Offer> = React.useCallback(async (request) => {
+    const newOffer: OfferApi.Offer = await props.getOneOffer(request).then(resp => resp.json()).then(data => mapToOffer(data, site));
+    return newOffer;
+  }, [props.getOneOffer, site]);
 
   // Reload all data
   const refresh: () => Promise<void> = React.useCallback(async () => {
@@ -92,6 +99,10 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
 
   // cache the end result
   return React.useMemo(() => {
-    return { allowedOffers: allowedOffers ?? [], offers: offerData?.offers ?? [], isPending: !isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName };
-  }, [offerData?.hash, allowedOffers, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName]);
+    return { 
+      allowedOffers: allowedOffers ?? [], 
+      offers: offerData?.offers ?? [], 
+      isPending: !isContextLoaded, 
+      createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer };
+  }, [offerData?.hash, allowedOffers, isContextLoaded, createOffer, refresh, cancelOffer, getLocalisedOfferName, fetchOffer]);
 }

@@ -46,7 +46,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private LocalDateTime expiresAt;
   private Long expiresInSeconds;
   
-  
+  private boolean anon = false;
   private String formName;
   private String flowName;
 
@@ -64,6 +64,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
     ProcessAssert.notNull(articleName, () -> "articleName must be defined!");
     ProcessAssert.notNull(formName, () -> "formName must be defined!");
     ProcessAssert.notNull(flowName, () -> "flowName must be defined!");
+    ProcessAssert.notNull(anon, () -> "anon must be defined!");
     
     
     final var entity = processRepository.save(new ProcessEntity()
@@ -78,6 +79,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setWorkflowName(workflowName)
       .setArticleName(articleName)
       .setParentArticleName(parentArticleName)
+      .setAnon(anon)
       .setFormName(formName)
       .setFlowName(flowName)
       
@@ -104,6 +106,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .workflowName(entity.getWorkflowName())
       .articleName(entity.getArticleName())
       .parentArticleName(entity.getParentArticleName())
+      .anon(Boolean.TRUE.equals(entity.getAnon()))
       .formName(entity.getFormName())
       .flowName(entity.getFlowName())
       

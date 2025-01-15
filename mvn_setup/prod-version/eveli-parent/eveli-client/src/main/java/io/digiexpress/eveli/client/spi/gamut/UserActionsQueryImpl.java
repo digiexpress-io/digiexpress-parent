@@ -73,11 +73,14 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   
   @Override
-  public Optional<UserAction> findOneById(String id) {
+  public Optional<UserAction> findOneAnonById(String id) {
     final var processes = hdesCommands.queryInstances().findOneById(id)
-        .stream().filter(process -> true)
+        .stream().filter(process -> Boolean.TRUE.equals(process.getAnon()))
         .toList();
-    final var tasks = visitTasks(processes, "");
+    final var tasks = new TasksContext(
+        Collections.emptyMap(), 
+        Collections.emptyList()
+    );
     return processes.stream()
         .map(process -> visitUserAction(process, tasks))
         .findFirst();

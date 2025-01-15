@@ -89,7 +89,7 @@ public class GamutFeedbackController {
   
   @GetMapping(value="/{actionId}")
   public ResponseEntity<UserAction> getActionById(@PathVariable("actionId") String actionId) {
-    final var action = gamutClient.userActionQuery().findOneById(actionId);
+    final var action = gamutClient.userActionQuery().findOneAnonById(actionId);
     if(action.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
@@ -118,6 +118,7 @@ public class GamutFeedbackController {
     try {
       return ResponseEntity.ok(gamutClient.userActionBuilder()
           .actionId(actionId)
+          .anon(true)
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)

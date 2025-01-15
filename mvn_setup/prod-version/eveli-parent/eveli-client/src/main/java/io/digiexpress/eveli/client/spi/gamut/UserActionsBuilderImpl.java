@@ -59,12 +59,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final Supplier<ProgramEnvir> programEnvir;
   private final Supplier<WorkflowTag> workflowEnvir;
   
-  
-  
   private final CrmClient auth;
   private final ZoneOffset offset;
   
-  
+  private boolean anon = false;
   private String actionId;
   private String clientLocale; 
   private String inputContextId;
@@ -120,6 +118,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .userId(request.getIdentity())
         .expiresInSeconds(expiresInSeconds)
         .expiresAt(stencilService.getEndDate())
+        .anon(anon)
         
         .workflowName(workflow.getName())
         .articleName(request.getInputContextId())

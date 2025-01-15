@@ -87,6 +87,9 @@ public class ProcessEntity {
   @Column(name="user_id")
   private String userId;
 
+  @Column(name="anon")
+  private Boolean anon;
+
   
   // execution context links
   @Column(name="workflow_name", nullable=false)

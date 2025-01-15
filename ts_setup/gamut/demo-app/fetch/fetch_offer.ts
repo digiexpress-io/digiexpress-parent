@@ -20,9 +20,20 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     return response;
   }
 
-  const fetchGet: OfferApi.GetOffersFetchGET = async () => {
+  const fetchAllGet: OfferApi.GetOffersFetchGET = async () => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
     const response = await window.fetch(url, {
+      method: 'GET',
+      headers: undefined,
+      credentials: undefined,
+    });
+    return response;
+  }
+
+
+  const fetchOneGet: OfferApi.GetOfferFetchGET = async (id) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(`${url}/${id}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,
@@ -49,7 +60,7 @@ export function createPublicOfferFetch(url: (string | undefined) = '/portal/feed
     });
     return response;
   }
-  return { fetchGet, fetchPost, fetchDelete, fetchAllowedGet };
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchAllowedGet };
 }
 
 
@@ -73,7 +84,7 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     return response;
   }
 
-  const fetchGet: OfferApi.GetOffersFetchGET = async () => {
+  const fetchAllGet: OfferApi.GetOffersFetchGET = async () => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
     const response = await window.fetch(url, {
       method: 'GET',
@@ -83,6 +94,16 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     return response;
   }
 
+
+  const fetchOneGet: OfferApi.GetOfferFetchGET = async (id) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(`${url}/${id}`, {
+      method: 'GET',
+      headers: undefined,
+      credentials: undefined,
+    });
+    return response;
+  }
 
   const fetchDelete: OfferApi.CancelOfferFetchDELETE = async (offer) => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
@@ -103,5 +124,5 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
     });
     return response;
   }
-  return { fetchGet, fetchPost, fetchDelete, fetchAllowedGet };
+  return { fetchAllGet, fetchOneGet, fetchPost, fetchDelete, fetchAllowedGet };
 }

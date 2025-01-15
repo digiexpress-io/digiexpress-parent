@@ -68,6 +68,8 @@ public interface ProcessClient {
     CreateProcessInstance expiresAt(LocalDateTime expiresAt);
     CreateProcessInstance workflowName(String name);
     
+    CreateProcessInstance anon(boolean anon);
+    
     CreateProcessInstance articleName(String articleName);
     CreateProcessInstance parentArticleName(String parentArticleName);
     
@@ -144,6 +146,9 @@ public interface ProcessClient {
     @Nullable String getTaskId();    
     @Nullable String getUserId();
 
+    
+    Boolean getAnon();
+    
     // Asset links
     String getFormTagName();
     String getStencilTagName();
