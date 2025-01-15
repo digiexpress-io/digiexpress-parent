@@ -92,7 +92,7 @@ author: jane.doe@morgue.com, message: edited dev branch
  | created
   + added new: 1 entries
   + 4::DOC_BRANCH_PATCH
-    {"id":"4","patchValue":[{"op":"remove","path":"/created-branch-command"},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}],"docType":"DOC_BRANCH_PATCH"}
+    {"id":"4","patchValue":[{"op":"remove","value":null,"path":"/created-branch-command"},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}],"docType":"DOC_BRANCH_PATCH"}
 
  | deleted
   - deleted: 0 entries
@@ -104,7 +104,7 @@ author: jane.doe@morgue.com, message: edited dev branch
 
 Logs
   - id: 24::DOC_BRANCH_PATCH
-    log patch: [{"op":"remove","path":"/created-branch-command"},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}]    log before: null    log after: null
+    log patch: [{"op":"remove","path":"/created-branch-command","value":null},{"op":"add","path":"/branch new content","value":"something in here"},{"op":"add","path":"/last_name","value":"used to be -> flop-2"}]    log before: null    log after: null
   - id: 23::DOC_BRANCH
     log patch: null    log before: {"id":"4","docId":"2","value":{},"status":"IN_FORCE","commitId":"8","branchName":"dev","createdWithCommitId":"8"}    log after: {"id":"4","docId":"2","value":{},"status":"IN_FORCE","commitId":"5","branchName":"dev","createdWithCommitId":"8"}
   - id: 22::DOC_BRANCH_PATCH
