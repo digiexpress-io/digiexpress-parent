@@ -14,6 +14,9 @@ function Component() {
   const { locale, offerId, productId } = Route.useParams();
   const offers = useOffers();
   const offer = offers.getOffer(offerId);
+
+console.log(offer);
+
   const formId = offer?.formUri;
 
   return React.useMemo(() => (<ChooseComponent locale={locale} offerId={offerId} productId={productId} formId={formId}/>), [locale, productId, offerId, formId])
@@ -22,7 +25,7 @@ function Component() {
 function ChooseComponent(props: { locale: string, offerId: string, productId: string, formId?: string }) {
 
   if(!props.formId) {
-    return (<></>);
+    return (<>Can't load form</>);
   }
 
 

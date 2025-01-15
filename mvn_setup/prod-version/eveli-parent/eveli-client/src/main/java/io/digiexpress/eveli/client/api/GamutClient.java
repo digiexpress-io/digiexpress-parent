@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.api;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -96,6 +97,7 @@ public interface GamutClient {
   
   interface UserActionQuery {
     List<UserAction> findAll();
+    Optional<UserAction> findOneById(String id); // only anon forms can be fetched by id
   }
   
   interface UserActionBuilder {

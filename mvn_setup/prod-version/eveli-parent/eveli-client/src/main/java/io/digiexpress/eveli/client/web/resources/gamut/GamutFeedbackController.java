@@ -87,6 +87,15 @@ public class GamutFeedbackController {
     return Collections.emptyList(); // not keeping unauthenticated actions
   }
   
+  @GetMapping(value="/{actionId}")
+  public ResponseEntity<UserAction> getActionById(@PathVariable("actionId") String actionId) {
+    final var action = gamutClient.userActionQuery().findOneById(actionId);
+    if(action.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return new ResponseEntity<>(action.get(), HttpStatus.OK);
+  }
+  
   @PostMapping
   public ResponseEntity<UserAction> kindOfCreateAction(
       @RequestParam("actionId") String actionId,

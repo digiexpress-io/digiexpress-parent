@@ -72,6 +72,17 @@ public class UserActionsQueryImpl implements UserActionQuery {
   }
   
   
+  @Override
+  public Optional<UserAction> findOneById(String id) {
+    final var processes = hdesCommands.queryInstances().findOneById(id)
+        .stream().filter(process -> true)
+        .toList();
+    final var tasks = visitTasks(processes, "");
+    return processes.stream()
+        .map(process -> visitUserAction(process, tasks))
+        .findFirst();
+  }
+  
   private String visitUserId() {
     final var customer = authClient.getCustomer().getPrincipal();
     if(customer.getRepresentedId() != null) {

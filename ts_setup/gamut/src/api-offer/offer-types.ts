@@ -49,6 +49,8 @@ export declare namespace OfferApi {
     isPending: boolean;
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;
+    fetchOffer: (offerId: OfferId) => Promise<void>;
+
     getOffer(offerId: OfferId): Offer | undefined;
     getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
     refresh(): Promise<void>;
