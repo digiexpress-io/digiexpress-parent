@@ -87,6 +87,7 @@ public class QuarkusJacksonJsonCodec implements JsonCodec {
         // Non-standard JSON but we allow C style comments in our JSON
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         
+        
         SimpleModule module = new SimpleModule("vertx-module");
         // custom types
         module.addSerializer(JsonObject.class, new JsonObjectSerializer());
@@ -105,6 +106,12 @@ public class QuarkusJacksonJsonCodec implements JsonCodec {
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new Jdk8Module());
         mapper.registerModule(new GuavaModule());
+        
+        
+        // false = 2025-01-15T09:51:17.113535Z
+        // true = 1736934713.942034000
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        
     }
 
     private ObjectMapper prettyMapper() {

@@ -82,7 +82,7 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   }
   
   
-  private static class GrimMissionContainerVersionVisitor {
+  public static class GrimMissionContainerVersionVisitor {
     private final GrimState tx;
     private final String missionId; 
     private final String currentCommitId;

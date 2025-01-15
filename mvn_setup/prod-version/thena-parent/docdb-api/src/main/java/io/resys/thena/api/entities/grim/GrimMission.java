@@ -27,6 +27,7 @@ import java.time.OffsetDateTime;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -40,6 +41,7 @@ import jakarta.annotation.Nullable;
 @Value.Immutable
 @JsonSerialize(as = ImmutableGrimMission.class)
 @JsonDeserialize(as = ImmutableGrimMission.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public interface GrimMission extends IsGrimObject, TenantEntity {
   String getId();
   String getCommitId();

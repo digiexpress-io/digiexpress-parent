@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -35,6 +36,7 @@ import jakarta.annotation.Nullable;
 // user inputed "comment" text that can be connected to the most of entities
 @JsonSerialize(as = ImmutableGrimRemark.class)
 @JsonDeserialize(as = ImmutableGrimRemark.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
 public interface GrimRemark extends IsGrimObject, TenantEntity {
   String getId();

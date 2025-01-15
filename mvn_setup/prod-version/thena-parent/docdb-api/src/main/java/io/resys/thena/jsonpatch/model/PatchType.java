@@ -33,10 +33,10 @@ public class PatchType {
   @Nullable private final JsonPointer from;
   @Nullable private final Object value;
   
-  private static final String NAMES_OP = "op";
-  private static final String NAMES_VALUE = "value";
-  private static final String NAMES_PATH = "path";
-  private static final String NAMES_FROM = "from";
+  public static final String NAMES_OP = "op";
+  public static final String NAMES_VALUE = "value";
+  public static final String NAMES_PATH = "path";
+  public static final String NAMES_FROM = "from";
   @SuppressWarnings("unused")
   private static final String NAMES_FROM_VALUE = "fromValue";
   
@@ -67,12 +67,12 @@ public class PatchType {
     }
     case REMOVE: {
       return jsonOp
-        //.put(NAMES_VALUE, diff.getValue())
+        .put(NAMES_VALUE, data.getSrcValue())
         .put(NAMES_PATH, data.getPath().toString());
     }
     case REPLACE: {
       return jsonOp
-        //.put(NAMES_FROM_VALUE, diff.getSrcValue())
+        .put(NAMES_FROM_VALUE, data.getSrcValue())
         .put(NAMES_PATH, data.getPath().toString())
         .put(NAMES_VALUE, data.getValue());
     }

@@ -22,6 +22,7 @@ package io.resys.thena.api.entities.grim;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,6 +34,7 @@ import jakarta.annotation.Nullable;
 
 @JsonSerialize(as = ImmutableGrimMissionLabel.class)
 @JsonDeserialize(as = ImmutableGrimMissionLabel.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
 public interface GrimMissionLabel extends IsGrimObject, TenantEntity {
   String getId();

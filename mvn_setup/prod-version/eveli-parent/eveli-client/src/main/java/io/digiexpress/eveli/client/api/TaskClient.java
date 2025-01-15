@@ -74,6 +74,7 @@ public interface TaskClient {
   
   interface QueryTasks {
     Uni<Task> getOneById(String taskId);
+    Uni<TaskDiff> getOneTaskDiff(String taskId, String commitId);
     Uni<List<Task>> findAll(List<String> taskId);
   }
   
@@ -202,16 +203,23 @@ public interface TaskClient {
   @JsonDeserialize(as = ImmutableTaskComment.class)
   @Value.Immutable
   interface TaskComment {
-    // null on new
-    @Nullable String getId();
-    @Nullable ZonedDateTime getCreated();
     
-    @Nullable Boolean getExternal();
+    String getId();
+    String getVersion();
+    ZonedDateTime getCreated();
+    
+    Boolean getExternal();
     @Nullable String getUserName();
     @Nullable String getReplyToId();
     
     String getTaskId();
     String getCommentText();
     TaskCommentSource getSource(); 
+  }
+  
+  @JsonSerialize(as = ImmutableTaskDiff.class)
+  @JsonDeserialize(as = ImmutableTaskDiff.class)
+  @Value.Immutable
+  interface TaskDiff {
   }
 }

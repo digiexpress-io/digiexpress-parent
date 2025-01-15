@@ -36,6 +36,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 
 public class TaskMapper {
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
@@ -59,6 +60,7 @@ public class TaskMapper {
   public static TaskClient.TaskComment map(GrimRemark remark) {
     return ImmutableTaskComment.builder()
         .id(remark.getId())
+        .version(remark.getCommitId())
         .created(TaskMapper.toZoned(remark.getTransitives().getCreatedAt()))
         .commentText(remark.getRemarkText())
         .userName(remark.getTransitives().getCreatedBy())
@@ -69,6 +71,10 @@ public class TaskMapper {
         .build();
   }
   
+
+  public static TaskClient.Task map(GrimMissionContainer cont) {
+    return map(cont.getMission(), cont.getAssignments().values(), cont.getRemarks().values());
+  }
   
   public static TaskClient.Task map(GrimMission commited, Collection<GrimAssignment> assignments, Collection<GrimRemark> remarks) {
 

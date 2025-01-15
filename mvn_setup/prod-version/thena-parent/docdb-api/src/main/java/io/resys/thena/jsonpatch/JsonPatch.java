@@ -1,5 +1,8 @@
 package io.resys.thena.jsonpatch;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -21,11 +24,13 @@ package io.resys.thena.jsonpatch;
  */
 
 import io.resys.thena.jsonpatch.model.JsonType;
+import io.resys.thena.jsonpatch.model.PatchType;
 import io.resys.thena.jsonpatch.visitors.ApplyPatch;
 import io.resys.thena.jsonpatch.visitors.CreatePatch;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
+import jakarta.json.JsonPatch.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,5 +49,45 @@ public class JsonPatch {
   public JsonObject apply(JsonObject applyOn) {
     final var body = new ApplyPatch().start(this.value, applyOn).close(); 
     return body;
+  }
+  
+  public List<JsonPatchOp> getStruct() {
+    return value.stream().map(v -> new JsonPatchOp((JsonObject) v)).toList();
+  }
+  
+  
+  @RequiredArgsConstructor
+  public static class JsonPatchOp {
+    private final JsonObject raw;
+    
+    public JsonObject getRaw() {
+      return raw;
+    }
+    
+    public Operation getOp() {
+      return Operation.fromOperationName(raw.getString(PatchType.NAMES_OP));
+    }
+    public String getPath() {
+      return raw.getString(PatchType.NAMES_PATH);
+    }
+    @SuppressWarnings("unchecked")
+    public <T> T getValue() {
+      return (T) raw.getValue(PatchType.NAMES_VALUE);
+    }
+    public JsonPatchValueType getValueType() {
+      final var value = getValue();
+      if(value instanceof JsonObject) {
+        return JsonPatchValueType.OBJECT;
+      } else if(value instanceof String) {
+        return JsonPatchValueType.STRING; 
+      } else if(value instanceof BigDecimal) {
+        return JsonPatchValueType.BIG_DECIMAL; 
+      }
+      return null;
+    }
+  }
+  
+  public static enum JsonPatchValueType {
+    OBJECT, STRING, BIG_DECIMAL
   }
 }

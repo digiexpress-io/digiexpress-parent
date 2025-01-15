@@ -49,6 +49,12 @@ public class CreateTaskTest extends TaskEnvirSetup {
         .build())
       .await().atMost(atMost);
 
-    
+    final var diff_version_1 = taskClient.queryTasks()
+        .getOneTaskDiff(task.getId(), task.getVersion())
+        .await().atMost(atMost);
+
+    final var diff_version_2 = taskClient.queryTasks()
+        .getOneTaskDiff(task.getId(), comment.getVersion())
+        .await().atMost(atMost);
   }
 }

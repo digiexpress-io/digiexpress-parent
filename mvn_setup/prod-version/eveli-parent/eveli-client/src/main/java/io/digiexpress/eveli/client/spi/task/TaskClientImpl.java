@@ -54,6 +54,12 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notNull(taskIds, () -> "taskIds can't be empty!");
         return ctx.getConfig().accept(new FindAllTaskByIdsVisitor(taskIds));
       }
+      @Override
+      public Uni<TaskDiff> getOneTaskDiff(String taskId, String commitId) {
+        TaskAssert.notNull(taskId, () -> "taskId can't be empty!");
+        TaskAssert.notNull(commitId, () -> "commitId can't be empty!");
+        return new TaskDiffVisitor(ctx, taskId, commitId).accept();
+      }
     };
   }
 

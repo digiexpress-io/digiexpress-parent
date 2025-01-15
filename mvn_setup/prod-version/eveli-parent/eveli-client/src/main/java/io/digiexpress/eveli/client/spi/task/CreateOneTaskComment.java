@@ -40,6 +40,9 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
   
   private String createdRemarkId;
   
+  private void setRemarkId(String remarkId) {
+    this.createdRemarkId = remarkId;
+  }
   private void createTaskComment(CreateTaskCommentCommand command, MergeMission merge) {
     final var remarkType = Boolean.TRUE.equals(command.getExternal()) ? TaskMapper.COMMENT_EXTERNAL : TaskMapper.COMMENT_INTERNAL;
     final var usedFor = command.getSource() == TaskCommentSource.FRONTDESK ? TaskMapper.VIEWER_WORKER : TaskMapper.VIEWER_CUSTOMER;
@@ -59,10 +62,6 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
     })
     .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).build())
     .build();
-  }
-  
-  private void setRemarkId(String remarkId) {
-    this.createdRemarkId = remarkId;
   }
 
   @Override
