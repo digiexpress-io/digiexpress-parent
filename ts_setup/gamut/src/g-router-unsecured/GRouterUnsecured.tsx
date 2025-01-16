@@ -78,7 +78,6 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
               <GPopoverTopics onTopic={handleTopicChange} />
               <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
             </div>
-
             <GArticle>{landingTopic}</GArticle>
           </GRouterUnsecuredRoot>
         </Container>

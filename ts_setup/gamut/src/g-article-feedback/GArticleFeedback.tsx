@@ -17,30 +17,7 @@ import { useLocale } from '../api-locale';
 
 
 
-const startMarker = "#### Otsikko";
-const endMarker = "####";
-function parseCustomerTitle(content: string): React.ReactElement {
-  const contentLines = content.split("\n");
 
-  let customerTitle: string[] = [];
-  let continueParsing = false;
-
-  for (const line of contentLines) {
-    if (line.includes(startMarker)) {
-      continueParsing = true;
-    } else if (line.includes(endMarker) && continueParsing) {
-      continueParsing = false;
-      break;
-    }
-    if (continueParsing) {
-      let cleanLine = line.includes(startMarker) ? line.replace(startMarker, "").trim() : line;
-      cleanLine = cleanLine.split(",").join("");
-      customerTitle.push(cleanLine);
-    }
-  }
-
-  return (<Typography variant='body2'>{customerTitle.join("\n")}</Typography>)
-}
 
 export interface GArticleFeedbackProps {
   children: SiteApi.TopicView | undefined;
