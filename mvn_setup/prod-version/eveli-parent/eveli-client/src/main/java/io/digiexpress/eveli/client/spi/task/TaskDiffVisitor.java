@@ -22,6 +22,8 @@ package io.digiexpress.eveli.client.spi.task;
 
 import java.util.Optional;
 
+import io.digiexpress.eveli.client.api.ImmutableTaskDiff;
+import io.digiexpress.eveli.client.api.ImmutableTaskDiffValue;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
@@ -29,7 +31,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.jsonpatch.JsonPatch;
 import io.resys.thena.jsonpatch.JsonPatch.JsonPatchOp;
-import io.resys.thena.jsonpatch.model.PatchType;
+import io.resys.thena.jsonpatch.JsonPatch.JsonPatchValueType;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,8 @@ public class TaskDiffVisitor {
   private final TaskStore ctx;
   private final String taskId;
   private final String commitId;
+  private final ImmutableTaskDiff.Builder diff = ImmutableTaskDiff.builder();
+  
   
   public Uni<TaskDiff> accept() {
     final var tenantName = ctx.getConfig().getTenantName();
@@ -69,7 +73,7 @@ public class TaskDiffVisitor {
     visitPatch(diff);
     
     
-    return null;
+    return this.diff.taskId(taskId).version(commitId).build();
   }
   
   public void visitPatch(JsonPatch patch) {
@@ -78,7 +82,40 @@ public class TaskDiffVisitor {
   }
   
   public void visitOperation(JsonPatchOp operation) {
-    System.out.println(operation.getRaw());
-    System.out.println(operation.getValueType());
+    final var path = operation.getPath();
+    if(path.isEmpty()) {
+      diff.addValues(ImmutableTaskDiffValue.builder()
+          .op(operation.getOp())
+          .path(path)
+          .raw(operation.getRaw())
+          .build());
+      return;
+    }
+    
+    if(operation.getValueType() == JsonPatchValueType.OBJECT) {
+      final JsonObject value = operation.getValue();
+      
+      value.forEach(entry -> {
+        final var nestedKey = path + "/" + entry.getKey();
+        final String nestedValue = Optional.ofNullable(entry.getValue()).map(e -> e.toString()).orElse(null);
+        
+        diff.addValues(ImmutableTaskDiffValue.builder()
+            .op(operation.getOp())
+            .path(nestedKey + "/" + nestedValue)
+            .value(nestedValue)
+            .raw(entry.getValue())
+            .build());
+        
+      });
+    }
+    
+    final String value = Optional.ofNullable(operation.getValue()).map(e -> e.toString()).orElse(null);
+    diff.addValues(ImmutableTaskDiffValue.builder()
+        .op(operation.getOp())
+        .path(path)
+        .value(value)
+        .raw(operation.getRaw())
+        .build());
+    
   }
 }

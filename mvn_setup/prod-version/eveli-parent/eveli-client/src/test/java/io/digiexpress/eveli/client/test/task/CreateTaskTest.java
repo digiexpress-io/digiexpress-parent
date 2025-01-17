@@ -38,8 +38,11 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.test.BaseEnvir;
+import io.quarkus.logging.Log;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
+@Slf4j
 public class CreateTaskTest extends TaskEnvirSetup {
   @Container @ServiceConnection static PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:17");
   @BeforeAll static void beforeAll() { start(CONTAINER); }
@@ -86,13 +89,16 @@ public class CreateTaskTest extends TaskEnvirSetup {
     final var diff_version_1 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), task.getVersion())
         .await().atMost(atMost);
+    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_1.getValues().stream().map(e -> e.toString()).toList()));
 
     final var diff_version_2 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), comment.getVersion())
         .await().atMost(atMost);
+    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_2.getValues().stream().map(e -> e.toString()).toList()));
     
     final var diff_version_3 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), assignee.getVersion())
         .await().atMost(atMost);
+    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_3.getValues().stream().map(e -> e.toString()).toList()));
   }
 }
