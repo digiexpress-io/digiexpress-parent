@@ -122,6 +122,7 @@ export const fi = {
   'gamut.forms.filling.summary.info4': 'New messages from our staff regarding your request',
   'gamut.forms.filling.summary.info5': 'New files we have sent to you or requested from you',
   'gamut.forms.filling.summary.info6': 'Jos tarvitset lisätietoa niin soita 3333-44444',
+  'gamut.forms.filling.must_be_authenticated': 'Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen',
 
   'gamut.forms.summary.button.back-to-overview': 'Takaisin Minun Asiat pääsivulle',
 

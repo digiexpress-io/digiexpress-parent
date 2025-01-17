@@ -10,6 +10,7 @@ import { GOverridableComponent } from '../g-override';
 export interface GSecuredServicesSearchProps {
   id: string;
   component?: GOverridableComponent<GSecuredServicesSearchProps>
+  onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }
 
 
@@ -29,6 +30,7 @@ export const GSecuredServicesSearch: React.FC<GSecuredServicesSearchProps> = (in
   return (
     <Root ownerState={ownerState} className={classes.root}>
       <TextField className={classes.input}
+        onChange={props.onChange}
         slotProps={{ input: { startAdornment: <SearchIcon className={classes.icon} /> } }}
         placeholder={intl.formatMessage({ id: props.id })}>
       </TextField>

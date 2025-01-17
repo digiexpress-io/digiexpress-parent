@@ -125,6 +125,7 @@ export const en = {
   'gamut.forms.filling.summary.info4': 'New messages from our staff regarding your request',
   'gamut.forms.filling.summary.info5': 'New files we have sent to you or requested from you',
   'gamut.forms.filling.summary.info6': 'Still have questions? Contact us by phone at xxxx-xxxx with questions',
+  'gamut.forms.filling.must_be_authenticated': 'You must be logged in to fill this form',
 
   'gamut.forms.summary.button.back-to-overview': 'Back to My Overview',
 

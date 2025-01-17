@@ -29,8 +29,7 @@ export const GSecuredServicesSearchRoot = styled('div', {
 
   return {
 
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(3),
+    padding: theme.spacing(1),
     minHeight: '10vh',
     '.GServicesSearch-icon': {
       color: theme.palette.primary.main
