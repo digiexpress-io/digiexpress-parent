@@ -137,7 +137,7 @@ public class AuthenticationConfigFakeUser  {
                     .addressValue("test-street")
                     .build())
                 .build())
-            .type(CustomerType.ANON)
+            .type(CustomerType.AUTH_CUSTOMER)
             .build();
       }
 

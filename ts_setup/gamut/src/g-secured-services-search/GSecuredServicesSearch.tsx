@@ -2,18 +2,18 @@ import React from 'react';
 import { TextField, useThemeProps } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useIntl } from 'react-intl';
-import { useUtilityClasses, GServicesSearchRoot, MUI_NAME } from './useUtilityClasses';
+import { useUtilityClasses, GSecuredServicesSearchRoot, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 
 
 
-export interface GServicesSearchProps {
+export interface GSecuredServicesSearchProps {
   id: string;
-  component?: GOverridableComponent<GServicesSearchProps>
+  component?: GOverridableComponent<GSecuredServicesSearchProps>
 }
 
 
-export const GServicesSearch: React.FC<GServicesSearchProps> = (initProps) => {
+export const GSecuredServicesSearch: React.FC<GSecuredServicesSearchProps> = (initProps) => {
   const intl = useIntl();
 
   const props = useThemeProps({
@@ -25,11 +25,11 @@ export const GServicesSearch: React.FC<GServicesSearchProps> = (initProps) => {
   const ownerState = {
     ...props,
   }
-  const Root = props.component ?? GServicesSearchRoot;
+  const Root = props.component ?? GSecuredServicesSearchRoot;
   return (
     <Root ownerState={ownerState} className={classes.root}>
       <TextField className={classes.input}
-        slotProps={{ input: { startAdornment: <SearchIcon className={classes.icon} /> }}}
+        slotProps={{ input: { startAdornment: <SearchIcon className={classes.icon} /> } }}
         placeholder={intl.formatMessage({ id: props.id })}>
       </TextField>
     </Root >

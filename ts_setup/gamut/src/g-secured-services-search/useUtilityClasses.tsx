@@ -1,21 +1,21 @@
 
 import { alpha, generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { GServicesSearchProps } from './GServicesSearch';
+import { GSecuredServicesSearchProps } from './GSecuredServicesSearch';
 
 
 
-export const MUI_NAME = 'GServicesSearch';
+export const MUI_NAME = 'GSecuredServicesSearch';
 
-export interface GServicesSearchClasses {
+export interface GSecuredServicesSearchClasses {
   root: string;
   icon: string;
   input: string;
 }
-export type GServicesSearchClassKey = keyof GServicesSearchClasses;
+export type GSecuredServicesSearchClassKey = keyof GSecuredServicesSearchClasses;
 
 
-export const GServicesSearchRoot = styled('div', {
+export const GSecuredServicesSearchRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -25,7 +25,7 @@ export const GServicesSearchRoot = styled('div', {
       styles.input
     ];
   },
-})<{ ownerState: GServicesSearchProps }>(({ theme }) => {
+})<{ ownerState: GSecuredServicesSearchProps }>(({ theme }) => {
 
   return {
 
@@ -42,7 +42,7 @@ export const GServicesSearchRoot = styled('div', {
 });
 
 
-export const useUtilityClasses = (ownerState: GServicesSearchProps) => {
+export const useUtilityClasses = (ownerState: GSecuredServicesSearchProps) => {
   const slots = {
     root: ['root'],
     icon: ['icon'],

@@ -203,8 +203,8 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GLayout: {},
   GLoader: {},
 
-  GServices: {},
-  GServicesSearch: {},
+  GSecuredServices: {},
+  GSecuredServicesSearch: {},
 
   GTooltip: {},
 

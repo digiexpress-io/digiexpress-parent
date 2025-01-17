@@ -13,8 +13,8 @@ import {
   useSite,
   GUserOverviewMenuView,
   SiteApi,
-  GServicesSearch,
-  GServices
+  GSecuredServicesSearch,
+  GSecuredServices
 } from '../';
 
 
@@ -85,9 +85,9 @@ export const RouterServiceSelect: React.FC<RouterServiceSelectProps> = ({ locale
               </Breadcrumbs>
             ),
             left: () => <>
-              <GServicesSearch id='gamut.search.placeholder' />
+              <GSecuredServicesSearch id='gamut.search.placeholder' />
               {topics.map((topic, index) => (<div key={topic.id}>
-                <GServices onClick={(_event) => handleOnTopic(topic)}>{topic.name}</GServices>
+                <GSecuredServices onClick={(_event) => handleOnTopic(topic)}>{topic.name}</GSecuredServices>
                 {index === topics.length - 1 ? <></> : <Divider /> }
               </div>
               ))}

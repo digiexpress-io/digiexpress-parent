@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link, Typography, useThemeProps } from '@mui/material';
-import { useUtilityClasses, MUI_NAME, GServicesRoot } from './useUtilityClasses';
+import { useUtilityClasses, MUI_NAME, GSecuredServicesRoot } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 
-export interface GServicesProps {
+export interface GSecuredServicesProps {
   onClick: (event: React.MouseEvent) => void;
   children: React.ReactNode;
-  component?: GOverridableComponent<GServicesProps>
+  component?: GOverridableComponent<GSecuredServicesProps>
 }
 
-export const GServices: React.FC<GServicesProps> = (initProps) => {
+export const GSecuredServices: React.FC<GSecuredServicesProps> = (initProps) => {
 
   const props = useThemeProps({
     props: initProps,
@@ -20,7 +20,7 @@ export const GServices: React.FC<GServicesProps> = (initProps) => {
   const ownerState = {
     ...props,
   }
-  const Root = props.component ?? GServicesRoot;
+  const Root = props.component ?? GSecuredServicesRoot;
 
   return (
     <Root ownerState={ownerState} className={classes.root}>

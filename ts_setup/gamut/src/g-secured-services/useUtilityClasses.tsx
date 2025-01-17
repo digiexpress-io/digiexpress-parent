@@ -1,17 +1,17 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { GServicesProps } from './GServices';
+import { GSecuredServicesProps } from './GSecuredServices';
 
-export const MUI_NAME = 'GServices';
+export const MUI_NAME = 'GSecuredServices';
 
 
-export interface GServicesClasses {
+export interface GSecuredServicesClasses {
   root: string;
   serviceLink: string;
 }
-export type GServicesClassKey = keyof GServicesClasses;
+export type GSecuredServicesClassKey = keyof GSecuredServicesClasses;
 
-export const GServicesRoot = styled('div', {
+export const GSecuredServicesRoot = styled('div', {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -20,7 +20,7 @@ export const GServicesRoot = styled('div', {
       styles.serviceLink
     ];
   },
-})<{ ownerState: GServicesProps }>(({ theme }) => {
+})<{ ownerState: GSecuredServicesProps }>(({ theme }) => {
   return {
     paddingLeft: theme.spacing(2),
     margin: theme.spacing(0.5),
@@ -31,7 +31,7 @@ export const GServicesRoot = styled('div', {
 });
 
 
-export const useUtilityClasses = (ownerState: GServicesProps) => {
+export const useUtilityClasses = (ownerState: GSecuredServicesProps) => {
   const slots = {
     root: ['root'],
     serviceLink: ['serviceLink']

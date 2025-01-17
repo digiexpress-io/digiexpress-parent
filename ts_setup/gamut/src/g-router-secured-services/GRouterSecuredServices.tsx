@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumbs, Container, Drawer, Link, Typography } from '@mui/material';
+import { Container, Drawer, Link, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
 import { useNavigate } from '@tanstack/react-router';
@@ -13,8 +13,8 @@ import {
   SiteApi,
   GAppBar,
   useSite,
-  GServices,
-  GServicesSearch,
+  GSecuredServices,
+  GSecuredServicesSearch,
   GUserOverviewMenuView,
   GArticle
 } from '../';
@@ -82,8 +82,8 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     <GShell>
       <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleClick('user-overview')} viewId={viewId} />
       <Drawer variant='permanent' open={false} className={GShellClassName}>
-        <GServicesSearch id='gamut.search.placeholder' />
-        {topics.map((topic) => (<GServices key={topic.id} onClick={(_event) => handleOnTopic(topic)}>{topic.name}</GServices>))}
+        <GSecuredServicesSearch id='gamut.search.placeholder' />
+        {topics.map((topic) => (<GSecuredServices key={topic.id} onClick={(_event) => handleOnTopic(topic)}>{topic.name}</GSecuredServices>))}
       </Drawer>
       <main role='main'>
         <Container>

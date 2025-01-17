@@ -51,8 +51,8 @@ export * from './g-form-base'
 export * from './g-user-overview-menu'
 export * from './g-user-overview'
 
-export * from './g-services'
-export * from './g-services-search'
+export * from './g-secured-services'
+export * from './g-secured-services-search'
 
 export * from './g-footer'
 

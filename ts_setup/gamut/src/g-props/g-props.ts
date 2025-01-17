@@ -16,8 +16,8 @@ import { GPopoverSearchClassKey, GPopoverSearchProps } from '../g-popover-search
 import { GConfirmClassKey, GConfirmProps } from '../g-confirm';
 import { GLoaderClassKey, GLoaderProps } from '../g-loader';
 
-import { GServicesClassKey, GServicesProps } from '../g-services';
-import { GServicesSearchClassKey, GServicesSearchProps } from '../g-services-search';
+import { GSecuredServicesClassKey, GSecuredServicesProps } from '../g-secured-services';
+import { GSecuredServicesSearchClassKey, GSecuredServicesSearchProps } from '../g-secured-services-search';
 
 import { GTooltipClassKey, GTooltipProps } from '../g-tooltip';
 
@@ -141,8 +141,8 @@ export interface GComponentsPropsList {
 
   GLogo: GLogoProps;
 
-  GServices: GServicesProps;
-  GServicesSearch: GServicesSearchProps;
+  GSecuredServices: GSecuredServicesProps;
+  GSecuredServicesSearch: GSecuredServicesSearchProps;
 
   GTooltip: GTooltipProps;
   GOffers: GOffersProps;
@@ -224,8 +224,8 @@ export interface GComponentNameToClassKey {
 
   GLogo: GLogoClassKey;
 
-  GServices: GServicesClassKey;
-  GServicesSearch: GServicesSearchClassKey;
+  GSecuredServices: GSecuredServicesClassKey;
+  GSecuredServicesSearch: GSecuredServicesSearchClassKey;
 
   GTooltip: GTooltipClassKey;
 
@@ -436,15 +436,15 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GLogo'];
     variants?: GComponentsVariants['GLogo'];
   },
-  GServices?: {
-    defaultProps?: GComponentsProps['GServices'];
-    styleOverrides?: GComponentsOverrides<Theme>['GServices'];
-    variants?: GComponentsVariants['GServices'];
+  GSecuredServices?: {
+    defaultProps?: GComponentsProps['GSecuredServices'];
+    styleOverrides?: GComponentsOverrides<Theme>['GSecuredServices'];
+    variants?: GComponentsVariants['GSecuredServices'];
   },
-  GServicesSearch?: {
-    defaultProps?: GComponentsProps['GServicesSearch'];
-    styleOverrides?: GComponentsOverrides<Theme>['GServicesSearch'];
-    variants?: GComponentsVariants['GServicesSearch'];
+  GSecuredServicesSearch?: {
+    defaultProps?: GComponentsProps['GSecuredServicesSearch'];
+    styleOverrides?: GComponentsOverrides<Theme>['GSecuredServicesSearch'];
+    variants?: GComponentsVariants['GSecuredServicesSearch'];
   },
   GTooltip?: {
     defaultProps?: GComponentsProps['GTooltip'];
