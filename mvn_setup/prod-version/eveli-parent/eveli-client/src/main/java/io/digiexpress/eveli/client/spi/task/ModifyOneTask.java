@@ -82,8 +82,8 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
       .reporterId(command.getClientIdentificator())
       .description(command.getDescription())
       .dueDate(command.getDueDate())
-      .priority(Optional.ofNullable(command.getPriority()).map(TaskPriority::name).orElse(null))
-      .status(Optional.ofNullable(command.getStatus()).map(TaskStatus::name).orElse(null))
+      .priority(Optional.ofNullable(command.getPriority()).map(TaskPriority::name).orElse(previousVersion.getPriority().name()))
+      .status(Optional.ofNullable(command.getStatus()).map(TaskStatus::name).orElse(previousVersion.getStatus().name()))
       .title(command.getSubject())
       .completedAt(Optional.ofNullable(command.getCompleted()).map(ZonedDateTime::toOffsetDateTime).orElse(null))
       

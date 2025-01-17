@@ -90,7 +90,10 @@ public class DecisionTest {
 //}
   @Test
   public void executionTest() throws IOException {
-    final var envir = TestUtils.client.envir().tagName("executionTest").addCommand().id("dt").decision(FileUtils.toString(getClass(), "decision/dt.json")).build().build();
+    final var envir = TestUtils.client.envir().tagName("executionTest")
+        .addCommand().id("dt").decision(FileUtils.toString(getClass(), "decision/dt.json"))
+        .build()
+        .build();
 
     Map<String, Serializable> values = new HashMap<>();
     values.put("sriBoolean", false);
@@ -105,6 +108,33 @@ public class DecisionTest {
     Assertions.assertEquals(2, result.getMatches().get(1).getOrder());
   }
 
+  
+  @Test
+  public void qinMatchingTest() throws IOException {
+    final var envir = TestUtils.client.envir().tagName("executionTest1").addCommand().id("qidDT").decision(FileUtils.toString(getClass(), "decision/dt3.json")).build().build();
+
+    {
+      Map<String, Serializable> values = new HashMap<>();
+      values.put("sriBoolean", false);
+      values.put("path", "xyz");
+      values.put("sri", 1);
+      values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
+      DecisionResult result = TestUtils.client.executor(envir).inputMap(values).decision("testDecisionTableQInExpression").andGetBody();
+      Assertions.assertEquals(0, result.getMatches().size());
+    }
+    
+    {
+      Map<String, Serializable> values = new HashMap<>();
+      values.put("sriBoolean", false);
+      values.put("path", "task.#");
+      values.put("sri", 1);
+      values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
+      DecisionResult result = TestUtils.client.executor(envir).inputMap(values).decision("testDecisionTableQInExpression").andGetBody();
+      Assertions.assertEquals(1, result.getMatches().size());
+    }
+
+  }
+  
   @Test
   public void nullEqualsNull() throws IOException {
     final var envir = TestUtils.client.envir().tagName("nullEqualsNull").addCommand().id("nullEqualsNull").decision(FileUtils.toString(getClass(), "decision/nullEqualsNull.json")).build().build();

@@ -1,7 +1,28 @@
 package io.digiexpress.thena.mq.client.spi;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -40,7 +61,10 @@ import lombok.extern.slf4j.Slf4j;
 @Setter @Accessors(fluent = true)
 public class ChannelBuilderImpl implements ChannelBuilder {
   private final ThenaMqChannelState state;
-  private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.NO_CHANGES);
+  private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder()
+      .log("")
+      .channelId("")
+      .batchStatus(OperationStatus.NO_CHANGES);
   private final List<Consumer<QueueBuilder>> newQueues = new ArrayList<>();
   private final List<Consumer<ConsumerBuilder>> newConsumers = new ArrayList<>();
   
@@ -55,21 +79,43 @@ public class ChannelBuilderImpl implements ChannelBuilder {
     RepoAssert.notEmpty(appId, () -> "appId must be defined!");
     RepoAssert.notEmpty(channelName, () -> "channelName must be defined!");
     
-    final var scope = ImmutableChannelTxScope.builder()
-        .channelId(channelName)
-        .commitAuthor(ChannelBuilderImpl.class.getCanonicalName())
-        .commitMessage("Creating channels and queues")
-        .build();
+
     
-    return state.withChannelTransaction(scope, tx -> 
-      Uni.combine().all().unis(
-        tx.queryChannels().findAll(),
-        tx.queryQueues().findAll(),
-        tx.queryQueueConsumer().findAllByAppId(appId, true)
-      )
-      .asTuple()
-      .onItem().transformToUni(input -> visitBatch(input, tx))
-    );
+    return state.queryChannels().getByNameOrId(channelName)
+    .onItem().transformToUni(found -> {
+      
+      final var scope = ImmutableChannelTxScope.builder()
+        .commitAuthor(ChannelBuilderImpl.class.getCanonicalName())
+        .commitMessage("Creating channels and queues");
+      
+      
+      if(found.isEmpty()) {
+        final var newChannel = visitChannel(Collections.emptyList());
+
+        return state.withChannel(newChannel)
+          .withChannelTransaction(scope.channelId(newChannel.getId()).build(), tx -> {
+            final var input = Tuple3.<List<Channel>, List<Queue>, List<QueueConsumer>>of(
+              Collections.emptyList(),
+              Collections.emptyList(),
+              Collections.emptyList()
+            );              
+            return visitBatch(input, tx);
+          });
+      } else {
+        return state.withChannelTransaction(scope.channelId(channelName).build(), tx -> 
+          Uni.combine().all().unis(
+            tx.queryChannels().findAll(),
+            tx.queryQueues().findAll(),
+            tx.queryQueueConsumer().findAllByAppId(appId, true)
+          )
+          .asTuple()
+          .onItem().transformToUni(input -> visitBatch(input, tx))
+        );
+      
+      }
+    });
+    
+
   }
 
   @Override
@@ -182,6 +228,12 @@ public class ChannelBuilderImpl implements ChannelBuilder {
   
   
   private Channel visitChannel(List<Channel> allChannels) {
+    final var alreadyBuilt = batch.build().getNewChannel();
+    if(alreadyBuilt.isPresent()) {
+      return alreadyBuilt.get();
+    }
+    
+    
     final Optional<Channel> existingChannel = allChannels.stream()
         .filter(channel -> channel.getChannelName().equals(channelName) || channel.getId().equals(channelName))
         .findFirst();

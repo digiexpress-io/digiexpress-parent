@@ -33,8 +33,10 @@ import org.testcontainers.junit.jupiter.Container;
 
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommand;
 import io.digiexpress.eveli.client.api.ImmutableCreateTaskCommentCommand;
+import io.digiexpress.eveli.client.api.ImmutableModifyTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
+import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.test.BaseEnvir;
 
 @SpringBootTest
@@ -69,12 +71,28 @@ public class CreateTaskTest extends TaskEnvirSetup {
         .build())
       .await().atMost(atMost);
 
+    
+    final var assignee = taskClient.taskBuilder()
+        .userId(user, email)
+        .modifyTask(task.getId(), ImmutableModifyTaskCommand.builder()
+            .status(TaskStatus.REJECTED)
+            .assignedUser("bob")
+            .assignedUserEmail("bob@bob")
+            .subject(task.getSubject())
+            .build())
+        .await().atMost(atMost);
+
+    
     final var diff_version_1 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), task.getVersion())
         .await().atMost(atMost);
 
     final var diff_version_2 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), comment.getVersion())
+        .await().atMost(atMost);
+    
+    final var diff_version_3 = taskClient.queryTasks()
+        .getOneTaskDiff(task.getId(), assignee.getVersion())
         .await().atMost(atMost);
   }
 }

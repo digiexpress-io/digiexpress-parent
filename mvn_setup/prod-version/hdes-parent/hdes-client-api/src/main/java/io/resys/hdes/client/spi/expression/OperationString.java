@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.thena.mq.client.api.routing.Router;
 import io.resys.hdes.client.api.exceptions.DecisionAstException;
 
 public class OperationString {
@@ -52,6 +53,12 @@ public class OperationString {
         if(value.indexOf("[") > -1) {
           List<String> values = objectMapper.readValue(value.substring(value.indexOf("[")), List.class);
           values.forEach(constants);
+          
+          boolean patternMatching = value.startsWith("qin") ? true : false;
+          if(patternMatching) {
+            return xin(values);
+          }
+          
           boolean contains = value.startsWith("in") ? true : false;
           return contains ? in(values) : notIn(values);
         } else {
@@ -62,7 +69,18 @@ public class OperationString {
         throw new DecisionAstException("Incorrect string expression: " + value + "!", e);
       }
     }
-    
+    private static Operation<String> xin(Collection<String> constant) {
+      return (String parameter) -> {
+        
+        for(final var value : constant) {
+          if(Router.builder().queueName(value).routingKey(parameter).isMatch()) {
+            return true;
+          }
+        }
+        
+        return false;
+      };
+    }    
     private static Operation<String> in(Collection<String> constant) {
       return (String parameter) -> constant.contains(parameter);
     }
