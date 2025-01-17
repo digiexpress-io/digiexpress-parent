@@ -72,7 +72,7 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
 
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.serviceSelect}>
           <Item
-            viewId='service-select-sm'
+            viewId='services'
             onClick={handleClick}
             title={intl.formatMessage({ id: 'gamut.userOverview.services.detail.title' })}
             buttonLabel={intl.formatMessage({ id: 'gamut.services' })}

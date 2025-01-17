@@ -1,7 +1,5 @@
 import React from 'react';
-import { Box, Chip, Container, Drawer, Grid2, Link, Typography } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-
+import { Container, Drawer, useTheme, useMediaQuery } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 
@@ -13,16 +11,14 @@ import {
   SiteApi,
   GAppBar,
   useSite,
-  GSecuredServicesSearch,
   GUserOverviewMenuView,
-  GArticle,
-  GLinkFormUnsecured,
-  GLinkPhone,
-  GLinkHyper,
+  GArticle
 } from '../';
-import { GRouterSecuredServicesBreadcrumbsRoot, GRouterSecuredServicesFilterButtonsRoot, GRouterSecuredServicesRoot, useUtilityClasses } from './useUtilityClasses';
+import { GRouterSecuredServicesRoot, useUtilityClasses, OwnerState } from './useUtilityClasses';
 import { SearchApi } from '../api-search';
-
+import { SearchFilters } from './SearchFilter';
+import { SearchResults } from './SearchResults';
+import { Nav } from './Nav';
 
 
 export interface GRouterSecuredServicesProps {
@@ -33,14 +29,23 @@ export interface GRouterSecuredServicesProps {
 export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ locale, viewId }) => {
   const { views } = useSite();
   const intl = useIntl();
+  const nav = useNavigate();
   const classes = useUtilityClasses();
+  const theme = useTheme();
 
-  const [topic, setTopic] = React.useState<SiteApi.TopicView>(views['000_index']);
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
+  const [topic, setTopic] = React.useState<SiteApi.TopicView>();
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
 
-
-  const handleClick: (newViewId: GUserOverviewMenuView | undefined) => void = React.useCallback((newViewId) => {
+  function onForm(form: SearchApi.LinkToForm) {
+    const productId = form.linkToForm.id;
+    const pageId = form.topic.id;
+    nav({
+      params: { productId, pageId, locale: intl.locale },
+      to: '/secured/$locale/pages/$pageId/products/$productId',
+    })
+  }
+  const handleNav: (newViewId: GUserOverviewMenuView | undefined) => void = React.useCallback((newViewId) => {
     if (!newViewId) { // i.e. --> login/logout buttons
       return;
     }
@@ -51,95 +56,56 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     })
   }, []);
 
-  const Article = React.useCallback(() => (topic ? <GArticle>{topic}</GArticle> : <></>), [topic]);
-  const Nav = React.useCallback(() => {
-    const classes = useUtilityClasses();
-    return (
-      <GRouterSecuredServicesBreadcrumbsRoot className={classes.root}>
-        <Link onClick={() => handleClick('user-overview')}>
-          <HomeIcon />
-          {intl.formatMessage({ id: 'gamut.userOverview.home' })}
-        </Link>
-        <Typography>
-          {intl.formatMessage({ id: 'gamut.services' })}
-        </Typography>
-        <Typography>
-          {topic.name}
-        </Typography>
-      </GRouterSecuredServicesBreadcrumbsRoot>);
-  }, [topic, viewId]);
-
-
-  function handleOnTopic(topic: SiteApi.TopicView) {
-    setTopic(topic)
-  }
-  function handleFilterByType(type: SearchApi.FilterMode) {
-    setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
-  }
-  function handleSecureLink(productId: string, pageId: string) {
-    console.log("pageId", pageId)
-    nav({
-      params: { productId, pageId, locale: intl.locale },
-      to: '/secured/$locale/pages/$pageId/products/$productId',
-    })
-  }
-
-
-  const nav = useNavigate();
   function handleLocale(locale: string) {
     nav({
       from: '/secured/$locale/views/$viewId',
       params: { locale },
-
       to: '/secured/$locale/views/$viewId',
     })
   }
 
+  const ownerState: OwnerState = {
+    search: state,
+    viewId,
+    topic,
+    withDrawer: !useMediaQuery(theme.breakpoints.down("md")),
+    onForm,
+    setSearch: setState,
+    onTopic: setTopic,
+    onHome: () => handleNav('user-overview')
+  }
+
+  const left = React.useCallback(() => {
+    return (
+      <>
+        {!topic && !ownerState.withDrawer && (
+          <>
+            <SearchFilters ownerState={ownerState} />
+            <SearchResults ownerState={ownerState} />
+          </>
+        )}
+        {!!topic && <GArticle>{topic}</GArticle>}
+      </>
+    );
+  }, [ownerState]);
+
+  const breadcrumbs = React.useCallback(() => <Nav ownerState={ownerState} />, [ownerState]);
+
   return (
     <GShell>
-      <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleClick('user-overview')} viewId={viewId} />
-      <Drawer variant='permanent' open={false} className={GShellClassName}>
-        <GSecuredServicesSearch id='gamut.search.placeholder'
-          onChange={({ currentTarget }) => setState(prev => prev.find(currentTarget.value))}
-        />
-        <GRouterSecuredServicesFilterButtonsRoot className={classes.searchFilterButtons}>
-          <Chip
-            color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
-            label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
-            onClick={() => handleFilterByType('PHONE_LINKS')} />
-          <Chip
-            color={state.searchOptionType === 'TOPICS' ? 'primary' : undefined}
-            label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
-            onClick={() => handleFilterByType('TOPICS')} />
-          <Chip
-            color={state.searchOptionType === 'FORM_LINKS' ? 'primary' : undefined}
-            label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })}
-            onClick={() => handleFilterByType('FORM_LINKS')} />
-          <Chip
-            color={state.searchOptionType === 'LINKS' ? 'primary' : undefined}
-            label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })}
-            onClick={() => handleFilterByType('LINKS')} />
-        </GRouterSecuredServicesFilterButtonsRoot>
-        {state.forms.map((form) => <GLinkFormUnsecured key={form.linkToForm.id} label={form.label}
-          value={form.linkToForm.value}
-          onClick={() => handleSecureLink(form.linkToForm.id, form.topic.id)} />
-        )}
-        {state.phones.map((phone) => <GLinkPhone key={phone.id} label={phone.name} value={phone.value} />)}
-        {state.topics.map((topic) => <Link key={topic.id} onClick={() => handleOnTopic(topic)}>{topic.name}</Link>)}
-        {...state.internal.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
-        {...state.external.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
+      <GRouterSecuredServicesRoot className={classes.root}>
+        <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleNav('user-overview')} viewId={viewId} />
 
-      </Drawer>
-      <main role='main'>
-        <Container>
-          <GRouterSecuredServicesRoot className={classes.root}>
-            <GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs: Nav, left: Article }} />
-          </GRouterSecuredServicesRoot>
-        </Container>
-      </main>
-      <footer role='footer'>
-        <GFooter />
-      </footer>
+        {ownerState.withDrawer && (
+          <Drawer variant='permanent' open={false} className={GShellClassName}>
+            <SearchFilters ownerState={ownerState} />
+            <SearchResults ownerState={ownerState} />
+          </Drawer>)
+        }
+
+        <main role='main'><Container><GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs, left }} /></Container></main>
+        <footer role='footer'><GFooter /></footer>
+      </GRouterSecuredServicesRoot>
     </GShell>
   );
 }

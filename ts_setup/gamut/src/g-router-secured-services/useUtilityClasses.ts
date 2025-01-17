@@ -1,6 +1,8 @@
 import { Breadcrumbs, generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
-
+import { SearchApi } from '../api-search';
+import { SiteApi } from '../api-site';
+import { GUserOverviewMenuView } from '../g-user-overview-menu';
 
 export const MUI_NAME = 'GRouterSecuredServices';
 
@@ -10,6 +12,19 @@ export interface GRouterSecuredServicesClasses {
   searchFilterButtons: string,
 }
 export type GRouterSecuredServicesClassKey = keyof GRouterSecuredServicesClasses;
+
+
+export interface OwnerState {
+  viewId: GUserOverviewMenuView;
+  topic: SiteApi.TopicView | undefined;
+  withDrawer: boolean;
+  search: SearchApi.SearchState;
+  setSearch: React.Dispatch<React.SetStateAction<SearchApi.SearchState>>;
+  onTopic: (topic: SiteApi.TopicView) => void;
+  onForm: (form: SearchApi.LinkToForm) => void;
+  onHome: () => void;
+}
+
 
 
 export const useUtilityClasses = () => {
@@ -36,8 +51,6 @@ export const GRouterSecuredServicesRoot = styled("div", {
 
   }
 });
-
-
 
 export const GRouterSecuredServicesFilterButtonsRoot = styled("div", {
   name: MUI_NAME,
@@ -71,7 +84,3 @@ export const GRouterSecuredServicesBreadcrumbsRoot = styled(Breadcrumbs, {
 
   }
 });
-
-
-
-

@@ -6,7 +6,6 @@ import {
   RouterBookings
 } from '../g-routes';
 import { GRouterSecuredServices } from '../g-router-secured-services';
-import { GRouterSecuredServicesSm } from '../g-router-secured-services-sm';
 
 import { GRouterInbox } from '../g-router-inbox';
 
@@ -30,12 +29,8 @@ function Component() {
 
 function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string }) {
   const { viewId, locale = 'en' } = props;
-
-
   if (viewId === 'services') {
     return <GRouterSecuredServices locale={locale} viewId={viewId} />
-  } else if (viewId === 'service-select-sm') {
-    return <GRouterSecuredServicesSm locale={locale} viewId={viewId} />
   } else if (viewId === 'requests-in-progress') {
     return <RouterUnfinishedForms locale={locale} viewId={viewId} />
   } else if (viewId === 'user-overview') {
