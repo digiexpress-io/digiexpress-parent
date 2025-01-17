@@ -63,7 +63,7 @@ export const RouterServiceSelected: React.FC<RouterServiceSelectedProps> = ({ lo
                   <HomeIcon />
                   {intl.formatMessage({ id: 'gamut.userOverview.home' })}
                 </Link>
-                <Link onClick={() => handleClick('service-select')}>
+                <Link onClick={() => handleClick('service-select-sm')}>
                   {intl.formatMessage({ id: 'gamut.services' })}
                 </Link>
                 <Typography>

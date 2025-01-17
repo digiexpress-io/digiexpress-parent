@@ -17,7 +17,7 @@ function Component() {
 function ChooseComponent(props: { locale: string, viewId: GUserOverviewMenuView, subjectId: string }) {
 
 
-  if (props.viewId === 'service-select') {
+  if (props.viewId === 'service-select-sm') {
     return (<RouterServiceSelected locale={props.locale} viewId={props.viewId} serviceId={props.subjectId} />)
   } 
   return (<GRouterInboxSubject locale={props.locale} viewId={props.viewId} subjectId={props.subjectId} />)

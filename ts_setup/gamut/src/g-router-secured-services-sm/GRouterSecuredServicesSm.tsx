@@ -17,13 +17,14 @@ import {
   GSecuredServices
 } from '../';
 
+// used exclusively for Mobile views
 
-export interface RouterServiceSelectProps {
+export interface GRouterSecuredServicesSmProps {
   locale: string;
   viewId: GUserOverviewMenuView;
 }
 
-export const RouterServiceSelect: React.FC<RouterServiceSelectProps> = ({ locale, viewId }) => {
+export const GRouterSecuredServicesSm: React.FC<GRouterSecuredServicesSmProps> = ({ locale, viewId }) => {
   const { views } = useSite();
   const intl = useIntl();
 
@@ -88,7 +89,7 @@ export const RouterServiceSelect: React.FC<RouterServiceSelectProps> = ({ locale
               <GSecuredServicesSearch id='gamut.search.placeholder' />
               {topics.map((topic, index) => (<div key={topic.id}>
                 <GSecuredServices onClick={(_event) => handleOnTopic(topic)}>{topic.name}</GSecuredServices>
-                {index === topics.length - 1 ? <></> : <Divider /> }
+                {index === topics.length - 1 ? <></> : <Divider />}
               </div>
               ))}
             </>,

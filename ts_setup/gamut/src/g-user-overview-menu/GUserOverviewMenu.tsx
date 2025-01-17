@@ -31,7 +31,7 @@ export interface GUserOverviewMenuViewOverrides { };
 
 export type GUserOverviewMenuView = OverridableStringUnion<
   'user-overview' |
-  'services' | 'service-select' |
+  'services' | 'service-select-sm' |
   'requests-in-progress' |
   'awaiting-decision' | 'with-decision' |
   'bookings' | 'inbox' |

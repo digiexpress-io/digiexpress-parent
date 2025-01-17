@@ -3,10 +3,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   RouterUnfinishedForms, RouterFormsAwaitingDecision, RouterFormsWithDecision,
   RouterUserOverview,
-  RouterBookings,
-  RouterServiceSelect
+  RouterBookings
 } from '../g-routes';
 import { GRouterSecuredServices } from '../g-router-secured-services';
+import { GRouterSecuredServicesSm } from '../g-router-secured-services-sm';
 
 import { GRouterInbox } from '../g-router-inbox';
 
@@ -34,6 +34,8 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
 
   if (viewId === 'services') {
     return <GRouterSecuredServices locale={locale} viewId={viewId} />
+  } else if (viewId === 'service-select-sm') {
+    return <GRouterSecuredServicesSm locale={locale} viewId={viewId} />
   } else if (viewId === 'requests-in-progress') {
     return <RouterUnfinishedForms locale={locale} viewId={viewId} />
   } else if (viewId === 'user-overview') {
@@ -46,8 +48,6 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
     return <GRouterInbox locale={locale} viewId={viewId} />
   } else if (viewId === 'bookings') {
     return <RouterBookings locale={locale} viewId={viewId} />
-  } else if (viewId === 'service-select') {
-    return <RouterServiceSelect locale={locale} viewId={viewId} />
-  }
+  } 
   return (<>No view defined</>)
 }
