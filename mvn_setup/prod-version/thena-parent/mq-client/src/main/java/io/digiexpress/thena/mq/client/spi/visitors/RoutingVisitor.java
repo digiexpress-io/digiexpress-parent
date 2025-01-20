@@ -122,14 +122,14 @@ public class RoutingVisitor implements  MessageToQueueRouter, ConsumerToQueueRou
   
   @Override
   public List<Queue> apply(Channel channel, QueueMessage message, List<Queue> queues) {
-    return queues.stream().filter(queue -> Router.builder()
+    return queues.stream().filter(queue -> Router.builderWithDot()
         .routingKey(message.getRoutingKey())
         .queueName(queue.getQueueName())
         .isMatch()).toList();
   }
   @Override
   public List<Queue> apply(Channel channel, QueueConsumer consumer, List<Queue> queues) {
-    return queues.stream().filter(queue -> Router.builder()
+    return queues.stream().filter(queue -> Router.builderWithDot()
         .routingKey(consumer.getRoutingKey())
         .queueName(queue.getQueueName())
         .isMatch()).toList();

@@ -166,7 +166,7 @@
   },
   {
     "id": "9",
-    "value": "qin [\"task.#.name\", \"task.#.description\"]",
+    "value": "qin [\"task/#/name\", \"task/#/description\"]",
     "type": "SET_CELL_VALUE"
   },
   {

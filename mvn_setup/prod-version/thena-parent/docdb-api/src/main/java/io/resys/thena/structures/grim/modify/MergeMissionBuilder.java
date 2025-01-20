@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableMap;
 
 import io.resys.thena.api.entities.grim.GrimAssignment;
@@ -229,6 +230,11 @@ public class MergeMissionBuilder implements MergeMission {
     this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream()
         .filter(a -> a.getRelation() == null)
         .filter(e -> e.getLabelType().equals(labelType))
+        .sorted((a, b) -> ComparisonChain.start()
+            .compare(a.getLabelType(), b.getLabelType())
+            .compare(a.getLabelValue(), b.getLabelValue())
+            .result())
+        
         .map(e -> {
           logger.rm(e);
           return e;

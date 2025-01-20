@@ -3,6 +3,7 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /*-
  * #%L
@@ -58,16 +59,21 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         merge.getCurrentState().getAssignments().values(),
         merge.getCurrentState().getRemarks().values());
     
-    merge
-      // overwrite assignees
-      .setAllAssignees(
+    // overwrite assignees    
+    if(command.getAssignedUser() == null) {
+      merge.setAllAssignees(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, Collections.emptyList(), null);
+    } else {
+      merge.setAllAssignees(
           TaskMapper.ASSIGNMENT_TYPE_TASK_USER, 
           Arrays.asList(command.getAssignedUser()), 
           newAssignee -> (builder) -> builder
           .assignmentType(TaskMapper.ASSIGNMENT_TYPE_TASK_USER)
           .assignee(newAssignee)
           .assigneeContact(command.getAssignedUserEmail())
-          .build())
+          .build());
+    }
+    
+    merge
       
       // overwrite roles
       .setAllAssignees(

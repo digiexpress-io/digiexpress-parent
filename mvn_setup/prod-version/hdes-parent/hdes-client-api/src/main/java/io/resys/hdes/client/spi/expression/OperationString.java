@@ -73,7 +73,7 @@ public class OperationString {
       return (String parameter) -> {
         
         for(final var value : constant) {
-          if(Router.builder().queueName(value).routingKey(parameter).isMatch()) {
+          if(Router.builderWithSlash().queueName(parameter).routingKey(value).isMatch()) {
             return true;
           }
         }

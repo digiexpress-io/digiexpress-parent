@@ -126,7 +126,7 @@ public class DecisionTest {
     {
       Map<String, Serializable> values = new HashMap<>();
       values.put("sriBoolean", false);
-      values.put("path", "task.#");
+      values.put("path", "task/smt/name");
       values.put("sri", 1);
       values.put("sriDate", DateParser.parseLocalDate("2017-07-03"));
       DecisionResult result = TestUtils.client.executor(envir).inputMap(values).decision("testDecisionTableQInExpression").andGetBody();

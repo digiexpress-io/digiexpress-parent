@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.test.task;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import io.digiexpress.eveli.client.api.ImmutableModifyTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
+import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.test.BaseEnvir;
 import io.resys.hdes.client.api.HdesClient;
@@ -58,7 +60,6 @@ import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 import io.resys.hdes.client.spi.ImmutableProgramContext;
 import io.resys.hdes.client.spi.decision.DecisionProgramBuilder;
 import io.resys.hdes.client.spi.decision.DecisionProgramExecutor;
-import jakarta.json.JsonPatch.Operation;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
@@ -117,6 +118,24 @@ public class CreateTaskTest extends TaskEnvirSetup {
             .subject(task.getSubject())
             .build())
         .await().atMost(atMost);
+    
+    
+    final var status_change = taskClient.taskBuilder()
+        .userId(user, email)
+        .modifyTask(task.getId(), ImmutableModifyTaskCommand.builder()
+            .status(TaskStatus.DELEGATED)
+            .subject(task.getSubject())
+            .build())
+        .await().atMost(atMost);
+    
+    
+    final var priority_change = taskClient.taskBuilder()
+        .userId(user, email)
+        .modifyTask(task.getId(), ImmutableModifyTaskCommand.builder()
+            .priority(TaskPriority.HIGH)
+            .subject(task.getSubject())
+            .build())
+        .await().atMost(atMost);
 
     final var diff_version_1 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), task.getVersion())
@@ -127,23 +146,34 @@ public class CreateTaskTest extends TaskEnvirSetup {
     Assertions.assertTrue(diff_version_1_events.containsAll(Arrays.asList("TASK_CREATED")));
     
     
+    
     final var diff_version_2 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), comment.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 2: \r\n {}", diff_version_2.getLog());
+    final var diff_version_2_events = eval(dt, diff_version_2);
+    log.info("Diff version 2: \r\n {}events: \r\n{}", diff_version_2.getLog(), diff_version_2_events);
+    Assertions.assertEquals(2, diff_version_2_events.size());
+    Assertions.assertTrue(diff_version_2_events.containsAll(Arrays.asList("TASK_UPDATED", "EXTERNAL_COMMENT_ADDED")));
+    
+    
     
     final var diff_version_3 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), assignee.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 3: \r\n {}", diff_version_3.getLog());
+    final var diff_version_3_events = eval(dt, diff_version_3);
+    log.info("Diff version 3: \r\n {}events: \r\n{}", diff_version_3.getLog(), diff_version_3_events);
+    Assertions.assertEquals(3, diff_version_3_events.size());
+    Assertions.assertTrue(diff_version_3_events.containsAll(Arrays.asList("TASK_UPDATED", "TASK_ASSIGNEE_UPDATED", "TASK_STATUS_UPDATED")));
+    
+    
     
     final var diff_version_4 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), assignee_change.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 4: \r\n {}", diff_version_4.getLog());
-    
-    
-    
+    final var diff_version4_events = eval(dt, diff_version_4);
+    log.info("Diff version 4: \r\n {}events: \r\n{}", diff_version_4.getLog(), diff_version4_events);
+    Assertions.assertEquals(2, diff_version4_events.size());
+    Assertions.assertTrue(diff_version4_events.containsAll(Arrays.asList("TASK_UPDATED", "TASK_ASSIGNEE_UPDATED")));
     
     
     
@@ -153,22 +183,7 @@ public class CreateTaskTest extends TaskEnvirSetup {
     /**
      * 
 
-    TASK_CREATED
-    TASK_UPDATED
-
-    TASK_COMPLETED
-    TASK_DESC_UPDATED
-    TASK_DUEDATE_UPDATED
-    TASK_ASSIGNEE_UPDATED (assigneeId, assignee_user, assignee_user_email)
-
-    TASK_SUBJECT_UPDATED
-    TASK_KEYWORDS_UPDATED
-    TASK_ASSIGNED_ROLES_UPDATED
-
-
-    TASK_STATUS_UPDATED
     TASK_STATUS_UPDATED_TO_
-    TASK_PRIORITY_UPDATED
     TASK_PRIORITY_UPDATED_TO_
      */
     
@@ -195,9 +210,92 @@ public class CreateTaskTest extends TaskEnvirSetup {
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("6").value("TASK_CREATED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//7
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("8").value(qin("/updated/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("8").value(in("/updated")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("9").value("replace").build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("10").value("TASK_UPDATED").build()
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("10").value("TASK_UPDATED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//11
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("12").value(qin("/completed/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("13").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("14").value("TASK_COMPLETED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//15
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("16").value(qin("/description/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("17").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("18").value("TASK_DESC_UPDATED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//19
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("20").value(qin("/dueDate/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("21").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("22").value("TASK_DUEDATE_UPDATED").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//23
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("24").value(qin("/subject/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("25").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("26").value("TASK_SUBJECT_UPDATED").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//27
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("28").value(qin(
+            "/assignedId/*",
+            "/assignedUser/*",
+            "/assignedUserEmail/*"
+        )).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("29").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("30").value("TASK_ASSIGNEE_UPDATED").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//31
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("32").value(qin("/keyWords/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("33").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("34").value("TASK_KEYWORDS_UPDATED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//35
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("36").value(qin("/assignedRoles/*")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("37").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("38").value("TASK_ROLES_UPDATED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//39
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("40").value(qin("/status")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("41").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("42").value("TASK_STATUS_UPDATED").build(),
+        
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//43
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("44").value(qin("/priority")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("45").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("46").value("TASK_PRIORITY_UPDATED").build(),
+
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//47              
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("48").value(qin("/comments/*/external/true")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("49").value("add").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("50").value("EXTERNAL_COMMENT_ADDED").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//51
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("52").value(qin("/comments/*/external/false")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("53").value("add").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("54").value("INTERNAL_COMMENT_ADDED").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//55
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("56").value(qin("/status/NEW")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("57").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("58").value("TASK_STATUS_UPDATED_TO_NEW").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//59
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("60").value(qin("/status/OPEN")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("61").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("62").value("TASK_STATUS_UPDATED_TO_OPEN").build(),
+        
+        ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//63
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("64").value(qin("/status/DELEGATED")).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("65").value(null).build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("66").value("TASK_STATUS_UPDATED_TO_DELEGATED").build()
+        
+        
     )).decision();
     
 
@@ -216,7 +314,7 @@ public class CreateTaskTest extends TaskEnvirSetup {
   private List<String> eval(ProgramWrapper<AstDecision, DecisionProgram> program, TaskDiff diff) {
     final var envir = ImmutableProgramEnvir.builder().tagName("junittest").putDecisionsByName(program.getId(), program).build();
     
-    final var events = new ArrayList<String>();
+    final var events = new HashSet<String>();
     for(final var diffValue : diff.getValues()) {
       final var ctx = ImmutableProgramContext.builder(hdesTypesMapper, envir, DI);
       ctx.map(Map.of(
@@ -231,12 +329,13 @@ public class CreateTaskTest extends TaskEnvirSetup {
       events.addAll(newEvents);
     }
     
-    return events;
+    return new ArrayList<>(events);
   }
   private String in(String exp) {
     return "in[\"" + exp + "\"]";
   }
-  private String qin(String exp) {
-    return "qin[\"" + exp + "\"]";
+  private String qin(String ...exp) {
+    final var next = Arrays.asList(exp).stream().map(e -> "\"" + e + "\"").toList().toArray(new String[] {});
+    return "qin[" + String.join(",", next) + "]";
   }
 }

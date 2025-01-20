@@ -26,7 +26,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Router {
-
+  private static String SPLIT_AT_DOT = "\\.";
+  private static String SPLIT_AT_SLASH = "\\/";
   private final String[] queueName;
   private final String[] routingKey;
   private int queueIndex = 0;
@@ -123,15 +124,22 @@ public class Router {
     return currentRoutingKey;
   }
   
-  public static RouterBuilder builder() {
-    return new RouterBuilder();
+  public static RouterBuilder builderWithDot() {
+    return new RouterBuilder(SPLIT_AT_DOT);
   }
+  public static RouterBuilder builderWithSlash() {
+    return new RouterBuilder(SPLIT_AT_SLASH);
+  }
+  
+  @RequiredArgsConstructor
   public static class RouterBuilder {
     private String[] queueName;
     private String[] routingKey;
+    private final String splitAt;
+    
     
     private String[] split(String value) {
-      return value.split("\\.");
+      return value.split(splitAt);
     }
     public RouterBuilder queueName(String queueName) {
       this.queueName = split(queueName);

@@ -29,31 +29,64 @@ public class RoutingKeyMatchTest {
 
   
   @Test
-  public void testSingleWordMatch() {
-    Assertions.assertTrue(Router.builder().queueName("task.modify.name").routingKey("*.modify.name").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.name").routingKey("task.*.name").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.name").routingKey("task.modify.*").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.name").routingKey("*.*.*").isMatch());
+  public void testSingleWordMatchWithDot() {
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.name").routingKey("*.modify.name").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.name").routingKey("task.*.name").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.name").routingKey("task.modify.*").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.name").routingKey("*.*.*").isMatch());
     
-    Assertions.assertFalse(Router.builder().queueName("task.modify.description").routingKey("task").isMatch());    
-    Assertions.assertFalse(Router.builder().queueName("task.modify.name").routingKey("*").isMatch());
-    Assertions.assertFalse(Router.builder().queueName("task.modify.name").routingKey("*.*").isMatch());
-    Assertions.assertFalse(Router.builder().queueName("task.modify.description").routingKey("task.*.name").isMatch());    
-    Assertions.assertFalse(Router.builder().queueName("taskcomment.modify.description").routingKey("task.*.name").isMatch());
+    Assertions.assertFalse(Router.builderWithDot().queueName("task.modify.description").routingKey("task").isMatch());    
+    Assertions.assertFalse(Router.builderWithDot().queueName("task.modify.name").routingKey("*").isMatch());
+    Assertions.assertFalse(Router.builderWithDot().queueName("task.modify.name").routingKey("*.*").isMatch());
+    Assertions.assertFalse(Router.builderWithDot().queueName("task.modify.description").routingKey("task.*.name").isMatch());    
+    Assertions.assertFalse(Router.builderWithDot().queueName("taskcomment.modify.description").routingKey("task.*.name").isMatch());
   }
   
   
   @Test
-  public void testWildcardWordMatch() {
-    Assertions.assertFalse(Router.builder().queueName("taskcomment.modify.description").routingKey("#.name").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("#.description").isMatch());
+  public void testWildcardWordMatchWithDot() {
+    Assertions.assertFalse(Router.builderWithDot().queueName("taskcomment.modify.description").routingKey("#.name").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("#.description").isMatch());
     
     
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("#.modify.description").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("task.#").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("task.#.description").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("task.modify.#").isMatch());
-    Assertions.assertTrue(Router.builder().queueName("task.modify.description").routingKey("#").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("#.modify.description").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("task.#").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("task.#.description").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("task.modify.#").isMatch());
+    Assertions.assertTrue(Router.builderWithDot().queueName("task.modify.description").routingKey("#").isMatch());
+    
+  }
+  
+  
+  @Test
+  public void testSingleWordMatchWithSlash() {
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/name").routingKey("*/modify/name").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/name").routingKey("task/*/name").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/name").routingKey("task/modify/*").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/name").routingKey("*/*/*").isMatch());
+    
+    Assertions.assertFalse(Router.builderWithSlash().queueName("task/modify/description").routingKey("task").isMatch());    
+    Assertions.assertFalse(Router.builderWithSlash().queueName("task/modify/name").routingKey("*").isMatch());
+    Assertions.assertFalse(Router.builderWithSlash().queueName("task/modify/name").routingKey("*/*").isMatch());
+    Assertions.assertFalse(Router.builderWithSlash().queueName("task/modify/description").routingKey("task/*/name").isMatch());    
+    Assertions.assertFalse(Router.builderWithSlash().queueName("taskcomment/modify/description").routingKey("task/*/name").isMatch());
+  }
+  
+  
+  @Test
+  public void testWildcardWordMatchWithSlash() {
+    Assertions.assertTrue(Router.builderWithSlash().queueName("/comments/0/external/true").routingKey("/comments/*/external/true").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("/assignedUser/sam").routingKey("/assignedUser/*").isMatch());
+    
+    Assertions.assertFalse(Router.builderWithSlash().queueName("taskcomment/modify/description").routingKey("#/name").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("#/description").isMatch());
+    
+    
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("#/modify/description").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("task/#").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("task/#/description").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("task/modify/#").isMatch());
+    Assertions.assertTrue(Router.builderWithSlash().queueName("task/modify/description").routingKey("#").isMatch());    
     
   }
 }
