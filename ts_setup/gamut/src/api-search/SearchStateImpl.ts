@@ -200,7 +200,7 @@ export class SearchStateImpl implements SearchApi.SearchState {
   ) {
     this._source = props.source;
     this._searchString = props.searchString;
-    this._searchOptionType = props.searchOptionType ?? 'TOPICS';
+    this._searchOptionType = props.searchOptionType ?? 'ALL';
     this._noValueIndicatorColon = props.noValueIndicatorColon;
     const search = new SearchReducer(this._source, this._searchString, this.searchOptionType, this._noValueIndicatorColon).accept();
     this._forms = search.forms;

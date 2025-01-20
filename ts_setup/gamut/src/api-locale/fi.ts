@@ -92,6 +92,7 @@ export const fi = {
   'gamut.search.results.phoneLinks': 'Puhelinnumerot',
 
   'gamut.search.results.noResults': 'Ei tuloksia haulle',
+  'gamut.search.results.allResults': 'Kaikki tulokset',
 
 
   // ------------------- GAMUT ARTICLES  -----------------------

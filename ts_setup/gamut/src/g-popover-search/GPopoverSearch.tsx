@@ -70,6 +70,10 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.quickSearch}>
               <Chip
+                color={state.searchOptionType === 'ALL' ? 'primary' : undefined}
+                label={intl.formatMessage({ id: 'gamut.search.results.allResults' })}
+                onClick={() => handleFilterByType('ALL')} />
+              <Chip
                 color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
                 onClick={() => handleFilterByType('PHONE_LINKS')} className={classes.quickSearchFilterItem} />
