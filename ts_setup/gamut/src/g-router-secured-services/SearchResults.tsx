@@ -43,7 +43,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
   const intl = useIntl();
   const classes = useUtilityClasses();
 
-  const hasNoResults = search.topics.length === 0 &&
+  const noResults = search.topics.length === 0 &&
     search.forms.length === 0 &&
     search.phones.length === 0 &&
     search.internal.length === 0 &&
@@ -51,7 +51,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
 
   return (
     <GRouterSecuredServicesSearchResultsRoot className={classes.searchResults}>
-      {hasNoResults ? (
+      {noResults ? (
         <Alert severity='info' variant='outlined'>
           {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
           {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {search.searchString}

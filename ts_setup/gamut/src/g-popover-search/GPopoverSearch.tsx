@@ -66,7 +66,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
 
-  const hasNoResults = state.topics.length === 0 &&
+  const noResults = state.topics.length === 0 &&
     state.forms.length === 0 &&
     state.phones.length === 0 &&
     state.internal.length === 0 &&
@@ -127,26 +127,28 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
           <Grid2>
             <Grid2 size={{ lg: 3, xl: 3 }} />
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer}>
-              {hasNoResults ? (
+              {noResults ? (
                 <Alert severity='info' variant='outlined'>
                   {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
                   {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {state.searchString}
                 </Alert>
               ) : (
                 <>
-                  <ResultsDivider searchState={state} title='gamut.search.results.formLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
-                  {state.forms.map((form) => <GLinkFormUnsecured key={form.linkToForm.id} label={form.label} value={form.linkToForm.value}
-                    onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />)}
+                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
+                    {state.topics.map((topic) => (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>))}
 
-                  <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
-                  {state.phones.map((phone) => <GLinkPhone key={phone.id} label={phone.name} value={phone.value} />)}
+                    <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
+                    {state.forms.map((form) => (<GLinkFormUnsecured key={form.linkToForm.id} label={form.label} value={form.linkToForm.value}
+                      onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />))}
 
-                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
-                    {state.topics.map((topic) => <Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)}
+                    <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' className={classes.resultsDividerTitle} isHidden={state.phones.length === 0} />
+                    {state.phones.map((phone) => (<GLinkPhone key={phone.id} label={phone.name} value={phone.value} />))}
 
-                    <ResultsDivider searchState={state} title='gamut.search.results.internalExternalLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
-                    {...state.internal.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
-                    {...state.external.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
+                    <ResultsDivider searchState={state} title='gamut.search.results.internalExternalLinks' className={classes.resultsDividerTitle}
+                      isHidden={state.external.length === 0 && state.internal.length === 0}
+                    />
+                    {...state.internal.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
+                    {...state.external.map((link) => (<GLinkHyper label={link.name} value={link.value} key={link.id} />))}
                 </>
               )}
             </Grid2>
