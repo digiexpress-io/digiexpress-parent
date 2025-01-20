@@ -82,7 +82,10 @@ public class OperationString {
       };
     }    
     private static Operation<String> in(Collection<String> constant) {
-      return (String parameter) -> constant.contains(parameter);
+      return (String parameter) -> {
+        
+        return constant.contains(parameter);
+      };
     }
     private static Operation<String> notIn(Collection<String> constant) {
       return (String parameter) -> !constant.contains(parameter);

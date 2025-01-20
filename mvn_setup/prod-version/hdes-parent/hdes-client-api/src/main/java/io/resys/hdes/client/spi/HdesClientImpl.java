@@ -197,7 +197,7 @@ public class HdesClientImpl implements HdesClient {
     }
   }
 
-  private static class HdesClientConfigImpl implements HdesClientConfig {
+  public static class HdesClientConfigImpl implements HdesClientConfig {
     private final List<AstFlowNodeVisitor> flowVisitors = new ArrayList<>();
     private final HdesCache cache;
     private final ServiceInit serviceInit;
