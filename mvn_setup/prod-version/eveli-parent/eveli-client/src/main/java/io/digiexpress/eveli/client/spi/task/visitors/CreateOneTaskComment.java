@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.task;
+package io.digiexpress.eveli.client.spi.task.visitors;
 
 /*-
  * #%L
@@ -24,6 +24,9 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.CreateTaskCommentCommand;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.spi.task.TaskException;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;

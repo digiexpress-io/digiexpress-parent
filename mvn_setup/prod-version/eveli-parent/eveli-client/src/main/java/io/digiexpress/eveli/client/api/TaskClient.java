@@ -224,6 +224,7 @@ public interface TaskClient {
   interface TaskDiff {
     String getTaskId();
     String getVersion();
+    String getLog();
     List<TaskDiffValue> getValues();
   }
   

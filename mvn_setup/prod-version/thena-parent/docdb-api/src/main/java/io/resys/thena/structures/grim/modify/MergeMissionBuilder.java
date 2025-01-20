@@ -175,6 +175,10 @@ public class MergeMissionBuilder implements MergeMission {
     final var toBeDeleted = new ArrayList<>(container.getAssignments().values().stream()
         .filter(a -> a.getRelation() == null)
         .filter(e -> e.getAssignmentType().equals(assigneeType))
+        .map(e -> {
+          logger.rm(e);
+          return e;
+        })
         .toList());
 
 
@@ -192,6 +196,7 @@ public class MergeMissionBuilder implements MergeMission {
           .filter(a -> a.getAssignmentType().equals(built.getAssignmentType()))
           .filter(a -> a.getAssignee().equals(built.getAssignee()))
           .filter(a -> Objects.equals(a.getAssigneeContact(), built.getAssigneeContact()))
+          
           .findFirst();
       
       if(previous.isPresent()) {
@@ -224,6 +229,10 @@ public class MergeMissionBuilder implements MergeMission {
     this.batch.addAllDeleteMissionLabels(container.getMissionLabels().values().stream()
         .filter(a -> a.getRelation() == null)
         .filter(e -> e.getLabelType().equals(labelType))
+        .map(e -> {
+          logger.rm(e);
+          return e;
+        })
         .toList());
     
     // add new
@@ -258,6 +267,10 @@ public class MergeMissionBuilder implements MergeMission {
     this.batch.addAllDeleteLinks(container.getLinks().values().stream()
         .filter(a -> a.getRelation() == null)
         .filter(a -> a.getLinkType().equals(linkType))
+        .map(e -> {
+          logger.rm(e);
+          return e;
+        })
         .toList());
     
     // add new

@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.task;
+package io.digiexpress.eveli.client.spi.task.visitors;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -31,6 +31,9 @@ import io.digiexpress.eveli.client.api.TaskClient.ModifyTaskCommand;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.spi.task.TaskException;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;

@@ -38,7 +38,6 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.test.BaseEnvir;
-import io.quarkus.logging.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
@@ -74,31 +73,43 @@ public class CreateTaskTest extends TaskEnvirSetup {
         .build())
       .await().atMost(atMost);
 
-    
     final var assignee = taskClient.taskBuilder()
+      .userId(user, email)
+      .modifyTask(task.getId(), ImmutableModifyTaskCommand.builder()
+          .status(TaskStatus.REJECTED)
+          .assignedUser("bob")
+          .assignedUserEmail("bob@bob")
+          .subject(task.getSubject())
+          .build())
+      .await().atMost(atMost);
+
+    final var assignee_change = taskClient.taskBuilder()
         .userId(user, email)
         .modifyTask(task.getId(), ImmutableModifyTaskCommand.builder()
-            .status(TaskStatus.REJECTED)
-            .assignedUser("bob")
-            .assignedUserEmail("bob@bob")
+            .assignedUser("sam")
+            .assignedUserEmail("sam@sam")
             .subject(task.getSubject())
             .build())
         .await().atMost(atMost);
 
-    
     final var diff_version_1 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), task.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_1.getValues().stream().map(e -> e.toString()).toList()));
+    log.info("Diff version 1: \r\n {}", diff_version_1.getLog());
 
     final var diff_version_2 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), comment.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_2.getValues().stream().map(e -> e.toString()).toList()));
+    log.info("Diff version 2: \r\n {}", diff_version_2.getLog());
     
     final var diff_version_3 = taskClient.queryTasks()
         .getOneTaskDiff(task.getId(), assignee.getVersion())
         .await().atMost(atMost);
-    log.info("Diff version 3: \r\n {}", String.join("\r\n", diff_version_3.getValues().stream().map(e -> e.toString()).toList()));
+    log.info("Diff version 3: \r\n {}", diff_version_3.getLog());
+    
+    final var diff_version_4 = taskClient.queryTasks()
+        .getOneTaskDiff(task.getId(), assignee_change.getVersion())
+        .await().atMost(atMost);
+    log.info("Diff version 4: \r\n {}", diff_version_4.getLog());
   }
 }

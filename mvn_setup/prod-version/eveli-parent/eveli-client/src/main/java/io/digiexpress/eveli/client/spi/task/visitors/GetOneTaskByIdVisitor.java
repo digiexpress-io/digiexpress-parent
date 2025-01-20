@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.task;
+package io.digiexpress.eveli.client.spi.task.visitors;
 
 /*-
  * #%L
@@ -20,10 +20,14 @@ package io.digiexpress.eveli.client.spi.task;
  * #L%
  */
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.spi.task.TaskException;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -35,13 +39,13 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisitor<List<TaskClient.Task>> {
-  private final List<String> taskId;
+public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<TaskClient.Task> {
+  private final String taskId;
   
   @Override
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
     return query
-          .addMissionId(taskId)
+          .addMissionId(Arrays.asList(taskId))
           // we don't need following docs
           .excludeDocs(
               GrimDocType.GRIM_COMMANDS, 
@@ -54,30 +58,24 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
   @Override
   public  List<GrimMissionContainer> visitEnvelope(GrimStructuredTenant config, QueryEnvelopeList<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw TaskException.builder("GET_TASKS_BY_IDS_FAIL")
+      throw TaskException.builder("GET_TASKS_BY_ID_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(taskId.toString()))
+        .add((callback) -> callback.addArgs(taskId))
         .build();
     }
     final var result = envelope.getObjects();
-    if(result == null) {
-      throw TaskException.builder("GET_TASKS_BY_IDS_NOT_FOUND")   
+    if(result == null || result.isEmpty()) {
+      throw TaskException.builder("GET_TASKS_BY_ID_NOT_FOUND")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(taskId.toString()))
+        .add((callback) -> callback.addArgs(taskId))
         .build();
     }
     return result;
   }
 
   @Override
-  public Uni<List<Task>> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
-    final var tasks = commit.stream()
-        .map(container -> TaskMapper.map(
-            container.getMission(), 
-            container.getAssignments().values(), 
-            container.getRemarks().values()))
-        .toList();
-    
-    return Uni.createFrom().item(tasks);
+  public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
+    final var container = commit.iterator().next();
+    return Uni.createFrom().item(TaskMapper.map(container.getMission(), container.getAssignments().values(), container.getRemarks().values()));
   }
 }

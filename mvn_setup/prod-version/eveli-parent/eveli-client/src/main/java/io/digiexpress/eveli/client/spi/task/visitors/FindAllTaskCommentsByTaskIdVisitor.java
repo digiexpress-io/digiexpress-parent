@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.task;
+package io.digiexpress.eveli.client.spi.task.visitors;
 
 /*-
  * #%L
@@ -20,7 +20,12 @@ package io.digiexpress.eveli.client.spi.task;
  * #L%
  */
 
+import java.util.List;
+
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.task.TaskException;
+import io.digiexpress.eveli.client.spi.task.TaskMapper;
+import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimQueryActions.MissionRemarkQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -30,36 +35,37 @@ import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
-
 @RequiredArgsConstructor
-public class GetOneTaskCommentByIdVisitor implements TaskStoreConfig.QueryOneTaskCommentsVisitor<TaskClient.TaskComment> {
-  private final String commentId;
+public class FindAllTaskCommentsByTaskIdVisitor implements TaskStoreConfig.QueryOneTaskCommentsVisitor<List<TaskClient.TaskComment>> {
+  private final String missionId;
   
   @Override
   public Uni<QueryEnvelope<GrimMissionContainer>> start(GrimStructuredTenant config, MissionRemarkQuery query) {
-    return query.getOneByRemarkId(commentId);
+    return query.findAllByMissionId(missionId);
   }
 
   @Override
   public GrimMissionContainer visitEnvelope(GrimStructuredTenant config, QueryEnvelope<GrimMissionContainer> envelope) {
     if(envelope.getStatus() != QueryEnvelopeStatus.OK) {
-      throw TaskException.builder("GET_TASK_COMMENT_BY_ID_FAIL")
+      throw TaskException.builder("FIND_ALL_TASK_COMMENTS_BY_TASK_ID_FAIL")
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(commentId))
+        .add((callback) -> callback.addArgs(missionId))
         .build();
     }
     final var result = envelope.getObjects();
-    if(result == null || result.getRemarks().isEmpty()) {
-      throw TaskException.builder("GET_TASK_COMMENT_BY_ID_NOT_FOUND")   
+    if(result == null) {
+      throw TaskException.builder("FIND_ALL_TASK_COMMENTS_BY_TASK_ID_NOT_FOUND")   
         .add(config, envelope)
-        .add((callback) -> callback.addArgs(commentId))
+        .add((callback) -> callback.addArgs(missionId))
         .build();
     }
     return result;
   }
 
   @Override
-  public Uni<TaskClient.TaskComment> end(GrimStructuredTenant config, GrimMissionContainer commit) {
-    return Uni.createFrom().item(TaskMapper.map(commit.getRemarks().values().iterator().next()));
+  public Uni<List<TaskClient.TaskComment>> end(GrimStructuredTenant config, GrimMissionContainer commit) {
+    return Uni.createFrom().item(
+      commit.getRemarks().values().stream().map(TaskMapper::map).toList()
+    );
   }
 }
