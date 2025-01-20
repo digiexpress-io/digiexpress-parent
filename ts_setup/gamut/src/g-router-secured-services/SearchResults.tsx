@@ -7,7 +7,7 @@ import {
   GLinkHyper,
 } from '../';
 
-import { GRouterSecuredServicesResultsDividerRoot, GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
+import { GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useIntl } from 'react-intl';
 
@@ -35,7 +35,6 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
     <GRouterSecuredServicesSearchResultsRoot className={classes.searchResults}>
 
       <ResultsDivider ownerState={ownerState} title='Forms' />
-
       {search.forms.map((form) => (
         <List dense>
           <GLinkFormUnsecured key={form.linkToForm.id} label={form.label}
