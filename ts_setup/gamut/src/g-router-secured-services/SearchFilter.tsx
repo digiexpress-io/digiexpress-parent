@@ -16,6 +16,7 @@ export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ ownerState
   const { search, setSearch } = ownerState;
 
   function handleFilterByType(type: SearchApi.FilterMode) {
+    console.log(type)
     setSearch(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
   }
   return (<>

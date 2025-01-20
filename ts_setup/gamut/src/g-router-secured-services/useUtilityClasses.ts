@@ -14,7 +14,6 @@ export interface GRouterSecuredServicesClasses {
   resultsDividerTitle: string,
   resultsDivider: string,
   servicesBreadcrumbs: string
-
 }
 export type GRouterSecuredServicesClassKey = keyof GRouterSecuredServicesClasses;
 
