@@ -94,8 +94,6 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   const parentPageId = topic.parent?.id ?? undefined;
   const pageId = topic.id;
 
-
-
   function handleCancelOffer() {
     if (anonymousUser) {
       nav({
@@ -105,7 +103,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       })
     }
     nav({
-      from: '/public/$locale/pages/$pageId/products/$productId',
+      from: '/secured/$locale/pages/$pageId/products/$productId',
       params: { viewId: 'user-overview' },
       to: '/secured/$locale/views/$viewId',
     })
@@ -125,7 +123,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       } else {
         nav({
           params: { locale, pageId, productId, offerId: offer.id },
-          to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+          to: '/secured/$locale/pages/${props.ownerState.pageId}/products/$productId/offers/$offerId',
         })
       }
     })
@@ -169,20 +167,21 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
 
 
 const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
-  const { topic, topicLink } = props.ownerState;
+  const { topic, topicLink, anonymousUser } = props.ownerState;
   const intl = useIntl();
   const nav = useNavigate();
 
+
   function handleUserOverview() {
     nav({
-      from: '/public/$locale/pages/$pageId/products/$productId',
+      from: '/secured/$locale/pages/$pageId/products/$productId',
       params: { viewId: 'user-overview' },
       to: '/secured/$locale/views/$viewId',
     })
   }
   function handleServicesClick() {
     nav({
-      from: '/public/$locale/pages/$pageId/products/$productId',
+      from: '/secured/$locale/pages/$pageId/products/$productId',
       params: { viewId: 'services' },
       to: '/secured/$locale/views/$viewId',
     });
