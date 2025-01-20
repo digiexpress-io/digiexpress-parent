@@ -88,6 +88,12 @@ export const en = {
   'gamut.search.popover.allLinks': 'All links',
   'gamut.search.popover.allServices': 'All services',
 
+  'gamut.search.results.serviceLinks': 'Services',
+  'gamut.search.results.formLinks': 'Lomakkeita',
+  'gamut.search.results.externalLinks': 'Links to other sites',
+  'gamut.search.results.internalLinks': 'Links to our pages',
+  'gamut.search.results.phoneLinks': 'Phone numbers',
+
   // ------------------- GAMUT ARTICLES  -----------------------
 
   'gamut.article.pagelinks.forms.title': 'Forms',
@@ -245,6 +251,7 @@ export const en = {
   'gamut.feedback.updatedOnDate': 'Updated date',
   'gamut.feedback.feedbackViewerTitle': 'Customer feedback',
   'gamut.feedback.feedbackViewerSubTitle': 'Organisation reply',
+
 
   // ----------------------- DIALOB REVIEW -------------------------
 

@@ -13,6 +13,7 @@ export interface GRouterSecuredServicesClasses {
   searchResults: string,
   resultsDividerTitle: string,
   resultsDivider: string,
+  servicesBreadcrumbs: string
 
 }
 export type GRouterSecuredServicesClassKey = keyof GRouterSecuredServicesClasses;
@@ -37,7 +38,8 @@ export const useUtilityClasses = () => {
     searchFilterButtons: ['searchFilterButtons'],
     searchResults: ['searchResults'],
     resultsDividerTitle: ['resultsDividerTitle'],
-    resultsDivider: ['resultsDivider']
+    resultsDivider: ['resultsDivider'],
+    servicesBreadcrumbs: ['servicesBreadcrumbs']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -53,7 +55,8 @@ export const GRouterSecuredServicesRoot = styled("div", {
       styles.searchResults,
       styles.searchFilterButtons,
       styles.resultsDividerTitle,
-      styles.resultsDivider
+      styles.resultsDivider,
+      styles.servicesBreadcrumbs
     ];
   },
 })(({ theme }) => {
@@ -70,14 +73,25 @@ export const GRouterSecuredServicesRoot = styled("div", {
       padding: theme.spacing(1),
     },
     '& .GRouterSecuredServices-resultsDividerTitle': {
-      ...theme.typography.h1,
-      textAlign: 'center'
+
+      [theme.breakpoints.down('md')]: {
+        ...theme.typography.h1,
+        textAlign: 'center',
+      },
+
+      [theme.breakpoints.up('md')]: {
+        ...theme.typography.h3,
+        textAlign: 'center',
+      },
     },
     '& .GRouterSecuredServices-resultsDivider': {
       border: `1px solid ${theme.palette.primary.main}`,
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
     },
+    '& .GRouterSecuredServices-servicesBreadcrumbs': {
+
+    }
 
   }
 });
@@ -113,7 +127,7 @@ export const GRouterSecuredServicesSearchResultsRoot = styled("div", {
 }
 );
 
-export const GRouterSecuredServicesResultsDividerRoot = styled(Breadcrumbs, {
+export const GRouterSecuredServicesResultsDividerRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -128,9 +142,9 @@ export const GRouterSecuredServicesResultsDividerRoot = styled(Breadcrumbs, {
   }
 });
 
-export const GRouterSecuredServicesBreadcrumbsRoot = styled('div', {
+export const GRouterSecuredServicesBreadcrumbsRoot = styled(Breadcrumbs, {
   name: MUI_NAME,
-  slot: 'Root',
+  slot: 'ServicesBreadcrumbs',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
@@ -138,7 +152,6 @@ export const GRouterSecuredServicesBreadcrumbsRoot = styled('div', {
   },
 })(({ theme }) => {
   return {
-
 
   }
 });

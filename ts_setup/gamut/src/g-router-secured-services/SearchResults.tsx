@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Link, List, Typography } from '@mui/material';
+import { Divider, Link, List, ListItem, Typography } from '@mui/material';
 
 import {
   GLinkFormUnsecured,
@@ -34,46 +34,58 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
   return (
     <GRouterSecuredServicesSearchResultsRoot className={classes.searchResults}>
 
-      <ResultsDivider ownerState={ownerState} title='Forms' />
-      {search.forms.map((form) => (
-        <List dense>
-          <GLinkFormUnsecured key={form.linkToForm.id} label={form.label}
-            value={form.linkToForm.value}
-            onClick={() => onForm(form)} />
-        </List>
-      )
-      )}
+      <ResultsDivider ownerState={ownerState} title='gamut.search.results.serviceLinks' />
 
-      <ResultsDivider ownerState={ownerState} title='Services' />
+      <List dense>
+        {search.topics.map((topic) => (
+          <ListItem key={topic.id}>
+            <Link onClick={() => onTopic(topic)}>{topic.name}</Link>
+          </ListItem>
+        ))}
+      </List>
 
-      {search.topics.map((topic) => (
-        <List dense>
-          <Link component='span' key={topic.id} onClick={() => onTopic(topic)}>{topic.name}</Link>
-        </List>
-      ))}
+      <ResultsDivider ownerState={ownerState} title='gamut.search.results.formLinks' />
+      <List dense>
+        {search.forms.map((form) => (
+          <ListItem key={form.linkToForm.id}>
+            <GLinkFormUnsecured key={form.linkToForm.id} label={form.label}
+              value={form.linkToForm.value}
+              onClick={() => onForm(form)} />
+          </ListItem>
+        )
+        )}
+      </List>
 
-      <ResultsDivider ownerState={ownerState} title='Phone numbers' />
+      <ResultsDivider ownerState={ownerState} title='gamut.search.results.phoneLinks' />
 
-      {search.phones.map((phone) => (
-        <List dense>
-          <GLinkPhone key={phone.id} label={phone.name} value={phone.value} />
-        </List>
-      ))}
+      <List dense>
+        {search.phones.map((phone) => (
+          <ListItem key={phone.id}>
+            <GLinkPhone label={phone.name} value={phone.value} />
+          </ListItem>
+        ))}
+      </List>
 
-      <ResultsDivider ownerState={ownerState} title='Links to other pages' />
+      <ResultsDivider ownerState={ownerState} title='gamut.search.results.internalLinks' />
 
-      {...search.internal.map((link) => (
-        <List dense>
-          <GLinkHyper label={link.name} value={link.value} key={link.id} />
-        </List>
-      ))}
+      <List dense>
+        {...search.internal.map((link) => (
+          <ListItem key={link.name}>
+            <GLinkHyper label={link.name} value={link.value} key={link.id} />
+          </ListItem>
+        ))}
+      </List>
 
-      <ResultsDivider ownerState={ownerState} title='Links to our pages' />
+      <ResultsDivider ownerState={ownerState} title='gamut.search.results.externalLinks' />
 
-      {...search.external.map((link) => (
-        <List dense>
-          <GLinkHyper label={link.name} value={link.value} key={link.id} />
-        </List>))}
+      <List dense>
+        {...search.external.map((link) => (
+          <ListItem key={link.name}>
+            <GLinkHyper label={link.name} value={link.value} key={link.id} />
+          </ListItem>
+        ))}
+      </List>
+
     </GRouterSecuredServicesSearchResultsRoot>
   );
 }

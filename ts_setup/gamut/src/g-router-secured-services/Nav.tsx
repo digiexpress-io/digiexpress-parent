@@ -23,7 +23,7 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const { topic, onHome } = ownerState;
 
   return (
-    <GRouterSecuredServicesBreadcrumbsRoot className={classes.root}>
+    <GRouterSecuredServicesBreadcrumbsRoot className={classes.servicesBreadcrumbs}>
       <Link onClick={onHome}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}

@@ -22,10 +22,6 @@ export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ ownerState
     <GSecuredServicesSearch id='gamut.search.placeholder' onChange={({ currentTarget }) => setSearch(prev => prev.find(currentTarget.value))} />
     <GRouterSecuredServicesFilterButtonsRoot className={classes.searchFilterButtons}>
       <Chip
-        color={search.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
-        label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
-        onClick={() => handleFilterByType('PHONE_LINKS')} />
-      <Chip
         color={search.searchOptionType === 'TOPICS' ? 'primary' : undefined}
         label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
         onClick={() => handleFilterByType('TOPICS')} />
@@ -33,6 +29,10 @@ export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ ownerState
         color={search.searchOptionType === 'FORM_LINKS' ? 'primary' : undefined}
         label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })}
         onClick={() => handleFilterByType('FORM_LINKS')} />
+      <Chip
+        color={search.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
+        label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
+        onClick={() => handleFilterByType('PHONE_LINKS')} />
       <Chip
         color={search.searchOptionType === 'LINKS' ? 'primary' : undefined}
         label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })}

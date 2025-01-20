@@ -33,6 +33,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
   const classes = useUtilityClasses();
   const theme = useTheme();
 
+  const withDrawer = !useMediaQuery(theme.breakpoints.down("md"));
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [topic, setTopic] = React.useState<SiteApi.TopicView>();
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
@@ -68,12 +69,19 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     search: state,
     viewId,
     topic,
-    withDrawer: !useMediaQuery(theme.breakpoints.down("md")),
+    withDrawer: withDrawer,
     onForm,
     setSearch: setState,
     onTopic: setTopic,
     onHome: () => handleNav('user-overview')
   }
+
+  React.useEffect(() => {
+    if (!topic && withDrawer) {
+      const defaultTopic = Object.values(views).find((view: SiteApi.TopicView) => view.id === "000_index");
+      setTopic(defaultTopic);
+    }
+  }, [topic, views]);
 
   const left = React.useCallback(() => {
     return (
