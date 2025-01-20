@@ -143,9 +143,4 @@ public abstract class TaskEnvirSetup {
       return processClient;
     }
   }
-
-  
-  public static void logDiff() {
-    
-  }
 }

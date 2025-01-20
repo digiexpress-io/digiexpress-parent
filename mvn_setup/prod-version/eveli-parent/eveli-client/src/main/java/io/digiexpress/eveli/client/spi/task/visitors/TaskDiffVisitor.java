@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class TaskDiffVisitor {
     } else if(operation.getValueType() == JsonPatchValueType.OBJECT) {
       diff.addAllValues(visitDiffObjectChildren(operation));
     } else {
-      diff.addValues(visitDiffObjectField(operation));  
+      diff.addAllValues(visitDiffObjectField(operation));  
     }
   }
   
@@ -120,29 +121,46 @@ public class TaskDiffVisitor {
     return root;
   }
   
-  private TaskDiffValue visitDiffObjectField(JsonPatchOp operation) {
+  private List<TaskDiffValue> visitDiffObjectField(JsonPatchOp operation) {
     final var from = Optional.ofNullable(operation.getRaw().getMap().get(PatchType.NAMES_FROM_VALUE))
         .map(e -> e.toString()).orElse("");
     
     final var to = Optional.ofNullable(operation.getRaw().getMap().get(PatchType.NAMES_VALUE))
         .map(e -> e.toString()).orElse("");
-
+    final var path = operation.getPath();
+    
     diffLog
       .append(System.lineSeparator())
       .append("field modified: ").append(System.lineSeparator())
       .append("  op: ").append(operation.getOp()).append(System.lineSeparator())
       .append("  path: ").append(operation.getPath()).append(System.lineSeparator())
       .append("  from: ").append(from).append(System.lineSeparator())
+      .append("  to: ").append(to).append(System.lineSeparator())
+
+    
+      .append("field modified(field path): ").append(System.lineSeparator())
+      .append("  op: ").append(operation.getOp()).append(System.lineSeparator())
+      .append("  path: ").append(path + "/" + to).append(System.lineSeparator())
+      .append("  from: ").append(from).append(System.lineSeparator())
       .append("  to: ").append(to).append(System.lineSeparator());
     
-    final var path = operation.getPath();
+
     final String value = Optional.ofNullable(operation.getValue()).map(e -> e.toString()).orElse(null);
-    return ImmutableTaskDiffValue.builder()
-      .op(operation.getOp())
-      .path(path)
-      .value(value)
-      .raw(operation.getRaw())
-      .build();
+    return Arrays.asList(
+        ImmutableTaskDiffValue.builder()
+          .op(operation.getOp())
+          .path(path)
+          .value(value)
+          .raw(operation.getRaw())
+          .build(),
+        
+        ImmutableTaskDiffValue.builder()
+          .op(operation.getOp())
+          .path(path + "/" + to)
+          .value(value)
+          .raw(operation.getRaw())
+          .build()
+      );
   }
   
   private List<TaskDiffValue> visitDiffObjectChildren(JsonPatchOp operation) {

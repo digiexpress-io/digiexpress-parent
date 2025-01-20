@@ -111,5 +111,32 @@ public class CreateTaskTest extends TaskEnvirSetup {
         .getOneTaskDiff(task.getId(), assignee_change.getVersion())
         .await().atMost(atMost);
     log.info("Diff version 4: \r\n {}", diff_version_4.getLog());
+    
+    
+    /**
+     * 
+
+    TASK_CREATED
+    TASK_UPDATED
+
+    TASK_COMPLETED
+    TASK_DESC_UPDATED
+    TASK_DUEDATE_UPDATED
+    TASK_ASSIGNEE_UPDATED (assigneeId, assignee_user, assignee_user_email)
+
+    TASK_SUBJECT_UPDATED
+    TASK_KEYWORDS_UPDATED
+    TASK_ASSIGNED_ROLES_UPDATED
+
+
+    TASK_STATUS_UPDATED
+    TASK_STATUS_UPDATED_TO_
+    TASK_PRIORITY_UPDATED
+    TASK_PRIORITY_UPDATED_TO_
+
+
+
+     */
+    
   }
 }
