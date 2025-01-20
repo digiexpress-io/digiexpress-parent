@@ -91,6 +91,7 @@ export const fi = {
   'gamut.search.results.internalLinks': 'Linkkejä sivuillemme',
   'gamut.search.results.phoneLinks': 'Puhelinnumerot',
 
+  'gamut.search.results.noResults': 'Ei tuloksia haulle',
 
 
   // ------------------- GAMUT ARTICLES  -----------------------

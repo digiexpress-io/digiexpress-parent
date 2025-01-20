@@ -93,6 +93,7 @@ export const en = {
   'gamut.search.results.externalLinks': 'Links to other sites',
   'gamut.search.results.internalLinks': 'Links to our pages',
   'gamut.search.results.phoneLinks': 'Phone numbers',
+  'gamut.search.results.noResults': 'No results for',
 
   // ------------------- GAMUT ARTICLES  -----------------------
 
