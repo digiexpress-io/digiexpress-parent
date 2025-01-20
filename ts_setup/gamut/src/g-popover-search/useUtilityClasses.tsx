@@ -15,6 +15,7 @@ export interface GPopoverSearchClasses {
   quickSearchFilterItem: string;
 
   resultsContainer: string;
+  resultsDividerTitle: string;
   inputField: string;
   inputFieldContainer: string;
 }
@@ -32,6 +33,7 @@ export const useUtilityClasses = (ownerState: GPopoverSearchProps) => {
     resultsContainer: ['resultsContainer'],
     inputField: ['inputField'],
     inputFieldContainer: ['inputFieldContainer'],
+    resultsDividerTitle: ['resultsDividerTitle']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -67,6 +69,7 @@ export const GSearchMuiPopover = styled(Popover, {
       styles.resultsContainer,
       styles.inputField,
       styles.inputFieldContainer,
+      styles.resultsDividerTitle
     ];
   },
 })(({ theme }) => {
@@ -82,9 +85,9 @@ export const GSearchMuiPopover = styled(Popover, {
       backgroundColor: theme.palette.primary.contrastText,
     },
     '& .GPopoverSearch-title': {
-      ...theme.typography.h4,
+      ...theme.typography.h1,
       marginRight: theme.spacing(1),
-      textAlign: 'right'
+      textAlign: 'center'
     },
     '& .GPopoverSearch-titleContainer': {
       display: 'flex',
@@ -92,10 +95,25 @@ export const GSearchMuiPopover = styled(Popover, {
       gap: 3
     },
     '& .GPopoverSearch-layoutContainer': {
-      padding: theme.spacing(3)
+      [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(3)
+      },
+      [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(1)
+      }
     },
     '& .GPopoverSearch-quickSearch': {
-      marginTop: theme.spacing(2)
+      [theme.breakpoints.up('md')]: {
+        paddingTop: theme.spacing(2),
+      },
+
+      [theme.breakpoints.down('md')]: {
+        gap: theme.spacing(1),
+        marginTop: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'column'
+      },
+
     },
     '& .GPopoverSearch-quickSearchFilterItem': {
       marginLeft: theme.spacing(0.5),
@@ -105,6 +123,20 @@ export const GSearchMuiPopover = styled(Popover, {
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2)
     },
+    '& .GPopoverSearch-resultsDividerTitle': {
+      ...theme.typography.h1,
+      [theme.breakpoints.down('md')]: {
+        textAlign: 'center',
+        marginBottom: theme.spacing(1)
+      },
+
+      [theme.breakpoints.up('md')]: {
+        ...theme.typography.h3,
+        textAlign: 'left',
+        marginBottom: theme.spacing(1)
+      },
+    },
+
     '& .MuiPopover-paper': {
       minWidth: '100%',
       left: '0px !important',

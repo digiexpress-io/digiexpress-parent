@@ -92,6 +92,7 @@ export const en = {
   'gamut.search.results.formLinks': 'Lomakkeita',
   'gamut.search.results.externalLinks': 'Links to other sites',
   'gamut.search.results.internalLinks': 'Links to our pages',
+  'gamut.search.results.internalExternalLinks': 'Links',
   'gamut.search.results.phoneLinks': 'Phone numbers',
   'gamut.search.results.noResults': 'No results for',
   'gamut.search.results.allResults': 'All results',

@@ -89,6 +89,7 @@ export const fi = {
   'gamut.search.results.formLinks': 'Lomakkeita',
   'gamut.search.results.externalLinks': 'Linkkejä muille sivuille',
   'gamut.search.results.internalLinks': 'Linkkejä sivuillemme',
+  'gamut.search.results.internalExternalLinks': 'Hyperlinkkejä',
   'gamut.search.results.phoneLinks': 'Puhelinnumerot',
 
   'gamut.search.results.noResults': 'Ei tuloksia haulle',

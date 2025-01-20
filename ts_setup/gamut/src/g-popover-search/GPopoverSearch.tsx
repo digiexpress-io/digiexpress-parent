@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2, Link } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -28,7 +28,31 @@ export interface GSearchResultProps {
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
+interface ResultsDividerProps {
+  searchState: SearchApi.SearchState,
+  title: string,
+  isHidden: boolean,
+  className?: string
+}
 
+const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isHidden, className }) => {
+  const intl = useIntl();
+  //const classes = useUtilityClasses(ownerState);
+
+  if (isHidden) {
+    return (<></>);
+  }
+
+  if (searchState.searchOptionType === 'ALL') {
+    return (
+      <>
+        <Divider />
+        <Typography className={className}>{intl.formatMessage({ id: title })}</Typography>
+      </>
+    )
+  }
+  return (<></>)
+}
 
 export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const props = useThemeProps({
@@ -42,6 +66,12 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
 
+  const hasNoResults = state.topics.length === 0 &&
+    state.forms.length === 0 &&
+    state.phones.length === 0 &&
+    state.internal.length === 0 &&
+    state.external.length === 0;
+
   function handleOnTopic(topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     props.onTopic(topic, event);
     anchor.anchorProps.onClose();
@@ -50,6 +80,8 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   function handleFilterByType(type: SearchApi.FilterMode) {
     setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
   }
+
+
   const Root = props.component ?? GPopoverSearchRoot;
 
   return (
@@ -58,12 +90,12 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
       <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open}>
         <div className={classes.layoutContainer}>
           <Grid2>
+            <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
             <Grid2 size={{ lg: 12, xl: 12 }} className={classes.titleContainer}>
               <TextField
                 className={classes.inputField}
                 placeholder={intl.formatMessage({ id: 'gamut.search.popover.input.placeholder' })}
                 onChange={({ currentTarget }) => setState(prev => prev.find(currentTarget.value))} />
-              <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
             </Grid2>
 
             <Grid2 size={{ lg: 3, xl: 3 }} />
@@ -72,11 +104,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               <Chip
                 color={state.searchOptionType === 'ALL' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.results.allResults' })}
-                onClick={() => handleFilterByType('ALL')} />
-              <Chip
-                color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
-                label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
-                onClick={() => handleFilterByType('PHONE_LINKS')} className={classes.quickSearchFilterItem} />
+                onClick={() => handleFilterByType('ALL')} className={classes.quickSearchFilterItem} />
               <Chip
                 color={state.searchOptionType === 'TOPICS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
@@ -85,6 +113,10 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                 color={state.searchOptionType === 'FORM_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })}
                 onClick={() => handleFilterByType('FORM_LINKS')} className={classes.quickSearchFilterItem} />
+              <Chip
+                color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
+                label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
+                onClick={() => handleFilterByType('PHONE_LINKS')} className={classes.quickSearchFilterItem} />
               <Chip
                 color={state.searchOptionType === 'LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })}
@@ -95,12 +127,30 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
           <Grid2>
             <Grid2 size={{ lg: 3, xl: 3 }} />
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.resultsContainer}>
-              {state.forms.map((form) => <GLinkFormUnsecured key={form.linkToForm.id} label={form.label} value={form.linkToForm.value} onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />)}
-              {state.phones.map((phone) => <GLinkPhone key={phone.id} label={phone.name} value={phone.value} />)}
-              {state.topics.map((topic) => <Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)}
-              {...state.internal.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
-              {...state.external.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
+              {hasNoResults ? (
+                <Alert severity='info' variant='outlined'>
+                  {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
+                  {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })} {state.searchString}
+                </Alert>
+              ) : (
+                <>
+                  <ResultsDivider searchState={state} title='gamut.search.results.formLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
+                  {state.forms.map((form) => <GLinkFormUnsecured key={form.linkToForm.id} label={form.label} value={form.linkToForm.value}
+                    onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />)}
+
+                  <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
+                  {state.phones.map((phone) => <GLinkPhone key={phone.id} label={phone.name} value={phone.value} />)}
+
+                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
+                    {state.topics.map((topic) => <Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)}
+
+                    <ResultsDivider searchState={state} title='gamut.search.results.internalExternalLinks' isHidden={state.topics.length === 0} className={classes.resultsDividerTitle} />
+                    {...state.internal.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
+                    {...state.external.map((link) => <GLinkHyper label={link.name} value={link.value} key={link.id} />)}
+                </>
+              )}
             </Grid2>
+
           </Grid2>
         </div>
       </GSearchMuiPopover>
