@@ -18,7 +18,7 @@ export interface GArticleProps {
   component?: GOverridableComponent<GArticleProps>;
 }
 
-export type GArticleSlot = React.ElementType<{ children: SiteApi.TopicView | undefined }>;
+export type GArticleSlot = React.ElementType<{ children: SiteApi.TopicView }>;
 
 export const GArticle: React.FC<GArticleProps> = (initProps) => {
   const props = useThemeProps({
@@ -43,18 +43,22 @@ export const GArticle: React.FC<GArticleProps> = (initProps) => {
 
   return (
     <Root ownerState={ownerState} className={classes.root}>
-      
-      <div className={classes.content}>
-        <div className={classes.page}>
-          <Page>{topic}</Page>
-        </div>
-        <div className={classes.pageLinks}>
-          <PageLinks>{topic}</PageLinks>
-        </div>
-      </div>
-      <div className={classes.pageBottom}>
-        <PageBottom>{topic}</PageBottom>
-        <PageFeedback>{topic}</PageFeedback>
-      </div>
+
+      {!!topic && (
+        <>
+          <div className={classes.content}>
+            <div className={classes.page}>
+              <Page>{topic}</Page>
+            </div>
+            <div className={classes.pageLinks}>
+              <PageLinks>{topic}</PageLinks>
+            </div>
+          </div>
+          <div className={classes.pageBottom}>
+            <PageBottom>{topic}</PageBottom>
+            <PageFeedback>{topic}</PageFeedback>
+          </div>
+        </>)
+      }
     </Root>)
 }

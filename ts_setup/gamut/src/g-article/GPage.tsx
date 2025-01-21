@@ -2,6 +2,6 @@ import React from 'react';
 import { SiteApi } from '../api-site';
 import { GMarkdown } from '../g-md';
 
-export const GPage: React.FC<{ children: SiteApi.TopicView | undefined }> = ({ children }) => {
+export const GPage: React.FC<{ children: SiteApi.TopicView }> = ({ children }) => {
   return (<GMarkdown>{children?.blob?.value}</GMarkdown>);
 }

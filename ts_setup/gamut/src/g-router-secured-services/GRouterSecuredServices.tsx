@@ -26,6 +26,8 @@ export interface GRouterSecuredServicesProps {
   viewId: GUserOverviewMenuView;
 }
 
+
+
 export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ locale, viewId }) => {
   const { views } = useSite();
   const intl = useIntl();
@@ -34,9 +36,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
   const theme = useTheme();
 
   const withDrawer = !useMediaQuery(theme.breakpoints.down("md"));
-  const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [topic, setTopic] = React.useState<SiteApi.TopicView>();
-  const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
 
   function onForm(form: SearchApi.LinkToForm) {
     const productId = form.linkToForm.id;
@@ -66,12 +66,10 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
   }
 
   const ownerState: OwnerState = {
-    search: state,
     viewId,
     topic,
     withDrawer: withDrawer,
     onForm,
-    setSearch: setState,
     onTopic: setTopic,
     onHome: () => handleNav('user-overview')
   }
@@ -100,21 +98,23 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
   const breadcrumbs = React.useCallback(() => <Nav ownerState={ownerState} />, [ownerState]);
 
   return (
-    <GShell>
-      <GRouterSecuredServicesRoot className={classes.root}>
-        <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleNav('user-overview')} viewId={viewId} />
+    <SearchApi.SearchProvider>
+      <GShell>
+        <GRouterSecuredServicesRoot className={classes.root}>
+          <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleNav('user-overview')} viewId={viewId} />
 
-        {ownerState.withDrawer && (
-          <Drawer variant='permanent' open={false} className={GShellClassName}>
-            <SearchFilters ownerState={ownerState} />
-            <SearchResults ownerState={ownerState} />
-          </Drawer>)
-        }
+          {ownerState.withDrawer && (
+            <Drawer variant='permanent' open={false} className={GShellClassName}>
+              <SearchFilters ownerState={ownerState} />
+              <SearchResults ownerState={ownerState} />
+            </Drawer>)
+          }
 
-        <main role='main'><Container><GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs, left }} /></Container></main>
-        <footer role='footer'><GFooter /></footer>
-      </GRouterSecuredServicesRoot>
-    </GShell>
+          <main role='main'><Container><GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs, left }} /></Container></main>
+          <footer role='footer'><GFooter /></footer>
+        </GRouterSecuredServicesRoot>
+      </GShell>
+    </SearchApi.SearchProvider>
   );
 }
 

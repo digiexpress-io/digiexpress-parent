@@ -22,8 +22,7 @@ export interface OwnerState {
   viewId: GUserOverviewMenuView;
   topic: SiteApi.TopicView | undefined;
   withDrawer: boolean;
-  search: SearchApi.SearchState;
-  setSearch: React.Dispatch<React.SetStateAction<SearchApi.SearchState>>;
+
   onTopic: (topic: SiteApi.TopicView) => void;
   onForm: (form: SearchApi.LinkToForm) => void;
   onHome: () => void;

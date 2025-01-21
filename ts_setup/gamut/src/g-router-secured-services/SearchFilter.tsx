@@ -10,16 +10,16 @@ import { GSecuredServicesSearch } from '../g-secured-services-search';
 
 
 
-export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
+export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ }) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
-  const { search, setSearch } = ownerState;
+  const { value: search, filterMode: handleFilterByType, find } = SearchApi.useSearch();
 
-  function handleFilterByType(type: SearchApi.FilterMode) {
-    setSearch(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
-  }
   return (<>
-    <GSecuredServicesSearch id='gamut.search.placeholder' onChange={({ currentTarget }) => setSearch(prev => prev.find(currentTarget.value))} />
+    <GSecuredServicesSearch id='gamut.search.placeholder'
+      value={search.searchString}
+      onChange={({ currentTarget }) => find(currentTarget.value)}
+    />
     <GRouterSecuredServicesFilterButtonsRoot className={classes.searchFilterButtons}>
       <Chip
         color={search.searchOptionType === 'ALL' ? 'primary' : undefined}

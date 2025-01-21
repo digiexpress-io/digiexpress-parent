@@ -71,9 +71,9 @@ export const RouterServiceSelected: React.FC<RouterServiceSelectedProps> = ({ lo
                 </Typography>
               </Breadcrumbs>
             ),
-            left: () => (
+            left: () => !!topic && (
               <>
-                <GMarkdown children={topic?.blob?.value} />
+                <GMarkdown children={topic.blob?.value} />
                 <GLinksPage children={topic} />
               </>
             )

@@ -10,6 +10,7 @@ import {
 import { GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useIntl } from 'react-intl';
+import { SearchApi } from '../api-search';
 
 interface ResultsDividerProps {
   ownerState: OwnerState,
@@ -18,16 +19,17 @@ interface ResultsDividerProps {
 }
 
 
-const ResultsDivider: React.FC<ResultsDividerProps> = ({ ownerState, title, isHidden }) => {
+const ResultsDivider: React.FC<ResultsDividerProps> = ({ title, isHidden }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { value: search } = SearchApi.useSearch();
 
   if (isHidden) {
     return <></>;
   }
 
 
-  if (ownerState.search.searchOptionType === 'ALL') {
+  if (search.searchOptionType === 'ALL') {
     return (
       <>
         <Divider className={classes.resultsDivider} />
@@ -39,7 +41,8 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ ownerState, title, isHi
 }
 
 export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
-  const { search, onTopic, onForm } = ownerState;
+  const { onTopic, onForm } = ownerState;
+  const { value: search } = SearchApi.useSearch();
   const intl = useIntl();
   const classes = useUtilityClasses();
 
@@ -58,7 +61,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
         </Alert>
       ) : (
         <>
-          <ResultsDivider ownerState={ownerState} title='gamut.search.results.serviceLinks' isHidden={ownerState.search.topics.length === 0} />
+            <ResultsDivider ownerState={ownerState} title='gamut.search.results.serviceLinks' isHidden={search.topics.length === 0} />
           <List dense>
             {search.topics.map((topic) => (
               <ListItem key={topic.id}>
@@ -67,7 +70,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             ))}
           </List>
 
-            <ResultsDivider ownerState={ownerState} title='gamut.search.results.formLinks' isHidden={ownerState.search.forms.length === 0} />
+            <ResultsDivider ownerState={ownerState} title='gamut.search.results.formLinks' isHidden={search.forms.length === 0} />
             <List dense>
               {search.forms.map((form) => (
                 <ListItem key={form.linkToForm.id}>
@@ -79,7 +82,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
               )}
             </List>
 
-            <ResultsDivider ownerState={ownerState} title='gamut.search.results.phoneLinks' isHidden={ownerState.search.phones.length === 0} />
+            <ResultsDivider ownerState={ownerState} title='gamut.search.results.phoneLinks' isHidden={search.phones.length === 0} />
             <List dense>
               {search.phones.map((phone) => (
                 <ListItem key={phone.id}>
@@ -88,7 +91,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
               ))}
             </List>
 
-            <ResultsDivider ownerState={ownerState} title='gamut.search.results.internalLinks' isHidden={ownerState.search.internal.length === 0} />
+            <ResultsDivider ownerState={ownerState} title='gamut.search.results.internalLinks' isHidden={search.internal.length === 0} />
             <List dense>
               {...search.internal.map((link) => (
                 <ListItem key={link.name}>
@@ -97,7 +100,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
               ))}
             </List>
 
-            <ResultsDivider ownerState={ownerState} title='gamut.search.results.externalLinks' isHidden={ownerState.search.external.length === 0} />
+            <ResultsDivider ownerState={ownerState} title='gamut.search.results.externalLinks' isHidden={search.external.length === 0} />
             <List dense>
               {...search.external.map((link) => (
                 <ListItem key={link.name}>
