@@ -56,8 +56,8 @@ import { GLinksPageClassKey, GLinksPageProps } from '../g-links-page';
 
 import {
   GLinkInfoClassKey, GLinkInfoProps,
-  GLinkFormSecuredClassKey, GLinkFormSecuredProps,
-  GLinkFormUnsecuredClassKey, GLinkFormUnsecuredProps,
+  GLinkFormLockedClassKey, GLinkFormLockedProps,
+  GLinkFormUnlockedClassKey, GLinkFormUnlockedProps,
   GLinkHyperClassKey, GLinkHyperProps,
   GLinkPhoneClassKey, GLinkPhoneProps
 } from '../g-link';
@@ -160,8 +160,8 @@ export interface GComponentsPropsList {
   GLinks: GLinksProps;
   GLinkHyper: GLinkHyperProps;
   GLinkPhone: GLinkPhoneProps;
-  GLinkFormSecured: GLinkFormSecuredProps;
-  GLinkFormUnsecured: GLinkFormUnsecuredProps;
+  GLinkFormLocked: GLinkFormLockedProps;
+  GLinkFormUnlocked: GLinkFormUnlockedProps;
   GLinkInfo: GLinkInfoProps;
   GLinksPage: GLinksPageProps;
 
@@ -246,8 +246,8 @@ export interface GComponentNameToClassKey {
   GLinks: GLinksClassKey;
   GLinkHyper: GLinkHyperClassKey;
   GLinkPhone: GLinkPhoneClassKey;
-  GLinkFormSecured: GLinkFormSecuredClassKey;
-  GLinkFormUnsecured: GLinkFormUnsecuredClassKey;
+  GLinkFormLocked: GLinkFormLockedClassKey;
+  GLinkFormUnlocked: GLinkFormUnlockedClassKey;
   GLinkInfo: GLinkInfoClassKey;
   GLinksPage: GLinksPageClassKey;
 
@@ -512,15 +512,15 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GLinkPhone'];
     variants?: GComponentsVariants['GLinkPhone'];
   },
-  GLinkFormSecured?: {
-    defaultProps?: GComponentsProps['GLinkFormSecured'];
-    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormSecured'];
-    variants?: GComponentsVariants['GLinkFormSecured'];
+  GLinkFormLocked?: {
+    defaultProps?: GComponentsProps['GLinkFormLocked'];
+    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormLocked'];
+    variants?: GComponentsVariants['GLinkFormLocked'];
   },
-  GLinkFormUnsecured?: {
-    defaultProps?: GComponentsProps['GLinkFormUnsecured'];
-    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnsecured'];
-    variants?: GComponentsVariants['GLinkFormUnsecured'];
+  GLinkFormUnlocked?: {
+    defaultProps?: GComponentsProps['GLinkFormUnlocked'];
+    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnlocked'];
+    variants?: GComponentsVariants['GLinkFormUnlocked'];
   },
   GLinkInfo?: {
     defaultProps?: GComponentsProps['GLinkInfo'];

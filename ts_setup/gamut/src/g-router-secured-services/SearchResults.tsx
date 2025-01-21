@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material';
 
 import {
-  GLinkFormUnsecured,
+  GLinkFormUnlocked,
   GLinkPhone,
   GLinkHyper,
 } from '../';
@@ -71,7 +71,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             <List dense>
               {search.forms.map((form) => (
                 <ListItem key={form.linkToForm.id}>
-                  <GLinkFormUnsecured key={form.linkToForm.id} label={form.label}
+                  <GLinkFormUnlocked key={form.linkToForm.id} label={form.label}
                     value={form.linkToForm.value}
                     onClick={() => onForm(form)} />
                 </ListItem>

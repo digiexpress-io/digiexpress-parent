@@ -218,8 +218,8 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GLinkHyper: {},
   GLinkPhone: {},
   GLinkInfo: {},
-  GLinkFormSecured: {},
-  GLinkFormUnsecured: {},
+  GLinkFormLocked: {},
+  GLinkFormUnlocked: {},
 
   GLinksPage: {},
 

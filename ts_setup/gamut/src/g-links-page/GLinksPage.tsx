@@ -6,7 +6,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { SiteApi } from '../api-site';
 import { GLinks } from '../g-links';
 import { useGArticleLinks } from './useGArticleLinks';
-import { GLinkFormSecured, GLinkHyper, GLinkPhone, GLinkInfo, GLinkFormUnsecured } from '../g-link';
+import { GLinkFormLocked, GLinkHyper, GLinkPhone, GLinkInfo, GLinkFormUnlocked } from '../g-link';
 import { GLinksPageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
@@ -43,13 +43,15 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
     })
   }
 
+  console.log("form links", formLinks)
+
   return (
     <GLinksPageRoot className={classes.root} as={themeProps.component}>
       {formLinks.length ?
         <GLinks header={intl.formatMessage({ id: 'gamut.article.pagelinks.forms.title' })}>
           {formLinks.map((formLink) => (formLink.secured ?
-            <GLinkFormSecured key={formLink.id} onClick={() => handleSecureLink(props.children!.id, formLink.id)} label={formLink.name} value={formLink.value} /> :
-            <GLinkFormUnsecured key={formLink.id} onClick={() => handleUnSecureLink(props.children!.id, formLink.id)} label={formLink.name} value={formLink.value} />
+            <GLinkFormLocked key={formLink.id} onClick={() => handleSecureLink(props.children!.id, formLink.id)} label={formLink.name} value={formLink.value} /> :
+            <GLinkFormUnlocked key={formLink.id} onClick={() => handleUnSecureLink(props.children!.id, formLink.id)} label={formLink.name} value={formLink.value} />
           ))}
         </GLinks> : <></>
       }

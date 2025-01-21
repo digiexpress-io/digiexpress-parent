@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
 import { useAnchor } from './useAnchor';
-import { GLinkFormUnsecured, GLinkPhone, GPopoverButton } from '../';
+import { GLinkFormUnlocked, GLinkPhone, GPopoverButton } from '../';
 import { useUtilityClasses, GPopoverSearchRoot, GSearchMuiPopover, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 import { GLinkHyper } from '../';
@@ -138,7 +138,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                     {state.topics.map((topic) => (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>))}
 
                     <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
-                    {state.forms.map((form) => (<GLinkFormUnsecured key={form.linkToForm.id} label={form.label} value={form.linkToForm.value}
+                    {state.forms.map((form) => (<GLinkFormUnlocked key={form.linkToForm.id} label={form.label} value={form.linkToForm.value}
                       onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }) }} />))}
 
                     <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' className={classes.resultsDividerTitle} isHidden={state.phones.length === 0} />

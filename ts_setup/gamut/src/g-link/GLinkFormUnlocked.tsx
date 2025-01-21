@@ -5,36 +5,39 @@ import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '../g-override';
 
 
-export interface GLinkFormUnsecuredClasses {
+const MUI_NAME = 'GLinkFormUnlocked';
+
+
+export interface GLinkFormUnlockedClasses {
   root: string
 }
 
-export type GLinkFormUnsecuredClassKey = keyof GLinkFormUnsecuredClasses;
+export type GLinkFormUnlockedClassKey = keyof GLinkFormUnlockedClasses;
 
-export interface GLinkFormUnsecuredProps {
+export interface GLinkFormUnlockedProps {
   label: string;
   value: string;
   onClick: () => void;
-  component?: GOverridableComponent<GLinkFormUnsecuredProps>;
+  component?: GOverridableComponent<GLinkFormUnlockedProps>;
 }
 
-const useUtilityClasses = (ownerState: GLinkFormUnsecuredProps) => {
+const useUtilityClasses = (ownerState: GLinkFormUnlockedProps) => {
   const slots = { root: ['root'] };
-  const getUtilityClass = (slot: string) => generateUtilityClass('GLinkFormUnsecured', slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
 
 
-export const GLinkFormUnsecured: React.FC<GLinkFormUnsecuredProps> = (initProps) => {
+export const GLinkFormUnlocked: React.FC<GLinkFormUnlockedProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
-    name: 'GLinkFormUnsecured',
+    name: MUI_NAME,
   });
   const classes = useUtilityClasses(props);
   const ownerState = {
     ...props
   }
-  const Root = props.component ?? GLinkFormUnsecuredRoot
+  const Root = props.component ?? GLinkFormUnlockedRoot
 
   return (
     <Root ownerState={ownerState} className={classes.root} onClick={props.onClick}>
@@ -48,15 +51,15 @@ export const GLinkFormUnsecured: React.FC<GLinkFormUnsecuredProps> = (initProps)
   )
 }
 
-const GLinkFormUnsecuredRoot = styled("div", {
-  name: 'GLinkFormUnsecured',
+const GLinkFormUnlockedRoot = styled("div", {
+  name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
     ];
   },
-})<{ ownerState: GLinkFormUnsecuredProps }>(({ theme }) => {
+})<{ ownerState: GLinkFormUnlockedProps }>(({ theme }) => {
   return {
     "span": {
       display: 'flex',
