@@ -97,9 +97,6 @@ class SearchReducer {
     }
 
     const form: SearchApi.LinkToForm = { linkToForm, topic, label: linkToForm.name + this._noValueIndicatorColon + topic.name };
-    if (this._forms.some(existingLink => existingLink.linkToForm.name === form.linkToForm.name)) {
-      return;
-    }
     this._forms.push(form);
   }
 
