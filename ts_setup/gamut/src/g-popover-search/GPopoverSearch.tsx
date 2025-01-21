@@ -46,7 +46,7 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isH
   if (searchState.searchOptionType === 'ALL') {
     return (
       <>
-        <Divider />
+        <Divider className={className} />
         <Typography className={className}>{intl.formatMessage({ id: title })}</Typography>
       </>
     )
