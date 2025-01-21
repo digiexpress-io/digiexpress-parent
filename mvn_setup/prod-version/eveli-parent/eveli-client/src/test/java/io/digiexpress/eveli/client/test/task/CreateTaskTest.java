@@ -180,14 +180,6 @@ public class CreateTaskTest extends TaskEnvirSetup {
   }
   
   public ImmutableProgramWrapper<AstDecision, DecisionProgram> createDt() {
-    /**
-     * 
-
-    TASK_STATUS_UPDATED_TO_
-    TASK_PRIORITY_UPDATED_TO_
-     */
-    
-    
     final var decision = hdesClient.ast().commands(Arrays.asList(
         ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value("task_events_template").build(),
         
@@ -206,35 +198,35 @@ public class CreateTaskTest extends TaskEnvirSetup {
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//3
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("4").value(in("")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("5").value("add").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("5").value(in("add")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("6").value("TASK_CREATED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//7
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("8").value(in("/updated")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("9").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("9").value(in("replace")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("10").value("TASK_UPDATED").build(),
         
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//11
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("12").value(qin("/completed/*")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("13").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("13").value(in("replace")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("14").value("TASK_COMPLETED").build(),
         
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//15
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("16").value(qin("/description/*")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("17").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("17").value(in("replace")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("18").value("TASK_DESC_UPDATED").build(),
         
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//19
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("20").value(qin("/dueDate/*")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("21").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("21").value(in("replace")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("22").value("TASK_DUEDATE_UPDATED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//23
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("24").value(qin("/subject/*")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("25").value("replace").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("25").value(in("replace")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("26").value("TASK_SUBJECT_UPDATED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//27
@@ -272,12 +264,12 @@ public class CreateTaskTest extends TaskEnvirSetup {
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//47              
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("48").value(qin("/comments/*/external/true")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("49").value("add").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("49").value(in("add")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("50").value("EXTERNAL_COMMENT_ADDED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//51
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("52").value(qin("/comments/*/external/false")).build(),
-        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("53").value("add").build(),
+        ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("53").value(in("add")).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).id("54").value("INTERNAL_COMMENT_ADDED").build(),
         
         ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).build(),//55
