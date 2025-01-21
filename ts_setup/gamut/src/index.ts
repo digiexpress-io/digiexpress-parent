@@ -19,8 +19,6 @@ export * from './g-divider'
 export * from './g-locales'
 export * from './g-login'
 
-export * from './g-search-list'
-export * from './g-search-list-item'
 export * from './g-md'
 export * from './g-layout'
 

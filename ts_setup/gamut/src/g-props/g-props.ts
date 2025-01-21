@@ -32,8 +32,6 @@ import { GShellClassKey, GShellProps } from '../g-shell';
 import { GLoginClassKey, GLoginProps } from '../g-login';
 import { GLogoutClassKey, GLogoutProps } from '../g-logout';
 
-import { GSearchListClassKey, GSearchListProps } from '../g-search-list';
-import { GSearchListItemClassKey, GSearchListItemProps } from '../g-search-list-item';
 import { GMarkdownClassKey, GMarkdownProps } from '../g-md';
 import { GLayoutClassKey, GLayoutProps } from '../g-layout';
 import { GFormBaseClassKey, GFormBaseProps } from '../g-form-base';
@@ -171,9 +169,6 @@ export interface GComponentsPropsList {
 
   GShell: GShellProps;
 
-  GSearchList: GSearchListProps;
-  GSearchListItem: GSearchListItemProps;
-
   GAuth: GAuthProps;
   GAuthRepPerson: GAuthRepPersonProps;
   GAuthRepCompany: GAuthRepCompanyProps;
@@ -255,9 +250,6 @@ export interface GComponentNameToClassKey {
 
   GFormBase: GFormBaseClassKey;
   GShell: GShellClassKey;
-
-  GSearchList: GSearchListClassKey;
-  GSearchListItem: GSearchListItemClassKey;
 
   GAuth: GAuthClassKey;
   GAuthRepCompany: GAuthRepCompanyClassKey;
@@ -547,22 +539,12 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GFormBase'];
     variants?: GComponentsVariants['GFormBase'];
   },
-  GSearchList?: {
-    defaultProps?: GComponentsProps['GSearchList'];
-    styleOverrides?: GComponentsOverrides<Theme>['GSearchList'];
-    variants?: GComponentsVariants['GSearchList'];
-  },
-  GSearchListItem?: {
-    defaultProps?: GComponentsProps['GSearchListItem'];
-    styleOverrides?: GComponentsOverrides<Theme>['GSearchListItem'];
-    variants?: GComponentsVariants['GSearchListItem'];
-  },
+
   GShell?: {
     defaultProps?: GComponentsProps['GShell'];
     styleOverrides?: GComponentsOverrides<Theme>['GShell'];
     variants?: GComponentsVariants['GShell'];
   },
-
 
 
   // Authentication related technical components... they do not contain styling  
