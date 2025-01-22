@@ -57,6 +57,10 @@ public class CreateOneChannelTest extends DbTestTemplate {
             .comment("success by worker 1")
             .build();
       }
+      // Not relevant, manual config
+      @Override public String getConsumerComment() { return null; }
+      @Override public String getConsumerName() { return null; }
+      @Override public String getRoutingKey() { return null; }
     };
     
     final var worker2 = new ThenaMqConsumer() {
@@ -67,6 +71,11 @@ public class CreateOneChannelTest extends DbTestTemplate {
             .comment("success by worker 2")
             .build();
       }
+
+      // Not relevant, manual config
+      @Override public String getConsumerComment() { return null; }
+      @Override public String getConsumerName() { return null; }
+      @Override public String getRoutingKey() { return null; }
     };
     
     

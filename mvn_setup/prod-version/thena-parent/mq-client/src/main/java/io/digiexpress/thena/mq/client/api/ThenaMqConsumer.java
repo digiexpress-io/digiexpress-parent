@@ -27,8 +27,12 @@ import org.immutables.value.Value;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.vertx.core.json.JsonObject;
 
-@FunctionalInterface
 public interface ThenaMqConsumer {
+  
+  String getConsumerComment();
+  String getConsumerName();
+  String getRoutingKey();
+  
   MessageResponse accept(QueueMessage msg);
   
   @Value.Immutable

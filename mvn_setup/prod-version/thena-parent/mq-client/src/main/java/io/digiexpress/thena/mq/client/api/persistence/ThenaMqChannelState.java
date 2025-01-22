@@ -77,6 +77,7 @@ public interface ThenaMqChannelState {
     Uni<List<QueueConsumer>> findAllByAppId(String appId, boolean lockForUpdate);
     Uni<List<QueueConsumer>> findAllEnabled();
     Uni<List<QueueConsumer>> findAllEnabled(String appId);
+    Uni<List<QueueConsumer>> findAll();
   }
   
   interface InternalQueueQuery {

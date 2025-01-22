@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
 import io.digiexpress.thena.mq.client.api.entities.Channel;
+import io.digiexpress.thena.mq.client.api.entities.ChannelConfig;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
 import io.digiexpress.thena.mq.client.api.entities.Queue;
 import io.digiexpress.thena.mq.client.api.entities.QueueConsumer;
@@ -41,10 +42,16 @@ public interface ThenaMqClient {
   BindingBuilder bindingBuilder();
   DeliveryBuilder deliveryBuilder();
   
+  ChannelConfigQuery channelConfigQuery();
+  
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
+  
+  interface ChannelConfigQuery {
+    Uni<ThenaMqEnvelope<ChannelConfig>> getOne(String channelIdOrName);
+  }
   
   interface DeliveryBuilder {
     DeliveryBuilder config(ThenaMqAppConfig config);

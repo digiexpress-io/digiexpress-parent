@@ -103,4 +103,24 @@ public class InternalQueueConsumerQueryImpl implements InternalQueueConsumerQuer
         .onFailure().invoke(e -> dataSource.getErrorHandler()
             .deadEnd(new SqlTupleFailed("Can't find enabled 'QUEUE_CONSUMER'-s by appId!", sql, e)));
   }
+
+
+  @Override
+  public Uni<List<QueueConsumer>> findAll() {
+    final var sql = dataSource.getRegistry().queueConsumer().findAll();
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalQueueConsumerQueryImpl.findAll query, with props: {} \r\n{}", 
+          "", 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().queueConsumer().defaultMapper())
+        .execute()
+        .onItem()
+        .transformToUni((RowSet<QueueConsumer> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler()
+            .deadEnd(new SqlFailed("Can't find all 'QUEUE_CONSUMER'-s!", sql, e)));
+  }
 }
