@@ -38,8 +38,11 @@ import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
+import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
+import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 
 
 
@@ -88,5 +91,10 @@ public class EveliAutoConfigWorker {
   @Bean 
   public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
     return new FeedbackApiController(authClient, feedbackClient);
+  }
+  
+  @Bean 
+  public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
+    return new QueueApiController(client, config);
   }
 }

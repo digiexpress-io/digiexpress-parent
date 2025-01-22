@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.ChannelConfig;
 import io.smallrye.mutiny.Uni;
@@ -38,12 +39,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QueueApiController {
   private final ThenaMqClient client;
-  private final String channelName;
+  private final ThenaMqAppConfig config;
   
   @GetMapping(path = "/configs")
   public Uni<List<ChannelConfig>> findAllFeedback() {
     return client.channelConfigQuery()
-        .getOne(channelName)
+        .getOne(config.getChannel().getChannelName())
         .onItem().transform(resp -> {
             if(resp.getObject() == null) {
               return Collections.emptyList();
