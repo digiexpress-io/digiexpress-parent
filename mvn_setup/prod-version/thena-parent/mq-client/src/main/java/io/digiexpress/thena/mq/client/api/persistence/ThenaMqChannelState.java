@@ -48,6 +48,7 @@ public interface ThenaMqChannelState {
   ThenaMqDataSource getDataSource();
   
   // change channel
+  Uni<ThenaMqChannelState> withDefaultChannel();
   Uni<ThenaMqChannelState> withChannel(String channelId);
   ThenaMqChannelState withChannel(Channel channel);
   

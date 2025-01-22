@@ -50,7 +50,9 @@ public class EveliAutoConfigMq {
  
   @Bean 
   public ThenaMqClient mqClient(io.vertx.mutiny.pgclient.PgPool pgPool, EveliPropsMq props) {
-    return ThenaMqChannelStateImpl.create().db(props.getChannelName()).client(pgPool).build();
+    return ThenaMqChannelStateImpl.create()
+        .db(props.getChannelName()).client(pgPool)
+        .build();
   }
   
   @Bean

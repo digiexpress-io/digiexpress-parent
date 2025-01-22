@@ -133,7 +133,7 @@ public class ChannelBuilderImpl implements ChannelBuilder {
   private Uni<ThenaMqEnvelope<ThenaMqAppConfig>> visitBatch(Tuple3<List<Channel>, List<Queue>, List<QueueConsumer>> input, ThenaMqChannelState tx) {
     final var channel = visitChannel(input.getItem1());
     final var queues = visitQueues(input.getItem2());
-    final var consumers = visitQueueConsumers(input.getItem3());
+    final var consumers = visitQueueConsumers(input.getItem3(), channel);
     final var queueNames = queues.stream().map(e -> e.getQueueName()).toList();
     final var request = batch.log("Batching channel: " + channel.getChannelName() + ", queues: " + String.join(",", queueNames)).build();
     if(request.getBatchStatus() == OperationStatus.NO_CHANGES) {
@@ -183,7 +183,7 @@ public class ChannelBuilderImpl implements ChannelBuilder {
         });
   }
   
-  private ThenaMqAppConfig visitQueueConsumers(List<QueueConsumer> foundAppConsumers) {
+  private ThenaMqAppConfig visitQueueConsumers(List<QueueConsumer> foundAppConsumers, Channel target) {
     
     final List<Tuple2<QueueConsumer, ThenaMqConsumer>> activeConsumers = this.newConsumers.stream().map(c -> {
       final var builder = new OneConsumerBuilderImpl(foundAppConsumers, appId, batch);
@@ -223,7 +223,7 @@ public class ChannelBuilderImpl implements ChannelBuilder {
         .addLogs(ImmutableLog.builder().text("Disabling queue:" + nextState.getConsumerName() + ".").build())
         .addUpdateQueueConsumer(result);
     }
-    return ThenaMqConsumerConfigImpl.from(appId, state.getDataSource().getChannel(), activeConsumers);
+    return ThenaMqConsumerConfigImpl.from(appId, target, activeConsumers);
   }
   
   

@@ -57,7 +57,11 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   public ThenaMqChannelState withChannel(Channel channel) {
     return new ThenaMqChannelStateImpl(dataSource.withChannel(channel));
   }
-  
+
+  @Override
+  public Uni<ThenaMqChannelState> withDefaultChannel() {
+    return withChannel(dataSource.getChannel().getId());
+  }
   @Override
   public Uni<ThenaMqChannelState> withChannel(String channelId) {
     
@@ -189,4 +193,5 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
       return new ThenaMqClientImpl(state);
     }
   }
+
 }

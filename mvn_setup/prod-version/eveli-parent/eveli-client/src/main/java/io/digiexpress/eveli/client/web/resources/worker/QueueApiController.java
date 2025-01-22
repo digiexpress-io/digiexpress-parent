@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.ChannelConfig;
+import io.digiexpress.thena.mq.client.api.entities.Delivery;
+import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -52,29 +54,12 @@ public class QueueApiController {
             return Arrays.asList(resp.getObject()); 
         });
   }
-  
-  
   @GetMapping(path = "/messages")
-  public Uni<List<ChannelConfig>> findMessages() {
-    return client.channelConfigQuery()
-        .getOne(config.getChannel().getChannelName())
-        .onItem().transform(resp -> {
-            if(resp.getObject() == null) {
-              return Collections.emptyList();
-            }
-            return Arrays.asList(resp.getObject()); 
-        });
+  public Uni<List<QueueMessage>> findMessages() {
+    return client.withChannel(config.getChannel()).messageQuery().findAll();
   }
-  
   @GetMapping(path = "/deliveries")
-  public Uni<List<ChannelConfig>> findDeliveries() {
-    return client.channelConfigQuery()
-        .getOne(config.getChannel().getChannelName())
-        .onItem().transform(resp -> {
-            if(resp.getObject() == null) {
-              return Collections.emptyList();
-            }
-            return Arrays.asList(resp.getObject()); 
-        });
+  public Uni<List<Delivery>> findDeliveries() {
+    return client.withChannel(config.getChannel()).deliveryQuery().findAll();
   }
 }
