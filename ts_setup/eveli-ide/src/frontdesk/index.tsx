@@ -121,6 +121,24 @@ const WithQueue: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const { serviceUrl } = useConfig();
 
+  const fetchQueueMessagesGET: QueueApi.FetchQueueMessagesGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/messages`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
+  const fetchQueueDeliveriesGET: QueueApi.FetchQueueDeliveriesGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/deliveries`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
   const fetchQueueConfigGET: QueueApi.FetchQueueConfigGET = async () => {
     const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/configs`, {
       method: 'GET',
@@ -131,6 +149,8 @@ const WithQueue: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
   return (
     <QueueProvider
+      fetchQueueMessagesGET={fetchQueueMessagesGET}
+      fetchQueueDeliveriesGET={fetchQueueDeliveriesGET}
       fetchQueueConfigGET={fetchQueueConfigGET}>
       {children}
     </QueueProvider>

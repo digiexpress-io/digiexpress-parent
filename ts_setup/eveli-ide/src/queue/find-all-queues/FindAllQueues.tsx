@@ -1,9 +1,6 @@
 import React from 'react';
 import { Box, Divider, List, ListItem, ListItemButton, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
-
-import * as Burger from '@/burger';
 import { useQueue, QueueApi } from '../queue-api';
 
 

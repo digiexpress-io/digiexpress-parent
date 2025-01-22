@@ -11,7 +11,8 @@ import { Toolbar } from './Toolbar';
 
 import queueIntl from './intl';
 import { FindAllQueues } from './find-all-queues';
-
+import { FindAllMessages } from './find-all-messages';
+import { FindAllDeliveries } from './find-all-deliveries';
 
 const composer: BurgerApi.App<Composer.ContextType> = {
   id: "queue-composer",
@@ -35,8 +36,8 @@ export const QueueComposer: React.FC<QueueComposerProps> = () => {
     <Routes>
       <Route element={<StartComposer />}>
         <Route path='/queues' element={<FindAllQueues />} />
-        <Route path='/queues/messages' element={<FindAllQueues />} />
-        <Route path='/queues/deliveries' element={<FindAllQueues />} />
+        <Route path='/queues/messages' element={<FindAllMessages />} />
+        <Route path='/queues/deliveries' element={<FindAllDeliveries />} />
       </Route>
     </Routes>)
 }
