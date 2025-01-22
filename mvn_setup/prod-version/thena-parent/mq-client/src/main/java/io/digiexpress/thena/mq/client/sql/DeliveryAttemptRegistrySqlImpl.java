@@ -33,6 +33,7 @@ import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -60,6 +61,24 @@ public class DeliveryAttemptRegistrySqlImpl implements DeliveryAttemptRegistry {
         .append("  WHERE id = $1").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findLastNEntries(long entries) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDeliveryAttempt()).ln()
+        .append("  WHERE delivery_id IN(")
+        .append("    SELECT id ").ln()
+        .append("    FROM ").append(options.getDelivery()).ln()
+        .append("    ORDER BY created_at DESC").ln() 
+        .append("    LIMIT $1").ln() 
+        .append("  )")
+        .append("  ORDER BY delivery_id DESC").ln() 
+        .append("  LIMIT $1").ln() 
+        .build())
+        .props(Tuple.of(entries))
         .build();
   }
   @Override

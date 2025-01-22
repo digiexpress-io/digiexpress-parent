@@ -70,7 +70,9 @@ public interface ThenaMqChannelState {
   
 
   interface InternalDeliveryQuery {
-    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);    
+    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
+    Uni<List<DeliveryAttempt>> findLastNAttemptEntries(long entries);
+    Uni<List<Delivery>> findLastNEntries(long entries);
   }
   
   interface InternalQueueConsumerQuery {
@@ -97,6 +99,7 @@ public interface ThenaMqChannelState {
   }
   
   interface InternalMessageQuery {
+    Uni<List<QueueMessage>> findLastNEntries(long entries);
     Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
     Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status);
   }

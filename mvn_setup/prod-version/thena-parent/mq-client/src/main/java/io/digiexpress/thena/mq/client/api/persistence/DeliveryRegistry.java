@@ -34,6 +34,8 @@ public interface DeliveryRegistry extends ThenaMqRegistryTemplate<Delivery, io.v
   ThenaSqlClient.SqlTupleList insertMany(List<Delivery> docs);
   
   ThenaSqlClient.SqlTuple findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
+  ThenaSqlClient.SqlTuple findLastNEntries(long entries);
+  
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();

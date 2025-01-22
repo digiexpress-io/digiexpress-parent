@@ -79,7 +79,18 @@ public class MessageRegistrySqlImpl implements MessageRegistry {
         .props(Tuple.of(status))
         .build();
   }
-  
+  @Override
+  public SqlTuple findLastNEntries(long entries) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getMessages()).ln()
+        .append("  ORDER BY created_at DESC").ln() 
+        .append("  LIMIT $1").ln() 
+        .build())
+        .props(Tuple.of(entries))
+        .build();
+  }
   @Override
   public SqlTuple findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status) {
     return ImmutableSqlTuple.builder()

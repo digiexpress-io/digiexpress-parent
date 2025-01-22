@@ -24,6 +24,7 @@ import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqLogConstants;
 import io.digiexpress.thena.mq.client.api.entities.Delivery;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryAttempt;
 import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqChannelState.InternalDeliveryQuery;
 import io.digiexpress.thena.mq.client.api.persistence.ThenaMqDataSource;
@@ -46,7 +47,7 @@ public class InternalDeliveryQueryImpl implements InternalDeliveryQuery {
    final var sql = dataSource.getRegistry().delivery().findAllByAppIdAndStatus(appId, status, lockForUpdate);
     
     if(log.isDebugEnabled()) {
-      log.debug("InternalMessageQueryImpl.findAllByAppIdAndDeliveryStatus query, with props: {} \r\n{}", 
+      log.debug("InternalDeliveryQueryImpl.findAllByAppIdAndDeliveryStatus query, with props: {} \r\n{}", 
           sql.getProps().deepToString(), 
           sql.getValue());
     }
@@ -57,6 +58,45 @@ public class InternalDeliveryQueryImpl implements InternalDeliveryQuery {
         .onItem()
         .transformToUni((RowSet<Delivery> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'QUEUE_DELIVERIES' by 'app_id' and 'status' for update!", sql, e)));
+
+  }
+
+
+  @Override
+  public Uni<List<Delivery>> findLastNEntries(long entries) {
+   final var sql = dataSource.getRegistry().delivery().findLastNEntries(entries);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalDeliveryQueryImpl.findLastNEntries query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().delivery().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<Delivery> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_DELIVERIES'!", sql, e)));
+
+  }
+  
+  @Override
+  public Uni<List<DeliveryAttempt>> findLastNAttemptEntries(long entries) {
+   final var sql = dataSource.getRegistry().deliveryAttempt().findLastNEntries(entries);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalDeliveryQueryImpl.findLastNEntries query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().deliveryAttempt().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<DeliveryAttempt> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_DELIVERY_ATTEMPTS'!", sql, e)));
 
   }
 }

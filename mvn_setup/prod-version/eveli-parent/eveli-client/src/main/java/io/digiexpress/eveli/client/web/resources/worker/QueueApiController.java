@@ -52,4 +52,29 @@ public class QueueApiController {
             return Arrays.asList(resp.getObject()); 
         });
   }
+  
+  
+  @GetMapping(path = "/messages")
+  public Uni<List<ChannelConfig>> findMessages() {
+    return client.channelConfigQuery()
+        .getOne(config.getChannel().getChannelName())
+        .onItem().transform(resp -> {
+            if(resp.getObject() == null) {
+              return Collections.emptyList();
+            }
+            return Arrays.asList(resp.getObject()); 
+        });
+  }
+  
+  @GetMapping(path = "/deliveries")
+  public Uni<List<ChannelConfig>> findDeliveries() {
+    return client.channelConfigQuery()
+        .getOne(config.getChannel().getChannelName())
+        .onItem().transform(resp -> {
+            if(resp.getObject() == null) {
+              return Collections.emptyList();
+            }
+            return Arrays.asList(resp.getObject()); 
+        });
+  }
 }

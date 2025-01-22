@@ -31,6 +31,7 @@ public interface DeliveryAttemptRegistry extends ThenaMqRegistryTemplate<Deliver
 
   ThenaSqlClient.SqlTupleList updateMany(List<DeliveryAttempt> attempts);
   ThenaSqlClient.SqlTupleList insertMany(List<DeliveryAttempt> attempts);
+  ThenaSqlClient.SqlTuple findLastNEntries(long entries);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();

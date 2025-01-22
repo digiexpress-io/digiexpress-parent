@@ -64,6 +64,18 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .build();
   }
   @Override
+  public SqlTuple findLastNEntries(long entries) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDelivery()).ln()
+        .append("  ORDER BY created_at DESC").ln() 
+        .append("  LIMIT $1").ln() 
+        .build())
+        .props(Tuple.of(entries))
+        .build();
+  }
+  @Override
   public SqlTuple findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate) {
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
@@ -200,4 +212,5 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .completedAt(row.getOffsetDateTime("completed_at"))
         .build();
   }
+
 }

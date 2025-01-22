@@ -34,7 +34,7 @@ public interface MessageRegistry extends ThenaMqRegistryTemplate<QueueMessage, i
   ThenaSqlClient.SqlTupleList updateMany(List<QueueMessage> docs);
   ThenaSqlClient.SqlTuple findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
   ThenaSqlClient.SqlTuple findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status) ;
-  
+  ThenaSqlClient.SqlTuple findLastNEntries(long entries);
   
   @Override ThenaSqlClient.SqlTuple getByIdOrName(String id);  // matches by external_id or id
   @Override ThenaSqlClient.Sql findAll();

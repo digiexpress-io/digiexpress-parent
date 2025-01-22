@@ -21,6 +21,7 @@ package io.digiexpress.thena.mq.client.api;
  */
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.function.Consumer;
 
 import io.digiexpress.thena.mq.client.api.entities.Binding;
@@ -42,12 +43,24 @@ public interface ThenaMqClient {
   BindingBuilder bindingBuilder();
   DeliveryBuilder deliveryBuilder();
   
-  ChannelConfigQuery channelConfigQuery();
-  
+  ChannelConfigQuery channelConfigQuery();  
+  MessageQuery messageQuery();
+  DeliveryQuery deliveryQuery();
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
+  
+  interface MessageQuery {
+    MessageQuery lastNEntries(long lastNEntriesToGet);
+    Uni<List<QueueMessage>> findAll();
+  }
+  
+  interface DeliveryQuery {
+    DeliveryQuery lastNEntries(long lastNEntriesToGet);
+    Uni<List<Delivery>> findAll();
+  }
+  
   
   interface ChannelConfigQuery {
     Uni<ThenaMqEnvelope<ChannelConfig>> getOne(String channelIdOrName);

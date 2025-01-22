@@ -76,4 +76,23 @@ public class InternalMessageQueryImpl implements InternalMessageQuery {
         .transformToUni((RowSet<QueueMessage> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'QUEUE_MESSAGE' by 'app_id' and 'delivery.status'!", sql, e)));
   }
+  
+  @Override
+  public Uni<List<QueueMessage>> findLastNEntries(long entries) {
+   final var sql = dataSource.getRegistry().message().findLastNEntries(entries);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("InternalMessageQueryImpl.findLastNEntries query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(dataSource.getRegistry().message().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToUni((RowSet<QueueMessage> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find last-N 'QUEUE_MESSAGE'!", sql, e)));
+
+  }
 }

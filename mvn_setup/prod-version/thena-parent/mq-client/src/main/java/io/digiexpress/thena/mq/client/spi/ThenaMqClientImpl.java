@@ -60,4 +60,12 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   public ChannelConfigQuery channelConfigQuery() {    
     return new ChannelConfigQueryImpl(state);
   }
+  @Override
+  public MessageQuery messageQuery() {
+    return new MessageQueryImpl(state);
+  }
+  @Override
+  public DeliveryQuery deliveryQuery() {
+    return new DeliveryQueryImpl(state);
+  }
 }
