@@ -65,6 +65,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     })
   }
 
+
   const ownerState: OwnerState = {
     viewId,
     topic,

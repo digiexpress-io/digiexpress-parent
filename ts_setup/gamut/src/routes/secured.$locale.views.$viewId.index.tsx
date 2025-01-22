@@ -1,14 +1,13 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import {
-  RouterUnfinishedForms, RouterFormsAwaitingDecision, RouterFormsWithDecision,
+  RouterFormsAwaitingDecision, RouterFormsWithDecision,
   RouterUserOverview,
   RouterBookings
 } from '../g-routes';
 import { GRouterSecuredServices } from '../g-router-secured-services';
-
 import { GRouterInbox } from '../g-router-inbox';
-
+import { GRouterUnfinishedForms } from '../g-router-unfinished-forms';
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
 import { useLocale } from '../api-locale';
 
@@ -32,7 +31,7 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
   if (viewId === 'services') {
     return <GRouterSecuredServices locale={locale} viewId={viewId} />
   } else if (viewId === 'requests-in-progress') {
-    return <RouterUnfinishedForms locale={locale} viewId={viewId} />
+    return <GRouterUnfinishedForms locale={locale} viewId={viewId} />
   } else if (viewId === 'user-overview') {
     return <RouterUserOverview locale={locale} viewId={viewId} />
   } else if (viewId === 'awaiting-decision') {
