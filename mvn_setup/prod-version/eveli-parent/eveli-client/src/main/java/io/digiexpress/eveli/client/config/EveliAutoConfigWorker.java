@@ -31,6 +31,7 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController;
 import io.digiexpress.eveli.client.web.resources.comms.EmailNotificationController.EmailFilter;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
@@ -53,9 +54,9 @@ public class EveliAutoConfigWorker {
     return new AttachmentApiController(attachments, taskClient, security, processClient);
   }
   @Bean 
-  public CommentApiController commentApiController(TaskClient taskClient, AuthClient security) {
+  public CommentApiController commentApiController(TaskClient taskClient, AuthClient security, MqEventPublisher mqEventPublisher) {
     
-    return new CommentApiController(taskClient, security);
+    return new CommentApiController(taskClient, security, mqEventPublisher);
   }
   @Bean 
   public PrintoutController printoutController(
@@ -72,9 +73,10 @@ public class EveliAutoConfigWorker {
       FeedbackClient feedback,
       AuthClient security, 
       TaskClient taskclient, 
-      DialobClient dialobClient) {
+      DialobClient dialobClient,
+      MqEventPublisher mqEventPublisher) {
     
-    return new TaskApiController(security, taskclient, dialobClient);
+    return new TaskApiController(security, taskclient, dialobClient, mqEventPublisher);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {

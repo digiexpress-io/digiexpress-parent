@@ -70,12 +70,13 @@ public class TaskDiffVisitor {
         .build();
     }
     
+    final var task = Optional.ofNullable(envelope.getObjects().getCurrentVersion()).map(TaskMapper::map);
     final var previous = Optional.ofNullable(envelope.getObjects().getParentVersion())
       .map(TaskMapper::map)
       .map(e -> JsonObject.mapFrom(e))
       .orElse(null);
-    final var next = Optional.ofNullable(envelope.getObjects().getCurrentVersion())
-      .map(TaskMapper::map)
+    final var next = 
+      task
       .map(e -> JsonObject.mapFrom(e))
       .orElse(null);
     
@@ -83,6 +84,7 @@ public class TaskDiffVisitor {
     visitPatch(diff);
     
     return this.diff
+        .task(task.orElse(null))
         .taskId(taskId)
         .version(commitId)
         .log(diffLog.toString())

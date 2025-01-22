@@ -56,8 +56,6 @@ public class HdesDefaultAssets {
           if(batch.getCreate().isEmpty() && batch.getUpdate().isEmpty()) {
             return Uni.createFrom().item(Collections.emptyList());
           }
-          
-          
           return client.store().batch(batch);
         });
   }

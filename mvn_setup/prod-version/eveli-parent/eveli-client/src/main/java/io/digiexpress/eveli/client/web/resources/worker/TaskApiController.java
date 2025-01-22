@@ -30,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +46,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,10 +65,10 @@ public class TaskApiController {
   private final AuthClient securityClient;
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
+  private final MqEventPublisher mqEventPublisher;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping
-  @Transactional(readOnly = true)
   public ResponseEntity<Page<Task>> taskSearch(
       @RequestParam(name="subject", defaultValue = "") String subject, 
       @RequestParam(name="clientIdentificator", defaultValue = "") String clientIdentificator, 
@@ -98,7 +98,6 @@ public class TaskApiController {
   }
 
   @GetMapping("/{id}")
-  @Transactional(readOnly = true)
   public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
     
     final var worker = securityClient.getUser();
@@ -119,28 +118,30 @@ public class TaskApiController {
   }
 
   @PostMapping
-  @Transactional
   public ResponseEntity<TaskClient.Task> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
     final var newTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .createTask(command).await().atMost(timeout);
+    
+    mqEventPublisher.publishMqEvent(newTask);
+    
     return new ResponseEntity<>(newTask, HttpStatus.CREATED);
   }
   
   @PutMapping("/{id}")
-  @Transactional
   public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
     final var modifiedTask = taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .modifyTask(id, command).await().atMost(timeout);
+    
+    mqEventPublisher.publishMqEvent(modifiedTask);
     return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
 
   }
 
   @DeleteMapping("/{id}")
-  @Transactional
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTask(@PathVariable("id") String id) {
     final var worker = securityClient.getUser().getPrincipal();
@@ -203,7 +204,6 @@ public class TaskApiController {
   private static class KeyWordsResponse { List<String> keyWords; }
   
   @GetMapping("/keywords")
-  @Transactional(readOnly = true)
   public ResponseEntity<KeyWordsResponse> getKeyWords() {
     return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryTaskKeywords().findAllKeywords().await().atMost(timeout)));
   }

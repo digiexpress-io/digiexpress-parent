@@ -23,11 +23,18 @@ package io.digiexpress.eveli.client.config;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
+import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.mq.LoggingThenaMqConsumer;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.mq.MqScheduler;
+import io.digiexpress.eveli.client.spi.mq.QueueWriter;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
@@ -92,6 +99,23 @@ public class EveliAutoConfigMq {
     return new LoggingThenaMqConsumer() ;
   }
 
+  @Bean
+  public QueueWriter queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliContext ctx) {
+    return new QueueWriter(taskClient, mqClient, ctx);
+  }
+  
+  @Bean
+  public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
+    return new MqEventPublisher(publisher);
+  }
+  
+  @Bean
+  public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
+    final var eventMulticaster = new SimpleApplicationEventMulticaster();
+    eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
+    return eventMulticaster;
+  }
+  
   public static class EveliAutoConfigMqException extends RuntimeException {
     private static final long serialVersionUID = 6360677780999109334L;
     public EveliAutoConfigMqException(String message) {

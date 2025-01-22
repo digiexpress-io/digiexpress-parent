@@ -23,19 +23,23 @@ package io.resys.hdes.client.test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.resys.hdes.client.api.ast.AstCommand.AstCommandValue;
 import io.resys.hdes.client.api.ast.ImmutableAstCommand;
+import io.resys.hdes.client.api.programs.FlowProgram.FlowExecutionStatus;
 import io.resys.hdes.client.test.config.TestUtils;
 
 
 public class FlowWith2DtTest {
 
+  @SuppressWarnings("unchecked")
   @Test
   public void runAll() throws IOException {
     
@@ -86,7 +90,11 @@ tasks:
 
     
     
+    Assertions.assertEquals(result.getStatus(), FlowExecutionStatus.COMPLETED);
     
+    final List<Map<String, Object>> values = (List<Map<String, Object>>) result.getReturns().get("");
+    Assertions.assertEquals(1, values.size());
+    Assertions.assertEquals("{queue=sms}", values.get(0).toString());
   }
 
 

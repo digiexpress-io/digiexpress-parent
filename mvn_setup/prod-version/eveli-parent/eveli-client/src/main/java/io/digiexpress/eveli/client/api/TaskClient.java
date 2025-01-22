@@ -224,6 +224,8 @@ public interface TaskClient {
   interface TaskDiff {
     String getTaskId();
     String getVersion();
+    
+    @Nullable Task getTask();
     String getLog();
     List<TaskDiffValue> getValues();
   }

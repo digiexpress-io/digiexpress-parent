@@ -109,7 +109,8 @@ public interface ThenaMqClient {
         ReceiveLogsTopic "*.critical"
         EmitLogTopic "kern.critical" "A critical kernel error"
      */
-    MessageBuilder routingKey(String routingKey);
+    MessageBuilder routingKey(List<String> routingKey);
+    MessageBuilder routingKey(String ...routingKey);
 
     MessageBuilder comment(String comment);
     MessageBuilder createdBy(String createdBy);
