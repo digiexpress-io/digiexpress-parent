@@ -26,7 +26,7 @@ import lombok.Data;
 
 
 @Data
-@ConfigurationProperties(prefix = "eveli.task")
+@ConfigurationProperties(prefix = "eveli.mq")
 public class EveliPropsMq {  
   private Boolean enabled;
   private String appId;

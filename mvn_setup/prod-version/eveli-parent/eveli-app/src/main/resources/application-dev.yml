@@ -61,6 +61,10 @@ eveli.crm.host:
 eveli.crm.service-path-company:
 eveli.crm.service-path-person:
 
+# mq
+eveli.mq.enabled: true
+eveli.mq.app-id: task-app
+eveli.mq.channel-name: main-channel-for-all
 
 app.jwt.public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi4PobwPTnWPJWwjnND2j\naYZoF8i0xGVI0FZsIcQ1cF1qSSHJH1J2JfspDpY4dJwN8zGsS3el4kgI0XcOzLam\n3s9U/Ix70kxTXvEosydtsPeKEh8qKIoTszPyHETPe3OyfhTR8mFggn0+2B1xSbMd\nsnlPLai+Xdp+o4Yg5A4ApxRpF/nvu8LdpSGfw3z1un+D+nEX3joWzc55mloHWiDi\nj2TUuqrDVNUz5oUYJJPUAYHa23hGFhWP21tFaqYeFwO6CGC8LxL6tN5ERh2hvXms\nLdN4ATCa/LjQQqv4Rls93R7jrEuNHjjMX2EOI/rLXZ1jgkB5VOYeJ7qHMmTu2YLY\nfQIDAQAB\n-----END PUBLIC KEY-----\n"
 app.jwt.issuer: https://frontdesk.digiexpress.io/gateway/issuer

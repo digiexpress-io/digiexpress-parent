@@ -43,7 +43,7 @@ public class ChannelConfigQueryImpl implements ChannelConfigQuery {
   public Uni<ThenaMqEnvelope<ChannelConfig>> getOne(String channelIdOrName) {
     return state.queryChannels()
         .getByNameOrId(channelIdOrName)
-        .onItem().transformToUni(found -> found.isEmpty() ? visitChannel(found.get()) : Uni.createFrom().item(visitNotFound(channelIdOrName)));
+        .onItem().transformToUni(found -> found.isEmpty() ? Uni.createFrom().item(visitNotFound(channelIdOrName)) : visitChannel(found.get()));
   }
 
   private Uni<ThenaMqEnvelope<ChannelConfig>> visitChannel(Channel channel) {
