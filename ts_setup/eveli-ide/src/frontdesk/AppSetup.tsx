@@ -22,6 +22,7 @@ import { BurgerApi } from '@/burger';
 import { StencilComposer, StencilClient } from '../stencil';
 import { WrenchComposer, WrenchClient } from '../wrench';
 import { FeedbackComposer } from '../feedback';
+import { QueueComposer } from '../queue';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
@@ -29,6 +30,7 @@ import { frontdeskIntl } from './intl'
 import { stencilIntl } from '../stencil'
 import { wrenchIntl } from '../wrench'
 import { feedbackIntl } from '../feedback';
+import { queueIntl } from '../queue';
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -50,7 +52,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   const isWrench = useMatch({ path: '/wrench/ide' })
   const isStencil = useMatch({ path: '/ui/content' })
   const isFeedback = useMatch({ path: '/feedback', end: false })
-
+  const isQueues = useMatch({ path: '/queues', end: false })
 
   const { serviceUrl } = useConfig();
 
@@ -72,6 +74,11 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
     return (
       <IntlProvider locale='en' messages={feedbackIntl.en}>
         <FeedbackComposer />
+      </IntlProvider>);
+  } else if (isQueues) {
+    return (
+      <IntlProvider locale='en' messages={queueIntl.en}>
+        <QueueComposer />
       </IntlProvider>);
   }
 
@@ -121,6 +128,7 @@ export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
 
       <Route path='/feedback/:taskId' element={<>feedback for task loading...</>} />
       <Route path='/feedback' element={<>feedback loading...</>} />
+      <Route path='/queues' element={<>queues loading...</>} />
       <Route path='/wrench/ide' element={<>wrench loading...</>} />
       <Route path='/ui/content' element={<>stencil loading...</>} />
     </Route>

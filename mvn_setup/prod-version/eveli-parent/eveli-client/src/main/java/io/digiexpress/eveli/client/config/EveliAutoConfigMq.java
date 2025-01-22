@@ -52,7 +52,11 @@ public class EveliAutoConfigMq {
     final var builder = client.channelBuilder()
       .channelName(props.getChannelName())
       .comment("created with spring boot config for task client")
-      .appId(props.getAppId());
+      .appId(props.getAppId())
+      .addQueue(b -> b
+          .queueName("queue.task.log")
+          .comment("task logging queue")
+          .build());
 
     for(final var consumer : consumers) {
       builder.addConsumer(worker -> worker
@@ -62,7 +66,8 @@ public class EveliAutoConfigMq {
           .build(consumer)); 
     }
     
-    return builder.build()
+    return builder
+        .build()
         .onItem().transform(resp -> {
           if( resp.getOperationStatus() == OperationStatus.ERROR || 
               resp.getOperationStatus() == OperationStatus.CONFLICT) {
