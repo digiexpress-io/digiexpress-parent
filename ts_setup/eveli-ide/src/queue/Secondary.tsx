@@ -3,6 +3,8 @@ import { alpha, Box, styled, SxProps, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import EmailIcon from '@mui/icons-material/Email';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'react-intl';
@@ -20,7 +22,8 @@ const iconSize: SxProps = {
 const menuItems: MenuItemProps[] = [
   { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
   { id: 'menu.queues', to: '/queues', icon: <FormatListNumberedIcon sx={iconSize} /> },
-
+  { id: 'menu.messages', to: '/queues/messages', icon: <EmailIcon sx={iconSize} /> },
+  { id: 'menu.deliveries', to: '/queues/deliveries', icon: <DeliveryDiningIcon sx={iconSize} /> },
 ]
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();

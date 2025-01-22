@@ -128,7 +128,11 @@ export const AppSetup: React.FC<{ locale: string }> = ({ locale }) => {
 
       <Route path='/feedback/:taskId' element={<>feedback for task loading...</>} />
       <Route path='/feedback' element={<>feedback loading...</>} />
+      
       <Route path='/queues' element={<>queues loading...</>} />
+      <Route path='/queues/messages' element={<>queues loading...</>} />
+      <Route path='/queues/deliveries' element={<>queues loading...</>} />
+
       <Route path='/wrench/ide' element={<>wrench loading...</>} />
       <Route path='/ui/content' element={<>stencil loading...</>} />
     </Route>

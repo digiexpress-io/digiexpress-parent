@@ -35,6 +35,8 @@ export const QueueComposer: React.FC<QueueComposerProps> = () => {
     <Routes>
       <Route element={<StartComposer />}>
         <Route path='/queues' element={<FindAllQueues />} />
+        <Route path='/queues/messages' element={<FindAllQueues />} />
+        <Route path='/queues/deliveries' element={<FindAllQueues />} />
       </Route>
     </Routes>)
 }
