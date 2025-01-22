@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Divider, Drawer, Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { Container, Drawer } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 
 import {
@@ -19,22 +18,22 @@ import {
   CommsApi,
   useIam,
 } from '../';
+import { GRouterUserOverviewRoot, UnfinishedFormsTitle, useUtilityClasses } from './useUtilityClasses';
 
 
-export interface RouterUserOverviewProps {
+export interface GRouterUserOverviewProps {
   locale: string;
   viewId: GUserOverviewMenuView;
 }
 
-export const RouterUserOverview: React.FC<RouterUserOverviewProps> = ({ locale, viewId }) => {
-  const intl = useIntl();
+export const GRouterUserOverview: React.FC<GRouterUserOverviewProps> = ({ locale, viewId }) => {
   const { contractStats } = useContracts();
   const { offers } = useOffers();
   const { subjects } = useComms();
+  const { views } = useSite();
   const iam = useIam();
   const nav = useNavigate();
-
-  const { views } = useSite();
+  const classes = useUtilityClasses();
   const topics = Object.values(views);
   const topicCount = topics.length;
 
@@ -66,7 +65,7 @@ export const RouterUserOverview: React.FC<RouterUserOverviewProps> = ({ locale, 
     })
   }
 
-
+  const topTitle = React.useCallback(() => <UnfinishedFormsTitle />, []);
 
   return (
     <GShell>
@@ -76,29 +75,26 @@ export const RouterUserOverview: React.FC<RouterUserOverviewProps> = ({ locale, 
       </Drawer>
       <main role='main'>
         <Container>
-          <GLayout variant='secured-1-row-1-column'
-            slots={{
-              topTitle: () => (<>
-                <Typography variant='h1'>{intl.formatMessage({ id: 'gamut.userOverview.welcome.title' })}</Typography>
-                <Typography variant='body1'>{intl.formatMessage({ id: 'gamut.userOverview.welcome.desc' })}</Typography>
-                <Divider />
-              </>
-              ),
-              left: () => (
-                <GUserOverview
-                  topicCount={topicCount}
-                  startedForms={offers.length}
-                  waitingForms={contractStats.awaitingDecision}
-                  decidedForms={contractStats.decided}
-                  newMessages={unreadMessages.length}
-                  bookings={0}
-                  userName={[iam.user?.firstName, iam.user?.lastName].join(' ')}
-                  userAddress={iam.user?.contact.address?.street || ''}
-                  userCityAndCountry={[iam.user?.contact.address?.locality, iam.user?.contact.address?.country].join(',') }
-                  userZipcode={iam.user?.contact.address?.postalCode || ''}
-                />
-              )
-            }} />
+          <GRouterUserOverviewRoot className={classes.root}>
+            <GLayout variant='secured-1-row-1-column'
+              slots={{
+                topTitle,
+                left: () => (
+                  <GUserOverview
+                    topicCount={topicCount}
+                    startedForms={offers.length}
+                    waitingForms={contractStats.awaitingDecision}
+                    decidedForms={contractStats.decided}
+                    newMessages={unreadMessages.length}
+                    bookings={0}
+                    userName={[iam.user?.firstName, iam.user?.lastName].join(' ')}
+                    userAddress={iam.user?.contact.address?.street || ''}
+                    userCityAndCountry={[iam.user?.contact.address?.locality, iam.user?.contact.address?.country].join(',')}
+                    userZipcode={iam.user?.contact.address?.postalCode || ''}
+                  />
+                )
+              }} />
+          </GRouterUserOverviewRoot>
         </Container>
       </main>
       <footer role='footer'>

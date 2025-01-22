@@ -62,6 +62,7 @@ export const GRouterUnfinishedForms: React.FC<GRouterUnfinishedFormsProps> = (pr
       to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
     })
   }
+
   const breadcrumbs = React.useCallback(() => <UnfinishedFormsBreadcrumbs onClick={() => handleNav('user-overview')} />, []);
   const topTitle = React.useCallback(() => <UnfinishedFormsTitle />, []);
   const left = () => (
