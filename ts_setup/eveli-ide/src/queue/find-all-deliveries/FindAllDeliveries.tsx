@@ -30,6 +30,11 @@ export const FindAllDeliveries: React.FC<{}> = ({  }) => {
             defaultSort: 'asc'
           },
           {
+            title: intl.formatMessage({ id: 'queue.all_deliveries.consumerId' }),
+            field: 'delivery.consumerId',
+            filtering: false,
+          },
+          {
             title: intl.formatMessage({ id: 'queue.all_deliveries.status' }),
             field: 'attempt.consumerStatus',
             filtering: false,

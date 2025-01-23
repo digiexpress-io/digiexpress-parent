@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Divider, List, ListItem, ListItemButton, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useQueue, QueueApi } from '../queue-api';
+import { DateTimeFormatter } from '@/burger';
 
 
 
@@ -27,19 +28,20 @@ export const FindAllQueues: React.FC<FindAllQueuesProps> = () => {
             <ListItem dense disableGutters>
               <ListItemButton>
                 <Box display='flex' gap={3} width='100%'>
-                  <Box width='13%'>
+                  <Box width='25%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.queueName' })}</Typography>
                     <Typography>{queue.queueName}</Typography>
+                    <Typography>{queue.id}</Typography>
                   </Box>
-                  <Box width='35%'>
+                  <Box width='20%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdAt' })}</Typography>
-                    <Typography>{queue.createdAt}</Typography>
+                    <Typography><DateTimeFormatter timestamp={queue.createdAt} /></Typography>
                   </Box>
-                  <Box width='13%'>
+                  <Box width='10%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdBy' })}</Typography>
                     <Typography>{queue.createdBy}</Typography>
                   </Box>
-                  <Box width='35%'>
+                  <Box width='45%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.comment' })}</Typography>
                     <Typography>{queue.comment}</Typography>
                   </Box>
@@ -58,29 +60,23 @@ export const FindAllQueues: React.FC<FindAllQueuesProps> = () => {
             <ListItem dense disableGutters>
               <ListItemButton>
                 <Box display='flex' gap={3} width='100%'>
-                  <Box width='13%'>
+                  <Box width='25%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.routingKey' })}</Typography>
                     <Typography>{consumer.routingKey}</Typography>
-                  </Box>
-                  <Box width='10%'>
-                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.appId' })}</Typography>
-                    <Typography>{consumer.appId}</Typography>
+                    <Typography>{consumer.id}</Typography>
                   </Box>
                   <Box width='20%'>
-                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.consumerName' })}</Typography>
-                    <Typography>{consumer.consumerName}</Typography>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.createdAt' })}</Typography>
+                    <Typography><DateTimeFormatter timestamp={consumer.createdAt} /></Typography>
                   </Box>
-                  <Box width='13%'>
+                  <Box width='10%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.consumerStatus' })}</Typography>
                     <Typography>{consumer.consumerStatus}</Typography>
                   </Box>
-                  <Box width='13%'>
-                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.comment' })}</Typography>
-                    <Typography style={{wordBreak: "break-word"}}>{consumer.comment}</Typography>
-                  </Box>
-                  <Box width='13%'>
-                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.qualifiedJavaName' })}</Typography>
-                    <Typography style={{wordBreak: "break-all"}}>{consumer.qualifiedJavaName}</Typography>
+                  <Box width='40%'>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'queue.config.consumerName' })}</Typography>
+                    <Typography>{consumer.consumerName}</Typography>
+                    <Typography>{consumer.comment}</Typography>
                   </Box>
                 </Box>
               </ListItemButton>
