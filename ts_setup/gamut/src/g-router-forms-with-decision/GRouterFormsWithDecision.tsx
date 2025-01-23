@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Box, Breadcrumbs, Container, Divider, Drawer, Link, Typography, useTheme, useThemeProps } from '@mui/material';
+import { Container, Divider, Drawer, useThemeProps } from '@mui/material';
 
 
 import { useNavigate } from '@tanstack/react-router';
@@ -14,7 +14,7 @@ import {
   GUserOverviewMenu,
   GContracts,
 } from '../';
-import { GFormsWithDecisionRoot, MUI_NAME, useUtilityClasses, WithDecisionBreadcrumbs, WithDecisionTitle } from './useUtilityClasses';
+import { GRouterFormsWithDecisionRoot, MUI_NAME, useUtilityClasses, WithDecisionBreadcrumbs, WithDecisionTitle } from './useUtilityClasses';
 
 
 
@@ -73,7 +73,7 @@ export const GRouterFormsWithDecision: React.FC<GRouterFormsWithDecisionProps> =
       </Drawer>
       <main role='main'>
         <Container>
-          <GFormsWithDecisionRoot className={classes.root}>
+          <GRouterFormsWithDecisionRoot className={classes.root}>
             <GLayout variant='secured-1-row-1-column'
               slots={{
                 breadcrumbs,
@@ -88,7 +88,7 @@ export const GRouterFormsWithDecision: React.FC<GRouterFormsWithDecisionProps> =
                 ),
               }}
             />
-          </GFormsWithDecisionRoot>
+          </GRouterFormsWithDecisionRoot>
         </Container>
       </main>
       <footer role='footer'>

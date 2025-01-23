@@ -8,9 +8,9 @@ import { useIntl } from "react-intl";
 import { GUserOverviewMenuView } from "../g-user-overview-menu";
 
 
-export const MUI_NAME = 'GFormsWithDecision';
+export const MUI_NAME = 'GRouterFormsWithDecision';
 
-export interface GFormsWithDecisionClasses {
+export interface GRouterFormsWithDecisionClasses {
   root: string;
   withDecisionTitle: string;
   withDecisionTitleLayout: string;
@@ -19,7 +19,7 @@ export interface GFormsWithDecisionClasses {
   avatar: string;
 }
 
-export type GFormsWithDecisionClassKey = keyof GFormsWithDecisionClasses;
+export type GRouterFormsWithDecisionClassKey = keyof GRouterFormsWithDecisionClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -35,7 +35,7 @@ export const useUtilityClasses = () => {
 }
 
 
-export const GFormsWithDecisionRoot = styled("div", {
+export const GRouterFormsWithDecisionRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -50,28 +50,28 @@ export const GFormsWithDecisionRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
-    '.GFormsWithDecision-withDecisionTitleLayout': {
+    '.GRouterFormsWithDecision-withDecisionTitleLayout': {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
-    '.GFormsWithDecision-withDecisionTitle': {
+    '.GRouterFormsWithDecision-withDecisionTitle': {
       textAlign: 'center',
       ...theme.typography.h1
     },
-    '.GFormsWithDecision-avatar': {
+    '.GRouterFormsWithDecision-avatar': {
       height: '50px',
       width: '50px',
       alignContent: 'center',
       marginRight: theme.spacing(1),
       backgroundColor: theme.palette.success.main,
     },
-    '.GFormsWithDecision-withDecisionBodyText': {
+    '.GRouterFormsWithDecision-withDecisionBodyText': {
       ...theme.typography.body1,
       marginTop: theme.spacing(0.5),
       marginBottom: theme.spacing(0.5)
     },
-    '.GFormsWithDecision-withDecisionBreadcrumbs': {
+    '.GRouterFormsWithDecision-withDecisionBreadcrumbs': {
 
     }
 

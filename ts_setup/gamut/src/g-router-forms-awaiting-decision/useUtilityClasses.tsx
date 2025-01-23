@@ -8,9 +8,9 @@ import { useIntl } from "react-intl";
 import { GUserOverviewMenuView } from "../g-user-overview-menu";
 
 
-export const MUI_NAME = 'GFormsAwaitingDecision';
+export const MUI_NAME = 'GRouterFormsAwaitingDecision';
 
-export interface GFormsAwaitingDecisionClasses {
+export interface GRouterFormsAwaitingDecisionClasses {
   root: string;
   awaitingDecisionTitle: string;
   awaitingDecisionTitleLayout: string;
@@ -19,7 +19,7 @@ export interface GFormsAwaitingDecisionClasses {
   avatar: string;
 }
 
-export type GFormsAwaitingDecisionClassKey = keyof GFormsAwaitingDecisionClasses;
+export type GRouterFormsAwaitingDecisionClassKey = keyof GRouterFormsAwaitingDecisionClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -35,7 +35,7 @@ export const useUtilityClasses = () => {
 }
 
 
-export const GFormsAwaitingDecisionRoot = styled("div", {
+export const GRouterFormsAwaitingDecisionRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {

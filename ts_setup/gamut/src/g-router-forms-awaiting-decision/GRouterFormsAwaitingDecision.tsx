@@ -12,7 +12,7 @@ import {
   GUserOverviewMenu,
   GContracts,
 } from '../';
-import { AwaitingDecisionsBreadcrumbs, AwaitingDecisionTitle, GFormsAwaitingDecisionRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { AwaitingDecisionsBreadcrumbs, AwaitingDecisionTitle, GRouterFormsAwaitingDecisionRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
 export interface GRouterFormsAwaitingDecisionProps {
@@ -69,7 +69,7 @@ export const GRouterFormsAwaitingDecision: React.FC<GRouterFormsAwaitingDecision
       </Drawer>
       <main role='main'>
         <Container>
-          <GFormsAwaitingDecisionRoot className={classes.root}>
+          <GRouterFormsAwaitingDecisionRoot className={classes.root}>
             <GLayout variant='secured-1-row-1-column'
               slots={{
                 breadcrumbs,
@@ -84,7 +84,7 @@ export const GRouterFormsAwaitingDecision: React.FC<GRouterFormsAwaitingDecision
                 ),
               }}
             />
-          </GFormsAwaitingDecisionRoot>
+          </GRouterFormsAwaitingDecisionRoot>
         </Container>
       </main>
       <footer role='footer'>

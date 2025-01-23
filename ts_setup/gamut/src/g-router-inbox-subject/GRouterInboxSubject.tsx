@@ -6,13 +6,13 @@ import { Bread, GRouterInboxSubjectRoot, Left, MUI_NAME, Top, useOwnerState, use
 import { GAppBar, GFooter, GLayout, GShell, GShellClassName, GUserOverviewMenu, GUserOverviewMenuView } from '../';
 
 
-export interface RouterInboxSubjectProps {
+export interface GRouterInboxSubjectProps {
   locale: string;
   viewId: GUserOverviewMenuView;
   subjectId: string;
 }
 
-export const GRouterInboxSubject: React.FC<RouterInboxSubjectProps> = (initProps) => {
+export const GRouterInboxSubject: React.FC<GRouterInboxSubjectProps> = (initProps) => {
 
   const nav = useNavigate();
   const props = useThemeProps({
