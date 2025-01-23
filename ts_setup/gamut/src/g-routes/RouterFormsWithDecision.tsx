@@ -92,7 +92,7 @@ export const RouterFormsWithDecision: React.FC<RouterFormsWithDecisionProps> = (
                 <Divider />
                 <GContracts
                   filter={(contract => contract.status === 'COMPLETED' || contract.status === 'REJECTED')}
-                  slotProps={{ item: { color, onClick: handleContractItemClick } }}
+                  slotProps={{ item: { onClick: handleContractItemClick } }}
                 />
               </>
               ),

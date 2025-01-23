@@ -1,12 +1,13 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RouterFormsAwaitingDecision, RouterFormsWithDecision } from '../g-routes';
+import { RouterFormsWithDecision } from '../g-routes';
 import { GRouterSecuredServices } from '../g-router-secured-services';
 import { GRouterInbox } from '../g-router-inbox';
 import { GRouterUnfinishedForms } from '../g-router-unfinished-forms';
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
 import { GRouterUserOverview } from '../g-router-user-overview';
 import { GRouterBookings } from '../g-router-bookings';
+import { GRouterFormsAwaitingDecision } from '../g-router-forms-awaiting-decision';
 import { useLocale } from '../api-locale';
 
 export const Route = createFileRoute('/secured/$locale/views/$viewId/')({
@@ -33,7 +34,7 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
   } else if (viewId === 'user-overview') {
     return <GRouterUserOverview locale={locale} viewId={viewId} />
   } else if (viewId === 'awaiting-decision') {
-    return <RouterFormsAwaitingDecision locale={locale} viewId={viewId} />
+    return <GRouterFormsAwaitingDecision locale={locale} viewId={viewId} />
   } else if (viewId === 'with-decision') {
     return <RouterFormsWithDecision locale={locale} viewId={viewId} />
   } else if (viewId === 'inbox') {

@@ -12,6 +12,7 @@ export const MUI_NAME = 'GRouterBookings';
 
 export interface GRouterBookingsClasses {
   root: string;
+  bookingTitleLayout: string;
   bookingTitle: string;
   bookingSubTitle: string;
   bookingBodyText: string;
@@ -24,10 +25,10 @@ export type GRouterBookingsClassKey = keyof GRouterBookingsClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    bookingTitleLayout: ['bookingTitleLayout'],
     bookingTitle: ['bookingTitle'],
     bookingSubTitle: ['bookingSubTitle'],
     bookingBodyText: ['bookingBodyText'],
-    bookingBodyTextError: ['bookingBodyTextError'],
     bookingBreadcrumbs: ['bookingBreadcrumbs'],
     avatar: ['avatar']
   };
@@ -42,16 +43,23 @@ export const GRouterBookingsRoot = styled("div", {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
+      styles.layout,
       styles.bookingTitle,
+      styles.bookingTitleLayout,
       styles.bookingSubTitle,
       styles.bookingBodyText,
-      styles.bookingBodyTextError,
       styles.bookingBreadcrumbs,
       styles.avatar
     ];
   },
 })(({ theme }) => {
   return {
+
+    '.GRouterBookings-bookingTitleLayout': {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
     '.GRouterBookings-bookingTitle': {
       textAlign: 'center',
       ...theme.typography.h1
@@ -87,7 +95,7 @@ export const BookingsTitle: React.FC = () => {
 
   return (
     <>
-      <Box display='flex' flexDirection='row' alignItems='center'>
+      <Box className={classes.bookingTitleLayout}>
         <Avatar className={classes.avatar}>
           <CalendarMonthIcon fontSize='large' />
         </Avatar>

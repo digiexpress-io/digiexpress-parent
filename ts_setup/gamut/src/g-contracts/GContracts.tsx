@@ -46,7 +46,6 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
     return {
       key: contract.id,
       exchangeId: contract.exchangeId,
-      color: props.slotProps?.item?.color,
       name: offerName,
       lastModified: contract.updated!,
       status: contract.status,
