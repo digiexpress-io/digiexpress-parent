@@ -29,6 +29,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.dialob.api.form.FormTag;
 import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
@@ -47,6 +48,7 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableTopicLink;
 import io.thestencil.client.api.MigrationBuilder;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -112,7 +114,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    final var sessionId = visitForm(request, stencilService).getId();
+    String formId = getFormId(stencilService);
+    final var sessionId = visitForm(request, formId).getId();
     
     final var process = hdesCommands.createInstance()
         .questionnaireId(sessionId)
@@ -152,6 +155,15 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .build();
   }
 
+  private String getFormId(final TopicLink stencilService) {
+    String formId = stencilService.getFormId();
+    if (formId == null) {
+      FormTag formTag = dialobCommands.getFormTag(stencilService.getFormName(), stencilService.getFormTag());
+      formId = formTag.getFormId();
+    }
+    return formId;
+  }
+
   private String visitArticleName(String articleName) {
     if(StringUtils.isEmpty(articleName)) {
       return null;
@@ -163,10 +175,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     return articleName;
   }
   
-  private IdAndRevision visitForm(InitUserAction request, MigrationBuilder.TopicLink link) {
+  private IdAndRevision visitForm(InitUserAction request, String formId) {
     final var formBuilder = dialobCommands.createSession()
-        // FIXME find form id from form name and tag name if no id present
-        .formId(link.getFormId())
+        .formId(formId)
         .language(clientLocale)
         .addContext("FirstNames", request.getFirstName())
         .addContext("LastName", request.getLastName())
