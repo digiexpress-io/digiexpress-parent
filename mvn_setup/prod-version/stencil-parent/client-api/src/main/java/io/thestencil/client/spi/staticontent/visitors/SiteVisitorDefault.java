@@ -264,6 +264,10 @@ public class SiteVisitorDefault implements SiteVisitor {
           .workflow(link.getWorkflow())
           .startDate(link.getStartDate())
           .endDate(link.getEndDate())
+          .formId(link.getFormId())
+          .formName(link.getFormName())
+          .formTag(link.getFormTag())
+          .flowName(link.getFlowName())
           .build();
         
         String id = Sha2.blobId(template.toString());
