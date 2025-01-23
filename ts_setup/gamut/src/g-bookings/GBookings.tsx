@@ -14,7 +14,6 @@ export interface GBookingsProps {
   };
   slotProps?: {
     item: {
-      color: string;
       onClick: () => void;
     }
   },
@@ -47,7 +46,6 @@ export const GBookings: React.FC<GBookingsProps> = (initProps) => {
       {bookings.map((booking) => (
         <Item
           key={booking.id}
-          color={slotProps?.item.color}
           name={booking.contractId}
           scheduledAt={booking.scheduledAt}
           onClick={slotProps?.item.onClick}
