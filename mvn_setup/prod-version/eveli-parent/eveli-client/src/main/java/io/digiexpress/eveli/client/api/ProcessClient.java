@@ -80,7 +80,6 @@ public interface ProcessClient {
     CreateProcessInstance formTagName(String formTagName);
     CreateProcessInstance stencilTagName(String stencilTagName);
     CreateProcessInstance wrenchTagName(String wrenchTagName);
-    CreateProcessInstance workflowTagName(String workflowTagName);
     
     ProcessInstance create();
   }
@@ -153,7 +152,6 @@ public interface ProcessClient {
     String getFormTagName();
     String getStencilTagName();
     String getWrenchTagName();
-    String getWorkflowTagName();
   }
   
 

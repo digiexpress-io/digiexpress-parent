@@ -44,6 +44,8 @@ import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableTopicLink;
+import io.thestencil.client.api.MigrationBuilder;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import jakarta.annotation.Nullable;
 import lombok.Data;
@@ -82,8 +84,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private UserAction createUserAction(Sites site) {
     
-    final var meta = new UserActionMetaQueryImpl(siteEnvir, programEnvir, workflowEnvir, offset).actionId(actionId).locale(clientLocale).getOne();
-    final var workflow = meta.getWorkflow();
+    final var meta = new UserActionMetaQueryImpl(siteEnvir, programEnvir, offset).actionId(actionId).locale(clientLocale).getOne();
     final var stencilService = meta.getTopicLink();
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
@@ -95,7 +96,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
       
       
        if(!(
-           allowed.contains(workflow.getName()) || 
+           allowed.contains(stencilService.getValue()) ||
            allowed.contains(actionId) ||
            allowed.contains(stencilService.getName())
         )) {
@@ -111,7 +112,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    final var sessionId = visitForm(request, workflow).getId();
+    final var sessionId = visitForm(request, stencilService).getId();
     
     final var process = hdesCommands.createInstance()
         .questionnaireId(sessionId)
@@ -120,16 +121,15 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .expiresAt(stencilService.getEndDate())
         .anon(anon)
         
-        .workflowName(workflow.getName())
+        .workflowName(stencilService.getValue())
         .articleName(request.getInputContextId())
         .parentArticleName(request.getInputParentContextId())
-        .flowName(workflow.getFlowName())
-        .formName(workflow.getFormName())
+        .flowName(stencilService.getFlowName())
+        .formName(stencilService.getFormName())
         
-        .formTagName(workflow.getFormTag())
+        .formTagName(stencilService.getFormTag())
         .stencilTagName(meta.getStencilTagName())
         .wrenchTagName(programEnvir.get().getTagName())
-        .workflowTagName(meta.getWorkflowTagName())
         
         .create();
 
@@ -163,9 +163,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     return articleName;
   }
   
-  private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
+  private IdAndRevision visitForm(InitUserAction request, MigrationBuilder.TopicLink link) {
     final var formBuilder = dialobCommands.createSession()
-        .formId(workflow.getFormId())
+        // FIXME find form id from form name and tag name if no id present
+        .formId(link.getFormId())
         .language(clientLocale)
         .addContext("FirstNames", request.getFirstName())
         .addContext("LastName", request.getLastName())

@@ -53,7 +53,6 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private String formTagName;
   private String stencilTagName;
   private String wrenchTagName;
-  private String workflowTagName;
   
   
   public ProcessInstance create() {
@@ -86,7 +85,6 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .setFormTagName(formTagName)
       .setStencilTagName(stencilTagName)
       .setWrenchTagName(wrenchTagName)
-      .setWorkflowTagName(workflowTagName)
       );
 
     return map(entity);
@@ -113,7 +111,6 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
       .formTagName(entity.getFormTagName())
       .stencilTagName(entity.getStencilTagName())
       .wrenchTagName(entity.getWrenchTagName())
-      .workflowTagName(entity.getWorkflowTagName())
       
       .expiresInSeconds(entity.getExpiresInSeconds())
       .expiresAt(entity.getExpiresAt())

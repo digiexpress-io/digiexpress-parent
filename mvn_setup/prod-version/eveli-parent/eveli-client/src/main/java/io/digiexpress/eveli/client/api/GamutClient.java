@@ -114,13 +114,10 @@ public interface GamutClient {
   @JsonDeserialize(as = ImmutableUserActionMeta.class)
   interface UserActionMeta {
     String getActionId();
-    Workflow getWorkflow();
     TopicLink getTopicLink();
     @Nullable Long getExpiresInSeconds();
     
-    
     String getStencilTagName();
-    String getWorkflowTagName();
   }
 
   @Value.Immutable

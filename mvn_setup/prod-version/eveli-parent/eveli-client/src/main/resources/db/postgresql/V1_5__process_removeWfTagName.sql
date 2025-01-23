@@ -1,0 +1,1 @@
+ALTER TABLE process DROP COLUMN "workflow_tag_name";

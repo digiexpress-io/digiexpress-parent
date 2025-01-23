@@ -154,6 +154,9 @@ public interface CreateBuilder {
     String getValue();
     List<String> getArticles();
     List<LocaleLabel> getLabels();
+    String getFormName();
+    String getFormTag();
+    String getFlowName();
     @Nullable
     Boolean getDevMode();
 

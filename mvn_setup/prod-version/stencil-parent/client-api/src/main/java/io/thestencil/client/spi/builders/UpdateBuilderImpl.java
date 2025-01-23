@@ -350,6 +350,7 @@ public class UpdateBuilderImpl implements UpdateBuilder {
         }
       }
     }
+    // TODO if no form data in workflow then find relevant data from workflow
     return ImmutableEntity.<Workflow>builder()
         .from(start)
         .body(ImmutableWorkflow.builder().from(start.getBody())
@@ -358,6 +359,10 @@ public class UpdateBuilderImpl implements UpdateBuilder {
             .value(changes.getValue())
             .startDate(changes.getStartDate())
             .endDate(changes.getEndDate())
+            .formName(changes.getFormName())
+            .formTag(changes.getFormTag())
+            .flowName(changes.getFlowName())
+            //FIXME.formId(changes.getformId())
             .labels(changes.getLabels() == null ? start.getBody().getLabels() : changes.getLabels())
             .articles(changes.getArticles() == null ? start.getBody().getArticles() : changes.getArticles())
             .build())

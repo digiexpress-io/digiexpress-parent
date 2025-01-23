@@ -148,7 +148,22 @@ public interface StencilClient {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getAnon();
-
+    
+    // ID is used in cases when dialob uses file-based forms, which are searchable by id
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormId();
+    // Form name, tag and flow name are nullable for migration period
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormName();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormTag();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFlowName();
+    
     List<String> getArticles();
     List<LocaleLabel> getLabels();
   }

@@ -169,7 +169,6 @@ public abstract class FeedbackEnvirSetup {
         
         .formTagName("dev")
         .stencilTagName("dev")
-        .workflowTagName("dev")
         .wrenchTagName("dev")
         .create();
       
