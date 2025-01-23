@@ -1,7 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
-
 import { GRouterInboxSubject } from '../g-router-inbox-subject';
 
 export const Route = createFileRoute('/secured/$locale/views/$viewId/$subjectId')({

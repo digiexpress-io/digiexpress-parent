@@ -1,33 +1,33 @@
 import { Avatar, Box, Breadcrumbs, generateUtilityClass, Link, styled, Typography } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import HomeIcon from '@mui/icons-material/Home';
-import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 
 import { useNavigate } from "@tanstack/react-router";
 import { useIntl } from "react-intl";
 import { GUserOverviewMenuView } from "../g-user-overview-menu";
 
 
-export const MUI_NAME = 'GFormsAwaitingDecision';
+export const MUI_NAME = 'GFormsWithDecision';
 
-export interface GFormsAwaitingDecisionClasses {
+export interface GFormsWithDecisionClasses {
   root: string;
-  awaitingDecisionTitle: string;
-  awaitingDecisionTitleLayout: string;
-  awaitingDecisionBodyText: string;
-  awaitingDecisionBreadcrumbs: string;
+  withDecisionTitle: string;
+  withDecisionTitleLayout: string;
+  withDecisionBodyText: string;
+  withDecisionBreadcrumbs: string;
   avatar: string;
 }
 
-export type GFormsAwaitingDecisionClassKey = keyof GFormsAwaitingDecisionClasses;
+export type GFormsWithDecisionClassKey = keyof GFormsWithDecisionClasses;
 
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    awaitingDecisionTitle: ['awaitingDecisionTitle'],
-    awaitingDecisionTitleLayout: ['awaitingDecisionTitleLayout'],
-    awaitingDecisionBodyText: ['awaitingDecisionBodyText'],
-    awaitingDecisionBreadcrumbs: ['awaitingDecisionBreadcrumbs'],
+    withDecisionTitle: ['withDecisionTitle'],
+    withDecisionTitleLayout: ['withDecisionTitleLayout'],
+    withDecisionBodyText: ['withDecisionBodyText'],
+    withDecisionBreadcrumbs: ['withDecisionBreadcrumbs'],
     avatar: ['avatar']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -35,43 +35,43 @@ export const useUtilityClasses = () => {
 }
 
 
-export const GFormsAwaitingDecisionRoot = styled("div", {
+export const GFormsWithDecisionRoot = styled("div", {
   name: MUI_NAME,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
-      styles.awaitingDecisionTitle,
-      styles.awaitingDecisionTitleLayout,
-      styles.awaitingDecisionBodyText,
-      styles.awaitingDecisionBreadcrumbs,
+      styles.withDecisionTitle,
+      styles.withDecisionTitleLayout,
+      styles.withDecisionBodyText,
+      styles.withDecisionBreadcrumbs,
       styles.avatar
     ];
   },
 })(({ theme }) => {
   return {
-    '.GFormsAwaitingDecision-awaitingDecisionTitleLayout': {
+    '.GFormsWithDecision-withDecisionTitleLayout': {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
-    '.GFormsAwaitingDecision-awaitingDecisionTitle': {
+    '.GFormsWithDecision-withDecisionTitle': {
       textAlign: 'center',
       ...theme.typography.h1
     },
-    '.GFormsAwaitingDecision-avatar': {
+    '.GFormsWithDecision-avatar': {
       height: '50px',
       width: '50px',
       alignContent: 'center',
       marginRight: theme.spacing(1),
-      backgroundColor: theme.palette.warning.main,
+      backgroundColor: theme.palette.success.main,
     },
-    '.GFormsAwaitingDecision-awaitingDecisionBodyText': {
+    '.GFormsWithDecision-withDecisionBodyText': {
       ...theme.typography.body1,
       marginTop: theme.spacing(0.5),
       marginBottom: theme.spacing(0.5)
     },
-    '.GFormsAwaitingDecision-awaitingDecisionBreadcrumbs': {
+    '.GFormsWithDecision-withDecisionBreadcrumbs': {
 
     }
 
@@ -80,26 +80,26 @@ export const GFormsAwaitingDecisionRoot = styled("div", {
 
 
 
-export const AwaitingDecisionTitle: React.FC = () => {
+export const WithDecisionTitle: React.FC = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
   return (
     <>
-      <Box className={classes.awaitingDecisionTitleLayout}>
+      <Box className={classes.withDecisionTitleLayout}>
         <Avatar className={classes.avatar}>
-          <HourglassTopIcon fontSize='large' />
+          <HourglassBottomIcon fontSize='large' />
         </Avatar>
-        <Typography className={classes.awaitingDecisionTitle}>{intl.formatMessage({ id: 'gamut.forms.awaitingDecision.title' })}</Typography>
+        <Typography className={classes.withDecisionTitle}>{intl.formatMessage({ id: 'gamut.forms.withDecision.title' })}</Typography>
       </Box>
-      <Typography className={classes.awaitingDecisionBodyText}>{intl.formatMessage({ id: 'gamut.forms.awaitingDecision.subtitle' })}</Typography>
+      <Typography className={classes.withDecisionBodyText}>{intl.formatMessage({ id: 'gamut.forms.withDecision.subtitle' })}</Typography>
     </>
   )
 }
 
 
 
-export const AwaitingDecisionsBreadcrumbs: React.FC = () => {
+export const WithDecisionBreadcrumbs: React.FC = () => {
   const intl = useIntl();
   const nav = useNavigate();
   const classes = useUtilityClasses();
@@ -115,7 +115,7 @@ export const AwaitingDecisionsBreadcrumbs: React.FC = () => {
     })
   }
   return (
-    <Breadcrumbs className={classes.awaitingDecisionBreadcrumbs}>
+    <Breadcrumbs className={classes.withDecisionBreadcrumbs}>
       <Link onClick={() => handleNav('user-overview')}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
