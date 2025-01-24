@@ -150,6 +150,13 @@ public class TaskException extends RuntimeException {
       .addAllArgs(envelope.getMessages().stream().map(message -> message.getText()).collect(Collectors.toList()));
       return this;
     }
+    public Builder add(String id, String desc, JsonObject body) {
+      msg
+        .id(id)
+        .value(desc)
+        .addArgs(body.encodePrettily());
+      return this;
+    }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {
       callback.accept(msg);
       return this;

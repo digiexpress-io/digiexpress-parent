@@ -23,11 +23,16 @@ package io.digiexpress.thena.mq.test;
 import java.io.Serializable;
 import java.time.Duration;
 
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.immutables.value.Value;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.thena.mq.client.api.ImmutableMessageResponse;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
+import io.digiexpress.thena.mq.client.api.ThenaMqConsumer.MessageResponse;
+import io.digiexpress.thena.mq.client.api.entities.Binding.BindingStatus;
+import io.digiexpress.thena.mq.client.api.entities.Delivery.DeliveryStatus;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -48,14 +53,19 @@ public class CreateOneChannelTest extends DbTestTemplate {
 
   @Test
   public void createOneChannelWithOneQueue() {
+    final var worker_1_rsp = new MutableObject<MessageResponse>();
+    final var worker_2_rsp = new MutableObject<MessageResponse>();    
     
     final var worker1 = new ThenaMqConsumer() {
       @Override
       public MessageResponse accept(QueueMessage msg) {
-        return ImmutableMessageResponse.builder()
+        final var rsp = ImmutableMessageResponse.builder()
             .ack(MessageResponseStatus.OK)
             .comment("success by worker 1")
             .build();
+        
+        worker_1_rsp.setValue(rsp);
+        return rsp;
       }
       // Not relevant, manual config
       @Override public String getConsumerComment() { return null; }
@@ -66,10 +76,13 @@ public class CreateOneChannelTest extends DbTestTemplate {
     final var worker2 = new ThenaMqConsumer() {
       @Override
       public MessageResponse accept(QueueMessage msg) {
-        return ImmutableMessageResponse.builder()
+        final var rsp = ImmutableMessageResponse.builder()
             .ack(MessageResponseStatus.OK)
             .comment("success by worker 2")
             .build();
+        
+        worker_2_rsp.setValue(rsp);
+        return rsp;
       }
 
       // Not relevant, manual config
@@ -129,6 +142,27 @@ public class CreateOneChannelTest extends DbTestTemplate {
       .build()
       .await().atMost(Duration.ofMinutes(1));
   
+    
+    // Check that consumers have been called
+    Assertions.assertNotNull(worker_1_rsp.getValue());
+    Assertions.assertNotNull(worker_2_rsp.getValue());
+    
+    
+    // Check for bindings
+    final var binding = getClient().withChannel(config.getChannel())
+        .bindingQuery()
+        .findAll()
+        .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(1, binding.size());
+    Assertions.assertEquals(1, binding.stream().filter(e -> e.getStatus() == BindingStatus.COMPLETED).toList().size());
+    
+    // 1 delivery for each consumer
+    final var deliveries = getClient().withChannel(config.getChannel())
+      .deliveryQuery()
+      .findAll()
+      .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(2, deliveries.size());
+    Assertions.assertEquals(2, deliveries.stream().filter(e -> e.getStatus() == DeliveryStatus.COMPLETED).toList().size());
     
   }
 }

@@ -154,6 +154,11 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     return this;
   }
   @Override
+  public InternalMissionQuery lockForUpdate() {
+    this.builder.lockForUpdate(true);
+    return this;
+  }
+  @Override
   public Uni<GrimMissionContainer> getById(String missionId) {
     builder.missionIds(Arrays.asList(missionId));
     this.filter = builder.build();

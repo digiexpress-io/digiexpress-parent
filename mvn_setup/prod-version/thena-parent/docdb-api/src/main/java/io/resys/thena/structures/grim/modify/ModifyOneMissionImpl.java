@@ -175,6 +175,7 @@ public class ModifyOneMissionImpl implements ModifyOneMission {
   private Multi<GrimBatchMissions> createRequest(GrimState tx) {
     return tx.query().missions()
     .missionId(this.missionId)
+    .lockForUpdate()
     .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER)
     .findAll().onItem().transform(labels -> createRequest(tx, labels));
   }

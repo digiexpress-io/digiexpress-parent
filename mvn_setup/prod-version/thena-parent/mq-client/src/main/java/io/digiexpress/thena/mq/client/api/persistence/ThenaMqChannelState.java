@@ -68,7 +68,6 @@ public interface ThenaMqChannelState {
   InternalThenaMqContainersQuery queryContainers();
   InternalMessageQuery queryMessages();
   InternalDeliveryQuery queryDeliveries();
-  
 
   interface InternalDeliveryQuery {
     Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);

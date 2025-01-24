@@ -82,6 +82,7 @@ public interface GrimQueries {
     
     InternalMissionQuery notViewed(@Nullable String userId, String usedFor);
     InternalMissionQuery includeViewer(String usedBy, String usedFor);
+    InternalMissionQuery lockForUpdate();
     
     InternalMissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
     InternalMissionQuery archived(GrimArchiveQueryType includeArchived); // true to exclude any tasks with archiveAt date present

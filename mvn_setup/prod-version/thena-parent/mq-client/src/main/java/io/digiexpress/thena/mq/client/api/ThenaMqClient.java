@@ -46,10 +46,15 @@ public interface ThenaMqClient {
   ChannelConfigQuery channelConfigQuery();  
   MessageQuery messageQuery();
   DeliveryQuery deliveryQuery();
+  BindingQuery bindingQuery();
   
   Uni<ThenaMqClient> withChannel(String channelIdOrName);
   ThenaMqClient withChannel(Channel channel);
 
+  
+  interface BindingQuery {
+    Uni<List<Binding>> findAll();    
+  }
   
   interface MessageQuery {
     MessageQuery lastNEntries(long lastNEntriesToGet);

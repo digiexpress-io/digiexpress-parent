@@ -3,7 +3,7 @@ const en = {
   'consumers.all': 'Consumers',
 
   'queue.config.appId': 'App id',
-
+  'queue.config.none': 'Loading',
 
   'queue.config.consumerName': 'Consumer name',
   'queue.config.routingKey': 'Routing key',

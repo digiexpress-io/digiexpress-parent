@@ -64,6 +64,9 @@ public interface GrimQueryActions {
   }
   
   interface MissionQuery {
+    
+    MissionQuery lockForUpdate();
+    
     // filter missions based on to what is the assignment, 
     // assignmentId parameter is used with OR filter
     // multiple calls addAssignment are treated as AND filter

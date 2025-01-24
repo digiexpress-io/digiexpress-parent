@@ -68,4 +68,8 @@ public class ThenaMqClientImpl implements ThenaMqClient {
   public DeliveryQuery deliveryQuery() {
     return new DeliveryQueryImpl(state);
   }
+  @Override
+  public BindingQuery bindingQuery() {
+    return new BindingQueryImpl(state);
+  }
 }

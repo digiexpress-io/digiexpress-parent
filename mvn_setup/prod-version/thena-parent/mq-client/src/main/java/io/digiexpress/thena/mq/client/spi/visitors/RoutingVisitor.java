@@ -77,7 +77,7 @@ public class RoutingVisitor implements  MessageToQueueRouter, ConsumerToQueueRou
     final var channel = request.getChannel();
     final var matchedQueues = apply(channel, msg, request.getQueues());
     final var bindings = matchedQueues.stream().map(queue -> ImmutableBinding.builder()
-        .status(BindingStatus.OPEN)
+        .status(BindingStatus.COMPLETED)
         .createdAt(now)
         .id(OidUtils.gen())
         .messageId(msg.getId())

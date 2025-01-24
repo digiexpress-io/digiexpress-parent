@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.mq;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
@@ -39,6 +40,7 @@ public class MqScheduler {
   private final ThenaMqClient client;
   
   @Scheduled(fixedRate = 15, timeUnit = TimeUnit.SECONDS)
+  @Async
   public void executeSync() {
     try {
       client.withChannel(config.getChannel())

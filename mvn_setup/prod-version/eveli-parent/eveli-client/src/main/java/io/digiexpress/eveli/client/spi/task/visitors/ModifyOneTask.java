@@ -41,6 +41,7 @@ import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -58,6 +59,18 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         merge.getCurrentState().getMission(), 
         merge.getCurrentState().getAssignments().values(),
         merge.getCurrentState().getRemarks().values());
+    
+    if(command.getVersion() != null && !previousVersion.getVersion().equals(command.getVersion())) {
+      throw TaskException.builder("MODIFY_ONE_TASK_FAIL_LOCK_VERSION_MISMATCH")
+      .add("locking failed", 
+          "Can't modify old version, locking failed",
+          JsonObject
+          .of("provided", command.getVersion(),
+              "expected", previousVersion.getVersion())
+      )
+      .build(); 
+    }
+    
     
     // overwrite assignees    
     if(command.getAssignedUser() == null) {
