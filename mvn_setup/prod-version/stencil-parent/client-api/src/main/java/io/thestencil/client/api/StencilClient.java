@@ -133,7 +133,7 @@ public interface StencilClient {
   @JsonSerialize(as = ImmutableWorkflow.class)
   @JsonDeserialize(as = ImmutableWorkflow.class)
   interface Workflow extends EntityBody {
-    String getValue(); // pointer to actual workflow
+    String getValue(); // workflow name
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getDevMode();
@@ -153,7 +153,6 @@ public interface StencilClient {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     String getFormId();
-    // Form name, tag and flow name are nullable for migration period
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     String getFormName();
