@@ -108,6 +108,7 @@ public class PersistencePgTest extends PgTestTemplate {
     
     Entity<Workflow> workflow1 = repo.create().workflow( 
         ImmutableCreateWorkflow.builder().value("Form1")
+          .formName("form1").formTag("v1").flowName("flow1")
           .addLabels(ImmutableLocaleLabel.builder().locale(locale1.getId()).labelValue("firstForm").build())
           .build()
       )      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull().await().atMost(Duration.ofMinutes(1));
