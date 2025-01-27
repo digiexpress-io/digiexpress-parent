@@ -8,11 +8,11 @@ export namespace StencilClient {
   export const mock = (): StencilApi.Service => {
     return createMock();
   };
-  export const service = (init: { store?: StencilApi.Store, config?: StencilApi.StoreConfig }): StencilApi.Service => {
+  export const service = (init: { store?: StencilApi.Store, config?: StencilApi.StoreConfig, assets?: StencilApi.AssetRepository }): StencilApi.Service => {
     return createService(init);
   };
 
-   const createService = (init: { store?: StencilApi.Store, config?: StencilApi.StoreConfig }): StencilApi.Service => {
+   const createService = (init: { store?: StencilApi.Store, config?: StencilApi.StoreConfig, assets?: StencilApi.AssetRepository }): StencilApi.Service => {
     const backend: StencilApi.Store = init.config ? new DefaultStore(init.config) : init.store as any;
   
     const getSite: () => Promise<StencilApi.Site> = async () => backend.fetch("/").then((data) => data as any)
@@ -46,7 +46,8 @@ export namespace StencilClient {
       create: () => new CreateBuilderImpl(backend),
       update: () => new UpdateBuilderImpl(backend),
       delete: () => new DeleteBuilderImpl(backend),
-      version
+      version,
+      assets: () => init.assets || new DefaultAssetRepository()
     };
   }
   
@@ -282,4 +283,10 @@ export namespace StencilClient {
         })
     }
   };
+
+  export class DefaultAssetRepository implements StencilApi.AssetRepository {
+    flowNames = () => new Promise<string[]>((resolve, reject) => {return []});
+    dialobForms = () => new Promise<StencilApi.DialobTagAsset[]>((resolve, reject) => {return []});
+
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IntlProvider } from 'react-intl'
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider, Outlet, useMatch } from 'react-router-dom';
 import { useUserInfo } from './context/UserContext';
@@ -19,7 +19,7 @@ import { TaskSessionContext } from './context/TaskSessionContext';
 
 import * as Burger from '@/burger';
 import { BurgerApi } from '@/burger';
-import { StencilComposer, StencilClient } from '../stencil';
+import { StencilComposer, StencilClient, StencilApi } from '../stencil';
 import { WrenchComposer, WrenchClient } from '../wrench';
 import { FeedbackComposer } from '../feedback';
 import { Secondary } from './Secondary';
@@ -29,6 +29,7 @@ import { frontdeskIntl } from './intl'
 import { stencilIntl } from '../stencil'
 import { wrenchIntl } from '../wrench'
 import { feedbackIntl } from '../feedback';
+import { SessionRefreshContext } from './context/SessionRefreshContext';
 
 
 const StartRouter: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -53,6 +54,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
 
 
   const { serviceUrl } = useConfig();
+  const session = useContext(SessionRefreshContext);
 
   if (isWrench) {
     const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: serviceUrl + "worker/rest/api/assets/wrench" }));
@@ -62,7 +64,13 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
       </IntlProvider>)
 
   } else if (isStencil) {
-    const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil" } });
+    const assetRepository:StencilApi.AssetRepository = {
+      dialobForms:  () => {return session.cFetch(`${serviceUrl}worker/rest/api/assets/dialob/tags`)
+      .then(response => response.json())},
+      flowNames: ()=> {return session.cFetch(`${serviceUrl}worker/rest/api/assets/wrench/flow-names`)
+      .then(response => response.json())}
+    } 
+    const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil"}, assets: assetRepository });
 
     return (
       <IntlProvider locale='en' messages={stencilIntl.en}>
