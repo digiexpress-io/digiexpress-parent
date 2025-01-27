@@ -139,7 +139,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
             </Box>
           </Box>
           <Box display="flex">
-            <Box flexGrow={1}>
+            <Box maxWidth="50%" flexGrow={1}>
               <Burger.Select label="services.formName" onChange={setFormName}
                 selected={formName}
                 items={allForms}
