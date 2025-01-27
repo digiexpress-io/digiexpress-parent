@@ -77,14 +77,25 @@ const en = {
   'services.change': 'Change existing services',
   'services.edit': 'Edit service',
 
-  'services.technicalname': 'Workflow name',
-  'services.technicalname.description': 'Flow name as defined in the Wrench',
+  'services.technicalname': 'Service workflow name',
+  'services.technicalname.description': 'Workflow descriptive name',
   'services.selected': 'Selected services',
   'services.devmode.helper': 'If Development mode is active, this service will only appear in the development environment for testing. It will not be included in production releases.',
   'services.devmode': 'Development mode',
 
   'services.anonmode.helper': 'If anonymous mode is active, this service will appear for BOTH anonymous and authenticated users.',
   'services.anonmode': 'Anonymous mode',
+
+  'services.flowName': 'Flow name',
+  'services.flowName.description': 'Flow name as defined in the Wrench',
+  'services.formName': 'Dialob form name',
+  'services.formName.description': 'Name of Dialob form used in service',
+  'services.formTag': 'Dialob form tag',
+  'services.formTag.description': 'Tag name for Dialob form used in service',
+  'services.startdate': 'Start date and time',
+  'services.startdate.description': 'Service activation date and time',
+  'services.enddate': 'End date and time',
+  'services.enddate.description': 'Service activation ending date and time',
   
 
   'services.delete': 'Delete service',
