@@ -40,8 +40,8 @@ author: jane.doe@morgue.com, message: changed meta for doc
  | merged
   +- merged: 1 entries
   +- 2::DOC
-   -  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"6","createdWithCommitId":"6","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"9","createdWithCommitId":"6","ownerId":null,"parentId":null,"meta":{"super cool field 1":"cool meta about the document"}}
+   -  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"6","createdWithCommitId":"6","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"9","createdWithCommitId":"6","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"super cool field 1":"cool meta about the document"}}
    diff: commitId :: 6 -> 9
    diff: meta :: null -> {"super cool field 1":"cool meta about the document"}
 
@@ -71,7 +71,7 @@ author: jane.doe@morgue.com, message: created first entry
  | created
   + added new: 3 entries
   + 2::DOC
-    {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"6","createdWithCommitId":"6","ownerId":null,"parentId":null,"meta":null}
+    {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-id","commitId":"6","createdWithCommitId":"6","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 3::DOC_BRANCH_PATCH
     {"id":"3","patchValue":[{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 7::DOC_COMMANDS
@@ -116,7 +116,7 @@ Logs
   - id: 19::DOC_BRANCH
     log patch: null    log before: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"6","branchName":"main","createdWithCommitId":"6"}    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"6","branchName":"main","createdWithCommitId":"6"}
   - id: 18::DOC
-    log patch: null    log before: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"6","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}    log after: {"id":"2","meta":{"super cool field 1":"cool meta about the document"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"9","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}
+    log patch: null    log before: {"id":"2","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"6","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}    log after: {"id":"2","meta":{"super cool field 1":"cool meta about the document"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"9","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}
   - id: 17::DOC_BRANCH_PATCH
     log patch: [{"op":"add","path":"/created-branch-command","value":"branch the customer for some reason"}]    log before: null    log after: null
   - id: 16::DOC_BRANCH
@@ -128,4 +128,4 @@ Logs
   - id: 13::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"3","docId":"2","value":{},"status":"IN_FORCE","commitId":"6","branchName":"main","createdWithCommitId":"6"}
   - id: 12::DOC
-    log patch: null    log before: null    log after: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"6","parentId":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}
+    log patch: null    log before: null    log after: {"id":"2","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"6","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-id","createdWithCommitId":"6"}

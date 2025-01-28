@@ -38,16 +38,19 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class CreateOneDocImpl implements CreateOneDoc {
 
   private final DbState state;
   
   private JsonObject branchContent;
   private List<JsonObject> commands;
-  private JsonObject docMeta;
+  private JsonObject meta;
 
   private String parentDocId;
   private final String repoId;
@@ -55,48 +58,44 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String externalId;
   private String docType;
   private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
-  private String author;
-  private String message;
+  private String commitAuthor;
+  private String commitMessage;
   private String ownerId;
+  private String docName;
+  private String docSubStatus;
+  private Boolean excludeBranchContentFromLog;
 
-
-  @Override public CreateOneDocImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName,     () -> "branchName has invalid charecters!"); return this; }
-  @Override public CreateOneDocImpl branchContent(JsonObject blob) {this.branchContent = RepoAssert.notNull(blob,         () -> "branchContent can't be empty!"); return this; }
-  @Override public CreateOneDocImpl commitAuthor(String author) {   this.author = RepoAssert.notEmpty(author,           () -> "commitAuthor can't be empty!"); return this; }
-  @Override public CreateOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message,         () -> "commitMessage can't be empty!"); return this; }
-  @Override public CreateOneDocImpl docType(String docType) {       this.docType = RepoAssert.notEmpty(docType,         () -> "docType can't be empty!"); return this;}
-
-  @Override public CreateOneDocImpl parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
-  @Override public CreateOneDocImpl docId(String docId) {           this.docId = docId; return this; }
-  @Override public CreateOneDocImpl externalId(String externalId) { this.externalId = externalId; return this; }
-  @Override public CreateOneDocImpl ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
-  @Override public CreateOneDocImpl commands(List<JsonObject> commands) {  this.commands = commands; return this; }
-  @Override public CreateOneDocImpl meta(JsonObject docMeta) {      this.docMeta = docMeta; return this; }
-  
+  @Override
+  public CreateOneDocImpl commitLogExcludesBranchBody() {
+    excludeBranchContentFromLog = Boolean.TRUE;
+    return this;
+  }
   
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    RepoAssert.notEmpty(author, () -> "author can't be empty!");
-    RepoAssert.notEmpty(message, () -> "message can't be empty!");
+    RepoAssert.notEmpty(commitAuthor, () -> "author can't be empty!");
+    RepoAssert.notEmpty(commitMessage, () -> "message can't be empty!");
     RepoAssert.notEmpty(docType, () -> "docType can't be empty!");
     RepoAssert.notNull(branchContent, () -> "Nothing to commit, no content!");
         
-    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    final var scope = ImmutableTxScope.builder().commitAuthor(commitAuthor).commitMessage(commitMessage).tenantId(repoId).build();
     return this.state.withDocTransaction(scope, this::doInTx);
   }
   
   private Uni<OneDocEnvelope> doInTx(DocState tx) {  
-    final var batch = new BatchForOneDocCreate(tx.getTenantId(), author, message)
+    final var batch = new BatchForOneDocCreate(tx.getTenantId(), commitAuthor, commitMessage, excludeBranchContentFromLog)
         .docId(docId)
         .docType(docType)
+        .docName(docName)
+        .docSubStatus(docSubStatus)
         .ownerId(ownerId)
         .externalId(externalId)
         .parentDocId(parentDocId)
         .branchName(branchName)
         .commands(commands)
-        .meta(docMeta)
+        .meta(meta)
         .branchContent(branchContent)
         .create();
 

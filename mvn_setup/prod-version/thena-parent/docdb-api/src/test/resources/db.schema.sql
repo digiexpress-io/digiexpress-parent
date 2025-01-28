@@ -94,8 +94,16 @@ CREATE TABLE doc
   doc_parent_id VARCHAR(100),
   doc_type VARCHAR(40) NOT NULL,
   doc_status VARCHAR(8) NOT NULL,
+  doc_starts_at TIMESTAMP WITH TIME ZONE,
+  doc_ends_at TIMESTAMP WITH TIME ZONE,
+  doc_name TEXT,
+  doc_sub_status VARCHAR(100),
   doc_meta jsonb
 );
+CREATE INDEX doc_DOC_STARTS_AT_INDEX ON doc (doc_starts_at);
+CREATE INDEX doc_DOC_ENDS_AT_INDEX ON doc (doc_ends_at);
+CREATE INDEX doc_DOC_SUB_STATUS_INDEX ON doc (doc_sub_status);
+CREATE INDEX doc_DOC_NAME_INDEX ON doc (doc_name);
 CREATE INDEX doc_DOC_EXT_INDEX ON doc (external_id);
 CREATE INDEX doc_DOC_PARENT_INDEX ON doc (doc_parent_id);
 CREATE INDEX doc_DOC_TYPE_INDEX ON doc (doc_type);

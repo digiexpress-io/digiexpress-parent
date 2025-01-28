@@ -54,7 +54,9 @@ public class DocCommitBuilder {
   private final OffsetDateTime createdAt;
   private final String docId;
   private final Optional<String> branchId;
-  public DocCommitBuilder(String tenantId, DocCommit commit) {
+  private final boolean excludeBranchContentFromLog;
+  
+  public DocCommitBuilder(String tenantId, Boolean excludeBranchContentFromLog, DocCommit commit) {
     super();
     this.commitId = commit.getId();
     this.tenantId = tenantId;
@@ -63,6 +65,7 @@ public class DocCommitBuilder {
     this.logger = new DocCommitLogger(tenantId, commit);
     this.createdAt = commit.getCreatedAt();
     this.branchId = commit.getBranchId();
+    this.excludeBranchContentFromLog = Boolean.TRUE.equals(excludeBranchContentFromLog);
   }
   public String getTenantId() {
     return tenantId;
@@ -79,7 +82,7 @@ public class DocCommitBuilder {
     if(entity instanceof DocBranch) {
       final var branch = (DocBranch) entity;
       final var emptyJsonObject = new JsonObject("{}");
-      final var diff = JsonPatch.diff(emptyJsonObject, branch.getValue());
+      final var diff = JsonPatch.diff(emptyJsonObject, excludeBranchContentFromLog ? new JsonObject("{}") : branch.getValue());
 
       this.trees.add(ImmutableDocCommitTree.builder()
           .id(OidUtils.gen())
@@ -108,13 +111,20 @@ public class DocCommitBuilder {
       return this;
     }
     
+    
+    final var bodyAfter = JsonObject.mapFrom(entity);
+    if(excludeBranchContentFromLog && entity instanceof DocBranch) {
+      bodyAfter.put("value", new JsonObject("{}"));
+    }
+    
+    
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
         .docId(docId)
         .branchId(branchId)
         .operationType(DocCommitTreeOperation.ADD)
-        .bodyAfter(JsonObject.mapFrom(entity))
+        .bodyAfter(bodyAfter)
         .bodyType(entity.getDocType().name())
         .build());
     this.logger.add(entity);
@@ -126,7 +136,9 @@ public class DocCommitBuilder {
     if(previous instanceof DocBranch) {
       final var branchPrev = (DocBranch) previous;
       final var branchNext = (DocBranch) next;
-      final var diff = JsonPatch.diff(branchPrev.getValue(), branchNext.getValue());
+      final var diff = JsonPatch.diff(branchPrev.getValue(), excludeBranchContentFromLog ? new JsonObject("{}") : branchNext.getValue());
+      
+      
       final var emptyJsonObject = new JsonObject("{}");
       this.trees.add(ImmutableDocCommitTree.builder()
           .id(OidUtils.gen())
@@ -158,20 +170,33 @@ public class DocCommitBuilder {
       return this;
     }
     
+    
+    final var bodyAfter = JsonObject.mapFrom(next);
+    final var bodyBefore = JsonObject.mapFrom(previous);
+    if(excludeBranchContentFromLog && previous instanceof DocBranch) {
+      bodyAfter.put("value", new JsonObject("{}"));
+      bodyBefore.put("value", new JsonObject("{}"));
+    }
+    
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
         .docId(docId)
         .branchId(branchId)
         .operationType(DocCommitTreeOperation.MERGE)
-        .bodyBefore(JsonObject.mapFrom(previous))
-        .bodyAfter(JsonObject.mapFrom(next))
+        .bodyBefore(bodyBefore)
+        .bodyAfter(bodyAfter)
         .bodyType(next.getDocType().name())
         .build());
     this.logger.merge(previous, next);
     return this;
   }
   public DocCommitBuilder rm(IsDocObject current) {
+    final var bodyBefore = JsonObject.mapFrom(current);
+    if(excludeBranchContentFromLog && current instanceof DocBranch) {
+      bodyBefore.put("value", new JsonObject("{}"));
+    }
+    
     this.trees.add(ImmutableDocCommitTree.builder()
         .id(OidUtils.gen())
         .docId(docId)

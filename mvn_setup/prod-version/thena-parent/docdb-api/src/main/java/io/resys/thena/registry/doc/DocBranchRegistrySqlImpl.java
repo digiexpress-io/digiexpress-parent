@@ -117,7 +117,10 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(" SET commit_id = $1, branch_name = $2, value = $3, branch_status = $4")
         .append(" WHERE branch_id = $5")
         .build())        
-        .props(docs.stream().map(ref -> Tuple.of(ref.getCommitId(), ref.getBranchName(), ref.getValue(), ref.getStatus(), ref.getId())).collect(Collectors.toList()))
+        .props(docs.stream().map(ref -> Tuple.of(
+            ref.getCommitId(), ref.getBranchName(), 
+            ref.getValue(), ref.getStatus(), ref.getId())
+        ).collect(Collectors.toList()))
         .build();
   }
 
@@ -129,7 +132,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     
     if(filter.getDocIds() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
       params.add(filter.getDocIds().toArray());
     }
     
@@ -160,10 +163,22 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     
     final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
     
+    //
+    
+    
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
 
-        .append("SELECT branch.*, ").ln()
+        .append("SELECT ").ln()
+        
+        .append(" branch.doc_id,").ln()
+        .append(" branch.branch_id,").ln()
+        .append(" branch.commit_id,").ln()
+        .append(" branch.created_with_commit_id,").ln()
+        .append(" branch.branch_name,").ln()
+        .append(" branch.branch_status,").ln()
+        .append(Boolean.TRUE.equals(filter.getEmptyBranchBody()) ? "'{}'::jsonb as value,": " branch.value,").ln()
+
         .append(" branch_updated_commit.created_at as updated_at,").ln()
         .append(" branch_created_commit.created_at as created_at").ln()
             
@@ -192,6 +207,11 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_sub_status as doc_sub_status,").ln()
+        .append("  doc.doc_starts_at as doc_starts_at,").ln()
+        .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -244,6 +264,11 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_sub_status as doc_sub_status,").ln()
+        .append("  doc.doc_starts_at as doc_starts_at,").ln()
+        .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -311,6 +336,11 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_sub_status as doc_sub_status,").ln()
+        .append("  doc.doc_starts_at as doc_starts_at,").ln()
+        .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -376,6 +406,11 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(new SqlStatement()
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
+        .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_sub_status as doc_sub_status,").ln()
+        .append("  doc.doc_starts_at as doc_starts_at,").ln()
+        .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
@@ -500,6 +535,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .doc(ImmutableDoc.builder()
             .id(row.getString("doc_id"))
             .externalId(row.getString("external_id"))
+            .subStatus(row.getString("doc_sub_status"))
+            .name(row.getString("doc_name"))
             .createdWithCommitId(row.getString("doc_created_commit_id"))
             .parentId(row.getString("doc_parent_id"))
             .type(row.getString("doc_type"))
@@ -508,6 +545,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
             .commitId(row.getString("doc_commit_id"))
             .createdAt(row.getOffsetDateTime("doc_created_at"))
             .updatedAt(row.getOffsetDateTime("doc_updated_at"))
+            .startsAt(row.getOffsetDateTime("doc_starts_at"))
+            .endsAt(row.getOffsetDateTime("doc_ends_at"))
             .build())
         .branch(ImmutableDocBranch.builder()
             .id(row.getString("branch_id"))
@@ -537,5 +576,4 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
     // string based - new JsonObject(row.getString(columnName));
     return row.getJsonObject(columnName);
   }
-
 }

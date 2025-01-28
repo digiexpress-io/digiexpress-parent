@@ -41,28 +41,29 @@ import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class BatchForOneDocModify {
 
   private final DocLock docLock;
   private final DocState tx;
   private final String author;
   private final String message;
+  
   private List<JsonObject> commands = null;
   private Optional<String> ownerId;
   private Optional<String> parentId;
   private Optional<String> externalId;
-  private Optional<JsonObject> appendMeta;
+  private Optional<String> docName;
+  private Optional<String> docSubStatus;
+  private Optional<JsonObject> meta;
   private boolean remove;
 
-  public BatchForOneDocModify externalId(Optional<String> externalId) { this.externalId = externalId; return this; }
-  public BatchForOneDocModify parentId(Optional<String> parentId) { this.parentId = parentId; return this; }
-  public BatchForOneDocModify ownerId(Optional<String> ownerId) { this.ownerId = ownerId; return this; }
-  public BatchForOneDocModify remove(boolean remove) { this.remove = remove; return this; }
-  public BatchForOneDocModify commands(List<JsonObject> log) { this.commands = log; return this; }
-  public BatchForOneDocModify meta(Optional<JsonObject> meta) { this.appendMeta = meta; return this; }
+  
   
   public DocBatchForOne create() {
     RepoAssert.notNull(docLock, () -> "docLock can't be empty!");
@@ -72,7 +73,7 @@ public class BatchForOneDocModify {
     
     final var now = OffsetDateTime.now();
     
-    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), ImmutableDocCommit.builder()
+    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), false, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(docLock.getDoc().get().getId())
         .createdAt(now)
@@ -85,8 +86,12 @@ public class BatchForOneDocModify {
 
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
-      .meta(appendMeta == null ? docLock.getDoc().get().getMeta() : appendMeta.get())
+      .meta(meta == null ? docLock.getDoc().get().getMeta() : meta.get())
       .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
+      
+      .name(this.docName == null ? docLock.getDoc().get().getName() : this.docName.orElse(null))
+      .parentId(this.docSubStatus == null ? docLock.getDoc().get().getSubStatus() : this.docSubStatus.orElse(null))
+      
       .parentId(this.parentId == null ? docLock.getDoc().get().getParentId() : this.parentId.orElse(null))
       .ownerId(this.ownerId == null ? docLock.getDoc().get().getOwnerId() : this.ownerId.orElse(null))
       .externalId(this.externalId == null ? docLock.getDoc().get().getExternalId() : this.externalId.orElse(null))

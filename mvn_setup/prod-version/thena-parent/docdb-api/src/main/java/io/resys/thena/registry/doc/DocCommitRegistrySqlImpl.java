@@ -75,7 +75,7 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
     
     if(filter.getDocIds() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
       params.add(filter.getDocIds().toArray());
     }
     

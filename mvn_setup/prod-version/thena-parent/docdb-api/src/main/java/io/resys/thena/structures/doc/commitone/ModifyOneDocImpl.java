@@ -58,6 +58,9 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   private Optional<String> parentDocId;
   private Optional<String> externalId;
   private Optional<String> ownerId;
+  
+  private Optional<String> docName;
+  private Optional<String> docSubStatus;
   private String author;
   private String message;
 
@@ -70,6 +73,9 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   @Override public ModifyOneDocImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
   @Override public ModifyOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
   @Override public ModifyOneDocImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
+  @Override public ModifyOneDocImpl docName(String docName) { this.docName = Optional.ofNullable(docName); return this; }
+  @Override public ModifyOneDocImpl docSubStatus(String docSubStatus) { this.docSubStatus = Optional.ofNullable(docSubStatus); return this; }
+  
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
@@ -96,6 +102,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
     final var batch = new BatchForOneDocModify(docLock, tx, author, message)
         .commands(commands)
         .meta(meta)
+        .docName(docName)
+        .docName(docSubStatus)
         .ownerId(ownerId)
         .parentId(parentDocId)
         .remove(remove)

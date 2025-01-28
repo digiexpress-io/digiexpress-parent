@@ -67,6 +67,8 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
     private String docId;
     private Optional<String> parentDocId;
     private Optional<String> ownerId;
+    private Optional<String> subStatus;
+    private Optional<String> docName;
     private Optional<String> externalId;
     private List<JsonObject> commands;
     private Optional<JsonObject> meta;
@@ -85,6 +87,8 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       @Override public AddItemToModifyDoc remove() { item.remove(true); return this; }
       @Override public AddItemToModifyDoc commands(List<JsonObject> log) { item.commands(log); return this; }
       @Override public AddItemToModifyDoc meta(JsonObject meta) { item.meta(Optional.ofNullable(meta)); return this; }
+      @Override public AddItemToModifyDoc docName(String docName) { item.docName(Optional.ofNullable(docName)); return this; }
+      @Override public AddItemToModifyDoc docSubStatus(String subStatus) { item.subStatus(Optional.ofNullable(subStatus)); return this; }
       @Override public ModifyManyDocs next() {
         final var result = item.build();
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
@@ -147,6 +151,8 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
           .remove(item.getRemove() == null ? false : item.getRemove())
           .commands(item.getCommands())
           .parentId(item.getParentDocId())
+          .docName(item.getDocName())
+          .docSubStatus(item.getSubStatus())
           .ownerId(item.getOwnerId())
           .externalId(item.getExternalId())
           .create();

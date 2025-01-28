@@ -50,6 +50,12 @@ public interface Doc extends DocEntity, IsDocObject, TenantEntity {
   
   @Nullable String getOwnerId();
   @Nullable String getParentId();
+  @Nullable String getSubStatus();
+  @Nullable String getName();
+  
+  @Nullable OffsetDateTime getStartsAt();
+  @Nullable OffsetDateTime getEndsAt();
+  
   @Nullable JsonObject getMeta();
   
   @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC; };
@@ -60,8 +66,8 @@ public interface Doc extends DocEntity, IsDocObject, TenantEntity {
     @Nullable String getParentId();
     @Nullable String getOwnerId();
     @Nullable String getDocType();
-    
     @Nullable String getBranch();
+    @Nullable Boolean getEmptyBranchBody();
   }
 
 }
