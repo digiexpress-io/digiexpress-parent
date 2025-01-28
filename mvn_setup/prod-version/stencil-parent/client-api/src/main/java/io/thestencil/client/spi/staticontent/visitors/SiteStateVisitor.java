@@ -143,6 +143,10 @@ public class SiteStateVisitor {
             .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
             .workflow(true)
             .global(false)
+            .flowName(link.getBody().getFlowName())
+            .formName(link.getBody().getFormName())
+            .formTag(link.getBody().getFormTag())
+            .formId(link.getBody().getFormId())
             .type(LINK_TYPE_WORKFLOW)
             .build();
         result.add(resource);
@@ -168,6 +172,10 @@ public class SiteStateVisitor {
               .endDate(link.getBody().getEndDate())
               .anon(Boolean.TRUE.equals(link.getBody().getAnon()))
               .workflow(true).global(true)
+              .flowName(link.getBody().getFlowName())
+              .formName(link.getBody().getFormName())
+              .formTag(link.getBody().getFormTag())
+              .formId(link.getBody().getFormId())
               .type(LINK_TYPE_WORKFLOW)
               .build();
           result.add(resource);

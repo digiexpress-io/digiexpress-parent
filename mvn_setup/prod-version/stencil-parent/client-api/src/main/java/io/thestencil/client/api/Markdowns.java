@@ -28,6 +28,8 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Value.Immutable
 public interface Markdowns {
   String getTagName();
@@ -49,6 +51,11 @@ public interface Markdowns {
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
     @Nullable String getDesc();
+    // values for workflows
+    @Nullable String getFormId();
+    @Nullable String getFormName();
+    @Nullable String getFormTag();
+    @Nullable String getFlowName();
   }
   
   @Value.Immutable
