@@ -218,7 +218,7 @@ public class EveliAutoConfigAssets {
           .onItem().transform(junk -> init)
           
         )
-        .await().atMost(Duration.ofSeconds(5));
+        .await().atMost(Duration.ofSeconds(10));
     
     final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
     
