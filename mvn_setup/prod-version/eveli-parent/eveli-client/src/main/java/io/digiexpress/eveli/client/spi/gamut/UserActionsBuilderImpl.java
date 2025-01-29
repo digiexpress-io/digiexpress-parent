@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.FormTag;
 import io.dialob.api.rest.IdAndRevision;
+import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
@@ -154,8 +156,21 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   private String getFormId(final TopicLink stencilService) {
     String formId = stencilService.getFormId();
-    if (formId == null) {
-      FormTag formTag = dialobCommands.getFormTag(stencilService.getFormName(), stencilService.getFormTag());
+    if (StringUtils.isAllBlank(formId)) {
+      String formName = stencilService.getFormName();
+      String formTagName = stencilService.getFormTag();
+      // workaround for transition period when not all services are filled with form information
+      // use workflow information to get form name and tag name.
+      if (StringUtils.isAllBlank(formName) && StringUtils.isAllBlank(formTagName)) {
+        String workflowName = stencilService.getValue();
+        Optional<Workflow> workflow = workflowEnvir.get().getEntries().stream().filter(wf->wf.getName().equals(workflowName)).findFirst();
+        if (workflow.isPresent()) {
+          Workflow wf = workflow.get();
+          formName = wf.getFormName();
+          formTagName = wf.getFormTag();
+        }
+      }
+      FormTag formTag = dialobCommands.getFormTag(formName, formTagName);
       formId = formTag.getFormId();
     }
     return formId;
