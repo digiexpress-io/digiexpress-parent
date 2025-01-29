@@ -120,7 +120,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
               <Burger.Select label="services.flowName" onChange={setFlowName}
                 selected={flowName}
                 items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
-                empty={{ id: "", label: "services.unselected" }}
               />
             </Box>
             <Box maxWidth="50%" sx={{ ml: 1 }}>
