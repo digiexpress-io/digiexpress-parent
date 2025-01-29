@@ -101,7 +101,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     <Burger.Dialog open={true} onClose={onClose}
       backgroundColor="uiElements.main"
       title="services.add"
-      submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || changeInProgress || labels.length < 1 }}>
+      submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
       <>
         <LocaleLabels
           onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}

@@ -100,7 +100,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     <Burger.Dialog open={true} onClose={onClose}
       backgroundColor="uiElements.main"
       title="services.edit"
-      submit={{ title: "button.apply", onClick: handleCreate, disabled: !technicalname || changeInProgress || labels.length < 1 }}>
+      submit={{ title: "button.apply", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
 
       <>
         <LocaleLabels
