@@ -73,7 +73,8 @@ public class EveliAutoConfigGamut {
         
         eveliContext.getSiteEnvir(),
         eveliContext.getProgramEnvir(),
-        eveliContext.getWorkflowEnvir()
+        eveliContext.getWorkflowEnvir(),
+        eveliAssetProps.getUseFormId()
     );
   }
   

@@ -30,7 +30,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;

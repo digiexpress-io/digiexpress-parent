@@ -51,6 +51,7 @@ public class GamutClientImpl implements GamutClient {
   private final Supplier<Sites> siteEnvir;
   private final Supplier<ProgramEnvir> programEnvir;
   private final Supplier<WorkflowTag> workflowEnvir;
+  private final boolean useFormId;
 
 
   @Override
@@ -60,7 +61,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, siteEnvir, programEnvir, workflowEnvir, authClient, offset);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, siteEnvir, programEnvir, workflowEnvir, authClient, offset, useFormId);
   }
 
   @Override

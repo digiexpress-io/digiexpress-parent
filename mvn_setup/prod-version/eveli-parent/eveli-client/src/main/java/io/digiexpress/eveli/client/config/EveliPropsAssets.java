@@ -41,4 +41,12 @@ public class EveliPropsAssets {
    */
   private String importDeployment;
   
+  /**
+   * If true uses form Id of tagged version to find correct form in process. Used in cases of shared database or 
+   * forms transferred between enironments in manner where it retains it's id (e.g. file based form storage).
+   * If false then form id to use is found by form name and tag name from form repository. Used in case when forms 
+   * are stored in database or transferred with release in manner where id is not retained.
+   */
+  private Boolean useFormId;
+  
 }

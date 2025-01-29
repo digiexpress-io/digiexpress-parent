@@ -64,6 +64,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private final CrmClient auth;
   private final ZoneOffset offset;
+  private final boolean useFormId;
   
   private boolean anon = false;
   private String actionId;
@@ -156,7 +157,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
 
   private String getFormId(final TopicLink stencilService) {
     String formId = stencilService.getFormId();
-    if (StringUtils.isAllBlank(formId)) {
+    if (!useFormId || StringUtils.isAllBlank(formId)) {
       String formName = stencilService.getFormName();
       String formTagName = stencilService.getFormTag();
       // workaround for transition period when not all services are filled with form information
