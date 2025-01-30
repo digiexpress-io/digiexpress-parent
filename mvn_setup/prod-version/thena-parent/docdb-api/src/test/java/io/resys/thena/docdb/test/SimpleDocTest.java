@@ -107,24 +107,46 @@ public class SimpleDocTest extends DbTestTemplate {
 
     assertRepo(repo.getRepo(), "doc-db-test-cases/crud-test-1.txt");
     
+    {
+      final var findAllDocs = getClient().doc(repo).find().docQuery()
+          .include(IncludeInQuery.ALL)
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));    
+      Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
+      Assertions.assertEquals(4, findAllDocs.getObjects().getCommits().size());
+      Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
+      Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().values().stream().filter(e -> !e.getValue().toString().equals("{}")).toList().size());
+    }
     
-    final var findAllDocs = getClient().doc(repo).find().docQuery()
-        .include(IncludeInQuery.ALL)
-        .findAll()
-    .await().atMost(Duration.ofMinutes(1));
+    {
+      final var findAllDocs = getClient().doc(repo).find().docQuery()
+          .include(IncludeInQuery.ALL)
+          .emptyBranchBody()
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));    
+      Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
+      Assertions.assertEquals(4, findAllDocs.getObjects().getCommits().size());
+      Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
+      Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().values().stream().filter(e -> e.getValue().toString().equals("{}")).toList().size());
+    }
     
-    Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(4, findAllDocs.getObjects().getCommits().size());
     
-    // one document, 2 branches
-    Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
-    
-    final var findAllMainBranchDocs = getClient().doc(repo).find().docQuery()
-        .branchName("main")
-        .findAll()
-    .await().atMost(Duration.ofMinutes(1));
-    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
-    Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().size());
+    {
+      // one document, 2 branches
+     
+      final var findAllDocs = getClient().doc(repo).find().docQuery()
+          .include(IncludeInQuery.ALL)
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));   
+      Assertions.assertEquals(2, findAllDocs.getObjects().getBranches().size());
+      
+      final var findAllMainBranchDocs = getClient().doc(repo).find().docQuery()
+          .branchName("main")
+          .findAll()
+      .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getDocs().size());
+      Assertions.assertEquals(1, findAllMainBranchDocs.getObjects().getBranches().size());
+    }
   }
   
   
@@ -210,5 +232,72 @@ public class SimpleDocTest extends DbTestTemplate {
     .await().atMost(Duration.ofMinutes(1));
     Assertions.assertEquals(2, findAllDocsAfterDelete.getObjects().getDocs()
         .values().stream().filter(e -> e.getStatus() == DocStatus.ARCHIVED).count());
+  }
+  
+  
+  @Test
+  public void dontLogContent() {
+    // create project
+    TenantCommitResult repo = getClient().tenants().commit()
+        .name("commitLogExcludesBranchBody", StructureType.doc)
+        .build()
+        .await().atMost(Duration.ofMinutes(1));
+    log.debug("created repo {}", repo);
+    Assertions.assertEquals(CommitStatus.OK, repo.getStatus());
+    
+    // doc 1
+    final var doc = getClient().doc(repo).commit()
+      .createOneDoc()
+      .docType("customer-data")
+      .externalId("bobs-ssn-id")
+      .branchName("main")
+      .branchContent(JsonObject.of("first_name", "bob", "last_name", "flop"))
+      .commitMessage("created first entry")
+      .commands(Arrays.asList(JsonObject.of("some_cool_command", "create_customer")))
+      .commitAuthor("jane.doe@morgue.com")
+      .commitLogExcludesBranchBody()
+    .build().await().atMost(Duration.ofMinutes(1));
+
+
+    {
+    final var findAllDocs = getClient().doc(repo).find().docQuery()
+        .include(IncludeInQuery.ALL)
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(1, findAllDocs.getObjects().getBranches().values().size());
+    Assertions.assertEquals(1, findAllDocs.getObjects().getCommits().size());
+    
+    final var branch = findAllDocs.getObjects().getBranches().values().stream().findFirst().get();
+    Assertions.assertTrue(branch.getValue().equals(JsonObject.of("first_name", "bob", "last_name", "flop")));
+    }
+
+
+    // doc 1
+    getClient().doc(repo).commit()
+      .modifyOneBranch()
+      .docId(doc.getDoc().getId())
+      .branchName("main")
+      .merge((old) -> JsonObject.of("first_name", "john", "last_name", "smith"))
+      .commitMessage("merged first entry")
+      .commitAuthor("jane.doe@morgue.com")
+      .commitLogExcludesBranchBody()
+    .build().await().atMost(Duration.ofMinutes(1));
+
+
+    {
+    final var findAllDocs = getClient().doc(repo).find().docQuery()
+        .include(IncludeInQuery.ALL)
+        .findAll()
+    .await().atMost(Duration.ofMinutes(1));
+    
+    Assertions.assertEquals(1, findAllDocs.getObjects().getDocs().size());
+    Assertions.assertEquals(1, findAllDocs.getObjects().getBranches().values().size());
+    Assertions.assertEquals(2, findAllDocs.getObjects().getCommits().size());
+    
+    final var branch = findAllDocs.getObjects().getBranches().values().stream().findFirst().get();
+    Assertions.assertTrue(branch.getValue().equals(JsonObject.of("first_name", "john", "last_name", "smith")));
+    }
   }
 }

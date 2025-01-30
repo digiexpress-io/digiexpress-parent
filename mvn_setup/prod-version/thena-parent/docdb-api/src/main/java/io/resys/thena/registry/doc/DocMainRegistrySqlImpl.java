@@ -95,7 +95,7 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
     
     if(filter.getDocIds() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
       params.add(filter.getDocIds().toArray());
     }
 
@@ -115,6 +115,12 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
       final var index = params.size() + 1;
       filters.add(" ( docs.doc_type = $" + index + " ) ");
       params.add(filter.getDocType());
+    }
+    
+    if(filter.getSubStatus() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
+      params.add(filter.getSubStatus());
     }
     final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
     
@@ -145,8 +151,8 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .value(new SqlStatement()
         .append("DELETE FROM ").append(options.getDoc())
         .append(" WHERE ").ln()
-        .append(" (id = $1 OR external_id = $1)")
-        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1))").ln()
+        .append(" (id = $1 OR external_id = $1 or doc_name = $1)")
+        .append(" OR doc_parent_id = (select id from ").append(options.getDoc()).append(" external_id = $1 or doc_name = $1))").ln()
         .append(" OR doc_parent_id = $1")
         .build())
         .props(Tuple.of(id))
@@ -156,8 +162,26 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   public ThenaSqlClient.SqlTupleList insertMany(List<Doc> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("INSERT INTO ").append(options.getDoc())
-        .append(" (id, external_id, doc_type, doc_status, doc_meta, doc_parent_id, commit_id, created_with_commit_id, owner_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append("INSERT INTO ").append(options.getDoc()).append(" ")
+        .append(
+"""
+(
+  id, 
+  external_id, 
+  doc_type, 
+  doc_status, 
+  doc_meta, 
+  doc_parent_id, 
+  commit_id, 
+  created_with_commit_id, 
+  owner_id, 
+  doc_name, 
+  doc_sub_status,
+  doc_starts_at,
+  doc_ends_at
+) 
+VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+""").ln()
         .build())
         .props(docs.stream()
             .map(doc -> Tuple.from(Arrays.asList(
@@ -169,7 +193,11 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
                 doc.getParentId(),
                 doc.getCommitId(),
                 doc.getCreatedWithCommitId(),
-                doc.getOwnerId()
+                doc.getOwnerId(),
+                doc.getName(), 
+                doc.getSubStatus(),
+                doc.getStartsAt(),
+                doc.getEndsAt()
             )))
             .collect(Collectors.toList()))
         .build();
@@ -178,12 +206,36 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   public ThenaSqlClient.SqlTupleList updateMany(List<Doc> docs) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getDoc())
-        .append(" SET external_id = $1, doc_type = $2, doc_status = $3, doc_meta = $4, commit_id = $5")
-        .append(" WHERE id = $6")
+        .append("UPDATE ").append(options.getDoc()).append(" ")
+        .append(
+"""
+SET 
+  external_id     = $1, 
+  doc_type        = $2, 
+  doc_status      = $3, 
+  doc_meta        = $4, 
+  commit_id       = $5, 
+  doc_name        = $6, 
+  doc_sub_status  = $7, 
+  doc_starts_at   = $8, 
+  doc_ends_at     = $9
+WHERE id          = $10
+""")
         .build())
         .props(docs.stream()
-            .map(doc ->Tuple.of(doc.getExternalId(), doc.getType(), doc.getStatus(), doc.getMeta(), doc.getCommitId(), doc.getId()))
+            .map(doc -> Tuple.from(Arrays.asList(
+                doc.getExternalId(), 
+                doc.getType(), 
+                doc.getStatus(), 
+                doc.getMeta(), 
+                doc.getCommitId(), 
+                doc.getName(), 
+                doc.getSubStatus(),
+                
+                doc.getStartsAt(),
+                doc.getEndsAt(),
+                
+                doc.getId())))
             .collect(Collectors.toList()))
         .build();
   }
@@ -196,9 +248,17 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .ownerId(row.getString("owner_id"))
         .parentId(row.getString("doc_parent_id"))
         .commitId(row.getString("commit_id"))
+        
+        .subStatus(row.getString("doc_sub_status"))
+        .name(row.getString("doc_name"))
+        
         .createdWithCommitId(row.getString("created_with_commit_id"))
         .createdAt(row.getOffsetDateTime("created_at"))
         .updatedAt(row.getOffsetDateTime("updated_at"))
+        
+        .startsAt(row.getOffsetDateTime("doc_starts_at"))
+        .endsAt(row.getOffsetDateTime("doc_ends_at"))
+        
         .type(row.getString("doc_type"))
         .status(Doc.DocStatus.valueOf(row.getString("doc_status")))
         .meta(row.getJsonObject("doc_meta"))
@@ -218,8 +278,30 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .append("  doc_parent_id VARCHAR(100),").ln()
         .append("  doc_type VARCHAR(40) NOT NULL,").ln()
         .append("  doc_status VARCHAR(8) NOT NULL,").ln()
+        
+        
+        .append("  doc_starts_at TIMESTAMP WITH TIME ZONE,").ln()
+        .append("  doc_ends_at TIMESTAMP WITH TIME ZONE,").ln()
+        
+        .append("  doc_name TEXT UNIQUE,").ln()
+        .append("  doc_sub_status VARCHAR(100),").ln()
+        
         .append("  doc_meta jsonb").ln()
         .append(");").ln()
+
+        
+        
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_STARTS_AT_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_starts_at);").ln()
+        
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_ENDS_AT_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_ends_at);").ln()
+        
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_SUB_STATUS_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_sub_status);").ln()
+        
+        .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_NAME_INDEX")
+        .append(" ON ").append(options.getDoc()).append(" (doc_name);").ln()
         
         .append("CREATE INDEX ").append(options.getDoc()).append("_DOC_EXT_INDEX")
         .append(" ON ").append(options.getDoc()).append(" (external_id);").ln()

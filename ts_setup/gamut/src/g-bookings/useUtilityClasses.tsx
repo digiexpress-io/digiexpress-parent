@@ -40,7 +40,10 @@ export const GBookingsRoot = styled("div", {
 })(({ theme }) => {
   return {
     '& .GBookings-header': {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
     }
   };
 });

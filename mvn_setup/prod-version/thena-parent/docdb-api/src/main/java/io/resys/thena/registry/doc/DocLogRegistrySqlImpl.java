@@ -76,7 +76,7 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
     
     if(filter.getDocIds() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") ) ");
+      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
       params.add(filter.getDocIds().toArray());
     }
     
@@ -96,6 +96,12 @@ public class DocLogRegistrySqlImpl implements DocCommitTreeRegistry {
       final var index = params.size() + 1;
       filters.add(" ( docs.doc_type = $" + index + " ) ");
       params.add(filter.getDocType());
+    }
+    
+    if(filter.getSubStatus() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
+      params.add(filter.getSubStatus());
     }
     
     if(filter.getBranch() != null) {

@@ -4,6 +4,7 @@ import {HdesApi} from '../../../client';
 type Operator = { key: string, value: string, text: string }
 const operators: Operator[] = [
   { key: 'in', value: 'in', text: 'in' },
+  { key: 'qin', value: 'qin', text: 'qin' },
   { key: 'not in', value: 'not in', text: 'not in' }
 ];
 

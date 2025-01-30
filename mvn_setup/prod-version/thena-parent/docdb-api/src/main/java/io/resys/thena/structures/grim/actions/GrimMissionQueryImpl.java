@@ -61,6 +61,7 @@ public class GrimMissionQueryImpl implements MissionQuery {
   private GrimArchiveQueryType includeArchived;
   private LocalDate fromCreatedOrUpdated;
   private Boolean overdue;
+  private boolean lockForUpdate;
   
   private String atLeastOneRemarkWithType;
   private Boolean atLeastOneRemarkWithAnyType;
@@ -170,7 +171,11 @@ public class GrimMissionQueryImpl implements MissionQuery {
     this.fromCreatedOrUpdated = fromCreatedOrUpdated;
     return this;
   }
-  
+  @Override
+  public MissionQuery lockForUpdate() {
+    lockForUpdate = true;
+    return this;
+  } 
   private InternalMissionQuery startQuery(GrimState state) {
     final var query = state.query().missions();
     if(this.ids != null) {
@@ -185,6 +190,11 @@ public class GrimMissionQueryImpl implements MissionQuery {
     if(docs != null && !docs.isEmpty()) {
       query.excludeDocs(docs.toArray(new GrimDocType[] {}));
     }
+    
+    if(lockForUpdate) {
+      query.lockForUpdate();
+    }
+    
     links.forEach(e -> query.addLink(e.getItem1(), e.getItem2()));
     assignments.forEach(e -> query.addAssignment(e.getItem1(), e.getItem2(), e.getItem3()));
     return query
@@ -280,5 +290,5 @@ public class GrimMissionQueryImpl implements MissionQuery {
               missionIdentifiers.indexOf(b.getMission().getId())));
           return Collections.unmodifiableList(result);
         });
-  } 
+  }
 }

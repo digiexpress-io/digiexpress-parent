@@ -1,5 +1,9 @@
 package io.resys.hdes.client.spi.config;
 
+import java.util.Optional;
+
+import io.resys.hdes.client.api.HdesAstTypes;
+
 /*-
  * #%L
  * hdes-client-api
@@ -21,11 +25,9 @@ package io.resys.hdes.client.spi.config;
  */
 
 import io.resys.hdes.client.api.HdesCache;
+import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowRoot;
 import io.resys.hdes.client.api.ast.ImmutableAstFlow;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface HdesClientConfig {
 
@@ -42,8 +44,9 @@ public interface HdesClientConfig {
   DependencyInjectionContext getDependencyInjectionContext();
   ServiceInit getServiceInit();
   HdesCache getCache();
-  List<AstFlowNodeVisitor> getFlowVisitors();
-  HdesClientConfig config(AstFlowNodeVisitor ... changes);
+  
+  HdesTypesMapper getTypes();
+  HdesAstTypes getAst();
   HdesClientConfig withBranch(String branchName);
   Optional<String> getBranchName();
   

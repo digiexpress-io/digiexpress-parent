@@ -205,9 +205,18 @@ public class DocDbPrinter {
       .stream()
       .sorted((b, a) -> ComparisonChain.start()
           .compare(
-              new StringBuilder(ID.apply(a.getId())).append("::").append(a.getBodyType()).toString(), 
-              new StringBuilder(ID.apply(b.getId())).append("::").append(b.getBodyType()).toString()
-          ).result())
+              ID.apply(a.getDocId()), 
+              ID.apply(b.getDocId())
+          )
+          .compare(
+              ID.apply(a.getId()), 
+              ID.apply(b.getId())
+          )
+          .compare(
+              a.getBodyType(), 
+              b.getBodyType()
+          )
+          .result())
       .forEach(item -> {
         
         result.append("  - id: ")

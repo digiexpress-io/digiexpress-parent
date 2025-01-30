@@ -34,8 +34,9 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
-import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
+import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
+import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -51,11 +52,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Import(value = { 
     EveliAutoConfigJpa.class, 
-    EveliAutoConfigAssets.class, 
+    EveliAutoConfigAssets.class,
+    EveliAutoConfigMq.class,
     EveliAutoConfig.class, 
     DialobAutoConfig.class,
     EveliAutoConfigGamut.class,
-    EveliAutoConfigWorker.class
+    EveliAutoConfigWorker.class,
+
 })
 public class Application {
   public static void main(String[] args) throws Exception {

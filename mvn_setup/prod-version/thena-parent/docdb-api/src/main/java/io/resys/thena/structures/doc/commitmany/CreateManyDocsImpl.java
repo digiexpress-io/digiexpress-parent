@@ -1,5 +1,7 @@
 package io.resys.thena.structures.doc.commitmany;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -34,34 +36,43 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
-import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.support.BatchForOneDocCreate;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class CreateManyDocsImpl implements CreateManyDocs {
   private final DbState state;
   private final List<DocBatchForOne> items = new ArrayList<DocBatchForOne>();
   private final String repoId;
  
-  private String author;
-  private String message;
-
+  private String commitAuthor;
+  private String commitMessage;
   private AddItemToCreateDoc lasItemBuilder;
-  @Override public CreateManyDocs commitAuthor(String author)  { this.author = RepoAssert.notEmpty(author,  () -> "commitAuthor can't be empty!"); return this; }
-  @Override public CreateManyDocs commitMessage(String message){ this.message = RepoAssert.notEmpty(message,() -> "commitMessage can't be empty!"); return this; }
 
+  
+  private Boolean excludeBranchContentFromLog;
+
+  @Override
+  public CreateManyDocsImpl commitLogExcludesBranchBody() {
+    excludeBranchContentFromLog = Boolean.TRUE;
+    return this;
+  }
+  
   @Override
   public AddItemToCreateDoc item() {
     RepoAssert.isNull(lasItemBuilder, () -> "previous item() method chain left unfinished, next() method must be called to finish item()!");
     
     final var parent = this;
-    final var oneDoc = new BatchForOneDocCreate(repoId, author, message);
+    final var oneDoc = new BatchForOneDocCreate(repoId, commitAuthor, commitMessage, excludeBranchContentFromLog);
 
     lasItemBuilder = new AddItemToCreateDoc() {
       @Override public AddItemToCreateDoc branchName(String branchName) { oneDoc.branchName(branchName); return this;}
@@ -71,14 +82,19 @@ public class CreateManyDocsImpl implements CreateManyDocs {
       @Override public AddItemToCreateDoc commands(List<JsonObject> log){ oneDoc.commands(log); return this; }
       @Override public AddItemToCreateDoc meta(JsonObject meta)         { oneDoc.meta(meta); return this; }
       @Override public AddItemToCreateDoc branchContent(JsonObject blob){ oneDoc.branchContent(blob); return this;}
+      @Override public AddItemToCreateDoc docName(String docName)       { oneDoc.docName(docName); return this; }
+      @Override public AddItemToCreateDoc docSubStatus(String subStatus){ oneDoc.docSubStatus(subStatus); return this; }
       @Override public AddItemToCreateDoc docId(String docId)           { oneDoc.docId(docId); return this;}      
-      @Override public AddItemToCreateDoc ownerId(String ownerId)       { oneDoc.ownerId(ownerId); return this;}      
+      @Override public AddItemToCreateDoc ownerId(String ownerId)       { oneDoc.ownerId(ownerId); return this;}
+      @Override public AddItemToCreateDoc docStartsAt(OffsetDateTime docStartsAt) { oneDoc.docStartsAt(docStartsAt); return this; }
+      @Override public AddItemToCreateDoc docEndsAt(OffsetDateTime docEndsAt)     { oneDoc.docEndsAt(docEndsAt); return this; }
       @Override public CreateManyDocs next() {
         lasItemBuilder = null;
         final var newDoc = oneDoc.create();
         items.add(newDoc);
         return parent;
       }
+
     };
     lasItemBuilder.branchName(DocObjectsQueryImpl.BRANCH_MAIN);
     return lasItemBuilder;
@@ -88,11 +104,11 @@ public class CreateManyDocsImpl implements CreateManyDocs {
   public Uni<ManyDocsEnvelope> build() {
     RepoAssert.isNull(lasItemBuilder, () -> "previous item() method chain left unfinished, next() method must be called to finish item()!");
     RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    RepoAssert.notEmpty(author, () -> "author can't be empty!");
-    RepoAssert.notEmpty(message, () -> "message can't be empty!");
+    RepoAssert.notEmpty(commitAuthor, () -> "author can't be empty!");
+    RepoAssert.notEmpty(commitMessage, () -> "message can't be empty!");
     RepoAssert.isTrue(!items.isEmpty(), () -> "Nothing to commit, no items!");
     
-    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    final var scope = ImmutableTxScope.builder().commitAuthor(commitAuthor).commitMessage(commitMessage).tenantId(repoId).build();
     return this.state.withDocTransaction(scope, this::doInTx);
   }
   

@@ -1,5 +1,11 @@
 package io.resys.hdes.client.spi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /*-
  * #%L
  * hdes-client-api
@@ -22,6 +28,7 @@ package io.resys.hdes.client.spi;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesCache;
 import io.resys.hdes.client.api.HdesClient;
@@ -49,34 +56,23 @@ import io.resys.hdes.client.spi.summary.HdesClientSummaryBuilder;
 import io.resys.hdes.client.spi.util.HdesAssert;
 import io.smallrye.mutiny.Uni;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-public class HdesClientImpl implements HdesClient {
-
-  private final HdesTypesMapper defs;
-  private final HdesAstTypes ast;
+public class HdesClientImpl implements HdesClient {;
   private final HdesStore store;
   private final HdesClientConfig config;
   
-  public HdesClientImpl(HdesTypesMapper types, HdesStore store, HdesAstTypes ast, HdesClientConfig config) {
+  public HdesClientImpl(HdesStore store, HdesClientConfig config) {
     super();
-    this.defs = types;
     this.store = store;
-    this.ast = ast;
     this.config = config;
   }
   @Override
   public ExecutorBuilder executor(ProgramEnvir envir) {
-    return new HdesClientExecutorBuilder(envir, defs, config.getDependencyInjectionContext());    
+    return new HdesClientExecutorBuilder(envir, config.getTypes(), config.getDependencyInjectionContext());    
   }
   @Override
   public EnvirBuilder envir() {
-    ProgramEnvirFactory factory = new ProgramEnvirFactory(ast, defs, config);
-    return new HdesClientEnvirBuilder(factory, defs);
+    ProgramEnvirFactory factory = new ProgramEnvirFactory(config);
+    return new HdesClientEnvirBuilder(factory, config.getTypes());
   }
   @Override
   public DiffBuilder diff() {
@@ -90,7 +86,7 @@ public class HdesClientImpl implements HdesClient {
 
   @Override
   public AstBuilder ast() {
-    return new HdesClientAstBuilder(defs, ast);
+    return new HdesClientAstBuilder(config.getTypes(), config.getAst());
   }
   @Override
   public HdesStore store() {
@@ -98,11 +94,11 @@ public class HdesClientImpl implements HdesClient {
   }
   @Override
   public HdesAstTypes types() {
-    return ast;
+    return config.getAst();
   }
   @Override
   public HdesTypesMapper mapper() {
-    return defs;
+    return config.getTypes();
   }
   @Override
   public ProgramBuilder program() {
@@ -113,11 +109,11 @@ public class HdesClientImpl implements HdesClient {
       }
       @Override
       public DecisionProgram ast(AstDecision ast) {
-        return new DecisionProgramBuilder(defs).build(ast);
+        return new DecisionProgramBuilder(config.getTypes()).build(ast);
       }
       @Override
       public FlowProgram ast(AstFlow ast) {
-        return new FlowProgramBuilder(defs).build(ast);
+        return new FlowProgramBuilder(config.getTypes()).build(ast);
       }
     };
   }
@@ -139,7 +135,7 @@ public class HdesClientImpl implements HdesClient {
   public HdesClient withBranch(String branchName) {
     final var newStore = store.withBranch(branchName);
     final var newConfig = config.withBranch(branchName);
-    return new HdesClientImpl(defs, newStore, ast, newConfig);
+    return new HdesClientImpl(newStore, newConfig);
   }
 
   public static Builder builder() {
@@ -189,33 +185,47 @@ public class HdesClientImpl implements HdesClient {
       if(cache == null) {
         cache = HdesClientEhCache.builder().build(store.getRepoName());
       }
-      
-      final var config = new HdesClientConfigImpl(flowVisitors, cache, serviceInit, dependencyInjectionContext);
-      final var types = new HdesTypeDefsFactory(objectMapper, config);
-      final var ast = new HdesAstTypesImpl(objectMapper, config);
-      return new HdesClientImpl(types, store, ast, config);
+      final var types = new HdesTypeDefsFactory(objectMapper);
+      final var ast = new HdesAstTypesImpl(types, flowVisitors);
+      final var config = new HdesClientConfigImpl(cache, serviceInit, dependencyInjectionContext, types, ast);
+
+      return new HdesClientImpl(store, config);
     }
   }
 
-  private static class HdesClientConfigImpl implements HdesClientConfig {
-    private final List<AstFlowNodeVisitor> flowVisitors = new ArrayList<>();
+  public static class HdesClientConfigImpl implements HdesClientConfig {
+
     private final HdesCache cache;
     private final ServiceInit serviceInit;
     private final DependencyInjectionContext dependencyInjectionContext;
+    private final HdesTypesMapper types;
+    private final HdesAstTypes ast;
 
     private final Optional<String> branchName;
     
-    public HdesClientConfigImpl(List<AstFlowNodeVisitor> flowVisitors, HdesCache cache, ServiceInit serviceInit, DependencyInjectionContext dependencyInjectionContext) {
-      this.flowVisitors.addAll(flowVisitors);
+    public HdesClientConfigImpl(
+        HdesCache cache, ServiceInit serviceInit, 
+        DependencyInjectionContext dependencyInjectionContext, 
+        HdesTypesMapper types,
+        HdesAstTypes ast) {
+
       this.cache = cache;
+      this.types = types;
+      this.ast = ast;
       this.serviceInit = serviceInit;
       this.dependencyInjectionContext = dependencyInjectionContext;
       this.branchName = Optional.empty();
     }
 
-    public HdesClientConfigImpl(List<AstFlowNodeVisitor> flowVisitors, HdesCache cache, ServiceInit serviceInit, DependencyInjectionContext dependencyInjectionContext, String branchName) {
-      this.flowVisitors.addAll(flowVisitors);
+    public HdesClientConfigImpl(
+        HdesCache cache, ServiceInit serviceInit, 
+        DependencyInjectionContext dependencyInjectionContext, 
+        String branchName,
+        HdesTypesMapper types,
+        HdesAstTypes ast) {
       this.cache = cache;
+      this.types = types;
+      this.ast = ast;
       this.serviceInit = serviceInit;
       this.dependencyInjectionContext = dependencyInjectionContext;
       this.branchName = Optional.ofNullable(branchName);
@@ -229,27 +239,26 @@ public class HdesClientImpl implements HdesClient {
       return cache;
     }
     @Override
-    public List<AstFlowNodeVisitor> getFlowVisitors() {
-      return flowVisitors;
-    }
-    @Override
-    public HdesClientConfig config(AstFlowNodeVisitor... changes) {
-      this.flowVisitors.addAll(Arrays.asList(changes));
-      return this;
-    }
-    @Override
     public Optional<String> getBranchName() {
       return branchName;
     }
     @Override
     public HdesClientConfig withBranch(String branchName) {
       Objects.requireNonNull(branchName, () -> "branchName can't be null!");
-      return new HdesClientConfigImpl(flowVisitors, cache.withName(branchName), serviceInit, dependencyInjectionContext, branchName);
+      return new HdesClientConfigImpl(cache.withName(branchName), serviceInit, dependencyInjectionContext, branchName, types, ast);
     }
 
     @Override
     public DependencyInjectionContext getDependencyInjectionContext() {
       return dependencyInjectionContext;
+    }
+
+    public HdesTypesMapper getTypes() {
+      return types;
+    }
+
+    public HdesAstTypes getAst() {
+      return ast;
     }
   }
 
@@ -273,12 +282,16 @@ public class HdesClientImpl implements HdesClient {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
         return store().repo().repoName(repoName).headName(headName).createIfNot()
             .onItem().transform(tuple -> {
-              return new HdesClientImpl(defs, tuple.getItem2(), ast, 
+              
+              
+              return new HdesClientImpl(tuple.getItem2(), 
                   new HdesClientConfigImpl(
-                      config.getFlowVisitors(),
                       config.getCache().withName(repoName), 
                       config.getServiceInit(),
-                      config.getDependencyInjectionContext()));
+                      config.getDependencyInjectionContext(),
+                      config.getTypes(),
+                      config.getAst()
+              ));
             });
       }
       @Override
@@ -286,8 +299,13 @@ public class HdesClientImpl implements HdesClient {
         HdesAssert.notNull(repoName, () -> "repoName must be defined!");
         final var newStore = store().repo().repoName(repoName).headName(headName).build();
         final var newCache = config.getCache().withName(repoName);
-        final var newConfig = new HdesClientConfigImpl(config.getFlowVisitors(), newCache, config.getServiceInit(), config.getDependencyInjectionContext());
-        return new HdesClientImpl(defs, newStore, ast, newConfig);
+        final var newConfig = new HdesClientConfigImpl( 
+            newCache, 
+            config.getServiceInit(), 
+            config.getDependencyInjectionContext(),
+            config.getTypes(),
+            config.getAst());
+        return new HdesClientImpl(newStore, newConfig);
       }
     };
   }

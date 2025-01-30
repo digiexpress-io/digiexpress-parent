@@ -1,6 +1,29 @@
 package io.digiexpress.thena.mq.client.spi;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import io.digiexpress.thena.mq.client.api.ThenaMqClient.MessageBuilder;
 import io.digiexpress.thena.mq.client.api.entities.ImmutableQueueMessage;
@@ -29,8 +52,7 @@ public class MessageBuilderImpl implements MessageBuilder {
   private final OffsetDateTime now = OffsetDateTime.now();
   private final ImmutableChannelBatch.Builder batch = ImmutableChannelBatch.builder().batchStatus(OperationStatus.OK);
   private final StringBuilder batchLog = new StringBuilder();
-  
-  private String routingKey;
+  private final LinkedHashSet<String> routingKey = new LinkedHashSet<>();
   
   private String comment;
   private String createdBy;
@@ -43,14 +65,22 @@ public class MessageBuilderImpl implements MessageBuilder {
   private String bodyType;
   private JsonObject bodyValue;
   
-  
+  @Override
+  public MessageBuilder routingKey(String ... routingKey) {
+    return this.routingKey(Arrays.asList(routingKey));
+  }
+  @Override
+  public MessageBuilder routingKey(List<String> routingKey) {
+    this.routingKey.addAll(routingKey);
+    return this;
+  }
   @Override
   public Uni<ThenaMqEnvelope<QueueMessage>> build() {
     return request().onItem().transform(resp -> response(resp));
   }
   
   private Uni<ChannelBatch> request() {
-    final var msg = createMsg();
+    final var msg = createAllMsg();
     final ChannelTxScope scope = ImmutableChannelTxScope.builder()
         .channelId(state.getDataSource().getChannel().getChannelName())
         .commitAuthor("MessageBuilderImpl")
@@ -58,7 +88,7 @@ public class MessageBuilderImpl implements MessageBuilder {
         .build();
     
     return state.withChannelTransaction(scope, tx -> tx.batchMany(batch
-        .addNewPublishedMessages(msg)
+        .addAllNewPublishedMessages(msg)
         .log(batchLog.toString())
         .channelId(state.getDataSource().getChannel().getId())
         .build()));
@@ -83,7 +113,13 @@ public class MessageBuilderImpl implements MessageBuilder {
         .build();
   }
   
-  private QueueMessage createMsg() {
+  private List<QueueMessage> createAllMsg() {
+    RepoAssert.isTrue(!routingKey.isEmpty(), () -> "routingKey can't be empty!");
+    
+    return routingKey.stream().map(this::createOneMsg).toList();
+  }
+  
+  private QueueMessage createOneMsg(String routingKey) {
     final var createdAt = this.createdAt == null ? now : this.createdAt;
     final var startsAt = this.startsAt == null ? now : this.startsAt;
     final var expiresAt = this.expiresAt == null ? now : this.expiresAt;
@@ -91,6 +127,7 @@ public class MessageBuilderImpl implements MessageBuilder {
     RepoAssert.isTrue(startsAt.isEqual(createdAt) || startsAt.isAfter(createdAt), () -> "message can't start before createdAt()");
     RepoAssert.isTrue(expiresAt.isEqual(now) || expiresAt.isAfter(startsAt), () -> "message can't expire before startsAt()");
     RepoAssert.notEmpty(routingKey, () -> "routingKey can't be empty!");
+    RepoAssert.notEmpty(routingKey, () -> "comment can't be empty!");
     
     
     
@@ -112,5 +149,7 @@ public class MessageBuilderImpl implements MessageBuilder {
       .bodyValue(bodyValue)
       .build();
   }
+
+
   
 }

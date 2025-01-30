@@ -85,6 +85,17 @@ export const fi = {
   'gamut.search.popover.allLinks': 'Kaikki linkit',
   'gamut.search.popover.allServices': 'Kaikki palvelut',
 
+  'gamut.search.results.serviceLinks': 'Palvelut',
+  'gamut.search.results.formLinks': 'Lomakkeita',
+  'gamut.search.results.externalLinks': 'Linkkejä muille sivuille',
+  'gamut.search.results.internalLinks': 'Linkkejä sivuillemme',
+  'gamut.search.results.internalExternalLinks': 'Hyperlinkkejä',
+  'gamut.search.results.phoneLinks': 'Puhelinnumerot',
+
+  'gamut.search.results.noResults': 'Ei tuloksia haulle',
+  'gamut.search.results.allResults': 'Kaikki tulokset',
+
+
   // ------------------- GAMUT ARTICLES  -----------------------
 
   'gamut.article.pagelinks.forms.title': 'Lomakkeet',

@@ -1,15 +1,13 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  RouterUnfinishedForms, RouterFormsAwaitingDecision, RouterFormsWithDecision,
-  RouterUserOverview,
-  RouterBookings
-} from '../g-routes';
 import { GRouterSecuredServices } from '../g-router-secured-services';
-
 import { GRouterInbox } from '../g-router-inbox';
-
+import { GRouterUnfinishedForms } from '../g-router-unfinished-forms';
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
+import { GRouterUserOverview } from '../g-router-user-overview';
+import { GRouterBookings } from '../g-router-bookings';
+import { GRouterFormsAwaitingDecision } from '../g-router-forms-awaiting-decision';
+import { GRouterFormsWithDecision } from '../g-router-forms-with-decision';
 import { useLocale } from '../api-locale';
 
 export const Route = createFileRoute('/secured/$locale/views/$viewId/')({
@@ -32,17 +30,17 @@ function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string 
   if (viewId === 'services') {
     return <GRouterSecuredServices locale={locale} viewId={viewId} />
   } else if (viewId === 'requests-in-progress') {
-    return <RouterUnfinishedForms locale={locale} viewId={viewId} />
+    return <GRouterUnfinishedForms locale={locale} viewId={viewId} />
   } else if (viewId === 'user-overview') {
-    return <RouterUserOverview locale={locale} viewId={viewId} />
+    return <GRouterUserOverview locale={locale} viewId={viewId} />
   } else if (viewId === 'awaiting-decision') {
-    return <RouterFormsAwaitingDecision locale={locale} viewId={viewId} />
+    return <GRouterFormsAwaitingDecision locale={locale} viewId={viewId} />
   } else if (viewId === 'with-decision') {
-    return <RouterFormsWithDecision locale={locale} viewId={viewId} />
+    return <GRouterFormsWithDecision locale={locale} viewId={viewId} />
   } else if (viewId === 'inbox') {
     return <GRouterInbox locale={locale} viewId={viewId} />
   } else if (viewId === 'bookings') {
-    return <RouterBookings locale={locale} viewId={viewId} />
+    return <GRouterBookings locale={locale} viewId={viewId} />
   } 
   return (<>No view defined</>)
 }

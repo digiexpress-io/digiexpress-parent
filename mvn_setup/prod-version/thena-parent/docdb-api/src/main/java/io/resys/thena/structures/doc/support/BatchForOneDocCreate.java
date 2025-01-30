@@ -39,38 +39,37 @@ import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class BatchForOneDocCreate {
 
   private final String repoId;
 
   private final String author;
   private final String message;
+  private final Boolean excludeBranchContentFromLog;
   
   private String docType;
   private String branchName;
+  private String docName;
+  private String docSubStatus;
   private String docId;
   private String parentDocId;
   private String externalId;
   private String ownerId;
   private JsonObject branchContent;
   private List<JsonObject> commands;
-  private JsonObject docMeta;
-
-  public BatchForOneDocCreate parentDocId(String parentId) {  this.parentDocId = parentId; return this; }
-  public BatchForOneDocCreate docId(String docId) {           this.docId = docId; return this; }
-  public BatchForOneDocCreate externalId(String externalId) { this.externalId = externalId; return this; }
-  public BatchForOneDocCreate ownerId(String ownerId) {       this.ownerId = ownerId; return this; }
-  public BatchForOneDocCreate commands(List<JsonObject> log) {this.commands = log; return this; }
-  public BatchForOneDocCreate meta(JsonObject meta) {         this.docMeta = meta; return this; }
-  public BatchForOneDocCreate branchContent(JsonObject blob) {this.branchContent = RepoAssert.notNull(blob, () -> "branchContent can't be empty!"); return this; }
-  public BatchForOneDocCreate branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this;}
-  public BatchForOneDocCreate docType(String docType)       { this.docType = RepoAssert.notEmpty(docType,     () -> "docType can't be empty!"); return this; }
+  private JsonObject meta;
+  private OffsetDateTime docStartsAt;
+  private OffsetDateTime docEndsAt;
   
+
   public DocBatchForOne create() {
-    RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
+    RepoAssert.isName(branchName, () -> "branchName can't be empty!");
     RepoAssert.notNull(repoId, () -> "repoId can't be empty!");
     RepoAssert.notEmpty(author, () -> "author can't be empty!");
     RepoAssert.notEmpty(message, () -> "message can't be empty!");
@@ -81,7 +80,7 @@ public class BatchForOneDocCreate {
     final var docId = Optional.ofNullable(this.docId).orElseGet(() -> Optional.ofNullable(branchContent.getString("id")).orElse(OidUtils.gen()));
     final var branchId = OidUtils.gen();
     final var now = OffsetDateTime.now();
-    final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
+    final var commitBuilder = new DocCommitBuilder(repoId, excludeBranchContentFromLog, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(docId)
         .branchId(branchId)
@@ -94,14 +93,18 @@ public class BatchForOneDocCreate {
     
     final var doc = ImmutableDoc.builder()
         .id(docId)
+        .name(docName)
+        .subStatus(docSubStatus)
         .ownerId(ownerId)
         .parentId(parentDocId)
+        .startsAt(docStartsAt)
+        .endsAt(docEndsAt)
         .commitId(commitBuilder.getCommitId())
         .createdWithCommitId(commitBuilder.getCommitId())
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))
         .type(docType)
         .status(Doc.DocStatus.IN_FORCE)
-        .meta(docMeta)
+        .meta(meta)
         .createdAt(now)
         .updatedAt(now)
         .build();

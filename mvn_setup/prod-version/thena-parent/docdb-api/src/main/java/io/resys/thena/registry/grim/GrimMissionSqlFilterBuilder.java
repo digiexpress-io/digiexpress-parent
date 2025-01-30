@@ -61,6 +61,7 @@ public class GrimMissionSqlFilterBuilder {
     }
   }
   
+  
   public SqlTuple where(GrimMissionFilter filter) {    
     
     // by id
@@ -228,6 +229,12 @@ public class GrimMissionSqlFilterBuilder {
       and();
       builder.append(" mission.mission_due_date < CURRENT_DATE").ln();
     }
+    
+    
+    if(Boolean.TRUE.equals(filter.getLockForUpdate()) && filter.getMissionIds().isPresent()) {
+      builder.append(" FOR UPDATE OF mission").ln();
+    }
+    
     
     final var result = builder.toString();
     

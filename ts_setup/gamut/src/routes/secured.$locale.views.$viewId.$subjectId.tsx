@@ -1,8 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { GUserOverviewMenuView } from '../g-user-overview-menu';
-import { RouterServiceSelected } from '../g-routes';
-
 import { GRouterInboxSubject } from '../g-router-inbox-subject';
 
 export const Route = createFileRoute('/secured/$locale/views/$viewId/$subjectId')({
@@ -15,10 +13,5 @@ function Component() {
 }
 
 function ChooseComponent(props: { locale: string, viewId: GUserOverviewMenuView, subjectId: string }) {
-
-
-  if (props.viewId === 'services') {
-    return (<RouterServiceSelected locale={props.locale} viewId={props.viewId} serviceId={props.subjectId} />)
-  } 
   return (<GRouterInboxSubject locale={props.locale} viewId={props.viewId} subjectId={props.subjectId} />)
 }

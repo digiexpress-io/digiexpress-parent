@@ -53,44 +53,46 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class CreateOneDocBranchImpl implements CreateOneDocBranch {
 
   private final DbState state;
   private final String repoId;
   
-  private JsonObject appendbranchContents = null;
+  private JsonObject branchContent = null;
   private List<JsonObject> commands = null;
 
   private String docId;
 
   private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
   private String branchFrom;
-  private String author;
-  private String message;
+  private String commitAuthor;
+  private String commitMessage;
+  private Boolean excludeBranchContentFromLog;
 
-  @Override public CreateOneDocBranchImpl docId(String docId) { this.docId = RepoAssert.notEmpty(docId,               () -> "docId can't be empty!"); return this; }
-  @Override public CreateOneDocBranchImpl branchName(String branchName) { this.branchName = RepoAssert.isName(branchName, () -> "branchName has invalid charecters!"); return this; }
-  @Override public CreateOneDocBranchImpl branchContent(JsonObject branchContent) { this.appendbranchContents = RepoAssert.notNull(branchContent, () -> "branchContent can't be empty!"); return this; }
-  @Override public CreateOneDocBranchImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author,     () -> "author can't be empty!"); return this; }
-  @Override public CreateOneDocBranchImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
-  @Override public CreateOneDocBranchImpl branchFrom(String branchFrom) { this.branchFrom = branchFrom; return this; }
-  @Override public CreateOneDocBranchImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
+  @Override
+  public CreateOneDocBranchImpl commitLogExcludesBranchBody() {
+    excludeBranchContentFromLog = Boolean.TRUE;
+    return this;
+  }
 
   @Override
   public Uni<OneDocEnvelope> build() {
     RepoAssert.notEmpty(branchName, () -> "branchName can't be empty!");
     RepoAssert.notEmpty(docId,      () -> "docId can't be empty!");
-    RepoAssert.notEmpty(author,     () -> "author can't be empty!");
+    RepoAssert.notEmpty(commitAuthor,     () -> "author can't be empty!");
     RepoAssert.notEmpty(branchFrom, () -> "branchFrom can't be empty!");
-    RepoAssert.notEmpty(message,    () -> "message can't be empty!");
-    RepoAssert.isTrue(appendbranchContents != null, () -> "Nothing to commit, no content!");
+    RepoAssert.notEmpty(commitMessage,    () -> "commitMessage can't be empty!");
+    RepoAssert.isTrue(branchContent != null, () -> "Nothing to commit, no content!");
     
     final var crit = ImmutableDocBranchLockCriteria.builder().branchName(branchFrom).docId(docId).build();
     
-    final var scope = ImmutableTxScope.builder().commitAuthor(author).commitMessage(message).tenantId(repoId).build();
+    final var scope = ImmutableTxScope.builder().commitAuthor(commitAuthor).commitMessage(commitMessage).tenantId(repoId).build();
     return this.state.withDocTransaction(scope, tx -> tx.query().branches().getBranchLock(crit).onItem().transformToUni(lock -> {
       final OneDocEnvelope validation = validateRepo(lock);
       if(validation != null) {
@@ -131,13 +133,13 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     
     final var now = OffsetDateTime.now();
     
-    final var commitBuilder = new DocCommitBuilder(repoId, ImmutableDocCommit.builder()
+    final var commitBuilder = new DocCommitBuilder(repoId, excludeBranchContentFromLog, ImmutableDocCommit.builder()
       .id(OidUtils.gen())
       .docId(doc.getId())
       .branchId(branchId)
       .createdAt(now)
-      .commitAuthor(this.author)
-      .commitMessage(this.message)
+      .commitAuthor(this.commitAuthor)
+      .commitMessage(this.commitMessage)
       .parent(lock.getCommit().get().getId())
       .commitLog("")
       .build()
@@ -149,7 +151,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .commitId(commitBuilder.getCommitId())
       .createdWithCommitId(commitBuilder.getCommitId())
       .branchName(branchName)
-      .value(appendbranchContents)
+      .value(branchContent)
       .createdAt(now)
       .updatedAt(now)
       .status(Doc.DocStatus.IN_FORCE)
@@ -164,7 +166,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
           .commitId(commitBuilder.getCommitId())
           .commands(commands)
           .createdAt(now)
-          .createdBy(author)
+          .createdBy(commitAuthor)
           .build()
         );
     docLogs.forEach(command -> commitBuilder.add(command));

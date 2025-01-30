@@ -50,26 +50,33 @@ import io.resys.thena.api.envelope.ThenaContainer;
 import io.resys.thena.spi.DbState;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@Setter @Accessors(fluent = true)
 public class DocObjectsQueryImpl implements DocObjectsQuery {
   public static String BRANCH_MAIN = "main";
   private final DbState state;
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();
   private String branchName;
+  private String subStatus;
   private String docType;
   private String parentId;
   private String ownerId;
+  private Boolean emptyBranchBody;
  
-  @Override public DocObjectsQuery ownerId(String ownerId) { this.ownerId = ownerId; return this; }
-  @Override public DocObjectsQuery parentId(String parentId) { this.parentId = parentId; return this; }
-  @Override public DocObjectsQuery branchName(String branchName) { this.branchName = branchName; return this; }
-  @Override public DocObjectsQuery include(IncludeInQuery ... children) { this.include.addAll(Arrays.asList(children)); return this; }
-  @Override public DocObjectsQuery docType(String docType) {
-    this.docType = docType;
+  @Override
+  public DocObjectsQuery emptyBranchBody() {
+    this.emptyBranchBody = true;
+    return this;
+  }
+  @Override
+  public DocObjectsQuery include(IncludeInQuery... children) {
+    this.include.addAll(Arrays.asList(children));
     return this;
   }
 
@@ -83,10 +90,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return get(Optional.of(id), true);
   }
   
-
   @Override
   public Uni<QueryEnvelope<DocObject>> findOne() {
     return get(Optional.empty(), false);
+  }
+  
+  @Override
+  public Uni<QueryEnvelope<DocObject>> findOne(String id) {
+    return get(Optional.of(id), false);
   }
   
   public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
@@ -94,6 +105,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .docType(docType)
         .parentId(parentId)
         .ownerId(ownerId)
+        .emptyBranchBody(emptyBranchBody)
+        .subStatus(subStatus)
         .branch(branchName);
     
     if(id.isPresent()) {
@@ -159,6 +172,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .branch(branchName)
         .parentId(parentId)
         .ownerId(ownerId)
+        .subStatus(subStatus)
+        .emptyBranchBody(emptyBranchBody)
         .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();

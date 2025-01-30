@@ -40,15 +40,18 @@ public interface DocQueryActions {
   
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
+    DocObjectsQuery subStatus(String subStatus);
     DocObjectsQuery docType(String docType);
     DocObjectsQuery parentId(String parentId);
     DocObjectsQuery ownerId(String ownerId);
-    DocObjectsQuery include(IncludeInQuery ... includeChildren);
-
+    DocObjectsQuery include(IncludeInQuery ... includeChildren); // include additional objects on top of "doc and branch"
+    DocObjectsQuery emptyBranchBody(); // load the branch with empty body = {} 
+    
     Uni<QueryEnvelope<DocObject>> get();
+    Uni<QueryEnvelope<DocObject>> findOne(String idOrExternalIdOrName);
     Uni<QueryEnvelope<DocObject>> findOne();
-    Uni<QueryEnvelope<DocObject>> get(String matchId);
-    Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> matchId);
+    Uni<QueryEnvelope<DocObject>> get(String idOrExternalIdOrName);
+    Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> idOrExternalIdOrName);
     Uni<QueryEnvelope<DocTenantObjects>> findAll();
   }
 }

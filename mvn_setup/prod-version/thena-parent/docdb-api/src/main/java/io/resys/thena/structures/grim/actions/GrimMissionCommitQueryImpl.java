@@ -107,7 +107,7 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
     private final String missionId; 
     private final String currentCommitId;
     private final Map<String, GrimCommit> commitsById;
-    private final Map<String, GrimCommit> commitsByParentId;
+    private final Map<String, List<GrimCommit>> commitsByParentId;
     private final Map<String, List<GrimCommitTree>> treesByCommitId;
     private GrimMissionContainer container;
     private GrimMissionContainer parentVersion;
@@ -127,7 +127,7 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
           .collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
       
       this.commitsByParentId = commitsById.stream()
-          .collect(Collectors.toMap(e -> Optional.ofNullable(e.getParentCommitId()).orElse(""), e -> e));
+          .collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentCommitId()).orElse("")));
       
       this.treesByCommitId = treesByCommitId.stream()
           .collect(Collectors.groupingBy(e -> e.getCommitId()));
@@ -171,7 +171,7 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
       if(next == null) {
         return;
       }
-      visitCommit(next);
+      next.forEach(entry -> visitCommit(entry));
     }
     
     private void visitTree(GrimCommit commit) {

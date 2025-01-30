@@ -1,5 +1,25 @@
 package io.digiexpress.thena.mq.client.spi.visitors;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +77,7 @@ public class RoutingVisitor implements  MessageToQueueRouter, ConsumerToQueueRou
     final var channel = request.getChannel();
     final var matchedQueues = apply(channel, msg, request.getQueues());
     final var bindings = matchedQueues.stream().map(queue -> ImmutableBinding.builder()
-        .status(BindingStatus.OPEN)
+        .status(BindingStatus.COMPLETED)
         .createdAt(now)
         .id(OidUtils.gen())
         .messageId(msg.getId())
@@ -102,14 +122,14 @@ public class RoutingVisitor implements  MessageToQueueRouter, ConsumerToQueueRou
   
   @Override
   public List<Queue> apply(Channel channel, QueueMessage message, List<Queue> queues) {
-    return queues.stream().filter(queue -> Router.builder()
+    return queues.stream().filter(queue -> Router.builderWithDot()
         .routingKey(message.getRoutingKey())
         .queueName(queue.getQueueName())
         .isMatch()).toList();
   }
   @Override
   public List<Queue> apply(Channel channel, QueueConsumer consumer, List<Queue> queues) {
-    return queues.stream().filter(queue -> Router.builder()
+    return queues.stream().filter(queue -> Router.builderWithDot()
         .routingKey(consumer.getRoutingKey())
         .queueName(queue.getQueueName())
         .isMatch()).toList();

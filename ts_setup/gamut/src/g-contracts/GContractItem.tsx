@@ -15,7 +15,6 @@ export interface GContractItemProps {
   lastModified: DateTime;
   documents?: number | undefined;
   messages?: number | undefined;
-  color?: string;
   onClick: (exchangeId: string) => void;
   date?: Partial<GDateProps>
 

@@ -84,6 +84,18 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     ]
   },
 
+  GRouterBookings: {},
+  GRouterFormsAwaitingDecision: {},
+  GRouterFormsWithDecision: {},
+  GRouterInbox: {},
+  GRouterInboxSubject: {},
+  GRouterOffer: {},
+  GRouterOfferSummary: {},
+  GRouterProduct: {},
+  GRouterSecuredServices: {},
+  GRouterUnfinishedForms: {},
+  GRouterUnsecured: {},
+  GRouterUserOverview: {},
 
   GLogin: {},
   GLogout: {},
@@ -218,8 +230,8 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GLinkHyper: {},
   GLinkPhone: {},
   GLinkInfo: {},
-  GLinkFormSecured: {},
-  GLinkFormUnsecured: {},
+  GLinkFormLocked: {},
+  GLinkFormUnlocked: {},
 
   GLinksPage: {},
 

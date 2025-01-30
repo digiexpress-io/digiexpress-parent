@@ -51,7 +51,12 @@ eveli.crm.enabled: false
 eveli.crm.host: 
 eveli.crm.service-path-company: gw/api/ypa/organizationRoles
 eveli.crm.service-path-person: gw/api/hpa/authorizationList
-  
+
+# mq
+eveli.mq.enabled: true
+eveli.mq.app-id: task-app
+eveli.mq.channel-name: main-channel-for-all
+
 # feedback  
 eveli.feedback.enabled: true
 eveli.feedback.forms: palautteet

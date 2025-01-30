@@ -32,6 +32,13 @@ public class EveliPropsAssets {
    * Enable asset management via live DB
    */
   private Boolean enabled;
+  
+  
+  /**
+   * Overwrite default assets
+   */
+  private Boolean overwrite;
+
 
   private Integer timezoneOffset = 2;
   

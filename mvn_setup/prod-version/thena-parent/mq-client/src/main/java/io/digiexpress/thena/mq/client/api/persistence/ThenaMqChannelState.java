@@ -1,5 +1,25 @@
 package io.digiexpress.thena.mq.client.api.persistence;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +48,7 @@ public interface ThenaMqChannelState {
   ThenaMqDataSource getDataSource();
   
   // change channel
+  Uni<ThenaMqChannelState> withDefaultChannel();
   Uni<ThenaMqChannelState> withChannel(String channelId);
   ThenaMqChannelState withChannel(Channel channel);
   
@@ -47,16 +68,18 @@ public interface ThenaMqChannelState {
   InternalThenaMqContainersQuery queryContainers();
   InternalMessageQuery queryMessages();
   InternalDeliveryQuery queryDeliveries();
-  
 
   interface InternalDeliveryQuery {
-    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);    
+    Uni<List<Delivery>> findAllByAppIdAndStatus(String appId, DeliveryStatus status, boolean lockForUpdate);
+    Uni<List<DeliveryAttempt>> findLastNAttemptEntries(long entries);
+    Uni<List<Delivery>> findLastNEntries(long entries);
   }
   
   interface InternalQueueConsumerQuery {
     Uni<List<QueueConsumer>> findAllByAppId(String appId, boolean lockForUpdate);
     Uni<List<QueueConsumer>> findAllEnabled();
     Uni<List<QueueConsumer>> findAllEnabled(String appId);
+    Uni<List<QueueConsumer>> findAll();
   }
   
   interface InternalQueueQuery {
@@ -76,6 +99,7 @@ public interface ThenaMqChannelState {
   }
   
   interface InternalMessageQuery {
+    Uni<List<QueueMessage>> findLastNEntries(long entries);
     Uni<List<QueueMessage>> findAllByStatus(QueueMessageStatus status, boolean lockForUpdate);
     Uni<List<QueueMessage>> findAllByAppIdAndDeliveryStatus(String appId, DeliveryStatus status);
   }

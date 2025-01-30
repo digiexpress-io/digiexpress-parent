@@ -1,5 +1,25 @@
 package io.digiexpress.thena.mq.client.spi.persistence;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -37,9 +57,19 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
   public ThenaMqChannelState withChannel(Channel channel) {
     return new ThenaMqChannelStateImpl(dataSource.withChannel(channel));
   }
-  
+
+  @Override
+  public Uni<ThenaMqChannelState> withDefaultChannel() {
+    return withChannel(dataSource.getChannel().getId());
+  }
   @Override
   public Uni<ThenaMqChannelState> withChannel(String channelId) {
+    
+    // channel already loaded
+    if(dataSource.getChannel().getId().equals(channelId)) {
+      return Uni.createFrom().item(this);
+    }
+    
     return queryChannels().getByNameOrId(channelId).onItem().transformToUni(channel -> {
       if(channel.isEmpty()) {
         return channelNotFound(channelId);
@@ -163,4 +193,5 @@ public class ThenaMqChannelStateImpl implements ThenaMqChannelState {
       return new ThenaMqClientImpl(state);
     }
   }
+
 }

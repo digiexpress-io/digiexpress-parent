@@ -37,8 +37,7 @@ public class PatchType {
   public static final String NAMES_VALUE = "value";
   public static final String NAMES_PATH = "path";
   public static final String NAMES_FROM = "from";
-  @SuppressWarnings("unused")
-  private static final String NAMES_FROM_VALUE = "fromValue";
+  public static final String NAMES_FROM_VALUE = "fromValue";
   
   public static PatchType decode(JsonObject patchOperation) {
     RepoAssert.notNull(patchOperation.containsKey(NAMES_OP), () -> "operation must be defined!");

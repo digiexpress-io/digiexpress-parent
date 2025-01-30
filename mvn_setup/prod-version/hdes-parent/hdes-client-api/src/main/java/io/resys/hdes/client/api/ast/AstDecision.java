@@ -63,5 +63,12 @@ public interface AstDecision extends AstBody, Serializable {
   }
 
   enum HitPolicy { FIRST, ALL }
-  enum ColumnExpressionType { IN, EQUALS }
+  enum ColumnExpressionType { IN, EQUALS, 
+    // pattern matching for special symbols
+    // "." - word separator   
+    // "#" - match one or more word 
+    // "*" - match one word
+    QIN  
+
+  }
 }

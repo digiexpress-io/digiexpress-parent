@@ -184,8 +184,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 11::DOC
-   -  {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"61","createdWithCommitId":"61","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"71","createdWithCommitId":"61","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"61","createdWithCommitId":"61","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"71","createdWithCommitId":"61","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 61 -> 71
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -208,8 +208,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 10::DOC
-   -  {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"60","createdWithCommitId":"60","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"70","createdWithCommitId":"60","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"60","createdWithCommitId":"60","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"70","createdWithCommitId":"60","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 60 -> 70
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -232,8 +232,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 9::DOC
-   -  {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"59","createdWithCommitId":"59","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"69","createdWithCommitId":"59","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"59","createdWithCommitId":"59","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"69","createdWithCommitId":"59","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 59 -> 69
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -256,8 +256,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 8::DOC
-   -  {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"58","createdWithCommitId":"58","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"68","createdWithCommitId":"58","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"58","createdWithCommitId":"58","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"68","createdWithCommitId":"58","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 58 -> 68
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -280,8 +280,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 7::DOC
-   -  {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"57","createdWithCommitId":"57","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"67","createdWithCommitId":"57","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"57","createdWithCommitId":"57","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"67","createdWithCommitId":"57","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 57 -> 67
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -304,8 +304,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 6::DOC
-   -  {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"56","createdWithCommitId":"56","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"66","createdWithCommitId":"56","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"56","createdWithCommitId":"56","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"66","createdWithCommitId":"56","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 56 -> 66
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -328,8 +328,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 5::DOC
-   -  {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"55","createdWithCommitId":"55","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"65","createdWithCommitId":"55","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"55","createdWithCommitId":"55","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"65","createdWithCommitId":"55","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 55 -> 65
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -352,8 +352,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 4::DOC
-   -  {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"54","createdWithCommitId":"54","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"64","createdWithCommitId":"54","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"54","createdWithCommitId":"54","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"64","createdWithCommitId":"54","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 54 -> 64
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -376,8 +376,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 3::DOC
-   -  {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"53","createdWithCommitId":"53","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"63","createdWithCommitId":"53","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"53","createdWithCommitId":"53","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"63","createdWithCommitId":"53","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 53 -> 63
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -400,8 +400,8 @@ author: jane.doe@morgue.com, message: edit dev branch
  | merged
   +- merged: 1 entries
   +- 2::DOC
-   -  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"52","createdWithCommitId":"52","ownerId":null,"parentId":null,"meta":null}
-   +  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"62","createdWithCommitId":"52","ownerId":null,"parentId":null,"meta":{"meta data":"some cool to add to meta"}}
+   -  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"52","createdWithCommitId":"52","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
+   +  {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"62","createdWithCommitId":"52","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":{"meta data":"some cool to add to meta"}}
    diff: commitId :: 52 -> 62
    diff: meta :: null -> {"meta data":"some cool to add to meta"}
 
@@ -414,7 +414,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 11::DOC
-    {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"61","createdWithCommitId":"61","ownerId":null,"parentId":null,"meta":null}
+    {"id":"11","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-11","commitId":"61","createdWithCommitId":"61","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 21::DOC_BRANCH_PATCH
     {"id":"21","patchValue":[{"op":"add","path":"/id","value":"11"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 41::DOC_COMMANDS
@@ -435,7 +435,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 10::DOC
-    {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"60","createdWithCommitId":"60","ownerId":null,"parentId":null,"meta":null}
+    {"id":"10","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-10","commitId":"60","createdWithCommitId":"60","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 20::DOC_BRANCH_PATCH
     {"id":"20","patchValue":[{"op":"add","path":"/id","value":"10"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 40::DOC_COMMANDS
@@ -456,7 +456,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 9::DOC
-    {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"59","createdWithCommitId":"59","ownerId":null,"parentId":null,"meta":null}
+    {"id":"9","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-9","commitId":"59","createdWithCommitId":"59","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 19::DOC_BRANCH_PATCH
     {"id":"19","patchValue":[{"op":"add","path":"/id","value":"9"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 39::DOC_COMMANDS
@@ -477,7 +477,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 8::DOC
-    {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"58","createdWithCommitId":"58","ownerId":null,"parentId":null,"meta":null}
+    {"id":"8","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-8","commitId":"58","createdWithCommitId":"58","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 18::DOC_BRANCH_PATCH
     {"id":"18","patchValue":[{"op":"add","path":"/id","value":"8"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 38::DOC_COMMANDS
@@ -498,7 +498,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 7::DOC
-    {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"57","createdWithCommitId":"57","ownerId":null,"parentId":null,"meta":null}
+    {"id":"7","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-7","commitId":"57","createdWithCommitId":"57","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 17::DOC_BRANCH_PATCH
     {"id":"17","patchValue":[{"op":"add","path":"/id","value":"7"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 37::DOC_COMMANDS
@@ -519,7 +519,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 6::DOC
-    {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"56","createdWithCommitId":"56","ownerId":null,"parentId":null,"meta":null}
+    {"id":"6","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-6","commitId":"56","createdWithCommitId":"56","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 16::DOC_BRANCH_PATCH
     {"id":"16","patchValue":[{"op":"add","path":"/id","value":"6"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 36::DOC_COMMANDS
@@ -540,7 +540,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 5::DOC
-    {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"55","createdWithCommitId":"55","ownerId":null,"parentId":null,"meta":null}
+    {"id":"5","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-5","commitId":"55","createdWithCommitId":"55","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 15::DOC_BRANCH_PATCH
     {"id":"15","patchValue":[{"op":"add","path":"/id","value":"5"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 35::DOC_COMMANDS
@@ -561,7 +561,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 4::DOC
-    {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"54","createdWithCommitId":"54","ownerId":null,"parentId":null,"meta":null}
+    {"id":"4","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-4","commitId":"54","createdWithCommitId":"54","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 14::DOC_BRANCH_PATCH
     {"id":"14","patchValue":[{"op":"add","path":"/id","value":"4"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 34::DOC_COMMANDS
@@ -582,7 +582,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 3::DOC
-    {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"53","createdWithCommitId":"53","ownerId":null,"parentId":null,"meta":null}
+    {"id":"3","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-3","commitId":"53","createdWithCommitId":"53","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 13::DOC_BRANCH_PATCH
     {"id":"13","patchValue":[{"op":"add","path":"/id","value":"3"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 33::DOC_COMMANDS
@@ -603,7 +603,7 @@ author: jane.doe@morgue.com, message: batching tests
  | created
   + added new: 3 entries
   + 2::DOC
-    {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"52","createdWithCommitId":"52","ownerId":null,"parentId":null,"meta":null}
+    {"id":"2","type":"customer-data","status":"IN_FORCE","externalId":"bobs-ssn-2","commitId":"52","createdWithCommitId":"52","ownerId":null,"parentId":null,"subStatus":null,"name":null,"startsAt":null,"endsAt":null,"meta":null}
   + 12::DOC_BRANCH_PATCH
     {"id":"12","patchValue":[{"op":"add","path":"/id","value":"2"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}],"docType":"DOC_BRANCH_PATCH"}
   + 32::DOC_COMMANDS
@@ -788,26 +788,86 @@ author: jane.doe@morgue.com, message: edit dev branch
 
 
 Logs
-  - id: 99::DOC
-    log patch: null    log before: null    log after: {"id":"8","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"58","parentId":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}
-  - id: 98::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"37","docId":"7","branchId":"17","commands":[{"some_cool_command":"create_customer"}],"commitId":"57","createdBy":"jane.doe@morgue.com"}
-  - id: 97::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"7"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 96::DOC_BRANCH
-    log patch: null    log before: null    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"57","branchName":"main","createdWithCommitId":"57"}
-  - id: 95::DOC
-    log patch: null    log before: null    log after: {"id":"7","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"57","parentId":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}
-  - id: 94::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"36","docId":"6","branchId":"16","commands":[{"some_cool_command":"create_customer"}],"commitId":"56","createdBy":"jane.doe@morgue.com"}
-  - id: 93::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"6"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 92::DOC_BRANCH
-    log patch: null    log before: null    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"56","branchName":"main","createdWithCommitId":"56"}
-  - id: 91::DOC_BRANCH_PATCH
+  - id: 165::DOC_BRANCH_PATCH
     log patch: []    log before: null    log after: null
+  - id: 164::DOC_BRANCH
+    log patch: null    log before: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}
+  - id: 163::DOC
+    log patch: null    log before: {"id":"9","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"59","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}    log after: {"id":"9","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"69","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}
+  - id: 138::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"49","docId":"9","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"69","createdBy":"jane.doe@morgue.com"}
+  - id: 129::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 128::DOC_BRANCH
+    log patch: null    log before: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"59","branchName":"main","createdWithCommitId":"59"}    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}
+  - id: 105::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"39","docId":"9","branchId":"19","commands":[{"some_cool_command":"create_customer"}],"commitId":"59","createdBy":"jane.doe@morgue.com"}
+  - id: 104::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"9"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 103::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"59","branchName":"main","createdWithCommitId":"59"}
+  - id: 102::DOC
+    log patch: null    log before: null    log after: {"id":"9","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"59","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}
+  - id: 99::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"58","branchName":"main","createdWithCommitId":"58"}
+  - id: 98::DOC
+    log patch: null    log before: null    log after: {"id":"8","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"58","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}
+  - id: 162::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"48","docId":"8","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"68","createdBy":"jane.doe@morgue.com"}
+  - id: 161::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 160::DOC_BRANCH
+    log patch: null    log before: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}
+  - id: 159::DOC
+    log patch: null    log before: {"id":"8","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"58","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}    log after: {"id":"8","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"68","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}
+  - id: 127::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 126::DOC_BRANCH
+    log patch: null    log before: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"58","branchName":"main","createdWithCommitId":"58"}    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}
+  - id: 101::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"38","docId":"8","branchId":"18","commands":[{"some_cool_command":"create_customer"}],"commitId":"58","createdBy":"jane.doe@morgue.com"}
+  - id: 100::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"8"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 97::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"37","docId":"7","branchId":"17","commands":[{"some_cool_command":"create_customer"}],"commitId":"57","createdBy":"jane.doe@morgue.com"}
+  - id: 96::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"7"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 95::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"57","branchName":"main","createdWithCommitId":"57"}
+  - id: 94::DOC
+    log patch: null    log before: null    log after: {"id":"7","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"57","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}
+  - id: 158::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"47","docId":"7","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"67","createdBy":"jane.doe@morgue.com"}
+  - id: 157::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 156::DOC_BRANCH
+    log patch: null    log before: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}
+  - id: 155::DOC
+    log patch: null    log before: {"id":"7","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"57","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}    log after: {"id":"7","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"67","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}
+  - id: 125::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 124::DOC_BRANCH
+    log patch: null    log before: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"57","branchName":"main","createdWithCommitId":"57"}    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}
+  - id: 93::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"36","docId":"6","branchId":"16","commands":[{"some_cool_command":"create_customer"}],"commitId":"56","createdBy":"jane.doe@morgue.com"}
+  - id: 92::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"6"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 91::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"56","branchName":"main","createdWithCommitId":"56"}
   - id: 90::DOC
-    log patch: null    log before: null    log after: {"id":"6","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"56","parentId":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}
+    log patch: null    log before: null    log after: {"id":"6","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"56","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}
+  - id: 154::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"46","docId":"6","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"66","createdBy":"jane.doe@morgue.com"}
+  - id: 153::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 152::DOC_BRANCH
+    log patch: null    log before: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}
+  - id: 151::DOC
+    log patch: null    log before: {"id":"6","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"56","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}    log after: {"id":"6","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"66","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}
+  - id: 123::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 122::DOC_BRANCH
+    log patch: null    log before: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"56","branchName":"main","createdWithCommitId":"56"}    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}
   - id: 89::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"35","docId":"5","branchId":"15","commands":[{"some_cool_command":"create_customer"}],"commitId":"55","createdBy":"jane.doe@morgue.com"}
   - id: 88::DOC_BRANCH_PATCH
@@ -815,7 +875,19 @@ Logs
   - id: 87::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"55","branchName":"main","createdWithCommitId":"55"}
   - id: 86::DOC
-    log patch: null    log before: null    log after: {"id":"5","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"55","parentId":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}
+    log patch: null    log before: null    log after: {"id":"5","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"55","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}
+  - id: 150::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"45","docId":"5","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"65","createdBy":"jane.doe@morgue.com"}
+  - id: 149::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 148::DOC_BRANCH
+    log patch: null    log before: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}    log after: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}
+  - id: 147::DOC
+    log patch: null    log before: {"id":"5","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"55","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}    log after: {"id":"5","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"65","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}
+  - id: 121::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 120::DOC_BRANCH
+    log patch: null    log before: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"55","branchName":"main","createdWithCommitId":"55"}    log after: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}
   - id: 85::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"34","docId":"4","branchId":"14","commands":[{"some_cool_command":"create_customer"}],"commitId":"54","createdBy":"jane.doe@morgue.com"}
   - id: 84::DOC_BRANCH_PATCH
@@ -823,7 +895,19 @@ Logs
   - id: 83::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"54","branchName":"main","createdWithCommitId":"54"}
   - id: 82::DOC
-    log patch: null    log before: null    log after: {"id":"4","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"54","parentId":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}
+    log patch: null    log before: null    log after: {"id":"4","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"54","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}
+  - id: 146::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"44","docId":"4","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"64","createdBy":"jane.doe@morgue.com"}
+  - id: 145::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 144::DOC_BRANCH
+    log patch: null    log before: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}    log after: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}
+  - id: 143::DOC
+    log patch: null    log before: {"id":"4","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"54","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}    log after: {"id":"4","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"64","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}
+  - id: 119::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 118::DOC_BRANCH
+    log patch: null    log before: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"54","branchName":"main","createdWithCommitId":"54"}    log after: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}
   - id: 81::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"33","docId":"3","branchId":"13","commands":[{"some_cool_command":"create_customer"}],"commitId":"53","createdBy":"jane.doe@morgue.com"}
   - id: 80::DOC_BRANCH_PATCH
@@ -831,7 +915,19 @@ Logs
   - id: 79::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"53","branchName":"main","createdWithCommitId":"53"}
   - id: 78::DOC
-    log patch: null    log before: null    log after: {"id":"3","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"53","parentId":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}
+    log patch: null    log before: null    log after: {"id":"3","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"53","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}
+  - id: 142::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"43","docId":"3","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"63","createdBy":"jane.doe@morgue.com"}
+  - id: 141::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 140::DOC_BRANCH
+    log patch: null    log before: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}    log after: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}
+  - id: 139::DOC
+    log patch: null    log before: {"id":"3","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"53","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}    log after: {"id":"3","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"63","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}
+  - id: 117::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 116::DOC_BRANCH
+    log patch: null    log before: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"53","branchName":"main","createdWithCommitId":"53"}    log after: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}
   - id: 77::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"32","docId":"2","branchId":"12","commands":[{"some_cool_command":"create_customer"}],"commitId":"52","createdBy":"jane.doe@morgue.com"}
   - id: 76::DOC_BRANCH_PATCH
@@ -839,7 +935,19 @@ Logs
   - id: 75::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"52","branchName":"main","createdWithCommitId":"52"}
   - id: 74::DOC
-    log patch: null    log before: null    log after: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"52","parentId":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}
+    log patch: null    log before: null    log after: {"id":"2","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"52","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}
+  - id: 137::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"42","docId":"2","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"62","createdBy":"jane.doe@morgue.com"}
+  - id: 136::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 135::DOC_BRANCH
+    log patch: null    log before: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}    log after: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}
+  - id: 134::DOC
+    log patch: null    log before: {"id":"2","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"52","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}    log after: {"id":"2","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"62","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}
+  - id: 115::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
+  - id: 114::DOC_BRANCH
+    log patch: null    log before: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"52","branchName":"main","createdWithCommitId":"52"}    log after: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}
   - id: 173::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"51","docId":"11","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"71","createdBy":"jane.doe@morgue.com"}
   - id: 172::DOC_BRANCH_PATCH
@@ -847,144 +955,36 @@ Logs
   - id: 171::DOC_BRANCH
     log patch: null    log before: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"22","branchName":"main","createdWithCommitId":"61"}    log after: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"22","branchName":"main","createdWithCommitId":"61"}
   - id: 170::DOC
-    log patch: null    log before: {"id":"11","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"61","parentId":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}    log after: {"id":"11","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"71","parentId":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}
-  - id: 169::DOC_BRANCH
-    log patch: null    log before: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}    log after: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}
-  - id: 168::DOC
-    log patch: null    log before: {"id":"10","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"60","parentId":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}    log after: {"id":"10","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"70","parentId":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}
-  - id: 167::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"49","docId":"9","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"69","createdBy":"jane.doe@morgue.com"}
-  - id: 166::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 165::DOC_BRANCH
-    log patch: null    log before: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}
-  - id: 164::DOC
-    log patch: null    log before: {"id":"9","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"59","parentId":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}    log after: {"id":"9","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"69","parentId":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}
-  - id: 163::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"48","docId":"8","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"68","createdBy":"jane.doe@morgue.com"}
-  - id: 162::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 161::DOC_BRANCH
-    log patch: null    log before: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}
-  - id: 160::DOC
-    log patch: null    log before: {"id":"8","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"58","parentId":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}    log after: {"id":"8","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"68","parentId":null,"externalId":"bobs-ssn-8","createdWithCommitId":"58"}
-  - id: 159::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"47","docId":"7","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"67","createdBy":"jane.doe@morgue.com"}
-  - id: 158::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 157::DOC_BRANCH
-    log patch: null    log before: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}
-  - id: 156::DOC
-    log patch: null    log before: {"id":"7","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"57","parentId":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}    log after: {"id":"7","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"67","parentId":null,"externalId":"bobs-ssn-7","createdWithCommitId":"57"}
-  - id: 155::DOC_BRANCH
-    log patch: null    log before: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}
-  - id: 154::DOC
-    log patch: null    log before: {"id":"6","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"56","parentId":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}    log after: {"id":"6","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"66","parentId":null,"externalId":"bobs-ssn-6","createdWithCommitId":"56"}
-  - id: 153::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"45","docId":"5","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"65","createdBy":"jane.doe@morgue.com"}
-  - id: 152::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 151::DOC_BRANCH
-    log patch: null    log before: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}    log after: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}
-  - id: 150::DOC
-    log patch: null    log before: {"id":"5","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"55","parentId":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}    log after: {"id":"5","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"65","parentId":null,"externalId":"bobs-ssn-5","createdWithCommitId":"55"}
-  - id: 149::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"44","docId":"4","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"64","createdBy":"jane.doe@morgue.com"}
-  - id: 148::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 147::DOC_BRANCH
-    log patch: null    log before: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}    log after: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}
-  - id: 146::DOC
-    log patch: null    log before: {"id":"4","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"54","parentId":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}    log after: {"id":"4","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"64","parentId":null,"externalId":"bobs-ssn-4","createdWithCommitId":"54"}
-  - id: 145::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"43","docId":"3","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"63","createdBy":"jane.doe@morgue.com"}
-  - id: 144::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 143::DOC_BRANCH
-    log patch: null    log before: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}    log after: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}
-  - id: 142::DOC
-    log patch: null    log before: {"id":"3","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"53","parentId":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}    log after: {"id":"3","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"63","parentId":null,"externalId":"bobs-ssn-3","createdWithCommitId":"53"}
-  - id: 141::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"50","docId":"10","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"70","createdBy":"jane.doe@morgue.com"}
-  - id: 140::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 139::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"42","docId":"2","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"62","createdBy":"jane.doe@morgue.com"}
-  - id: 138::DOC_BRANCH_PATCH
-    log patch: []    log before: null    log after: null
-  - id: 137::DOC_BRANCH
-    log patch: null    log before: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}    log after: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}
-  - id: 136::DOC
-    log patch: null    log before: {"id":"2","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"52","parentId":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}    log after: {"id":"2","meta":{"meta data":"some cool to add to meta"},"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"62","parentId":null,"externalId":"bobs-ssn-2","createdWithCommitId":"52"}
-  - id: 135::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 134::DOC_BRANCH
-    log patch: null    log before: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"61","branchName":"main","createdWithCommitId":"61"}    log after: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"22","branchName":"main","createdWithCommitId":"61"}
+    log patch: null    log before: {"id":"11","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"61","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}    log after: {"id":"11","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"71","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}
   - id: 133::DOC_BRANCH_PATCH
     log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
   - id: 132::DOC_BRANCH
-    log patch: null    log before: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"60","branchName":"main","createdWithCommitId":"60"}    log after: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}
+    log patch: null    log before: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"61","branchName":"main","createdWithCommitId":"61"}    log after: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"22","branchName":"main","createdWithCommitId":"61"}
+  - id: 113::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"41","docId":"11","branchId":"21","commands":[{"some_cool_command":"create_customer"}],"commitId":"61","createdBy":"jane.doe@morgue.com"}
+  - id: 112::DOC_BRANCH_PATCH
+    log patch: [{"op":"add","path":"/id","value":"11"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
+  - id: 111::DOC_BRANCH
+    log patch: null    log before: null    log after: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"61","branchName":"main","createdWithCommitId":"61"}
+  - id: 110::DOC
+    log patch: null    log before: null    log after: {"id":"11","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"61","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}
+  - id: 169::DOC_COMMANDS
+    log patch: null    log before: null    log after: {"id":"50","docId":"10","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"70","createdBy":"jane.doe@morgue.com"}
+  - id: 168::DOC_BRANCH_PATCH
+    log patch: []    log before: null    log after: null
+  - id: 167::DOC_BRANCH
+    log patch: null    log before: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}    log after: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}
+  - id: 166::DOC
+    log patch: null    log before: {"id":"10","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"60","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}    log after: {"id":"10","meta":{"meta data":"some cool to add to meta"},"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"70","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}
   - id: 131::DOC_BRANCH_PATCH
     log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
   - id: 130::DOC_BRANCH
-    log patch: null    log before: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"59","branchName":"main","createdWithCommitId":"59"}    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"24","branchName":"main","createdWithCommitId":"59"}
-  - id: 129::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 128::DOC_BRANCH
-    log patch: null    log before: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"58","branchName":"main","createdWithCommitId":"58"}    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"25","branchName":"main","createdWithCommitId":"58"}
-  - id: 127::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 126::DOC_BRANCH
-    log patch: null    log before: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"57","branchName":"main","createdWithCommitId":"57"}    log after: {"id":"17","docId":"7","value":{},"status":"IN_FORCE","commitId":"26","branchName":"main","createdWithCommitId":"57"}
-  - id: 125::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"46","docId":"6","branchId":null,"commands":[{"logging":"added meta"}],"commitId":"66","createdBy":"jane.doe@morgue.com"}
-  - id: 124::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 123::DOC_BRANCH
-    log patch: null    log before: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"56","branchName":"main","createdWithCommitId":"56"}    log after: {"id":"16","docId":"6","value":{},"status":"IN_FORCE","commitId":"27","branchName":"main","createdWithCommitId":"56"}
-  - id: 122::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 121::DOC_BRANCH
-    log patch: null    log before: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"55","branchName":"main","createdWithCommitId":"55"}    log after: {"id":"15","docId":"5","value":{},"status":"IN_FORCE","commitId":"28","branchName":"main","createdWithCommitId":"55"}
-  - id: 120::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 119::DOC_BRANCH
-    log patch: null    log before: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"54","branchName":"main","createdWithCommitId":"54"}    log after: {"id":"14","docId":"4","value":{},"status":"IN_FORCE","commitId":"29","branchName":"main","createdWithCommitId":"54"}
-  - id: 118::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 117::DOC_BRANCH
-    log patch: null    log before: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"53","branchName":"main","createdWithCommitId":"53"}    log after: {"id":"13","docId":"3","value":{},"status":"IN_FORCE","commitId":"30","branchName":"main","createdWithCommitId":"53"}
-  - id: 116::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/added new field","value":"super cool field"}]    log before: null    log after: null
-  - id: 115::DOC_BRANCH
-    log patch: null    log before: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"52","branchName":"main","createdWithCommitId":"52"}    log after: {"id":"12","docId":"2","value":{},"status":"IN_FORCE","commitId":"31","branchName":"main","createdWithCommitId":"52"}
-  - id: 114::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"41","docId":"11","branchId":"21","commands":[{"some_cool_command":"create_customer"}],"commitId":"61","createdBy":"jane.doe@morgue.com"}
-  - id: 113::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"11"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 112::DOC_BRANCH
-    log patch: null    log before: null    log after: {"id":"21","docId":"11","value":{},"status":"IN_FORCE","commitId":"61","branchName":"main","createdWithCommitId":"61"}
-  - id: 111::DOC
-    log patch: null    log before: null    log after: {"id":"11","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"61","parentId":null,"externalId":"bobs-ssn-11","createdWithCommitId":"61"}
-  - id: 110::DOC_COMMANDS
+    log patch: null    log before: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"60","branchName":"main","createdWithCommitId":"60"}    log after: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"23","branchName":"main","createdWithCommitId":"60"}
+  - id: 109::DOC_COMMANDS
     log patch: null    log before: null    log after: {"id":"40","docId":"10","branchId":"20","commands":[{"some_cool_command":"create_customer"}],"commitId":"60","createdBy":"jane.doe@morgue.com"}
-  - id: 109::DOC_BRANCH_PATCH
+  - id: 108::DOC_BRANCH_PATCH
     log patch: [{"op":"add","path":"/id","value":"10"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 108::DOC_BRANCH
+  - id: 107::DOC_BRANCH
     log patch: null    log before: null    log after: {"id":"20","docId":"10","value":{},"status":"IN_FORCE","commitId":"60","branchName":"main","createdWithCommitId":"60"}
-  - id: 107::DOC
-    log patch: null    log before: null    log after: {"id":"10","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"60","parentId":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}
-  - id: 106::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"39","docId":"9","branchId":"19","commands":[{"some_cool_command":"create_customer"}],"commitId":"59","createdBy":"jane.doe@morgue.com"}
-  - id: 105::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"9"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 104::DOC_BRANCH
-    log patch: null    log before: null    log after: {"id":"19","docId":"9","value":{},"status":"IN_FORCE","commitId":"59","branchName":"main","createdWithCommitId":"59"}
-  - id: 103::DOC
-    log patch: null    log before: null    log after: {"id":"9","meta":null,"type":"customer-data","status":"IN_FORCE","ownerId":null,"commitId":"59","parentId":null,"externalId":"bobs-ssn-9","createdWithCommitId":"59"}
-  - id: 102::DOC_COMMANDS
-    log patch: null    log before: null    log after: {"id":"38","docId":"8","branchId":"18","commands":[{"some_cool_command":"create_customer"}],"commitId":"58","createdBy":"jane.doe@morgue.com"}
-  - id: 101::DOC_BRANCH_PATCH
-    log patch: [{"op":"add","path":"/id","value":"8"},{"op":"add","path":"/first_name","value":"bob"},{"op":"add","path":"/last_name","value":"flop"}]    log before: null    log after: null
-  - id: 100::DOC_BRANCH
-    log patch: null    log before: null    log after: {"id":"18","docId":"8","value":{},"status":"IN_FORCE","commitId":"58","branchName":"main","createdWithCommitId":"58"}
+  - id: 106::DOC
+    log patch: null    log before: null    log after: {"id":"10","meta":null,"name":null,"type":"customer-data","endsAt":null,"status":"IN_FORCE","ownerId":null,"commitId":"60","parentId":null,"startsAt":null,"subStatus":null,"externalId":"bobs-ssn-10","createdWithCommitId":"60"}

@@ -53,7 +53,7 @@ public class DbTestTemplate {
 
   private final Map<String, String> replacements = new HashMap<>();
   
-  private boolean STORE_TO_DEBUG_DB = true;
+  private boolean STORE_TO_DEBUG_DB = false;
   private ThenaMqClient client;
   private String db;
   private Channel channel;

@@ -21,6 +21,11 @@ import { GRouterUnsecuredRoot } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
+export interface GRouterUnsecuredProps {
+  pageId: string
+}
+
+
 const FlexSpacerRow: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (<Stack spacing={1} direction='row'>{children}</Stack>)
 }
@@ -93,7 +98,7 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
 
 
 
-export const GRouterUnsecured: React.FC<{ pageId: string }> = ({ pageId }) => {
+export const GRouterUnsecured: React.FC<GRouterUnsecuredProps> = ({ pageId }) => {
   return (
     <GShell drawerOpen={false}>
       <Internal pageId={pageId} />

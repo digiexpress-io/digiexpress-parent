@@ -52,7 +52,9 @@ export const GContractItemRoot = styled("div", {
   },
 })<{ ownerState: GContractItemProps }>(({ theme, ownerState }) => {
 
-  const iconColor = ownerState.color ? ownerState.color : 'inherit';
+  // const iconColor = ownerState.color ? ownerState.color : 'inherit';
+
+  const color = theme.palette.info.main;
 
   return {
     cursor: 'pointer',
@@ -83,7 +85,7 @@ export const GContractItemRoot = styled("div", {
       },
       height: '35px',
       width: '35px',
-      backgroundColor: `${alpha(iconColor, 0.3)}`,
+      backgroundColor: `${alpha(color, 0.3)}`,
       color: theme.palette.text.primary
     },
     '& .GContracts-filesCount': {
@@ -93,7 +95,7 @@ export const GContractItemRoot = styled("div", {
       },
       height: '35px',
       width: '35px',
-      backgroundColor: `${alpha(iconColor, 0.3)}`,
+      backgroundColor: `${alpha(color, 0.3)}`,
       color: theme.palette.text.primary
     },
     '& .GContracts-lastModified': {
@@ -109,7 +111,7 @@ export const GContractItemRoot = styled("div", {
       marginRight: theme.spacing(0.5),
     },
     '& .GContracts-offerIcon': {
-      color: ownerState.color,
+      color: color,
       fontSize: 'large'
     }
   };

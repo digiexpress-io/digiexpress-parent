@@ -24,7 +24,6 @@ import java.time.Duration;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +33,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 
 @RestController
-@Transactional
 @RequestMapping("/worker/rest/api/comments")
 @Slf4j
 @RequiredArgsConstructor
@@ -48,6 +47,7 @@ public class CommentApiController
 {
   private final TaskClient taskClient;
   private final AuthClient securityClient;
+  private final MqEventPublisher mqEventPublisher;
   private static final Duration timeout = Duration.ofMillis(10000);
   
   @GetMapping("/{id}")
@@ -64,6 +64,7 @@ public class CommentApiController
         .userId(worker.getUsername(), worker.getEmail())
         .createTaskComment(command).await().atMost(timeout);
     
+    mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
     return new ResponseEntity<>(newComment, HttpStatus.CREATED);
   }
 }

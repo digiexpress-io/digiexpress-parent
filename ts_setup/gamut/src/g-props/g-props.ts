@@ -32,8 +32,6 @@ import { GShellClassKey, GShellProps } from '../g-shell';
 import { GLoginClassKey, GLoginProps } from '../g-login';
 import { GLogoutClassKey, GLogoutProps } from '../g-logout';
 
-import { GSearchListClassKey, GSearchListProps } from '../g-search-list';
-import { GSearchListItemClassKey, GSearchListItemProps } from '../g-search-list-item';
 import { GMarkdownClassKey, GMarkdownProps } from '../g-md';
 import { GLayoutClassKey, GLayoutProps } from '../g-layout';
 import { GFormBaseClassKey, GFormBaseProps } from '../g-form-base';
@@ -47,7 +45,6 @@ import {
 import { GContractsClassKey, GContractsProps, GContractItemProps, } from '../g-contracts';
 import { GBookingsClassKey, GBookingsProps } from '../g-bookings';
 
-
 import { GOffersProps, GOffersClassKey } from '../g-offers';
 
 import { GLinksClassKey, GLinksProps } from '../g-links';
@@ -56,8 +53,8 @@ import { GLinksPageClassKey, GLinksPageProps } from '../g-links-page';
 
 import {
   GLinkInfoClassKey, GLinkInfoProps,
-  GLinkFormSecuredClassKey, GLinkFormSecuredProps,
-  GLinkFormUnsecuredClassKey, GLinkFormUnsecuredProps,
+  GLinkFormLockedClassKey, GLinkFormLockedProps,
+  GLinkFormUnlockedClassKey, GLinkFormUnlockedProps,
   GLinkHyperClassKey, GLinkHyperProps,
   GLinkPhoneClassKey, GLinkPhoneProps
 } from '../g-link';
@@ -89,7 +86,18 @@ import {
   GFormReviewTimeClassKey
 } from '../g-form-review-components';
 
-
+import { GRouterBookingsClassKey, GRouterBookingsProps } from '../g-router-bookings';
+import { GRouterFormsAwaitingDecisionClassKey, GRouterFormsAwaitingDecisionProps } from '../g-router-forms-awaiting-decision';
+import { GRouterFormsWithDecisionClassKey, GRouterFormsWithDecisionProps } from '../g-router-forms-with-decision';
+import { GRouterInboxClassKey, GRouterInboxProps } from '../g-router-inbox';
+import { GRouterInboxSubjectClassKey, GRouterInboxSubjectProps } from '../g-router-inbox-subject';
+import { GRouterOfferClassKey, GRouterOfferProps } from '../g-router-offer';
+import { GRouterOfferSummaryClassKey, GRouterOfferSummaryProps } from '../g-router-offer-summary';
+import { GRouterProductClassKey, GRouterProductProps } from '../g-router-product';
+import { GRouterSecuredServicesClassKey, GRouterSecuredServicesProps } from '../g-router-secured-services';
+import { GRouterUnfinishedFormsClassKey, GRouterUnfinishedFormsProps } from '../g-router-unfinished-forms';
+import { GRouterUnsecuredClassKey, GRouterUnsecuredProps } from '../g-router-unsecured';
+import { GRouterUserOverviewClassKey, GRouterUserOverviewProps } from '../g-router-user-overview';
 
 declare module "@mui/material" {
   export interface Components<Theme = unknown> extends GComponents<Theme> { }
@@ -101,6 +109,20 @@ declare module "@mui/material" {
  * MUI theme integration
  */
 export interface GComponentsPropsList {
+
+  GRouterBookings: GRouterBookingsProps;
+  GRouterFormsAwaitingDecision: GRouterFormsAwaitingDecisionProps;
+  GRouterFormsWithDecision: GRouterFormsWithDecisionProps;
+  GRouterInbox: GRouterInboxProps;
+  GRouterInboxSubject: GRouterInboxSubjectProps;
+  GRouterOffer: GRouterOfferProps;
+  GRouterOfferSummary: GRouterOfferSummaryProps;
+  GRouterProduct: GRouterProductProps;
+  GRouterSecuredServices: GRouterSecuredServicesProps;
+  GRouterUnfinishedForms: GRouterUnfinishedFormsProps;
+  GRouterUnsecured: GRouterUnsecuredProps;
+  GRouterUserOverview: GRouterUserOverviewProps;
+
   GFormReviewBoolean: ItemProps;
   GFormReviewChoice: ItemProps;
   GFormReviewDate: ItemProps;
@@ -160,8 +182,8 @@ export interface GComponentsPropsList {
   GLinks: GLinksProps;
   GLinkHyper: GLinkHyperProps;
   GLinkPhone: GLinkPhoneProps;
-  GLinkFormSecured: GLinkFormSecuredProps;
-  GLinkFormUnsecured: GLinkFormUnsecuredProps;
+  GLinkFormLocked: GLinkFormLockedProps;
+  GLinkFormUnlocked: GLinkFormUnlockedProps;
   GLinkInfo: GLinkInfoProps;
   GLinksPage: GLinksPageProps;
 
@@ -170,9 +192,6 @@ export interface GComponentsPropsList {
   GMarkdown: GMarkdownProps;
 
   GShell: GShellProps;
-
-  GSearchList: GSearchListProps;
-  GSearchListItem: GSearchListItemProps;
 
   GAuth: GAuthProps;
   GAuthRepPerson: GAuthRepPersonProps;
@@ -183,6 +202,19 @@ export interface GComponentsPropsList {
 }
 
 export interface GComponentNameToClassKey {
+
+  GRouterBookings: GRouterBookingsClassKey;
+  GRouterFormsAwaitingDecision: GRouterFormsAwaitingDecisionClassKey;
+  GRouterFormsWithDecision: GRouterFormsWithDecisionClassKey;
+  GRouterInbox: GRouterInboxClassKey;
+  GRouterInboxSubject: GRouterInboxSubjectClassKey;
+  GRouterOffer: GRouterOfferClassKey;
+  GRouterOfferSummary: GRouterOfferSummaryClassKey;
+  GRouterProduct: GRouterProductClassKey;
+  GRouterSecuredServices: GRouterSecuredServicesClassKey;
+  GRouterUnfinishedForms: GRouterUnfinishedFormsClassKey;
+  GRouterUnsecured: GRouterUnsecuredClassKey;
+  GRouterUserOverview: GRouterUserOverviewClassKey;
 
   GFormReviewBoolean: GFormReviewBooleanClassKey;
   GFormReviewChoice: GFormReviewChoiceClassKey;
@@ -246,8 +278,8 @@ export interface GComponentNameToClassKey {
   GLinks: GLinksClassKey;
   GLinkHyper: GLinkHyperClassKey;
   GLinkPhone: GLinkPhoneClassKey;
-  GLinkFormSecured: GLinkFormSecuredClassKey;
-  GLinkFormUnsecured: GLinkFormUnsecuredClassKey;
+  GLinkFormLocked: GLinkFormLockedClassKey;
+  GLinkFormUnlocked: GLinkFormUnlockedClassKey;
   GLinkInfo: GLinkInfoClassKey;
   GLinksPage: GLinksPageClassKey;
 
@@ -255,9 +287,6 @@ export interface GComponentNameToClassKey {
 
   GFormBase: GFormBaseClassKey;
   GShell: GShellClassKey;
-
-  GSearchList: GSearchListClassKey;
-  GSearchListItem: GSearchListItemClassKey;
 
   GAuth: GAuthClassKey;
   GAuthRepCompany: GAuthRepCompanyClassKey;
@@ -268,6 +297,68 @@ export interface GComponentNameToClassKey {
 }
 
 export interface GComponents<Theme = unknown> {
+
+  GRouterBookings?: {
+    defaultProps?: GComponentsProps['GRouterBookings'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterBookings'];
+    variants?: GComponentsVariants['GRouterBookings'];
+  },
+  GRouterFormsAwaitingDecision?: {
+    defaultProps?: GComponentsProps['GRouterFormsAwaitingDecision'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterFormsAwaitingDecision'];
+    variants?: GComponentsVariants['GRouterFormsAwaitingDecision'];
+  },
+  GRouterFormsWithDecision?: {
+    defaultProps?: GComponentsProps['GRouterFormsWithDecision'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterFormsWithDecision'];
+    variants?: GComponentsVariants['GRouterFormsWithDecision'];
+  },
+  GRouterInbox?: {
+    defaultProps?: GComponentsProps['GRouterInbox'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterInbox'];
+    variants?: GComponentsVariants['GRouterInbox'];
+  },
+  GRouterInboxSubject?: {
+    defaultProps?: GComponentsProps['GRouterInboxSubject'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterInboxSubject'];
+    variants?: GComponentsVariants['GRouterInboxSubject'];
+  },
+  GRouterOffer?: {
+    defaultProps?: GComponentsProps['GRouterOffer'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterOffer'];
+    variants?: GComponentsVariants['GRouterOffer'];
+  },
+  GRouterOfferSummary?: {
+    defaultProps?: GComponentsProps['GRouterOfferSummary'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterOfferSummary'];
+    variants?: GComponentsVariants['GRouterOfferSummary'];
+  },
+  GRouterProduct?: {
+    defaultProps?: GComponentsProps['GRouterProduct'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterProduct'];
+    variants?: GComponentsVariants['GRouterProduct'];
+  },
+  GRouterSecuredServices?: {
+    defaultProps?: GComponentsProps['GRouterSecuredServices'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterSecuredServices'];
+    variants?: GComponentsVariants['GRouterSecuredServices'];
+  },
+  GRouterUnfinishedForms?: {
+    defaultProps?: GComponentsProps['GRouterUnfinishedForms'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterUnfinishedForms'];
+    variants?: GComponentsVariants['GRouterUnfinishedForms'];
+  },
+  GRouterUnsecured?: {
+    defaultProps?: GComponentsProps['GRouterUnsecured'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterUnsecured'];
+    variants?: GComponentsVariants['GRouterUnsecured'];
+  },
+  GRouterUserOverview?: {
+    defaultProps?: GComponentsProps['GRouterUserOverview'];
+    styleOverrides?: GComponentsOverrides<Theme>['GRouterUserOverview'];
+    variants?: GComponentsVariants['GRouterUserOverview'];
+  },
+
 
   GFormReviewBoolean?: {
     defaultProps?: GComponentsProps['GFormReviewBoolean'];
@@ -512,15 +603,15 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GLinkPhone'];
     variants?: GComponentsVariants['GLinkPhone'];
   },
-  GLinkFormSecured?: {
-    defaultProps?: GComponentsProps['GLinkFormSecured'];
-    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormSecured'];
-    variants?: GComponentsVariants['GLinkFormSecured'];
+  GLinkFormLocked?: {
+    defaultProps?: GComponentsProps['GLinkFormLocked'];
+    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormLocked'];
+    variants?: GComponentsVariants['GLinkFormLocked'];
   },
-  GLinkFormUnsecured?: {
-    defaultProps?: GComponentsProps['GLinkFormUnsecured'];
-    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnsecured'];
-    variants?: GComponentsVariants['GLinkFormUnsecured'];
+  GLinkFormUnlocked?: {
+    defaultProps?: GComponentsProps['GLinkFormUnlocked'];
+    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnlocked'];
+    variants?: GComponentsVariants['GLinkFormUnlocked'];
   },
   GLinkInfo?: {
     defaultProps?: GComponentsProps['GLinkInfo'];
@@ -539,7 +630,6 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GMarkdown'];
     variants?: GComponentsVariants['GMarkdown'];
   },
-  // ----------------------- COMPLETED UNTIL HERE ---------------------------
 
 
   GFormBase?: {
@@ -547,22 +637,12 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GFormBase'];
     variants?: GComponentsVariants['GFormBase'];
   },
-  GSearchList?: {
-    defaultProps?: GComponentsProps['GSearchList'];
-    styleOverrides?: GComponentsOverrides<Theme>['GSearchList'];
-    variants?: GComponentsVariants['GSearchList'];
-  },
-  GSearchListItem?: {
-    defaultProps?: GComponentsProps['GSearchListItem'];
-    styleOverrides?: GComponentsOverrides<Theme>['GSearchListItem'];
-    variants?: GComponentsVariants['GSearchListItem'];
-  },
+
   GShell?: {
     defaultProps?: GComponentsProps['GShell'];
     styleOverrides?: GComponentsOverrides<Theme>['GShell'];
     variants?: GComponentsVariants['GShell'];
   },
-
 
 
   // Authentication related technical components... they do not contain styling  

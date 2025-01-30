@@ -20,7 +20,7 @@ import { useLocale } from '../api-locale';
 
 
 export interface GArticleFeedbackProps {
-  children: SiteApi.TopicView | undefined;
+  children: SiteApi.TopicView;
   enabled?: (view: SiteApi.TopicView) => boolean;
   slots?: {
 

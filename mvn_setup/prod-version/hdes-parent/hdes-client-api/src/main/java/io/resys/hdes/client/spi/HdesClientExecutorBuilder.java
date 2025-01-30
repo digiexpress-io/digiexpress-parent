@@ -142,7 +142,15 @@ public class HdesClientExecutorBuilder implements ExecutorBuilder {
     
     ProgramWrapper<?, ?> wrapper = wrapperByNameOrId;
     HdesAssert.isTrue(wrapper != null, () -> "Can't find program by nameOrId: '" + nameOrId + "', known names: [" + String.join(", ", src.keySet())  + "]!");
-    HdesAssert.isTrue(wrapper.getStatus() == ProgramStatus.UP, () -> "Can't run program by name/id: '" + nameOrId + "' because program status is: '" + wrapper.getStatus() + "'!");
+    HdesAssert.isTrue(wrapper.getStatus() == ProgramStatus.UP, () -> {
+
+      final var errors = wrapper.getErrors().stream().map(e -> e.getMsg()).toList();
+      
+      return "Can't run program by name/id: '" + nameOrId + "' because program status is: '" + wrapper.getStatus() + "'!" + 
+          System.lineSeparator() + 
+          String.join(System.lineSeparator(), errors)
+          ;
+    });
     return (T) wrapper.getProgram().get();
   }
 }

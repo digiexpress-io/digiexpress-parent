@@ -21,6 +21,7 @@ package io.resys.thena.structures.doc.commitmany;
  */
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,11 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
     private String docId;
     private Optional<String> parentDocId;
     private Optional<String> ownerId;
+    private Optional<String> subStatus;
+    private Optional<String> docName;
     private Optional<String> externalId;
+    private Optional<OffsetDateTime> docStartsAt;
+    private Optional<OffsetDateTime> docEndsAt;
     private List<JsonObject> commands;
     private Optional<JsonObject> meta;
   }
@@ -85,6 +90,10 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
       @Override public AddItemToModifyDoc remove() { item.remove(true); return this; }
       @Override public AddItemToModifyDoc commands(List<JsonObject> log) { item.commands(log); return this; }
       @Override public AddItemToModifyDoc meta(JsonObject meta) { item.meta(Optional.ofNullable(meta)); return this; }
+      @Override public AddItemToModifyDoc docName(String docName) { item.docName(Optional.ofNullable(docName)); return this; }
+      @Override public AddItemToModifyDoc docSubStatus(String subStatus) { item.subStatus(Optional.ofNullable(subStatus)); return this; }
+      @Override public AddItemToModifyDoc docStartsAt(OffsetDateTime docStartsAt) { item.docStartsAt(Optional.ofNullable(docStartsAt)); return this; }
+      @Override public AddItemToModifyDoc docEndsAt(OffsetDateTime docEndsAt)     { item.docEndsAt(Optional.ofNullable(docEndsAt)); return this; }
       @Override public ModifyManyDocs next() {
         final var result = item.build();
         RepoAssert.notEmpty(result.docId, () -> "docId can't be empty!");
@@ -147,6 +156,10 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
           .remove(item.getRemove() == null ? false : item.getRemove())
           .commands(item.getCommands())
           .parentId(item.getParentDocId())
+          .docName(item.getDocName())
+          .docSubStatus(item.getSubStatus())
+          .docStartsAt(item.getDocStartsAt())
+          .docEndsAt(item.getDocEndsAt())
           .ownerId(item.getOwnerId())
           .externalId(item.getExternalId())
           .create();

@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
+import jakarta.json.JsonPatch.Operation;
 
 public interface TaskClient {
 
@@ -221,5 +222,21 @@ public interface TaskClient {
   @JsonDeserialize(as = ImmutableTaskDiff.class)
   @Value.Immutable
   interface TaskDiff {
+    String getTaskId();
+    String getVersion();
+    
+    @Nullable Task getTask();
+    String getLog();
+    List<TaskDiffValue> getValues();
+  }
+  
+  @JsonSerialize(as = ImmutableTaskDiffValue.class)
+  @JsonDeserialize(as = ImmutableTaskDiffValue.class)
+  @Value.Immutable
+  interface TaskDiffValue {
+    Operation getOp();
+    String getPath();
+    @Nullable Object getRaw();
+    @Nullable String getValue();
   }
 }

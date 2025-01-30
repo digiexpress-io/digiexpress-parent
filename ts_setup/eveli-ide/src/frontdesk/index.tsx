@@ -13,6 +13,7 @@ import { SnackbarProvider } from 'notistack';
 import { AppSetup } from './AppSetup';
 import { LocaleSelectContextProvider, useLocaleSelect } from './context';
 import { FeedbackProvider, FeedbackApi } from '../feedback';
+import { QueueProvider, QueueApi } from '../queue';
 
 
 export { frontdeskIntl } from './intl';
@@ -115,6 +116,49 @@ const WithFeedback: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 }
 
 
+
+const WithQueue: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+  const { serviceUrl } = useConfig();
+
+  const fetchQueueMessagesGET: QueueApi.FetchQueueMessagesGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/messages`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
+  const fetchQueueDeliveriesGET: QueueApi.FetchQueueDeliveriesGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/deliveries`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+
+  const fetchQueueConfigGET: QueueApi.FetchQueueConfigGET = async () => {
+    const response = await window.fetch(`${serviceUrl}worker/rest/api/queues/configs`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined,
+    });
+    return response;
+  }
+  return (
+    <QueueProvider
+      fetchQueueMessagesGET={fetchQueueMessagesGET}
+      fetchQueueDeliveriesGET={fetchQueueDeliveriesGET}
+      fetchQueueConfigGET={fetchQueueConfigGET}>
+      {children}
+    </QueueProvider>
+  );
+}
+
+
+
 export interface FrontdeskProps {
   defaultLocale?: string | undefined;
   configUrl?: string | undefined;
@@ -126,7 +170,11 @@ export const Frontdesk: React.FC<FrontdeskProps> = (initProps) => {
   return (
     <ConfigContextProvider path={configUrl}>
       <LocaleSelectContextProvider locale={defaultLocale}>
-        <WithFeedback><WithLocale /></WithFeedback>
+        <WithQueue>
+          <WithFeedback>
+            <WithLocale />
+          </WithFeedback>
+        </WithQueue>
       </LocaleSelectContextProvider>
     </ConfigContextProvider>
   );

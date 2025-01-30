@@ -1,12 +1,33 @@
 package io.digiexpress.thena.mq.client.api.routing;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import io.resys.thena.support.RepoAssert;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class Router {
-
+  private static String SPLIT_AT_DOT = "\\.";
+  private static String SPLIT_AT_SLASH = "\\/";
   private final String[] queueName;
   private final String[] routingKey;
   private int queueIndex = 0;
@@ -103,15 +124,22 @@ public class Router {
     return currentRoutingKey;
   }
   
-  public static RouterBuilder builder() {
-    return new RouterBuilder();
+  public static RouterBuilder builderWithDot() {
+    return new RouterBuilder(SPLIT_AT_DOT);
   }
+  public static RouterBuilder builderWithSlash() {
+    return new RouterBuilder(SPLIT_AT_SLASH);
+  }
+  
+  @RequiredArgsConstructor
   public static class RouterBuilder {
     private String[] queueName;
     private String[] routingKey;
+    private final String splitAt;
+    
     
     private String[] split(String value) {
-      return value.split("\\.");
+      return value.split(splitAt);
     }
     public RouterBuilder queueName(String queueName) {
       this.queueName = split(queueName);

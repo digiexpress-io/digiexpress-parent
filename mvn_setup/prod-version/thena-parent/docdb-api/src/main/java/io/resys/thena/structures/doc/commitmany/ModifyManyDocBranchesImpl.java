@@ -55,11 +55,13 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
 
   private final DbState state;
   private final String repoId;
+  private final List<ItemModData> items = new ArrayList<ItemModData>();
+  
   private String branchName;
   private String author;
   private String message;
-  private final List<ItemModData> items = new ArrayList<ItemModData>();
   private AddItemToModifyDocBranch lastItem;
+  private Boolean excludeBranchContentFromLog;
   
   @Data @Builder
   private static class ItemModData {
@@ -72,6 +74,14 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
     private List<JsonObject> commands;
     private JsonObjectMerge merge;
   }
+
+
+  @Override
+  public ModifyManyDocBranchesImpl commitLogExcludesBranchBody() {
+    excludeBranchContentFromLog = Boolean.TRUE;
+    return this;
+  }
+  
   @Override public int getItemsAdded() { return items.size();}
   @Override public ModifyManyDocBranchesImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
@@ -204,7 +214,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
       }
       
-      final var batch = new BatchForOneBranchModify(lock, tx, author, message)
+      final var batch = new BatchForOneBranchModify(lock, tx, author, message, excludeBranchContentFromLog)
         .replace(item.getReplace())
         .merge(item.getMerge())
         .commands(item.getCommands())

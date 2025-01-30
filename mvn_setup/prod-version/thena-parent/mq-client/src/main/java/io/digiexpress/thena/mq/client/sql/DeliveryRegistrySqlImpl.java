@@ -1,5 +1,25 @@
 package io.digiexpress.thena.mq.client.sql;
 
+/*-
+ * #%L
+ * thena-mq-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,6 +61,18 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .append("  WHERE id = $1").ln() 
         .build())
         .props(Tuple.of(id))
+        .build();
+  }
+  @Override
+  public SqlTuple findLastNEntries(long entries) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT * ").ln()
+        .append("  FROM ").append(options.getDelivery()).ln()
+        .append("  ORDER BY created_at DESC").ln() 
+        .append("  LIMIT $1").ln() 
+        .build())
+        .props(Tuple.of(entries))
         .build();
   }
   @Override
@@ -180,4 +212,5 @@ public class DeliveryRegistrySqlImpl implements DeliveryRegistry {
         .completedAt(row.getOffsetDateTime("completed_at"))
         .build();
   }
+
 }

@@ -1,5 +1,7 @@
 package io.resys.thena.api.actions;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -61,9 +63,14 @@ public interface DocCommitActions {
     CreateOneDoc externalId(@Nullable String externalId); // user given unique id
     CreateOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     CreateOneDoc meta(@Nullable JsonObject docMeta);
+    CreateOneDoc docName(@Nullable String docName); 
+    CreateOneDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    CreateOneDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
+    CreateOneDoc docSubStatus(@Nullable String subStatus);
 
     CreateOneDoc commitAuthor(String author);
     CreateOneDoc commitMessage(String message);
+    CreateOneDoc commitLogExcludesBranchBody(); // don't log content into db 
     
     CreateOneDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
     CreateOneDoc branchContent(JsonObject branchContent);
@@ -74,7 +81,7 @@ public interface DocCommitActions {
   interface CreateManyDocs { 
     CreateManyDocs commitAuthor(String author);
     CreateManyDocs commitMessage(String message);
-    
+    CreateManyDocs commitLogExcludesBranchBody(); // don't log content into db 
     AddItemToCreateDoc item();
     Uni<ManyDocsEnvelope> build();
   }
@@ -84,6 +91,11 @@ public interface DocCommitActions {
     AddItemToCreateDoc docId(@Nullable String docId); 
     AddItemToCreateDoc meta(@Nullable JsonObject docMeta);
     AddItemToCreateDoc externalId(@Nullable String externalId);
+    AddItemToCreateDoc docName(@Nullable String docName); 
+    AddItemToCreateDoc docSubStatus(@Nullable String subStatus);
+    AddItemToCreateDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    AddItemToCreateDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
+    
     AddItemToCreateDoc ownerId(@Nullable String ownerId);
     AddItemToCreateDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
     AddItemToCreateDoc branchContent(JsonObject branchContent); 
@@ -100,6 +112,11 @@ public interface DocCommitActions {
     ModifyOneDoc commitAuthor(String author);
     ModifyOneDoc commitMessage(String message);
     
+    ModifyOneDoc docStartsAt(OffsetDateTime docStartsAt);
+    ModifyOneDoc docEndsAt(OffsetDateTime docEndsAt);
+    
+    ModifyOneDoc docName(@Nullable String docName); 
+    ModifyOneDoc docSubStatus(@Nullable String subStatus);
     ModifyOneDoc parentDocId(@Nullable String parentDocId); 
     ModifyOneDoc externalId(@Nullable String externalId); // user given unique id
     ModifyOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
@@ -118,6 +135,10 @@ public interface DocCommitActions {
   }
   interface AddItemToModifyDoc {
     AddItemToModifyDoc docId(String docIdOrExternalId);
+    AddItemToModifyDoc docName(@Nullable String name);
+    AddItemToModifyDoc docSubStatus(@Nullable String subStatus);
+    AddItemToModifyDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    AddItemToModifyDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
     AddItemToModifyDoc parentDocId(@Nullable String parentDocId); 
     AddItemToModifyDoc externalId(@Nullable String externalId); // user given unique id
     AddItemToModifyDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
@@ -136,10 +157,11 @@ public interface DocCommitActions {
     CreateOneDocBranch branchFrom(@Nullable String branchIdFromWhatToCreateABranch);  // branch name from what to create the branch
     CreateOneDocBranch commitAuthor(String author);
     CreateOneDocBranch commitMessage(String message);
-    
+
     CreateOneDocBranch commands(List<JsonObject> commands);
     CreateOneDocBranch branchName(String branchName);
     CreateOneDocBranch branchContent(JsonObject branchContent);
+    CreateOneDocBranch commitLogExcludesBranchBody(); // don't log content into db 
     
     Uni<OneDocEnvelope> build();
   }
@@ -148,8 +170,6 @@ public interface DocCommitActions {
     ModifyOneDocBranch docId(String docId);
     ModifyOneDocBranch commit(String versionToModify);
     ModifyOneDocBranch parentIsLatest();
-    ModifyOneDocBranch commitAuthor(String author);
-    ModifyOneDocBranch commitMessage(String message);
     
     ModifyOneDocBranch branchName(String branchName);
     ModifyOneDocBranch commands(List<JsonObject> commands);
@@ -157,6 +177,10 @@ public interface DocCommitActions {
     ModifyOneDocBranch merge(JsonObjectMerge doc);
 
     ModifyOneDocBranch remove(); // deletes the branch
+
+    ModifyOneDocBranch commitAuthor(String author);
+    ModifyOneDocBranch commitMessage(String message);
+    ModifyOneDocBranch commitLogExcludesBranchBody(); // don't log content into db 
     
     Uni<OneDocEnvelope> build();
   }
@@ -165,7 +189,7 @@ public interface DocCommitActions {
     int getItemsAdded();
     ModifyManyDocBranches commitAuthor(String author);
     ModifyManyDocBranches commitMessage(String message);
-    
+    ModifyManyDocBranches commitLogExcludesBranchBody(); // don't log content into db 
     AddItemToModifyDocBranch item();
     Uni<ManyDocsEnvelope> build();
   }
@@ -173,11 +197,13 @@ public interface DocCommitActions {
   interface AddItemToModifyDocBranch {
     AddItemToModifyDocBranch docId(String docId);
     AddItemToModifyDocBranch commit(String versionToModify);
+
     AddItemToModifyDocBranch parentIsLatest();
     AddItemToModifyDocBranch branchName(String branchName);
     AddItemToModifyDocBranch commands(List<JsonObject> commands);
     AddItemToModifyDocBranch replace(JsonObject newContent); 
     AddItemToModifyDocBranch merge(JsonObjectMerge doc);
+
     AddItemToModifyDocBranch remove(); // deletes the branch
     ModifyManyDocBranches next();
   }

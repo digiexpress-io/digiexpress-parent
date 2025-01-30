@@ -73,10 +73,10 @@ public class ProgramEnvirFactory {
   private ProgramEnvir baseEnvir;
   private String tagName;
   
-  public ProgramEnvirFactory(HdesAstTypes hdesTypes, HdesTypesMapper hdesFactory, HdesClientConfig config) {
+  public ProgramEnvirFactory(HdesClientConfig config) {
     super();
-    this.hdesTypes = hdesTypes;
-    this.hdesFactory = hdesFactory;
+    this.hdesTypes = config.getAst();
+    this.hdesFactory = config.getTypes();
     this.cache = config.getCache();
     this.config = config;
   }

@@ -48,6 +48,8 @@ public interface GrimMissionFilter {
   
   @Nullable String getNotViewedByUser();
   @Nullable String getNotViewedByUsage();
+  
+  @Nullable Boolean getLockForUpdate();
 
   @Value.Immutable
   interface GrimAssignmentFilter {

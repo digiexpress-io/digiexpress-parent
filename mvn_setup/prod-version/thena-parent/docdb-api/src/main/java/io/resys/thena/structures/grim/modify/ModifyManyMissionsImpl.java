@@ -187,6 +187,7 @@ public class ModifyManyMissionsImpl implements ModifyManyMissions {
   
   private Multi<GrimBatchMissions> createRequest(GrimState tx) {
     return tx.query().missions()
+    .lockForUpdate()
     .missionId(this.missions.keySet().toArray(new String[]{}))
     .excludeDocs(GrimDocType.GRIM_COMMANDS, GrimDocType.GRIM_COMMIT_VIEWER, GrimDocType.GRIM_COMMIT)
     .findAll().onItem().transform(labels -> createRequest(tx, labels));

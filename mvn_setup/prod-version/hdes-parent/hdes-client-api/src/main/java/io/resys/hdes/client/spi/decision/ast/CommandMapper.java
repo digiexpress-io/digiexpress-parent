@@ -171,6 +171,8 @@ public class CommandMapper {
         return "= " + constant;
       case IN:
         return "in[\"" + constant + "\"]";
+      case QIN:
+        return "qin[\"" + constant + "\"]";
       default:
         return null;
       }

@@ -54,6 +54,7 @@ public class BatchForOneBranchModify {
   private final DocState tx;
   private final String author;
   private final String message;
+  private final Boolean excludeBranchContentFromLog;
   
   private JsonObject appendBlobs;
   private List<JsonObject> commands;
@@ -78,7 +79,7 @@ public class BatchForOneBranchModify {
     final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();
     final var now = OffsetDateTime.now();
-    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), ImmutableDocCommit.builder()
+    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), excludeBranchContentFromLog, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(doc.getId())
         .branchId(branchId)

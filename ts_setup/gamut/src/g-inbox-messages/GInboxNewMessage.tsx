@@ -34,9 +34,13 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
 
   const classes = useUtilityClasses();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setMessageText(event.target.value);
-  };
+  }
+
+  function handleClearField() {
+    setMessageText('');
+  }
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -90,7 +94,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           style={{ display: 'none' }}
           onChange={handleFileUpload}
         />
-        <Button startIcon={<DeleteForeverIcon />} className={classes.newMsgCancelButton} variant='outlined' disabled={emptyMessage}>
+        <Button startIcon={<DeleteForeverIcon />} className={classes.newMsgCancelButton} variant='outlined' disabled={emptyMessage} onClick={handleClearField}>
           <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
         </Button>
       </div>

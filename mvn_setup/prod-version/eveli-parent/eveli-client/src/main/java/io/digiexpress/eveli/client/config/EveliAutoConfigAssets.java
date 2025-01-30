@@ -40,6 +40,7 @@ import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
 import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.spi.assets.HdesDefaultAssets;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
@@ -210,7 +211,15 @@ public class EveliAutoConfigAssets {
     };
 
     final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
-    final var createdWrench = wrenchClient.repo().create().await().atMost(Duration.ofSeconds(5));
+    final var createdWrench = wrenchClient.repo().create()
+        .onItem().transformToUni(init -> 
+        
+          new HdesDefaultAssets(init, Boolean.TRUE.equals(assetProps.getOverwrite())).accept()
+          .onItem().transform(junk -> init)
+          
+        )
+        .await().atMost(Duration.ofSeconds(10));
+    
     final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
     
     

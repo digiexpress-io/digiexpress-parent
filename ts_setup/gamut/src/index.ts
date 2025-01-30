@@ -19,8 +19,6 @@ export * from './g-divider'
 export * from './g-locales'
 export * from './g-login'
 
-export * from './g-search-list'
-export * from './g-search-list-item'
 export * from './g-md'
 export * from './g-layout'
 
@@ -72,6 +70,21 @@ export * from './api-contract'
 export * from './api-locale'
 
 export * from './router'
+
+export * from './g-router-bookings'
+export * from './g-router-forms-awaiting-decision'
+export * from './g-router-forms-with-decision'
+export * from './g-router-inbox'
+export * from './g-router-inbox-subject'
+export * from './g-router-offer'
+export * from './g-router-offer-summary'
+export * from './g-router-product'
+export * from './g-router-secured-services'
+export * from './g-router-unfinished-forms'
+export * from './g-router-unsecured'
+export * from './g-router-user-overview'
+
+
 
 const logo = `
  ______ _______ _______ _     _ _______

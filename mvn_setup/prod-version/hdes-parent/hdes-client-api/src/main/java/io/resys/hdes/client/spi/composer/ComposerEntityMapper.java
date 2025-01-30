@@ -24,6 +24,7 @@ import io.resys.hdes.client.api.HdesClient.EnvirBuilder;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ImmutableComposerEntity;
 import io.resys.hdes.client.api.ImmutableComposerState;
+import io.resys.hdes.client.api.ImmutableStoreEntity;
 import io.resys.hdes.client.api.ast.AstBranch;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
@@ -33,6 +34,36 @@ import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 
 public class ComposerEntityMapper {
 
+  public static EnvirBuilder toEnvir(EnvirBuilder envirBuilder, AstTag source) {
+    
+    
+    for(final var tag : source.getValues()) {
+      final var entity = ImmutableStoreEntity.builder()
+          .body(tag.getCommands())
+          .bodyType(tag.getBodyType())
+          .id(tag.getId())
+          .hash(tag.getHash())
+          .build();
+      
+      switch (tag.getBodyType()) {
+        case DT: { 
+          envirBuilder.addCommand().id(tag.getId()).decision(entity).build();
+          break;
+        }
+        case FLOW: {
+          envirBuilder.addCommand().id(tag.getId()).flow(entity).build();
+          break;
+        }
+        case FLOW_TASK: {
+          envirBuilder.addCommand().id(tag.getId()).branch(entity).build();     
+          break;
+        }
+        
+        default: continue;
+      }
+    }
+    return envirBuilder;
+  }
   
   public static EnvirBuilder toEnvir(EnvirBuilder envirBuilder, StoreState source) {
     source.getDecisions().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).decision(v).build());

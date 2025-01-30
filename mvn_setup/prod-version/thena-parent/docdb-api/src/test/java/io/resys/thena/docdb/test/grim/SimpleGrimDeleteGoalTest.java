@@ -343,7 +343,15 @@ author: jane.doe@morgue.com, message: remove remark #2
   + added new: 0 entries
 
  | deleted
-  - deleted: 4 entries
+  - deleted: 10 entries
+  - 22::GRIM_MISSION_LINKS
+    {"docType":"GRIM_MISSION_LINKS","id":"22","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
+  - 23::GRIM_MISSION_LINKS
+    {"docType":"GRIM_MISSION_LINKS","id":"23","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null}
+  - 20::GRIM_MISSION_LABEL
+    {"docType":"GRIM_MISSION_LABEL","id":"20","commitId":"4","labelType":"keyword","labelValue":"housing","labelBody":null,"missionId":"5","relation":null}
+  - 21::GRIM_MISSION_LABEL
+    {"docType":"GRIM_MISSION_LABEL","id":"21","commitId":"4","labelType":"keyword","labelValue":"roofing","labelBody":null,"missionId":"5","relation":null}
   - 8::GRIM_OBJECTIVE
     {"docType":"GRIM_OBJECTIVE","id":"8","commitId":"4","createdWithCommitId":"4","missionId":"5","objectiveStatus":null,"startDate":"2023-01-01","dueDate":"2024-01-01","description":"all ideas are welcome how we should design kitchen and bathroom!","title":"interior design ideas"}
   - 9::GRIM_OBJECTIVE_GOAL
@@ -352,6 +360,10 @@ author: jane.doe@morgue.com, message: remove remark #2
     {"docType":"GRIM_ASSIGNMENT","id":"16","commitId":"4","missionId":"5","assignee":"no-name-worker-1","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
   - 17::GRIM_ASSIGNMENT
     {"docType":"GRIM_ASSIGNMENT","id":"17","commitId":"4","missionId":"5","assignee":"no-name-worker-2","assignmentType":"objective-worker","assigneeContact":null,"relation":{"objectiveId":"8","remarkId":null,"objectiveGoalId":null,"relationType":"OBJECTIVE"}}
+  - 18::GRIM_ASSIGNMENT
+    {"docType":"GRIM_ASSIGNMENT","id":"18","commitId":"4","missionId":"5","assignee":"jane-from-the-roofing","assignmentType":"worker","assigneeContact":null,"relation":null}
+  - 19::GRIM_ASSIGNMENT
+    {"docType":"GRIM_ASSIGNMENT","id":"19","commitId":"4","missionId":"5","assignee":"sam-from-the-mill","assignmentType":"worker","assigneeContact":null,"relation":null}
 
  | merged
   +- merged: 1 entries

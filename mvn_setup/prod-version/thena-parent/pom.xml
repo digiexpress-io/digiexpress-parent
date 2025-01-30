@@ -15,6 +15,7 @@
 
   <modules>
     <module>docdb-api</module>
+    <module>mq-client</module>
   </modules>
 
 </project>
