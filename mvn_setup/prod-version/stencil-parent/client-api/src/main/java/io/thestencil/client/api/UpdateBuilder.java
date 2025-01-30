@@ -120,6 +120,8 @@ public interface UpdateBuilder {
     String getWorkflowId(); 
     String getValue();
     @Nullable
+    String getFormId();
+    @Nullable
     String getFormName();
     @Nullable
     String getFormTag();

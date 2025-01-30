@@ -65,10 +65,15 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
 
   } else if (isStencil) {
     const assetRepository:StencilApi.AssetRepository = {
-      dialobForms:  () => {return session.cFetch(`${serviceUrl}worker/rest/api/assets/dialob/tags`)
-      .then(response => response.json())},
-      flowNames: ()=> {return session.cFetch(`${serviceUrl}worker/rest/api/assets/wrench/flow-names`)
-      .then(response => response.json())}
+      dialobForms: () => session
+        .cFetch(`${serviceUrl}worker/rest/api/assets/dialob/tags`)
+        .then(response => response.json())
+        .then(data => data.sort()),
+
+      flowNames: () => session
+        .cFetch(`${serviceUrl}worker/rest/api/assets/wrench/flow-names`)
+        .then(response => response.json())
+        .then(data => data.sort())
     } 
     const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil"}, assets: assetRepository });
 

@@ -286,6 +286,7 @@ public class CreateBuilderImpl implements CreateBuilder {
         .endDate(init.getEndDate())
         .formName(init.getFormName())
         .formTag(init.getFormTag())
+        .formId(init.getFormId())
         .flowName(init.getFlowName());
 
     final var articles = new ArrayList<String>();

@@ -114,7 +114,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    String formId = getFormId(stencilService);
+    final var formId = getFormId(stencilService);
     final var sessionId = visitForm(request, formId).getId();
     
     final var process = hdesCommands.createInstance()

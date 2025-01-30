@@ -359,10 +359,12 @@ public class UpdateBuilderImpl implements UpdateBuilder {
             .value(changes.getValue())
             .startDate(changes.getStartDate())
             .endDate(changes.getEndDate())
+            
             .formName(changes.getFormName())
             .formTag(changes.getFormTag())
+            .formId(changes.getFormId())
+            
             .flowName(changes.getFlowName())
-            //FIXME.formId(changes.getformId())
             .labels(changes.getLabels() == null ? start.getBody().getLabels() : changes.getLabels())
             .articles(changes.getArticles() == null ? start.getBody().getArticles() : changes.getArticles())
             .build())

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { ListItemText, Paper, Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -34,16 +34,16 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [flowName, setFlowName] = React.useState<string>(workflow.body.flowName || '');
   const [formName, setFormName] = React.useState<string>(workflow.body.formName || '');
   const [formTag, setFormTag] = React.useState<string>(workflow.body.formTag || '');
-  const [allTags, setAllTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
+  const [allDialobTags, setAllDialobTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
   const [allFlows, setAllFlows] = React.useState<string[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
-  useEffect(()=> {
-    service.assets().dialobForms().then(tags=>setAllTags(tags.sort()));
-  },[]);
-  useEffect(()=> {
-    service.assets().flowNames().then(flows=>setAllFlows(flows));
-  },[]);
+  console.log("WORKFLOW", workflow);
+
+  React.useEffect(()=> {
+    service.assets().dialobForms().then(setAllDialobTags);
+    service.assets().flowNames().then(setAllFlows);
+  }, []);
 
   const handleCreate = () => {
     const entity: StencilApi.WorkflowMutator = { 
@@ -57,7 +57,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       flowName: flowName,
       formName: formName,
       formTag: formTag,
-      formId: allTags.find(tag=> tag.formName === formName && tag.tagName === formTag)?.tagFormId,
+      formId: allDialobTags.find(tag => tag.formName === formName && tag.tagName === formTag)?.tagFormId,
     };
     service.update().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -67,8 +67,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     })
   }
   const message = <FormattedMessage id="snack.workflow.editedMessage" />
-
-
   const articles: { id: string, value: string }[] = Object.values(site.articles)
     .sort((a1, a2) => {
       if (a1.body.parentId && a1.body.parentId === a2.body.parentId) {
@@ -88,13 +86,15 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     }));
 
 
-    const allForms = React.useMemo(()=> {
-      return allTags.filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName)).map(tag=>{return {id:tag.formName, value:tag.formLabel}}).sort((a,b)=>a.value.localeCompare(b.value))
-    }, [allTags]);
+    const allForms = React.useMemo(() => allDialobTags
+      .filter((tag,index) => index === allDialobTags.findIndex(tag2=>tag2.formName === tag.formName))
+      .map(({formName, formLabel}) => ({id: formName, value: formLabel}))
+      .sort((a,b) => a.value.localeCompare(b.value)), [allDialobTags]);
   
-    const formTags = React.useMemo(()=> {
-      return allTags.filter(t=>t.formName === formName).map(tag=>{return {id:tag.tagName, value:tag.tagName}}).sort((a,b)=>a.value.localeCompare(b.value))
-    }, [allTags, formName]);
+    const formTags = React.useMemo(() => allDialobTags
+      .filter(({formName}) => formName)
+      .map(({tagName}) => ({id: tagName, value: tagName}))
+      .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
     
   return (
     <Burger.Dialog open={true} onClose={onClose}

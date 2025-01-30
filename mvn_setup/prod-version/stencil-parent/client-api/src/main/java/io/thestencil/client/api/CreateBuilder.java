@@ -149,16 +149,17 @@ public interface CreateBuilder {
   @JsonSerialize(as = ImmutableCreateWorkflow.class)
   @JsonDeserialize(as = ImmutableCreateWorkflow.class)
   interface CreateWorkflow extends Command {
-    @Nullable
-    String getId();
+    @Nullable String getId();
     String getValue();
     List<String> getArticles();
     List<LocaleLabel> getLabels();
+    
     String getFormName();
     String getFormTag();
+    String getFormId();
+    
     String getFlowName();
-    @Nullable
-    Boolean getDevMode();
+    @Nullable Boolean getDevMode();
 
     @Nullable
     Boolean getAnon();

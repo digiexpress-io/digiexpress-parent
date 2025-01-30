@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 
 import { ListItemText, Paper, Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -32,12 +32,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [allTags, setAllTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
   const [allFlows, setAllFlows] = React.useState<string[]>([]);
 
-  useEffect(()=> {
-    service.assets().dialobForms().then(tags=>setAllTags(tags.sort()));
-  },[]);
-  useEffect(()=> {
-    service.assets().flowNames().then(flows=>setAllFlows(flows));
-  },[]);
+  React.useEffect(()=> {
+    service.assets().dialobForms().then(setAllTags);
+    service.assets().flowNames().then(setAllFlows);
+  }, []);
 
   const handleCreate = () => {
     const entity: StencilApi.CreateWorkflow = { 
@@ -89,13 +87,15 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setFlowName(newFlowName);
   }
 
-  const allForms = useMemo(()=> {
-    return allTags.filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName)).map(tag=>{return {id:tag.formName, value:tag.formLabel}}).sort((a,b)=>a.value.localeCompare(b.value))
-  }, [allTags]);
+  const allForms = React.useMemo(() => allTags
+      .filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName))
+      .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
+      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
 
-    const formTags = React.useMemo(()=> {
-      return allTags.filter(t=>t.formName === formName).map(tag=>{return {id:tag.tagName, value:tag.tagName}}).sort((a,b)=>a.value.localeCompare(b.value))
-    }, [allTags, formName]);
+    const formTags = React.useMemo(() => allTags
+      .filter(t=>t.formName === formName)
+      .map(tag=>{return {id:tag.tagName, value:tag.tagName}})
+      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags, formName]);
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
