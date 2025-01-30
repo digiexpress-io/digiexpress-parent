@@ -96,7 +96,7 @@ CREATE TABLE doc
   doc_status VARCHAR(8) NOT NULL,
   doc_starts_at TIMESTAMP WITH TIME ZONE,
   doc_ends_at TIMESTAMP WITH TIME ZONE,
-  doc_name TEXT,
+  doc_name TEXT UNIQUE,
   doc_sub_status VARCHAR(100),
   doc_meta jsonb
 );

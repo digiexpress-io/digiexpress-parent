@@ -1,5 +1,7 @@
 package io.resys.thena.api.actions;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -62,6 +64,8 @@ public interface DocCommitActions {
     CreateOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     CreateOneDoc meta(@Nullable JsonObject docMeta);
     CreateOneDoc docName(@Nullable String docName); 
+    CreateOneDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    CreateOneDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
     CreateOneDoc docSubStatus(@Nullable String subStatus);
 
     CreateOneDoc commitAuthor(String author);
@@ -89,6 +93,9 @@ public interface DocCommitActions {
     AddItemToCreateDoc externalId(@Nullable String externalId);
     AddItemToCreateDoc docName(@Nullable String docName); 
     AddItemToCreateDoc docSubStatus(@Nullable String subStatus);
+    AddItemToCreateDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    AddItemToCreateDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
+    
     AddItemToCreateDoc ownerId(@Nullable String ownerId);
     AddItemToCreateDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
     AddItemToCreateDoc branchContent(JsonObject branchContent); 
@@ -104,7 +111,10 @@ public interface DocCommitActions {
     ModifyOneDoc docId(String docIdOrExternalId);
     ModifyOneDoc commitAuthor(String author);
     ModifyOneDoc commitMessage(String message);
-
+    
+    ModifyOneDoc docStartsAt(OffsetDateTime docStartsAt);
+    ModifyOneDoc docEndsAt(OffsetDateTime docEndsAt);
+    
     ModifyOneDoc docName(@Nullable String docName); 
     ModifyOneDoc docSubStatus(@Nullable String subStatus);
     ModifyOneDoc parentDocId(@Nullable String parentDocId); 
@@ -127,6 +137,8 @@ public interface DocCommitActions {
     AddItemToModifyDoc docId(String docIdOrExternalId);
     AddItemToModifyDoc docName(@Nullable String name);
     AddItemToModifyDoc docSubStatus(@Nullable String subStatus);
+    AddItemToModifyDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
+    AddItemToModifyDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
     AddItemToModifyDoc parentDocId(@Nullable String parentDocId); 
     AddItemToModifyDoc externalId(@Nullable String externalId); // user given unique id
     AddItemToModifyDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  

@@ -1,5 +1,7 @@
 package io.resys.thena.structures.doc.commitone;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -64,6 +66,8 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String docName;
   private String docSubStatus;
   private Boolean excludeBranchContentFromLog;
+  private OffsetDateTime docStartsAt;
+  private OffsetDateTime docEndsAt;
 
   @Override
   public CreateOneDocImpl commitLogExcludesBranchBody() {
@@ -89,6 +93,8 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .docId(docId)
         .docType(docType)
         .docName(docName)
+        .docStartsAt(docStartsAt)
+        .docEndsAt(docEndsAt)
         .docSubStatus(docSubStatus)
         .ownerId(ownerId)
         .externalId(externalId)

@@ -1,5 +1,7 @@
 package io.resys.thena.structures.doc.commitmany;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -83,7 +85,9 @@ public class CreateManyDocsImpl implements CreateManyDocs {
       @Override public AddItemToCreateDoc docName(String docName)       { oneDoc.docName(docName); return this; }
       @Override public AddItemToCreateDoc docSubStatus(String subStatus){ oneDoc.docSubStatus(subStatus); return this; }
       @Override public AddItemToCreateDoc docId(String docId)           { oneDoc.docId(docId); return this;}      
-      @Override public AddItemToCreateDoc ownerId(String ownerId)       { oneDoc.ownerId(ownerId); return this;}      
+      @Override public AddItemToCreateDoc ownerId(String ownerId)       { oneDoc.ownerId(ownerId); return this;}
+      @Override public AddItemToCreateDoc docStartsAt(OffsetDateTime docStartsAt) { oneDoc.docStartsAt(docStartsAt); return this; }
+      @Override public AddItemToCreateDoc docEndsAt(OffsetDateTime docEndsAt)     { oneDoc.docEndsAt(docEndsAt); return this; }
       @Override public CreateManyDocs next() {
         lasItemBuilder = null;
         final var newDoc = oneDoc.create();

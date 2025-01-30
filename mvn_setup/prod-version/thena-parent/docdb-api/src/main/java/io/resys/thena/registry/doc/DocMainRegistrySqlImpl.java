@@ -116,6 +116,12 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
       filters.add(" ( docs.doc_type = $" + index + " ) ");
       params.add(filter.getDocType());
     }
+    
+    if(filter.getSubStatus() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
+      params.add(filter.getSubStatus());
+    }
     final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
     
     return ImmutableSqlTuple.builder()
@@ -277,7 +283,7 @@ WHERE id          = $10
         .append("  doc_starts_at TIMESTAMP WITH TIME ZONE,").ln()
         .append("  doc_ends_at TIMESTAMP WITH TIME ZONE,").ln()
         
-        .append("  doc_name TEXT,").ln()
+        .append("  doc_name TEXT UNIQUE,").ln()
         .append("  doc_sub_status VARCHAR(100),").ln()
         
         .append("  doc_meta jsonb").ln()

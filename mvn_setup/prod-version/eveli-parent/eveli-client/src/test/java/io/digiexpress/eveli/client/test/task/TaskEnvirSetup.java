@@ -21,7 +21,6 @@ package io.digiexpress.eveli.client.test.task;
  */
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,10 +51,8 @@ import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.spi.HdesClientImpl;
-import io.resys.hdes.client.spi.HdesClientImpl.HdesClientConfigImpl;
 import io.resys.hdes.client.spi.HdesInMemoryStore;
 import io.resys.hdes.client.spi.HdesTypeDefsFactory;
-import io.resys.hdes.client.spi.cache.HdesClientEhCache;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.thena.api.ThenaClient;
@@ -152,7 +149,7 @@ public abstract class TaskEnvirSetup {
     
     @Bean
     public HdesTypesMapper hdesTypes(ObjectMapper objectMapper) {
-      return new HdesTypeDefsFactory(objectMapper, new HdesClientConfigImpl(Collections.emptyList(), HdesClientEhCache.builder().build("junittest"), SERVICE_INIT, DI));
+      return new HdesTypeDefsFactory(objectMapper);
     }
     
     @Bean

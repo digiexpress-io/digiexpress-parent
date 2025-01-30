@@ -28,7 +28,9 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions.CreateManyDocs;
+import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.DocQueryActions.DocObjectsQuery;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.envelope.DocContainer.DocObject;
@@ -69,10 +71,22 @@ public interface ThenaDocConfig {
     List<DocBranch> visitEnvelope(ThenaDocConfig config, ManyDocsEnvelope envelope);
     List<T> end(ThenaDocConfig config, List<DocBranch> commit);
   }
-  
+  interface OneDocCreateVisitor<T> extends DocVisitor { 
+    CreateOneDoc start(ThenaDocConfig config, CreateOneDoc builder);
+    OneDocEnvelope visitEnvelope(ThenaDocConfig config, OneDocEnvelope envelope);
+    T end(ThenaDocConfig config, OneDocEnvelope commit);
+  }
   
   default <T> Uni<List<T>> accept(DocCreateVisitor<T> visitor) {
     final var builder = visitor.start(this, getClient().doc(getRepoId()).commit().createManyDocs());
+    
+    return builder.build()
+        .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))
+        .onItem().transform(ref -> visitor.end(this, ref));
+  }
+  
+  default <T> Uni<T> accept(OneDocCreateVisitor<T> visitor) {
+    final var builder = visitor.start(this, getClient().doc(getRepoId()).commit().createOneDoc());
     
     return builder.build()
         .onItem().transform(envelope -> visitor.visitEnvelope(this, envelope))

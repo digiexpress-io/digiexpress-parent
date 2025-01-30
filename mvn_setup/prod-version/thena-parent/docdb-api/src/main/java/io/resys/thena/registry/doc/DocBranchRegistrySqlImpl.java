@@ -153,7 +153,11 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
       filters.add(" ( docs.doc_type = $" + index + " ) ");
       params.add(filter.getDocType());
     }
-    
+    if(filter.getSubStatus() != null) {
+      final var index = params.size() + 1;
+      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
+      params.add(filter.getSubStatus());
+    }
 
     if(filter.getBranch() != null) {
       final var index = params.size() + 1;

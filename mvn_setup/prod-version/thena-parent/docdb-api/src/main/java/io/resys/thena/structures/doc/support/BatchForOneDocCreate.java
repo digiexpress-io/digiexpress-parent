@@ -64,6 +64,9 @@ public class BatchForOneDocCreate {
   private JsonObject branchContent;
   private List<JsonObject> commands;
   private JsonObject meta;
+  private OffsetDateTime docStartsAt;
+  private OffsetDateTime docEndsAt;
+  
 
   public DocBatchForOne create() {
     RepoAssert.isName(branchName, () -> "branchName can't be empty!");
@@ -94,6 +97,8 @@ public class BatchForOneDocCreate {
         .subStatus(docSubStatus)
         .ownerId(ownerId)
         .parentId(parentDocId)
+        .startsAt(docStartsAt)
+        .endsAt(docEndsAt)
         .commitId(commitBuilder.getCommitId())
         .createdWithCommitId(commitBuilder.getCommitId())
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))

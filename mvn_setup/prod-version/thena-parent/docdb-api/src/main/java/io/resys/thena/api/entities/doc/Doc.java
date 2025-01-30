@@ -67,6 +67,7 @@ public interface Doc extends DocEntity, IsDocObject, TenantEntity {
     @Nullable String getOwnerId();
     @Nullable String getDocType();
     @Nullable String getBranch();
+    @Nullable String getSubStatus();
     @Nullable Boolean getEmptyBranchBody();
   }
 

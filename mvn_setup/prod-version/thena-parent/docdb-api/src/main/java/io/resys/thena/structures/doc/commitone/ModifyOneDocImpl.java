@@ -21,6 +21,7 @@ package io.resys.thena.structures.doc.commitone;
  */
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   private Optional<String> parentDocId;
   private Optional<String> externalId;
   private Optional<String> ownerId;
+  private Optional<OffsetDateTime> docStartsAt;
+  private Optional<OffsetDateTime> docEndsAt;
   
   private Optional<String> docName;
   private Optional<String> docSubStatus;
@@ -75,6 +78,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   @Override public ModifyOneDocImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
   @Override public ModifyOneDocImpl docName(String docName) { this.docName = Optional.ofNullable(docName); return this; }
   @Override public ModifyOneDocImpl docSubStatus(String docSubStatus) { this.docSubStatus = Optional.ofNullable(docSubStatus); return this; }
+  @Override public ModifyOneDocImpl docStartsAt(OffsetDateTime docStartsAt) { this.docStartsAt = Optional.ofNullable(docStartsAt); return this; }
+  @Override public ModifyOneDocImpl docEndsAt(OffsetDateTime docEndsAt) { this.docEndsAt = Optional.ofNullable(docEndsAt); return this; }
   
   @Override
   public Uni<OneDocEnvelope> build() {
@@ -103,7 +108,9 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
         .commands(commands)
         .meta(meta)
         .docName(docName)
-        .docName(docSubStatus)
+        .docSubStatus(docSubStatus)
+        .docStartsAt(docStartsAt)
+        .docEndsAt(docEndsAt)
         .ownerId(ownerId)
         .parentId(parentDocId)
         .remove(remove)

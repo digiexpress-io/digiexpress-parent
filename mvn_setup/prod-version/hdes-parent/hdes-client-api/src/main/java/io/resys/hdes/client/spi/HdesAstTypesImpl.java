@@ -1,5 +1,12 @@
 package io.resys.hdes.client.spi;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
+
 /*-
  * #%L
  * hdes-client-api
@@ -22,35 +29,35 @@ package io.resys.hdes.client.spi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import groovy.lang.GroovyClassLoader;
 import io.resys.hdes.client.api.HdesAstTypes;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.spi.branch.BranchAstBuilderImpl;
-import io.resys.hdes.client.spi.config.HdesClientConfig;
+import io.resys.hdes.client.spi.config.HdesClientConfig.AstFlowNodeVisitor;
 import io.resys.hdes.client.spi.decision.DecisionAstBuilderImpl;
 import io.resys.hdes.client.spi.flow.FlowAstBuilderImpl;
 import io.resys.hdes.client.spi.groovy.GroovyCompilationCustomizer;
 import io.resys.hdes.client.spi.groovy.ServiceAstBuilderImpl;
 import io.resys.hdes.client.spi.tag.TagAstBuilderImpl;
-import org.codehaus.groovy.control.CompilerConfiguration;
-import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 
 public class HdesAstTypesImpl implements HdesAstTypes {
   private final ObjectMapper yaml = new ObjectMapper(new YAMLFactory());
   private final GroovyClassLoader gcl;
   private final HdesTypesMapper typeDefs;
-  private final HdesClientConfig config;
+  private final Collection<AstFlowNodeVisitor> visitors;
   
-  public HdesAstTypesImpl(ObjectMapper objectMapper, HdesClientConfig config) {
+  public HdesAstTypesImpl(HdesTypesMapper typeDefs, List<AstFlowNodeVisitor> visitors) {
     super();
     CompilerConfiguration groovyConfig = new CompilerConfiguration();
     groovyConfig.setTargetBytecode(CompilerConfiguration.JDK8);
     groovyConfig.addCompilationCustomizers(new GroovyCompilationCustomizer());
     groovyConfig.addCompilationCustomizers(new ASTTransformationCustomizer(groovy.transform.CompileStatic.class));
     
-    this.config = config;
+
     this.gcl = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), groovyConfig);
-    this.typeDefs = new HdesTypeDefsFactory(objectMapper, config);
+    this.typeDefs = typeDefs;
+    this.visitors = Collections.unmodifiableList(visitors);
   }
   @Override
   public DecisionAstBuilder decision() {
@@ -58,7 +65,7 @@ public class HdesAstTypesImpl implements HdesAstTypes {
   }
   @Override
   public FlowAstBuilder flow() {
-    return new FlowAstBuilderImpl(yaml, typeDefs, config.getFlowVisitors());
+    return new FlowAstBuilderImpl(yaml, typeDefs, visitors);
   }
   @Override
   public ServiceAstBuilder service() {

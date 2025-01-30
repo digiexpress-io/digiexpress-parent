@@ -60,6 +60,8 @@ public class BatchForOneDocModify {
   private Optional<String> externalId;
   private Optional<String> docName;
   private Optional<String> docSubStatus;
+  private Optional<OffsetDateTime> docStartsAt;
+  private Optional<OffsetDateTime> docEndsAt;
   private Optional<JsonObject> meta;
   private boolean remove;
 
@@ -90,7 +92,9 @@ public class BatchForOneDocModify {
       .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
       
       .name(this.docName == null ? docLock.getDoc().get().getName() : this.docName.orElse(null))
-      .parentId(this.docSubStatus == null ? docLock.getDoc().get().getSubStatus() : this.docSubStatus.orElse(null))
+      .subStatus(this.docSubStatus == null ? docLock.getDoc().get().getSubStatus() : this.docSubStatus.orElse(null))
+      .startsAt(this.docStartsAt == null ? docLock.getDoc().get().getStartsAt() : this.docStartsAt.orElse(null))
+      .endsAt(this.docEndsAt == null ? docLock.getDoc().get().getEndsAt() : this.docEndsAt.orElse(null))
       
       .parentId(this.parentId == null ? docLock.getDoc().get().getParentId() : this.parentId.orElse(null))
       .ownerId(this.ownerId == null ? docLock.getDoc().get().getOwnerId() : this.ownerId.orElse(null))

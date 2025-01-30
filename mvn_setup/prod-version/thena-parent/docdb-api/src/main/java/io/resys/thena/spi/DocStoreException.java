@@ -111,7 +111,14 @@ public class DocStoreException extends RuntimeException {
     public Builder add(ThenaDocConfig config, QueryEnvelope<?> envelope) {
       msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
       .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
-      .addAllArgs(envelope.getMessages().stream().map(message->message.getText()).collect(Collectors.toList()));
+      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
+          .collect(Collectors.toList()));
+      return this;
+    }
+    public Builder add(ThenaDocConfig config, OneDocEnvelope envelope) {
+      msg.id(envelope.getRepoId())
+      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
+          .collect(Collectors.toList()));
       return this;
     }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {

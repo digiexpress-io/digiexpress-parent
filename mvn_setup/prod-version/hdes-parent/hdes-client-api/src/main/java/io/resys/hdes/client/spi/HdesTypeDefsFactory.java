@@ -1,5 +1,19 @@
 package io.resys.hdes.client.spi;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /*-
  * #%L
  * hdes-client-api
@@ -37,7 +51,6 @@ import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.ast.TypeDef.ValueTypeResolver;
 import io.resys.hdes.client.api.exceptions.HdesJsonException;
 import io.resys.hdes.client.api.programs.ExpressionProgram;
-import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.expression.ExpressionProgramFactory;
 import io.resys.hdes.client.spi.serializers.DateDataTypeDeserializer;
 import io.resys.hdes.client.spi.serializers.DateTimeDataTypeDeserializer;
@@ -47,30 +60,15 @@ import io.resys.hdes.client.spi.serializers.JsonObjectDataTypeDeserializer;
 import io.resys.hdes.client.spi.serializers.TimeDataTypeDeserializer;
 import io.resys.hdes.client.spi.util.HdesAssert;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class HdesTypeDefsFactory implements HdesTypesMapper {
-  private final HdesClientConfig config;
+
   private final Map<ValueType, Deserializer> deserializers;
   private final Map<ValueType, Serializer> serializers;
   private final ValueTypeResolver valueTypeResolver;
   private final ObjectMapper objectMapper; 
 
-  public HdesTypeDefsFactory(ObjectMapper objectMapper, HdesClientConfig config) {
+  public HdesTypeDefsFactory(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
-    this.config = config;
     
     Map<ValueType, Deserializer> deserializers = new HashMap<>();
     this.deserializers = Collections.unmodifiableMap(deserializers);
@@ -360,10 +358,6 @@ public class HdesTypeDefsFactory implements HdesTypesMapper {
     } catch (Exception e) {
       throw new HdesJsonException(e.getMessage(), e);
     }
-  }
-  
-  public HdesClientConfig config() {
-    return config;
   }
    
 }

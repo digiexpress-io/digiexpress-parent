@@ -2,6 +2,10 @@ package io.digiexpress.eveli.envir.spi;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirTenantQuery;
+import io.digiexpress.eveli.envir.spi.actions.CreateOneDeploymentImpl;
+import io.digiexpress.eveli.envir.spi.actions.DeploymentQueryImpl;
+import io.digiexpress.eveli.envir.spi.actions.EveliDeploymentCompilerImpl;
+import io.digiexpress.eveli.envir.spi.actions.ModifyOneDeploymentImpl;
 import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -21,28 +25,26 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
   public EveliEnvirTenantQuery tenantQuery() {
     return new EveliEnvirTenantQueryImpl(ctx);
   }
-
   @Override
   public CreateOneDeployment createOneDeployment() {
-    // TODO Auto-generated method stub
-    return null;
+    return new CreateOneDeploymentImpl(ctx);
   }
-
   @Override
   public ModifyOneDeployment modifyOneDeployment() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ModifyOneDeploymentImpl(ctx);
   }
-
+  @Override
+  public DeploymentQuery deploymentQuery() {
+    return new DeploymentQueryImpl(ctx);
+  }
   @Override
   public EveliRuntimeQuery runtimeQuery() {
     // TODO Auto-generated method stub
     return null;
   }
-
   @Override
-  public DeploymentQuery deploymentQuery() {
-    // TODO Auto-generated method stub
-    return null;
+  public EveliDeploymentCompiler deploymentCompiler() {
+    return new EveliDeploymentCompilerImpl(ctx);
   }
+
 }

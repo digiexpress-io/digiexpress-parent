@@ -40,6 +40,7 @@ public interface DocQueryActions {
   
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
+    DocObjectsQuery subStatus(String subStatus);
     DocObjectsQuery docType(String docType);
     DocObjectsQuery parentId(String parentId);
     DocObjectsQuery ownerId(String ownerId);
@@ -47,6 +48,7 @@ public interface DocQueryActions {
     DocObjectsQuery emptyBranchBody(); // load the branch with empty body = {} 
     
     Uni<QueryEnvelope<DocObject>> get();
+    Uni<QueryEnvelope<DocObject>> findOne(String idOrExternalIdOrName);
     Uni<QueryEnvelope<DocObject>> findOne();
     Uni<QueryEnvelope<DocObject>> get(String idOrExternalIdOrName);
     Uni<QueryEnvelope<DocTenantObjects>> findAll(List<String> idOrExternalIdOrName);

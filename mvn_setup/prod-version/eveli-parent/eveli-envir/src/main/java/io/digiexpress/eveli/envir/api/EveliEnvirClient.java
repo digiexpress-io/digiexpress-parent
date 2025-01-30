@@ -23,11 +23,19 @@ public interface EveliEnvirClient {
   CreateOneDeployment createOneDeployment();
   ModifyOneDeployment modifyOneDeployment();
   EveliRuntimeQuery runtimeQuery();
+  EveliDeploymentCompiler deploymentCompiler();
   DeploymentQuery deploymentQuery();
   
   
+  interface EveliDeploymentCompiler {
+    EveliDeploymentCompiler userId(String userId);
+    EveliDeploymentCompiler deploymentId(String id);
+    Uni<EveliDeployment> compile(); // build all deployments with status "BUILDING", changes them to READY OR ERROR
+  }
+  
   interface DeploymentQuery {
-    Uni<List<EveliDeployment>> findAll();  
+    DeploymentQuery status(EveliDeploymentStatus status);
+    Uni<List<EveliDeployment>> findAll(); // will not load assets
   }
   
   interface EveliRuntimeQuery {
@@ -36,6 +44,7 @@ public interface EveliEnvirClient {
   }
   
   interface CreateOneDeployment {
+    CreateOneDeployment userId(String userId);
     CreateOneDeployment name(String name);    
     CreateOneDeployment startsAt(OffsetDateTime startsAt);
     CreateOneDeployment stencil(SiteState stencil);
@@ -66,6 +75,14 @@ public interface EveliEnvirClient {
     OffsetDateTime getCreatedAt();
     OffsetDateTime getStartsAt();
 
+    // Null when user has requested sources to be not loaded on api level
+    @Nullable EveliSources getSources();
+  }
+  
+  @JsonSerialize(as = ImmutableEveliSources.class)
+  @JsonDeserialize(as = ImmutableEveliSources.class)
+  @Value.Immutable
+  interface EveliSources {
     SiteState getStencil();
     AstTag getWrench();
     List<Form> getDialob();

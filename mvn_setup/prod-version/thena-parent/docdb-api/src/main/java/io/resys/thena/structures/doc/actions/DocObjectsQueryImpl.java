@@ -63,6 +63,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();
   private String branchName;
+  private String subStatus;
   private String docType;
   private String parentId;
   private String ownerId;
@@ -89,10 +90,14 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     return get(Optional.of(id), true);
   }
   
-
   @Override
   public Uni<QueryEnvelope<DocObject>> findOne() {
     return get(Optional.empty(), false);
+  }
+  
+  @Override
+  public Uni<QueryEnvelope<DocObject>> findOne(String id) {
+    return get(Optional.of(id), false);
   }
   
   public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
@@ -101,6 +106,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .parentId(parentId)
         .ownerId(ownerId)
         .emptyBranchBody(emptyBranchBody)
+        .subStatus(subStatus)
         .branch(branchName);
     
     if(id.isPresent()) {
@@ -166,6 +172,7 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .branch(branchName)
         .parentId(parentId)
         .ownerId(ownerId)
+        .subStatus(subStatus)
         .emptyBranchBody(emptyBranchBody)
         .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
