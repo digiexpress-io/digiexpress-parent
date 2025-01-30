@@ -176,6 +176,10 @@ export declare namespace StencilApi {
       anon?: boolean,
       startDate?: string | undefined,
       endDate?: string | undefined,
+      formName?: string | undefined,
+      formTag?: string | undefined,
+      formId?: string | undefined,
+      flowName?: string | undefined,
     }
   }
 
@@ -188,6 +192,10 @@ export declare namespace StencilApi {
     anon: boolean | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
+    formName: string,
+    formTag: string,
+    formId?: string | undefined,
+    flowName: string,
   }
 
   export interface FetchIntegration {
@@ -202,6 +210,7 @@ export declare namespace StencilApi {
     delete(): DeleteBuilder;
     update(): UpdateBuilder;
     version(): Promise<VersionEntity>;
+    assets(): AssetRepository;
   }
 
   export interface VersionEntity {
@@ -248,6 +257,10 @@ export declare namespace StencilApi {
     anon: boolean | undefined;
     startDate?: string | undefined;
     endDate?: string | undefined;
+    formName: string;
+    formTag: string;
+    formId?: string | undefined,
+    flowName: string;
   }
   export interface CreateRelease {
     name: string,
@@ -290,12 +303,25 @@ export declare namespace StencilApi {
   export interface Store {
     fetch<T>(path: string, init?: RequestInit): Promise<T>;
   }
+
   export interface StoreConfig {
     url: string;
     oidc?: string;
     status?: string;
     csrf?: { key: string, value: string }
   }
+
+  export interface DialobTagAsset {
+    formLabel: string;
+    formName: string;
+    tagFormId: string;
+    tagName: string;
+  }
+  export interface AssetRepository {
+    flowNames(): Promise<string[]>;
+    dialobForms(): Promise<DialobTagAsset[]>;
+  }
+  
   export interface ErrorMsg {
     id: string;
     value: string;

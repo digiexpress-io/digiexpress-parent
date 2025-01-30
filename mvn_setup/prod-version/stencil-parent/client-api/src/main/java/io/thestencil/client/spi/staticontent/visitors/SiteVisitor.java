@@ -81,6 +81,10 @@ public interface SiteVisitor {
     Boolean getWorkflow();
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
+    @Nullable String getFormId();
+    @Nullable String getFormName();
+    @Nullable String getFormTag();
+    @Nullable String getFlowName();
   }
 
   @Value.Immutable

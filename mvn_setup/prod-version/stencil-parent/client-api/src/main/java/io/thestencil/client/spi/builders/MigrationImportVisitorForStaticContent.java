@@ -211,9 +211,16 @@ public class MigrationImportVisitorForStaticContent {
     
     final var gid = gid(EntityType.WORKFLOW);
     articles.add(article.getId());    
-  
+    // TODO?
     final var workflow = ImmutableWorkflow.builder()
       .value(topicLink.getValue()) // pointer
+      .startDate(topicLink.getStartDate())
+      .endDate(topicLink.getEndDate())
+      .formId(topicLink.getFormId())
+      .formName(topicLink.getFormName())
+      .formTag(topicLink.getFormTag())
+      .flowName(topicLink.getFlowName())
+      .anon(topicLink.getAnon())
       .addLabels(ImmutableLocaleLabel.builder()
           .labelValue(topicLink.getName())
           .locale(locale.getId())

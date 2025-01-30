@@ -133,7 +133,7 @@ public interface StencilClient {
   @JsonSerialize(as = ImmutableWorkflow.class)
   @JsonDeserialize(as = ImmutableWorkflow.class)
   interface Workflow extends EntityBody {
-    String getValue(); // pointer to actual workflow
+    String getValue(); // workflow name
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getDevMode();
@@ -148,7 +148,21 @@ public interface StencilClient {
     @Nullable
     @JsonInclude(JsonInclude.Include.NON_NULL) 
     Boolean getAnon();
-
+    
+    // ID is used in cases when dialob uses file-based forms, which are searchable by id
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormId();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormName();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFormTag();
+    @Nullable
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
+    String getFlowName();
+    
     List<String> getArticles();
     List<LocaleLabel> getLabels();
   }

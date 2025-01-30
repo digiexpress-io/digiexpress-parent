@@ -40,6 +40,7 @@ public class DialobProxyImpl implements DialobProxy {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     final var headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
     final var requestEntity = new HttpEntity<>(body, headers);
     try {
       return dialobService.getSessions().exchange("/"+ sessionId, HttpMethod.POST, requestEntity, String.class);

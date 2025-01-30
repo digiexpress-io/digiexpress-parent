@@ -31,7 +31,19 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [technicalname, setTechnicalname] = React.useState(workflow.body.value);
   //const articles: StencilApi.Article[] = session.getArticlesForLocales(workflow.body.labels.map(l => l.locale));
   const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>(workflow.body.labels);
+  const [flowName, setFlowName] = React.useState<string>(workflow.body.flowName || '');
+  const [formName, setFormName] = React.useState<string>(workflow.body.formName || '');
+  const [formTag, setFormTag] = React.useState<string>(workflow.body.formTag || '');
+  const [allDialobTags, setAllDialobTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
+  const [allFlows, setAllFlows] = React.useState<string[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
+
+  console.log("WORKFLOW", workflow);
+
+  React.useEffect(()=> {
+    service.assets().dialobForms().then(setAllDialobTags);
+    service.assets().flowNames().then(setAllFlows);
+  }, []);
 
   const handleCreate = () => {
     const entity: StencilApi.WorkflowMutator = { 
@@ -40,8 +52,12 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       articles: articleId, 
       anon: anon,
       labels, devMode,
-      startDate: startdate ? startdate + ":00" : undefined,
-      endDate: enddate ? enddate + ":00": undefined,
+      startDate: startdate ? startdate : undefined,
+      endDate: enddate ? enddate : undefined,
+      flowName: flowName,
+      formName: formName,
+      formTag: formTag,
+      formId: allDialobTags.find(tag => tag.formName === formName && tag.tagName === formTag)?.tagFormId,
     };
     service.update().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -51,8 +67,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     })
   }
   const message = <FormattedMessage id="snack.workflow.editedMessage" />
-
-
   const articles: { id: string, value: string }[] = Object.values(site.articles)
     .sort((a1, a2) => {
       if (a1.body.parentId && a1.body.parentId === a2.body.parentId) {
@@ -71,11 +85,22 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       value: `${article.body.order} - ${article.body.parentId ? site.articles[article.body.parentId].body.name + "/" : ""}${article.body.name}`,
     }));
 
+
+    const allForms = React.useMemo(() => allDialobTags
+      .filter((tag,index) => index === allDialobTags.findIndex(tag2=>tag2.formName === tag.formName))
+      .map(({formName, formLabel}) => ({id: formName, value: formLabel}))
+      .sort((a,b) => a.value.localeCompare(b.value)), [allDialobTags]);
+  
+    const formTags = React.useMemo(() => allDialobTags
+      .filter(({formName}) => formName)
+      .map(({tagName}) => ({id: tagName, value: tagName}))
+      .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
+    
   return (
     <Burger.Dialog open={true} onClose={onClose}
       backgroundColor="uiElements.main"
       title="services.edit"
-      submit={{ title: "button.apply", onClick: handleCreate, disabled: !technicalname || changeInProgress || labels.length < 1 }}>
+      submit={{ title: "button.apply", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
 
       <>
         <LocaleLabels
@@ -92,6 +117,10 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
                 required
                 value={technicalname}
                 onChange={setTechnicalname} />
+              <Burger.Select label="services.flowName" onChange={setFlowName}
+                selected={flowName}
+                items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
+              />
             </Box>
             <Box maxWidth="50%" sx={{ ml: 1 }}>
               <Burger.Switch
@@ -108,7 +137,22 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
               />
             </Box>
           </Box>
-
+          <Box display="flex">
+            <Box maxWidth="50%" flexGrow={1}>
+              <Burger.Select label="services.formName" onChange={setFormName}
+                selected={formName}
+                items={allForms}
+                helperText='services.formName.description'
+              />
+            </Box>
+            <Box maxWidth="50%" sx={{ ml: 1 }}>
+            <Burger.Select label="services.formTag" onChange={setFormTag}
+                selected={formTag}
+                items={formTags}
+                helperText='services.formTag.description'
+              />
+            </Box>
+          </Box>
           <Box display="flex">
             <Box flexGrow={1}>
               <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'

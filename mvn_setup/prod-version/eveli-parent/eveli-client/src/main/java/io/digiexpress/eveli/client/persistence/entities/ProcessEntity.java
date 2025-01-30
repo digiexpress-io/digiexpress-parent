@@ -118,9 +118,6 @@ public class ProcessEntity {
   @Column(name="wrench_tag_name")
   private String wrenchTagName;
   
-  @Column(name="workflow_tag_name")
-  private String workflowTagName;
-  
   
   // execution context
   @Basic(fetch = FetchType.LAZY)

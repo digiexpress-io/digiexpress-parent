@@ -232,6 +232,10 @@ public class StencilClientImpl implements StencilClient {
               .startDate(link.getStartDate())
               .endDate(link.getEndDate())
               .workflow(link.getType().equals(SiteStateVisitor.LINK_TYPE_WORKFLOW))
+              .flowName(link.getFlowName())
+              .formName(link.getFormName())
+              .formTag(link.getFormTag())
+              .formId(link.getFormId())
               .build()
         )));
         

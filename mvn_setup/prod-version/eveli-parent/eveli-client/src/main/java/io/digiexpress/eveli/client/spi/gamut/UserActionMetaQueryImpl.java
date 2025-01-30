@@ -25,8 +25,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMeta;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMetaQuery;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
@@ -44,7 +42,6 @@ import lombok.experimental.Accessors;
 public class UserActionMetaQueryImpl implements UserActionMetaQuery {
   private final Supplier<Sites> siteEnvir;
   private final Supplier<ProgramEnvir> programEnvir;
-  private final Supplier<WorkflowTag> workflowEnvir;
   private final ZoneOffset offset;
   
   private String locale;
@@ -71,22 +68,12 @@ public class UserActionMetaQueryImpl implements UserActionMetaQuery {
           .toString());
     }
     
-    final var wkEnvir = workflowEnvir.get();
-    final Workflow workflow = wkEnvir.getEntries().stream()
-        .filter(w -> w.getName().equals(stencilService.getValue()))
-        .findFirst()
-        .orElseThrow(() -> new WorkflowNotFoundException(new StringBuilder()
-        .append("Can't find workflow by name: '").append(locale).append("'!")
-        .toString()));
-    
     return ImmutableUserActionMeta.builder()
         .actionId(actionId)
-        .workflow(workflow)
         .expiresInSeconds(expiresInSeconds)
         .topicLink(stencilService)
         
         .stencilTagName(stencilSite.getTagName())
-        .workflowTagName(wkEnvir.getName())
         
         .build();
   }

@@ -22,8 +22,6 @@ import java.time.ZoneOffset;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +71,8 @@ public class EveliAutoConfigGamut {
         
         eveliContext.getSiteEnvir(),
         eveliContext.getProgramEnvir(),
-        eveliContext.getWorkflowEnvir()
+        eveliContext.getWorkflowEnvir(),
+        eveliAssetProps.getUseFormId()
     );
   }
   

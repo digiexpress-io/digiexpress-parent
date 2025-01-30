@@ -26,8 +26,16 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
   const locales = labels.map(l => l.locale);
+  const [flowName, setFlowName] = React.useState<string>('');
+  const [formName, setFormName] = React.useState<string>('');
+  const [formTag, setFormTag] = React.useState<string>('');
+  const [allTags, setAllTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
+  const [allFlows, setAllFlows] = React.useState<string[]>([]);
 
-
+  React.useEffect(()=> {
+    service.assets().dialobForms().then(setAllTags);
+    service.assets().flowNames().then(setAllFlows);
+  }, []);
 
   const handleCreate = () => {
     const entity: StencilApi.CreateWorkflow = { 
@@ -36,8 +44,12 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       devMode, 
       labels,
       anon,
-      startDate: startdate ? startdate + ":00" : undefined,
-      endDate: enddate ? enddate + ":00": undefined,
+      startDate: startdate ? startdate : undefined,
+      endDate: enddate ? enddate : undefined,
+      flowName: flowName,
+      formName: formName,
+      formTag: formTag,
+      formId: allTags.find(tag=> tag.formName === formName && tag.tagName === formTag)?.tagFormId,
      };
     service.create().workflow(entity).then(success => {
       enqueueSnackbar(message, { variant: 'success' });
@@ -68,11 +80,28 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       sx: article.body.parentId ? selectSub : undefined
     }));
 
+  const handleFlowNameChange = (newFlowName:string) => {
+    if (technicalname === '' || technicalname === flowName) {
+      setTechnicalname(newFlowName);
+    }
+    setFlowName(newFlowName);
+  }
+
+  const allForms = React.useMemo(() => allTags
+      .filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName))
+      .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
+      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
+
+    const formTags = React.useMemo(() => allTags
+      .filter(t=>t.formName === formName)
+      .map(tag=>{return {id:tag.tagName, value:tag.tagName}})
+      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags, formName]);
+
   return (
     <Burger.Dialog open={true} onClose={onClose}
       backgroundColor="uiElements.main"
       title="services.add"
-      submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || changeInProgress || labels.length < 1 }}>
+      submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
       <>
         <LocaleLabels
           onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
@@ -86,6 +115,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 required
                 value={technicalname}
                 onChange={setTechnicalname} />
+              <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
+                selected={flowName}
+                items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
+              />
             </Box>
             <Box maxWidth="50%" sx={{ ml: 1 }}>
              <Burger.Switch
@@ -94,7 +127,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 helperText={"services.anonmode.helper"}
                 label={"services.anonmode"}
               />
-
               <Burger.Switch
                 checked={devMode}
                 helperText="services.devmode.helper"
@@ -103,7 +135,22 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               />
             </Box>
           </Box>
-
+          <Box display="flex">
+            <Box maxWidth="50%" flexGrow={1}>
+              <Burger.Select label="services.formName" onChange={setFormName}
+                selected={formName}
+                items={allForms}
+                helperText='services.formName.description'
+              />
+            </Box>
+            <Box maxWidth="50%" sx={{ ml: 1 }}>
+            <Burger.Select label="services.formTag" onChange={setFormTag}
+                selected={formTag}
+                items={formTags}
+                helperText='services.formTag.description'
+              />
+            </Box>
+          </Box>
           <Box display="flex">
             <Box flexGrow={1}>
               <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'

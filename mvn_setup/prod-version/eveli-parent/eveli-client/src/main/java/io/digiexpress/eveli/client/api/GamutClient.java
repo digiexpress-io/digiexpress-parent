@@ -30,7 +30,6 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
@@ -114,13 +113,10 @@ public interface GamutClient {
   @JsonDeserialize(as = ImmutableUserActionMeta.class)
   interface UserActionMeta {
     String getActionId();
-    Workflow getWorkflow();
     TopicLink getTopicLink();
     @Nullable Long getExpiresInSeconds();
     
-    
     String getStencilTagName();
-    String getWorkflowTagName();
   }
 
   @Value.Immutable

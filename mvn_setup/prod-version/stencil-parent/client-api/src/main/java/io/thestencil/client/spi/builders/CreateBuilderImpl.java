@@ -283,7 +283,11 @@ public class CreateBuilderImpl implements CreateBuilder {
         .anon(Boolean.TRUE.equals(init.getAnon()))
         .value(init.getValue())
         .startDate(init.getStartDate())
-        .endDate(init.getEndDate());
+        .endDate(init.getEndDate())
+        .formName(init.getFormName())
+        .formTag(init.getFormTag())
+        .formId(init.getFormId())
+        .flowName(init.getFlowName());
 
     final var articles = new ArrayList<String>();
     for(final var articleRef : init.getArticles()) {

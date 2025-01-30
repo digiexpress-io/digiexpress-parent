@@ -110,5 +110,9 @@ public interface MigrationBuilder {
     @Nullable Boolean getAnon();
     @Nullable LocalDateTime getStartDate();
     @Nullable LocalDateTime getEndDate();
+    @Nullable String getFormId();
+    @Nullable String getFormName();
+    @Nullable String getFormTag();
+    @Nullable String getFlowName();
   }
 }

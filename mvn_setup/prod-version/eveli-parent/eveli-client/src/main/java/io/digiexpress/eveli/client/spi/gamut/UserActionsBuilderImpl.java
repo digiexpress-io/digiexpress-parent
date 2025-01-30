@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.dialob.api.form.FormTag;
 import io.dialob.api.rest.IdAndRevision;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
@@ -45,6 +47,7 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.api.MigrationBuilder.TopicLink;
 import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +64,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private final CrmClient auth;
   private final ZoneOffset offset;
+  private final boolean useFormId;
   
   private boolean anon = false;
   private String actionId;
@@ -82,8 +86,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   
   private UserAction createUserAction(Sites site) {
     
-    final var meta = new UserActionMetaQueryImpl(siteEnvir, programEnvir, workflowEnvir, offset).actionId(actionId).locale(clientLocale).getOne();
-    final var workflow = meta.getWorkflow();
+    final var meta = new UserActionMetaQueryImpl(siteEnvir, programEnvir, offset).actionId(actionId).locale(clientLocale).getOne();
     final var stencilService = meta.getTopicLink();
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
@@ -95,7 +98,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
       
       
        if(!(
-           allowed.contains(workflow.getName()) || 
+           allowed.contains(stencilService.getValue()) ||
            allowed.contains(actionId) ||
            allowed.contains(stencilService.getName())
         )) {
@@ -111,7 +114,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     
     final var request = visitRequest();
-    final var sessionId = visitForm(request, workflow).getId();
+    final var formId = getFormId(stencilService);
+    final var sessionId = visitForm(request, formId).getId();
     
     final var process = hdesCommands.createInstance()
         .questionnaireId(sessionId)
@@ -120,16 +124,15 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .expiresAt(stencilService.getEndDate())
         .anon(anon)
         
-        .workflowName(workflow.getName())
+        .workflowName(stencilService.getValue())
         .articleName(request.getInputContextId())
         .parentArticleName(request.getInputParentContextId())
-        .flowName(workflow.getFlowName())
-        .formName(workflow.getFormName())
+        .flowName(stencilService.getFlowName())
+        .formName(stencilService.getFormName())
         
-        .formTagName(workflow.getFormTag())
+        .formTagName(stencilService.getFormTag())
         .stencilTagName(meta.getStencilTagName())
         .wrenchTagName(programEnvir.get().getTagName())
-        .workflowTagName(meta.getWorkflowTagName())
         
         .create();
 
@@ -152,6 +155,28 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         .build();
   }
 
+  private String getFormId(final TopicLink stencilService) {
+    String formId = stencilService.getFormId();
+    if (!useFormId || StringUtils.isAllBlank(formId)) {
+      String formName = stencilService.getFormName();
+      String formTagName = stencilService.getFormTag();
+      // workaround for transition period when not all services are filled with form information
+      // use workflow information to get form name and tag name.
+      if (StringUtils.isAllBlank(formName) && StringUtils.isAllBlank(formTagName)) {
+        String workflowName = stencilService.getValue();
+        Optional<Workflow> workflow = workflowEnvir.get().getEntries().stream().filter(wf->wf.getName().equals(workflowName)).findFirst();
+        if (workflow.isPresent()) {
+          Workflow wf = workflow.get();
+          formName = wf.getFormName();
+          formTagName = wf.getFormTag();
+        }
+      }
+      FormTag formTag = dialobCommands.getFormTag(formName, formTagName);
+      formId = formTag.getFormId();
+    }
+    return formId;
+  }
+
   private String visitArticleName(String articleName) {
     if(StringUtils.isEmpty(articleName)) {
       return null;
@@ -163,9 +188,9 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     return articleName;
   }
   
-  private IdAndRevision visitForm(InitUserAction request, Workflow workflow) {
+  private IdAndRevision visitForm(InitUserAction request, String formId) {
     final var formBuilder = dialobCommands.createSession()
-        .formId(workflow.getFormId())
+        .formId(formId)
         .language(clientLocale)
         .addContext("FirstNames", request.getFirstName())
         .addContext("LastName", request.getLastName())
