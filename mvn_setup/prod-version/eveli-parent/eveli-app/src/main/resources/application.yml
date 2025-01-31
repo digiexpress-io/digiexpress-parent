@@ -66,7 +66,7 @@ eveli.feedback.question-title: feedBackTitle
 eveli.feedback.question: feedBackTxt
 eveli.feedback.username-allowed: publicAnswerAllowed
   
-app.jwt.public-key-value:
-app.jwt.issuer: "https://frontdesk.digiexpress.io/gateway/issuer"
-app.jwt.portal.public-key-value: 
-app.jwt.portal.issuer: "https://portal.digiexpress.io/gateway/issuer"
+eveli.jwt.eveli-public-key-value:
+eveli.jwt.eveli-issuer: "https://frontdesk.digiexpress.io/gateway/issuer"
+eveli.jwt.gamut-public-key-value: 
+eveli.jwt.gamut-issuer: "https://portal.digiexpress.io/gateway/issuer"
