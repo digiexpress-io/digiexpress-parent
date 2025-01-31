@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -42,29 +41,20 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtIss
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import io.digiexpress.eveli.app.config.EveliPropsCrm;
+import io.digiexpress.eveli.app.config.EveliPropsJwt;
 import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
 import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
+import jakarta.inject.Inject;
 
 @Configuration
 @Profile("jwt")
 public class AuthenticationConfigJWT {
-
-  @Value("${app.jwt.public-key-value}")
-  private String publicKeyValue;
-  @Value("${app.jwt.issuer}")
-  private String issuer;
-  @Value("${app.jwt.portal.public-key-value}")
-  private String portalPublicKeyValue;
-  @Value("${app.jwt.portal.issuer}")
-  private String portalIssuer;
+  @Inject
+  private EveliPropsJwt jwtProps;
   
-  @Value("${eveli.crm.host:#{null}}")
-  private String crmHost;
-
-  @Value("${eveli.crm.service-path-company:gw/api/hpa/authorizationList}")
-  private String crmPathCompany;
-  @Value("${eveli.crm.service-path-person:gw/api/ypa/organizationRoles}")
-  private String crmPathPerson;
+  @Inject
+  private EveliPropsCrm crmProps;
   
   @Bean
   public SpringJwtAuthClient authClientJwt() {
@@ -74,17 +64,18 @@ public class AuthenticationConfigJWT {
   @Bean
   public SpringJwtCrmClient crmClientJwt() {
     final var restTemplate = new RestTemplate();
+    final String crmHost = crmProps.getHost();
     if(crmHost != null && !crmHost.trim().isEmpty()) {
       restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(crmHost));
     }
-    return new SpringJwtCrmClient(restTemplate, crmPathCompany, crmPathPerson);
+    return new SpringJwtCrmClient(restTemplate, crmProps.getServicePathCompany(), crmProps.getServicePathPerson());
   }
 
   @Bean
   JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
     Map<String, AuthenticationManager> decoders;
-    decoders = Map.of(issuer, authenticationManager(jwtDecoder(publicKeyValue), jwtAuthenticationConverter()), portalIssuer,
-        authenticationManager(jwtDecoder(portalPublicKeyValue), jwtPortalAuthenticationConverter()));
+    decoders = Map.of(jwtProps.getEveliIssuer(), authenticationManager(jwtDecoder(jwtProps.getEveliPublicKeyValue()), jwtAuthenticationConverter()), 
+        jwtProps.getGamutIssuer(), authenticationManager(jwtDecoder(jwtProps.getGamutPublicKeyValue()), jwtPortalAuthenticationConverter()));
     return new JwtIssuerAuthenticationManagerResolver(decoders::get);
   }
 
