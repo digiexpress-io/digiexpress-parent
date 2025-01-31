@@ -4,7 +4,7 @@ package io.resys.thena.registry.doc;
  * #%L
  * thena-docdb-api
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@ package io.resys.thena.registry.doc;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
-import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.doc.DocCommandsRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
@@ -75,53 +74,7 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
   @Override
   public SqlTuple findAll(DocFilter filter) {
     
-    final var params = new ArrayList<Object>();
-    final var filters = new ArrayList<String>();
-    
-    if(filter.getDocIds() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
-      params.add(filter.getDocIds().toArray());
-    }
-
-    if(filter.getParentId() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_parent_id = $" + index + " ) ");
-      params.add(filter.getParentId());
-    }
-    if(filter.getOwnerId() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.owner_id = $" + index + " ) ");
-      params.add(filter.getOwnerId());
-    }    
-    
-    
-    if(filter.getDocType() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_type = $" + index + " ) ");
-      params.add(filter.getDocType());
-    }
-    
-    if(filter.getSubStatus() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
-      params.add(filter.getSubStatus());
-    }
-    
-    if(filter.getBranch() != null) {
-      final var index = params.size() + 1;
-      filters.add(
-          new StringBuilder()
-          .append("(SELECT count(branch_id) ")
-          .append(" FROM ").append(options.getDocBranch()).append(" as branches ")
-          .append(" WHERE branches.doc_id = docs.id ")
-          .append(" AND branches.branch_name = $" + index + " OR branches.branch_id = $" + index)
-          .append(") > 0")
-          .toString());
-      params.add(filter.getBranch());
-    }
-    
-    final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
+    final var filters = new DocsSqlFilterBuilder(options).branchJoinFilter(filter).docFilter(filter).build();
     
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
@@ -134,9 +87,9 @@ public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
         .append(" LEFT JOIN ").append(options.getDoc()).append(" as docs").ln()
         .append(" ON(docs.id = commands.doc_id)")
         
-        .append(where).ln()
+        .append(filters.getValue()).ln()
         .build())
-        .props(Tuple.from(params))
+        .props(filters.getProps())
         .build();
   }
   @Override

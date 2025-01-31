@@ -38,6 +38,7 @@ public interface DialobClient {
   DialobSessionBuilder createSession();
   DialobProxy createProxy();  
   Form createForm(Form form);
+  Form updateForm(Form form);
   FormTag createTag(String formId, String tagName);
   
   Form getFormById(String formId);

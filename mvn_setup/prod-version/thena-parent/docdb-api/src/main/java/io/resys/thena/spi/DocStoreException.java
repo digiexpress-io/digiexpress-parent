@@ -121,6 +121,10 @@ public class DocStoreException extends RuntimeException {
           .collect(Collectors.toList()));
       return this;
     }
+    public Builder add(ThenaDocConfig config) {
+      msg.id(config.getRepoId());
+      return this;
+    }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {
       callback.accept(msg);
       return this;

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -56,15 +57,15 @@ public class SiteStateVisitor {
   private final Map<String, Entity<Locale>> enablesLocales = new HashMap<>();
   private SiteState entity;
   private final boolean dev;
-  private final ZoneOffset offset;
-  private final LocalDateTime now;
+  private final Optional<ZoneOffset> offset;
+  private final Optional<LocalDateTime> now;
   
-  public SiteStateVisitor(boolean dev, ZoneOffset offset) {
-    super();
-    this.dev = dev;
+  public SiteStateVisitor(boolean dev, Optional<ZoneOffset> offset) {
     ParserAssert.notNull(offset, () -> "offset must be defined!");
+    
+    this.dev = dev;
     this.offset = offset;
-    this.now = Instant.now().atOffset(this.offset).toLocalDateTime();
+    this.now = offset.map(t -> Instant.now().atOffset(t).toLocalDateTime());
     log.info("Using offset for instant: {}, now: {}", this.offset, this.now);
   }
 
@@ -92,11 +93,16 @@ public class SiteStateVisitor {
       return true;
     }
     
-    if(link.getBody().getEndDate() != null && link.getBody().getEndDate().compareTo(now) < 0) {
+    if(now.isEmpty()) {
+      return true;
+    }
+    
+    final var target = now.get();
+    if(link.getBody().getEndDate() != null && link.getBody().getEndDate().compareTo(target) < 0) {
       return false;
     }
 
-    if(link.getBody().getStartDate() != null && link.getBody().getStartDate().compareTo(now) > 0) {
+    if(link.getBody().getStartDate() != null && link.getBody().getStartDate().compareTo(target) > 0) {
       return false;
     }
     

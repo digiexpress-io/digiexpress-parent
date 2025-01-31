@@ -41,9 +41,15 @@ public interface DocBranch extends DocEntity, IsDocObject, TenantEntity {
   OffsetDateTime getUpdatedAt(); // transitive from commit
   
   String getBranchName();
+  
+  
   String getDocId();
   Doc.DocStatus getStatus();
   
+  @Nullable String getValueName();
+  @Nullable String getValueStatus();
+  @Nullable OffsetDateTime getValueStartsAt();
+  @Nullable OffsetDateTime getValueEndsAt();
   @Nullable JsonObject getValue();  // null when json loading is disabled
   
   @JsonIgnore @Override default public DocType getDocType() { return DocType.DOC_BRANCH; };

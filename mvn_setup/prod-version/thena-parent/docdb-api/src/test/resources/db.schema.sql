@@ -123,9 +123,17 @@ CREATE TABLE doc_branch
   branch_name              VARCHAR(255) NOT NULL,
   branch_status            VARCHAR(40) NOT NULL,
   value                    JSONB NOT NULL,
+  value_starts_at          TIMESTAMP WITH TIME ZONE,
+  value_ends_at            TIMESTAMP WITH TIME ZONE,
+  value_name               TEXT,
+  value_status             VARCHAR(100),
   PRIMARY KEY (branch_id),
   UNIQUE (doc_id, branch_name)
 );
+CREATE INDEX doc_branch_VALUE_STARTS_AT_INDEX ON doc_branch (value_starts_at);
+CREATE INDEX doc_branch_VALUE_ENDS_AT_INDEX ON doc_branch (value_ends_at);
+CREATE INDEX doc_branch_VALUE_STATUS_INDEX ON doc_branch (value_status);
+CREATE INDEX doc_branch_VALUE_NAME_INDEX ON doc_branch (value_name);
 CREATE INDEX doc_branch_DOC_DOC_ID_INDEX ON doc_branch (doc_id);
 CREATE INDEX doc_branch_DOC_BRANCH_NAME_INDEX ON doc_branch (branch_name);
 CREATE INDEX doc_branch_DOC_COMMIT_ID_INDEX ON doc_branch (commit_id);

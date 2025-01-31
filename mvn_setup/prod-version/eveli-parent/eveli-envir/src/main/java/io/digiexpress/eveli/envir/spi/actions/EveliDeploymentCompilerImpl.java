@@ -1,15 +1,27 @@
 package io.digiexpress.eveli.envir.spi.actions;
 
+import java.util.Optional;
+
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentCompiler;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.spi.EveliEnvirStore;
+import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.spi.HdesClientEnvirBuilder;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.envir.ProgramEnvirFactory;
+import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.spi.DocStoreException;
+import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
+import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.thestencil.client.api.StencilClient;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,6 +32,7 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   private final EveliEnvirStore ctx;
   private final HdesClientConfig hdesClientConfig;
   private final DialobClient dialobClient;
+  private final StencilClient stencilClient;
   
   private String userId;
   private String deploymentId;
@@ -29,19 +42,71 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
     RepoAssert.notEmpty(userId, () -> "userId must be defined!");
     RepoAssert.notEmpty(deploymentId, () -> "deploymentId must be defined!");
     
-  
-    return null;
+    return new DeploymentQueryImpl(ctx).emptyBranchBody(false).getOneById(deploymentId)
+        .onItem().transformToUni(this::visitMerge);
   }
   
-  
-  private void hdes(EveliDeployment deployment) {
-    final var builder = new HdesClientEnvirBuilder(new ProgramEnvirFactory(hdesClientConfig), hdesClientConfig.getTypes())
-        .tagName(deployment.getName());
-    final var envir = ComposerEntityMapper.toEnvir(builder, deployment.getSources().getWrench()).build();     
+  private Uni<EveliDeployment> visitMerge(EveliDeployment deployment) {
+    final var result = visitEnvir(deployment);
+    
+    
+    final var config = ctx.getConfig();
+    return config.getClient().doc(config.getRepoId()).commit()
+        .modifyOneDoc()
+        .docId(deploymentId)
+        .commitAuthor(userId)
+        .commitMessage("Update deployment by: " + EveliDeploymentCompilerImpl.class)
+        .docSubStatus(result.getItem1().name())
+        .build().onItem().transform(env -> visitEnvelope(config, env));
   }
   
+  public EveliDeployment visitEnvelope(ThenaDocConfig config, OneDocEnvelope envelope) {
+    if(envelope.getStatus() != CommitResultStatus.OK) {
+      throw DocStoreException.builder("GET_DEPLOYMENT_BY_ID_FOR_COMPILING_FAILED")
+        .add(config, envelope)
+        .add((callback) -> callback.addArgs(JsonObject.of("id", deploymentId).encode()))
+        .build();
+    }
+    return EveliEnvirStore.map(envelope.getDoc(), Optional.ofNullable(envelope.getBranch()));
+  }
+
+  private Tuple2<EveliDeploymentStatus, JsonObject> visitEnvir(EveliDeployment deployment) {
+    final var wrench = visitWrench(deployment);
+    final var stencil = visitStencil(deployment);
+    
+    final var errors1 = new DeploymentEnvirValidator(deployment, stencil, wrench).accept();
+    if(errors1.isPresent()) {
+      return Tuple2.of(EveliDeploymentStatus.ERROR, errors1.get());
+    }
+    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil).accept();
+    if(errors2.isPresent()) {
+      return Tuple2.of(EveliDeploymentStatus.ERROR, errors2.get());      
+    }
+    
+    return Tuple2.of(EveliDeploymentStatus.READY, null);       
+  }
   
-  private void syncDialob() {
-    dialobClient.getFormTag(userId, deploymentId);
+  private ProgramEnvir visitWrench(EveliDeployment deployment) {
+    final var envir = new HdesClientEnvirBuilder(new ProgramEnvirFactory(hdesClientConfig), hdesClientConfig.getTypes())
+        .tagName(deployment.getName())
+        .callback(builder -> ComposerEntityMapper.toEnvir(builder, deployment.getSources().getWrench()).build())
+        .build();
+    return envir;
+  }
+  
+  private Sites visitStencil(EveliDeployment deployment) {
+    final var state = deployment.getSources().getStencil();
+    final var markdowns = stencilClient.markdown()
+      .offset(null)
+      .json(state, true)
+      .build();
+    
+    final var envir = stencilClient.sites()
+      .imagePath("images")
+      .created(System.currentTimeMillis())
+      .source(markdowns)
+      .tagName(deployment.getName())
+      .build();
+    return envir;
   }
 }

@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.envir.spi.actions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,22 @@ import lombok.experimental.Accessors;
 @Setter @Accessors(fluent = true)
 public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<List<EveliDeployment>>{
   private final EveliEnvirStore ctx;
+  private final List<String> ids = new ArrayList<>();
   private EveliDeploymentStatus status;
+  private boolean emptyBranchBody = true;
+  
+  @Override
+  public Uni<EveliDeployment> getOneById(String id) {
+    ids.add(id);
+    final var config = ctx.getConfig();
+    return config.accept(this).onItem().transform(e -> {
+      if(e.size() != 1) {
+        throw DocStoreException.builder("GET_ONE_DEPLOYMENTS_FAIL").add((m) -> m.addArgs(config.toString(), id)).build();
+      }
+      
+      return e.iterator().next();
+    });
+  }  
   
   @Override
   public Uni<List<EveliDeployment>> findAll() {
@@ -42,8 +58,16 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
     if(status != null) {
       builder.subStatus(status.name());
     }
+
+    if(emptyBranchBody) {
+      builder.emptyBranchBody();
+    }
     
-    return builder.docType(EveliEnvirStore.DOC_TYPE_DEPLOYMENT).findAll();
+    builder.docType(EveliEnvirStore.DOC_TYPE_DEPLOYMENT);
+    if(!ids.isEmpty()) {
+      return builder.findAll(ids);
+    }
+    return builder.findAll();
   }
   @Override
   public DocTenantObjects visitEnvelope(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {
@@ -65,6 +89,4 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
         List<DocCommitTree> trees) -> EveliEnvirStore.map(doc, Optional.ofNullable(docBranch))
     );
   }
-  
-
 }

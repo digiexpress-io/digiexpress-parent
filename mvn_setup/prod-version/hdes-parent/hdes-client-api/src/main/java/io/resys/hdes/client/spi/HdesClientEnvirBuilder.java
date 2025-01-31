@@ -1,5 +1,7 @@
 package io.resys.hdes.client.spi;
 
+import java.util.function.Consumer;
+
 /*-
  * #%L
  * hdes-client-api
@@ -146,6 +148,12 @@ public class HdesClientEnvirBuilder implements EnvirBuilder {
   @Override
   public EnvirBuilder tagName(String tagName) {
     this.tagName = tagName;
+    return this;
+  }
+  @Override
+  public EnvirBuilder callback(Consumer<EnvirBuilder> callback) {
+    HdesAssert.notNull(callback, () -> "callback must be defined!");
+    callback.accept(this);
     return this;
   }
   @Override

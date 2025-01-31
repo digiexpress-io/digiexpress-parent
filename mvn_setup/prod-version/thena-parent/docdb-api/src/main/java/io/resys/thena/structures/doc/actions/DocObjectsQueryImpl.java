@@ -67,6 +67,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   private String docType;
   private String parentId;
   private String ownerId;
+  private String branchValueName;
+  private String branchValueStatus;
   private Boolean emptyBranchBody;
  
   @Override
@@ -103,11 +105,13 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   public Uni<QueryEnvelope<DocObject>> get(Optional<String> id, boolean failOnNotFound) {
     final var filterBuilder = ImmutableDocFilter.builder()
         .docType(docType)
-        .parentId(parentId)
-        .ownerId(ownerId)
-        .emptyBranchBody(emptyBranchBody)
-        .subStatus(subStatus)
-        .branch(branchName);
+        .docParentId(parentId)
+        .docOwnerId(ownerId)
+        .branchValueEmpty(emptyBranchBody)
+        .docSubStatus(subStatus)
+        .branchNameOrId(branchName)
+        .branchValueName(branchValueName)
+        .branchValueStatus(branchValueStatus);
     
     if(id.isPresent()) {
       filterBuilder.docIds(Arrays.asList(id.get()));
@@ -169,11 +173,13 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     final DocFilter filter = ImmutableDocFilter.builder()
         .docIds(docs)
         .docType(docType)
-        .branch(branchName)
-        .parentId(parentId)
-        .ownerId(ownerId)
-        .subStatus(subStatus)
-        .emptyBranchBody(emptyBranchBody)
+        .branchNameOrId(branchName)
+        .docParentId(parentId)
+        .docOwnerId(ownerId)
+        .docSubStatus(subStatus)
+        .branchValueEmpty(emptyBranchBody)
+        .branchValueName(branchValueName)
+        .branchValueStatus(branchValueStatus)
         .build();
     return state.toDocState(repoId).onItem().transformToUni(docState -> {
       final var tenant = docState.getDataSource().getTenant();

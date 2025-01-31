@@ -141,6 +141,19 @@ public class DialobClientImpl implements DialobClient {
       throw new DialobException(e.getMessage(), e);
     }
   }
+  
+  @Override
+  public Form updateForm(Form form) {
+    try {
+      final var headers = headers().toSingleValueMap();
+      final var body = objectMapper.writeValueAsString(form);
+      final var resp = createProxy().formRequest("/" + form.getId(), null, HttpMethod.PUT, body, headers);
+      return objectMapper.readValue(resp.getBody(), Form.class);
+    } catch (IOException e) {
+      throw new DialobException(e.getMessage(), e);
+    }
+  }
+  
   @Override
   public FormTag createTag(String formId, String tagName) {
     try {

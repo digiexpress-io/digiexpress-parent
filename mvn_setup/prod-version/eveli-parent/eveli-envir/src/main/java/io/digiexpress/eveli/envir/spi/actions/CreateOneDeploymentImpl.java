@@ -2,6 +2,7 @@ package io.digiexpress.eveli.envir.spi.actions;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import io.resys.thena.spi.ThenaDocConfig;
 import io.resys.thena.spi.ThenaDocConfig.OneDocCreateVisitor;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableSiteState;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -84,7 +86,7 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
         .commitMessage("Creating new deployment from: " + CreateOneDeploymentImpl.class)
         .commitLogExcludesBranchBody()
         .branchContent(JsonObject.mapFrom(ImmutableEveliSources.builder()
-            .stencil(stencil)
+            .stencil(ImmutableSiteState.builder().from(stencil).releases(Collections.emptyMap()).build())
             .wrench(wrench)
             .dialob(dialob)
             .build()))

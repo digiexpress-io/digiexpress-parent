@@ -35,6 +35,8 @@ public interface EveliEnvirClient {
   
   interface DeploymentQuery {
     DeploymentQuery status(EveliDeploymentStatus status);
+    DeploymentQuery emptyBranchBody(boolean emptyBranchBody); // don't fetch the branch contents, default is true
+    Uni<EveliDeployment> getOneById(String id);
     Uni<List<EveliDeployment>> findAll(); // will not load assets
   }
   

@@ -3,6 +3,7 @@ package io.thestencil.client.spi;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -138,7 +139,7 @@ public class StencilClientImpl implements StencilClient {
       public MarkdownBuilder json(String jsonOfSiteState, boolean dev) {
         try {
           final var site = store.getConfig().getObjectMapper().readValue(jsonOfSiteState, SiteState.class);
-          this.jsonOfSiteState = new SiteStateVisitor(dev, offset).visit(site);
+          this.jsonOfSiteState = new SiteStateVisitor(dev, Optional.ofNullable(offset)).visit(site);
         } catch (IOException e) {
           throw new RuntimeException(e.getMessage(), e);
         }
@@ -147,7 +148,7 @@ public class StencilClientImpl implements StencilClient {
       
       @Override
       public MarkdownBuilder json(SiteState jsonOfSiteState, boolean dev) {
-        this.jsonOfSiteState = new SiteStateVisitor(dev, offset).visit(jsonOfSiteState);
+        this.jsonOfSiteState = new SiteStateVisitor(dev, Optional.ofNullable(offset)).visit(jsonOfSiteState);
         return this;
       }
       

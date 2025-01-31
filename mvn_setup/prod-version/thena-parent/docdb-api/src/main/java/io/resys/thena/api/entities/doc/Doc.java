@@ -63,12 +63,16 @@ public interface Doc extends DocEntity, IsDocObject, TenantEntity {
   @Value.Immutable
   interface DocFilter {
     @Nullable List<String> getDocIds();
-    @Nullable String getParentId();
-    @Nullable String getOwnerId();
+    
+    @Nullable String getDocParentId();
+    @Nullable String getDocOwnerId();
     @Nullable String getDocType();
-    @Nullable String getBranch();
-    @Nullable String getSubStatus();
-    @Nullable Boolean getEmptyBranchBody();
+    @Nullable String getDocSubStatus();
+    
+    @Nullable String getBranchNameOrId(); 
+    @Nullable String getBranchValueName();
+    @Nullable String getBranchValueStatus();
+    @Nullable Boolean getBranchValueEmpty();
   }
 
 }

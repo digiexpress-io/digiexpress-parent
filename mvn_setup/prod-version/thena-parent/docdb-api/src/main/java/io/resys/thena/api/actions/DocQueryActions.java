@@ -22,6 +22,8 @@ package io.resys.thena.api.actions;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.resys.thena.api.envelope.DocContainer.DocTenantObjects;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -46,6 +48,9 @@ public interface DocQueryActions {
     DocObjectsQuery ownerId(String ownerId);
     DocObjectsQuery include(IncludeInQuery ... includeChildren); // include additional objects on top of "doc and branch"
     DocObjectsQuery emptyBranchBody(); // load the branch with empty body = {} 
+    
+    DocObjectsQuery branchValueName(@Nullable String branchValueName);
+    DocObjectsQuery branchValueStatus(@Nullable String branchValueStatus);
     
     Uni<QueryEnvelope<DocObject>> get();
     Uni<QueryEnvelope<DocObject>> findOne(String idOrExternalIdOrName);

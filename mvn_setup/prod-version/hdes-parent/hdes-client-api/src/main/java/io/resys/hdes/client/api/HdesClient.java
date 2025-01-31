@@ -1,5 +1,16 @@
 package io.resys.hdes.client.api;
 
+import java.io.InputStream;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
+
 /*-
  * #%L
  * hdes-client-api
@@ -23,6 +34,7 @@ package io.resys.hdes.client.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import io.resys.hdes.client.api.HdesAstTypes.DataTypeAstBuilder;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ast.AstCommand;
@@ -45,15 +57,6 @@ import io.resys.hdes.client.api.programs.ServiceProgram;
 import io.resys.hdes.client.api.programs.ServiceProgram.ServiceResult;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.smallrye.mutiny.Uni;
-
-import javax.annotation.Nullable;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public interface HdesClient {
   AstBuilder ast();
@@ -109,6 +112,7 @@ public interface HdesClient {
     EnvirBuilder tagName(String tagName);
     EnvirBuilder from(ProgramEnvir envir);
     EnvirCommandFormatBuilder addCommand();
+    EnvirBuilder callback(Consumer<EnvirBuilder> callback);
     ProgramEnvir build();
   }
 

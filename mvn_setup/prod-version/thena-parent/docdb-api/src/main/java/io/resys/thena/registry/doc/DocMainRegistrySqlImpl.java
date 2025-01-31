@@ -4,7 +4,7 @@ package io.resys.thena.registry.doc;
  * #%L
  * thena-docdb-api
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package io.resys.thena.registry.doc;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -90,39 +89,8 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   }
   @Override
   public SqlTuple findAll(DocFilter filter) {
-    final var params = new ArrayList<Object>();
-    final var filters = new ArrayList<String>();
+    final var filters = new DocsSqlFilterBuilder(options).branchJoinFilter(filter).docFilter(filter).build();
     
-    if(filter.getDocIds() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.id = ANY($" + index +") OR docs.external_id = ANY($" + index + ") OR docs.doc_name = ANY($" + index + ") ) ");
-      params.add(filter.getDocIds().toArray());
-    }
-
-    if(filter.getParentId() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_parent_id = $" + index + " ) ");
-      params.add(filter.getParentId());
-    }
-    
-    if(filter.getOwnerId() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.owner_id = $" + index + " ) ");
-      params.add(filter.getOwnerId());
-    }    
-    
-    if(filter.getDocType() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_type = $" + index + " ) ");
-      params.add(filter.getDocType());
-    }
-    
-    if(filter.getSubStatus() != null) {
-      final var index = params.size() + 1;
-      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
-      params.add(filter.getSubStatus());
-    }
-    final var where = (params.isEmpty() ? "" : " WHERE ") + String.join(" AND ", filters);
     
     return ImmutableSqlTuple.builder()
         .value(new SqlStatement()
@@ -139,9 +107,9 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
         .append(" LEFT JOIN ").append(options.getDocCommits()).append(" as created_commit").ln()
         .append(" ON(created_commit.id = docs.created_with_commit_id)").ln()
         
-        .append(where).ln()
+        .append(filters.getValue()).ln()
         .build())
-        .props(Tuple.from(params))
+        .props(filters.getProps())
         .build();
   }
 
