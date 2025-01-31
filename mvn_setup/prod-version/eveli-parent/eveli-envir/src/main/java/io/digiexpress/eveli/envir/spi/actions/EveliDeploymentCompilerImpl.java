@@ -48,8 +48,6 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   
   private Uni<EveliDeployment> visitMerge(EveliDeployment deployment) {
     final var result = visitEnvir(deployment);
-    
-    
     final var config = ctx.getConfig();
     return config.getClient().doc(config.getRepoId()).commit()
         .modifyOneDoc()
@@ -57,6 +55,7 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
         .commitAuthor(userId)
         .commitMessage("Update deployment by: " + EveliDeploymentCompilerImpl.class)
         .docSubStatus(result.getItem1().name())
+        .meta(result.getItem2())
         .build().onItem().transform(env -> visitEnvelope(config, env));
   }
   

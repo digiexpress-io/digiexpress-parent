@@ -1,29 +1,35 @@
 package io.digiexpress.eveli.envir.spi;
 
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirTenantQuery;
 import io.digiexpress.eveli.envir.spi.actions.CreateOneDeploymentImpl;
 import io.digiexpress.eveli.envir.spi.actions.DeploymentQueryImpl;
 import io.digiexpress.eveli.envir.spi.actions.EveliDeploymentCompilerImpl;
 import io.digiexpress.eveli.envir.spi.actions.ModifyOneDeploymentImpl;
+import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.thena.api.entities.Tenant;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.StencilClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EveliEnvirClientImpl implements EveliEnvirClient {
   private final EveliEnvirStore ctx;
-  
+
+  private final HdesClientConfig hdesClientConfig;
+  private final DialobClient dialobClient;
+  private final StencilClient stencilClient;
   public EveliEnvirStore getCtx() { return ctx; }
   
   public EveliEnvirClientImpl withTenant(String tenantId) {
-    return new EveliEnvirClientImpl(ctx.withTenantId(tenantId));
+    return new EveliEnvirClientImpl(ctx.withTenantId(tenantId), hdesClientConfig, dialobClient, stencilClient);
   }
   public Uni<Tenant> getTenant() {
     return ctx.getTenant();
   }
   public EveliEnvirTenantQuery tenantQuery() {
-    return new EveliEnvirTenantQueryImpl(ctx);
+    return new EveliEnvirTenantQueryImpl(ctx, hdesClientConfig, dialobClient, stencilClient);
   }
   @Override
   public CreateOneDeployment createOneDeployment() {
@@ -44,7 +50,7 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
   }
   @Override
   public EveliDeploymentCompiler deploymentCompiler() {
-    return new EveliDeploymentCompilerImpl(ctx);
+    return new EveliDeploymentCompilerImpl(ctx, hdesClientConfig, dialobClient, stencilClient);
   }
 
 }
