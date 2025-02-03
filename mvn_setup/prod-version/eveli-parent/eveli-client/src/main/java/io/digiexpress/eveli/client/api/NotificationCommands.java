@@ -130,7 +130,7 @@ public interface NotificationCommands {
      * <ul>
      * <li> 0 - message sent
      * <li> 204 - Client has not enabled message receiving 
-     * <li> 400..499 - error code, see https://palveluhallinta.suomi.fi/fi/tuki/artikkelit/6231a819e014bf0100455b70 for TilaKoodi values
+     * <li> 400..499 - business error code, specific to service
      * <li> 500 - technical error
      * <li> 307 - message sending is disabled in system
      * </ul>
