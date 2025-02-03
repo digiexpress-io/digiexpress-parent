@@ -33,50 +33,50 @@ public class RestEmailNotificationBuilder implements NotificationCommands.EmailN
     private final EveliPropsEmail emailProps;
     private final RestTemplate client;
     
-    private EmailRequest props = new EmailRequest();
+    private EmailRequest request = new EmailRequest();
 
     @Override
     public EmailNotificationBuilder title(String notificationTitle) {
-      props.setNotificationTitle(notificationTitle);
+      request.setNotificationTitle(notificationTitle);
       return this;
     }
 
     @Override
     public EmailNotificationBuilder message(String notificationMessage) {
-      props.setNotificationMessage(notificationMessage);
+      request.setNotificationMessage(notificationMessage);
       return this;
     }
 
     @Override
     public EmailNotificationBuilder address(String recipientAddress) {
-      if (props.getRecipientAddresses() == null) {
-        props.setRecipientAddresses(new ArrayList<>());
+      if (request.getRecipientAddresses() == null) {
+        request.setRecipientAddresses(new ArrayList<>());
       }
-      props.getRecipientAddresses().add(recipientAddress);
+      request.getRecipientAddresses().add(recipientAddress);
       return this;
     }
 
     @Override
     public EmailNotificationBuilder refId(String refId) {
-      props.setRefId(refId);
+      request.setRefId(refId);
       return this;
     }
 
     @Override
     public EmailNotificationBuilder addresses(List<String> recipientAddress) {
-      if (props.getRecipientAddresses() == null) {
-        props.setRecipientAddresses(new ArrayList<>());
+      if (request.getRecipientAddresses() == null) {
+        request.setRecipientAddresses(new ArrayList<>());
       }
-      props.getRecipientAddresses().addAll(recipientAddress);
+      request.getRecipientAddresses().addAll(recipientAddress);
       return this;
     }
 
     @Override
     public void build() {
-      final String logPrefix = "Email sending request, refId: " + props.getRefId();
-      List<String> emailAddressList = props.getRecipientAddresses();
+      final String logPrefix = "Email sending request, refId: " + request.getRefId();
+      List<String> emailAddressList = request.getRecipientAddresses();
       
-      log.info("{}, title {}, number of recipients: {}", logPrefix, props.getNotificationTitle(), 
+      log.info("{}, title {}, number of recipients: {}", logPrefix, request.getNotificationTitle(), 
           emailAddressList != null ? emailAddressList.size() : 0);
       log.debug("{}, recipients: {}", logPrefix, emailAddressList);
       
@@ -85,7 +85,8 @@ public class RestEmailNotificationBuilder implements NotificationCommands.EmailN
       }
       else {
         try {
-          sendEmailNotification(this.props, logPrefix);
+          sendEmailNotification(logPrefix);
+          log.info("{}, result: sending completed.", logPrefix);
         }
         catch (Exception e) {
           log.error("{}, result: error", logPrefix, e);
@@ -93,9 +94,9 @@ public class RestEmailNotificationBuilder implements NotificationCommands.EmailN
       }
     }
 
-    private void sendEmailNotification(EmailRequest request, String logPrefix) {
+    private void sendEmailNotification(String logPrefix) {
       if (StringUtils.isEmpty(emailProps.getServiceUrl())) {
-        log.info("Notification url is not configured, skipping sending for message: {}", props);
+        log.warn("{}, email service url is not configured, sending skipped", logPrefix);
         return;
       }
       
@@ -105,15 +106,15 @@ public class RestEmailNotificationBuilder implements NotificationCommands.EmailN
 
       final HttpEntity<EmailRequest> requestEntity = new HttpEntity<>(request, headers);
       String serviceUrl = UriComponentsBuilder.fromHttpUrl(emailProps.getServiceUrl()).toUriString();
-      log.info("Sending notification message {} to url {}", request, emailProps.getServiceUrl());
+      log.debug("{}, sending email message to service url {}", logPrefix, emailProps.getServiceUrl());
       ResponseEntity<EmailResponse> response = client.exchange(serviceUrl, 
           HttpMethod.POST, requestEntity, EmailResponse.class);
       if (response.getStatusCode().is2xxSuccessful()) {
         EmailResponse result = response.getBody();
-        log.info("Email sending response OK, result: {}", result);
+        log.debug("{}, email sending response OK, result: {}", logPrefix, result != null ? result.getResponseCode() : "null");
       }
       else {
-        log.warn("Email sending response code {}, email sending failed", response.getStatusCode());
+        log.warn("{}, email sending response code {}, email sending failed with body: {}", logPrefix, response.getStatusCode(), response.getBody());
       }
       
     }
