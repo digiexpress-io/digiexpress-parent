@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.envir.spi.actions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,14 @@ import lombok.experimental.Accessors;
 public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<List<EveliDeployment>>{
   private final EveliEnvirStore ctx;
   private final List<String> ids = new ArrayList<>();
-  private EveliDeploymentStatus status;
+  private final List<EveliDeploymentStatus> status = new ArrayList<>();
   private boolean emptyBranchBody = true;
+
+  @Override
+  public DeploymentQuery status(EveliDeploymentStatus ...status) {
+    this.status.addAll(Arrays.asList(status));
+    return this;
+  }
   
   @Override
   public Uni<EveliDeployment> getOneById(String id) {
@@ -56,7 +63,7 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
   @Override
   public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery builder) {
     if(status != null) {
-      builder.subStatus(status.name());
+      builder.docSubStatus(status.stream().map(n -> n.name()).toList());
     }
 
     if(emptyBranchBody) {

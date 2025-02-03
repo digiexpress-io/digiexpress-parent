@@ -1,6 +1,6 @@
 package io.thestencil.client.tests;
 
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
 
 /*-
  * #%L
@@ -35,7 +35,7 @@ public class StaticContentSiteTest {
   
   @Test
   public void buildSiteForProd() {
-    final var md = client.markdown().offset(ZoneOffset.UTC).json(TestUtils.toString("site.json"), false)
+    final var md = client.markdown().targetDate(LocalDateTime.now()).json(TestUtils.toString("site.json"), false)
         .build();
 
     final var content = client
@@ -50,7 +50,7 @@ public class StaticContentSiteTest {
   }
   @Test
   public void buildSiteForDev() {
-    final var md = client.markdown().offset(ZoneOffset.UTC).json(TestUtils.toString("site.json"), true)
+    final var md = client.markdown().targetDate(LocalDateTime.now()).json(TestUtils.toString("site.json"), true)
         .build();
 
     final var content = client

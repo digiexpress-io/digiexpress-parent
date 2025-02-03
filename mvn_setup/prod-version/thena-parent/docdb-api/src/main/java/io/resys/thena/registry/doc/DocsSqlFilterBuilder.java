@@ -70,12 +70,12 @@ public class DocsSqlFilterBuilder {
       filters.add(" ( docs.doc_type = $" + index + " ) ");
       params.add(filter.getDocType());
     }
+    
     if(filter.getDocSubStatus() != null) {
       final var index = params.size() + 1;
-      filters.add(" ( docs.doc_sub_status = $" + index + " ) ");
+      filters.add(" ( docs.doc_sub_status = ANY($" + index + " )) ");
       params.add(filter.getDocSubStatus());
     }
-    
     return this;
   }
   

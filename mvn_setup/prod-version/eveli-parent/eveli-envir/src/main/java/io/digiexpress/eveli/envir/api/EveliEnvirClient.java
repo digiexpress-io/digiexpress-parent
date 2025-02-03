@@ -22,10 +22,21 @@ import jakarta.annotation.Nullable;
 public interface EveliEnvirClient {
   CreateOneDeployment createOneDeployment();
   ModifyOneDeployment modifyOneDeployment();
+  
+  
   EveliRuntimeQuery runtimeQuery();
   EveliDeploymentCompiler deploymentCompiler();
-  DeploymentQuery deploymentQuery();
   
+  DeploymentQuery deploymentQuery();
+  DeploymentBuilder deploymentBuilder();
+  
+  
+  // moves given deployment to 'DEPLOYED' and sets any other 'DEPLOYED' entries into 'READY' status
+  interface DeploymentBuilder {
+    DeploymentBuilder userId(String userId);
+    DeploymentBuilder deploymentId(String id);
+    Uni<EveliDeployment> build();
+  }
   
   interface EveliDeploymentCompiler {
     EveliDeploymentCompiler userId(String userId);
@@ -34,13 +45,14 @@ public interface EveliEnvirClient {
   }
   
   interface DeploymentQuery {
-    DeploymentQuery status(EveliDeploymentStatus status);
+    DeploymentQuery status(EveliDeploymentStatus ...status);
     DeploymentQuery emptyBranchBody(boolean emptyBranchBody); // don't fetch the branch contents, default is true
     Uni<EveliDeployment> getOneById(String id);
     Uni<List<EveliDeployment>> findAll(); // will not load assets
   }
   
   interface EveliRuntimeQuery {
+    EveliRuntimeQuery devEnvir(boolean isDevEnvir);
     Uni<EveliRuntime> getOne();
     Uni<Optional<EveliRuntime>> findOne();
   }
@@ -96,9 +108,8 @@ public interface EveliEnvirClient {
 
   interface EveliRuntime {
     String getName();
-    String getSrcId();
+    String getDeploymentId();
     ExecutorBuilder getWrench();
-    Sites getStencil();
-    List<Form> getForms();
+    Sites getStencil(OffsetDateTime now);
   }
 }

@@ -28,8 +28,6 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 @Value.Immutable
 public interface Markdowns {
   String getTagName();

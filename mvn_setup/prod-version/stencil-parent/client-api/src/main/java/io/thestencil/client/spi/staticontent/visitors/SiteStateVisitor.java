@@ -1,8 +1,6 @@
 package io.thestencil.client.spi.staticontent.visitors;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /*-
  * #%L
@@ -57,15 +55,15 @@ public class SiteStateVisitor {
   private final Map<String, Entity<Locale>> enablesLocales = new HashMap<>();
   private SiteState entity;
   private final boolean dev;
-  private final Optional<ZoneOffset> offset;
+  private final Optional<LocalDateTime> offset;
   private final Optional<LocalDateTime> now;
   
-  public SiteStateVisitor(boolean dev, Optional<ZoneOffset> offset) {
+  public SiteStateVisitor(boolean dev, Optional<LocalDateTime> offset) {
     ParserAssert.notNull(offset, () -> "offset must be defined!");
     
     this.dev = dev;
     this.offset = offset;
-    this.now = offset.map(t -> Instant.now().atOffset(t).toLocalDateTime());
+    this.now = offset;
     log.info("Using offset for instant: {}, now: {}", this.offset, this.now);
   }
 

@@ -42,7 +42,8 @@ public interface DocQueryActions {
   
   interface DocObjectsQuery {
     DocObjectsQuery branchName(String branchName);
-    DocObjectsQuery subStatus(String subStatus);
+    DocObjectsQuery docSubStatus(String ...subStatus);
+    DocObjectsQuery docSubStatus(List<String> subStatus);
     DocObjectsQuery docType(String docType);
     DocObjectsQuery parentId(String parentId);
     DocObjectsQuery ownerId(String ownerId);

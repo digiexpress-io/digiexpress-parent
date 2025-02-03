@@ -62,8 +62,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
   private final DbState state;
   private final String repoId;
   private final List<IncludeInQuery> include = new ArrayList<>();
+  private final List<String> subStatus = new ArrayList<>();
   private String branchName;
-  private String subStatus;
   private String docType;
   private String parentId;
   private String ownerId;
@@ -81,7 +81,18 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
     this.include.addAll(Arrays.asList(children));
     return this;
   }
-
+  @Override
+  public DocObjectsQuery docSubStatus(String... subStatus) {
+    this.subStatus.addAll(Arrays.asList(subStatus));
+    return this;
+  }
+  @Override
+  public DocObjectsQuery docSubStatus(List<String> subStatus) {
+    if(subStatus != null) {
+      this.subStatus.addAll(subStatus);
+    }
+    return this;
+  }
   @Override
   public Uni<QueryEnvelope<DocObject>> get() {
     return get(Optional.empty(), true);
@@ -107,8 +118,8 @@ public class DocObjectsQueryImpl implements DocObjectsQuery {
         .docType(docType)
         .docParentId(parentId)
         .docOwnerId(ownerId)
-        .branchValueEmpty(emptyBranchBody)
         .docSubStatus(subStatus)
+        .branchValueEmpty(emptyBranchBody)
         .branchNameOrId(branchName)
         .branchValueName(branchValueName)
         .branchValueStatus(branchValueStatus);

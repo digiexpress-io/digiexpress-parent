@@ -20,7 +20,8 @@ import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import io.thestencil.client.api.MigrationBuilder.Sites;
-import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.spi.MarkdownBuilderImpl;
+import io.thestencil.client.spi.SitesBuilderImpl;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -32,7 +33,6 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   private final EveliEnvirStore ctx;
   private final HdesClientConfig hdesClientConfig;
   private final DialobClient dialobClient;
-  private final StencilClient stencilClient;
   
   private String userId;
   private String deploymentId;
@@ -95,12 +95,12 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   
   private Sites visitStencil(EveliDeployment deployment) {
     final var state = deployment.getSources().getStencil();
-    final var markdowns = stencilClient.markdown()
-      .offset(null)
+    final var markdowns = new MarkdownBuilderImpl()
+      .targetDate(null)
       .json(state, true)
       .build();
     
-    final var envir = stencilClient.sites()
+    final var envir = new SitesBuilderImpl()
       .imagePath("images")
       .created(System.currentTimeMillis())
       .source(markdowns)

@@ -62,7 +62,7 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
         .onItem().transformToUni(e -> {
           visitExistingDocs(config, e);
           return config.accept(this);
-        }); 
+        });
   }
   
   private void visitExistingDocs(ThenaDocConfig config, QueryEnvelope<DocTenantObjects> envelope) {

@@ -121,6 +121,12 @@ public class DocStoreException extends RuntimeException {
           .collect(Collectors.toList()));
       return this;
     }
+    public Builder add(ThenaDocConfig config, ManyDocsEnvelope envelope) {
+      msg.id(envelope.getRepoId())
+      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
+          .collect(Collectors.toList()));
+      return this;
+    }
     public Builder add(ThenaDocConfig config) {
       msg.id(config.getRepoId());
       return this;

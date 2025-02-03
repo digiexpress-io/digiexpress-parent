@@ -2,7 +2,6 @@ package io.thestencil.client.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -56,7 +55,7 @@ public interface StencilClient {
   interface MarkdownBuilder {
     MarkdownBuilder json(String jsonOfSiteState, boolean dev);
     MarkdownBuilder json(SiteState jsonOfSiteState, boolean dev);
-    MarkdownBuilder offset(ZoneOffset created);
+    MarkdownBuilder targetDate(LocalDateTime created);
     MarkdownBuilder md(String path, byte[] value);
     Markdowns build();
   }
