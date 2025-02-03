@@ -71,10 +71,10 @@ public class DocsSqlFilterBuilder {
       params.add(filter.getDocType());
     }
     
-    if(filter.getDocSubStatus() != null) {
+    if(filter.getDocSubStatus() != null && !filter.getDocSubStatus().isEmpty()) {
       final var index = params.size() + 1;
       filters.add(" ( docs.doc_sub_status = ANY($" + index + " )) ");
-      params.add(filter.getDocSubStatus());
+      params.add(filter.getDocSubStatus().toArray());
     }
     return this;
   }
