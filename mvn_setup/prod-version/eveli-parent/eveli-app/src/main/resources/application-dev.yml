@@ -85,7 +85,22 @@ eveli.mq.enabled: true
 eveli.mq.app-id: task-app
 eveli.mq.channel-name: main-channel-for-all
 
-app.jwt.public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi4PobwPTnWPJWwjnND2j\naYZoF8i0xGVI0FZsIcQ1cF1qSSHJH1J2JfspDpY4dJwN8zGsS3el4kgI0XcOzLam\n3s9U/Ix70kxTXvEosydtsPeKEh8qKIoTszPyHETPe3OyfhTR8mFggn0+2B1xSbMd\nsnlPLai+Xdp+o4Yg5A4ApxRpF/nvu8LdpSGfw3z1un+D+nEX3joWzc55mloHWiDi\nj2TUuqrDVNUz5oUYJJPUAYHa23hGFhWP21tFaqYeFwO6CGC8LxL6tN5ERh2hvXms\nLdN4ATCa/LjQQqv4Rls93R7jrEuNHjjMX2EOI/rLXZ1jgkB5VOYeJ7qHMmTu2YLY\nfQIDAQAB\n-----END PUBLIC KEY-----\n"
-app.jwt.issuer: https://frontdesk.digiexpress.io/gateway/issuer
-app.jwt.portal.public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkb8vttXCPPraVCQBkFR/\nNIVP4PXnYS9Ik3KBX3Th684d3P1OdEnQ4EMU3gn+jnG5+qQSs+KpXBvwcCsyE1jx\ncIeSQ5GpuXC1BwhCTSM6RY78I2A+mcnt4h45a9ipPi6W9PHfk+PzYFrrp9jgFflZ\n6fyJt5Hfaz3yhnPb7Y/GE5zz9v+HgoCLDbu7xj98BOgt7rIZ27End90Q1iFyQpu1\nYbyyvGy/61hUv/rDeL7gsypyfvjL1n5a1mJ2A3VheXLyLJIleu4vNw8yejtXqp7S\nHc9EiCCf+ccEQnQgAAWLOvgYMaIvaXmuT/MszCjSpsQyqbGV5k9TrlZ7X7gxvcOJ\njQIDAQAB\n-----END PUBLIC KEY-----\n"
-app.jwt.portal.issuer: "https://portal.digiexpress.io/gateway/issuer"
+eveli.jwt.eveli-public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi4PobwPTnWPJWwjnND2j\naYZoF8i0xGVI0FZsIcQ1cF1qSSHJH1J2JfspDpY4dJwN8zGsS3el4kgI0XcOzLam\n3s9U/Ix70kxTXvEosydtsPeKEh8qKIoTszPyHETPe3OyfhTR8mFggn0+2B1xSbMd\nsnlPLai+Xdp+o4Yg5A4ApxRpF/nvu8LdpSGfw3z1un+D+nEX3joWzc55mloHWiDi\nj2TUuqrDVNUz5oUYJJPUAYHa23hGFhWP21tFaqYeFwO6CGC8LxL6tN5ERh2hvXms\nLdN4ATCa/LjQQqv4Rls93R7jrEuNHjjMX2EOI/rLXZ1jgkB5VOYeJ7qHMmTu2YLY\nfQIDAQAB\n-----END PUBLIC KEY-----\n"
+eveli.jwt.eveli-issuer: https://frontdesk.digiexpress.io/gateway/issuer
+eveli.jwt.gamut-public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkb8vttXCPPraVCQBkFR/\nNIVP4PXnYS9Ik3KBX3Th684d3P1OdEnQ4EMU3gn+jnG5+qQSs+KpXBvwcCsyE1jx\ncIeSQ5GpuXC1BwhCTSM6RY78I2A+mcnt4h45a9ipPi6W9PHfk+PzYFrrp9jgFflZ\n6fyJt5Hfaz3yhnPb7Y/GE5zz9v+HgoCLDbu7xj98BOgt7rIZ27End90Q1iFyQpu1\nYbyyvGy/61hUv/rDeL7gsypyfvjL1n5a1mJ2A3VheXLyLJIleu4vNw8yejtXqp7S\nHc9EiCCf+ccEQnQgAAWLOvgYMaIvaXmuT/MszCjSpsQyqbGV5k9TrlZ7X7gxvcOJ\njQIDAQAB\n-----END PUBLIC KEY-----\n"
+eveli.jwt.gamut-issuer: "https://portal.digiexpress.io/gateway/issuer"
+
+
+eveli.email.enabled: false
+# In case of using jakarta email transport implementation
+eveli.email.host-name: 
+eveli.email.host-port: 
+eveli.email.sender-email: 
+eveli.email.sender-password: 
+eveli.email.allowed-recipients: 
+eveli.email.enabled-domains:
+#in case of REST API implementation
+eveli.email.service-url:
+
+eveli.notification.enabled: false
+eveli.notification.service-url: 
