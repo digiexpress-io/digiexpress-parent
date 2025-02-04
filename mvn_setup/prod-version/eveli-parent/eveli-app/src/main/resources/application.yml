@@ -70,3 +70,18 @@ eveli.jwt.eveli-public-key-value:
 eveli.jwt.eveli-issuer: "https://frontdesk.digiexpress.io/gateway/issuer"
 eveli.jwt.gamut-public-key-value: 
 eveli.jwt.gamut-issuer: "https://portal.digiexpress.io/gateway/issuer"
+
+eveli.email.enabled: false
+# In case of using jakarta email transport implementation
+eveli.email.host-name: 
+eveli.email.host-port: 
+eveli.email.sender-email: 
+eveli.email.sender-password: 
+eveli.email.allowed-recipients: 
+eveli.email.enabled-domains:
+#in case of REST API implementation
+eveli.email.service-url:
+
+eveli.notification.enabled: false
+eveli.notification.service-url: 
+ 

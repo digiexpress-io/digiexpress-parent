@@ -1,4 +1,5 @@
 package io.digiexpress.eveli.app;
+ 
 
 /*-
  * #%L
@@ -20,6 +21,7 @@ package io.digiexpress.eveli.app;
  * #L%
  */
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,11 +34,13 @@ import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 public class MockServicesProvider {
 
   @Bean
+  @ConditionalOnMissingBean
   public AttachmentCommands attachmentCommands() {
     return new AttachmentCommandsDummy();
   }
 
   @Bean
+  @ConditionalOnMissingBean
   public NotificationCommands notificationCommands() {
     return new NotificationCommandsDummy();
   }
