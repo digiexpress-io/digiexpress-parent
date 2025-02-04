@@ -20,19 +20,17 @@ package io.digiexpress.eveli.client.config;
  * #L%
  */
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import io.digiexpress.eveli.client.api.NotificationCommands;
-import io.digiexpress.eveli.client.spi.notification.NotificationCommandsImpl;
+import lombok.Data;
 
-@Configuration
-public class EveliAutoConfigNotification {
+@Data
+@ConfigurationProperties(prefix = "eveli.user-registry")
+public class EveliPropsUserRegistry {
 
-  @Bean
-  public NotificationCommands notificationCommands(EveliPropsNotification notificationProps, EveliPropsEmail emailProps, 
-      EveliPropsUserRegistry userRegistryProps, RestTemplate client) {
-    return new NotificationCommandsImpl(notificationProps, emailProps, userRegistryProps, client);
-  }
+  /*
+   *  URL for REST service providing io.digiexpress.eveli.client.api.NotificationCommands.GroupMembershipQuery
+   *  endpoint.
+   */
+  private String serviceUrl;
 }
