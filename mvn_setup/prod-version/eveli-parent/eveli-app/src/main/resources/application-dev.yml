@@ -99,8 +99,10 @@ eveli.email.sender-email:
 eveli.email.sender-password: 
 eveli.email.allowed-recipients: 
 eveli.email.enabled-domains:
-#in case of REST API implementation
+#in case of REST API implementation, if defined it is used
 eveli.email.service-url:
 
 eveli.notification.enabled: false
 eveli.notification.service-url: 
+
+eveli.user-registry.service-url:
