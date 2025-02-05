@@ -44,6 +44,7 @@ import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionNotAllowedException;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,29 +93,32 @@ public class GamutFeedbackController {
   }
   
   @PostMapping
-  public ResponseEntity<UserAction> kindOfCreateAction(
+  public Uni<ResponseEntity<UserAction>> kindOfCreateAction(
       @RequestParam("actionId") String actionId,
       @RequestParam("inputContextId") String inputContextId,
       @RequestParam("inputParentContextId") String inputParentContextId,
       @RequestParam("actionLocale") String actionLocale) {
     
-    final var meta = gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale).getOne();
-    if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
-      throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
-    }
+    return gamutClient.userActionMetaQuery().actionId(actionId).locale(actionLocale)
+      .getOne().onItem().transform(meta -> {
+        if(!Boolean.TRUE.equals(meta.getTopicLink().getAnon())) {
+          throw new org.springframework.security.access.AccessDeniedException("action: " + meta + ", not allowed!");
+        }
+        try {
+          return ResponseEntity.ok(gamutClient.userActionBuilder()
+            .actionId(actionId)
+            .anon(true)
+            .clientLocale(actionLocale)
+            .inputContextId(inputContextId)
+            .inputParentContextId(inputParentContextId)
+            .createOne().await().atMost(timeout));
+        } catch(UserActionNotAllowedException e) {
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (WorkflowNotFoundException e) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    });
     
-    try {
-      return ResponseEntity.ok(gamutClient.userActionBuilder()
-          .actionId(actionId)
-          .anon(true)
-          .clientLocale(actionLocale)
-          .inputContextId(inputContextId)
-          .inputParentContextId(inputParentContextId)
-          .createOne().await().atMost(timeout));
-    } catch(UserActionNotAllowedException e) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    } catch (WorkflowNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
+
   }
 }

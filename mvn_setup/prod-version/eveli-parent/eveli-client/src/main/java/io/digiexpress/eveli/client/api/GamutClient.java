@@ -54,7 +54,7 @@ public interface GamutClient {
   interface UserActionMetaQuery {
     UserActionMetaQuery locale(String locale);
     UserActionMetaQuery actionId(String actionId);
-    UserActionMeta getOne();
+    Uni<UserActionMeta> getOne();
   }
   
   interface UserActionFillEventBuilder {
@@ -115,8 +115,6 @@ public interface GamutClient {
     String getActionId();
     TopicLink getTopicLink();
     @Nullable Long getExpiresInSeconds();
-    
-    String getStencilTagName();
   }
 
   @Value.Immutable
@@ -226,6 +224,13 @@ public interface GamutClient {
   public static class UserActionNotAllowedException extends RuntimeException {
     private static final long serialVersionUID = 1781444267360040922L;
     public UserActionNotAllowedException(String message) {
+      super(message);
+    }
+  }
+  
+  public static class DialobFormNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1781444267360040922L;
+    public DialobFormNotFoundException(String message) {
       super(message);
     }
   }

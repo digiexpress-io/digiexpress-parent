@@ -56,6 +56,7 @@ import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
@@ -193,10 +194,10 @@ public class EveliAutoConfig {
   public ProcessClient processClient(
       ProcessRepository processJPA,
       TransactionWrapper ts,
-      EveliContext eveliContext
+      EveliEnvirClient envir
       ) {
 
-    return new ProcessClientImpl(processJPA, eveliContext.getWrench(), eveliContext.getProgramEnvir(), ts, eveliContext.getAssets());
+    return new ProcessClientImpl(processJPA, ts, envir);
   }
 
 }

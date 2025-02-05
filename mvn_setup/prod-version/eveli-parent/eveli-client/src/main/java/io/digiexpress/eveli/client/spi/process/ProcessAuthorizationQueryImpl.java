@@ -23,7 +23,6 @@ package io.digiexpress.eveli.client.spi.process;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.ImmutableProcessAuthorization;
@@ -31,11 +30,11 @@ import io.digiexpress.eveli.client.api.ProcessClient.InitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessAuthorizationQuery;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
-import io.resys.hdes.client.api.HdesClient;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
-import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramStatus;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
 
 @RequiredArgsConstructor
 public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery {
@@ -44,45 +43,44 @@ public class ProcessAuthorizationQueryImpl implements ProcessAuthorizationQuery 
   private final static String DT_ROLE_OUTPUT_NAME = "processName";  
   private final static String ROLE_SPLIT = ";";  
   
-  private final HdesClient hdesClient;
-  private final Supplier<ProgramEnvir> programEnvir;
+  private final EveliEnvirClient envir;
   
   @Override
   public ProcessAuthorization get(InitProcessAuthorization init) {
-    return processRequest(new AuthorizationRequest(hdesClient, programEnvir.get(), init));
+    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
+    return processRequest(new AuthorizationRequest(runtime, init));
   }
   
   
   @Data @RequiredArgsConstructor
   private static class AuthorizationRequest {
-    private final HdesClient hdesClient;
-    private final ProgramEnvir programEnvir;
+    private final EveliRuntime runtime;
     private final InitProcessAuthorization init;
   }
   
 
   private static ProcessAuthorization processRequest(AuthorizationRequest init) {
-    final var dt = init.programEnvir.getDecisionsByName().get(DT_NAME);
-    ProcessAssert.notNull(dt, () -> "Authorizations requires DT with name: " + DT_NAME + "!");
-    ProcessAssert.isTrue(dt.getStatus() == ProgramStatus.UP, () -> "Authorizations required DT with name: " + DT_NAME + " has compilation errors!");
-    final var ast = dt.getAst().get();
     
-    final var output = ast.getHeaders().getReturnDefs().stream().filter(t -> t.getName().equals(DT_ROLE_OUTPUT_NAME)).findFirst();
-    final var input = ast.getHeaders().getAcceptDefs().stream().filter(t -> t.getName().equals(DT_ROLE_INPUT_NAME)).findFirst();
-    ProcessAssert.isTrue(input.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain input field with name: " + DT_ROLE_INPUT_NAME + "!");
-    ProcessAssert.notNull(output.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain output field with name: " + DT_ROLE_OUTPUT_NAME + "!");    
+    final var dt = init.runtime.getWrench().decision(DT_NAME)
+      .callback(ast -> {
+        final var output = ast.getHeaders().getReturnDefs().stream().filter(t -> t.getName().equals(DT_ROLE_OUTPUT_NAME)).findFirst();
+        final var input = ast.getHeaders().getAcceptDefs().stream().filter(t -> t.getName().equals(DT_ROLE_INPUT_NAME)).findFirst();
+        ProcessAssert.isTrue(input.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain input field with name: " + DT_ROLE_INPUT_NAME + "!");
+        ProcessAssert.notNull(output.isPresent(), () -> "Authorizations required DT with name: " + DT_NAME + " must contain output field with name: " + DT_ROLE_OUTPUT_NAME + "!");    
+    });
+    ProcessAssert.notNull(dt, () -> "Authorizations requires DT with name: " + DT_NAME + "!");
     
     final var processNames = new ArrayList<String>();
     for(final var role : init.getInit().getUserRoles()) {
-      final List<String> rows = init.hdesClient.executor(init.programEnvir).inputField(DT_ROLE_INPUT_NAME, role).decision(DT_NAME).andFind()
-          .stream().flatMap(row -> {
-            final var outputName = row.get(DT_ROLE_OUTPUT_NAME);
-            if(outputName == null) {
-              return new ArrayList<String>().stream();
-            }
-            return Arrays.asList(outputName.toString().split(ROLE_SPLIT)).stream();
-          })
-          .collect(Collectors.toList());
+      final List<String> rows = init.runtime.getWrench().inputField(DT_ROLE_INPUT_NAME, role).decision(DT_NAME).andFind()
+        .stream().flatMap(row -> {
+          final var outputName = row.get(DT_ROLE_OUTPUT_NAME);
+          if(outputName == null) {
+            return new ArrayList<String>().stream();
+          }
+          return Arrays.asList(outputName.toString().split(ROLE_SPLIT)).stream();
+        })
+        .collect(Collectors.toList());
       processNames.addAll(rows);
     }
     

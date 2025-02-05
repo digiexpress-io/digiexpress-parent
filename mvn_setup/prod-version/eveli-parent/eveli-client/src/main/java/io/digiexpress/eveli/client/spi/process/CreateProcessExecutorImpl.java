@@ -26,14 +26,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.client.api.ProcessClient.CreateProcessExecutor;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.resys.hdes.client.api.HdesClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -47,14 +45,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class CreateProcessExecutorImpl implements CreateProcessExecutor {
-  
-  
+    
   private final Supplier<QueryProcessInstances> processCommands;
-  private final HdesClient hdesClient;
-  private final Supplier<ProgramEnvir> programEnvir;
   private final TransactionWrapper ts;
-  private final EveliAssetClient workflowCommands;
-  
+  private final EveliEnvirClient envir;
+
   private ProcessInstance instance;
   
   @Override
@@ -74,8 +69,9 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
     final var flowInput = new HashMap<String, Serializable>();
     flowInput.put("questionnaireId", instance.getQuestionnaireId());
     flowInput.put("workflowName", instance.getWorkflowName());
+    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
     
-    final FlowResult run = hdesClient.executor(programEnvir.get())
+    final FlowResult run = runtime.getWrench()
         .inputMap(flowInput)
         .flow(instance.getFlowName())
         .andGetBody();

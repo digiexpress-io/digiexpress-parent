@@ -154,6 +154,7 @@ public interface HdesClient {
     FlowResult andGetBody();
   }
   interface DecisionExecutor extends ProgramExecutor {
+    DecisionExecutor callback(Consumer<AstDecision> callback);
     Map<String, Serializable> andGet();
     List<Map<String, Serializable>> andFind();
     DecisionResult andGetBody();

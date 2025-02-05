@@ -1,7 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
+import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.function.Supplier;
 
 /*-
  * #%L
@@ -30,8 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
-import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,22 +43,30 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GamutSiteController {
   
-  private final Supplier<Sites> siteEnvir;
+  private final EveliEnvirClient envir;
   private final FeedbackClient feedback;
 
   @GetMapping
-  public LocalizedSite getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
-   
-    final var sites = siteEnvir.get();
-    final var data = sites.getSites().get(locale);
-    
-    if(data == null) {
-      return LocalizedSiteBean.builder().id("not-found")
+  public Uni<LocalizedSite> getOneSiteByLocale(@RequestParam(name = "locale") String locale) {
+    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
+      final var data = runtime.getStencil(OffsetDateTime.now()).getSites().get(locale);
+      if(data == null) {
+        final LocalizedSite failsafe = LocalizedSiteBean.builder().id("not-found")
+            .images("images")
+            .locale(locale)
+            .build();
+        return failsafe;
+      }
+      return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
+    }).onFailure().recoverWithItem(error -> {
+      log.error("Failed to resolve site for locale: {}, because of error: {}", locale, error.getMessage(), error);
+      final LocalizedSite failsafe = LocalizedSiteBean.builder().id("under-construction")
           .images("images")
           .locale(locale)
           .build();
-    }
-    return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
+          
+      return failsafe;
+    });
   }
   
   @GetMapping(path = "feedback")

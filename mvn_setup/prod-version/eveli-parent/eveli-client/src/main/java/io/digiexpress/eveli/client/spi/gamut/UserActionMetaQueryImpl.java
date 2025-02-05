@@ -21,17 +21,16 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Supplier;
 
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMeta;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionMetaQuery;
 import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableUserActionMeta;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
-import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -40,41 +39,42 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Data @Accessors(fluent = true)
 public class UserActionMetaQueryImpl implements UserActionMetaQuery {
-  private final Supplier<Sites> siteEnvir;
-  private final Supplier<ProgramEnvir> programEnvir;
-  private final ZoneOffset offset;
+  private final EveliEnvirClient envir;
   
   private String locale;
   private String actionId;
   
   @Override
-  public UserActionMeta getOne() {
+  public Uni<UserActionMeta> getOne() {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(locale, () -> "locale can't be null!");
-    
-    final var stencilSite = siteEnvir.get();
-    final var stencilService = stencilSite.getSites().get(locale).getLinks().get(actionId);
+    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
+      
+      final var now = OffsetDateTime.now();
+      final var stencilSite = runtime.getStencil(now);
+      final var stencilService = stencilSite.getSites().get(locale).getLinks().get(actionId);
 
-    if(stencilService == null) {
-      throw new WorkflowNotFoundException(new StringBuilder()
-          .append("Can't find stencil service by id: '").append(actionId).append("'!")
-          .toString());
-    }
+      if(stencilService == null) {
+        throw new WorkflowNotFoundException(new StringBuilder()
+            .append("Can't find stencil service by id: '").append(actionId).append("'!")
+            .toString());
+      }
 
-    final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS.between(Instant.now().atOffset(offset).toLocalDateTime(), stencilService.getEndDate());
-    if(expiresInSeconds != null && expiresInSeconds <= 0) {
-      throw new WorkflowNotFoundException(new StringBuilder()
-          .append("Can't find stencil service by id: '").append(actionId).append("'!")
-          .toString());
-    }
+      final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS
+          .between(Instant.now().atOffset(now.getOffset()).toLocalDateTime(), stencilService.getEndDate());
+      if(expiresInSeconds != null && expiresInSeconds <= 0) {
+        throw new WorkflowNotFoundException(new StringBuilder()
+            .append("Can't find stencil service by id: '").append(actionId).append("'!")
+            .toString());
+      }
+      
+      return ImmutableUserActionMeta.builder()
+          .actionId(actionId)
+          .expiresInSeconds(expiresInSeconds)
+          .topicLink(stencilService)
+          .build();
+    });
     
-    return ImmutableUserActionMeta.builder()
-        .actionId(actionId)
-        .expiresInSeconds(expiresInSeconds)
-        .topicLink(stencilService)
-        
-        .stencilTagName(stencilSite.getTagName())
-        
-        .build();
+
   }
 }

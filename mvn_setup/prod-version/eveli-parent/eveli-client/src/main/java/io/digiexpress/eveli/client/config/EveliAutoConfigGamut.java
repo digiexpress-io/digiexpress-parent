@@ -39,6 +39,7 @@ import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutUserActionsController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -50,13 +51,10 @@ public class EveliAutoConfigGamut {
   @Bean
   public GamutClient gamutClient(
       ProcessClient processRepository,
-
       TaskClient taskclient,
       AttachmentCommands attachmentCommands,
-      EveliContext eveliContext,
-      EveliPropsAssets eveliAssetProps, 
+      EveliEnvirClient envir, 
       DialobClient dialobCommands,
-      
       CrmClient authClient
     ) {
     
@@ -67,12 +65,7 @@ public class EveliAutoConfigGamut {
         attachmentCommands, 
         dialobCommands,
         authClient,
-        ZoneOffset.ofHours(eveliAssetProps.getTimezoneOffset()),
-        
-        eveliContext.getSiteEnvir(),
-        eveliContext.getProgramEnvir(),
-        eveliContext.getWorkflowEnvir(),
-        eveliAssetProps.getUseFormId()
+        envir
     );
   }
   
@@ -87,8 +80,8 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutSiteController gamutSiteController(EveliContext eveliContext, FeedbackClient feedback) {
-    return new GamutSiteController(eveliContext.getSiteEnvir(), feedback);
+  public GamutSiteController gamutSiteController(EveliEnvirClient envir, FeedbackClient feedback) {
+    return new GamutSiteController(envir, feedback);
   }
   
   @Bean

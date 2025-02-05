@@ -23,6 +23,7 @@ package io.resys.hdes.client.spi;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -32,9 +33,12 @@ import io.resys.hdes.client.api.HdesClient.ExecutorInput;
 import io.resys.hdes.client.api.HdesClient.FlowExecutor;
 import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.HdesClient.ServiceExecutor;
+import io.resys.hdes.client.api.ast.AstBody;
+import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.DecisionProgram.DecisionResult;
 import io.resys.hdes.client.api.programs.FlowProgram;
+import io.resys.hdes.client.api.programs.Program;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResultLog;
 import io.resys.hdes.client.api.programs.ProgramEnvir;
@@ -115,7 +119,9 @@ public class HdesClientExecutorBuilder implements ExecutorBuilder {
   }
   @Override
   public DecisionExecutor decision(String nameOrId) {
-    DecisionProgram program = getProgram(nameOrId, envir.getDecisionsByName());
+    final ProgramWrapper<AstDecision, DecisionProgram> wrapper = getWrapper(nameOrId, envir.getDecisionsByName());
+    final var program = wrapper.getProgram().get();
+    
     return new DecisionExecutor() {
       @Override
       public DecisionResult andGetBody() {
@@ -129,7 +135,35 @@ public class HdesClientExecutorBuilder implements ExecutorBuilder {
       public List<Map<String, Serializable>> andFind() {
         return DecisionProgramExecutor.find(andGetBody());
       }
+      @Override
+      public DecisionExecutor callback(Consumer<AstDecision> callback) {
+        final var ast = wrapper.getAst().get();
+        callback.accept(ast);
+        return this;
+      }
     };
+  }
+
+  @SuppressWarnings("unchecked")
+  private <A extends AstBody, P extends Program> ProgramWrapper<A, P> getWrapper(String nameOrId, Map<String, ? extends ProgramWrapper<?, ?>> src) {
+    HdesAssert.isTrue(nameOrId != null && !nameOrId.isBlank(), () -> "nameOrId must be defined!");
+    ProgramWrapper<?, ?> wrapperByNameOrId = src.get(nameOrId);
+    if(wrapperByNameOrId == null) {
+      wrapperByNameOrId = this.envir.getValues().get(nameOrId);
+    }
+    
+    ProgramWrapper<A, P> wrapper = (ProgramWrapper<A, P>) wrapperByNameOrId;
+    HdesAssert.isTrue(wrapper != null, () -> "Can't find program by nameOrId: '" + nameOrId + "', known names: [" + String.join(", ", src.keySet())  + "]!");
+    HdesAssert.isTrue(wrapper.getStatus() == ProgramStatus.UP, () -> {
+
+      final var errors = wrapper.getErrors().stream().map(e -> e.getMsg()).toList();
+      
+      return "Can't run program by name/id: '" + nameOrId + "' because program status is: '" + wrapper.getStatus() + "'!" + 
+          System.lineSeparator() + 
+          String.join(System.lineSeparator(), errors)
+          ;
+    });
+    return wrapper;
   }
   
   @SuppressWarnings("unchecked")

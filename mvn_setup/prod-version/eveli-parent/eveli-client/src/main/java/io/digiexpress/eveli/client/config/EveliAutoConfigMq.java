@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.spi.mq.LoggingThenaMqConsumer;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.spi.mq.MqScheduler;
 import io.digiexpress.eveli.client.spi.mq.QueueWriter;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqConsumer;
@@ -102,8 +103,8 @@ public class EveliAutoConfigMq {
   }
 
   @Bean
-  public QueueWriter queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliContext ctx) {
-    return new QueueWriter(taskClient, mqClient, ctx);
+  public QueueWriter queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
+    return new QueueWriter(taskClient, mqClient, envir);
   }
   
   @Bean

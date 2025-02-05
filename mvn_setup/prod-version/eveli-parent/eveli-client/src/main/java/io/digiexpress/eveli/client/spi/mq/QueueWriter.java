@@ -33,11 +33,12 @@ import org.springframework.context.event.EventListener;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
-import io.digiexpress.eveli.client.config.EveliContext;
+import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
@@ -52,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class QueueWriter {
   private final TaskClient taskClient;
   private final ThenaMqClient mqClient;
-  private final EveliContext ctx;
+  private final EveliEnvirClient envir;
   private final String flowName = "task_mq_router";
   
   
@@ -66,13 +67,13 @@ public class QueueWriter {
   
   @EventListener(MqEvent.class)
   public void publishMessageToQueue(MqEvent event) {
-    final var envir = ctx.getProgramEnvir().get();
+    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
     final String taskId = event.getTaskId();
     final String commitId = event.getCommitId();
     
     taskClient.queryTasks().getOneTaskDiff(taskId, commitId)
     .onItem().transformToUni(diff -> {
-      final var queues = getQueues(diff, envir);
+      final var queues = getQueues(diff, runtime);
       return createMessage(diff.getTask(), queues);
     }).await().atMost(Duration.ofMinutes(10));
     
@@ -101,12 +102,12 @@ public class QueueWriter {
   }
   
   @SuppressWarnings("unchecked")
-  private List<String> getQueues(TaskDiff diff, ProgramEnvir envir) {
+  private List<String> getQueues(TaskDiff diff, EveliRuntime envir) {
     try {
       final List<String> queues = new ArrayList<>();
 
       for(final var diffValue : diff.getValues()) {
-        final FlowResult run = ctx.getWrench().executor(envir)
+        final FlowResult run = envir.getWrench()
             .inputMap(Map.of(
                 "operation", diffValue.getOp().operationName(),
                 "path", diffValue.getPath()

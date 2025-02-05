@@ -104,7 +104,7 @@ public abstract class FeedbackEnvirSetup {
 
     @Bean
     public ProcessClient processClient() {
-      final var processClient = new ProcessClientImpl(processJPA, null, null, null, null);
+      final var processClient = new ProcessClientImpl(processJPA, null, null);
       return processClient;
     }
     

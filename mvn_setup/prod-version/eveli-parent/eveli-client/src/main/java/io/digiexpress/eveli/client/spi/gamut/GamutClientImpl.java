@@ -1,29 +1,5 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.ZoneOffset;
-import java.util.function.Supplier;
-
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.api.GamutClient;
@@ -33,8 +9,7 @@ import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
-import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import lombok.RequiredArgsConstructor;
 
 
@@ -46,12 +21,7 @@ public class GamutClientImpl implements GamutClient {
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
   private final CrmClient authClient;
-  private final ZoneOffset offset;
-  
-  private final Supplier<Sites> siteEnvir;
-  private final Supplier<ProgramEnvir> programEnvir;
-  private final Supplier<WorkflowTag> workflowEnvir;
-  private final boolean useFormId;
+  private final EveliEnvirClient envir;
 
 
   @Override
@@ -61,7 +31,7 @@ public class GamutClientImpl implements GamutClient {
   
   @Override
   public UserActionBuilder userActionBuilder() {
-    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, siteEnvir, programEnvir, workflowEnvir, authClient, offset, useFormId);
+    return new UserActionsBuilderImpl(processInstanceClient, dialobCommands, authClient, envir);
   }
 
   @Override
@@ -137,6 +107,6 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public UserActionMetaQuery userActionMetaQuery() {
-    return new UserActionMetaQueryImpl(siteEnvir, programEnvir, offset);
+    return new UserActionMetaQueryImpl(envir);
   }
 }

@@ -12,20 +12,7 @@
     <dependency>
       <groupId>io.digiexpress</groupId>    
       <artifactId>dialob-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.digiexpress</groupId>    
-      <artifactId>stencil-client-api</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.slf4j</groupId>
-          <artifactId>slf4j-jboss-logmanager</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    
-    
+    </dependency>    
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>eveli-assets</artifactId>
@@ -50,7 +37,7 @@
     
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>hdes-client-api</artifactId>
+      <artifactId>eveli-envir</artifactId>
       <exclusions>
       	<exclusion>
       		<groupId>org.jboss.slf4j</groupId>
