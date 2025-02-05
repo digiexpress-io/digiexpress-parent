@@ -48,15 +48,8 @@ public class AssetsAnyTagController {
     return composer.anyAssetTagQuery().findAllByType(AssetTagType.WRENCH).await().atMost(timeout);
   }
 
-  @GetMapping("/workflow-tags")
-  public List<AnyAssetTag> findAllWorkflowTags() {
-    return composer.anyAssetTagQuery().findAllByType(AssetTagType.WORKFLOW).await().atMost(timeout);
-  }
-
   @GetMapping("/stencil-tags")
   public List<AnyAssetTag> findAllContentTags() {
     return composer.anyAssetTagQuery().findAllByType(AssetTagType.STENCIL).await().atMost(timeout);
   }
-  
-  
 }

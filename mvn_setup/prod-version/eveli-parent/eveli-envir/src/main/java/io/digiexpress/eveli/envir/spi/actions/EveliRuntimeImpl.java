@@ -42,9 +42,8 @@ public class EveliRuntimeImpl implements EveliRuntime {
   private final HdesClientConfig hdesClientConfig;
   private final ProgramEnvir wrenchEnvir;
   private final StencilEnvir stencilEnvir;
-  
-  public final String name;
-  public final String deploymentId;
+  private final EveliDeployment deployment;
+
   private final boolean isDev;
   
   public EveliRuntimeImpl(
@@ -59,19 +58,17 @@ public class EveliRuntimeImpl implements EveliRuntime {
         .build();
     
     this.stencilEnvir = StencilEnvirImpl.of(deployment.getSources().getStencil(), deployment.getName(), isDev);
-    this.name = deployment.getName();
-    this.deploymentId = deployment.getId();
+    this.deployment = deployment;
     this.isDev = isDev;
   }
   
-  
   @Override
   public String getName() {
-    return name;
+    return deployment.getName();
   }
   @Override
   public String getDeploymentId() {
-    return deploymentId;
+    return deployment.getId();
   }
   @Override
   public ExecutorBuilder getWrench() {
@@ -83,5 +80,13 @@ public class EveliRuntimeImpl implements EveliRuntime {
   }
   public boolean isDev() {
     return isDev;
+  }
+  @Override
+  public String getWrenchTagName() {
+    return deployment.getSources().getWrench().getName();
+  }
+  @Override
+  public String getStencilTagName() {
+    return deployment.getSources().getWrench().getName();
   }
 }

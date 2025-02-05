@@ -84,13 +84,11 @@ public class EveliAutoConfigAssets {
     final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
     return new AssetsAnyTagController(composer);
   }
-  
   @Bean
   public AssetsDeploymentController assetsDeploymentController(EveliContext context, AuthClient auth, DialobClient dialobClient) {
     final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
     return new AssetsDeploymentController(composer);
-  } 
-  
+  }
   @Bean
   public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
     return new AssetsDialobController(client, objectMapper);
@@ -253,53 +251,4 @@ public class EveliAutoConfigAssets {
         .build();
   }
   
-  
-  /*
-
-  @Bean
-  public WrenchConfig hdesReadonly(EveliProps eveliProps, EveliPropsHdes hdesProps, ObjectMapper objectMapper, ApplicationContext context) {
-
-        WorkflowCommandsJPA.builder().workflowJPA(workflowRepository.get()).releaseJPA(workflowReleaseRepository.get()).build();
-
-    HdesClientImpl.builder().objectMapper(objectMapper)
-        .dependencyInjectionContext(new DependencyInjectionContext() {
-          @Override
-          public <T> T get(Class<T> type) {
-            return context.getBean(type);
-          }
-        })
-        .serviceInit(new ServiceInit() {
-          @Override
-          public <T> T get(Class<T> type) {
-            return context.getAutowireCapableBeanFactory().createBean(type);
-          }
-        })
-        .store(HdesInMemoryStore.builder().objectMapper(objectMapper).build()).build();
-    
-    final var state = hdesClient.store().query().get().await().atMost(Duration.ofMinutes(1));
-    final var envir = ComposerEntityMapper.toEnvir(hdesClient.envir(), state).build();
-    final Supplier<ProgramEnvir> programEnvir = () -> envir;
-    
-    
-    final var client = StencilClientImpl.builder().defaultObjectMapper().inmemory().build()
-        .sites().source(buildItem.getContent())
-        .imagePath("")
-        .created(System.currentTimeMillis());
-    final var content = client.build();
-    final var contentValues = content.getSites().entrySet().stream()
-        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
-    
-    if(!contentValues.containsKey(config.defaultLocale)) {
-      throw new ConfigurationException("Markdowns must have localization for default-locale: '" + config.defaultLocale + "'!");
-    } 
-    
-    WorkflowCommandsJson.builder().workflows(jsonWorkflowLocation.get(), null).build()
-  }
-  
-  
-
-  /*
-  @Bean 
-  public NotificationController notificationController() {
-  }*/
 }

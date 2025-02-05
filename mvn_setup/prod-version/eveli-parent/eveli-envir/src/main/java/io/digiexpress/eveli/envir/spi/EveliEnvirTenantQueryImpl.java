@@ -37,6 +37,7 @@ public class EveliEnvirTenantQueryImpl implements EveliEnvirTenantQuery {
   private final HdesClientConfig hdesClientConfig;
   private final DialobClient dialobClient;
   private final EveliRuntimeCache cache;
+  private final boolean isDev;
   private String repoName;
   
   
@@ -44,37 +45,39 @@ public class EveliEnvirTenantQueryImpl implements EveliEnvirTenantQuery {
       EveliEnvirStore ctx,
       HdesClientConfig hdesClientConfig,
       DialobClient dialobClient,
-      EveliRuntimeCache cache) {
+      EveliRuntimeCache cache,
+      boolean isDev) {
     
     this.store = ctx.query();
     this.ctx = ctx;
     this.hdesClientConfig = hdesClientConfig;
     this.dialobClient = dialobClient;
     this.cache = cache;
+    this.isDev = isDev;
   }
   
   @Override 
   public Uni<EveliEnvirClient> createIfNot() { 
-    return store.createIfNot().onItem().transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache)); 
+    return store.createIfNot().onItem().transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache, isDev)); 
   }
   @Override
   public Uni<EveliEnvirClient> create() {
     return store.create().onItem()
-        .transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache));
+        .transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache, isDev));
   }
   @Override
   public EveliEnvirClientImpl build() {
-    return new EveliEnvirClientImpl(store.build(), hdesClientConfig, dialobClient, cache);
+    return new EveliEnvirClientImpl(store.build(), hdesClientConfig, dialobClient, cache, isDev);
   }
   @Override
   public Uni<EveliEnvirClient> delete() {
     return store.delete().onItem()
-        .transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache));
+        .transform(doc -> new EveliEnvirClientImpl(doc, hdesClientConfig, dialobClient, cache, isDev));
   }
   @Override
   public Uni<EveliEnvirClient> deleteAll() {
     return store.deleteAll().onItem()
-        .transform(doc -> new EveliEnvirClientImpl(ctx, hdesClientConfig, dialobClient, cache));
+        .transform(doc -> new EveliEnvirClientImpl(ctx, hdesClientConfig, dialobClient, cache, isDev));
   }
   @Override
   public EveliEnvirTenantQueryImpl tenantName(String tenantName) {
@@ -93,7 +96,7 @@ public class EveliEnvirTenantQueryImpl implements EveliEnvirTenantQuery {
             final Optional<EveliEnvirClient> result = Optional.empty();
             return result;
           }
-          return Optional.of(new EveliEnvirClientImpl(store.build(), hdesClientConfig, dialobClient, cache));
+          return Optional.of(new EveliEnvirClientImpl(store.build(), hdesClientConfig, dialobClient, cache, isDev));
         });
     
   }

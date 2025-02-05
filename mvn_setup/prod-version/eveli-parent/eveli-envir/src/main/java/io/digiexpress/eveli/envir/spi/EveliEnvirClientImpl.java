@@ -42,17 +42,18 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
   private final HdesClientConfig hdesClientConfig;
   private final DialobClient dialobClient;
   private final EveliRuntimeCache cache;
+  private final boolean isDev;
   
   public EveliEnvirStore getCtx() { return ctx; }
   
   public EveliEnvirClientImpl withTenant(String tenantId) {
-    return new EveliEnvirClientImpl(ctx.withTenantId(tenantId), hdesClientConfig, dialobClient, cache);
+    return new EveliEnvirClientImpl(ctx.withTenantId(tenantId), hdesClientConfig, dialobClient, cache, isDev);
   }
   public Uni<Tenant> getTenant() {
     return ctx.getTenant();
   }
   public EveliEnvirTenantQuery tenantQuery() {
-    return new EveliEnvirTenantQueryImpl(ctx, hdesClientConfig, dialobClient, cache);
+    return new EveliEnvirTenantQueryImpl(ctx, hdesClientConfig, dialobClient, cache, isDev);
   }
   @Override
   public CreateOneDeployment createOneDeployment() {
@@ -76,7 +77,7 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
   }
   @Override
   public EveliRuntimeQuery runtimeQuery() {
-    return new EveliRuntimeQueryImpl(ctx, cache, hdesClientConfig);
+    return new EveliRuntimeQueryImpl(ctx, cache, hdesClientConfig, isDev);
   }
 
 }
