@@ -41,10 +41,10 @@ const CodeEditorState: React.FC<ViewProps> = (props) => {
       hint: props.hint
     });
 
-    setState(state);
+    setState(editor);
 
     return () => {
-      editor.remove()
+      state?.remove()
     }
   }, []);
 
