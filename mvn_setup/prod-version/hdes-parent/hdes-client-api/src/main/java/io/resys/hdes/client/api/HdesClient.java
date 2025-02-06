@@ -173,6 +173,8 @@ public interface HdesClient {
     ExecutorBuilder inputJson(JsonNode json);
     ExecutorBuilder input(ExecutorInput input);
     
+    List<String> getFlowNames();
+    
     FlowExecutor flow(String nameOrId);
     DecisionExecutor decision(String nameOrId);
     ServiceExecutor service(String nameOrId);

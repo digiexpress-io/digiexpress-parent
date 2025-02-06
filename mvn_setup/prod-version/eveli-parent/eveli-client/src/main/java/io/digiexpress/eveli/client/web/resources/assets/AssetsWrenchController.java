@@ -21,8 +21,8 @@ package io.digiexpress.eveli.client.web.resources.assets;
  */
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +40,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.api.HdesComposer.ComposerEntity;
 import io.resys.hdes.client.api.HdesComposer.ComposerState;
@@ -54,7 +55,7 @@ import io.resys.hdes.client.api.ImmutableDiffRequest;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
 import io.resys.hdes.client.api.diff.TagDiff;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -65,7 +66,7 @@ import lombok.RequiredArgsConstructor;
 public class AssetsWrenchController {
   private final HdesComposer composer;
   private final ObjectMapper objectMapper;
-  private final Supplier<ProgramEnvir> programEnvir;
+  private final EveliEnvirClient envir;
   private final String version;
   private final String timestamp;
   private static final Duration timeout = Duration.ofMillis(10000);
@@ -144,8 +145,13 @@ public class AssetsWrenchController {
   }
   
   @GetMapping(path="/flow-names")
-  public List<String> flowNames() {
-    return programEnvir.get().getFlowsByName().keySet().stream().toList();
+  public Uni<List<String>> flowNames() {
+    return envir.runtimeQuery().findOne().onItem().transform(runtime -> {
+      if(runtime.isEmpty()) {
+        return Collections.emptyList();
+      }
+      return runtime.get().getWrench().getFlowNames();
+    }); 
   }
   
   @Data

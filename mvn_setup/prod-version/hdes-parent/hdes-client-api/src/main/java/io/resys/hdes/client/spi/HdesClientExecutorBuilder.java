@@ -63,6 +63,13 @@ public class HdesClientExecutorBuilder implements ExecutorBuilder {
     this.data = ImmutableProgramContext.builder(defs, envir, dependencyInjectionContext);
   }
   
+
+  
+  @Override
+  public List<String> getFlowNames() {
+    return envir.getFlowsByName().keySet().stream().toList();    
+  }
+  
   @Override
   public ExecutorBuilder inputField(String name, Serializable value) {
     return inputMap(Map.of(name, value));

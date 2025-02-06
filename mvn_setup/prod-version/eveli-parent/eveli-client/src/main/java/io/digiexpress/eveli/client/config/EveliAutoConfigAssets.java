@@ -21,25 +21,15 @@ package io.digiexpress.eveli.client.config;
  */
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetState;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
-import io.digiexpress.eveli.assets.api.ImmutableWorkflowTag;
-import io.digiexpress.eveli.assets.spi.EveliAssetsClientImpl;
-import io.digiexpress.eveli.assets.spi.EveliAssetsComposerImpl;
-import io.digiexpress.eveli.assets.spi.EveliAssetsDeserializer;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.spi.assets.HdesDefaultAssets;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
@@ -50,16 +40,15 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.resys.hdes.client.api.programs.ProgramEnvir;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
-import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.client.spi.store.ThenaStore;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.thestencil.client.api.MigrationBuilder.Sites;
+import io.smallrye.mutiny.Uni;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
@@ -69,6 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 
+@DependsOn(EveliEditEnvir.BEAN_NAME)
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {
@@ -80,47 +70,62 @@ public class EveliAutoConfigAssets {
   private String timestamp = "";
 
   @Bean
-  public AssetsAnyTagController assetsAnyTagController(EveliContext context, AuthClient security, DialobClient dialobClient) {
-    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
-    return new AssetsAnyTagController(composer);
+  public AssetsAnyTagController assetsAnyTagController(
+      EveliEditEnvir context, 
+      AuthClient security, 
+      DialobClient dialobClient,
+      EveliEnvirClient envir
+  ) {
+
+    return new AssetsAnyTagController(context.getStencil(), context.getWrench());
   }
   @Bean
-  public AssetsDeploymentController assetsDeploymentController(EveliContext context, AuthClient auth, DialobClient dialobClient) {
-    final var composer = new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient);
+  public AssetsDeploymentController assetsDeploymentController(
+      EveliEditEnvir context, 
+      AuthClient auth, 
+      DialobClient dialobClient,
+      EveliEnvirClient envir) {
+    
     return new AssetsDeploymentController(composer);
+  }
+  @Bean 
+  public AssetsPublicationController assetReleaseController(
+      EveliEditEnvir context, 
+      AuthClient security,
+      DialobClient dialobClient,
+      EveliEnvirClient envir
+  ) {
+    return new AssetsPublicationController();
   }
   @Bean
   public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
     return new AssetsDialobController(client, objectMapper);
   }
   @Bean 
-  public AssetsPublicationController assetReleaseController(EveliContext context, AuthClient security, DialobClient dialobClient) {
-    return new AssetsPublicationController(new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient), security);
-  }
-  @Bean 
-  public AssetsWorkflowController workflowController(EveliContext context, AuthClient auth, DialobClient dialobClient) {
-    return new AssetsWorkflowController(auth, new EveliAssetsComposerImpl(context.getAssets(), context.getStencil(), context.getWrench(), dialobClient));
-  }
-  @Bean
-  public AssetsWrenchController wrenchComposerController(EveliContext context, ObjectMapper objectMapper) {
-    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, context.getProgramEnvir(), version, timestamp);
+  public AssetsWorkflowController workflowController(
+      EveliEditEnvir context,
+      DialobClient dialobClient
+  ) {
+    return new AssetsWorkflowController(context.getStencil(), dialobClient);
   }
   @Bean
-  public AssetsStencilController assetsStencilController(EveliContext context, ObjectMapper objectMapper) {
+  public AssetsWrenchController wrenchComposerController(EveliEditEnvir context, EveliEnvirClient client, ObjectMapper objectMapper) {
+    return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, client, version, timestamp);
+  }
+  @Bean
+  public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper) {
     return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper);
   }
 
-  @Bean
-  public EveliContext eveliContext(
+  
+  
+  public static EveliEditEnvir eveliEditEnvir(
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
       ObjectMapper objectMapper,
       ApplicationContext context,
       io.vertx.mutiny.pgclient.PgPool pgPool
     ) {
-    
-    final var liveContent = "live content:" + context.getApplicationName();
-
     
     final var wrenchClient = HdesClientImpl.builder()
         .store(ThenaStore.builder()
@@ -154,22 +159,18 @@ public class EveliAutoConfigAssets {
             .authorProvider(() -> "eveli")
         ).build());
 
-    final var createdWrench = wrenchClient.repo().create()
-        .onItem().transformToUni(init -> 
-          new HdesDefaultAssets(init, Boolean.TRUE.equals(assetProps.getOverwrite())).accept()
-          .onItem().transform(junk -> init)
-        )
-        .await().atMost(Duration.ofSeconds(10));
-    
-    final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
-    
-
-    
-    return EveliContext.builder()
-        .stencil(stencilClient)
-        .wrench(wrenchClient)
-        .assets(assetClient)
-        .build();
+    return new EveliEditEnvir(stencilClient, wrenchClient, assetProps);
   }
   
+  public static Uni<EveliEditEnvir> getOrCreateDb(EveliEditEnvir envir) {
+    final var createdWrench = envir.getWrench().repo().create()
+        .onItem().transformToUni(init -> 
+          new HdesDefaultAssets(init, Boolean.TRUE.equals(envir.getAssetProps().getOverwrite())).accept()
+          .onItem().transform(junk -> init)
+        );
+    final var createdStencil = envir.getStencil().repo().create();
+    return Uni.combine().all()
+        .unis(createdWrench, createdStencil)
+        .asTuple().onItem().transform(e -> envir);
+  }
 }
