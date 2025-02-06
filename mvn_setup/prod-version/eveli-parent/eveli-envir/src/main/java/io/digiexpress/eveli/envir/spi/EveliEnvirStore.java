@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
+import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.api.ImmutableEveliDeployment;
 import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
 import io.resys.thena.api.entities.Tenant.StructureType;
@@ -38,12 +39,18 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
 
   public static String DOC_TYPE_DEPLOYMENT = "deployment";
   
-  public EveliEnvirStore(ThenaDocConfig config, DocStoreFactory<EveliEnvirStore> factory) {
+  private final ExternalDeploymentProvider externalProvider;
+  
+  public EveliEnvirStore(
+      ThenaDocConfig config, 
+      DocStoreFactory<EveliEnvirStore> factory,
+      ExternalDeploymentProvider externalProvider) {
     super(config, factory);
+    this.externalProvider = externalProvider;
   }
 
-  public static Builder<EveliEnvirStore> builder() {
-    final DocStoreFactory<EveliEnvirStore> factory = (config, delegate) -> new EveliEnvirStore(config, delegate);
+  public static Builder<EveliEnvirStore> builder(ExternalDeploymentProvider externalProvider) {
+    final DocStoreFactory<EveliEnvirStore> factory = (config, delegate) -> new EveliEnvirStore(config, delegate, externalProvider);
     return new Builder<EveliEnvirStore>(factory);
   }
   
@@ -65,5 +72,9 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
             .map(src -> src.getValue().mapTo(ImmutableEveliSources.class))
             .orElse(null))
         .build();
+  }
+
+  public ExternalDeploymentProvider getExternalProvider() {
+    return externalProvider;
   }
 }

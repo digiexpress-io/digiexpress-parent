@@ -37,7 +37,9 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   private final EveliEnvirStore ctx;
   private final EveliRuntimeCache cache;
   private final HdesClientConfig hdesClientConfig;
+  
   private final boolean isDev;
+  
 
   private EveliRuntime createEnvir(EveliDeployment deployment) {
     final var envir = new EveliRuntimeImpl(deployment, hdesClientConfig, isDev);
@@ -76,7 +78,17 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   public Uni<EveliRuntime> getOne() {
     return getLastDeployment().onItem().transformToUni(last -> {
       if(last.isEmpty()) {
-        throw new EveliRuntimeQueryException("No deployments that can be activated!");
+        
+        return ctx.getExternalProvider().getDeployment().onItem().transformToUni(resp -> {
+          if(resp.isPresent()) {
+            final Uni<EveliRuntime> external = getOrCreateEnvir(resp.get());
+            return external;
+          }
+          
+          throw new EveliRuntimeQueryException("No deployments that can be activated!");
+        });
+        
+        
       }
       
       return getOrCreateEnvir(last.get());
@@ -87,9 +99,16 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   public Uni<Optional<EveliRuntime>> findOne() {
     return getLastDeployment().onItem().transformToUni(last -> {
       if(last.isEmpty()) {
-        return Uni.createFrom().item(Optional.<EveliRuntime>empty());
+        
+        return ctx.getExternalProvider().getDeployment().onItem().transformToUni(resp -> {
+          if(resp.isPresent()) {
+            final Uni<EveliRuntime> external = getOrCreateEnvir(resp.get());
+            return external.onItem().transform(e -> Optional.of(e));
+          }
+          return Uni.createFrom().item(Optional.<EveliRuntime>empty());
+          
+        });
       }
-      
       return getOrCreateEnvir(last.get()).onItem().transform(e -> Optional.of(e));
     });
   }
