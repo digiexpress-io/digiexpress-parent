@@ -21,7 +21,11 @@ package io.resys.hdes.client.spi.composer;
  */
 
 import io.resys.hdes.client.api.HdesClient.EnvirBuilder;
+import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
+
+import java.time.LocalDateTime;
+
 import io.resys.hdes.client.api.ImmutableComposerEntity;
 import io.resys.hdes.client.api.ImmutableComposerState;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
@@ -30,13 +34,14 @@ import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.ast.AstTag.AstTagValue;
+import io.resys.hdes.client.api.ast.ImmutableAstTag;
+import io.resys.hdes.client.api.ast.ImmutableAstTagValue;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 
 public class ComposerEntityMapper {
 
   public static EnvirBuilder toEnvir(EnvirBuilder envirBuilder, AstTag source) {
-    
-    
     for(final var tag : source.getValues()) {
       final var entity = ImmutableStoreEntity.builder()
           .body(tag.getCommands())
@@ -71,7 +76,6 @@ public class ComposerEntityMapper {
     source.getFlows().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).flow(v).build());
     source.getTags().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).tag(v).build());
     source.getBranches().values().forEach(v -> envirBuilder.addCommand().id(v.getId()).branch(v).build());
-    
     return envirBuilder;
   }
   
@@ -140,5 +144,32 @@ public class ComposerEntityMapper {
     default:
       break;
     }
+  }
+  
+  
+  
+  public static AstTag toTag(StoreState source) {
+    final var builder = ImmutableAstTag.builder();
+    
+    source.getDecisions().values().forEach(v -> builder.addValues(toTagValue(v)));
+    source.getServices().values().forEach(v -> builder.addValues(toTagValue(v)));
+    source.getFlows().values().forEach(v -> builder.addValues(toTagValue(v)));
+    
+    return builder
+        .name(source.getTagName())
+        .created(LocalDateTime.now())
+        .build();
+  }
+  
+  private static AstTagValue toTagValue(StoreEntity entity) {
+    final var tagValue = ImmutableAstTagValue
+      .builder()
+      .id(entity.getId())
+      .hash(entity.getHash())
+      .commands(entity.getBody())
+      .bodyType(entity.getBodyType())
+      .build();
+    
+    return tagValue;
   }
 }
