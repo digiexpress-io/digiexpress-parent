@@ -148,5 +148,10 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+    	<groupId>io.digiexpress</groupId>
+    	<artifactId>stencil-client-api</artifactId>
+    	<version>0.y-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

@@ -1,6 +1,9 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
-import java.time.Duration;
+
+
+
+import java.io.Serializable;
 
 /*-
  * #%L
@@ -24,28 +27,23 @@ import java.time.Duration;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.immutables.value.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflow;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer.WorkflowMutator;
-import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
-import io.digiexpress.eveli.client.api.AuthClient;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.spi.StencilComposerImpl;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,95 +55,83 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetsWorkflowController {
 
-  private final AuthClient authClient;
-  private final EveliAssetComposer composer;
-  private static final Duration timeout = Duration.ofMillis(10000);
+  private final StencilClient stencilClient;
+  private final DialobClient dialobClient;
   
-  @GetMapping
-  public ResponseEntity<List<Entity<Workflow>>> findAllWorkflows() {
-    final var wks = composer.workflowQuery().findAll().await().atMost(timeout);
-    return new ResponseEntity<>(wks, HttpStatus.OK);
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableWorkflow.class)
+  @JsonDeserialize(as = ImmutableWorkflow.class)
+  public interface Workflow extends Serializable {
+    String getId();
+    WorkflowBody getBody();
   }
   
-  @PostMapping
-  public ResponseEntity<Entity<Workflow>> create(@RequestBody CreateWorkflow workflow) {
-    return new ResponseEntity<>(composer.create().workflow(workflow).await().atMost(timeout), HttpStatus.CREATED);
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableWorkflowBody.class)
+  @JsonDeserialize(as = ImmutableWorkflowBody.class)
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public interface WorkflowBody {
+    String getName();
+    @Nullable String getFormId();
+    @Nullable String getFormName();
+    @Nullable String getFormTag();
+    @Nullable String getFlowName();
+  }
+  
+  @Value.Immutable
+  @JsonSerialize(as = ImmutableWorkflowMutator.class)
+  @JsonDeserialize(as = ImmutableWorkflowMutator.class)
+  public interface WorkflowMutator {
+    String getId();
+    @Nullable String getName();
+    @Nullable String getFormName();
+    @Nullable String getFormTag();
+    @Nullable String getFlowName();
+  }
+  
+  
+  @GetMapping
+  public Uni<List<Workflow>> findAllWorkflows() {
+    return stencilClient.getStore().query().head().onItem().transform(state -> state.getWorkflows().values().stream()
+        .map(release -> {
+          final WorkflowBody body = ImmutableWorkflowBody.builder()
+              .formId(release.getBody().getFormId())
+              .formName(release.getBody().getFormName())
+              .formTag(release.getBody().getFormTag())
+              .flowName(release.getBody().getFlowName())
+              .name(release.getBody().getValue())
+              .build();
+          
+          final Workflow result = ImmutableWorkflow.builder()
+            .id(release.getId())
+            .body(body)
+            .build();
+          
+          return result;
+        })
+        .toList()
+    );
   }
   
   @GetMapping("/{id}")
-  public ResponseEntity<Entity<Workflow>> get(@PathVariable("id") String id) {
-    final var workflow = composer.workflowQuery().findOneByName(id)
-        .await().atMost(timeout);
-
-    if(workflow.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    return new ResponseEntity<>(workflow.get(), HttpStatus.OK);
+  public Uni<Workflow> get(@PathVariable("id") String id) {
+    return findAllWorkflows().onItem().transform(values -> values.stream().filter(e -> e.getId().equals(id)).findFirst().get());
   }
   
   @PutMapping("/{id}")
-  @Transactional
-  public ResponseEntity<Entity<Workflow>> save(@PathVariable("id") String id, @RequestBody WorkflowMutator workflow) {
-    final var previousWorkflow = composer.workflowQuery().findOneById(id)
-        .await().atMost(timeout);
-
-    if(previousWorkflow.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    final var entity = composer.update().workflow(workflow).await().atMost(timeout);
-    return new ResponseEntity<>(entity, HttpStatus.OK);
-  }
-
-  @DeleteMapping("/{id}")
-  @Transactional
-  public ResponseEntity<Entity<Workflow>> delete(@PathVariable("id") String id) {
-    final var previousWorkflow = composer.workflowQuery().findOneById(id)
-        .await().atMost(timeout);
-    
-    if(previousWorkflow.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    final var entity = composer.delete().workflow(id).await().atMost(timeout);
-    return new ResponseEntity<>(entity, HttpStatus.OK);
-  }
-  
-  
-  @GetMapping("/tags")
-  public ResponseEntity<List<Entity<WorkflowTag>>> findAllTags() {
-    return new ResponseEntity<>(composer.workflowTagQuery().findAll().await().atMost(timeout), HttpStatus.OK);
-  }
-  @PostMapping("/tags")
-  public ResponseEntity<Entity<WorkflowTag>> createOneTag(@RequestBody CreateWorkflowTag workflowRelease) {
-    try {
-      final var snapshotRelease = ImmutableCreateWorkflowTag.builder()
-        .from(workflowRelease)
-        .user(authClient.getUser().getPrincipal().getUsername())
+  public Uni<Workflow> save(@PathVariable("id") String id, @RequestBody WorkflowMutator workflow) {
+    final var formId = dialobClient.getFormByNameAndTag(workflow.getFormName(), workflow.getFormTag()).getId();
+    final var command = io.thestencil.client.api.ImmutableWorkflowMutator.builder()
+        .workflowId(id)
+        .flowName(workflow.getFlowName())
+        .value(workflow.getName())
+        .formId(formId)
+        .formTag(workflow.getFormTag())
+        .formName(workflow.getFormName())
         .build();
-      
-      return new ResponseEntity<>(composer.create().workflowTag(snapshotRelease).await().atMost(timeout), HttpStatus.CREATED);
-      
-    } catch (Exception e) {
-      log.warn("Data integrity violation in snapshot release creation: {}", e.getMessage());
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists");
-    }
-  }
-  @GetMapping("/tags/{id}")
-  public ResponseEntity<Entity<WorkflowTag>> getOneTagById(@PathVariable("id") String name) {
-    final var tags = composer.workflowTagQuery().findAll().await().atMost(timeout);
-    final var workflowRelease = tags.stream().filter(e -> e.getBody().getName().equals(name)).findFirst();
-    if(workflowRelease.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    return new ResponseEntity<>(workflowRelease.get(), HttpStatus.OK);
-  }
-  
-  @DeleteMapping("/tags/{id}")
-  public ResponseEntity<Entity<WorkflowTag>> deleteById(@PathVariable("id") String name) {
-    final var workflowRelease = composer.workflowTagQuery().findOneByName(name).await().atMost(timeout);
-    if(workflowRelease.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-    final var entity = composer.delete().workflowTag(workflowRelease.get().getId()).await().atMost(timeout);
-    return new ResponseEntity<>(entity, HttpStatus.OK);
+    return new StencilComposerImpl(stencilClient)
+        .update().workflow(command)
+        .onItem().transformToUni(saved -> get(saved.getId()));
+
   }
 }
