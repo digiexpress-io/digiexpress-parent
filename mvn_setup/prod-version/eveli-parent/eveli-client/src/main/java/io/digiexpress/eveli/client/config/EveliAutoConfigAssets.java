@@ -154,27 +154,6 @@ public class EveliAutoConfigAssets {
             .authorProvider(() -> "eveli")
         ).build());
 
-    final var assetClient = EveliAssetsClientImpl.builder()
-        .config((builder) -> builder
-            .client(DbStateSqlImpl.create().client(pgPool).build())
-            .repoName("eveli-assets")
-            .headName("main")
-            .deserializer(new EveliAssetsDeserializer(objectMapper))
-            .objectMapper(objectMapper)
-            .serializer((entity) -> {
-              try {
-                return new JsonObject(objectMapper.writeValueAsString(entity));
-              } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-              }
-            })
-            .gidProvider(() -> UUID.randomUUID().toString())
-            .authorProvider(() -> "junit-test"))
-            
-        .build();
-
-
-    final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
     final var createdWrench = wrenchClient.repo().create()
         .onItem().transformToUni(init -> 
           new HdesDefaultAssets(init, Boolean.TRUE.equals(assetProps.getOverwrite())).accept()
@@ -184,23 +163,7 @@ public class EveliAutoConfigAssets {
     
     final var createdStencil = stencilClient.repo().create().await().atMost(Duration.ofSeconds(5));
     
-    
-    final var msg = new StringBuilder("\r\n")
-      .append("Creating assets DB-s:").append("\r\n")
-      .append("  workflows: ").append("\r\n")
-      .append("    created-db: ").append(createdAssets).append("\r\n")
-      .append("    connected-to-repo: ").append(assetClient.getConfig().getRepoName()).append("\r\n")
-      
-      .append("  wrench: ").append("\r\n")
-      .append("    created-db: ").append(createdWrench).append("\r\n")
-      .append("    connected-to-repo: ").append(wrenchClient.store().getRepoName()).append("\r\n")
-      
-      .append("  stencil: ").append("\r\n")
-      .append("    created-db: ").append(createdStencil).append("\r\n")
-      .append("    connected-to-repo: ").append(stencilClient.getStore().getRepoName()).append("\r\n")
-      ;
-    
-    EveliAutoConfigAssets.log.info(msg.toString());
+
     
     return EveliContext.builder()
         .stencil(stencilClient)

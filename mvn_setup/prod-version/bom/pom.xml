@@ -34,11 +34,6 @@
       </dependency>   
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>eveli-assets</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.digiexpress</groupId>
         <artifactId>eveli-envir</artifactId>
         <version>${project.version}</version>
       </dependency>

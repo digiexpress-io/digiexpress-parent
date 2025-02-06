@@ -10,20 +10,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.digiexpress</groupId>    
-      <artifactId>dialob-client</artifactId>
-    </dependency>    
-    <dependency>
-      <groupId>io.digiexpress</groupId>
-      <artifactId>eveli-assets</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jboss.slf4j</groupId>
-          <artifactId>slf4j-jboss-logmanager</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>thena-mq-client</artifactId>
       <exclusions>
@@ -33,8 +19,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
-    
     <dependency>
       <groupId>io.digiexpress</groupId>
       <artifactId>eveli-envir</artifactId>
@@ -146,12 +130,6 @@
           <artifactId>snakeyaml</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-
-    <dependency>
-    	<groupId>io.digiexpress</groupId>
-    	<artifactId>stencil-client-api</artifactId>
-    	<version>0.y-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
