@@ -28,7 +28,6 @@ import java.util.Optional;
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.Deployment;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.DeploymentBuilder;
 import io.digiexpress.eveli.assets.api.ImmutableDeployment;
@@ -37,6 +36,7 @@ import io.digiexpress.eveli.assets.spi.exceptions.AssetsAssert.EveliAssetsAssert
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.ast.AstTag;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -87,8 +87,7 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
     return Uni.combine().all().unis(
         getWrench(publication), 
         getStencil(publication),
-        getDialob(publication),
-        getWorkflow(publication)
+        getDialob(publication)
     ).asTuple().onItem().transform(tuple -> {
       
       
@@ -96,7 +95,6 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
           .addAllDialobTag(tuple.getItem3())
           .stencilTag(tuple.getItem2())
           .wrenchTag(tuple.getItem1())
-          .workflowTag(tuple.getItem4())
           .source(publication)
           .created(LocalDateTime.now())
           .build();
@@ -130,23 +128,14 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
   }
   
   private Uni<List<Form>> getDialob(Publication publication) {
-    return client.queryBuilder().findOneWorkflowTagByName(publication.getWorkflowTagName())
-    .onItem().transform(wk -> {
-      
-      return wk
-        .orElseThrow(() -> new EveliAssetsAssertException("Can't find workflow tag: " + publication.getWorkflowTagName() + "!"))
-        .getBody().getEntries().stream()
-        .map(entry -> dialobClient.getFormById(entry.getFormId()))
+    return getStencil(publication).onItem().transformToMulti(stencil -> {
+      final var formIds = stencil.getWorkflows().values().stream()
+        .map(e -> e.getBody().getFormId())
+        .filter(e -> e != null)
         .toList();
-    });
-  }
-  
-  private Uni<WorkflowTag> getWorkflow(Publication publication) {
-    return client.queryBuilder().findOneWorkflowTagByName(publication.getWorkflowTagName())
-    .onItem().transform(wk -> {
-      return wk
-        .orElseThrow(() -> new EveliAssetsAssertException("Can't find workflow tag: " + publication.getWorkflowTagName() + "!"))
-        .getBody();
-    }); 
+      return Multi.createFrom().iterable(formIds);
+    })
+    .onItem().transform(formId -> dialobClient.getFormById(formId))
+    .collect().asList();
   }
 }

@@ -35,8 +35,6 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityBody;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetClientConfig;
 import io.digiexpress.eveli.assets.api.ImmutableAssetState;
 import io.digiexpress.eveli.assets.spi.exceptions.QueryException;
@@ -77,19 +75,6 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
   }
 
   @Override
-  public Uni<List<Entity<WorkflowTag>>> findAllWorkflowTags() {
-    return findAnyById(Collections.emptyList(), EntityType.WORKFLOW_TAG);
-  }
-  @Override
-  public Uni<List<Entity<Workflow>>> findAllWorkflows() {
-    return findAnyById(Collections.emptyList(), EntityType.WORKFLOW);
-  }
-  @Override
-  public Uni<List<Entity<Workflow>>> findAllWorkflowsById(List<String> ids) {
-    final Uni<List<Entity<Workflow>>> wks = findAnyById(ids, EntityType.WORKFLOW);
-    return wks;
-  }
-  @Override
   public Uni<List<Entity<Publication>>> findAllPublicationsById(List<String> ids) {
     final Uni<List<Entity<Publication>>> wks = findAnyById(ids, EntityType.PUBLICATION);
     return wks;
@@ -100,12 +85,7 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
     final Uni<List<Entity<Publication>>> wks = findAnyById(Collections.emptyList(), EntityType.PUBLICATION);
     return wks;
   }
-  
-  @Override
-  public Uni<List<Entity<WorkflowTag>>> findAllWorkflowTagsById(List<String> ids) {
-    final Uni<List<Entity<WorkflowTag>>> wks = findAnyById(ids, EntityType.WORKFLOW_TAG);
-    return wks;
-  }
+
   @Override
   public Uni<Optional<Entity<Publication>>> findOnePublicationByName(String name) {
     return config.getClient()
@@ -126,73 +106,7 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
         })
         .findAny();
     });
-  }
-  @Override
-  public Uni<Optional<Entity<Workflow>>> findOneWorkflowById(String id) {
-    return config.getClient()
-    .git(config.getRepoName())
-    .pull().pullQuery()
-    .branchNameOrCommitOrTag(config.getHeadName())
-    .docId(id)
-
-    .findAll().onItem()
-    .transform(state -> {
-      if(state.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new QueryException("failed to find any workflows", EntityType.WORKFLOW, state);  
-      }
-
-      return state.getObjects().getBlob().stream()
-        .map(blob -> {
-          final Entity<Workflow> result = config.getDeserializer().fromString(EntityType.WORKFLOW, blob.getValue().encode());
-          return result;
-        })
-        .findAny();
-    });
-  }
-  @Override
-  public Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name) {
-    return config.getClient()
-    .git(config.getRepoName())
-    .pull().pullQuery()
-    .branchNameOrCommitOrTag(config.getHeadName())
-    .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.WORKFLOW.name()), MatchCriteria.equalsTo("body.name", name)))
-    .findAll().onItem()
-    .transform(state -> {
-      if(state.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new QueryException("failed to find any workflows", EntityType.WORKFLOW, state);  
-      }
-
-      return state.getObjects().getBlob().stream()
-        .map(blob -> {
-          final Entity<Workflow> result = config.getDeserializer().fromString(EntityType.WORKFLOW, blob.getValue().encode());
-          return result;
-        })
-        .findAny();
-    });
-  }
-  @Override
-  public Uni<Optional<Entity<WorkflowTag>>> findOneWorkflowTagByName(String name) {
-    return config.getClient()
-    .git(config.getRepoName())
-    .pull().pullQuery()
-    .branchNameOrCommitOrTag(config.getHeadName())
-    .matchBy(Arrays.asList(MatchCriteria.equalsTo("type", EntityType.WORKFLOW_TAG.name()), MatchCriteria.equalsTo("body.name", name)))
-    .findAll().onItem()
-    .transform(state -> {
-      if(state.getStatus() != QueryEnvelopeStatus.OK) {
-        throw new QueryException("failed to find any workflow tags", EntityType.WORKFLOW_TAG, state);  
-      }
-
-      return state.getObjects().getBlob().stream()
-        .map(blob -> {
-          final Entity<WorkflowTag> result = config.getDeserializer().fromString(EntityType.WORKFLOW_TAG, blob.getValue().encode());
-          return result;
-        })
-        .findAny();
-    });
-  }
-
-  
+  }  
   @Override
   public Uni<AssetState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();
@@ -255,12 +169,6 @@ public class QueryBuilderImpl implements EveliAssetClient.QueryBuilder {
       switch (entity.getType()) {
       case PUBLICATION:
         builder.putPublications(id, (Entity<Publication>) entity);
-        break;
-      case WORKFLOW:
-        builder.putWorkflows(id, (Entity<Workflow>) entity);
-        break;
-      case WORKFLOW_TAG:
-        builder.putWorkflowTags(id, (Entity<WorkflowTag>) entity);
         break;
       default: throw new RuntimeException("Don't know how to convert entity: " + entity.toString() + "!");
       }

@@ -24,8 +24,6 @@ import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetState;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -45,25 +43,5 @@ public class DeleteBuilderImpl implements EveliAssetComposer.DeleteBuilder {
       return eveliAssetClient.crudBuilder().delete(currentState);
     });
 
-  }
-
-  @Override
-  public Uni<Entity<Workflow>> workflow(String workflowId) {
-    final Uni<AssetState> query = eveliAssetClient.queryBuilder().head();
-    
-    return query.onItem().transformToUni(state -> {
-      final var currentState = state.getWorkflows().get(workflowId);
-      return eveliAssetClient.crudBuilder().delete(currentState);
-    });
-  }
-
-  @Override
-  public Uni<Entity<WorkflowTag>> workflowTag(String workflowTagId) {
-    final Uni<AssetState> query = eveliAssetClient.queryBuilder().head();
-
-    return query.onItem().transformToUni(state -> {
-      final var currentState = state.getWorkflowTags().get(workflowTagId);
-      return eveliAssetClient.crudBuilder().delete(currentState);
-    });
   }
 }

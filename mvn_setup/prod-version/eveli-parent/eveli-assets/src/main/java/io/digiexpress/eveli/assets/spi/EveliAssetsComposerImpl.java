@@ -26,14 +26,11 @@ import java.util.Optional;
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.ImmutableAnyAssetTag;
 import io.digiexpress.eveli.assets.spi.builders.CreateBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.DeleteBuilderImpl;
 import io.digiexpress.eveli.assets.spi.builders.DeploymentBuilderImpl;
-import io.digiexpress.eveli.assets.spi.builders.UpdateBuilderImpl;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.resys.hdes.client.api.HdesClient;
 import io.smallrye.mutiny.Uni;
@@ -50,11 +47,6 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
   @Override
   public CreateBuilder create() {
     return new CreateBuilderImpl(client, stencilClient, hdesClient, dialobClient);
-  }
-
-  @Override
-  public UpdateBuilder update() {
-    return new UpdateBuilderImpl(client, dialobClient);
   }
 
   @Override
@@ -119,21 +111,6 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
                 .toList();
           });
         }
-        case WORKFLOW: {
-          return workflowTagQuery().findAll().onItem().transform(tags -> {
-            return tags.stream().map(tag -> (AnyAssetTag) ImmutableAnyAssetTag.builder()
-                .created(tag.getBody().getCreated())
-                .type(AssetTagType.WORKFLOW)
-                .description(tag.getBody().getDescription())
-                .id(tag.getId())
-                .name(tag.getBody().getName())
-
-                .user(tag.getBody().getUser())
-                .build()).toList();
-          });
-          
-          
-        }
         default:
           throw new IllegalArgumentException("Unexpected value: " + type);
         }
@@ -158,44 +135,4 @@ public class EveliAssetsComposerImpl implements EveliAssetComposer {
       
     };
   }
-
-  @Override
-  public WorkflowQuery workflowQuery() {
-    return new WorkflowQuery() {
-
-      @Override
-      public Uni<List<Entity<Workflow>>> findAll() {
-        return client.queryBuilder().findAllWorkflows();
-      }
-
-      @Override
-      public Uni<Optional<Entity<Workflow>>> findOneByName(String name) {
-        return client.queryBuilder().findOneWorkflowByName(name);
-      }
-
-      @Override
-      public Uni<Optional<Entity<Workflow>>> findOneById(String id) {
-        return client.queryBuilder().findOneWorkflowById(id);
-      }
-      
-    };
-  }
-
-  @Override
-  public WorkflowTagQuery workflowTagQuery() {
-    return new WorkflowTagQuery() {
-      
-      @Override
-      public Uni<Optional<Entity<WorkflowTag>>> findOneByName(String name) {
-        return client.queryBuilder().findOneWorkflowTagByName(name);
-      }
-      
-      @Override
-      public Uni<List<Entity<WorkflowTag>>> findAll() {
-        return client.queryBuilder().findAllWorkflowTags();
-      }
-    };
-  }
-  
-
 }

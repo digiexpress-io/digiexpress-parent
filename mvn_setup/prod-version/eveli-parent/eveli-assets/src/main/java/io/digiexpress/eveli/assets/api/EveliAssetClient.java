@@ -23,7 +23,6 @@ package io.digiexpress.eveli.assets.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,14 +58,7 @@ public interface EveliAssetClient {
   
   
   interface QueryBuilder {
-    Uni<List<Entity<Workflow>>> findAllWorkflowsById(List<String> ids);
     Uni<List<Entity<Publication>>> findAllPublicationsById(List<String> ids);
-    Uni<List<Entity<WorkflowTag>>> findAllWorkflowTagsById(List<String> ids);
-    Uni<List<Entity<WorkflowTag>>> findAllWorkflowTags();
-    Uni<List<Entity<Workflow>>> findAllWorkflows();
-    Uni<Optional<Entity<Workflow>>> findOneWorkflowByName(String name);
-    Uni<Optional<Entity<Workflow>>> findOneWorkflowById(String id);
-    Uni<Optional<Entity<WorkflowTag>>> findOneWorkflowTagByName(String name);    
     Uni<AssetState> head();
     
     Uni<List<Entity<Publication>>> findAllPublications();    
@@ -83,7 +75,6 @@ public interface EveliAssetClient {
   
   
   enum EntityType {
-    WORKFLOW, WORKFLOW_TAG, 
     PUBLICATION // Pointer to all other releases
   }
 
@@ -109,9 +100,7 @@ public interface EveliAssetClient {
     @Nullable
     String getCommit();
     AssetStatus getRepoStatus();
-    Map<String, Entity<Workflow>> getWorkflows();
     Map<String, Entity<Publication>> getPublications();
-    Map<String, Entity<WorkflowTag>> getWorkflowTags();
   }
   
 
@@ -124,40 +113,6 @@ public interface EveliAssetClient {
     T getBody();
   }
 
-
-
-
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableWorkflow.class)
-  @JsonDeserialize(as = ImmutableWorkflow.class)
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  interface Workflow extends EntityBody {
-    String getName();
-    String getFormId();
-    String getFormName();
-    String getFormTag();
-    String getFlowName();
-    ZonedDateTime getUpdated();
-  }
-  
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableWorkflowTag.class)
-  @JsonDeserialize(as = ImmutableWorkflowTag.class)
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  interface WorkflowTag extends EntityBody {
-    @Nullable String getParentCommit();
-    List<Workflow> getEntries();
-  
-    String getName();
-    String getDescription();
-    // some models don't store user info for tag
-    @Nullable
-    String getUser();
-    LocalDateTime getCreated();
-  }
-  
-  
 
   @Value.Immutable
   @JsonSerialize(as = ImmutablePublication.class)
@@ -175,7 +130,6 @@ public interface EveliAssetClient {
     
     String getStencilTagName();
     String getWrenchTagName();
-    String getWorkflowTagName();
   }
     
   @Value.Immutable

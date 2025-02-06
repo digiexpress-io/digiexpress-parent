@@ -154,30 +154,6 @@ public class EveliAutoConfigAssets {
             .authorProvider(() -> "eveli")
         ).build());
 
-    final Supplier<ProgramEnvir> programEnvir = () -> {
-      final var state = wrenchClient.store().query().get().await().atMost(Duration.ofMinutes(1));
-      return ComposerEntityMapper.toEnvir(wrenchClient.envir().tagName(liveContent), state).build();          
-    };
-
-    
-    final Supplier<Sites> siteEnvir = () -> {
-      final var targetDate = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.ofHours(assetProps.getTimezoneOffset()));
-      
-      final var stencilState = stencilClient.getStore().query().head()
-          .onItem().transform(state -> stencilClient.markdown()
-              .targetDate(targetDate.toLocalDateTime())
-              .json(state, true).build())
-          .onItem().transform(markdowns -> stencilClient.sites()
-              .imagePath("images")
-              .created(System.currentTimeMillis())
-              .source(markdowns)
-              .tagName(liveContent)
-              .build());
-      
-      return stencilState.await().atMost(Duration.ofMinutes(1));
-    };
-    
-    
     final var assetClient = EveliAssetsClientImpl.builder()
         .config((builder) -> builder
             .client(DbStateSqlImpl.create().client(pgPool).build())
@@ -196,28 +172,13 @@ public class EveliAutoConfigAssets {
             .authorProvider(() -> "junit-test"))
             
         .build();
-    final Supplier<WorkflowTag> workflowEnvir = () -> {
-      
-      final AssetState state = assetClient.queryBuilder().head().await().atMost(Duration.ofMinutes(1));
-      
-      final var release = ImmutableWorkflowTag.builder()
-            .name(liveContent)
-            .description("live dev")
-            .created(LocalDateTime.now())
-            .user(context.getApplicationName())
-            .parentCommit(state.getCommit())
-            .entries(state.getWorkflows().values().stream().map(e -> e.getBody()).toList())
-            .build();
-      return release;
-    };
+
 
     final var createdAssets = assetClient.repoBuilder().createIfNot().await().atMost(Duration.ofSeconds(5));
     final var createdWrench = wrenchClient.repo().create()
         .onItem().transformToUni(init -> 
-        
           new HdesDefaultAssets(init, Boolean.TRUE.equals(assetProps.getOverwrite())).accept()
           .onItem().transform(junk -> init)
-          
         )
         .await().atMost(Duration.ofSeconds(10));
     
@@ -244,10 +205,7 @@ public class EveliAutoConfigAssets {
     return EveliContext.builder()
         .stencil(stencilClient)
         .wrench(wrenchClient)
-        .programEnvir(programEnvir)
-        .siteEnvir(siteEnvir)
         .assets(assetClient)
-        .workflowEnvir(workflowEnvir)
         .build();
   }
   

@@ -29,8 +29,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetClientConfig;
 import lombok.RequiredArgsConstructor;
 
@@ -46,12 +44,6 @@ public class EveliAssetsDeserializer implements EveliAssetClientConfig.Deseriali
       switch(entityType) {
         case PUBLICATION: {
           return (T) objectMapper.readValue(value, new TypeReference<Entity<Publication>>() {});  
-        }
-        case WORKFLOW: {
-          return (T) objectMapper.readValue(value, new TypeReference<Entity<Workflow>>() {});  
-        }
-        case WORKFLOW_TAG: {
-          return (T) objectMapper.readValue(value, new TypeReference<Entity<WorkflowTag>>() {});  
         }
         default: throw new RuntimeException("can't map: " + entityType);
       }
@@ -71,14 +63,6 @@ public class EveliAssetsDeserializer implements EveliAssetClientConfig.Deseriali
       case PUBLICATION: {
         return objectMapper.convertValue(node, new TypeReference<Entity<Publication>>() {});
       }
-      case WORKFLOW: {
-        return objectMapper.convertValue(node, new TypeReference<Entity<Workflow>>() {});
-      }
-      case WORKFLOW_TAG: {
-        return objectMapper.convertValue(node, new TypeReference<Entity<WorkflowTag>>() {});
-      }
-
-
       default:
         throw new RuntimeException("can't map: " + node);
       }

@@ -21,30 +21,20 @@ package io.digiexpress.eveli.assets.spi.builders;
  */
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import io.digiexpress.eveli.assets.api.EveliAssetClient;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetState;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetStatus;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityBody;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.EntityType;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.AssetBatch;
 import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreatePublication;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflow;
-import io.digiexpress.eveli.assets.api.EveliAssetComposer.CreateWorkflowTag;
-import io.digiexpress.eveli.assets.api.ImmutableCreateWorkflowTag;
 import io.digiexpress.eveli.assets.api.ImmutableEntity;
 import io.digiexpress.eveli.assets.api.ImmutablePublication;
-import io.digiexpress.eveli.assets.api.ImmutableWorkflow;
-import io.digiexpress.eveli.assets.api.ImmutableWorkflowTag;
 import io.digiexpress.eveli.assets.spi.exceptions.ConstraintException;
 import io.digiexpress.eveli.assets.spi.visitors.BatchSiteCommandVisitor;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -55,7 +45,6 @@ import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableCreateRelease;
 import io.thestencil.client.api.StencilClient;
-import io.thestencil.client.spi.StencilAssert;
 import io.thestencil.client.spi.StencilComposerImpl;
 import lombok.RequiredArgsConstructor;
 
@@ -94,92 +83,14 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
                   .build()):
               Uni.createFrom().nullItem();
           
-          
-          final var workflowRelease = init.getWorkflowTag() == null ? 
-              workflowTag(ImmutableCreateWorkflowTag.builder()
-                  .description("auto-created")
-                  .name(createdTag.getBody().getWorkflowTagName())
-                  .build()):
+
               Uni.createFrom().nullItem();
           
-          return Uni.combine().all().unis(stencilRelease, wrenchRelease, workflowRelease).with((autoCreatedTags) -> {
-            
+          return Uni.combine().all().unis(stencilRelease, wrenchRelease).with((autoCreatedTags) -> {
             return createdTag;
           });
         });
   }
-  @Override
-  public Uni<Entity<Workflow>> workflow(CreateWorkflow init) {
-    final Uni<AssetState> query = client.queryBuilder().head();
-    return query.onItem().transformToUni(state -> client.crudBuilder().create(workflow(init, state, client, dialobClient)));
-  }
-  @Override
-  public Uni<Entity<WorkflowTag>> workflowTag(CreateWorkflowTag init) {
-    final Uni<AssetState> query = client.queryBuilder().head();
-    return query.onItem().transformToUni(state -> client.crudBuilder().create(workflowTag(init, state, client)));
-  }
-
-  public static Entity<WorkflowTag> workflowTag(CreateWorkflowTag init, AssetState state, EveliAssetClient client) {
-    StencilAssert.isTrue(state.getRepoStatus() != AssetStatus.NOT_CREATED, () -> "Can't create workflow tag because ref state query failed!");
-    
-    
-    final var gid = client.getConfig().getGidProvider().getNextId();
-    final var release = ImmutableWorkflowTag.builder()
-          .name(init.getName())
-          .description(init.getDescription())
-          .created(LocalDateTime.now())
-          .user(Optional.ofNullable(init.getUser()).orElse(""))
-          .parentCommit(state.getCommit())
-          .entries(state.getWorkflows().values().stream().map(e -> e.getBody()).toList())
-          .build();
-  
-    final Entity<WorkflowTag> entity = ImmutableEntity.<WorkflowTag>builder()
-        .id(gid)
-        .type(EntityType.WORKFLOW_TAG)
-        .body(release)
-        .build();
-    
-    final var duplicate = state.getWorkflowTags().values().stream()
-        .filter(p -> p.getBody().getName().equals(init.getName()))
-        .findFirst();
-    
-    if(duplicate.isPresent()) {
-      throw new ConstraintException(entity, "Workflow tag: '" + init.getName() + "' already exists!");
-    }
-    
-    return assertUniqueId(entity, state);
-  }
-  
-  public static Entity<Workflow> workflow(CreateWorkflow init, AssetState state, EveliAssetClient client, DialobClient dialobClient) {
-
-    final var formTag = dialobClient.getFormTag(init.getFormName(), init.getFormTag());
-    
-    
-    final var gid = client.getConfig().getGidProvider().getNextId();
-    final var template = ImmutableWorkflow.builder()
-        .name(init.getName())
-        .formName(init.getFormName())
-        .formTag(init.getFormTag())
-        .flowName(init.getFlowName())
-        .formId(formTag.getFormId())
-        .updated(ZonedDateTime.now(ZoneId.of("UTC")))
-        .build();
-    final Entity<Workflow> entity = ImmutableEntity.<Workflow>builder()
-        .id(gid)
-        .type(EntityType.WORKFLOW)
-        .body(template)
-        .build();
-    
-    final var duplicate = state.getWorkflows().values().stream()
-        .filter(p -> p.getBody().getName().equals(init.getName()))
-        .findFirst();
-    
-    if(duplicate.isPresent()) {
-      throw new ConstraintException(entity, "Workflow: '" + init.getName() + "' already exists!");
-    }
-    return assertUniqueId(entity, state);
-  }
-  
   public static Entity<Publication> publication(CreatePublication init, AssetState state, EveliAssetClient client) {
     final var gid = client.getConfig().getGidProvider().getNextId();
     final var name = Optional.ofNullable(init.getName()).orElse("generic-" + gid);
@@ -195,7 +106,6 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
         .user(Optional.ofNullable(init.getUser()).orElse(""))
         .wrenchTagName(Optional.ofNullable(init.getWrenchTag()).orElse(name))
         .stencilTagName(Optional.ofNullable(init.getStencilTag()).orElse(name))
-        .workflowTagName(Optional.ofNullable(init.getWorkflowTag()).orElse(name))
         .build();
     final Entity<Publication> entity = ImmutableEntity.<Publication>builder()
         .id(gid)
@@ -219,9 +129,7 @@ public class CreateBuilderImpl implements EveliAssetComposer.CreateBuilder {
   }
   
   private static <T extends EntityBody> Entity<T> assertUniqueId(Entity<T> entity, AssetState state) {
-    if( state.getPublications().containsKey(entity.getId()) ||
-        state.getWorkflows().containsKey(entity.getId()) ||
-        state.getWorkflowTags().containsKey(entity.getId())) {
+    if( state.getPublications().containsKey(entity.getId())) {
       
       throw new ConstraintException(entity, "Entity with id: '" + entity.getId() + "' already exist!");  
     }

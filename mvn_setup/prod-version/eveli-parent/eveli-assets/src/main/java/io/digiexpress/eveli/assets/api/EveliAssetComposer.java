@@ -37,8 +37,6 @@ import io.dialob.api.form.Form;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.AssetState;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Entity;
 import io.digiexpress.eveli.assets.api.EveliAssetClient.Publication;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.Workflow;
-import io.digiexpress.eveli.assets.api.EveliAssetClient.WorkflowTag;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer.SiteState;
@@ -47,17 +45,12 @@ import io.thestencil.client.api.StencilComposer.SiteState;
 
 public interface EveliAssetComposer {
   CreateBuilder create();
-  UpdateBuilder update();
   DeleteBuilder delete();
   MigrationBuilder migration();
   DeploymentBuilder deployment();
   
-  
-  
   AnyTagQuery anyAssetTagQuery();
   PublicationQuery publicationQuery();
-  WorkflowQuery workflowQuery();
-  WorkflowTagQuery workflowTagQuery();
   
   
 
@@ -70,7 +63,6 @@ public interface EveliAssetComposer {
     Publication getSource();
     LocalDateTime getCreated(); // download time
     
-    WorkflowTag getWorkflowTag();
     SiteState getStencilTag();
     AstTag getWrenchTag();
     List<Form> getDialobTag();
@@ -80,20 +72,9 @@ public interface EveliAssetComposer {
   @JsonSerialize(as = ImmutableAssetBatch.class)
   @JsonDeserialize(as = ImmutableAssetBatch.class)
   interface AssetBatch extends CreateBuilder.CreateCommand {
-    List<CreateWorkflow> getWorkflows();
-    List<CreateWorkflowTag> getWorkflowTags();
     List<CreatePublication> getPublications();
   }
   
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCreateWorkflowTag.class)
-  @JsonDeserialize(as = ImmutableCreateWorkflowTag.class)
-  interface CreateWorkflowTag extends CreateBuilder.CreateCommand {
-    String getName();
-    String getDescription();
-    @Nullable
-    String getUser();
-  }
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableCreatePublication.class)
@@ -101,7 +82,6 @@ public interface EveliAssetComposer {
   interface CreatePublication extends CreateBuilder.CreateCommand {
     @Nullable String getStencilTag(); // auto-create tag on null
     @Nullable String getWrenchTag();  // auto-create tag on null
-    @Nullable String getWorkflowTag();// auto-create tag on null
     
     @Nullable String getUser();
     @Nullable String getName();  // autoname on null
@@ -110,27 +90,6 @@ public interface EveliAssetComposer {
     
   }
 
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableCreateWorkflow.class)
-  @JsonDeserialize(as = ImmutableCreateWorkflow.class)
-  interface CreateWorkflow extends CreateBuilder.CreateCommand {
-    String getName();
-    String getFormName();
-    String getFormTag();
-    String getFlowName();
-  }
-  
-  @Value.Immutable
-  @JsonSerialize(as = ImmutableWorkflowMutator.class)
-  @JsonDeserialize(as = ImmutableWorkflowMutator.class)
-  interface WorkflowMutator {
-    String getId();
-    @Nullable String getName();
-    @Nullable String getFormName();
-    @Nullable String getFormTag();
-    @Nullable String getFlowName();
-  }
-  
   @Value.Immutable
   @JsonSerialize(as = ImmutableAnyAssetTag.class)
   @JsonDeserialize(as = ImmutableAnyAssetTag.class)
@@ -147,16 +106,8 @@ public interface EveliAssetComposer {
   }
   
   enum AssetTagType {
-    WRENCH, STENCIL, WORKFLOW
-  }
-  
-
-  interface WorkflowQuery {
-    Uni<List<Entity<Workflow>>> findAll();
-    Uni<Optional<Entity<Workflow>>> findOneByName(String name);
-    Uni<Optional<Entity<Workflow>>> findOneById(String id);
-  }
-  
+    WRENCH, STENCIL
+  }  
   interface AnyTagQuery {
     Uni<List<AnyAssetTag>> findAllByType(AssetTagType type);
   }
@@ -166,10 +117,6 @@ public interface EveliAssetComposer {
     Uni<Optional<Entity<Publication>>> findOneByName(String name);
   }
   
-  interface WorkflowTagQuery {
-    Uni<List<Entity<WorkflowTag>>> findAll();
-    Uni<Optional<Entity<WorkflowTag>>> findOneByName(String name);
-  }
   
   interface DeploymentBuilder {
     DeploymentBuilder id(String idOrName);
@@ -178,22 +125,14 @@ public interface EveliAssetComposer {
   
   interface CreateBuilder {
     Uni<AssetState> repo();
-    Uni<Entity<Workflow>> workflow(CreateWorkflow init);
-    Uni<Entity<WorkflowTag>> workflowTag(CreateWorkflowTag init);
     Uni<Entity<Publication>> publication(CreatePublication init);
     Uni<List<Entity<?>>> batch(AssetBatch batch);
     
     interface CreateCommand extends Serializable {}
   }
-  
-  interface UpdateBuilder {
-    Uni<Entity<Workflow>> workflow(WorkflowMutator changes);
-  }
 
   interface DeleteBuilder {
     Uni<Entity<Publication>> publication(String publicationId);
-    Uni<Entity<Workflow>> workflow(String workflowId);
-    Uni<Entity<WorkflowTag>> workflowTag(String workflowTagId);
   }
 
   interface MigrationBuilder {
