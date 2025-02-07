@@ -64,10 +64,17 @@ public class ExMessageFormatter {
   }
   
   private void visitMessage(DocumentExceptionMsg m) {
-    result
-    .append("  - msg id: '").append(m.getId()).append("'").append(System.lineSeparator())
-    .append("  - msg value: '").append(m.getValue()).append("'").append(System.lineSeparator())
-    .append("  - msg additional info: ").append(System.lineSeparator());
+    if(!m.getId().equals(code)) {
+      result
+        .append("  - msg id: '").append(m.getId()).append("'").append(System.lineSeparator());
+    }
+    
+    if(!m.getId().equals(m.getValue())) {
+      result
+        .append("  - msg value: '").append(m.getValue()).append("'").append(System.lineSeparator());
+    }
+    
+    result.append("  - msg additional info: ").append(System.lineSeparator());
   
     for(final var arg : m.getArgs()) {
       final var nested = Arrays.asList(arg.trim()

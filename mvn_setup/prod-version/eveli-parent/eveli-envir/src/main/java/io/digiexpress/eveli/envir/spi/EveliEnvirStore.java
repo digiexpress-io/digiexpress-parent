@@ -56,7 +56,9 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
   
   @Override
   public StoreTenantQuery<EveliEnvirStore> query() {
-    return super.query().repoType(StructureType.doc);
+    final var resp = super.query().repoType(StructureType.doc).repoName(config.getRepoId());
+    
+    return resp;
   }
   
   public static EveliDeployment map(Doc doc, Optional<DocBranch> branch) {

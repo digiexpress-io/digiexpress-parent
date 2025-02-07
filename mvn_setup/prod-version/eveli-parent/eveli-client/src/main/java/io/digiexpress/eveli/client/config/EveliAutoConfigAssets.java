@@ -41,6 +41,8 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
+import io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
@@ -131,6 +133,10 @@ public class EveliAutoConfigAssets {
     return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper);
   }
 
+  @Bean
+  public ExternalDeploymentProvider externalDeploymentProvider(EveliEditEnvir context) {
+    return new ExternalDeploymentProviderDevEnvir(context.getStencil(), context.getWrench());
+  }
   
   /**
    * Create this bean for edit envir

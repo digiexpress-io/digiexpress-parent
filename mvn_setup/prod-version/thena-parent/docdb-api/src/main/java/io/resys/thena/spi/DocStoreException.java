@@ -33,7 +33,6 @@ import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.spi.ExMessageFormatter.DocumentExceptionMsg;
 import io.vertx.core.json.JsonObject;
-import lombok.RequiredArgsConstructor;
 
 
 
@@ -103,32 +102,37 @@ public class DocStoreException extends RuntimeException {
     return new Builder(msgId);
   }
   
-  @RequiredArgsConstructor
   public static class Builder {
     private final String id;
     private final ImmutableDocumentExceptionMsg.Builder msg = ImmutableDocumentExceptionMsg.builder();
     
+    public Builder(String id) {
+      super();
+      this.id = id;
+      this.msg.id(id).value(id);
+    }
     public Builder add(ThenaDocConfig config, QueryEnvelope<?> envelope) {
-      msg.id(envelope.getRepo() == null ? config.getRepoId() : envelope.getRepo().getName())
-      .value(envelope.getRepo() == null ? "no-repo" : envelope.getRepo().getId())
+      this.add(config);
+      this.msg
       .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
           .collect(Collectors.toList()));
+      
       return this;
     }
     public Builder add(ThenaDocConfig config, OneDocEnvelope envelope) {
-      msg.id(envelope.getRepoId())
-      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
+      this.add(config);
+      this.msg.addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
           .collect(Collectors.toList()));
       return this;
     }
     public Builder add(ThenaDocConfig config, ManyDocsEnvelope envelope) {
-      msg.id(envelope.getRepoId())
-      .addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
+      this.add(config);
+      this.msg.addAllArgs(envelope.getMessages().stream().map(message -> message.getText())
           .collect(Collectors.toList()));
       return this;
     }
     public Builder add(ThenaDocConfig config) {
-      msg.id(config.getRepoId());
+      msg.addArgs(JsonObject.of("repoId", config.getRepoId()).encode());
       return this;
     }
     public Builder add(Consumer<ImmutableDocumentExceptionMsg.Builder> callback) {

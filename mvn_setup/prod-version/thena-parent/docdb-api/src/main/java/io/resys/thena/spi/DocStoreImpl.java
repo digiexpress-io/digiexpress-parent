@@ -71,11 +71,16 @@ public class DocStoreImpl<T extends DocStore<T>> implements DocStore<T> {
       protected String repoName, headName, externalId;
       @Override public StoreTenantQuery<T> externalId(String externalId) { this.externalId = externalId; return this; }
       @Override public StoreTenantQuery<T> repoType(StructureType repoType) { this.repoType = repoType; return this; }
-      @Override public StoreTenantQuery<T> repoName(String repoName) { this.repoName = repoName; return this; }
+      @Override public StoreTenantQuery<T> repoName(String repoName) { 
+        this.repoName = repoName; 
+        return this; 
+      }
       @Override public StoreTenantQuery<T> headName(String headName) { this.headName = headName; return this; }
       @Override public Uni<T> create() { return createRepo(repoName, headName, externalId, repoType); }
       @Override public T build() { return withRepo(repoName, headName); }
-      @Override public Uni<T> createIfNot() { return createRepoOrGetRepo(repoName, headName, externalId, repoType); }
+      @Override public Uni<T> createIfNot() { 
+        return createRepoOrGetRepo(repoName, headName, externalId, repoType); 
+      }
       @Override public Uni<T> delete() { return deleteRepo(repoName, headName); }
       @Override public Uni<Void> deleteAll() { return deleteRepos(); }
     };

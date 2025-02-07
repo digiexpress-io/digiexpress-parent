@@ -1,5 +1,16 @@
 package io.resys.hdes.client.api;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * hdes-client-api
@@ -22,20 +33,11 @@ package io.resys.hdes.client.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstCommand;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
-
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public interface HdesStore {
   Uni<StoreEntity> create(CreateStoreEntity newType);
@@ -121,6 +123,8 @@ public interface HdesStore {
   @Value.Immutable
   interface StoreState {
     String getTagName();
+    @Nullable String getCommitId(); //only when available
+    @Nullable LocalDateTime getCommitAt(); //only when available
     Map<String, StoreEntity> getBranches();
     Map<String, StoreEntity> getTags();
     Map<String, StoreEntity> getFlows();

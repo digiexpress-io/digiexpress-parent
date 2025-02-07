@@ -23,12 +23,10 @@ package io.resys.hdes.client.spi.composer;
 import io.resys.hdes.client.api.HdesClient.EnvirBuilder;
 import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
-
-import java.time.LocalDateTime;
-
 import io.resys.hdes.client.api.ImmutableComposerEntity;
 import io.resys.hdes.client.api.ImmutableComposerState;
 import io.resys.hdes.client.api.ImmutableStoreEntity;
+import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstBranch;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
@@ -37,6 +35,7 @@ import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTag.AstTagValue;
 import io.resys.hdes.client.api.ast.ImmutableAstTag;
 import io.resys.hdes.client.api.ast.ImmutableAstTagValue;
+import io.resys.hdes.client.api.ast.ImmutableHeaders;
 import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 
 public class ComposerEntityMapper {
@@ -60,7 +59,7 @@ public class ComposerEntityMapper {
           break;
         }
         case FLOW_TASK: {
-          envirBuilder.addCommand().id(tag.getId()).branch(entity).build();     
+          envirBuilder.addCommand().id(tag.getId()).service(entity).build();     
           break;
         }
         
@@ -157,7 +156,10 @@ public class ComposerEntityMapper {
     
     return builder
         .name(source.getTagName())
-        .created(LocalDateTime.now())
+        .created(source.getCommitAt())
+        .commitId(source.getCommitId())
+        .headers(ImmutableHeaders.builder().build())
+        .bodyType(AstBodyType.TAG)
         .build();
   }
   

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -21,6 +23,7 @@ package io.digiexpress.eveli.client.config;
  */
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.ApplicationContext;
@@ -48,6 +51,7 @@ import io.resys.hdes.client.spi.cache.HdesClientEhCache;
 import io.resys.hdes.client.spi.config.HdesClientConfig;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
+import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -60,24 +64,37 @@ public class EveliAutoConfigEnvir {
       DialobClient dialobClient, 
       ObjectMapper objectMapper, 
       AuthClient authClient,
+      Optional<ExternalDeploymentProvider> depProvider,
       ApplicationContext context) {
     
     final boolean isDev = true;
-    final ExternalDeploymentProvider externalProvider = null;
+    final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
+      @Override
+      public Uni<Optional<EveliDeployment>> getDeployment() {
+        return Uni.createFrom().item(Optional.empty());
+      }
+    });
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient);
     final EveliRuntimeCache cache = cache();
     final var hdesClientConfig = hdesConfig(objectMapper, context);
-    return new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
+    final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
+    
+    
+    store.query()
+      .createIfNot()
+      .await().atMost(Duration.ofMinutes(5));
+    
+    return envir;
   }
 
   private EveliRuntimeCache cache() {
     final Cache<String, EveliDeployment> short_deployment_cache = Caffeine.newBuilder()
-        .refreshAfterWrite(1, TimeUnit.MINUTES)
+        .expireAfterWrite(1, TimeUnit.MINUTES)
         .build();
 
     final Cache<String, EveliRuntime> long_runtime_cache = Caffeine.newBuilder()
         .maximumSize(5)
-        .refreshAfterWrite(30, TimeUnit.MINUTES)
+        .expireAfterWrite(30, TimeUnit.MINUTES)
         .build();
     
     return new EveliRuntimeCacheInMemory(short_deployment_cache, long_runtime_cache);

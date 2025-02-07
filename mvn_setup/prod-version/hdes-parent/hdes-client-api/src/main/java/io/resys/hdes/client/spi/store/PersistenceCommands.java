@@ -122,10 +122,11 @@ public class PersistenceCommands implements ThenaConfig.Commands {
           
 
           final var builder = ImmutableStoreState.builder();
+          
+          
           if(state.getObjects() == null) {
             return builder.tagName(config.getHeadName()).build(); 
           }
-          
           final var tree = state.getObjects().getTree();
           for(final var entry : tree.getValues().entrySet()) {
             final var blobId = entry.getValue().getBlob();
@@ -139,8 +140,15 @@ public class PersistenceCommands implements ThenaConfig.Commands {
              default: throw new RuntimeException("Unknown type: " + entity.getBodyType() + "!");
             }
           }
+
           
-          return builder.tagName(config.getHeadName()).build();
+          final var commitId = state.getObjects().getRef().getCommit();
+          
+          return builder
+              .commitId(commitId)
+              .commitAt(state.getObjects().getCommit().getDateTime())
+              .tagName(config.getHeadName())
+              .build();
         });
   }
 

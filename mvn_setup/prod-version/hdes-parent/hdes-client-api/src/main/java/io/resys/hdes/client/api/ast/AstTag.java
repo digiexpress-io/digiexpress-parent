@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface AstTag extends AstBody, Serializable {
   
   String getName();
+  @Nullable String getCommitId(); //only when possible
   LocalDateTime getCreated();
   List<AstTagValue> getValues();
   
