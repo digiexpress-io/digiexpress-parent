@@ -100,7 +100,7 @@ public interface EveliEnvirClient {
   interface EveliDeployment {
     String getId();
     String getName();
-    String getExternalId();
+    @Nullable String getExternalId();
 
     EveliDeploymentStatus getStatus();
     @Nullable JsonObject getErrors();
