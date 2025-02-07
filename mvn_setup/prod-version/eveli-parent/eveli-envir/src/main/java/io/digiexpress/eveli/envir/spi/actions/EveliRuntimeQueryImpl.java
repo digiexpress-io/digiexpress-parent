@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.envir.spi.actions;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-envir
@@ -48,7 +50,8 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   }
   
   private Uni<EveliRuntime> getOrCreateEnvir(EveliDeployment deployment) {
-    final var currentEnvir = cache.get();
+    
+    final var currentEnvir = cache.getRuntime(deployment.getId());
     
     // already created
     if(currentEnvir.isPresent() && currentEnvir.get().getDeploymentId().equals(deployment.getId())) {
@@ -63,14 +66,25 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   }
   
   private Uni<Optional<EveliDeployment>> getLastDeployment() {
+    final var cached = cache.getDeployment();
+    if(cached.isPresent()) {
+      return Uni.createFrom().item(cached);
+    }
+    final OffsetDateTime now = OffsetDateTime.now();
     return new DeploymentQueryImpl(ctx).emptyBranchBody(true)
       .status(EveliDeploymentStatus.DEPLOYED)
       .emptyBranchBody(true)
       .findAll()
       .onItem().transform(deployments -> deployments.stream()
+          .filter((a) -> a.getStartsAt().isBefore(now))
           .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
           .findFirst()
-      );
+      ).onItem().transform(latest -> {
+        if(latest.isPresent()) {
+          cache.save(latest.get());
+        }
+        return latest;
+      });
   }
   
   
@@ -87,8 +101,6 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
           
           throw new EveliRuntimeQueryException("No deployments that can be activated!");
         });
-        
-        
       }
       
       return getOrCreateEnvir(last.get());
@@ -112,9 +124,6 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
       return getOrCreateEnvir(last.get()).onItem().transform(e -> Optional.of(e));
     });
   }
-  
-  
-
   public static class EveliRuntimeQueryException extends RuntimeException {
     private static final long serialVersionUID = -6001308683183662536L;
 

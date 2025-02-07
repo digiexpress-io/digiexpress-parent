@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.app;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-app
@@ -23,6 +25,8 @@ package io.digiexpress.eveli.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -32,12 +36,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
+import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
+import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
+import io.digiexpress.eveli.client.config.EveliProps;
+import io.digiexpress.eveli.client.config.EveliPropsAssets;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,11 +68,26 @@ import lombok.extern.slf4j.Slf4j;
     DialobAutoConfig.class,
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
+    EveliAutoConfigEnvir.class
 
 })
 public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(new Class<?>[] { Application.class }, args);
+  }
+  
+  
+  // Bean controlling that stencil/wrench assets can be edited
+  @Bean(name = EveliAutoConfigAssets.BEAN_NAME)
+  public EveliEditEnvir eveliEditEnvir(
+      EveliProps eveliProps, 
+      EveliPropsAssets assetProps,
+      ObjectMapper objectMapper,
+      ApplicationContext context,
+      io.vertx.mutiny.pgclient.PgPool pgPool) {
+    
+    return EveliAutoConfigAssets.getOrCreateDb(EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool))
+        .await().atMost(Duration.ofMinutes(5));
   }
 
   @EventListener

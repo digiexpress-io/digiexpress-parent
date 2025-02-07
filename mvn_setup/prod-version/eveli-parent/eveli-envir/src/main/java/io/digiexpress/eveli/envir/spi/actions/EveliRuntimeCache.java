@@ -22,9 +22,19 @@ package io.digiexpress.eveli.envir.spi.actions;
 
 import java.util.Optional;
 
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 
 public interface EveliRuntimeCache {
-  Optional<EveliRuntime> get();
+  
+  // short cache for latest "deployment id"
+  Optional<EveliDeployment> getDeployment();
+  
+  // long cache for compiled envir
+  Optional<EveliRuntime> getRuntime(String deploymentId);
+  
+  
+  
   EveliRuntime save(EveliRuntime runtime);
+  EveliDeployment save(EveliDeployment deployment);
 }

@@ -50,7 +50,7 @@ import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
-import io.digiexpress.eveli.client.spi.process.DialobCallbackController;
+import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -172,13 +172,12 @@ public class EveliAutoConfig {
   }
 
   @Bean
-  public DialobCallbackController dialobCallbackController(
-      ThreadPoolTaskScheduler submitTaskScheduler, 
+  public DialobScheduler dialobScheduler(
       ProcessClient processClient, 
       DialobClient dialobClient,
       ObjectMapper objectMapper) {
     
-    return new DialobCallbackController(submitTaskScheduler, processClient, dialobClient, objectMapper);
+    return new DialobScheduler(processClient, dialobClient, objectMapper);
   }
   
 

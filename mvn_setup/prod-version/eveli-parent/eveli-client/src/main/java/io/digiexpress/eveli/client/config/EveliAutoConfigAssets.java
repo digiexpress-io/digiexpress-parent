@@ -41,6 +41,7 @@ import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWrenchController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.spi.HdesClientImpl;
 import io.resys.hdes.client.spi.HdesComposerImpl;
 import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
@@ -49,19 +50,23 @@ import io.resys.hdes.client.spi.flow.validators.IdValidator;
 import io.resys.hdes.client.spi.store.ThenaStore;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilClientImpl;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.thestencil.client.spi.StencilStoreImpl;
 import io.thestencil.client.spi.serializers.ZoeDeserializer;
 import io.vertx.core.json.JsonObject;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 
-@DependsOn(EveliEditEnvir.BEAN_NAME)
+@DependsOn(EveliAutoConfigAssets.BEAN_NAME)
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {
+  public static final String BEAN_NAME = "eveliEditEnvir";
   
   // TODO @Value("${app.version}")
   private String version = "alpha";
@@ -69,6 +74,15 @@ public class EveliAutoConfigAssets {
   // TODO  @Value("${build.timestamp}")
   private String timestamp = "";
 
+  @Getter
+  @RequiredArgsConstructor
+  public static class EveliEditEnvir {  
+    private final StencilClient stencil;
+    private final HdesClient wrench;
+    private final EveliPropsAssets assetProps;
+  }
+
+  
   @Bean
   public AssetsAnyTagController assetsAnyTagController(
       EveliEditEnvir context, 

@@ -3,8 +3,6 @@ package io.digiexpress.eveli.dialob.config;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.springframework.boot.autoconfigure.web.client.RestTemplateBuilderConfigurer;
-
 /*-
  * #%L
  * dialob-client
@@ -34,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +44,7 @@ import io.digiexpress.eveli.dialob.spi.DialobService;
 
 @Configuration
 @EnableConfigurationProperties(value = {
-    DialobConfigProps.class, 
+  DialobConfigProps.class, 
 })
 public class DialobAutoConfig {
   

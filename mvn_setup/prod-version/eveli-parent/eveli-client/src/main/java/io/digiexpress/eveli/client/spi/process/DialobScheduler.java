@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,9 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DialobCallbackController {
+public class DialobScheduler {
   
-  private final ThreadPoolTaskScheduler submitTaskScheduler;
   private final ProcessClient processClient;
   private final DialobClient dialobClient;
   private final ObjectMapper objectMapper;

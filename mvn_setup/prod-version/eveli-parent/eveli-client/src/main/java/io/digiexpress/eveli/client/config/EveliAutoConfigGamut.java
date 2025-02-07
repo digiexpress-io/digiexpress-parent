@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.config;
 
-import java.time.ZoneOffset;
-
 /*-
  * #%L
  * eveli-client
