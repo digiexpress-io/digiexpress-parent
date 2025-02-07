@@ -139,10 +139,11 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
     // Get the page
     final Uni<EntityState<Release>> query = get(releaseId, EntityType.RELEASE);
     
-    return query.onItem().transformToUni(this::getCommitState);
+    return query.onItem().transformToUni(this::siteState);
   }
   
-  private Uni<SiteState> getCommitState(EntityState<Release> release) {
+  
+  private Uni<SiteState> siteState(EntityState<Release> release) {
     return config.getClient().git(config.getRepoName()).commit().commitQuery()
     .branchNameOrCommitOrTag(release.getEntity().getBody().getParentCommit())
     .docsIncluded()

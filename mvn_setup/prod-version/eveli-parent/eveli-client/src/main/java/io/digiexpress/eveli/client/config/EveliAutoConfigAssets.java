@@ -86,7 +86,7 @@ public class EveliAutoConfigAssets {
       DialobClient dialobClient,
       EveliEnvirClient envir) {
     
-    return new AssetsDeploymentController(composer);
+    return new AssetsDeploymentController(envir);
   }
   @Bean 
   public AssetsPublicationController assetReleaseController(
@@ -95,7 +95,7 @@ public class EveliAutoConfigAssets {
       DialobClient dialobClient,
       EveliEnvirClient envir
   ) {
-    return new AssetsPublicationController();
+    return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security);
   }
   @Bean
   public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
@@ -118,7 +118,9 @@ public class EveliAutoConfigAssets {
   }
 
   
-  
+  /**
+   * Create this bean for edit envir
+   */
   public static EveliEditEnvir eveliEditEnvir(
       EveliProps eveliProps, 
       EveliPropsAssets assetProps,
@@ -162,6 +164,9 @@ public class EveliAutoConfigAssets {
     return new EveliEditEnvir(stencilClient, wrenchClient, assetProps);
   }
   
+  /**
+   * Call this for get/create wrench/stencil db-s only needed for edit envir
+   */
   public static Uni<EveliEditEnvir> getOrCreateDb(EveliEditEnvir envir) {
     final var createdWrench = envir.getWrench().repo().create()
         .onItem().transformToUni(init -> 

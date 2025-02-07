@@ -32,6 +32,7 @@ import io.smallrye.mutiny.tuples.Tuple2;
 import io.thestencil.client.api.StencilClient.Entity;
 import io.thestencil.client.api.StencilClient.EntityBody;
 import io.thestencil.client.api.StencilClient.EntityType;
+import io.thestencil.client.api.StencilClient.Release;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.api.StencilConfig.EntityState;
 
