@@ -144,11 +144,12 @@ public class DocMainRegistrySqlImpl implements DocMainRegistry {
   created_with_commit_id, 
   owner_id, 
   doc_name, 
+  doc_description, 
   doc_sub_status,
   doc_starts_at,
   doc_ends_at
 ) 
-VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
 """).ln()
         .build())
         .props(docs.stream()
@@ -163,6 +164,7 @@ VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
                 doc.getCreatedWithCommitId(),
                 doc.getOwnerId(),
                 doc.getName(), 
+                doc.getDescription(), 
                 doc.getSubStatus(),
                 doc.getStartsAt(),
                 doc.getEndsAt()
@@ -186,8 +188,9 @@ SET
   doc_name        = $6, 
   doc_sub_status  = $7, 
   doc_starts_at   = $8, 
-  doc_ends_at     = $9
-WHERE id          = $10
+  doc_ends_at     = $9,
+  doc_description = $10
+WHERE id          = $11
 """)
         .build())
         .props(docs.stream()
@@ -202,6 +205,7 @@ WHERE id          = $10
                 
                 doc.getStartsAt(),
                 doc.getEndsAt(),
+                doc.getDescription(),
                 
                 doc.getId())))
             .collect(Collectors.toList()))
@@ -219,6 +223,7 @@ WHERE id          = $10
         
         .subStatus(row.getString("doc_sub_status"))
         .name(row.getString("doc_name"))
+        .description(row.getString("doc_description"))
         
         .createdWithCommitId(row.getString("created_with_commit_id"))
         .createdAt(row.getOffsetDateTime("created_at"))
@@ -252,6 +257,7 @@ WHERE id          = $10
         .append("  doc_ends_at TIMESTAMP WITH TIME ZONE,").ln()
         
         .append("  doc_name TEXT UNIQUE,").ln()
+        .append("  doc_description TEXT,").ln()
         .append("  doc_sub_status VARCHAR(100),").ln()
         
         .append("  doc_meta jsonb").ln()

@@ -59,6 +59,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   private Optional<String> parentDocId;
   private Optional<String> externalId;
   private Optional<String> ownerId;
+  private Optional<String> docDescription;
   private Optional<OffsetDateTime> docStartsAt;
   private Optional<OffsetDateTime> docEndsAt;
   
@@ -77,6 +78,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   @Override public ModifyOneDocImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
   @Override public ModifyOneDocImpl commands(List<JsonObject> commands) { this.commands = commands; return this; }
   @Override public ModifyOneDocImpl docName(String docName) { this.docName = Optional.ofNullable(docName); return this; }
+  @Override public ModifyOneDocImpl docDescription(String docDescription) { this.docDescription = Optional.ofNullable(docDescription); return this; }
   @Override public ModifyOneDocImpl docSubStatus(String docSubStatus) { this.docSubStatus = Optional.ofNullable(docSubStatus); return this; }
   @Override public ModifyOneDocImpl docStartsAt(OffsetDateTime docStartsAt) { this.docStartsAt = Optional.ofNullable(docStartsAt); return this; }
   @Override public ModifyOneDocImpl docEndsAt(OffsetDateTime docEndsAt) { this.docEndsAt = Optional.ofNullable(docEndsAt); return this; }
@@ -112,6 +114,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
         .docStartsAt(docStartsAt)
         .docEndsAt(docEndsAt)
         .ownerId(ownerId)
+        .docDescription(docDescription)
         .parentId(parentDocId)
         .remove(remove)
         .externalId(externalId)

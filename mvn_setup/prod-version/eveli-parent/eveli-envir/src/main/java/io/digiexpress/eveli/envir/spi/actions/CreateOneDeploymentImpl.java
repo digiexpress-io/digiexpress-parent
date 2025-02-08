@@ -59,6 +59,7 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
 
   private String userId;
   private String name;
+  private String description;
   private OffsetDateTime startsAt;
   private SiteState stencil;
   private AstTag wrench;
@@ -101,6 +102,9 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
 
   @Override
   public CreateOneDoc start(ThenaDocConfig config, CreateOneDoc builder) {
+
+    
+    
     return builder
         .commitAuthor(userId)
         .commitMessage("Creating new deployment from: " + CreateOneDeploymentImpl.class)
@@ -110,11 +114,15 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
             .wrench(wrench)
             .dialob(dialob)
             .build()))
+        .ownerId(userId)
         .docName(name)
         .docSubStatus(EveliDeploymentStatus.BUILDING.name())
         .docType(EveliEnvirStore.DOC_TYPE_DEPLOYMENT)
+        .docDescription(EveliEnvirStore.formatDescription(description, stencil, wrench))
         .docStartsAt(startsAt);
   }
+  
+
 
   @Override
   public OneDocEnvelope visitEnvelope(ThenaDocConfig config, OneDocEnvelope envelope) {

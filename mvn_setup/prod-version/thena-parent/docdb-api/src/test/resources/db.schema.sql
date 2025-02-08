@@ -97,6 +97,7 @@ CREATE TABLE doc
   doc_starts_at TIMESTAMP WITH TIME ZONE,
   doc_ends_at TIMESTAMP WITH TIME ZONE,
   doc_name TEXT UNIQUE,
+  doc_description TEXT,
   doc_sub_status VARCHAR(100),
   doc_meta jsonb
 );
@@ -126,6 +127,7 @@ CREATE TABLE doc_branch
   value_starts_at          TIMESTAMP WITH TIME ZONE,
   value_ends_at            TIMESTAMP WITH TIME ZONE,
   value_name               TEXT,
+  value_description        TEXT,
   value_status             VARCHAR(100),
   PRIMARY KEY (branch_id),
   UNIQUE (doc_id, branch_name)

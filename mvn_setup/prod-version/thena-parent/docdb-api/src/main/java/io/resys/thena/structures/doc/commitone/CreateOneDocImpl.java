@@ -59,6 +59,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private String docId;
   private String externalId;
   private String docType;
+  private String docDescription;
   private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
   private String commitAuthor;
   private String commitMessage;
@@ -97,6 +98,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
         .docEndsAt(docEndsAt)
         .docSubStatus(docSubStatus)
         .ownerId(ownerId)
+        .docDescription(docDescription)
         .externalId(externalId)
         .parentDocId(parentDocId)
         .branchName(branchName)

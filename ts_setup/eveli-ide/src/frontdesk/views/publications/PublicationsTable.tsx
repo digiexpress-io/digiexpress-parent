@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import MaterialTable, { Column } from '@material-table/core';
 
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { localizeTable } from '../../util/localizeTable';
@@ -21,11 +21,42 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip, DialogTitle, DialogContent, Dialog, DialogContentText, DialogActions, Button } from '@mui/material';
 
 
 interface TableState {
   columns: Array<Column<Publication>>;
+}
+
+
+const DeploymentInfo: React.FC<Publication> = ({description}) => {
+  const [open, setOpen] = useState(false);
+
+  function handleOpen() {
+    setOpen(true)
+  }
+
+  function handleClose() {
+    setOpen(false)
+  }
+
+
+  return (
+  <>
+    <Dialog open={open} fullWidth maxWidth='md'>
+      <DialogContent>
+        <DialogContentText sx={{whiteSpace: 'pre-wrap'}} variant='body2'>
+          {description}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}><FormattedMessage id='button.accept' /></Button>
+      </DialogActions>
+    </Dialog>
+    <Box width='200px' height='46px' textOverflow='ellipsis' overflow='hidden' sx={{cursor: 'pointer'}} onClick={handleOpen}>
+      {description}
+    </Box>
+  </>);
 }
 
 export const PublicationsTable: React.FC = () => {
@@ -40,7 +71,7 @@ export const PublicationsTable: React.FC = () => {
   const [newDialogOpen, setNewDialogOpen] = useState(false);
 
   const getRelease = (releaseTag: Publication) => {
-    let url = `${serviceUrl}worker/rest/api/assets/deployments/${releaseTag.body.name}`;
+    let url = `${serviceUrl}worker/rest/api/assets/deployments/${releaseTag.name}`;
     return session.cFetch(`${url}`, {
       method: 'GET',
       headers: {
@@ -50,7 +81,7 @@ export const PublicationsTable: React.FC = () => {
       .then(response => handleErrors(response))
       .then((response: Response) => response.json())
       .then(json => {
-        downloadFile(JSON.stringify(json, undefined, 2), releaseTag.body.name + '.json', 'text/json');
+        downloadFile(JSON.stringify(json, undefined, 2), releaseTag.name + '.json', 'text/json');
       })
       .catch(error => {
         enqueueSnackbar(intl.formatMessage({ id: 'assetRelease.downloadFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
@@ -61,28 +92,23 @@ export const PublicationsTable: React.FC = () => {
     columns: [
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.name' }),
-        field: 'body.name',
+        field: 'name',
         headerStyle: { fontWeight: 'bold' }
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.description' }),
-        field: 'body.description',
+        field: 'description',
         headerStyle: { fontWeight: 'bold' },
+        render: (data) => <DeploymentInfo {...data}/>,
       },
       {
-        title: intl.formatMessage({ id: 'publicationsTableHeader.contentTag' }),
-        field: 'body.stencilTagName',
-        headerStyle: { fontWeight: 'bold' },
-      },
-      {
-        title: intl.formatMessage({ id: 'publicationsTableHeader.workflowTag' }),
-        field: 'body.workflowTagName',
-        headerStyle: { fontWeight: 'bold' },
-      },
-      {
-        title: intl.formatMessage({ id: 'publicationsTableHeader.wrenchTag' }),
-        field: 'body.wrenchTagName',
-        headerStyle: { fontWeight: 'bold' },
+        title: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
+        field: 'startsAt',
+        filtering: false,
+        type: 'date',
+        defaultSort: 'desc',
+        render: data => <DateTimeFormatter value={data.startsAt} />,
+        headerStyle: { fontWeight: 'bold' }
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
@@ -90,7 +116,7 @@ export const PublicationsTable: React.FC = () => {
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => <DateTimeFormatter value={data.body.created} />,
+        render: data => <DateTimeFormatter value={data.createdAt} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {

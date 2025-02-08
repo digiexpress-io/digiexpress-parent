@@ -1,22 +1,27 @@
 
 
 export interface Publication {
-  id: number;
-  body: {
-    name: string;
-    description: string;
-    created?: Date;
-    createdBy?: string;
-    contentTag: string;
-    wrenchTag: string;
-    workflowTag: string;
-  }
+  id: string;
+  name: string;
+  externalId: string | undefined;
+
+  description: string;
+  createdBy: string;
+  createdAt: string; // offset date time
+  startsAt: string; // offset date time
+  status: 'BUILDING' | 'READY' | 'ERROR' | 'DEPLOYED';
+  errors: Object;
+  sources: {
+    stencil: Object;
+    wrench: Object;
+    dialob: Object[];
+  } | undefined; // only when loaded on demand
 }
 
 export interface PublicationInit {
   name: string;
+  liveDate: string | null;
   description: string | null;
-  contentTag: string | null;
+  stencilTag: string | null;
   wrenchTag: string | null;
-  workflowTag: string | null;
 }

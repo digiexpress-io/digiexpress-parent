@@ -83,6 +83,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
       @Override public AddItemToCreateDoc meta(JsonObject meta)         { oneDoc.meta(meta); return this; }
       @Override public AddItemToCreateDoc branchContent(JsonObject blob){ oneDoc.branchContent(blob); return this;}
       @Override public AddItemToCreateDoc docName(String docName)       { oneDoc.docName(docName); return this; }
+      @Override public AddItemToCreateDoc docDescription(String docDescription) { oneDoc.docDescription(docDescription); return this; }
       @Override public AddItemToCreateDoc docSubStatus(String subStatus){ oneDoc.docSubStatus(subStatus); return this; }
       @Override public AddItemToCreateDoc docId(String docId)           { oneDoc.docId(docId); return this;}      
       @Override public AddItemToCreateDoc ownerId(String ownerId)       { oneDoc.ownerId(ownerId); return this;}

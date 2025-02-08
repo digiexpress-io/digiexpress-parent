@@ -110,12 +110,13 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
    doc_id, 
    value, 
    value_name,
+   value_description,
    value_status,
    value_starts_at,
    value_ends_at, 
    created_with_commit_id
  ) VALUES(
-   $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+   $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
  )
 """)
         .build())
@@ -126,7 +127,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
               ref.getCommitId(), 
               ref.getDocId(), 
               ref.getValue(), 
-              ref.getValueName(), 
+              ref.getValueName(),
+              ref.getValueDescription(), 
               ref.getValueStatus(), 
               ref.getValueStartsAt(),
               ref.getValueEndsAt(),
@@ -144,16 +146,17 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(
 """
  SET 
-   commit_id = $1, 
-   branch_name = $2, 
-   value = $3, 
-   branch_status = $4,
-   value_status = $5,
-   value_name = $6,
-   value_starts_at = $7,
-   value_ends_at = $8
+   commit_id          = $1, 
+   branch_name        = $2, 
+   value              = $3, 
+   branch_status      = $4,
+   value_status       = $5,
+   value_name         = $6,
+   value_starts_at    = $7,
+   value_ends_at      = $8,
+   value_description  = $9
  
- WHERE branch_id = $9
+ WHERE branch_id      = $10
 """)
         .build())        
         .props(docs.stream().map(ref -> Tuple.tuple(Arrays.asList(
@@ -165,6 +168,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
             ref.getValueName(),
             ref.getValueStartsAt(),
             ref.getValueEndsAt(),
+            ref.getValueDescription(),
             ref.getId()))
         ).collect(Collectors.toList()))
         .build();
@@ -190,6 +194,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append(" branch.value_status,").ln()
         .append(" branch.value_starts_at,").ln()
         .append(" branch.value_ends_at,").ln()
+        .append(" branch.value_description,").ln()
+        
         .append(Boolean.TRUE.equals(filter.getBranchValueEmpty()) ? "'{}'::jsonb as value,": " branch.value,").ln()
 
         .append(" branch_updated_commit.created_at as updated_at,").ln()
@@ -221,6 +227,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
         .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_description as doc_description,").ln()
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
@@ -246,6 +253,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.value_status as branch_value_status,").ln()
         .append("  branch.value_starts_at as branch_value_starts_at,").ln()
         .append("  branch.value_ends_at as branch_value_ends_at,").ln()
+        .append("  branch.value_description as branch_value_description,").ln()
         
         .append("  commits.created_at as branch_updated_at,").ln()
         .append("  branch_created_commit.created_at as branch_created_at,").ln()
@@ -284,6 +292,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
         .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_description as doc_description,").ln()
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
@@ -309,6 +318,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.value_status as branch_value_status,").ln()
         .append("  branch.value_starts_at as branch_value_starts_at,").ln()
         .append("  branch.value_ends_at as branch_value_ends_at,").ln()
+        .append("  branch.value_description as branch_value_description,").ln()
         
         .append("  commits.created_at as branch_updated_at,").ln()
         .append("  branch_created_commit.created_at as branch_created_at,").ln()
@@ -365,6 +375,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        .append("  doc.doc_description as doc_description,").ln()
         
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
@@ -387,6 +398,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.value_status as branch_value_status,").ln()
         .append("  branch.value_starts_at as branch_value_starts_at,").ln()
         .append("  branch.value_ends_at as branch_value_ends_at,").ln()
+        .append("  branch.value_description as branch_value_description,").ln()
         
         .append("  commits.created_at as branch_updated_at,").ln()
         .append("  branch_created_commit.created_at as branch_created_at,").ln()
@@ -438,6 +450,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("SELECT ")
         .append("  doc.external_id as external_id,").ln()
         .append("  doc.doc_name as doc_name,").ln()
+        .append("  doc.doc_description as doc_description,").ln()
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
@@ -464,7 +477,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  branch.value_status as branch_value_status,").ln()
         .append("  branch.value_starts_at as branch_value_starts_at,").ln()
         .append("  branch.value_ends_at as branch_value_ends_at,").ln()
-        
+        .append("  branch.value_description as branch_value_description,").ln()
         
         .append("  commits.created_at as branch_updated_at,").ln()
         .append("  branch_created_commit.created_at as branch_created_at,").ln()
@@ -510,6 +523,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  value_starts_at          TIMESTAMP WITH TIME ZONE,").ln()
         .append("  value_ends_at            TIMESTAMP WITH TIME ZONE,").ln()
         .append("  value_name               TEXT,").ln()
+        .append("  value_description        TEXT,").ln()
+        
         .append("  value_status             VARCHAR(100),").ln()
         
         .append("  PRIMARY KEY (branch_id),").ln()
@@ -583,6 +598,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .value(jsonObject(row, "value"))
         .status(Doc.DocStatus.valueOf(row.getString("branch_status")))
         .valueName(row.getString("value_name"))
+        .valueDescription(row.getString("value_description"))
         .valueStatus(row.getString("value_status"))
         .valueStartsAt(row.getOffsetDateTime("value_starts_at"))
         .valueEndsAt(row.getOffsetDateTime("value_ends_at"))
@@ -597,6 +613,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
             .externalId(row.getString("external_id"))
             .subStatus(row.getString("doc_sub_status"))
             .name(row.getString("doc_name"))
+            .description(row.getString("doc_description"))
             .createdWithCommitId(row.getString("doc_created_commit_id"))
             .parentId(row.getString("doc_parent_id"))
             .type(row.getString("doc_type"))
@@ -619,6 +636,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
             .createdWithCommitId(row.getString("branch_created_with_commit_id"))
             .value(jsonObject(row, "branch_value"))
             .valueName(row.getString("branch_value_name"))
+            .valueDescription(row.getString("branch_value_description"))
             .valueStatus(row.getString("branch_value_status"))
             .valueStartsAt(row.getOffsetDateTime("branch_value_starts_at"))
             .valueEndsAt(row.getOffsetDateTime("branch_value_ends_at"))

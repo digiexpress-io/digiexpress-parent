@@ -27,11 +27,13 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.eveli.envir.api.ImmutableEveliDeployment;
 import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
+import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.spi.DocStoreImpl;
 import io.resys.thena.spi.ThenaDocConfig;
+import io.thestencil.client.api.StencilComposer.SiteState;
 
 
 
@@ -61,6 +63,43 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
     return resp;
   }
   
+  public static String formatDescription(String description, SiteState stencil, AstTag wrench) {
+    final var desc = new StringBuilder()
+      .append("stencil tag: ").append(stencil.getName()).append(System.lineSeparator())
+      .append("wrench tag: ").append(wrench.getName()).append(System.lineSeparator())
+      .append("workflows: ").append(System.lineSeparator());
+    
+    for(final var wk : stencil.getWorkflows().values()) {
+      final var body = wk.getBody();
+      
+      final var start = Optional.ofNullable(body.getStartDate()).map(e -> e.toString()).orElse("N/A");
+      final var end = Optional.ofNullable(body.getEndDate()).map(e -> e.toString()).orElse("N/A");
+      
+      
+      desc
+        .append("  - ").append(body.getValue()).append(System.lineSeparator())
+        .append("    start-end/anon/dev: ")
+          .append(start).append(" - ").append(end)
+          .append("/").append(Boolean.TRUE.equals(body.getAnon()))
+          .append("/").append(Boolean.TRUE.equals(body.getDevMode()))
+        .append(System.lineSeparator())
+        .append("    flow name: ").append(body.getFlowName()).append(System.lineSeparator())
+        .append("    dialob id: ").append(body.getFormId()).append(System.lineSeparator())
+        .append("    dialob name/tag: ").append(body.getFormName()).append("/").append(body.getFormTag()).append(System.lineSeparator())
+        .append("    articles (").append(body.getArticles().size()).append("): ").append(System.lineSeparator());
+      for(final var articleId : body.getArticles()) {
+        final var article = stencil.getArticles().get(articleId);
+        desc.append("      - ").append(article.getBody().getName()).append(System.lineSeparator());;
+      }
+      
+    }
+    
+    if(description != null && !description.isBlank()) {
+      desc.insert(0, description + System.lineSeparator() + System.lineSeparator());
+    }
+    return desc.toString();
+  }
+  
   public static EveliDeployment map(Doc doc, Optional<DocBranch> branch) {
     return ImmutableEveliDeployment.builder()
         .id(doc.getId())
@@ -69,6 +108,9 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
         .status(EveliDeploymentStatus.valueOf(doc.getSubStatus()))
         .externalId(doc.getExternalId())
         .createdAt(doc.getCreatedAt())
+        
+        .createdBy(doc.getOwnerId())
+        .description(doc.getDescription())
         .errors(doc.getMeta())
         .sources(branch
             .map(src -> src.getValue().mapTo(ImmutableEveliSources.class))

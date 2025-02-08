@@ -13,7 +13,7 @@ import { PublicationInit } from '../../types/Publication';
 import { AssetTag } from '../../types/AssetTag';
 import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';
-
+import { Datepicker } from '../../components/Datepicker';
 
 import * as Burger from '@/burger';
 
@@ -43,7 +43,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
   const { serviceUrl } = useConfig()
 
   const session = useContext(SessionRefreshContext);
-  const { response: workflowTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/workflow-tags`);
   const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/wrench-tags`);
   const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/stencil-tags`);
 
@@ -57,14 +56,11 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
     let init: PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
-    if (assetReleaseCommand.contentTag === NEW_TAG_VALUE) {
-      init.contentTag = null;
+    if (assetReleaseCommand.stencilTag === NEW_TAG_VALUE) {
+      init.stencilTag = null;
     }
     if (assetReleaseCommand.wrenchTag === NEW_TAG_VALUE) {
       init.wrenchTag = null;
-    }
-    if (assetReleaseCommand.workflowTag === NEW_TAG_VALUE) {
-      init.workflowTag = null;
     }
 
     session.cFetch(`${url}`, {
@@ -107,13 +103,13 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
           initialValues={{
             name: '',
             description: '',
-            workflowTag: NEW_TAG_VALUE,
+            liveDate: null,
             wrenchTag: NEW_TAG_VALUE,
-            contentTag: NEW_TAG_VALUE
+            stencilTag: NEW_TAG_VALUE
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values as PublicationInit);
+            handleSubmit(values);
             setSubmitting(false);
           }}
         >
@@ -122,13 +118,22 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               <Form>
                 <DialogContent>
                   <Stack spacing={1}>
+                    <Field
+                      name='liveDate'
+                      component={Datepicker}
+                      disableMaskedInput
+                      label={intl.formatMessage({ id: 'publications.liveDate' })}
+                      fullWidth
+                    />
+
                     <Field component={TextField} name='name' label={intl.formatMessage({ id: 'publications.name' })}
                       fullWidth required validate={requiredValidator} error={!!errors?.name}
                       helperText={errors?.name} InputProps={{ margin: 'dense' }} />
-                    <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })}
-                      fullWidth InputProps={{ margin: 'dense' }} />
-                    <TagComponent name='contentTag' labelId='publications.contentTag' newTag={values.name} tags={contentTags} />
-                    <TagComponent name='workflowTag' labelId='publications.workflowTag' newTag={values.name} tags={workflowTags} />
+
+
+                    <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })} fullWidth InputProps={{ margin: 'dense' }} />
+
+                    <TagComponent name='stencilTag' labelId='publications.contentTag' newTag={values.name} tags={contentTags} />
                     <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={values.name} tags={wrenchTags} />
                   </Stack>
                 </DialogContent>

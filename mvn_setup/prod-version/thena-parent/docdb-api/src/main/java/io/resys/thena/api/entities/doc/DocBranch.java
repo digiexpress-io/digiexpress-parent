@@ -42,12 +42,12 @@ public interface DocBranch extends DocEntity, IsDocObject, TenantEntity {
   
   String getBranchName();
   
-  
   String getDocId();
   Doc.DocStatus getStatus();
   
   @Nullable String getValueName();
   @Nullable String getValueStatus();
+  @Nullable String getValueDescription();
   @Nullable OffsetDateTime getValueStartsAt();
   @Nullable OffsetDateTime getValueEndsAt();
   @Nullable JsonObject getValue();  // null when json loading is disabled

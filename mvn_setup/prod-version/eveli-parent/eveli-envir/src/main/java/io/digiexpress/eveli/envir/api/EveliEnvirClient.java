@@ -101,12 +101,13 @@ public interface EveliEnvirClient {
     String getId();
     String getName();
     @Nullable String getExternalId();
-
-    EveliDeploymentStatus getStatus();
-    @Nullable JsonObject getErrors();
-
+    String getCreatedBy();
     OffsetDateTime getCreatedAt();
     OffsetDateTime getStartsAt();
+
+    String getDescription();
+    @Nullable JsonObject getErrors();
+    EveliDeploymentStatus getStatus();
 
     // Null when user has requested sources to be not loaded on api level
     @Nullable EveliSources getSources();

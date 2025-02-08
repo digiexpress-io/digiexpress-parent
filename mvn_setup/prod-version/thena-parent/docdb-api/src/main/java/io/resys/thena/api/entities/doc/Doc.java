@@ -52,6 +52,7 @@ public interface Doc extends DocEntity, IsDocObject, TenantEntity {
   @Nullable String getParentId();
   @Nullable String getSubStatus();
   @Nullable String getName();
+  @Nullable String getDescription();
   
   @Nullable OffsetDateTime getStartsAt();
   @Nullable OffsetDateTime getEndsAt();

@@ -63,7 +63,9 @@ public interface DocCommitActions {
     CreateOneDoc externalId(@Nullable String externalId); // user given unique id
     CreateOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     CreateOneDoc meta(@Nullable JsonObject docMeta);
-    CreateOneDoc docName(@Nullable String docName); 
+    
+    CreateOneDoc docName(@Nullable String docName);
+    CreateOneDoc docDescription(@Nullable String docDescription);
     CreateOneDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
     CreateOneDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
     CreateOneDoc docSubStatus(@Nullable String subStatus);
@@ -92,6 +94,7 @@ public interface DocCommitActions {
     AddItemToCreateDoc meta(@Nullable JsonObject docMeta);
     AddItemToCreateDoc externalId(@Nullable String externalId);
     AddItemToCreateDoc docName(@Nullable String docName); 
+    AddItemToCreateDoc docDescription(@Nullable String docDescription);
     AddItemToCreateDoc docSubStatus(@Nullable String subStatus);
     AddItemToCreateDoc docStartsAt(@Nullable OffsetDateTime docStartsAt); 
     AddItemToCreateDoc docEndsAt(@Nullable OffsetDateTime docEndsAt); 
@@ -116,6 +119,7 @@ public interface DocCommitActions {
     ModifyOneDoc docEndsAt(OffsetDateTime docEndsAt);
     
     ModifyOneDoc docName(@Nullable String docName); 
+    ModifyOneDoc docDescription(@Nullable String docDescription);
     ModifyOneDoc docSubStatus(@Nullable String subStatus);
     ModifyOneDoc parentDocId(@Nullable String parentDocId); 
     ModifyOneDoc externalId(@Nullable String externalId); // user given unique id

@@ -54,6 +54,7 @@ public class BatchForOneDocCreate {
   private final Boolean excludeBranchContentFromLog;
   
   private String docType;
+  private String docDescription;
   private String branchName;
   private String docName;
   private String docSubStatus;
@@ -99,6 +100,7 @@ public class BatchForOneDocCreate {
         .parentId(parentDocId)
         .startsAt(docStartsAt)
         .endsAt(docEndsAt)
+        .description(docDescription)
         .commitId(commitBuilder.getCommitId())
         .createdWithCommitId(commitBuilder.getCommitId())
         .externalId(Optional.ofNullable(this.externalId == null || this.externalId.trim().isEmpty() ? null : this.externalId).orElse(OidUtils.gen()))

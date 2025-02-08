@@ -55,6 +55,8 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
             .id(wrench.getCommitId() + "/dev/" + stencil.getCommit() )
             .createdAt(now)
             .startsAt(now)
+            .createdBy(ExternalDeploymentProviderDevEnvir.class.getCanonicalName())
+            .description(EveliEnvirStore.formatDescription("live deployment", stencil, wrench))
             .name("dev")
             .externalId(null)
             .sources(ImmutableEveliSources.builder()

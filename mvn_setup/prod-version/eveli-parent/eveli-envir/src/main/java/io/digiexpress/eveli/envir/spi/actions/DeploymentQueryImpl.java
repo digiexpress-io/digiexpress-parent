@@ -68,7 +68,7 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
     ids.add(id);    
     return ctx.getExternalProvider().getDeployment().onItem()
       .transformToUni(predefined -> {
-        if(predefined.isPresent() && predefined.get().getId().equals(id)) {
+        if(predefined.isPresent() && (predefined.get().getId().equals(id) || predefined.get().getName().equals(id))) {
           return Uni.createFrom().item(predefined.get());
         }
         final var config = ctx.getConfig();
