@@ -51,10 +51,8 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
           final AstTag wrench = tuple.getItem2();
           final SiteState stencil = tuple.getItem1();
           
-          
-          
           final var deployment = ImmutableEveliDeployment.builder()
-            .id(wrench.getCreated() + stencil.getCommit() + "-dev")
+            .id(wrench.getCommitId() + "/dev/" + stencil.getCommit() )
             .createdAt(now)
             .startsAt(now)
             .name("dev")

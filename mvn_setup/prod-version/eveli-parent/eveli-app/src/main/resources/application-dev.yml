@@ -29,10 +29,14 @@ management:
 #logging.org.springframework.http: INFO
 #logging.level.org.springframework.boot: INFO
 
-
-
+logging.level.io.resys.hdes.client.spi.groovy: OFF
+logging.level.io.resys.hdes.client.spi.envir: OFF
 logging.level.io.vertx.core.impl.btc.BlockedThreadChecker: OFF
 logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
+
+
+logging.level.io.digiexpress.eveli.envir.spi: DEBUG
+
 
 # DB config
 spring.datasource.url: "jdbc:postgresql://localhost:5433/eveli-app"

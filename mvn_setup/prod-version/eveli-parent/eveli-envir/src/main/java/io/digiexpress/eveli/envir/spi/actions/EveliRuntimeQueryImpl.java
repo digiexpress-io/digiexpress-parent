@@ -79,7 +79,15 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
           .filter((a) -> a.getStartsAt().isBefore(now))
           .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
           .findFirst()
-      ).onItem().transform(latest -> {
+      )
+      .onItem().transformToUni(latest -> {
+        if(latest.isEmpty()) {
+          return ctx.getExternalProvider().getDeployment();  
+        }
+        return Uni.createFrom().item(Optional.<EveliDeployment>empty());
+      })
+      
+      .onItem().transform(latest -> {
         if(latest.isPresent()) {
           cache.save(latest.get());
         }
@@ -91,19 +99,13 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   @Override
   public Uni<EveliRuntime> getOne() {
     return getLastDeployment().onItem().transformToUni(last -> {
-      if(last.isEmpty()) {
-        
-        return ctx.getExternalProvider().getDeployment().onItem().transformToUni(resp -> {
-          if(resp.isPresent()) {
-            final Uni<EveliRuntime> external = getOrCreateEnvir(resp.get());
-            return external;
-          }
-          
-          throw new EveliRuntimeQueryException("No deployments that can be activated!");
-        });
+
+      if(last.isPresent()) {
+        final Uni<EveliRuntime> external = getOrCreateEnvir(last.get());
+        return external;
       }
       
-      return getOrCreateEnvir(last.get());
+      throw new EveliRuntimeQueryException("No deployments that can be activated!");
     });
   }
 
@@ -111,15 +113,7 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   public Uni<Optional<EveliRuntime>> findOne() {
     return getLastDeployment().onItem().transformToUni(last -> {
       if(last.isEmpty()) {
-        
-        return ctx.getExternalProvider().getDeployment().onItem().transformToUni(resp -> {
-          if(resp.isPresent()) {
-            final Uni<EveliRuntime> external = getOrCreateEnvir(resp.get());
-            return external.onItem().transform(e -> Optional.of(e));
-          }
-          return Uni.createFrom().item(Optional.<EveliRuntime>empty());
-          
-        });
+        return Uni.createFrom().item(Optional.<EveliRuntime>empty());
       }
       return getOrCreateEnvir(last.get()).onItem().transform(e -> Optional.of(e));
     });

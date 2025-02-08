@@ -30,8 +30,9 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RequiredArgsConstructor
 public class EveliRuntimeCacheInMemory implements EveliRuntimeCache {
   private final Cache<String, EveliDeployment> short_deployment_cache;
@@ -39,24 +40,31 @@ public class EveliRuntimeCacheInMemory implements EveliRuntimeCache {
 
   @Override
   public Optional<EveliDeployment> getDeployment() {
+    
     final OffsetDateTime now = OffsetDateTime.now();
-    return short_deployment_cache.asMap().values().stream()
+    final var result = short_deployment_cache.asMap().values().stream()
       .filter((a) -> a.getStartsAt().isBefore(now))
       .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
       .findFirst();
+    log.debug("Resolving deployment: {} from cache", result.map(e -> e.getId()));
+    return result;
   }
   @Override
-  public Optional<EveliRuntime> getRuntime(String deploymentId) {
-    return Optional.ofNullable(long_runtime_cache.getIfPresent(deploymentId));
+  public Optional<EveliRuntime> getRuntime(String runtimeId) {
+    final var runtime = Optional.ofNullable(long_runtime_cache.getIfPresent(runtimeId));
+    log.debug("Resolving runtime: {} from cache", runtime.map(e -> e.getDeploymentId()));
+    return runtime;
   }
   @Override
   public EveliDeployment save(EveliDeployment deployment) {
     this.short_deployment_cache.put(deployment.getId(), deployment);
+    log.debug("Saving deployment: {} to cache", deployment.getId());
     return deployment;
   }
   @Override
   public EveliRuntime save(EveliRuntime runtime) {
     this.long_runtime_cache.put(runtime.getDeploymentId(), runtime);
+    log.debug("Saving runtime: {} from cache", runtime.getDeploymentId());
     return runtime;
   }
 }
