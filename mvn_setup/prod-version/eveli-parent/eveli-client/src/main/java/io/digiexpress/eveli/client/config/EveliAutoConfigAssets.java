@@ -104,16 +104,17 @@ public class EveliAutoConfigAssets {
       DialobClient dialobClient,
       EveliEnvirClient envir) {
     
-    return new AssetsDeploymentController(envir, publisher);
+    return new AssetsDeploymentController(auth, envir, publisher);
   }
   @Bean 
   public AssetsPublicationController assetReleaseController(
       EveliEditEnvir context, 
       AuthClient security,
       DialobClient dialobClient,
-      EveliEnvirClient envir
+      EveliEnvirClient envir,
+      ApplicationEventPublisher publisher
   ) {
-    return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security);
+    return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security, publisher);
   }
   @Bean
   public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {

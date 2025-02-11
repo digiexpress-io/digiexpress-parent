@@ -4,7 +4,7 @@ export interface Publication {
   id: string;
   name: string;
   externalId: string | undefined;
-
+  external: boolean | undefined;
   description: string;
   createdBy: string;
   createdAt: string; // offset date time

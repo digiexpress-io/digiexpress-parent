@@ -48,13 +48,15 @@ public interface EveliEnvirClient {
   EveliDeploymentCompiler deploymentCompiler();
   
   DeploymentQuery deploymentQuery();
-  DeploymentBuilder deploymentBuilder();
+  DeploymentStatusBuilder deploymentStatusBuilder();
   
   
   // moves given deployment to 'DEPLOYED' and sets any other 'DEPLOYED' entries into 'READY' status
-  interface DeploymentBuilder {
-    DeploymentBuilder userId(String userId);
-    DeploymentBuilder deploymentId(String id);
+  interface DeploymentStatusBuilder {
+    DeploymentStatusBuilder userId(String userId);
+    DeploymentStatusBuilder deploymentId(String id);
+    DeploymentStatusBuilder deployed();
+    DeploymentStatusBuilder undeployed();
     Uni<EveliDeployment> build();
   }
   
@@ -109,6 +111,8 @@ public interface EveliEnvirClient {
     String getDescription();
     @Nullable JsonObject getErrors();
     EveliDeploymentStatus getStatus();
+    
+    @Nullable Boolean getExternal();
 
     // Null when user has requested sources to be not loaded on api level
     @Nullable EveliSources getSources();

@@ -118,15 +118,6 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
           search: true,
           paging: false
         }}
-        actions={historyView || !config.modifiableAssets ? [] : [
-          {
-            icon: AddIcon,
-            tooltip: intl.formatMessage({ id: 'workflowTable.addButton' }),
-            isFreeAction: true,
-            onClick: () => { setWorkflow(null); setOpen(true); },
-          }
-        ]}
-
         isLoading={false}
         data={workflows || []}
       />

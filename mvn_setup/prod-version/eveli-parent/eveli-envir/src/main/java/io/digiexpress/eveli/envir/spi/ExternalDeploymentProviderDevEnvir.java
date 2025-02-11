@@ -76,6 +76,7 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
             .description(EveliEnvirStore.formatDescription("live deployment", stencil, wrench))
             .name("dev-" + LocalDateTime.now())
             .externalId(null)
+            .external(true)
             .sources(ImmutableEveliSources.builder()
                 .stencil(stencil)
                 .wrench(wrench)

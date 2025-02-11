@@ -118,13 +118,16 @@ public class EveliRuntimeLogger {
   }
   
   public void info() {
+    if(events.isEmpty()) {
+      return;
+    }
     final var result = new StringBuilder("events:").append(System.lineSeparator());
     for(final var event : events) {
       result
         .append("  - ").append(event.getType()).append(":").append(System.lineSeparator())
-        .append("    id: ").append(event.getId()).append(":").append(System.lineSeparator())
-        .append("    name: ").append(event.getName()).append(":").append(System.lineSeparator())
-        .append("    starts at: ").append(event.getStartsAt()).append(":").append(System.lineSeparator())
+        .append("    id: ").append(event.getId()).append(System.lineSeparator())
+        .append("    name: ").append(event.getName()).append(System.lineSeparator())
+        .append("    starts at: ").append(event.getStartsAt()).append(System.lineSeparator())
       ;
     }
     final var cost = System.currentTimeMillis() - start;
@@ -132,13 +135,16 @@ public class EveliRuntimeLogger {
   }
   
   public void error() {
+    if(events.isEmpty()) {
+      return;
+    }
     final var result = new StringBuilder("events:").append(System.lineSeparator());
     for(final var event : events) {
       result
         .append("  - ").append(event.getType()).append(":").append(System.lineSeparator())
-        .append("    id: ").append(event.getId()).append(":").append(System.lineSeparator())
-        .append("    name: ").append(event.getName()).append(":").append(System.lineSeparator())
-        .append("    starts at: ").append(event.getStartsAt()).append(":").append(System.lineSeparator())
+        .append("    id: ").append(event.getId()).append(System.lineSeparator())
+        .append("    name: ").append(event.getName()).append(System.lineSeparator())
+        .append("    starts at: ").append(event.getStartsAt()).append(System.lineSeparator())
       ;
     }
     final var cost = System.currentTimeMillis() - start;

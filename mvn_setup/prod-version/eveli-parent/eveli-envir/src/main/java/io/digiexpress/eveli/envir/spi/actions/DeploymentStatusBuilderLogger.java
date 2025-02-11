@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class DeploymentBuilderLogger {
+public class DeploymentStatusBuilderLogger {
   private final List<LogEvent> events = new ArrayList<>();
   private final long start = System.currentTimeMillis();
   
@@ -52,7 +52,7 @@ public class DeploymentBuilderLogger {
 
   }
   
-  public DeploymentBuilderLogger invalidateCache(Optional<EveliDeployment> deployment) {
+  public DeploymentStatusBuilderLogger invalidateCache(Optional<EveliDeployment> deployment) {
     events.add(LogEvent.builder()
         .id(deployment.map(e -> e.getId()).orElse(null))
         .name(deployment.map(e -> e.getName()).orElse(null))
@@ -62,7 +62,7 @@ public class DeploymentBuilderLogger {
     return this;
   }
   
-  public DeploymentBuilderLogger setDeployed(EveliDeployment deployment) {
+  public DeploymentStatusBuilderLogger setDeployed(EveliDeployment deployment) {
     events.add(LogEvent.builder()
         .id(deployment.getId())
         .name(deployment.getName())
@@ -72,7 +72,7 @@ public class DeploymentBuilderLogger {
     return this;
   }
   
-  public DeploymentBuilderLogger setReady(EveliDeployment deployment) {
+  public DeploymentStatusBuilderLogger setReady(EveliDeployment deployment) {
     events.add(LogEvent.builder()
         .id(deployment.getId())
         .name(deployment.getName())
@@ -82,7 +82,7 @@ public class DeploymentBuilderLogger {
     return this;
   }
   
-  public DeploymentBuilderLogger setSkipping(EveliDeployment deployment) {
+  public DeploymentStatusBuilderLogger setSkipping(EveliDeployment deployment) {
     events.add(LogEvent.builder()
         .id(deployment.getId())
         .name(deployment.getName())
@@ -93,26 +93,32 @@ public class DeploymentBuilderLogger {
   }
   
   public void info() {
+    if(events.isEmpty()) {
+      return;
+    }
     final var result = new StringBuilder("events:").append(System.lineSeparator());
     for(final var event : events) {
       result
         .append("  - ").append(event.getType()).append(":").append(System.lineSeparator())
-        .append("    id: ").append(event.getId()).append(":").append(System.lineSeparator())
-        .append("    name: ").append(event.getName()).append(":").append(System.lineSeparator())
-        .append("    starts at: ").append(event.getStartsAt()).append(":").append(System.lineSeparator())
+        .append("    id: ").append(event.getId()).append(System.lineSeparator())
+        .append("    name: ").append(event.getName()).append(System.lineSeparator())
+        .append("    starts at: ").append(event.getStartsAt()).append(System.lineSeparator())
       ;
     }
     final var cost = System.currentTimeMillis() - start;
-    log.info("New version deployed, cost: {} millis, \r\n", cost, result.toString());
+    log.info("New version deployed, cost: {} millis, \r\n{}", cost, result.toString());
   }
   public void error() {
+    if(events.isEmpty()) {
+      return;
+    }
     final var result = new StringBuilder("events:").append(System.lineSeparator());
     for(final var event : events) {
       result
         .append("  - ").append(event.getType()).append(":").append(System.lineSeparator())
-        .append("    id: ").append(event.getId()).append(":").append(System.lineSeparator())
-        .append("    name: ").append(event.getName()).append(":").append(System.lineSeparator())
-        .append("    starts at: ").append(event.getStartsAt()).append(":").append(System.lineSeparator())
+        .append("    id: ").append(event.getId()).append(System.lineSeparator())
+        .append("    name: ").append(event.getName()).append(System.lineSeparator())
+        .append("    starts at: ").append(event.getStartsAt()).append(System.lineSeparator())
       ;
     }
     final var cost = System.currentTimeMillis() - start;

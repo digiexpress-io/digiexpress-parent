@@ -23,7 +23,7 @@ package io.digiexpress.eveli.envir.spi.actions;
 import java.util.List;
 import java.util.Optional;
 
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.DeploymentBuilder;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.DeploymentStatusBuilder;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.spi.EveliEnvirStore;
@@ -41,16 +41,28 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
-public class DeploymentBuilderImpl implements DeploymentBuilder {
+public class DeploymentStatusBuilderImpl implements DeploymentStatusBuilder {
   private final EveliEnvirStore ctx;
   private final EveliRuntimeCache cache;
-  private final DeploymentBuilderLogger logger = new DeploymentBuilderLogger();
+  private final DeploymentStatusBuilderLogger logger = new DeploymentStatusBuilderLogger();
   private String userId;
   private String deploymentId;
   
+  private Boolean setToDeployed;
   
   @Override
+  public DeploymentStatusBuilder deployed() {
+    this.setToDeployed = true;
+    return this;
+  }
+  @Override
+  public DeploymentStatusBuilder undeployed() {
+    this.setToDeployed = false;
+    return this;
+  }
+  @Override
   public Uni<EveliDeployment> build() {
+    RepoAssert.notNull(setToDeployed, () -> "deployed/undeployed must be defined!");
     RepoAssert.notEmpty(userId, () -> "userId must be defined!");
     RepoAssert.notEmpty(deploymentId, () -> "deploymentId must be defined!");
     
@@ -89,10 +101,18 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
         .docSubStatus(EveliDeploymentStatus.READY.name())
         .next();
     }
-    logger.setDeployed(target);
+    
+    final EveliDeploymentStatus targetStatus;
+    if(this.setToDeployed) {
+      targetStatus = EveliDeploymentStatus.DEPLOYED;
+      logger.setDeployed(target);
+    } else {
+      targetStatus = EveliDeploymentStatus.READY;
+      logger.setReady(target);
+    }
     return builder.item()
       .docId(target.getId())
-      .docSubStatus(EveliDeploymentStatus.DEPLOYED.name())
+      .docSubStatus(targetStatus.name())
       .next()
       .build();
   }

@@ -31,6 +31,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,8 +40,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliSources;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
@@ -56,6 +59,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetsDeploymentController {
   
+  private final AuthClient authClient;
   private final EveliEnvirClient composer;
   private final ApplicationEventPublisher publisher;
   
@@ -72,11 +76,19 @@ public class AssetsDeploymentController {
     EveliSources getSources();
   }
   
+  @JsonSerialize(as = ImmutableEveliDeploymentChange.class)
+  @JsonDeserialize(as = ImmutableEveliDeploymentChange.class)
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  @Value.Immutable
+  public interface EveliDeploymentChange {
+    String getId();
+    EveliDeploymentStatus getStatus();
+  }
   
   @Getter @RequiredArgsConstructor
-  public static class CompileDeploymentEvent {
+  public static class CompileAndDeployEvent {
     private final String deploymentId;
-    
+    private final String userId;
   }
   
   @GetMapping("/{name}")
@@ -86,6 +98,7 @@ public class AssetsDeploymentController {
   
   @PostMapping
   public Uni<EveliDeployment> upload(@RequestBody EveliDeploymentUpload body) {
+    final var userId = authClient.getUser().getPrincipal().getUsername();
     return composer.createOneDeployment()
 
         .dialob(body.getSources().getDialob())
@@ -98,19 +111,29 @@ public class AssetsDeploymentController {
         
         .build()
         .onItem().invoke(deployment -> 
-          publisher.publishEvent(new CompileDeploymentEvent(deployment.getId()))          
+          publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId))          
         );
+  }
+  
+  @PutMapping("/{name}")
+  public Uni<EveliDeployment> updateDeployment(@RequestBody EveliDeploymentChange body) {
+    final var userId = authClient.getUser().getPrincipal().getUsername();
+    if(body.getStatus() == EveliDeploymentStatus.DEPLOYED) {
+      publisher.publishEvent(new CompileAndDeployEvent(body.getId(), userId));
+      return composer.deploymentQuery().getOneById(body.getId());
+    }
+    return composer.deploymentStatusBuilder().undeployed().deploymentId(body.getId()).userId(userId).build();
   }
 
   @Async
   @EventListener
-  public void compileDeployment(CompileDeploymentEvent event) {
+  public void compileAndDeploy(CompileAndDeployEvent event) {
     composer.deploymentCompiler()
       .deploymentId(event.getDeploymentId())
-      .userId("system")
+      .userId(event.getUserId())
       .compile()
       .onItem().transformToUni(e -> 
-        composer.deploymentBuilder().deploymentId(e.getId()).userId("system").build()
+        composer.deploymentStatusBuilder().deployed().deploymentId(e.getId()).userId(event.getUserId()).build()
       )
       .await().atMost(Duration.ofMinutes(20));
   }

@@ -24,7 +24,7 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirTenantQuery;
 import io.digiexpress.eveli.envir.spi.actions.CreateOneDeploymentImpl;
-import io.digiexpress.eveli.envir.spi.actions.DeploymentBuilderImpl;
+import io.digiexpress.eveli.envir.spi.actions.DeploymentStatusBuilderImpl;
 import io.digiexpress.eveli.envir.spi.actions.DeploymentQueryImpl;
 import io.digiexpress.eveli.envir.spi.actions.EveliDeploymentCompilerImpl;
 import io.digiexpress.eveli.envir.spi.actions.EveliRuntimeCache;
@@ -73,8 +73,8 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
     return new EveliDeploymentCompilerImpl(ctx, hdesClientConfig, dialobClient);
   }
   @Override
-  public DeploymentBuilder deploymentBuilder() {
-    return new DeploymentBuilderImpl(ctx, cache);
+  public DeploymentStatusBuilder deploymentStatusBuilder() {
+    return new DeploymentStatusBuilderImpl(ctx, cache);
   }
   @Override
   public EveliRuntimeQuery runtimeQuery() {

@@ -3,6 +3,9 @@ import React, { useContext, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CircleIcon from '@mui/icons-material/Circle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 import MaterialTable, { Column } from '@material-table/core';
 
 import { useIntl, FormattedMessage } from 'react-intl';
@@ -22,9 +25,10 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
-import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button } from '@mui/material';
+import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button, DialogTitle, Stack } from '@mui/material';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 
+import * as Burger from '@/burger';
 
 interface TableState {
   columns: Array<Column<Publication>>;
@@ -61,6 +65,84 @@ const DeploymentInfo: React.FC<Publication> = ({description}) => {
   </>);
 }
 
+
+const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
+  const intl = useIntl();
+  const { enqueueSnackbar } = useSnackbar();
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState<string>();
+  const { serviceUrl } = useConfig();
+  const session = useContext(SessionRefreshContext);
+
+  const handleClose = () => {
+    setStatusDialogOpen(false);
+  }
+  const handleOpen = () => {
+    setStatusDialogOpen(true);
+  }
+
+  const handleDeploy = () => {
+    handleSubmit('DEPLOYED');
+  }
+  const handleUnDeployed = () => {
+    handleSubmit('READY');
+  }
+
+  const handleSubmit = (status: string): void => {
+    session.cFetch(`${serviceUrl}worker/rest/api/assets/deployments/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json'
+      },
+      body: { status, id }
+    })
+      .then(response => handleErrors(response))
+      .then((response: any) => {
+        setStatusDialogOpen(false);
+        onSubmit();
+      })
+      .catch(error => {
+        enqueueSnackbar(intl.formatMessage({ id: 'publications.statusChangeFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
+      });
+  }
+
+  let color: 'success' | 'error' | 'primary' | 'warning';
+  if(status == 'DEPLOYED') {
+    color = 'success';
+  } else if(status == 'ERROR') {
+    color = 'error';
+  } else if(status == 'READY') {
+    color = 'primary';
+  } else {
+    color = 'warning';
+  }
+
+  return (<div>
+      <Dialog open={statusDialogOpen} onClose={handleClose} maxWidth='md' fullWidth>
+        <DialogTitle fontWeight='bold'>{intl.formatMessage({ id: 'publications.changeStatus' })}</DialogTitle>
+        <DialogContent>
+          <Stack spacing={1}>
+            { external === true ? 
+              (<>
+              <span>{intl.formatMessage({ id: 'publications.external' })}</span>
+              <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
+              </>) : (<>
+              <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
+              <Button disabled={status === 'READY'} variant='outlined' color='error' startIcon={<DeleteIcon />} onClick={handleDeploy}>{intl.formatMessage({ id: 'publications.remove' })}</Button>
+              <Button disabled={status === 'DEPLOYED'} variant='contained' endIcon={<SendIcon />} onClick={handleUnDeployed}>{intl.formatMessage({ id: 'publications.deploy' })}</Button>
+              </>)}
+
+              {JSON.stringify(errors, null, 2)}
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
+        </DialogActions>
+      </Dialog>
+      <IconButton onClick={handleOpen}><CircleIcon color={color}/></IconButton>
+    </div>);
+}
+
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const { serviceUrl } = useConfig();
@@ -94,6 +176,9 @@ export const PublicationsTable: React.FC = () => {
   const tableState: TableState = {
     columns: [
       {
+        render: data => <PublicationStatus {...data} onSubmit={() => refreshAssetReleases()}/>,
+      },
+      {
         title: intl.formatMessage({ id: 'publicationsTableHeader.name' }),
         field: 'name',
         headerStyle: { fontWeight: 'bold' }
@@ -115,7 +200,7 @@ export const PublicationsTable: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
-        field: 'body.created',
+        field: 'createdAt',
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
@@ -124,7 +209,7 @@ export const PublicationsTable: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
-        field: 'body.user',
+        field: 'createdBy',
         headerStyle: { fontWeight: 'bold' }
       },
       {

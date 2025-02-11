@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.assets;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -27,6 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +44,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController.CompileAndDeployEvent;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
@@ -60,6 +66,7 @@ import io.thestencil.client.api.StencilComposer.SiteState;
 import io.thestencil.client.spi.StencilComposerImpl;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,11 +77,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/worker/rest/api/assets/publications")
 @Slf4j
 public class AssetsPublicationController {
+  
   private final EveliEnvirClient envirClient;
   private final StencilClient stencilClient;
   private final HdesClient wrenchClient;
   private final DialobClient dialobClient;
   private final AuthClient securityClient;
+  private final ApplicationEventPublisher publisher;
 
   @Value.Immutable
   @JsonSerialize(as = ImmutableCreatePublication.class)
@@ -89,6 +98,13 @@ public class AssetsPublicationController {
     
   }
   
+  
+  @Getter @RequiredArgsConstructor
+  public static class CompileEvent {
+    private final String deploymentId;
+    private final String userId;
+  }
+  
   @GetMapping
   public Uni<List<EveliDeployment>> findAllPublications() {
     return envirClient.deploymentQuery().findAll();
@@ -101,7 +117,7 @@ public class AssetsPublicationController {
   
   @PostMapping
   public Uni<EveliDeployment> createOnePublication(@RequestBody CreatePublication publication) {
-    
+    final var userId = securityClient.getUser().getPrincipal().getUsername();
     final var stencilSrc = getOrCreateStencilSrc(publication)
         .onItem().transformToUni(stencil -> getForms(stencil).onItem().transform(forms -> Tuple2.of(stencil, forms)));
     final var hdesSrc = getOrCreateWrenchSrc(publication);
@@ -120,23 +136,28 @@ public class AssetsPublicationController {
           .stencil(src.getItem1().getItem1())
           .dialob(src.getItem1().getItem2())
           .build()
+      )
+      .onItem().invoke(deployment -> 
+        publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId))          
       );
   }
   
   private Uni<AstTag> getOrCreateWrenchSrc(CreatePublication workflowRelease) {    
     final Uni<ComposerState> composerState;
+    final var tagName = Optional
+        .ofNullable(workflowRelease.getWrenchTag())
+        .orElse((workflowRelease.getName() + "_" + LocalDateTime.now()));
     
     if(workflowRelease.getWrenchTag() == null) {    
       composerState = new HdesComposerImpl(wrenchClient).create(ImmutableCreateEntity.builder()
           .type(AstBodyType.TAG)
-          .name(workflowRelease.getWrenchTag())
+          .name(tagName)
           .desc("auto-created")
           .build());
     } else {
       composerState = new HdesComposerImpl(wrenchClient).get();
     }
     
-    final var tagName = Optional.ofNullable(workflowRelease.getWrenchTag()).orElse(workflowRelease.getName());
     return composerState.onItem().transform(state -> {
       final var rel = state.getTags().values().stream().filter(tag -> tag.getAst().getName().equals(tagName)).findFirst();
       if(rel.isEmpty()) {
@@ -147,7 +168,9 @@ public class AssetsPublicationController {
   }
   
   private Uni<SiteState> getOrCreateStencilSrc(CreatePublication workflowRelease) {    
-    final var tagName = Optional.ofNullable(workflowRelease.getStencilTag()).orElse(workflowRelease.getName());
+    final var tagName = Optional.ofNullable(workflowRelease.getStencilTag())
+        .orElse(workflowRelease.getName() + "_" + LocalDateTime.now());
+    
     final var getRelease = stencilClient.getStore().query().head()
       .onItem().transform(state -> state.getReleases().values().stream().filter(f -> f.getBody().getName().equals(tagName)).findFirst())
       .onItem().transformToUni(rel -> {
@@ -159,7 +182,7 @@ public class AssetsPublicationController {
   
     if(workflowRelease.getStencilTag() == null) {
       final Uni<Entity<Release>> createRelease = new StencilComposerImpl(stencilClient).create().release(ImmutableCreateRelease.builder()
-          .name(workflowRelease.getStencilTag())
+          .name(tagName)
           .note("auto-created")
           .build());
       return createRelease.onItem().transformToUni(createdRelease -> getRelease);
@@ -180,7 +203,6 @@ public class AssetsPublicationController {
   }
 
   private Form getFormIdById(final Entity<Workflow> stencilService) {
-
     try {
       return dialobClient.getFormById(stencilService.getBody().getFormId());
     } catch(Exception e) {
@@ -188,6 +210,17 @@ public class AssetsPublicationController {
           "Can't resolve for by tag or form name, will try by form id for topic: " + 
           JsonObject.mapFrom(stencilService).encodePrettily());
     }
+  }
+  
+  
+  @Async
+  @EventListener
+  public void compile(CompileEvent event) {
+    envirClient.deploymentCompiler()
+      .deploymentId(event.getDeploymentId())
+      .userId(event.getUserId())
+      .compile()
+      .await().atMost(Duration.ofMinutes(20));
   }
   
   public class StencilTagNotFoundException extends RuntimeException {

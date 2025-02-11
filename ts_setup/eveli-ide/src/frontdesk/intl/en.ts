@@ -216,6 +216,11 @@ const en = {
   'publicationsTable.viewButton': 'View',
   'publicationsTable.exportButton': 'Export',
 
+  'publications.external': 'This is externally configured deployment and will be in effect when there are no other deployments',
+  'publications.changeStatus': 'Modify deployment status',
+  'publications.currentStatus': 'Current status of deployment',
+  'publications.remove': 'Remove deployment',
+  'publications.deploy': 'Deploy now',
   'publications.dialogTitle': 'Create new Publication',
   'publications.name': 'Release name',
   'publications.description': 'Description',
