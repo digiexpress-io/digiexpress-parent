@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.envir.spi.actions;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-envir
@@ -45,10 +47,11 @@ public class DeploymentStatusBuilderImpl implements DeploymentStatusBuilder {
   private final EveliEnvirStore ctx;
   private final EveliRuntimeCache cache;
   private final DeploymentStatusBuilderLogger logger = new DeploymentStatusBuilderLogger();
+  private final OffsetDateTime now = OffsetDateTime.now();
   private String userId;
   private String deploymentId;
-  
   private Boolean setToDeployed;
+  
   
   @Override
   public DeploymentStatusBuilder deployed() {
@@ -95,6 +98,11 @@ public class DeploymentStatusBuilderImpl implements DeploymentStatusBuilder {
     }
     
     for(final var dep : deployed) {
+      if(!dep.getStartsAt().isBefore(now)) {
+        continue;
+      }
+      
+      // undeploy old versions
       logger.setReady(dep);
       builder.item()
         .docId(dep.getId())
