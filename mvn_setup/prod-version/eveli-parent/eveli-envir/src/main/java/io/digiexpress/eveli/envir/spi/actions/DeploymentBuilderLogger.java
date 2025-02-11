@@ -23,6 +23,7 @@ package io.digiexpress.eveli.envir.spi.actions;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import lombok.Builder;
@@ -47,8 +48,20 @@ public class DeploymentBuilderLogger {
     DEPLOYMENT_IN_ERROR_SKIPPING,
     DEPLOYMENT_SET_READY,
     DEPLOYMENT_SET_DEPLOYED,
+    DEPLOYMENT_CACHE_INVALIDATED
 
   }
+  
+  public DeploymentBuilderLogger invalidateCache(Optional<EveliDeployment> deployment) {
+    events.add(LogEvent.builder()
+        .id(deployment.map(e -> e.getId()).orElse(null))
+        .name(deployment.map(e -> e.getName()).orElse(null))
+        .startsAt(deployment.map(e -> e.getStartsAt()).orElse(null))
+        .type(LogEventType.DEPLOYMENT_CACHE_INVALIDATED)
+        .build());
+    return this;
+  }
+  
   public DeploymentBuilderLogger setDeployed(EveliDeployment deployment) {
     events.add(LogEvent.builder()
         .id(deployment.getId())

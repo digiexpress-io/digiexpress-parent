@@ -62,11 +62,7 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
     )
     .asTuple().onItem().transformToUni(tuple -> applyUpdate(tuple.getItem1(), tuple.getItem2()))
     .onItem().transform(this::validateUpdateResponse)
-    .onItem().transform(this::createResult)
-    .onItem().transform((resp) -> {
-      cache.invalidateId();
-      return resp;
-    });
+    .onItem().transform(this::createResult);
   }
   
   private Uni<ManyDocsEnvelope> applyUpdate(EveliDeployment target, List<EveliDeployment> deployed) {
@@ -111,7 +107,9 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
         .build();
     }
     
-    logger.info();
+    logger.invalidateCache(cache.getDeployment()).info();
+    
+    cache.invalidateId();
     return envelope;
   }
 
