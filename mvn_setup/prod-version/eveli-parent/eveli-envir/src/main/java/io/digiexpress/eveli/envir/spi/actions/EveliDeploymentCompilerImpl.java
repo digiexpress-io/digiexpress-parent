@@ -46,17 +46,16 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 
-@Slf4j
+
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
 public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   private final EveliEnvirStore ctx;
   private final HdesClientConfig hdesClientConfig;
   private final DialobClient dialobClient;
-  
+  private final EveliDeploymentCompilerLogger logger = new EveliDeploymentCompilerLogger();
   private String userId;
   private String deploymentId;
 
@@ -70,16 +69,9 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   }
   
   private Uni<EveliDeployment> visitMerge(EveliDeployment deployment) {
-    final var result = visitEnvir(deployment);
-    log.info(new StringBuilder("Compiled deployment\r\n")
-        .append("  - deployment\r\n")
-        .append("    id: {}\r\n")
-        .append("    name: {}\r\n")
-        .append("    status: {} -> {}\r\n")
-        .toString(),
-        
-        deploymentId, deployment.getName(), deployment.getStatus(), result.getItem1());
+    logger.compiling(deployment);
     
+    final var result = visitEnvir(deployment);    
     final var config = ctx.getConfig();
     return config.getClient().doc(config.getRepoId()).commit()
         .modifyOneDoc()
@@ -93,11 +85,14 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   
   public EveliDeployment visitEnvelope(ThenaDocConfig config, OneDocEnvelope envelope) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
+      logger.error();
       throw DocStoreException.builder("GET_DEPLOYMENT_BY_ID_FOR_COMPILING_FAILED")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(JsonObject.of("id", deploymentId).encode()))
         .build();
     }
+    
+    logger.info();
     return EveliEnvirStore.map(envelope.getDoc(), Optional.ofNullable(envelope.getBranch()));
   }
 
@@ -105,13 +100,13 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
     final var wrench = visitWrench(deployment);
     final var stencil = visitStencil(deployment);
     
-    final var errors1 = new DeploymentEnvirValidator(deployment, stencil, wrench).accept();
-    if(errors1.isPresent()) {
-      return Tuple2.of(EveliDeploymentStatus.ERROR, errors1.get());
+    final var errors1 = new DeploymentEnvirValidator(deployment, stencil, wrench, logger).accept();
+    if(errors1 > 0) {
+      return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());
     }
-    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil).accept();
-    if(errors2.isPresent()) {
-      return Tuple2.of(EveliDeploymentStatus.ERROR, errors2.get());      
+    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil, logger).accept();
+    if(errors2 > 0) {
+      return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());      
     }
     
     return Tuple2.of(EveliDeploymentStatus.READY, null);       

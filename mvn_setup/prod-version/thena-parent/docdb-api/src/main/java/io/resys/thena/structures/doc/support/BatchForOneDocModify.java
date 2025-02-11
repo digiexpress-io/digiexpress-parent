@@ -89,7 +89,7 @@ public class BatchForOneDocModify {
 
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
-      .meta(meta == null ? docLock.getDoc().get().getMeta() : meta.get())
+      .meta(meta == null ? docLock.getDoc().map(e -> e.getMeta()).orElse(null) : meta.orElse(null))
       .status(remove ? Doc.DocStatus.ARCHIVED : Doc.DocStatus.IN_FORCE)
       
       .name(this.docName == null ? docLock.getDoc().get().getName() : this.docName.orElse(null))

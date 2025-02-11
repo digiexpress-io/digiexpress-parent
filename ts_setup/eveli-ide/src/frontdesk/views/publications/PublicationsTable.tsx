@@ -66,6 +66,20 @@ const DeploymentInfo: React.FC<Publication> = ({description}) => {
 }
 
 
+
+function parseErrors(errors: any): string[] {
+  if(!errors) {
+    return [];
+  }
+
+  const result = errors['map'];
+  if(!result) {
+    return [];
+  }
+
+  return Object.values(result);
+}
+
 const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
@@ -117,6 +131,8 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
     color = 'warning';
   }
 
+
+
   return (<div>
       <Dialog open={statusDialogOpen} onClose={handleClose} maxWidth='md' fullWidth>
         <DialogTitle fontWeight='bold'>{intl.formatMessage({ id: 'publications.changeStatus' })}</DialogTitle>
@@ -128,11 +144,11 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
               <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
               </>) : (<>
               <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
-              <Button disabled={status === 'READY'} variant='outlined' color='error' startIcon={<DeleteIcon />} onClick={handleDeploy}>{intl.formatMessage({ id: 'publications.remove' })}</Button>
-              <Button disabled={status === 'DEPLOYED'} variant='contained' endIcon={<SendIcon />} onClick={handleUnDeployed}>{intl.formatMessage({ id: 'publications.deploy' })}</Button>
+              <Button disabled={status === 'READY'} variant='outlined' color='error' startIcon={<DeleteIcon />} onClick={handleUnDeployed}>{intl.formatMessage({ id: 'publications.remove' })}</Button>
+              <Button disabled={status === 'DEPLOYED'} variant='contained' endIcon={<SendIcon />} onClick={handleDeploy}>{intl.formatMessage({ id: 'publications.deploy' })}</Button>
               </>)}
 
-              {JSON.stringify(errors, null, 2)}
+              {parseErrors(errors).map((e, key) => (<div key={key}>{e}</div>))}
           </Stack>
         </DialogContent>
         <DialogActions>

@@ -20,36 +20,26 @@ package io.digiexpress.eveli.envir.spi.actions;
  * #L%
  */
 
-import java.util.Optional;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
-import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class DeploymentEnvirDialobUploader {
-
   private final DialobClient dialobClient;
   private final EveliDeployment deployment;
   private final Sites sites;
-  private final JsonObject errors = JsonObject.of();
+  private final EveliDeploymentCompilerLogger logger;
   private int errorIndex;
   
-  public Optional<JsonObject> accept() {
+  public int accept() {
     visitSites(sites);
-    
-    if(errors.isEmpty()) {
-      return Optional.empty();
-    }
-    return Optional.of(errors);
+    return errorIndex;
   }
 
   private void visitSites(Sites sites) {
@@ -102,38 +92,32 @@ public class DeploymentEnvirDialobUploader {
       createTag(updated, link);
       return;
     }
+    
+    existingForm.ifPresent(existing -> logger.formUpToDate(existing, link));
   }
   
   
   private Form updateForm(Form form, TopicLink link) {
     try {
-      return dialobClient.updateForm(form);
+      final var updated = dialobClient.updateForm(form);
+      logger.formUpdated(updated, link);
+      return updated;
     } catch(Exception e) {
-      final var stack = String.join(System.lineSeparator(), ExceptionUtils.getRootCauseStackTrace(e));
-      addError(
-          "FAILED_TO_UPDATE_FORM", 
-          "Can't create dialob form via dialob api for workflow: " + JsonObject.mapFrom(link).encodePrettily() + System.lineSeparator() +
-          "because of error in rest api: " + e.getMessage() + System.lineSeparator() +
-          "stack: " + System.lineSeparator() +
-          stack
-      );
+      addError();
+      logger.failedToUpdateForm(form, link, e);
       return null;
     }
   }
   
   private Form createForm(Form form, TopicLink link) {
     try {
-      return dialobClient.createForm(form);
+      final var created = dialobClient.createForm(form);
+      logger.formCreated(created, link);
+      return created;
     } catch(Exception e) {
-      final var stack = String.join(System.lineSeparator(), ExceptionUtils.getRootCauseStackTrace(e));
-      addError(
-          "FAILED_TO_CREATE_FORM", 
-          "Can't create dialob form via dialob api for workflow: " + JsonObject.mapFrom(link).encodePrettily() + System.lineSeparator() +
-          "because of error in rest api: " + e.getMessage() + System.lineSeparator() +
-          "stack: " + System.lineSeparator() +
-          stack
-      );
       
+      addError();
+      logger.failedToCreateFormTag(form, link, e);
       return null;
     }
   }
@@ -141,20 +125,15 @@ public class DeploymentEnvirDialobUploader {
   private void createTag(Form form, TopicLink link) {
     try {
       dialobClient.createTag(form.getName(), link.getFormTag());
+      logger.formTagCreated(form, link);
     } catch(Exception e) {
-      final var stack = String.join(System.lineSeparator(), ExceptionUtils.getRootCauseStackTrace(e));
-      addError(
-          "FAILED_TO_CREATE_FORM_TAG", 
-          "Can't create dialob form via dialob api for workflow: " + JsonObject.mapFrom(link).encodePrettily() + System.lineSeparator() +
-          "because of error in rest api: " + e.getMessage() + System.lineSeparator() +
-          "stack: " + System.lineSeparator() +
-          stack
-      );
+      addError();
+      logger.failedToCreateFormTag(form, link, e);
     }
   }
   
-  private void addError(String code, String error) {
+  private void addError() {
     errorIndex++;
-    errors.put(errorIndex + "-" + code, error);
+
   }
 }

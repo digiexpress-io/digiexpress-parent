@@ -86,7 +86,7 @@ public class AssetsDeploymentController {
   }
   
   @Getter @RequiredArgsConstructor
-  public static class CompileAndDeployEvent {
+  private static class CompileAndDeployEvent {
     private final String deploymentId;
     private final String userId;
   }

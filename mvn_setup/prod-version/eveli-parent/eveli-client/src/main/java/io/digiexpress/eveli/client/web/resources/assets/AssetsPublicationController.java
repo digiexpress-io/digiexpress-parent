@@ -44,7 +44,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController.CompileAndDeployEvent;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
@@ -100,7 +99,7 @@ public class AssetsPublicationController {
   
   
   @Getter @RequiredArgsConstructor
-  public static class CompileEvent {
+  private static class CompileEvent {
     private final String deploymentId;
     private final String userId;
   }
@@ -138,7 +137,7 @@ public class AssetsPublicationController {
           .build()
       )
       .onItem().invoke(deployment -> 
-        publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId))          
+        publisher.publishEvent(new CompileEvent(deployment.getId(), userId))          
       );
   }
   
