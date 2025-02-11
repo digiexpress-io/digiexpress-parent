@@ -119,7 +119,7 @@ public class CreateOneDeploymentImpl implements CreateOneDeployment, OneDocCreat
         .docSubStatus(EveliDeploymentStatus.BUILDING.name())
         .docType(EveliEnvirStore.DOC_TYPE_DEPLOYMENT)
         .docDescription(EveliEnvirStore.formatDescription(description, stencil, wrench))
-        .docStartsAt(startsAt);
+        .docStartsAt(startsAt.withSecond(0).withNano(0));
   }
   
 

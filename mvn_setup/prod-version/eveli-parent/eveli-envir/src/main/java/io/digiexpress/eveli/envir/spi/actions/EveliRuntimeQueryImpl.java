@@ -77,15 +77,17 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
     }
     final OffsetDateTime now = OffsetDateTime.now();
     return new DeploymentQueryImpl(ctx).emptyBranchBody(true)
-      .status(EveliDeploymentStatus.READY)
+      .status(EveliDeploymentStatus.DEPLOYED)
+      .excludeExternal(true)
       .emptyBranchBody(true)
       .findAll()
-      .onItem().transform(deployments -> deployments.stream()
-          .filter((a) -> a.getStartsAt().isBefore(now) || a.getStartsAt().isEqual(now))
-          .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
-          .findFirst()
-      )
-      .onItem().transformToUni(latest -> {
+      .onItem().transformToUni(all -> {
+        
+        final var latest = all.stream()
+            .filter((a) -> a.getStartsAt().isBefore(now) || a.getStartsAt().isEqual(now))
+            .sorted((a, b) -> b.getStartsAt().compareTo(b.getStartsAt()))
+            .findFirst();
+        
         logging.lastQueriedDeployment(latest);
         
         if(latest.isEmpty()) {
