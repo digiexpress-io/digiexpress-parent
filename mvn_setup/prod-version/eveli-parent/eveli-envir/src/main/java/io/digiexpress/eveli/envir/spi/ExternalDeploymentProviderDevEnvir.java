@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.envir.spi;
 
+import java.time.LocalDateTime;
+
 /*-
  * #%L
  * eveli-envir
@@ -21,8 +23,11 @@ package io.digiexpress.eveli.envir.spi;
  */
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import io.dialob.api.form.Form;
+import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
 import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
@@ -31,25 +36,37 @@ import io.digiexpress.eveli.envir.api.ImmutableEveliSources;
 import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.spi.composer.ComposerEntityMapper;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import io.thestencil.client.api.StencilClient;
+import io.thestencil.client.api.StencilClient.Entity;
+import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentProvider {
   private final StencilClient stencilClient;
   private final HdesClient wrenchClient;
+  private final DialobClient dialobClient;
 
   @Override
   public Uni<Optional<EveliDeployment>> getDeployment() {
+    
+    final var stencilAndForms = stencilState().onItem().transformToUni(stencil -> {
+      return getForms(stencil).onItem().transform(forms -> Tuple2.of(stencil, forms));
+    });
+    
     return Uni.combine().all()
-        .unis(stencilState(), wrenchState())
+        .unis(stencilAndForms, wrenchState())
         .asTuple().onItem().transform(tuple -> {
           
           final var now = OffsetDateTime.now();
           final AstTag wrench = tuple.getItem2();
-          final SiteState stencil = tuple.getItem1();
+          final SiteState stencil = tuple.getItem1().getItem1();
+          final List<Form> dialob = tuple.getItem1().getItem2();
           
           final var deployment = ImmutableEveliDeployment.builder()
             .id(wrench.getCommitId() + "/dev/" + stencil.getCommit() )
@@ -57,11 +74,12 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
             .startsAt(now)
             .createdBy(ExternalDeploymentProviderDevEnvir.class.getCanonicalName())
             .description(EveliEnvirStore.formatDescription("live deployment", stencil, wrench))
-            .name("dev")
+            .name("dev-" + LocalDateTime.now())
             .externalId(null)
             .sources(ImmutableEveliSources.builder()
                 .stencil(stencil)
                 .wrench(wrench)
+                .dialob(dialob)
                 .build())
             .status(EveliDeploymentStatus.READY)
             .build();
@@ -69,6 +87,38 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
           return Optional.ofNullable(deployment);
         });
   }
+  
+  
+  private Uni<List<Form>> getForms(SiteState site) {    
+    final var workflows = site.getWorkflows().values().stream()
+      .filter(e -> e.getBody().getFormId() != null)
+      .filter(e -> !Boolean.TRUE.equals(e.getBody().getDevMode()))
+      .toList();
+    
+    return Multi.createFrom().items(workflows.stream())
+        .onItem().transform(this::getFormIdById)
+        .collect().asList();
+  }
+
+  private Form getFormIdById(final Entity<Workflow> stencilService) {
+
+    try {
+      return dialobClient.getFormById(stencilService.getBody().getFormId());
+    } catch(Exception e) {
+      throw new DialobFormNotFoundException(
+          "Can't resolve for by tag or form name, will try by form id for topic: " + 
+          JsonObject.mapFrom(stencilService).encodePrettily());
+    }
+  }
+  
+  public static class DialobFormNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1781444267360040922L;
+    public DialobFormNotFoundException(String message) {
+      super(message);
+    }
+  }
+  
+  
 
   private Uni<SiteState> stencilState() {
     return stencilClient.getStore().query().head();

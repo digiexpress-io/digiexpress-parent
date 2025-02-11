@@ -25,3 +25,18 @@ export interface PublicationInit {
   stencilTag: string | null;
   wrenchTag: string | null;
 }
+
+
+
+export interface PublicationUpload {
+  name: string;
+  externalId: string | undefined;
+  description: string;
+  createdBy: string;
+  startsAt: string; // offset date time
+  sources: {
+    stencil: Object;
+    wrench: Object;
+    dialob: Object[];
+  } | undefined; // only when loaded on demand
+}

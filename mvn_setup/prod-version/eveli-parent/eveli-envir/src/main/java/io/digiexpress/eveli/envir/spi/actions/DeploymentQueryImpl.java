@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.common.collect.ImmutableList;
+
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.DeploymentQuery;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeploymentStatus;
@@ -56,6 +58,7 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
   private final List<String> ids = new ArrayList<>();
   private final List<EveliDeploymentStatus> status = new ArrayList<>();
   private boolean emptyBranchBody = true;
+  private boolean excludeExternal = false;
 
   @Override
   public DeploymentQuery status(EveliDeploymentStatus ...status) {
@@ -63,14 +66,23 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
     return this;
   }
   
+  private Uni<Optional<EveliDeployment>> getExternal() {
+    if(excludeExternal) {
+      return Uni.createFrom().item(Optional.empty());
+    }
+    return ctx.getExternalProvider().getDeployment();
+  }
+  
   @Override
   public Uni<EveliDeployment> getOneById(String id) {
     ids.add(id);    
-    return ctx.getExternalProvider().getDeployment().onItem()
+    return getExternal().onItem()
       .transformToUni(predefined -> {
+        
         if(predefined.isPresent() && (predefined.get().getId().equals(id) || predefined.get().getName().equals(id))) {
           return Uni.createFrom().item(predefined.get());
         }
+        
         final var config = ctx.getConfig();
         return config.accept(this).onItem().transform(e -> {
           if(e.size() != 1) {
@@ -87,13 +99,21 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
   
   @Override
   public Uni<List<EveliDeployment>> findAll() {
-    return ctx.getExternalProvider().getDeployment().onItem()
+    return getExternal().onItem()
         .transformToUni(predefined -> {
-          if(predefined.isPresent() && (this.ids.isEmpty() || this.ids.contains(predefined.get().getId()))) {
-            return Uni.createFrom().item(Arrays.asList(predefined.get()));
-          }
+          
+          final var isIncludeExternal = predefined.isPresent() && (this.ids.isEmpty() || this.ids.contains(predefined.get().getId()));
+          
           final var config = ctx.getConfig();
-          return config.accept(this);
+          return config.accept(this)
+              .onItem().transform(e -> {
+                
+                final var builder = ImmutableList.<EveliDeployment>builder();
+                if(isIncludeExternal) {
+                  builder.add(predefined.get());
+                }
+                return builder.addAll(e).build();
+              });
         });
   }  
   @Override

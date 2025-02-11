@@ -66,6 +66,7 @@ public interface EveliEnvirClient {
   
   interface DeploymentQuery {
     DeploymentQuery status(EveliDeploymentStatus ...status);
+    DeploymentQuery excludeExternal(boolean excludeExternal); // don't fetch the external source
     DeploymentQuery emptyBranchBody(boolean emptyBranchBody); // don't fetch the branch contents, default is true
     Uni<EveliDeployment> getOneById(String id);
     Uni<List<EveliDeployment>> findAll(); // will not load assets
@@ -128,6 +129,7 @@ public interface EveliEnvirClient {
 
   interface EveliRuntime {
     String getName();
+    OffsetDateTime getStartsAt();
     String getDeploymentId();
     String getWrenchTagName();
     String getStencilTagName();

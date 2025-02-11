@@ -89,4 +89,9 @@ public class EveliRuntimeImpl implements EveliRuntime {
   public String getStencilTagName() {
     return deployment.getSources().getWrench().getName();
   }
+
+  @Override
+  public OffsetDateTime getStartsAt() {
+    return deployment.getStartsAt();
+  }
 }

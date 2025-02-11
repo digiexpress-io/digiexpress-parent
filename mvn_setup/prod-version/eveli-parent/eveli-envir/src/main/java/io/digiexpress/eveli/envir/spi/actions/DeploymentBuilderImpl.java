@@ -38,12 +38,16 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 
+
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
 public class DeploymentBuilderImpl implements DeploymentBuilder {
   private final EveliEnvirStore ctx;
+  private final EveliRuntimeCache cache;
+  private final DeploymentBuilderLogger logger = new DeploymentBuilderLogger();
   private String userId;
   private String deploymentId;
+  
   
   @Override
   public Uni<EveliDeployment> build() {
@@ -51,12 +55,18 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
     RepoAssert.notEmpty(deploymentId, () -> "deploymentId must be defined!");
     
     return Uni.combine().all().unis(
-      new DeploymentQueryImpl(ctx).emptyBranchBody(true).getOneById(deploymentId),
-      new DeploymentQueryImpl(ctx).emptyBranchBody(true).status(EveliDeploymentStatus.DEPLOYED).findAll()
+      new DeploymentQueryImpl(ctx).emptyBranchBody(true).excludeExternal(true).getOneById(deploymentId),
+      new DeploymentQueryImpl(ctx).emptyBranchBody(true).excludeExternal(true)
+        .status(EveliDeploymentStatus.DEPLOYED)
+        .findAll()
     )
     .asTuple().onItem().transformToUni(tuple -> applyUpdate(tuple.getItem1(), tuple.getItem2()))
     .onItem().transform(this::validateUpdateResponse)
-    .onItem().transform(this::createResult);
+    .onItem().transform(this::createResult)
+    .onItem().transform((resp) -> {
+      cache.invalidateId();
+      return resp;
+    });
   }
   
   private Uni<ManyDocsEnvelope> applyUpdate(EveliDeployment target, List<EveliDeployment> deployed) {
@@ -64,15 +74,26 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
     
     final var builder = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
       .commitMessage("Activating singular deployment")
-      .commitAuthor(DeploymentBuilderImpl.class.getName());
+      .commitAuthor(userId);
+    
+    // skip on error
+    if(target.getStatus() == EveliDeploymentStatus.ERROR) {
+      logger.setSkipping(target).error();
+      return builder.item()
+          .docId(target.getId())
+          .docSubStatus(EveliDeploymentStatus.ERROR.name())
+          .next()
+          .build();
+    }
     
     for(final var dep : deployed) {
+      logger.setReady(dep);
       builder.item()
         .docId(dep.getId())
         .docSubStatus(EveliDeploymentStatus.READY.name())
         .next();
     }
-    
+    logger.setDeployed(target);
     return builder.item()
       .docId(target.getId())
       .docSubStatus(EveliDeploymentStatus.DEPLOYED.name())
@@ -82,12 +103,15 @@ public class DeploymentBuilderImpl implements DeploymentBuilder {
   
   public ManyDocsEnvelope validateUpdateResponse(ManyDocsEnvelope envelope) {
     if(envelope.getStatus() != CommitResultStatus.OK) {
+      logger.error();
       final var config = ctx.getConfig();
       throw DocStoreException.builder("DEPLOYMENT_UPDATE_FAILED")
         .add(config, envelope)
         .add((callback) -> callback.addArgs(JsonObject.of("id", deploymentId).encode()))
         .build();
     }
+    
+    logger.info();
     return envelope;
   }
 

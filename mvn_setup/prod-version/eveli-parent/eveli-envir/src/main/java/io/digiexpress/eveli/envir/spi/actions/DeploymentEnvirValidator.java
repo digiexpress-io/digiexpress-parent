@@ -31,6 +31,7 @@ import io.resys.hdes.client.api.programs.ProgramEnvir.ProgramWrapper;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Sites;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -115,7 +116,7 @@ public class DeploymentEnvirValidator {
     
     final ProgramWrapper<AstFlow, FlowProgram> flow = programs.getFlowsByName().get(flowName);
     if(flow.getStatus() != ProgramStatus.UP) {
-      addError("WRENCH_FLOW_BROKEN", "wrench flow in status: " + flow.getStatus() + " with errors: " + JsonObject.mapFrom(flow.getErrors()).encodePrettily());
+      addError("WRENCH_FLOW_BROKEN", "wrench flow in status: " + flow.getStatus() + " with errors: " + new JsonArray(flow.getErrors()).encodePrettily());
       return;
     }
   }

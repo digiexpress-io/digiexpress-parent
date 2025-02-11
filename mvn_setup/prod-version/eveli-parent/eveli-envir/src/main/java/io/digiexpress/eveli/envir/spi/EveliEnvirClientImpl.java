@@ -74,7 +74,7 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
   }
   @Override
   public DeploymentBuilder deploymentBuilder() {
-    return new DeploymentBuilderImpl(ctx);
+    return new DeploymentBuilderImpl(ctx, cache);
   }
   @Override
   public EveliRuntimeQuery runtimeQuery() {

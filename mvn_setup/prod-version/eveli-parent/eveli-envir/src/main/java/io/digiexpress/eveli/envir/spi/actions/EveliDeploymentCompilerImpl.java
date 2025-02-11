@@ -46,7 +46,10 @@ import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
 public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
@@ -68,6 +71,15 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   
   private Uni<EveliDeployment> visitMerge(EveliDeployment deployment) {
     final var result = visitEnvir(deployment);
+    log.info(new StringBuilder("Compiled deployment\r\n")
+        .append("  - deployment\r\n")
+        .append("    id: {}\r\n")
+        .append("    name: {}\r\n")
+        .append("    status: {} -> {}\r\n")
+        .toString(),
+        
+        deploymentId, deployment.getName(), deployment.getStatus(), result.getItem1());
+    
     final var config = ctx.getConfig();
     return config.getClient().doc(config.getRepoId()).commit()
         .modifyOneDoc()

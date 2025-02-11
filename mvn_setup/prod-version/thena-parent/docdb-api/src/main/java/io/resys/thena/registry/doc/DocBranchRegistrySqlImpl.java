@@ -231,6 +231,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        .append("  doc.owner_id as doc_owner_id,").ln()
         
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
@@ -296,6 +297,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  doc.doc_sub_status as doc_sub_status,").ln()
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
+        .append("  doc.owner_id as doc_owner_id,").ln()
         
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
@@ -376,6 +378,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  doc.doc_starts_at as doc_starts_at,").ln()
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
         .append("  doc.doc_description as doc_description,").ln()
+        .append("  doc.owner_id as doc_owner_id,").ln()
         
         .append("  doc.doc_type as doc_type,").ln()
         .append("  doc.doc_status as doc_status,").ln()
@@ -456,6 +459,8 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
         .append("  doc.doc_ends_at as doc_ends_at,").ln()
         
         .append("  doc.doc_type as doc_type,").ln()
+        .append("  doc.owner_id as doc_owner_id,").ln()
+        
         .append("  doc.doc_status as doc_status,").ln()
         .append("  doc.doc_meta as doc_meta,").ln()
         .append("  doc.doc_parent_id as doc_parent_id,").ln()
@@ -624,6 +629,7 @@ public class DocBranchRegistrySqlImpl implements DocBranchRegistry {
             .updatedAt(row.getOffsetDateTime("doc_updated_at"))
             .startsAt(row.getOffsetDateTime("doc_starts_at"))
             .endsAt(row.getOffsetDateTime("doc_ends_at"))
+            .ownerId(row.getString("doc_owner_id"))
             .build())
         .branch(ImmutableDocBranch.builder()
             .id(row.getString("branch_id"))

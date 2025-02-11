@@ -170,6 +170,7 @@ public class AssetsPublicationController {
   
   private Uni<List<Form>> getForms(SiteState site) {    
     final var workflows = site.getWorkflows().values().stream()
+      .filter(e -> e.getBody().getFormId() != null)
       .filter(e -> !Boolean.TRUE.equals(e.getBody().getDevMode()))
       .toList();
     

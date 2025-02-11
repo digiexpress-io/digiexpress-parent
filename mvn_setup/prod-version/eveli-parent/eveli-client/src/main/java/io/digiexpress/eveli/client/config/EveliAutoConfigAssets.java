@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -97,12 +98,13 @@ public class EveliAutoConfigAssets {
   }
   @Bean
   public AssetsDeploymentController assetsDeploymentController(
+      ApplicationEventPublisher publisher,
       EveliEditEnvir context, 
       AuthClient auth, 
       DialobClient dialobClient,
       EveliEnvirClient envir) {
     
-    return new AssetsDeploymentController(envir);
+    return new AssetsDeploymentController(envir, publisher);
   }
   @Bean 
   public AssetsPublicationController assetReleaseController(
@@ -134,8 +136,8 @@ public class EveliAutoConfigAssets {
   }
 
   @Bean
-  public ExternalDeploymentProvider externalDeploymentProvider(EveliEditEnvir context) {
-    return new ExternalDeploymentProviderDevEnvir(context.getStencil(), context.getWrench());
+  public ExternalDeploymentProvider externalDeploymentProvider(EveliEditEnvir context, DialobClient dialob) {
+    return new ExternalDeploymentProviderDevEnvir(context.getStencil(), context.getWrench(), dialob);
   }
   
   /**

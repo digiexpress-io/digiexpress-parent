@@ -2,6 +2,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import MaterialTable, { Column } from '@material-table/core';
 
 import { useIntl, FormattedMessage } from 'react-intl';
@@ -21,7 +22,8 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
-import { Box, IconButton, Tooltip, DialogTitle, DialogContent, Dialog, DialogContentText, DialogActions, Button } from '@mui/material';
+import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button } from '@mui/material';
+import { UploadPublicationDialog } from './UploadPublicationDialog';
 
 
 interface TableState {
@@ -69,6 +71,7 @@ export const PublicationsTable: React.FC = () => {
   const tableRef = useRef();
   const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<Publication[]>(`${serviceUrl}worker/rest/api/assets/publications`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const getRelease = (releaseTag: Publication) => {
     let url = `${serviceUrl}worker/rest/api/assets/deployments/${releaseTag.name}`;
@@ -161,6 +164,12 @@ export const PublicationsTable: React.FC = () => {
             isFreeAction: true,
             hidden: !config.modifiableAssets,
             onClick: () => { setNewDialogOpen(true); }
+          },
+          {
+            icon: FileUploadIcon,
+            tooltip: intl.formatMessage({ id: 'publicationsTable.uploadButton' }),
+            isFreeAction: true,
+            onClick: () => { setUploadDialogOpen(true); }
           }
         ]}
 
@@ -168,6 +177,7 @@ export const PublicationsTable: React.FC = () => {
         data={assetReleases || []}
       />
       <NewPublicationDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshAssetReleases()} />
+      <UploadPublicationDialog open={uploadDialogOpen} setOpen={setUploadDialogOpen} onSubmit={() => refreshAssetReleases()} />
     </>
   );
 }

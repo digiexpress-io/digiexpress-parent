@@ -67,4 +67,9 @@ public class EveliRuntimeCacheInMemory implements EveliRuntimeCache {
     log.debug("Saving runtime: {} from cache", runtime.getDeploymentId());
     return runtime;
   }
+  
+  public void invalidateId() {
+    log.debug("Invalidating deployment cache");
+    short_deployment_cache.invalidateAll();
+  }
 }

@@ -108,11 +108,12 @@ public class EveliEnvirStore extends DocStoreImpl<EveliEnvirStore> {
         .status(EveliDeploymentStatus.valueOf(doc.getSubStatus()))
         .externalId(doc.getExternalId())
         .createdAt(doc.getCreatedAt())
-        
+        .name(doc.getName())
         .createdBy(doc.getOwnerId())
         .description(doc.getDescription())
         .errors(doc.getMeta())
         .sources(branch
+            .filter(src -> !src.getValue().isEmpty())
             .map(src -> src.getValue().mapTo(ImmutableEveliSources.class))
             .orElse(null))
         .build();
