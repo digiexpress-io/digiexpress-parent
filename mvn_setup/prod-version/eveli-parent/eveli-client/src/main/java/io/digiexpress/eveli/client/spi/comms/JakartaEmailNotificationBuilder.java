@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.notification;
+package io.digiexpress.eveli.client.spi.comms;
 
 /*-
  * #%L

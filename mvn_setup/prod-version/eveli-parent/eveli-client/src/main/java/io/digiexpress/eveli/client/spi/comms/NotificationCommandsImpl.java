@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.spi.notification;
+package io.digiexpress.eveli.client.spi.comms;
 
 /*-
  * #%L
@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import io.digiexpress.eveli.client.config.EveliPropsNotification;
-import io.digiexpress.eveli.client.spi.notification.JakartaEmailNotificationBuilder.EmailFilter;
+import io.digiexpress.eveli.client.spi.comms.JakartaEmailNotificationBuilder.EmailFilter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

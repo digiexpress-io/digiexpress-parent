@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.spi.notification.NotificationCommandsImpl;
+import io.digiexpress.eveli.client.spi.comms.NotificationCommandsImpl;
 
 @Configuration
 public class EveliAutoConfigNotification {
