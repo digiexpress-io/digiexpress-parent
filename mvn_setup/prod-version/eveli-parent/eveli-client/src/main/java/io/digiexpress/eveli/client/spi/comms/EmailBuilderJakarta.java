@@ -38,16 +38,16 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Email notification builder implementation based on Jakarta mail transport.
  */
-@Slf4j
+
 @RequiredArgsConstructor
 @Setter @Accessors(fluent = true)
 public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
   private final EveliPropsEmail config;
+  private final EmailSendingLogger logger = new EmailSendingLogger();
   private final List<String> recipients = new ArrayList<>();
   private String title;
   private String message;
@@ -66,54 +66,46 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
 
   @Override
   public void build() {
+    try {
+      visitAllRecipients(this.recipients);
+    } finally {
+      logger.close();
+    }
+  }
+
+  private void visitAllRecipients(List<String> receiverEmails) {
+    if(!Boolean.TRUE.equals(config.getEnabled())) {
+      logger.emailDisabled();
+      return;
+    }
+    
     RepoAssert.notEmpty(title, () -> "title must be defined!");
     RepoAssert.notEmpty(refId, () -> "refId must be defined!");
     RepoAssert.notEmpty(message, () -> "message must be defined!");
-    RepoAssert.notEmpty(recipients, () -> "recipientAddress must be defined!");
     
-    final String logPrefix = "Email sending request, refId: " + refId;
-    List<String> emailAddressList = recipients;
-    
-    log.info("{}, title {}, number of recipients: {}", logPrefix, title, 
-        emailAddressList != null ? emailAddressList.size() : 0);
-    log.debug("{}, recipients: {}", logPrefix, emailAddressList);
-    
-    
-    if (config.getEnabled()) {
-      try {
-        sendEmailNotification(logPrefix);
-      }
-      catch (Exception e) {
-        log.error("{}, result: error", logPrefix, e);
-      }
-    } else {
-      log.info("{}, result: cancelled, reason: email sending disabled in configuration.", logPrefix);
-    }
-    
-  }
+    logger.emailCreated(recipients, title, refId);
+    if (receiverEmails.isEmpty()) {
+      logger.noRecipients();
+      return;
+    } 
+    final var internetAddresses = visitInternetAddresses(receiverEmails);
 
-  private void sendEmailNotification(String logPrefix)
-      throws AddressException, MessagingException 
-  {
-    List<String> emailAddressList = this.recipients;
-    
-    if (emailAddressList == null || emailAddressList.isEmpty()) {
-      log.warn("{}, result: cancelled, reason: no email addresses.", logPrefix);
+    if (internetAddresses.isEmpty()) {
+      logger.noValidRecipients();
+      return;
     }
-    else {
-      InternetAddress[] internetAddresses = parseEmailAddressesToInternetAddresses(emailAddressList, logPrefix);
-  
-      if (internetAddresses.length == 0) {
-        log.warn("{}, result: cancelled, reason: no valid or allowed email addresses.", logPrefix);
-      }
-      else {
-        sendEmail(internetAddresses);
-        log.info("{}, result: sent email to {} recipient(s).", logPrefix, internetAddresses.length);
-      }
+    
+    try {
+      sendEmail(internetAddresses);
+      logger.emailSent(internetAddresses);
+    } catch(Exception e) {
+      logger.emailFailed(internetAddresses, e);
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
 
-  private void sendEmail(InternetAddress[] internetAddresses) throws MessagingException, AddressException {
+  private void sendEmail(List<InternetAddress> internetAddresses) throws MessagingException, AddressException {
+    
     Properties props = new Properties();
     props.put("mail.smtp.host", config.getHostName());
     props.put("mail.smtp.port", config.getHostPort());
@@ -125,7 +117,7 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     final var msg = new MimeMessage(session);
     msg.setFrom(new InternetAddress(config.getSenderEmail(), false));
 
-    msg.setRecipients(MimeMessage.RecipientType.TO, internetAddresses);
+    msg.setRecipients(MimeMessage.RecipientType.TO, internetAddresses.toArray(new InternetAddress[internetAddresses.size()]));
     msg.setSubject(title);
     msg.setText(message);
     msg.setSentDate(new Date());
@@ -135,32 +127,27 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     Transport.send(msg);
   }
 
-  private InternetAddress[] parseEmailAddressesToInternetAddresses(List<String> emailAddressList, String logPrefix) {
+  private List<InternetAddress> visitInternetAddresses(List<String> emailAddresses) {
     final EmailFilter filter = new EmailFilter(config);
-    
-    List<InternetAddress> emailAddresses = new ArrayList<>();
-    for (String emailAddress : emailAddressList) {
+    final var internetAddresses = new ArrayList<InternetAddress>();
+    for (final var emailAddress : emailAddresses) {
       if (!filter.isValidEmail(emailAddress)) {
-        log.warn("{}, email {} has no valid address, skipping recipient", logPrefix, emailAddress);
+        logger.invalidRecipientSkipped(emailAddress);
+        continue;
       }
-      else {
-        try {
-          InternetAddress[] emailInternetAddresses = InternetAddress.parse(emailAddress);
-          for (InternetAddress address: emailInternetAddresses) {
-            if (filter.isEnabledEmail(address)) {
-              emailAddresses.add(address);
-            }
-            else {
-              log.info("{}, email {} is not in allowlist, skipping recipient", logPrefix, address);
-            }
+      try {
+        for (InternetAddress address : InternetAddress.parse(emailAddress)) {
+          if (filter.isEnabledEmail(address)) {
+            internetAddresses.add(address);
+          } else {
+            logger.blockedRecipientSkipped(address);
           }
-        } 
-        catch (AddressException e) {
-          log.warn("{}, email {} address parse error {}, skipping recipient", logPrefix, emailAddress, e);
         }
+      } catch (AddressException e) {
+        logger.corrupRecipientSkipped(emailAddress, e);
       }
     }
-    return emailAddresses.toArray(new InternetAddress[emailAddresses.size()]);
+    return internetAddresses;
   }
 
 }
