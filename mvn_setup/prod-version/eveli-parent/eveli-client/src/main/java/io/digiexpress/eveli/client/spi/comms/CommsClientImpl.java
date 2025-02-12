@@ -26,11 +26,10 @@ import org.springframework.web.client.RestTemplate;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import io.digiexpress.eveli.client.config.EveliPropsNotification;
-import io.digiexpress.eveli.client.spi.comms.JakartaEmailNotificationBuilder.EmailFilter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NotificationCommandsImpl implements CommsClient {
+public class CommsClientImpl implements CommsClient {
 
   private final EveliPropsNotification notificationProps;
   private final EveliPropsEmail emailProps;
@@ -38,11 +37,11 @@ public class NotificationCommandsImpl implements CommsClient {
   
   
   @Override
-  public EmailNotificationBuilder createEmail() {
+  public EmailBuilder createEmail() {
     if (StringUtils.isNotBlank(emailProps.getServiceUrl())) {
       return new RestEmailNotificationBuilder(emailProps, client);
     }
-    return new JakartaEmailNotificationBuilder(emailProps, new EmailFilter(emailProps));
+    return new EmailBuilderJakarta(emailProps);
   }
   
   @Override

@@ -34,11 +34,16 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.api.CommsClient.EmailNotificationBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
 import io.digiexpress.eveli.client.api.CommsClient.EmailRequest;
 import io.digiexpress.eveli.client.api.CommsClient.EmailResponse;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,27 +53,62 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class RestEmailNotificationBuilder implements CommsClient.EmailNotificationBuilder {
+public class RestEmailNotificationBuilder implements CommsClient.EmailBuilder {
 
+  
+  @Data
+  @Builder(toBuilder = true)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class EmailRequest {
+    private String notificationTitle; 
+    private String notificationMessage;
+    @Singular
+    private List<String> recipientAddresses;
+    private String refId;
+  }
+
+  @Data
+  @Builder(toBuilder = true)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class EmailResponse {
+    /**
+     * Possible codes:
+     * <ul>
+     * <li> 0 - message sent
+     * <li> 403 - No valid email addresses
+     * <li> 404 - No email addresses
+     * <li> 405 - Email sending disabled
+     * <li> 500 - technical error
+     * </ul>
+     */
+    private int responseCode;
+    private String message;
+    @Builder.Default
+    private int emailCount = 0;
+  }
+  
+  
     private final EveliPropsEmail emailProps;
     private final RestTemplate client;
     
     private EmailRequest request = new EmailRequest();
 
     @Override
-    public EmailNotificationBuilder title(String notificationTitle) {
+    public EmailBuilder title(String notificationTitle) {
       request.setNotificationTitle(notificationTitle);
       return this;
     }
 
     @Override
-    public EmailNotificationBuilder message(String notificationMessage) {
+    public EmailBuilder message(String notificationMessage) {
       request.setNotificationMessage(notificationMessage);
       return this;
     }
 
     @Override
-    public EmailNotificationBuilder address(String recipientAddress) {
+    public EmailBuilder recipientAddress(String recipientAddress) {
       if (request.getRecipientAddresses() == null) {
         request.setRecipientAddresses(new ArrayList<>());
       }
@@ -77,13 +117,13 @@ public class RestEmailNotificationBuilder implements CommsClient.EmailNotificati
     }
 
     @Override
-    public EmailNotificationBuilder refId(String refId) {
+    public EmailBuilder refId(String refId) {
       request.setRefId(refId);
       return this;
     }
 
     @Override
-    public EmailNotificationBuilder addresses(List<String> recipientAddress) {
+    public EmailBuilder addresses(List<String> recipientAddress) {
       if (request.getRecipientAddresses() == null) {
         request.setRecipientAddresses(new ArrayList<>());
       }

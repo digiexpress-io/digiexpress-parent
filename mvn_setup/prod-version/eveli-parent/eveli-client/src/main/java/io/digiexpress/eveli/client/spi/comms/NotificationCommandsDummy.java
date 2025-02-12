@@ -31,7 +31,7 @@ public class NotificationCommandsDummy implements CommsClient {
   }
 
   @Override
-  public EmailNotificationBuilder createEmail() {
+  public EmailBuilder createEmail() {
     // TODO Auto-generated method stub
     return null;
   }

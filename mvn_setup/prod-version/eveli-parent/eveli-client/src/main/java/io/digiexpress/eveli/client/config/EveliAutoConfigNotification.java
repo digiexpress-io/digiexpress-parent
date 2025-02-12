@@ -25,16 +25,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.spi.comms.NotificationCommandsImpl;
+import io.digiexpress.eveli.client.spi.comms.CommsClientImpl;
 
 @Configuration
 public class EveliAutoConfigNotification {
 
   @Bean
   public CommsClient notificationCommands(
-      EveliPropsNotification notificationProps, EveliPropsEmail emailProps, 
-      EveliPropsOrg userRegistryProps, RestTemplate client) {
+      EveliPropsNotification notificationProps, 
+      EveliPropsEmail emailProps, 
+      RestTemplate client) {
     
-    return new NotificationCommandsImpl(notificationProps, emailProps, userRegistryProps, client);
+    return new CommsClientImpl(notificationProps, emailProps, client);
   }
 }
