@@ -31,22 +31,68 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.digiexpress.eveli.client.api.CommsClient.Client;
-import io.digiexpress.eveli.client.api.CommsClient.ClientType;
 import io.digiexpress.eveli.client.api.CommsClient.NotificationBuilder;
-import io.digiexpress.eveli.client.api.CommsClient.NotificationRequest;
-import io.digiexpress.eveli.client.api.CommsClient.NotificationResponse;
 import io.digiexpress.eveli.client.config.EveliPropsNotification;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class RestNotificationBuilder implements NotificationBuilder {
+public class NotificationBuilderDelegate implements NotificationBuilder {
 
   private final EveliPropsNotification props;
   private final RestTemplate client;
-  private NotificationRequest request = new NotificationRequest();
+  private final NotificationRequest request = new NotificationRequest();
+
+  
+  @Data
+  @Builder(toBuilder = true)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class NotificationRequest {
+    private Client client;
+    private String notificationId;
+    private String notificationTitle; 
+    private String notificationMessage;
+  }
+  
+  public static enum ClientType {
+    SSN,
+    CRN
+  }
+  
+  @Data
+  @Builder(toBuilder = true)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class Client {
+    private String clientId;
+    private ClientType clientType;
+  }
+
+  @Data
+  @Builder(toBuilder = true)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class NotificationResponse {
+    /**
+     * Possible codes:
+     * <ul>
+     * <li> 0 - message sent
+     * <li> 204 - Client has not enabled message receiving 
+     * <li> 400..499 - business error code, specific to service
+     * <li> 500 - technical error
+     * <li> 307 - message sending is disabled in system
+     * </ul>
+     */
+    private int responseCode;
+    private String message;
+  }
+
   
   @Override
   public NotificationBuilder title(String title) {
@@ -68,9 +114,15 @@ public class RestNotificationBuilder implements NotificationBuilder {
     this.request.getClient().setClientId(userId);
     return this;
   }
-
   @Override
-  public NotificationBuilder userIdType(String userId, ClientType userType) {
+  public NotificationBuilder ssn(String userId) {
+    return this.userIdType(userId, ClientType.SSN);
+  }
+  @Override
+  public NotificationBuilder crn(String userId) {
+    return this.userIdType(userId, ClientType.CRN);
+  }
+  private NotificationBuilder userIdType(String userId, ClientType userType) {
     if (this.request.getClient() == null) {
       this.request.setClient(new Client());
     }
@@ -86,7 +138,7 @@ public class RestNotificationBuilder implements NotificationBuilder {
   }
 
   @Override
-  public NotificationResponse build() {
+  public void build() {
     NotificationResponse result = null;
     final String logPrefix = "Notification sending request, refId: " + request.getNotificationId();
     log.info("{}, starting request processing", logPrefix);
@@ -103,7 +155,6 @@ public class RestNotificationBuilder implements NotificationBuilder {
         log.error("{}, result: error", logPrefix, e);
       }
     }
-    return result;
   }
 
   private NotificationResponse sendNotification(String logPrefix) {
