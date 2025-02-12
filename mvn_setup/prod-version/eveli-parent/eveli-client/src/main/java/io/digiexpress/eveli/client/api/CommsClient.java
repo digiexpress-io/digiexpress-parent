@@ -27,13 +27,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 
 
 public interface CommsClient {
   NotificationBuilder create();
-  EmailNotificationBuilder createEmail();
+  EmailBuilder createEmail();
 
 
   interface NotificationBuilder {
@@ -45,49 +44,14 @@ public interface CommsClient {
     NotificationResponse build();
   }
 
-  interface EmailNotificationBuilder {
-    EmailNotificationBuilder title(String notificationTitle); 
-    EmailNotificationBuilder message(String notificationMessage);
-    EmailNotificationBuilder address(String recipientAddress);
-    EmailNotificationBuilder refId(String refId);
-    EmailNotificationBuilder addresses(List<String> recipientAddress);
+  interface EmailBuilder {
+    EmailBuilder title(String title); 
+    EmailBuilder message(String message);
+    EmailBuilder refId(String refId);
+    
+    EmailBuilder recipientAddress(List<String> recipientAddress);
+    EmailBuilder recipientAddress(String recipientAddress);
     void build();
-  }
-
-  
-  
-  @Data
-  @Builder(toBuilder = true)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public class EmailRequest {
-
-    private String notificationTitle; 
-    private String notificationMessage;
-    @Singular
-    private List<String> recipientAddresses;
-    private String refId;
-  }
-
-  @Data
-  @Builder(toBuilder = true)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public class EmailResponse {
-    /**
-     * Possible codes:
-     * <ul>
-     * <li> 0 - message sent
-     * <li> 403 - No valid email addresses
-     * <li> 404 - No email addresses
-     * <li> 405 - Email sending disabled
-     * <li> 500 - technical error
-     * </ul>
-     */
-    private int responseCode;
-    private String message;
-    @Builder.Default
-    private int emailCount = 0;
   }
 
   
