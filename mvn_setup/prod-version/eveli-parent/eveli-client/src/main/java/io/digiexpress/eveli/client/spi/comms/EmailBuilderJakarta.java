@@ -100,7 +100,6 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
       logger.emailSent(internetAddresses);
     } catch(Exception e) {
       logger.emailFailed(internetAddresses, e);
-      throw new RuntimeException(e.getMessage(), e);
     }
   }
 

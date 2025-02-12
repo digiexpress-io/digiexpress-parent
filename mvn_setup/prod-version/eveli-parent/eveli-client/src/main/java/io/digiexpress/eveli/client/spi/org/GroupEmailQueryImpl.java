@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import io.digiexpress.eveli.client.api.OrgClient.GroupEmailQuery;
 import io.digiexpress.eveli.client.spi.asserts.IntegrationAssert;
-import io.digiexpress.eveli.client.spi.comms.RestEmailNotificationBuilder.EmailRequest;
+import io.digiexpress.eveli.client.spi.comms.EmailBuilderDelegate.EmailRequest;
 import lombok.RequiredArgsConstructor;
 
 

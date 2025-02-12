@@ -39,7 +39,7 @@ public class CommsClientImpl implements CommsClient {
   @Override
   public EmailBuilder createEmail() {
     if (StringUtils.isNotBlank(emailProps.getServiceUrl())) {
-      return new RestEmailNotificationBuilder(emailProps, client);
+      return new EmailBuilderDelegate(emailProps, client);
     }
     return new EmailBuilderJakarta(emailProps);
   }
