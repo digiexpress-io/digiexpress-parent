@@ -23,11 +23,6 @@ package io.digiexpress.eveli.client.api;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 
 
 public interface CommsClient {
@@ -39,9 +34,10 @@ public interface CommsClient {
     NotificationBuilder title(String title);
     NotificationBuilder content(String content);
     NotificationBuilder userId(String userId);
-    NotificationBuilder userIdType(String userId, ClientType userType);
+    NotificationBuilder ssn(String userId);
+    NotificationBuilder crn(String userId);
     NotificationBuilder notificationId(String notificationId);
-    NotificationResponse build();
+    void build();
   }
 
   interface EmailBuilder {
@@ -53,50 +49,4 @@ public interface CommsClient {
     EmailBuilder recipientAddress(String recipientAddress);
     void build();
   }
-
-  
-  @Data
-  @Builder(toBuilder = true)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public class NotificationRequest {
-    private Client client;
-    private String notificationId;
-    private String notificationTitle; 
-    private String notificationMessage;
-  }
-  
-  public enum ClientType {
-    SSN,
-    CRN
-  }
-  
-  @Data
-  @Builder(toBuilder = true)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class Client {
-    private String clientId;
-    private ClientType clientType;
-  }
-
-  @Data
-  @Builder(toBuilder = true)
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public class NotificationResponse {
-    /**
-     * Possible codes:
-     * <ul>
-     * <li> 0 - message sent
-     * <li> 204 - Client has not enabled message receiving 
-     * <li> 400..499 - business error code, specific to service
-     * <li> 500 - technical error
-     * <li> 307 - message sending is disabled in system
-     * </ul>
-     */
-    private int responseCode;
-    private String message;
-  }
-
 }

@@ -46,7 +46,7 @@ public class CommsClientImpl implements CommsClient {
   
   @Override
   public NotificationBuilder create() {
-    return new RestNotificationBuilder(notificationProps, client);
+    return new NotificationBuilderDelegate(notificationProps, client);
   }
 
 }
