@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class EmailSendingLogger {
+public class EmailBuilderLogger {
   private List<LogEvent> events;
 
   private final long start = System.currentTimeMillis();
@@ -37,7 +37,7 @@ public class EmailSendingLogger {
     BLOCKED_RECIPIENT_SKIPPED
   }
 
-  public EmailSendingLogger emailCreated(List<String> recipients, String title, String refId) {    
+  public EmailBuilderLogger emailCreated(List<String> recipients, String title, String refId) {    
     events.add(LogEvent.builder()
       .props(Map.of(
           "refId", refId,
@@ -50,7 +50,7 @@ public class EmailSendingLogger {
     return this;
   }
   
-  public EmailSendingLogger noValidRecipients() {
+  public EmailBuilderLogger noValidRecipients() {
     if(log.isWarnEnabled()) {
       events.add(LogEvent.builder()
         .props(Map.of(
@@ -63,7 +63,7 @@ public class EmailSendingLogger {
     return this;
   }
   
-  public EmailSendingLogger noRecipients() {
+  public EmailBuilderLogger noRecipients() {
     if(log.isWarnEnabled()) {
       events.add(LogEvent.builder()
         .props(Map.of(
@@ -76,7 +76,7 @@ public class EmailSendingLogger {
     return this;
   }
   
-  public EmailSendingLogger invalidRecipientSkipped(String invalidRecipient) {
+  public EmailBuilderLogger invalidRecipientSkipped(String invalidRecipient) {
     if(log.isWarnEnabled()) {
       events.add(LogEvent.builder()
         .props(Map.of(
@@ -89,7 +89,7 @@ public class EmailSendingLogger {
     
     return this;
   }
-  public EmailSendingLogger corrupRecipientSkipped(String invalidRecipient, AddressException e) {
+  public EmailBuilderLogger corrupRecipientSkipped(String invalidRecipient, AddressException e) {
     if(log.isWarnEnabled()) {
       events.add(LogEvent.builder()
         .props(Map.of(
@@ -105,7 +105,7 @@ public class EmailSendingLogger {
     return this;
   }
   
-  public EmailSendingLogger blockedRecipientSkipped(InternetAddress invalidRecipient) {
+  public EmailBuilderLogger blockedRecipientSkipped(InternetAddress invalidRecipient) {
     if(log.isInfoEnabled()) {
       events.add(LogEvent.builder()
         .props(Map.of(
@@ -119,7 +119,7 @@ public class EmailSendingLogger {
     return this;
   }
 
-  public EmailSendingLogger emailSent(List<InternetAddress> recipient) {
+  public EmailBuilderLogger emailSent(List<InternetAddress> recipient) {
     
     if(log.isInfoEnabled()) {
       events.add(LogEvent.builder()
@@ -133,7 +133,7 @@ public class EmailSendingLogger {
     }
     return this;
   }
-  public EmailSendingLogger emailFailed(List<InternetAddress> recipient, Exception e) {
+  public EmailBuilderLogger emailFailed(List<InternetAddress> recipient, Exception e) {
     events.add(LogEvent.builder()
         .props(Map.of(
             "text", "failed to send any email",
@@ -148,7 +148,7 @@ public class EmailSendingLogger {
   }
   
   
-  public EmailSendingLogger emailDisabled() {
+  public EmailBuilderLogger emailDisabled() {
     if(log.isInfoEnabled()) {
       events.add(LogEvent.builder()
           .props(Map.of(

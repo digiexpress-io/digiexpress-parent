@@ -47,7 +47,7 @@ import lombok.experimental.Accessors;
 @Setter @Accessors(fluent = true)
 public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
   private final EveliPropsEmail config;
-  private final EmailSendingLogger logger = new EmailSendingLogger();
+  private final EmailBuilderLogger logger = new EmailBuilderLogger();
   private final List<String> recipients = new ArrayList<>();
   private String title;
   private String message;
