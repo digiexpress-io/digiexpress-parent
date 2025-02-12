@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
-import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
+import io.digiexpress.eveli.client.spi.comms.NotificationCommandsDummy;
 
 @Configuration
 public class MockServicesProvider {
