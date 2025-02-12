@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.NotificationCommands;
+import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.NotificationCommandsDummy;
 
@@ -41,7 +41,7 @@ public class MockServicesProvider {
 
   @Bean
   @ConditionalOnMissingBean
-  public NotificationCommands notificationCommands() {
+  public CommsClient notificationCommands() {
     return new NotificationCommandsDummy();
   }
 

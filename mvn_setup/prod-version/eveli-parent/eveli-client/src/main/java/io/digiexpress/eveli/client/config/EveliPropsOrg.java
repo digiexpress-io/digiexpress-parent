@@ -25,11 +25,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Data;
 
 @Data
-@ConfigurationProperties(prefix = "eveli.user-registry")
-public class EveliPropsUserRegistry {
+@ConfigurationProperties(prefix = "eveli.org")
+public class EveliPropsOrg {
 
   /*
-   *  URL for REST service providing io.digiexpress.eveli.client.api.NotificationCommands.GroupMembershipQuery
+   *  URL for REST service providing OrgClientImpl
    *  endpoint.
    */
   private String serviceUrl;

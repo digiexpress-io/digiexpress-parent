@@ -31,11 +31,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.digiexpress.eveli.client.api.NotificationCommands.Client;
-import io.digiexpress.eveli.client.api.NotificationCommands.ClientType;
-import io.digiexpress.eveli.client.api.NotificationCommands.NotificationBuilder;
-import io.digiexpress.eveli.client.api.NotificationCommands.NotificationRequest;
-import io.digiexpress.eveli.client.api.NotificationCommands.NotificationResponse;
+import io.digiexpress.eveli.client.api.CommsClient.Client;
+import io.digiexpress.eveli.client.api.CommsClient.ClientType;
+import io.digiexpress.eveli.client.api.CommsClient.NotificationBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.NotificationRequest;
+import io.digiexpress.eveli.client.api.CommsClient.NotificationResponse;
 import io.digiexpress.eveli.client.config.EveliPropsNotification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
