@@ -31,7 +31,7 @@ import io.digiexpress.eveli.client.spi.comms.CommsClientImpl;
 public class EveliAutoConfigNotification {
 
   @Bean
-  public CommsClient notificationCommands(
+  public CommsClient commsClient(
       EveliPropsNotification notificationProps, 
       EveliPropsEmail emailProps, 
       RestTemplate client) {
