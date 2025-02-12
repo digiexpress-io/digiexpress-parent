@@ -20,11 +20,11 @@ package io.digiexpress.eveli.client.spi;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.NotificationCommands;
+import io.digiexpress.eveli.client.api.CommsClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NotificationCommandsDummy implements NotificationCommands {
+public class NotificationCommandsDummy implements CommsClient {
   @Override
   public NotificationBuilder create() {
     return null;
@@ -32,12 +32,6 @@ public class NotificationCommandsDummy implements NotificationCommands {
 
   @Override
   public EmailNotificationBuilder createEmail() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public GroupMembershipQuery createMembershipQuery() {
     // TODO Auto-generated method stub
     return null;
   }

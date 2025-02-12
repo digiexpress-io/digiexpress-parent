@@ -28,9 +28,9 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import io.digiexpress.eveli.client.api.NotificationCommands;
-import io.digiexpress.eveli.client.api.NotificationCommands.EmailNotificationBuilder;
-import io.digiexpress.eveli.client.api.NotificationCommands.EmailRequest;
+import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.CommsClient.EmailNotificationBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.EmailRequest;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class JakartaEmailNotificationBuilder implements NotificationCommands.EmailNotificationBuilder {
+public class JakartaEmailNotificationBuilder implements CommsClient.EmailNotificationBuilder {
 
   private EmailRequest props = new EmailRequest();
   private final EveliPropsEmail emailProps;

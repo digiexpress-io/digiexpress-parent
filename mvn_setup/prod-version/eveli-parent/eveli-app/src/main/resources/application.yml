@@ -85,5 +85,5 @@ eveli.email.service-url:
 eveli.notification.enabled: false
 eveli.notification.service-url: 
  
-eveli.user-registry.service-url:
+eveli.org.service-url:
  

@@ -33,10 +33,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.digiexpress.eveli.client.api.NotificationCommands;
-import io.digiexpress.eveli.client.api.NotificationCommands.EmailNotificationBuilder;
-import io.digiexpress.eveli.client.api.NotificationCommands.EmailRequest;
-import io.digiexpress.eveli.client.api.NotificationCommands.EmailResponse;
+import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.CommsClient.EmailNotificationBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.EmailRequest;
+import io.digiexpress.eveli.client.api.CommsClient.EmailResponse;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class RestEmailNotificationBuilder implements NotificationCommands.EmailNotificationBuilder {
+public class RestEmailNotificationBuilder implements CommsClient.EmailNotificationBuilder {
 
     private final EveliPropsEmail emailProps;
     private final RestTemplate client;

@@ -23,25 +23,19 @@ package io.digiexpress.eveli.client.spi.notification;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import io.digiexpress.eveli.client.api.NotificationCommands;
+import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
 import io.digiexpress.eveli.client.config.EveliPropsNotification;
-import io.digiexpress.eveli.client.config.EveliPropsUserRegistry;
 import io.digiexpress.eveli.client.spi.notification.JakartaEmailNotificationBuilder.EmailFilter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NotificationCommandsImpl implements NotificationCommands {
+public class NotificationCommandsImpl implements CommsClient {
 
   private final EveliPropsNotification notificationProps;
   private final EveliPropsEmail emailProps;
-  private final EveliPropsUserRegistry userRegistryProps;
   private final RestTemplate client;
   
-  @Override
-  public GroupMembershipQuery createMembershipQuery() {
-    return new GroupMembershipRestQuery(userRegistryProps.getServiceUrl(), client);
-  }
   
   @Override
   public EmailNotificationBuilder createEmail() {

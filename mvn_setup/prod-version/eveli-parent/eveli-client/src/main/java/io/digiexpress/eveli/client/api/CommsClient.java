@@ -22,7 +22,6 @@ package io.digiexpress.eveli.client.api;
  */
 
 import java.util.List;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,10 +31,10 @@ import lombok.Singular;
 
 
 
-public interface NotificationCommands {
+public interface CommsClient {
   NotificationBuilder create();
   EmailNotificationBuilder createEmail();
-  GroupMembershipQuery createMembershipQuery();
+
 
   interface NotificationBuilder {
     NotificationBuilder title(String title);
@@ -56,9 +55,6 @@ public interface NotificationCommands {
   }
 
   
-  interface GroupMembershipQuery {
-    Set<String> queryMembership(String groupName); 
-  }
   
   @Data
   @Builder(toBuilder = true)
