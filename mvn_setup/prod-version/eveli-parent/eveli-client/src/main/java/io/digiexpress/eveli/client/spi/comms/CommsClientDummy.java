@@ -24,7 +24,7 @@ import io.digiexpress.eveli.client.api.CommsClient;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class NotificationCommandsDummy implements CommsClient {
+public class CommsClientDummy implements CommsClient {
   @Override
   public NotificationBuilder create() {
     return null;
