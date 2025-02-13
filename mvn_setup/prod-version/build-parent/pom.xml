@@ -34,7 +34,7 @@
     <immutables.version>2.10.1</immutables.version>
     <findbugs.version>3.0.2</findbugs.version>
     <guava.version>33.3.0-jre</guava.version>
-    <groovy.version>3.0.22</groovy.version>
+    <groovy.version>4.0.25</groovy.version>
     <jsonassert.version>1.5.3</jsonassert.version>
 
     <commons-io.version>2.16.1</commons-io.version>
@@ -293,7 +293,7 @@
 
       <!-- Utils -->
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy</artifactId>
         <version>${groovy.version}</version>
       </dependency>
