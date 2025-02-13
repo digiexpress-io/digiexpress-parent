@@ -16,11 +16,9 @@
     <maven.compiler.source>${jdk.version}</maven.compiler.source>
     <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
  
-
     <resource.plugin.version>3.3.1</resource.plugin.version>
     <compiler.plugin.version>3.13.0</compiler.plugin.version>
     <surefire.plugin.version>3.3.1</surefire.plugin.version>
-
 
     <spring.boot.version>3.4.2</spring.boot.version>
     <spring.security.version>6.4.2</spring.security.version>
@@ -30,21 +28,13 @@
     <spring-cloud-gcp.version>3.4.0</spring-cloud-gcp.version>    
     <jackson.version>2.18.2</jackson.version>
 
-    <jandex.version>3.1.5</jandex.version>
     <quarkus.version>3.15.3</quarkus.version>
     <lombok.version>1.18.34</lombok.version>
     
-    <logback.version>1.5.8</logback.version>
-    <slf4j.version>1.7.36</slf4j.version>
-
-    <eirslett.version>1.12.0</eirslett.version>
     <immutables.version>2.10.1</immutables.version>
     <findbugs.version>3.0.2</findbugs.version>
-    <ehcache.version>3.10.8</ehcache.version>
     <guava.version>33.3.0-jre</guava.version>
     <groovy.version>3.0.22</groovy.version>
-    <jgit.version>5.13.3.202401111512-r</jgit.version>
-
     <jsonassert.version>1.5.3</jsonassert.version>
 
     <commons-io.version>2.16.1</commons-io.version>
@@ -54,20 +44,10 @@
     <commons-collections.version>4.4</commons-collections.version>
     <commons-validator.version>1.7</commons-validator.version>
     <dialob.version>3.0.1</dialob.version>
-    <flexmark.version>0.62.2</flexmark.version>
+    <flexmark.version>0.62.2</flexmark.version>  
 
-  
-    <flapdoodle.version>3.0.0</flapdoodle.version>
-    
-    <pnpm.version>v8.6.12</pnpm.version>
-    <node.version>v18.18.2</node.version>
-    
-    <modelmapper.version>3.0.0</modelmapper.version>
-    
-    <assertj-core.version>3.24.2</assertj-core.version>
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
-    
     <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
   </properties>
 
@@ -201,21 +181,6 @@
           </executions>
         </plugin>
         <plugin>
-          <groupId>io.smallrye</groupId>
-          <artifactId>jandex-maven-plugin</artifactId>
-          <version>${jandex.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>${eirslett.version}</version>
-          <configuration>
-            <installDirectory>target</installDirectory>
-            <nodeVersion>${nodeVersion}</nodeVersion>
-            <yarnVersion>${yarnVersion}</yarnVersion>
-          </configuration>
-        </plugin>
-        <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${resource.plugin.version}</version>
         </plugin>
@@ -251,13 +216,7 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-    
-      <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>${assertj-core.version}</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
@@ -319,12 +278,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.modelmapper</groupId>
-        <artifactId>modelmapper</artifactId>
-        <version>${modelmapper.version}</version>
-      </dependency>
-    
-      <dependency>
         <groupId>io.dialob</groupId>
         <artifactId>dialob-api</artifactId>
         <version>${dialob.version}</version>
@@ -377,18 +330,6 @@
         <type>pom</type>
       </dependency>
 
-      <!-- JGIT -->
-      <dependency>
-        <groupId>org.eclipse.jgit</groupId>
-        <artifactId>org.eclipse.jgit</artifactId>
-        <version>${jgit.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jgit</groupId>
-        <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
-        <version>${jgit.version}</version>
-      </dependency>
-
       <!-- Commons -->
       <dependency>
         <groupId>commons-io</groupId>
@@ -411,11 +352,6 @@
         <version>${commons-lang.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-collections4</artifactId>
-        <version>${commons-collections.version}</version>
-      </dependency>
-      <dependency>
         <groupId>commons-validator</groupId>
         <artifactId>commons-validator</artifactId>
         <version>${commons-validator.version}</version>
@@ -425,7 +361,11 @@
         <artifactId>flexmark-all</artifactId>
         <version>${flexmark.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${commons-collections.version}</version>
+      </dependency>
 
       <!-- Quarkus -->
       <dependency>
