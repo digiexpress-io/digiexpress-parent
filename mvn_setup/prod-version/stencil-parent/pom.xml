@@ -12,6 +12,6 @@
   <packaging>pom</packaging>
   
   <modules>
-    <module>client-api</module>
+    <module>stencil-client</module>
   </modules>
 </project>

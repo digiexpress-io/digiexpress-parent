@@ -7,7 +7,7 @@
     <artifactId>stencil-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
-  <artifactId>stencil-client-api</artifactId>
+  <artifactId>stencil-client</artifactId>
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
