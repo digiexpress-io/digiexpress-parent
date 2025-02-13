@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: mvn_setup/prod-version
+        working-directory: mvn_setup
     
     name: release digiexpress-parent branch dev
     steps:

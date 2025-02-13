@@ -3,13 +3,13 @@ on:
 
   pull_request:
     paths:
-      - 'mvn_setup/prod-version/**'
+      - 'mvn_setup/**'
     branches:
       - dev
 
   push:
     paths:
-      - 'mvn_setup/prod-version/**'
+      - 'mvn_setup/**'
     branches:
       - dev
 permissions:
@@ -31,7 +31,7 @@ jobs:
     - id: build
       name: Maven build
       run: |
-        cd ./mvn_setup/prod-version
+        cd ./mvn_setup
         ./mvnw -B clean install
       env:
         QUARKUS_JIB_PLATFORMS: "linux/amd64,linux/arm64"
