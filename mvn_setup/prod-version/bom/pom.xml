@@ -41,7 +41,7 @@
 
       <dependency>
         <groupId>io.digiexpress</groupId>
-        <artifactId>hdes-client-api</artifactId>
+        <artifactId>hdes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
