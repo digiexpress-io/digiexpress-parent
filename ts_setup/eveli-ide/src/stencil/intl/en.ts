@@ -77,7 +77,7 @@ const en = {
   'services.change': 'Change existing services',
   'services.edit': 'Edit service',
 
-  'services.technicalname': 'Service workflow name',
+  'services.technicalname': 'User given unique service name',
   'services.technicalname.description': 'Workflow descriptive name',
   'services.selected': 'Selected services',
   'services.devmode.helper': 'If Development mode is active, this service will only appear in the development environment for testing. It will not be included in production releases.',

@@ -103,69 +103,74 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       title="services.add"
       submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
       <>
+
+        <Burger.TextField label='services.technicalname'
+          required
+          value={technicalname}
+          onChange={setTechnicalname} />
+
+        <Box display="flex">
+          <Box flexGrow={1}>
+            <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
+              selected={flowName}
+              items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
+            />
+          </Box>
+          <Box sx={{ ml: 1 }}>
+            <Burger.Select label="services.formName" onChange={setFormName}
+              selected={formName}
+              items={allForms}
+              helperText='services.formName.description'
+            />
+          </Box>
+          <Box sx={{ ml: 1 }}>
+            <Burger.Select label="services.formTag" onChange={setFormTag}
+              selected={formTag}
+              items={formTags}
+              helperText='services.formTag.description'
+            />
+          </Box>
+        </Box>
+        <Box display="flex">
+          <Box flexGrow={1}>
+            <Burger.Switch
+              checked={anon ? anon : false}
+              onChange={setAnon}
+              helperText={"services.anonmode.helper"}
+              label={"services.anonmode"}
+            />
+          </Box>
+          <Box maxWidth="50%" sx={{ ml: 1 }}>
+
+            <Burger.Switch
+              checked={devMode}
+              helperText="services.devmode.helper"
+              label="services.devmode"
+              onChange={setDevMode}
+            />
+          </Box>
+        </Box>
+        <Box display="flex">
+          <Box flexGrow={1}>
+            <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'
+              required
+              value={startdate}
+              onChange={setStartdate} />
+          </Box>
+          <Box maxWidth="50%" sx={{ ml: 1 }}>
+            <Burger.DateTimeField label='services.enddate' helperText='services.enddate.description'
+              required
+              value={enddate}
+              onChange={setEnddate} />
+          </Box>
+        </Box>
+
         <LocaleLabels
           onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
           onChangeStart={() => setChangeInProgress(true)}
           selected={labels.map(label => ({ locale: label.locale, value: label.labelValue }))} />
 
         <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
-          <Box display="flex">
-            <Box flexGrow={1}>
-              <Burger.TextField label='services.technicalname' helperText='services.technicalname.description'
-                required
-                value={technicalname}
-                onChange={setTechnicalname} />
-              <Burger.Select label="services.flowName" onChange={handleFlowNameChange}
-                selected={flowName}
-                items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
-              />
-            </Box>
-            <Box maxWidth="50%" sx={{ ml: 1 }}>
-             <Burger.Switch
-                checked={anon ? anon : false}
-                onChange={setAnon}
-                helperText={"services.anonmode.helper"}
-                label={"services.anonmode"}
-              />
-              <Burger.Switch
-                checked={devMode}
-                helperText="services.devmode.helper"
-                label="services.devmode"
-                onChange={setDevMode}
-              />
-            </Box>
-          </Box>
-          <Box display="flex">
-            <Box maxWidth="50%" flexGrow={1}>
-              <Burger.Select label="services.formName" onChange={setFormName}
-                selected={formName}
-                items={allForms}
-                helperText='services.formName.description'
-              />
-            </Box>
-            <Box maxWidth="50%" sx={{ ml: 1 }}>
-            <Burger.Select label="services.formTag" onChange={setFormTag}
-                selected={formTag}
-                items={formTags}
-                helperText='services.formTag.description'
-              />
-            </Box>
-          </Box>
-          <Box display="flex">
-            <Box flexGrow={1}>
-              <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'
-                required
-                value={startdate}
-                onChange={setStartdate} />
-            </Box>
-            <Box maxWidth="50%" sx={{ ml: 1 }}>
-              <Burger.DateTimeField label='services.enddate' helperText='services.enddate.description'
-                required
-                value={enddate}
-                onChange={setEnddate} />
-            </Box>
-          </Box>
-
           <Burger.SelectMultiple label='article.select'
             multiline
             open={articleSelectOpen}

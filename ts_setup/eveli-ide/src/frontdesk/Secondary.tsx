@@ -39,12 +39,9 @@ const menuItems: MenuItemProps[] = [
   { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} /> },
   { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} /> },
   { id: 'menu.content', to: '/ui/content', icon: <MenuBookIcon sx={iconSize} /> },
+  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
   { id: 'menu.feedback', to: '/feedback', icon: <ThumbUpAltIcon sx={iconSize} /> },
   { id: 'menu.queues', to: '/queues', icon: <CloudQueueIcon sx={iconSize} /> },
-
-  //TODO Calendar still needed??  
-  //{ id: 'menu.calendar', to: '/ui/calendar', icon: <CalendarMonthIcon sx={iconSize} /> }, 
-  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
   { id: 'menu.publications', to: '/ui/publications', icon: <BeenhereIcon sx={iconSize} /> },
 ]
 
