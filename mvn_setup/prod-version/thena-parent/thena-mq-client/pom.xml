@@ -17,7 +17,7 @@
 
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-docdb-api</artifactId>
+      <artifactId>thena-db-client</artifactId>
     </dependency>
 
     <dependency>

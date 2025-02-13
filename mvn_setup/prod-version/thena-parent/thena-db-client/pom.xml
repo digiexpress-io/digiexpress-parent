@@ -8,7 +8,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>thena-docdb-api</artifactId>
+  <artifactId>thena-db-client</artifactId>
 
   <dependencies>
     <dependency>

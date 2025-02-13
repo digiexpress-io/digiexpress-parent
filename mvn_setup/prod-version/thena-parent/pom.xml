@@ -14,8 +14,8 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>docdb-api</module>
-    <module>mq-client</module>
+    <module>thena-db-client</module>
+    <module>thena-mq-client</module>
   </modules>
 
 </project>
