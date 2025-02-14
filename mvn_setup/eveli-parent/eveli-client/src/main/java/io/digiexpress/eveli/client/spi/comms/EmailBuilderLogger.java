@@ -250,7 +250,7 @@ public class EmailBuilderLogger {
         result.append("    ").append(e.getKey()).append(": ").append(e.getValue()).append(System.lineSeparator())
       );
     }
-    ;
+    
     
     final var isError = events.stream()
       .filter(e -> e.getType().getLevel() == LogEventLevel.ERROR)
