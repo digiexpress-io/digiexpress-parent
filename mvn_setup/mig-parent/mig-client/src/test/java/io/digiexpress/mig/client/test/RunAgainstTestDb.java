@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.mig.client.api.ImmutableFormFilter;
-import io.digiexpress.mig.client.spi.SourceDbClientImpl;
+import io.digiexpress.mig.client.spi.MigClientImpl;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
@@ -33,7 +33,7 @@ public class RunAgainstTestDb {
   
   @Test
   public void test() {
-    final var client = new SourceDbClientImpl(src_pg_pool, src_pg_pool, target_pg_pool);
+    final var client = new MigClientImpl(src_pg_pool, src_pg_pool, target_pg_pool);
     
     // get all tasks
     final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));

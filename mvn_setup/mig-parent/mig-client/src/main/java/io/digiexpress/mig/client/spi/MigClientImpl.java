@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class SourceDbClientImpl implements MigClient {
+public class MigClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool src_tasks;
   private final io.vertx.mutiny.pgclient.PgPool src_dialob;
   private final io.vertx.mutiny.pgclient.PgPool target_dialob;
