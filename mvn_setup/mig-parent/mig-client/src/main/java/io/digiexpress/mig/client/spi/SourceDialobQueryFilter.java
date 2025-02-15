@@ -45,8 +45,10 @@ public class SourceDialobQueryFilter {
   
   
   private void visitForms() {
-    final var forms = src.getForms().stream()
-      .collect(Collectors.toMap(e -> (e.getTenant_id() + "/" + e.getName()), e -> e));
+    final var forms = src.getForms().stream().collect(Collectors.toMap(e -> (e.getTenant_id() + "/" + e.getName()), e -> e));
+    final var docs = ok_docs.stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var src_docs = src.getFormDocument().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+    final var src_revs = src.getFormRev().stream().collect(Collectors.toMap(e -> e.getForm_document_id(), e -> e));
     
     for(final var rev : ok_revs) {
       final var form = forms.get(rev.getTenant_id() + "/" + rev.getForm_name());
@@ -54,7 +56,28 @@ public class SourceDialobQueryFilter {
         log.formNotFound(rev);
         continue;
       }
-      ok_forms.add(form);
+      
+      if(!docs.containsKey(form.getLatest_form_id())) {
+        final var unusedFormDoc = src_docs.get(form.getLatest_form_id());
+        if(unusedFormDoc == null) {
+          log.latestFormDocNotFound(form);
+          continue;
+        }
+        if(!ok_docs.contains(unusedFormDoc)) {
+          ok_docs.add(unusedFormDoc);
+        }
+        
+        final var unusedRev = src_revs.get(unusedFormDoc.getId());
+        if(unusedRev != null && !ok_revs.contains(unusedRev)) {
+          ok_revs.add(unusedRev);
+        }
+      }
+      
+      
+      if(!ok_forms.contains(form)) {
+        ok_forms.add(form);  
+      }
+      
     }
   }
   
@@ -129,7 +152,9 @@ public class SourceDialobQueryFilter {
       }
       
       this.ok_revs.add(rev);
-      this.ok_docs.add(doc);
+      if(!this.ok_docs.contains(doc)) {
+        this.ok_docs.add(doc);
+      }
       this.ok_questionnaires.add(questionnaire);
       this.ok_questionnairesFormDocIds.add(questionnaire.getForm_document_id());
     }

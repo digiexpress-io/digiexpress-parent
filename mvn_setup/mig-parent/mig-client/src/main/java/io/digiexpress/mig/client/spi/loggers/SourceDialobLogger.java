@@ -10,6 +10,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.mig.client.api.MigClient.FormFilter;
 import io.digiexpress.mig.client.api.SourceForms;
+import io.digiexpress.mig.client.api.SourceForms.SourceForm;
 import io.digiexpress.mig.client.api.SourceForms.SourceFormDocument;
 import io.digiexpress.mig.client.api.SourceForms.SourceFormRev;
 import io.digiexpress.mig.client.api.SourceForms.SourceQuestionnaire;
@@ -45,7 +46,6 @@ public class SourceDialobLogger {
       }
       return;
     }
-    
     messages.add(LogEvent.builder()
         .level(LogEventLevel.ERROR)
         .props(Map.of(
@@ -54,6 +54,7 @@ public class SourceDialobLogger {
         ))
         .build());
   }
+
   
   public void formRevMoreThenOneRev(SourceFormDocument filter, List<SourceFormRev> revs, SourceQuestionnaire q) {
     if(q == null) {
@@ -87,11 +88,23 @@ public class SourceDialobLogger {
         .level(LogEventLevel.ERROR)
         .props(Map.of(
             "text", "form was not found based on form_rev",
+            "rev name", filter.getName(),
+            "form document id", filter.getForm_document_id(),
             "form name", filter.getForm_name()
         ))
         .build());
   }
   
+  public void latestFormDocNotFound(SourceForm filter) {
+    messages.add(LogEvent.builder()
+        .level(LogEventLevel.ERROR)
+        .props(Map.of(
+            "text", "form was not found based on form_rev",
+            "form name", filter.getName()
+        ))
+        .build());
+  }
+
   public void formNotFound(FormFilter filter) {
     messages.add(LogEvent.builder()
         .level(LogEventLevel.ERROR)
