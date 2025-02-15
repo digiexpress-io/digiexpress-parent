@@ -23,7 +23,7 @@ import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SourceDbDialobQueryImpl implements SourceDialobQuery {
+public class SourceDialobQueryImpl implements SourceDialobQuery {
   private final SourceDialobLogger logger = new SourceDialobLogger();
   private final io.vertx.mutiny.pgclient.PgPool pool;
   private final List<String> onlyRelatedToQuestionnaires = new ArrayList<>();

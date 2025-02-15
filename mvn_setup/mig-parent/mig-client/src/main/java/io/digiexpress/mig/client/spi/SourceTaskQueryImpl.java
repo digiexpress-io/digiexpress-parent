@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class SourceDbTaskQueryImpl implements SourceTaskQuery {
+public class SourceTaskQueryImpl implements SourceTaskQuery {
   private final SourceTasksLogger logger = new SourceTasksLogger();
   private final io.vertx.mutiny.pgclient.PgPool pool;
   

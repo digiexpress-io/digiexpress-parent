@@ -12,12 +12,12 @@ public class MigClientImpl implements MigClient {
 
   @Override
   public SourceTaskQuery taskQuery() {
-    return new SourceDbTaskQueryImpl(src_tasks);
+    return new SourceTaskQueryImpl(src_tasks);
   }
 
   @Override
   public SourceDialobQuery dialobQuery() {
-    return new SourceDbDialobQueryImpl(src_dialob);
+    return new SourceDialobQueryImpl(src_dialob);
   }
 
   @Override
