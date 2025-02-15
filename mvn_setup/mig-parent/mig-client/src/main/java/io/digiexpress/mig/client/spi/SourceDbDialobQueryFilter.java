@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.digiexpress.mig.client.api.ImmutableSourceDbDialob;
-import io.digiexpress.mig.client.api.SourceDbClient.FormFilter;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbDialob;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbForm;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormDocument;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormRev;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbQuestionnaire;
+import io.digiexpress.mig.client.api.ImmutableSourceForms;
+import io.digiexpress.mig.client.api.MigClient.FormFilter;
+import io.digiexpress.mig.client.api.SourceForms;
+import io.digiexpress.mig.client.api.SourceForms.SourceForm;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormDocument;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormRev;
+import io.digiexpress.mig.client.api.SourceForms.SourceQuestionnaire;
 import io.digiexpress.mig.client.spi.loggers.SourceDbDialobQueryLogger;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +19,23 @@ import lombok.RequiredArgsConstructor;
 public class SourceDbDialobQueryFilter {
   private final List<String> onlyRelatedToQuestionnaires;
   private final List<FormFilter> includeFrom;
-  private final SourceDbDialob src;
+  private final SourceForms src;
   private final SourceDbDialobQueryLogger log;
   
   private final List<String> ok_questionnairesFormDocIds = new ArrayList<String>();
   
-  private final List<SourceDbQuestionnaire> ok_questionnaires = new ArrayList<SourceDbQuestionnaire>();
-  private final List<SourceDbFormDocument> ok_docs = new ArrayList<SourceDbFormDocument>();
-  private final List<SourceDbFormRev> ok_revs = new ArrayList<SourceDbFormRev>();
-  private final List<SourceDbForm> ok_forms = new ArrayList<SourceDbForm>();
+  private final List<SourceQuestionnaire> ok_questionnaires = new ArrayList<SourceQuestionnaire>();
+  private final List<SourceFormDocument> ok_docs = new ArrayList<SourceFormDocument>();
+  private final List<SourceFormRev> ok_revs = new ArrayList<SourceFormRev>();
+  private final List<SourceForm> ok_forms = new ArrayList<SourceForm>();
   
 
-  public SourceDbDialob apply() {
+  public SourceForms apply() {
     visitFormDocIdsFromQuestionnaires();
     visitFormFilters();
     visitForms();
     
-    return ImmutableSourceDbDialob.builder()
+    return ImmutableSourceForms.builder()
         .formDocument(ok_docs)
         .formRev(ok_revs)
         .forms(ok_forms)
@@ -73,7 +73,7 @@ public class SourceDbDialobQueryFilter {
     
   }
   
-  private Tuple2<FormFilter, SourceDbFormRev> visitSourceDbFormDocumentFilter(SourceDbFormDocument doc, List<FormFilter> filters) {
+  private Tuple2<FormFilter, SourceFormRev> visitSourceDbFormDocumentFilter(SourceFormDocument doc, List<FormFilter> filters) {
     
     final var revFound = visitRevision(doc, null);
     if(revFound == null) {
@@ -126,7 +126,7 @@ public class SourceDbDialobQueryFilter {
   }
   
   
-  private boolean isAcceptedQuestionnaire(SourceDbQuestionnaire questionnaire) {
+  private boolean isAcceptedQuestionnaire(SourceQuestionnaire questionnaire) {
     if(onlyRelatedToQuestionnaires.isEmpty()) {
       return true;
     }
@@ -143,7 +143,7 @@ public class SourceDbDialobQueryFilter {
   }
   
   
-  private SourceDbFormRev visitRevision(SourceDbFormDocument doc, SourceDbQuestionnaire q) {
+  private SourceFormRev visitRevision(SourceFormDocument doc, SourceQuestionnaire q) {
     
     final var rev = src.getFormRev().stream().filter(f -> f.getForm_document_id().equals(doc.getId())).toList();
     if(rev.isEmpty()) {

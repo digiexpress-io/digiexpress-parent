@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTasks;
+import io.digiexpress.mig.client.api.SourceTasks;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEventLevel;
@@ -39,7 +39,7 @@ public class SourceDbTaskQueryLogger {
     log.error("\r\n{}", EntityQueryLogger.generateLog(messages), e);
   }
   
-  public void ok(SourceDbTasks e) {
+  public void ok(SourceTasks e) {
     final var errorsPresent = messages.stream()
         .filter(t -> t.getLevel() == LogEventLevel.ERROR)
         .count();

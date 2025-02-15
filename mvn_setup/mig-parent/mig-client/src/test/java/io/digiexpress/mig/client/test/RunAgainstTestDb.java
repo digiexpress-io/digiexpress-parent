@@ -13,25 +13,21 @@ import io.vertx.sqlclient.PoolOptions;
 
 @Disabled
 public class RunAgainstTestDb {
-
+  final io.vertx.mutiny.pgclient.PgPool src_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
+      new PgConnectOptions()
+        .setHost("localhost")
+        .setPort(5462)
+        .setDatabase("mig-data")
+        .setUser("mig-data")
+        .setPassword("password123"), 
+      new PoolOptions().setMaxSize(5));
+  
+  
+  
   @Test
   public void test() {
-    final io.vertx.mutiny.pgclient.PgPool pgPool = io.vertx.mutiny.pgclient.PgPool.pool(
-        new PgConnectOptions()
-          .setHost("localhost")
-          .setPort(5462)
-          .setDatabase("mig-data")
-          .setUser("mig-data")
-          .setPassword("password123"), 
-        new PoolOptions().setMaxSize(5));
-    
-    
-    final var client = new SourceDbClientImpl(pgPool, pgPool);
-    
-    
+    final var client = new SourceDbClientImpl(src_pg_pool, src_pg_pool);
     final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));
-    
-    
     client.dialobQuery()
       .includeFromQuestionnaires(
           tasks.getProcesses().values().stream()

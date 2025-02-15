@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import io.digiexpress.mig.client.api.ImmutableSourceDbDialob;
-import io.digiexpress.mig.client.api.ImmutableSourceDbForm;
-import io.digiexpress.mig.client.api.ImmutableSourceDbFormDocument;
-import io.digiexpress.mig.client.api.ImmutableSourceDbFormRev;
-import io.digiexpress.mig.client.api.ImmutableSourceDbQuestionnaire;
-import io.digiexpress.mig.client.api.SourceDbClient.FormFilter;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbDialob;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbDialobQuery;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbForm;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormDocument;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormRev;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbQuestionnaire;
+import io.digiexpress.mig.client.api.ImmutableSourceForm;
+import io.digiexpress.mig.client.api.ImmutableSourceFormDocument;
+import io.digiexpress.mig.client.api.ImmutableSourceFormRev;
+import io.digiexpress.mig.client.api.ImmutableSourceForms;
+import io.digiexpress.mig.client.api.ImmutableSourceQuestionnaire;
+import io.digiexpress.mig.client.api.MigClient.FormFilter;
+import io.digiexpress.mig.client.api.MigClient.SourceDbDialobQuery;
+import io.digiexpress.mig.client.api.SourceForms;
+import io.digiexpress.mig.client.api.SourceForms.SourceForm;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormDocument;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormRev;
+import io.digiexpress.mig.client.api.SourceForms.SourceQuestionnaire;
 import io.digiexpress.mig.client.spi.loggers.SourceDbDialobQueryLogger;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -30,14 +30,14 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
   private final List<FormFilter> includeFrom = new ArrayList<>();
   
   @Override
-  public Uni<SourceDbDialob> findAll() {
+  public Uni<SourceForms> findAll() {
     return Uni.combine().all().unis(
         getForms(),
         getFormDocument(),
         getFormRev(),
         getQuestionnaires()
     ).asTuple().onItem().transform(sources -> {
-      final SourceDbDialob result = filter(ImmutableSourceDbDialob.builder()
+      final SourceForms result = filter(ImmutableSourceForms.builder()
           .forms(sources.getItem1())
           .formDocument(sources.getItem2())
           .formRev(sources.getItem3())
@@ -61,7 +61,7 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
     return this;
   }
   
-  private SourceDbDialob filter(SourceDbDialob dialob) {
+  private SourceForms filter(SourceForms dialob) {
     if(onlyRelatedToQuestionnaires.isEmpty() && includeFrom.isEmpty()) {
       return dialob;
     }
@@ -69,9 +69,9 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
     return new SourceDbDialobQueryFilter(onlyRelatedToQuestionnaires, includeFrom, dialob, logger).apply();
   }
 
-  private Uni<List<SourceDbForm>> getForms() {
+  private Uni<List<SourceForm>> getForms() {
     final var sql = "select * from form";
-    return processAnyQuery(SourceDbForm.class, sql, row -> ImmutableSourceDbForm.builder()
+    return processAnyQuery(SourceForm.class, sql, row -> ImmutableSourceForm.builder()
         .name(row.getString("name"))
         .updated(row.getLocalDateTime("updated"))
         .created(row.getLocalDateTime("created"))
@@ -81,9 +81,9 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
         .build());
   }
   
-  private Uni<List<SourceDbFormDocument>> getFormDocument() {
+  private Uni<List<SourceFormDocument>> getFormDocument() {
     final var sql = "select * from form_document";
-    return processAnyQuery(SourceDbFormDocument.class, sql, row -> ImmutableSourceDbFormDocument.builder()
+    return processAnyQuery(SourceFormDocument.class, sql, row -> ImmutableSourceFormDocument.builder()
         .id(row.getUUID("id").toString())
         .rev(row.getInteger("rev"))
         .updated(row.getLocalDateTime("updated"))
@@ -92,9 +92,9 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
         .tenant_id(row.getString("tenant_id"))
         .build());
   }
-  private Uni<List<SourceDbFormRev>> getFormRev() {
+  private Uni<List<SourceFormRev>> getFormRev() {
     final var sql = "select * from form_rev";
-    return processAnyQuery(SourceDbFormRev.class, sql, row -> ImmutableSourceDbFormRev.builder()
+    return processAnyQuery(SourceFormRev.class, sql, row -> ImmutableSourceFormRev.builder()
         .form_name(row.getString("form_name"))
         .name(row.getString("name"))
         .updated(row.getLocalDateTime("updated"))
@@ -106,9 +106,9 @@ public class SourceDbDialobQueryImpl implements SourceDbDialobQuery {
         .ref_name(Optional.ofNullable(row.getString("ref_name")))
         .build());
   }
-  private Uni<List<SourceDbQuestionnaire>> getQuestionnaires() {
+  private Uni<List<SourceQuestionnaire>> getQuestionnaires() {
     final var sql = "select * from questionnaire";
-    return processAnyQuery(SourceDbQuestionnaire.class, sql, row -> ImmutableSourceDbQuestionnaire.builder()
+    return processAnyQuery(SourceQuestionnaire.class, sql, row -> ImmutableSourceQuestionnaire.builder()
         .id(row.getUUID("id").toString())
         .rev(row.getInteger("rev"))
         .updated(row.getLocalDateTime("updated"))

@@ -1,11 +1,11 @@
 package io.digiexpress.mig.client.spi;
 
-import io.digiexpress.mig.client.api.SourceDbClient;
+import io.digiexpress.mig.client.api.MigClient;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class SourceDbClientImpl implements SourceDbClient {
+public class SourceDbClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool taskDbPool;
   private final io.vertx.mutiny.pgclient.PgPool dialobDbPool;
 

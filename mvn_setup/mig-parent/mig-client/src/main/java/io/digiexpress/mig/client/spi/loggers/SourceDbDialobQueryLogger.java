@@ -8,11 +8,11 @@ import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.mig.client.api.SourceDbClient.FormFilter;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbDialob;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormDocument;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbFormRev;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbQuestionnaire;
+import io.digiexpress.mig.client.api.MigClient.FormFilter;
+import io.digiexpress.mig.client.api.SourceForms;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormDocument;
+import io.digiexpress.mig.client.api.SourceForms.SourceFormRev;
+import io.digiexpress.mig.client.api.SourceForms.SourceQuestionnaire;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEventLevel;
@@ -35,7 +35,7 @@ public class SourceDbDialobQueryLogger {
   
   
   
-  public void formRevNotFound(SourceDbFormDocument filter, SourceDbQuestionnaire q) {
+  public void formRevNotFound(SourceFormDocument filter, SourceQuestionnaire q) {
     if(q == null) {
       if(log.isDebugEnabled()) {
         messages.add(LogEvent.builder()
@@ -58,7 +58,7 @@ public class SourceDbDialobQueryLogger {
         .build());
   }
   
-  public void formRevMoreThenOneRev(SourceDbFormDocument filter, List<SourceDbFormRev> revs, SourceDbQuestionnaire q) {
+  public void formRevMoreThenOneRev(SourceFormDocument filter, List<SourceFormRev> revs, SourceQuestionnaire q) {
     if(q == null) {
       
       if(log.isDebugEnabled()) {
@@ -109,7 +109,7 @@ public class SourceDbDialobQueryLogger {
         .build());
   }
   
-  public void questionnaireNotUsed(SourceDbQuestionnaire q) {
+  public void questionnaireNotUsed(SourceQuestionnaire q) {
     if(!log.isDebugEnabled()) {
       return;
     }
@@ -127,7 +127,7 @@ public class SourceDbDialobQueryLogger {
 
   }
   
-  public void questionnaireFormNotFound(SourceDbQuestionnaire q) {
+  public void questionnaireFormNotFound(SourceQuestionnaire q) {
     final var meta = q.getData().map(json -> json.mapTo(Questionnaire.class));
     
     messages.add(LogEvent.builder()
@@ -154,7 +154,7 @@ public class SourceDbDialobQueryLogger {
     log.error("\r\n{}", EntityQueryLogger.generateLog(messages), e);
   }
   
-  public void ok(SourceDbDialob e) {
+  public void ok(SourceForms e) {
     final var errorsPresent = messages.stream()
         .filter(t -> t.getLevel() == LogEventLevel.ERROR)
         .count();

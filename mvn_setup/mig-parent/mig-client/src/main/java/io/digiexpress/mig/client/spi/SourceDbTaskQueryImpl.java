@@ -5,25 +5,25 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.digiexpress.mig.client.api.ImmutableSourceDbTask;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskAccess;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskComment;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskKeywords;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskLink;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskProcess;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskRole;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTaskWorkflow;
-import io.digiexpress.mig.client.api.ImmutableSourceDbTasks;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTask;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskAccess;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskComment;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskKeywords;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskLink;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskProcess;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskQuery;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskRole;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTaskWorkflow;
-import io.digiexpress.mig.client.api.SourceDbClient.SourceDbTasks;
+import io.digiexpress.mig.client.api.ImmutableSourceAccess;
+import io.digiexpress.mig.client.api.ImmutableSourceComment;
+import io.digiexpress.mig.client.api.ImmutableSourceKeywords;
+import io.digiexpress.mig.client.api.ImmutableSourceLink;
+import io.digiexpress.mig.client.api.ImmutableSourceProcess;
+import io.digiexpress.mig.client.api.ImmutableSourceRole;
+import io.digiexpress.mig.client.api.ImmutableSourceTask;
+import io.digiexpress.mig.client.api.ImmutableSourceTasks;
+import io.digiexpress.mig.client.api.ImmutableSourceWorkflow;
+import io.digiexpress.mig.client.api.MigClient.SourceDbTaskQuery;
+import io.digiexpress.mig.client.api.SourceTasks;
+import io.digiexpress.mig.client.api.SourceTasks.SourceAccess;
+import io.digiexpress.mig.client.api.SourceTasks.SourceComment;
+import io.digiexpress.mig.client.api.SourceTasks.SourceKeywords;
+import io.digiexpress.mig.client.api.SourceTasks.SourceLink;
+import io.digiexpress.mig.client.api.SourceTasks.SourceProcess;
+import io.digiexpress.mig.client.api.SourceTasks.SourceRole;
+import io.digiexpress.mig.client.api.SourceTasks.SourceTask;
+import io.digiexpress.mig.client.api.SourceTasks.SourceWorkflow;
 import io.digiexpress.mig.client.spi.loggers.SourceDbTaskQueryLogger;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -36,7 +36,7 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
   private final io.vertx.mutiny.pgclient.PgPool pool;
   
   @Override
-  public Uni<SourceDbTasks> findAll() {
+  public Uni<SourceTasks> findAll() {
     return Uni.combine().all().unis(
         getTasks(),
         getRoles(),
@@ -47,7 +47,7 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
         getProcesses(),
         getWorkflows()
     ).asTuple().onItem().transform(sources -> {
-      final SourceDbTasks result = ImmutableSourceDbTasks.builder()
+      final SourceTasks result = ImmutableSourceTasks.builder()
           .tasks(sources.getItem1().stream().collect(Collectors.toMap(e -> e.getId(), e -> e)))
           .roles(sources.getItem2().stream().collect(Collectors.groupingBy(e -> e.getTask_id())))
           .keywords(sources.getItem3().stream().collect(Collectors.groupingBy(e -> e.getTask_id())))
@@ -63,9 +63,9 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
     .onFailure().invoke(e -> logger.fail(e));
   }
   
-  private Uni<List<SourceDbTaskProcess>> getProcesses() {
+  private Uni<List<SourceProcess>> getProcesses() {
     final var sql = "select * from process order by id";
-    return processAnyQuery(SourceDbTaskProcess.class, sql, (row) -> ImmutableSourceDbTaskProcess.builder()
+    return processAnyQuery(SourceProcess.class, sql, (row) -> ImmutableSourceProcess.builder()
         .id(row.getLong("id"))
         .workflow_name(row.getString("workflow_name"))
         .updated(row.getLocalDateTime("updated"))
@@ -81,9 +81,9 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
         .build());
   }
   
-  private Uni<List<SourceDbTaskWorkflow>> getWorkflows() {
+  private Uni<List<SourceWorkflow>> getWorkflows() {
     final var sql = "select * from workflow order by id";
-    return processAnyQuery(SourceDbTaskWorkflow.class, sql, (row) -> ImmutableSourceDbTaskWorkflow.builder()
+    return processAnyQuery(SourceWorkflow.class, sql, (row) -> ImmutableSourceWorkflow.builder()
         .id(row.getLong("id"))
         .name(row.getString("name"))
         .updated(row.getLocalDateTime("updated"))
@@ -96,18 +96,18 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
         .build());
   }
   
-  private Uni<List<SourceDbTaskAccess>> getAccess() {
+  private Uni<List<SourceAccess>> getAccess() {
     final var sql = "select * from task_access order by task_id";
-    return processAnyQuery(SourceDbTaskAccess.class, sql, (row) -> ImmutableSourceDbTaskAccess.builder()
+    return processAnyQuery(SourceAccess.class, sql, (row) -> ImmutableSourceAccess.builder()
         .task_id(row.getLong("task_id"))
         .updated(row.getLocalDateTime("updated"))
         .user_id(row.getString("user_id"))
         .build());
   }
   
-  private Uni<List<SourceDbTaskLink>> getLinks() {
+  private Uni<List<SourceLink>> getLinks() {
     final var sql = "select * from task_link order by task_id";
-    return processAnyQuery(SourceDbTaskLink.class, sql, (row) -> ImmutableSourceDbTaskLink.builder()
+    return processAnyQuery(SourceLink.class, sql, (row) -> ImmutableSourceLink.builder()
         .id(row.getLong("id"))
         .task_id(row.getLong("task_id"))
         .link_key(row.getString("link_key"))
@@ -115,9 +115,9 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
         .build());
   }
   
-  private Uni<List<SourceDbTaskComment>> getComments() {
+  private Uni<List<SourceComment>> getComments() {
     final var sql = "select * from comment order by task_id";
-    return processAnyQuery(SourceDbTaskComment.class, sql, (row) -> ImmutableSourceDbTaskComment.builder()
+    return processAnyQuery(SourceComment.class, sql, (row) -> ImmutableSourceComment.builder()
         .task_id(row.getLong("task_id"))
         .id(row.getLong("id"))
         .comment_text(row.getString("comment_text"))
@@ -130,26 +130,26 @@ public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
   }
   
   
-  private Uni<List<SourceDbTaskKeywords>> getKeywords() {
+  private Uni<List<SourceKeywords>> getKeywords() {
     final var sql = "select * from task_keywords order by task_id";
-    return processAnyQuery(SourceDbTaskKeywords.class, sql, (row) -> ImmutableSourceDbTaskKeywords.builder()
+    return processAnyQuery(SourceKeywords.class, sql, (row) -> ImmutableSourceKeywords.builder()
         .task_id(row.getLong("task_id"))
         .key_words(row.getString("key_words"))
         .build());
   }
   
-  private Uni<List<SourceDbTaskRole>> getRoles() {
+  private Uni<List<SourceRole>> getRoles() {
     final var sql = "select * from task_roles order by task_id";
-    return processAnyQuery(SourceDbTaskRole.class, sql, row -> ImmutableSourceDbTaskRole.builder()
+    return processAnyQuery(SourceRole.class, sql, row -> ImmutableSourceRole.builder()
         .task_id(row.getLong("task_id"))
         .assigned_roles(row.getString("assigned_roles"))
         .build());
   }
   
 
-  private Uni<List<SourceDbTask>> getTasks() {
+  private Uni<List<SourceTask>> getTasks() {
     final var sql = "select * from task order by id";
-    return processAnyQuery(SourceDbTask.class, sql, (row) ->  ImmutableSourceDbTask.builder()
+    return processAnyQuery(SourceTask.class, sql, (row) ->  ImmutableSourceTask.builder()
       .id(row.getLong("id"))
       .created(row.getLocalDateTime("created"))
       .priority(row.getInteger("priority"))
