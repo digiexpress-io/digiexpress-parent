@@ -66,7 +66,7 @@ public class SourceDialobQueryImpl implements SourceDialobQuery {
       return dialob;
     }
     
-    return new SourceDbDialobQueryFilter(onlyRelatedToQuestionnaires, includeFrom, dialob, logger).apply();
+    return new SourceDialobQueryFilter(onlyRelatedToQuestionnaires, includeFrom, dialob, logger).apply();
   }
 
   private Uni<List<SourceForm>> getForms() {

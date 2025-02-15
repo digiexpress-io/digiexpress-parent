@@ -16,7 +16,7 @@ import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SourceDbDialobQueryFilter {
+public class SourceDialobQueryFilter {
   private final List<String> onlyRelatedToQuestionnaires;
   private final List<FormFilter> includeFrom;
   private final SourceForms src;
