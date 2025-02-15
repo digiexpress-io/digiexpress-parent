@@ -38,12 +38,44 @@ public interface EntityQueryLogger<T> {
   }
   
   public static String generateLog(List<LogEvent> messages) {
+
+    final String yellowColor = "\033[33m";
+    final String resetColor = "\033[0m";
+    final String errorColor = "\033[0;31m";
+    final String magentaColor = "\033[35m";
     final var result = new StringBuilder("events:").append(System.lineSeparator());
+    var index = 0;
     for(final var event : messages) {
-      result.append("  - ").append(event.getLevel()).append(":").append(System.lineSeparator());
-      event.getProps().entrySet().forEach(e -> 
-        result.append("    ").append(e.getKey()).append(": ").append(e.getValue()).append(System.lineSeparator())
-      );
+      
+      final boolean isLast = index++ == messages.size() -1;
+      
+      final var mainColor = event.getLevel() == LogEventLevel.ERROR ? errorColor : resetColor;
+      result.append("  - ").append(mainColor).append(event.getLevel()).append(resetColor).append(":").append(System.lineSeparator());
+      event.getProps().entrySet().forEach(e -> {
+        final String typeColor;
+        
+        switch (e.getKey()) {
+          case "sql": {
+            typeColor = yellowColor; 
+            break;
+          }
+          default: {
+            if(isLast) {
+              typeColor = magentaColor;              
+            } else {
+              typeColor = resetColor;
+            }
+            
+          };
+        }
+        
+        result.append("    ").append(e.getKey()).append(": ")
+          .append(typeColor)
+          .append(e.getValue()).append(resetColor)
+          .append(System.lineSeparator());
+      });
+      
+      result.append(resetColor);
     }
     return result.toString();
   }

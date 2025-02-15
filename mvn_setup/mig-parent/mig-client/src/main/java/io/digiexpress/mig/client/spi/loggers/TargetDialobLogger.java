@@ -72,10 +72,10 @@ public class TargetDialobLogger {
           .level(LogEventLevel.INFO)
           .props(Map.of(
               "text", "successfully inserted conversion data",
-              "forms inserted/existing", getCount(SourceForm.class, e.getForms().size()),
-              "form document", getCount(SourceFormDocument.class, e.getFormDocument().size()),
-              "form revs", getCount(SourceFormRev.class, e.getFormRev().size()),
-              "questionnaires", getCount(Questionnaire.class, e.getQuestionnaires().size())
+              "forms inserted/skipped", getCount(SourceForm.class, e.getForms().size()),
+              "form document inserted/skipped", getCount(SourceFormDocument.class, e.getFormDocument().size()),
+              "form revs inserted/skipped", getCount(SourceFormRev.class, e.getFormRev().size()),
+              "questionnaires inserted/skipped", getCount(Questionnaire.class, e.getQuestionnaires().size())
               
           ))
           .build());
