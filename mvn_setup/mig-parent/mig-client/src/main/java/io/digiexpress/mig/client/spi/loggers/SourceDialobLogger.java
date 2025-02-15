@@ -31,10 +31,7 @@ public class SourceDialobLogger {
       }
     };
   }
-  
-  
-  
-  
+
   public void formRevNotFound(SourceFormDocument filter, SourceQuestionnaire q) {
     if(q == null) {
       if(log.isDebugEnabled()) {
@@ -85,7 +82,15 @@ public class SourceDialobLogger {
         .build());
   }
   
-  
+  public void formNotFound(SourceFormRev filter) {
+    messages.add(LogEvent.builder()
+        .level(LogEventLevel.ERROR)
+        .props(Map.of(
+            "text", "form was not found based on form_rev",
+            "form name", filter.getForm_name()
+        ))
+        .build());
+  }
   
   public void formNotFound(FormFilter filter) {
     messages.add(LogEvent.builder()

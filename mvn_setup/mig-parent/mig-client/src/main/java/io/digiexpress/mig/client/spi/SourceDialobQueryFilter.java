@@ -45,7 +45,17 @@ public class SourceDialobQueryFilter {
   
   
   private void visitForms() {
+    final var forms = src.getForms().stream()
+      .collect(Collectors.toMap(e -> (e.getTenant_id() + "/" + e.getName()), e -> e));
     
+    for(final var rev : ok_revs) {
+      final var form = forms.get(rev.getTenant_id() + "/" + rev.getForm_name());
+      if(form == null) {
+        log.formNotFound(rev);
+        continue;
+      }
+      ok_forms.add(form);
+    }
   }
   
   private void visitFormFilters() {
