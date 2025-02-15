@@ -8,16 +8,22 @@ import org.immutables.value.Value;
 import io.smallrye.mutiny.Uni;
 
 public interface MigClient {
-  SourceDbTaskQuery taskQuery();
-  SourceDbDialobQuery dialobQuery();
+  SourceTaskQuery taskQuery();
+  SourceDialobQuery dialobQuery();
   
-  interface SourceDbDialobQuery {
-    SourceDbDialobQuery includeFromQuestionnaires(List<String> questionnaires);
-    SourceDbDialobQuery includeFrom(List<? extends FormFilter> formMeta);
+  TargetDialobBuilder dialobBuilder();
+  
+  interface TargetDialobBuilder {
+    Uni<SourceForms> build(SourceForms source);
+  }
+  
+  interface SourceDialobQuery {
+    SourceDialobQuery includeFromQuestionnaires(List<String> questionnaires);
+    SourceDialobQuery includeFrom(List<? extends FormFilter> formMeta);
     Uni<SourceForms> findAll();
   }
   
-  interface SourceDbTaskQuery {
+  interface SourceTaskQuery {
     Uni<SourceTasks> findAll();
   }
   

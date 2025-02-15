@@ -14,7 +14,7 @@ import io.digiexpress.mig.client.api.ImmutableSourceRole;
 import io.digiexpress.mig.client.api.ImmutableSourceTask;
 import io.digiexpress.mig.client.api.ImmutableSourceTasks;
 import io.digiexpress.mig.client.api.ImmutableSourceWorkflow;
-import io.digiexpress.mig.client.api.MigClient.SourceDbTaskQuery;
+import io.digiexpress.mig.client.api.MigClient.SourceTaskQuery;
 import io.digiexpress.mig.client.api.SourceTasks;
 import io.digiexpress.mig.client.api.SourceTasks.SourceAccess;
 import io.digiexpress.mig.client.api.SourceTasks.SourceComment;
@@ -24,15 +24,15 @@ import io.digiexpress.mig.client.api.SourceTasks.SourceProcess;
 import io.digiexpress.mig.client.api.SourceTasks.SourceRole;
 import io.digiexpress.mig.client.api.SourceTasks.SourceTask;
 import io.digiexpress.mig.client.api.SourceTasks.SourceWorkflow;
-import io.digiexpress.mig.client.spi.loggers.SourceDbTaskQueryLogger;
+import io.digiexpress.mig.client.spi.loggers.SourceTasksLogger;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class SourceDbTaskQueryImpl implements SourceDbTaskQuery {
-  private final SourceDbTaskQueryLogger logger = new SourceDbTaskQueryLogger();
+public class SourceDbTaskQueryImpl implements SourceTaskQuery {
+  private final SourceTasksLogger logger = new SourceTasksLogger();
   private final io.vertx.mutiny.pgclient.PgPool pool;
   
   @Override

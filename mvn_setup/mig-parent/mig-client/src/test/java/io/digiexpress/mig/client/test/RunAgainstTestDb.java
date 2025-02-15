@@ -11,7 +11,7 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
 
-@Disabled
+//@Disabled
 public class RunAgainstTestDb {
   final io.vertx.mutiny.pgclient.PgPool src_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
       new PgConnectOptions()
@@ -21,14 +21,25 @@ public class RunAgainstTestDb {
         .setUser("mig-data")
         .setPassword("password123"), 
       new PoolOptions().setMaxSize(5));
-  
+  final io.vertx.mutiny.pgclient.PgPool target_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
+      new PgConnectOptions()
+        .setHost("localhost")
+        .setPort(5436)
+        .setDatabase("dialob")
+        .setUser("dialob")
+        .setPassword("dialob123"), 
+      new PoolOptions().setMaxSize(5));
   
   
   @Test
   public void test() {
-    final var client = new SourceDbClientImpl(src_pg_pool, src_pg_pool);
+    final var client = new SourceDbClientImpl(src_pg_pool, src_pg_pool, target_pg_pool);
+    
+    // get all tasks
     final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));
-    client.dialobQuery()
+    
+    // get all dialob related data
+    final var dialob = client.dialobQuery()
       .includeFromQuestionnaires(
           tasks.getProcesses().values().stream()
           .map(e -> e.getQuestionnaire_id())
@@ -45,5 +56,10 @@ public class RunAgainstTestDb {
           .toList()
       )
       .findAll().await().atMost(Duration.ofMinutes(1));
+    
+    
+    
+    client.dialobBuilder().build(dialob)
+      .await().atMost(Duration.ofMinutes(10));
   }
 }

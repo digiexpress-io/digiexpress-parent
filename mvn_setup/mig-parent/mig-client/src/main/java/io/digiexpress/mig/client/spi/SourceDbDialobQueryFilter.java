@@ -11,7 +11,7 @@ import io.digiexpress.mig.client.api.SourceForms.SourceForm;
 import io.digiexpress.mig.client.api.SourceForms.SourceFormDocument;
 import io.digiexpress.mig.client.api.SourceForms.SourceFormRev;
 import io.digiexpress.mig.client.api.SourceForms.SourceQuestionnaire;
-import io.digiexpress.mig.client.spi.loggers.SourceDbDialobQueryLogger;
+import io.digiexpress.mig.client.spi.loggers.SourceDialobLogger;
 import io.smallrye.mutiny.tuples.Tuple2;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ public class SourceDbDialobQueryFilter {
   private final List<String> onlyRelatedToQuestionnaires;
   private final List<FormFilter> includeFrom;
   private final SourceForms src;
-  private final SourceDbDialobQueryLogger log;
+  private final SourceDialobLogger log;
   
   private final List<String> ok_questionnairesFormDocIds = new ArrayList<String>();
   

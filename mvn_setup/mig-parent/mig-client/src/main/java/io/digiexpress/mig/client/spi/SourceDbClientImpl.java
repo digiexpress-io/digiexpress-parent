@@ -6,16 +6,22 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SourceDbClientImpl implements MigClient {
-  private final io.vertx.mutiny.pgclient.PgPool taskDbPool;
-  private final io.vertx.mutiny.pgclient.PgPool dialobDbPool;
+  private final io.vertx.mutiny.pgclient.PgPool src_tasks;
+  private final io.vertx.mutiny.pgclient.PgPool src_dialob;
+  private final io.vertx.mutiny.pgclient.PgPool target_dialob;
 
   @Override
-  public SourceDbTaskQuery taskQuery() {
-    return new SourceDbTaskQueryImpl(taskDbPool);
+  public SourceTaskQuery taskQuery() {
+    return new SourceDbTaskQueryImpl(src_tasks);
   }
 
   @Override
-  public SourceDbDialobQuery dialobQuery() {
-    return new SourceDbDialobQueryImpl(dialobDbPool);
+  public SourceDialobQuery dialobQuery() {
+    return new SourceDbDialobQueryImpl(src_dialob);
+  }
+
+  @Override
+  public TargetDialobBuilder dialobBuilder() {
+    return new TargetDialobBuilderImpl(target_dialob);
   }
 }

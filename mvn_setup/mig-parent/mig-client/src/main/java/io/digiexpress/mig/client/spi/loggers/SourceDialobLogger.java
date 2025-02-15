@@ -20,11 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class SourceDbDialobQueryLogger {
+public class SourceDialobLogger {
   private final List<LogEvent> messages = Collections.synchronizedList(new ArrayList<>());
   
   public <T> EntityQueryLogger<T> entityQuery(Class<T> type) {
-    return new EntityQueryLoggerImpl<T>(type, SourceDbDialobQueryLogger.log) {
+    return new EntityQueryLoggerImpl<T>(type, SourceDialobLogger.log) {
       @Override
       public void close(List<LogEvent> entries) {
         messages.addAll(entries);

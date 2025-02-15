@@ -10,14 +10,18 @@ import org.slf4j.Logger;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.RowSet;
+import io.vertx.mutiny.sqlclient.Tuple;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 public interface EntityQueryLogger<T> {
   EntityQueryLogger<T> query(String sql);
+  EntityQueryLogger<T> query(String sql, List<Tuple> props);
   EntityQueryLogger<T> queryFail(Throwable e);
   EntityQueryLogger<T> queryOk(List<T> e);
+  EntityQueryLogger<T> queryOk(RowSet<Row> e);
   
   EntityQueryLogger<T> mappingOk(T entity);
   EntityQueryLogger<T> mappingFail(Row task, Exception e);
@@ -59,13 +63,13 @@ public interface EntityQueryLogger<T> {
       }
       
       messages.add(LogEvent.builder()
-          .level(LogEventLevel.INFO)
-          .props(Map.of(
-              "text", "executing SQL query",
-              "conversion type", type.getSimpleName(),
-              "sql", sql
-          ))
-          .build());
+        .level(LogEventLevel.INFO)
+        .props(Map.of(
+            "text", "executing SQL query",
+            "conversion type", type.getSimpleName(),
+            "sql", sql
+        ))
+        .build());
       
       return this;
     }
@@ -73,19 +77,48 @@ public interface EntityQueryLogger<T> {
     @Override
     public EntityQueryLogger<T> queryFail(Throwable e) {
       messages.add(LogEvent.builder()
-          .level(LogEventLevel.ERROR)
-          .props(Map.of(
-              "text", "failed to fully to retrive conversion type relations",
-              "conversion type", type.getSimpleName(),
-              "error", e.getMessage(),
-              "stack", ExceptionUtils.getStackTrace(e)
-          ))
-          .build());
+        .level(LogEventLevel.ERROR)
+        .props(Map.of(
+            "text", "failed to fully to retrive conversion type relations",
+            "conversion type", type.getSimpleName(),
+            "error", e.getMessage(),
+            "stack", ExceptionUtils.getStackTrace(e)
+        ))
+        .build());
       
       this.close(messages);
       return this;
     }
 
+    
+    @Override
+    public EntityQueryLogger<T> query(String sql, List<Tuple> props) {
+      messages.add(LogEvent.builder()
+          .level(LogEventLevel.INFO)
+          .props(Map.of(
+              "text", "inserting entries",
+              "sql", sql,
+              "number of entries in query", String.valueOf(props.size()),
+              "conversion type", type.getSimpleName()
+          ))
+          .build());
+      return this;
+    }
+    
+    @Override
+    public EntityQueryLogger<T> queryOk(RowSet<Row> e) {
+      messages.add(LogEvent.builder()
+        .level(LogEventLevel.INFO)
+        .props(Map.of(
+            "text", "successfully inserted entries",
+            "number of entries inserted", String.valueOf(e.size()),
+            "conversion type", type.getSimpleName()
+        ))
+        .build());
+      this.close(messages);
+      return this;
+    }
+    
     @Override
     public EntityQueryLogger<T> queryOk(List<T> e) {
 

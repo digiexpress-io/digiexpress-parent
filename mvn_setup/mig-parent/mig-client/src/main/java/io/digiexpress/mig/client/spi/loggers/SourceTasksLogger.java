@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class SourceDbTaskQueryLogger {
+public class SourceTasksLogger {
   private final List<LogEvent> messages = Collections.synchronizedList(new ArrayList<>());
   
   public <T> EntityQueryLogger<T> entityQuery(Class<T> type) {
-    return new EntityQueryLoggerImpl<T>(type, SourceDbTaskQueryLogger.log) {
+    return new EntityQueryLoggerImpl<T>(type, SourceTasksLogger.log) {
       @Override
       public void close(List<LogEvent> entries) {
         messages.addAll(entries);
