@@ -2,7 +2,6 @@ package io.digiexpress.mig.client.test;
 
 import java.time.Duration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.mig.client.api.ImmutableFormFilter;
@@ -21,7 +20,7 @@ public class RunAgainstTestDb {
         .setUser("mig-data")
         .setPassword("password123"), 
       new PoolOptions().setMaxSize(5));
-  final io.vertx.mutiny.pgclient.PgPool target_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
+  final io.vertx.mutiny.pgclient.PgPool target_dialob_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
       new PgConnectOptions()
         .setHost("localhost")
         .setPort(5436)
@@ -29,15 +28,28 @@ public class RunAgainstTestDb {
         .setUser("dialob")
         .setPassword("dialob123"), 
       new PoolOptions().setMaxSize(5));
-  
+  final io.vertx.mutiny.pgclient.PgPool target_task_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
+      new PgConnectOptions()
+        .setHost("localhost")
+        .setPort(5433)
+        .setDatabase("eveli-app")
+        .setUser("eveli-app")
+        .setPassword("password123")
+        , 
+      new PoolOptions().setMaxSize(10));
+  final String task_tenant = "TASK_TENAN13_";
   
   @Test
   public void test() {
-    final var client = new MigClientImpl(src_pg_pool, src_pg_pool, target_pg_pool);
+    final var client = new MigClientImpl(
+        src_pg_pool, src_pg_pool, 
+        target_dialob_pg_pool, target_task_pg_pool, 
+        task_tenant);
     
     // get all tasks
     final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));
     
+    /*
     // get all dialob related data
     final var dialob = client.dialobQuery()
       .includeFromQuestionnaires(
@@ -57,9 +69,10 @@ public class RunAgainstTestDb {
       )
       .findAll().await().atMost(Duration.ofMinutes(1));
     
+    client.dialobBuilder().build(dialob).await().atMost(Duration.ofMinutes(10));
+    */
     
+    client.taskBuilder().build(tasks).await().atMost(Duration.ofMinutes(10));
     
-    client.dialobBuilder().build(dialob)
-      .await().atMost(Duration.ofMinutes(10));
   }
 }

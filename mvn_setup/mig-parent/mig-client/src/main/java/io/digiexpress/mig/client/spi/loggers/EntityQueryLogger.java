@@ -143,7 +143,7 @@ public interface EntityQueryLogger<T> {
         .level(LogEventLevel.INFO)
         .props(Map.of(
             "text", "successfully inserted entries",
-            "number of entries inserted", String.valueOf(e.size()),
+            "number of entries inserted", String.valueOf(getTotalEntries(e)),
             "conversion type", type.getSimpleName()
         ))
         .build());
@@ -229,6 +229,21 @@ public interface EntityQueryLogger<T> {
           ))
           .build());
       return this;
+    }
+    @SuppressWarnings("rawtypes")
+    public int getTotalEntries(RowSet<Row> e) {
+      if(e.size() == 0 || e.size() == 1) {
+        var runningNumber = 0;
+        // try resolving from different batch impl
+        io.vertx.sqlclient.RowSet running = (io.vertx.sqlclient.RowSet) e.getDelegate().value();      
+        while(running != null) {
+          runningNumber += running.size();
+          running = running.next();
+        }
+        
+        return runningNumber;
+      }
+      return e.size();
     }
   }
 }

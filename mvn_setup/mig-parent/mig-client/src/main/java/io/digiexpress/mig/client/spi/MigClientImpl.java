@@ -9,6 +9,9 @@ public class MigClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool src_tasks;
   private final io.vertx.mutiny.pgclient.PgPool src_dialob;
   private final io.vertx.mutiny.pgclient.PgPool target_dialob;
+  private final io.vertx.mutiny.pgclient.PgPool target_tasks;
+  
+  private final String taskTenant;
 
   @Override
   public SourceTaskQuery taskQuery() {
@@ -23,5 +26,10 @@ public class MigClientImpl implements MigClient {
   @Override
   public TargetDialobBuilder dialobBuilder() {
     return new TargetDialobBuilderImpl(target_dialob);
+  }
+
+  @Override
+  public TargetTaskBuilder taskBuilder() {
+    return new TargetTaskBuilderImpl(target_tasks, taskTenant);
   }
 }

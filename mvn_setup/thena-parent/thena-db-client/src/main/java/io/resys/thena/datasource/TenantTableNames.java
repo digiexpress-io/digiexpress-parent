@@ -78,7 +78,10 @@ public abstract class TenantTableNames {
   
   public TenantTableNames toRepo(Tenant repo) {
     final String prefix = repo.getPrefix();
-    
+    return toRepo(prefix);
+  }
+  
+  public TenantTableNames toRepo(String prefix) {
     return ImmutableTenantTableNames.builder()
         .db(this.getDb())
         .tenant(this.getTenant())

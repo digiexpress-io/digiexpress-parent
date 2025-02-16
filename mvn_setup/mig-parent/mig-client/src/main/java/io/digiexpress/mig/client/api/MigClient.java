@@ -12,6 +12,11 @@ public interface MigClient {
   SourceDialobQuery dialobQuery();
   
   TargetDialobBuilder dialobBuilder();
+  TargetTaskBuilder taskBuilder();
+  
+  interface TargetTaskBuilder {
+    Uni<SourceTasks> build(SourceTasks tasks);
+  }
   
   interface TargetDialobBuilder {
     Uni<SourceForms> build(SourceForms source);
