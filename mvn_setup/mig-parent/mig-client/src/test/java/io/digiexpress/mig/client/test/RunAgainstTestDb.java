@@ -42,14 +42,17 @@ public class RunAgainstTestDb {
   @Test
   public void test() {
     final var client = new MigClientImpl(
-        src_pg_pool, src_pg_pool, 
+        src_pg_pool, src_pg_pool, src_pg_pool,
         target_dialob_pg_pool, target_task_pg_pool, 
         task_tenant);
     
     // get all tasks
-    final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));
+    final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(10));
     
-    /*
+    final var stencil = client.thenaQuary().findAll("nested_11_").await().atMost(Duration.ofMinutes(10));
+    final var wrench = client.thenaQuary().findAll("nested_10_").await().atMost(Duration.ofMinutes(10));
+    
+    
     // get all dialob related data
     final var dialob = client.dialobQuery()
       .includeFromQuestionnaires(
@@ -69,9 +72,7 @@ public class RunAgainstTestDb {
       )
       .findAll().await().atMost(Duration.ofMinutes(1));
     
-    client.dialobBuilder().build(dialob).await().atMost(Duration.ofMinutes(10));
-    */
-    
+    client.dialobBuilder().build(dialob).await().atMost(Duration.ofMinutes(10));    
     client.taskBuilder().build(tasks).await().atMost(Duration.ofMinutes(10));
     
   }

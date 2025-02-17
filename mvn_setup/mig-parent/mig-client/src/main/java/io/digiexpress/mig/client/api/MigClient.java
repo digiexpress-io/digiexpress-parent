@@ -10,6 +10,7 @@ import io.smallrye.mutiny.Uni;
 public interface MigClient {
   SourceTaskQuery taskQuery();
   SourceDialobQuery dialobQuery();
+  SourceThenaQuery thenaQuary();
   
   TargetDialobBuilder dialobBuilder();
   TargetTaskBuilder taskBuilder();
@@ -20,6 +21,10 @@ public interface MigClient {
   
   interface TargetDialobBuilder {
     Uni<SourceForms> build(SourceForms source);
+  }
+  
+  interface SourceThenaQuery {
+    Uni<SourceThena> findAll(String tenanPrefix);
   }
   
   interface SourceDialobQuery {

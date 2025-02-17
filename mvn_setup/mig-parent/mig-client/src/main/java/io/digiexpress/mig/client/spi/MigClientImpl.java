@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public class MigClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool src_tasks;
   private final io.vertx.mutiny.pgclient.PgPool src_dialob;
+  private final io.vertx.mutiny.pgclient.PgPool src_thena;
   private final io.vertx.mutiny.pgclient.PgPool target_dialob;
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
   
@@ -31,5 +32,10 @@ public class MigClientImpl implements MigClient {
   @Override
   public TargetTaskBuilder taskBuilder() {
     return new TargetTaskBuilderImpl(target_tasks, taskTenant);
+  }
+
+  @Override
+  public SourceThenaQuery thenaQuary() {
+    return new SourceThenaQueryImpl(src_thena);
   }
 }
