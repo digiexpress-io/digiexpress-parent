@@ -1,19 +1,13 @@
 package io.digiexpress.mig.client.spi;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.mig.client.api.MigClient.TargetTaskBuilder;
 import io.digiexpress.mig.client.api.SourceTasks;
-import io.digiexpress.mig.client.api.SourceTasks.SourceComment;
-import io.digiexpress.mig.client.api.SourceTasks.SourceTask;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger;
 import io.digiexpress.mig.client.spi.loggers.TargetTaskLogger;
 import io.resys.thena.api.entities.grim.GrimAssignment;
@@ -21,6 +15,7 @@ import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.datasource.TenantTableNames;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
@@ -32,9 +27,9 @@ public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
   private final TenantTableNames names; 
-  private final ZoneId defaultZone = ZoneId.of("Europe/Helsinki");
+  
 
-  /**
+/**
 delete from task_tenan13_grim_commands;
 delete from task_tenan13_grim_mission_link;
 delete from task_tenan13_grim_mission_label;
@@ -45,12 +40,9 @@ delete from task_tenan13_grim_assignment;
 delete from task_tenan13_grim_remark ;
 delete from task_tenan13_grim_mission;
 delete from task_tenan13_grim_commit;
-   */
+*/
   
 
-  
-  
-  
   enum TaskStatus { NEW, OPEN, COMPLETED, REJECTED, DELEGATED }
   enum TaskPriority { LOW, NORMAL, HIGH }
   
@@ -74,7 +66,8 @@ delete from task_tenan13_grim_commit;
         createAssignees(conn, source),
         createRoles(conn, source),
         createComments(conn, source),
-        createKeywords(conn, source)
+        createKeywords(conn, source),
+        createAccess(conn, source)
     ).asTuple().onItem().transform(e -> {
       logger.ok(source);
       
@@ -122,19 +115,12 @@ delete from task_tenan13_grim_commit;
     final var props = source.getTasks().values().stream()
         .map(doc -> {
           
-          final var questionnaire_id = Optional.ofNullable(source.getLinks().get(doc.getId()))
-              .map(links -> links.stream()
-                  .filter(e -> "questionnaireId".equals(e.getLink_key()))
-                  .map(e -> e.getLink_address())
-                  .findFirst().orElse(null)
-              );
-          
-          final var taskCommits = getTaskComments(doc.getId(), source);
-          final var treeCommit = taskCommits.isEmpty() ? createUpdateCommitId(doc) : createCommentCommitId(taskCommits.get(taskCommits.size() - 1));
+          final var questionnaire_id = source.getQuestionnaireId(doc.getId());
+          final var commits = TargetTaskCommit.of(doc, source);
           
           return Tuple.from(Arrays.asList(
               String.valueOf(doc.getId()),
-              createUpdateCommitId(doc),
+              commits.updatedWithCommit(),
               
               null, //parent_mission_id
               null, //external_id
@@ -145,14 +131,14 @@ delete from task_tenan13_grim_commit;
               doc.getDue_date().orElse(null),
               doc.getSubject().orElse(null),
               doc.getDescription().orElse(null),
-              doc.getCompleted().map(e -> e.atZone(defaultZone).toOffsetDateTime()).orElse(null),
+              doc.getCompleted().map(e -> e.atZone(source.getZoneId()).toOffsetDateTime()).orElse(null),
               null, //archived_at
               null, //archived_status
               doc.getTask_ref().orElse(null),
-              questionnaire_id.orElse(null),
+              questionnaire_id,
               
-              createCommitId(doc),
-              treeCommit
+              commits.createdWithCommit(),
+              commits.treeUpdatedWithCommit()
             ));
         })
         .collect(Collectors.toList());
@@ -184,15 +170,14 @@ delete from task_tenan13_grim_commit;
         .filter(doc -> doc.getAssigned_user().isPresent())
         .filter(doc -> !doc.getAssigned_user().get().isBlank())
         .map(doc -> {
-          
+          final var commits = TargetTaskCommit.of(doc, source);
           return Tuple.from(Arrays.asList(
-              String.valueOf(doc.getId()) + "_assignee",
-              createCommitId(doc),
+              doc.getAssigneeGid(),
+              commits.createdWithCommit(),
               String.valueOf(doc.getId()),
               null, //objective_id
               null, //goal_id
               null, //remark_id
-              
               doc.getAssigned_user().get(),
               TaskMapper.ASSIGNMENT_TYPE_TASK_USER,
               doc.getAssigned_user_email().orElse(null)
@@ -203,8 +188,7 @@ delete from task_tenan13_grim_commit;
       return batch(conn, GrimAssignment.class, sql, props);
   }
   private Uni<?> createRoles(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
-    
-    
+
     final var sql = "INSERT INTO  " + names.getGrimAssignment() +
 """
  (id,
@@ -224,17 +208,15 @@ delete from task_tenan13_grim_commit;
     final var props = source.getRoles().values().stream()
         .flatMap(e -> e.stream())
         .map(doc -> {
-
+          final var commits = TargetTaskCommit.of(doc.getTask_id(), source);
           final var task = source.getTasks().get(doc.getTask_id());
-          
           return Tuple.from(Arrays.asList(
-              String.valueOf(doc.getTask_id()) + "_role",
-              createCommitId(task),
+              doc.getGid(),
+              commits.createdWithCommit(),
               String.valueOf(task.getId()),
               null, //objective_id
               null, //goal_id
               null, //remark_id
-              
               doc.getAssigned_roles(),
               TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE,
               null
@@ -244,6 +226,7 @@ delete from task_tenan13_grim_commit;
      
       return batch(conn, GrimAssignment.class, sql, props);
   }
+
   private Uni<?> createCommits(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
     
     final var sql = "INSERT INTO  " + names.getGrimCommit() +        
@@ -261,60 +244,25 @@ delete from task_tenan13_grim_commit;
 """;
     final var props = source.getTasks().values().stream()
         .flatMap(doc -> {
-          
-          
-          
-          final var commit1 = Tuple.from(Arrays.asList(
-              createCommitId(doc),
-              null,
+          return TargetTaskCommit.of(doc, source).getEvents().stream()
+          .map(event -> Tuple.from(Arrays.asList(
+              event.getEventId(),
+              event.getParentEventId(),
               String.valueOf(doc.getId()),
-              doc.getCreated().atZone(defaultZone).toOffsetDateTime(),
-              "conversion commit for created at date",
-              doc.getUpdater_id().orElse("conversion_runner"),
+              event.getEventDate(),
+              "conversion commit for comment at date",
+              event.getEventAuthor(),
               "created with conversion at: " + OffsetDateTime.now()
-            ));
-          
-          final var commit2 = Tuple.from(Arrays.asList(
-              createUpdateCommitId(doc),
-              createCommitId(doc),
-              String.valueOf(doc.getId()),
-              doc.getUpdated().atZone(defaultZone).toOffsetDateTime(),
-              "conversion commit for updated at date",
-              doc.getUpdater_id().orElse("conversion_runner"),
-              "created with conversion at: " + OffsetDateTime.now()
-            ));
-          
-          // create commits for comments
-          final var commits = new ArrayList<Tuple>();
-          commits.add(commit1);
-          commits.add(commit2);
-          
-          var previous = commit2.getString(0);
-          for(final var comment : getTaskComments(doc.getId(), source)) {
-            final var commit_next = Tuple.from(Arrays.asList(
-                createCommentCommitId(comment),
-                previous,
-                String.valueOf(doc.getId()),
-                comment.getCreated().atZone(defaultZone).toOffsetDateTime(),
-                "conversion commit for comment at date",
-                doc.getUpdater_id().orElse("conversion_runner"),
-                "created with conversion at: " + OffsetDateTime.now()
-              ));
-            previous = commit2.getString(0);
-            commits.add(commit_next);
-          }
-          
-          return commits.stream();
+            )));
         })
         .collect(Collectors.toList());
-     
       return batch(conn, GrimCommit.class, sql, props);
   }
   
   
  private Uni<?> createComments(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
     final var sql = "INSERT INTO  " + names.getGrimRemark() +        
-        """
+"""
   (id,
   commit_id,
   created_commit_id,
@@ -335,46 +283,40 @@ delete from task_tenan13_grim_commit;
   ON CONFLICT (id) DO NOTHING
   RETURNING id
 """;
-    final var props = source.getComments().values().stream()
-        .flatMap(e -> e.stream())
-        .sorted((a, b) -> {
-          
-          return Long.compare(a.getReply_to_id().orElse((long) -1), b.getReply_to_id().orElse((long) -1));
-          
-          
-        })
-        .map(doc -> {
-          
-          final String parentId = doc.getReply_to_id().map(e -> e + "_comment").orElse(null);
-          final var remarkType = Boolean.TRUE.equals(doc.getExternal().orElse(false)) ? TaskMapper.COMMENT_EXTERNAL : TaskMapper.COMMENT_INTERNAL;
-          final var commitId = createCommentCommitId(doc);
-          
-          return Tuple.from(Arrays.asList(
-              doc.getId() + "_comment",
-              commitId, // commit_id
-              commitId, // created_commit_id
-              parentId, // parent_id
-              String.valueOf(doc.getTask_id()),
-              null, //objective_id
-              null, //goal_id
-              null, //remark_id
-              
-              doc.getUser_name(),
-              null, //remark_status
-              remarkType, //remark_type
-              doc.getSource().orElse(null),
-              doc.getComment_text()
-            ));
-        })
-        .collect(Collectors.toList());
-     
-      return batch(conn, GrimRemark.class, sql, props);
+      final var props = source.getComments().values().stream()
+      .flatMap(e -> e.stream())
+      .sorted((a, b) ->  Long.compare(
+          a.getReply_to_id().orElse((long) -1), 
+          b.getReply_to_id().orElse((long) -1)
+      ))
+      .map(doc -> {
+        
+        final String parentId = doc.getReployToGid().orElse(null);
+        final var remarkType = doc.getRemarkType();
+        final String commitId = TargetTaskCommit.createCommentEvent(doc, source).getEventId();
+        
+        return Tuple.from(Arrays.asList(
+            doc.getGid(),
+            commitId, // commit_id
+            commitId, // created_commit_id
+            parentId, // parent_id
+            String.valueOf(doc.getTask_id()),
+            null, //objective_id
+            null, //goal_id
+            null, //remark_id
+            
+            doc.getUser_name(),
+            null, //remark_status
+            remarkType, //remark_type
+            doc.getSource().orElse(null),
+            doc.getComment_text()
+          ));
+      })
+      .collect(Collectors.toList());
+   
+    return batch(conn, GrimRemark.class, sql, props);
   }
   
- 
- 
-
- 
  private Uni<?> createKeywords(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
     final var sql = "INSERT INTO  " + names.getGrimMissionLabel() +        
 """
@@ -398,11 +340,11 @@ delete from task_tenan13_grim_commit;
         .flatMap(e -> e.stream())
         .map(doc -> {
           final var task = source.getTasks().get(doc.getTask_id());
-          
+          final String commitId = TargetTaskCommit.of(task, source).createdWithCommit();
           
           return Tuple.from(Arrays.asList(
-              doc.getTask_id() + "_kw",
-              createCommitId(task),
+              doc.getGid(),
+              commitId,
               String.valueOf(doc.getTask_id()),
               null, //objective_id
               null, //goal_id
@@ -418,28 +360,48 @@ delete from task_tenan13_grim_commit;
   }
   
  
-  private String createCommitId(SourceTask task) {
-    return task.getId() + "/" + task.getVersion() + "/C";
+
+ private Uni<?> createAccess(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
+    final var sql = "INSERT INTO  " + names.getGrimCommitViewer() +        
+"""
+  (id,
+  commit_id,
+  object_id,
+  object_type,
+  used_by,
+  used_for,
+  updated_at,
+  mission_id,
+  created_at)
+
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+""";
+    final var props = source.getAccess().values().stream()
+        .flatMap(e -> e.stream())
+        .map(doc -> {
+          final var task = source.getTasks().get(doc.getTask_id());
+          final var commitId = TargetTaskCommit.of(task, source).treeUpdatedWithCommit();
+          
+          return Tuple.from(Arrays.asList(
+              doc.getGid(),
+              commitId,
+              String.valueOf(task.getId()), //object_id
+              GrimDocType.GRIM_MISSION.name(), //object_type
+              doc.getUser_id(), //used_by
+              "conversion", //used_for
+              doc.getUpdated().atZone(source.getZoneId()).toOffsetDateTime(), //updated_at
+              String.valueOf(doc.getTask_id()), 
+              doc.getUpdated().atZone(source.getZoneId()).toOffsetDateTime()
+            ));
+        })
+        .collect(Collectors.toList());
+     
+      return batch(conn, GrimMissionLabel.class, sql, props);
   }
-  
-  private String createUpdateCommitId(SourceTask task) {
-    return task.getId() + "/" + task.getVersion() + "/U";
-  }
-  
-  private String createCommentCommitId(SourceComment task) {
-    final var commitId = (task.getId() + "/" + task.getTask_id() + "/" + task.getCreated() + "_CM")
-        .replace(".", "")
-        .replace(":", "")
-        .replace("-", "");
-    
-    return commitId;
-  }
-  private List<SourceComment> getTaskComments(long taskId, SourceTasks source) {
-    return Optional.ofNullable(source.getComments().get(taskId)).orElse(Collections.emptyList())
-      .stream().sorted((a, b) -> a.getCreated().compareTo(b.getCreated()))
-      .toList();
-  }
-  
+ 
+
   private <T> Uni<RowSet<Row>> batch(
       io.vertx.mutiny.sqlclient.SqlConnection conn,
       Class<T> type,

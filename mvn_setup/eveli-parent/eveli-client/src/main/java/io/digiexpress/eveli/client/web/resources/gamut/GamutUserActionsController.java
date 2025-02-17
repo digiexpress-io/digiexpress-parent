@@ -61,7 +61,6 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -111,7 +110,6 @@ public class GamutUserActionsController {
     return ResponseEntity.ok(Map.of("session", session, "form", form));
   }
 
-  @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
   @GetMapping(value="/messages")
   public ResponseEntity<List<UserMessage>> getMessages() {
     return ResponseEntity.ok(gamutClient.userMessagesQuery().findAllByUserId());
@@ -133,7 +131,6 @@ public class GamutUserActionsController {
     return feedback.queryCustomerFeedbacks().findAllByCustomerId(authClient.getCustomer().getPrincipal().getUsername());
   }
   
-  @Transactional // ends up pulling task -> task comment -> reply-to-comment -> all the access entities
   @GetMapping(value="{actionId}/messages")
   public ResponseEntity<List<UserMessage>> getMessages(@PathVariable("actionId") String actionId) {
     try {
@@ -143,7 +140,6 @@ public class GamutUserActionsController {
     }
   }
   
-  @Transactional
   @PostMapping(value="{actionId}/messages")
   public ResponseEntity<UserMessage> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
     try {
