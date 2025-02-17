@@ -14,9 +14,21 @@ public interface MigClient {
   
   TargetDialobBuilder dialobBuilder();
   TargetTaskBuilder taskBuilder();
+  TargetWrenchBuilder wrenchBuilder();
+  TargetStencilBuilder stencilBuilder();
+  
+  
+  
+  interface TargetStencilBuilder {
+    Uni<SourceThena> build(SourceThena tasks, String tenantName);
+  }
+  interface TargetWrenchBuilder {
+    Uni<SourceThena> build(SourceThena tasks, String tenantName);
+  }
+  
   
   interface TargetTaskBuilder {
-    Uni<SourceTasks> build(SourceTasks tasks);
+    Uni<SourceTasks> build(SourceTasks tasks, String tenantName);
   }
   
   interface TargetDialobBuilder {

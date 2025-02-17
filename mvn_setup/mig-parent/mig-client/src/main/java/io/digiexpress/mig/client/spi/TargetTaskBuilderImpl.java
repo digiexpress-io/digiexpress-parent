@@ -18,15 +18,17 @@ import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.datasource.TenantTableNames;
 import io.smallrye.mutiny.Uni;
-import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
 import io.vertx.mutiny.sqlclient.Tuple;
+import lombok.RequiredArgsConstructor;
 
+
+@RequiredArgsConstructor
 public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  private final TenantTableNames names; 
+  private TenantTableNames names; 
   
 
 /**
@@ -46,15 +48,11 @@ delete from task_tenan13_grim_commit;
   enum TaskStatus { NEW, OPEN, COMPLETED, REJECTED, DELEGATED }
   enum TaskPriority { LOW, NORMAL, HIGH }
   
-  public TargetTaskBuilderImpl(PgPool target_tasks, String tenantName) {
-    super();
-    this.target_tasks = target_tasks;
-    this.names = TenantTableNames.defaults("").toRepo(tenantName);
-  }
   
   
   @Override
-  public Uni<SourceTasks> build(SourceTasks source) {
+  public Uni<SourceTasks> build(SourceTasks source, String tenantName) {
+    this.names = TenantTableNames.defaults("").toRepo(tenantName);
     return target_tasks.withTransaction(conn -> execute(conn, source));
   }
   
