@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 
 public interface MigClient {
   SourceTaskQuery taskQuery();
@@ -20,8 +21,10 @@ public interface MigClient {
   
   
   interface TargetStencilBuilder {
-    Uni<SourceThena> build(SourceThena tasks, String tenantName);
+    Uni<SourceThena> build(SourceThena thena, SourceTasks tasks, String tenantName);
   }
+  
+  
   interface TargetWrenchBuilder {
     Uni<SourceThena> build(SourceThena tasks, String tenantName);
   }
@@ -57,6 +60,8 @@ public interface MigClient {
     String getFormName();
   }
   
-
+  interface StencilEntityConverter {
+    JsonObject convertValue(JsonObject blob);
+  }
   
 }

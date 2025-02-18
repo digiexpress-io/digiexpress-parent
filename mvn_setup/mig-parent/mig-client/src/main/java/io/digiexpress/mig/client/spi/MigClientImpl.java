@@ -1,6 +1,7 @@
 package io.digiexpress.mig.client.spi;
 
 import io.digiexpress.mig.client.api.MigClient;
+import io.digiexpress.mig.client.spi.converters.StencilEntityConverterImpl;
 import lombok.RequiredArgsConstructor;
 
 

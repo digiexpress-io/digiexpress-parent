@@ -72,7 +72,7 @@ public class RunAgainstTestDb {
 
     // convert stencil
     final var stencil = client.thenaQuary().findAll("nested_11_").await().atMost(Duration.ofMinutes(10));
-    client.stencilBuilder().build(stencil, "STENCIL_AS12_").await().atMost(Duration.ofMinutes(10));
+    client.stencilBuilder().build(stencil, tasks, "STENCIL_AS12_").await().atMost(Duration.ofMinutes(10));
     
     // convert wrench
     final var wrench = client.thenaQuary().findAll("nested_10_").await().atMost(Duration.ofMinutes(10));

@@ -30,7 +30,7 @@ public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
   private TenantTableNames names;
-  private final String anonUser = "";
+  private final String anonUser = "unknown";
   
 
 /**

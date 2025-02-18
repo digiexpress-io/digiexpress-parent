@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.digiexpress.mig.client.api.MigClient.StencilEntityConverter;
 import io.digiexpress.mig.client.api.MigClient.TargetStencilBuilder;
+import io.digiexpress.mig.client.api.SourceTasks;
 import io.digiexpress.mig.client.api.SourceThena;
+import io.digiexpress.mig.client.spi.converters.StencilEntityConverterImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger;
 import io.digiexpress.mig.client.spi.loggers.TargetThenaLogger;
 import io.resys.thena.api.entities.git.Blob;
@@ -22,11 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class TargetStencilBuilderImpl implements TargetStencilBuilder {
   private final TargetThenaLogger logger = new TargetThenaLogger();
   private final io.vertx.mutiny.pgclient.PgPool pool;
+  private StencilEntityConverter stencilEntityConverter;
   private TenantTableNames names;
 
   @Override
-  public Uni<SourceThena> build(SourceThena source, String tenantName) {
+  public Uni<SourceThena> build(SourceThena source, SourceTasks tasks, String tenantName) {
     this.names = TenantTableNames.defaults("").toRepo(tenantName);
+    this.stencilEntityConverter = new StencilEntityConverterImpl(tasks.getWorkflows().values());
     return pool.withTransaction(conn -> execute(conn, source));
   }
   /**
@@ -109,7 +114,9 @@ delete from STENCIL_AS12_git_blobs;
         """;
 
     final var props = source.getBlobs().values().stream()
-        .map(doc -> Tuple.from(Arrays.asList(doc.getId(), doc.getValue())))
+        .map(doc -> 
+          Tuple.from(Arrays.asList(doc.getId(), stencilEntityConverter.convertValue(doc.getValue())))
+        )
         .collect(Collectors.toList());
     return batch(conn, Blob.class, sql, props);
   }
