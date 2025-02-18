@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.mig.client.api.MigClient.TargetTaskBuilder;
 import io.digiexpress.mig.client.api.SourceTasks;
@@ -28,7 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  private TenantTableNames names; 
+  private TenantTableNames names;
+  private final String anonUser = "";
   
 
 /**
@@ -42,6 +44,8 @@ delete from task_tenan13_grim_assignment;
 delete from task_tenan13_grim_remark ;
 delete from task_tenan13_grim_mission;
 delete from task_tenan13_grim_commit;
+
+delete from process;
 */
   
 
@@ -65,7 +69,8 @@ delete from task_tenan13_grim_commit;
         createRoles(conn, source),
         createComments(conn, source),
         createKeywords(conn, source),
-        createAccess(conn, source)
+        createAccess(conn, source),
+        createProcess(conn, source)
     ).asTuple().onItem().transform(e -> {
       logger.ok(source);
       
@@ -399,6 +404,73 @@ delete from task_tenan13_grim_commit;
       return batch(conn, GrimMissionLabel.class, sql, props);
   }
  
+ 
+
+ private Uni<?> createProcess(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
+    final var sql =  
+"""
+  INSERT INTO process
+  (
+    id,
+    article_name,
+    created,
+    expires_at,
+    expires_in_seconds,
+    flow_body,
+    flow_name,
+    form_body,
+    form_name,
+    form_tag_name,
+    parent_article_name,
+    questionnaire_id,
+    status,
+    stencil_tag_name,
+    task_id,
+    updated,
+    user_id,
+    workflow_name,
+    wrench_tag_name,
+    anon
+  )
+
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+  ON CONFLICT (id) DO NOTHING
+  RETURNING id
+""";
+    final var props = source.getProcesses().values().stream()
+
+        .map(doc -> {
+          
+          return Tuple.from(Arrays.asList(
+
+            doc.getId(), //id
+            doc.getInput_context_id().orElse(null),  //article_name
+            doc.getCreated(),//created
+            null,//expires_at
+            null,//expires_in_seconds
+            null,//flow_body
+            null,//flow_name
+            null,//form_body
+            null,//form_name
+            null,//form_tag_name
+            doc.getInput_parent_context_id().orElse(null),//parent_article_name
+            doc.getQuestionnaire_id().orElse(null), //questionnaire_id
+            doc.getStatus().orElse(null),//status
+            null, //stencil_tag_name
+            doc.getTask_id().map(e -> String.valueOf(e)).orElse(null), //task_id
+            doc.getUpdated(),//updated
+            doc.getUser_id().orElse(null),//user_id
+            doc.getWorkflow_name(),//workflow_name
+            null,//wrench_tag_name
+            doc.getUser_id().map(userId-> userId.equals(anonUser)).orElse(false)//anon
+              
+              
+          ));
+        })
+        .collect(Collectors.toList());
+     
+      return batch(conn, ProcessEntity.class, sql, props);
+  }
 
   private <T> Uni<RowSet<Row>> batch(
       io.vertx.mutiny.sqlclient.SqlConnection conn,

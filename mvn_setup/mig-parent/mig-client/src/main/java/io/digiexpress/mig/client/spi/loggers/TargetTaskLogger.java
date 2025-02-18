@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
 import io.digiexpress.mig.client.api.SourceTasks;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
@@ -77,7 +78,9 @@ public class TargetTaskLogger {
               "missions inserted", String.valueOf(inserted_count.getOrDefault(GrimMission.class, 0)),
               "assignments inserted", String.valueOf(inserted_count.getOrDefault(GrimAssignment.class, 0)),
               "labels inserted", String.valueOf(inserted_count.getOrDefault(GrimMissionLabel.class, 0)),
-              "remarks inserted", String.valueOf(inserted_count.getOrDefault(GrimRemark.class, 0))
+              "remarks inserted", String.valueOf(inserted_count.getOrDefault(GrimRemark.class, 0)),
+              "processes inserted", String.valueOf(inserted_count.getOrDefault(ProcessEntity.class, 0))
+              
               
           ))
           .build());
