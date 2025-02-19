@@ -29,7 +29,7 @@ export const SiteBackendContext = React.createContext<SiteBackendContextType>({
   voteOnReply: (() => { }) as any
 });
 
-const staleTime = 15000_000;
+const staleTime = 15000;
 const refetchInterval = staleTime;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
