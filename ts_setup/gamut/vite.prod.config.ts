@@ -7,6 +7,8 @@ import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 
+import { intlTsVite } from './gamut-intl-vite-plugin';
+
 
 // https://vitejs.dev/config/
 export default function defineConfig(props: ConfigEnv): UserConfig {
@@ -20,6 +22,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       dts({ rollupTypes: true }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
+      intlTsVite({})
     ],
     build: {
       outDir: 'build',

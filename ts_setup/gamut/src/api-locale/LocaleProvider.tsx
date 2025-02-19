@@ -1,6 +1,7 @@
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { LocaleApi } from './locale-types';
+import locales from '../intl';
 
 
 export const LocaleContext = React.createContext<LocaleApi.LocaleContextType>({} as any);
@@ -32,17 +33,18 @@ export const useLocale = () => {
 }
 
 function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
-  const { en = {} } = options;
-  const { fi = {} } = options;
-  const otherLocales = {...options};
-  delete otherLocales['en'];
-  delete otherLocales['fi'];
+  const merged: LocaleApi.Localizations = {};
 
-  return { 
-    en: {...LocaleApi.en, ...en}, 
-    fi: {...LocaleApi.fi, ...fi}, 
-    ...otherLocales
-  };
+  for (const [code, value] of Object.entries(locales)) {
+    const overrides = options[code] ?? {};
+    merged[code] = { ...value, ...overrides };
+  }
+  for (const [code, value] of Object.entries(options)) {
+    if (!merged[code]) {
+      merged[code] = value;
+    }
+  }
+  return merged;
 }
 
 const getLocale = () => {
