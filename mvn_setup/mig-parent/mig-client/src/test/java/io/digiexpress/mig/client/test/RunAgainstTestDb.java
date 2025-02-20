@@ -37,20 +37,19 @@ public class RunAgainstTestDb {
         .setPassword("password123")
         , 
       new PoolOptions().setMaxSize(10));
-  final String task_tenant = "TASK_TENAN13_";
+
   
   @Test
   public void test() {
     final var client = new MigClientImpl(
-        src_pg_pool, src_pg_pool, 
-        target_dialob_pg_pool, target_task_pg_pool, 
-        task_tenant);
+        src_pg_pool, src_pg_pool, src_pg_pool,
+        target_dialob_pg_pool, target_task_pg_pool);
     
-    // get all tasks
-    final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(1));
+    // convert tasks
+    final var tasks = client.taskQuery().findAll().await().atMost(Duration.ofMinutes(10));
+    client.taskBuilder().build(tasks, "TASK_TENAN13_").await().atMost(Duration.ofMinutes(10));
     
-    /*
-    // get all dialob related data
+    // convert dialob
     final var dialob = client.dialobQuery()
       .includeFromQuestionnaires(
           tasks.getProcesses().values().stream()
@@ -68,11 +67,16 @@ public class RunAgainstTestDb {
           .toList()
       )
       .findAll().await().atMost(Duration.ofMinutes(1));
-    
     client.dialobBuilder().build(dialob).await().atMost(Duration.ofMinutes(10));
-    */
     
-    client.taskBuilder().build(tasks).await().atMost(Duration.ofMinutes(10));
+
+    // convert stencil
+    final var stencil = client.thenaQuary().findAll("nested_11_").await().atMost(Duration.ofMinutes(10));
+    client.stencilBuilder().build(stencil, tasks, "STENCIL_AS12_").await().atMost(Duration.ofMinutes(10));
+    
+    // convert wrench
+    final var wrench = client.thenaQuary().findAll("nested_10_").await().atMost(Duration.ofMinutes(10));
+    client.wrenchBuilder().build(wrench, "WRENCH_ASS11_").await().atMost(Duration.ofMinutes(10));
     
   }
 }

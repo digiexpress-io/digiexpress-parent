@@ -34,14 +34,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
-import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
+import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
@@ -52,8 +51,6 @@ import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
 
-
-@EnableWebSocket
 @EnableWebSecurity 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -69,7 +66,6 @@ import lombok.extern.slf4j.Slf4j;
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
     EveliAutoConfigEnvir.class
-
 })
 public class Application {
   public static void main(String[] args) throws Exception {

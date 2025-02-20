@@ -8,29 +8,29 @@ import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
-import io.digiexpress.mig.client.api.SourceTasks;
+import io.digiexpress.mig.client.api.SourceThena;
+import io.digiexpress.mig.client.api.SourceThena.TreeValueExt;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEventLevel;
-import io.resys.thena.api.entities.grim.GrimAssignment;
-import io.resys.thena.api.entities.grim.GrimCommit;
-import io.resys.thena.api.entities.grim.GrimMission;
-import io.resys.thena.api.entities.grim.GrimMissionLabel;
-import io.resys.thena.api.entities.grim.GrimRemark;
+import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Branch;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.entities.git.Tag;
+import io.resys.thena.api.entities.git.Tree;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class TargetTaskLogger {
+public class TargetThenaLogger {
   private final List<LogEvent> messages = Collections.synchronizedList(new ArrayList<>());
   private final Map<Class<?>, Integer> inserted_count = Collections.synchronizedMap(new HashMap<>());
   
   
   public <T> EntityQueryLogger<T> entityQuery(Class<T> type) {
-    return new EntityQueryLoggerImpl<T>(type, TargetTaskLogger.log) {
+    return new EntityQueryLoggerImpl<T>(type, TargetThenaLogger.log) {
       @Override
       public void close(List<LogEvent> entries) {
         messages.addAll(entries);
@@ -55,7 +55,7 @@ public class TargetTaskLogger {
     log.error("\r\n{}", EntityQueryLogger.generateLog(messages), e);
   }
   
-  public void ok(SourceTasks e) {
+  public void ok(SourceThena e) {
     final var errorsPresent = messages.stream()
         .filter(t -> t.getLevel() == LogEventLevel.ERROR)
         .count();
@@ -74,13 +74,12 @@ public class TargetTaskLogger {
           .level(LogEventLevel.INFO)
           .props(Map.of(
               "text", "successfully inserted conversion data",
-              "commits inserted", String.valueOf(inserted_count.getOrDefault(GrimCommit.class, 0)),
-              "missions inserted", String.valueOf(inserted_count.getOrDefault(GrimMission.class, 0)),
-              "assignments inserted", String.valueOf(inserted_count.getOrDefault(GrimAssignment.class, 0)),
-              "labels inserted", String.valueOf(inserted_count.getOrDefault(GrimMissionLabel.class, 0)),
-              "remarks inserted", String.valueOf(inserted_count.getOrDefault(GrimRemark.class, 0)),
-              "processes inserted", String.valueOf(inserted_count.getOrDefault(ProcessEntity.class, 0))
-              
+              "blobs inserted", String.valueOf(inserted_count.getOrDefault(Blob.class, 0)),
+              "commits inserted", String.valueOf(inserted_count.getOrDefault(Commit.class, 0)),
+              "branches inserted", String.valueOf(inserted_count.getOrDefault(Branch.class, 0)),
+              "tags inserted", String.valueOf(inserted_count.getOrDefault(Tag.class, 0)),
+              "tree values inserted", String.valueOf(inserted_count.getOrDefault(TreeValueExt.class, 0)),
+              "trees inserted", String.valueOf(inserted_count.getOrDefault(Tree.class, 0))
               
           ))
           .build());

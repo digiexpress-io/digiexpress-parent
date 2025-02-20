@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 import { fileURLToPath, URL } from 'url';
+import { intlTsVite } from './gamut-intl-vite-plugin';
 
 // rollup module delegate
 const alias: { find: string, replacement: string }[] = [
@@ -30,6 +31,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           // svgr options
         },
       }),
+      intlTsVite({})
     ],
     build: {
       chunkSizeWarningLimit: 5000,

@@ -1,6 +1,7 @@
 package io.digiexpress.mig.client.spi;
 
 import io.digiexpress.mig.client.api.MigClient;
+import io.digiexpress.mig.client.spi.converters.StencilEntityConverterImpl;
 import lombok.RequiredArgsConstructor;
 
 
@@ -8,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 public class MigClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool src_tasks;
   private final io.vertx.mutiny.pgclient.PgPool src_dialob;
+  private final io.vertx.mutiny.pgclient.PgPool src_thena;
   private final io.vertx.mutiny.pgclient.PgPool target_dialob;
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  
-  private final String taskTenant;
 
   @Override
   public SourceTaskQuery taskQuery() {
@@ -30,6 +30,20 @@ public class MigClientImpl implements MigClient {
 
   @Override
   public TargetTaskBuilder taskBuilder() {
-    return new TargetTaskBuilderImpl(target_tasks, taskTenant);
+    return new TargetTaskBuilderImpl(target_tasks);
+  }
+
+  @Override
+  public SourceThenaQuery thenaQuary() {
+    return new SourceThenaQueryImpl(src_thena);
+  }
+
+  @Override
+  public TargetWrenchBuilder wrenchBuilder() {
+    return new TargetWrenchBuilderImpl(target_tasks);
+  }
+  @Override
+  public TargetStencilBuilder stencilBuilder() {
+    return new TargetStencilBuilderImpl(target_tasks);
   }
 }

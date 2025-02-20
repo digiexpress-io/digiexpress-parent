@@ -2,43 +2,27 @@ package io.digiexpress.mig.client.spi.loggers;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
-import io.digiexpress.mig.client.api.SourceTasks;
+import io.digiexpress.mig.client.api.SourceThena;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEventLevel;
-import io.resys.thena.api.entities.grim.GrimAssignment;
-import io.resys.thena.api.entities.grim.GrimCommit;
-import io.resys.thena.api.entities.grim.GrimMission;
-import io.resys.thena.api.entities.grim.GrimMissionLabel;
-import io.resys.thena.api.entities.grim.GrimRemark;
-import io.vertx.mutiny.sqlclient.Row;
-import io.vertx.mutiny.sqlclient.RowSet;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class TargetTaskLogger {
+public class SourceThenaLogger {
   private final List<LogEvent> messages = Collections.synchronizedList(new ArrayList<>());
-  private final Map<Class<?>, Integer> inserted_count = Collections.synchronizedMap(new HashMap<>());
-  
   
   public <T> EntityQueryLogger<T> entityQuery(Class<T> type) {
-    return new EntityQueryLoggerImpl<T>(type, TargetTaskLogger.log) {
+    return new EntityQueryLoggerImpl<T>(type, SourceThenaLogger.log) {
       @Override
       public void close(List<LogEvent> entries) {
         messages.addAll(entries);
-      }
-      @Override
-      public EntityQueryLogger<T> queryOk(RowSet<Row> e) {
-        inserted_count.put(type, inserted_count.getOrDefault(type, 0) + getTotalEntries(e));
-        return super.queryOk(e);
       }
     };
   }
@@ -55,7 +39,7 @@ public class TargetTaskLogger {
     log.error("\r\n{}", EntityQueryLogger.generateLog(messages), e);
   }
   
-  public void ok(SourceTasks e) {
+  public void ok(SourceThena e) {
     final var errorsPresent = messages.stream()
         .filter(t -> t.getLevel() == LogEventLevel.ERROR)
         .count();
@@ -73,18 +57,19 @@ public class TargetTaskLogger {
       messages.add(LogEvent.builder()
           .level(LogEventLevel.INFO)
           .props(Map.of(
-              "text", "successfully inserted conversion data",
-              "commits inserted", String.valueOf(inserted_count.getOrDefault(GrimCommit.class, 0)),
-              "missions inserted", String.valueOf(inserted_count.getOrDefault(GrimMission.class, 0)),
-              "assignments inserted", String.valueOf(inserted_count.getOrDefault(GrimAssignment.class, 0)),
-              "labels inserted", String.valueOf(inserted_count.getOrDefault(GrimMissionLabel.class, 0)),
-              "remarks inserted", String.valueOf(inserted_count.getOrDefault(GrimRemark.class, 0)),
-              "processes inserted", String.valueOf(inserted_count.getOrDefault(ProcessEntity.class, 0))
-              
+              "text", "successfully retrieved conversion data",
+              "blobs", String.valueOf(e.getBlobs().size()),
+              "branches", String.valueOf(e.getBranches().size()),
+              "commits", String.valueOf(e.getCommits().size()),
+              "tags", String.valueOf(e.getTags().size()),
+              "trees", String.valueOf(e.getTrees().size()),
+              "tree values", String.valueOf(e.getTreeValues().size())
               
           ))
           .build());
       log.info("\r\n{}", EntityQueryLogger.generateLog(messages), e);
     }
   }
+
+
 }

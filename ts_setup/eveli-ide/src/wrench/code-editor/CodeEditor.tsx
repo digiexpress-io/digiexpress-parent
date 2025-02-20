@@ -44,7 +44,7 @@ const CodeEditorState: React.FC<ViewProps> = (props) => {
     setState(editor);
 
     return () => {
-      state?.remove()
+      editor.remove()
     }
   }, []);
 
