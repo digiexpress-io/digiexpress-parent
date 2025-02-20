@@ -60,6 +60,11 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           changeOrigin: false,
           secure: false,
         },
+        '/dialob/': {
+          target: 'http://localhost:9000',
+          changeOrigin: false,
+          secure: false,
+        },
       }
     },
     optimizeDeps: {
