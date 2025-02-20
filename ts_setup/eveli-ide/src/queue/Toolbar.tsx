@@ -1,11 +1,9 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 
-import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
-import * as Burger from '@/burger';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -24,7 +22,6 @@ const StyledToolbarButton = styled(Box)(({ theme }) => ({
 }));
 
 
-
 const StyledToolbar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   display: 'flex',
@@ -37,27 +34,14 @@ const StyledToolbar = styled(Box)(({ theme }) => ({
 
 export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const drawerCtx = Burger.useDrawer();
-  const drawerOpen = drawerCtx.session.drawer;
 
   function handleBacktoTasks() {
     navigate('/ui/tasks');
   }
-
-  const toggleDrawer = () => {
-    drawerCtx.actions.handleDrawerOpen(!drawerOpen);
-  };
-
   return (
-    <>
-      <StyledToolbar>
-        <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
-        <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
-        <StyledToolbarButton onClick={handleBacktoTasks}><HomeOutlinedIcon /></StyledToolbarButton>
-
-      </StyledToolbar>
-    </>
+    <StyledToolbar>
+      <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
+      <StyledToolbarButton onClick={handleBacktoTasks}><HomeOutlinedIcon /></StyledToolbarButton>
+    </StyledToolbar>
   );
 }
-
-

@@ -1,5 +1,4 @@
 export { useApps, AppProvider as Provider } from './context/AppContext';
-export { useDrawer } from './context/drawer/DrawerContext';
 export { useTabs } from './context/tabs/TabsContext';
 export { useSecondary } from './context/secondary/SecondaryContext';
 export { siteTheme } from './theme/siteTheme';

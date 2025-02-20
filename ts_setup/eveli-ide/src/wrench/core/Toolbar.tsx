@@ -3,10 +3,9 @@ import React from 'react';
 import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
-import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -18,42 +17,22 @@ import * as Burger from '@/burger';
 import { Composer } from './context';
 
 
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.explorerItem.main,
-  },
-  "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-  }
-}));
-
-const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.explorerItem.dark,
-    marginRight: "49px"
-  }
-}));
-
-
 
 
 const Toolbar: React.FC<{}> = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const composer = Composer.useComposer();
-  const drawer = Burger.useDrawer();
   const tabs = Burger.useTabs();
   const secondary = Burger.useSecondary();
   const { enqueueSnackbar } = useSnackbar();
   
   const tabActions = tabs.actions;  
-  const drawerOpen = drawer.session.drawer;
   React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
   
 
-  function handleBack() {
-    navigate('/ui/tasks');
+  function handleBacktoTasks() {
+    //navigate('/ui/tasks');
   }
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
@@ -98,36 +77,22 @@ const Toolbar: React.FC<{}> = () => {
     } else if (newValue === 'toolbar.import') {
       tabs.actions.handleTabAdd({ id: 'import', label: 'Import' })
 
-    } else if (newValue === 'toolbar.expand') {
-      drawer.actions.handleDrawerOpen(!drawerOpen)
-    } 
+    }
   };
 
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: "100%", height: "100%", backgroundColor: "explorer.main" }}>
-        <StyledTabs orientation="vertical"
-          onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }}
-          value={secondary.session.secondary}>
-
-          <StyledTab value='toolbar.activities' icon={<DashboardIcon />} />
-          <StyledTab value='toolbar.save'
-            icon={<SaveIcon sx={saveSx} />}
-            disabled={unsavedPages.length === 0}
-            label={unsavedPages.length ? (<Box sx={saveSx}>{unsavedPages.length}</Box>) : undefined} />
-          <StyledTab value='toolbar.search' icon={<SearchOutlinedIcon />} />
-          <StyledTab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
-          <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
-          <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          <StyledTab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} /> 
-
-        </StyledTabs>
-        <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
-
-      </Box>
-    </>
+    <Tabs orientation='vertical' onChange={handleChange} value={secondary.session.secondary}>
+      <Tab value='toolbar.activities' icon={<DashboardIcon />}/>
+      <Tab value='toolbar.save'
+        icon={<SaveIcon sx={saveSx} />}
+        disabled={unsavedPages.length === 0}
+        label={unsavedPages.length ? (<Box sx={saveSx}>{unsavedPages.length}</Box>) : undefined} />
+      <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
+      <Tab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
+      <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
+      <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} /> 
+    </Tabs>
   );
 }
 

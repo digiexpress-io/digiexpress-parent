@@ -41,6 +41,7 @@
     "@material-table/core": "^6.4.4",
     "@mui/icons-material": "^6.1.4",
     "@mui/lab": "6.0.0-beta.12",
+    "@mui/utils": "^6.1.4",
     "@mui/material": "^6.1.4",
     "@mui/styles": "^6.1.4",
     "@mui/system": "^6.1.4",

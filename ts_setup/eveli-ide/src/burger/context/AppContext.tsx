@@ -3,7 +3,6 @@ import React from 'react';
 import AppSessionData from './AppSessionData';
 import { AppReducer, AppReducerDispatch } from './AppSessionReducer';
 
-import { DrawerProvider } from './drawer/DrawerContext';
 import { TabsProvider } from './tabs/TabsContext';
 import { SecondaryProvider } from './secondary/SecondaryContext';
 import { Container } from '../layout';
@@ -20,12 +19,10 @@ const sessionData = new AppSessionData({ active: "" });
 
 
 interface AppProviderProps {
-  drawerOpen?: boolean;
   secondary?: string;
   appId?: BurgerApi.AppId;
   children: BurgerApi.App<any>[];
 }
-
 
 const getAppId = (props: AppProviderProps): BurgerApi.AppId => {
   if (props.appId) {
@@ -84,13 +81,11 @@ const AppProvider: React.FC<AppProviderProps> = (props: AppProviderProps) => {
   const actions = React.useMemo(() => new AppReducerDispatch(dispatch, apps), [dispatch, apps]);
 
   return (<AppContext.Provider value={{ session, actions }}>
-    <DrawerProvider drawerOpen={props.drawerOpen}>
-      <TabsProvider appId={session.active}>
-        <SecondaryProvider appId={session.active} secondary={props.secondary}>
-          <AppInit children={props.children} />
-        </SecondaryProvider>
-      </TabsProvider>
-    </DrawerProvider>
+    <TabsProvider appId={session.active}>
+      <SecondaryProvider appId={session.active} secondary={props.secondary}>
+        <AppInit children={props.children} />
+      </SecondaryProvider>
+    </TabsProvider>
   </AppContext.Provider>);
 };
 

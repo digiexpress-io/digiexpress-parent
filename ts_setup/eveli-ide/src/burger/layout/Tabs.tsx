@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tabs as MuiTabs, Tab as MuiTab, useTheme, Box } from '@mui/material';
+import { Tabs as MuiTabs, Tab as MuiTab, useTheme, Box, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { BurgerApi } from '../BurgerApi';
@@ -23,7 +23,10 @@ const Tabs: React.FC<{}> = () => {
       _event.stopPropagation();
       actions.handleTabClose(newValue);
     };
-    return (<MuiTabs value={active} onChange={handleTabChange} variant="scrollable" scrollButtons="auto"
+    return (
+    
+      <Typography noWrap component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+    <MuiTabs value={active} onChange={handleTabChange} variant="scrollable" scrollButtons="auto"
       sx={{
         "& .MuiTabs-indicator": {
           backgroundColor: theme.palette.uiElements.main,
@@ -55,6 +58,7 @@ const Tabs: React.FC<{}> = () => {
           />))
       }
     </MuiTabs >
+    </Typography>
     )
   }, [tabs, active, theme, actions]);
 }

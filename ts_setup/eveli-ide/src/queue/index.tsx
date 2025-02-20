@@ -24,7 +24,7 @@ const composer: BurgerApi.App<Composer.ContextType> = {
 }
 
 const StartComposer: React.FC<{}> = () => {
-  return (<Burger.Provider children={[composer]} drawerOpen />)
+  return (<Burger.Provider children={[composer]} />)
 }
 
 interface QueueComposerProps {

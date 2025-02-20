@@ -98,7 +98,7 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   return (
     <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
       <TaskSessionContext>
-        <Burger.Provider children={[frontdeskApp]} drawerOpen />
+        <Burger.Provider children={[frontdeskApp]} />
       </TaskSessionContext>
     </IntlProvider>
 

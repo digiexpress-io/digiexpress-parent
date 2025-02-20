@@ -35,7 +35,7 @@ const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) =>
     /* @ts-ignore */
     <SnackbarProvider maxSnack={3}>
       <Composer.Provider service={service} >
-        <Burger.Provider children={[composer]} secondary="toolbar.articles" drawerOpen />
+        <Burger.Provider children={[composer]} secondary="toolbar.articles" />
       </Composer.Provider>
     </SnackbarProvider>
   );

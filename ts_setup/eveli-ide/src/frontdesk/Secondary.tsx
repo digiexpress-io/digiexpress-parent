@@ -112,7 +112,6 @@ export const Secondary: React.FC = () => {
   const intl = useIntl();
 
   return (<>
-    <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
       <ExplorerTitleBar>
         <Typography sx={{ color: 'white', fontStyle: 'italic', fontFamily: 'serif' }}>My Logo</Typography>
         <Typography>{intl.formatMessage({ id: 'explorer.title' })}</Typography>
@@ -121,7 +120,6 @@ export const Secondary: React.FC = () => {
         <Explorer />
       </Box>
       <ExplorerSecondaryButtons />
-    </Box>
   </>
   )
 }
