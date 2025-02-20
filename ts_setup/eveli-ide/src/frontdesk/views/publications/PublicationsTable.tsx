@@ -67,17 +67,8 @@ const DeploymentInfo: React.FC<Publication> = ({description}) => {
 
 
 
-function parseErrors(errors: any): string[] {
-  if(!errors) {
-    return [];
-  }
-
-  const result = errors['map'];
-  if(!result) {
-    return [];
-  }
-
-  return Object.values(result);
+function parseErrors(errors: any): any[] {
+  return  errors?.map?.errors || [];
 }
 
 const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
@@ -148,7 +139,7 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
               <Button disabled={status === 'DEPLOYED'} variant='contained' endIcon={<SendIcon />} onClick={handleDeploy}>{intl.formatMessage({ id: 'publications.deploy' })}</Button>
               </>)}
 
-              {parseErrors(errors).map((e, key) => (<div key={key}>{e}</div>))}
+              {parseErrors(errors).map((e, key) => (<div key={key}>{JSON.stringify(e)}</div>))}
           </Stack>
         </DialogContent>
         <DialogActions>
