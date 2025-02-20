@@ -158,7 +158,7 @@ export const PublicationsTable: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: assetReleases, refresh: refreshAssetReleases } = useFetch<Publication[]>(`${serviceUrl}worker/rest/api/assets/publications`);
+  const { response: assetReleases, refresh: refreshAssetReleases, isLoading } = useFetch<Publication[]>(`${serviceUrl}worker/rest/api/assets/publications`);
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
@@ -265,7 +265,7 @@ export const PublicationsTable: React.FC = () => {
           }
         ]}
 
-        isLoading={false}
+        isLoading={isLoading}
         data={assetReleases || []}
       />
       <NewPublicationDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={() => refreshAssetReleases()} />

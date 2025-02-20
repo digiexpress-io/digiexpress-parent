@@ -11,7 +11,8 @@ export function useFetch<R>(url: string, options?: CFetchOptions & HookOptions):
   response?: R,
   error?: Error,
   refresh: () => void,
-  code?: number
+  code?: number,
+  isLoading: boolean
 } {
   const [response, setResponse] = useState<R>();
   const [error, setError] = useState<Error>();
@@ -33,6 +34,7 @@ export function useFetch<R>(url: string, options?: CFetchOptions & HookOptions):
 
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         let res = !!optionsRef.current?.noRetry ? await cFetch(url, optionsRef.current) : await session.cFetch(url, optionsRef.current);
         const json = await res.json();
         if(didCancel) return;
@@ -43,8 +45,10 @@ export function useFetch<R>(url: string, options?: CFetchOptions & HookOptions):
         } else {
           setError(new Error(json));
         }
+        setIsLoading(false)
       } catch (error) {
         console.error("error in fetch", error)
+        setIsLoading(false);
         if(didCancel) return;
         setError(error as Error);
       }
@@ -69,5 +73,5 @@ export function useFetch<R>(url: string, options?: CFetchOptions & HookOptions):
     }
   }, [poll]);
 
-  return { response, error, refresh, code };
+  return { response, error, refresh, code, isLoading };
 };
