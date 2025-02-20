@@ -92,7 +92,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       .sort((a,b) => a.value.localeCompare(b.value)), [allDialobTags]);
   
     const formTags = React.useMemo(() => allDialobTags
-      .filter(({formName}) => formName)
+      .filter((tag) => tag.formName === formName)
       .map(({tagName}) => ({id: tagName, value: tagName}))
       .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
     
