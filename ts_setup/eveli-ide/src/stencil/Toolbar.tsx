@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from 'react-intl';
-//import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import * as Burger from '@/burger';
 import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
@@ -41,7 +41,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
@@ -62,8 +62,8 @@ const Toolbar: React.FC<{}> = () => {
 
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
-  function handleBacktoTasks() {
-    //navigate('/ui/tasks');
+  function handleBack() {
+    navigate('/');
   }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -125,7 +125,7 @@ const Toolbar: React.FC<{}> = () => {
           <StyledTab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
           <StyledTab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
           <StyledTab value='toolbar.expand' icon={<FlipToFrontOutlinedIcon />} />
-          <StyledTab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} />
+          <StyledTab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} />
 
         </StyledTabs>
         <Box flexGrow={1} sx={{ borderRight: 1, borderColor: 'explorerItem.dark' }} />
