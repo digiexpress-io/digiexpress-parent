@@ -77,7 +77,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
     dialobTags?.forEach(tag => {
       result.set(tag.formName, tag.formLabel);
     })
-    return Array.from(result);
+    return Array.from(result).sort((a,b)=>a[1].localeCompare(b[1]));
   }, [dialobTags]);
 
   const requiredValidator = (value: any) => !value ? intl.formatMessage(messages.requiredError) : undefined;
