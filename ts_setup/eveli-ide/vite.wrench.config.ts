@@ -49,10 +49,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       // react redux error
       'process.env.IS_SSR': undefined,
       'process.env.REACT_APP_LOCAL_DEV_MODE': true + '',
-      'process.env.REACT_APP_START_MODE': '"wrench"',
+      'process.env.REACT_APP_START_MODE': '"wrench"'
 
-      'process.env.VITE_IAP_REFRESH': false + '',
-      'process.env.VITE_HOST_URL': '"http://localhost:3000"'
     },
   }
 }

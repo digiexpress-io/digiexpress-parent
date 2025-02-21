@@ -36,13 +36,6 @@ const StyledToolbar = styled(Box)(({ theme }) => ({
 export const Toolbar: React.FC<{}> = () => {
   const drawerCtx = Burger.useDrawer();
   const drawerOpen = drawerCtx.session.drawer;
-  //const context = React.useContext(FeedbackContext);
-
-  /*
-  const openFeedback = () => {
-    context.open();
-  }
-  */
   const toggleDrawer = () => {
     drawerCtx.actions.handleDrawerOpen(!drawerOpen);
   };
@@ -52,10 +45,7 @@ export const Toolbar: React.FC<{}> = () => {
       <StyledToolbar>
         <StyledToolbarButton onClick={toggleDrawer}><FlipToFrontOutlinedIcon /></StyledToolbarButton>
         <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
-        {/*TODO Feedback still needed??  */}
-        { /*<StyledToolbarButton onClick={openFeedback}><FeedbackOutlinedIcon /></StyledToolbarButton> */}
         <LocaleSelect />
-        {/*userInfo.isAuthenticated() && (ENV_TYPE !== 'prod' || userInfo.hasRole(...FEEDBACK_ROLES)) && */}
       </StyledToolbar>
     </>
   );

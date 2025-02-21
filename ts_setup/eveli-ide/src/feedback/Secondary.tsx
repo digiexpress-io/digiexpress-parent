@@ -23,11 +23,6 @@ const menuItems: MenuItemProps[] = [
 
 ]
 
-// --------- Frame.tsx ----------
-const HOST_URL = process.env.VITE_HOST_URL || 'http://localhost:3000';
-
-
-
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
 

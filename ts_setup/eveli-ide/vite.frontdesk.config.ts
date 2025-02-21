@@ -81,11 +81,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       // react redux error
       'process.env.IS_SSR': undefined,
       'process.env.REACT_APP_LOCAL_DEV_MODE': true + '',
-      'process.env.REACT_APP_START_MODE': '"frontdesk"',
+      'process.env.REACT_APP_START_MODE': '"frontdesk"'
 
-      'process.env.VITE_IAP_REFRESH': true + '',
-      'process.env.VITE_HOST_URL': '"http://localhost:3000"',
-      'process.env.VITE_ENV_TYPE': '"test"'
     },
   }
 }
