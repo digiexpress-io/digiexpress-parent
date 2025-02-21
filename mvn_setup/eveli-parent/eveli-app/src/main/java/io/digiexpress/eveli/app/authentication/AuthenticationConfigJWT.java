@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -48,6 +49,10 @@ import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
 import jakarta.inject.Inject;
 
 @Configuration
+@EnableConfigurationProperties( value = {
+    EveliPropsJwt.class, 
+    EveliPropsCrm.class
+})
 @Profile("jwt")
 public class AuthenticationConfigJWT {
   @Inject
