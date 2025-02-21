@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class DialobService {
-  private final RestTemplate forms;
+  private final RestTemplate api;
   private final RestTemplate sessions;
-  private final RestTemplate questionnaires;
 }

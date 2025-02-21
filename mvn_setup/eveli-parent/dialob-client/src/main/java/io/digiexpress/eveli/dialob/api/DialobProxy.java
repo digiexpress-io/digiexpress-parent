@@ -33,8 +33,9 @@ public interface DialobProxy {
   ResponseEntity<String> sessionPost(String sessionId, String body);
   
   
-  // path = anything that comes after forms/api
+  // path = anything that comes after /api/forms
   ResponseEntity<String> formRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers);
+  ResponseEntity<String> tagsRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers);
 
 
 }

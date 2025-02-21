@@ -123,7 +123,7 @@ public class DialobClientImpl implements DialobClient {
   }
   @Override
   public Questionnaire getQuestionnaireById(String questionnaireId) {
-    return dialobService.getQuestionnaires().getForObject("/" + questionnaireId, Questionnaire.class);
+    return dialobService.getApi().getForObject("/questionnaires/" + questionnaireId, Questionnaire.class);
   }
   @Override
   public Dialob getDialobById(String questionnaireId) {
@@ -177,30 +177,30 @@ public class DialobClientImpl implements DialobClient {
   }
   @Override
   public Form getFormById(String formId) {
-    return dialobService.getForms().getForObject("/" + formId, Form.class);
+    return dialobService.getApi().getForObject("/forms/" + formId, Form.class);
   }
   @Override
   public Form getFormByNameAndTag(String formName, String formTag) {
-    final var uri = "/" + formName + "/tags/" + formTag;
-    final FormTag tag = dialobService.getForms().getForObject(uri, FormTag.class);
+    final var uri = "/forms/" + formName + "/tags/" + formTag;
+    final FormTag tag = dialobService.getApi().getForObject(uri, FormTag.class);
     String taggedFormId = tag.getFormId();
-    return dialobService.getForms().getForObject("/" + taggedFormId, Form.class);
+    return dialobService.getApi().getForObject("/forms/" + taggedFormId, Form.class);
   }
   @Override
   public FormTag getFormTag(String formName, String formTag) {
-    final var uri = "/" + formName + "/tags/" + formTag;
-    return dialobService.getForms().getForObject(uri, FormTag.class);
+    final var uri = "/forms/" + formName + "/tags/" + formTag;
+    return dialobService.getApi().getForObject(uri, FormTag.class);
   }
   @Override
   public List<FormTag> findAllFormTags(String formName) {
-    final var uri = "/" + formName + "/tags";
-    final var tags = dialobService.getForms().getForObject(uri, FormTag[].class);
+    final var uri = "/forms/" + formName + "/tags";
+    final var tags = dialobService.getApi().getForObject(uri, FormTag[].class);
     return Arrays.asList(tags);
   }
   @Override
   public Optional<Form> findOneFormById(String formId) {
     try {
-      return Optional.ofNullable(dialobService.getForms().getForObject("/" + formId, Form.class));
+      return Optional.ofNullable(dialobService.getApi().getForObject("/forms/" + formId, Form.class));
     } catch(org.springframework.web.client.HttpClientErrorException.NotFound e) {
       return Optional.empty();
     }

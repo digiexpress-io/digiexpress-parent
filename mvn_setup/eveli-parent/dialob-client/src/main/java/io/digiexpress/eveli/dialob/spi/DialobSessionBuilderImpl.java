@@ -83,7 +83,7 @@ public class DialobSessionBuilderImpl implements DialobClient.DialobSessionBuild
     
     final HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers());
     try {
-      ResponseEntity<IdAndRevision> response = dialobService.getQuestionnaires().exchange("", HttpMethod.POST, requestEntity, IdAndRevision.class);
+      ResponseEntity<IdAndRevision> response = dialobService.getApi().exchange("/questionnaires", HttpMethod.POST, requestEntity, IdAndRevision.class);
       DialobAssert.isTrue(response.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + response.getStatusCode() + " but expecting 201!");
       return response.getBody();
     } catch (Exception e) {

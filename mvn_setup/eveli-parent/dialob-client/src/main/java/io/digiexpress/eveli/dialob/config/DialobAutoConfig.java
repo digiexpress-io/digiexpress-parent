@@ -65,13 +65,8 @@ public class DialobAutoConfig {
     
     final var interceptors = Collections.singletonList(interceptor);
     
-    final var forms = new RestTemplateBuilder()
-        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api/forms"))
-        .additionalInterceptors(interceptors)
-        .build();
-
-    final var questionnaires = new RestTemplateBuilder()
-        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api/questionnaires"))
+    final var api = new RestTemplateBuilder()
+        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api"))
         .additionalInterceptors(interceptors)
         .build();
 
@@ -80,7 +75,7 @@ public class DialobAutoConfig {
       .additionalInterceptors(interceptors)
       .build();
   
-    return new DialobService(forms, sessions, questionnaires);
+    return new DialobService(api, sessions);
   }
   
   @Bean 

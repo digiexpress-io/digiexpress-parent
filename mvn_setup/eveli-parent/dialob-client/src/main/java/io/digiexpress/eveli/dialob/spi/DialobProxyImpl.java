@@ -70,7 +70,19 @@ public class DialobProxyImpl implements DialobProxy {
         entry.getKey().equals(HttpHeaderNames.ACCEPT.toString())
       )
       .forEach((entry) -> reqHeaders.put(entry.getKey(), Collections.singletonList(entry.getValue())));
-    return dialobService.getForms().exchange(path, method, new HttpEntity<>(body, reqHeaders), String.class);
+    return dialobService.getApi().exchange("/forms" + path, method, new HttpEntity<>(body, reqHeaders), String.class);
+  }
+
+  @Override
+  public ResponseEntity<String> tagsRequest(String path, String query, HttpMethod method, String body, Map<String, String> headers) {
+    final var reqHeaders = new HttpHeaders();
+    headers.entrySet().stream()
+    .filter(entry ->
+    entry.getKey().equals(HttpHeaderNames.CONTENT_TYPE.toString()) ||
+    entry.getKey().equals(HttpHeaderNames.ACCEPT.toString())
+        )
+    .forEach((entry) -> reqHeaders.put(entry.getKey(), Collections.singletonList(entry.getValue())));
+    return dialobService.getApi().exchange("/tags"+ path, method, new HttpEntity<>(body, reqHeaders), String.class);
   }
 
   static boolean invalidSessionId(String sessionId) {
