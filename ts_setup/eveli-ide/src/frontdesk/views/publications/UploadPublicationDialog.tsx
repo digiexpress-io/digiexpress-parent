@@ -69,7 +69,7 @@ export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit
         </DialogContent>
         <DialogActions>
           <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
-          <Burger.PrimaryButton disabled={!file} onClick={handleSubmit} label='button.accept' />
+          <Button variant='contained' disabled={!file} onClick={handleSubmit} label='button.accept' />
         </DialogActions>
       </Dialog>
   );

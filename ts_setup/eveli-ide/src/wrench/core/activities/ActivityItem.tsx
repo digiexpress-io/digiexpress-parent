@@ -40,7 +40,7 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
       <Box display="flex">
         {props.data.buttonViewAll && props.data.onView ? <Burger.SecondaryButton onClick={props.data.onView} label={props.data.buttonViewAll} /> : <Box />}
         {props.data.buttonTertiary && props.data.onTertiary ? <Burger.SecondaryButton label={props.data.buttonTertiary} onClick={props.data.onTertiary} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
-        <Burger.PrimaryButton onClick={props.onCreate} label={props.data.buttonCreate} />
+        <Button variant='contained' onClick={props.onCreate} label={props.data.buttonCreate} />
       </Box>
     </CardActions>
   </Card>

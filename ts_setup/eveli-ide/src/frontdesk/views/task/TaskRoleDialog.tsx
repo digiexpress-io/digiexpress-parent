@@ -69,7 +69,7 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({ assignedRoles, g
       </DialogContent>
       <DialogActions>
         <Burger.SecondaryButton onClick={closeDialog} label='button.cancel' />
-        <Burger.PrimaryButton onClick={() => acceptDialog(roles)} label='button.accept' />
+        <Button variant='contained' onClick={() => acceptDialog(roles)} label='button.accept' />
       </DialogActions>
     </Dialog>
   )

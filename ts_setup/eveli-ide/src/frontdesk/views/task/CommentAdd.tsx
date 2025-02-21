@@ -37,7 +37,7 @@ export const CommentAdd: React.FC<CommentAddProps> = (props) => {
       </Grid2>
       <Grid2 size={{ xs: 12 }} sx={{ margin: 'auto' }}>
         <Stack direction='row' spacing={2}>
-          <Burger.PrimaryButton onClick={send} disabled={!inputValue} label={'comment.store'} />
+          <Button variant='contained' onClick={send} disabled={!inputValue} label={'comment.store'} />
           <Burger.SecondaryButton onClick={props.onCancel} label='taskButton.cancel' />
         </Stack>
       </Grid2>

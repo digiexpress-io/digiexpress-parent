@@ -295,7 +295,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
 
   const actionButton = () => {
     if (isLatest) {
-      return <Burger.PrimaryButton label='releases.button.release' onClick={() => setReleaseComposer(true)} />
+      return <Button variant='contained' label='releases.button.release' onClick={() => setReleaseComposer(true)} />
     } else if (isDefault) {
       return <Burger.SecondaryButton label='releases.button.checkout' onClick={() => handleCheckout("default")} />
     } else {
@@ -344,7 +344,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
           <TableRow>
             <TableCell />
             <TableCell colSpan={5}>
-              <Burger.PrimaryButton label={'releases.button.branch'} onClick={() => handleCreateBranch(release.body.name, release.id)} />
+              <Button variant='contained' label={'releases.button.branch'} onClick={() => handleCreateBranch(release.body.name, release.id)} />
               <Burger.SecondaryButton label={'releases.button.details'} onClick={() => setDetailsDialogOpen(true)} />
               {detailsDialogOpen &&
                 <Burger.Dialog

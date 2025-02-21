@@ -160,7 +160,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
                 color: "uiElements.main",
                 alignSelf: 'center',
               }} /> : null}
-          <Burger.PrimaryButton onClick={props.onCreate} label={props.data.buttonCreate} />
+          <Button variant='contained' onClick={props.onCreate} label={props.data.buttonCreate} />
         </Box>
       </CardActions>
     </Card>

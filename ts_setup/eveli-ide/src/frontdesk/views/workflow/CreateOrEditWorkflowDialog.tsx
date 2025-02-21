@@ -147,7 +147,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
                 </DialogContent>
                 <DialogActions>
                   <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
-                  <Burger.PrimaryButton onClick={submitForm} disabled={isSubmitting || !isValid} label='button.accept' />
+                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid} label='button.accept' />
                 </DialogActions>
               </Form>
             )

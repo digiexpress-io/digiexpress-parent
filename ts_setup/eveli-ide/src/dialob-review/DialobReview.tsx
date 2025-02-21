@@ -1,10 +1,9 @@
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import { GFormReview, DialobProvider, DialobApi } from '@dxs-ts/gamut';
-import * as Burger from '@/burger';
 
 
 import { useConfig } from '../frontdesk/context/ConfigContext';
@@ -46,7 +45,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
           </DialogContent>
 
           <DialogActions>
-            <Burger.PrimaryButton onClick={props.onClose} label='button.close' />
+            <Button variant='contained' onClick={props.onClose} label='button.close' />
           </DialogActions>
         </Dialog>
       </DialobProvider>

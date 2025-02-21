@@ -8,7 +8,6 @@ import BuildIcon from '@mui/icons-material/Build';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -17,20 +16,13 @@ import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useConfig } from './context/ConfigContext';
-import { useUserInfo } from './context/UserContext';
-
 import { MenuItem, MenuItemProps } from './explorer';
 import { useIntl } from 'react-intl';
-
-import * as Burger from '@/burger';
-
 
 
 const iconSize: SxProps = {
   fontSize: '13pt'
 }
-
 
 const menuItems: MenuItemProps[] = [
   { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
@@ -44,24 +36,6 @@ const menuItems: MenuItemProps[] = [
   { id: 'menu.queues', to: '/queues', icon: <CloudQueueIcon sx={iconSize} /> },
   { id: 'menu.publications', to: '/ui/publications', icon: <BeenhereIcon sx={iconSize} /> },
 ]
-
-// --------- Frame.tsx ----------
-
-const ExplorerSecondaryButtons: React.FC = () => {
-  const config = useConfig();
-  const userInfo = useUserInfo();
-  const label = userInfo.isAuthenticated() ? 'explorer.logout' : 'explorer.login';
-  const location = userInfo.isAuthenticated() ? config.logoutUrl || '/logout' : config.loginUrl || '/oauth2/authorization/oidcprovider';
-  return (
-    <Box display='flex' marginTop='auto' justifyContent='center'>
-      <Burger.PrimaryButton label={label}
-        sx={{ width: 350, position: 'fixed', bottom: 0, marginBottom: 3 }}
-        onClick={() => window.location.href = location}
-      />
-    </Box>
-
-  )
-}
 
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -119,7 +93,6 @@ export const Secondary: React.FC = () => {
       <Box display="flex" flexDirection='column' flexGrow={1}>
         <Explorer />
       </Box>
-      <ExplorerSecondaryButtons />
   </>
   )
 }

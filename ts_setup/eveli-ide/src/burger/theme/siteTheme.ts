@@ -1,4 +1,4 @@
-import { createTheme, PaletteOptions, Theme } from "@mui/material/styles";
+import { createTheme, PaletteOptions, Theme, alpha, darken } from "@mui/material/styles";
 import {} from "@mui/styles";
 declare module 'react' {
   interface CSSProperties {
@@ -270,16 +270,47 @@ const siteTheme = createTheme({
     },
 
     MuiButton: {
-      styleOverrides: {
-        root: {
-          fontVariant: 'body2',
-          borderRadius: 0,
-          textTransform: 'capitalize',
-          borderWidth: '2px solid !important',
-        }
+
+
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+  
+        })
       },
+
+      variants: [
+        {
+          props: { variant: 'contained' },
+          style: ({ theme }) => ({
+            fontVariant: 'body2',
+            textTransform: 'capitalize',
+            borderWidth: '2px solid !important',
+            borderRadius: theme.spacing(1),
+            fontWeight: 'bold',
+            backgroundColor: theme.palette.uiElements.main,
+            '&:hover': {
+              backgroundColor: darken(theme.palette.uiElements.main, 0.2),
+            },
+          }),
+        },
+        {
+          props: { variant: 'text' },
+          style: ({ theme }) => ({
+            borderRadius: theme.spacing(1),
+            borderWidth: 0,
+            fontWeight: 'bold',
+            color: theme.palette.uiElements.main,
+            textTransform: 'capitalize',
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+              border: 'none',
+            },
+          }),
+        },
+
+      ],
       defaultProps: {
-        variant: 'outlined',
+        variant: 'text',
       }
     },
 

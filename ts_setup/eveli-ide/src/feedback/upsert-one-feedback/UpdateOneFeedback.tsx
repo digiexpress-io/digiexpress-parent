@@ -90,7 +90,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleDelete} label='button.delete' />
-        <Burger.PrimaryButton onClick={handlePublish} label='button.update' />
+        <Button variant='contained' onClick={handlePublish} label='button.update' />
       </Box>
     </div>
   )

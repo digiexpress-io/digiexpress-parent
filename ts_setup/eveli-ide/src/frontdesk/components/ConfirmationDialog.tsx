@@ -40,7 +40,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
         <Burger.SecondaryButton onClick={handleCancel}
           {...cancelOptions} label={cancel || 'button.cancel'} />
         {/* @ts-ignore */}
-        <Burger.PrimaryButton onClick={handleAccept}
+        <Button variant='contained' onClick={handleAccept}
           {...acceptOptions} label={accept || 'button.accept'} />
       </DialogActions>
     </Dialog>

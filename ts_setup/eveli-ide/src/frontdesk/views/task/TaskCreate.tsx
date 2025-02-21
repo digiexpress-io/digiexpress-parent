@@ -587,7 +587,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         </fieldset>
 
                       </Box>
-                      <Burger.PrimaryButton onClick={() => { this.openDialog() }} label='button.editRoles' />
+                      <Button variant='contained' onClick={() => { this.openDialog() }} label='button.editRoles' />
 
                     </Grid2>
                   }
@@ -680,7 +680,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <FeedbackButton taskId={editTask.id} />
                       </Box>
                     )}
-                    {!readonly && <Burger.PrimaryButton disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label='taskButton.accept' />}
+                    {!readonly && <Button variant='contained' disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label='taskButton.accept' />}
                   </Stack>
                 </Paper>
               </Box>

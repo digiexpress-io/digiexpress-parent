@@ -44,7 +44,7 @@ export const EditNumber: React.FC<{ builder: NumberBuilder, onChange: (value: st
     return <Box component="form" noValidate autoComplete="off">
       <Box display="flex" sx={{ pb: 1 }}>
         <Box flexGrow={1} />
-        <Burger.PrimaryButton
+        <Button variant='contained'
           label="decisions.cells.newvalue.number.comparisonToRange"
           onClick={() => handleComparisonTypeChange('range')} />
       </Box>

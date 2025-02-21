@@ -114,7 +114,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
             )}
           </RadioGroup>
           <Box display='flex' justifyContent='center' mt={2}>
-            <Burger.PrimaryButton onClick={handleConfirm} disabled={!radioValue} label="button.accept" />
+            <Button variant='contained' onClick={handleConfirm} disabled={!radioValue} label="button.accept" />
           </Box>
         </Box>
       </Popover>

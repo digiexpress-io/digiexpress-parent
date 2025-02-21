@@ -245,13 +245,13 @@ const DebugView: React.FC<{}> = ({ }) => {
       <Table stickyHeader size="small">
         <DebugHeader>
           {ast ?
-            (<Burger.PrimaryButton label={`${ast?.bodyType} - ${ast?.name}`} onClick={() => setOption('SELECT_ASSET')} />) :
-            (<Burger.PrimaryButton label="debug.toolbar.noAsset" onClick={() => setOption('SELECT_ASSET')} />)
+            (<Button variant='contained' label={`${ast?.bodyType} - ${ast?.name}`} onClick={() => setOption('SELECT_ASSET')} />) :
+            (<Button variant='contained' label="debug.toolbar.noAsset" onClick={() => setOption('SELECT_ASSET')} />)
           }
-          <Burger.PrimaryButton disabled={selected ? false : true} label="debug.toolbar.openAsset" onClick={() => entity && nav.handleInTab({ article: entity })} sx={{ ml: 1 }} />
-          <Burger.PrimaryButton label="debug.toolbar.options" onClick={() => setOption('DRAWER')} sx={{ ml: 1 }} />
-          <Burger.PrimaryButton disabled={selected ? false : true} label="debug.toolbar.execute" onClick={() => handleExecute()} sx={{ ml: 1 }} />
-          {inputType === 'CSV' && debug?.debug?.bodyCsv ? <Burger.PrimaryButton disabled={selected ? false : true} label="debug.toolbar.download" onClick={() => setDialogShow(true)} sx={{ ml: 1 }} /> : null}
+          <Button variant='contained' disabled={selected ? false : true} label="debug.toolbar.openAsset" onClick={() => entity && nav.handleInTab({ article: entity })} sx={{ ml: 1 }} />
+          <Button variant='contained' label="debug.toolbar.options" onClick={() => setOption('DRAWER')} sx={{ ml: 1 }} />
+          <Button variant='contained' disabled={selected ? false : true} label="debug.toolbar.execute" onClick={() => handleExecute()} sx={{ ml: 1 }} />
+          {inputType === 'CSV' && debug?.debug?.bodyCsv ? <Button variant='contained' disabled={selected ? false : true} label="debug.toolbar.download" onClick={() => setDialogShow(true)} sx={{ ml: 1 }} /> : null}
         </DebugHeader>
 
         <TableBody>

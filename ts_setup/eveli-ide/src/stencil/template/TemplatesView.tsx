@@ -41,7 +41,7 @@ const TemplatesView: React.FC<{}> = () => {
           <Box flexGrow={1} />
           <Box>
             <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-            <Burger.PrimaryButton label="button.create" onClick={() => setTemplateComposer(true)} />
+            <Button variant='contained' label="button.create" onClick={() => setTemplateComposer(true)} />
           </Box>
         </Box>
 

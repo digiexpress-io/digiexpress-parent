@@ -37,7 +37,7 @@ const ReleasesView: React.FC<{}> = () => {
           <Box>
             <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
             <Burger.SecondaryButton label="button.releasegraph" onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }} />
-            <Burger.PrimaryButton label="button.create" onClick={() => setReleaseComposer(true)} />
+            <Button variant='contained' label="button.create" onClick={() => setReleaseComposer(true)} />
           </Box>
         </Box>
 

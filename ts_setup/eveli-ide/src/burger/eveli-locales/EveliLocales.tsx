@@ -53,12 +53,14 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
 
   return (
     <Root ownerState={ownerState} className={classes.root}>
+      
       <Button onClick={anchorOnClick}
         variant='text'
         startIcon={startIcon}
         className={classes.selectedLocale}>
         <FormattedMessage id={`locale.${value}`} />
       </Button>
+
       <Popover {...anchorProps}>
         <List disablePadding>
           {locales.map((locale) => (

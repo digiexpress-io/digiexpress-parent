@@ -93,7 +93,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
       </div>
       <Box display='flex' gap={1}>
         <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />
-        <Burger.PrimaryButton onClick={handlePublish} label='button.publish' disabled={!reply} />
+        <Button variant='contained' onClick={handlePublish} label='button.publish' disabled={!reply} />
       </Box>
     </>
   )
