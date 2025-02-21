@@ -41,7 +41,6 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='decisions.delete.title'
     submit={{
       title: "buttons.delete",
@@ -146,7 +145,6 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
       <Burger.Dialog open={true}
         onClose={handleDialogClose}
         children={editor}
-        backgroundColor="uiElements.main"
         title='decisions.composer.copyTitle'
         submit={{
           title: "buttons.copy",

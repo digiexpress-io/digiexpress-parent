@@ -21,7 +21,7 @@ const NameDescHitPolicyEdit: React.FC<{
   const [hitpolicy, setHitpolicy] = React.useState<string>(decision.hitPolicy);
 
 
-  return (<Burger.Dialog title="decisions.toolbar.nameAndHitpolicy" open={true} onClose={onClose} backgroundColor="uiElements.main"
+  return (<Burger.Dialog title="decisions.toolbar.nameAndHitpolicy" open={true} onClose={onClose}
     submit={{
       title: "buttons.apply",
       disabled: false,

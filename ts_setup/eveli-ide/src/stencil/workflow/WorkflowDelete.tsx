@@ -28,7 +28,6 @@ const WorkflowDelete: React.FC<WorkflowDeleteProps> = ({ workflow, onClose }) =>
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="services.delete"
       submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
 

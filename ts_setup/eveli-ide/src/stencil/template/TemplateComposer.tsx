@@ -40,7 +40,6 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
   return (
     <Burger.Dialog open={true} onClose={onClose}
       title={"template.create"}
-      backgroundColor={"uiElements.main"}
       submit={{ title: "button.add", disabled: !name || !content, onClick: handleCreate }}
     >
 

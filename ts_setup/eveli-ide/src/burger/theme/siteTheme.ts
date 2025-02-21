@@ -242,6 +242,42 @@ const siteTheme = createTheme({
       }
     },
 
+    MuiDialogTitle: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => {
+
+
+          return {
+            color: theme.palette.secondary.contrastText,
+            fontWeight: 'bold',
+            borderBottom: '1px solid gray',
+            mb: 2, 
+            backgroundColor: alpha(theme.palette.uiElements.main, 0.9)
+          }
+        }
+      }
+    },
+
+    MuiTextField: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+          marginTop: theme.spacing(1),
+          color: theme.palette.primary.contrastText,
+          backgroundColor: theme.palette.background.paper,
+          '& .MuiInputBase-input': {
+            padding: theme.spacing(2),
+            color: ownerState.value ? theme.palette.text.primary : theme.palette.text.secondary,
+          },
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor: theme.palette.uiElements.main,
+            },
+          },
+        })
+      },
+    },
+
+
     MuiListItemText: {
       styleOverrides: {
         root: {
@@ -269,6 +305,51 @@ const siteTheme = createTheme({
       }
     },
 
+    MuiFormControl: {
+      variants: [
+        {
+          props: { variant: 'outlined' },
+          style: ({ theme }) => ({
+            marginTop: theme.spacing(2),
+            color: theme.palette.uiElements.main,
+            backgroundColor: theme.palette.background.paper,
+            '& .MuiOutlinedInput-root': {
+              '&.Mui-focused fieldset': {
+                borderColor: theme.palette.uiElements.main,
+              },
+            }
+          }), 
+        }
+      ]
+    },
+
+    MuiRadio: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+          marginLeft: theme.spacing(1.5),
+          color: theme.palette.uiElements.main,
+          '&.Mui-checked': {
+            color: theme.palette.uiElements.main,
+          }
+        })
+      },
+    },
+
+    MuiSwitch: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+          '& .MuiSwitch-switchBase.Mui-checked': {
+            color: theme.palette.uiElements.main,
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+            },
+          },
+          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: alpha(theme.palette.uiElements.main, 0.5),
+          },
+        })
+      },
+    },
     MuiCheckbox: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({

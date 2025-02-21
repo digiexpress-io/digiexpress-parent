@@ -4,18 +4,6 @@ import { FormattedMessage } from 'react-intl';
 
 
 
-const StyledFormControl = styled(FormControl)<FormControlProps>(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  color: theme.palette.uiElements.main,
-  backgroundColor: theme.palette.background.paper,
-  '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.uiElements.main,
-    },
-  }
-}));
-
-
 interface StyledSelectProps<T> {
   label: string;
   items: { id: string, value: string | React.ReactNode, sx?: SxProps<Theme> }[];
@@ -30,7 +18,7 @@ interface StyledSelectProps<T> {
 const StyledSelect: React.FC<StyledSelectProps<string>> = (props) => {
   const title = <FormattedMessage id={props.label} />;
   return (
-    <StyledFormControl variant="outlined" fullWidth>
+    <FormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
       <Select
         value={props.selected}
@@ -42,7 +30,7 @@ const StyledSelect: React.FC<StyledSelectProps<string>> = (props) => {
         {props.items.map(item => (<MenuItem key={item.id} value={item.id} sx={item.sx}>{item.value}</MenuItem>))}
       </Select>
       {props.helperText ? <FormHelperText><FormattedMessage id={props.helperText} /></FormHelperText> : null}
-    </StyledFormControl>
+    </FormControl>
   );
 }
 
@@ -54,7 +42,7 @@ const StyledSelectMultiple: React.FC<{
 } & StyledSelectProps<string[]>> = (props) => {
   const title = <FormattedMessage id={props.label} />;
   return (
-    <StyledFormControl variant="outlined" fullWidth>
+    <FormControl variant="outlined" fullWidth>
       <InputLabel>{title}</InputLabel>
       <Select 
         multiple={true}
@@ -71,7 +59,7 @@ const StyledSelectMultiple: React.FC<{
         {props.items.map(item => (<MenuItem key={item.id} value={item.id} sx={item.sx}>{item.value}</MenuItem>))}
       </Select>
       {props.helperText ? <FormHelperText><FormattedMessage id={props.helperText} /></FormHelperText> : null}
-    </StyledFormControl>
+    </FormControl>
   );
 }
 

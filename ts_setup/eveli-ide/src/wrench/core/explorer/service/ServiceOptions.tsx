@@ -39,7 +39,6 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='services.delete.title'
     submit={{
       title: "buttons.delete",
@@ -144,7 +143,6 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
       <Burger.Dialog open={true}
         onClose={handleDialogClose}
         children={editor}
-        backgroundColor="uiElements.main"
         title='services.composer.copyTitle'
         submit={{
           title: "buttons.copy",

@@ -16,7 +16,6 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
   const [csv, setCsv] = React.useState('');
 
   return (<Burger.Dialog title="decisions.toolbar.csvUpload" open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     submit={{
       title: "buttons.apply",
       disabled: false,

@@ -26,7 +26,6 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
       title="locale.composer.title"
       submit={{ title: "button.create", onClick: handleCreate, disabled: !locale || locales.includes(locale) || locale.length !== 2 }}>
 

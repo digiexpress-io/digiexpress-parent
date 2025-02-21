@@ -17,7 +17,6 @@ const MsgTreeItem: React.FC<{
   return (
     <>
       {open ? (<Burger.Dialog open={true} onClose={() => setOpen(false)}
-        backgroundColor="uiElements.main"
         title={`programs.${props.error ? "error" : "warning"}.title`}>
         <DialogContentText>
           <b>{props.msg.id}</b><br />

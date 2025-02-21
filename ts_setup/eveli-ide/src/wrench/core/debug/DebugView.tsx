@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox } from '@mui/material';
+import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox, Radio } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { Composer } from '../context';
@@ -221,8 +221,8 @@ const DebugView: React.FC<{}> = ({ }) => {
         value={delimiter}
         onChange={(e) => setDelimiter(e.target.value)}
       >
-        <FormControlLabel value="comma" control={<Burger.RadioButton />} label={intl.formatMessage({id: 'debug.csv.download.delimiter.comma'})} />
-        <FormControlLabel value="semicolon" control={<Burger.RadioButton />} label={intl.formatMessage({id: 'debug.csv.download.delimiter.semicolon'})} />
+        <FormControlLabel value="comma" control={<Radio />} label={intl.formatMessage({id: 'debug.csv.download.delimiter.comma'})} />
+        <FormControlLabel value="semicolon" control={<Radio />} label={intl.formatMessage({id: 'debug.csv.download.delimiter.semicolon'})} />
       </RadioGroup>
       <p>{intl.formatMessage({id: 'debug.csv.download.options'})}</p>
       <Checkbox checked={wrap} onChange={() => setWrap(!wrap)} />
@@ -264,7 +264,6 @@ const DebugView: React.FC<{}> = ({ }) => {
 
     { dialogShow && <Burger.Dialog open={true}
       onClose={() => setDialogShow(false)}
-      backgroundColor="uiElements.main"
       children={dialogChildren}
       title='debug.csv.download'
       submit={{

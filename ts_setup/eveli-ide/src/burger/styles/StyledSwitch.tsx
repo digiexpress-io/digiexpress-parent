@@ -1,22 +1,10 @@
 import React from 'react';
-import { Switch, FormControlLabel, FormHelperText, alpha, styled } from '@mui/material';
+import { Switch, FormControlLabel, FormHelperText } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
 
 
-const StyledSwitchRoot = styled(Switch)(({ theme }) => ({
-  '& .MuiSwitch-switchBase.Mui-checked': {
-    color: theme.palette.uiElements.main,
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
-    },
-  },
-  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: alpha(theme.palette.uiElements.main, 0.5),
-  },
-
-}));
 
 interface StyledSwitchProps {
   onChange: (newValue: boolean) => void,
@@ -27,7 +15,7 @@ interface StyledSwitchProps {
 
 const StyledSwitch: React.FC<StyledSwitchProps> = (props) => {
 
-  const switchControl = <StyledSwitchRoot
+  const switchControl = <Switch
     onChange={(event) => props.onChange(event.target.checked)}
     checked={props.checked}
   />

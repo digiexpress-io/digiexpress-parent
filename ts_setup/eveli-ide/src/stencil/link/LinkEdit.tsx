@@ -67,7 +67,6 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
     }));
 
   return (<Burger.Dialog open={true} onClose={onClose}
-    backgroundColor="uiElements.main"
     title="link.edit.title"
     submit={{ title: "button.update", onClick: handleUpdate, disabled: !value || changeInProgress || labels.length < 1 }}>
     <>

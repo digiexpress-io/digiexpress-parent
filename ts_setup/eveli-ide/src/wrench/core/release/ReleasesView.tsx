@@ -140,7 +140,6 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title={prefix + '.delete.title'}
     submit={{
       title: "buttons.delete",
@@ -202,7 +201,6 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
   return (<Burger.Dialog open={true}
     onClose={onClose}
     children={editor}
-    backgroundColor="uiElements.main"
     title='release.delete.title'
     submit={{
       title: "buttons.delete",
@@ -348,7 +346,6 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
               {detailsDialogOpen &&
                 <Burger.Dialog
                   onClose={() => setDetailsDialogOpen(false)}
-                  backgroundColor='uiElements.main'
                   title={intl.formatMessage({ id: 'releases.details.title' }, { name: release.body.name })}
                   open={detailsDialogOpen}
                 >

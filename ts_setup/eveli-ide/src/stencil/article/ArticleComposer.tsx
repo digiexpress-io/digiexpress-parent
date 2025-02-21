@@ -38,7 +38,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main" title="article.composer.title"
+      title="article.composer.title"
       submit={{ title: "article.create", onClick: handleCreate, disabled: !name }}>
       <>
 

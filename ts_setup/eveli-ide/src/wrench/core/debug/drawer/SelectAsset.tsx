@@ -65,7 +65,7 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
 
 
 
-  return (<Burger.Dialog title="debug.select.title" backgroundColor="uiElements.main" open={true} onClose={onClose}
+  return (<Burger.Dialog title="debug.select.title" open={true} onClose={onClose}
     submit={{
       title: "debug.select.confirm",
       disabled: (link ? false : true),

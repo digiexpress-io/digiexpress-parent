@@ -24,8 +24,6 @@ export {
 
 export { StyledTransferList as TransferList } from './styles/StyledTransferList';
 export { StyledSwitch as Switch} from './styles/StyledSwitch';
-export { StyledRadioButton as RadioButton } from './styles/StyledRadioButton';
-
 
 export { DateTimeFormat as DateTimeFormatter } from './utils/DateTimeFormatter';
 export { ReleaseTable } from './releases/ReleaseTable';

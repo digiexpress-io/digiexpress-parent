@@ -57,7 +57,7 @@ const LocalesView: React.FC<{}> = () => {
   return (<>
     { editLocale ?
       (<Burger.Dialog open={true} onClose={() => setEditLocale(undefined)}
-        backgroundColor="uiElements.main" title={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"}
+        title={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"}
         submit={{
           title: editLocale.body.enabled ? "button.disable" : "button.enable",
           onClick: editLocale.body.enabled ? () => handleEnable(editLocale, false) : () => handleEnable(editLocale, true),

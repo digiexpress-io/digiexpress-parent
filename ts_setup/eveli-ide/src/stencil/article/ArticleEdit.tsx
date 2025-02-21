@@ -54,7 +54,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
 
   return (
     <Burger.Dialog open={true} onClose={onClose}
-      backgroundColor="uiElements.main"
+      
       title="article.edit.title"
       submit={{ title: "button.update", onClick: handleUpdate, disabled: !name }}>
       <>
