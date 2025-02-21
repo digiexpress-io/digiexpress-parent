@@ -1,4 +1,6 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Button } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
@@ -76,7 +78,7 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
       value: props.cell.value
     }}
     actions={
-      <Burger.SecondaryButton label="decisions.cells.newvalue.clear" onClick={() => {
+      <Button variant='text' children={<FormattedMessage id="decisions.cells.newvalue.clear"/>} onClick={() => {
         const builder = Builder({ header, value: undefined }) as any;
         setValue({ value: undefined, builder });
       }} />

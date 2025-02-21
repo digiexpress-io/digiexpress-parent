@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Grid2, ListItemText } from '@mui/material';
+import { Box, Grid2, ListItemText, Button } from '@mui/material';
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
 import { useIntl } from 'react-intl';
@@ -115,7 +115,7 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
       column: header.name
     }}
     actions={
-      <Burger.SecondaryButton label={intl.formatMessage({ id: 'dt.header.delete' })} onClick={() => {
+      <Button variant='text' children={intl.formatMessage({ id: 'dt.header.delete' })} onClick={() => {
         onChange([{ type: 'DELETE_HEADER', id: header.id }]);
         onClose();
       }} />

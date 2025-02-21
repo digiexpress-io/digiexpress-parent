@@ -1,7 +1,8 @@
-import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle } from '@mui/material';
+import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, Button } from '@mui/material';
 import React from 'react';
 
 import * as Burger from '@/burger';
+import { FormattedMessage } from 'react-intl';
 
 export interface ConfirmationDialogProps {
   title?: string;
@@ -35,13 +36,12 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => 
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        {/* TODO correct types */}
-        {/* @ts-ignore */}
-        <Burger.SecondaryButton onClick={handleCancel}
-          {...cancelOptions} label={cancel || 'button.cancel'} />
-        {/* @ts-ignore */}
-        <Button variant='contained' onClick={handleAccept}
-          {...acceptOptions} label={accept || 'button.accept'} />
+        <Button onClick={handleCancel} variant='text' {...cancelOptions}>
+          <FormattedMessage id={cancel || 'button.cancel'}/>
+        </Button>
+        <Button variant='contained' onClick={handleAccept} {...acceptOptions}>
+          <FormattedMessage id={accept || 'button.accept'}/>
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/styles';
 import {
   Card, CardHeader, CardActions, CardContent, Theme,
-  Typography, Box, Divider
+  Typography, Box, Divider, Button
 } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -153,14 +153,15 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
 
       <CardActions sx={{ alignSelf: "flex-end" }}>
         <Box display="flex">
-          {props.data.buttonViewAll && props.data.onView ? <Burger.SecondaryButton onClick={props.data.onView} label={props.data.buttonViewAll} /> : <Box />}
+          {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={<FormattedMessage id={props.data.buttonViewAll} />} /> : <Box />}
           {props.data.buttonTertiary && props.data.onView ?
-            <Burger.SecondaryButton label="button.releasegraph" onClick={() => tabs.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}
+            <Button variant='text' onClick={() => tabs.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}
+              children={<FormattedMessage id='button.releasegraph' />}
               sx={{
                 color: "uiElements.main",
                 alignSelf: 'center',
               }} /> : null}
-          <Button variant='contained' onClick={props.onCreate} label={props.data.buttonCreate} />
+          <Button onClick={props.onCreate} children={<FormattedMessage id={props.data.buttonCreate} />}/>
         </Box>
       </CardActions>
     </Card>

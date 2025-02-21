@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Box, Typography, IconButton,
-  TableCell, TableRow, Card
+  TableCell, TableRow, Card, Button
 } from '@mui/material';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -35,9 +35,13 @@ const ReleasesView: React.FC<{}> = () => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-            <Burger.SecondaryButton label="button.releasegraph" onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }} />
-            <Button variant='contained' label="button.create" onClick={() => setReleaseComposer(true)} />
+            <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+            <Button variant='text' onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }}>
+              <FormattedMessage id="button.releasegraph"/>
+            </Button>
+            <Button variant='contained' onClick={() => setReleaseComposer(true)}>
+              <FormattedMessage id="button.create"/>
+            </Button>
           </Box>
         </Box>
 

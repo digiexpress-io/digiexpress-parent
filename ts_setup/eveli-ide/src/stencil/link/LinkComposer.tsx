@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemText, Box, Typography } from '@mui/material';
+import { ListItemText, Box, Typography, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
@@ -82,8 +82,8 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onChange={setValue} />
 
         <Box display="flex" alignItems="center" sx={{ mt: 1, mb: 1 }}>
-          <Burger.SecondaryButton label={"allarticles"} onClick={() => setArticleId(Object.keys(site.articles))} />
-          <Burger.SecondaryButton label={"allarticles.individual"} onClick={() => setArticleId([])} />
+          <Button  onClick={() => setArticleId(Object.keys(site.articles))}  variant='text'><FormattedMessage id='allarticles'/></Button>
+          <Button  onClick={() => setArticleId([])}  variant='text'><FormattedMessage id='allarticles.individual'/></Button>
           <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.link.help" /></Typography>
         </Box>
 

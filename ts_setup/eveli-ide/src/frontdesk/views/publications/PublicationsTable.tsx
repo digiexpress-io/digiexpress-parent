@@ -143,7 +143,7 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
+          <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
         </DialogActions>
       </Dialog>
       <IconButton onClick={handleOpen}><CircleIcon color={color}/></IconButton>

@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem, Button } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { useIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { useConfig } from '../../context/ConfigContext';
@@ -146,8 +146,8 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
                   </Grid2>
                 </DialogContent>
                 <DialogActions>
-                  <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
-                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid} label='button.accept' />
+                  <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid}  ><FormattedMessage id='button.accept'/></Button>
                 </DialogActions>
               </Form>
             )

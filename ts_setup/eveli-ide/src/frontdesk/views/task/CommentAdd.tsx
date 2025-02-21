@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { OutlinedInput, Grid2, Stack } from '@mui/material';
+import { OutlinedInput, Grid2, Stack, Button } from '@mui/material';
+
+import { FormattedMessage } from 'react-intl';
 
 import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 import { Comment } from '../../types/task/Comment';
 import { Task } from '../../types/task/Task';
 
-import * as Burger from '@/burger';
 
 type CommentAddProps = {
   parentComment?: Comment
@@ -37,8 +38,8 @@ export const CommentAdd: React.FC<CommentAddProps> = (props) => {
       </Grid2>
       <Grid2 size={{ xs: 12 }} sx={{ margin: 'auto' }}>
         <Stack direction='row' spacing={2}>
-          <Button variant='contained' onClick={send} disabled={!inputValue} label={'comment.store'} />
-          <Burger.SecondaryButton onClick={props.onCancel} label='taskButton.cancel' />
+          <Button variant='contained' onClick={send} disabled={!inputValue}><FormattedMessage id='comment.store'/></Button>
+          <Button onClick={props.onCancel} variant='text'><FormattedMessage id='taskButton.cancel'/></Button>
         </Stack>
       </Grid2>
     </>

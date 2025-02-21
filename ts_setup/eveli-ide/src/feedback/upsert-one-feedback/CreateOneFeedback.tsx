@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, CircularProgress, TextField, Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { Box, CircularProgress, TextField, Typography, Button } from '@mui/material';
+import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 
@@ -92,8 +92,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         }
       </div>
       <Box display='flex' gap={1}>
-        <Burger.SecondaryButton onClick={handleCancel} label='button.cancel' />
-        <Button variant='contained' onClick={handlePublish} label='button.publish' disabled={!reply} />
+        <Button onClick={handleCancel}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+        <Button variant='contained' onClick={handlePublish} disabled={!reply}><FormattedMessage id='button.publish'/></Button>
       </Box>
     </>
   )

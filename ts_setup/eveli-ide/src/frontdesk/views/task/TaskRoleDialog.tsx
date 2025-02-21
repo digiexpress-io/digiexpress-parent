@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Autocomplete, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Container } from "@mui/material";
+import { Autocomplete, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Container, Button } from "@mui/material";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 import { FormattedMessage, useIntl } from "react-intl";
@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import { UserGroup } from '../../types/UserGroup';
-import * as Burger from '@/burger';
+
 
 export type TaskRoleDialogProps = {
   assignedRoles: string[]
@@ -68,8 +68,8 @@ export const TaskRoleDialog: React.FC<TaskRoleDialogProps> = ({ assignedRoles, g
         </Container>
       </DialogContent>
       <DialogActions>
-        <Burger.SecondaryButton onClick={closeDialog} label='button.cancel' />
-        <Button variant='contained' onClick={() => acceptDialog(roles)} label='button.accept' />
+        <Button onClick={closeDialog}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+        <Button variant='contained' onClick={() => acceptDialog(roles)}  ><FormattedMessage id='button.accept'/></Button>
       </DialogActions>
     </Dialog>
   )

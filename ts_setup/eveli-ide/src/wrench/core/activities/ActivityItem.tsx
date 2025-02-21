@@ -1,10 +1,7 @@
 import React from 'react';
 import { SxProps } from '@mui/system';
-import { Card, CardHeader, CardActions, CardContent, Typography, Box, Divider } from '@mui/material';
+import { Card, CardHeader, CardActions, CardContent, Typography, Box, Divider, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
-import * as Burger from '@/burger';
-
 
 interface ActivityData {
   title: string;
@@ -38,9 +35,9 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
 
     <CardActions sx={{ alignSelf: "flex-end" }}>
       <Box display="flex">
-        {props.data.buttonViewAll && props.data.onView ? <Burger.SecondaryButton onClick={props.data.onView} label={props.data.buttonViewAll} /> : <Box />}
-        {props.data.buttonTertiary && props.data.onTertiary ? <Burger.SecondaryButton label={props.data.buttonTertiary} onClick={props.data.onTertiary} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
-        <Button variant='contained' onClick={props.onCreate} label={props.data.buttonCreate} />
+        {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={<FormattedMessage id={props.data.buttonViewAll}/>} /> : <Box />}
+        {props.data.buttonTertiary && props.data.onTertiary ? <Button variant='text' children={<FormattedMessage id={props.data.buttonTertiary}/>} onClick={props.data.onTertiary} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
+        <Button onClick={props.onCreate} children={<FormattedMessage id={props.data.buttonCreate}/>}/>
       </Box>
     </CardActions>
   </Card>

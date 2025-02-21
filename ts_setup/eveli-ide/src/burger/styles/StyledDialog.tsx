@@ -1,16 +1,7 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Box, alpha, useTheme, styled } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Box, alpha, useTheme, styled, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { StyledSecondaryButton, StyledPrimaryButton } from './StyledButton'
-/*
-const StyledDialogButton = styled(Button)(() => ({
-  fontWeight: 'bold',
-  "&:hover, &.Mui-focusVisible": {
-    fontWeight: 'bold',
-  },
-}));
 
-*/
 
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   color: theme.palette.secondary.contrastText,
@@ -49,8 +40,10 @@ const StyledDialog: React.FC<StyledDialogProps> = (props) => {
       <DialogActions>
         <Box display="inline-flex">
           {props.actions}
-          <StyledSecondaryButton sx={{ mr: 1 }} onClick={props.onClose} label="button.cancel" />
-          {props.submit ? <StyledPrimaryButton onClick={props.submit.onClick} disabled={props.submit.disabled} label={props.submit.title} /> : undefined }
+          <Button variant='text' sx={{ mr: 1 }} onClick={props.onClose}>
+            <FormattedMessage id='button.cancel'/>
+          </Button>
+          {props.submit ? <Button onClick={props.submit.onClick} disabled={props.submit.disabled}><FormattedMessage id={props.submit.title}/></Button> : undefined }
         </Box>
       </DialogActions>
     </Dialog>

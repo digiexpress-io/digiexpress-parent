@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Typography, Table, TableContainer, TableBody, TableCell, TableRow, TableHead, Paper, IconButton } from '@mui/material';
+import { Box, Typography, Table, TableContainer, TableBody, TableCell, TableRow, TableHead, Paper, IconButton, Button } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { StyledSecondaryButton, StyledPrimaryButton } from './StyledButton'
 import { StyledSearchField } from './StyledInputField';
+import { Form } from 'react-router-dom';
 
 interface StyledTransferListProps {
   title: string;
@@ -72,8 +72,12 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <StyledSecondaryButton label={props.cancel.label} onClick={cancel.onClick} sx={{ marginRight: 1 }} />
-            <StyledPrimaryButton label={props.submit.label} onClick={() => submit.onClick(selected)} />
+            <Button variant='text' onClick={cancel.onClick} sx={{ marginRight: 1 }}>
+              <FormattedMessage id={props.cancel.label}/>
+            </Button>
+            <Button onClick={() => submit.onClick(selected)}>
+              <FormattedMessage id={props.submit.label}/>
+            </Button>
           </Box>
         </Box>
       </Box>

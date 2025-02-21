@@ -3,7 +3,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { Composer } from "../context";
 import { HdesApi } from "../client";
-import { Box, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
+import { Box, Button, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as Burger from '@/burger';
 
@@ -93,14 +93,14 @@ const CompareDialog: React.FC<CompareDialogProps> = ({ open, setOpen, diff }) =>
       <DialogContent sx={{ mx: 1, overflowY: 'unset' }}>
         <Box sx={{ minWidth: '80vw', display: 'flex', flexDirection: 'column' }}>
           <ButtonGroup variant="text" sx={{ alignSelf: 'flex-end' }}>
-            <Burger.SecondaryButton label={"compare.dialog.line"} onClick={() => setOutputFormat('line-by-line')} />
-            <Burger.SecondaryButton label={"compare.dialog.side"} onClick={() => setOutputFormat('side-by-side')} />
+            <Button  onClick={() => setOutputFormat('line-by-line')}  variant='text'><FormattedMessage id='compare.dialog.line'/></Button>
+            <Button  onClick={() => setOutputFormat('side-by-side')}  variant='text'><FormattedMessage id='compare.dialog.side'/></Button>
           </ButtonGroup>
           <div dangerouslySetInnerHTML={{ __html: diffHtml }} />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Burger.SecondaryButton label={"button.cancel"} onClick={() => setOpen(false)} />
+        <Button  onClick={() => setOpen(false)}  variant='text'><FormattedMessage id='button.cancel'/></Button>
       </DialogActions>
     </Dialog>
   );
@@ -150,8 +150,8 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-          <Button variant='contained' label="activities.compare.view" onClick={() => setOpen(true)} disabled={disabled} />
+          <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>
       <Typography variant="body2" sx={{ mx: 1, mt: 2 }}><FormattedMessage id={"compare.tip"} /></Typography>

@@ -45,8 +45,9 @@ export const EditNumber: React.FC<{ builder: NumberBuilder, onChange: (value: st
       <Box display="flex" sx={{ pb: 1 }}>
         <Box flexGrow={1} />
         <Button variant='contained'
-          label="decisions.cells.newvalue.number.comparisonToRange"
-          onClick={() => handleComparisonTypeChange('range')} />
+          onClick={() => handleComparisonTypeChange('range')}>
+            <FormattedMessage id='decisions.cells.newvalue.number.comparisonToRange'/>
+        </Button>
       </Box>
       <Grid2 container spacing={2}>
         <Grid2 size={{ xs: 3 }}>

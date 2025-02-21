@@ -310,7 +310,7 @@ const siteTheme = createTheme({
 
       ],
       defaultProps: {
-        variant: 'text',
+        variant: 'contained',
       }
     },
 

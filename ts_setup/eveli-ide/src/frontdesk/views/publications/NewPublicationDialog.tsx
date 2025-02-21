@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Button } from '@mui/material';
 
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { useSnackbar } from 'notistack';
-import { useIntl, defineMessages } from 'react-intl';
+import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
 
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
@@ -14,8 +14,6 @@ import { AssetTag } from '../../types/AssetTag';
 import { useFetch } from '../../hooks/useFetch';
 import { handleErrors } from '../../util/cFetch';
 import { Datepicker } from '../../components/Datepicker';
-
-import * as Burger from '@/burger';
 
 
 const messages = defineMessages(
@@ -138,8 +136,8 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
                   </Stack>
                 </DialogContent>
                 <DialogActions>
-                  <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
-                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid} label='button.accept' />
+                  <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid}  ><FormattedMessage id='button.accept'/></Button>
                 </DialogActions>
               </Form>
             )

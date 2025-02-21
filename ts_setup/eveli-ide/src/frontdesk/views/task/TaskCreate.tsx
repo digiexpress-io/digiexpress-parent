@@ -5,6 +5,7 @@ import {
   Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
   useTheme,
   alpha,
+  Button
 } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -206,7 +207,7 @@ const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) =>
     navigate(`/feedback/${taskId}`);
   }
 
-  return (<Burger.SecondaryButton label='task.form.feedback.manage' onClick={handleFeedback} />);
+  return (<Button  onClick={handleFeedback} variant='text'><FormattedMessage id='task.form.feedback.manage'/></Button>);
 }
 
 const FormReview: React.FC<{ sessionId: string | undefined, taskId: number | undefined }> = ({ sessionId, taskId }) => {
@@ -218,7 +219,7 @@ const FormReview: React.FC<{ sessionId: string | undefined, taskId: number | und
 
   return (
     <>
-      <Burger.SecondaryButton label='task.form.review' onClick={() => setOpen(true)} />
+      <Button  onClick={() => setOpen(true)} variant='text'><FormattedMessage id='task.form.review'/></Button>
       {open && <DialobReview taskId={taskId + ""} onClose={() => setOpen(false)} />}
     </>
   )
@@ -587,7 +588,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         </fieldset>
 
                       </Box>
-                      <Button variant='contained' onClick={() => { this.openDialog() }} label='button.editRoles' />
+                      <Button variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles'/></Button>
 
                     </Grid2>
                   }
@@ -673,14 +674,14 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
               <Box sx={{ position: 'sticky', bottom: 10, width: 'fit-content', float: 'right' }}>
                 <Paper elevation={2} sx={{ padding: 1, marginRight: 2 }}>
                   <Stack direction="row" spacing={1} justifyContent='flex-end'>
-                    <Burger.SecondaryButton onClick={() => this.props.navigate('/ui/tasks')} label={'taskButton.cancel'} />
+                    <Button onClick={() => this.props.navigate('/ui/tasks')}  variant='text'><FormattedMessage id='taskButton.cancel'/></Button>
                     {(!editTask.keyWords || editTask.keyWords.length === 0) && (
                       <Box display='flex' gap={1}>
                         <FormReview sessionId={editTask.questionnaireId} taskId={editTask.id} />
                         <FeedbackButton taskId={editTask.id} />
                       </Box>
                     )}
-                    {!readonly && <Button variant='contained' disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} label='taskButton.accept' />}
+                    {!readonly && <Button variant='contained' disabled={isSubmitting || !isValid || !dirty} onClick={submitForm}  ><FormattedMessage id='taskButton.accept'/></Button>}
                   </Stack>
                 </Paper>
               </Box>

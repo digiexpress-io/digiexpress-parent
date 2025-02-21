@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Grid2 } from '@mui/material';
+import React, { useEffect, useRef, useState, } from 'react';
+import { Box, Grid2, Button } from '@mui/material';
 
 import { Task } from '../../types/task/Task';
 import { Comment as CommentData } from '../../types/task/Comment';
 import { CommentAdd } from './CommentAdd';
 import mapNestedEntities from '../../util/mapNestedEntities';
 import { Thread } from './Thread';
+import { FormattedMessage } from 'react-intl';
 
-
-import * as Burger from '@/burger';
 
 type CommentThreadProps = {
   task: Task
@@ -86,7 +85,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({ task, isExternalTh
           onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>
-            <Button variant='contained' onClick={toggleComment} label={buttonId} />
+            <Button variant='contained' onClick={toggleComment}><FormattedMessage id={buttonId}/></Button>
           </Grid2>
         )}
       </Grid2>

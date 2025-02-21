@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, CircularProgress, Divider, TextField, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 
 import * as Burger from '@/burger';
@@ -89,8 +89,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         />
 
       <Box display='flex' gap={1}>
-        <Burger.SecondaryButton onClick={handleDelete} label='button.delete' />
-        <Button variant='contained' onClick={handlePublish} label='button.update' />
+        <Button onClick={handleDelete}  variant='text'><FormattedMessage id='button.delete'/></Button>
+        <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.update'/></Button>
       </Box>
     </div>
   )

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, Stack, DialogContentText } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Stack, DialogContentText, Button } from '@mui/material';
 
 
 import { useSnackbar } from 'notistack';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 
 import { useConfig } from '../../context/ConfigContext';
 import { SessionRefreshContext } from '../../context/SessionRefreshContext';
@@ -68,8 +68,8 @@ export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Burger.SecondaryButton onClick={handleClose} label='button.cancel' />
-          <Button variant='contained' disabled={!file} onClick={handleSubmit} label='button.accept' />
+          <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button variant='contained' disabled={!file} onClick={handleSubmit}  ><FormattedMessage id='button.accept'/></Button>
         </DialogActions>
       </Dialog>
   );

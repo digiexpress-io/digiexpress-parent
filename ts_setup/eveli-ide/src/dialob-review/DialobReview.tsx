@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import { GFormReview, DialobProvider, DialobApi } from '@dxs-ts/gamut';
@@ -45,7 +45,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
           </DialogContent>
 
           <DialogActions>
-            <Button variant='contained' onClick={props.onClose} label='button.close' />
+            <Button variant='contained' onClick={props.onClose}><FormattedMessage id='button.close'/></Button>
           </DialogActions>
         </Dialog>
       </DialobProvider>

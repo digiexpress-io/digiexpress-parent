@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Box, Typography, IconButton, Table, TableBody,
-  TableCell, TableContainer, TableRow, TableHead, Paper, Card
+  TableCell, TableContainer, TableRow, TableHead, Paper, Card, Button
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -40,8 +40,8 @@ const TemplatesView: React.FC<{}> = () => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <Burger.SecondaryButton label="button.cancel" onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-            <Button variant='contained' label="button.create" onClick={() => setTemplateComposer(true)} />
+            <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+            <Button variant='contained'  onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create'/></Button>
           </Box>
         </Box>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, List, ListItem, ListItemText, Typography, Divider } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Typography, Divider, Button } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -109,9 +109,9 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
   }
 
   return (<Burger.Dialog title="flows.autocomplete.task" backgroundColor="uiElements.main" open={true} onClose={onClose}
-    actions={<Burger.SecondaryButton label="flows.autocomplete.task.create"
+    actions={<Button variant='text'
       disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false }
-      onClick={() => handleSave()} />}
+      onClick={() => handleSave()}><FormattedMessage id="flows.autocomplete.task.create" /></Button>}
     submit={{
       title: "flows.autocomplete.task.link",
       disabled: (link ? false : true) || apply,

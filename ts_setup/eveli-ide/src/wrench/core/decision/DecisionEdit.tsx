@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton } from '@mui/material';
+import { Box, List, Drawer, ListItemIcon, ListItemText, Divider, ListItemButton, Button } from '@mui/material';
 import { SxProps } from '@mui/system';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -130,11 +130,23 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     <Decision.Table ast={ast}
       renderHeader={headerProps => (
         <Decision.Header {...headerProps} onClick={(header) => setEdit({ header })}>
-          <Burger.SecondaryButton label={`${ast.name} - ${intl.formatMessage({id: "decisions.table.hitpolicy"})}: ${ast.hitPolicy}`} onClick={() => setEdit({ options: true })} />
-          <Burger.SecondaryButton label="decisions.toolbar.addInputColumn" onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])} />
-          <Burger.SecondaryButton label="decisions.toolbar.addOutputColumn" onClick={() => onChange([{ type: 'ADD_HEADER_OUT', id: "out-" + ast.headers.returnDefs.length + 1 }])} />
-          <Burger.SecondaryButton label="decisions.toolbar.addRow" onClick={() => onChange([{ type: 'ADD_ROW', id: "" }])} />
-          <Burger.SecondaryButton label="decisions.toolbar.organize.rows.columns" onClick={() => setEdit({ rowsColumns: true })} />
+          <Button variant='text' onClick={() => setEdit({ options: true })}>
+            {`${ast.name} - ${intl.formatMessage({id: "decisions.table.hitpolicy"})}: ${ast.hitPolicy}`}
+          </Button>
+          <Button variant='text' onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])}>
+            <FormattedMessage id='decisions.toolbar.addInputColumn'/>
+          </Button>
+          <Button variant='text' onClick={() => onChange([{ type: 'ADD_HEADER_OUT', id: "out-" + ast.headers.returnDefs.length + 1 }])}>
+            <FormattedMessage id='decisions.toolbar.addOutputColumn'/>
+          </Button>
+          
+          <Button variant='text' onClick={() => onChange([{ type: 'ADD_ROW', id: "" }])}>
+            <FormattedMessage id='decisions.toolbar.addRow'/>
+          </Button>
+
+          <Button variant='text' onClick={() => setEdit({ rowsColumns: true })}>
+            <FormattedMessage id='decisions.toolbar.organize.rows.columns'/>
+          </Button>
         </Decision.Header>
       )}
       renderRow={rowProps => <Decision.Row {...rowProps} />}

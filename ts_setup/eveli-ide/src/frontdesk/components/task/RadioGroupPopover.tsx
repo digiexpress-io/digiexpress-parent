@@ -114,7 +114,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
             )}
           </RadioGroup>
           <Box display='flex' justifyContent='center' mt={2}>
-            <Button variant='contained' onClick={handleConfirm} disabled={!radioValue} label="button.accept" />
+            <Button variant='contained' onClick={handleConfirm} disabled={!radioValue}  ><FormattedMessage id='button.accept'/></Button>
           </Box>
         </Box>
       </Popover>

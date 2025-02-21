@@ -2,12 +2,11 @@ import React from 'react';
 
 import {
   Box, Typography, IconButton,
-  TableCell, TableRow, Card, alpha, styled,
+  TableCell, TableRow, Card, alpha, styled, Button
 } from '@mui/material';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-//import ForkRightIcon from '@mui/icons-material/ForkRight';
 import ForkRightIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -88,9 +87,9 @@ const ReleasesView: React.FC<{}> = () => {
         </Box>
         <Box flexGrow={1} />
         <Box>
-          <Burger.SecondaryButton label={"button.cancel"} onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} />
-          <Burger.SecondaryButton label={"activities.releases.graph"} onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }} />
-          <Burger.SecondaryButton label={"releases.button.compare"} onClick={() => layout.actions.handleTabAdd({ id: 'compare', label: "Compare" })} />
+          <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button  onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }}  variant='text'><FormattedMessage id='activities.releases.graph'/></Button>
+          <Button  onClick={() => layout.actions.handleTabAdd({ id: 'compare', label: "Compare" })}  variant='text'><FormattedMessage id='releases.button.compare'/></Button>
         </Box>
       </Box>
 
@@ -295,11 +294,11 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
 
   const actionButton = () => {
     if (isLatest) {
-      return <Button variant='contained' label='releases.button.release' onClick={() => setReleaseComposer(true)} />
+      return <Button variant='contained'  onClick={() => setReleaseComposer(true)} ><FormattedMessage id='releases.button.release'/></Button>
     } else if (isDefault) {
-      return <Burger.SecondaryButton label='releases.button.checkout' onClick={() => handleCheckout("default")} />
+      return <Button  onClick={() => handleCheckout("default")} variant='text'><FormattedMessage id='releases.button.checkout'/></Button>
     } else {
-      return <Burger.SecondaryButton sx={{ border: 1 }} label='buttons.download' onClick={() => onDownload(release.body.data)} />
+      return <Button sx={{ border: 1 }}  onClick={() => onDownload(release.body.data)} variant='text'><FormattedMessage id='buttons.download'/></Button>
     }
   }
 
@@ -332,7 +331,7 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
                   <TableCell align="left"><Burger.DateTimeFormatter timestamp={branch.branch.created} /></TableCell>
                   <TableCell align="left">Branch created from release: {release.body.name}</TableCell>
                   <TableCell align="center">
-                    <Burger.SecondaryButton label={'releases.button.checkout'} onClick={() => handleCheckout(branch.branch.name)} />
+                    <Button  onClick={() => handleCheckout(branch.branch.name)} variant='text'><FormattedMessage id='releases.button.checkout'/></Button>
                   </TableCell>
                   <TableCell align="right">
                     <IconButton sx={{ color: 'error.main' }} onClick={() => setAssetToDelete(branch)}><DeleteOutlineOutlinedIcon /> </IconButton>
@@ -344,8 +343,8 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
           <TableRow>
             <TableCell />
             <TableCell colSpan={5}>
-              <Button variant='contained' label={'releases.button.branch'} onClick={() => handleCreateBranch(release.body.name, release.id)} />
-              <Burger.SecondaryButton label={'releases.button.details'} onClick={() => setDetailsDialogOpen(true)} />
+              <Button variant='contained'  onClick={() => handleCreateBranch(release.body.name, release.id)} ><FormattedMessage id='releases.button.branch'/></Button>
+              <Button  onClick={() => setDetailsDialogOpen(true)} variant='text'><FormattedMessage id='releases.button.details'/></Button>
               {detailsDialogOpen &&
                 <Burger.Dialog
                   onClose={() => setDetailsDialogOpen(false)}
