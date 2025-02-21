@@ -53,7 +53,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
     }));
 
   return (
-    <Dialog open={true} onClose={onClose}>
+  <Dialog open={true} onClose={onClose}>
     <DialogTitle><FormattedMessage id='article.edit.title'/></DialogTitle>
     <DialogContent>
       <Burger.Select label="article.edit.parent" onChange={setParentId}
