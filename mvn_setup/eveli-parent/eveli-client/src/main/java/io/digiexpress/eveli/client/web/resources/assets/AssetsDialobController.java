@@ -84,7 +84,7 @@ public class AssetsDialobController {
     for (var formTag : formTags) {
       FormTagResult result = new FormTagResult();
       result.setFormName(formTag.getFormName());
-      result.setFormLabel(formLabels.get(formTag.getFormId()));
+      result.setFormLabel(formLabels.get(formTag.getFormName()));
       result.setTagFormId(formTag.getFormId());
       result.setTagName(formTag.getName());
       tags.add(result);
