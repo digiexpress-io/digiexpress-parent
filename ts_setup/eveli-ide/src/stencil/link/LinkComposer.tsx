@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
@@ -96,7 +96,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           items={articles.map(article => ({
             id: article.id,
             value: (<>
-              <Burger.Checkbox checked={articleId.includes(article.id) ? true : false} />
+              <Checkbox checked={articleId.includes(article.id) ? true : false} />
               <ListItemText primary={article.value} />
             </>)
           })

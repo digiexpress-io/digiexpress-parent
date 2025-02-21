@@ -23,7 +23,6 @@ export {
   StyledDateTimeField as DateTimeField } from './styles/StyledInputField';
 
 export { StyledTransferList as TransferList } from './styles/StyledTransferList';
-export { StyledCheckbox as Checkbox } from './styles/StyledCheckbox';
 export { StyledSwitch as Switch} from './styles/StyledSwitch';
 export { StyledRadioButton as RadioButton } from './styles/StyledRadioButton';
 

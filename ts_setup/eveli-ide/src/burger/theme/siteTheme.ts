@@ -269,15 +269,18 @@ const siteTheme = createTheme({
       }
     },
 
-    MuiButton: {
-
-
+    MuiCheckbox: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-  
+          color: theme.palette.uiElements.main,
+          '&.Mui-checked': {
+            color: theme.palette.uiElements.main,
+          }
         })
       },
+    },
 
+    MuiButton: {
       variants: [
         {
           props: { variant: 'contained' },

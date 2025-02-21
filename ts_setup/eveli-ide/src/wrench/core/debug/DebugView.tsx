@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button } from '@mui/material';
+import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { Composer } from '../context';
@@ -225,7 +225,7 @@ const DebugView: React.FC<{}> = ({ }) => {
         <FormControlLabel value="semicolon" control={<Burger.RadioButton />} label={intl.formatMessage({id: 'debug.csv.download.delimiter.semicolon'})} />
       </RadioGroup>
       <p>{intl.formatMessage({id: 'debug.csv.download.options'})}</p>
-      <Burger.Checkbox checked={wrap} onChange={() => setWrap(!wrap)} />
+      <Checkbox checked={wrap} onChange={() => setWrap(!wrap)} />
       <label>{intl.formatMessage({ id: 'debug.csv.download.wrap' })}</label>
     </>
   );

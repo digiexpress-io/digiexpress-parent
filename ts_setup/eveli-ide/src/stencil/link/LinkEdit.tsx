@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
@@ -100,7 +100,7 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
         items={articles.map((article) => ({
           id: article.id,
           value: (<>
-            <Burger.Checkbox checked={articleId.indexOf(article.id) > -1} />
+            <Checkbox checked={articleId.indexOf(article.id) > -1} />
             <ListItemText primary={article.value} />
           </>)
         }

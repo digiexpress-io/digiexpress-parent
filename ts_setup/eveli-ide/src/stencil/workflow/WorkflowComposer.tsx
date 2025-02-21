@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
@@ -182,7 +182,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             items={articles.map((article) => ({
               id: article.id,
               value: (<>
-                <Burger.Checkbox checked={articleId.indexOf(article.id) > -1} />
+                <Checkbox checked={articleId.indexOf(article.id) > -1} />
                 <ListItemText primary={article.value} />
               </>)
             }))}
