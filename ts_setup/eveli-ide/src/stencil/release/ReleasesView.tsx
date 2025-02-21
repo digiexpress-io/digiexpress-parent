@@ -1,18 +1,12 @@
 import React from 'react';
-import {
-  Box, Typography, IconButton,
-  TableCell, TableRow, Card, Button
-} from '@mui/material';
-import GetAppIcon from '@mui/icons-material/GetApp';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-
+import { Box, Typography, Card, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import fileDownload from 'js-file-download'
+
 
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 import { Composer } from '../context';
-import { ReleaseComposer, ReleaseDelete } from './';
+import { ReleaseComposer } from './';
+import { ReleaseTable } from './ReleaseTable';
 
 
 const ReleasesView: React.FC<{}> = () => {
@@ -51,43 +45,12 @@ const ReleasesView: React.FC<{}> = () => {
             <Typography variant="h4" sx={{ p: 2, backgroundColor: "table.main" }}>
               <FormattedMessage id="releases" />
             </Typography>
-            <Burger.ReleaseTable releases={releases} tableRowComponent={Row} />
+            <ReleaseTable releases={releases} />
           </Card>
         </Box>
       </Box>
     </>
   );
-}
-
-
-const Row: React.FC<{ release: BurgerApi.Release }> = ({ release }) => {
-  const [releaseDeleteOpen, setReleaseDeleteOpen] = React.useState(false);
-  const { service } = Composer.useComposer();
-
-  const onDownload = (releaseId: string) => {
-    service.getReleaseContent(releaseId).then(content => {
-      const data = JSON.stringify(content, null, 2);
-      fileDownload(data, release.body.name + '.json');
-    })  
-  }
-
-  return (
-    <>
-      {releaseDeleteOpen ? <ReleaseDelete id={release.id} onClose={() => setReleaseDeleteOpen(false)} /> : null}
-
-      <TableRow key={release.id}>
-        <TableCell align="left" >{release.body.name}</TableCell>
-        <TableCell align="left"><Burger.DateTimeFormatter timestamp={release.body.created} /></TableCell>
-        <TableCell align="left">{release.body.note}</TableCell>
-        <TableCell align="center" >
-          <IconButton onClick={() => onDownload(release.id)} sx={{ color: 'uiElements.main' }}><GetAppIcon /> </IconButton>
-        </TableCell>
-        <TableCell align="center" >
-          <IconButton onClick={() => setReleaseDeleteOpen(true)} sx={{ color: 'error.main' }}><DeleteOutlineIcon /> </IconButton>
-        </TableCell>
-      </TableRow>
-    </>
-  )
 }
 
 export { ReleasesView }

@@ -26,5 +26,4 @@ export { StyledTransferList as TransferList } from './styles/StyledTransferList'
 export { StyledSwitch as Switch} from './styles/StyledSwitch';
 
 export { DateTimeFormat as DateTimeFormatter } from './utils/DateTimeFormatter';
-export { ReleaseTable } from './releases/ReleaseTable';
 export type { BurgerApi } from './BurgerApi';
