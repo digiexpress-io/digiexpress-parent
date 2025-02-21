@@ -1,15 +1,13 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Box, alpha, useTheme, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
-
 
 
 interface StyledDialogProps {
   title: string;
   titleArgs?: {};
   onClose: () => void;
-  submit?: {
+  submit: {
     title: string;
     disabled: boolean;
     onClick: () => void;
@@ -25,10 +23,12 @@ const StyledDialog: React.FC<StyledDialogProps> = (props) => {
       <DialogTitle><FormattedMessage id={props.title} values={props.titleArgs} /></DialogTitle>
       <DialogContent>{props.children}</DialogContent>
       <DialogActions>
-          <Button variant='text' onClick={props.onClose}>
-            <FormattedMessage id='button.cancel'/>
-          </Button>
-          {props.submit ? <Button onClick={props.submit.onClick} disabled={props.submit.disabled}><FormattedMessage id={props.submit.title}/></Button> : undefined }
+        <Button variant='text' onClick={props.onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={props.submit.onClick} disabled={props.submit.disabled}>
+          <FormattedMessage id={props.submit.title}/>
+        </Button>
       </DialogActions>
     </Dialog>
   );

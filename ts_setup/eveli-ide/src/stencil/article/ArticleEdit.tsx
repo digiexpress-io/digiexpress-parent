@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
@@ -53,41 +53,47 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
     }));
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      
-      title="article.edit.title"
-      submit={{ title: "button.update", onClick: handleUpdate, disabled: !name }}>
-      <>
-        <Burger.Select label="article.edit.parent" onChange={setParentId}
-          selected={parentId ? parentId : ''}
-          items={articles}
-          empty={{ id: "", label: "article.composer.parent.unselected" }}
-        />
+    <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='article.edit.title'/></DialogTitle>
+    <DialogContent>
+      <Burger.Select label="article.edit.parent" onChange={setParentId}
+        selected={parentId ? parentId : ''}
+        items={articles}
+        empty={{ id: "", label: "article.composer.parent.unselected" }}
+      />
 
-        <Box display='flex' alignItems='center'>
-          <Box>
-            <Burger.NumberField label="article.order" helperText='article.composer.orderhelper'
-              onChange={setOrder}
-              value={order}
-              placeholder={400}
-            />
-          </Box>
-          <Box sx={{ width: '10%' }}>
-            <ArticleOrderNumberViewer />
-          </Box>
-        </Box>
-
-        <Burger.TextField label="article.name" required value={name} onChange={setName} />
-        <Box maxWidth="50%" sx={{ ml: 1 }}>
-          <Burger.Switch
-            checked={devMode ? devMode : false}
-            helperText="article.devmode.helper"
-            label="article.devmode"
-            onChange={setDevMode}
+      <Box display='flex' alignItems='center'>
+        <Box>
+          <Burger.NumberField label="article.order" helperText='article.composer.orderhelper'
+            onChange={setOrder}
+            value={order}
+            placeholder={400}
           />
         </Box>
-      </>
-    </Burger.Dialog>);
+        <Box sx={{ width: '10%' }}>
+          <ArticleOrderNumberViewer />
+        </Box>
+      </Box>
+
+      <Burger.TextField label="article.name" required value={name} onChange={setName} />
+      <Box maxWidth="50%" sx={{ ml: 1 }}>
+        <Burger.Switch
+          checked={devMode ? devMode : false}
+          helperText="article.devmode.helper"
+          label="article.devmode"
+          onChange={setDevMode}
+        />
+      </Box>
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleUpdate} disabled={!name}>
+        <FormattedMessage id='button.update' />
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export { ArticleEdit }
