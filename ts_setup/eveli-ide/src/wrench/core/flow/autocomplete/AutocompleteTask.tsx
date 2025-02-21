@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, List, ListItem, ListItemText, Typography, Divider, Button } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -108,16 +108,10 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
     }
   }
 
-  return (<Burger.Dialog title="flows.autocomplete.task" open={true} onClose={onClose}
-    actions={<Button variant='text'
-      disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false }
-      onClick={() => handleSave()}><FormattedMessage id="flows.autocomplete.task.create" /></Button>}
-    submit={{
-      title: "flows.autocomplete.task.link",
-      disabled: (link ? false : true) || apply,
-      onClick: () => handleSave()
-    }}>
-    <Box>
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='flows.autocomplete.task.create' /></DialogTitle>
+    <DialogContent>
       <Burger.Select
         selected={type}
         onChange={(newType) => {
@@ -140,7 +134,7 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
           }
           setName(newName);
         }} />
-
+  
       <Box pt={2} pb={2}>
         <Typography variant="h4" fontWeight="bold"><FormattedMessage id={"flows.autocomplete.task.searchResults"} /></Typography>
       </Box>
@@ -155,8 +149,19 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
           setName((a.entity.ast as Client.AstBody).name);
         }} />)}
       </List>
-    </Box>
-  </Burger.Dialog >);
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false } onClick={handleSave}>
+          <FormattedMessage id="flows.autocomplete.task.create" />
+      </Button>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button disabled={(link ? false : true) || apply} onClick={handleSave}>
+        <FormattedMessage id='flows.autocomplete.task.link'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export { AutocompleteTask };

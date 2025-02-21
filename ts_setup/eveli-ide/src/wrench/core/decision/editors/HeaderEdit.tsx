@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Box, Grid2, ListItemText, Button } from '@mui/material';
+import { Box, Grid2, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';
 
 
@@ -104,30 +104,28 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
       {header.direction === 'IN' && header.valueType === 'STRING' && <EditValueSet valueSet={valueSet} setValueSet={setValueSet} commands={commands} setCommands={setCommands} headerId={header.id} />}
     </Box >);
 
-
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='decisions.header.dialog.title'
-    titleArgs={{
-      name: dt.name,
-      column: header.name
-    }}
-    actions={
+  return (<Dialog open={true} onClose={onClose}>
+    <DialogTitle>
+      <FormattedMessage id='decisions.header.dialog.title' values={{
+        name: dt.name,
+        column: header.name }} />
+    </DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
       <Button variant='text' children={intl.formatMessage({ id: 'dt.header.delete' })} onClick={() => {
         onChange([{ type: 'DELETE_HEADER', id: header.id }]);
         onClose();
       }} />
-    }
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        onChange(commands);
-        onClose();
-      }
-    }}
-  />);
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={() => {
+          onChange(commands);
+          onClose(); }}>
+        <FormattedMessage id='buttons.apply'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export type { HeaderEditProps };

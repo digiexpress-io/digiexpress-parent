@@ -14,27 +14,21 @@ interface StyledDialogProps {
     disabled: boolean;
     onClick: () => void;
   };
-  actions?: React.ReactElement;
+
   open: boolean;
   children: React.ReactElement;
 }
 
 const StyledDialog: React.FC<StyledDialogProps> = (props) => {
-
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle><FormattedMessage id={props.title} values={props.titleArgs} /></DialogTitle>
       <DialogContent>{props.children}</DialogContent>
       <DialogActions>
-        <Box display="inline-flex">
-        
-          {props.actions}
-          <Button variant='text' sx={{ mr: 1 }} onClick={props.onClose}>
+          <Button variant='text' onClick={props.onClose}>
             <FormattedMessage id='button.cancel'/>
           </Button>
           {props.submit ? <Button onClick={props.submit.onClick} disabled={props.submit.disabled}><FormattedMessage id={props.submit.title}/></Button> : undefined }
-        
-        </Box>
       </DialogActions>
     </Dialog>
   );

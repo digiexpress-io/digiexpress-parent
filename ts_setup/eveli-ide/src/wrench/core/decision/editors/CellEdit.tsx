@@ -1,8 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
 
-import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
 
 import Builder, { 
@@ -67,31 +66,37 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
     editor = (<></>);
   }
 
-  return (<Burger.Dialog open={true}
-    onClose={props.onClose}
-    children={editor}
-    title='decisions.cells.dialog.title'
-    titleArgs={{
-      name: props.dt.name,
-      column: header.name,
-      value: props.cell.value
-    }}
-    actions={
-      <Button variant='text' children={<FormattedMessage id="decisions.cells.newvalue.clear"/>} onClick={() => {
-        const builder = Builder({ header, value: undefined }) as any;
-        setValue({ value: undefined, builder });
+
+
+  return (<Dialog open={true} onClose={props.onClose}>
+    <DialogTitle>
+      <FormattedMessage id='decisions.cells.dialog.title' values={{
+        name: props.dt.name,
+        column: header.name,
+        value: props.cell.value
       }} />
-    }
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        const command: Client.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
-        props.onChange(command);
-        props.onClose();
-      }
-    }}
-  />);
+    </DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+        <Button variant='text' onClick={() => {
+            const builder = Builder({ header, value: undefined }) as any;
+            setValue({ value: undefined, builder });
+          }}>
+          <FormattedMessage id="decisions.cells.newvalue.clear"/>
+        </Button>
+        <Button variant='text' onClick={props.onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={() => {
+            const command: Client.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
+            props.onChange(command);
+            props.onClose();
+          }}>
+          <FormattedMessage id='buttons.apply'/>
+        </Button>
+    </DialogActions>
+  </Dialog>
+  );
 }
 
 export type { CellEditProps };

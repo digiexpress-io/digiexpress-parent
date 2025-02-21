@@ -258,6 +258,10 @@ const siteTheme = createTheme({
       }
     },
 
+    MuiDialogActions: {
+      
+    },
+
     MuiDialogTitle: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => {
