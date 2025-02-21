@@ -12,8 +12,6 @@ import { FormattedMessage } from 'react-intl';
 const DUMMY_ID = "none-selected"
 
 
-
-
 const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const { service, actions, session } = Composer.useComposer();
@@ -33,7 +31,6 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       actions.handleLoadSite();
     });
   }
-
   const message = <FormattedMessage id="snack.article.createdMessage" values={{ name }} />
 
   return (

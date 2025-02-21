@@ -242,6 +242,22 @@ const siteTheme = createTheme({
       }
     },
 
+    MuiDialog: {
+      defaultProps: {
+        fullWidth: true, 
+        maxWidth: 'md'
+      }
+    },
+
+    MuiDialogContent: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+          color: theme.palette.mainContent.dark, 
+          fontWeight: '400'
+        })
+      }
+    },
+
     MuiDialogTitle: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => {

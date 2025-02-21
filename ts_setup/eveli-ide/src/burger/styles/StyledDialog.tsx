@@ -22,17 +22,18 @@ interface StyledDialogProps {
 const StyledDialog: React.FC<StyledDialogProps> = (props) => {
 
   return (
-    <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="md" >
-      <DialogTitle>
-        <FormattedMessage id={props.title} values={props.titleArgs} /></DialogTitle>
-      <DialogContent sx={{ color: "mainContent.dark", fontWeight: '400' }}>{props.children}</DialogContent>
+    <Dialog open={props.open} onClose={props.onClose}>
+      <DialogTitle><FormattedMessage id={props.title} values={props.titleArgs} /></DialogTitle>
+      <DialogContent>{props.children}</DialogContent>
       <DialogActions>
         <Box display="inline-flex">
+        
           {props.actions}
           <Button variant='text' sx={{ mr: 1 }} onClick={props.onClose}>
             <FormattedMessage id='button.cancel'/>
           </Button>
           {props.submit ? <Button onClick={props.submit.onClick} disabled={props.submit.disabled}><FormattedMessage id={props.submit.title}/></Button> : undefined }
+        
         </Box>
       </DialogActions>
     </Dialog>
