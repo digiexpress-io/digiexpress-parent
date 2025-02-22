@@ -1,11 +1,9 @@
 import React from 'react';
-import { DialogContentText } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
-
 import { FormattedMessage } from 'react-intl';
-
 import { Composer, StencilApi } from '../context';
-import * as Burger from '@/burger';
+
 
 interface WorkflowDeleteProps {
   workflow: StencilApi.Workflow,
@@ -27,14 +25,18 @@ const WorkflowDelete: React.FC<WorkflowDeleteProps> = ({ workflow, onClose }) =>
   const message = <FormattedMessage id="snack.workflow.deletedMessage" />
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="services.delete"
-      submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
-
-      <DialogContentText>
-        <FormattedMessage id="services.delete.desc" />
-      </DialogContentText>
-    </Burger.Dialog>
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='services.delete' /></DialogTitle>
+      <DialogContent><FormattedMessage id="services.delete.desc" /></DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleDelete}>
+          <FormattedMessage id='button.delete'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 export { WorkflowDelete }

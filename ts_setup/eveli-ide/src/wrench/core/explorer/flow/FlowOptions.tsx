@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -36,33 +36,36 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
     </Typography>)
   }
 
-
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='flows.delete.title'
-    submit={{
-      title: "buttons.delete",
-      disabled: apply,
-      onClick: () => {
-        setErrors(undefined);
-        setApply(true);
-        var flowTab = tabs.session.tabs.find(tab => tab.id === flowId);
-        service.delete().flow(flowId)
-          .then(data => {
-            if (flowTab) {
-              tabs.actions.handleTabClose(flowTab);
-            }
-            enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
-            actions.handleLoadSite(data);
-            onClose();
-          })
-          .catch((error: Client.StoreError) => {
-            setErrors(error);
-          });
-      }
-    }}
-  />);
+  const handleDelete = () => {
+    setErrors(undefined);
+    setApply(true);
+    var flowTab = tabs.session.tabs.find(tab => tab.id === flowId);
+    service.delete().flow(flowId)
+      .then(data => {
+        if (flowTab) {
+          tabs.actions.handleTabClose(flowTab);
+        }
+        enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
+        actions.handleLoadSite(data);
+        onClose();
+      })
+      .catch((error: Client.StoreError) => {
+        setErrors(error);
+      });
+  }
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='flows.delete.title' /></DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleDelete} disabled={apply}>
+        <FormattedMessage id='buttons.delete'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 
@@ -147,17 +150,19 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
         labelText={<FormattedMessage id="flows.copyas.title" />}>
       </Burger.TreeItemOption>
 
-      {dialogOpen === 'FlowCopy' ? 
-      <Burger.Dialog open={true}
-        onClose={handleDialogClose}
-        children={editor}
-        title='flows.composer.copyTitle'
-        submit={{
-          title: "buttons.copy",
-          disabled: apply,
-          onClick: () => handleCopy()
-        }}
-      /> : null}
+      {dialogOpen === 'FlowCopy' ? (
+        <Dialog open={true} onClose={handleDialogClose}>
+          <DialogTitle><FormattedMessage id='flows.composer.copyTitle' /></DialogTitle>
+          <DialogContent>{editor}</DialogContent>
+          <DialogActions>
+            <Button variant='text' onClick={handleDialogClose}>
+              <FormattedMessage id='button.cancel'/>
+            </Button>
+            <Button onClick={handleCopy} disabled={apply}>
+              <FormattedMessage id='buttons.copy'/>
+            </Button>
+          </DialogActions>
+        </Dialog>) : null}
     </>
   );
 }

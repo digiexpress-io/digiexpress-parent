@@ -1,10 +1,9 @@
 import React from 'react';
-import { DialogContentText } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { Composer, StencilApi } from '../context';
-import * as Burger from '@/burger';
 
 
 interface ReleaseDeleteProps {
@@ -26,12 +25,17 @@ const ReleaseDelete: React.FC<ReleaseDeleteProps> = ({ id, onClose }) => {
   }
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="release.delete.title"
-      submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
-      <DialogContentText>
-        <FormattedMessage id="release.delete.desc" />
-      </DialogContentText>
-    </Burger.Dialog>);
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='release.delete.title' /></DialogTitle>
+      <DialogContent><FormattedMessage id="release.delete.desc" /></DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleDelete}>
+          <FormattedMessage id='button.delete'/>
+        </Button>
+      </DialogActions>
+    </Dialog>);
 };
 export { ReleaseDelete };

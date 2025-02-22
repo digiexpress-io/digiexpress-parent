@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
-import { Box } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 
 
@@ -42,12 +42,10 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
   const templates: StencilApi.Template[] = Object.values(site.templates);
 
   return (
-    <Burger.Dialog open={true} onClose={props.onClose}
-      title="newpage.title"
-      //titleArgs={{articleId ? name: articleName : undefined}}
-      submit={{ title: "button.create", onClick: handleCreate, disabled: !locale }}>
-      <>
-        <FormattedMessage id='newpage.info' />
+    <Dialog open={true} onClose={props.onClose}>
+      <DialogTitle><FormattedMessage id='newpage.title' /></DialogTitle>
+      <DialogContent>
+      <FormattedMessage id='newpage.info' />
 
         <Burger.Select
           selected={articleId}
@@ -82,8 +80,16 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
             onChange={setDevMode}
           />
         </Box>
-      </>
-    </Burger.Dialog>
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={props.onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleCreate} disabled={!locale}>
+          <FormattedMessage id='button.create'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

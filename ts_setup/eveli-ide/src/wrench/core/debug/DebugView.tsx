@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox, Radio } from '@mui/material';
+import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox, Radio,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { Composer } from '../context';
@@ -262,16 +262,20 @@ const DebugView: React.FC<{}> = ({ }) => {
       </Table>
     </TableContainer>
 
-    { dialogShow && <Burger.Dialog open={true}
-      onClose={() => setDialogShow(false)}
-      children={dialogChildren}
-      title='debug.csv.download'
-      submit={{
-        title: "buttons.download",
-        disabled: false,
-        onClick: () => downloadCsv(delimiter, wrap)
-      }}
-    /> }
+    { dialogShow && (   
+      <Dialog open={true} onClose={() => setDialogShow(false)}>
+        <DialogTitle><FormattedMessage id='debug.csv.download' /></DialogTitle>
+        <DialogContent>{dialogChildren}</DialogContent>
+        <DialogActions>
+          <Button variant='text' onClick={() => setDialogShow(false)}>
+            <FormattedMessage id='button.cancel'/>
+          </Button>
+          <Button onClick={() => downloadCsv(delimiter, wrap)}>
+            <FormattedMessage id='buttons.download'/>
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )}
 
   </Box >);
 }

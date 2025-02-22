@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemText, Box, Typography, Button, Checkbox } from '@mui/material';
+import { ListItemText, Box, Typography, Button, Checkbox,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
@@ -66,10 +66,12 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
       sx: article.body.parentId ? selectSub : undefined
     }));
 
-  return (<Burger.Dialog open={true} onClose={onClose}
-    title="link.edit.title"
-    submit={{ title: "button.update", onClick: handleUpdate, disabled: !value || changeInProgress || labels.length < 1 }}>
-    <>
+
+
+
+  return (<Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='link.edit.title'/></DialogTitle>
+    <DialogContent>
       <LocaleLabels
         onChange={(labels) => { setChangeInProgress(false); setLabels(labels.map(l => ({ locale: l.locale, labelValue: l.value }))); }}
         onChangeStart={() => setChangeInProgress(true)}
@@ -113,8 +115,16 @@ const LinkEdit: React.FC<LinkEditProps> = ({ linkId, onClose }) => {
           onChange={setDevMode}
         />
       </Box>
-    </>
-  </Burger.Dialog>
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleUpdate} disabled={!value || changeInProgress || labels.length < 1}>
+        <FormattedMessage id='button.update'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 export { LinkEdit }

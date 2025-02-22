@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -36,32 +36,37 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
     </Typography>)
   }
 
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='services.delete.title'
-    submit={{
-      title: "buttons.delete",
-      disabled: apply,
-      onClick: () => {
-        setErrors(undefined);
-        setApply(true);
-        var serviceTab = tabs.session.tabs.find(tab => tab.id === serviceId);
-        composerService.delete().service(serviceId)
-          .then(data => {
-            if (serviceTab) {
-              tabs.actions.handleTabClose(serviceTab);
-            }
-            enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
-            actions.handleLoadSite(data);
-            onClose();
-          })
-          .catch((error: Client.StoreError) => {
-            setErrors(error);
-          });
-      }
-    }}
-  />);
+  const handleDelete = () => {
+    setErrors(undefined);
+    setApply(true);
+    var serviceTab = tabs.session.tabs.find(tab => tab.id === serviceId);
+    composerService.delete().service(serviceId)
+      .then(data => {
+        if (serviceTab) {
+          tabs.actions.handleTabClose(serviceTab);
+        }
+        enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
+        actions.handleLoadSite(data);
+        onClose();
+      })
+      .catch((error: Client.StoreError) => {
+        setErrors(error);
+      });
+  }
+
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='services.delete.title' /></DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleDelete} disabled={apply}>
+        <FormattedMessage id='services.delete.title'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = ({ service }) => {
@@ -139,17 +144,19 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
         onClick={() => setDialogOpen('ServiceCopy')}
         labelText={<FormattedMessage id="services.copyas.title" />}>
       </Burger.TreeItemOption>
-      {dialogOpen === 'ServiceCopy' ? 
-      <Burger.Dialog open={true}
-        onClose={handleDialogClose}
-        children={editor}
-        title='services.composer.copyTitle'
-        submit={{
-          title: "buttons.copy",
-          disabled: apply,
-          onClick: () => handleCopy()
-        }}
-      /> : null}
+      {dialogOpen === 'ServiceCopy' ? (
+        <Dialog open={true} onClose={handleDialogClose}>
+          <DialogTitle><FormattedMessage id='services.composer.copyTitle' /></DialogTitle>
+          <DialogContent>{editor}</DialogContent>
+          <DialogActions>
+            <Button variant='text' onClick={handleDialogClose}>
+              <FormattedMessage id='button.cancel'/>
+            </Button>
+            <Button onClick={handleCopy} disabled={apply}>
+              <FormattedMessage id='buttons.copy'/>
+            </Button>
+          </DialogActions>
+        </Dialog>) : null}
     </>
   );
 }

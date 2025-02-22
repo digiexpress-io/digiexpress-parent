@@ -3,8 +3,10 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+
+
 import { Composer, StencilApi } from '../context';
-import * as Burger from '@/burger';
 
 
 interface TemplateDeleteProps {
@@ -31,14 +33,18 @@ const TemplateDelete: React.FC<TemplateDeleteProps> = ({ templateId, onClose }) 
 
 
   return (
-    <Burger.Dialog onClose={onClose} open={true}
-      title={"template.delete"}
-      submit={{ title: 'button.delete', disabled: false, onClick: handleDelete, }}
-    >
-      <>
-        <FormattedMessage id='template.delete.message' />
-      </>
-    </Burger.Dialog>
+    <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='template.delete' /></DialogTitle>
+    <DialogContent><FormattedMessage id='template.delete.message' /></DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleDelete}>
+        <FormattedMessage id='button.delete'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 

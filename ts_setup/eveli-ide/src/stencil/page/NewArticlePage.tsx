@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box,  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
@@ -45,11 +45,9 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
   const templates: StencilApi.Template[] = Object.values(site.templates);
 
   return (
-    <Burger.Dialog open={open ? true : false} onClose={onClose}
-      title="newpage.title"
-      titleArgs={{ name: articleName }}
-      submit={{ title: "button.create", onClick: handleCreate, disabled: false }}>
-      <>
+    <Dialog open={open ? true : false} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='newpage.title' values={{ name: articleName }}/></DialogTitle>
+    <DialogContent>
         <Typography>
           <FormattedMessage id='newpage.article.info' values={{ article: article.body.name, locale: open.body.value }} />
         </Typography>
@@ -70,8 +68,16 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
             onChange={setDevMode}
           />
         </Box>
-      </>
-    </Burger.Dialog>
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleCreate}>
+          <FormattedMessage id='button.create'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

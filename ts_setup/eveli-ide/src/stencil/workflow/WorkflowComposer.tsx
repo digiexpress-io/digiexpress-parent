@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
@@ -98,10 +98,9 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .sort((a,b)=>a.value.localeCompare(b.value)), [allTags, formName]);
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="services.add"
-      submit={{ title: "button.add", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
-      <>
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='services.add' /></DialogTitle>
+      <DialogContent>
 
         <Burger.TextField label='services.technicalname'
           required
@@ -193,8 +192,16 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <WarningAmberRoundedIcon sx={{ ml: 3, color: "warning.main" }} /><Typography variant="caption" sx={{ ml: 1 }}><FormattedMessage id="add.allarticles.service.help" /></Typography>
           </Box>
         </Paper>
-      </>
-    </Burger.Dialog>
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
+          <FormattedMessage id='button.add'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 
 }

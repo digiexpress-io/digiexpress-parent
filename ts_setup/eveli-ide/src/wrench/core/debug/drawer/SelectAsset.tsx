@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, List, ListItem, ListItemText, Typography, Divider } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import * as Burger from '@/burger';
 
@@ -65,17 +65,13 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
 
 
 
-  return (<Burger.Dialog title="debug.select.title" open={true} onClose={onClose}
-    submit={{
-      title: "debug.select.confirm",
-      disabled: (link ? false : true),
-      onClick: () => {
-        if(link) {
-          onSelect(link);
-        }
-      }
-    }}>
-    <Box>
+
+
+
+  return (
+    <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='debug.select.title' /></DialogTitle>
+    <DialogContent>
       <Burger.Select
         selected={type}
         onChange={(newType) => {
@@ -114,8 +110,20 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
             setName((a.entity.ast as HdesApi.AstBody).name);
           }} />)}
       </List>
-    </Box>
-  </Burger.Dialog >);
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={() => {
+          if(link) {
+            onSelect(link);
+          }
+        }} disabled={link ? false : true}>
+        <FormattedMessage id='debug.select.confirm'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export { SelectAsset };

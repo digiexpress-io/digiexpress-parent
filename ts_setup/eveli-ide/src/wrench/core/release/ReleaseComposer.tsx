@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
@@ -63,16 +63,19 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
 
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='releases.composer.title'
-    submit={{
-      title: "buttons.create",
-      disabled: apply,
-      onClick: () => handleCreate()
-    }}
-  />);
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='releases.composer.title' /></DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleCreate} disabled={apply}>
+        <FormattedMessage id='buttons.create'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export { ReleaseComposer };

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TextareaAutosize, Box, Divider, Chip, Typography } from '@mui/material';
+import { TextareaAutosize, Box, Divider, Chip, Typography,  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/burger';
@@ -17,17 +17,13 @@ interface InputCSVProps {
 const InputCSV: React.FC<InputCSVProps> = ({ onSelect, onClose, value }) => {
   const [csv, setCsv] = React.useState(value);
 
-  return (<Burger.Dialog title="debug.input.csvUpload" open={true} onClose={onClose}
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        onSelect(csv);
-        onClose();
-      }
-    }}>
 
-    <Box>
+
+
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='debug.input.csvUpload' /></DialogTitle>
+    <DialogContent>
       <Box>
         <Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.csvFileTitle"} /></Typography></Box>
         <Burger.FileField value="" onChange={setCsv} label="debug.input.csvFile" />
@@ -42,9 +38,19 @@ const InputCSV: React.FC<InputCSVProps> = ({ onSelect, onClose, value }) => {
         value={csv}
         onChange={({ target }) => setCsv(target.value)}
       />
-
-    </Box>
-  </Burger.Dialog>);
+    </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={() => {
+            onSelect(csv);
+            onClose();
+          }}>
+          <FormattedMessage id='buttons.apply'/>
+        </Button>
+      </DialogActions>
+    </Dialog>);
 }
 
 export type { InputCSVProps };

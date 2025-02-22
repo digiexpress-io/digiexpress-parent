@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
@@ -28,33 +29,40 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
   const unusedLocales: StencilApi.SiteLocale[] = Object.values(site.locales).filter(siteLocale => !usedLocales.includes(siteLocale.id));
 
   const valid = pageId && articleId && newLocale;
-  return (
-    <Burger.Dialog open={true} onClose={props.onClose}
-      title="pages.change"
-      submit={{ title: "button.update", onClick: handleUpdate, disabled: !valid }}>
 
-      <>
-        <FormattedMessage id='pages.change.info' />
-        <Burger.Select
-          selected={pageId}
-          onChange={setPageId}
-          label='pages.edit.selectpage'
-          items={articlePages.map((articlePage) => ({
-            id: articlePage.id,
-            value: site.locales[articlePage.body.locale].body.value
-          }))}
-        />
-        <Burger.Select
-          selected={newLocale}
-          onChange={setNewLocale}
-          label='pages.edit.selectTargetLocale'
-          items={unusedLocales.map((unusedLocale) => ({
-            id: unusedLocale.id,
-            value: unusedLocale.body.value
-          }))}
-        />
-      </>
-    </Burger.Dialog>
+  return (
+  <Dialog open={true} onClose={props.onClose}>
+    <DialogTitle><FormattedMessage id='pages.change' /></DialogTitle>
+    <DialogContent>
+      <FormattedMessage id='pages.change.info' />
+      <Burger.Select
+        selected={pageId}
+        onChange={setPageId}
+        label='pages.edit.selectpage'
+        items={articlePages.map((articlePage) => ({
+          id: articlePage.id,
+          value: site.locales[articlePage.body.locale].body.value
+        }))}
+      />
+      <Burger.Select
+        selected={newLocale}
+        onChange={setNewLocale}
+        label='pages.edit.selectTargetLocale'
+        items={unusedLocales.map((unusedLocale) => ({
+          id: unusedLocale.id,
+          value: unusedLocale.body.value
+        }))}
+      />
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={props.onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleUpdate} disabled={!valid}>
+        <FormattedMessage id='button.update'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 

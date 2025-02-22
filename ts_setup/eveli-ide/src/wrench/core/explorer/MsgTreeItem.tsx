@@ -1,8 +1,9 @@
 import React from 'react';
-import { DialogContentText } from '@mui/material';
+import {  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { HdesApi } from '../client';
+import { FormattedMessage } from 'react-intl';
 
 
 
@@ -13,16 +14,22 @@ const MsgTreeItem: React.FC<{
   children: React.ReactNode
 }> = (props) => {
   const [open, setOpen] = React.useState(false);
-
+  const onClose = () => setOpen(false);
   return (
     <>
-      {open ? (<Burger.Dialog open={true} onClose={() => setOpen(false)}
-        title={`programs.${props.error ? "error" : "warning"}.title`}>
-        <DialogContentText>
+      {open ? (
+      <Dialog open={true} onClose={onClose}>
+        <DialogTitle><FormattedMessage id={`programs.${props.error ? "error" : "warning"}.title`} /></DialogTitle>
+        <DialogContent>
           <b>{props.msg.id}</b><br />
           {props.msg.msg}
-        </DialogContentText>
-      </Burger.Dialog>) : undefined}
+        </DialogContent>
+        <DialogActions>
+          <Button variant='text' onClick={onClose}>
+            <FormattedMessage id='button.cancel'/>
+          </Button>
+        </DialogActions>
+      </Dialog>) : undefined}
 
       <Burger.TreeItemRoot
         itemId={props.nodeId}

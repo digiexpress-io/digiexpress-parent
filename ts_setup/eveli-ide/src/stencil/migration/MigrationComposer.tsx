@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import * as Burger from '@/burger';
 import { Composer } from '../context';
 
@@ -30,19 +30,24 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   
 
 
+
   
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="toolbar.import"
-      submit={{ title: "imports.import.action", onClick: handleCreate, disabled: loading || !file }}>
-      <>
-        <div>{file}</div>
-        <Burger.FileField value='' onChange={setFile} label="imports.select" />
-
-      </>
-    </Burger.Dialog>
-
-
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='toolbar.import' /></DialogTitle>
+    <DialogContent>
+      <div>{file}</div>
+      <Burger.FileField value='' onChange={setFile} label="imports.select" />
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleCreate} disabled={loading || !file }>
+        <FormattedMessage id='imports.import.action"'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 

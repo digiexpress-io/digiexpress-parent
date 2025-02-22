@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ListItemText, Paper, Box, Typography, Button, Checkbox } from '@mui/material';
+import { ListItemText, Paper, Box, Typography, Button, Checkbox, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
@@ -95,13 +95,11 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       .filter((tag) => tag.formName === formName)
       .map(({tagName}) => ({id: tagName, value: tagName}))
       .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
-    
-  return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="services.edit"
-      submit={{ title: "button.apply", onClick: handleCreate, disabled: !technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }}>
 
-      <>
+  return (
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='services.edit' /></DialogTitle>
+      <DialogContent>
         <Burger.TextField label='services.technicalname'
           required
           value={technicalname}
@@ -194,8 +192,16 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
             </Typography>
           </Box>
         </Paper>
-      </>
-    </Burger.Dialog >
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }>
+          <FormattedMessage id='button.apply"'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 
 }

@@ -1,10 +1,11 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
+import {  Dialog, DialogTitle, DialogContent, DialogActions, Box, Button } from '@mui/material';
 
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
-import { Box } from '@mui/material';
+
 
 
 const PageEditDevMode: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
@@ -34,12 +35,10 @@ const PageEditDevMode: React.FC<{ onClose: () => void, articleId: StencilApi.Art
   
     const valid = pageId && articleId;
     return (
-      <Burger.Dialog open={true} onClose={props.onClose}
-        title="pages.change.devmode"
-        submit={{ title: "button.update", onClick: handleUpdate, disabled: !valid }}>
-  
-        <>
-          <FormattedMessage id='pages.change.devmode.info' />
+    <Dialog open={true} onClose={props.onClose}>
+      <DialogTitle><FormattedMessage id='pages.change.devmode' /></DialogTitle>
+      <DialogContent>
+        <FormattedMessage id='pages.change.devmode.info' />
           <Burger.Select
             selected={pageId}
             onChange={setPageId}
@@ -48,18 +47,26 @@ const PageEditDevMode: React.FC<{ onClose: () => void, articleId: StencilApi.Art
               id: articlePage.id,
               value: site.locales[articlePage.body.locale].body.value
             }))}
+        />
+        {pageId.length > 0 && 
+        <Box maxWidth="50%" sx={{ ml: 1 }}>
+          <Burger.Switch
+            checked={devMode}
+            helperText="pages.devmode.helper"
+            label="pages.devmode"
+            onChange={setDevMode}
           />
-          {pageId.length > 0 && 
-          <Box maxWidth="50%" sx={{ ml: 1 }}>
-            <Burger.Switch
-              checked={devMode}
-              helperText="pages.devmode.helper"
-              label="pages.devmode"
-              onChange={setDevMode}
-            />
-          </Box>}
-        </>
-      </Burger.Dialog>
+        </Box>}
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={props.onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleUpdate} disabled={!valid}>
+          <FormattedMessage id='button.update'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
     );
 }
 

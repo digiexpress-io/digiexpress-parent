@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Card, DialogContentText } from '@mui/material';
+import { Box, Typography, Card, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import Table from '@mui/material/Table';
@@ -53,21 +53,23 @@ const LocalesView: React.FC<{}> = () => {
     message = <FormattedMessage id='snack.locale.enabled' />
   }
 
-
+  const onClose = () => setEditLocale(undefined);
   return (<>
     { editLocale ?
-      (<Burger.Dialog open={true} onClose={() => setEditLocale(undefined)}
-        title={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"}
-        submit={{
-          title: editLocale.body.enabled ? "button.disable" : "button.enable",
-          onClick: editLocale.body.enabled ? () => handleEnable(editLocale, false) : () => handleEnable(editLocale, true),
-          disabled: false
-        }}>
-
-        <DialogContentText>
+      (<Dialog open={true} onClose={onClose}>
+        <DialogTitle><FormattedMessage id={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"} /></DialogTitle>
+        <DialogContent>
           {editLocale.body.enabled ? <FormattedMessage id="locale.disable" /> : <FormattedMessage id="locale.enable" />}
-        </DialogContentText>
-      </Burger.Dialog>) : null
+        </DialogContent>
+        <DialogActions>
+          <Button variant='text' onClick={onClose}>
+            <FormattedMessage id='button.cancel'/>
+          </Button>
+          <Button onClick={editLocale.body.enabled ? () => handleEnable(editLocale, false) : () => handleEnable(editLocale, true)}>
+            <FormattedMessage id={editLocale.body.enabled ? "button.disable" : "button.enable"}/>
+          </Button>
+        </DialogActions>
+      </Dialog>) : null
     }
 
     <Box sx={{ paddingBottom: 1, m: 2 }}>

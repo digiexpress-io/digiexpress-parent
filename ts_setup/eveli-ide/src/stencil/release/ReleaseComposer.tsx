@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
-import { Typography } from '@mui/material';
+import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
@@ -30,24 +30,31 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const message = <FormattedMessage id="snack.release.createdMessage" />
 
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="release.composer.title"
-      submit={{ title: "button.create", onClick: handleCreate, disabled: !name || site.contentType === 'EMPTY' }}>
-      <>
-        {site.contentType === 'EMPTY' ? <Typography variant="h4" sx={{
-          color: 'error.main',
-          fontWeight: 'bold',
-          p: 2,
-          borderRadius: 3,
-          textAlign: 'center',
-          border: '1px solid',
-          borderColor: 'error.main'
-        }}>
-          <FormattedMessage id={'site.content.empty'} /></Typography> : null}
-        <Burger.TextField label='release.composer.label' onChange={setName} value={name} />
-        <Burger.TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
-      </>
-    </Burger.Dialog>
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='release.composer.title' /></DialogTitle>
+    <DialogContent>
+      {site.contentType === 'EMPTY' ? <Typography variant="h4" sx={{
+        color: 'error.main',
+        fontWeight: 'bold',
+        p: 2,
+        borderRadius: 3,
+        textAlign: 'center',
+        border: '1px solid',
+        borderColor: 'error.main'
+      }}>
+        <FormattedMessage id={'site.content.empty'} /></Typography> : null}
+      <Burger.TextField label='release.composer.label' onChange={setName} value={name} />
+      <Burger.TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleCreate} disabled={!name || site.contentType === 'EMPTY'}>
+        <FormattedMessage id='button.create'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 

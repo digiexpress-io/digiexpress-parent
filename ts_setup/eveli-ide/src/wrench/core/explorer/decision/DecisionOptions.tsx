@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button  } from "@mui/material";
+
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
@@ -38,32 +39,38 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   }
 
 
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='decisions.delete.title'
-    submit={{
-      title: "buttons.delete",
-      disabled: apply,
-      onClick: () => {
-        setErrors(undefined);
-        setApply(true);
-        var decisionTab = tabs.session.tabs.find(tab => tab.id === decisionId);
-        service.delete().decision(decisionId)
-          .then(data => {
-            if (decisionTab) {
-              tabs.actions.handleTabClose(decisionTab);
-            }
-            enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
-            actions.handleLoadSite(data);
-            onClose();
-          })
-          .catch((error: HdesApi.StoreError) => {
-            setErrors(error);
-          });
-      }
-    }}
-  />);
+  const handleSubmit = () => {
+    setErrors(undefined);
+    setApply(true);
+    var decisionTab = tabs.session.tabs.find(tab => tab.id === decisionId);
+    service.delete().decision(decisionId)
+      .then(data => {
+        if (decisionTab) {
+          tabs.actions.handleTabClose(decisionTab);
+        }
+        enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
+        actions.handleLoadSite(data);
+        onClose();
+      })
+      .catch((error: HdesApi.StoreError) => {
+        setErrors(error);
+      });
+  }
+
+  return (
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='decisions.delete.title' /></DialogTitle>
+      <DialogContent>{editor}</DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleSubmit} disabled={apply}>
+          <FormattedMessage id='buttons.delete'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 
@@ -114,6 +121,8 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
     </Typography>)
   }
 
+
+
   return (
     <>
       {dialogOpen === 'DecisionDelete' ? <DecisionDelete decisionId={decision.id} onClose={handleDialogClose} /> : null}
@@ -141,17 +150,20 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
         onClick={() => setDialogOpen('DecisionCopy')}
         labelText={<FormattedMessage id="decisions.copyas.title" />}>
       </Burger.TreeItemOption>
-      {dialogOpen === 'DecisionCopy' ? 
-      <Burger.Dialog open={true}
-        onClose={handleDialogClose}
-        children={editor}
-        title='decisions.composer.copyTitle'
-        submit={{
-          title: "buttons.copy",
-          disabled: apply,
-          onClick: () => handleCopy()
-        }}
-      /> : null}
+      {dialogOpen === 'DecisionCopy' ? (
+        <Dialog open={true} onClose={handleDialogClose}>
+          <DialogTitle><FormattedMessage id='decisions.composer.copyTitle' /></DialogTitle>
+          <DialogContent>{editor}</DialogContent>
+          <DialogActions>
+            <Button variant='text' onClick={handleDialogClose}>
+              <FormattedMessage id='button.cancel'/>
+            </Button>
+            <Button onClick={() => handleCopy()} disabled={apply}>
+              <FormattedMessage id='buttons.copy'/>
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
     </>
   );
 }

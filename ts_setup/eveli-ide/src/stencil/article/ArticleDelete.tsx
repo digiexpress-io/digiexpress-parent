@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContentText } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
@@ -24,15 +24,19 @@ const ArticleDelete: React.FC<ArticleDeleteProps> = ({ articleId, onClose }) => 
       actions.handleLoadSite();
     });
   }
-
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      
-      title="article.delete.title"
-      submit={{ title: "button.delete", onClick: handleDelete, disabled: false }}>
-      <DialogContentText>
-        <FormattedMessage id="article.delete" />
-      </DialogContentText>
-    </Burger.Dialog>);
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='article.delete.title' /></DialogTitle>
+      <DialogContent></DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleDelete} >
+          <FormattedMessage id='button.delete'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 };
 export { ArticleDelete };

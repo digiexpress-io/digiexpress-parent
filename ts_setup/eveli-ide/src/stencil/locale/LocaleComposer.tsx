@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
@@ -9,6 +10,10 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const [locale, setLocale] = React.useState("");
+
+
+  const message = <FormattedMessage id="snack.locale.createdMessage" />
+  const locales: StencilApi.Locale[] = Object.values(site.locales).map(l => l.body.value);
 
   const handleCreate = () => {
     const entity: StencilApi.CreateLocale = { locale };
@@ -21,21 +26,25 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     });
   }
 
-  const message = <FormattedMessage id="snack.locale.createdMessage" />
-  const locales: StencilApi.Locale[] = Object.values(site.locales).map(l => l.body.value);
-  
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title="locale.composer.title"
-      submit={{ title: "button.create", onClick: handleCreate, disabled: !locale || locales.includes(locale) || locale.length !== 2 }}>
-
-      <Burger.TextField label='locale.composer.placeholder' helperText='locale.composer.helper' placeholder="en"
-        required
-        value={locale}
-        onChange={setLocale}
-      />
-    </Burger.Dialog>
-  );
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='locale.composer.title' /></DialogTitle>
+      <DialogContent>
+        <Burger.TextField label='locale.composer.placeholder' helperText='locale.composer.helper' placeholder="en"
+          required
+          value={locale}
+          onChange={setLocale}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={handleCreate} disabled={!locale || locales.includes(locale) || locale.length !== 2 }>
+          <FormattedMessage id='button.create'/>
+        </Button>
+      </DialogActions>
+    </Dialog>);
 }
 
 export { LocaleComposer }

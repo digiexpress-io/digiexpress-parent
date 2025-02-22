@@ -1,9 +1,10 @@
 import React from 'react'
 
-import { ListItemText } from '@mui/material';
+import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
+import { FormattedMessage } from 'react-intl';
 
 const hitPolicyOptions = [
   { key: 'ALL', value: 'ALL', text: 'ALL' },
@@ -20,29 +21,10 @@ const NameDescHitPolicyEdit: React.FC<{
   const [desc, setDesc] = React.useState(decision.description);
   const [hitpolicy, setHitpolicy] = React.useState<string>(decision.hitPolicy);
 
-
-  return (<Burger.Dialog title="decisions.toolbar.nameAndHitpolicy" open={true} onClose={onClose}
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        const commands: Client.AstCommand[] = [];
-        if (name !== decision.name) {
-          commands.push({ type: "SET_NAME", value: name, id: "" });
-        }
-        if (hitpolicy !== decision.hitPolicy) {
-          commands.push({ type: "SET_HIT_POLICY", value: hitpolicy, id: "" });
-        }
-        if (desc !== decision.description) {
-          commands.push({ type: "SET_DESCRIPTION", value: desc, id: "" });
-        }
-        if (commands.length > 0) {
-          onChange(commands);
-        }
-        onClose();
-      }
-    }}>
-    <>
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='decisions.toolbar.nameAndHitpolicy' /></DialogTitle>
+    <DialogContent>
       <Burger.TextField label='decisions.name' value={name} onChange={setName} />
       <Burger.TextField label='decisions.desc' value={desc ? desc : ""} onChange={setDesc} />
       <Burger.Select label="decisions.hitpolicy" helperText="decisions.hitpolicy.helper"
@@ -52,8 +34,31 @@ const NameDescHitPolicyEdit: React.FC<{
           id: type.value,
           value: (<ListItemText primary={type.text} />)
         }))} />
-    </>
-  </Burger.Dialog>);
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={() => {
+          const commands: Client.AstCommand[] = [];
+          if (name !== decision.name) {
+            commands.push({ type: "SET_NAME", value: name, id: "" });
+          }
+          if (hitpolicy !== decision.hitPolicy) {
+            commands.push({ type: "SET_HIT_POLICY", value: hitpolicy, id: "" });
+          }
+          if (desc !== decision.description) {
+            commands.push({ type: "SET_DESCRIPTION", value: desc, id: "" });
+          }
+          if (commands.length > 0) {
+            onChange(commands);
+          }
+          onClose();
+        }}>
+        <FormattedMessage id='buttons.apply'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export { NameDescHitPolicyEdit };

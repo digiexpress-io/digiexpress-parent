@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { FormattedMessage } from 'react-intl'
-import { ListItemText, InputLabel } from '@mui/material';
+import { ListItemText, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
 import { HdesApi as Client } from '../../client';
@@ -212,20 +212,25 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
     {operation ? operations[operation as OperationType] : null}
   </>);
 
-
-  return (<Burger.Dialog title="decisions.toolbar.organize.rows.columns" open={true} onClose={props.onClose}
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        if (commands) {
-          props.onChange([commands]);
-        }
-        props.onClose();
-      }
-    }}>
-    {editor}
-  </Burger.Dialog >);
+  return (
+    <Dialog open={true} onClose={props.onClose}>
+      <DialogTitle><FormattedMessage id='decisions.toolbar.organize.rows.columns' /></DialogTitle>
+      <DialogContent>{editor}</DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={props.onClose}>
+          <FormattedMessage id='button.cancel'/>
+        </Button>
+        <Button onClick={() => {
+              if (commands) {
+                props.onChange([commands]);
+              }
+              props.onClose();
+            }}>
+          <FormattedMessage id='buttons.apply'/>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export type { OrderEditProps };

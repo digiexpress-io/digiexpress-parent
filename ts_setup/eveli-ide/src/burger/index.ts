@@ -4,7 +4,6 @@ export { useSecondary } from './context/secondary/SecondaryContext';
 export { siteTheme } from './theme/siteTheme';
 
 
-export { StyledDialog as Dialog } from './styles/StyledDialog';
 export { 
   StyledTreeItem as TreeItem, 
   StyledTreeItemRoot as TreeItemRoot, 

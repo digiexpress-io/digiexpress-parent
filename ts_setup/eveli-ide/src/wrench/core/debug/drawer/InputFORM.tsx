@@ -1,9 +1,8 @@
 import React from 'react'
 
-import { Box, Typography, Grid2 } from '@mui/material';
+import { Box, Typography, Grid2, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
-import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi } from '../../client';
 import { InputFORMField } from './InputFORMField';
@@ -73,20 +72,12 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
     newObject[typeDef.name] = newValue;
     setJson(Object.assign({}, json, newObject))
   }
-
   const elements = asset?.ast ? asset.ast.headers.acceptDefs : [];
 
-  return (<Burger.Dialog title="debug.input.form" open={true} onClose={onClose}
-    submit={{
-      title: "buttons.apply",
-      disabled: false,
-      onClick: () => {
-        onSelect(json);
-        onClose();
-      }
-    }}>
-
-    <Box>
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='debug.input.form' /></DialogTitle>
+    <DialogContent>
       <Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.formTitle"} /></Typography></Box>
       {!selected ? (<Box><Typography variant="h4" fontWeight="bold"><FormattedMessage id={"debug.input.noAsset"} /></Typography></Box>) : null}
       {!selected ? null : (
@@ -98,9 +89,19 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
           )}
         </Grid2>
       )}
-
-    </Box>
-  </Burger.Dialog>);
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={() => {
+          onSelect(json);
+          onClose();
+        }}>
+        <FormattedMessage id='buttons.apply'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 export type { InputFORMProps };

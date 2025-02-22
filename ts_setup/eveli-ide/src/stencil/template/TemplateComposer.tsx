@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { FormattedMessage } from 'react-intl';
@@ -37,45 +37,49 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
   }
   const message = <FormattedMessage id="snack.template.createdMessage" />
 
+
   return (
-    <Burger.Dialog open={true} onClose={onClose}
-      title={"template.create"}
-      submit={{ title: "button.add", disabled: !name || !content, onClick: handleCreate }}
-    >
-
-      <>
-        <Typography variant="body2" ><FormattedMessage id={"template.description"} /></Typography>
-
-        <Burger.TextField label='template.name' helperText='template.name.desc'
-          value={name}
-          onChange={setName} />
-
-        <Burger.Select label='template.type'
-          selected={templateType}
-          onChange={setTemplateType}
-          helperText={"template.page.desc"}
-
-          items={[
-            { id: 'page', value: <FormattedMessage id='template.page' /> },
-          ]} />
-
-
-        <Burger.TextField label='template.desc' helperText='template.description.desc'
-          value={description}
-          onChange={setDescription} />
-
-        <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold' }}><FormattedMessage id={"templates.intro"} /></Typography>
-
-        <Box display="flex" flexDirection="row" flexWrap="wrap" sx={{ mt: 2 }}>
-          <Box flex="1" sx={{ paddingRight: 1 }}>
-            <MDEditor key={1} value={content} onChange={handleContentChange}
-              textareaProps={{ placeholder: '# Level 1 Header' }}
-              height={300}
-            />
-          </Box>
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='template.create' /></DialogTitle>
+    <DialogContent>
+      <Typography variant="body2" ><FormattedMessage id={"template.description"} /></Typography>
+      <Burger.TextField label='template.name' helperText='template.name.desc'
+        value={name}
+        onChange={setName} />
+  
+      <Burger.Select label='template.type'
+        selected={templateType}
+        onChange={setTemplateType}
+        helperText={"template.page.desc"}
+  
+        items={[
+          { id: 'page', value: <FormattedMessage id='template.page' /> },
+        ]} />
+  
+      <Burger.TextField label='template.desc' helperText='template.description.desc'
+        value={description}
+        onChange={setDescription} />
+  
+      <Typography variant="body2" sx={{ mt: 2, fontWeight: 'bold' }}><FormattedMessage id={"templates.intro"} /></Typography>
+  
+      <Box display="flex" flexDirection="row" flexWrap="wrap" sx={{ mt: 2 }}>
+        <Box flex="1" sx={{ paddingRight: 1 }}>
+          <MDEditor key={1} value={content} onChange={handleContentChange}
+            textareaProps={{ placeholder: '# Level 1 Header' }}
+            height={300}
+          />
         </Box>
-      </>
-    </Burger.Dialog >
+      </Box>
+    </DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleCreate} disabled={!name || !content}>
+        <FormattedMessage id='button.add'/>
+      </Button>
+    </DialogActions>
+  </Dialog>
   );
 }
 

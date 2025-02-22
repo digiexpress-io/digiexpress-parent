@@ -2,7 +2,8 @@ import React from 'react';
 
 import {
   Box, Typography, IconButton,
-  TableCell, TableRow, Card, alpha, styled, Button
+  TableCell, TableRow, Card, alpha, styled, Button,
+  Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -136,45 +137,48 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
     </Typography>)
   }
 
+  const handleDelete = () => {
+    setErrors(undefined);
+    setApply(true);
 
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title={prefix + '.delete.title'}
-    submit={{
-      title: "buttons.delete",
-      disabled: apply,
-      onClick: () => {
-        setErrors(undefined);
-        setApply(true);
-
-        if (isBranch) {
-          const key = enqueueSnackbar(<FormattedMessage id="release.branch.deleting" values={{ name }} />, { persist: true });
-          service.withBranch("default").delete().branch(id)
-            .then((data) => {
-              actions.handleBranchUpdate("default");
-              actions.handleLoadSite(data);
-              handleTabs(tabs.actions);
-              closeSnackbar(key);
-              enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
-            })
-            .catch((error: HdesApi.StoreError) => {
-              setErrors(error);
-            })
-        } else {
-          service.delete().tag(id)
-            .then(data => {
-              enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name }} />);
-              actions.handleLoadSite(data);
-              onClose();
-            })
-            .catch((error: HdesApi.StoreError) => {
-              setErrors(error);
-            });
-        }
-      }
-    }}
-  />);
+    if (isBranch) {
+      const key = enqueueSnackbar(<FormattedMessage id="release.branch.deleting" values={{ name }} />, { persist: true });
+      service.withBranch("default").delete().branch(id)
+        .then((data) => {
+          actions.handleBranchUpdate("default");
+          actions.handleLoadSite(data);
+          handleTabs(tabs.actions);
+          closeSnackbar(key);
+          enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
+        })
+        .catch((error: HdesApi.StoreError) => {
+          setErrors(error);
+        })
+    } else {
+      service.delete().tag(id)
+        .then(data => {
+          enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name }} />);
+          actions.handleLoadSite(data);
+          onClose();
+        })
+        .catch((error: HdesApi.StoreError) => {
+          setErrors(error);
+        });
+    }
+  }
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id={prefix + '.delete.title'} /></DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleDelete} disabled={apply}>
+        <FormattedMessage id='buttons.delete'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ release, onClose }) => {
@@ -197,30 +201,34 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
     </Typography>)
   }
 
+  const handleDelete = () => {
+    setErrors(undefined);
+    setApply(true);
 
-  return (<Burger.Dialog open={true}
-    onClose={onClose}
-    children={editor}
-    title='release.delete.title'
-    submit={{
-      title: "buttons.delete",
-      disabled: apply,
-      onClick: () => {
-        setErrors(undefined);
-        setApply(true);
+    service.delete().tag(release.id)
+      .then(data => {
+        enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name: release.body.name }} />);
+        actions.handleLoadSite(data);
+        onClose();
+      })
+      .catch((error: HdesApi.StoreError) => {
+        setErrors(error);
+      });
+  }
 
-        service.delete().tag(release.id)
-          .then(data => {
-            enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name: release.body.name }} />);
-            actions.handleLoadSite(data);
-            onClose();
-          })
-          .catch((error: HdesApi.StoreError) => {
-            setErrors(error);
-          });
-      }
-    }}
-  />);
+  return (
+  <Dialog open={true} onClose={onClose}>
+    <DialogTitle><FormattedMessage id='release.delete.title' /></DialogTitle>
+    <DialogContent>{editor}</DialogContent>
+    <DialogActions>
+      <Button variant='text' onClick={onClose}>
+        <FormattedMessage id='button.cancel'/>
+      </Button>
+      <Button onClick={handleDelete} disabled={apply}>
+        <FormattedMessage id='buttons.delete'/>
+      </Button>
+    </DialogActions>
+  </Dialog>);
 }
 
 const Row: React.FC<{ release: Release }> = ({ release }) => {
