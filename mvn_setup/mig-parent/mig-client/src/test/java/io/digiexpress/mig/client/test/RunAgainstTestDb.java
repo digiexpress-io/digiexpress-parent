@@ -42,7 +42,7 @@ public class RunAgainstTestDb {
   @Test
   public void test() {
     final var client = new MigClientImpl(
-        src_pg_pool, src_pg_pool, src_pg_pool,
+        src_pg_pool, src_pg_pool, src_pg_pool, src_pg_pool,
         target_dialob_pg_pool, target_task_pg_pool);
     
     // convert tasks

@@ -1,13 +1,13 @@
 package io.digiexpress.mig.client.spi;
 
 import io.digiexpress.mig.client.api.MigClient;
-import io.digiexpress.mig.client.spi.converters.StencilEntityConverterImpl;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 public class MigClientImpl implements MigClient {
   private final io.vertx.mutiny.pgclient.PgPool src_tasks;
+  private final io.vertx.mutiny.pgclient.PgPool src_backend;
   private final io.vertx.mutiny.pgclient.PgPool src_dialob;
   private final io.vertx.mutiny.pgclient.PgPool src_thena;
   private final io.vertx.mutiny.pgclient.PgPool target_dialob;
@@ -15,7 +15,7 @@ public class MigClientImpl implements MigClient {
 
   @Override
   public SourceTaskQuery taskQuery() {
-    return new SourceTaskQueryImpl(src_tasks);
+    return new SourceTaskQueryImpl(src_tasks, src_backend);
   }
 
   @Override

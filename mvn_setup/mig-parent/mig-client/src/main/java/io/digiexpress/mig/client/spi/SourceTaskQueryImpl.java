@@ -33,7 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SourceTaskQueryImpl implements SourceTaskQuery {
   private final SourceTasksLogger logger = new SourceTasksLogger();
-  private final io.vertx.mutiny.pgclient.PgPool pool;
+  private final io.vertx.mutiny.pgclient.PgPool taskPool;
+  private final io.vertx.mutiny.pgclient.PgPool backendPool;
   
   @Override
   public Uni<SourceTasks> findAll() {
@@ -65,7 +66,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceProcess>> getProcesses() {
     final var sql = "select * from process order by id";
-    return processAnyQuery(SourceProcess.class, sql, (row) -> ImmutableSourceProcess.builder()
+    return processAnyQuery(backendPool, SourceProcess.class, sql, (row) -> ImmutableSourceProcess.builder()
         .id(row.getLong("id"))
         .workflow_name(row.getString("workflow_name"))
         .updated(row.getLocalDateTime("updated"))
@@ -83,7 +84,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceWorkflow>> getWorkflows() {
     final var sql = "select * from workflow order by id";
-    return processAnyQuery(SourceWorkflow.class, sql, (row) -> ImmutableSourceWorkflow.builder()
+    return processAnyQuery(backendPool, SourceWorkflow.class, sql, (row) -> ImmutableSourceWorkflow.builder()
         .id(row.getLong("id"))
         .name(row.getString("name"))
         .updated(row.getLocalDateTime("updated"))
@@ -98,7 +99,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceAccess>> getAccess() {
     final var sql = "select * from task_access order by task_id";
-    return processAnyQuery(SourceAccess.class, sql, (row) -> ImmutableSourceAccess.builder()
+    return processAnyQuery(taskPool, SourceAccess.class, sql, (row) -> ImmutableSourceAccess.builder()
         .task_id(row.getLong("task_id"))
         .updated(row.getLocalDateTime("updated"))
         .user_id(row.getString("user_id"))
@@ -107,7 +108,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceLink>> getLinks() {
     final var sql = "select * from task_link order by task_id";
-    return processAnyQuery(SourceLink.class, sql, (row) -> ImmutableSourceLink.builder()
+    return processAnyQuery(taskPool, SourceLink.class, sql, (row) -> ImmutableSourceLink.builder()
         .id(row.getLong("id"))
         .task_id(row.getLong("task_id"))
         .link_key(row.getString("link_key"))
@@ -117,7 +118,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceComment>> getComments() {
     final var sql = "select * from comment order by task_id";
-    return processAnyQuery(SourceComment.class, sql, (row) -> ImmutableSourceComment.builder()
+    return processAnyQuery(taskPool, SourceComment.class, sql, (row) -> ImmutableSourceComment.builder()
         .task_id(row.getLong("task_id"))
         .id(row.getLong("id"))
         .comment_text(row.getString("comment_text"))
@@ -132,7 +133,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceKeywords>> getKeywords() {
     final var sql = "select * from task_keywords order by task_id";
-    return processAnyQuery(SourceKeywords.class, sql, (row) -> ImmutableSourceKeywords.builder()
+    return processAnyQuery(taskPool, SourceKeywords.class, sql, (row) -> ImmutableSourceKeywords.builder()
         .task_id(row.getLong("task_id"))
         .key_words(row.getString("key_words"))
         .build());
@@ -140,7 +141,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   private Uni<List<SourceRole>> getRoles() {
     final var sql = "select * from task_roles order by task_id";
-    return processAnyQuery(SourceRole.class, sql, row -> ImmutableSourceRole.builder()
+    return processAnyQuery(taskPool, SourceRole.class, sql, row -> ImmutableSourceRole.builder()
         .task_id(row.getLong("task_id"))
         .assigned_roles(row.getString("assigned_roles"))
         .build());
@@ -149,7 +150,7 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
 
   private Uni<List<SourceTask>> getTasks() {
     final var sql = "select * from task order by id";
-    return processAnyQuery(SourceTask.class, sql, (row) ->  ImmutableSourceTask.builder()
+    return processAnyQuery(taskPool, SourceTask.class, sql, (row) ->  ImmutableSourceTask.builder()
       .id(row.getLong("id"))
       .created(row.getLocalDateTime("created"))
       .priority(row.getInteger("priority"))
@@ -171,7 +172,11 @@ public class SourceTaskQueryImpl implements SourceTaskQuery {
   
   
 
-  private <T> Uni<List<T>> processAnyQuery(Class<T> type, String sql, Function<io.vertx.mutiny.sqlclient.Row, T> mapper) {
+  private <T> Uni<List<T>> processAnyQuery(
+      io.vertx.mutiny.pgclient.PgPool pool, 
+      Class<T> type, 
+      String sql, 
+      Function<io.vertx.mutiny.sqlclient.Row, T> mapper) {
     final var logger = this.logger.entityQuery(type);
     logger.query(sql);
     return pool.preparedQuery(sql)
