@@ -1,8 +1,11 @@
 package io.digiexpress.mig.client.spi;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
@@ -32,7 +35,8 @@ public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private TenantTableNames names;
   private final String anonUser = "unknown";
   
-
+  private final AtomicLong counter = new AtomicLong();
+  private final String TASK_REF_PREFIX = "C"+ DateTimeFormatter.ofPattern("YYYYMM-").format(LocalDate.now());
 /**
 delete from task_tenan13_grim_commands;
 delete from task_tenan13_grim_mission_link;
@@ -128,8 +132,8 @@ delete from process;
               null, //parent_mission_id
               null, //external_id
               doc.getClient_identificator().orElse(null),
-              TaskStatus.values()[doc.getStatus()],
-              TaskStatus.values()[doc.getPriority()],
+              TaskStatus.values()[doc.getStatus()].name().toUpperCase(),
+              TaskPriority.values()[doc.getPriority()].name().toUpperCase(),
               null,
               doc.getDue_date().orElse(null),
               doc.getSubject().orElse(null),
@@ -137,7 +141,7 @@ delete from process;
               doc.getCompleted().map(e -> e.atZone(source.getZoneId()).toOffsetDateTime()).orElse(null),
               null, //archived_at
               null, //archived_status
-              doc.getTask_ref().orElse(null),
+              doc.getTask_ref().orElse(TASK_REF_PREFIX + counter.incrementAndGet()),
               questionnaire_id,
               
               commits.createdWithCommit(),
