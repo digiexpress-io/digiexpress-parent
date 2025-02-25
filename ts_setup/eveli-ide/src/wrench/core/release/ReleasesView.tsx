@@ -351,14 +351,18 @@ const Row: React.FC<{ release: Release }> = ({ release }) => {
             <TableCell colSpan={5}>
               <Button variant='contained'  onClick={() => handleCreateBranch(release.body.name, release.id)} ><FormattedMessage id='releases.button.branch'/></Button>
               <Button  onClick={() => setDetailsDialogOpen(true)} variant='text'><FormattedMessage id='releases.button.details'/></Button>
-              {detailsDialogOpen &&
-                <Burger.Dialog
-                  onClose={() => setDetailsDialogOpen(false)}
-                  title={intl.formatMessage({ id: 'releases.details.title' }, { name: release.body.name })}
-                  open={detailsDialogOpen}
-                >
-                  <AssetMapper assets={details} />
-                </Burger.Dialog>}
+              {detailsDialogOpen && (
+
+              <Dialog open={detailsDialogOpen} onClose={() => setDetailsDialogOpen(false)}>
+                <DialogTitle><FormattedMessage id='releases.details.title' values={{name: release.body.name }}/></DialogTitle>
+                <DialogContent><AssetMapper assets={details} /></DialogContent>
+                <DialogActions>
+                  <Button variant='text' onClick={() => setDetailsDialogOpen(false)}>
+                    <FormattedMessage id='button.cancel'/>
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              )}
             </TableCell>
           </TableRow>
         </>

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -374,7 +375,7 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
           .updatedTreeWithCommitId(row.getString("updated_tree_commit_id"))
           .title(row.getString("mission_title"))
           .description(row.getString("mission_description"))
-          .refId(row.getString("mission_ref"))
+          .refId(Optional.ofNullable(row.getString("mission_ref")).orElse(""))
           .questionnaireId(row.getString("questionnaire_id"))
           
           .transitives(ImmutableGrimMissionTransitives.builder()

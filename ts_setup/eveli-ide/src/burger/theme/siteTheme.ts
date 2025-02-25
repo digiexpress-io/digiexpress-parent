@@ -84,6 +84,14 @@ const palette = {
     disabled: 'rgba(0,0,0,0.36)',
     hint: 'rgba(0,0,0,0.37)',
   },
+
+
+  table: {
+    main: '#F3F4F6', // table header gray
+    dark: '#e8eaed', // table header darker gray
+    light: 'rgba(80, 72, 229, 0.04)',
+    contrastText: '#F3F4F6'
+  },
   explorer: {
     main: 'rgb(17, 24, 39)', // background colour, dark grey-black
     dark: 'rgb(255, 255, 255)',
@@ -108,12 +116,8 @@ const palette = {
     light: 'rgba(80, 72, 229, 0.04)', // transparent purple for hover backgrounds, secondary button fill on hover
     contrastText: 'rgb(80, 72, 229)'
   },
-  table: {
-    main: '#F3F4F6', // table header gray
-    dark: '#e8eaed', // table header darker gray
-    light: 'rgba(80, 72, 229, 0.04)',
-    contrastText: '#F3F4F6'
-  },
+
+
   article: {
     main: '#5048E5', // blue
     dark: '#3229e0',

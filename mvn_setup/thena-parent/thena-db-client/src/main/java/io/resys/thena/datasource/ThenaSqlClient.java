@@ -1,5 +1,7 @@
 package io.resys.thena.datasource;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -21,6 +23,7 @@ package io.resys.thena.datasource;
  */
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.immutables.value.Value;
@@ -97,15 +100,14 @@ public interface ThenaSqlClient {
       return sb.toString();
     }
   }
-  
   static String getPropsDeepString(Tuple props) {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
     final int size = props.size();
     for (int i = 0; i < size; i++) {
       final var value = props.getValue(i);
-      if(value instanceof String[]) {
-        final var unwrapped = (String[]) value;
+      if(value != null && value.getClass().isArray()) {
+        final var unwrapped = Arrays.asList((Object[]) value).stream().map(e -> Optional.ofNullable(e).map(x -> x.toString()).orElse(null)).toList();
         sb.append("[")
         .append(String.join(",", unwrapped))
         .append("]");   

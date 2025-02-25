@@ -45,7 +45,7 @@ logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: DEBUG
 
 
 # SQL-s
-logging.level.io.resys.thena.show_sql: ERROR
+logging.level.io.resys.thena.show_sql: DEBUG
 logging.level.io.resys.thenamq.show_sql: ERROR
 
 
