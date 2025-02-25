@@ -41,10 +41,10 @@ import { useAttachmentConfig } from '../../context/AttachmentContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
 import * as Yup from 'yup';
 
-import * as Burger from '@/burger';
 import { TaskFeedback } from './TaskFeedback';
 import { StatusIndicator } from '../../../feedback';
 import { DialobReview } from '../../../dialob-review';
+
 
 
 const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
@@ -92,8 +92,8 @@ const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = 
 const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
   const theme = useTheme();
   return (
-    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', backgroundColor: alpha(theme.palette.uiElements.main, 0.05) }}>
-      <InfoOutlinedIcon sx={{ mr: 1, color: theme.palette.uiElements.main }} />
+    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', backgroundColor: alpha(theme.palette.primary.main, 0.05) }}>
+      <InfoOutlinedIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
       <Typography variant='subtitle2'><FormattedMessage id={id} /></Typography>
     </Paper>)
 }

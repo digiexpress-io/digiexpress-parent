@@ -68,19 +68,20 @@ const SecondaryExplorer: React.FC<{}> = () => {
   }
 
   return (<>
-    <Box display="flex" >
+    <Box display="flex" flexDirection='column'>
+
+    <StyledSearch focused  sx={{ mx: 1 }}
+          type="search"
+          placeholder={getLabel("explorer.tabs.search")}
+          value={searchString}
+          onChange={({ target }) => setSearchString(target.value)} />
+
       <StyledTabs value={tab} onChange={(_event, value) => setTab(value)}>
         <StyledTab label={getLabel("explorer.tabs.articles")} value='toolbar.articles' />
         <StyledTab label={getLabel("explorer.tabs.services")} value='toolbar.services' />
         <StyledTab label={getLabel("explorer.tabs.links")} value='toolbar.links' />
       </StyledTabs>
-      <Box alignSelf="center" sx={{ m: 1 }}>
-        <StyledSearch focused
-          type="search"
-          placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
-      </Box>
+      
     </Box>
     {component}
   </>);

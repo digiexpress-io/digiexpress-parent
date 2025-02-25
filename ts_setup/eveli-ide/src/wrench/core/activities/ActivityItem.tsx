@@ -10,7 +10,7 @@ interface ActivityData {
   buttonViewAll?: string;
   buttonTertiary?: string;
   onView?: () => void;
-  onTertiary?: () => void;
+  //onTertiary?: () => void;
 }
 
 const cardStyle: SxProps = {
@@ -26,7 +26,7 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
   </Box>);
 
   return (<Card sx={cardStyle}>
-    <CardHeader sx={{ p: 1, backgroundColor: "table.main" }} title={title} />
+    <CardHeader title={title} />
     <CardContent sx={{ flexGrow: 1, p: 2, height: 'fit-content' }}>
       <Typography color="mainContent.contrastText" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
     </CardContent>
@@ -36,7 +36,6 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
     <CardActions sx={{ alignSelf: "flex-end" }}>
       <Box display="flex">
         {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={<FormattedMessage id={props.data.buttonViewAll}/>} /> : <Box />}
-        {props.data.buttonTertiary && props.data.onTertiary ? <Button variant='text' children={<FormattedMessage id={props.data.buttonTertiary}/>} onClick={props.data.onTertiary} sx={{ color: "uiElements.main", alignSelf: 'center' }} /> : null}
         <Button onClick={props.onCreate} children={<FormattedMessage id={props.data.buttonCreate}/>}/>
       </Box>
     </CardActions>

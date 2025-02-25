@@ -41,15 +41,8 @@ const StyledBottomText = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledUploadButton = styled(Button)(({ theme }) => ({
-  padding: theme.spacing(2),
-  color: theme.palette.text.primary,
-  backgroundColor: theme.palette.uiElements.light,
-  borderRadius: theme.spacing(0.5),
-  borderColor: theme.palette.info.contrastText,
-  width: 'fit-content',
-  ':hover': {
-    borderColor: theme.palette.warning.contrastText,
-  }
+  
+
 }));
 
 const BottomText: React.FC<{
@@ -84,7 +77,7 @@ const StyledFileField: React.FC<StyledInputFieldProps<string>> = (props) => {
   return (
     <>
       <StyledInputLabel><FormattedMessage id={label} /></StyledInputLabel>
-      <StyledFormControl variant="outlined" fullWidth>
+      <StyledFormControl variant="outlined">
         <input type="file" hidden ref={inputFile} accept="json" onChange={handleFileChange} />
 
         <StyledUploadButton
@@ -233,7 +226,7 @@ const StyledSearchField: React.FC<StyledInputFieldProps<string>> = (props) => {
         } : undefined}
         InputProps={{
           endAdornment: (
-            <SearchIcon sx={{ color: 'uiElements.main' }} />
+            <SearchIcon />
           ),
         }}
       />

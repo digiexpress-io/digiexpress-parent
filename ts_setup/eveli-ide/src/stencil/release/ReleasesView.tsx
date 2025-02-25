@@ -18,37 +18,19 @@ const ReleasesView: React.FC<{}> = () => {
   return (
     <>
       {releaseComposer ? <ReleaseComposer onClose={() => setReleaseComposer(false)} /> : null}
-
-      <Box sx={{ paddingBottom: 1, m: 2 }}>
-        <Box display="flex">
-          <Box alignSelf="center">
-            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: "mainContent.dark" }}>
-              <FormattedMessage id="releases" />: {releases.length}
-              <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"release.desc"} /></Typography>
-            </Typography>
-          </Box>
-          <Box flexGrow={1} />
-          <Box>
-            <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
-            <Button variant='text' onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} sx={{ marginRight: 1 }}>
-              <FormattedMessage id="button.releasegraph"/>
-            </Button>
-            <Button variant='contained' onClick={() => setReleaseComposer(true)}>
-              <FormattedMessage id="button.create"/>
-            </Button>
-          </Box>
-        </Box>
-
-        <Box display="flex" sx={{ justifyContent: 'center' }}>
-
-          <Card sx={{ margin: 1, width: 'fill-available' }}>
-            <Typography variant="h4" sx={{ p: 2, backgroundColor: "table.main" }}>
-              <FormattedMessage id="releases" />
-            </Typography>
-            <ReleaseTable releases={releases} />
-          </Card>
-        </Box>
-      </Box>
+      <Typography variant='h3'>
+        <FormattedMessage id="releases" />: {releases.length}
+      </Typography>
+      <Typography variant="body2"><FormattedMessage id={"release.desc"} /></Typography>
+      
+      <Button onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
+      <Button variant='text' onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
+        <FormattedMessage id="button.releasegraph"/>
+      </Button>
+      <Button variant='contained' onClick={() => setReleaseComposer(true)}>
+        <FormattedMessage id="button.create"/>
+      </Button>
+      <ReleaseTable releases={releases} />
     </>
   );
 }

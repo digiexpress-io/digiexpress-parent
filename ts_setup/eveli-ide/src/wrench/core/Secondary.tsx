@@ -71,18 +71,18 @@ const Secondary: React.FC<{}> = () => {
   }
 
   return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
-    <Box display="flex" >
+    <Box display="flex" flexDirection='column'>
+      
+      <TextFieldRoot sx={{mx: 1}} focused placeholder={getLabel("explorer.tabs.search")}
+          value={searchString}
+          onChange={({ target }) => setSearchString(target.value)} />
+
       <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
         <StyledTab label={getLabel("explorer.tabs.flows")} value='tabs.flows' />
         <StyledTab label={getLabel("explorer.tabs.services")} value='tabs.services' />
         <StyledTab label={getLabel("explorer.tabs.decisions")} value='tabs.decisions' />
       </StyledTabs>
 
-      <Box alignSelf="center" sx={{ m: 1 }}>
-        <TextFieldRoot focused placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
-      </Box>
     </Box>
     {component}
     <Box sx={{ position: 'absolute', bottom: '2%', left: '15%' }}>

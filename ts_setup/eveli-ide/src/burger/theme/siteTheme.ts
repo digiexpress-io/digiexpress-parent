@@ -1,5 +1,8 @@
 import { createTheme, PaletteOptions, Theme, alpha, darken } from "@mui/material/styles";
 import {} from "@mui/styles";
+import { colors } from '../eveli-colors';
+
+
 declare module 'react' {
   interface CSSProperties {
     '--tree-view-text-color'?: string;
@@ -27,8 +30,6 @@ declare module '@mui/material/styles' {
     explorer: Palette['primary'];
     explorerItem: Palette['primary'];
     mainContent: Palette['primary'];
-    uiElements: Palette['primary'];
-    table: Palette['primary'];
   }
   interface PaletteOptions {
     article: Palette['primary'];
@@ -43,8 +44,6 @@ declare module '@mui/material/styles' {
     explorer: Palette['primary'];
     explorerItem: Palette['primary'];
     mainContent: Palette['primary'];
-    uiElements: Palette['primary'];
-    table: Palette['primary'];
 
   }
 }
@@ -53,7 +52,7 @@ const palette = {
   mode: 'light',
 
   primary: {
-    main: 'rgb(80, 72, 229)',
+    main: colors.blue,
     contrastText: '#fff',
     dark: 'rgb(50, 41, 224)',
     light: 'rgb(84, 76, 230)',
@@ -86,12 +85,7 @@ const palette = {
   },
 
 
-  table: {
-    main: '#F3F4F6', // table header gray
-    dark: '#e8eaed', // table header darker gray
-    light: 'rgba(80, 72, 229, 0.04)',
-    contrastText: '#F3F4F6'
-  },
+
   explorer: {
     main: 'rgb(17, 24, 39)', // background colour, dark grey-black
     dark: 'rgb(255, 255, 255)',
@@ -110,14 +104,6 @@ const palette = {
     light: 'rgb(255, 255, 255)', // primary content bg colour, white
     contrastText: 'rgb(101, 116, 139)' // secondary content text, medium gray
   },
-  uiElements: {
-    main: 'rgb(80, 72, 229)', // primary ui element, blue-purple (button fill, button text, text, checkboxes, etc.)
-    dark: '#F3F4F6', // table header gray
-    light: 'rgba(80, 72, 229, 0.04)', // transparent purple for hover backgrounds, secondary button fill on hover
-    contrastText: 'rgb(80, 72, 229)'
-  },
-
-
   article: {
     main: '#5048E5', // blue
     dark: '#3229e0',
@@ -198,7 +184,7 @@ const siteTheme = createTheme({
       fontSize: "1.6rem",
       lineHeight: 1,
       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-      fontWeight: 300,
+      fontWeight: 'bold',
       paddingTop: 15,
       paddingBottom: 15,
     },
@@ -230,11 +216,57 @@ const siteTheme = createTheme({
 
 
   components: {
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
 
+    MuiTabs: {
+      styleOverrides: {
+        root: ({ ownerState }) => {
+          if(ownerState.orientation === "vertical") {
+            return {
+
+            }
+          }
+
+          return ({
+            flexGrow: 1,
+
+            "& .MuiTabs-indicator": {
+              backgroundColor: colors.blue,
+              marginRight: "49px"
+            },
+  
+            "& .MuiTab-root": {
+              minHeight: 'unset', 
+              color: "mainContent.dark",
+              "&:focus": { color: colors.blue } 
+            },
+  
+            "& .MuiSvgIcon-root": {
+              m: 0,
+              color: colors.blue,
+              "&:hover": {
+                color: "mainContent.dark"
+              }
+            }
+  
+          })
         }
+      }
+    },
+
+
+    MuiTableHead: {
+      styleOverrides: {
+        root: () => ({
+          backgroundColor: colors.grey
+        })
+      }
+    },
+    MuiCardHeader: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          backgroundColor: colors.grey,
+          padding: theme.spacing(1)
+        })
       }
     },
     MuiListItem: {
@@ -252,7 +284,6 @@ const siteTheme = createTheme({
         maxWidth: 'md'
       }
     },
-
     MuiDialogContent: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
@@ -261,11 +292,6 @@ const siteTheme = createTheme({
         })
       }
     },
-
-    MuiDialogActions: {
-      
-    },
-
     MuiDialogTitle: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => {
@@ -276,7 +302,7 @@ const siteTheme = createTheme({
             fontWeight: 'bold',
             borderBottom: '1px solid gray',
             mb: 2, 
-            backgroundColor: alpha(theme.palette.uiElements.main, 0.9)
+            backgroundColor: alpha(colors.blue, 0.9)
           }
         }
       }
@@ -294,9 +320,12 @@ const siteTheme = createTheme({
           },
           '& .MuiOutlinedInput-root': {
             '&.Mui-focused fieldset': {
-              borderColor: theme.palette.uiElements.main,
+              borderColor: colors.blue,
             },
           },
+          '& .MuiSvgIcon-root': {
+            color: colors.blue
+          }
         })
       },
     },
@@ -335,11 +364,11 @@ const siteTheme = createTheme({
           props: { variant: 'outlined' },
           style: ({ theme }) => ({
             marginTop: theme.spacing(2),
-            color: theme.palette.uiElements.main,
+            color: colors.blue,
             backgroundColor: theme.palette.background.paper,
             '& .MuiOutlinedInput-root': {
               '&.Mui-focused fieldset': {
-                borderColor: theme.palette.uiElements.main,
+                borderColor: colors.blue,
               },
             }
           }), 
@@ -347,29 +376,36 @@ const siteTheme = createTheme({
       ]
     },
 
+    MuiIconButton: {
+      styleOverrides:  {
+        root: ({ ownerState, theme }) => ({
+          color: colors.blue, 
+        })
+      }
+    },
+
     MuiRadio: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
           marginLeft: theme.spacing(1.5),
-          color: theme.palette.uiElements.main,
+          color: colors.blue,
           '&.Mui-checked': {
-            color: theme.palette.uiElements.main,
+            color: colors.blue,
           }
         })
       },
-    },
-
+    },    
     MuiSwitch: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
           '& .MuiSwitch-switchBase.Mui-checked': {
-            color: theme.palette.uiElements.main,
+            color: colors.blue,
             '&:hover': {
-              backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+              backgroundColor: alpha(colors.blue, 0.1),
             },
           },
           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: alpha(theme.palette.uiElements.main, 0.5),
+            backgroundColor: alpha(colors.blue, 0.5),
           },
         })
       },
@@ -377,9 +413,9 @@ const siteTheme = createTheme({
     MuiCheckbox: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-          color: theme.palette.uiElements.main,
+          color: colors.blue,
           '&.Mui-checked': {
-            color: theme.palette.uiElements.main,
+            color: colors.blue,
           }
         })
       },
@@ -395,9 +431,9 @@ const siteTheme = createTheme({
             borderWidth: '2px solid !important',
             borderRadius: theme.spacing(1),
             fontWeight: 'bold',
-            backgroundColor: theme.palette.uiElements.main,
+            backgroundColor: colors.blue,
             '&:hover': {
-              backgroundColor: darken(theme.palette.uiElements.main, 0.2),
+              backgroundColor: darken(colors.blue, 0.2),
             },
           }),
         },
@@ -407,15 +443,29 @@ const siteTheme = createTheme({
             borderRadius: theme.spacing(1),
             borderWidth: 0,
             fontWeight: 'bold',
-            color: theme.palette.uiElements.main,
+            color: colors.blue,
             textTransform: 'capitalize',
             '&:hover': {
-              backgroundColor: alpha(theme.palette.uiElements.main, 0.1),
+              backgroundColor: alpha(colors.blue, 0.1),
               border: 'none',
             },
           }),
         },
 
+        {
+          props: { variant: 'outlined' },
+          style: ({ theme }) => ({
+            borderRadius: theme.spacing(1),
+            borderWidth: 0,
+            fontWeight: 'bold',
+            color: colors.blue,
+            textTransform: 'capitalize',
+            '&:hover': {
+              backgroundColor: alpha(colors.blue, 0.1),
+              border: 'none',
+            },
+          }),
+        },
       ],
       defaultProps: {
         variant: 'contained',

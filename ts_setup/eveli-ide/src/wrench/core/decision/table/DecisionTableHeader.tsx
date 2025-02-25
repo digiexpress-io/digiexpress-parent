@@ -34,7 +34,7 @@ const DecisionTableHeader: React.FC<{
       </TableCell>
 
       <TableCell align="center" colSpan={ast.headers.returnDefs.length}
-        sx={{ backgroundColor: "uiElements.main", color: "primary.contrastText" }}>
+        sx={{ backgroundColor: "primary.main", color: "primary.contrastText" }}>
 
         <Typography display="inline-flex" fontWeight="bold">
           <FormattedMessage id="decisions.table.outputs.title" />
@@ -49,7 +49,7 @@ const DecisionTableHeader: React.FC<{
           onClick={() => onClick(accept)}
           sx={{
             fontWeight: "bold", minWidth: "50px", maxWidth: "200px", cursor: "pointer",
-            backgroundColor: accept.direction === "OUT" ? "uiElements.main" : "page.main",
+            backgroundColor: accept.direction === "OUT" ? "primary.main" : "page.main",
             color: "primary.contrastText"
           }}>
           

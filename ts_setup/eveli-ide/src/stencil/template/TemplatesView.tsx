@@ -17,69 +17,54 @@ const TemplatesView: React.FC<{}> = () => {
   const layout = Burger.useTabs();
   const { site } = Composer.useComposer();
   const templates = Object.values(site.templates);
-
-
   const [templateComposer, setTemplateComposer] = React.useState(false);
   const [templateDelete, setTemplateDelete] = React.useState<StencilApi.TemplateId>();
   const [templateEdit, setTemplateEdit] = React.useState<StencilApi.TemplateId>();
 
-  return (
-    <>
+  return (<>
+    {templateComposer ? <TemplateComposer onClose={() => setTemplateComposer(false)} /> : null}
+    {templateDelete ? <TemplateDelete templateId={templateDelete} onClose={() => setTemplateDelete(undefined)} /> : null}
+    {templateEdit ? <TemplateEdit templateId={templateEdit} onClose={() => setTemplateEdit(undefined)} /> : null}
 
-      { templateComposer ? <TemplateComposer onClose={() => setTemplateComposer(false)} /> : null}
-      { templateDelete ? <TemplateDelete templateId={templateDelete} onClose={() => setTemplateDelete(undefined)} /> : null}
-      { templateEdit ? <TemplateEdit templateId={templateEdit} onClose={() => setTemplateEdit(undefined)} /> : null}
 
-      <Box sx={{ paddingBottom: 1, m: 2 }}>
-        <Box display="flex">
-          <Box alignSelf="center">
-            <Typography variant="h3" sx={{ p: 1, mb: 3, fontWeight: "bold", color: "mainContent.dark" }}>
-              <FormattedMessage id="templates" />
-              <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"templates.templatesview.description"} /></Typography>
-            </Typography>
-          </Box>
-          <Box flexGrow={1} />
-          <Box>
-            <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
-            <Button variant='contained'  onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create'/></Button>
-          </Box>
-        </Box>
+    <Typography variant="h3" >
+      <FormattedMessage id="templates" />
+    </Typography>
 
-        <Card sx={{ margin: 1, width: 'fill-available' }}>
-          <Typography variant="h4" sx={{ p: 2, backgroundColor: "table.main" }}>
-            <FormattedMessage id="templates" />
-          </Typography>
+    <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
+    <Button onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+    <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
 
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow sx={{ p: 1 }}>
-                  <TableCell align="left" sx={{ fontWeight: 'bold' }} colSpan={2}><FormattedMessage id="template.name" /></TableCell>
-                  <TableCell align="left" sx={{ fontWeight: 'bold' }}><FormattedMessage id="template.desc" /></TableCell>
-                  <TableCell align="left"></TableCell>
-                </TableRow>
-              </TableHead>
+    <TableContainer component={Paper}>
+      <Table size="small">
+        <TableHead>
+          <TableRow sx={{ p: 1 }}>
+            <TableCell align="left" sx={{ fontWeight: 'bold' }} colSpan={2}><FormattedMessage id="template.name" /></TableCell>
+            <TableCell align="left" sx={{ fontWeight: 'bold' }}><FormattedMessage id="template.desc" /></TableCell>
+            <TableCell align="left"></TableCell>
+          </TableRow>
+        </TableHead>
 
-              <TableBody>
-                {templates.map((template, index) => (
-                  <TableRow sx={{ p: 1 }} hover>
-                    <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                      <IconButton sx={{ color: 'uiElements.main' }} onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
-                    </TableCell>
-                    <TableCell>{template.body.name}</TableCell>
-                    <TableCell>{template.body.description}</TableCell>
-                    <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                      <IconButton sx={{ color: 'uiElements.main' }} onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
-                    </TableCell>
-                  </TableRow>))
-                }
+        <TableBody>
+          {templates.map((template, index) => (
+            <TableRow hover>
+              <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
+                <IconButton onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
+              </TableCell>
+              <TableCell>{template.body.name}</TableCell>
+              <TableCell>{template.body.description}</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
+                <IconButton onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
+              </TableCell>
+            </TableRow>))
+          }
 
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
-      </Box>
-    </>
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+
+  </>
 
   );
 }

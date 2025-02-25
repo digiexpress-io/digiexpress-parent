@@ -135,7 +135,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
       display: 'flex',
       flexDirection: 'column',
     }}>
-      <CardHeader sx={{ p: 1, backgroundColor: "table.main" }}
+      <CardHeader
         title={
           <Box display="flex"
             sx={{
@@ -156,11 +156,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
           {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={<FormattedMessage id={props.data.buttonViewAll} />} /> : <Box />}
           {props.data.buttonTertiary && props.data.onView ?
             <Button variant='text' onClick={() => tabs.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}
-              children={<FormattedMessage id='button.releasegraph' />}
-              sx={{
-                color: "uiElements.main",
-                alignSelf: 'center',
-              }} /> : null}
+              children={<FormattedMessage id='button.releasegraph' />}/> : null}
           <Button onClick={props.onCreate} children={<FormattedMessage id={props.data.buttonCreate} />}/>
         </Box>
       </CardActions>

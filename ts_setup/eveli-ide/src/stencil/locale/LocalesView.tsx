@@ -72,50 +72,36 @@ const LocalesView: React.FC<{}> = () => {
       </Dialog>) : null
     }
 
-    <Box sx={{ paddingBottom: 1, m: 2 }}>
-      <Box display="flex">
-        <Box alignSelf="center">
-          <Typography variant="h3" sx={{ fontWeight: 'bold', p: 1 }}>{title}{": "}{locales.length}</Typography>
-        </Box>
-      </Box>
+    <Typography variant="h3">{title}{": "}{locales.length}</Typography>
 
-      <Box sx={{ justifyContent: 'center' }}>
-        <Card sx={{ margin: 1 }}>
-          <Typography variant="h4" sx={{ p: 2, backgroundColor: "table.main" }}>
-            <FormattedMessage id="locales" />
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <Header label="locale" />
-                  <Header label="status" />
-                </TableRow>
-              </TableHead>
-              <TableBody >
-                {locales.map((locale) => (
-                  <TableRow key={locale.id} hover>
-                    <TableCell align="left">{locale.body.value}</TableCell>
-                    <TableCell>
-                      <Burger.Switch
-                        checked={locale.body.enabled}
-                        onChange={() => setEditLocale(locale)}
-                        label={undefined}
-                        helperText={undefined}
-                      />
-                      {locale.body.enabled ? <FormattedMessage id="locales.enabledMessage" /> : <FormattedMessage id="locales.disabledMessage" />}
-
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
-        <LocalesOverview site={site} />
-      </Box>
-    </Box>
-
+    <TableContainer component={Paper}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <Header label="locale" />
+            <Header label="status" />
+          </TableRow>
+        </TableHead>
+        <TableBody >
+          {locales.map((locale) => (
+            <TableRow key={locale.id} hover>
+              <TableCell align="left">{locale.body.value}</TableCell>
+              <TableCell>
+                <Burger.Switch
+                  checked={locale.body.enabled}
+                  onChange={() => setEditLocale(locale)}
+                  label={undefined}
+                  helperText={undefined}
+                />
+                {locale.body.enabled ? <FormattedMessage id="locales.enabledMessage" /> : <FormattedMessage id="locales.disabledMessage" />}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <Box paddingTop={3}/>
+    <LocalesOverview site={site} />
   </>
   );
 }

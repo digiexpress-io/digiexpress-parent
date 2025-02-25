@@ -100,7 +100,7 @@ const Row: React.FC<{ release: StencilApi.Release }> = ({ release }) => {
         <TableCell align="left"><Burger.DateTimeFormatter timestamp={release.body.created} /></TableCell>
         <TableCell align="left">{release.body.note}</TableCell>
         <TableCell align="center" >
-          <IconButton onClick={() => onDownload(release.id)} sx={{ color: 'uiElements.main' }}><GetAppIcon /> </IconButton>
+          <IconButton onClick={() => onDownload(release.id)}><GetAppIcon /> </IconButton>
         </TableCell>
         <TableCell align="center" >
           <IconButton onClick={() => setReleaseDeleteOpen(true)} sx={{ color: 'error.main' }}><DeleteOutlineIcon /> </IconButton>

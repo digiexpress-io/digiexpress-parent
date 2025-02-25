@@ -23,7 +23,7 @@ export const ArticleOrderNumberViewer: React.FC<{}> = () => {
 
   return (<>
     <Tooltip title={<FormattedMessage id="article.order.view" />}>
-      <IconButton sx={{ ml: 2, color: 'uiElements.main' }} onClick={handlePopover}>
+      <IconButton onClick={handlePopover}>
         <FormatListNumberedIcon fontSize="large" />
       </IconButton>
     </Tooltip>

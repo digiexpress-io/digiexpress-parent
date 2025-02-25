@@ -83,7 +83,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
       <Box component={Paper} sx={{ mt: 1, mb: 1, mr: 3, ml: 3 }}>
         <TableContainer component={Paper}>
           <Table size="small">
-            <TableHead sx={{ backgroundColor: "table.main" }}>
+            <TableHead>
               <TableRow sx={{ borderBottom: 0 }}>
                 <TableCell colSpan={headers.length + 1} sx={{ borderBottom: 0 }}>
                   <Typography variant="h4" sx={{ marginBottom: 1 }}><FormattedMessage id={selectedTitle} /></Typography>
@@ -104,7 +104,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
               {selected.map((row, index) => (
                 <TableRow hover key={index}>
                   <TableCell>
-                    <IconButton sx={{ color: 'uiElements.main' }} onClick={() => handleChange(row, "remove")}>
+                    <IconButton onClick={() => handleChange(row, "remove")}>
                       <DeleteOutlineIcon />
                     </IconButton>
                   </TableCell>
@@ -124,7 +124,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
       <Box sx={{ mt: 1, mb: 1, mr: 3, ml: 3 }}>
         <TableContainer component={Paper}>
           <Table size="small">
-            <TableHead sx={{ backgroundColor: "table.main" }}>
+            <TableHead>
               <TableRow>
                 <TableCell sx={{ width: "80px" }} />
                 {headers.map((header, index) => (<TableCell key={index} align="left" sx={{ fontWeight: "bold" }}><FormattedMessage id={header} /></TableCell>))}
@@ -141,7 +141,7 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
               {searchItems.map((row, index) => (
                 <TableRow hover key={index}>
                   <TableCell>
-                    <IconButton sx={{ color: 'uiElements.main' }} onClick={() => handleChange(row, "add")} disabled={selected.includes(row)}>
+                    <IconButton onClick={() => handleChange(row, "add")} disabled={selected.includes(row)}>
                       <AddCircleOutlineIcon />
                     </IconButton>
                   </TableCell>
