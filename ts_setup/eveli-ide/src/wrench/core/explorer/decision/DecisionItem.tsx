@@ -29,7 +29,7 @@ function FlowItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={AccountTreeOutlinedIcon} color="article.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={AccountTreeOutlinedIcon} color="primary.main" sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >

@@ -42,7 +42,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
     title: "activities.article.title",
     desc: "activities.article.desc",
-    color: theme.palette.article?.main,
+    color: theme.palette.primary.main,
     type: "article",
     buttonCreate: "article.create",
     buttonViewAll: undefined
@@ -73,7 +73,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" }),
     title: "services",
     desc: "services.desc",
-    color: theme.palette.workflow?.main,
+    color: Burger.colors.red,
     type: "workflow",
     buttonCreate: "services.create",
     buttonViewAll: undefined

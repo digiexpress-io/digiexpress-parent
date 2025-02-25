@@ -3,6 +3,7 @@ export { useTabs } from './context/tabs/TabsContext';
 export { useSecondary } from './context/secondary/SecondaryContext';
 export { siteTheme } from './theme/siteTheme';
 
+export { colors } from './eveli-colors';
 
 export { 
   StyledTreeItem as TreeItem, 

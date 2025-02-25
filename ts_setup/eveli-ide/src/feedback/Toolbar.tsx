@@ -1,11 +1,9 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 
-import FlipToFrontOutlinedIcon from '@mui/icons-material/FlipToFrontOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
-import * as Burger from '@/burger';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -45,10 +43,8 @@ export const Toolbar: React.FC<{}> = () => {
   return (
     <>
       <StyledToolbar>
-
         <StyledToolbarButton onClick={() => window.open("https://google.com", "_blank")}><HelpOutlineOutlinedIcon /></StyledToolbarButton>
         <StyledToolbarButton onClick={handleBacktoTasks}><HomeOutlinedIcon /></StyledToolbarButton>
-
       </StyledToolbar>
     </>
   );

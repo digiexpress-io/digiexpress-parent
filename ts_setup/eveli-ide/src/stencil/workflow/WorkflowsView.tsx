@@ -19,6 +19,8 @@ import { Composer, StencilApi } from '../context';
 import { WorkflowDelete } from './WorkflowDelete';
 import { WorkflowEdit } from './WorkflowEdit';
 
+import { colors } from '@/burger';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       alignSelf: "center",
       marginLeft: theme.spacing(1),
-      backgroundColor: theme.palette.workflow.main,
+      backgroundColor: colors.red,
       textTransform: 'uppercase'
     }
   }));
@@ -67,9 +69,9 @@ const useRowStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       padding: 2,
-      color: theme.palette.workflow.main,
+      color: colors.red,
       "&:hover, &.Mui-focusVisible": {
-        backgroundColor: theme.palette.workflow.main,
+        backgroundColor: colors.red,
         color: theme.palette.background.paper,
         "& .MuiSvgIcon-root": {
           color: theme.palette.background.paper,

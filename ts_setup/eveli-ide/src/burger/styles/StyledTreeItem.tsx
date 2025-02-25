@@ -131,7 +131,7 @@ const StyledTreeItemOption: React.FC<{
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.2, pr: 0}} >
           { /*/@ts-ignore */}
-          <Box component={props.icon}  color={theme.palette[props.color].main} sx={{ pl: 1, mr: 1}} />
+          <Box component={props.icon}  color={theme.palette[props.color]?.main ?? props.color} sx={{ pl: 1, mr: 1}} />
           <Typography 
             variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}

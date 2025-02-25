@@ -18,10 +18,9 @@ declare module '@mui/styles/defaultTheme' {
 
 declare module '@mui/material/styles' {
   interface Palette {
-    article: Palette['primary'];
+
     page: Palette['primary'];
     link: Palette['primary'];
-    workflow: Palette['primary'];
     release: Palette['primary'];
     locale: Palette['primary'];
     import: Palette['primary'];
@@ -32,10 +31,8 @@ declare module '@mui/material/styles' {
     mainContent: Palette['primary'];
   }
   interface PaletteOptions {
-    article: Palette['primary'];
     page: Palette['primary'];
     link: Palette['primary'];
-    workflow: Palette['primary'];
     release: Palette['primary'];
     locale: Palette['primary'];
     import: Palette['primary'];
@@ -104,12 +101,7 @@ const palette = {
     light: 'rgb(255, 255, 255)', // primary content bg colour, white
     contrastText: 'rgb(101, 116, 139)' // secondary content text, medium gray
   },
-  article: {
-    main: '#5048E5', // blue
-    dark: '#3229e0',
-    light: '#3229e0',
-    contrastText: '#fff'
-  },
+
   page: {
     main: '#14B8A6', // turquoise
     dark: '#109384',
@@ -120,12 +112,6 @@ const palette = {
     main: '#a0548b', // purple
     dark: '#864674',
     light: '#b26c9e',
-    contrastText: '#fff'
-  },
-  workflow: {
-    main: '#D14343', // red
-    dark: '#c53030',
-    light: '#db6b6b',
     contrastText: '#fff'
   },
   release: {
