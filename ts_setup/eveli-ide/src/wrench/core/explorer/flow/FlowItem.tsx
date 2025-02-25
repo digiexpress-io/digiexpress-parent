@@ -34,7 +34,7 @@ function DecisionItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={AccountTreeOutlinedIcon} color="page.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={AccountTreeOutlinedIcon} color="secondary.contrastText" sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -59,7 +59,7 @@ const ServiceItem: React.FC<{
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={LinkIcon} color="link.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -137,7 +137,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
     <Burger.TreeItem itemId={flow.id}
       labelText={flowName}
       labelIcon={ArticleOutlinedIcon}
-      labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}
+      labelcolor={saved ? "explorerItem" : "secondary.light"}
       labelInfo={flow.status === "UP" ? undefined : <ConstructionIcon color="error" />}>
 
       {/** Flow options */}
@@ -152,7 +152,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
         labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
-        labelcolor="workflow">
+        labelcolor={Burger.colors.red}>
 
         {flow.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {flow.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -177,7 +177,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
         labelText={<FormattedMessage id="services" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${services.length}`}
-        labelcolor="link">
+        labelcolor={Burger.colors.purple}>
 
         {services.map(view => (<ServiceItem key={view.ref.ref} nodeId={`${flow.id}-st-${view.ref.ref}`}
           labelText={view.ref.ref}

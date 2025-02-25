@@ -12,143 +12,46 @@ declare module 'react' {
   }
 }
 
-declare module '@mui/styles/defaultTheme' {
-  interface DefaultTheme extends Theme { }
-}
-
-declare module '@mui/material/styles' {
-  interface Palette {
-
-    page: Palette['primary'];
-    link: Palette['primary'];
-    release: Palette['primary'];
-    locale: Palette['primary'];
-    import: Palette['primary'];
-    activeItem: Palette['primary'];
-    save: Palette['primary'];
-    explorer: Palette['primary'];
-    explorerItem: Palette['primary'];
-    mainContent: Palette['primary'];
-  }
-  interface PaletteOptions {
-    page: Palette['primary'];
-    link: Palette['primary'];
-    release: Palette['primary'];
-    locale: Palette['primary'];
-    import: Palette['primary'];
-    activeItem: Palette['primary'];
-    save: Palette['primary'];
-    explorer: Palette['primary'];
-    explorerItem: Palette['primary'];
-    mainContent: Palette['primary'];
-
-  }
-}
-
-const palette = {
-  mode: 'light',
-
-  primary: {
-    main: colors.blue,
-    contrastText: '#fff',
-    dark: 'rgb(50, 41, 224)',
-    light: 'rgb(84, 76, 230)',
-  },
-  secondary: {
-    main: '#3E668E',
-    light: '#5585B4',
-    dark: '#325171',
-    contrastText: '#fff'
-  },
-  error: {
-    main: '#e53935',
-  },
-  info: {
-    main: '##03045E',
-    contrastText: '#FFFFFF',
-  },
-  warning: {
-    main: '#ff9800',
-    contrastText: '#000000',
-  },
-  success: {
-    main: '#4caf50',
-  },
-  text: {
-    primary: 'rgba(0,0,0,0.86)',
-    secondary: 'rgba(0,0,0,0.55)',
-    disabled: 'rgba(0,0,0,0.36)',
-    hint: 'rgba(0,0,0,0.37)',
-  },
-
-
-
-  explorer: {
-    main: 'rgb(17, 24, 39)', // background colour, dark grey-black
-    dark: 'rgb(255, 255, 255)',
-    light: 'rgb(18, 24, 40)',
-    contrastText: 'rgb(17, 24, 39)'
-  },
-  explorerItem: {
-    main: 'rgb(209, 213, 219)', // inactive item 
-    dark: 'rgb(16, 185, 129)', // active item
-    light: 'rgba(255, 255, 255, 0.08)', // active item hover
-    contrastText: 'rgba(253, 205, 73)' // indicative item
-  },
-  mainContent: {
-    main: 'rgb(249, 250, 252)', // primary bg colour for behind content boxes, light gray
-    dark: 'rgb(18, 24, 40)', // primary content text, dark gray/black
-    light: 'rgb(255, 255, 255)', // primary content bg colour, white
-    contrastText: 'rgb(101, 116, 139)' // secondary content text, medium gray
-  },
-
-  page: {
-    main: '#14B8A6', // turquoise
-    dark: '#109384',
-    light: '#18dcc5',
-    contrastText: '#fff',
-  },
-  link: {
-    main: '#a0548b', // purple
-    dark: '#864674',
-    light: '#b26c9e',
-    contrastText: '#fff'
-  },
-  release: {
-    main: '#91bc24', // green
-    dark: '#779a1d',
-    light: '#a9d831',
-    contrastText: '#fff'
-  },
-  locale: {
-    main: '#FFB020', // orange-yellow
-    dark: '#f59f00',
-    light: '#ffbf47',
-    contrastText: '#fff'
-  },
-  import: {
-    main: 'rgba(77, 144, 142)',
-    dark: 'rgba(64, 119, 118)',
-    light: 'rgba(86, 159, 158)',
-    contrastText: '#fff'
-  },
-  activeItem: {
-    main: '#edf6f9',
-    dark: '#edf6f9',
-    light: '#edf6f9',
-    contrastText: '#000'
-  },
-  save: {
-    main: 'rgba(255, 99, 71, 0.8)',
-    dark: 'rgba(255, 183, 3)',
-    light: 'rgba(255, 183, 3)',
-    contrastText: '#000'
-  },
-
-}
 
 const siteTheme = createTheme({
-  palette: palette as PaletteOptions,
+  palette: {
+    mode: 'light',
+  
+    primary: {
+      main: colors.blue,
+      contrastText: '#fff',
+      dark: 'rgb(50, 41, 224)',
+      light: 'rgb(84, 76, 230)',
+    },
+
+    secondary: {
+      main: 'rgb(17, 24, 39)', // background colour, dark grey-black
+      dark: 'rgb(255, 255, 255)', //unused
+      light: 'rgb(253, 205, 73)',
+      contrastText: 'rgb(16, 185, 129)'
+    },
+
+    error: {
+      main: '#e53935',
+    },
+    
+    info: {
+      main: '##03045E',
+      contrastText: '#FFFFFF',
+    },
+    warning: {
+      main: '#ff9800',
+      contrastText: '#000000',
+    },
+    success: {
+      main: '#4caf50',
+    },
+    text: {
+      primary: 'rgba(0,0,0,0.86)',
+      secondary: 'rgba(0,0,0,0.55)',
+      disabled: 'rgba(0,0,0,0.36)'
+    }
+  },
 
   typography: {
     fontFamily: "'IBM Plex Sans Arabic', sans-serif",
@@ -222,7 +125,7 @@ const siteTheme = createTheme({
   
             "& .MuiTab-root": {
               minHeight: 'unset', 
-              color: "mainContent.dark",
+              color: "secondary.main",
               "&:focus": { color: colors.blue } 
             },
   
@@ -230,7 +133,7 @@ const siteTheme = createTheme({
               m: 0,
               color: colors.blue,
               "&:hover": {
-                color: "mainContent.dark"
+                color: "secondary.main"
               }
             }
   
@@ -273,7 +176,7 @@ const siteTheme = createTheme({
     MuiDialogContent: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-          color: theme.palette.mainContent.dark, 
+          color: theme.palette.secondary.main, 
           fontWeight: '400'
         })
       }
@@ -284,7 +187,7 @@ const siteTheme = createTheme({
 
 
           return {
-            color: theme.palette.secondary.contrastText,
+            color: theme.palette.primary.contrastText,
             fontWeight: 'bold',
             borderBottom: '1px solid gray',
             mb: 2, 
@@ -325,21 +228,21 @@ const siteTheme = createTheme({
           marginTop: 0,
           marginBottom: 0,
         },
-        primary: {
-          color: palette.text.primary,
+        primary: ({theme}) => ({
+          color: theme.palette.text.primary,
           "&:hover": {
-            color: palette.primary.dark,
+            color: theme.palette.primary.dark,
             fontWeight: 'bold',
           }
-        },
-        secondary: {
+        }),
+        secondary: ({theme}) => ({
           fontSize: '.9rem',
-          color: palette.text.primary,
+          color: theme.palette.text.primary,
           "&:hover": {
-            color: palette.primary.dark,
+            color: theme.palette.primary.dark,
             fontWeight: 'bold',
           }
-        }
+        })
 
       }
     },
@@ -460,11 +363,11 @@ const siteTheme = createTheme({
 
     MuiPaper: {
       styleOverrides: {
-        root: {
+        root: ({theme}) => ({
           elevation: 1,
-          borderColor: palette.secondary.main,
+          borderColor: theme.palette.secondary.main,
           transition: 'unset'
-        }
+        })
       },
     },
   },

@@ -14,7 +14,7 @@ import {
 import { Composer } from './context';
 
 
-const root = { height: `100%`, padding: 1, backgroundColor: "mainContent.main" };
+const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();

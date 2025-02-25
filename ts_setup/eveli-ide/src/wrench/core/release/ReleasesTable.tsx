@@ -31,7 +31,7 @@ interface ReleasesTableProps {
 }
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.explorer.main, .05),
+  backgroundColor: alpha(theme.palette.secondary.main, .05),
 }));
 
 

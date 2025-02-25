@@ -27,7 +27,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   if (!feedbackExists && props.size === 'SMALL') {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
-        <Avatar sx={{ height: '20px', width: '20px', backgroundColor: theme.palette.mainContent.contrastText }}>
+        <Avatar sx={{ height: '20px', width: '20px', backgroundColor: theme.palette.primary.light }}>
           <DoNotDisturbAltIcon fontSize='inherit' />
         </Avatar>
       </Tooltip>
@@ -37,7 +37,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   if (!feedbackExists && props.size === 'LARGE') {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
-        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.mainContent.contrastText }}>
+        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.primary.light }}>
           <DoNotDisturbAltIcon fontSize='small' />
         </Avatar>
       </Tooltip>)

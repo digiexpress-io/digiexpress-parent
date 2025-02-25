@@ -86,7 +86,7 @@ const CompareDialog: React.FC<CompareDialogProps> = ({ open, setOpen, diff }) =>
   return (
     <Dialog open={open} onClose={() => setOpen(false)} maxWidth='xl'>
       <DialogTitle>
-        <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "mainContent.dark" }}>
+        <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "secondary.main" }}>
           <FormattedMessage id="compare.dialog.title" values={{ base: diff?.baseName, target: diff?.targetName }} />
         </Typography>
       </DialogTitle>
@@ -143,7 +143,7 @@ const CompareView: React.FC = () => {
     <Box sx={{ paddingBottom: 1, m: 2 }}>
       <Box display="flex">
         <Box alignSelf="center">
-          <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "mainContent.dark" }}>
+          <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "secondary.main" }}>
             <FormattedMessage id="activities.compare.title" />
             <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"activities.compare.desc"} /></Typography>
           </Typography>

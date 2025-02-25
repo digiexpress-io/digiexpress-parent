@@ -30,7 +30,7 @@ export const LocaleSelect: React.FC = () => {
         <Typography sx={{
           textTransform: 'uppercase',
           fontWeight: 'bold',
-          color: theme.palette.explorerItem.main
+          color: theme.palette.primary.contrastText
         }}
         >
           {locale}

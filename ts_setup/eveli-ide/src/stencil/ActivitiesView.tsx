@@ -1,7 +1,7 @@
 import React from 'react';
-import { useTheme } from '@mui/styles';
+
 import {
-  Card, CardHeader, CardActions, CardContent, Theme,
+  Card, CardHeader, CardActions, CardContent, Theme, useTheme,
   Typography, Box, Divider, Button
 } from '@mui/material';
 
@@ -52,7 +52,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => console.log("nothing to see here"),
     title: "activities.page.title",
     desc: "activities.page.desc",
-    color: theme.palette.page?.main,
+    color: theme.palette.secondary.contrastText,
     type: "page",
     buttonCreate: "page.create",
     buttonViewAll: undefined
@@ -62,7 +62,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'links', label: "Links" }),
     title: "activities.link.title",
     desc: "activities.link.desc",
-    color: theme.palette.link?.main,
+    color: Burger.colors.purple,
     type: "link",
     buttonCreate: "link.create",
     buttonViewAll: undefined
@@ -84,7 +84,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'locales', label: "Locales" }),
     title: "activities.locale.title",
     desc: "activities.locale.desc",
-    color: theme.palette.locale?.main,
+    color: theme.palette.secondary.light,
     type: "locale",
     buttonCreate: "locale.create",
     buttonViewAll: "button.view.all.locales"
@@ -95,7 +95,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'releases', label: "Releases" }),
     title: "activities.release.title",
     desc: "activities.release.desc",
-    color: theme.palette.release?.main,
+    color: theme.palette.secondary.contrastText,
     type: "release",
     buttonCreate: "release.create",
     buttonViewAll: "button.view.all.releases",
@@ -106,7 +106,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: () => tabs.handleTabAdd({ id: 'templates', label: "Templates" }),
     title: "activities.templates.title",
     desc: "activities.templates.desc",
-    color: theme.palette.release?.main,
+    color: theme.palette.secondary.contrastText,
     type: "templates",
     buttonCreate: "template.create",
     buttonViewAll: "button.view.all.templates"
@@ -116,7 +116,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsAct
     onView: undefined,
     title: "activities.migration.title",
     desc: "activities.migration.desc",
-    color: theme.palette.release?.main,
+    color: theme.palette.secondary.contrastText,
     type: "migration",
     buttonCreate: "migration.create",
     buttonViewAll: undefined
@@ -147,7 +147,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
       />
 
       <CardContent sx={{ flexGrow: 1, p: 2, height: 'fit-content' }}>
-        <Typography color="mainContent.contrastText" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
+        <Typography color="primary.light" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
       </CardContent>
       <Divider />
 

@@ -19,7 +19,7 @@ const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
       { dialogOpen === 'LinkDelete' ? <LinkDelete linkId={link.id} onClose={handleDialogClose} /> : null}
 
       <Burger.TreeItemOption nodeId={link.id + 'link.edit'}
-        color='link'
+        color={Burger.colors.purple}
         icon={EditIcon}
         onClick={() => setDialogOpen('LinkEdit')}
         labelText={<FormattedMessage id="link.edit.title" />}>
@@ -27,7 +27,7 @@ const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
 
 
       <Burger.TreeItemOption nodeId={link.id + 'link.delete'}
-        color='link'
+        color={Burger.colors.purple}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('LinkDelete')}
         labelText={<FormattedMessage id="link.delete.title" />}>

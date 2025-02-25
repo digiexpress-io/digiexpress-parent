@@ -57,7 +57,7 @@ const LinkItem: React.FC<LinkItemProps> = (props) => {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color="link.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -98,7 +98,7 @@ const ArticleItem: React.FC<{
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
-      <Burger.TreeItem itemId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+      <Burger.TreeItem itemId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
 
         {/** Article options */
           options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
@@ -113,7 +113,7 @@ const ArticleItem: React.FC<{
           labelText={<FormattedMessage id="pages" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${pages.length}`}
-          labelcolor={saved ? "page" : "explorerItem.contrastText"}>
+          labelcolor={saved ? "page" : "secondary.light"}>
           {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
             saved={isPageSaved(pageView)}
             article={view}
@@ -126,7 +126,7 @@ const ArticleItem: React.FC<{
             labelText={<FormattedMessage id="services" />}
             labelIcon={FolderOutlinedIcon}
             labelInfo={`${workflows.length}`}
-            labelcolor="workflow">
+            labelcolor={Burger.colors.red}>
 
             {workflows
               .map((w) => ({ w, name: session.getWorkflowName(w.workflow.id)?.name }))
@@ -147,7 +147,7 @@ const ArticleItem: React.FC<{
             labelText={<FormattedMessage id="links" />}
             labelIcon={FolderOutlinedIcon}
             labelInfo={`${links.length}`}
-            labelcolor="link">
+            labelcolor={Burger.colors.purple}>
 
             {links
               .map((w) => ({ w, name: session.getLinkName(w.link.id)?.name }))

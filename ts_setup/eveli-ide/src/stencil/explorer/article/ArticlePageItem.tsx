@@ -14,7 +14,7 @@ import { Composer } from '../../context';
 const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.PageView, saved?: boolean }> = (props) => {
 
   const theme = useTheme<Theme>();
-  const localeIconColor = theme.palette.page.main;
+  const localeIconColor = theme.palette.secondary.contrastText;
 
   const { handleInTab, findTab } = Composer.useNav();
   const page = props.page.page;
@@ -54,13 +54,13 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
       itemId={itemId}
       onClick={onLeftEdit}
       style={{
-        "--tree-view-color": theme.palette.explorerItem.main
+        "--tree-view-color": theme.palette.primary.contrastText
       }}
       label={
 
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={icon} color={props.saved === false ? 
-            "explorerItem.contrastText": 
+            "secondary.light": 
             (nav?.value === page.body.locale ? localeIconColor : "inherit")} />
           
           <Typography

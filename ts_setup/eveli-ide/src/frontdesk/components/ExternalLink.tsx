@@ -20,7 +20,7 @@ export const ExternalLink: React.FC<Props> = ({ icon, children, button, to, clas
     [to],
   );
 
-  const explorerItemColor = theme.palette.explorerItem.main;
+  const explorerItemColor = theme.palette.primary.contrastText;
 
 
   return (

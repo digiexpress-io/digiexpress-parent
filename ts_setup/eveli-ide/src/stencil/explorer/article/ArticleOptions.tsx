@@ -36,13 +36,13 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
 
       {/** Article options */}
       <Burger.TreeItemOption nodeId={article.id + 'edit-nested'}
-        color='article'
+        color='primary'
         icon={EditIcon}
         onClick={() => setDialogOpen('ArticleEdit')}
         labelText={<FormattedMessage id="article.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={article.id + 'delete-nested'}
-        color='article'
+        color='primary'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ArticleDelete')}
         labelText={<FormattedMessage id="article.delete.title" />}>
@@ -74,28 +74,28 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
         labelText={<FormattedMessage id="pages.delete" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={article.id + 'resource.create.workflows'}
-        color='workflow'
+        color={Burger.colors.red}
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('WorkflowComposer')}
         labelText={<FormattedMessage id="services.add" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.workflows'}
-        color='workflow'
+        color={Burger.colors.red}
         icon={EditIcon}
         onClick={() => handleInTab({ article, type: "ARTICLE_WORKFLOWS" })}
         labelText={<FormattedMessage id="services.change" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.create.links'}
-        color='link'
+        color={Burger.colors.purple}
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('LinkComposer')}
         labelText={<FormattedMessage id="link.create" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.links'}
-        color='link'
+        color={Burger.colors.purple}
         icon={EditIcon}
         onClick={() => handleInTab({ article, type: "ARTICLE_LINKS" })}
         labelText={<FormattedMessage id="links.change" />}>

@@ -37,7 +37,7 @@ const Toolbar: React.FC<{}> = () => {
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
-  const saveSx = unsavedPages.length ? { color: "explorerItem.contrastText" } : undefined;
+  const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
 
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {

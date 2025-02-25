@@ -58,8 +58,8 @@ const ExplorerTitleBar = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(1.5),
   paddingBottom: theme.spacing(1.5),
   paddingLeft: theme.spacing(2),
-  color: theme.palette.explorerItem.dark,
-  backgroundColor: alpha(theme.palette.explorerItem.dark, .2),
+  color: theme.palette.secondary.contrastText,
+  backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
   '& .MuiTypography-root': {
     marginLeft: theme.spacing(3),
     fontSize: theme.typography.caption.fontSize,
@@ -73,7 +73,7 @@ export const Secondary: React.FC = () => {
   const intl = useIntl();
 
   return (<>
-    <Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>
+    <Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>
       <ExplorerTitleBar>
         <Typography sx={{ color: 'white', fontStyle: 'italic', fontFamily: 'serif' }}>My Logo</Typography>
         <Typography>{intl.formatMessage({ id: 'explorer.title' })}</Typography>

@@ -21,26 +21,26 @@ import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../../context';
 
 
-//color: theme.palette.explorerItem.dark,
-//backgroundColor: theme.palette.explorer.main,
+//color: theme.palette.secondary.contrastText,
+//backgroundColor: theme.palette.secondary.main,
 const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
   marginTop: theme.spacing(1),
   padding: theme.spacing(1),
-  color: theme.palette.explorerItem.dark,
-  backgroundColor: theme.palette.explorer.main,
+  color: theme.palette.secondary.contrastText,
+  backgroundColor: theme.palette.secondary.main,
   '& .MuiOutlinedInput-input': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
   },
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.explorerItem.dark,
+      borderColor: theme.palette.secondary.contrastText,
     },
   },
   '& .MuiFormLabel-root': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
   },
   '& .MuiFormHelperText-root': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
     marginLeft: 0
   }
 }));
@@ -60,7 +60,7 @@ const findMatch = (line: string, keyword: string, fallback?: boolean) => {
 
   return (<>
     <span>{fragment_0}</span>
-    <Box component="span" sx={{ color: "explorerItem.contrastText" }}><b>{fragment_1}</b></Box>
+    <Box component="span" sx={{ color: "secondary.light" }}><b>{fragment_1}</b></Box>
     <span>{fragment_2}</span>
   </>);
 }
@@ -101,7 +101,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
       <Burger.TreeItem
         itemId={view.link.id}
         labelText={view.link.body.value}
-        labelcolor="link"
+        labelcolor={Burger.colors.purple}
         labelIcon={view.link.body.devMode ? ConstructionIcon : LinkIcon}>
         {items}
       </Burger.TreeItem>
@@ -138,7 +138,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
       <Burger.TreeItem
         itemId={view.workflow.id}
         labelText={<span>{findMatch(view.workflow.body.value, keyword, true)}</span>}
-        labelcolor="workflow"
+        labelcolor={Burger.colors.red}
         labelIcon={view.workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
         {items}
       </Burger.TreeItem>
@@ -188,7 +188,7 @@ const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer
   if (items.length > 0) {
     const articleEditButton: React.ReactElement =
       <Burger.TreeItemOption nodeId={article.id + 'edit-nested'}
-        color='article'
+        color='primary'
         icon={EditIcon}
         onClick={() => setArticleEditOpen(true)}
         labelText={<FormattedMessage id="article.edit.title" />}>
@@ -254,7 +254,7 @@ const SearchExplorer: React.FC<{}> = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon sx={{ color: 'explorerItem.dark' }} />
+              <SearchIcon sx={{ color: 'secondary.contrastText' }} />
             </InputAdornment>
           ),
         }} />
@@ -263,7 +263,7 @@ const SearchExplorer: React.FC<{}> = () => {
         sx={{
           fontVariant: 'all-petite-caps',
           fontWeight: 'bold',
-          color: 'explorerItem.main',
+          color: 'primary.contrastText',
           ml: 1, mr: 1, mb: 1,
           borderBottom: '1px solid'
         }}>

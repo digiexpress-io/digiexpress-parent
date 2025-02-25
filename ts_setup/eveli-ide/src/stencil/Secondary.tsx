@@ -9,14 +9,14 @@ import { ArticleExplorer, WorkflowExplorer, LinkExplorer, SearchExplorer } from 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
   "&.MuiButtonBase-root": {
     minWidth: "unset",
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
     fontSize: '9pt',
     paddingLeft: '.5rem',
     paddingRight: '.5rem'
   },
   "&.Mui-selected": {
-    color: theme.palette.explorerItem.dark,
-    backgroundColor: alpha(theme.palette.explorerItem.dark, .2),
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
   },
 }));
 
@@ -28,23 +28,23 @@ const StyledTabs = styled(Tabs)<TabsProps>(() => ({
 
 
 const StyledSearch = styled(TextField)<TextFieldProps>(({ theme }) => ({
-  color: theme.palette.explorerItem.main,
-  backgroundColor: theme.palette.explorer.main,
+  color: theme.palette.primary.contrastText,
+  backgroundColor: theme.palette.secondary.main,
   '& .MuiOutlinedInput-input': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
   },
   '& .MuiOutlinedInput-root': {
     fontSize: '10pt',
     height: '2rem',
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.explorerItem.dark,
+      borderColor: theme.palette.secondary.contrastText,
     },
   },
   '& .MuiFormLabel-root': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
   },
   '& .MuiFormHelperText-root': {
-    color: theme.palette.explorerItem.main,
+    color: theme.palette.primary.contrastText,
     marginLeft: 1
   }
 }));
@@ -97,7 +97,7 @@ const Secondary: React.FC<{}> = () => {
   } else {
     component = <SecondaryExplorer />;
   }
-  return (<Box sx={{ backgroundColor: "explorer.main", height: '100%' }}>{component}</Box>)
+  return (<Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>{component}</Box>)
 }
 export { Secondary }
 

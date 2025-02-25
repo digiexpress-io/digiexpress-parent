@@ -26,7 +26,7 @@ const DecisionTableHeader: React.FC<{
     <TableRow>
       <TableCell align="center"
         colSpan={ast.headers.acceptDefs.length + 1}
-        sx={{ backgroundColor: "page.main", color: "primary.contrastText" }}>
+        sx={{ backgroundColor: "secondary.contrastText", color: "primary.contrastText" }}>
 
         <Typography display="inline-flex" fontWeight="bold">
           <FormattedMessage id="decisions.table.inputs.title" />
@@ -43,13 +43,13 @@ const DecisionTableHeader: React.FC<{
     </TableRow>
 
     <TableRow>
-      <TableCell align="left" sx={{ fontWeight: "bold", width: "30px", backgroundColor: "page.main", color: "primary.contrastText" }}>#</TableCell>
+      <TableCell align="left" sx={{ fontWeight: "bold", width: "30px", backgroundColor: "secondary.contrastText", color: "primary.contrastText" }}>#</TableCell>
       {headers.map((accept) => (
         <TableCell key={accept.id} align="left"
           onClick={() => onClick(accept)}
           sx={{
             fontWeight: "bold", minWidth: "50px", maxWidth: "200px", cursor: "pointer",
-            backgroundColor: accept.direction === "OUT" ? "primary.main" : "page.main",
+            backgroundColor: accept.direction === "OUT" ? "primary.main" : "secondary.contrastText",
             color: "primary.contrastText"
           }}>
           

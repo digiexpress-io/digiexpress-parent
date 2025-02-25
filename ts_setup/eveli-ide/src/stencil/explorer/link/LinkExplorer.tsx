@@ -42,7 +42,7 @@ const LinkExplorer: React.FC<{ searchString: string }> = ({ searchString }) => {
         sx={{
           fontVariant: 'all-petite-caps',
           fontWeight: 'bold',
-          color: 'explorerItem.main',
+          color: 'primary.contrastText',
           ml: 1, mr: 1, mb: 1,
           borderBottom: '1px solid',
         }}>

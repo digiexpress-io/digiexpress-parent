@@ -39,7 +39,7 @@ const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflo
           labelText={<FormattedMessage id="articles" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${workflow.body.articles.length}`}
-          labelcolor="article">
+          labelcolor="primary">
 
           {workflow.body.articles.map((id => session.getArticleView(id))).map(view => (
             <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${workflow.id}-${view.article.id}-nested`}/>

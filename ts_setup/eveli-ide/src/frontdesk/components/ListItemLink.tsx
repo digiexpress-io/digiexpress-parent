@@ -13,7 +13,7 @@ interface Props {
 export const ListItemLink: React.FC<Props> = ({ icon, children, button, to, className }) => {
   const theme = useTheme();
 
-  const explorerItemColor = theme.palette.explorerItem.main;
+  const explorerItemColor = theme.palette.primary.contrastText;
 
   const renderLink = useMemo(
     // @ts-ignore

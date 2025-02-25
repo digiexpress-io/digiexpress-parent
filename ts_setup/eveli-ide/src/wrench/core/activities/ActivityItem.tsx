@@ -28,7 +28,7 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
   return (<Card sx={cardStyle}>
     <CardHeader title={title} />
     <CardContent sx={{ flexGrow: 1, p: 2, height: 'fit-content' }}>
-      <Typography color="mainContent.contrastText" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
+      <Typography color="primary.light" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
     </CardContent>
 
     <Divider />

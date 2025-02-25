@@ -38,7 +38,6 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [allFlows, setAllFlows] = React.useState<string[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
-  console.log("WORKFLOW", workflow);
 
   React.useEffect(()=> {
     service.assets().dialobForms().then(setAllDialobTags);

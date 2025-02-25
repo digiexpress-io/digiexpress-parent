@@ -20,7 +20,7 @@ const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }
       
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.edit'}
         icon={EditIcon}
-        color='workflow'
+        color={Burger.colors.red}
         onClick={() => setDialogOpen('WorkflowEdit')}
         labelText={<FormattedMessage id="services.edit" />}>
       </Burger.TreeItemOption>
@@ -28,7 +28,7 @@ const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }
             
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.delete'}
         icon={DeleteOutlineOutlinedIcon}
-        color='workflow'
+        color={Burger.colors.red}
         onClick={() => setDialogOpen('WorkflowDelete')}
         labelText={<FormattedMessage id="services.delete" />}>
       </Burger.TreeItemOption>

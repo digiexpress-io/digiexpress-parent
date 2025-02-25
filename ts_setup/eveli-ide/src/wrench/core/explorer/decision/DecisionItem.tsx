@@ -55,7 +55,7 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
   const flows: HdesApi.Entity<HdesApi.AstFlow>[] = [];
 
   return (
-    <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+    <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
 
       {/** Decision options */}
       <Burger.TreeItem itemId={decision.id + 'options-nested'}
@@ -70,7 +70,7 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
         labelText={<FormattedMessage id="flows" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}
-        labelcolor="article">
+        labelcolor="primary">
 
         {flows.map(view => (<FlowItem key={view.id} nodeId={view.id}
           labelText={view.ast ? view.ast.name : view.id}

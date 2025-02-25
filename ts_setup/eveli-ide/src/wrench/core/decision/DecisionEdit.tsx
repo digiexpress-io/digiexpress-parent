@@ -54,7 +54,7 @@ const DrawerOption: React.FC<{
   label: string;
   icon: React.ReactElement;
 }> = ({ icon, onClick, label }) => {
-  const itemSx: SxProps = { color: "explorerItem.main" }
+  const itemSx: SxProps = { color: "primary.contrastText" }
   return (<ListItemButton onClick={onClick}>
     <ListItemIcon sx={itemSx}>{icon}</ListItemIcon>
     <ListItemText sx={itemSx}>
@@ -69,7 +69,7 @@ const DrawerOption: React.FC<{
 const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>
     <Box sx={{ width: "350px" }}><List>{children}</List></Box>
-    <Divider orientation="vertical" flexItem color="explorerItem.contrastColor" />
+    <Divider orientation="vertical" flexItem color="secondary.dark" />
   </>
 }
 
@@ -110,7 +110,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     {edit?.header ? <HeaderEdit dt={ast} header={edit.header} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
 
     <Drawer anchor="top" open={edit?.options} onClose={() => setEdit(undefined)} sx={{ zIndex: "10000" }}>
-      <Box sx={{ display: "flex", backgroundColor: "explorer.main", color: "primary.contrastText" }}>
+      <Box sx={{ display: "flex", backgroundColor: "secondary.main", color: "primary.contrastText" }}>
         <DrawerSection>
           <DrawerOption label='decisions.toolbar.addInputColumn' icon={<DoubleArrowRoundedIcon sx={{ transform: "rotate(-180deg)" }} />} onClick={() => onChange([{ type: 'ADD_HEADER_IN', id: "in-" + ast.headers.acceptDefs.length + 1 }])} />
           <DrawerOption label='decisions.toolbar.addOutputColumn' icon={<DoubleArrowRoundedIcon />} onClick={() => onChange([{ type: 'ADD_HEADER_OUT', id: "out-" + ast.headers.returnDefs.length + 1 }])} />

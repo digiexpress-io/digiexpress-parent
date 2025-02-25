@@ -100,7 +100,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
     <TableHead>
       <TableRow sx={{ borderBottom: 0 }}>
         <TableCell colSpan={3} sx={{ borderBottom: 0 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1, color: "mainContent.dark" }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 1, color: "secondary.main" }}>
             <FormattedMessage id={"locales.label.table.title"} />
           </Typography>
         </TableCell>
@@ -115,7 +115,7 @@ const LocaleLabels: React.FC<LocaleLabelsProps> = (props) => {
       </TableRow>
 
       <TableRow>
-        <TableCell sx={{ width: "100px" }} colSpan={2} align="left" color="mainContent.contrastText"><FormattedMessage id="locales.label.table.locale" /></TableCell>
+        <TableCell sx={{ width: "100px" }} colSpan={2} align="left" color="primary.light"><FormattedMessage id="locales.label.table.locale" /></TableCell>
         <TableCell sx={{}} colSpan={2} align="left"><FormattedMessage id="locales.label.table.value" /></TableCell>
       </TableRow>
     </TableHead>

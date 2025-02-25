@@ -17,7 +17,7 @@ const StyledToolbarButton = styled(Box)(({ theme }) => ({
     cursor: 'pointer'
   },
   '& .MuiSvgIcon-root': {
-    color: theme.palette.explorerItem.main
+    color: theme.palette.primary.contrastText
   }
 }));
 
@@ -28,8 +28,8 @@ const StyledToolbar = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "100%",
   flexDirection: 'column',
-  borderRight: `1px solid ${theme.palette.explorerItem.dark}`,
-  backgroundColor: theme.palette.explorer.main
+  borderRight: `1px solid ${theme.palette.secondary.contrastText}`,
+  backgroundColor: theme.palette.secondary.main
 }))
 
 export const Toolbar: React.FC<{}> = () => {

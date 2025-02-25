@@ -40,7 +40,7 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
           labelText={<FormattedMessage id="articles" />}
           labelIcon={FolderOutlinedIcon}
           labelInfo={`${link.body.articles.length}`}
-          labelcolor="article">
+          labelcolor="primary">
 
           {link.body.articles.map((id => session.getArticleView(id))).map(view => (
             <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${link.id}-${view.article.id}-nested`}/>

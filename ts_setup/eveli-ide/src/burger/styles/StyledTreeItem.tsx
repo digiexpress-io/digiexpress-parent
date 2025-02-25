@@ -8,7 +8,7 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
   color: `var(--tree-view-text-color, ${theme.palette.text.secondary})`,
   [`& .${treeItemClasses.content}`]: {
-    color: `var(--tree-view-text-color, ${theme.palette.explorerItem.main})`,
+    color: `var(--tree-view-text-color, ${theme.palette.primary.contrastText})`,
     borderTopRightRadius: theme.spacing(2),
     borderBottomRightRadius: theme.spacing(2),
     paddingRight: theme.spacing(1),
@@ -21,7 +21,7 @@ const StyledTreeItemRoot = styled(TreeItem2)(({ theme }) => ({
     },
     "&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused": {
       backgroundColor: `var(--tree-view-bg-color, ${theme.palette.action.selected})`,
-      color: `var(--tree-view-color, ${theme.palette.explorerItem.dark})` //"var(--tree-view-color)"
+      color: `var(--tree-view-color, ${theme.palette.secondary.contrastText})` //"var(--tree-view-color)"
     },
     [`& .${treeItemClasses.label}`]: {
       //fontWeight: "inherit",
@@ -76,7 +76,7 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
 
   return (
     <StyledTreeItemRoot
-      sx={{ backgroundColor: "explorer.main" }}
+      sx={{ backgroundColor: "secondary.main" }}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           {labelButton ? labelButton : (

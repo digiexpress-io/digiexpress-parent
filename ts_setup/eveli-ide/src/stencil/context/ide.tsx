@@ -273,7 +273,7 @@ const ArticleTabIndicator: React.FC<{ article: StencilApi.Article, type: Stencil
   return <span style={{
     paddingLeft: "5px",
     fontSize: '30px',
-    color: theme.palette.explorerItem.contrastText,
+    color: theme.palette.secondary.light,
     display: saved ? "none" : undefined
   }}>*</span>
 }

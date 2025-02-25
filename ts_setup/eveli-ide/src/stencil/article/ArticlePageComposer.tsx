@@ -5,6 +5,7 @@ import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/r
 import { Composer, StencilApi } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
+import { colors } from '@/burger'
 
 
 const regexp_starts_with = new RegExp('^# .');
@@ -139,7 +140,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
     return (<>
       <Box data-color-mode="light" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={1} value={value1} onChange={(value) => handleChange({ page: page1, value })} toolbarHeight={40}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
+          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -153,7 +154,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
 
       <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={2} value={value1} onChange={(value) => handleChange({ page: page1, value })}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.page.main, site)}
+          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -161,7 +162,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
       </Box>
       <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={3} value={value2} onChange={(value) => handleChange({ page: page2, value })}
-          commands={getMdCommands(session.site.locales[page2.body.locale], theme.palette.page.dark, site)}
+          commands={getMdCommands(session.site.locales[page2.body.locale], colors.purple, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />

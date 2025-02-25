@@ -80,7 +80,7 @@ const Toolbar: React.FC<{}> = () => {
     tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
   }, [tabsActions, secondaryActions]);
 
-  const saveSx = unsavedPages.length ? { color: "explorerItem.contrastText" } : undefined;
+  const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
 
   return (
     <>

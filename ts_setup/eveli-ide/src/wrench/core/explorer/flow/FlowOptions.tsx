@@ -123,28 +123,28 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
       {dialogOpen === 'FlowDelete' ? <FlowDelete flowId={flow.id} onClose={handleDialogClose} /> : null}
 
       <Burger.TreeItemOption nodeId={flow.id + 'edit-nested'}
-        color='article'
+        color='primary'
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: flow })}
         labelText={<FormattedMessage id="flows.edit.title" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={flow.id + 'simulate-nested'}
-        color='article'
+        color='primary'
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(flow.id)}
         labelText={<FormattedMessage id="flows.simulate.title" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={flow.id + 'delete-nested'}
-        color='article'
+        color='primary'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('FlowDelete')}
         labelText={<FormattedMessage id="flows.delete.title" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={flow.id + 'copyas-nested'}
-        color='article'
+        color='primary'
         icon={EditIcon}
         onClick={() => setDialogOpen('FlowCopy')}
         labelText={<FormattedMessage id="flows.copyas.title" />}>

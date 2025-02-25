@@ -17,7 +17,7 @@ import { CompareView } from './compare';
 
 
 
-const root: SxProps = { height: `100%`,  padding: 1, backgroundColor: "mainContent.main" };
+const root: SxProps = { height: `100%`,  padding: 1, backgroundColor: "primary.contrastText" };
 
 const EntityEditor: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
   if (entity.source.bodyType === 'DT') {

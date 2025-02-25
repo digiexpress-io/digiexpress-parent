@@ -233,7 +233,7 @@ const ArticleTabIndicator: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity
   return <span style={{
     paddingLeft: "5px",
     fontSize: '30px',
-    color: theme.palette.explorerItem.contrastText,
+    color: theme.palette.secondary.light,
     display: saved ? "none" : undefined
   }}>*</span>
 }

@@ -65,7 +65,7 @@ function DecisionItem(props: {
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={AccountTreeOutlinedIcon} color="page.main" sx={{ pl: 1, mr: 1 }} />
+          <Box component={AccountTreeOutlinedIcon} color="secondary.contrastText" sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} maxWidth="300px" variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -135,7 +135,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
       labelIcon={ArticleOutlinedIcon}
       labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color="error" />}
-      labelcolor={saved ? "explorerItem" : "explorerItem.contrastText"}>
+      labelcolor={saved ? "explorerItem" : "secondary.light"}>
 
       {/** Service options */}
       <Burger.TreeItem itemId={service.id + 'options-nested'}
@@ -149,7 +149,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
         labelText={<FormattedMessage id={`program.status.${service.status}`} />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor="workflow">
+        labelcolor={Burger.colors.red}>
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -161,7 +161,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
         labelText={<FormattedMessage id="flows" />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}
-        labelcolor="article">
+        labelcolor="primary">
 
         {flows.map(view => (<FlowItem key={view.ref.ref} nodeId={`${service.id}-fl-${view.ref.ref}`}
           labelText={view.ref.ref}

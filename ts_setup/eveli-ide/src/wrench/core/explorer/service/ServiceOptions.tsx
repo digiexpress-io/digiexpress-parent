@@ -121,25 +121,25 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
     <>
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
-        color='link'
+        color={Burger.colors.purple}
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: service })}
         labelText={<FormattedMessage id="services.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}
-        color='link'
+        color={Burger.colors.purple}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(service.id)}
         labelText={<FormattedMessage id="services.simulate.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
-        color='link'
+        color={Burger.colors.purple}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ServiceDelete')}
         labelText={<FormattedMessage id="services.delete.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'copyas-nested'}
-        color='link'
+        color={Burger.colors.purple}
         icon={EditIcon}
         onClick={() => setDialogOpen('ServiceCopy')}
         labelText={<FormattedMessage id="services.copyas.title" />}>

@@ -58,17 +58,17 @@ export const EveliShellRoot = styled('div', {
       display: 'flex',
       flexDirection: 'column',
       width: `${minibarWidth -1}px`,
-      borderRight: drawerOpen ? `1px solid ${theme.palette.explorerItem.dark}` : undefined,
+      borderRight: drawerOpen ? `1px solid ${theme.palette.secondary.contrastText}` : undefined,
     },
     "& .EveliShellMiniBar .MuiButtonBase-root": {
       minWidth: "unset",
-      color: theme.palette.explorerItem.main,
+      color: theme.palette.primary.contrastText,
     },
     "& .EveliShellMiniBar .Mui-selected": {
-      color: theme.palette.explorerItem.dark,
+      color: theme.palette.secondary.contrastText,
     },
     "& .EveliShellMiniBar .MuiTabs-indicator": {
-      backgroundColor: theme.palette.explorerItem.dark,
+      backgroundColor: theme.palette.secondary.contrastText,
       marginRight: "49px"
     },
 
@@ -84,7 +84,7 @@ export const EveliShellRoot = styled('div', {
     },
 
     '& .EveliShellBase .MuiDrawer-paper': {    
-      backgroundColor: theme.palette.explorer.main,
+      backgroundColor: theme.palette.secondary.main,
       boxSizing: 'border-box',     
       paddingTop: toolbarHeight,
       width: drawerWidth,

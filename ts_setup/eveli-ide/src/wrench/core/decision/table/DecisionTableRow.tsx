@@ -22,7 +22,7 @@ const DecisionTableRow: React.FC<{
     <TableCell align="left" sx={{
       position: "sticky",
       left: 0,
-      backgroundColor: "page.main",
+      backgroundColor: "secondary.contrastText",
       color: "primary.contrastText",
       borderBottom: "unset"
     }}>
