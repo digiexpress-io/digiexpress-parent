@@ -141,8 +141,6 @@ const siteTheme = createTheme({
         }
       }
     },
-
-
     MuiTableHead: {
       styleOverrides: {
         root: () => ({
@@ -184,8 +182,6 @@ const siteTheme = createTheme({
     MuiDialogTitle: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => {
-
-
           return {
             color: theme.palette.primary.contrastText,
             fontWeight: 'bold',
@@ -196,7 +192,6 @@ const siteTheme = createTheme({
         }
       }
     },
-
     MuiTextField: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
@@ -218,8 +213,6 @@ const siteTheme = createTheme({
         })
       },
     },
-
-
     MuiListItemText: {
       styleOverrides: {
         root: {
@@ -309,7 +302,6 @@ const siteTheme = createTheme({
         })
       },
     },
-
     MuiButton: {
       variants: [
         {

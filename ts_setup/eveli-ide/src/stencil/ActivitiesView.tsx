@@ -147,7 +147,7 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
       />
 
       <CardContent sx={{ flexGrow: 1, p: 2, height: 'fit-content' }}>
-        <Typography color="primary.light" variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
+        <Typography variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
       </CardContent>
       <Divider />
 
