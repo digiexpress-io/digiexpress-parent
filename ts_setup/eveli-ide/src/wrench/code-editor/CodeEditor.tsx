@@ -30,39 +30,42 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const CodeEditorState: React.FC<ViewProps> = (props) => {
-  const ref = React.createRef<HTMLTextAreaElement>();
+  const ref = React.useRef<HTMLTextAreaElement>(null);
   const [state, setState] = React.useState<View>();
   
   React.useEffect(() => {
-    const editor = createView(ref, props)
-    .withEvents({
-      onChanges: props.onChange,  
-      lint: props.lint,
-      hint: props.hint
-    });
-
-    setState(editor);
+    setState(createView(ref, props).withEvents(props));
 
     return () => {
-      editor.remove()
+      try {
+        state?.remove();
+      } catch(e) {}
     }
-  }, []);
-
-  React.useEffect(() => {
-    if(!state) {
-      return;
-    }
-    state.withEvents({
-      onChanges: props.onChange,  
-      lint: props.lint,
-      hint: props.hint
-    });
-  }, [props, state]);
-
+  }, [ref.current]);
   return (<textarea key={props.id} id={props.id} ref={ref} />);
 }
 
 const CodeEditor: React.FC<ViewProps> = (props) => {
+  const [state, setState] = React.useState<string>(props.id);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  
+  React.useEffect(() => {
+
+    if(props.id !== state) {
+      setLoading(true)
+      setState(props.id);
+    }
+  }, [props.id]);
+
+  React.useEffect(() => {
+    if(loading) {
+      setLoading(false);
+    }
+  }, [loading]);
+
+  if(loading) {
+    return (<></>)
+  }
   return (<StyledBox><CodeEditorState {...props} /></StyledBox>);
 }
 export { CodeEditor };

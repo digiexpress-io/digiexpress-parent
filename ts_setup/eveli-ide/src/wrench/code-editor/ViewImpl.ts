@@ -30,6 +30,7 @@ interface View {
   withValue(value: string): View;
   withEvents(events: ViewEvents): View
   remove(): void;
+  refresh(): void;
 }
 
 class ViewImpl implements View {
@@ -102,6 +103,10 @@ class ViewImpl implements View {
 
   remove() {
     this._editor.toTextArea();
+  }
+
+  refresh() {
+    //this._editor.refresh();
   }
 
   getAnnotations(
