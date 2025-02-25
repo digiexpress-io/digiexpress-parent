@@ -1,4 +1,4 @@
-import { isAbsolute, join, normalize } from 'node:path'
+import { normalize } from 'node:path'
 import type { Plugin } from 'vite'
 import { createFilePath, writeFile } from './file-utils'
 import { IntlFile, parseCsv } from './parse-csv'

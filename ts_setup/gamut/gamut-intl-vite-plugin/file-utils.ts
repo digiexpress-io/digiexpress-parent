@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
-import { relative, resolve, dirname } from 'node:path'
+import { writeFileSync, existsSync, mkdirSync } from 'node:fs'
+import { resolve, dirname } from 'node:path'
 
 
 
