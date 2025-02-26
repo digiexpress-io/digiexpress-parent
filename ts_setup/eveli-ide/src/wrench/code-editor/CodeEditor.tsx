@@ -39,33 +39,15 @@ const CodeEditorState: React.FC<ViewProps> = (props) => {
     return () => {
       try {
         state?.remove();
-      } catch(e) {}
+      } catch(e) {
+      }
     }
   }, [ref.current]);
   return (<textarea key={props.id} id={props.id} ref={ref} />);
 }
 
 const CodeEditor: React.FC<ViewProps> = (props) => {
-  const [state, setState] = React.useState<string>(props.id);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  
-  React.useEffect(() => {
-
-    if(props.id !== state) {
-      setLoading(true)
-      setState(props.id);
-    }
-  }, [props.id]);
-
-  React.useEffect(() => {
-    if(loading) {
-      setLoading(false);
-    }
-  }, [loading]);
-
-  if(loading) {
-    return (<></>)
-  }
-  return (<StyledBox><CodeEditorState {...props} /></StyledBox>);
+  const Editor = React.useCallback(() => <StyledBox><CodeEditorState {...props} /></StyledBox>, [props.id]);
+  return <Editor />;
 }
 export { CodeEditor };

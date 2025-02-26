@@ -41,7 +41,6 @@ const FlowEdit: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) =
   const { session, actions, service } = Composer.useComposer();
   const { site } = session;
   const update = session.pages[flow.id];
-  const src = flow.ast?.src.value;
   
   const [ast, setAst] = React.useState<Client.AstFlow | undefined>(flow.ast);
   const [guided, setGuided] = React.useState<{ cm: CodeMirror.Editor, data: CodeMirror.Hints, cur: CodeMirror.Hint, guided: FlowAstAutocomplete }>();
@@ -52,6 +51,12 @@ const FlowEdit: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) =
   React.useEffect(() => {
     service.ast(flowId, commands).then(data => setAst(data.ast));
   }, [commands, flowId, service])
+
+
+  const originalState = flow.ast?.src.value;
+  const updatedContent = update?.value[0].value;
+  const src = updatedContent ?? originalState;
+
 
   return (<Box sx={{ height: 1, display: 'flex' }}>
     {guided ? <AutocompleteTask onClose={() => setGuided(undefined)} flow={flow} {...guided} /> : undefined}
