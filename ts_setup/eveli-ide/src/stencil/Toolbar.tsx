@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
-import { Tabs, Tab, Box, TabProps, TabsProps } from '@mui/material';
-import { styled } from "@mui/material/styles";
+import { Tabs, Tab, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-//import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import * as Burger from '@/burger';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -20,7 +19,7 @@ import { LocaleFilter } from './explorer/filter';
 
 const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
@@ -39,8 +38,8 @@ const Toolbar: React.FC<{}> = () => {
 
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
-  function handleBacktoTasks() {
-    //navigate('/ui/tasks');
+  function handleBack() {
+    navigate('/');
   }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -96,7 +95,7 @@ const Toolbar: React.FC<{}> = () => {
           <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
           <Tab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
           <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
-          <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} />
+          <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} />
         </Tabs>
 
         <Box flexGrow={1} />

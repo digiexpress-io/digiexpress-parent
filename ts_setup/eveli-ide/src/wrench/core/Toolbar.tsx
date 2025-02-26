@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Tabs, Tab, Box, TabProps, TabsProps, styled } from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -20,7 +20,7 @@ import { Composer } from './context';
 
 
 const Toolbar: React.FC<{}> = () => {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
@@ -31,8 +31,8 @@ const Toolbar: React.FC<{}> = () => {
   React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
   
 
-  function handleBacktoTasks() {
-    //navigate('/ui/tasks');
+  function handleBack() {
+    navigate('/');
   }
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
@@ -91,7 +91,7 @@ const Toolbar: React.FC<{}> = () => {
       <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
       <Tab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
       <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
-      <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBacktoTasks} /> 
+      <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} /> 
     </Tabs>
   );
 }
