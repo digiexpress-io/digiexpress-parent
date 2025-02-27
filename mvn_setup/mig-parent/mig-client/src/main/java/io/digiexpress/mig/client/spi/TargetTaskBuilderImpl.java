@@ -22,6 +22,7 @@ import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.datasource.TenantTableNames;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.subscription.Cancellable;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -409,6 +410,7 @@ delete from process;
   }
  
  
+ // TODO: run following query to reset sequence: select setval('process_id_seq', max(id)+1) from process;
 
  private Uni<?> createProcess(io.vertx.mutiny.sqlclient.SqlConnection conn, SourceTasks source) {
     final var sql =  
@@ -473,9 +475,21 @@ delete from process;
         })
         .collect(Collectors.toList());
      
-      return batch(conn, ProcessEntity.class, sql, props);
+      return batch(conn, ProcessEntity.class, sql, props).onItem().invoke(rs->postProcess(conn, ProcessEntity.class));
   }
 
+  private <T> Cancellable postProcess(
+      io.vertx.mutiny.sqlclient.SqlConnection conn,
+      Class<T> type
+      ) {
+    // statement to reset process id sequence to latest from imported process id
+    final String sql = "select setval('process_id_seq', max(id)+1) from process";
+    
+    final EntityQueryLogger<T> logger = this.logger.entityQuery(type).query(sql);
+    return conn.preparedQuery(sql).execute()
+        .subscribe().with(data -> logger.queryOk(data), e -> logger.queryFail(e));
+  }
+   
   private <T> Uni<RowSet<Row>> batch(
       io.vertx.mutiny.sqlclient.SqlConnection conn,
       Class<T> type,
