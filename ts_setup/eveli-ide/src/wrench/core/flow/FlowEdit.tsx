@@ -20,7 +20,6 @@ const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flo
     <Graph flow={flow} site={site}
       onClick={() => console.log("single")}
       onDoubleClick={(id) => {
-        
         let article: Client.Entity<any> = site.decisions[id];
         if(!article) {
           article = site.flows[id];
@@ -44,7 +43,7 @@ const FlowEdit: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) =
   
   const [ast, setAst] = React.useState<Client.AstFlow | undefined>(flow.ast);
   const [guided, setGuided] = React.useState<{ cm: CodeMirror.Editor, data: CodeMirror.Hints, cur: CodeMirror.Hint, guided: FlowAstAutocomplete }>();
-  const [showGraph, setShowGraph] = React.useState<boolean>(false);
+  const [showGraph, setShowGraph] = React.useState<boolean>(true);
   const commands = React.useMemo(() => update ? update.value : flow.source.commands, [flow, update]);
   const flowId = flow.id;
   

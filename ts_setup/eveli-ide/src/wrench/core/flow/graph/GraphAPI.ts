@@ -1,50 +1,38 @@
-import Vis from '../../../vis';
+import { Node, Edge, Model } from '../../../vis';
 import { HdesApi } from '../../client';
 
 
-type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow' | undefined;
+type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow';
+
 
 class ModelVisitor {
   private _fl: HdesApi.AstFlow;
   private _nested: boolean;
   private _visited: string[] = [];
-  private _nodes: Vis.Node[] = [];
-  private _edges: Vis.Edge[] = [];
+  private _nodes: Node[] = [];
+  private _edges: Edge[] = [];
   private _models: HdesApi.Site;
-  private _start: { x: number, y: number };
-  private _constraints: {
-    width: { maximum: number, minimum: number }
-  };
-  private _seperation: {
-    level: number;
-    switch: number;
-  };
 
-  constructor(fl: HdesApi.AstFlow, models: HdesApi.Site, nested?: {x: number, y: number, visited: string[]}) {
+
+  constructor(fl: HdesApi.AstFlow, models: HdesApi.Site, nested?: { visited: string[]}) {
     this._fl = fl;
     this._models = models;
     this._nested = nested ? true : false;
-    this._constraints = {
-      width: { maximum: 150, minimum: 150 }
-    }
-    this._seperation = {
-      level: 100,
-      switch: 80 + this._constraints.width.minimum
-    };
-    this._start = {
-      x: nested ? nested.x : -500, 
-      y: nested ? nested.y : -500
-    };
+
+
     
     if(nested) {
       this._visited.push(...nested.visited);
     }
   }
 
-  visit(): Vis.Model {
+  visit(): Model {
     const steps = Object.values(this._fl.src.tasks);    
     
-    const start: Vis.Node = {id: 'start', label: 'start', shape: 'circle', x: 0, y: this._start.y, parents: []};
+    const start: Node = {
+      id: 'start', type: 'start', label: 'start', parents: []
+    };
+
     if(!this._nested) {
       this._nodes.push(start);
     }
@@ -57,17 +45,16 @@ class ModelVisitor {
     if (steps.length === 0 && !this._nested) {
       this._edges.push({ from: 'start', to: 'end' });
       this._nodes.push({
-        id: 'end', label: 'end', shape: 'circle',
-        parents: [],
-        x: 0,
-        y: this._start.y + this._seperation.level
+        id: 'end', label: 'end',
+        type: 'end',
+        parents: []
       })
     }
 
     return { nodes: this._nodes, edges: this._edges, visited: this._visited };
   }
 
-  visitEdge(step: HdesApi.AstFlowTaskNode, props: { parent: Vis.Node, index?: number }) {
+  visitEdge(step: HdesApi.AstFlowTaskNode, props: { parent: Node, index?: number }) {
     const id = this._fl.name + "/" + step.id.value;
     const parent = props.parent;
 
@@ -88,7 +75,7 @@ class ModelVisitor {
     }
   }
 
-  visitStep(step: HdesApi.AstFlowTaskNode, props: { parent: Vis.Node, index?: number }) {
+  visitStep(step: HdesApi.AstFlowTaskNode, props: { parent: Node, index?: number }) {
     const id = this._fl.name + "/" + step.id.value;
     const parent = props.parent;
 
@@ -103,22 +90,15 @@ class ModelVisitor {
       parents.push(...parent.parents);
       parents.push(parent.id);
     }
-
     const ref = this.visitRef(step);
     const group = this.visitType(step);
-    const { x, y } = this.visitCoords(step, props);
-
-    const node: Vis.Node = {
+    const node: Node = {
       id: id,
       parents: parents,
       externalId: ref?.id,
       label: step.keyword,
-      group: group,
-      color: this.visitColor(group),
-      shape: this.visitShape(group),
-      x: x, y: y,
-      body: { step, ref },
-      widthConstraint: this._constraints.width
+      type: group,
+      body: { step, ref }
     }
 
     this._nodes.push(node)
@@ -134,11 +114,9 @@ class ModelVisitor {
       }
       this.visitThen(step.then, { parent: node, index: props.index });
     }
-
-    this.visitOverlapping(node);
   }
   
-  visitServiceAssoc(entity: HdesApi.Entity<HdesApi.AstService>, props: { parent: Vis.Node, index?: number }) {
+  visitServiceAssoc(entity: HdesApi.Entity<HdesApi.AstService>, props: { parent: Node, index?: number }) {
     if(!entity.ast) {
       return;
     }  
@@ -152,23 +130,7 @@ class ModelVisitor {
     
     const assocs = refName ? usedAssoc : allAssocs;
     
-    let index = 0
-    let evenX = 0
-    let oddX = 0
     for (let caseInTask of assocs) {
-      let caseX
-      if (index === 0) {
-        caseX = 0;
-      } else if (index % 2 === 0) {
-        // even
-        evenX += this._seperation.switch;
-        caseX = evenX;
-      } else {
-        // odd
-        oddX += this._seperation.switch;
-        caseX = oddX * -1;
-      }
-      index++;
       
       const ref = this.findRef(caseInTask.ref, caseInTask.refType);
       const parents: string[] = [];
@@ -176,19 +138,13 @@ class ModelVisitor {
       parents.push(parent.id);
       const group: ModelType = caseInTask.refType === "FLOW" ? "flow" : 'decisionTable';
       const id = caseInTask.ref + "/" + parent.id  + "/" + (caseInTask.id ? caseInTask.id : caseInTask.ref);
-      const offsetX = assocs.length === 1 ? (150 + id.length) : 100;
-      const offsetY = assocs.length === 1 ? 0 : 50;
-      const node: Vis.Node = {
+      const node: Node = {
         id: id,
         parents: parents,
         externalId: caseInTask.id,
         label: "::" + caseInTask.ref,
-        group: group,
-        color: this.visitColor(group),
-        shape: this.visitShape(group),
-        x: caseX + offsetX, y: parent.y + offsetY,
+        type: group,
         body: { ref },
-        widthConstraint: this._constraints.width
       }
       
       this._edges.push({ from: props.parent.id, to: node.id})
@@ -202,16 +158,15 @@ class ModelVisitor {
           continue;
         }
         this._visited.push(flow.name);
-        const nested = new ModelVisitor(flow, this._models, {x: node.x, y: node.y, visited: this._visited}).visit();
+        const nested = new ModelVisitor(flow, this._models, {visited: this._visited}).visit();
         this._edges.push(...nested.edges)
         this._nodes.push(...nested.nodes)
         this._visited.push(...nested.visited);
-        
       }
     }
   }
   
-  visitEnd(props: { parent: Vis.Node, index?: number }) {
+  visitEnd(props: { parent: Node, index?: number }) {
     const id = 'end-' + props.parent.id + (props.index ? props.index : '');
     const parentId = props.parent.id;
     const refId = parentId + '->' + id
@@ -220,16 +175,15 @@ class ModelVisitor {
     }
     
     this._nodes.push({
-        id, label: 'end', shape: 'circle', 
-        x: props.parent.x, 
-        y: props.parent.y + this._seperation.level,
+        id, label: 'end',
+        type: 'end',
         parents: [...props.parent.parents, props.parent.id]
     });
     this._visited.push(refId)
     this._edges.push({ from: parentId, to: id})
   }
   
-  visitThen(then: HdesApi.AstFlowNode, props: { parent: Vis.Node, index?: number }) {
+  visitThen(then: HdesApi.AstFlowNode, props: { parent: Node, index?: number }) {
     if (!then.value) {
       return;
     }
@@ -247,7 +201,7 @@ class ModelVisitor {
     return this.visitStep(step, props);
   }
 
-  visitSwitch(step: HdesApi.AstFlowTaskNode, props: { parent: Vis.Node, index?: number }) {
+  visitSwitch(step: HdesApi.AstFlowTaskNode, props: { parent: Node, index?: number }) {
     if (!step.switch) {
       return;
     }
@@ -262,11 +216,9 @@ class ModelVisitor {
         caseX = 0;
       } else if (index % 2 === 0) {
         // even
-        evenX += this._seperation.switch;
         caseX = evenX;
       } else {
         // odd
-        oddX += this._seperation.switch;
         caseX = oddX * -1;
       }
       index++;
@@ -277,66 +229,6 @@ class ModelVisitor {
     }
   }
 
-  visitOverlapping(node: Vis.Node) {
-    let overlapping = this.findPos(node);
-    if (overlapping) {
-      //push everything down
-      for (const overlap of this._nodes) {
-        if (!overlap.parents || overlap.id === node.id) {
-          continue;
-        }
-        if (overlap.parents.includes(overlapping.id) || overlapping.id === overlap.id) {
-          overlap.y = overlap.y + this._seperation.level;
-        }
-      }
-    }
-  }
-
-  findPos(props: { x: number, y: number, id: string }) {
-    for (const v of this._nodes) {
-      if (v.id === props.id) {
-        continue;
-      }
-      if (v.x === props.x && v.y === props.y) {
-        return v;
-      }
-    }
-    return undefined;
-  }
-
-  visitCoords(
-    _step: HdesApi.AstFlowTaskNode,
-    props: {
-      parent?: Vis.Node,
-      index?: number
-    }): { x: number, y: number } {
-
-    const parent = props.parent;
-    const switchIndex = props.index;
-
-    const parentY = parent ? parent.y : this._start.y;
-    const parentOffset = parent ? parent.x : 0;
-    const y = parentY + this._seperation.level
-    const x = (switchIndex ? switchIndex : 0) + parentOffset;
-
-    return { x, y };
-  }
-
-  visitShape(type: ModelType): 'diamond' | 'box' {
-    if (type === "switch") {
-      return 'diamond';
-    }
-    return 'box' as any;
-  }
-
-
-  visitColor(type: ModelType): string {
-    if (type === "service") {
-      return '#eaa9ff';
-    }
-    return '#cce2ff';
-  }
-
   visitType(step: HdesApi.AstFlowTaskNode): ModelType {
     if (step.decisionTable) {
       return "decisionTable";
@@ -345,7 +237,8 @@ class ModelVisitor {
     } else if (step.switch) {
       return "switch";
     }
-    return undefined;
+
+    return "service";
   }
 
   visitRef(step: HdesApi.AstFlowTaskNode): HdesApi.Entity<any> | undefined {
@@ -378,7 +271,7 @@ class ModelVisitor {
   }
 
 
-  visitCyclicDependency(step: HdesApi.AstFlowTaskNode, parent?: Vis.Node) {
+  visitCyclicDependency(step: HdesApi.AstFlowTaskNode, parent?: Node) {
     const id = this._fl.name + "/" + step.id.value;
     const parents: string[] = [];
     if (parent) {
@@ -397,7 +290,11 @@ namespace GraphAPI {
     models: HdesApi.Site
   }) => {
 
-    return new ModelVisitor(props.fl, props.models).visit();
+    try {
+      return new ModelVisitor(props.fl, props.models).visit();
+    } catch(error) {
+      console.error(error)
+    }
   };
 }
 
