@@ -149,9 +149,9 @@ public interface ProcessClient {
     Boolean getAnon();
     
     // Asset links
-    String getFormTagName();
-    String getStencilTagName();
-    String getWrenchTagName();
+    @Nullable String getFormTagName();
+    @Nullable String getStencilTagName();
+    @Nullable String getWrenchTagName();
   }
   
 
