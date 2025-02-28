@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import * as Burger from '@/burger';
 import {
   ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
-  ReleasesView, LocalesView, ReleaseGraph,
+  ReleasesView, LocalesView
 } from './';
 
 import {
@@ -41,8 +41,6 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><LocalesView /></Box>);
     } else if (active.id === 'workflows') {
       return (<Box sx={root}><WorkflowsView /></Box>);
-    } else if (active.id === 'graph') {
-      return (<Box sx={root}><ReleaseGraph /></Box>);
     } else if (active.id === 'templates') {
       return (<Box sx={root}><TemplatesView /></Box>);
     }
