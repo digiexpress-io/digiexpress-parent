@@ -24,13 +24,8 @@ import { FeedbackComposer } from '../feedback';
 import { QueueComposer } from '../queue';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
-
-import { frontdeskIntl } from './intl'
-import { stencilIntl } from '../stencil'
-import { wrenchIntl } from '../wrench'
-import { feedbackIntl } from '../feedback';
 import { SessionRefreshContext } from './context/SessionRefreshContext';
-import { queueIntl } from '../queue';
+import intlMessages from '../intl'
 
 
 
@@ -58,10 +53,12 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
   const { serviceUrl } = useConfig();
   const session = useContext(SessionRefreshContext);
 
+  const messages = (intlMessages as any)[locale];
+
   if (isWrench) {
     const service = new WrenchClient.ServiceImpl(new WrenchClient.DefaultStore({ url: serviceUrl + "worker/rest/api/assets/wrench" }));
     return (
-      <IntlProvider locale='en' messages={wrenchIntl.en}>
+      <IntlProvider locale='en' messages={messages}>
         <WrenchComposer service={service} />
       </IntlProvider>)
 
@@ -80,23 +77,23 @@ const StartFrame: React.FC<{ locale: string }> = ({ locale }) => {
     const service = StencilClient.service({ config: { url: serviceUrl + "worker/rest/api/assets/stencil"}, assets: assetRepository });
 
     return (
-      <IntlProvider locale='en' messages={stencilIntl.en}>
+      <IntlProvider locale={locale} messages={messages}>
         <StencilComposer service={service} />
       </IntlProvider>)
   } else if (isFeedback) {
     return (
-      <IntlProvider locale='en' messages={feedbackIntl.en}>
+      <IntlProvider locale={locale} messages={messages}>
         <FeedbackComposer />
       </IntlProvider>);
   } else if (isQueues) {
     return (
-      <IntlProvider locale='en' messages={queueIntl.en}>
+      <IntlProvider locale={locale} messages={messages}>
         <QueueComposer />
       </IntlProvider>);
   }
 
   return (
-    <IntlProvider locale={locale} messages={frontdeskIntl[locale]}>
+    <IntlProvider locale={locale} messages={messages}>
       <TaskSessionContext>
         <Burger.Provider children={[frontdeskApp]} />
       </TaskSessionContext>

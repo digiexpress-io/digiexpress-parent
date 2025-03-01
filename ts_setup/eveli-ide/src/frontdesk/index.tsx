@@ -1,12 +1,22 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { Locale } from 'date-fns';
+import { enUS } from 'date-fns/locale/en-US';
+import { fi } from 'date-fns/locale/fi';
+import { sv } from 'date-fns/locale/sv';
+
+export const DATE_LOCALE_MAP: { [key: string]: Locale } = {
+  en: enUS,
+  fi: fi,
+  sv: sv
+};
+
 
 import { UserContextProvider } from './context/UserContext';
 import { ConfigContextProvider, useConfig } from './context/ConfigContext';
 import { IAPSessionRefreshContext } from './context/SessionRefreshContext';
 
-import { DATE_LOCALE_MAP } from './intl/datelocalization';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
@@ -16,7 +26,8 @@ import { FeedbackProvider, FeedbackApi } from '../feedback';
 import { QueueProvider, QueueApi } from '../queue';
 
 
-export { frontdeskIntl } from './intl';
+import { parseTs } from '../intl/exporter';
+
 
 
 
@@ -26,6 +37,9 @@ const WithLocale: React.FC = () => {
   const onClickDismiss = (key: string | number | undefined) => () => {
     notistackRef.current?.closeSnackbar(key);
   }
+
+  parseTs();
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>

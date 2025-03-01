@@ -3,6 +3,7 @@ import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
+import { intlTsVite } from './intl-vite-plugin';
 
 import { alias } from './vite.paths.config';
 
@@ -24,7 +25,8 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           // svgr options
         },
       }), 
-      mockDevServerPlugin()
+      mockDevServerPlugin(),
+      intlTsVite({})
     ],
     build: {
       chunkSizeWarningLimit: 5000,

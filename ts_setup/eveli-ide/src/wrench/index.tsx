@@ -7,7 +7,7 @@ import { Composer } from './core/context';
 
 import WrenchClient, { HdesApi } from './core/client';
 import Toolbar from './core/Toolbar';
-import wrenchIntl from './core/intl';
+
 
 import { SnackbarProvider } from 'notistack';
 import * as Burger from '@/burger';
@@ -46,4 +46,4 @@ const WrenchComposer: React.FC<WrenchComposerProps> = ({ service, locked }) => {
 
 
 export type { WrenchComposerProps, HdesApi };
-export { WrenchComposer, WrenchClient, wrenchIntl };
+export { WrenchComposer, WrenchClient };

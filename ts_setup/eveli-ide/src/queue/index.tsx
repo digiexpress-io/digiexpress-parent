@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { Route, Outlet, Routes, useParams } from 'react-router-dom';
+import { Route, Outlet, Routes } from 'react-router-dom';
 
 import { Composer } from '../stencil/context';
 import * as Burger from '@/burger';
@@ -9,7 +9,6 @@ import { BurgerApi } from '@/burger';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
-import queueIntl from './intl';
 import { FindAllQueues } from './find-all-queues';
 import { FindAllMessages } from './find-all-messages';
 import { FindAllDeliveries } from './find-all-deliveries';
@@ -43,5 +42,4 @@ export const QueueComposer: React.FC<QueueComposerProps> = () => {
 }
 
 export * from './queue-api';
-export { queueIntl };
 

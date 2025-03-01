@@ -9,7 +9,6 @@ import { BurgerApi } from '@/burger';
 import { Secondary } from './Secondary';
 import { Toolbar } from './Toolbar';
 
-import feedbackIntl from './intl';
 import { UpsertOneFeedback } from './upsert-one-feedback';
 import { FeedbackAllTasks } from './feedbackAllTasks';
 
@@ -56,5 +55,5 @@ export const FeedbackComposer: React.FC<FeedbackComposerProps> = () => {
 }
 
 
-export { feedbackIntl, UpsertOneFeedback };
+export { UpsertOneFeedback };
 

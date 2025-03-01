@@ -41,7 +41,7 @@ const StyledBottomText = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledUploadButton = styled(Button)(({ theme }) => ({
-  
+
 
 }));
 
@@ -86,7 +86,7 @@ const StyledFileField: React.FC<StyledInputFieldProps<string>> = (props) => {
           startIcon={<UploadIcon />}
           onClick={() => inputFile.current?.click()}
         >
-          <Typography><FormattedMessage id='Upload' /></Typography>
+          <FormattedMessage id='Upload' />
         </StyledUploadButton>
       </StyledFormControl>
       <BottomText helperText={helperText} error={error} errorMessage={errorMessage} />
@@ -94,7 +94,7 @@ const StyledFileField: React.FC<StyledInputFieldProps<string>> = (props) => {
   );
 }
 
-const StyledTextField: React.FC<StyledInputFieldProps<string> & { type?: React.InputHTMLAttributes<unknown>['type']}> = (props) => {
+const StyledTextField: React.FC<StyledInputFieldProps<string> & { type?: React.InputHTMLAttributes<unknown>['type'] }> = (props) => {
   const { onChange, onEnter, label, value, required, placeholder, helperText, disabled, errorMessage, error, type } = props;
   return (
     <>

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Menu, MenuItem, Button, Typography, useTheme, Box } from '@mui/material';
+import { Menu, MenuItem, Typography, useTheme, Box } from '@mui/material';
 import { useLocaleSelect } from '../context';
-import { frontdeskIntl } from '../intl';
+import frontdeskIntl from '../../intl';
 import { useIntl } from 'react-intl';
 
 

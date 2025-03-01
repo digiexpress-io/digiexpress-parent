@@ -1,4 +1,3 @@
-import messages from './intl';
 
 import { Main } from './Main';
 import { Secondary } from './Secondary';
@@ -12,5 +11,5 @@ const ComposerProvider = Composer.Provider;
 const useComposer = Composer.useComposer;
 
 
-export { messages, Main, Secondary, Toolbar, ComposerProvider, useComposer, Composer, version };
+export { Main, Secondary, Toolbar, ComposerProvider, useComposer, Composer, version };
 export default HdesClient;

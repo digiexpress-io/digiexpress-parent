@@ -5,7 +5,6 @@ import { Secondary } from './Secondary';
 import {StencilClient, StencilApi} from './client';
 import Toolbar from './Toolbar';
 import { Composer } from './context';
-import stencilIntl from './intl';
 
 import { SnackbarProvider } from 'notistack';
 import * as Burger from '@/burger';
@@ -42,7 +41,7 @@ const StencilComposer: React.FC<StencilComposerProps> = ({ service, locked }) =>
 }
 
 export type { StencilComposerProps, StencilApi };
-export { StencilComposer, StencilClient,  stencilIntl };
+export { StencilComposer, StencilClient };
 export { SiteCache, SessionData } from './context'
 export * from './client';
 export * from './Main';
