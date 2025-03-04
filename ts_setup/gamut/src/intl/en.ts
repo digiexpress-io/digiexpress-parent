@@ -15,7 +15,7 @@ export const en = {
   'footer.column4.title': 'DigiExpress info',
   'footer.column4.email': 'Email: info@digiExpress.io',
   'footer.column4.phone': 'Phone: 123 456 7890',
-  'footer.column4.address': 'Visiting address: 1234 Any Street MyTwond',
+  'footer.column4.address': 'Visiting address: 1234 Any Street MyTown',
   'footer.column4.postalCode': 'Postal code: 1234',
   'gamut.forms': 'Forms',
   'gamut.new-messages': 'New messages',

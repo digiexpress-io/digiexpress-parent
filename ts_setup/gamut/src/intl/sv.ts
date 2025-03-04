@@ -15,7 +15,7 @@ export const sv = {
   'footer.column4.title': 'DigiExpress info',
   'footer.column4.email': 'E-post: info@digiExpress.io',
   'footer.column4.phone': 'Telefon: 123 456 7890',
-  'footer.column4.address': 'Besöksadress: 1234 Any Street MyTwond',
+  'footer.column4.address': 'Besöksadress: 1234 Any Street MyTown',
   'footer.column4.postalCode': 'Postnummer: 1234',
   'gamut.forms': 'Blanketter',
   'gamut.new-messages': 'Nya meddelanden',
@@ -80,7 +80,7 @@ export const sv = {
   'gamut.forms.filling.summary.info2': 'Se till att kontrollera Min översikt regelbundet för',
   'gamut.forms.filling.summary.info3': 'Statusuppdateringar för formulärbearbetning',
   'gamut.forms.filling.summary.info4': 'Nya meddelanden från vår personal angående din förfrågan',
-  'gamut.forms.filling.summary.info5': 'Nya filer som vi har skickat till dig eller begärt från dig',
+  'gamut.forms.filling.summary.info5': 'Nya filer som vi har skickat till dig eller begärt av dig',
   'gamut.forms.filling.summary.info6': 'Har du fortfarande frågor? Kontakta oss per telefon på xxxx-xxxx med frågor',
   'gamut.forms.summary.button.back-to-overview': 'Tillbaka till Min översikt',
   'gamut.forms.answer.date.placeholder.day': 'dd',
@@ -160,5 +160,13 @@ export const sv = {
   'gamut.feedback.table.subtopic': 'Underämne',
   'gamut.feedback.table.updatedOnDate': 'Datum',
   'gamut.feedback.table.title': 'Feed-back',
-  'gamut.feedback.table.topicTitle': 'Titel'
+  'gamut.feedback.table.topicTitle': 'Titel',
+  'gamut.feedback.vote.title': 'Var detta svar till hjälp?',
+  'gamut.feedback.vote.notHelpful': 'Nej, detta var inte till hjälp.',
+  'gamut.feedback.vote.yesHelpful': 'Ja, detta var hjälpsamt.',
+  'gamut.feedback.updatedOnDate': 'Uppdaterat datum',
+  'gamut.feedback.feedbackViewerTitle': 'Kundrespons',
+  'gamut.feedback.feedbackViewerSubTitle': 'Organisationens svar',
+  'dialob.review.title': 'Formulärgranskning',
+  'dialob.review.button.close': 'stäng'
 }
