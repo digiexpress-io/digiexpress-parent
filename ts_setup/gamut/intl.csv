@@ -47,6 +47,7 @@ gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tam
 gamut.locale.en,,English,Englanti,engelska,Inggeris
 gamut.locale.fi,,Finnish,Suomi,finska,bahasa Finland
 gamut.locale.sv,,Swedish,Ruotsi,svenska,bahasa Sweden
+gamut.locale.my,,Malay,Malaiji,malajisk,bahasa Melayu
 // ------------------- GAMUT SEARCH -----------------------,,,,#VALUE!,
 gamut.search.placeholder,,Search our services,Hae palvelua,Sök i våra tjänster,Cari perkhidmatan kami
 gamut.search.popover.title,,Search our site,Hae sivustolta,Sök på vår sida,Cari tapak kami
@@ -59,6 +60,14 @@ gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bent
 gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon
 gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan
 gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Semua perkhidmatan
+gamut.search.results.allResults,,All results,,,
+gamut.search.results.noResults,,No results,,,
+gamut.search.results.serviceLinks,,Services,,,
+gamut.search.results.formLinks,,Forms,,,
+gamut.search.results.phoneLinks,,Phones,,,
+gamut.search.results.internalExternalLinks,,Links,,,
+gamut.search.results.internalLinks,,Links,,,
+gamut.search.results.externalLinks,,External links,,,
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
 gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Blanketter,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
@@ -80,6 +89,7 @@ gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {step
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
 gamut.forms.page.complete,,Complete,Valmis,Komplett,lengkap
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
+gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,,
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini
 gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi
 gamut.forms.filling.start.button,,Continue to form,Jatka lomakkeella,Fortsätt att bilda,Teruskan membentuk
@@ -177,9 +187,11 @@ gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik
 gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,tarikh
 gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas
 gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk
+gamut.feedback.table.nodata,,No data,,,
 gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?,Var detta svar till hjälp?,Adakah jawapan ini membantu?
 gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu"
 gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu
+gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,,,
 gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat datum,Tarikh dikemas kini
 gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan
 gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi
