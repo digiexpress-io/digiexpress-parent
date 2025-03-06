@@ -7,8 +7,7 @@ export const Route = createFileRoute('/secured/$locale/')({
 
 function Component() {
   return <Navigate {...{
-    from: '/',
-    to: '/secured/$locale/worker/tasks',
-    params: { locale: 'en' }
+    from: '/secured/$locale',
+    to: '/secured/$locale/worker/tasks'
   }}/>
 }

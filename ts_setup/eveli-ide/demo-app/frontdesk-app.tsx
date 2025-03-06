@@ -22,7 +22,7 @@ export const FrontdeskApp: React.FC = () => {
     notistackRef.current?.closeSnackbar(key);
   }
   async function handleExpire() {
-    alert("SESSION EXPIRED");
+    //alert("SESSION EXPIRED");
   }
   const logoutUrl = '/logout';
   const loginUrl = '/oauth2/authorization/oidcprovider';

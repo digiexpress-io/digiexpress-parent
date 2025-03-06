@@ -12,9 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as SecuredLocaleImport } from './routes/secured.$locale'
 import { Route as SecuredLocaleIndexImport } from './routes/secured.$locale.index'
 import { Route as PublicLocaleIndexImport } from './routes/public.$locale.index'
 import { Route as SecuredLocaleWorkerImport } from './routes/secured.$locale.worker'
+import { Route as SecuredLocaleAssetsImport } from './routes/secured.$locale.assets'
 import { Route as SecuredLocaleWorkerTasksImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerTasksIndexImport } from './routes/secured.$locale.worker.tasks.index'
 import { Route as SecuredLocaleWorkerQueuesIndexImport } from './routes/secured.$locale.worker.queues.index'
@@ -41,10 +43,16 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SecuredLocaleIndexRoute = SecuredLocaleIndexImport.update({
-  id: '/secured/$locale/',
-  path: '/secured/$locale/',
+const SecuredLocaleRoute = SecuredLocaleImport.update({
+  id: '/secured/$locale',
+  path: '/secured/$locale',
   getParentRoute: () => rootRoute,
+} as any)
+
+const SecuredLocaleIndexRoute = SecuredLocaleIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SecuredLocaleRoute,
 } as any)
 
 const PublicLocaleIndexRoute = PublicLocaleIndexImport.update({
@@ -54,9 +62,15 @@ const PublicLocaleIndexRoute = PublicLocaleIndexImport.update({
 } as any)
 
 const SecuredLocaleWorkerRoute = SecuredLocaleWorkerImport.update({
-  id: '/secured/$locale/worker',
-  path: '/secured/$locale/worker',
-  getParentRoute: () => rootRoute,
+  id: '/worker',
+  path: '/worker',
+  getParentRoute: () => SecuredLocaleRoute,
+} as any)
+
+const SecuredLocaleAssetsRoute = SecuredLocaleAssetsImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => SecuredLocaleRoute,
 } as any)
 
 const SecuredLocaleWorkerTasksRoute = SecuredLocaleWorkerTasksImport.update({
@@ -116,30 +130,30 @@ const SecuredLocaleWorkerDashboardIndexRoute =
 
 const SecuredLocaleAssetsWrenchIndexRoute =
   SecuredLocaleAssetsWrenchIndexImport.update({
-    id: '/secured/$locale/assets/wrench/',
-    path: '/secured/$locale/assets/wrench/',
-    getParentRoute: () => rootRoute,
+    id: '/wrench/',
+    path: '/wrench/',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
 
 const SecuredLocaleAssetsStencilIndexRoute =
   SecuredLocaleAssetsStencilIndexImport.update({
-    id: '/secured/$locale/assets/stencil/',
-    path: '/secured/$locale/assets/stencil/',
-    getParentRoute: () => rootRoute,
+    id: '/stencil/',
+    path: '/stencil/',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
 
 const SecuredLocaleAssetsServicesIndexRoute =
   SecuredLocaleAssetsServicesIndexImport.update({
-    id: '/secured/$locale/assets/services/',
-    path: '/secured/$locale/assets/services/',
-    getParentRoute: () => rootRoute,
+    id: '/services/',
+    path: '/services/',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
 
 const SecuredLocaleAssetsFormsIndexRoute =
   SecuredLocaleAssetsFormsIndexImport.update({
-    id: '/secured/$locale/assets/forms/',
-    path: '/secured/$locale/assets/forms/',
-    getParentRoute: () => rootRoute,
+    id: '/forms/',
+    path: '/forms/',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
 
 const SecuredLocaleWorkerTasksCreateIndexRoute =
@@ -188,12 +202,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/secured/$locale': {
+      id: '/secured/$locale'
+      path: '/secured/$locale'
+      fullPath: '/secured/$locale'
+      preLoaderRoute: typeof SecuredLocaleImport
+      parentRoute: typeof rootRoute
+    }
+    '/secured/$locale/assets': {
+      id: '/secured/$locale/assets'
+      path: '/assets'
+      fullPath: '/secured/$locale/assets'
+      preLoaderRoute: typeof SecuredLocaleAssetsImport
+      parentRoute: typeof SecuredLocaleImport
+    }
     '/secured/$locale/worker': {
       id: '/secured/$locale/worker'
-      path: '/secured/$locale/worker'
+      path: '/worker'
       fullPath: '/secured/$locale/worker'
       preLoaderRoute: typeof SecuredLocaleWorkerImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleImport
     }
     '/public/$locale/': {
       id: '/public/$locale/'
@@ -204,10 +232,10 @@ declare module '@tanstack/react-router' {
     }
     '/secured/$locale/': {
       id: '/secured/$locale/'
-      path: '/secured/$locale'
-      fullPath: '/secured/$locale'
+      path: '/'
+      fullPath: '/secured/$locale/'
       preLoaderRoute: typeof SecuredLocaleIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleImport
     }
     '/secured/$locale/worker/tasks': {
       id: '/secured/$locale/worker/tasks'
@@ -218,31 +246,31 @@ declare module '@tanstack/react-router' {
     }
     '/secured/$locale/assets/forms/': {
       id: '/secured/$locale/assets/forms/'
-      path: '/secured/$locale/assets/forms'
+      path: '/forms'
       fullPath: '/secured/$locale/assets/forms'
       preLoaderRoute: typeof SecuredLocaleAssetsFormsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleAssetsImport
     }
     '/secured/$locale/assets/services/': {
       id: '/secured/$locale/assets/services/'
-      path: '/secured/$locale/assets/services'
+      path: '/services'
       fullPath: '/secured/$locale/assets/services'
       preLoaderRoute: typeof SecuredLocaleAssetsServicesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleAssetsImport
     }
     '/secured/$locale/assets/stencil/': {
       id: '/secured/$locale/assets/stencil/'
-      path: '/secured/$locale/assets/stencil'
+      path: '/stencil'
       fullPath: '/secured/$locale/assets/stencil'
       preLoaderRoute: typeof SecuredLocaleAssetsStencilIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleAssetsImport
     }
     '/secured/$locale/assets/wrench/': {
       id: '/secured/$locale/assets/wrench/'
-      path: '/secured/$locale/assets/wrench'
+      path: '/wrench'
       fullPath: '/secured/$locale/assets/wrench'
       preLoaderRoute: typeof SecuredLocaleAssetsWrenchIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof SecuredLocaleAssetsImport
     }
     '/secured/$locale/worker/dashboard/': {
       id: '/secured/$locale/worker/dashboard/'
@@ -333,6 +361,23 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface SecuredLocaleAssetsRouteChildren {
+  SecuredLocaleAssetsFormsIndexRoute: typeof SecuredLocaleAssetsFormsIndexRoute
+  SecuredLocaleAssetsServicesIndexRoute: typeof SecuredLocaleAssetsServicesIndexRoute
+  SecuredLocaleAssetsStencilIndexRoute: typeof SecuredLocaleAssetsStencilIndexRoute
+  SecuredLocaleAssetsWrenchIndexRoute: typeof SecuredLocaleAssetsWrenchIndexRoute
+}
+
+const SecuredLocaleAssetsRouteChildren: SecuredLocaleAssetsRouteChildren = {
+  SecuredLocaleAssetsFormsIndexRoute: SecuredLocaleAssetsFormsIndexRoute,
+  SecuredLocaleAssetsServicesIndexRoute: SecuredLocaleAssetsServicesIndexRoute,
+  SecuredLocaleAssetsStencilIndexRoute: SecuredLocaleAssetsStencilIndexRoute,
+  SecuredLocaleAssetsWrenchIndexRoute: SecuredLocaleAssetsWrenchIndexRoute,
+}
+
+const SecuredLocaleAssetsRouteWithChildren =
+  SecuredLocaleAssetsRoute._addFileChildren(SecuredLocaleAssetsRouteChildren)
+
 interface SecuredLocaleWorkerTasksRouteChildren {
   SecuredLocaleWorkerTasksIndexRoute: typeof SecuredLocaleWorkerTasksIndexRoute
   SecuredLocaleWorkerTasksTaskIdIndexRoute: typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
@@ -388,11 +433,29 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
 const SecuredLocaleWorkerRouteWithChildren =
   SecuredLocaleWorkerRoute._addFileChildren(SecuredLocaleWorkerRouteChildren)
 
+interface SecuredLocaleRouteChildren {
+  SecuredLocaleAssetsRoute: typeof SecuredLocaleAssetsRouteWithChildren
+  SecuredLocaleWorkerRoute: typeof SecuredLocaleWorkerRouteWithChildren
+  SecuredLocaleIndexRoute: typeof SecuredLocaleIndexRoute
+}
+
+const SecuredLocaleRouteChildren: SecuredLocaleRouteChildren = {
+  SecuredLocaleAssetsRoute: SecuredLocaleAssetsRouteWithChildren,
+  SecuredLocaleWorkerRoute: SecuredLocaleWorkerRouteWithChildren,
+  SecuredLocaleIndexRoute: SecuredLocaleIndexRoute,
+}
+
+const SecuredLocaleRouteWithChildren = SecuredLocaleRoute._addFileChildren(
+  SecuredLocaleRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/public/$locale': typeof PublicLocaleIndexRoute
-  '/secured/$locale': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
@@ -414,6 +477,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/public/$locale': typeof PublicLocaleIndexRoute
   '/secured/$locale': typeof SecuredLocaleIndexRoute
@@ -438,6 +502,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/public/$locale/': typeof PublicLocaleIndexRoute
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
@@ -464,9 +530,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/secured/$locale'
+    | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/public/$locale'
-    | '/secured/$locale'
+    | '/secured/$locale/'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/services'
@@ -487,6 +555,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/public/$locale'
     | '/secured/$locale'
@@ -509,6 +578,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/secured/$locale'
+    | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/public/$locale/'
     | '/secured/$locale/'
@@ -534,24 +605,14 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  SecuredLocaleWorkerRoute: typeof SecuredLocaleWorkerRouteWithChildren
+  SecuredLocaleRoute: typeof SecuredLocaleRouteWithChildren
   PublicLocaleIndexRoute: typeof PublicLocaleIndexRoute
-  SecuredLocaleIndexRoute: typeof SecuredLocaleIndexRoute
-  SecuredLocaleAssetsFormsIndexRoute: typeof SecuredLocaleAssetsFormsIndexRoute
-  SecuredLocaleAssetsServicesIndexRoute: typeof SecuredLocaleAssetsServicesIndexRoute
-  SecuredLocaleAssetsStencilIndexRoute: typeof SecuredLocaleAssetsStencilIndexRoute
-  SecuredLocaleAssetsWrenchIndexRoute: typeof SecuredLocaleAssetsWrenchIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  SecuredLocaleWorkerRoute: SecuredLocaleWorkerRouteWithChildren,
+  SecuredLocaleRoute: SecuredLocaleRouteWithChildren,
   PublicLocaleIndexRoute: PublicLocaleIndexRoute,
-  SecuredLocaleIndexRoute: SecuredLocaleIndexRoute,
-  SecuredLocaleAssetsFormsIndexRoute: SecuredLocaleAssetsFormsIndexRoute,
-  SecuredLocaleAssetsServicesIndexRoute: SecuredLocaleAssetsServicesIndexRoute,
-  SecuredLocaleAssetsStencilIndexRoute: SecuredLocaleAssetsStencilIndexRoute,
-  SecuredLocaleAssetsWrenchIndexRoute: SecuredLocaleAssetsWrenchIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -565,20 +626,34 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/secured/$locale",
+        "/public/$locale/"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/secured/$locale": {
+      "filePath": "secured.$locale.tsx",
+      "children": [
+        "/secured/$locale/assets",
         "/secured/$locale/worker",
-        "/public/$locale/",
-        "/secured/$locale/",
+        "/secured/$locale/"
+      ]
+    },
+    "/secured/$locale/assets": {
+      "filePath": "secured.$locale.assets.tsx",
+      "parent": "/secured/$locale",
+      "children": [
         "/secured/$locale/assets/forms/",
         "/secured/$locale/assets/services/",
         "/secured/$locale/assets/stencil/",
         "/secured/$locale/assets/wrench/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
     "/secured/$locale/worker": {
       "filePath": "secured.$locale.worker.tsx",
+      "parent": "/secured/$locale",
       "children": [
         "/secured/$locale/worker/tasks",
         "/secured/$locale/worker/dashboard/",
@@ -596,7 +671,8 @@ export const routeTree = rootRoute
       "filePath": "public.$locale.index.tsx"
     },
     "/secured/$locale/": {
-      "filePath": "secured.$locale.index.tsx"
+      "filePath": "secured.$locale.index.tsx",
+      "parent": "/secured/$locale"
     },
     "/secured/$locale/worker/tasks": {
       "filePath": "secured.$locale.worker.tasks.tsx",
@@ -608,16 +684,20 @@ export const routeTree = rootRoute
       ]
     },
     "/secured/$locale/assets/forms/": {
-      "filePath": "secured.$locale.assets.forms.index.tsx"
+      "filePath": "secured.$locale.assets.forms.index.tsx",
+      "parent": "/secured/$locale/assets"
     },
     "/secured/$locale/assets/services/": {
-      "filePath": "secured.$locale.assets.services.index.tsx"
+      "filePath": "secured.$locale.assets.services.index.tsx",
+      "parent": "/secured/$locale/assets"
     },
     "/secured/$locale/assets/stencil/": {
-      "filePath": "secured.$locale.assets.stencil.index.tsx"
+      "filePath": "secured.$locale.assets.stencil.index.tsx",
+      "parent": "/secured/$locale/assets"
     },
     "/secured/$locale/assets/wrench/": {
-      "filePath": "secured.$locale.assets.wrench.index.tsx"
+      "filePath": "secured.$locale.assets.wrench.index.tsx",
+      "parent": "/secured/$locale/assets"
     },
     "/secured/$locale/worker/dashboard/": {
       "filePath": "secured.$locale.worker.dashboard.index.tsx",

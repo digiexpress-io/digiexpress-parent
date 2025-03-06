@@ -67,7 +67,11 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleToWrench}><BuildOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/assets/wrench'
+        })}>
+          <BuildOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 
