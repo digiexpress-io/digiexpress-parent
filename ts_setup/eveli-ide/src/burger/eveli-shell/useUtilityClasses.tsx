@@ -12,6 +12,7 @@ export const useUtilityClasses = () => {
     root: ['root'],
     unsaved: ['unsaved'],
     itemDisabled: ['itemDisabled'],
+    itemActive: ['itemActive'],
     logoContainer: ['logoContainer'],
     logo: ['logo'],
     composeButton: ['composeButton'],
@@ -32,6 +33,7 @@ export const EveliShellRoot = styled('div', {
       styles.root,
       styles.unsaved,
       styles.itemDisabled,
+      styles.itemActive,
       styles.logoContainer,
       styles.logo,
       styles.composeButton,
@@ -288,6 +290,11 @@ export const EveliShellMiniBarRoot = styled('div', {
     },
     '& .EveliShell-itemDisabled': {
       color: theme.palette.action.disabled
+    },
+    '& .EveliShell-itemActive': {
+      color: 'rgb(58, 55, 55)',
+      backgroundColor: alpha("#ca7df9", 0.5),
+      padding: theme.spacing(1),
     }
   }
 })

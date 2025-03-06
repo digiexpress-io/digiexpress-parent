@@ -105,13 +105,14 @@ const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale/assets/wrench',
           to: '/secured/$locale'
         })}>
-          <TaskOutlinedIcon /></IconButton>
+          <TaskOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
       <div>
-        <IconButton disabled><BuildOutlinedIcon /></IconButton>
-        <Typography className={classes.itemDisabled}><FormattedMessage id='toolbar.wrench' /></Typography>
+        <IconButton disabled className={classes.itemActive}><BuildOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 
       <div>
@@ -119,13 +120,15 @@ const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale/assets/wrench',
           to: '/secured/$locale/assets/stencil'
         })}>
-          <EditNoteOutlinedIcon /></IconButton>
+          <EditNoteOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 
       <div>
         <IconButton onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
-          <HelpOutlineOutlinedIcon /></IconButton>
+          <HelpOutlineOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 

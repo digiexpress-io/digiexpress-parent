@@ -45,8 +45,8 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton className={classes.itemDisabled} onClick={() => { }}><TaskOutlinedIcon /></IconButton>
-        <Typography className={classes.itemDisabled}><FormattedMessage id='toolbar.tasks' /></Typography>
+        <IconButton disabled className={classes.itemActive} onClick={() => { }}><TaskOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
       <div>
@@ -54,7 +54,8 @@ export const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale',
           to: '/secured/$locale/assets/wrench'
         })}>
-          <BuildOutlinedIcon /></IconButton>
+          <BuildOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 
@@ -63,13 +64,15 @@ export const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale',
           to: '/secured/$locale/assets/stencil'
         })}>
-          <EditNoteOutlinedIcon /></IconButton>
+          <EditNoteOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 
       <div>
         <IconButton onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
-          <HelpOutlineOutlinedIcon /></IconButton>
+          <HelpOutlineOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 

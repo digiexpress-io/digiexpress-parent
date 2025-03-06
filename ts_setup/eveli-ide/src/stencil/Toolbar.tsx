@@ -66,6 +66,7 @@ export const Toolbar: React.FC<{}> = () => {
       tabs.handleTabAdd({ id: 'newItem', label: "Activities" });
     } else if (newValue === 'toolbar.search') {
       secondaryCtx.handleActiveId("toolbar.search")
+      console.log("xxx", secondaryCtx)
     }
   };
 
@@ -101,7 +102,8 @@ export const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale/assets/stencil',
           to: '/secured/$locale'
         })}>
-          <TaskOutlinedIcon /></IconButton>
+          <TaskOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
@@ -110,14 +112,15 @@ export const Toolbar: React.FC<{}> = () => {
           from: '/secured/$locale/assets/stencil',
           to: '/secured/$locale/assets/wrench'
         })}>
-          <BuildOutlinedIcon /></IconButton>
+          <BuildOutlinedIcon />
+        </IconButton>
         <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 
 
       <div>
-        <IconButton disabled><EditNoteOutlinedIcon /></IconButton>
-        <Typography className={classes.itemDisabled}><FormattedMessage id='toolbar.stencil' /></Typography>
+        <IconButton disabled className={classes.itemActive}><EditNoteOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 
       <div>
