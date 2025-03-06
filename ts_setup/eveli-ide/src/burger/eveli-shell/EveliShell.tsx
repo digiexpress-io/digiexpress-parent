@@ -38,7 +38,8 @@ const EveliShellInternal: React.FC<EveliShellProps> = (initProps) => {
 
   const ownerState = {
     footerHeight: 50,
-    drawerWidth: 450,
+    //drawerWidth: 450, //TODO
+    drawerWidth: 300,
     ...initProps,
     drawerOpen,
     toolbarHeight,

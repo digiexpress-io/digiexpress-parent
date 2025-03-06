@@ -36,7 +36,7 @@ const siteTheme = createTheme({
     },
     
     info: {
-      main: '##03045E',
+      main: '#03045E',
       contrastText: '#FFFFFF',
     },
     warning: {
@@ -54,7 +54,7 @@ const siteTheme = createTheme({
   },
 
   typography: {
-    fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+    //fontFamily: "'IBM Plex Sans Arabic', sans-serif",
     h1: {
       fontSize: "2rem",
       lineHeight: 2,
@@ -94,11 +94,18 @@ const siteTheme = createTheme({
     },
     body1: {
       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-      fontWeight: 300,
+      fontSize: "1rem",
+      fontWeight: 400,
     },
     body2: {
       fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "1rem",
+      fontWeight: 400,
+    },
+    caption: {
+      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+      fontSize: "0.7rem",
+      fontWeight: 500,
     }
   },
 
@@ -221,6 +228,7 @@ const siteTheme = createTheme({
           marginTop: 0,
           marginBottom: 0,
         },
+        /*
         primary: ({theme}) => ({
           color: theme.palette.text.primary,
           "&:hover": {
@@ -236,7 +244,7 @@ const siteTheme = createTheme({
             fontWeight: 'bold',
           }
         })
-
+*/
       }
     },
 
@@ -261,7 +269,7 @@ const siteTheme = createTheme({
     MuiIconButton: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-          color: colors.blue, 
+          color: 'rgb(58, 55, 55)', 
         })
       }
     },

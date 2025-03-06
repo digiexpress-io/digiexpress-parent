@@ -1,95 +1,120 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, TextField, TextFieldProps, alpha, Typography, Button } from '@mui/material';
-import { styled } from "@mui/material/styles";
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Typography, Button, Divider, Stack } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
+import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
+import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
+
+import { useIntl } from 'react-intl';
+
+import { ComposeSelect } from '../../uiDev/ComposeSelect';
+import { EveliShellLargeBarRoot, useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
+import logo from '../../uiDev/logoLifeDigitalDark.svg';
 
 
-import { FlowExplorer, ServiceExplorer, DecisionExplorer } from './explorer';
-import { Composer } from './context';
-
-
-const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
-
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.secondary.main,
-  '& .MuiOutlinedInput-input': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiOutlinedInput-root': {
-    fontSize: '10pt',
-    height: '2rem',
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.secondary.contrastText,
-    },
-  },
-  '& .MuiFormLabel-root': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiFormHelperText-root': {
-    color: theme.palette.primary.contrastText,
-    marginLeft: 1
-  }
-}));
-
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.primary.contrastText,
-    fontSize: '9pt',
-    paddingLeft: '.5rem',
-    paddingRight: '.5rem'
-  },
-  "&.Mui-selected": {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
-  },
-}));
-
-const StyledTabs = styled(Tabs)<TabsProps>(() => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: "unset",
-  }
-}));
-
+type NavType = 'FLOWS' | 'SERVICES' | 'DECISIONS' | 'DEBUG' | 'RELEASES' | 'COMPARE' | 'TEMPLATES' | 'MIGRATIONS';
 
 const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
-  const activeBranch = Composer.useBranchName();
-  const branchName = activeBranch || intl.formatMessage({ id: 'explorer.active.branch.default' });
-  const getLabel = (id: string) => intl.formatMessage({ id });
+  const classes = useUtilityClasses();
+  const userFirstAndLastName = 'Missing username';
 
-  const [tab, setTab] = React.useState("tabs.flows")
-  const [searchString, setSearchString] = React.useState("");
 
-  let component = <></>;
-  if (tab === 'tabs.flows') {
-    component = (<FlowExplorer />)
-  } else if (tab === 'tabs.services') {
-    component = (<ServiceExplorer />)
-  } else if (tab === 'tabs.decisions') {
-    component = (<DecisionExplorer />);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [activeButton, setActiveButton] = React.useState<NavType>('FLOWS')
+
+  const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleComposeSelectClose = () => {
+    setAnchorEl(null);
+  };
+
+  function handleMenuButtonClick(buttonId: NavType) {
+    setActiveButton(buttonId)
   }
 
-  return (<Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>
-    <Box display="flex" flexDirection='column'>
-      
-      <TextFieldRoot sx={{mx: 1}} focused placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
+  return (
+    <>
+      <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
 
-      <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.flows")} value='tabs.flows' />
-        <StyledTab label={getLabel("explorer.tabs.services")} value='tabs.services' />
-        <StyledTab label={getLabel("explorer.tabs.decisions")} value='tabs.decisions' />
-      </StyledTabs>
+      <EveliShellLargeBarRoot className={classes.root}>
+        <div className={classes.logoContainer}>
+          <img src={logo} className={classes.logo} />
+        </div>
 
-    </Box>
-    {component}
-    <Box sx={{ position: 'absolute', bottom: '2%', left: '15%' }}>
-      <Typography sx={{ color: 'white' }}><FormattedMessage id='explorer.active.branch' values={{ name: branchName }} /></Typography>
-    </Box>
+        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
 
-  </Box>)
+        <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
+          className={activeButton === 'FLOWS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('FLOWS')}>
+          {intl.formatMessage({ id: 'menu.flows' })}
+        </Button>
+
+        <Button variant='text' startIcon={<TableChartOutlinedIcon />}
+          className={activeButton === 'DECISIONS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('DECISIONS')}>
+          {intl.formatMessage({ id: 'menu.decisions' })}
+        </Button>
+
+        <Button variant='text' startIcon={<CodeOutlinedIcon />}
+          className={activeButton === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('SERVICES')}>
+          {intl.formatMessage({ id: 'menu.services' })}
+        </Button>
+
+        <Button variant='text' startIcon={<BugReportOutlinedIcon />}
+          className={activeButton === 'DEBUG' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('DEBUG')}>
+          {intl.formatMessage({ id: 'menu.debug' })}
+        </Button>
+
+        <Button variant='text' startIcon={<CompareArrowsOutlinedIcon />}
+          className={activeButton === 'COMPARE' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('COMPARE')}>
+          {intl.formatMessage({ id: 'menu.compare' })}
+        </Button>
+
+        <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
+          className={activeButton === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('TEMPLATES')}>
+          {intl.formatMessage({ id: 'menu.templates' })}
+        </Button>
+
+        <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
+          className={activeButton === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('MIGRATIONS')}>
+          {intl.formatMessage({ id: 'menu.migrations' })}
+        </Button>
+
+        <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
+          className={activeButton === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('RELEASES')}>
+          {intl.formatMessage({ id: 'menu.releases' })}
+        </Button>
+
+        <Divider className={classes.secondaryDivider} />
+
+        <Button className={classes.logoutButton}
+          variant="text"
+          startIcon={<LogoutIcon />}
+          onClick={() => console.log("log out")}
+        >
+          <Stack spacing={0} alignItems="flex-start">
+            <Typography>{intl.formatMessage({ id: 'menu.logout' })}</Typography>
+            <Typography variant="caption">{userFirstAndLastName}</Typography>
+          </Stack>
+        </Button>
+      </EveliShellLargeBarRoot>
+    </>
+  )
 }
 export { Secondary }
 

@@ -44,8 +44,9 @@ export function readDiretory(
 ): SourceFile[] {
   const { routeFilePrefix, routeFileIgnorePrefix, routeFileIgnorePattern } = config;
   const routeFileIgnoreRegExp = new RegExp(routeFileIgnorePattern ?? '', 'g')
-  return readdirSync(fullPath, { withFileTypes: true, recursive: true })
+  return readdirSync(fullPath, { withFileTypes: true, recursive: false })
     .filter((d) => {
+      console.log("Parsing files", d.name)
       if (
         d.name.startsWith('.') ||
         (routeFileIgnorePrefix && d.name.startsWith(routeFileIgnorePrefix))

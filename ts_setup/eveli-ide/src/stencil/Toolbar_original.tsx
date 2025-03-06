@@ -1,0 +1,109 @@
+/*import React from 'react';
+import { useSnackbar } from 'notistack';
+
+import { Tabs, Tab, Box } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom'
+
+import * as Burger from '@/burger';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+
+import { Composer, StencilApi } from './context';
+import { LocaleFilter } from './explorer/filter';
+
+
+const Toolbar: React.FC<{}> = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const composer = Composer.useComposer();
+  const tabsCtx = Burger.useTabs();
+  const secondaryCtx = Burger.useSecondary();
+
+  const tabsActions = tabsCtx.actions;
+  const secondaryActions = secondaryCtx.actions;
+
+
+
+  const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
+  const article = active ? composer.site.articles[active.id] : undefined;
+  const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
+  const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
+  const unsavedArticlePages: Composer.PageUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.body.article === article.id) : []);
+
+  const message = <FormattedMessage id="snack.page.savedMessage" />
+
+  function handleBack() {
+    navigate('/');
+  }
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+
+    if (newValue === 'toolbar.save' && articlePagesView && article) {
+      if (unsavedArticlePages.length === 0) {
+        return;
+      }
+      const update: StencilApi.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      composer.service.update().pages(update).then(success => {
+        enqueueSnackbar(message, { variant: 'success' });
+        composer.actions.handlePageUpdateRemove(success.map(p => p.id));
+      }).then(() => {
+        composer.actions.handleLoadSite();
+      });
+
+
+    } else if (newValue === 'toolbar.activities') {
+      tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+
+    } else if (newValue === 'toolbar.articles') {
+      secondaryCtx.actions.handleSecondary("toolbar.articles")
+
+    } else if (newValue === 'toolbar.search') {
+      secondaryCtx.actions.handleSecondary("toolbar.search")
+
+    } else if (newValue === 'toolbar.import') {
+      tabsActions.handleTabAdd({ id: 'import', label: 'Import' })
+
+    }
+  };
+
+
+  // open dashboard
+  React.useLayoutEffect(() => {
+    secondaryActions.handleSecondary("toolbar.articles")
+    tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+  }, [tabsActions, secondaryActions]);
+
+  const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
+
+  return (
+    <>
+        <Tabs orientation="vertical"
+          onChange={handleChange}
+          value={secondaryCtx.session.secondary}>
+
+          <Tab value='toolbar.activities' icon={<DashboardIcon />} />
+          <Tab value='toolbar.save'
+            icon={<SaveIcon sx={saveSx} />}
+            disabled={unsavedArticlePages.length === 0}
+            label={unsavedPages.length ? (<Box sx={saveSx}>{unsavedPages.length}</Box>) : undefined} />
+          <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
+          <Tab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
+          <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
+          <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} />
+        </Tabs>
+
+        <Box flexGrow={1} />
+        <LocaleFilter />
+    </>
+  );
+}
+
+
+export default Toolbar;
+*/

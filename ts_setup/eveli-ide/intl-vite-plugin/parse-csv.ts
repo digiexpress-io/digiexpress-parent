@@ -11,7 +11,7 @@ class CsvReadVisitor {
     this._index++;
     const intlKey = this.visitIntlKey(object);
     if(!intlKey) {
-      console.error('unknown column', this._index, object);
+      console.error('unknown column: ' + this._index + '/' + Object.keys(object));
       return;
     }
     if(this.visitComment(intlKey)) {

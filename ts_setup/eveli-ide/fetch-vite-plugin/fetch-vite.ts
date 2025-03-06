@@ -36,6 +36,7 @@ export function fetchVite(options: Partial<Config> = {}): Plugin {
     }
     setLock(true)
     try {
+      console.log('\u{2192} generated new fetch routes');
       const config = userConfig;
       const root = process.cwd();
       const fetchDir = createFilePath([root], config.fetchDirectory);
@@ -45,8 +46,6 @@ export function fetchVite(options: Partial<Config> = {}): Plugin {
         const path = createFilePath([root, config.fetchTreeDirectory], config.fetchTreeGenFile);
         writeFile({ fullPath: path.fullPath, content: newFile.content });
       }
-
-      console.log('\u{2192} generated new fetch routes');
     } catch (err) {
       console.error(err)
       console.info()

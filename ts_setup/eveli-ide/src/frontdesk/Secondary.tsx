@@ -1,177 +1,156 @@
 import React from 'react';
-import { alpha, Box, styled, SxProps, Typography } from '@mui/material';
-import { SimpleTreeView } from '@mui/x-tree-view';
-
+import { Button, Divider, Stack, Typography } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 import ListIcon from '@mui/icons-material/ListAlt';
-import BuildIcon from '@mui/icons-material/Build';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import SettingsIcon from '@mui/icons-material/Settings';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
-import BeenhereIcon from '@mui/icons-material/Beenhere';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import EmailIcon from '@mui/icons-material/Email';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-
-import { useNavigate } from '@tanstack/react-router';
-
-import { MenuItem } from './explorer';
 import { useIntl } from 'react-intl';
+import { useNavigate } from '@tanstack/react-router'
 
 
-const iconSize: SxProps = {
-  fontSize: '13pt'
+import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
+
+import logo from '../uiDev/logoLifeDigitalDark.svg';
+import { ComposeSelect } from '../uiDev/ComposeSelect';
+
+type NavType = 'TASKS' | 'DASHBOARD' | 'PROCESSES' | 'FORMS' | 'WRENCH' | 'STENCIL' | 'WORKFLOWS' | 'FEEDBACK' | 'QUEUES' | 'PUBLICATIONS';
+
+const navPaths: Record<NavType, string> = {
+  TASKS: '/ui/tasks',
+  DASHBOARD: '/ui/dashboard',
+  PROCESSES: '/ui/processes',
+  FORMS: '/ui/forms',
+  WRENCH: '/wrench/ide',
+  STENCIL: '/ui/content',
+  WORKFLOWS: '/ui/workflows',
+  FEEDBACK: '/feedback',
+  QUEUES: './queues',
+  PUBLICATIONS: '/ui/publications'
 }
-
-
-export const Explorer: React.FC<{}> = () => {
-  const navigate = useNavigate();
-
-
-  return (
-    <SimpleTreeView>
-      <MenuItem
-        icon={<ChecklistIcon sx={iconSize} />}
-        id='menu.tasks'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/tasks'
-        })}
-      />
-      <MenuItem
-        icon={<DashboardIcon sx={iconSize} />}
-        id='menu.dashboard'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/dashboard'
-        })}
-      />
-      <MenuItem
-        icon={<NetworkCheckIcon sx={iconSize} />}
-        id='menu.processes'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/monitoring'
-        })}
-      />
-
-      <MenuItem
-        icon={<ListIcon sx={iconSize} />}
-        id='menu.forms'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/assets/forms'
-        })}
-      />
-
-      <MenuItem
-        icon={<BuildIcon sx={iconSize} />}
-        id='menu.flow'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/assets/wrench'
-        })}
-      />
-
-      <MenuItem
-        icon={<MenuBookIcon sx={iconSize} />}
-        id='menu.content'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/assets/stencil'
-        })}
-      />
-
-      <MenuItem
-        icon={<SettingsIcon sx={iconSize} />}
-        id='menu.workflows'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/assets/services'
-        })}
-      />
-
-      <MenuItem
-        icon={<ThumbUpAltIcon sx={iconSize} />}
-        id='menu.feedback'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/feedback'
-        })}
-      />
-
-      <MenuItem
-        icon={<CloudQueueIcon sx={iconSize} />}
-        id='menu.queues'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/queues'
-        })}
-      />
-      <MenuItem
-        icon={<EmailIcon sx={iconSize} />}
-        id='menu.messages'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/queues/messages'
-        })}
-      />
-      <MenuItem
-        icon={<DeliveryDiningIcon sx={iconSize} />}
-        id='menu.deliveries'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/queues/deliveries'
-        })}
-      />
-
-      <MenuItem
-        icon={<BeenhereIcon sx={iconSize} />}
-        id='menu.publications'
-        onClick={() => navigate({
-          from: '/secured/$locale/worker',
-          to: '/secured/$locale/worker/publications'
-        })}
-      />
-    </SimpleTreeView>
-  );
-}
-
-const ExplorerTitleBar = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  minWidth: "unset",
-  paddingTop: theme.spacing(1.5),
-  paddingBottom: theme.spacing(1.5),
-  paddingLeft: theme.spacing(2),
-  color: theme.palette.secondary.contrastText,
-  backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
-  '& .MuiTypography-root': {
-    marginLeft: theme.spacing(3),
-    fontSize: theme.typography.caption.fontSize,
-    textTransform: 'uppercase',
-  }
-}));
-
 
 
 export const Secondary: React.FC = () => {
-
   const intl = useIntl();
+  const navigate = useNavigate();
+  const classes = useUtilityClasses();
+
+  const userFirstAndLastName = 'Missing username';
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [activeButton, setActiveButton] = React.useState<NavType>('TASKS')
+
+  const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleComposeSelectClose = () => {
+    setAnchorEl(null);
+  };
+
+  function navigateTo(navType: NavType) {
+    const path = navPaths[navType] || '/';
+    //navigate(path)
+  }
+
+  function handleMenuButtonClick(buttonId: NavType) {
+    setActiveButton(buttonId),
+      navigateTo(buttonId)
+  }
 
   return (<>
-      <ExplorerTitleBar>
-        <Typography sx={{ color: 'white', fontStyle: 'italic', fontFamily: 'serif' }}>My Logo</Typography>
-        <Typography>{intl.formatMessage({ id: 'explorer.title' })}</Typography>
-      </ExplorerTitleBar>
-      <Box display="flex" flexDirection='column' flexGrow={1}>
-        <Explorer />
-      </Box>
+    <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
+
+    <EveliShellLargeBarRoot className={classes.root}>
+      <div className={classes.logoContainer}>
+        <img src={logo} className={classes.logo} />
+      </div>
+
+      <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
+
+      <Button variant='text' startIcon={<TaskOutlinedIcon />}
+        className={activeButton === 'TASKS' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('TASKS')}>
+        {intl.formatMessage({ id: 'menu.tasks' })}
+      </Button>
+
+      <Button variant='text' startIcon={<DashboardCustomizeOutlinedIcon />}
+        className={activeButton === 'DASHBOARD' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('DASHBOARD')}>
+        {intl.formatMessage({ id: 'menu.dashboard' })}
+      </Button>
+
+      <Button variant='text' startIcon={<NetworkCheckIcon />}
+        className={activeButton === 'PROCESSES' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('PROCESSES')}>
+        {intl.formatMessage({ id: 'menu.processes' })}
+      </Button>
+
+      <Button variant='text' startIcon={<ListIcon />}
+        className={activeButton === 'FORMS' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('FORMS')}>
+        {intl.formatMessage({ id: 'menu.forms' })}
+      </Button>
+
+      <Button variant='text' startIcon={<BuildOutlinedIcon />}
+        className={activeButton === 'WRENCH' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('WRENCH')}>
+        {intl.formatMessage({ id: 'menu.flow' })}
+      </Button>
+
+      <Button variant='text' startIcon={<EditNoteOutlinedIcon />}
+        className={activeButton === 'STENCIL' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('STENCIL')}>
+        {intl.formatMessage({ id: 'menu.content' })}
+      </Button>
+
+      <Button variant='text' startIcon={<SettingsOutlinedIcon />}
+        className={activeButton === 'WORKFLOWS' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('WORKFLOWS')}>
+        {intl.formatMessage({ id: 'menu.workflows' })}
+      </Button>
+
+      <Button variant='text' startIcon={<ThumbUpAltOutlinedIcon />}
+        className={activeButton === 'FEEDBACK' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('FEEDBACK')}>
+        {intl.formatMessage({ id: 'menu.feedback' })}
+      </Button>
+
+      <Button variant='text' startIcon={<CloudQueueIcon />}
+        className={activeButton === 'QUEUES' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('QUEUES')}>
+        {intl.formatMessage({ id: 'menu.queues' })}
+      </Button>
+
+      <Button variant='text' startIcon={<BeenhereOutlinedIcon />}
+        className={activeButton === 'PUBLICATIONS' ? classes.menuButtonActive : classes.menuButton}
+        onClick={() => handleMenuButtonClick('PUBLICATIONS')}>
+        {intl.formatMessage({ id: 'menu.publications' })}
+      </Button>
+
+      <Divider className={classes.secondaryDivider} />
+
+      <Button className={classes.logoutButton}
+        variant="text"
+        startIcon={<LogoutIcon />}
+        onClick={() => console.log("log out")}
+      >
+        <Stack spacing={0} alignItems="flex-start">
+          <Typography>{intl.formatMessage({ id: 'menu.logout' })}</Typography>
+          <Typography variant="caption">{userFirstAndLastName}</Typography>
+        </Stack>
+      </Button>
+
+    </EveliShellLargeBarRoot>
   </>
   )
 }

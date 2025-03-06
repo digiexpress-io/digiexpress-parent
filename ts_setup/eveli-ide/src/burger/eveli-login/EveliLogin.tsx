@@ -29,7 +29,7 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
 
   const config = useConfig();
   const { user } = useIam();
-  const label = user.authenticated ? 'explorer.logout' : 'explorer.login';
+  const label = user.authenticated ? 'menu.logout' : 'explorer.login';
   const location = user.authenticated ? config.logoutUrl : config.loginUrl;
 
   const { icon: StartIcon = PersonOutlinedIcon } = props;

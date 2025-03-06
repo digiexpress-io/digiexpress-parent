@@ -1,103 +1,143 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, TextFieldProps, TextField, alpha } from '@mui/material';
-import { styled } from "@mui/material/styles";
+import { Button, Divider, Stack, Typography } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
+import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+
 import { useIntl } from 'react-intl';
-import * as Burger from '@/burger';
-import { ArticleExplorer, WorkflowExplorer, LinkExplorer, SearchExplorer } from './explorer';
+
+import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
+import { ComposeSelect } from '../uiDev/ComposeSelect';
+import logo from '../uiDev/logoLifeDigitalDark.svg';
+import { useNavigate } from '@tanstack/react-router';
 
 
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.primary.contrastText,
-    fontSize: '9pt',
-    paddingLeft: '.5rem',
-    paddingRight: '.5rem'
-  },
-  "&.Mui-selected": {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
-  },
-}));
+type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
 
-const StyledTabs = styled(Tabs)<TabsProps>(() => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: "unset",
-  }
-}));
-
-
-const StyledSearch = styled(TextField)<TextFieldProps>(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.secondary.main,
-  '& .MuiOutlinedInput-input': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiOutlinedInput-root': {
-    fontSize: '10pt',
-    height: '2rem',
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.secondary.contrastText,
-    },
-  },
-  '& .MuiFormLabel-root': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiFormHelperText-root': {
-    color: theme.palette.primary.contrastText,
-    marginLeft: 1
-  }
-}));
-
-
-
-const SecondaryExplorer: React.FC<{}> = () => {
-  const intl = useIntl();
-  const getLabel = (id: string) => intl.formatMessage({ id });
-  const [tab, setTab] = React.useState("toolbar.articles");
-  const [searchString, setSearchString] = React.useState<string>("");
-
-  let component = <></>;
-
-  if (tab === 'toolbar.services') {
-    component = (<WorkflowExplorer searchString={searchString.toLocaleLowerCase()} />)
-  } else if (tab === 'toolbar.links') {
-    component = (<LinkExplorer searchString={searchString.toLocaleLowerCase()} />)
-  } else {
-    component = <ArticleExplorer searchString={searchString.toLocaleLowerCase()} />;
-  }
-
-  return (<>
-    <Box display="flex" flexDirection='column'>
-
-    <StyledSearch focused  sx={{ mx: 1 }}
-      type="search"
-      placeholder={getLabel("explorer.tabs.search")}
-      value={searchString}
-      onChange={({ target }) => setSearchString(target.value)} />
-
-      <StyledTabs value={tab} onChange={(_event, value) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.articles")} value='toolbar.articles' />
-        <StyledTab label={getLabel("explorer.tabs.services")} value='toolbar.services' />
-        <StyledTab label={getLabel("explorer.tabs.links")} value='toolbar.links' />
-      </StyledTabs>
-      
-    </Box>
-    {component}
-  </>);
+const navPaths: Record<NavType, string> = {
+  ARTICLES: '/ui/tasks',
+  PAGES: '/ui/dashboard',
+  SERVICES: '/ui/processes',
+  LINKS: '/ui/forms',
+  LOCALES: '/wrench/ide',
+  MIGRATIONS: '/ui/content',
+  TEMPLATES: '/ui/workflows',
+  RELEASES: '/'
 }
 
+const Secondary: React.FC<{}> = () => {
+  const intl = useIntl();
+  const navigate = useNavigate();
+  const classes = useUtilityClasses();
 
-const Secondary: React.FC<{ }> = () => {
-  const {activeId} = Burger.useIconbar()
 
-  let component = <></>;
-  if (activeId === 'toolbar.search') {
-    component = (<SearchExplorer />)
-  } else {
-    component = <SecondaryExplorer />;
+  const userFirstAndLastName = 'Missing username';
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [activeButton, setActiveButton] = React.useState<NavType>('ARTICLES')
+
+  const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleComposeSelectClose = () => {
+    setAnchorEl(null);
+  };
+
+  function navigateTo(navType: NavType) {
+    /*navigate({
+      from: '/secured/$locale/assets/stencil',
+      to: ''
+    });
+    */
   }
-  return (<Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>{component}</Box>)
+
+  function handleMenuButtonClick(buttonId: NavType) {
+    setActiveButton(buttonId)
+    // navigateTo(buttonId)
+  }
+  return (
+    <>
+      <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
+
+      <EveliShellLargeBarRoot className={classes.root}>
+        <div className={classes.logoContainer}>
+          <img src={logo} className={classes.logo} />
+        </div>
+
+        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
+
+        <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
+          className={activeButton === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('ARTICLES')}>
+          {intl.formatMessage({ id: 'menu.articles' })}
+        </Button>
+
+        <Button variant='text' startIcon={<DescriptionOutlinedIcon />}
+          className={activeButton === 'PAGES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('PAGES')}>
+          {intl.formatMessage({ id: 'menu.pages' })}
+        </Button>
+
+        <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
+          className={activeButton === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('SERVICES')}>
+          {intl.formatMessage({ id: 'menu.services' })}
+        </Button>
+
+        <Button variant='text' startIcon={<InsertLinkOutlinedIcon />}
+          className={activeButton === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('LINKS')}>
+          {intl.formatMessage({ id: 'menu.links' })}
+        </Button>
+
+        <Button variant='text' startIcon={<TranslateOutlinedIcon />}
+          className={activeButton === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => { }}>
+          {intl.formatMessage({ id: 'menu.locales' })}
+        </Button>
+
+        <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
+          className={activeButton === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('TEMPLATES')}>
+          {intl.formatMessage({ id: 'menu.templates' })}
+        </Button>
+
+        <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
+          className={activeButton === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('MIGRATIONS')}>
+          {intl.formatMessage({ id: 'menu.migrations' })}
+        </Button>
+
+        <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
+          className={activeButton === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => handleMenuButtonClick('RELEASES')}>
+          {intl.formatMessage({ id: 'menu.releases' })}
+        </Button>
+
+
+        <Divider className={classes.secondaryDivider} />
+
+        <Button className={classes.logoutButton}
+          variant="text"
+          startIcon={<LogoutIcon />}
+          onClick={() => console.log("log out")}
+        >
+          <Stack spacing={0} alignItems="flex-start">
+            <Typography>{intl.formatMessage({ id: 'menu.logout' })}</Typography>
+            <Typography variant="caption">{userFirstAndLastName}</Typography>
+          </Stack>
+        </Button>
+      </EveliShellLargeBarRoot>
+    </>
+  )
 }
 export { Secondary }
 

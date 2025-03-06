@@ -158,6 +158,8 @@ export type TreeFile = {
 
 export function parseTree(files: SourceFile[]): TreeFile[] {
   const visitor = new TreeVisitor();
-  files.forEach(src => visitor.visit(src))
+  files.forEach(src => {
+    visitor.visit(src);
+  })
   return visitor.close();
 }

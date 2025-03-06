@@ -1,34 +1,66 @@
 import React from 'react';
 
-import { Tabs, Tab, Box } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import LanguageIcon from '@mui/icons-material/Language';
+import SearchIcon from '@mui/icons-material/Search';
+import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-
 import * as Burger from '@/burger';
+
 import { Composer } from './context';
+import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
+import { LocaleSelect } from '../../uiDev/LocaleSelect';
+import { useNavigate } from '@tanstack/react-router';
 
 
 
 
 const Toolbar: React.FC<{}> = () => {
-
+  const navigate = useNavigate();
+  const { locale } = useIntl();
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
-  const [secondary, setSecondary] = React.useState<string>();
+  const secondary = Burger.useIconbar();
   const { enqueueSnackbar } = useSnackbar();
+  
+  React.useEffect(() => tabs.handleTabAdd({ id: 'activities', label: "Activities" }), []);
+  
+  const classes = useUtilityClasses();
 
-  //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const handleLocalePopoverClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleLocalePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  function handleToTasks() {
+    navigate({
+      from: '/secured/$locale',
+      to: '/secured/$locale/worker/tasks'
+    });
+  }
+
+  function handleToStencil() {
+    navigate({
+      from: '/secured/$locale',
+      to: '/secured/$locale/assets/stencil'
+    });
+  }
+
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
-  const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
-
+  const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     if (newValue === 'toolbar.save' && unsavedPages) {
@@ -58,35 +90,56 @@ const Toolbar: React.FC<{}> = () => {
     } else if (newValue === 'toolbar.activities') {
       tabs.handleTabAdd({ id: 'activities', label: "Activities" });
 
-    } else if (newValue === 'toolbar.assets') {
-      setSecondary("toolbar.assets")
-
     } else if (newValue === 'toolbar.search') {
-      setSecondary("toolbar.search")
-
-    } else if (newValue === 'toolbar.import') {
-      tabs.handleTabAdd({ id: 'import', label: 'Import' })
-
-    }
+      secondary.handleActiveId("toolbar.search")
+    } 
   };
-
-    // open dashboard
-    React.useLayoutEffect(() => {
-      tabs.handleTabAdd({ id: 'activities', label: "Activities" });
-    }, []);
 
 
   return (
-    <Tabs orientation='vertical' onChange={handleChange} value={secondary}>
-      <Tab value='toolbar.activities' icon={<DashboardIcon />}/>
-      <Tab value='toolbar.save'
-        icon={<SaveIcon sx={saveSx} />}
-        disabled={unsavedPages.length === 0}
-        label={unsavedPages.length ? (<Box sx={saveSx}>{unsavedPages.length}</Box>) : undefined} />
-      <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
-      <Tab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
-      <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
-    </Tabs>
+    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
+      <LocaleSelect open={!!anchorEl} onClose={handleLocalePopoverClose} anchorEl={anchorEl} />
+      <div>
+        <IconButton onClick={(event) => handleChange(event, 'toolbar.activities')}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.activities' /></Typography>
+      </div>
+
+      <div>
+        <IconButton className={saveIconClassName} onClick={(event) => handleChange(event, 'toolbar.save')} ><SaveOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.save' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={(event) => handleChange(event, 'toolbar.search')}><SearchIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.search' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={handleToTasks}><TaskOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
+      </div>
+
+      <div>
+        <IconButton disabled><BuildOutlinedIcon /></IconButton>
+        <Typography className={classes.itemDisabled}><FormattedMessage id='toolbar.wrench' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={handleToStencil}><EditNoteOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
+          <HelpOutlineOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.help' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={handleLocalePopoverClick}><LanguageIcon /></IconButton>
+        <Typography>{locale.toLocaleUpperCase()}</Typography>
+      </div>
+    </EveliShellMiniBarRoot>
   );
 }
 
