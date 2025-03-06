@@ -1,5 +1,9 @@
 import React from 'react';
-import { HookByPath, RootFileFetch, HookProps, HookImpl } from '@dxs-ts/eveli-fetch';
+
+
+import { HookProps, HookByPath } from './fetch-api';
+import { RootFileFetch } from './createFileFetch';
+
 
 
 export interface FetchContextType {

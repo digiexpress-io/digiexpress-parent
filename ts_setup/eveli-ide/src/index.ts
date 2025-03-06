@@ -1,5 +1,4 @@
 import intl from './intl';
-export { FetchProvider } from '@dxs-ts/eveli-fetch';
 export { tree as fetchtree } from './fetchTree.gen'
 export { LocaleProvider, IamBackendProvider } from '@/burger';
 
@@ -16,3 +15,5 @@ export { ConfigContextProvider, useConfig } from './frontdesk';
 
 export { router } from './router'
 
+
+export { FetchProvider } from './eveli-fetch';

@@ -1,4 +1,5 @@
-import { HookByPath, Hook, HookProps, ProxyHook, useRouteParams, useNativeRouteParams } from '@dxs-ts/eveli-fetch';
+import { Hook, HookProps, ProxyHook, HookByPath } from './fetch-api'
+import { useRouteParams, useNativeRouteParams } from './FetchProvider'
 
 
 

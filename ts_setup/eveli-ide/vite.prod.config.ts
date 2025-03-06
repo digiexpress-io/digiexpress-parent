@@ -19,7 +19,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     resolve: { alias },
     plugins: [
       react({ }),
-      dts({ rollupTypes: true }),
+      dts({ rollupTypes: false }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
       intlTsVite({}),
