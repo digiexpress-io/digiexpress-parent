@@ -32,7 +32,7 @@ const TemplatesView: React.FC<{}> = () => {
     </Typography>
 
     <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
-    <Button onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+    <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
     <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
 
     <TableContainer component={Paper}>

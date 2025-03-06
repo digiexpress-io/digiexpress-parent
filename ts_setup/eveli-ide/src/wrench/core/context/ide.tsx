@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
@@ -17,7 +16,7 @@ declare namespace WrenchComposerApi {
     nav?: Nav
     withNav(nav: Nav): TabData;
   }
-  interface Tab extends BurgerApi.TabSession<TabData> {
+  interface Tab extends Burger.OneTab<TabData> {
 
   }
 
@@ -138,6 +137,17 @@ namespace WrenchComposerApi {
     return result.session.branchName;
   }
 
+  export const useQueryHeaders = () => {
+    const branchName = useBranchName();
+    const headers: Record<string, string> = {  };
+    if (branchName && branchName !== "default") {
+      headers["Branch-Name"] = branchName;
+    }
+    headers["Content-Type"] = "application/json;charset=UTF-8";
+    return headers;
+  }
+
+
   export const useSession = () => {
     const result: ContextType = React.useContext(ComposerContext);
     return result.session;
@@ -159,10 +169,10 @@ namespace WrenchComposerApi {
 
       const oldTab = layout.session.findTab(props.article.id);
       if (oldTab !== undefined) {
-        layout.actions.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
+        layout.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
       } else {
         // open or add the tab
-        layout.actions.handleTabAdd(tab);
+        layout.handleTabAdd(tab);
       }
 
     }
@@ -186,7 +196,7 @@ namespace WrenchComposerApi {
     const { session, actions } = useComposer();
 
     const handleDebugInit = (selected: HdesApi.EntityId) => {
-      layout.actions.handleTabAdd({ id: 'debug', label: "Debug" })
+      layout.handleTabAdd({ id: 'debug', label: "Debug" })
 
       if (session.debug.selected && session.debug.selected !== selected) {
         const previous = session.debug.values[selected];
@@ -203,20 +213,13 @@ namespace WrenchComposerApi {
 
   export const Provider: React.FC<{ children: React.ReactNode, service: HdesApi.Service }> = ({ children, service: init }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
-    const [service, setService] = React.useState<HdesApi.Service>(init);
-    const branchName = session.branchName;
-
-    React.useEffect(() => {
-      setService(prev => prev.withBranch(branchName));
-    }, [branchName]);
+    const service = React.useMemo<HdesApi.Service>(() => init, [init]);
 
     const actions = React.useMemo(() => {
-      console.log("init ide dispatch");
       return new ReducerDispatch(dispatch, service);
     }, [dispatch, service]);
 
     React.useLayoutEffect(() => {
-      console.log("init ide data");
       actions.handleLoad();
     }, [service, actions]);
 

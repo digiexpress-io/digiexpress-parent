@@ -1,17 +1,13 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid2, MenuItem, Button } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { useSnackbar } from 'notistack';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { useConfig } from '../../context/ConfigContext';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { useFetch } from '../../hooks/useFetch';
 import { Workflow } from '../../types/Workflow';
 import { DialobFormTag } from '../../types';
 
-import * as Burger from '@/burger';
 
 const messages = defineMessages(
   {
@@ -34,42 +30,11 @@ export interface CreateOrEditWorkflowDialogProps {
 
 export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProps> = ({ onSubmit, workflow, open, setOpen, dialobTags }) => {
   const intl = useIntl();
-
-  const { serviceUrl } = useConfig();
-  const { response: flows } = useFetch<string[]>(`${serviceUrl}worker/rest/api/assets/wrench/flow-names`);
-
-  const session = useContext(SessionRefreshContext);
-  const { enqueueSnackbar } = useSnackbar();
+  const { update: handleSubmit } = useFetch('worker/rest/api/assets/workflows/$workflowId.PUT', {});
+  const { flows } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
 
   const handleClose = () => {
     setOpen(false);
-  }
-
-  const handleSubmit = (workflowCommand: Workflow): void => {
-    let method = 'POST';
-    let url = `${serviceUrl}worker/rest/api/assets/workflows`;
-
-    if (workflowCommand.id) {
-      method = 'PUT';
-      url = url + '/' + workflowCommand.id;
-    }
-
-    session.cFetch(`${url}`, {
-      method: method,
-      headers: {
-        'Accept': 'application/json'
-      },
-      body: { ...workflowCommand.body, ...(workflowCommand.id ? { id: workflowCommand.id } : {}) }
-    })
-      .then((response: any) => {
-        if (response.ok) {
-          setOpen(false);
-          onSubmit();
-        }
-        else {
-          enqueueSnackbar(intl.formatMessage({ id: 'error.workflowCreation' }), { variant: 'error' });
-        }
-      })
   }
 
   const forms = useMemo(() => {
@@ -98,7 +63,10 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values as Workflow);
+            handleSubmit(values as Workflow, () => {
+              setOpen(false);
+              onSubmit();
+            });
             setSubmitting(false);
           }}
         >

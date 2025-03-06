@@ -46,7 +46,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
     service.delete().decision(decisionId)
       .then(data => {
         if (decisionTab) {
-          tabs.actions.handleTabClose(decisionTab);
+          tabs.handleTabClose(decisionTab);
         }
         enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
         actions.handleLoadSite(data);

@@ -1,18 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { Dialog, DialogActions, DialogContent, DialogTitle, Stack, DialogContentText, Button } from '@mui/material';
 
-
-import { useSnackbar } from 'notistack';
 import { useIntl, FormattedMessage } from 'react-intl';
-
-import { useConfig } from '../../context/ConfigContext';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { PublicationUpload } from '../../types/Publication';
-import { handleErrors } from '../../util/cFetch';
-
-
+import { useFetch } from '@dxs-ts/eveli-fetch';
 import * as Burger from '@/burger';
+
+import { PublicationUpload } from '../../types/Publication';
 
 
 export interface UploadReleaseProps {
@@ -23,36 +17,24 @@ export interface UploadReleaseProps {
 
 export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
-  const { enqueueSnackbar } = useSnackbar();
-  const { serviceUrl } = useConfig()
-  const session = useContext(SessionRefreshContext);
   const [file, setFile] = React.useState<string | undefined>();
   const init: PublicationUpload | undefined = file ? JSON.parse(file) : undefined;
+
+  const { saveDeployment } = useFetch('worker/rest/api/assets/deployments.POST', {});
 
   const handleClose = () => {
     setOpen(false);
   }
 
   const handleSubmit = (): void => {
-    if(!file) {
+    if(!init) {
       return;
     }
 
-    session.cFetch(`${serviceUrl}worker/rest/api/assets/deployments`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json'
-      },
-      body: init
-    })
-      .then(response => handleErrors(response))
-      .then((response: any) => {
-        setOpen(false);
-        onSubmit();
-      })
-      .catch(error => {
-        enqueueSnackbar(intl.formatMessage({ id: 'publications.tagCreationFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
-      });
+    saveDeployment(init, () => {
+      setOpen(false);
+      onSubmit();
+    });
   }
 
   return (

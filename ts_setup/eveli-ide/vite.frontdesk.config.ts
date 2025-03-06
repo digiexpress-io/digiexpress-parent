@@ -1,10 +1,11 @@
 import { ConfigEnv, UserConfig } from 'vite';
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 import { intlTsVite } from './intl-vite-plugin';
-
+import { fetchVite } from './fetch-vite-plugin';
 import { alias } from './vite.paths.config';
 
 
@@ -26,7 +27,9 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
         },
       }), 
       mockDevServerPlugin(),
-      intlTsVite({})
+      intlTsVite({}),
+      fetchVite(),
+      TanStackRouterVite(),
     ],
     build: {
       chunkSizeWarningLimit: 5000,
@@ -39,6 +42,9 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
       port: 3000,
 
       proxy: {
+
+
+
         '/config': {
           target: 'http://localhost:8080',
           changeOrigin: false,

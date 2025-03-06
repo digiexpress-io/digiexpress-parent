@@ -35,7 +35,7 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
     console.log("saving selected services" + selectedWorkflows);
     service.update().article(entity)
       .then(_success => actions.handleLoadSite())
-      .then(() => layout.actions.handleTabCloseCurrent())
+      .then(() => layout.handleTabCloseCurrent())
     enqueueSnackbar(message, { variant: 'success' });
   }
 
@@ -60,7 +60,7 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
         selected={view.workflows.map(l => l.workflow.id)}
         cancel={{
           label: 'button.cancel',
-          onClick: () => layout.actions.handleTabCloseCurrent()
+          onClick: () => layout.handleTabCloseCurrent()
         }}
         submit={{
           label: "button.apply",

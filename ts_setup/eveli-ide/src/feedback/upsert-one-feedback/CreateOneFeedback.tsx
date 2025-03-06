@@ -2,9 +2,7 @@ import React from 'react';
 import { Box, CircularProgress, TextField, Typography, Button } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
-
-import * as Burger from '@/burger';
+import { useNavigate } from '@tanstack/react-router';
 import { useFeedback, FeedbackApi } from '../feedback-api';
 
 
@@ -57,9 +55,14 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
   function handleCancel() {
     if (template) {
-      setReply(template.replys.join("\r\n\r\n"));
+      setReply(template.replys.join("\r\n\r\n"))
     }
-    navigate(`/ui/tasks/task/${taskId}`);
+
+    navigate({
+      from: '/secured/$locale',
+      params: { taskId },
+      to: '/secured/$locale/worker/tasks/$taskId'
+    })
   }
 
   if (!command) {

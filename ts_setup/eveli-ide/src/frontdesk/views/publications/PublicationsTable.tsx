@@ -1,5 +1,5 @@
 
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -7,25 +7,17 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import MaterialTable, { Column } from '@material-table/core';
+import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button, DialogTitle, Stack } from '@mui/material';
 
 import { useIntl, FormattedMessage } from 'react-intl';
-import { useSnackbar } from 'notistack';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { localizeTable } from '../../util/localizeTable';
-import { downloadFile } from '../../util/downloadFile';
-import { handleErrors } from '../../util/cFetch';
-
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { useConfig } from '../../context/ConfigContext';
-import { useFetch } from '../../hooks/useFetch';
-
 import { Publication } from '../../types/Publication';
 import { NewPublicationDialog } from './NewPublicationDialog';
-
-
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
-import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button, DialogTitle, Stack } from '@mui/material';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 
 import * as Burger from '@/burger';
@@ -73,11 +65,8 @@ function parseErrors(errors: any): any[] {
 
 const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
   const intl = useIntl();
-  const { enqueueSnackbar } = useSnackbar();
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<string>();
-  const { serviceUrl } = useConfig();
-  const session = useContext(SessionRefreshContext);
+  const { saveDeployment } = useFetch('worker/rest/api/assets/deployments/$deploymentId.PUT', {})
 
   const handleClose = () => {
     setStatusDialogOpen(false);
@@ -94,21 +83,10 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
   }
 
   const handleSubmit = (status: string): void => {
-    session.cFetch(`${serviceUrl}worker/rest/api/assets/deployments/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json'
-      },
-      body: { status, id }
-    })
-      .then(response => handleErrors(response))
-      .then((response: any) => {
-        setStatusDialogOpen(false);
-        onSubmit();
-      })
-      .catch(error => {
-        enqueueSnackbar(intl.formatMessage({ id: 'publications.statusChangeFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
-      });
+    saveDeployment({ id, status }, () => {
+      setStatusDialogOpen(false);
+      onSubmit();
+    });
   }
 
   let color: 'success' | 'error' | 'primary' | 'warning';
@@ -152,33 +130,15 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
 
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
-  const { serviceUrl } = useConfig();
   const config = useConfig();
-  const session = useContext(SessionRefreshContext);
-  const { enqueueSnackbar } = useSnackbar();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
-  const { response: assetReleases, refresh: refreshAssetReleases, isLoading } = useFetch<Publication[]>(`${serviceUrl}worker/rest/api/assets/publications`);
+  const { assetReleases, refreshAssetReleases, isLoading } = useFetch('worker/rest/api/assets/publications.GET', {});
+  const { getRelease } = useFetch('worker/rest/api/assets/deployments/$deploymentId.GET', {});
+
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
-  const getRelease = (releaseTag: Publication) => {
-    let url = `${serviceUrl}worker/rest/api/assets/deployments/${releaseTag.name}`;
-    return session.cFetch(`${url}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-      .then(response => handleErrors(response))
-      .then((response: Response) => response.json())
-      .then(json => {
-        downloadFile(JSON.stringify(json, undefined, 2), releaseTag.name + '.json', 'text/json');
-      })
-      .catch(error => {
-        enqueueSnackbar(intl.formatMessage({ id: 'assetRelease.downloadFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
-      });
-  }
 
   const tableState: TableState = {
     columns: [

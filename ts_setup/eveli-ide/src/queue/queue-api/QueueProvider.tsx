@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueueApi } from './queue-types';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 export interface QueueContextType {
   getOneChannelConfig: () => Promise<QueueApi.ChannelConfig>;
@@ -11,41 +12,16 @@ export const QueueContext = React.createContext<QueueContextType>({} as any);
 
 export interface QueueProviderProps {
   children: React.ReactNode;
-  fetchQueueConfigGET: QueueApi.FetchQueueConfigGET;
-  fetchQueueMessagesGET: QueueApi.FetchQueueMessagesGET;
-  fetchQueueDeliveriesGET: QueueApi.FetchQueueDeliveriesGET;
 }
 export const QueueProvider: React.FC<QueueProviderProps> = (props) => {
+  const { getOneChannelConfig } = useFetch('worker/rest/api/queues/configs.GET', {});
+  const { findAllQueueMessages } = useFetch('worker/rest/api/queues/messages.GET', {});
+  const { findAllQueueDeliveries } = useFetch('worker/rest/api/queues/deliveries.GET', {});
 
   // create the context 
   const contextValue: QueueContextType = React.useMemo(() => {
-
-    function getOneChannelConfig(): Promise<QueueApi.ChannelConfig> {
-      return props.fetchQueueConfigGET()
-        .then(resp => resp.json())
-        .then(data => data as QueueApi.ChannelConfig[])
-        .then(([data]) => data);
-    }
-
-    function findAllQueueMessages(): Promise<QueueApi.QueueMessage[]> {
-      return props.fetchQueueMessagesGET()
-      .then(resp => resp.json())
-      .then(data => data as QueueApi.QueueMessage[])
-    }
-
-    function findAllQueueDeliveries(): Promise<QueueApi.Delivery[]> {
-      return props.fetchQueueDeliveriesGET()
-      .then(resp => resp.json())
-      .then(data => data as QueueApi.Delivery[])
-    }
-
-    // return all methods
-    return {
-      getOneChannelConfig, findAllQueueMessages, findAllQueueDeliveries
-    };
-  }, [
-   props.fetchQueueConfigGET
-  ]);
+    return { getOneChannelConfig, findAllQueueMessages, findAllQueueDeliveries };
+  }, [ getOneChannelConfig, findAllQueueMessages, findAllQueueDeliveries ]);
 
   return (<QueueContext.Provider value={contextValue}>{props.children}</QueueContext.Provider>);
 }

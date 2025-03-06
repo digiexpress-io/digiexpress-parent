@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Button } from '@mui/material';
 
@@ -6,14 +6,12 @@ import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { useSnackbar } from 'notistack';
 import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { useConfig } from '../../context/ConfigContext';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { PublicationInit } from '../../types/Publication';
 import { AssetTag } from '../../types/AssetTag';
-import { useFetch } from '../../hooks/useFetch';
-import { handleErrors } from '../../util/cFetch';
+import { PublicationInit } from '../../types/Publication';
 import { Datepicker } from '../../components/Datepicker';
+
 
 
 const messages = defineMessages(
@@ -38,20 +36,16 @@ export interface NewReleaseProps {
 export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
-  const { serviceUrl } = useConfig()
 
-  const session = useContext(SessionRefreshContext);
-  const { response: wrenchTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/wrench-tags`);
-  const { response: contentTags } = useFetch<AssetTag[]>(`${serviceUrl}worker/rest/api/assets/any-tags/stencil-tags`);
+  const { wrenchTags } = useFetch('worker/rest/api/assets/any-tags/wrench-tags.GET', {});
+  const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});
+  const { savePublication } = useFetch('worker/rest/api/assets/publications.POST', {});
 
   const handleClose = () => {
     setOpen(false);
   }
 
   const handleSubmit = (assetReleaseCommand: PublicationInit): void => {
-    let method = 'POST';
-    let url = `${serviceUrl}worker/rest/api/assets/publications`;
-
     let init: PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
     if (assetReleaseCommand.stencilTag === NEW_TAG_VALUE) {
@@ -61,21 +55,10 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
       init.wrenchTag = null;
     }
 
-    session.cFetch(`${url}`, {
-      method: method,
-      headers: {
-        'Accept': 'application/json'
-      },
-      body: init
-    })
-      .then(response => handleErrors(response))
-      .then((response: any) => {
-        setOpen(false);
-        onSubmit();
-      })
-      .catch(error => {
-        enqueueSnackbar(intl.formatMessage({ id: 'publications.tagCreationFailed' }, { cause: (error.message || 'N/A') }), { variant: 'error' });
-      });
+    savePublication(init, () => {
+      setOpen(false);
+      onSubmit();
+    });
   }
 
   const requiredValidator = (value: any) => !value ? intl.formatMessage(messages.requiredError) : undefined;
@@ -93,10 +76,8 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
   return (
     <>
-
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
         <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'publications.dialogTitle' })}</DialogTitle>
-
         <Formik
           initialValues={{
             name: '',

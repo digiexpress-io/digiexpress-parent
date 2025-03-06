@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 
 import { Tabs, Tab, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom'
+
 
 import * as Burger from '@/burger';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -11,25 +11,20 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+
 
 import { Composer, StencilApi } from './context';
 import { LocaleFilter } from './explorer/filter';
 
 
-const Toolbar: React.FC<{}> = () => {
+export const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  
 
   const composer = Composer.useComposer();
   const tabsCtx = Burger.useTabs();
-  const secondaryCtx = Burger.useSecondary();
-
-  const tabsActions = tabsCtx.actions;
-  const secondaryActions = secondaryCtx.actions;
-
-
-
+  const {activeId, handleActiveId} = Burger.useIconbar()
+  
   const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
   const article = active ? composer.site.articles[active.id] : undefined;
   const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
@@ -38,9 +33,6 @@ const Toolbar: React.FC<{}> = () => {
 
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
-  function handleBack() {
-    navigate('/');
-  }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
 
@@ -58,16 +50,16 @@ const Toolbar: React.FC<{}> = () => {
 
 
     } else if (newValue === 'toolbar.activities') {
-      tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
+      tabsCtx.handleTabAdd({ id: 'newItem', label: "Activities" });
 
     } else if (newValue === 'toolbar.articles') {
-      secondaryCtx.actions.handleSecondary("toolbar.articles")
+      handleActiveId("toolbar.articles")
 
     } else if (newValue === 'toolbar.search') {
-      secondaryCtx.actions.handleSecondary("toolbar.search")
+      handleActiveId("toolbar.search")
 
     } else if (newValue === 'toolbar.import') {
-      tabsActions.handleTabAdd({ id: 'import', label: 'Import' })
+      tabsCtx.handleTabAdd({ id: 'import', label: 'Import' })
 
     }
   };
@@ -75,9 +67,9 @@ const Toolbar: React.FC<{}> = () => {
 
   // open dashboard
   React.useLayoutEffect(() => {
-    secondaryActions.handleSecondary("toolbar.articles")
-    tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
-  }, [tabsActions, secondaryActions]);
+    handleActiveId("toolbar.articles")
+    tabsCtx.handleTabAdd({ id: 'newItem', label: "Activities" });
+  }, []);
 
   const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
 
@@ -85,7 +77,7 @@ const Toolbar: React.FC<{}> = () => {
     <>
         <Tabs orientation="vertical"
           onChange={handleChange}
-          value={secondaryCtx.session.secondary}>
+          value={activeId}>
 
           <Tab value='toolbar.activities' icon={<DashboardIcon />} />
           <Tab value='toolbar.save'
@@ -95,7 +87,6 @@ const Toolbar: React.FC<{}> = () => {
           <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
           <Tab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
           <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
-          <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} />
         </Tabs>
 
         <Box flexGrow={1} />
@@ -103,6 +94,3 @@ const Toolbar: React.FC<{}> = () => {
     </>
   );
 }
-
-
-export default Toolbar;

@@ -15,14 +15,16 @@ import { DeleteDialog } from './DeleteDialog';
 import { useConfig } from '../../context/ConfigContext';
 import { DialobFormEntry } from '../../types';
 
-import { useFetch } from '../../hooks/useFetch';
 import { localizeTable } from '../../util/localizeTable';
 import { TableHeader } from '../../components/TableHeader';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
+
 
 export const DialobFormsView: React.FC = () => {
-  const { serviceUrl, dialobComposerUrl } = useConfig();
+  const { dialobComposerUrl } = useConfig();
 
-  const { response: dialobForms, refresh } = useFetch<DialobFormEntry[]>(`${serviceUrl}worker/rest/api/assets/dialob`);
+  const { dialobForms, refresh } = useFetch('worker/rest/api/assets/dialob.GET', {});
   const [selectedForm, setSelectedForm] = useState<DialobFormEntry | undefined>();
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);

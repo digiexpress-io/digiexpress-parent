@@ -1,0 +1,17 @@
+import React from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import { useLocale } from '@/burger'
+import { FindAllMessages, QueueProvider } from '../queue';
+
+export const Route = createFileRoute('/secured/$locale/worker/queues/messages/')({
+  component: Component,
+})
+
+function Component() {
+  const { locale } = Route.useParams();
+  const { setLocale } = useLocale();
+
+  React.useLayoutEffect(() => setLocale(locale), [locale])
+
+  return (<QueueProvider><FindAllMessages /></QueueProvider>)
+}

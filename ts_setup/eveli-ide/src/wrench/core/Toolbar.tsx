@@ -3,7 +3,6 @@ import React from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -20,20 +19,11 @@ import { Composer } from './context';
 
 
 const Toolbar: React.FC<{}> = () => {
-  const navigate = useNavigate();
 
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
-  const secondary = Burger.useSecondary();
+  const [secondary, setSecondary] = React.useState<string>();
   const { enqueueSnackbar } = useSnackbar();
-  
-  const tabActions = tabs.actions;  
-  React.useEffect(() => tabActions.handleTabAdd({ id: 'activities', label: "Activities" }), [tabActions]);
-  
-
-  function handleBack() {
-    navigate('/');
-  }
 
   //const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
@@ -66,23 +56,28 @@ const Toolbar: React.FC<{}> = () => {
       });
 
     } else if (newValue === 'toolbar.activities') {
-      tabs.actions.handleTabAdd({ id: 'activities', label: "Activities" });
+      tabs.handleTabAdd({ id: 'activities', label: "Activities" });
 
     } else if (newValue === 'toolbar.assets') {
-      secondary.actions.handleSecondary("toolbar.assets")
+      setSecondary("toolbar.assets")
 
     } else if (newValue === 'toolbar.search') {
-      secondary.actions.handleSecondary("toolbar.search")
+      setSecondary("toolbar.search")
 
     } else if (newValue === 'toolbar.import') {
-      tabs.actions.handleTabAdd({ id: 'import', label: 'Import' })
+      tabs.handleTabAdd({ id: 'import', label: 'Import' })
 
     }
   };
 
+    // open dashboard
+    React.useLayoutEffect(() => {
+      tabs.handleTabAdd({ id: 'activities', label: "Activities" });
+    }, []);
+
 
   return (
-    <Tabs orientation='vertical' onChange={handleChange} value={secondary.session.secondary}>
+    <Tabs orientation='vertical' onChange={handleChange} value={secondary}>
       <Tab value='toolbar.activities' icon={<DashboardIcon />}/>
       <Tab value='toolbar.save'
         icon={<SaveIcon sx={saveSx} />}
@@ -91,7 +86,6 @@ const Toolbar: React.FC<{}> = () => {
       <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
       <Tab value='toolbar.assets' icon={<ArticleOutlinedIcon />} />
       <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon />} />
-      <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} /> 
     </Tabs>
   );
 }

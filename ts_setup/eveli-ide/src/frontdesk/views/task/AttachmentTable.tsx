@@ -27,7 +27,7 @@ interface TableState  {
 }
 
 interface Props {
-  taskId: number,
+  taskId: string,
   readonly: boolean,
   attachments: Attachment[], 
   setAttachments: React.Dispatch<React.SetStateAction<Attachment[]>>

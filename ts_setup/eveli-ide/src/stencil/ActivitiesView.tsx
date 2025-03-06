@@ -7,7 +7,6 @@ import {
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 import { ArticleComposer } from './article';
 import { LinkComposer } from './link';
 import { WorkflowComposer } from './workflow';
@@ -36,7 +35,7 @@ interface CardData {
 
 type CardType = "release" | "article" | "page" | "link" | "workflow" | "locale" | "migration" | "templates";
 
-const createCards: (site: StencilApi.Site, theme: Theme, tabs: BurgerApi.TabsActions) => CardData[] = (_site, theme, tabs) => ([
+const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContextType) => CardData[] = (_site, theme, tabs) => ([
   {
     composer: (handleClose) => (<ArticleComposer onClose={handleClose} />),
     onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
@@ -154,9 +153,6 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
       <CardActions sx={{ alignSelf: "flex-end" }}>
         <Box display="flex">
           {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={<FormattedMessage id={props.data.buttonViewAll} />} /> : <Box />}
-          {props.data.buttonTertiary && props.data.onView ?
-            <Button variant='text' onClick={() => tabs.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}
-              children={<FormattedMessage id='button.releasegraph' />}/> : null}
           <Button onClick={props.onCreate} children={<FormattedMessage id={props.data.buttonCreate} />}/>
         </Box>
       </CardActions>
@@ -168,19 +164,18 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
 //card view for all CREATE views
 const ActivitiesView: React.FC<{}> = () => {
   const theme = useTheme();
-  const { actions } = Burger.useTabs();
+  const tabs = Burger.useTabs();
   const { site } = Composer.useComposer();
   const { service } = Composer.useComposer();
 
   const [open, setOpen] = React.useState<number>();
   const handleClose = () => setOpen(undefined);
-  const cards = React.useMemo(() => createCards(site, theme, actions), [site, theme, actions]);
+  const cards = React.useMemo(() => createCards(site, theme, tabs), [site, theme, tabs]);
 
   const [coreVersion, setCoreVersion] = React.useState<{ version: string, built: string }>();
 
   React.useEffect(() => {
     service.version().then((version) => {
-      console.log("core version", version, "composer version", composerVersion);
       setCoreVersion(version);
     });
   }, [service]);

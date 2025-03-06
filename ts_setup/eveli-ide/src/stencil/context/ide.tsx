@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useTheme } from '@mui/material';
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 import { StencilApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
@@ -49,7 +48,7 @@ declare namespace StencilComposerApi {
     withNav(nav: Nav): TabData;
   }
 
-  interface Tab extends BurgerApi.TabSession<TabData> {
+  interface Tab extends Burger.OneTab<TabData> {
 
   }
 
@@ -227,10 +226,10 @@ namespace StencilComposerApi {
 
       const oldTab = layout.session.findTab(props.article.id);
       if (oldTab !== undefined) {
-        layout.actions.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
+        layout.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
       } else {
         // open or add the tab
-        layout.actions.handleTabAdd(tab);
+        layout.handleTabAdd(tab);
       }
 
     }

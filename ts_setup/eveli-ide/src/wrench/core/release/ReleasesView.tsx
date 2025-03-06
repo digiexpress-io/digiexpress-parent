@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import ReleasesTable from './ReleasesTable';
@@ -50,9 +50,9 @@ const ReleasesView: React.FC<{}> = () => {
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc"} /></Typography>
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc.additional"} /></Typography>
 
-      <Button  onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
-      <Button  onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} variant='text'><FormattedMessage id='activities.releases.graph'/></Button>
-      <Button  onClick={() => layout.actions.handleTabAdd({ id: 'compare', label: "Compare" })}  variant='text'><FormattedMessage id='releases.button.compare'/></Button>
+      <Button  onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
+      <Button  onClick={() => layout.handleTabAdd({ id: 'graph', label: "Release Graph" })} variant='text'><FormattedMessage id='activities.releases.graph'/></Button>
+      <Button  onClick={() => layout.handleTabAdd({ id: 'compare', label: "Compare" })}  variant='text'><FormattedMessage id='releases.button.compare'/></Button>
 
       <ReleasesTable releases={formattedReleases} />
     </>

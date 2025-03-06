@@ -1,18 +1,18 @@
-import messages from './intl';
+import intl from './intl';
+export { FetchProvider } from '@dxs-ts/eveli-fetch';
+export { tree as fetchtree } from './fetchTree.gen'
+export { LocaleProvider, IamBackendProvider } from '@/burger';
+
+export { intl }
 export { siteTheme } from './burger';
-export type { BurgerApi } from './burger';
-export type { StencilApi} from './stencil';
+export type { StencilApi } from './stencil';
 export type { HdesApi } from './wrench';
+export type { QueueApi } from './queue'
+export type { FeedbackApi } from './feedback'
 
-export { StencilComposer, StencilClient } from './stencil';
-export { WrenchComposer, WrenchClient } from './wrench';
-export { Frontdesk } from './frontdesk';
+export { StencilClient, Composer as StencilComposer, StencilComponents } from './stencil';
+export { WrenchClient, Composer as WrenchComposer, WrenchComponents } from './wrench';
+export { ConfigContextProvider, useConfig } from './frontdesk';
 
-export { FeedbackComposer } from './feedback';
+export { router } from './router'
 
-
-
-export const feedbackIntl: Record<string, any> = messages;
-export const wrenchIntl: Record<string, any> = messages;
-export const stencilIntl: Record<string, any> = messages;
-export const frontdeskIntl: Record<string, any> = messages;

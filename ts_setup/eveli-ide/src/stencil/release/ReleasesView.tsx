@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Card, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
@@ -23,8 +23,8 @@ const ReleasesView: React.FC<{}> = () => {
       </Typography>
       <Typography variant="body2"><FormattedMessage id={"release.desc"} /></Typography>
       
-      <Button onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
-      <Button variant='text' onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
+      <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
+      <Button variant='text' onClick={() => layout.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
         <FormattedMessage id="button.releasegraph"/>
       </Button>
       <Button variant='contained' onClick={() => setReleaseComposer(true)}>

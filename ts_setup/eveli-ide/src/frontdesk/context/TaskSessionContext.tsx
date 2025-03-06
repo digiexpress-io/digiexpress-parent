@@ -1,14 +1,8 @@
-import React, { createContext, useContext, useState } from 'react'
-import { SessionRefreshContext } from './SessionRefreshContext'
-import { QueryResult } from '@material-table/core'
-import { ROLE_AUTHORIZED } from '../util/rolemapper'
-import { useSnackbar } from 'notistack';
-import { useIntl } from 'react-intl'
-import { useUserInfo } from './UserContext'
+import React, { createContext, useState } from 'react'
+
 import { TaskBackend, TaskBackendProvider } from './TaskApiConfigContext';
 import { Task } from '../types/task/Task';
-import { Comment, CommentSource } from '../types/task/Comment';
-import { useConfig } from './ConfigContext';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 export interface TableState {
   sort: any;
@@ -25,119 +19,28 @@ export const TableStateContext = createContext<TableState>({
   paging:undefined, setPaging: ()=>{}});
 
 export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { serviceUrl } = useConfig();
-  const session = useContext(SessionRefreshContext);
-  const { enqueueSnackbar } = useSnackbar();
-  const intl = useIntl();
-  const userInfo = useUserInfo();
+  const { getTasks } = useFetch('worker/rest/api/tasks.GET', {});
+  const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
+  const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
+  const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
+  const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
+  const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
+  const { saveComment } = useFetch('worker/rest/api/tasks/$taskId/comments.POST', {});
 
   const [filters, setFilters] = useState<any>();
   const [sort, setSort] = useState<any>();
   const [paging, setPaging] = useState<any>();
 
-  const getTasks = (page=0, size=20):Promise<QueryResult<Task>> => {
-    return session.cFetch(`${serviceUrl}worker/rest/api/tasks?page=${page}&size=${size}`)
-      .then(response => response.json())
-      .then(json=>{
-        return {
-          data: json._embedded?.tasks || [],
-          page: json.page.number,
-          totalCount: json.page.totalElements
-        };
-      });
-  }
-
-  const getTask = (taskId:any) => {
-    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/${taskId}`)
-    .then(response => response.json())
-    .then(task => {
-      if (task.dueDate) {
-        task.dueDate = new Date(task.dueDate);
-      }
-      return task;
-    });
-  }
-  const saveTask = (task:Task) => {
-    let method = 'POST';
-    let url = `${serviceUrl}worker/rest/api/tasks`;
+  function saveTask(task: Task) {
     if (task.id) {
-      method = 'PUT';
-      url = url + "/" + task.id;
-    }
-    else {
-      // default label for created task
-      if (!(task.keyWords && task.keyWords?.length >0)) {
-        task.keyWords = ['Manual'];
-      }
-      // by default visible to all users
-      if (!task.assignedRoles) {
-        task.assignedRoles = [ROLE_AUTHORIZED];
-      }
-    }
-    return session.cFetch(url, {method: method,
-      body: JSON.stringify(task)
-    })
-    .then(response => response.json());
-  }
-  const deleteTask = (taskId:any) => {
-    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/${taskId}`, 
-      {method: 'DELETE'})
-    .then(response=>{
-      if (!response.ok) {
-        let message = 'error.dataAccess';
-        if (response.status === 403) {
-          message = 'error.unauthorizedAccess';
-        }
-        enqueueSnackbar(intl.formatMessage({id: message}), {variant: 'error'});
-      }
-      return response;
-    });
-  }
-  const getTaskComments = (task:Task) => {
-    if (!task.id) {
-      return Promise.resolve();
-    }
-    const commentsUrl = `${serviceUrl}worker/rest/api/tasks/${task.id}/comments`;
-    
-    return session.cFetch(commentsUrl)
-    .then(response => {
-      if (response.ok) return response.json();
-      throw new Error("Error with code:" + response.status);
-    });
+      return updateTask(task);
+    } 
+    return createTask(task)
   }
 
-  const saveComment = (commentText:string, replyToId:number|undefined, task:Task, isExternalThread:boolean|undefined):Promise<Comment> => {
-    let savingComment = {
-      commentText: commentText,
-      replyToId: replyToId,
-      taskId: task.id,
-      external: isExternalThread,
-      userName: userInfo.user.name,
-      source: CommentSource.FRONTDESK
-    };
-    let url = `${serviceUrl}worker/rest/api/comments`;
-    return session.cFetch(url, {method: 'POST',
-      body: JSON.stringify(savingComment)
-    })
-    .then(response => {
-      if (response.ok) return response.json();
-      throw new Error("Comment save error:" + response.status);
-    })
-    .then((comment:Comment) => {
-      return comment;
-    });
-  }
+  const apiSessionContext:TaskBackend = { getTasks, getTask, saveTask, deleteTask, getTaskComments, saveComment }
 
-  const apiSessionContext:TaskBackend = {
-    getTasks: getTasks,
-    getTask: getTask,
-    saveTask: saveTask,
-    deleteTask: deleteTask,
-    getTaskComments: getTaskComments,
-    saveComment: saveComment
-  }
-
-  const tableState:TableState = {
+  const tableState: TableState = {
     filters,
     setFilters,
     sort,
@@ -147,10 +50,10 @@ export const TaskSessionContext: React.FC<{ children: React.ReactNode }> = ({ ch
   }
 
   return (
-      <TaskBackendProvider value={apiSessionContext}>
-        <TableStateContext.Provider value={tableState}>
-          {children}
-        </TableStateContext.Provider>
+    <TaskBackendProvider value={apiSessionContext}>
+      <TableStateContext.Provider value={tableState}>
+        {children}
+      </TableStateContext.Provider>
     </TaskBackendProvider>
   )
 }

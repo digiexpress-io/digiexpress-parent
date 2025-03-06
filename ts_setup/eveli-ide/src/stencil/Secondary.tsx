@@ -71,10 +71,10 @@ const SecondaryExplorer: React.FC<{}> = () => {
     <Box display="flex" flexDirection='column'>
 
     <StyledSearch focused  sx={{ mx: 1 }}
-          type="search"
-          placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
+      type="search"
+      placeholder={getLabel("explorer.tabs.search")}
+      value={searchString}
+      onChange={({ target }) => setSearchString(target.value)} />
 
       <StyledTabs value={tab} onChange={(_event, value) => setTab(value)}>
         <StyledTab label={getLabel("explorer.tabs.articles")} value='toolbar.articles' />
@@ -88,11 +88,11 @@ const SecondaryExplorer: React.FC<{}> = () => {
 }
 
 
-const Secondary: React.FC<{}> = () => {
-  const {session} = Burger.useSecondary();
+const Secondary: React.FC<{ }> = () => {
+  const {activeId} = Burger.useIconbar()
 
   let component = <></>;
-  if (session.secondary === 'toolbar.search') {
+  if (activeId === 'toolbar.search') {
     component = (<SearchExplorer />)
   } else {
     component = <SecondaryExplorer />;

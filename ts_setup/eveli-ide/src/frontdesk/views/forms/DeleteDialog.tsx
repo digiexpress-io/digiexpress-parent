@@ -1,11 +1,10 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, Box, Divider, Typography, DialogActions, Button, Dialog } from '@mui/material';
-import { useConfig } from '../../context/ConfigContext';
+
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
+
 import { DialobFormEntry } from '../../types';
-import { useContext } from 'react';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { handleErrors } from '../../util/cFetch';
-import { enqueueSnackbar } from 'notistack';
 import { TableHeader } from '../../components/TableHeader';
 
 interface DeleteDialogProps {
@@ -22,25 +21,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
   formConfiguration,
 }) => {
   const intl = useIntl();
-  const { serviceUrl } = useConfig();
-  const session = useContext(SessionRefreshContext);
-
-  const deleteDialog = async () => {
-    let url = `${serviceUrl}worker/rest/api/assets/dialob/proxy/forms/${formConfiguration?.id}`;
-    return session.cFetch(`${url}`,{
-      method: 'DELETE',
-    })
-    .then((response:Response)=>handleErrors(response))
-    .then((response:Response) => response.json())
-    .then ((json:any)=>{
-        handleDeleteModalClose();
-        refresh();
-        return json;
-    })
-    .catch((error:any) => {
-      enqueueSnackbar(intl.formatMessage({id: 'dialobForm.deleteFailed'}, {cause: (error.message || 'N/A')}), {variant: 'error'});
-    });
-  };
+  const { deleteDialog } = useFetch('worker/rest/api/assets/dialob/proxy/forms/$formId.DELETE', {})
 
   return (
     <Box>
@@ -59,7 +40,10 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
         <DialogActions sx={{display: "flex", justifyContent: "space-between", padding: "12px"}}>
             <Button onClick={handleDeleteModalClose} variant='contained' color='secondary'><FormattedMessage id={'button.cancel'} /></Button>
             <Button variant='contained' color='error'
-                onClick={() => deleteDialog()}
+                onClick={() => deleteDialog(formConfiguration?.id!, () => {
+                  handleDeleteModalClose();
+                  refresh();
+                })}
             >
                 <FormattedMessage id={'button.accept'} />
             </Button>

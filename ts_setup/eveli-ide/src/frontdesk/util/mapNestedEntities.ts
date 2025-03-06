@@ -1,11 +1,21 @@
-import getBy from './getBy';
-
 function get(entity:any, key:string|string[]){
   if(Array.isArray(key)) {
     return getBy(entity, key);
   }
   return entity[key];
 }
+
+function getBy(item:object, path:string|string[]) {
+  if(typeof path === 'string') {
+    path = [path];
+  }
+
+  return (path.reduce((val:any, field:string) => {
+    if(!val) return undefined;
+    return val[field];
+  }, item));
+}
+
 
 export default function mapNestedEntities(
   src: any[],

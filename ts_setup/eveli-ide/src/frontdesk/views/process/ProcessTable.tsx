@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
-import MaterialTable, { Column, Query, QueryResult } from '@material-table/core';
-
+import React from 'react';
+import MaterialTable, { Column } from '@material-table/core';
 import { useIntl } from 'react-intl';
-import { useConfig } from '../../context/ConfigContext';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
-import { Process } from '../../types/Process';
 
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
+import { Process } from '../../types/Process';
 import { localizeTable } from '../../util/localizeTable';
-import { createQueryString } from '../../util/tableQuery';
 import { TableHeader } from '../../components/TableHeader';
 
 
@@ -17,28 +15,9 @@ interface TableState {
 
 export const ProcessTable: React.FC = () => {
   const intl = useIntl();
-  const session = useContext(SessionRefreshContext);
-  const config = useConfig();
+  const { loadProcesses } = useFetch('worker/rest/api/processes.GET', {})
+
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
-
-  const loadProcesses = (query: Query<Process>): Promise<QueryResult<Process>> => {
-    let queryString = createQueryString(query, tableState.columns);
-    return session.cFetch(`${config.serviceUrl}worker/rest/api/processes?${queryString}`, {
-      headers: {
-        'Accept': 'application/json'
-      },
-    })
-      .then(response => response.json())
-      .then(json => {
-        return {
-          data: json.content, // array of data
-          page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
-          totalCount: json.numberOfElements // total entries on all the pages combined
-        }
-      })
-  };
-
-
 
   const tableState: TableState = {
     columns: [
@@ -76,6 +55,7 @@ export const ProcessTable: React.FC = () => {
     ]
   };
 
+
   return (
     <MaterialTable
       title={<TableHeader id='processTable.title' />}
@@ -92,9 +72,7 @@ export const ProcessTable: React.FC = () => {
 
 
       isLoading={false}
-      data={query => {
-        return loadProcesses(query)
-      }
+      data={query => loadProcesses(query, tableState.columns)
       }
     />
   );

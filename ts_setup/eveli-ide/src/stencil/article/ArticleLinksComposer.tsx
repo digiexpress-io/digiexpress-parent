@@ -31,7 +31,7 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
     };
     service.update().article(entity)
       .then(_success => actions.handleLoadSite())
-      .then(() => tabs.actions.handleTabCloseCurrent())
+      .then(() => tabs.handleTabCloseCurrent())
     enqueueSnackbar(message, { variant: 'success' });
   }
   const message = <FormattedMessage id="snack.link.editedMessage" />
@@ -54,7 +54,7 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
         selected={view.links.map(l => l.link.id)}
         cancel={{
           label: 'button.cancel',
-          onClick: () => tabs.actions.handleTabCloseCurrent()
+          onClick: () => tabs.handleTabCloseCurrent()
         }}
         submit={{
           label: "button.apply",

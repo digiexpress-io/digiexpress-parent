@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 
@@ -29,8 +29,10 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       .then(resp => resp)
       .then((resp) => {
 
+
         setFeedback(resp);
-        setReply(resp.replyText);
+
+        setReply(resp?.replyText ?? '');
       });
   }, [])
 
@@ -53,7 +55,11 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     deleteOneFeedback(taskId).then(feedback => {
       onComplete(feedback);
     });
-    navigate(`/ui/tasks/task/${taskId}`);
+    navigate({
+      from: '/secured/$locale',
+      params: { taskId },
+      to: '/secured/$locale/worker/tasks/$taskId'
+    });
   }
 
   if (!feedback) {

@@ -150,7 +150,7 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button  onClick={() => layout.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
           <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>

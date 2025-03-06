@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from '@tanstack/react-router';
 import { LinearProgress, Container } from '@mui/material';
 
 import { TaskCreate } from './TaskCreate';
@@ -9,8 +9,8 @@ import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
 import { UserGroup } from '../../types/UserGroup';
 import { Task } from '../../types/task/Task';
-import { useUserInfo } from '../../context/UserContext';
 import { TableHeader } from '../../components/TableHeader';
+import { useIam } from '@/burger';
 
 type OwnProps = {
   taskId?: number
@@ -29,10 +29,13 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   const [commentData, setCommentData] = useState<Comment[]>([]);
   const taskContext = useContext(TaskBackendContext);
 
-  const userInfo = useUserInfo();
+  const { user } = useIam();
 
   const navigateBack = ()=> {
-    navigate('/ui/tasks');
+    navigate({
+      from: '/secured/$locale/worker',
+      to: '/secured/$locale/worker/tasks'
+    });
   }
 
   const cancel= () => {
@@ -109,7 +112,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
         comments={commentData}
         reloadComments={loadCommentData}
         userSelectionFree={props.userSelectionFree}
-        currentUser={userInfo?.user}
+        currentUser={user}
         supressConfirmation={supressConfirmation}
       />
     </Container>

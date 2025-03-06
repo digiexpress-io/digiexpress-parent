@@ -7,7 +7,8 @@ import { EveliLoginRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses
 
 import { EveliOverridableComponent } from '../api-variants';
 import { useConfig } from '../../frontdesk/context/ConfigContext';
-import { useUserInfo } from '../../frontdesk/context/UserContext';
+import { useIam } from '../';
+
 
 
 export interface EveliLoginProps {
@@ -27,9 +28,9 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
   }
 
   const config = useConfig();
-  const userInfo = useUserInfo();
-  const label = userInfo.isAuthenticated() ? 'explorer.logout' : 'explorer.login';
-  const location = userInfo.isAuthenticated() ? config.logoutUrl || '/logout' : config.loginUrl || '/oauth2/authorization/oidcprovider';
+  const { user } = useIam();
+  const label = user.authenticated ? 'explorer.logout' : 'explorer.login';
+  const location = user.authenticated ? config.logoutUrl : config.loginUrl;
 
   const { icon: StartIcon = PersonOutlinedIcon } = props;
   const Root = props.component ?? EveliLoginRoot;

@@ -9,7 +9,7 @@ import version from './version';
 
 const ComposerProvider = Composer.Provider;
 const useComposer = Composer.useComposer;
+const useBranchName = Composer.useBranchName;
 
-
-export { Main, Secondary, Toolbar, ComposerProvider, useComposer, Composer, version };
+export { Main, Secondary, Toolbar, ComposerProvider, useComposer, useBranchName, Composer, version };
 export default HdesClient;

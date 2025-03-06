@@ -14,7 +14,6 @@ import fileDownload from 'js-file-download'
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 import { HdesApi } from '../client';
 import { Composer } from "../context";
 import { Release } from "./release-types";
@@ -35,7 +34,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-const handleTabs = (actions: BurgerApi.TabsActions) => {
+const handleTabs = (actions: Burger.TabsContextType) => {
   actions.handleTabCloseAll();
   actions.handleTabAdd({ id: 'activities', label: "Activities" });
   actions.handleTabAdd({ id: 'releases', label: "Releases" });
@@ -135,11 +134,11 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
 
     if (isBranch) {
       const key = enqueueSnackbar(<FormattedMessage id="release.branch.deleting" values={{ name }} />, { persist: true });
-      service.withBranch("default").delete().branch(id)
+      service.delete().branch(id)
         .then((data) => {
           actions.handleBranchUpdate("default");
           actions.handleLoadSite(data);
-          handleTabs(tabs.actions);
+          handleTabs(tabs);
           closeSnackbar(key);
           enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
         })
@@ -264,11 +263,11 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
       id: releaseId
     }
     const key = enqueueSnackbar(<FormattedMessage id="release.branch.creating" values={{ name: branchName }} />, { persist: true });
-    service.withBranch(branchName).create().branch([command])
+    service.create().branch([command])
       .then((data) => {
         actions.handleBranchUpdate(branchName);
         actions.handleLoadSite(data);
-        handleTabs(tabs.actions);
+        handleTabs(tabs);
         closeSnackbar(key);
         enqueueSnackbar(<FormattedMessage id="release.branch.created" values={{ name: branchName }} />);
       })
@@ -278,11 +277,11 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
   }
 
   const handleCheckout = (branchName: string) => {
-    service.withBranch(branchName).getSite()
+    service.getSite()
       .then((data) => {
         actions.handleBranchUpdate(branchName);
         actions.handleLoadSite(data);
-        handleTabs(tabs.actions);
+        handleTabs(tabs);
         enqueueSnackbar(<FormattedMessage id="release.branch.checkout" values={{ name: branchName }} />);
       })
       .catch((error: HdesApi.StoreError) => {

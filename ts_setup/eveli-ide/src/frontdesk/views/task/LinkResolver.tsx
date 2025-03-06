@@ -2,7 +2,7 @@ import React from 'react';
 import { TaskLinkComponent, TaskLinkOpenCallback, TaskLinkPdfCallback, TaskLinkProps } from '../../components/task/TaskLinkComponent';
 import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
 import { MenuItem, Tooltip } from '@mui/material';
-import { mapRole } from '../../util/rolemapper';
+import { mapIamRole } from '@/burger';
 import { UserGroup } from '../../types/UserGroup';
 import { ComponentResolver } from '../../context/ComponentResolver';
 
@@ -27,9 +27,9 @@ export class TasksComponentResolver implements ComponentResolver {
     groups.forEach(group=> {
       result.push( 
         <MenuItem key={group.id} value={group.id}>
-          <Tooltip key={group.id} placement='left' title={mapRole(group.id)} >
+          <Tooltip key={group.id} placement='left' title={mapIamRole(group.id)} >
             <div>        
-              {group.groupName || mapRole(group.id)}
+              {group.groupName || mapIamRole(group.id)}
             </div>
           </Tooltip>
         </MenuItem>

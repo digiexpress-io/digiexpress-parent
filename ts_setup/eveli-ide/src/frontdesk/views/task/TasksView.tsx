@@ -1,41 +1,46 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { Container } from '@mui/material';
+import { useNavigate } from "@tanstack/react-router";
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { Column, Query } from '@material-table/core';
-import { useNavigate } from 'react-router-dom';
-
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
+import { useIam } from '@/burger';
 import { useConfig } from '../../context/ConfigContext';
-import { useUserInfo } from '../../context/UserContext';
-import { TableStateContext } from '../../context/TaskSessionContext';
-import { UserBackendContext } from '../../context/TaskUserContext';
 
-import { createQueryString } from '../../util/tableQuery';
 
-import { Task } from '../../types/task/Task';
 import { UserGroup } from '../../types/UserGroup';
-
 import { TasksTable } from './TasksTable';
 
 
 export const TasksView: React.FC = () => {
   const navigate = useNavigate();
-  const userContext = useContext(UserBackendContext);
-  const [groups, setGroups] = useState<UserGroup[]>([]);
-  const session = useContext(SessionRefreshContext);
-  const { serviceUrl, taskDeleteGroups } = useConfig();
-  const userInfo = useUserInfo();
-  const [newTasks, setNewTasks] = useState<number[]>([]);
-  const tableContext = useContext(TableStateContext);
+  const { taskDeleteGroups } = useConfig();
+  const { user } = useIam();
+  const [newTasks, setNewTasks] = useState<string[]>([]);
+  const { groups } = useFetch('$org/groupList.GET', {});
+  const { loadTasks } = useFetch('worker/rest/api/tasks.GET', {});
+  const { loadNewTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
 
-  const taskOpenCallback = (id:number|undefined) => {
-    let taskId = id ? id : '';
-    navigate(`/ui/tasks/task/${taskId}`);
+  const taskOpenCallback = (taskId: string | undefined) => {
+    
+
+    if(taskId) {
+      navigate({
+        from: '/secured/$locale/worker/tasks',
+        params: { taskId },
+        to: '/secured/$locale/worker/tasks/$taskId',
+      });
+    } else {
+      navigate({
+        from: '/secured/$locale/worker/tasks',
+        to: '/secured/$locale/worker/tasks/create',
+      });
+    }
   }
 
   const taskDeletableCallback = () => {
     if (taskDeleteGroups && taskDeleteGroups.length > 0) {
-      if (userInfo.hasRole(...taskDeleteGroups)) {
+      if (user.hasRole(...taskDeleteGroups)) {
         return true;
       }
       return false;
@@ -43,69 +48,11 @@ export const TasksView: React.FC = () => {
     return true;
   }
 
-  const loadTasks = (query:Query<Task>, columns:Column<any>[]) => {
-    // store paging info to allow restoring of page on navigation back
-    let page = query.page;
-    let pageSize = query.pageSize;
-    const currentPaging = tableContext.paging;
-    if (page !== currentPaging?.page || pageSize !== currentPaging?.pageSize) {
-      tableContext.setPaging({page, pageSize});
-    }
 
-    let visibleColumns: any = [];
-    const hiddenColumns = columns.map((column: any) => {
-      if(column.hidden){
-        return column.field
-      }else{
-        visibleColumns.push(column.field)
-        return undefined;
-      }
-    })
-
-    let queryString = createQueryString(
-      {...query, 
-        filters: query.filters.filter((item: any) => !hiddenColumns.includes(item.column.field)), 
-        orderByCollection: query.orderByCollection.reduce((accumulator: any[], item: any) => {
-          if (item.sortOrder > 0) {
-            if (!hiddenColumns.includes(columns[item.orderBy].field)) {
-              accumulator.push({
-                ...item,
-                orderBy: visibleColumns.findIndex((visibleColumn: any) => visibleColumn === columns[item.orderBy].field)
-              });
-            }
-          }
-          return accumulator;
-        }, [])
-      }, 
-      columns.filter((column: any) => !column.hidden)
-    );
-
-    return session.cFetch(`${serviceUrl}worker/rest/api/tasks?${queryString}`)
-    .then(response => response.json())
-    .then(json=>{
-      return {
-        data: json.content, // array of data
-        page: json.pageable.pageNumber, // current page we are on, starts with 0 = first page
-        totalCount: json.totalElements // total entries on all the pages combined
-      };
-    });
-  }
-
-  const loadNewTasks = () => {
-    return session.cFetch(`${serviceUrl}worker/rest/api/tasks/unread`)
-    .then(response => response.json())
-    .then(json=>{
-      return json;
-    });
-  }
 
   useEffect(() => {
-    userContext.getGroups()
-      .then(groups => setGroups(groups));
-    loadNewTasks()
-    .then(newTasks=>setNewTasks(newTasks));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[userContext])
+    loadNewTasks().then(newTasks => setNewTasks(newTasks));
+  },[])
 
 
   return (

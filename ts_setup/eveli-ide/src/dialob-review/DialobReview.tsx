@@ -2,11 +2,9 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
 
-import { GFormReview, DialobProvider, DialobApi } from '@dxs-ts/gamut';
-
-
-import { useConfig } from '../frontdesk/context/ConfigContext';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 export interface DialobReviewProps {
   taskId: string;
@@ -18,17 +16,7 @@ export interface DialobReviewProps {
 export const DialobReview: React.FC<DialobReviewProps> = (props) => {
   const intl = useIntl();
   const queryClient = new QueryClient()
-  const { serviceUrl } = useConfig();
-
-
-  const fetchReviewGet: DialobApi.FetchReviewGET = async (sessionId) => {
-    const response = await window.fetch(`${serviceUrl}worker/rest/api/tasks/${sessionId}/reviews`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: undefined,
-    });
-    return response;
-  }
+  const { fetchReviewGet } = useFetch('worker/rest/api/tasks/$taskId/reviews.GET', {});
 
   return (<>
     <QueryClientProvider client={queryClient}>

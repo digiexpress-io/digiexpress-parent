@@ -1,42 +1,43 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
-import { useFetch } from '../hooks/useFetch';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+import React, { createContext, PropsWithChildren, useContext } from 'react';
+
 
 export interface Config {
-  serviceUrl?: string;
-  dialobComposerUrl?: string;
+  dialobComposerUrl?: string; // location of the DIALOB FORM COMPOSER UI
   taskDeleteGroups?: string[];
   taskAdminGroups?: string[];
   appVersion?: string;
   modifiableAssets?: boolean; //enable releases and other asset operations
-  loginUrl?: string;
-  loginAutoRefresh?: boolean;
-  logoutUrl?: string;
+
+  loginUrl: string;
+  logoutUrl: string;
 }
 
-const INITIAL_CONFIG: Config = {};
+const INITIAL_CONFIG: Config = {
+  loginUrl: '',
+  logoutUrl: ''
+};
 
 export interface ConfigContextProviderProps {
-  path: string;
+  loginUrl: string; // default - unless overriden by service
+  logoutUrl: string; // default - unless overriden by service
 }
 
 export const ConfigContext = createContext<Config>(INITIAL_CONFIG);
 
-export const ConfigContextProvider: React.FC<PropsWithChildren<ConfigContextProviderProps>> = 
-({path, children}) => {
+export const ConfigContextProvider: React.FC<PropsWithChildren<ConfigContextProviderProps>> = ({ children, loginUrl, logoutUrl }) => {
+  const {config, pending} = useFetch('config.GET', {}); 
 
-  const [pending, setPending] = useState<boolean>(true);
-  const [config, setConfig] = useState<Config>({});
-  const { response } = useFetch<Config>(path);
-
-  useEffect(() => {
-    if (response) {
-      setConfig({ ...response });
-      setPending(false);
+  const contextValue: Config = React.useMemo(() => {
+    return {
+      ...config,      
+      loginUrl: config?.loginUrl ?? loginUrl,
+      logoutUrl: config?.logoutUrl ?? logoutUrl,
     }
-  }, [response]);
+  }, [config]);
 
   return (
-    <ConfigContext.Provider value={config}>
+    <ConfigContext.Provider value={contextValue}>
       {!pending && children}
     </ConfigContext.Provider>
   );

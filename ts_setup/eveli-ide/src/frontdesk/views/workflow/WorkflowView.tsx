@@ -1,13 +1,10 @@
 import React from 'react';
 import { WorkflowTable } from './WorkflowTable';
-import { useFetch } from '../../hooks/useFetch';
-import { Workflow } from '../../types/Workflow';
-import { useConfig } from '../../context/ConfigContext';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
 
 export const WorkflowView: React.FC = () => {
-  const { serviceUrl } = useConfig();
-  const { response: workflows, refresh: refreshWorkflows } = useFetch<Workflow[]>(`${serviceUrl}worker/rest/api/assets/workflows`);
-
+  const { workflows, refreshWorkflows } = useFetch('worker/rest/api/assets/workflows.GET', {});
   return (
     <WorkflowTable workflows={workflows} refreshWorkflows={refreshWorkflows} />
   );

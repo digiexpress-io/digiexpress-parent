@@ -3,7 +3,6 @@ import { Typography, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 
 import { FlowComposer } from '../flow';
 import { DecisionComposer } from '../decision';
@@ -24,7 +23,7 @@ interface ActivityType {
   onCreate?: () => void;
 }
 
-const createCards: (tabs: BurgerApi.TabsActions) => (ActivityData & ActivityType)[] = (tabs) => ([
+const createCards: (tabs: Burger.TabsContextType) => (ActivityData & ActivityType)[] = (tabs) => ([
   {
     composer: (handleClose) => (<FlowComposer onClose={handleClose} />),
     onView: undefined,
@@ -102,11 +101,11 @@ const createCards: (tabs: BurgerApi.TabsActions) => (ActivityData & ActivityType
 
 //card view for all CREATE views
 const Activities: React.FC<{}> = () => {
-  const { actions } = Burger.useTabs();
+  const tabs = Burger.useTabs();
   const [open, setOpen] = React.useState<number>();
   const [coreVersion, setCoreVersion] = React.useState<{ version: string, built: string }>();
   const handleClose = () => setOpen(undefined);
-  const cards = React.useMemo(() => createCards(actions), [actions]);
+  const cards = React.useMemo(() => createCards(tabs), [tabs]);
   const { service } = Composer.useComposer();
 
   let composer: undefined | React.ReactChild = undefined;

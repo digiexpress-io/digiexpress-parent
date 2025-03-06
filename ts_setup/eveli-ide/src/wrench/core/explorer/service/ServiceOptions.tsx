@@ -43,7 +43,7 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
     composerService.delete().service(serviceId)
       .then(data => {
         if (serviceTab) {
-          tabs.actions.handleTabClose(serviceTab);
+          tabs.handleTabClose(serviceTab);
         }
         enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
         actions.handleLoadSite(data);

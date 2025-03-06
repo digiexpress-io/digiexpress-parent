@@ -13,10 +13,14 @@ import BeenhereIcon from '@mui/icons-material/Beenhere';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import EmailIcon from '@mui/icons-material/Email';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 
-import { useNavigate } from 'react-router-dom';
 
-import { MenuItem, MenuItemProps } from './explorer';
+import { useNavigate } from '@tanstack/react-router';
+
+import { MenuItem } from './explorer';
 import { useIntl } from 'react-intl';
 
 
@@ -24,42 +28,117 @@ const iconSize: SxProps = {
   fontSize: '13pt'
 }
 
-const menuItems: MenuItemProps[] = [
-  { id: 'menu.tasks', to: '/ui/tasks', icon: <ChecklistIcon sx={iconSize} /> },
-  { id: 'menu.dashboard', to: '/ui/dashboard', icon: <DashboardIcon sx={iconSize} /> },
-  { id: 'menu.processes', to: '/ui/processes', icon: <NetworkCheckIcon sx={iconSize} /> },
-  { id: 'menu.forms', to: '/ui/forms', icon: <ListIcon sx={iconSize} /> },
-  { id: 'menu.flow', to: '/wrench/ide', icon: <BuildIcon sx={iconSize} /> },
-  { id: 'menu.content', to: '/ui/content', icon: <MenuBookIcon sx={iconSize} /> },
-  { id: 'menu.workflows', to: '/ui/workflows', icon: <SettingsIcon sx={iconSize} /> },
-  { id: 'menu.feedback', to: '/feedback', icon: <ThumbUpAltIcon sx={iconSize} /> },
-  { id: 'menu.queues', to: '/queues', icon: <CloudQueueIcon sx={iconSize} /> },
-  { id: 'menu.publications', to: '/ui/publications', icon: <BeenhereIcon sx={iconSize} /> },
-]
 
 export const Explorer: React.FC<{}> = () => {
   const navigate = useNavigate();
 
-  const handleMenuItemClick = (to?: string) => {
-    if (to) {
-      navigate(to);
-    } 
-  };
 
-  return (<>
-
+  return (
     <SimpleTreeView>
-      {menuItems.map((item) => (
-        <MenuItem
-          key={item.id}
-          icon={item.icon}
-          id={item.id}
-          onClick={() => handleMenuItemClick(item.to)}
-        />
-      )
-      )}
+      <MenuItem
+        icon={<ChecklistIcon sx={iconSize} />}
+        id='menu.tasks'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/tasks'
+        })}
+      />
+      <MenuItem
+        icon={<DashboardIcon sx={iconSize} />}
+        id='menu.dashboard'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/dashboard'
+        })}
+      />
+      <MenuItem
+        icon={<NetworkCheckIcon sx={iconSize} />}
+        id='menu.processes'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/monitoring'
+        })}
+      />
+
+      <MenuItem
+        icon={<ListIcon sx={iconSize} />}
+        id='menu.forms'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/assets/forms'
+        })}
+      />
+
+      <MenuItem
+        icon={<BuildIcon sx={iconSize} />}
+        id='menu.flow'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/assets/wrench'
+        })}
+      />
+
+      <MenuItem
+        icon={<MenuBookIcon sx={iconSize} />}
+        id='menu.content'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/assets/stencil'
+        })}
+      />
+
+      <MenuItem
+        icon={<SettingsIcon sx={iconSize} />}
+        id='menu.workflows'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/assets/services'
+        })}
+      />
+
+      <MenuItem
+        icon={<ThumbUpAltIcon sx={iconSize} />}
+        id='menu.feedback'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/feedback'
+        })}
+      />
+
+      <MenuItem
+        icon={<CloudQueueIcon sx={iconSize} />}
+        id='menu.queues'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/queues'
+        })}
+      />
+      <MenuItem
+        icon={<EmailIcon sx={iconSize} />}
+        id='menu.messages'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/queues/messages'
+        })}
+      />
+      <MenuItem
+        icon={<DeliveryDiningIcon sx={iconSize} />}
+        id='menu.deliveries'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/queues/deliveries'
+        })}
+      />
+
+      <MenuItem
+        icon={<BeenhereIcon sx={iconSize} />}
+        id='menu.publications'
+        onClick={() => navigate({
+          from: '/secured/$locale/worker',
+          to: '/secured/$locale/worker/publications'
+        })}
+      />
     </SimpleTreeView>
-  </>
   );
 }
 

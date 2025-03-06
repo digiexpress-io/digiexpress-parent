@@ -43,7 +43,7 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
     service.delete().flow(flowId)
       .then(data => {
         if (flowTab) {
-          tabs.actions.handleTabClose(flowTab);
+          tabs.handleTabClose(flowTab);
         }
         enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
         actions.handleLoadSite(data);
