@@ -20,7 +20,7 @@ import logo from '../../uiDev/logoLifeDigitalDark.svg';
 
 type NavType = 'FLOWS' | 'SERVICES' | 'DECISIONS' | 'DEBUG' | 'RELEASES' | 'COMPARE' | 'TEMPLATES' | 'MIGRATIONS';
 
-const Secondary: React.FC<{}> = () => {
+export const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const userFirstAndLastName = 'Missing username';
@@ -40,6 +40,7 @@ const Secondary: React.FC<{}> = () => {
   function handleMenuButtonClick(buttonId: NavType) {
     setActiveButton(buttonId)
   }
+
 
   return (
     <>
@@ -116,6 +117,6 @@ const Secondary: React.FC<{}> = () => {
     </>
   )
 }
-export { Secondary }
+
 
 

@@ -9,7 +9,6 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router'
 
-
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 import { LocaleSelect } from '../uiDev';
 
@@ -18,7 +17,7 @@ import * as Burger from '@/burger';
 
 export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const secondary = Burger.useIconbar()
+  const secondary = Burger.useIconbar();
   const classes = useUtilityClasses();
   const { locale } = useIntl();
 
@@ -32,27 +31,11 @@ export const Toolbar: React.FC<{}> = () => {
   };
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-
     if (newValue === 'toolbar.search') {
       secondary.handleActiveId("toolbar.search")
     }
   };
 
-  function handleToWrench() {
-    navigate({
-      from: '/secured/$locale',
-      to: '/secured/$locale/assets/wrench'
-    })
-  }
-
-  function handleToStencil() {
-    navigate({
-      from: '/secured/$locale',
-      to: '/secured/$locale/assets/stencil'
-    })
-  }
-
-  //(event) => handleChange(event, 'toolbar.activities')
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: false }}>
       <LocaleSelect open={!!anchorEl} onClose={handleLocalePopoverClose} anchorEl={anchorEl} />
@@ -76,7 +59,11 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleToStencil}><EditNoteOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/assets/stencil'
+        })}>
+          <EditNoteOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 

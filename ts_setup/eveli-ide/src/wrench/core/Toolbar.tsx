@@ -30,11 +30,10 @@ const Toolbar: React.FC<{}> = () => {
   const tabs = Burger.useTabs();
   const secondary = Burger.useIconbar();
   const { enqueueSnackbar } = useSnackbar();
-  
-  React.useEffect(() => tabs.handleTabAdd({ id: 'activities', label: "Activities" }), []);
-  
-  const classes = useUtilityClasses();
 
+  React.useEffect(() => tabs.handleTabAdd({ id: 'activities', label: "Activities" }), []);
+
+  const classes = useUtilityClasses();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const handleLocalePopoverClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,19 +44,6 @@ const Toolbar: React.FC<{}> = () => {
     setAnchorEl(null);
   };
 
-  function handleToTasks() {
-    navigate({
-      from: '/secured/$locale',
-      to: '/secured/$locale/worker/tasks'
-    });
-  }
-
-  function handleToStencil() {
-    navigate({
-      from: '/secured/$locale',
-      to: '/secured/$locale/assets/stencil'
-    });
-  }
 
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
   const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
@@ -68,31 +54,31 @@ const Toolbar: React.FC<{}> = () => {
         return;
       }
       const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
-      
+
       const article = active ? composer.session.getEntity(active.id) : undefined;
-      if(!article) {
+      if (!article) {
         return;
       }
       const toBeSaved = unsavedPages.filter(p => !p.saved).filter(p => p.origin.id === article.id);
-      if(toBeSaved.length !== 1) {
+      if (toBeSaved.length !== 1) {
         return;
       }
-      
+
       const unsavedArticlePages: Composer.PageUpdate = toBeSaved[0];
       composer.service.update(article.id, unsavedArticlePages.value).then(success => {
         composer.actions.handlePageUpdateRemove([article.id]);
         enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: article.ast?.name }} />);
         composer.actions.handleLoadSite(success);
       }).catch((error) => {
-        
+
       });
 
     } else if (newValue === 'toolbar.activities') {
       tabs.handleTabAdd({ id: 'activities', label: "Activities" });
-
     } else if (newValue === 'toolbar.search') {
       secondary.handleActiveId("toolbar.search")
     } 
+
   };
 
 
@@ -115,7 +101,11 @@ const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleToTasks}><TaskOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/wrench',
+          to: '/secured/$locale'
+        })}>
+          <TaskOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
@@ -125,7 +115,11 @@ const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleToStencil}><EditNoteOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/wrench',
+          to: '/secured/$locale/assets/stencil'
+        })}>
+          <EditNoteOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 

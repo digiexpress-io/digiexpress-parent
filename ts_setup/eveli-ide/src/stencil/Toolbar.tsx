@@ -12,7 +12,6 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
-
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from './context';
 import { LocaleSelect } from '../uiDev';
@@ -27,7 +26,6 @@ export const Toolbar: React.FC<{}> = () => {
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
   const secondaryCtx = Burger.useIconbar();
-
 
   const classes = useUtilityClasses();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -48,19 +46,6 @@ export const Toolbar: React.FC<{}> = () => {
   const unsavedArticlePages: Composer.PageUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.body.article === article.id) : []);
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
-  function handleToTasks() {
-    navigate({
-      from: '/secured/$locale',
-      to: 'worker/tasks'
-    });
-  }
-
-  function handleToWrench() {
-    navigate({
-      from: '/secured/$locale',
-      to: '/secured/$locale/assets/wrench'
-    });
-  }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
 
@@ -112,12 +97,20 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleToTasks}><TaskOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/stencil',
+          to: '/secured/$locale'
+        })}>
+          <TaskOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
       <div>
-        <IconButton onClick={handleToWrench}><BuildOutlinedIcon /></IconButton>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/stencil',
+          to: '/secured/$locale/assets/wrench'
+        })}>
+          <BuildOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 

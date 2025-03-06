@@ -21,16 +21,6 @@ import { useNavigate } from '@tanstack/react-router';
 
 type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
 
-const navPaths: Record<NavType, string> = {
-  ARTICLES: '/ui/tasks',
-  PAGES: '/ui/dashboard',
-  SERVICES: '/ui/processes',
-  LINKS: '/ui/forms',
-  LOCALES: '/wrench/ide',
-  MIGRATIONS: '/ui/content',
-  TEMPLATES: '/ui/workflows',
-  RELEASES: '/'
-}
 
 const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
