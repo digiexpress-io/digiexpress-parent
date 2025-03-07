@@ -1,33 +1,23 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
-import { useThemeProps } from '@mui/system';
-import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import { UiDevAppSearchRoot } from './useUtilityClasses';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { ArticleList, useUtilityClasses } from '../explorer/article'
+import { ArticlesViewRoot } from '../../stencil/explorer/article/useUtilityClasses';
 
-export interface UiDevSearchProps {
-}
 
 
-export const UiDevSearchAsset: React.FC<UiDevSearchProps> = (initProps) => {
 
-  const props = useThemeProps({
-    props: initProps,
-    name: MUI_NAME,
-  });
-  const ownerState = {
-    ...props
-  }
+export const ArticlesView: React.FC = () => {
+  const [searchString, setSearchString] = React.useState('')
   const classes = useUtilityClasses();
 
 
-
   return (
-    <UiDevAppSearchRoot className={classes.root} ownerState={ownerState}>
+    <ArticlesViewRoot className={classes.root}>
       <div className={classes.searchFieldContainer}>
         <TextField type='search' className={classes.searchField}
-
+          onChange={(event) => setSearchString(event.target.value)}
           placeholder='Search Articles'
           slotProps={{
             input: {
@@ -39,10 +29,11 @@ export const UiDevSearchAsset: React.FC<UiDevSearchProps> = (initProps) => {
             },
           }}
         >
-
+          {searchString}
         </TextField>
       </div>
-
-    </UiDevAppSearchRoot>
-  )
+      <ArticleList searchString={searchString} />
+    </ArticlesViewRoot>)
 }
+
+

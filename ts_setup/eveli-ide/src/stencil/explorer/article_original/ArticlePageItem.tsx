@@ -53,7 +53,11 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
     <Burger.TreeItemRoot
       itemId={itemId}
       onClick={onLeftEdit}
+      style={{
+        "--tree-view-color": theme.palette.primary.contrastText
+      }}
       label={
+
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={icon} color={props.saved === false ? 
             "secondary.light": 

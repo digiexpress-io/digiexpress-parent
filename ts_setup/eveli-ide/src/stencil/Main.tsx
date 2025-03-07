@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import * as Burger from '@/burger';
 import {
   ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
-  ReleasesView, LocalesView
+  ReleasesView, LocalesView, ArticlesView
 } from './';
 
 import {
@@ -43,6 +43,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><WorkflowsView /></Box>);
     } else if (active.id === 'templates') {
       return (<Box sx={root}><TemplatesView /></Box>);
+    } else if (active.id === 'articles') {
+      return (<Box sx={root}><ArticlesView /></Box>);
     }
 
     //article-based composers

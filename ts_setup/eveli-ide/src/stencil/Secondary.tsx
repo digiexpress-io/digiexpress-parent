@@ -17,6 +17,7 @@ import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell
 import { ComposeSelect } from '../uiDev/ComposeSelect';
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { useNavigate } from '@tanstack/react-router';
+import * as Burger from '@/burger';
 
 
 type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
@@ -26,7 +27,7 @@ const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const classes = useUtilityClasses();
-
+  const tabs = Burger.useTabs();
 
   const userFirstAndLastName = 'Missing username';
 
@@ -53,6 +54,9 @@ const Secondary: React.FC<{}> = () => {
     setActiveButton(buttonId)
     // navigateTo(buttonId)
   }
+
+  //    onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
+
   return (
     <>
       <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
@@ -62,11 +66,15 @@ const Secondary: React.FC<{}> = () => {
           <img src={logo} className={classes.logo} />
         </div>
 
-        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
+        <Button startIcon={<CreateOutlinedIcon />}
+          className={classes.composeButton}
+          onClick={handleComposeSelectClick}>
+          {intl.formatMessage({ id: 'menu.compose' })}
+        </Button>
 
         <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
           className={activeButton === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('ARTICLES')}>
+          onClick={() => tabs.handleTabAdd({ id: 'articles', label: "Articles" })}>
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
