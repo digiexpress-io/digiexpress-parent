@@ -6,7 +6,7 @@ import * as Burger from '@/burger';
 
 import Activities from './activities';
 import { Composer } from './context';
-import { FlowEdit } from './flow';
+import { FlowEdit, FlowsView } from './flow';
 import { DecisionEdit } from './decision';
 import { ServiceEdit } from './service';
 import { DebugView } from './debug';
@@ -14,7 +14,7 @@ import { ReleasesView } from './release';
 
 import { HdesApi } from './client';
 import { CompareView } from './compare';
-
+import { DecisionsView } from './decision/DecisionsView';
 
 
 const root: SxProps = { height: `100%`,  padding: 1, backgroundColor: "primary.contrastText" };
@@ -59,6 +59,10 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><DebugView /></Box>);
     } else if (active.id === 'compare') {
       return (<Box sx={root}><CompareView /></Box>);
+    } else if (active.id === 'flows') {
+      return (<Box sx={root}><FlowsView /></Box>);
+    } else if (active.id === 'decisions') {
+      return (<Box sx={root}><DecisionsView /></Box>);
     }
     if (entity) {
       return <Box sx={root}><EntityEditor entity={entity} /></Box>

@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
@@ -142,15 +140,13 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
 
       {/** Flow options */}
       <Burger.TreeItem itemId={flow.id + 'options-nested'}
-        labelText={<FormattedMessage id="options" />}
-        labelIcon={EditIcon} >
+        labelText={<FormattedMessage id="options" />}>
         <FlowOptions flow={flow} />
       </Burger.TreeItem>
 
       {/** Flow status */}
       <Burger.TreeItem itemId={flow.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
         labelcolor={Burger.colors.red}>
 
@@ -161,7 +157,6 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       {/** Decision options */}
       <Burger.TreeItem itemId={flow.id + 'decisions-nested'}
         labelText={<FormattedMessage id="decisions" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
         labelcolor="page">
 
@@ -175,7 +170,6 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       {/** Service options */}
       <Burger.TreeItem itemId={flow.id + 'services-nested'}
         labelText={<FormattedMessage id="services" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${services.length}`}
         labelcolor={Burger.colors.purple}>
 
