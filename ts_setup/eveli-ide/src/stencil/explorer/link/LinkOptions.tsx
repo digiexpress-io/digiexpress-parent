@@ -1,7 +1,5 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import EditIcon from '@mui/icons-material/ModeEdit';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 import { LinkDelete } from '../../link/LinkDelete';
 import { LinkEdit } from '../../link';
@@ -20,7 +18,6 @@ const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
 
       <Burger.TreeItemOption nodeId={link.id + 'link.edit'}
         color={Burger.colors.purple}
-        icon={EditIcon}
         onClick={() => setDialogOpen('LinkEdit')}
         labelText={<FormattedMessage id="link.edit.title" />}>
       </Burger.TreeItemOption>
@@ -28,7 +25,6 @@ const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
 
       <Burger.TreeItemOption nodeId={link.id + 'link.delete'}
         color={Burger.colors.purple}
-        icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('LinkDelete')}
         labelText={<FormattedMessage id="link.delete.title" />}>
       </Burger.TreeItemOption>

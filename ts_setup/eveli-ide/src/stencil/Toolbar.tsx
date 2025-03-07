@@ -66,7 +66,6 @@ export const Toolbar: React.FC<{}> = () => {
       tabs.handleTabAdd({ id: 'newItem', label: "Activities" });
     } else if (newValue === 'toolbar.search') {
       secondaryCtx.handleActiveId("toolbar.search")
-      console.log("xxx", secondaryCtx)
     }
   };
 

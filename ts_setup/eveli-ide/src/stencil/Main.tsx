@@ -5,14 +5,9 @@ import {
   ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
   ReleasesView, LocalesView, ArticlesView
 } from './';
-
-import {
-  TemplatesView
-} from './template';
-
-
+import { TemplatesView } from './template';
 import { Composer } from './context';
-
+import { LinksView } from './link';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
@@ -28,6 +23,7 @@ const Main: React.FC<{}> = () => {
     if (site.contentType === "NO_CONNECTION") {
       return (<Box>{site.contentType}</Box>);
     }
+
     if (!active) {
       return null;
     }
@@ -35,7 +31,7 @@ const Main: React.FC<{}> = () => {
 
     if (active.id === 'releases') {
       return (<Box sx={root}><ReleasesView /></Box>);
-    } else if (active.id === 'releases') {
+    } else if (active.id === 'activities') {
       return (<Box sx={root}><ActivitiesView /></Box>);
     } else if (active.id === 'locales') {
       return (<Box sx={root}><LocalesView /></Box>);
@@ -45,6 +41,8 @@ const Main: React.FC<{}> = () => {
       return (<Box sx={root}><TemplatesView /></Box>);
     } else if (active.id === 'articles') {
       return (<Box sx={root}><ArticlesView /></Box>);
+    } else if (active.id === 'links') {
+      return (<Box sx={root}><LinksView /></Box>);
     }
 
     //article-based composers

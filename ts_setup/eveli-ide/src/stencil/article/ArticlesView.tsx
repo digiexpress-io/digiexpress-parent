@@ -17,7 +17,7 @@ export const ArticlesView: React.FC = () => {
     <ArticlesViewRoot className={classes.root}>
       <div className={classes.searchFieldContainer}>
         <TextField type='search' className={classes.searchField}
-          onChange={(event) => setSearchString(event.target.value)}
+          onChange={(event) => setSearchString(event.target.value.trim())}
           placeholder='Search Articles'
           slotProps={{
             input: {
@@ -29,7 +29,7 @@ export const ArticlesView: React.FC = () => {
             },
           }}
         >
-          {searchString}
+          {searchString.trim()}
         </TextField>
       </div>
       <ArticleList searchString={searchString} />

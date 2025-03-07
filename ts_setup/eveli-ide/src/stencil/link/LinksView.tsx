@@ -2,22 +2,23 @@ import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { LinksViewRoot, useUtilityClasses} from '../../stencil/explorer/link/useUtilityClasses';
+import { LinksList } from '../../stencil/explorer';
 
-import { WorkflowsViewRoot, useUtilityClasses } from '../../stencil/explorer/workflow/useUtilityClasses';
-import { WorkflowList } from '../../stencil/explorer';
 
 
-export const WorkflowsView: React.FC = () => {
+
+export const LinksView: React.FC = () => {
   const [searchString, setSearchString] = React.useState('')
   const classes = useUtilityClasses();
 
 
   return (
-    <WorkflowsViewRoot className={classes.root}>
+    <LinksViewRoot className={classes.root}>
       <div className={classes.searchFieldContainer}>
         <TextField type='search' className={classes.searchField}
           onChange={(event) => setSearchString(event.target.value.trim())}
-          placeholder='Search Articles'
+          placeholder='Search Links'
           slotProps={{
             input: {
               startAdornment: (
@@ -28,11 +29,11 @@ export const WorkflowsView: React.FC = () => {
             },
           }}
         >
-          {searchString.trim()}
+          {searchString}
         </TextField>
       </div>
-      <WorkflowList searchString={searchString} />
-    </WorkflowsViewRoot>)
+      <LinksList searchString={searchString} />
+    </LinksViewRoot>)
 }
 
 

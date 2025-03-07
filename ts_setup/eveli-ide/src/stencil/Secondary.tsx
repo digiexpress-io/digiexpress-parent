@@ -15,8 +15,8 @@ import { useIntl } from 'react-intl';
 import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 import { ComposeSelect } from '../uiDev/ComposeSelect';
 import logo from '../uiDev/logoLifeDigitalDark.svg';
-import { useNavigate } from '@tanstack/react-router';
 import * as Burger from '@/burger';
+import { MigrationComposer } from './migration';
 
 
 type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
@@ -30,8 +30,10 @@ const Secondary: React.FC<{}> = () => {
   const userFirstAndLastName = 'Missing username';
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [activeButton, setActiveButton] = React.useState<NavType>('ARTICLES')
+  const [activeButton, setActiveButton] = React.useState<NavType>('ARTICLES');
+  const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)
 
+  console.log("tabs", tabs)
   const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,14 +42,11 @@ const Secondary: React.FC<{}> = () => {
     setAnchorEl(null);
   };
 
-  function handleMenuButtonClick(buttonId: NavType) {
-    setActiveButton(buttonId)
-  }
-
 
   return (
     <>
       <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
+      {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 
       <EveliShellLargeBarRoot className={classes.root}>
         <div className={classes.logoContainer}>
@@ -68,13 +67,13 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
           className={activeButton === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('SERVICES')}>
+          onClick={() => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" })}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 
         <Button variant='text' startIcon={<InsertLinkOutlinedIcon />}
           className={activeButton === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('LINKS')}>
+          onClick={() => tabs.handleTabAdd({ id: 'links', label: "Links" })}>
           {intl.formatMessage({ id: 'menu.links' })}
         </Button>
 
@@ -92,7 +91,7 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
           className={activeButton === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'migrations', label: "Migrations" })}>
+          onClick={() => setMigrationsDialogOpen(true)}>
           {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
