@@ -122,10 +122,10 @@ export class ManyTabsImpl implements ManyTabs {
       if (alreadyOpen === this._history.open) {
         return this;
       }
-      return this.next({ previous: this.history, open: alreadyOpen });
+      return this.next({ previous: this.history, open: alreadyOpen }).withTabData(newTab.id, (pr) => newTab.data);
     }
 
-    return this.next({ previous: this.history, open: this.tabs.length }, this._tabs.concat(newTab));
+    return this.next({ previous: this.history, open: this.tabs.length }, this._tabs.concat(newTab)).withTabData(newTab.id, (pr) => newTab.data);
   }
   findTab(newTabId: string): number | undefined {
     let index = 0;
@@ -154,8 +154,6 @@ export class ManyTabsImpl implements ManyTabs {
         tabs.push(tab);
       }
     }
-
-    console.log("closing", this._onTabClose);
     const result = this.next(this.history, tabs).withTab(tabs.length - 1);
     if(tabToClose) {
       this._onTabClose(tabToClose, result.activeTab);

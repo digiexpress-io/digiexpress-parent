@@ -19,6 +19,7 @@ import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../../context';
+import { useTabNav } from '../../../routes/secured.$locale.assets.stencil.index';
 
 
 //color: theme.palette.secondary.contrastText,
@@ -148,8 +149,8 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
 const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, searchResult, keyword }) => {
 
   const { article } = view;
-  const { handleInTab } = Composer.useNav();
-  const onLeftEdit = (page: StencilApi.Page) => handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale })
+  const { onNav } = useTabNav();
+  const onLeftEdit = (page: StencilApi.Page) => onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: page.body.locale })
 
   const [articleEditOpen, setArticleEditOpen] = React.useState<boolean>(false);
   const [noCollapseIcon, setNoCollapseIcon] = React.useState<boolean>(false)

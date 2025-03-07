@@ -10,6 +10,7 @@ import { ArticleEdit, ArticleDelete } from '../../article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../page';
 import { Composer, StencilApi } from '../../context';
 import * as Burger from '@/burger';
+import { useTabNav } from '../../../routes/secured.$locale.assets.stencil.index';
 
 interface ArticleOptionsProps {
   article: StencilApi.Article,
@@ -21,7 +22,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
 
   const { site } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
-  const { handleInTab } = Composer.useNav();
+  const { activeItem, onNav } = useTabNav();
 
   return (
     <>
@@ -83,7 +84,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.workflows'}
         color={Burger.colors.red}
         icon={EditIcon}
-        onClick={() => handleInTab({ article, type: "ARTICLE_WORKFLOWS" })}
+        onClick={() => onNav({ article: article.id, type: "ARTICLE_WORKFLOWS" })}
         labelText={<FormattedMessage id="services.change" />}>
       </Burger.TreeItemOption>
 
@@ -97,7 +98,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.links'}
         color={Burger.colors.purple}
         icon={EditIcon}
-        onClick={() => handleInTab({ article, type: "ARTICLE_LINKS" })}
+        onClick={() => onNav({ article: article.id, type: "ARTICLE_LINKS" })}
         labelText={<FormattedMessage id="links.change" />}>
       </Burger.TreeItemOption>
 

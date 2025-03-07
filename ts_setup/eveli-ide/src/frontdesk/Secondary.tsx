@@ -118,7 +118,7 @@ export const Secondary: React.FC = () => {
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/stencil',
-          search: { explorer: ['ARTICLES'] }
+          search: { explorer: [] }
         })}>
         {intl.formatMessage({ id: 'menu.content' })}
       </Button>

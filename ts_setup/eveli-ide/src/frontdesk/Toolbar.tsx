@@ -63,7 +63,7 @@ export const Toolbar: React.FC<{}> = () => {
         <IconButton onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/stencil',
-          search: { explorer: ['ARTICLES'] }
+          search: { explorer: [] }
         })}>
           <EditNoteOutlinedIcon />
         </IconButton>

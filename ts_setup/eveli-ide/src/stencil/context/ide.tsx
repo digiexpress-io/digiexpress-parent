@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { useTheme } from '@mui/material';
-import * as Burger from '@/burger';
 import { StencilApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
@@ -31,25 +29,6 @@ declare namespace StencilComposerApi {
     type: "ARTICLE_NAME"  | "ARTICLE_PAGE" |
           "WORKFLOW_NAME" | "WORKFLOW_LABEL" | 
           "LINK_VALUE"    | "LINK_LABEL" 
-  }
-
-
-
-  type NavType = "ARTICLE_LINKS" | "ARTICLE_WORKFLOWS" | "ARTICLE_PAGES";
-
-  interface Nav {
-    type: NavType;
-    value?: string | null;
-    value2?: string | null;
-  }
-
-  interface TabData {
-    nav?: Nav
-    withNav(nav: Nav): TabData;
-  }
-
-  interface Tab extends Burger.OneTab<TabData> {
-
   }
 
   interface PageUpdate {
@@ -144,27 +123,6 @@ declare namespace StencilComposerApi {
 
 namespace StencilComposerApi {
   const sessionData = new SessionData({});
-  export class ImmutableTabData implements TabData {
-    private _nav: Nav;
-  
-    constructor(props: { nav: Nav }) {
-      this._nav = props.nav;
-    }
-    get nav() {
-      return this._nav;
-    }
-    withNav(nav: Nav) {
-      return new ImmutableTabData({
-        nav: {
-          type: nav.type,
-          value: nav.value === undefined ? this._nav.value : nav.value,
-          value2: nav.value2 === undefined ? this._nav.value2 : nav.value2
-        }
-      });
-    }
-  }
-
-  export const createTab = (props: { nav: Nav, page?: StencilApi.Page }) => new ImmutableTabData(props);
 
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
@@ -202,52 +160,6 @@ namespace StencilComposerApi {
     return result.session;
   }
 
-  export const useNav = () => {
-    const layout = Burger.useTabs();
-
-
-    const handleInTab = (props: { article: StencilApi.Article, type: NavType, locale?: string | null, secondary?: boolean }) => {
-      const nav = {
-        type: props.type,
-        value: props.secondary ? undefined : props.locale,
-        value2: props.secondary ? props.locale : undefined
-      };
-
-      let icon: React.ReactElement | undefined = undefined;
-      if (props.type === "ARTICLE_PAGES") {
-        icon = <ArticleTabIndicator article={props.article} type={props.type} />;
-      }
-      const tab: Tab = {
-        id: props.article.id,
-        label: props.article.body.name,
-        icon,
-        data: createTab({ nav })
-      };
-
-      const oldTab = layout.session.findTab(props.article.id);
-      if (oldTab !== undefined) {
-        layout.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
-      } else {
-        // open or add the tab
-        layout.handleTabAdd(tab);
-      }
-
-    }
-
-    const findTab = (article: StencilApi.Article): Tab | undefined => {
-      const oldTab = layout.session.findTab(article.id);
-      if (oldTab !== undefined) {
-        const tabs = layout.session.tabs;
-        const active = tabs[layout.session.history.open];
-        const tab: Tab = active;
-        return tab;
-      }
-      return undefined;
-    }
-
-
-    return { handleInTab, findTab };
-  }
 
   export const Provider: React.FC<{ children: React.ReactNode, service: StencilApi.Service }> = ({ children, service }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
@@ -261,20 +173,8 @@ namespace StencilComposerApi {
       actions.handleLoad();
     }, [service, actions]);
 
-    return (<ComposerContext.Provider value={{ session, actions, service }}>{children}</ComposerContext.Provider>);
+    return (<ComposerContext.Provider value={{ session, actions, service }}>{session.site.contentType !== 'NO_CONNECTION' && children}</ComposerContext.Provider>);
   };
-}
-
-const ArticleTabIndicator: React.FC<{ article: StencilApi.Article, type: StencilComposerApi.NavType }> = ({ article }) => {
-  const theme = useTheme();
-  const { isArticleSaved } = StencilComposerApi.useComposer();
-  const saved = isArticleSaved(article);
-  return <span style={{
-    paddingLeft: "5px",
-    fontSize: '30px',
-    color: theme.palette.secondary.light,
-    display: saved ? "none" : undefined
-  }}>*</span>
 }
 
 

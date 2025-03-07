@@ -7,8 +7,39 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliApp, useTabs, OneTab } from '@/burger';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 
+export interface ExplorerItemArticlePages { 
+  type: 'ARTICLE_PAGES', article: string, locale1: string, locale2?: string | undefined
+}
+export type ExplorerItem = (
+  { type: 'ACTIVITIES' } | 
+  { type: 'ARTICLES', article: string | undefined } | 
+  //{ type: 'PAGES' } | 
+  { type: 'SERVICES' } | 
+  { type: 'LINKS' } | 
+  { type: 'LOCALES' } | 
+  { type: 'MIGRATIONS' } | 
+  { type: 'TEMPLATES' } | 
+  { type: 'RELEASES' } |
+  ExplorerItemArticlePages  |
+  { type: 'ARTICLE_LINKS', article: string } |
+  { type: 'ARTICLE_WORKFLOWS', article: string }
+);
 
-export type ExplorerItem = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
+export type NavInput = (
+  'ACTIVITIES'|
+  'ARTICLES'|
+  'SERVICES'|
+  'LINKS'|
+  'LOCALES'|
+  'MIGRATIONS'|
+  'TEMPLATES' |
+  'RELEASES' |
+
+  { type: 'ARTICLE_PAGES', article: string, locale1: string, locale2?: string | undefined } |
+  { type: 'ARTICLE_LINKS', article: string } |
+  { type: 'ARTICLE_WORKFLOWS', article: string }
+)
+
 export interface StencilRouteParams {
   explorer: ExplorerItem[]
 }
@@ -17,8 +48,9 @@ export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteParams => {
     // validate and parse the search params into a typed state
+
     return {
-      explorer: (search.explorer as ExplorerItem[]) || ['ARTICLES'],
+      explorer: (search.explorer as ExplorerItem[]) || [{ type: 'ARTICLES' }],
     }
   },
 }) 
@@ -50,8 +82,8 @@ function Component() {
       from: '/secured/$locale/assets/stencil', 
       search: (prev) => {
         
-        const explorer = [...prev.explorer].filter(t => t !== tab.id.toUpperCase());
-        const newItem: ExplorerItem | undefined = nextActive?.id.toUpperCase() as any;
+        const explorer = [...prev.explorer].filter(t => toTab(t).id !== tab.id);
+        const newItem: ExplorerItem | undefined = nextActive?.data;
 
         if(newItem) {
           const itemIndex = explorer.indexOf(newItem);
@@ -80,42 +112,73 @@ function LoadTabsFromSearchParams() {
 
   // load only once...
   React.useEffect(() => {
-    tabs.handleTabAddAll(explorer.map(tabId => ({ id: tabId.toLowerCase(), label: tabId.toLowerCase() })));
+    tabs.handleTabAddAll(explorer.map(toTab));
   }, []);
   return (<></>)
 }
 
+
 export function useTabNav(): { 
-  activeItem: ExplorerItem;
-  onNav: (newItem: ExplorerItem) => void;
+  activeItem: ExplorerItem | undefined;
+  onNav: (newItem: NavInput) => void;
+  findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
 } {
   const navigate = useNavigate();
   const tabs = useTabs();
   
   const { explorer } = useSearch({ from: '/secured/$locale/assets/stencil/' });
-  const activeItem = explorer[explorer.length - 1];
+  const activeItem = explorer.find(explorer => toTab(explorer).id === tabs.session.activeTab?.id);
 
-  function onNav(newItem: ExplorerItem) {
-    tabs.handleTabAdd({ id: newItem.toLowerCase(), label: newItem.toLowerCase() });
-
+  function onNav(input: NavInput) {
+    const newItem = toExplorerItem(input);
+    const newTab = toTab(newItem);
+    tabs.handleTabAdd(newTab);
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev) => {
-        
-        const explorer = [...prev.explorer];
-        if(!prev.explorer.includes(newItem)) {
-          explorer.push(newItem);
-        }
-        // set item as last
-        const itemIndex = explorer.indexOf(newItem);
-        if(itemIndex !== explorer.length - 1) {
-          delete explorer[itemIndex];
-          explorer.push(newItem);
-        }
-  
-        return { ...prev, explorer: explorer.filter(e => !!e) };
-      }
+      search: (prev) => ({ ...prev, explorer: calculateNextSearch(newItem, prev.explorer) })
     });
   }
-  return { activeItem, onNav }
+
+  function findTab(newItem: ExplorerItem['type'], articleId?: string): ExplorerItem | undefined {
+    return tabs.session.tabs
+      .filter(tab => tab.data?.type === newItem)
+      .find(tab => articleId ? tab.data?.article === articleId : true)?.data;
+  }
+
+  return { activeItem, onNav, findTab }
 }
+
+function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]): ExplorerItem[]  {
+  const newItemId = toTab(newExplorerItem).id;
+  const explorer = [...prev.filter(explorer => toTab(explorer).id !== newItemId), newExplorerItem];
+  return explorer;
+}
+
+
+function toExplorerItem(input: NavInput): ExplorerItem {
+  const data: ExplorerItem = ((input as any)['type'] ? input : { type: input }) as any;
+  return data;
+}
+
+function toTab(data: ExplorerItem) {
+  const id = JSON.stringify(Object.entries(data)
+    .filter(([key]) => key === 'type' || key === 'article')
+    .reduce((result, [key, value]) => result + "/" + value, ''));
+  const label = data.type.toLowerCase();
+  return { id, label, data };
+}
+
+
+/*
+const ArticleTabIndicator: React.FC<{ article: StencilApi.Article, type: StencilComposerApi.NavType }> = ({ article }) => {
+  const theme = useTheme();
+  const { isArticleSaved } = StencilComposerApi.useComposer();
+  const saved = isArticleSaved(article);
+  return <span style={{
+    paddingLeft: "5px",
+    fontSize: '30px',
+    color: theme.palette.secondary.light,
+    display: saved ? "none" : undefined
+  }}>*</span>
+}
+*/

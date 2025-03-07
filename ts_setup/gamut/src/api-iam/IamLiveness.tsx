@@ -22,12 +22,16 @@ export const IamLiveness: React.FC<{
       const resp = await fetchUserLivenessGET();
       const v: { expiresIn: number } | undefined = resp.ok ? await resp.json() : undefined;
 
-      const expiresIn = v ? v.expiresIn * 1000 : -1;
-      setTimeLeft(expiresIn);
+      try {
+        const expiresIn = v ? parseInt(v.expiresIn + '') * 1000 : -1;
+        setTimeLeft(expiresIn);
 
 
-      if (expiresIn <= 1000) {
-        onExpire();
+        if (expiresIn <= 1000) {
+          onExpire();
+        }
+      } catch(e) {
+        console.error('liveness failed', e)
       }
     }, timeout);
     return () => clearTimeout(timer);

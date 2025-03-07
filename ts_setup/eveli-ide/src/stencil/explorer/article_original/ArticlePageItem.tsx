@@ -16,7 +16,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
   const theme = useTheme<Theme>();
   const localeIconColor = theme.palette.secondary.contrastText;
 
-  const { handleInTab, findTab } = Composer.useNav();
+  const { handleInTab, findTab } = {} as any //Composer.useNav();
   const page = props.page.page;
   const article = props.article.article;
   const itemId = props.page.page.id

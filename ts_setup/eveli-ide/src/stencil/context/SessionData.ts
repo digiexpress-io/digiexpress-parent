@@ -271,7 +271,7 @@ class SessionData implements StencilComposerApi.Session {
     filter?: StencilComposerApi.SessionFilter;
   }) {
     this._filter = props.filter ? props.filter : new ImmutableSessionFilter({});
-    this._site = props.site ? props.site : { name: "", contentType: "OK", releases: {}, articles: {}, links: {}, locales: {}, pages: {}, workflows: {}, templates: {} };
+    this._site = props.site ? props.site : { name: "", contentType: "NO_CONNECTION", releases: {}, articles: {}, links: {}, locales: {}, pages: {}, workflows: {}, templates: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
   }

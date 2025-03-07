@@ -54,43 +54,43 @@ const Secondary: React.FC<{}> = () => {
         </Button>
 
         <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
-          className={activeItem === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('ARTICLES')}>
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
         <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
-          className={activeItem === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('SERVICES')}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 
         <Button variant='text' startIcon={<InsertLinkOutlinedIcon />}
-          className={activeItem === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('LINKS')}>
           {intl.formatMessage({ id: 'menu.links' })}
         </Button>
 
         <Button variant='text' startIcon={<TranslateOutlinedIcon />}
-          className={activeItem === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('LOCALES')}>
           {intl.formatMessage({ id: 'menu.locales' })}
         </Button>
 
         <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
-          className={activeItem === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('TEMPLATES')}>
           {intl.formatMessage({ id: 'menu.templates' })}
         </Button>
 
         <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
-          className={activeItem === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => setMigrationsDialogOpen(true)}>
           {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
         <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
-          className={activeItem === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem?.type === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => onNav('RELEASES')}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>

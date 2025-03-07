@@ -21,7 +21,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
 
   const { site } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
-  const { handleInTab } = Composer.useNav();
+  const { handleInTab } = {} as any///Composer.useNav();
 
   return (
     <>

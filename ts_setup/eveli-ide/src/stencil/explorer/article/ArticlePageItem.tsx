@@ -7,6 +7,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 
 import * as Burger from '@/burger';
 import { Composer } from '../../context';
+import { ExplorerItemArticlePages, useTabNav } from "../../../routes/secured.$locale.assets.stencil.index";
 
 
 
@@ -16,28 +17,27 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
   const theme = useTheme<Theme>();
   const localeIconColor = theme.palette.secondary.contrastText;
 
-  const { handleInTab, findTab } = Composer.useNav();
+
+  const { onNav, findTab } = useTabNav();
+
   const page = props.page.page;
   const article = props.article.article;
   const itemId = props.page.page.id
-  const oldTab = findTab(article);
-  const nav = oldTab?.data?.nav;
+  const nav: ExplorerItemArticlePages | undefined = findTab('ARTICLE_PAGES', article.id) as any;
 
-
-  const onLeftEdit = () => handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale })
+  const onLeftEdit = () => onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: page.body.locale })
   const onRightEdit = () => {
 
-    const secondary = nav?.value ? true : false
     // Same locale on the right side
-    if (nav?.value && nav?.value === page.body.locale) {
+    if (nav?.locale1 && nav?.locale1 === page.body.locale) {
       return;
     }
 
     // Close the locale     
-    if (nav?.value2 === page.body.locale) {
-      handleInTab({ article, type: "ARTICLE_PAGES", locale: null, secondary })
+    if (nav?.locale2 === page.body.locale) {
+      onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: nav!.locale1, locale2: undefined })
     } else {
-      handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale, secondary })
+      onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: nav!.locale1, locale2: page.body.locale })
     }
   }
 
@@ -57,7 +57,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
           <Box component={icon} color={props.saved === false ? 
             "secondary.light": 
-            (nav?.value === page.body.locale ? localeIconColor : "inherit")} />
+            (nav?.locale1 === page.body.locale ? localeIconColor : "inherit")} />
           
           <Typography
             variant="body2"
@@ -67,7 +67,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
           </Typography>
 
           <Box component={RightEditIcon}
-            color={nav?.value2 === page.body.locale ? localeIconColor : "inherit"}
+            color={nav?.locale2 === page.body.locale ? localeIconColor : "inherit"}
             onClick={(event) => {
               event.stopPropagation()
               onRightEdit();

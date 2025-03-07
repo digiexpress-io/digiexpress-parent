@@ -90,6 +90,7 @@ type PageComposerProps = {
 
 
 const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, locale2 }) => {
+
   const theme = useTheme();
   const { actions, session } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
