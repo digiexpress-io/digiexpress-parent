@@ -72,17 +72,16 @@ class ImmutableTab<T> implements OneTab<T> {
 export class ManyTabsImpl implements ManyTabs {
   private _tabs: ImmutableTab<any>[];
   private _history: NavHistory;
-  private _secondary?: string;
-  private _drawer: boolean;
+  private _onTabClose: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
 
   constructor(props: {
     tabs?: ImmutableTab<any>[],
     history?: NavHistory,
-    secondary?: string,
-    drawer?: boolean
+    onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void
   }) {
-    this._drawer = props.drawer ? true : false;
-    this._secondary = props.secondary;
+    this._onTabClose = props.onTabClose ?? function (tab: OneTab<any>, nextActive: OneTab<any> | undefined) {
+
+    };
     this._tabs = props.tabs ? props.tabs : [];
     this._history = props.history ? props.history : { open: 0 };
   }
@@ -92,18 +91,9 @@ export class ManyTabsImpl implements ManyTabs {
   get history() {
     return this._history;
   }
-  get secondary() {
-    return this._secondary;
-  }
-  get drawer() {
-    return this._drawer;
-  }
   private next(history: NavHistory, tabs?: ImmutableTab<any>[]): ManyTabs {
     const newTabs: ImmutableTab<any>[] = tabs ? tabs : this._tabs;
-    return new ManyTabsImpl({ 
-      secondary: this._secondary, 
-      drawer: this._drawer,
-      tabs: [...newTabs], history});
+    return new ManyTabsImpl({ tabs: [...newTabs], history, onTabClose: this._onTabClose });
   }
   withTabData(tabId: string, updateCommand: (oldData: any) => any): ManyTabs {
     const tabs: ImmutableTab<any>[] = [];
@@ -147,38 +137,36 @@ export class ManyTabsImpl implements ManyTabs {
     }
     return undefined;
   }
-  withSecondary(newItemId?: string): ManyTabs {
-    return new ManyTabsImpl({ 
-      secondary: newItemId, 
-      tabs: this._tabs, 
-      history: this._history, 
-      drawer: this._drawer });
-  }
-  withDrawer(open: boolean): ManyTabs {
-    return new ManyTabsImpl({ 
-      secondary: this._secondary, 
-      tabs: this._tabs, 
-      history: this._history, 
-      drawer: open
-    });
-  }
   getTabData<T>(tabId: string): T {
     const tabIndex = this.findTab(tabId);
     if (tabIndex) {
       return this.tabs[tabIndex].data;
     }
-    console.error(this);
     throw new Error(`cant find tab: '${tabId}'`);
   }
   deleteTab(tabId: string): ManyTabs {
+    let tabToClose: ImmutableTab<any> | undefined;
     const tabs: ImmutableTab<any>[] = [];
     for (const tab of this._tabs) {
-      if (tabId !== tab.id) {
+      if (tabId === tab.id) {
+        tabToClose = tab;
+      } else {
         tabs.push(tab);
       }
     }
+
+    console.log("closing", this._onTabClose);
     const result = this.next(this.history, tabs).withTab(tabs.length - 1);
+    if(tabToClose) {
+      this._onTabClose(tabToClose, result.activeTab);
+    }
     return result;
+  }
+
+  get activeTab(): OneTab<any> | undefined {
+    const tabs = this.tabs;
+    const active = tabs.length ? tabs[this.history.open] : undefined;
+    return active;
   }
 
   deleteTabs(): ManyTabs {

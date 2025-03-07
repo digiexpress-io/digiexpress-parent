@@ -9,7 +9,7 @@ import { EveliShell, EveliShellClassName, EveliShellMiniBarClassName, EveliShell
 import { EveliFooter } from '../eveli-footer';
 import { EveliLogin } from '../eveli-login';
 import { EveliLocales } from '../eveli-locales';
-import { TabsProvider } from '../api-tabs';
+import { OneTab, TabsProvider } from '../api-tabs';
 import { IconbarProvider } from '../api-iconbar';
 import { FormattedMessage } from 'react-intl';
 
@@ -36,6 +36,9 @@ export interface ContainerProps {
   main: React.FC;
   secondary: React.FC;
   toolbar: React.FC;
+
+  onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
+  children?: React.ReactNode
 };
 
 export const EveliApp: React.FC<ContainerProps> = (components) => {
@@ -43,7 +46,7 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
 
   return (
     <IconbarProvider>
-      <TabsProvider>
+      <TabsProvider onTabClose={components.onTabClose}>
         <EveliShell drawerOpen={true}>
           <ToggleDrawer {...components} />
 
@@ -62,6 +65,8 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
           <footer role='footer'>
             <EveliFooter />
           </footer>
+
+          <>{components.children}</>
         </EveliShell>
       </TabsProvider>
     </IconbarProvider>);

@@ -117,7 +117,8 @@ export const Secondary: React.FC = () => {
         className={activeButton === 'STENCIL' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
-          to: '/secured/$locale/assets/stencil'
+          to: '/secured/$locale/assets/stencil',
+          search: { explorer: ['ARTICLES'] }
         })}>
         {intl.formatMessage({ id: 'menu.content' })}
       </Button>

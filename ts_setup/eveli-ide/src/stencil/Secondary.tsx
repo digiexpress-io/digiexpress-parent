@@ -15,33 +15,27 @@ import { useIntl } from 'react-intl';
 import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 import { ComposeSelect } from '../uiDev/ComposeSelect';
 import logo from '../uiDev/logoLifeDigitalDark.svg';
-import * as Burger from '@/burger';
 import { MigrationComposer } from './migration';
+import { useTabNav } from '../routes/secured.$locale.assets.stencil.index';
 
-
-type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRATIONS' | 'TEMPLATES' | 'RELEASES';
 
 
 const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const tabs = Burger.useTabs();
 
   const userFirstAndLastName = 'Missing username';
-
+  const { activeItem, onNav } = useTabNav();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [activeButton, setActiveButton] = React.useState<NavType>('ARTICLES');
+
   const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)
 
-  console.log("tabs", tabs)
   const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-
+  }
   const handleComposeSelectClose = () => {
     setAnchorEl(null);
-  };
-
+  }
 
   return (
     <>
@@ -60,44 +54,44 @@ const Secondary: React.FC<{}> = () => {
         </Button>
 
         <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
-          className={activeButton === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'articles', label: "Articles" })}>
+          className={activeItem === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('ARTICLES')}>
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
         <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
-          className={activeButton === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" })}>
+          className={activeItem === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('SERVICES')}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 
         <Button variant='text' startIcon={<InsertLinkOutlinedIcon />}
-          className={activeButton === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'links', label: "Links" })}>
+          className={activeItem === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('LINKS')}>
           {intl.formatMessage({ id: 'menu.links' })}
         </Button>
 
         <Button variant='text' startIcon={<TranslateOutlinedIcon />}
-          className={activeButton === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'locales', label: "Locales" })}>
+          className={activeItem === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('LOCALES')}>
           {intl.formatMessage({ id: 'menu.locales' })}
         </Button>
 
         <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
-          className={activeButton === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'templates', label: "Templates" })}>
+          className={activeItem === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('TEMPLATES')}>
           {intl.formatMessage({ id: 'menu.templates' })}
         </Button>
 
         <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
-          className={activeButton === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
+          className={activeItem === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => setMigrationsDialogOpen(true)}>
           {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
         <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
-          className={activeButton === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => tabs.handleTabAdd({ id: 'releases', label: "Releases" })}>
+          className={activeItem === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
+          onClick={() => onNav('RELEASES')}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
 

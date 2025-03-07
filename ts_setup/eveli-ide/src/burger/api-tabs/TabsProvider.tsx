@@ -4,15 +4,19 @@ import { ManyTabs, OneTab, TabsContextType } from './tab-api';
 
 
 const TabsContext = React.createContext<TabsContextType>({} as any)
-const sessionInit: ManyTabsImpl = new ManyTabsImpl({})
 
 
-export const TabsProvider: React.FC<{ children: React.ReactNode}> = ({children}) => {
-  const [state, setState] = React.useState<ManyTabs>(sessionInit);
+export const TabsProvider: React.FC<{ children: React.ReactNode, onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void}> = ({children, onTabClose}) => {
+
+  const [state, setState] = React.useState<ManyTabs>(new ManyTabsImpl({onTabClose}));
   
   const setters = React.useMemo(() => {
     function handleTabAdd(newItem: OneTab<any>) {
       setState(prev => prev.withTab(newItem));
+    }
+
+    function handleTabAddAll(newItems: OneTab<any>[]) {
+      setState(prev => newItems.reduce((collector, newItem) => collector.withTab(newItem), prev));
     }
 
     function handleTabChange(tabIndex: number) {
@@ -44,7 +48,7 @@ export const TabsProvider: React.FC<{ children: React.ReactNode}> = ({children})
         return result;
       });
     }
-    return { handleTabAdd, handleTabChange, handleTabClose, handleTabCloseAll, handleTabData, handleTabCloseCurrent }
+    return { handleTabAdd, handleTabChange, handleTabClose, handleTabCloseAll, handleTabData, handleTabCloseCurrent, handleTabAddAll }
   }, [setState])
 
   const context: TabsContextType = React.useMemo(() => ({ session: state, ...setters }), [state, setters])
