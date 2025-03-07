@@ -86,4 +86,7 @@ eveli.notification.enabled: false
 eveli.notification.service-url: 
  
 eveli.org.service-url:
+
+eveli.envir.cache-expirations.short-deployment: PT30M
+eveli.envir.cache-expirations.long-runtime: PT60M
  

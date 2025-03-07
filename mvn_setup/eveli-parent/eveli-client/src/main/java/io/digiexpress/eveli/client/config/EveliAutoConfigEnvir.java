@@ -24,7 +24,6 @@ import java.time.Duration;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +64,8 @@ public class EveliAutoConfigEnvir {
       ObjectMapper objectMapper, 
       AuthClient authClient,
       Optional<ExternalDeploymentProvider> depProvider,
-      ApplicationContext context) {
+      ApplicationContext context,
+      EveliPropsEnvir envirProps) {
     
     final boolean isDev = true;
     final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
@@ -75,7 +75,7 @@ public class EveliAutoConfigEnvir {
       }
     });
     final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient);
-    final EveliRuntimeCache cache = cache();
+    final EveliRuntimeCache cache = cache(envirProps);
     final var hdesClientConfig = hdesConfig(objectMapper, context);
     final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
     
@@ -87,14 +87,14 @@ public class EveliAutoConfigEnvir {
     return envir;
   }
 
-  private EveliRuntimeCache cache() {
+  private EveliRuntimeCache cache(EveliPropsEnvir envirProps) {
     final Cache<String, EveliDeployment> short_deployment_cache = Caffeine.newBuilder()
-        .expireAfterWrite(1, TimeUnit.MINUTES)
+        .expireAfterWrite(envirProps.getCacheExpirations().getShortDeployment())
         .build();
 
     final Cache<String, EveliRuntime> long_runtime_cache = Caffeine.newBuilder()
         .maximumSize(5)
-        .expireAfterWrite(30, TimeUnit.MINUTES)
+        .expireAfterWrite(envirProps.getCacheExpirations().getLongRuntime())
         .build();
     
     return new EveliRuntimeCacheInMemory(short_deployment_cache, long_runtime_cache);

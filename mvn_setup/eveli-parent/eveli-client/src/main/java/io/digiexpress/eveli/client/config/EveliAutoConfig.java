@@ -75,8 +75,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsFeedback.class,
     EveliPropsPrintout.class,
     EveliPropsTask.class,
-    EveliPropsMq.class
-    
+    EveliPropsMq.class,
+    EveliPropsEnvir.class
 })
 @Slf4j
 public class EveliAutoConfig {
