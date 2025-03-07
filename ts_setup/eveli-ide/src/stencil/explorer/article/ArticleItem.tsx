@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Box, Typography } from "@mui/material";
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
@@ -106,7 +104,6 @@ const ArticleItem: React.FC<{
         {/** Article options */
           options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
             labelText={<FormattedMessage id="options" />}
-          //labelIcon={EditIcon}
           >
             <ArticleOptions article={article} />
           </Burger.TreeItem>) : null
@@ -157,7 +154,7 @@ const ArticleItem: React.FC<{
               .map(view => (<LinkItem key={view.link.id}
                 labelText={session.getLinkName(view.link.id).name}
                 nodeId={view.link.id}
-                onClick={() => options.setEditLink(view.link.id)} 
+                onClick={() => options.setEditLink(view.link.id)}
                 devMode={view.link.body.devMode} />)
               )}
           </Burger.TreeItem>) : null

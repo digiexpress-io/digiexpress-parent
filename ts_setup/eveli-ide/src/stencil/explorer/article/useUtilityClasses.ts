@@ -64,19 +64,21 @@ export const ArticlesViewRoot = styled("div", {
     },
 
     '& .MuiTreeItem-root': {
-     // backgroundColor: 'rgb(236, 239, 243)',
-     backgroundColor: 'unset'
+      backgroundColor: 'unset',
+      color: 'rgb(58, 55, 55)',
     },
 
-    '& .MuiTreeItem-content': {
-    },
-    
     '& .MuiTreeItem-content.Mui-selected': {
       backgroundColor: 'rgb(236, 239, 243)',
+      borderRadius: 'unset',
       ':hover': {
         backgroundColor: 'rgb(236, 239, 243)',
       }
-    }
+    },
+    '& .MuiTreeItem-content:hover': {
+      borderRadius: 'unset',
+    },
+
   }
 })
 

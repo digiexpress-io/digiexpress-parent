@@ -5,7 +5,6 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -25,7 +24,6 @@ type NavType = 'ARTICLES' | 'PAGES' | 'SERVICES' | 'LINKS' | 'LOCALES' | 'MIGRAT
 
 const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
   const classes = useUtilityClasses();
   const tabs = Burger.useTabs();
 
@@ -42,20 +40,10 @@ const Secondary: React.FC<{}> = () => {
     setAnchorEl(null);
   };
 
-  function navigateTo(navType: NavType) {
-    /*navigate({
-      from: '/secured/$locale/assets/stencil',
-      to: ''
-    });
-    */
-  }
-
   function handleMenuButtonClick(buttonId: NavType) {
     setActiveButton(buttonId)
-    // navigateTo(buttonId)
   }
 
-  //    onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
 
   return (
     <>
@@ -78,12 +66,6 @@ const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
-        <Button variant='text' startIcon={<DescriptionOutlinedIcon />}
-          className={activeButton === 'PAGES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('PAGES')}>
-          {intl.formatMessage({ id: 'menu.pages' })}
-        </Button>
-
         <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
           className={activeButton === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => handleMenuButtonClick('SERVICES')}>
@@ -98,25 +80,25 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant='text' startIcon={<TranslateOutlinedIcon />}
           className={activeButton === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => { }}>
+          onClick={() => tabs.handleTabAdd({ id: 'locales', label: "Locales" })}>
           {intl.formatMessage({ id: 'menu.locales' })}
         </Button>
 
         <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
           className={activeButton === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('TEMPLATES')}>
+          onClick={() => tabs.handleTabAdd({ id: 'templates', label: "Templates" })}>
           {intl.formatMessage({ id: 'menu.templates' })}
         </Button>
 
         <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
           className={activeButton === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('MIGRATIONS')}>
+          onClick={() => tabs.handleTabAdd({ id: 'migrations', label: "Migrations" })}>
           {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
         <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
           className={activeButton === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => handleMenuButtonClick('RELEASES')}>
+          onClick={() => tabs.handleTabAdd({ id: 'releases', label: "Releases" })}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
 

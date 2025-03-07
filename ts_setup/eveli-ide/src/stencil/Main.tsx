@@ -35,7 +35,7 @@ const Main: React.FC<{}> = () => {
 
     if (active.id === 'releases') {
       return (<Box sx={root}><ReleasesView /></Box>);
-    } else if (active.id === 'newItem') {
+    } else if (active.id === 'releases') {
       return (<Box sx={root}><ActivitiesView /></Box>);
     } else if (active.id === 'locales') {
       return (<Box sx={root}><LocalesView /></Box>);
