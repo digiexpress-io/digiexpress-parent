@@ -22,6 +22,7 @@ package io.resys.thena.structures.git.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GitBranchActions;
@@ -55,6 +56,21 @@ public class BranchObjectsQueryImpl implements BranchObjectsQuery {
   private boolean docsIncluded;
   @Override public BranchObjectsQueryImpl matchBy(List<MatchCriteria> blobCriteria) { this.blobCriteria.addAll(blobCriteria); return this; }
 
+  
+  public Uni<Optional<Branch>> getOneBranch() {
+    RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
+    
+    return state.tenant().getByNameOrId(repoId).onItem()
+    .transformToUni((Tenant existing) -> {
+      if(existing == null) {
+        return Uni.createFrom().item(Optional.empty());
+      }
+      
+      return state.toGitState(existing).query().refs().name(branchName).onItem()
+        .transform((Branch ref) -> Optional.<Branch>ofNullable(ref));
+    });
+  }
+  
   @Override
   public BranchObjectsQuery docsIncluded() {
     docsIncluded = true;

@@ -21,6 +21,7 @@ package io.thestencil.client.api;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -78,6 +79,8 @@ public interface StencilStore {
   String gid(EntityType type);
   
   interface QueryBuilder {
+    Uni<Optional<io.resys.thena.api.entities.git.Branch>> getBranch();
+    
     Uni<SiteState> head();
     Uni<SiteState> release(String releaseId);
     <T extends EntityBody> Uni<List<Entity<T>>> head(List<String> ids, EntityType type);

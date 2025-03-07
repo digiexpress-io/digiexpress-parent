@@ -39,4 +39,6 @@ public interface EveliRuntimeCache {
   EveliDeployment save(EveliDeployment deployment);
   
   void invalidateId();
+  
+  void invalidateAll();
 }

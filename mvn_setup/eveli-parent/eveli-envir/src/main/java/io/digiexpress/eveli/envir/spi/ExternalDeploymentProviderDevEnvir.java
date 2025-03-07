@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.envir.spi;
 
-import java.time.LocalDateTime;
-
 /*-
  * #%L
  * eveli-envir
@@ -53,8 +51,46 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
   private final DialobClient dialobClient;
 
   @Override
-  public Uni<Optional<EveliDeployment>> getDeployment() {
+  public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {
+    if(emptyBranchBody) {
+      return getDeploymentWithoutBody();
+    }
+    return getDeploymentWithBody();
+  }
+  
+  private Uni<Optional<EveliDeployment>> getDeploymentWithoutBody() {
+
     
+    return Uni.combine().all()
+        .unis(wrenchClient.store().query().getBranch(), stencilClient.getStore().query().getBranch())
+        .asTuple().onItem().transform(tuple -> {
+          
+          final var now = OffsetDateTime.now();
+  
+          final var wrenchCommitId = tuple.getItem1().map(e -> e.getCommit()).orElse("not-created");
+          final var stencilCommitId = tuple.getItem2().map(e -> e.getCommit()).orElse("not-created");
+          
+          
+          final var deployment = ImmutableEveliDeployment.builder()
+            .id(createId(wrenchCommitId, stencilCommitId))
+            .createdAt(now)
+            .startsAt(now)
+            .createdBy(ExternalDeploymentProviderDevEnvir.class.getCanonicalName())
+            .description("live deployment")
+            .name("editable asset envir")
+            .externalId(null)
+            .external(true)
+            .sources(null)
+            .status(EveliDeploymentStatus.READY)
+            .build();
+          
+          return Optional.ofNullable(deployment);
+        });
+  }
+  
+  
+
+  private Uni<Optional<EveliDeployment>> getDeploymentWithBody() {
     final var stencilAndForms = stencilState().onItem().transformToUni(stencil -> {
       return getForms(stencil).onItem().transform(forms -> Tuple2.of(stencil, forms));
     });
@@ -68,13 +104,14 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
           final SiteState stencil = tuple.getItem1().getItem1();
           final List<Form> dialob = tuple.getItem1().getItem2();
           
+          
           final var deployment = ImmutableEveliDeployment.builder()
-            .id(wrench.getCommitId() + "/dev/" + stencil.getCommit() )
+            .id(createId(wrench.getCommitId(), stencil.getCommit()))
             .createdAt(now)
             .startsAt(now)
             .createdBy(ExternalDeploymentProviderDevEnvir.class.getCanonicalName())
-            .description(EveliEnvirStore.formatDescription("live deployment", stencil, wrench))
-            .name("dev-" + LocalDateTime.now())
+            .description("live deployment")
+            .name("editable asset envir")
             .externalId(null)
             .external(true)
             .sources(ImmutableEveliSources.builder()
@@ -88,9 +125,13 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
           return Optional.ofNullable(deployment);
         });
   }
+
   
+  private String createId(String wrenchCommitId, String stencilCommitId) {
+    return wrenchCommitId + "/dev/" + stencilCommitId;
+  }
   
-  private Uni<List<Form>> getForms(SiteState site) {    
+  private Uni<List<Form>> getForms(SiteState site) {
     final var workflows = site.getWorkflows().values().stream()
       .filter(e -> e.getBody().getFormId() != null)
       .filter(e -> !Boolean.TRUE.equals(e.getBody().getDevMode()))

@@ -81,4 +81,10 @@ public class EveliEnvirClientImpl implements EveliEnvirClient {
     return new EveliRuntimeQueryImpl(ctx, cache, hdesClientConfig, isDev);
   }
 
+  @Override
+  public void invalidateCache() {
+    cache.invalidateAll();
+    
+  }
+
 }

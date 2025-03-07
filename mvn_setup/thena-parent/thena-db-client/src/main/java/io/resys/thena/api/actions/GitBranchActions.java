@@ -22,6 +22,7 @@ package io.resys.thena.api.actions;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
@@ -40,13 +41,16 @@ public interface GitBranchActions {
 
   BranchObjectsQuery branchQuery();
   
+  
   // build REF world state, no blobs by default
   interface BranchObjectsQuery {
     BranchObjectsQuery branchName(String ref);
     BranchObjectsQuery docsIncluded();
     BranchObjectsQuery docsIncluded(boolean docsIncluded);
     BranchObjectsQuery matchBy(List<MatchCriteria> blobCriteria);
+    
     Uni<QueryEnvelope<GitBranchActions.BranchObjects>> get();
+    Uni<Optional<Branch>> getOneBranch();
   }
 
   @Value.Immutable

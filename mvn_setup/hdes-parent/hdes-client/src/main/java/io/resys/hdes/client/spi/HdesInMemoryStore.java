@@ -118,6 +118,15 @@ public class HdesInMemoryStore implements HdesStore {
       public Uni<StoreState> get() {
         return Uni.createFrom().item(() -> state);
       }
+      @Override
+      public Uni<Optional<io.resys.thena.api.entities.git.Branch>> getBranch() {
+        final var commit = io.resys.thena.api.entities.git.ImmutableBranch.builder()
+            .name(getHeadName())
+            .commit("not-configured")
+            .build();
+        
+        return Uni.createFrom().item(Optional.of(commit));
+      }
     };
   }
 

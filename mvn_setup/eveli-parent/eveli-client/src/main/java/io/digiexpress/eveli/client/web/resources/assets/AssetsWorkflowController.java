@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.spi.StencilComposerImpl;
@@ -57,6 +58,7 @@ public class AssetsWorkflowController {
 
   private final StencilClient stencilClient;
   private final DialobClient dialobClient;
+  private final EveliEnvirClient envir;
   
   @Value.Immutable
   @JsonSerialize(as = ImmutableWorkflow.class)
@@ -131,7 +133,8 @@ public class AssetsWorkflowController {
         .build();
     return new StencilComposerImpl(stencilClient)
         .update().workflow(command)
-        .onItem().transformToUni(saved -> get(saved.getId()));
+        .onItem().transformToUni(saved -> get(saved.getId()))
+        .onItem().invoke(() -> envir.invalidateCache());
 
   }
 }

@@ -123,17 +123,18 @@ public class EveliAutoConfigAssets {
   @Bean 
   public AssetsWorkflowController workflowController(
       EveliEditEnvir context,
-      DialobClient dialobClient
+      DialobClient dialobClient,
+      EveliEnvirClient client
   ) {
-    return new AssetsWorkflowController(context.getStencil(), dialobClient);
+    return new AssetsWorkflowController(context.getStencil(), dialobClient, client);
   }
   @Bean
   public AssetsWrenchController wrenchComposerController(EveliEditEnvir context, EveliEnvirClient client, ObjectMapper objectMapper) {
     return new AssetsWrenchController(new HdesComposerImpl(context.getWrench()), objectMapper, client, version, timestamp);
   }
   @Bean
-  public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper) {
-    return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper);
+  public AssetsStencilController assetsStencilController(EveliEditEnvir context, ObjectMapper objectMapper, EveliEnvirClient client) {
+    return new AssetsStencilController(new StencilComposerImpl(context.getStencil()), objectMapper, client);
   }
 
   @Bean

@@ -50,6 +50,8 @@ public interface EveliEnvirClient {
   DeploymentQuery deploymentQuery();
   DeploymentStatusBuilder deploymentStatusBuilder();
   
+  void invalidateCache();
+  
   
   // moves given deployment to 'DEPLOYED' and sets any other 'DEPLOYED' entries into 'READY' status
   interface DeploymentStatusBuilder {

@@ -173,4 +173,8 @@ public class HdesComposerImpl implements HdesComposer {
         .onItem().transformToUni(newEntity -> client.store().batch(newEntity))
         .onItem().transformToUni(savedEntity -> client.store().query().get().onItem().transform(this::state));
   }
+
+  public HdesClient getClient() {
+    return client;
+  }
 }

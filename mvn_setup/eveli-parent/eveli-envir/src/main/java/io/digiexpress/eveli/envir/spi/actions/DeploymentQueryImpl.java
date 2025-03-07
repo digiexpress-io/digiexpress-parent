@@ -70,7 +70,7 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
     if(excludeExternal) {
       return Uni.createFrom().item(Optional.empty());
     }
-    return ctx.getExternalProvider().getDeployment();
+    return ctx.getExternalProvider().getDeployment(emptyBranchBody);
   }
   
   @Override

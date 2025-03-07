@@ -27,6 +27,7 @@ import io.smallrye.mutiny.Uni;
 
 public interface ExternalDeploymentProvider {
 
-  Uni<Optional<EveliDeployment>> getDeployment();
+  // emptyBranchBody = false => with body all the large json assets, stencil, wrench, dialob etc....
+  Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody);
   
 }

@@ -51,12 +51,12 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
   }
   
   private Uni<EveliRuntime> getOrCreateEnvir(EveliDeployment deployment) {
-    final var currentEnvir = cache.getRuntime(deployment.getId());
-    logging.cachedRuntime(currentEnvir);
+    final var cachedEnvir = cache.getRuntime(deployment.getId());
+    logging.cachedRuntime(cachedEnvir);
     
     // already created
-    if(currentEnvir.isPresent() && currentEnvir.get().getDeploymentId().equals(deployment.getId())) {
-      return Uni.createFrom().item(currentEnvir.get());
+    if(cachedEnvir.isPresent() && cachedEnvir.get().getDeploymentId().equals(deployment.getId())) {
+      return Uni.createFrom().item(cachedEnvir.get());
     }
     
     return new DeploymentQueryImpl(ctx).emptyBranchBody(true)
@@ -91,7 +91,7 @@ public class EveliRuntimeQueryImpl implements EveliRuntimeQuery {
         logging.lastQueriedDeployment(latest);
         
         if(latest.isEmpty()) {
-          return ctx.getExternalProvider().getDeployment().onItem().invoke(ext -> logging.lastExternalDeployment(latest));  
+          return ctx.getExternalProvider().getDeployment(true).onItem().invoke(ext -> logging.lastExternalDeployment(latest));  
         }
         
         return Uni.createFrom().item(latest);

@@ -72,4 +72,12 @@ public class EveliRuntimeCacheInMemory implements EveliRuntimeCache {
     log.debug("Invalidating deployment cache");
     short_deployment_cache.invalidateAll();
   }
+  
+  public void invalidateAll() {
+    log.debug("Invalidating deployment cache");
+    short_deployment_cache.invalidateAll();
+    
+    log.debug("Invalidating runtime cache");
+    long_runtime_cache.invalidateAll();
+  }
 }

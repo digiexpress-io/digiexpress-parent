@@ -70,7 +70,7 @@ public class EveliAutoConfigEnvir {
     final boolean isDev = true;
     final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
       @Override
-      public Uni<Optional<EveliDeployment>> getDeployment() {
+      public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {
         return Uni.createFrom().item(Optional.empty());
       }
     });

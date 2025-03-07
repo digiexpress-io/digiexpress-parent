@@ -23,9 +23,11 @@ import java.util.List;
  */
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
@@ -55,6 +57,15 @@ public class QueryBuilderImpl extends PersistenceCommands implements QueryBuilde
     super(config);
   }
 
+
+  @Override
+  public Uni<Optional<Branch>> getBranch() {
+    return config.getClient().git(config.getRepoName()).branch()
+        .branchQuery()
+        .branchName(config.getHeadName())
+        .getOneBranch();
+  }
+  
   @Override
   public Uni<SiteState> head() {
     final var siteName = config.getRepoName() + ":" + config.getHeadName();

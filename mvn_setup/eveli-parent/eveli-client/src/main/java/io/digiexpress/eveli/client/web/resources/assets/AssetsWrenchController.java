@@ -69,6 +69,7 @@ public class AssetsWrenchController {
   private final EveliEnvirClient envir;
   private final String version;
   private final String timestamp;
+  
   private static final Duration timeout = Duration.ofMillis(10000);
 
 
@@ -85,7 +86,7 @@ public class AssetsWrenchController {
   @PostMapping(path = "/commands", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComposerEntity<?> commands(@RequestBody String body, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
     final var command = objectMapper.readValue(body, UpdateEntity.class);
-    return composer.withBranch(branchName).dryRun(command).await().atMost(timeout);
+    return composer.withBranch(branchName).dryRun(command).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @PostMapping(path = "/debugs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -95,32 +96,32 @@ public class AssetsWrenchController {
 
   @PostMapping(path = "/importTag", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState importTag(@RequestBody AstTag entity) {
-    return composer.importTag(entity).await().atMost(timeout);
+    return composer.importTag(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @PostMapping(path = "/resources", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState create(@RequestBody CreateEntity entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).create(entity).await().atMost(timeout);
+    return composer.withBranch(branchName).create(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @PutMapping(path = "/resources", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState update(@RequestBody UpdateEntity entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).update(entity).await().atMost(timeout);
+    return composer.withBranch(branchName).update(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @DeleteMapping(path = "/resources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState delete(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).delete(id).await().atMost(timeout);
+    return composer.withBranch(branchName).delete(id).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @GetMapping(path = "/resources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ComposerEntity<?> get(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).get(id).await().atMost(timeout);
+    return composer.withBranch(branchName).get(id).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @PostMapping(path = "/copyas", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState copyAs(@RequestBody CopyAs entity, @RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).copyAs(entity).await().atMost(timeout);
+    return composer.withBranch(branchName).copyAs(entity).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
   }
 
   @GetMapping(path = "/history/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

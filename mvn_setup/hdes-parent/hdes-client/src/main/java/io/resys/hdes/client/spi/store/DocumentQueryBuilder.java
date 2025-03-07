@@ -1,5 +1,7 @@
 package io.resys.hdes.client.spi.store;
 
+import java.util.Optional;
+
 import io.resys.hdes.client.api.HdesStore.QueryBuilder;
 
 /*-
@@ -41,5 +43,13 @@ public class DocumentQueryBuilder extends PersistenceCommands implements QueryBu
   public Uni<StoreEntity> get(String id) {
     var result = super.getEntityState(id);
     return result.onItem().transform(entityState -> entityState.getEntity());
+  }
+
+  @Override
+  public Uni<Optional<io.resys.thena.api.entities.git.Branch>> getBranch() {
+    return config.getClient().git(config.getRepoName()).branch()
+        .branchQuery()
+        .branchName(config.getHeadName())
+        .getOneBranch();
   }
 }

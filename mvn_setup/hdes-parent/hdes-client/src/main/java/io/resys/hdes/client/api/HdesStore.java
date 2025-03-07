@@ -73,6 +73,7 @@ public interface HdesStore {
   }
    
   interface QueryBuilder {
+    Uni<Optional<io.resys.thena.api.entities.git.Branch>> getBranch();
     Uni<StoreState> get();
     Uni<StoreEntity> get(String id);
   }
