@@ -62,7 +62,7 @@ function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
   const explorerItems = search['explorer'];
 
   if(!Array.isArray(explorerItems)) {
-    return [{ type: 'ARTICLES', article: undefined }];
+    return [{ type: 'ACTIVITIES' }];
   }
   return explorerItems;
 }

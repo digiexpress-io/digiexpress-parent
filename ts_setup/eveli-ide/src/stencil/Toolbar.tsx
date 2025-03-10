@@ -17,6 +17,7 @@ import { Composer, StencilApi } from './context';
 import { LocaleSelect } from '../uiDev';
 import { EveliShellMiniBarRoot, useUtilityClasses, EveliShellMiniBarClassName } from '../burger/eveli-shell/useUtilityClasses';
 import { useNavigate } from '@tanstack/react-router';
+import { useStencilNav } from './nav';
 
 
 export const Toolbar: React.FC<{}> = () => {
@@ -25,7 +26,10 @@ export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
+
+  const {onNav} = useStencilNav();
   const secondaryCtx = Burger.useIconbar();
+  
 
   const classes = useUtilityClasses();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -61,28 +65,17 @@ export const Toolbar: React.FC<{}> = () => {
         composer.actions.handleLoadSite();
       });
 
-
-    } else if (newValue === 'toolbar.activities') {
-      tabs.handleTabAdd({ id: 'newItem', label: "Activities" });
     } else if (newValue === 'toolbar.search') {
       secondaryCtx.handleActiveId("toolbar.search")
     }
   };
-
-
-  // open dashboard
-  React.useLayoutEffect(() => {
-    secondaryCtx.handleActiveId("toolbar.articles")
-    tabs.handleTabAdd({ id: 'newItem', label: "Activities" });
-  }, []);
-
   const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
       <LocaleSelect open={!!anchorEl} onClose={handleLocalePopoverClose} anchorEl={anchorEl} />
       <div>
-        <IconButton onClick={(event) => handleChange(event, 'toolbar.activities')}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <IconButton onClick={() => onNav('ACTIVITIES')}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
       </div>
 
