@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useIntl } from 'react-intl'
 
 import { Composer, StencilApi } from '../../context';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
@@ -21,6 +22,8 @@ const EndIcon: React.FC = () => {
 }
 
 export const WorkflowList: React.FC<{ searchString: string }> = ({ searchString }) => {
+  const intl = useIntl();
+
   const { session } = Composer.useComposer();
   const [expanded, setExpanded] = React.useState<string[]>([]);
   const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);
@@ -39,6 +42,8 @@ export const WorkflowList: React.FC<{ searchString: string }> = ({ searchString 
       {editWorkflow ? <WorkflowEdit workflowId={editWorkflow} onClose={() => setEditWorkflow(undefined)} /> : undefined}
 
       <WorkflowsListRoot className={classes.root}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'main.services.all' })}</Typography>
+
         <SimpleTreeView expandedItems={expanded} slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
 
           onExpandedItemsChange={(_event: React.SyntheticEvent, nodeIds: string[]) => {

@@ -1,5 +1,15 @@
 package io.resys.hdes.client.spi.envir;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*-
  * #%L
  * hdes-client-api
@@ -50,15 +60,6 @@ import io.resys.hdes.client.spi.decision.DecisionProgramBuilder;
 import io.resys.hdes.client.spi.flow.FlowProgramBuilder;
 import io.resys.hdes.client.spi.groovy.ServiceProgramBuilder;
 import io.resys.hdes.client.spi.tag.TagProgramBuilder;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ProgramEnvirFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(ProgramEnvirFactory.class);
@@ -109,6 +110,7 @@ public class ProgramEnvirFactory {
         .forEach(tree::add);
     }
     
+    final var visited = new ArrayList<String>();
     tree.build().forEach(e -> {
 
       visitTreeLog(e);
@@ -119,13 +121,20 @@ public class ProgramEnvirFactory {
       if(ast == null) {
         return;
       }
+      
+      final var astName = ast.getName() + "/" + ast.getBodyType();
+      final var isDup = visited.contains(astName);
+      visited.add(astName);
+      
+      final var name = isDup ? ast.getName() + "_dup_" + visited.size(): ast.getName();
+      
 
       switch (ast.getBodyType()) {
-      case DT: envir.putDecisionsByName(ast.getName(), (ProgramWrapper<AstDecision, DecisionProgram>) e); break;
-      case FLOW_TASK: envir.putServicesByName(ast.getName(), (ProgramWrapper<AstService, ServiceProgram>) e); break;
-      case FLOW: envir.putFlowsByName(ast.getName(), (ProgramWrapper<AstFlow, FlowProgram>) e); break;
-      case TAG: envir.putTagsByName(ast.getName(), (ProgramWrapper<AstTag, TagProgram>) e); break;
-      case BRANCH: envir.putBranchesByName(ast.getName(), (ProgramWrapper<AstBranch, BranchProgram>) e); break;
+      case DT: envir.putDecisionsByName(name, (ProgramWrapper<AstDecision, DecisionProgram>) e); break;
+      case FLOW_TASK: envir.putServicesByName(name, (ProgramWrapper<AstService, ServiceProgram>) e); break;
+      case FLOW: envir.putFlowsByName(name, (ProgramWrapper<AstFlow, FlowProgram>) e); break;
+      case TAG: envir.putTagsByName(name, (ProgramWrapper<AstTag, TagProgram>) e); break;
+      case BRANCH: envir.putBranchesByName(name, (ProgramWrapper<AstBranch, BranchProgram>) e); break;
       default: break;
       
       }

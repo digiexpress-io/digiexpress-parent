@@ -164,7 +164,7 @@ function toTab(data: ExplorerItem) {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => key === 'type' || key === 'article')
     .reduce((result, [key, value]) => result + "/" + value, ''));
-  const label = data.type.toLowerCase();
+  const label = data.type ? data.type.toLowerCase() : 'no type';
   return { id, label, data };
 }
 

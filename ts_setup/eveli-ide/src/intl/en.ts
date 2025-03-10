@@ -74,6 +74,8 @@ export const en = {
   'app.login': 'Log in',
   'app.feedback': 'Feedback',
   'main.articles.all': 'All Articles',
+  'main.links.all': 'All Links',
+  'main.services.all': 'All Services',
   'menu.dashboard': 'Dashboard',
   'menu.profile': 'Profile',
   'menu.tasks': 'Tasks',
@@ -300,7 +302,7 @@ export const en = {
   'pages': 'Pages',
   'articles': 'Articles',
   'locale': 'Locale',
-  'locales': 'Locales',
+  'locales': 'Site Languages',
   'tag': 'Tag',
   'links': 'Links',
   'releases': 'Releases',
@@ -479,6 +481,7 @@ export const en = {
   'button.view.all.releases': 'View releases',
   'button.view.all.templates': 'View templates',
   'links.message': 'Expand rows to view Link - Article associations',
+  'links.searchAll': 'Search all links',
   'link.article.add.title': 'Add link to an Article',
   'link.article.select': 'Select Article',
   'link.type': 'Type',
@@ -842,5 +845,6 @@ export const en = {
   'queue.all_messages.body': 'Body',
   'queue.all_messages.created': 'Created',
   'menu.messages': 'Messages',
-  'menu.deliveries': 'Deliveries'
+  'menu.deliveries': 'Deliveries',
+  'articles.searchAll': 'Search all articles'
 }

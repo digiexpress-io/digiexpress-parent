@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useIntl } from 'react-intl'
 
 
 import { Composer, StencilApi } from '../../context';
@@ -23,6 +24,7 @@ const EndIcon: React.FC = () => {
 }
 
 export const LinksList: React.FC<{ searchString: string }> = ({ searchString }) => {
+  const intl = useIntl();
   const { session } = Composer.useComposer();
   const [expanded, setExpanded] = React.useState<string[]>([]);
   const [editLink, setEditLink] = React.useState<undefined | StencilApi.LinkId>(undefined);
@@ -39,8 +41,9 @@ export const LinksList: React.FC<{ searchString: string }> = ({ searchString }) 
   return (
     <>
       {editLink ? <LinkEdit linkId={editLink} onClose={() => setEditLink(undefined)} /> : undefined}
-     
+
       <LinksListRoot className={classes.root}>
+        <Typography className={classes.title}>{intl.formatMessage({ id: 'main.links.all' })}</Typography>
 
         <SimpleTreeView expandedItems={expanded}
           slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
