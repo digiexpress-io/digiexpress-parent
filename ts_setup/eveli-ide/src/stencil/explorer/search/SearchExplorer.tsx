@@ -3,7 +3,6 @@ import { Box, Typography, TextField, TextFieldProps, InputAdornment, useTheme } 
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SearchIcon from '@mui/icons-material/Search';
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/ModeEdit';
@@ -19,8 +18,8 @@ import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../../context';
-import { useTabNav } from '../../../routes/secured.$locale.assets.stencil.index';
 
+import { useStencilNav } from '../../nav';
 
 //color: theme.palette.secondary.contrastText,
 //backgroundColor: theme.palette.secondary.main,
@@ -149,7 +148,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
 const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, searchResult, keyword }) => {
 
   const { article } = view;
-  const { onNav } = useTabNav();
+  const { onNav } = useStencilNav();
   const onLeftEdit = (page: StencilApi.Page) => onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: page.body.locale })
 
   const [articleEditOpen, setArticleEditOpen] = React.useState<boolean>(false);

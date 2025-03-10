@@ -6,9 +6,13 @@ import { ManyTabs, OneTab, TabsContextType } from './tab-api';
 const TabsContext = React.createContext<TabsContextType>({} as any)
 
 
-export const TabsProvider: React.FC<{ children: React.ReactNode, onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void}> = ({children, onTabClose}) => {
+export const TabsProvider: React.FC<{ 
+  children: React.ReactNode, 
+  onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void,
+  onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void,
+}> = ({children, onTabClose, onTabChange}) => {
 
-  const [state, setState] = React.useState<ManyTabs>(new ManyTabsImpl({onTabClose}));
+  const [state, setState] = React.useState<ManyTabs>(new ManyTabsImpl({onTabClose, onTabChange}));
   
   const setters = React.useMemo(() => {
     function handleTabAdd(newItem: OneTab<any>) {

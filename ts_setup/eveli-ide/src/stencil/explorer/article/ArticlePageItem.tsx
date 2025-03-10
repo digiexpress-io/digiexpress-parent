@@ -7,8 +7,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 
 import * as Burger from '@/burger';
 import { Composer } from '../../context';
-import { ExplorerItemArticlePages, useTabNav } from "../../../routes/secured.$locale.assets.stencil.index";
-
+import { ExplorerItemArticlePages, useStencilNav } from '../../nav';
 
 
 
@@ -18,7 +17,7 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
   const localeIconColor = theme.palette.secondary.contrastText;
 
 
-  const { onNav, findTab } = useTabNav();
+  const { onNav, findTab } = useStencilNav();
 
   const page = props.page.page;
   const article = props.article.article;

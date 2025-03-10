@@ -11,7 +11,7 @@ import { ArticleEdit, ArticleDelete } from '../../article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../page';
 import { Composer, StencilApi } from '../../context';
 import * as Burger from '@/burger';
-import { useTabNav } from '../../../routes/secured.$locale.assets.stencil.index';
+import { useStencilNav } from '../../nav';
 
 interface ArticleOptionsProps {
   article: StencilApi.Article,
@@ -23,7 +23,7 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
 
   const { site } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
-  const { activeItem, onNav } = useTabNav();
+  const { activeItem, onNav } = useStencilNav();
 
   return (
     <>

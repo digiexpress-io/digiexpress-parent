@@ -8,7 +8,7 @@ import {
 import { TemplatesView } from './template';
 import { Composer } from './context';
 import { LinksView } from './link';
-import { ExplorerItem } from '../routes/secured.$locale.assets.stencil.index';
+import { ExplorerItem } from './nav';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 

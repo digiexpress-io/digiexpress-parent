@@ -6,7 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { useTabNav } from '../../routes/secured.$locale.assets.stencil.index';
+
+import { useStencilNav } from '../nav';
 
 
 
@@ -17,7 +18,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
   const [template, setTemplate] = React.useState<StencilApi.TemplateId | ''>('');
   const [articleId, setArticleId] = React.useState(props.articleId ? props.articleId : '');
   const [devMode, setDevMode] = React.useState<boolean>(false);
-  const { onNav } = useTabNav();
+  const { onNav } = useStencilNav();
 
   const handleCreate = () => {
 

@@ -16,7 +16,7 @@ import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell
 import { ComposeSelect } from '../uiDev/ComposeSelect';
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { MigrationComposer } from './migration';
-import { useTabNav } from '../routes/secured.$locale.assets.stencil.index';
+import { useStencilNav } from './nav';
 
 
 
@@ -25,7 +25,7 @@ const Secondary: React.FC<{}> = () => {
   const classes = useUtilityClasses();
 
   const userFirstAndLastName = 'Missing username';
-  const { activeItem, onNav } = useTabNav();
+  const { activeItem, onNav } = useStencilNav();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)

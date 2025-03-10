@@ -38,6 +38,8 @@ export interface ContainerProps {
   toolbar: React.FC;
 
   onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
+  onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
+
   children?: React.ReactNode
 };
 
@@ -46,7 +48,7 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
 
   return (
     <IconbarProvider>
-      <TabsProvider onTabClose={components.onTabClose}>
+      <TabsProvider onTabClose={components.onTabClose} onTabChange={components.onTabChange}>
         <EveliShell drawerOpen={true}>
           <ToggleDrawer {...components} />
 

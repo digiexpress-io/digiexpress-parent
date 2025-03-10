@@ -73,13 +73,18 @@ export class ManyTabsImpl implements ManyTabs {
   private _tabs: ImmutableTab<any>[];
   private _history: NavHistory;
   private _onTabClose: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
+  private _onTabChange: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
 
   constructor(props: {
     tabs?: ImmutableTab<any>[],
     history?: NavHistory,
-    onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void
+    onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void,
+    onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void
   }) {
     this._onTabClose = props.onTabClose ?? function (tab: OneTab<any>, nextActive: OneTab<any> | undefined) {
+
+    };
+    this._onTabChange = props.onTabChange ?? function (tab: OneTab<any>, nextActive: OneTab<any> | undefined) {
 
     };
     this._tabs = props.tabs ? props.tabs : [];
@@ -93,7 +98,11 @@ export class ManyTabsImpl implements ManyTabs {
   }
   private next(history: NavHistory, tabs?: ImmutableTab<any>[]): ManyTabs {
     const newTabs: ImmutableTab<any>[] = tabs ? tabs : this._tabs;
-    return new ManyTabsImpl({ tabs: [...newTabs], history, onTabClose: this._onTabClose });
+
+    if(history.open !== this._history.open) {
+      this._onTabChange(this._tabs[this._history.open], newTabs[history.open]);
+    }
+    return new ManyTabsImpl({ tabs: [...newTabs], history, onTabClose: this._onTabClose, onTabChange: this._onTabChange });
   }
   withTabData(tabId: string, updateCommand: (oldData: any) => any): ManyTabs {
     const tabs: ImmutableTab<any>[] = [];
@@ -114,6 +123,7 @@ export class ManyTabsImpl implements ManyTabs {
     }
     const newTab = new ImmutableTab<any>(newTabOrTabIndex as OneTab<any>);
     const alreadyOpen = this.findTab(newTab.id);
+
     if (alreadyOpen !== undefined) {
       const editModeChange = this.tabs[alreadyOpen].edit !== newTab.edit;
       if (editModeChange && newTab.edit === true) {
@@ -122,10 +132,14 @@ export class ManyTabsImpl implements ManyTabs {
       if (alreadyOpen === this._history.open) {
         return this;
       }
-      return this.next({ previous: this.history, open: alreadyOpen }).withTabData(newTab.id, (pr) => newTab.data);
+      return this
+        .next({ previous: this.history, open: alreadyOpen })
+        .withTabData(newTab.id, (pr) => newTab.data);
     }
 
-    return this.next({ previous: this.history, open: this.tabs.length }, this._tabs.concat(newTab)).withTabData(newTab.id, (pr) => newTab.data);
+    return this
+      .next({ previous: this.history, open: this.tabs.length }, this._tabs.concat(newTab))
+      .withTabData(newTab.id, (pr) => newTab.data);
   }
   findTab(newTabId: string): number | undefined {
     let index = 0;
