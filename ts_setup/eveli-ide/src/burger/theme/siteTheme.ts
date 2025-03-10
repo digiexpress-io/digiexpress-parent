@@ -54,17 +54,15 @@ const siteTheme = createTheme({
   },
 
   typography: {
-    //fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+    fontFamily: '"Ubuntu", sans-serif',
     h1: {
       fontSize: "2rem",
       lineHeight: 2,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 600,
     },
     h2: {
       fontSize: "1.9rem",
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 400,
       paddingTop: 15,
       paddingBottom: 15,
@@ -72,7 +70,6 @@ const siteTheme = createTheme({
     h3: {
       fontSize: "1.6rem",
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 'bold',
       paddingTop: 15,
       paddingBottom: 15,
@@ -80,30 +77,24 @@ const siteTheme = createTheme({
     h4: {
       fontSize: "1.3rem",
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     h5: {
       fontSize: "1.1rem",
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     h6: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     body1: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "1rem",
       fontWeight: 400,
     },
     body2: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "1rem",
       fontWeight: 400,
     },
     caption: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "0.7rem",
       fontWeight: 500,
     }
