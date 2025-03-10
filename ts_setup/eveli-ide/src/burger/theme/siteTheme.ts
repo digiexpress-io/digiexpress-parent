@@ -25,11 +25,13 @@ const siteTheme = createTheme({
     },
 
     secondary: {
-      main: 'rgb(17, 24, 39)', // background colour, dark grey-black
-      dark: 'rgb(255, 255, 255)', //unused
-      light: 'rgb(253, 205, 73)',
+      main: 'rgb(246, 249, 253)', // Explorer (Secondary) background color
+      dark: 'rgb(236, 239, 243)', // Toolbar background color
+      light: '#CED8DE', // don't use for dividers! //TODO
       contrastText: 'rgb(16, 185, 129)'
     },
+
+    divider: '#CED8DE', // Borders and dividers
 
     error: {
       main: '#e53935',
@@ -46,10 +48,15 @@ const siteTheme = createTheme({
     success: {
       main: '#4caf50',
     },
+
     text: {
       primary: 'rgba(0,0,0,0.86)',
-      secondary: 'rgba(0,0,0,0.55)',
+      secondary: 'rgb(58, 55, 55)', // Icon and text color
       disabled: 'rgba(0,0,0,0.36)'
+    },
+
+    background: {
+      default: '#FFFFFF'
     }
   },
 
@@ -57,20 +64,20 @@ const siteTheme = createTheme({
     fontFamily: '"Ubuntu", sans-serif',
     h1: {
       fontSize: "2rem",
-      lineHeight: 2,
+      lineHeight: 1.5,
       fontWeight: 600,
     },
     h2: {
       fontSize: "1.9rem",
       lineHeight: 1,
-      fontWeight: 400,
+      fontWeight: 500,
       paddingTop: 15,
       paddingBottom: 15,
     },
     h3: {
       fontSize: "1.6rem",
+      fontWeight: 300,
       lineHeight: 1,
-      fontWeight: 'bold',
       paddingTop: 15,
       paddingBottom: 15,
     },
@@ -146,11 +153,23 @@ const siteTheme = createTheme({
         })
       }
     },
+    MuiCard: {
+      defaultProps: {
+        variant: 'outlined'
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderRadius: 'unset',
+          border: `1px solid ${theme.palette.divider}`,
+          variant: 'outlined',
+        })
+      }
+    },
     MuiCardHeader: {
       styleOverrides: {
         root: ({theme}) => ({
           backgroundColor: colors.grey,
-          padding: theme.spacing(1)
+          padding: theme.spacing(1),
         })
       }
     },
@@ -166,14 +185,14 @@ const siteTheme = createTheme({
     MuiDialog: {
       defaultProps: {
         fullWidth: true, 
-        maxWidth: 'md'
+        maxWidth: 'md',
       }
     },
     MuiDialogContent: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
           color: theme.palette.secondary.main, 
-          fontWeight: '400'
+          fontWeight: '400',
         })
       }
     },
@@ -181,11 +200,9 @@ const siteTheme = createTheme({
       styleOverrides:  {
         root: ({ ownerState, theme }) => {
           return {
-            color: theme.palette.primary.contrastText,
-            fontWeight: 'bold',
-            borderBottom: '1px solid gray',
+            ...theme.typography.h1,
+            color: colors.blue,
             mb: 2, 
-            backgroundColor: alpha(colors.blue, 0.9)
           }
         }
       }
@@ -309,7 +326,7 @@ const siteTheme = createTheme({
             fontVariant: 'body2',
             textTransform: 'capitalize',
             borderWidth: '2px solid !important',
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             fontWeight: 'bold',
             backgroundColor: colors.blue,
             '&:hover': {
@@ -320,7 +337,7 @@ const siteTheme = createTheme({
         {
           props: { variant: 'text' },
           style: ({ theme }) => ({
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
             color: colors.blue,
@@ -335,7 +352,7 @@ const siteTheme = createTheme({
         {
           props: { variant: 'outlined' },
           style: ({ theme }) => ({
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
             color: colors.blue,

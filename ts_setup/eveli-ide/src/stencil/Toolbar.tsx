@@ -119,7 +119,7 @@ export const Toolbar: React.FC<{}> = () => {
 
       <div>
         <IconButton disabled className={classes.itemActive}><EditNoteOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+        <Typography className={classes.textActive}><FormattedMessage id='toolbar.stencil' /></Typography>
       </div>
 
       <div>

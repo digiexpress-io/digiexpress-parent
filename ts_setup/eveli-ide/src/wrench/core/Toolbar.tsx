@@ -112,7 +112,7 @@ const Toolbar: React.FC<{}> = () => {
 
       <div>
         <IconButton disabled className={classes.itemActive}><BuildOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
+        <Typography className={classes.textActive}><FormattedMessage id='toolbar.wrench' /></Typography>
       </div>
 
       <div>

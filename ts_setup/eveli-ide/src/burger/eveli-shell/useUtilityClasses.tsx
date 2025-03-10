@@ -1,5 +1,7 @@
 import { styled, generateUtilityClass, alpha } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
+import { colors } from '../eveli-colors'
+
 
 export const EveliShellClassName = 'EveliShellBase';
 export const EveliShellMiniBarClassName = 'EveliShellMiniBar';
@@ -13,6 +15,7 @@ export const useUtilityClasses = () => {
     unsaved: ['unsaved'],
     itemDisabled: ['itemDisabled'],
     itemActive: ['itemActive'],
+    textActive: ['textActive'],
     logoContainer: ['logoContainer'],
     logo: ['logo'],
     composeButton: ['composeButton'],
@@ -34,6 +37,7 @@ export const EveliShellRoot = styled('div', {
       styles.unsaved,
       styles.itemDisabled,
       styles.itemActive,
+      styles.textActive,
       styles.logoContainer,
       styles.logo,
       styles.composeButton,
@@ -84,8 +88,8 @@ export const EveliShellRoot = styled('div', {
       flexDirection: 'column',
       textAlign: 'center',
       width: `${minibarWidth - 1}px`,
-      borderRight: drawerOpen ? `1px solid #CED8DE` : undefined,
-      backgroundColor: 'rgb(236, 239, 243)',
+      borderRight: drawerOpen ? `1px solid ${theme.palette.divider}` : undefined,
+      backgroundColor: theme.palette.secondary.dark
     },
 
     '& .EveliShellMiniBar > div': {
@@ -124,16 +128,16 @@ export const EveliShellRoot = styled('div', {
     },
 
     '& .EveliShell-composeButton': {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: theme.palette.background.default,
       borderRadius: theme.spacing(2),
-      color: 'rgb(58, 55, 55)',
+      color: theme.palette.text.secondary,
       width: '100%',
       ...theme.typography.body1,
       fontWeight: 'bold',
       padding: theme.spacing(2),
       marginBottom: theme.spacing(3),
       ':hover': {
-        backgroundColor: '#FFFFFF'
+        backgroundColor: theme.palette.background.default
       },
     },
 
@@ -142,13 +146,13 @@ export const EveliShellRoot = styled('div', {
       marginTop: theme.spacing(0.5),
       borderRadius: theme.spacing(3),
       paddingLeft: theme.spacing(2),
-      border: `1px solid rgb(246, 249, 253)`,
+      border: `1px solid ${theme.palette.secondary.main}`,
       ...theme.typography.body1,
-      color: 'rgb(58, 55, 55)',
+      color: theme.palette.text.secondary,
       width: '100%',
       ':hover': {
-        backgroundColor: 'rgb(236, 239, 243)',
-        border: `1px solid rgb(246, 249, 253)`,
+        backgroundColor: theme.palette.secondary.dark,
+        border: `1px solid ${theme.palette.secondary.main}`,
       }
     },
 
@@ -156,16 +160,16 @@ export const EveliShellRoot = styled('div', {
       justifyContent: 'left',
       marginTop: theme.spacing(0.5),
       borderRadius: theme.spacing(3),
-      border: `1px solid #CED8DE`,
+      border: `1px solid ${theme.palette.divider}`,
       ...theme.typography.body1,
       paddingLeft: theme.spacing(2),
       fontWeight: 'bold',
-      color: 'rgb(58, 55, 55)',
+      color: theme.palette.text.secondary,
       width: '100%',
-      backgroundColor: 'rgb(236, 239, 243)',
+      backgroundColor: theme.palette.secondary.dark,
       ':hover': {
-        backgroundColor: 'rgb(236, 239, 243)',
-        border: `1px solid #CED8DE`,
+        backgroundColor: theme.palette.secondary.dark,
+        border: `1px solid ${theme.palette.divider}`,
       }
     },
     '& .EveliShell-logoutButton': {
@@ -174,13 +178,13 @@ export const EveliShellRoot = styled('div', {
       marginTop: theme.spacing(0.5),
       borderRadius: theme.spacing(3),
       paddingLeft: theme.spacing(2),
-      border: `1px solid rgb(246, 249, 253)`,
+      border: `1px solid ${theme.palette.secondary.main}`,
       ...theme.typography.body1,
-      color: 'rgb(58, 55, 55)',
+      color: theme.palette.text.secondary,
       width: '100%',
       ':hover': {
-        backgroundColor: 'rgb(236, 239, 243)',
-        border: `1px solid rgb(246, 249, 253)`,
+        backgroundColor: theme.palette.secondary.dark,
+        border: `1px solid ${theme.palette.secondary.main}`,
       }
     },
     '& .EveliShell-secondaryDivider': {
@@ -190,7 +194,7 @@ export const EveliShellRoot = styled('div', {
     },
 
     '& .EveliShellBase .MuiDrawer-paper': {
-      backgroundColor: 'rgb(246, 249, 253)',
+      backgroundColor: theme.palette.secondary.main,
       boxSizing: 'border-box',
       width: drawerWidth,
 
@@ -198,7 +202,7 @@ export const EveliShellRoot = styled('div', {
       flexGrow: 1,
       flexDirection: 'row',
 
-      borderRight: `1px solid #CED8DE`,
+      borderRight: `1px solid ${theme.palette.divider}`,
 
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -258,8 +262,6 @@ export const EveliShellLargeBarRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-
-
     '& .EveliShell-itemDisabled': {
       color: theme.palette.action.disabled
     }
@@ -281,19 +283,23 @@ export const EveliShellMiniBarRoot = styled('div', {
   return {
 
     '& .EveliShell-unsaved': {
-      color: ownerState.unsaved ? theme.palette.common.black : 'rgb(58, 55, 55)',
+      color: ownerState.unsaved ? theme.palette.common.black : theme.palette.text.secondary,
       backgroundColor: alpha(theme.palette.warning.main, 0.8),
       padding: theme.spacing(1),
       '&:hover': {
-        boxShadow: `0px 4px 6px rgba(0, 0, 0, 0.2)`
+        boxShadow: `0px 4px 6px ${theme.palette.text.primary}`
       }
     },
     '& .EveliShell-itemDisabled': {
       color: theme.palette.action.disabled
     },
     '& .EveliShell-itemActive': {
-      color: 'rgb(58, 55, 55)',
-      backgroundColor: alpha("#ca7df9", 0.5),
+      color: colors.grey,
+      backgroundColor: colors.blue,
+      padding: theme.spacing(1),
+    },
+    '& .EveliShell-textActive': {
+      color: colors.blue,
       padding: theme.spacing(1),
     }
   }

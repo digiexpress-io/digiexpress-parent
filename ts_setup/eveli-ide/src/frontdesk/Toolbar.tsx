@@ -46,7 +46,7 @@ export const Toolbar: React.FC<{}> = () => {
 
       <div>
         <IconButton disabled className={classes.itemActive} onClick={() => { }}><TaskOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
+        <Typography className={classes.textActive}><FormattedMessage id='toolbar.tasks' /></Typography>
       </div>
 
       <div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SxProps } from '@mui/system';
-import { Card, CardHeader, CardActions, CardContent, Typography, Box, Divider, Button } from '@mui/material';
+import { Card, CardHeader, CardActions, CardContent, Typography, Box, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 interface ActivityData {
@@ -31,7 +31,6 @@ const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (pr
       <Typography variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
     </CardContent>
 
-    <Divider />
 
     <CardActions sx={{ alignSelf: "flex-end" }}>
       <Box display="flex">
