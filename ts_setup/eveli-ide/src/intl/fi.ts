@@ -313,7 +313,7 @@ export const fi = {
   'article.create': 'Luo artikkeli',
   'article.name': 'Artikkelin nimi',
   'article.delete.title': 'Poista tämä artikkeli pysyvästi?',
-  'article.delete': 'Artikkelin poistaminen poistaa sen ja siihen yhdistetyt sivut koko sovelluksesta.',
+  'article.delete.description': 'Artikkelin poistaminen poistaa sen ja siihen yhdistetyt sivut koko sovelluksesta.',
   'article.edit.title': 'Muokkaa artikkelia',
   'article.edit.parent': 'Emoartikkeli',
   'article.edit.orderhelper': 'Kolmenumeroinen luku järjestelyyn',

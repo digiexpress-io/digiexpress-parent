@@ -28,11 +28,18 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
   const message = <FormattedMessage id="snack.page.deletedMessage" />
   const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
 
+  const articleName = articlePages.map(articlePage => {
+    const articleId = articlePage.body.article;
+    const article = site.articles[articleId];
+    return article.body.name;
+  });
+
+
   return (
     <Dialog open={true} onClose={props.onClose}>
-      <DialogTitle><FormattedMessage id='pages.delete' /></DialogTitle>
+      <DialogTitle><FormattedMessage id='page.delete.dialog.title' />{articleName}</DialogTitle>
       <DialogContent>
-        <FormattedMessage id='pages.delete.message' />
+        <FormattedMessage id='page.delete.description' />
         <Burger.Select
           selected={pageId}
           onChange={setPageId}
@@ -48,7 +55,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={handleDelete} disabled={!pageId}>
-          <FormattedMessage id='button.delete'/>
+          <FormattedMessage id='button.delete.page' />
         </Button>
       </DialogActions>
     </Dialog>
