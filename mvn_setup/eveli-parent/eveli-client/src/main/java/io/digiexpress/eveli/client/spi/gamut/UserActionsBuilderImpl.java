@@ -61,12 +61,13 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private final DialobClient dialobCommands;
   private final CrmClient auth;
   private final EveliEnvirClient envir;
-  
   private boolean anon = false;
   private String actionId;
   private String clientLocale; 
   private String inputContextId;
   private String inputParentContextId;
+  private final UserActionLogger userActionLogger = new UserActionLogger();
+  
   
   
   public Uni<UserAction> createOne() throws UserActionNotAllowedException, WorkflowNotFoundException {
@@ -75,25 +76,36 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     TaskAssert.notNull(inputContextId, () -> "inputContextId can't be null!");
     TaskAssert.notNull(inputParentContextId, () -> "inputParentContextId can't be null!");
     
-    return Uni.combine().all().unis(
-        envir.runtimeQuery().getOne(), 
-        new UserActionMetaQueryImpl(envir).actionId(actionId).locale(clientLocale).getOne()
-    ).asTuple()
-    .onItem().transformToUni(tuple -> createUserAction(tuple.getItem1(), tuple.getItem2()));
+    
+    userActionLogger.startRuntime();
+    return envir.runtimeQuery().getOne()
+        .invoke(runtime -> userActionLogger.endRuntime(runtime))
+        .onItem().transformToUni(runtime -> createUserAction(runtime))
+        .onItem().invoke(action -> userActionLogger.close());
   }
   
-  private Uni<UserAction> createUserAction(EveliRuntime runtime, UserActionMeta meta) {
+  private Uni<UserAction> createUserAction(EveliRuntime runtime) {
+    
+    userActionLogger.startStencilService();
+    final UserActionMeta meta = new UserActionMetaQueryImpl(envir).actionId(actionId).locale(clientLocale).getOne(runtime);
+    userActionLogger.endStencilService(meta);
+    
     final var now = OffsetDateTime.now();
     final var sites = runtime.getStencil(now);
     final var stencilService = meta.getTopicLink();
     final var expiresInSeconds = meta.getExpiresInSeconds();
     
+    
+    userActionLogger.startAuth();
     if(auth.getCustomer().getPrincipal().getRepresentedId() != null) {
-      final var userRoles = auth.getCustomerRoles().getRoles();  
+      final var userRoles = auth.getCustomerRoles().getRoles();
+      userActionLogger.endAuth();
+      
+      userActionLogger.startWrenchAllowedRoles();
       final var allowed = hdesCommands.queryAuthorization().get(ImmutableInitProcessAuthorization.builder()
           .addAllUserRoles(userRoles)
           .build()).getAllowedProcessNames();
-      
+      userActionLogger.endWrenchAllowedRoles();
       
        if(!(
            allowed.contains(stencilService.getValue()) ||
@@ -102,7 +114,10 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         )) {
          throw new UserActionNotAllowedException("Process: " + actionId + " blocked, allowed list: "  + allowed + "!");         
        }
+    } else {
+      userActionLogger.endAuth();
     }
+
     
     if(sites.getSites().get(clientLocale) == null) {
       throw new WorkflowNotFoundException(new StringBuilder()
@@ -114,7 +129,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
     
     return visitForm(request, stencilService).onItem().transform(revision -> {
       
-      final var sessionId = revision.getId();            
+      final var sessionId = revision.getId();
+      userActionLogger.startProcessInstance();
       final var process = hdesCommands.createInstance()
           .questionnaireId(sessionId)
           .userId(request.getIdentity())
@@ -133,6 +149,8 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .wrenchTagName(runtime.getWrenchTagName())
           
           .create();
+      
+      userActionLogger.endProcessInstance();
 
       return ImmutableUserAction.builder()
           .id(process.getId().toString())
@@ -171,12 +189,15 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
         if(StringUtils.isAllBlank(stencilService.getFormId())) {
           return null;
         }
+        userActionLogger.startFormId();
         final var form = dialobCommands.getFormById(stencilService.getFormId());
         return form.getId();  
       } catch(Exception e) {
         // not the end of the world
         log.info("Can't resolve for by tag or form name, will try by form id for topic: {}", JsonObject.mapFrom(stencilService).encodePrettily());
         return null;
+      } finally {
+        userActionLogger.endFormId(); 
       }
       
     });
@@ -186,14 +207,18 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
   private Uni<String> getFormIdByTag(final TopicLink stencilService) {
     return Uni.createFrom().item(() -> {
       try {
+
         final var formName = stencilService.getFormName();
         final var formTagName = stencilService.getFormTag();
+        userActionLogger.startFormTag();
         final var formTag = dialobCommands.getFormTag(formName, formTagName);
         return formTag.getFormId();
       } catch(Exception e) {
         // not the end of the world
         log.info("Can't resolve for by tag or form name, will try by form id for topic: {}", JsonObject.mapFrom(stencilService).encodePrettily());
         return null;
+      } finally {
+        userActionLogger.endFormTag();
       }
     });
   }
@@ -249,7 +274,11 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           formBuilder.addContext("inputParentContextId", request.getInputParentContextId());
         }
         
-      return formBuilder.build();
+      userActionLogger.startFormCreate();
+      final var result = formBuilder.build();
+      userActionLogger.endFormCreate();
+      
+      return result;
       
     });
     

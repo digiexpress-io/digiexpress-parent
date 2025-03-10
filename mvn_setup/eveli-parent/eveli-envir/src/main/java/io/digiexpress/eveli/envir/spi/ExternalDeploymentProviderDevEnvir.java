@@ -43,7 +43,10 @@ import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer.SiteState;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RequiredArgsConstructor
 public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentProvider {
   private final StencilClient stencilClient;
@@ -138,8 +141,18 @@ public class ExternalDeploymentProviderDevEnvir implements ExternalDeploymentPro
       .toList();
     
     return Multi.createFrom().items(workflows.stream())
-        .onItem().transform(this::getFormIdById)
-        .collect().asList();
+        .onItem().transform(entity -> {
+          
+          try {
+            return Optional.ofNullable(getFormIdById(entity));
+          } catch(Exception e) {
+            log.error(e.getMessage(), e);
+            return Optional.<Form>empty();
+          }
+          
+        })
+        .collect().asList()
+        .onItem().transform(e -> e.stream().filter(sub -> sub.isPresent()).map(sub -> sub.get()).toList());
   }
 
   private Form getFormIdById(final Entity<Workflow> stencilService) {

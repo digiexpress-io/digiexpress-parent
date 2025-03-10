@@ -40,6 +40,7 @@ export const sv = {
   'gamut.locale.en': 'engelska',
   'gamut.locale.fi': 'finska',
   'gamut.locale.sv': 'svenska',
+  'gamut.locale.my': 'malajisk',
   'gamut.search.placeholder': 'Sök i våra tjänster',
   'gamut.search.popover.title': 'Sök på vår sida',
   'gamut.search.popover.input.placeholder': 'Vad letar du efter?',

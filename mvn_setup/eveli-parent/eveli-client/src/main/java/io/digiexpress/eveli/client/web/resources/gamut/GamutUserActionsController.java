@@ -1,7 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.gamut;
 
-import java.time.Duration;
-
 /*-
  * #%L
  * eveli-client
@@ -61,6 +59,7 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableInitProcessAuthorization;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,7 +70,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GamutUserActionsController {
   private final ApplicationEventPublisher publisher;
-  private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final CrmClient authClient;
   private final DialobClient dialob;
@@ -207,7 +205,7 @@ public class GamutUserActionsController {
   
 
   @GetMapping
-  public ResponseEntity<?> kindOfCreateActionOrGet(
+  public Uni<ResponseEntity<?>> kindOfCreateActionOrGet(
       @RequestParam(name = "id", required = false) String actionId,
       @RequestParam(name = "inputContextId", required = false) String inputContextId,
       @RequestParam(name = "inputParentContextId", required = false) String inputParentContextId,
@@ -215,20 +213,21 @@ public class GamutUserActionsController {
   ) {
     
     if(actionId == null) {
-      return ResponseEntity.ok(gamutClient.userActionQuery().findAll());
+      return Uni.createFrom().item(ResponseEntity.ok(gamutClient.userActionQuery().findAll()));
     }
 
     try {
-      return ResponseEntity.ok(gamutClient.userActionBuilder()
+      return gamutClient.userActionBuilder()
           .actionId(actionId)
           .clientLocale(actionLocale)
           .inputContextId(inputContextId)
           .inputParentContextId(inputParentContextId)
-          .createOne().await().atMost(timeout));
+          .createOne().onItem().transform(e -> ResponseEntity.ok(e));
+      
     } catch(UserActionNotAllowedException e) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+      return Uni.createFrom().item(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
     } catch (WorkflowNotFoundException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return Uni.createFrom().item(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
   }
 }

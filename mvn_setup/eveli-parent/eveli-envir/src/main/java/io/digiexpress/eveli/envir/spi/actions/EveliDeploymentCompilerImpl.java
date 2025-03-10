@@ -57,6 +57,7 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
   private final DialobClient dialobClient;
   private final EveliDeploymentCompilerLogger logger = new EveliDeploymentCompilerLogger();
   private String userId;
+  private boolean forced;
   private String deploymentId;
 
   @Override
@@ -101,15 +102,15 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
     final var stencil = visitStencil(deployment);
     
     final var errors1 = new DeploymentEnvirValidator(deployment, stencil, wrench, logger).accept();
-    if(errors1 > 0) {
+    if(errors1 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());
     }
     final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil, logger).accept();
-    if(errors2 > 0) {
+    if(errors2 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());      
     }
     
-    return Tuple2.of(EveliDeploymentStatus.READY, null);       
+    return Tuple2.of(EveliDeploymentStatus.READY, logger.getErrors());       
   }
   
   private ProgramEnvir visitWrench(EveliDeployment deployment) {

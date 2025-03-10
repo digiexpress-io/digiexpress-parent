@@ -58,10 +58,16 @@ public class DeploymentEnvirDialobUploader {
   }
   
   private void visitForm(String locale, TopicLink link) {
-    final var form = deployment.getSources().getDialob().stream()
+    final var found = deployment.getSources().getDialob().stream()
+        .filter(e -> link.getFormId() != null)
         .filter(e -> link.getFormId().equals(e.getId()))
-        .findFirst()
-        .get();
+        .findFirst();
+    
+    if(found.isEmpty()) {
+      return;
+    }
+    
+    final var form = found.get();
 
     final var tag = dialobClient.findAllFormTags(form.getName()).stream()
         .filter(e -> e.getName().equals(link.getFormTag()))

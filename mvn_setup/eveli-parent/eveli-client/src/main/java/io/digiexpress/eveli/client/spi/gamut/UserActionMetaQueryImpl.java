@@ -30,6 +30,7 @@ import io.digiexpress.eveli.client.api.GamutClient.WorkflowNotFoundException;
 import io.digiexpress.eveli.client.api.ImmutableUserActionMeta;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -48,33 +49,38 @@ public class UserActionMetaQueryImpl implements UserActionMetaQuery {
   public Uni<UserActionMeta> getOne() {
     TaskAssert.notNull(actionId, () -> "actionId can't be null!");
     TaskAssert.notNull(locale, () -> "locale can't be null!");
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
-      
-      final var now = OffsetDateTime.now();
-      final var stencilSite = runtime.getStencil(now);
-      final var stencilService = stencilSite.getSites().get(locale).getLinks().get(actionId);
-
-      if(stencilService == null) {
-        throw new WorkflowNotFoundException(new StringBuilder()
-            .append("Can't find stencil service by id: '").append(actionId).append("'!")
-            .toString());
-      }
-
-      final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS
-          .between(Instant.now().atOffset(now.getOffset()).toLocalDateTime(), stencilService.getEndDate());
-      if(expiresInSeconds != null && expiresInSeconds <= 0) {
-        throw new WorkflowNotFoundException(new StringBuilder()
-            .append("Can't find stencil service by id: '").append(actionId).append("'!")
-            .toString());
-      }
-      
-      return ImmutableUserActionMeta.builder()
-          .actionId(actionId)
-          .expiresInSeconds(expiresInSeconds)
-          .topicLink(stencilService)
-          .build();
-    });
     
+    return envir.runtimeQuery().getOne().onItem().transform(runtime -> getOne(runtime));
 
+  }
+  
+  
+  public UserActionMeta getOne(EveliRuntime runtime) {
+    TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+    TaskAssert.notNull(locale, () -> "locale can't be null!");
+    
+    final var now = OffsetDateTime.now();
+    final var stencilSite = runtime.getStencil(now);
+    final var stencilService = stencilSite.getSites().get(locale).getLinks().get(actionId);
+
+    if(stencilService == null) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+          .append("Can't find stencil service by id: '").append(actionId).append("'!")
+          .toString());
+    }
+
+    final var expiresInSeconds = stencilService.getEndDate() == null ? null : ChronoUnit.SECONDS
+        .between(Instant.now().atOffset(now.getOffset()).toLocalDateTime(), stencilService.getEndDate());
+    if(expiresInSeconds != null && expiresInSeconds <= 0) {
+      throw new WorkflowNotFoundException(new StringBuilder()
+          .append("Can't find stencil service by id: '").append(actionId).append("'!")
+          .toString());
+    }
+    
+    return ImmutableUserActionMeta.builder()
+        .actionId(actionId)
+        .expiresInSeconds(expiresInSeconds)
+        .topicLink(stencilService)
+        .build();
   }
 }

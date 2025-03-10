@@ -89,6 +89,7 @@ public class AssetsDeploymentController {
   private static class CompileAndDeployEvent {
     private final String deploymentId;
     private final String userId;
+    private final boolean force;
   }
   
   @GetMapping("/{name}")
@@ -111,7 +112,7 @@ public class AssetsDeploymentController {
         
         .build()
         .onItem().invoke(deployment -> 
-          publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId))          
+          publisher.publishEvent(new CompileAndDeployEvent(deployment.getId(), userId, false))          
         );
   }
   
@@ -119,7 +120,7 @@ public class AssetsDeploymentController {
   public Uni<EveliDeployment> updateDeployment(@RequestBody EveliDeploymentChange body) {
     final var userId = authClient.getUser().getPrincipal().getUsername();
     if(body.getStatus() == EveliDeploymentStatus.DEPLOYED) {
-      publisher.publishEvent(new CompileAndDeployEvent(body.getId(), userId));
+      publisher.publishEvent(new CompileAndDeployEvent(body.getId(), userId, true));
       return composer.deploymentQuery().getOneById(body.getId());
     }
     return composer.deploymentStatusBuilder().undeployed().deploymentId(body.getId()).userId(userId).build();
@@ -131,6 +132,7 @@ public class AssetsDeploymentController {
     composer.deploymentCompiler()
       .deploymentId(event.getDeploymentId())
       .userId(event.getUserId())
+      .forced(event.isForce())
       .compile()
       .onItem().transformToUni(e -> 
         composer.deploymentStatusBuilder().deployed().deploymentId(e.getId()).userId(event.getUserId()).build()

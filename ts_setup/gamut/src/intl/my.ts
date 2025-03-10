@@ -38,6 +38,7 @@ export const my = {
   'gamut.locale.en': 'Inggeris',
   'gamut.locale.fi': 'bahasa Finland',
   'gamut.locale.sv': 'bahasa Sweden',
+  'gamut.locale.my': 'bahasa Melayu',
   'gamut.search.placeholder': 'Cari perkhidmatan kami',
   'gamut.search.popover.title': 'Cari tapak kami',
   'gamut.search.popover.input.placeholder': 'Apa yang anda cari?',

@@ -64,6 +64,7 @@ public interface EveliEnvirClient {
   
   interface EveliDeploymentCompiler {
     EveliDeploymentCompiler userId(String userId);
+    EveliDeploymentCompiler forced(boolean forced);
     EveliDeploymentCompiler deploymentId(String id);
     Uni<EveliDeployment> compile(); // build all deployments with status "BUILDING", changes them to READY OR ERROR
   }
