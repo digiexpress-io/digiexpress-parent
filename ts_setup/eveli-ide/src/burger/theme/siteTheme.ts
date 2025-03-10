@@ -19,8 +19,8 @@ const siteTheme = createTheme({
     primary: {
       main: 'rgb(81, 11, 200)',           // primary color for buttons, active items
       contrastText: '#fff',
-      dark: '#D14343',                      //colors.red -- red icons
-      light: '#a0548b',                     //colors.purplse -- purple icons
+      dark: '#D14343',                      // colors.red for red icons
+      light: '#a0548b',                     // colors.purple for purple icons
     },
 
     secondary: {
@@ -190,7 +190,7 @@ const siteTheme = createTheme({
     MuiDialogContent: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-          color: theme.palette.secondary.main, 
+          color: theme.palette.text.primary, 
           fontWeight: '400',
         })
       }
