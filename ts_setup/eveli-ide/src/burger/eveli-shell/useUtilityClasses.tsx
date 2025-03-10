@@ -12,6 +12,8 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     unsaved: ['unsaved'],
+
+    
     itemDisabled: ['itemDisabled'],
     itemActive: ['itemActive'],
     textActive: ['textActive'],
@@ -20,8 +22,6 @@ export const useUtilityClasses = () => {
     composeButton: ['composeButton'],
     menuButton: ['menuButton'],
     menuButtonActive: ['menuButtonActive'],
-    secondaryDivider: ['secondaryDivider'],
-    logoutButton: ['logoutButton']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -42,8 +42,6 @@ export const EveliShellRoot = styled('div', {
       styles.composeButton,
       styles.menuButton,
       styles.menuButtonActive,
-      styles.secondaryDivider,
-      styles.logoutButton
     ];
   },
 })<{
@@ -52,14 +50,11 @@ export const EveliShellRoot = styled('div', {
     footerHeight: number;
     drawerWidth: number;
     drawerOpen: boolean;
-
-    expanded?: number;
-    collapsed?: number;
+    minibarWidth: number
   }
 }>(({ theme, ownerState }) => {
-  const minibarWidth = 60;
-  const drawerWidth = ownerState.drawerOpen ? ownerState.drawerWidth : minibarWidth;
-  const largebarWidth = ownerState.drawerOpen ? drawerWidth - minibarWidth : 0;
+
+  const drawerWidth = ownerState.drawerOpen ? ownerState.drawerWidth : ownerState.minibarWidth;
 
   const {
     toolbarHeight,
@@ -86,7 +81,7 @@ export const EveliShellRoot = styled('div', {
       display: 'flex',
       flexDirection: 'column',
       textAlign: 'center',
-      width: `${minibarWidth - 1}px`,
+      width: `${ownerState.minibarWidth - 1}px`,
       borderRight: drawerOpen ? `1px solid ${theme.palette.divider}` : undefined,
       backgroundColor: theme.palette.secondary.dark
     },
@@ -107,12 +102,6 @@ export const EveliShellRoot = styled('div', {
       position: 'sticky',
       top: '0',
       zIndex: theme.zIndex.drawer + 1,
-    },
-
-    '& .EveliShellLargeBar': {
-      width: `${largebarWidth - 1}px`,
-      display: drawerOpen ? undefined : 'none',
-      padding: theme.spacing(1)
     },
 
     '& .EveliShell-logoContainer': {
@@ -174,27 +163,6 @@ export const EveliShellRoot = styled('div', {
         border: `1px solid ${theme.palette.divider}`,
       }
     },
-    '& .EveliShell-logoutButton': {
-      justifyContent: 'left',
-      alignItems: "flex-start",
-      marginTop: theme.spacing(0.5),
-      borderRadius: theme.spacing(3),
-      paddingLeft: theme.spacing(2),
-      border: `1px solid ${theme.palette.secondary.main}`,
-      ...theme.typography.body1,
-      color: theme.palette.text.secondary,
-      width: '100%',
-      ':hover': {
-        backgroundColor: theme.palette.secondary.dark,
-        border: `1px solid ${theme.palette.secondary.main}`,
-      }
-    },
-    '& .EveliShell-secondaryDivider': {
-      borderWidth: `1px solid ${theme.palette.divider}`,
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
-    },
-
     '& .EveliShellBase .MuiDrawer-paper': {
       backgroundColor: theme.palette.secondary.main,
       boxSizing: 'border-box',
@@ -253,22 +221,6 @@ export const EveliShellRoot = styled('div', {
   };
 });
 
-export const EveliShellLargeBarRoot = styled('div', {
-  name: MUI_NAME,
-  slot: 'LargeBar',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-    ];
-  },
-})<{}>(({ theme }) => {
-
-  return {
-    '& .EveliShell-itemDisabled': {
-      color: theme.palette.action.disabled
-    }
-  }
-})
 
 
 export const EveliShellMiniBarRoot = styled('div', {

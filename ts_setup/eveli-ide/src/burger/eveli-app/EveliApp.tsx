@@ -1,17 +1,25 @@
 import React from 'react';
 
-import { Container as MuiContainer, Stack, Drawer, AppBar, IconButton, Typography } from '@mui/material';
+import { Container as MuiContainer, Stack, Drawer, AppBar, IconButton, Typography, Divider } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
 
 import { EveliAppTabs } from './EveliAppTabs';
-import { EveliShell, EveliShellClassName, EveliShellMiniBarClassName, EveliShellMiniBarTopClassName, EveliShellLargeBarClassName, useEveliShell } from '../eveli-shell';
+import { 
+  EveliShell, EveliShellClassName, 
+  EveliShellMiniBarClassName, EveliShellMiniBarTopClassName, EveliShellLargeBarClassName, 
+  useEveliShell, 
+  EveliShellToolbarHeightOptions
+
+} from '../eveli-shell';
 import { EveliFooter } from '../eveli-footer';
 import { EveliLogin } from '../eveli-login';
 import { EveliLocales } from '../eveli-locales';
 import { OneTab, TabsProvider } from '../api-tabs';
+
 import { IconbarProvider } from '../api-iconbar';
 import { FormattedMessage } from 'react-intl';
+import { EveliShellExplorer } from '../eveli-shell-explorer';
 
 
 const ToggleDrawer: React.FC<ContainerProps> = (components) => {
@@ -27,7 +35,14 @@ const ToggleDrawer: React.FC<ContainerProps> = (components) => {
         </div>
         <UserTabs />
       </div>
-      <div className={EveliShellLargeBarClassName}><UserButtons /></div>
+      <div className={EveliShellLargeBarClassName}>
+        <UserButtons />
+
+        <EveliShellExplorer>
+          <Divider />
+          <EveliLogin />
+        </EveliShellExplorer>
+      </div>
     </Drawer>);
 }
 
@@ -40,6 +55,10 @@ export interface ContainerProps {
   onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
   onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
 
+  toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
+  footerHeight?: number;
+  drawerWidth?: number;
+
   children?: React.ReactNode
 };
 
@@ -49,14 +68,18 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
   return (
     <IconbarProvider>
       <TabsProvider onTabClose={components.onTabClose} onTabChange={components.onTabChange}>
-        <EveliShell drawerOpen={true}>
+        <EveliShell 
+          drawerOpen={true} 
+          toolbarHeight={components.toolbarHeight} 
+          drawerWidth={components.drawerWidth} 
+          footerHeight={components.footerHeight}>
+          
           <ToggleDrawer {...components} />
 
           <AppBar position='fixed' className={EveliShellClassName}>
             <Stack spacing={1} direction='row'>
               <EveliLocales value={'en'} onClick={() => { }} />
               <EveliAppTabs />
-              <EveliLogin />
             </Stack>
           </AppBar>
 

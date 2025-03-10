@@ -10,9 +10,10 @@ export interface EveliShellProps {
   drawerOpen?: boolean;
 
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
-
   footerHeight?: number;
   drawerWidth?: number;
+  minibarWidth?: number;
+  
   component?: EveliOverridableComponent<EveliShellProps>;
 }
 

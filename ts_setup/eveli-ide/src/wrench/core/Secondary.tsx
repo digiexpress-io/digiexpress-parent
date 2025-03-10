@@ -1,20 +1,18 @@
 import React from 'react';
-import { Typography, Button, Divider, Stack } from '@mui/material';
+import { Button } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
-import LogoutIcon from '@mui/icons-material/Logout';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
-import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 
 import { useIntl } from 'react-intl';
 
 import { ComposeSelect } from '../../uiDev/ComposeSelect';
-import { EveliShellLargeBarRoot, useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
+import { useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
 import logo from '../../uiDev/logoLifeDigitalDark.svg';
 import * as Burger from '@/burger';
 import { ServiceComposer } from './service';
@@ -25,7 +23,6 @@ type NavType = 'FLOWS' | 'SERVICES' | 'DECISIONS' | 'DEBUG' | 'RELEASES' | 'COMP
 export const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
-  const userFirstAndLastName = 'Missing username';
   const tabs = Burger.useTabs();
 
 
@@ -51,7 +48,7 @@ export const Secondary: React.FC<{}> = () => {
       <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
       {serviceComposerOpen && <ServiceComposer onClose={() => setServiceComposerOpen(false)} />}
 
-      <EveliShellLargeBarRoot className={classes.root}>
+      <Burger.EveliShellExplorer>
         <div className={classes.logoContainer}>
           <img src={logo} className={classes.logo} />
         </div>
@@ -108,20 +105,7 @@ export const Secondary: React.FC<{}> = () => {
           onClick={() => tabs.handleTabAdd({ id: 'releases', label: "Releases" })}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
-
-        <Divider className={classes.secondaryDivider} />
-
-        <Button className={classes.logoutButton}
-          variant="text"
-          startIcon={<LogoutIcon />}
-          onClick={() => console.log("log out")}
-        >
-          <Stack spacing={0} alignItems="flex-start">
-            <Typography>{intl.formatMessage({ id: 'menu.logout' })}</Typography>
-            <Typography variant="caption">{userFirstAndLastName}</Typography>
-          </Stack>
-        </Button>
-      </EveliShellLargeBarRoot>
+      </Burger.EveliShellExplorer>
     </>
   )
 }

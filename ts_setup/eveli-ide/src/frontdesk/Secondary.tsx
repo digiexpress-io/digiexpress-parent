@@ -12,12 +12,12 @@ import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
-import LogoutIcon from '@mui/icons-material/Logout';
+
 
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router'
 
-import { EveliShellLargeBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
+import {  useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { ComposeSelect } from '../uiDev/ComposeSelect';
@@ -58,7 +58,7 @@ export const Secondary: React.FC = () => {
   return (<>
     <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
 
-    <EveliShellLargeBarRoot className={classes.root}>
+    <Burger.EveliShellExplorer>
       <div className={classes.logoContainer}>
         <img src={logo} className={classes.logo} />
       </div>
@@ -162,20 +162,9 @@ export const Secondary: React.FC = () => {
         {intl.formatMessage({ id: 'menu.publications' })}
       </Button>
 
-      <Divider className={classes.secondaryDivider} />
 
-      <Button className={classes.logoutButton}
-        variant="text"
-        startIcon={<LogoutIcon />}
-        onClick={() => console.log("log out")}
-      >
-        <Stack spacing={0} alignItems="flex-start">
-          <Typography>{intl.formatMessage({ id: 'menu.logout' })}</Typography>
-          <Typography variant="caption">{userFirstAndLastName}</Typography>
-        </Stack>
-      </Button>
 
-    </EveliShellLargeBarRoot>
+    </Burger.EveliShellExplorer>
   </>
   )
 }
