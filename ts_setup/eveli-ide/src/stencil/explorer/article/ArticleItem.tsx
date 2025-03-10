@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
 import LinkIcon from '@mui/icons-material/Link';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
@@ -14,22 +14,23 @@ import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
 
 
-
-function WorkflowItem(props: {
+interface WorkflowItemProps {
   labelText: string;
   nodeId: string;
   children?: React.ReactChild;
   devMode?: boolean,
   onClick: () => void;
-}) {
+}
 
+const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
+  const theme = useTheme();
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={Burger.colors.red} sx={{ pl: 1, mr: 1 }} />
+          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={theme.palette.primary.dark} sx={{ pl: 1, mr: 1 }} />
           <Typography noWrap={true} sx={{ fontWeight: "inherit", flexGrow: 1 }}>
             {props.labelText}
           </Typography>
@@ -48,13 +49,15 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = (props) => {
+  const theme = useTheme();
+
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
+          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -77,6 +80,7 @@ const ArticleItem: React.FC<{
   nodeId?: string,
   options?: ArticleItemOptions
 }> = ({ articleId, nodeId, options }) => {
+  const theme = useTheme();
 
   const { session, isArticleSaved } = Composer.useComposer();
   const view = session.getArticleView(articleId);
@@ -125,7 +129,7 @@ const ArticleItem: React.FC<{
           options ? (<Burger.TreeItem itemId={article.id + 'workflows-nested'}
             labelText={<FormattedMessage id="services" />}
             labelInfo={`${workflows.length}`}
-            labelcolor={Burger.colors.red}>
+            labelcolor={theme.palette.primary.dark}>
 
             {workflows
               .map((w) => ({ w, name: session.getWorkflowName(w.workflow.id)?.name }))
@@ -145,7 +149,7 @@ const ArticleItem: React.FC<{
           options ? (<Burger.TreeItem itemId={article.id + 'links-nested'}
             labelText={<FormattedMessage id="links" />}
             labelInfo={`${links.length}`}
-            labelcolor={Burger.colors.purple}>
+            labelcolor={theme.palette.primary.light}>
 
             {links
               .map((w) => ({ w, name: session.getLinkName(w.link.id)?.name }))

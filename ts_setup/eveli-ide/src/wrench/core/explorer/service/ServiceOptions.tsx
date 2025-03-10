@@ -1,9 +1,9 @@
 import React from 'react';
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, useTheme } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -71,6 +71,7 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
 
 const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = ({ service }) => {
 
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceDelete' | 'ServiceCopy'>(undefined);
   const nav = Composer.useNav();
   const {handleDebugInit} = Composer.useDebug();
@@ -121,25 +122,25 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
     <>
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={EditIcon}
         onClick={() => nav.handleInTab({ article: service })}
         labelText={<FormattedMessage id="services.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(service.id)}
         labelText={<FormattedMessage id="services.simulate.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ServiceDelete')}
         labelText={<FormattedMessage id="services.delete.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'copyas-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={EditIcon}
         onClick={() => setDialogOpen('ServiceCopy')}
         labelText={<FormattedMessage id="services.copyas.title" />}>

@@ -5,8 +5,6 @@ import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/r
 import { Composer, StencilApi } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import { colors } from '@/burger'
-
 
 const regexp_starts_with = new RegExp('^# .');
 
@@ -163,7 +161,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
       </Box>
       <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={3} value={value2} onChange={(value) => handleChange({ page: page2, value })}
-          commands={getMdCommands(session.site.locales[page2.body.locale], colors.purple, site)}
+          commands={getMdCommands(session.site.locales[page2.body.locale], theme.palette.primary.light, site)}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />

@@ -1,14 +1,16 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useTheme } from '@mui/material';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
+
+import { FormattedMessage } from 'react-intl';
 import { WorkflowDelete } from '../../workflow/WorkflowDelete';
 import { WorkflowEdit } from '../../workflow';
 import { StencilApi } from '../../context';
 import * as Burger from '@/burger';
 
 const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }) => {
-
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'WorkflowEdit' | 'WorkflowDelete'>(undefined);
   const handleDialogClose = () => setDialogOpen(undefined);
 
@@ -20,7 +22,7 @@ const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }
       
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.edit'}
         icon={EditIcon}
-        color={Burger.colors.red}
+        color={theme.palette.primary.dark}
         onClick={() => setDialogOpen('WorkflowEdit')}
         labelText={<FormattedMessage id="services.edit" />}>
       </Burger.TreeItemOption>
@@ -28,7 +30,7 @@ const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }
             
       <Burger.TreeItemOption nodeId={workflow.id + 'workflow.delete'}
         icon={DeleteOutlineOutlinedIcon}
-        color={Burger.colors.red}
+        color={theme.palette.primary.dark}
         onClick={() => setDialogOpen('WorkflowDelete')}
         labelText={<FormattedMessage id="services.delete" />}>
       </Burger.TreeItemOption>

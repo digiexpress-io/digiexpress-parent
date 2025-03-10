@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   Card, CardHeader, CardActions, CardContent, Theme, useTheme,
-  Typography, Box, Divider, Button
+  Typography, Box, Button
 } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -62,7 +62,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
     onView: () => tabs.handleTabAdd({ id: 'links', label: "Links" }),
     title: "activities.link.title",
     desc: "activities.link.desc",
-    color: Burger.colors.purple,
+    color: theme.palette.primary.light,
     type: "link",
     buttonCreate: "link.create",
     buttonViewAll: undefined
@@ -73,7 +73,7 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
     onView: () => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" }),
     title: "services",
     desc: "services.desc",
-    color: Burger.colors.red,
+    color: theme.palette.primary.dark,
     type: "workflow",
     buttonCreate: "services.create",
     buttonViewAll: undefined

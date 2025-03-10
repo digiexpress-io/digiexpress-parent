@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -112,7 +112,7 @@ interface RefFlow {
 }
 
 const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) => {
-
+  const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
   const nav = Composer.useNav();
 
@@ -149,7 +149,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
         labelText={<FormattedMessage id={`program.status.${service.status}`} />}
         labelIcon={FolderOutlinedIcon}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor={Burger.colors.red}>
+        labelcolor={theme.palette.primary.dark}>
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}

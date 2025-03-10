@@ -7,7 +7,6 @@ export * from './api-locale';
 export * from './api-iconbar';
 
 export { siteTheme } from './theme/siteTheme';
-export { colors } from './eveli-colors';
 
 export { 
   StyledTreeItem as TreeItem, 

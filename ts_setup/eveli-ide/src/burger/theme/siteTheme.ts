@@ -1,6 +1,5 @@
-import { createTheme, PaletteOptions, Theme, alpha, darken } from "@mui/material/styles";
-import {} from "@mui/styles";
-import { colors } from '../eveli-colors';
+import { createTheme, alpha, darken } from "@mui/material/styles";
+import { } from "@mui/styles";
 
 
 declare module 'react' {
@@ -18,10 +17,10 @@ const siteTheme = createTheme({
     mode: 'light',
   
     primary: {
-      main: colors.blue,
+      main: 'rgb(81, 11, 200)',
       contrastText: '#fff',
-      dark: 'rgb(50, 41, 224)',
-      light: 'rgb(84, 76, 230)',
+      dark: '#D14343',  //colors.red -- red icons
+      light: '#a0548b', //colors.purplse -- purple icons
     },
 
     secondary: {
@@ -113,7 +112,7 @@ const siteTheme = createTheme({
 
     MuiTabs: {
       styleOverrides: {
-        root: ({ ownerState }) => {
+        root: ({ ownerState, theme }) => {
           if(ownerState.orientation === "vertical") {
             return {
 
@@ -124,19 +123,19 @@ const siteTheme = createTheme({
             flexGrow: 1,
 
             "& .MuiTabs-indicator": {
-              backgroundColor: colors.blue,
+              backgroundColor: theme.palette.primary.main,
               marginRight: "49px"
             },
   
             "& .MuiTab-root": {
               minHeight: 'unset', 
               color: "secondary.main",
-              "&:focus": { color: colors.blue } 
+              "&:focus": { color: theme.palette.primary.main } 
             },
   
             "& .MuiSvgIcon-root": {
               m: 0,
-              color: colors.blue,
+              color: theme.palette.primary.main,
               "&:hover": {
                 color: "secondary.main"
               }
@@ -148,8 +147,8 @@ const siteTheme = createTheme({
     },
     MuiTableHead: {
       styleOverrides: {
-        root: () => ({
-          backgroundColor: colors.grey
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.secondary.main
         })
       }
     },
@@ -168,7 +167,7 @@ const siteTheme = createTheme({
     MuiCardHeader: {
       styleOverrides: {
         root: ({theme}) => ({
-          backgroundColor: colors.grey,
+          backgroundColor: theme.palette.secondary.main,
           padding: theme.spacing(1),
         })
       }
@@ -201,7 +200,7 @@ const siteTheme = createTheme({
         root: ({ ownerState, theme }) => {
           return {
             ...theme.typography.h1,
-            color: colors.blue,
+            color: theme.palette.primary.main,
             mb: 2, 
           }
         }
@@ -219,11 +218,11 @@ const siteTheme = createTheme({
           },
           '& .MuiOutlinedInput-root': {
             '&.Mui-focused fieldset': {
-              borderColor: colors.blue,
+              borderColor: theme.palette.primary.main,
             },
           },
           '& .MuiSvgIcon-root': {
-            color: colors.blue
+            color: theme.palette.primary.main
           }
         })
       },
@@ -262,11 +261,11 @@ const siteTheme = createTheme({
           props: { variant: 'outlined' },
           style: ({ theme }) => ({
             marginTop: theme.spacing(2),
-            color: colors.blue,
+            color: theme.palette.primary.main,
             backgroundColor: theme.palette.background.paper,
             '& .MuiOutlinedInput-root': {
               '&.Mui-focused fieldset': {
-                borderColor: colors.blue,
+                borderColor: theme.palette.primary.main,
               },
             }
           }), 
@@ -286,9 +285,9 @@ const siteTheme = createTheme({
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
           marginLeft: theme.spacing(1.5),
-          color: colors.blue,
+          color: theme.palette.primary.main,
           '&.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
           }
         })
       },
@@ -297,13 +296,13 @@ const siteTheme = createTheme({
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
           '& .MuiSwitch-switchBase.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
             },
           },
           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: alpha(colors.blue, 0.5),
+            backgroundColor: alpha(theme.palette.primary.main, 0.5),
           },
         })
       },
@@ -311,9 +310,9 @@ const siteTheme = createTheme({
     MuiCheckbox: {
       styleOverrides:  {
         root: ({ ownerState, theme }) => ({
-          color: colors.blue,
+          color: theme.palette.primary.main,
           '&.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
           }
         })
       },
@@ -328,9 +327,9 @@ const siteTheme = createTheme({
             borderWidth: '2px solid !important',
             borderRadius: 'unset',
             fontWeight: 'bold',
-            backgroundColor: colors.blue,
+            backgroundColor: theme.palette.primary.main,
             '&:hover': {
-              backgroundColor: darken(colors.blue, 0.2),
+              backgroundColor: darken(theme.palette.primary.main, 0.2),
             },
           }),
         },
@@ -340,10 +339,10 @@ const siteTheme = createTheme({
             borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
-            color: colors.blue,
+            color: theme.palette.primary.main,
             textTransform: 'capitalize',
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
               border: 'none',
             },
           }),
@@ -355,10 +354,10 @@ const siteTheme = createTheme({
             borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
-            color: colors.blue,
+            color: theme.palette.primary.main,
             textTransform: 'capitalize',
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
               border: 'none',
             },
           }),

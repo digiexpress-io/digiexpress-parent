@@ -1,6 +1,5 @@
 import { styled, generateUtilityClass, alpha } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
-import { colors } from '../eveli-colors'
 
 
 export const EveliShellClassName = 'EveliShellBase';
@@ -168,7 +167,7 @@ export const EveliShellRoot = styled('div', {
       width: '100%',
       backgroundColor: theme.palette.secondary.dark,
       '& .MuiSvgIcon-root': {
-        color: colors.blue
+        color: theme.palette.primary.main
       },
       ':hover': {
         backgroundColor: theme.palette.secondary.dark,
@@ -297,12 +296,12 @@ export const EveliShellMiniBarRoot = styled('div', {
       color: theme.palette.action.disabled
     },
     '& .EveliShell-itemActive': {
-      color: colors.grey,
-      backgroundColor: colors.blue,
+      color: theme.palette.secondary.main,
+      backgroundColor: theme.palette.primary.main,
       padding: theme.spacing(1),
     },
     '& .EveliShell-textActive': {
-      color: colors.blue,
+      color: theme.palette.primary.main,
       padding: theme.spacing(1),
     }
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
@@ -51,13 +51,14 @@ const ServiceItem: React.FC<{
   children?: React.ReactChild;
   onClick: () => void;
 }> = (props) => {
+  const theme = useTheme();
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
+          <Box component={LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -115,7 +116,7 @@ interface RefService {
 }
 
 const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
-
+  const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
   const nav = Composer.useNav();
 
@@ -148,7 +149,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       <Burger.TreeItem itemId={flow.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
-        labelcolor={Burger.colors.red}>
+        labelcolor={theme.palette.primary.dark}>
 
         {flow.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {flow.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -171,7 +172,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       <Burger.TreeItem itemId={flow.id + 'services-nested'}
         labelText={<FormattedMessage id="services" />}
         labelInfo={`${services.length}`}
-        labelcolor={Burger.colors.purple}>
+        labelcolor={theme.palette.primary.light}>
 
         {services.map(view => (<ServiceItem key={view.ref.ref} nodeId={`${flow.id}-st-${view.ref.ref}`}
           labelText={view.ref.ref}

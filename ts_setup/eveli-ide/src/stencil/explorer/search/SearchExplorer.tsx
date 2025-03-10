@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, TextField, TextFieldProps, InputAdornment } from '@mui/material';
+import { Box, Typography, TextField, TextFieldProps, InputAdornment, useTheme } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -76,7 +76,7 @@ const findMainId = (values: string[]) => {
 
 
 const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, keyword }) => {
-
+  const theme = useTheme();
   const [linkEditOpen, setLinkEditOpen] = React.useState<boolean>(false);
 
   const items: React.ReactElement[] = [];
@@ -102,7 +102,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
       <Burger.TreeItem
         itemId={view.link.id}
         labelText={view.link.body.value}
-        labelcolor={Burger.colors.purple}
+        labelcolor={theme.palette.primary.light}
         labelIcon={view.link.body.devMode ? ConstructionIcon : LinkIcon}>
         {items}
       </Burger.TreeItem>
@@ -110,7 +110,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
 }
 
 const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, keyword }) => {
-
+  const theme = useTheme();
   const [workflowEditOpen, setWorkflowEditOpen] = React.useState<boolean>(false);
 
   const items: React.ReactElement[] = [];
@@ -139,7 +139,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
       <Burger.TreeItem
         itemId={view.workflow.id}
         labelText={<span>{findMatch(view.workflow.body.value, keyword, true)}</span>}
-        labelcolor={Burger.colors.red}
+        labelcolor={theme.palette.primary.dark}
         labelIcon={view.workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
         {items}
       </Burger.TreeItem>
