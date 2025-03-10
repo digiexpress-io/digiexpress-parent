@@ -1,29 +1,29 @@
 import { OneTab } from '@/burger';
 
 
-export interface ExplorerItemArticlePages { 
+export interface ExplorerItemArticlePages {
   type: 'ARTICLE_PAGES';
   article: string;
-  locale1: string; 
+  locale1: string;
   locale2?: string | undefined;
 }
 
-export interface ExplorerItemArticle { 
+export interface ExplorerItemArticle {
   type: 'ARTICLES';
-  article?: string | undefined, 
+  article?: string | undefined,
   expanded?: string[]
 }
 
 export type ExplorerItem = (
-  ExplorerItemArticlePages  |
-  ExplorerItemArticle | 
+  ExplorerItemArticlePages |
+  ExplorerItemArticle |
 
-  { type: 'ACTIVITIES' } | 
-  { type: 'SERVICES' } | 
-  { type: 'LINKS' } | 
-  { type: 'LOCALES' } | 
-  { type: 'MIGRATIONS' } | 
-  { type: 'TEMPLATES' } | 
+  { type: 'ACTIVITIES' } |
+  { type: 'SERVICES' } |
+  { type: 'LINKS' } |
+  { type: 'LOCALES' } |
+  { type: 'MIGRATIONS' } |
+  { type: 'TEMPLATES' } |
   { type: 'RELEASES' } |
 
 
@@ -34,7 +34,7 @@ export type ExplorerItem = (
 export function toTab(data: ExplorerItem): OneTab<any> {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => {
-      if(data.type === 'ARTICLES') {
+      if (data.type === 'ARTICLES') {
         return key === 'type';
       }
 
@@ -50,7 +50,7 @@ export interface StencilRouteSearchParams {
   explorer: ExplorerItem[];
   explorerActive?: string | undefined;
 }
-  
+
 export function parseSearchParams(search: Record<string, unknown>): StencilRouteSearchParams {
   return {
     explorer: parseExplorerItems(search),
@@ -61,8 +61,12 @@ export function parseSearchParams(search: Record<string, unknown>): StencilRoute
 function parseExplorerItems(search: Record<string, unknown>): ExplorerItem[] {
   const explorerItems = search['explorer'];
 
-  if(!Array.isArray(explorerItems)) {
+  if (!Array.isArray(explorerItems)) {
     return [{ type: 'ACTIVITIES' }];
   }
+  if (explorerItems.length === 0) {
+    return [{ type: 'ACTIVITIES' }];
+  }
+
   return explorerItems;
 }

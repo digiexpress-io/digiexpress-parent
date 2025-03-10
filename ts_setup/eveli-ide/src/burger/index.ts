@@ -6,6 +6,7 @@ export * from './api-tabs';
 export * from './api-iam';
 export * from './api-locale';
 export * from './api-iconbar';
+export * from './eveli-shell-compose';
 
 export { siteTheme } from './theme/siteTheme';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, MenuList, MenuItem, ListItemText } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
@@ -12,7 +12,7 @@ import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import { useIntl } from 'react-intl';
 
 import { useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
-import { ComposeSelect } from '../uiDev/ComposeSelect';
+
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { MigrationComposer } from './migration';
 import { useStencilNav } from './nav';
@@ -37,7 +37,31 @@ const Secondary: React.FC<{}> = () => {
 
   return (
     <>
-      <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
+      <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
+        <MenuList dense>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Article</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Page</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Service</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Link</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Locale</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Migration</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleComposeSelectClose}>
+            <ListItemText>Template</ListItemText>
+          </MenuItem>
+        </MenuList>
+      </Burger.EveliShellCompose>
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 
       <Burger.EveliShellExplorer>
