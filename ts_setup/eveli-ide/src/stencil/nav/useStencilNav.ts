@@ -1,11 +1,10 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemArticlePages, toTab } from './stencil-nav-types';
+import { ExplorerItem, ExplorerItemArticle, ExplorerItemArticlePages, toTab } from './stencil-nav-types';
 
-import { OneTab, useTabs } from '@/burger';
+import { useTabs } from '@/burger';
 
 export type NavInput = (
   'ACTIVITIES'|
-  'ARTICLES'|
   'SERVICES'|
   'LINKS'|
   'LOCALES'|
@@ -13,6 +12,7 @@ export type NavInput = (
   'TEMPLATES' |
   'RELEASES' |
 
+  ExplorerItemArticle |
   ExplorerItemArticlePages |
   { type: 'ARTICLE_LINKS', article: string } |
   { type: 'ARTICLE_WORKFLOWS', article: string }
@@ -32,12 +32,11 @@ function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]
 }
 
 
-
-
 export function useStencilNav(): { 
   activeItem: ExplorerItem | undefined;
   onNav: (newItem: NavInput) => void;
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
+  getArticle: () => ExplorerItemArticle
 } {
   const navigate = useNavigate();
   const tabs = useTabs();
@@ -49,9 +48,16 @@ export function useStencilNav(): {
     const newItem = toExplorerItem(input);
     const newTab = toTab(newItem);
     tabs.handleTabAdd(newTab);
+
+    const other: {} = newItem;
+
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev) => ({ ...prev, explorer: calculateNextSearch(newItem, prev.explorer) })
+      search: (prev) => ({
+        ...prev, 
+        ...other,
+        explorer: calculateNextSearch(newItem, prev.explorer),
+      })
     });
   }
 
@@ -60,5 +66,11 @@ export function useStencilNav(): {
       .filter(tab => tab.data?.type === newItem)
       .find(tab => articleId ? tab.data?.article === articleId : true)?.data;
   }
-  return { activeItem, onNav, findTab }
+
+  function getArticle(): ExplorerItemArticle {
+    const article: ExplorerItemArticle | undefined = explorer.find(({ type }) => type === 'ARTICLES') as ExplorerItemArticle | undefined;
+    return article ?? { type: 'ARTICLES', article: undefined, expanded: []};
+  }
+
+  return { activeItem, onNav, findTab, getArticle }
 }

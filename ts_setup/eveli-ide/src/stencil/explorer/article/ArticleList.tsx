@@ -10,6 +10,8 @@ import ArticleItem, { ArticleItemOptions } from './ArticleItem';
 import { LinkEdit } from '../../link/LinkEdit';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
 import { ArticlesListRoot, useUtilityClasses } from './useUtilityClasses';
+import { useStencilNav } from '../../nav';
+
 
 const findMainId = (values: string[]) => {
   const result = values.filter(id => !id.endsWith("-nested"));
@@ -27,14 +29,14 @@ const EndIcon: React.FC = () => {
 export const ArticleList: React.FC<{ searchString: string }> = ({ searchString }) => {
   const intl = useIntl();
   const { session } = Composer.useComposer();
-  const [expanded, setExpanded] = React.useState<string[]>([]);
+  const { getArticle, onNav } = useStencilNav();
+  const expanded = getArticle().expanded ?? [];
 
   const [editLink, setEditLink] = React.useState<undefined | StencilApi.LinkId>(undefined);
   const [editWorkflow, setEditWorkflow] = React.useState<undefined | StencilApi.WorkflowId>(undefined);
   const articleOptions: ArticleItemOptions = { setEditLink, setEditWorkflow }
 
   const classes = useUtilityClasses();
-
 
   const treeItems: Composer.ArticleView[] = React.useMemo(() => {
     if (searchString) {
@@ -48,6 +50,16 @@ export const ArticleList: React.FC<{ searchString: string }> = ({ searchString }
   });
 
 
+  function handleExpanded(_event: React.SyntheticEvent, nodeIds: string[]) {
+    const active = findMainId(expanded);
+    const newId = findMainId(nodeIds.filter(n => n !== active));
+    if (active !== newId && active && newId) {
+      nodeIds.splice(nodeIds.indexOf(active), 1);
+    }
+    onNav({ type: 'ARTICLES', article: active, expanded: [...nodeIds]})
+  }
+
+
   return (
     <>
       {editLink ? <LinkEdit linkId={editLink} onClose={() => setEditLink(undefined)} /> : undefined}
@@ -58,14 +70,8 @@ export const ArticleList: React.FC<{ searchString: string }> = ({ searchString }
 
         <SimpleTreeView expandedItems={expanded}
           slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
-          onExpandedItemsChange={(_event: React.SyntheticEvent, nodeIds: string[]) => {
-            const active = findMainId(expanded);
-            const newId = findMainId(nodeIds.filter(n => n !== active));
-            if (active !== newId && active && newId) {
-              nodeIds.splice(nodeIds.indexOf(active), 1);
-            }
-            setExpanded(nodeIds);
-          }}>
+          onExpandedItemsChange={handleExpanded}>
+
           {treeItems.map((view) => <>
             <ArticleItem key={view.article.id} articleId={view.article.id} options={articleOptions} />
             <Divider />

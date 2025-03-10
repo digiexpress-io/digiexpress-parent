@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { OneTab } from '@/burger';
 
 
@@ -9,8 +8,15 @@ export interface ExplorerItemArticlePages {
   locale2?: string | undefined;
 }
 
+export interface ExplorerItemArticle { 
+  type: 'ARTICLES';
+  article?: string | undefined, 
+  expanded?: string[]
+}
+
 export type ExplorerItem = (
   ExplorerItemArticlePages  |
+  ExplorerItemArticle | 
 
   { type: 'ACTIVITIES' } | 
   { type: 'SERVICES' } | 
@@ -20,14 +26,20 @@ export type ExplorerItem = (
   { type: 'TEMPLATES' } | 
   { type: 'RELEASES' } |
 
-  { type: 'ARTICLES', article: string | undefined } | 
+
   { type: 'ARTICLE_LINKS', article: string } |
   { type: 'ARTICLE_WORKFLOWS', article: string }
 )
 
 export function toTab(data: ExplorerItem): OneTab<any> {
   const id = JSON.stringify(Object.entries(data)
-    .filter(([key]) => key === 'type' || key === 'article')
+    .filter(([key]) => {
+      if(data.type === 'ARTICLES') {
+        return key === 'type';
+      }
+
+      return key === 'type' || key === 'article'
+    })
     .reduce((result, [key, value]) => result + '/' + value, ''));
   const label = data.type ? data.type.toLowerCase() : 'no type';
   return { id, label, data };

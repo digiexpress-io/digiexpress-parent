@@ -55,7 +55,7 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
           className={activeItem?.type === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
-          onClick={() => onNav('ARTICLES')}>
+          onClick={() => onNav({ type: 'ARTICLES' })}>
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
