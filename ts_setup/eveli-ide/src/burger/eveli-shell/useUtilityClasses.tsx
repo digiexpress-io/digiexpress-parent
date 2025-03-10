@@ -160,13 +160,16 @@ export const EveliShellRoot = styled('div', {
       justifyContent: 'left',
       marginTop: theme.spacing(0.5),
       borderRadius: theme.spacing(3),
+      paddingLeft: theme.spacing(2),
       border: `1px solid ${theme.palette.divider}`,
       ...theme.typography.body1,
-      paddingLeft: theme.spacing(2),
       fontWeight: 'bold',
       color: theme.palette.text.secondary,
       width: '100%',
       backgroundColor: theme.palette.secondary.dark,
+      '& .MuiSvgIcon-root': {
+        color: colors.blue
+      },
       ':hover': {
         backgroundColor: theme.palette.secondary.dark,
         border: `1px solid ${theme.palette.divider}`,
@@ -188,7 +191,7 @@ export const EveliShellRoot = styled('div', {
       }
     },
     '& .EveliShell-secondaryDivider': {
-      borderWidth: `1px solid #CED8DE`,
+      borderWidth: `1px solid ${theme.palette.divider}`,
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
     },

@@ -149,7 +149,6 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
       <CardContent sx={{ flexGrow: 1, p: 2, height: 'fit-content' }}>
         <Typography variant="body2"><FormattedMessage id={props.data.desc} /></Typography>
       </CardContent>
-      <Divider />
 
       <CardActions sx={{ alignSelf: "flex-end" }}>
         <Box display="flex">
