@@ -1,5 +1,8 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox, Radio,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import {
+  Box, TableContainer, Typography, Table, TableBody, RadioGroup, FormControlLabel,
+  Button, Checkbox, Radio, Dialog, DialogTitle, DialogContent, DialogActions
+} from '@mui/material';
 
 import * as Burger from '@/burger';
 import { Composer } from '../context';
@@ -232,6 +235,7 @@ const DebugView: React.FC<{}> = ({ }) => {
 
 
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
+    <Typography variant='h1'>{intl.formatMessage({ id: 'main.debug' })}</Typography>
 
     <DebugDrawer selected={selected} open={option === "DRAWER"} onClose={() => setOption(undefined)} onSelect={setOption} />
 

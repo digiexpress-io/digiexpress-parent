@@ -124,9 +124,9 @@ const Activities: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h3" fontWeight="bold" sx={{ p: 1, m: 1 }}>
+      <Typography variant="h1" fontWeight="bold" sx={{ p: 1, m: 1 }}>
         <FormattedMessage id={"activities.title"} />
-        <Typography variant="body2" sx={{ pt: 1 }}>
+        <Typography variant="body2">
           <FormattedMessage id={"activities.desc"} />
         </Typography>
       </Typography>

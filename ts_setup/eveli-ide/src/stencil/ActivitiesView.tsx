@@ -24,6 +24,7 @@ interface CardData {
   type: CardType;
   title: string;
   desc: string;
+  open?: boolean;
   buttonCreate: string;
   buttonViewAll?: string;
   buttonTertiary?: string;
@@ -182,8 +183,8 @@ const ActivitiesView: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h3" fontWeight="bold" sx={{ p: 1, m: 1 }}><FormattedMessage id={"activities.title"} />
-        <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"activities.desc"} /></Typography>
+      <Typography variant="h1" fontWeight="bold" sx={{ p: 1, m: 1 }}><FormattedMessage id={"activities.title"} />
+        <Typography variant="body2"><FormattedMessage id={"activities.desc"} /></Typography>
       </Typography>
       <Box sx={{
         margin: 1,

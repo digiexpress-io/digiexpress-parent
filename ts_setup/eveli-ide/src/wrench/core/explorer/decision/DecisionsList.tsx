@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SimpleTreeView } from "@mui/x-tree-view";
+import { useIntl } from 'react-intl'
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
@@ -15,12 +16,15 @@ const EndIcon: React.FC = () => {
 
 
 export const DecisionsList: React.FC<{}> = () => {
+  const intl = useIntl();
   const { session } = Composer.useComposer();
   const [toggle, setToggle] = React.useState(new TreeViewToggle());
   const classes = useUtilityClasses();
   
   return (
     <DecisionsListRoot className={classes.root}>
+      <Typography className={classes.title} variant='h1'>{intl.formatMessage({ id: 'main.decisions.all' })}</Typography>
+
       <SimpleTreeView expandedItems={toggle.expanded}
         slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
 
