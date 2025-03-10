@@ -17,20 +17,20 @@ const siteTheme = createTheme({
     mode: 'light',
   
     primary: {
-      main: 'rgb(81, 11, 200)',
+      main: 'rgb(81, 11, 200)',           // primary color for buttons, active items
       contrastText: '#fff',
-      dark: '#D14343',  //colors.red -- red icons
-      light: '#a0548b', //colors.purplse -- purple icons
+      dark: '#D14343',                      //colors.red -- red icons
+      light: '#a0548b',                     //colors.purplse -- purple icons
     },
 
     secondary: {
-      main: 'rgb(246, 249, 253)', // Explorer (Secondary) background color
-      dark: 'rgb(236, 239, 243)', // Toolbar background color
-      light: '#CED8DE', // don't use for dividers! //TODO
+      main: 'rgb(246, 249, 253)',         // Explorer (Secondary) background color
+      dark: 'rgb(236, 239, 243)',         // Toolbar background color
+      light: '#CED8DE',                     // don't use for dividers! //TODO
       contrastText: 'rgb(16, 185, 129)'
     },
 
-    divider: '#CED8DE', // Borders and dividers
+    divider: '#CED8DE',                     // Borders and dividers
 
     error: {
       main: '#e53935',
