@@ -302,7 +302,6 @@ export const EveliShellMiniBarRoot = styled('div', {
     },
     '& .EveliShell-textActive': {
       color: theme.palette.primary.main,
-      padding: theme.spacing(1),
     }
   }
 })
