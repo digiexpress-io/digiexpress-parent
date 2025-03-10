@@ -27,13 +27,16 @@ const TemplatesView: React.FC<{}> = () => {
     {templateEdit ? <TemplateEdit templateId={templateEdit} onClose={() => setTemplateEdit(undefined)} /> : null}
 
 
-    <Typography variant="h3" >
+    <Typography variant="h1" >
       <FormattedMessage id="templates" />
     </Typography>
 
-    <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
-    <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
-    <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
+    <Box display='flex' alignItems='center' my={1}>
+      <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
+      <Box flexGrow={1} />
+      <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+      <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
+    </Box>
 
     <TableContainer component={Paper}>
       <Table size="small">

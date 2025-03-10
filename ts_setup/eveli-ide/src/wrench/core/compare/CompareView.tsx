@@ -144,7 +144,7 @@ const CompareView: React.FC = () => {
   }, [base, target]);
 
   return (
-    <Box sx={{ paddingBottom: 1, m: 2 }}>
+    <Box sx={{ paddingBottom: 1 }}>
       <Box display="flex">
         <Box alignSelf="center">
           <Typography variant="h1" sx={{ p: 1 }}>

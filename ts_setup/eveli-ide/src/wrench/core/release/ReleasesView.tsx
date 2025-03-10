@@ -43,7 +43,7 @@ const ReleasesView: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h3">
+      <Typography variant="h1">
         <FormattedMessage id="activities.releases.title" />: {releases.length}
       </Typography>
 

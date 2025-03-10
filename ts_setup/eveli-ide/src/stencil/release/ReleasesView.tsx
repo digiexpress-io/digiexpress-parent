@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
@@ -18,18 +18,22 @@ const ReleasesView: React.FC<{}> = () => {
   return (
     <>
       {releaseComposer ? <ReleaseComposer onClose={() => setReleaseComposer(false)} /> : null}
-      <Typography variant='h3'>
-        <FormattedMessage id="releases" />: {releases.length}
-      </Typography>
-      <Typography variant="body2"><FormattedMessage id={"release.desc"} /></Typography>
-      
-      <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
-      <Button variant='text' onClick={() => layout.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
-        <FormattedMessage id="button.releasegraph"/>
-      </Button>
-      <Button variant='contained' onClick={() => setReleaseComposer(true)}>
-        <FormattedMessage id="button.create"/>
-      </Button>
+      <Typography variant='h1'><FormattedMessage id="releases" />: {releases.length}</Typography>
+
+      <Box display='flex' alignItems='center' my={1}>
+        <Box maxWidth='75%' flexWrap='wrap'>
+          <Typography variant="body2"><FormattedMessage id="release.desc" /></Typography>
+        </Box>
+        <Box flexGrow={1} />
+        <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+        <Button variant='text' onClick={() => layout.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
+          <FormattedMessage id="button.releasegraph" />
+        </Button>
+        <Button variant='contained' onClick={() => setReleaseComposer(true)}>
+          <FormattedMessage id="button.create" />
+        </Button>
+      </Box>
+
       <ReleaseTable releases={releases} />
     </>
   );

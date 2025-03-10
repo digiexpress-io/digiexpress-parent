@@ -517,6 +517,7 @@ export const en = {
   'locale.composer.placeholder': 'Two-letter language code',
   'locale.composer.helper': 'Two-letter language codes designate the content language. Common examples: en = English, fi = Finnish, sv = Swedish',
   'locale.overview': 'Locale usage overview',
+  'locales.overview.description': 'Manage the languages of your site content. Disable locales to hide all content associated with that language from your site',
   'locales.content': 'Page in this locale has content',
   'locales.nocontent': 'Page in this locale has no content',
   'locales.nopage': 'There is no page for this locale in this Article',
