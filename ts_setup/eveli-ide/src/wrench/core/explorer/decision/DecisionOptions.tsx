@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button  } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
@@ -64,10 +64,10 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
         <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
+          <FormattedMessage id='button.cancel' />
         </Button>
         <Button onClick={handleSubmit} disabled={apply}>
-          <FormattedMessage id='buttons.delete'/>
+          <FormattedMessage id='buttons.delete' />
         </Button>
       </DialogActions>
     </Dialog>
@@ -78,7 +78,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
 const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'DecisionDelete' | 'DecisionCopy'>(undefined);
   const { onNav } = useWrenchNav()
-  const {handleDebugInit} = Composer.useDebug();
+  const { handleDebugInit } = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
@@ -130,37 +130,41 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
       <Burger.TreeItemOption nodeId={decision.id + 'edit-nested'}
         color='page'
         icon={EditIcon}
-        onClick={() => onNav({ type: 'DECISIONS' })}
+        onClick={() => onNav({ type: 'ENTITY_EDITOR', id: decision.id })}
         labelText={<FormattedMessage id="decisions.edit.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'simulate-nested'}
         color='page'
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(decision.id)}
         labelText={<FormattedMessage id="decisions.simulate.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'delete-nested'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('DecisionDelete')}
         labelText={<FormattedMessage id="decisions.delete.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'copyas-nested'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('DecisionCopy')}
         labelText={<FormattedMessage id="decisions.copyas.title" />}>
       </Burger.TreeItemOption>
+
       {dialogOpen === 'DecisionCopy' ? (
         <Dialog open={true} onClose={handleDialogClose}>
           <DialogTitle><FormattedMessage id='decisions.composer.copyTitle' /></DialogTitle>
           <DialogContent>{editor}</DialogContent>
           <DialogActions>
             <Button variant='text' onClick={handleDialogClose}>
-              <FormattedMessage id='button.cancel'/>
+              <FormattedMessage id='button.cancel' />
             </Button>
             <Button onClick={() => handleCopy()} disabled={apply}>
-              <FormattedMessage id='buttons.copy'/>
+              <FormattedMessage id='buttons.copy' />
             </Button>
           </DialogActions>
         </Dialog>

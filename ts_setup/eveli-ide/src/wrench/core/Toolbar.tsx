@@ -19,6 +19,7 @@ import { Composer } from './context';
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
 import { LocaleSelect } from '../../uiDev/LocaleSelect';
 import { useNavigate } from '@tanstack/react-router';
+import { useWrenchNav } from './nav';
 
 
 
@@ -28,7 +29,7 @@ const Toolbar: React.FC<{}> = () => {
   const { locale } = useIntl();
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
-  const secondary = Burger.useIconbar();
+  const { onNav } = useWrenchNav();
   const { enqueueSnackbar } = useSnackbar();
 
   const classes = useUtilityClasses();
@@ -72,9 +73,7 @@ const Toolbar: React.FC<{}> = () => {
       });
 
     } else if (newValue === 'toolbar.activities') {
-      tabs.handleTabAdd({ id: 'activities', label: "Activities" }); fkdfkdsfhj
-    } else if (newValue === 'toolbar.search') {
-      secondary.handleActiveId("toolbar.search")
+      onNav({ type: 'ACTIVITIES' })
     } 
 
   };

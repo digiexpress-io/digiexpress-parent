@@ -165,7 +165,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
 
         {flows.map(view => (<FlowItem key={view.ref.ref} nodeId={`${service.id}-fl-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? onNav({ type: 'FLOWS' }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />)
         )}
       </Burger.TreeItem>

@@ -27,9 +27,8 @@ const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flo
         if(!article) {
           article = site.services[id];
         }
-        if(article) {
-          //nav.handleInTab({ article })
-          onNav({ type: 'FLOWS' })
+        if (article) {
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         }
       }} 
     />

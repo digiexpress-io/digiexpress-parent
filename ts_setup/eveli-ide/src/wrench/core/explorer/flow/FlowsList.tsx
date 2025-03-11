@@ -9,6 +9,7 @@ import { Composer } from '../../context';
 import FlowItem from './FlowItem';
 import TreeViewToggle from '../TreeViewToggle';
 import { useUtilityClasses, FlowsListRoot } from './useUtilityClasses';
+import { useWrenchNav } from '../../nav';
 
 const EndIcon: React.FC = () => {
   return <Box style={{ width: 24 }} />;
@@ -18,16 +19,23 @@ const EndIcon: React.FC = () => {
 export const FlowsList: React.FC<{}> = () => {
   const intl = useIntl();
   const { session } = Composer.useComposer();
-  const [toggle, setToggle] = React.useState(new TreeViewToggle());
   const classes = useUtilityClasses();
+
+  const { getFlows, onNav } = useWrenchNav();
+  const expanded: string[] = getFlows().expanded ?? [];
+
+  function handleExpanded(_event: React.SyntheticEvent, nodeIds: string[]) {
+    const nodes = new TreeViewToggle().onNodeToggle(nodeIds);
+    onNav({ type: 'FLOWS', id: nodes.main, expanded: [...nodes.expanded] })
+  }
 
   return (
     <FlowsListRoot className={classes.root}>
       <Typography className={classes.title} variant='h1'>{intl.formatMessage({ id: 'main.flows.all' })}</Typography>
 
-      <SimpleTreeView expandedItems={toggle.expanded}
+      <SimpleTreeView expandedItems={expanded}
         slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
-        onExpandedItemsChange={(_event: React.SyntheticEvent, nodeIds: string[]) => setToggle(toggle.onNodeToggle(nodeIds))}>
+        onExpandedItemsChange={handleExpanded}>
         
         { Object.values(session.site.flows)
           .sort((a, b) => (a.ast ? a.ast.name : a.id).localeCompare((b.ast ? b.ast.name : b.id)) )

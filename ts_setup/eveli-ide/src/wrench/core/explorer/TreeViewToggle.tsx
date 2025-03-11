@@ -15,6 +15,7 @@ class TreeViewToggle {
     this._main = main;
   }
   get expanded() { return this._expanded; }
+  get main() { return this._main }
 
   onNodeToggle(nodeIds: string[]): TreeViewToggle {
     const newId = findMainId(nodeIds.filter(n => n !== this._main));

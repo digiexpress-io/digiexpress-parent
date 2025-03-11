@@ -75,7 +75,7 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
 
         {flows.map(view => (<FlowItem key={view.id} nodeId={view.id}
           labelText={view.ast ? view.ast.name : view.id}
-          onClick={() => onNav({ type: 'DECISIONS' })}
+          onClick={() => onNav({ type: 'ENTITY_EDITOR', id: view.id })}
         />)
         )}
       </Burger.TreeItem>

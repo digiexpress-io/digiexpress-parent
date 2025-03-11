@@ -9,14 +9,22 @@ export interface ExplorerItemEntity {
 
 export interface ExplorerItemFlows {
   type: 'FLOWS';
+  id?: string | undefined;
+  expanded?: string[];
+}
+
+export interface ExplorerItemDecisions {
+  type: 'DECISIONS';
+  id?: string | undefined;
   expanded?: string[];
 }
 
 export type ExplorerItem = (
   ExplorerItemEntity |
   ExplorerItemFlows |
+  ExplorerItemDecisions |
+
   { type: 'SERVICES' } |
-  { type: 'DECISIONS' } |
   { type: 'DEBUG' } |
   { type: 'ACTIVITIES' } |
   { type: 'RELEASES' } |
@@ -27,6 +35,10 @@ export type ExplorerItem = (
 export function toTab(data: ExplorerItem): OneTab<any> {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => {
+
+      if (data.type === 'FLOWS' || data.type === 'SERVICES' || data.type === 'DECISIONS') {
+        return key === 'type';
+      }
 
       return key === 'type' || key === 'id'
     })
