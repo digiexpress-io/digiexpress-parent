@@ -7,9 +7,9 @@ import { FormattedMessage } from 'react-intl';
 import { EveliLoginRoot, EveliLogoutButton, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 import { EveliOverridableComponent } from '../api-variants';
-import { useConfig } from '../../frontdesk/context/ConfigContext';
-import { useIam } from '../api-iam';
 
+import { useIam } from '../api-iam';
+import { useConfig } from '../api-config';
 
 
 export interface EveliLoginProps {

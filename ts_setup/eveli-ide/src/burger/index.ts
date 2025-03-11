@@ -4,6 +4,7 @@ export * from './eveli-app';
 export * from './eveli-shell-explorer';
 export * from './api-tabs';
 export * from './api-iam';
+export * from './api-config';
 export * from './api-locale';
 export * from './api-iconbar';
 export * from './eveli-shell-compose';

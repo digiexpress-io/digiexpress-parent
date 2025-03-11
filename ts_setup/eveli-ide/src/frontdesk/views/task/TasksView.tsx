@@ -5,11 +5,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { useIam } from '@/burger';
-import { useConfig } from '../../context/ConfigContext';
-
-
-import { UserGroup } from '../../types/UserGroup';
 import { TasksTable } from './TasksTable';
+import { useConfig } from '@/burger';
 
 
 export const TasksView: React.FC = () => {

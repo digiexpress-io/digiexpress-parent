@@ -8,10 +8,11 @@ import { FormattedMessage } from 'react-intl';
 import { SnackbarProvider } from 'notistack';
 
 
-import { 
-  fetchtree, FetchProvider, LocaleProvider, IamBackendProvider,
-  siteTheme, router, ConfigContextProvider 
- } from '@dxs-ts/eveli-ide';
+import {
+  fetchtree, FetchProvider, LocaleProvider,
+  IamBackendProvider, ConfigContextProvider,
+  siteTheme, router,
+} from '@dxs-ts/eveli-ide';
 
 
 const queryClient = new QueryClient();
@@ -21,31 +22,36 @@ export const FrontdeskApp: React.FC = () => {
   const handleCloseNotification = (key: string | number | undefined) => () => {
     notistackRef.current?.closeSnackbar(key);
   }
+
   async function handleExpire() {
-    //alert("SESSION EXPIRED");
+    console.log("SESSION EXPIRED");
   }
   const logoutUrl = '/logout';
   const loginUrl = '/oauth2/authorization/oidcprovider';
-  
+
   return (
     <QueryClientProvider client={queryClient}>
-      <FetchProvider tree={fetchtree} contextPath='/'>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={siteTheme}>
-            <LocaleProvider>
-              <SnackbarProvider maxSnack={3} ref={notistackRef}
-                action={(key) => (<Button onClick={handleCloseNotification(key)}><FormattedMessage id='button.dismiss' /></Button>)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              >
-                <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+      {/** config context will update context path to whatever /config.serviceUrl will return */}
+      <FetchProvider tree={fetchtree} initContextPath='/'>
+        <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={siteTheme}>
+              <LocaleProvider>
+                <SnackbarProvider maxSnack={3} ref={notistackRef}
+                  action={(key) => (<Button onClick={handleCloseNotification(key)}><FormattedMessage id='button.dismiss' /></Button>)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                >
+
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />
                   </IamBackendProvider>
-                </ConfigContextProvider>
-              </SnackbarProvider>
-            </LocaleProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
+
+                </SnackbarProvider>
+              </LocaleProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </ConfigContextProvider>
       </FetchProvider>
     </QueryClientProvider>
   );

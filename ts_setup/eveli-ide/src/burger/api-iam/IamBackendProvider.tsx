@@ -3,7 +3,7 @@ import { IamApi } from './iam-types'
 import { IamLiveness } from './IamLiveness'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { IamForcedLogin } from './IamForcedLogin';
-import { useConfig } from '../../frontdesk';
+import { useConfig } from '../api-config';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);

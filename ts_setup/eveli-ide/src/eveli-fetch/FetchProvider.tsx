@@ -9,16 +9,18 @@ import { RootFileFetch } from './createFileFetch';
 export interface FetchContextType {
   contextPath: string;
   state: RootFileFetch
+  setContextPath: (newContextPath: string) => void;
 }
 
 export const FetchContext = React.createContext<FetchContextType>({} as any)
 
-export const FetchProvider: React.FC<{ children: React.ReactNode, tree: RootFileFetch, contextPath: string }> = ({children, tree, contextPath}) => {
+export const FetchProvider: React.FC<{ children: React.ReactNode, tree: RootFileFetch, initContextPath: string }> = ({children, tree, initContextPath}) => {
   const [state, setState] = React.useState<RootFileFetch>(tree);
+  const [contextPath, setContextPath] = React.useState<string>(initContextPath);
   
   const context = React.useMemo(() => {
-    return { state, contextPath }
-  }, [setState, state, contextPath])
+    return { state, contextPath, setContextPath }
+  }, [setContextPath, state, contextPath])
 
   return (<FetchContext.Provider value={context}>{children}</FetchContext.Provider>);
 }
@@ -71,6 +73,11 @@ export function useNativeRouteParams<
   const context: FetchContextType = React.useContext(FetchContext);
   const delegateFetch = window.fetch;
   return new FetchParams<TFetchPath, TPath, TMethod, TParams>(context.contextPath, path, method, delegateFetch);
+}
+
+export function useFetchConfig() {
+  const context: FetchContextType = React.useContext(FetchContext);
+  return context;
 }
 
 export function useFetch<TPathId extends keyof HookByPath>(

@@ -3,11 +3,11 @@ import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import { FormattedMessage } from 'react-intl';
 import { mapIamRole, useIam } from '@/burger';
-import { useConfig } from '../context/ConfigContext';
+
 
 export const Impersonation: React.FC = () => {
   const { user } = useIam();
-  const config = useConfig();
+  
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -65,12 +65,6 @@ export const Impersonation: React.FC = () => {
               <Typography variant="body2" gutterBottom>
               <Divider />
               </Typography>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <Typography variant="body2" gutterBottom><FormattedMessage id='profile.app.version' /></Typography>
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <strong>{config.appVersion || '-'}</strong>
             </Grid2>
           </Grid2>
         </Box>

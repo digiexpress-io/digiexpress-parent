@@ -5,7 +5,6 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { useIntl } from 'react-intl';
 
-import { useConfig } from '../../context/ConfigContext';
 import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
@@ -28,7 +27,6 @@ interface WorkflowTableProps {
 
 export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refreshWorkflows, historyView = false }) => {
   const intl = useIntl();
-  const config = useConfig();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
 

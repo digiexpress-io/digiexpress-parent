@@ -12,12 +12,12 @@ import { FormattedDate, FormattedTime, useIntl } from 'react-intl';
 
 import { CreateDialog } from './CreateDialog';
 import { DeleteDialog } from './DeleteDialog';
-import { useConfig } from '../../context/ConfigContext';
 import { DialobFormEntry } from '../../types';
 
 import { localizeTable } from '../../util/localizeTable';
 import { TableHeader } from '../../components/TableHeader';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { useConfig } from '@/burger';
 
 
 

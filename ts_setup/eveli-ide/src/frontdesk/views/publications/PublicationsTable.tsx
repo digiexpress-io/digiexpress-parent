@@ -13,14 +13,13 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { localizeTable } from '../../util/localizeTable';
-import { useConfig } from '../../context/ConfigContext';
 import { Publication } from '../../types/Publication';
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
+import { useConfig } from '@/burger';
 
-import * as Burger from '@/burger';
 
 interface TableState {
   columns: Array<Column<Publication>>;
