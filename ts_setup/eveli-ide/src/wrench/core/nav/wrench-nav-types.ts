@@ -19,12 +19,18 @@ export interface ExplorerItemDecisions {
   expanded?: string[];
 }
 
+export interface ExplorerItemServices {
+  type: 'SERVICES',
+  id?: string | undefined;
+  expanded?: string[];
+}
+
 export type ExplorerItem = (
   ExplorerItemEntity |
   ExplorerItemFlows |
   ExplorerItemDecisions |
+  ExplorerItemServices |
 
-  { type: 'SERVICES' } |
   { type: 'DEBUG' } |
   { type: 'ACTIVITIES' } |
   { type: 'RELEASES' } |

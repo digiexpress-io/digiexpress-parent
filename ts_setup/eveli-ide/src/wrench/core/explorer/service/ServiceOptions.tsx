@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, useTheme } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 
 import { useSnackbar } from 'notistack';
@@ -124,8 +123,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
         color={theme.palette.primary.light}
-        icon={EditIcon}
-        onClick={() => onNav({ type: 'SERVICES' })}
+        onClick={() => onNav({ type: 'ENTITY_EDITOR', id: service.id })}
         labelText={<FormattedMessage id="services.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}
@@ -142,7 +140,6 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'copyas-nested'}
         color={theme.palette.primary.light}
-        icon={EditIcon}
         onClick={() => setDialogOpen('ServiceCopy')}
         labelText={<FormattedMessage id="services.copyas.title" />}>
       </Burger.TreeItemOption>

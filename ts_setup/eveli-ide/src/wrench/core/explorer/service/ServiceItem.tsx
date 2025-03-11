@@ -1,11 +1,9 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 
@@ -134,22 +132,23 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
       labelIcon={ArticleOutlinedIcon}
-      labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color="error" />}
-      labelcolor={saved ? "explorerItem" : "secondary.light"}>
+      labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color='error' />}
+      labelcolor={saved ? "explorerItem" : "secondary.light"}
+    >
 
       {/** Service options */}
       <Burger.TreeItem itemId={service.id + 'options-nested'}
         labelText={<FormattedMessage id="options" />}
-        labelIcon={EditIcon}>
+      >
         <ServiceOptions service={service} />
       </Burger.TreeItem>
 
       {/** Service status */}
       <Burger.TreeItem itemId={service.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${service.status}`} />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor={theme.palette.primary.dark}>
+        labelcolor={theme.palette.primary.dark}
+      >
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -159,7 +158,6 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
       {/** Flow options */}
       <Burger.TreeItem itemId={service.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}
         labelcolor="primary">
 
@@ -173,7 +171,6 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
       {/** Internal decision options */}
       <Burger.TreeItem itemId={service.id + 'internal-decisions-nested'}
         labelText={<FormattedMessage id="internal-decisions" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
         labelcolor="page">
 

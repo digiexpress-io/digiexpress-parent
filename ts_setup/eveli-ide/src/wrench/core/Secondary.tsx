@@ -65,7 +65,7 @@ export const Secondary: React.FC<{}> = () => {
 
         <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<CodeOutlinedIcon />}
-          onClick={() => setServiceComposerOpen(true)}>
+          onClick={() => onNav({ type: 'SERVICES' })}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 

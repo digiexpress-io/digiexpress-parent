@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, toTab } from './wrench-nav-types';
+import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toTab } from './wrench-nav-types';
 
 import { useTabs } from '@/burger';
 
@@ -26,6 +26,7 @@ export function useWrenchNav(): {
 
   getFlows: () => ExplorerItemFlows;
   getDecisions: () => ExplorerItemDecisions;
+  getServices: () => ExplorerItemServices;
 
 } {
   const navigate = useNavigate();
@@ -67,5 +68,10 @@ export function useWrenchNav(): {
     return article ?? { type: 'DECISIONS', id: undefined, expanded: [] };
   }
 
-  return { activeItem, onNav, findTab, getFlows, getDecisions }
+  function getServices(): ExplorerItemServices {
+    const article: ExplorerItemServices | undefined = explorer.find(({ type }) => type === 'SERVICES') as ExplorerItemServices | undefined;
+    return article ?? { type: 'SERVICES', id: undefined, expanded: [] };
+  }
+
+  return { activeItem, onNav, findTab, getFlows, getDecisions, getServices }
 }

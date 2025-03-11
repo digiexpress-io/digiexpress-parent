@@ -10,6 +10,7 @@ import { FlowEdit, FlowsView } from './flow';
 import { DecisionEdit } from './decision';
 import { ServiceEdit } from './service';
 import { DebugView } from './debug';
+import { ServicesView } from './service/ServicesView';
 import { ReleasesView } from './release';
 
 import { CompareView } from './compare';
@@ -42,6 +43,7 @@ const Main: React.FC<{}> = () => {
       case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
       case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
       case 'DEBUG': return (<Box sx={root}><DebugView /></Box>);
+      case 'SERVICES': return (<Box sx={root}><ServicesView /></Box>);
       case 'COMPARE': return (<Box sx={root}><CompareView /></Box>);
       case 'FLOWS': return (<Box sx={root}><FlowsView /></Box>);
       case 'DECISIONS': return (<Box sx={root}><DecisionsView /></Box>);
