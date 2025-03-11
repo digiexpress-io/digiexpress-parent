@@ -5,15 +5,16 @@ import { LinearProgress, Container } from '@mui/material';
 import { TaskCreate } from './TaskCreate';
 import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
-import { TaskBackendContext } from '../../context/TaskApiConfigContext';
+
 import { ComponentResolver } from '../../context/ComponentResolver';
 import { UserGroup } from '../../types/UserGroup';
 import { Task } from '../../types/task/Task';
 import { TableHeader } from '../../components/TableHeader';
 import { useIam } from '@/burger';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 type OwnProps = {
-  taskId?: number
+  taskId?: string
   taskUpdateCallback?: ()=>void
   groups: UserGroup[]
   getUsers: (groupName:string[])=>Promise<GroupMember[]>
@@ -27,7 +28,10 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   const [supressConfirmation, setSupressConfirmation] = useState<boolean>();
   const [taskData, setTaskData] = useState<Task|null>(null);
   const [commentData, setCommentData] = useState<Comment[]>([]);
-  const taskContext = useContext(TaskBackendContext);
+  const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
+  const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
+  const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
+  const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
 
   const { user } = useIam();
 
@@ -44,16 +48,23 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   }
   const loadCommentData = () => {
     if (taskData) {
-      taskContext.getTaskComments(taskData)
-      .then(data => setCommentData(data));
+      getTaskComments(taskData).then(data => setCommentData(data));
     }
     else {
       setCommentData([]);
     }
   }
 
+  function saveTask(task: Task) {
+    if (task.id) {
+      return updateTask(task);
+    } 
+    return createTask(task)
+  }
+  
+
   const accept = (task:Task) => {
-    taskContext.saveTask(task)
+    saveTask(task)
       .then(result => {
         setSupressConfirmation(true);
         return result;
@@ -67,7 +78,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
 
   useEffect(()=>{
     if (props.taskId) {
-      taskContext.getTask(props.taskId)
+      getTask(props.taskId)
       .then(task => {
         setTaskData(task);
       });

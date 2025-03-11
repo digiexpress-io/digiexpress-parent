@@ -14,7 +14,7 @@ function hook(props: {}) {
   const intl = useIntl();
   
   return {
-    deleteTask: async (taskId: string) => {
+    deleteTask: async (taskId: string): Promise<{}> => {
       return params
         .fetch(url({ taskId }), { method })
         .then(response => {

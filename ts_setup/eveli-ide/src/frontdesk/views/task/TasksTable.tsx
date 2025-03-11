@@ -15,7 +15,6 @@ import { localizeTable } from '../../util/localizeTable';
 import { mapIamRolesList } from '@/burger';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
-import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 
 import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
 import { UserGroup } from '../../types/UserGroup';
@@ -23,6 +22,7 @@ import { UserGroup } from '../../types/UserGroup';
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
 import { TableHeader } from '../../components/TableHeader';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 function getStatusCode(status: TaskStatus | undefined) {
@@ -78,12 +78,13 @@ const useRefresh = (): UseRefreshReturnType => {
 export const TasksTable: React.FC<Props> =
   ({ loadTasks, groups, taskOpenHandler, taskDeletableHandler, newTasks }) => {
 
-    const taskBackend = useContext(TaskBackendContext);
+
     const intl = useIntl();
     const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
     const tableRef = useRef<any>();
     const tableContext = useContext(TableStateContext);
     const { isFirstRenderAfterRefresh, setRefreshed } = useRefresh();
+    const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
 
     useEffect(() => {
       try {
@@ -106,13 +107,6 @@ export const TasksTable: React.FC<Props> =
 
     const addTask = () => {
       taskOpenHandler();
-    }
-
-    const deleteTask = (taskId: any) => {
-      return taskBackend.deleteTask(taskId)
-        .then(result => {
-          return result;
-        })
     }
 
     const formatTime = (time: any) => {
@@ -200,7 +194,7 @@ export const TasksTable: React.FC<Props> =
       columns: [
         {
           render: (data) => {
-            return <div onClick={() => deleteTask(data.id)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
+            return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
           },
           hidden: isDeleteHidden
         },
