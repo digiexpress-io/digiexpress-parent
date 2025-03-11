@@ -43,8 +43,6 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
 
       proxy: {
 
-
-
         '/config': {
           target: 'http://localhost:8080',
           changeOrigin: false,

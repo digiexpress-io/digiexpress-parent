@@ -11,7 +11,7 @@ function Component() {
   if(iam.authType === 'ANON') {
     return <Navigate {...{
       from: '/',
-      to: '/public/$locale',
+      to: '/public/$locale/auth',
       params: { locale: 'en' }
     }}/>
   } else {
