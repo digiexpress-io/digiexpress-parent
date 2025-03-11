@@ -151,7 +151,8 @@ export const EveliShellRoot = styled('div', {
       backgroundColor: theme.palette.background.paper,
       boxShadow: `0 0 7px ${theme.palette.text.disabled}`,
       height: toolbarHeight + 'px',
-      paddingLeft: drawerOpen ? theme.spacing(1) : theme.spacing(8),
+
+      paddingLeft: `calc(${drawerWidth}px + ${theme.spacing(1)})`,
       paddingRight: theme.spacing(1),
     },
 

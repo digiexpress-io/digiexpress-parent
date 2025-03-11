@@ -14,7 +14,6 @@ import {
 } from '../eveli-shell';
 import { EveliFooter } from '../eveli-footer';
 import { EveliLogin } from '../eveli-login';
-import { EveliLocales } from '../eveli-locales';
 import { OneTab, TabsProvider } from '../api-tabs';
 
 import { IconbarProvider } from '../api-iconbar';
@@ -77,10 +76,7 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
           <ToggleDrawer {...components} />
 
           <AppBar position='fixed' className={EveliShellClassName}>
-            <Stack spacing={1} direction='row'>
-              <EveliLocales value={'en'} onClick={() => { }} />
-              <EveliAppTabs />
-            </Stack>
+            <EveliAppTabs />
           </AppBar>
 
           <main role='main'>

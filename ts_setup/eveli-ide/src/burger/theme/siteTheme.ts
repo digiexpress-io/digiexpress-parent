@@ -1,4 +1,5 @@
 import { createTheme, alpha, darken } from "@mui/material/styles";
+import Button from '@mui/material/Button';
 import { } from "@mui/styles";
 
 declare module '@mui/material/Button' {
