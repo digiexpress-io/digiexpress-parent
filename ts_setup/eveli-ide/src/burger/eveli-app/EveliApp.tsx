@@ -50,6 +50,7 @@ export interface ContainerProps {
   main: React.FC;
   secondary: React.FC;
   toolbar: React.FC;
+  tabs?: React.FC;
 
   onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
   onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
@@ -62,7 +63,7 @@ export interface ContainerProps {
 };
 
 export const EveliApp: React.FC<ContainerProps> = (components) => {
-  const { main: UserContent } = components;
+  const { main: UserContent, tabs: UserTabs } = components;
 
   return (
     <IconbarProvider>
@@ -76,7 +77,7 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
           <ToggleDrawer {...components} />
 
           <AppBar position='fixed' className={EveliShellClassName}>
-            <EveliAppTabs />
+            {UserTabs ? <UserTabs /> : <EveliAppTabs />}
           </AppBar>
 
           <main role='main'>
