@@ -195,10 +195,7 @@ export const EveliShellMiniBarRoot = styled('div', {
     '& .EveliShell-unsaved': {
       color: ownerState.unsaved ? theme.palette.common.black : theme.palette.text.secondary,
       backgroundColor: alpha(theme.palette.warning.main, 0.8),
-      padding: theme.spacing(1),
-      '&:hover': {
-        boxShadow: `0px 4px 6px ${theme.palette.text.primary}`
-      }
+      padding: theme.spacing(1)
     },
     '& .EveliShell-itemDisabled': {
       color: theme.palette.action.disabled

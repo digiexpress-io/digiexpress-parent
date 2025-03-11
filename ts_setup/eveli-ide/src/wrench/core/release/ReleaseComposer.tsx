@@ -26,7 +26,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setErrors(undefined);
     setApply(true);
 
-    service.create().tag({name, desc})
+    service.create().tag({ name, desc })
       .then(data => {
         enqueueSnackbar(<FormattedMessage id="releases.composer.createdMessage" values={{ name }} />);
         actions.handleLoadSite(data).then(() => {
@@ -55,28 +55,29 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Burger.TextField
           label='releases.composer.assetName'
           value={name}
-          onChange={setName}/>
+          onChange={setName}
+        />
         <Burger.TextField
           label='releases.composer.assetDesc'
           value={desc}
-          onChange={setDesc}/>
+          onChange={setDesc} />
       </Typography>)
   }
 
 
   return (
-  <Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='releases.composer.title' /></DialogTitle>
-    <DialogContent>{editor}</DialogContent>
-    <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
-      <Button onClick={handleCreate} disabled={apply}>
-        <FormattedMessage id='buttons.create'/>
-      </Button>
-    </DialogActions>
-  </Dialog>);
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='releases.composer.title' /></DialogTitle>
+      <DialogContent>{editor}</DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel' />
+        </Button>
+        <Button onClick={handleCreate} disabled={apply}>
+          <FormattedMessage id='buttons.create' />
+        </Button>
+      </DialogActions>
+    </Dialog>);
 }
 
 export { ReleaseComposer };

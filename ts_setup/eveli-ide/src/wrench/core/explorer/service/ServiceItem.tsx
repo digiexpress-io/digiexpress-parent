@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 
 import ConstructionIcon from '@mui/icons-material/Construction';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
@@ -131,7 +132,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
   
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
-      labelIcon={ArticleOutlinedIcon}
+      labelIcon={CodeOutlinedIcon}
       labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color='error' />}
       labelcolor={saved ? "explorerItem" : "secondary.light"}
     >

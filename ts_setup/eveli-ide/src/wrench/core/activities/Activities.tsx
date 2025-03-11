@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import * as Burger from '@/burger';
 
 import { FlowComposer } from '../flow';
 import { DecisionComposer } from '../decision';
@@ -10,12 +9,12 @@ import { ServiceComposer } from '../service';
 
 import ReleaseComposer from '../release';
 import MigrationComposer from '../migration';
-import TemplateComposer from '../template';
 
 import { ActivityItem, ActivityData } from './ActivityItem';
 
 import composerVersion from '../version';
 import { Composer } from '../context';
+import { useWrenchNav } from '../nav';
 
 interface ActivityType {
   type: "releases" | "decisions" | "flows" | "services" | "migration" | "templates" | "debug" | "compare";
@@ -23,7 +22,7 @@ interface ActivityType {
   onCreate?: () => void;
 }
 
-const createCards: (tabs: Burger.TabsContextType) => (ActivityData & ActivityType)[] = (tabs) => ([
+const createCards: (tabs: ReturnType<typeof useWrenchNav>) => (ActivityData & ActivityType)[] = (tabs) => ([
   {
     composer: (handleClose) => (<FlowComposer onClose={handleClose} />),
     onView: undefined,
@@ -51,7 +50,7 @@ const createCards: (tabs: Burger.TabsContextType) => (ActivityData & ActivityTyp
     buttonViewAll: undefined
   },
   {
-    onCreate: () => tabs.handleTabAdd({ id: 'debug', label: "Debug" }),
+    onCreate: () => tabs.onNav({ type: 'DEBUG' }),
     onView: undefined,
     title: "activities.debug.title",
     desc: "activities.debug.desc",
@@ -61,32 +60,21 @@ const createCards: (tabs: Burger.TabsContextType) => (ActivityData & ActivityTyp
   },
   {
     composer: (handleClose) => (<ReleaseComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'releases', label: "Releases" }),
-    onTertiary: () => tabs.handleTabAdd({ id: 'graph', label: "Release Graph" }),
+    onView: () => tabs.onNav({ type: 'RELEASES' }),
     title: "activities.releases.title",
     desc: "activities.releases.desc",
     type: "releases",
     buttonCreate: "buttons.create",
     buttonViewAll: "activities.releases.view",
-    buttonTertiary: "activities.releases.graph"
   },
   {
-    onCreate: () => tabs.handleTabAdd({ id: 'compare', label: "Compare" }),
+    onCreate: () => tabs.onNav({ type: 'COMPARE' }),
     onView: undefined,
     title: "activities.compare.title",
     desc: "activities.compare.desc",
     type: "compare",
     buttonCreate: "activities.compare.view",
     buttonViewAll: undefined,
-  },
-  {
-    composer: (handleClose) => <TemplateComposer onClose={handleClose} />,
-    onView: () => tabs.handleTabAdd({ id: 'templates', label: "Templates" }),
-    title: "activities.templates.title",
-    desc: "activities.templates.desc",
-    type: "templates",
-    buttonCreate: "buttons.create",
-    buttonViewAll: "activities.templates.view"
   },
   {
     composer: (handleClose) => <MigrationComposer onClose={handleClose} />,
@@ -101,12 +89,13 @@ const createCards: (tabs: Burger.TabsContextType) => (ActivityData & ActivityTyp
 
 //card view for all CREATE views
 const Activities: React.FC<{}> = () => {
-  const tabs = Burger.useTabs();
+  const nav = useWrenchNav();
+
   const [open, setOpen] = React.useState<number>();
   const [coreVersion, setCoreVersion] = React.useState<{ version: string, built: string }>();
   const handleClose = () => setOpen(undefined);
-  const cards = React.useMemo(() => createCards(tabs), [tabs]);
   const { service } = Composer.useComposer();
+  const cards = createCards(nav);
 
   let composer: undefined | React.ReactChild = undefined;
   let openComposer = open !== undefined ? cards[open].composer : undefined;
@@ -131,6 +120,7 @@ const Activities: React.FC<{}> = () => {
       </Typography>
       <Box sx={{ margin: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
         {composer}
+
         {cards.map((card, index) => (<ActivityItem key={index} data={card} onCreate={() => {
           if (card.composer) {
             setOpen(index);

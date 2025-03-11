@@ -1,12 +1,8 @@
 import React from 'react';
 
-import {
-  Card, CardHeader, CardActions, CardContent, Theme, useTheme,
-  Typography, Box, Button
-} from '@mui/material';
+import { Card, CardHeader, CardActions, CardContent, Typography, Box, Button } from '@mui/material';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import * as Burger from '@/burger';
 import { ArticleComposer } from './article';
 import { LinkComposer } from './link';
 import { WorkflowComposer } from './workflow';
@@ -16,9 +12,10 @@ import { NewPage } from './page';
 import { MigrationComposer } from './migration';
 import { TemplateComposer } from './template';
 
-import { Composer, StencilApi } from './context';
+import { Composer } from './context';
 
 import composerVersion from './version';
+import { useStencilNav } from './nav';
 
 interface CardData {
   type: CardType;
@@ -28,7 +25,6 @@ interface CardData {
   buttonCreate: string;
   buttonViewAll?: string;
   buttonTertiary?: string;
-  color: string;
   onView?: () => void;
   composer: (handleClose: () => void) => React.ReactChild;
   //viewer: (() => void) => xxx;
@@ -36,13 +32,12 @@ interface CardData {
 
 type CardType = "release" | "article" | "page" | "link" | "workflow" | "locale" | "migration" | "templates";
 
-const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContextType) => CardData[] = (_site, theme, tabs) => ([
+const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tabs) => ([
   {
     composer: (handleClose) => (<ArticleComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'articles', label: "Articles" }),
+    onView: () => tabs.onNav({ type: 'ARTICLES' }),
     title: "activities.article.title",
     desc: "activities.article.desc",
-    color: theme.palette.primary.main,
     type: "article",
     buttonCreate: "article.create",
     buttonViewAll: undefined
@@ -52,17 +47,15 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
     onView: () => console.log("nothing to see here"),
     title: "activities.page.title",
     desc: "activities.page.desc",
-    color: theme.palette.secondary.contrastText,
     type: "page",
     buttonCreate: "page.create",
     buttonViewAll: undefined
   },
   {
     composer: (handleClose) => (<LinkComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'links', label: "Links" }),
+    onView: () => tabs.onNav('LINKS'),
     title: "activities.link.title",
     desc: "activities.link.desc",
-    color: theme.palette.primary.light,
     type: "link",
     buttonCreate: "link.create",
     buttonViewAll: undefined
@@ -70,10 +63,9 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
 
   {
     composer: (handleClose) => (<WorkflowComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'workflows', label: "Workflows" }),
+    onView: () => tabs.onNav('SERVICES'),
     title: "services",
     desc: "services.desc",
-    color: theme.palette.primary.dark,
     type: "workflow",
     buttonCreate: "services.create",
     buttonViewAll: undefined
@@ -81,10 +73,9 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
 
   {
     composer: (handleClose) => (<LocaleComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'locales', label: "Locales" }),
+    onView: () => tabs.onNav('LOCALES'),
     title: "activities.locale.title",
     desc: "activities.locale.desc",
-    color: theme.palette.secondary.light,
     type: "locale",
     buttonCreate: "locale.create",
     buttonViewAll: "button.view.all.locales"
@@ -92,10 +83,9 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
 
   {
     composer: (handleClose) => (<ReleaseComposer onClose={handleClose} />),
-    onView: () => tabs.handleTabAdd({ id: 'releases', label: "Releases" }),
+    onView: () => tabs.onNav('RELEASES'),
     title: "activities.release.title",
     desc: "activities.release.desc",
-    color: theme.palette.secondary.contrastText,
     type: "release",
     buttonCreate: "release.create",
     buttonViewAll: "button.view.all.releases",
@@ -103,10 +93,9 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
   },
   {
     composer: (handleClose) => <TemplateComposer onClose={handleClose} />,
-    onView: () => tabs.handleTabAdd({ id: 'templates', label: "Templates" }),
+    onView: () => tabs.onNav('TEMPLATES'),
     title: "activities.templates.title",
     desc: "activities.templates.desc",
-    color: theme.palette.secondary.contrastText,
     type: "templates",
     buttonCreate: "template.create",
     buttonViewAll: "button.view.all.templates"
@@ -116,7 +105,6 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
     onView: undefined,
     title: "activities.migration.title",
     desc: "activities.migration.desc",
-    color: theme.palette.secondary.contrastText,
     type: "migration",
     buttonCreate: "migration.create",
     buttonViewAll: undefined
@@ -126,7 +114,6 @@ const createCards: (site: StencilApi.Site, theme: Theme, tabs: Burger.TabsContex
 
 const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (props) => {
   const title = useIntl().formatMessage({ id: props.data.title })
-  const tabs = Burger.useTabs();
   return (
 
     <Card sx={{
@@ -163,14 +150,12 @@ const ActivitiesViewItem: React.FC<{ data: CardData, onCreate: () => void }> = (
 
 //card view for all CREATE views
 const ActivitiesView: React.FC<{}> = () => {
-  const theme = useTheme();
-  const tabs = Burger.useTabs();
-  const { site } = Composer.useComposer();
+  const nav = useStencilNav();
   const { service } = Composer.useComposer();
 
   const [open, setOpen] = React.useState<number>();
   const handleClose = () => setOpen(undefined);
-  const cards = React.useMemo(() => createCards(site, theme, tabs), [site, theme, tabs]);
+  const cards = createCards(nav);
 
   const [coreVersion, setCoreVersion] = React.useState<{ version: string, built: string }>();
 

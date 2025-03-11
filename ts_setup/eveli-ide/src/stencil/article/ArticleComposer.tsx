@@ -22,7 +22,6 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [devMode, setDevMode] = React.useState<boolean>(false);
   const message = <FormattedMessage id="snack.article.createdMessage" values={{ name }} />
 
-
   const handleCreate = () => {
     const entity: StencilApi.CreateArticle = { name, parentId: parentId && parentId !== DUMMY_ID ? parentId : undefined, order, devMode };
 

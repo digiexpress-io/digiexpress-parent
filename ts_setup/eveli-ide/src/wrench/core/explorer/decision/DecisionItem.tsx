@@ -1,10 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -56,12 +53,12 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
   const flows: HdesApi.Entity<HdesApi.AstFlow>[] = [];
 
   return (
-    <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
+    <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={TableChartOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
 
       {/** Decision options */}
       <Burger.TreeItem itemId={decision.id + 'options-nested'}
         labelText={<FormattedMessage id="options" />}
-        labelIcon={EditIcon}>
+      >
         <DecisionOptions decision={decision} />
       </Burger.TreeItem>
 
@@ -69,7 +66,6 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
       {/** Decision options */}
       <Burger.TreeItem itemId={decision.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}
         labelcolor="primary">
 

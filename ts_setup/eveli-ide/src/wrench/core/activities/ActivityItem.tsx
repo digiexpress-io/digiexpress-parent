@@ -21,6 +21,7 @@ const cardStyle: SxProps = {
 };
 
 const ActivityItem: React.FC<{ data: ActivityData, onCreate: () => void }> = (props) => {
+
   const title = (<Box display="flex" sx={{ justifyContent: 'center' }}>
     <Typography variant="h2" sx={{ fontWeight: 'bold', p: 1 }}><FormattedMessage id={props.data.title} /></Typography>
   </Box>);
