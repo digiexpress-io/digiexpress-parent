@@ -38,6 +38,7 @@ export const EveliShellRoot = styled('div', {
       styles.composeButton,
     ];
   },
+  shouldForwardProp: (prop) => prop !== 'toolbarHeight' && prop !== 'ownerState',
 })<{
   ownerState: {
     toolbarHeight: number;
