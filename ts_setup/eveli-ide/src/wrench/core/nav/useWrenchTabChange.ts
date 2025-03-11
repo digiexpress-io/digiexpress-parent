@@ -1,5 +1,4 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toTab } from './wrench-nav-types';
 
 import { OneTab } from '@/burger';
 

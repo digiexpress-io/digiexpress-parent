@@ -51,7 +51,7 @@ export interface WrenchRouteSearchParams {
   explorerActive?: string | undefined;
 }
 
-export function parseSearchParams(search: Record<string, unknown>): WrenchRouteSearchParams {
+export function parseWrenchSearchParams(search: Record<string, unknown>): WrenchRouteSearchParams {
   return {
     explorer: parseExplorerItems(search),
     explorerActive: search.explorerActive as any

@@ -1,14 +1,19 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/burger'
-import { StencilClient, Main, Toolbar, Secondary, LoadTabsFromSearchParams, StencilRouteSearchParams, parseSearchParams, useStencilTabClose, useStencilTabChange } from '../stencil';
-import { Composer, StencilApi } from '../stencil/context';
+
+import {
+  Composer, StencilApi,
+  StencilClient, Main, Toolbar, Secondary,
+  LoadTabsFromSearchParams, StencilRouteSearchParams, parseStencilSearchParams,
+  useStencilTabClose, useStencilTabChange
+} from '../stencil';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliApp } from '@/burger';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
-  validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseSearchParams(search)
+  validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
 }) 
 
 function Component() {

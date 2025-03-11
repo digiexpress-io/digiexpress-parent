@@ -2,11 +2,12 @@ import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale, EveliApp } from '@/burger'
 import { WrenchClient, WrenchComponents} from '../wrench';
-import { Composer } from '../wrench/core/context';
+import { Composer, WrenchRouteSearchParams, parseWrenchSearchParams } from '../wrench';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
   component: Component,
+  validateSearch: (search: Record<string, unknown>): WrenchRouteSearchParams => parseWrenchSearchParams(search)
 })
 
 function Component() {

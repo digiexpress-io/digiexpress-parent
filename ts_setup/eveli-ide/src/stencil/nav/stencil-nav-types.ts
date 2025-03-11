@@ -51,7 +51,7 @@ export interface StencilRouteSearchParams {
   explorerActive?: string | undefined;
 }
 
-export function parseSearchParams(search: Record<string, unknown>): StencilRouteSearchParams {
+export function parseStencilSearchParams(search: Record<string, unknown>): StencilRouteSearchParams {
   return {
     explorer: parseExplorerItems(search),
     explorerActive: search.explorerActive as any

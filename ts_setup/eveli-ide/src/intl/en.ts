@@ -617,6 +617,7 @@ export const en = {
   'flows.autocomplete.task.snackbar.creating': 'Creating new {type}: {name}',
   'flows.graph.show': 'Show flow graph',
   'flows.graph.hide': 'Hide flow graph',
+  'services.searchAll': 'Search all services',
   'services.edit.title': 'Edit service',
   'services.copyas.title': 'Copy service as',
   'services.delete.title': 'Delete service',
