@@ -11,6 +11,7 @@ import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import {ErrorView} from '../../styles';
+import { useWrenchNav } from '../../nav';
 
 
 const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ flowId, onClose }) => {
@@ -72,7 +73,7 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
 const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) => {
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'FlowDelete' | 'FlowCopy'>(undefined);
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
   const {handleDebugInit} = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service, actions } = Composer.useComposer();
@@ -90,7 +91,7 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
         enqueueSnackbar(<FormattedMessage id="flows.composer.copiedMessage" values={{ name: flow.ast?.name, newName: name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.flows).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
       }).catch((error: Client.StoreError) => {
@@ -125,7 +126,7 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
       <Burger.TreeItemOption nodeId={flow.id + 'edit-nested'}
         color='primary'
         icon={EditIcon}
-        onClick={() => nav.handleInTab({ article: flow })}
+        onClick={() => onNav({ type: 'ENTITY_EDITOR', id: flow.id })}
         labelText={<FormattedMessage id="flows.edit.title" />}>
       </Burger.TreeItemOption>
 

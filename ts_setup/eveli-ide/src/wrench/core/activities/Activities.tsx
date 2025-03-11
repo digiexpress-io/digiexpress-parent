@@ -116,7 +116,6 @@ const Activities: React.FC<{}> = () => {
 
   React.useEffect(() => {
     service.version().then((version) => {
-      console.log("hdes core version", version, "hdes composer version", composerVersion);
       setCoreVersion(version)
     });
 

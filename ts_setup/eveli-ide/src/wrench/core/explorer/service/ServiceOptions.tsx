@@ -11,6 +11,7 @@ import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import { ErrorView } from '../../styles';
+import { useWrenchNav } from '../../nav';
 
 
 const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
@@ -73,7 +74,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
 
   const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceDelete' | 'ServiceCopy'>(undefined);
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
   const {handleDebugInit} = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service: clientService, actions } = Composer.useComposer();
@@ -91,7 +92,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
         enqueueSnackbar(<FormattedMessage id="services.composer.copiedMessage" values={{ name: service.ast?.name, newName: name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.services).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
       }).catch((error: Client.StoreError) => {
@@ -124,7 +125,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
         color={theme.palette.primary.light}
         icon={EditIcon}
-        onClick={() => nav.handleInTab({ article: service })}
+        onClick={() => onNav({ type: 'SERVICES' })}
         labelText={<FormattedMessage id="services.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}

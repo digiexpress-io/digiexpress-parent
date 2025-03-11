@@ -9,10 +9,11 @@ import { useSnackbar } from 'notistack';
 import { Composer } from '../context';
 import { ErrorView } from '../styles';
 import { HdesApi} from '../client';
+import { useWrenchNav } from '../nav';
 
 const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { service, actions } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
 
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState("");
@@ -28,7 +29,7 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         enqueueSnackbar(<FormattedMessage id="services.composer.createdMessage" values={{ name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.services).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
 
         onClose();

@@ -14,6 +14,7 @@ import * as Burger from '@/burger';
 import { Composer,  } from '../../context';
 import { HdesApi } from '../../client';
 import DecisionOptions from './DecisionOptions';
+import { useWrenchNav } from "../../nav";
 
 
 
@@ -44,7 +45,7 @@ function FlowItem(props: {
 const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId }) => {
 
   const { session, isArticleSaved } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
   
   
   const decision = session.site.decisions[decisionId];
@@ -74,7 +75,7 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
 
         {flows.map(view => (<FlowItem key={view.id} nodeId={view.id}
           labelText={view.ast ? view.ast.name : view.id}
-          onClick={() => nav.handleInTab({ article: view })}
+          onClick={() => onNav({ type: 'DECISIONS' })}
         />)
         )}
       </Burger.TreeItem>

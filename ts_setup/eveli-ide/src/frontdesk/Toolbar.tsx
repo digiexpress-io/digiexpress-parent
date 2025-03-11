@@ -52,7 +52,8 @@ export const Toolbar: React.FC<{}> = () => {
       <div>
         <IconButton onClick={() => navigate({
           from: '/secured/$locale',
-          to: '/secured/$locale/assets/wrench'
+          to: '/secured/$locale/assets/wrench',
+          search: { explorer: [] }
         })}>
           <BuildOutlinedIcon />
         </IconButton>

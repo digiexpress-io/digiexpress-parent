@@ -17,6 +17,7 @@ import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
+import { useWrenchNav } from '../../nav';
 
 
 
@@ -118,7 +119,7 @@ interface RefService {
 const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
   const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
 
   const flow = session.site.flows[flowId];
 
@@ -163,7 +164,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${flow.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />))}
       </Burger.TreeItem>
 
@@ -176,7 +177,7 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
 
         {services.map(view => (<ServiceItem key={view.ref.ref} nodeId={`${flow.id}-st-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />)
         )}
       </Burger.TreeItem>

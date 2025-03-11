@@ -8,18 +8,6 @@ import { SessionData } from './SessionData';
 
 declare namespace WrenchComposerApi {
 
-  interface Nav {
-    value?: string | null;
-  }
-
-  interface TabData {
-    nav?: Nav
-    withNav(nav: Nav): TabData;
-  }
-  interface Tab extends Burger.OneTab<TabData> {
-
-  }
-
   interface DebugSession {
     error?: HdesApi.StoreError;
     debug?: HdesApi.DebugResponse;
@@ -82,25 +70,6 @@ declare namespace WrenchComposerApi {
 namespace WrenchComposerApi {
   const sessionData = new SessionData({});
 
-  export class ImmutableTabData implements TabData {
-    private _nav: Nav;
-  
-    constructor(props: { nav: Nav }) {
-      this._nav = props.nav;
-    }
-    get nav() {
-      return this._nav;
-    }
-    withNav(nav: Nav) {
-      return new ImmutableTabData({
-        nav: {
-          value: nav.value === undefined ? this._nav.value : nav.value
-        }
-      });
-    }
-  }
-  export const createTab = (props: { nav: Nav, page?: HdesApi.Entity<any> }) => new ImmutableTabData(props);
-
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
     actions: {} as Actions,
@@ -152,44 +121,6 @@ namespace WrenchComposerApi {
     const result: ContextType = React.useContext(ComposerContext);
     return result.session;
   }
-  export const useNav = () => {
-    const layout = Burger.useTabs();
-
-
-    const handleInTab = (props: { article: HdesApi.Entity<any> }) => {
-      const nav = { value: props.article.id };
-
-      const icon = <ArticleTabIndicator entity={props.article} />;
-      const tab: Tab = {
-        id: props.article.id,
-        label: props.article.ast ? props.article.ast?.name : props.article.id,
-        icon,
-        data: createTab({ nav })
-      };
-
-      const oldTab = layout.session.findTab(props.article.id);
-      if (oldTab !== undefined) {
-        layout.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
-      } else {
-        // open or add the tab
-        layout.handleTabAdd(tab);
-      }
-
-    }
-    const findTab = (article: HdesApi.Entity<any>): Tab | undefined => {
-      const oldTab = layout.session.findTab(article.id);
-      if (oldTab !== undefined) {
-        const tabs = layout.session.tabs;
-        const active = tabs[layout.session.history.open];
-        const tab: Tab = active;
-        return tab;
-      }
-      return undefined;
-    }
-
-
-    return { handleInTab, findTab }
-  }
 
   export const useDebug = () => {
     const layout = Burger.useTabs();
@@ -228,20 +159,6 @@ namespace WrenchComposerApi {
     </ComposerContext.Provider>);
   };
 }
-
-const ArticleTabIndicator: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
-  const theme = useTheme();
-  const { isArticleSaved } = WrenchComposerApi.useComposer();
-  const saved = isArticleSaved(entity);
-  return <span style={{
-    paddingLeft: "5px",
-    fontSize: '30px',
-    color: theme.palette.secondary.light,
-    display: saved ? "none" : undefined
-  }}>*</span>
-}
-
-
 
 export default WrenchComposerApi;
 

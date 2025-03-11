@@ -66,7 +66,7 @@ export const Secondary: React.FC = () => {
       <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
 
       <Button variant='text' startIcon={<TaskOutlinedIcon />}
-        className={activeButton === 'TASKS' ? classes.menuButtonActive : classes.menuButton}
+      //className={activeButton === 'TASKS' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/tasks'
@@ -76,7 +76,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<DashboardCustomizeOutlinedIcon />}
-        className={activeButton === 'DASHBOARD' ? classes.menuButtonActive : classes.menuButton}
+      //className={activeButton === 'DASHBOARD' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/dashboard'
@@ -86,7 +86,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<NetworkCheckIcon />}
-        className={activeButton === 'PROCESSES' ? classes.menuButtonActive : classes.menuButton}
+      // className={activeButton === 'PROCESSES' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/monitoring'
@@ -96,7 +96,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<ListIcon />}
-        className={activeButton === 'FORMS' ? classes.menuButtonActive : classes.menuButton}
+      //className={activeButton === 'FORMS' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/forms'
@@ -105,16 +105,18 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<BuildOutlinedIcon />}
-        className={activeButton === 'WRENCH' ? classes.menuButtonActive : classes.menuButton}
-        onClick={() => navigate({
+        //className={activeButton === 'WRENCH' ? classes.menuButtonActive : classes.menuButton}
+      /*  onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/wrench'
-        })}>
+        })}
+          */
+      >
         {intl.formatMessage({ id: 'menu.flow' })}
       </Button>
 
       <Button variant='text' startIcon={<EditNoteOutlinedIcon />}
-        className={activeButton === 'STENCIL' ? classes.menuButtonActive : classes.menuButton}
+      // className={activeButton === 'STENCIL' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/stencil',
@@ -124,7 +126,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<SettingsOutlinedIcon />}
-        className={activeButton === 'WORKFLOWS' ? classes.menuButtonActive : classes.menuButton}
+      //className={activeButton === 'WORKFLOWS' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/assets/services'
@@ -133,7 +135,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<ThumbUpAltOutlinedIcon />}
-        className={activeButton === 'FEEDBACK' ? classes.menuButtonActive : classes.menuButton}
+      // className={activeButton === 'FEEDBACK' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/feedback'
@@ -143,7 +145,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<CloudQueueIcon />}
-        className={activeButton === 'QUEUES' ? classes.menuButtonActive : classes.menuButton}
+      // className={activeButton === 'QUEUES' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/queues'
@@ -153,7 +155,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button variant='text' startIcon={<BeenhereOutlinedIcon />}
-        className={activeButton === 'PUBLICATIONS' ? classes.menuButtonActive : classes.menuButton}
+      // className={activeButton === 'PUBLICATIONS' ? classes.menuButtonActive : classes.menuButton}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/publications'

@@ -1,44 +1,34 @@
 import { OneTab } from '@/burger';
 
 
-export interface ExplorerItemArticlePages {
-  type: 'ARTICLE_PAGES';
-  article: string;
-  locale1: string;
-  locale2?: string | undefined;
+
+export interface ExplorerItemEntity {
+  type: 'ENTITY_EDITOR';
+  id: string
 }
 
-export interface ExplorerItemArticle {
-  type: 'ARTICLES';
-  article?: string | undefined,
-  expanded?: string[]
+export interface ExplorerItemFlows {
+  type: 'FLOWS';
+  expanded?: string[];
 }
 
 export type ExplorerItem = (
-  ExplorerItemArticlePages |
-  ExplorerItemArticle |
-
-  { type: 'ACTIVITIES' } |
+  ExplorerItemEntity |
+  ExplorerItemFlows |
   { type: 'SERVICES' } |
-  { type: 'LINKS' } |
-  { type: 'LOCALES' } |
-  { type: 'MIGRATIONS' } |
-  { type: 'TEMPLATES' } |
+  { type: 'DECISIONS' } |
+  { type: 'DEBUG' } |
+  { type: 'ACTIVITIES' } |
   { type: 'RELEASES' } |
-
-
-  { type: 'ARTICLE_LINKS', article: string } |
-  { type: 'ARTICLE_WORKFLOWS', article: string }
+  { type: 'COMPARE' } |
+  { type: 'MIGRATIONS' }
 )
 
 export function toTab(data: ExplorerItem): OneTab<any> {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => {
-      if (data.type === 'ARTICLES') {
-        return key === 'type';
-      }
 
-      return key === 'type' || key === 'article'
+      return key === 'type' || key === 'id'
     })
     .reduce((result, [key, value]) => result + '/' + value, ''));
   const label = data.type ? data.type.toLowerCase() : 'no type';

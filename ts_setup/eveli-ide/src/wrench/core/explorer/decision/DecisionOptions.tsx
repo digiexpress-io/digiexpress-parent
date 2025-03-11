@@ -13,6 +13,7 @@ import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi } from '../../client';
 import { ErrorView } from '../../styles';
+import { useWrenchNav } from '../../nav';
 
 
 const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
@@ -76,7 +77,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
 
 const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'DecisionDelete' | 'DecisionCopy'>(undefined);
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav()
   const {handleDebugInit} = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service, actions } = Composer.useComposer();
@@ -94,7 +95,7 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
         enqueueSnackbar(<FormattedMessage id="decisions.composer.copiedMessage" values={{ name: decision.ast?.name, newName: name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.decisions).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
       }).catch((error: HdesApi.StoreError) => {
@@ -129,7 +130,7 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
       <Burger.TreeItemOption nodeId={decision.id + 'edit-nested'}
         color='page'
         icon={EditIcon}
-        onClick={() => nav.handleInTab({ article: decision })}
+        onClick={() => onNav({ type: 'DECISIONS' })}
         labelText={<FormattedMessage id="decisions.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={decision.id + 'simulate-nested'}

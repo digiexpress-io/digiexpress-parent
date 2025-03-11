@@ -17,6 +17,7 @@ import MsgTreeItem from '../MsgTreeItem';
 import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import ServiceOptions from './ServiceOptions';
+import { useWrenchNav } from '../../nav';
 
 
 const ErrorItem: React.FC<{
@@ -114,8 +115,7 @@ interface RefFlow {
 const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) => {
   const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
-  const nav = Composer.useNav();
-
+  const { onNav } = useWrenchNav();
 
   const service = session.site.services[serviceId];
 
@@ -165,7 +165,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
 
         {flows.map(view => (<FlowItem key={view.ref.ref} nodeId={`${service.id}-fl-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'FLOWS' }) : undefined}
         />)
         )}
       </Burger.TreeItem>
@@ -179,7 +179,7 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${service.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'DECISIONS' }) : undefined}
         />))}
 
       </Burger.TreeItem>

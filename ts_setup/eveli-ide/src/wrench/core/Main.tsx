@@ -12,32 +12,19 @@ import { ServiceEdit } from './service';
 import { DebugView } from './debug';
 import { ReleasesView } from './release';
 
-import { HdesApi } from './client';
 import { CompareView } from './compare';
 import { DecisionsView } from './decision/DecisionsView';
+import { ExplorerItem } from './nav';
 
 
 const root: SxProps = { height: `100%`,  padding: 1, backgroundColor: "primary.contrastText" };
 
-const EntityEditor: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
-  if (entity.source.bodyType === 'DT') {
-    return (<DecisionEdit decision={entity} />);
-  } else if (entity.source.bodyType === 'FLOW') {
-    return (<FlowEdit flow={entity} />);
-  } else if (entity.source.bodyType === 'FLOW_TASK') {
-    return (<ServiceEdit service={entity} />);
-  }
-  return null;
-}
 
 const Main: React.FC<{}> = () => {
   const layout = Burger.useTabs();
   const { site, session } = Composer.useComposer();
   const tabs = layout.session.tabs;
   const active = tabs.length ? tabs[layout.session.history.open] : undefined;
-  const entity = active ? session.getEntity(active.id) : undefined;
-
-  //composers which are NOT linked directly with an article
 
   return React.useMemo(() => {
     
@@ -47,29 +34,35 @@ const Main: React.FC<{}> = () => {
     if (!active) {
       return null;
     }
-    if (active.id === 'activities') {
-      return (<Box sx={root}><Activities /></Box>);
-    } else if (active.id === 'releases') {
-      return (<Box sx={root}><ReleasesView /></Box>);
-    } else if (active.id === 'graph') {
-      return (<Box sx={root}>graph</Box>);
-    } else if (active.id === 'templates') {
-      return (<Box sx={root}>templates</Box>);
-    } else if (active.id === 'debug') {
-      return (<Box sx={root}><DebugView /></Box>);
-    } else if (active.id === 'compare') {
-      return (<Box sx={root}><CompareView /></Box>);
-    } else if (active.id === 'flows') {
-      return (<Box sx={root}><FlowsView /></Box>);
-    } else if (active.id === 'decisions') {
-      return (<Box sx={root}><DecisionsView /></Box>);
+    const explorer: ExplorerItem | undefined = active.data;
+    if (!explorer) {
+      return (<Box sx={root}></Box>)
     }
-    if (entity) {
-      return <Box sx={root}><EntityEditor entity={entity} /></Box>
+    switch (explorer.type) {
+      case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
+      case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
+      case 'DEBUG': return (<Box sx={root}><DebugView /></Box>);
+      case 'COMPARE': return (<Box sx={root}><CompareView /></Box>);
+      case 'FLOWS': return (<Box sx={root}><FlowsView /></Box>);
+      case 'DECISIONS': return (<Box sx={root}><DecisionsView /></Box>);
+      case 'ENTITY_EDITOR': {
+        const entity = active ? session.getEntity(explorer.id) : undefined;
+        if (!entity) {
+          return (<>not found</>)
+        }
+        if (entity.source.bodyType === 'DT') {
+          return (<Box sx={root}><DecisionEdit decision={entity} /></Box>);
+        } else if (entity.source.bodyType === 'FLOW') {
+          return (<Box sx={root}><FlowEdit flow={entity} /></Box>);
+        } else if (entity.source.bodyType === 'FLOW_TASK') {
+          return (<Box sx={root}><ServiceEdit service={entity} /></Box>);
+        }
+        return (<></>)
+      }
+      default: return (<></>)
     }
-    throw new Error("unknown view: " + JSON.stringify(active, null, 2));
 
-  }, [active, site, entity]);
+  }, [active, site, session]);
 }
 export { Main }
 

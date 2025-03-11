@@ -31,8 +31,6 @@ const Toolbar: React.FC<{}> = () => {
   const secondary = Burger.useIconbar();
   const { enqueueSnackbar } = useSnackbar();
 
-  React.useEffect(() => tabs.handleTabAdd({ id: 'activities', label: "Activities" }), []);
-
   const classes = useUtilityClasses();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -74,7 +72,7 @@ const Toolbar: React.FC<{}> = () => {
       });
 
     } else if (newValue === 'toolbar.activities') {
-      tabs.handleTabAdd({ id: 'activities', label: "Activities" });
+      tabs.handleTabAdd({ id: 'activities', label: "Activities" }); fkdfkdsfhj
     } else if (newValue === 'toolbar.search') {
       secondary.handleActiveId("toolbar.search")
     } 
