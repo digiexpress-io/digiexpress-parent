@@ -25,12 +25,11 @@ export function useAnchor() {
     onClose,
     anchorEl,
     open,
-    anchorOrigin: { horizontal: 'center', vertical: 'bottom' },
-    transformOrigin: { horizontal: 'center', vertical: 'top' },
+    anchorOrigin: { horizontal: 'right', vertical: 'top' },
+    transformOrigin: { horizontal: 'right', vertical: 'top' },
   }
-
   return {
-    onClick, anchorProps
+    onClick, anchorProps, onClose
   }
 }
 

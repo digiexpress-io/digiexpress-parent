@@ -60,11 +60,6 @@ export const EveliShellRoot = styled('div', {
     display: 'flex',
     flexDirection: 'column',
 
-    '& .EveliLocales-root': {
-      width: `${drawerWidth}px`,
-      display: drawerOpen ? undefined : 'none'
-    },
-
     '& .EveliShellMiniBarTop': {
       display: 'flex',
       alignItems: 'center',

@@ -1,7 +1,6 @@
 import React from 'react';
 import { IconButton, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import LanguageIcon from '@mui/icons-material/Language';
 import SearchIcon from '@mui/icons-material/Search';
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
@@ -10,7 +9,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router'
 
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
-import { LocaleSelect } from '../uiDev';
 
 import * as Burger from '@/burger';
 
@@ -21,15 +19,6 @@ export const Toolbar: React.FC<{}> = () => {
   const classes = useUtilityClasses();
   const { locale } = useIntl();
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const handleLocalePopoverClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleLocalePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     if (newValue === 'toolbar.search') {
       secondary.handleActiveId("toolbar.search")
@@ -38,7 +27,7 @@ export const Toolbar: React.FC<{}> = () => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: false }}>
-      <LocaleSelect open={!!anchorEl} onClose={handleLocalePopoverClose} anchorEl={anchorEl} />
+
       <div>
         <IconButton onClick={(event) => handleChange(event, 'toolbar.search')}><SearchIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.search' /></Typography>
@@ -78,10 +67,7 @@ export const Toolbar: React.FC<{}> = () => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
-      <div>
-        <IconButton onClick={handleLocalePopoverClick}><LanguageIcon /></IconButton>
-        <Typography>{locale.toLocaleUpperCase()}</Typography>
-      </div>
+      <Burger.EveliLocales />
     </EveliShellMiniBarRoot>
   );
 }

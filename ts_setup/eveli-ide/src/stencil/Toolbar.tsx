@@ -4,7 +4,6 @@ import { IconButton, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import LanguageIcon from '@mui/icons-material/Language';
 import SearchIcon from '@mui/icons-material/Search';
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
@@ -14,7 +13,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from './context';
-import { LocaleSelect } from '../uiDev';
 import { EveliShellMiniBarRoot, useUtilityClasses, EveliShellMiniBarClassName } from '../burger/eveli-shell/useUtilityClasses';
 import { useNavigate } from '@tanstack/react-router';
 import { useStencilNav } from './nav';
@@ -22,26 +20,14 @@ import { useStencilNav } from './nav';
 
 export const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { locale } = useIntl();
   const navigate = useNavigate();
   const composer = Composer.useComposer();
   const tabs = Burger.useTabs();
 
   const {onNav} = useStencilNav();
   const secondaryCtx = Burger.useIconbar();
-  
 
   const classes = useUtilityClasses();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  const handleLocalePopoverClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleLocalePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
 
   const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
   const article = active ? composer.site.articles[active.id] : undefined;
@@ -73,7 +59,6 @@ export const Toolbar: React.FC<{}> = () => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
-      <LocaleSelect open={!!anchorEl} onClose={handleLocalePopoverClose} anchorEl={anchorEl} />
       <div>
         <IconButton onClick={() => onNav('ACTIVITIES')}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
@@ -121,10 +106,7 @@ export const Toolbar: React.FC<{}> = () => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
-      <div>
-        <IconButton onClick={handleLocalePopoverClick}><LanguageIcon /></IconButton>
-        <Typography>{locale.toLocaleUpperCase()}</Typography>
-      </div>
+      <Burger.EveliLocales />
     </EveliShellMiniBarRoot>
   );
 }

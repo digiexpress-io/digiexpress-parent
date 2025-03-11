@@ -2,6 +2,7 @@
 
 export * from './eveli-app';
 export * from './eveli-login';
+export * from './eveli-locales';
 export * from './eveli-shell-explorer';
 export * from './api-tabs';
 export * from './api-iam';
