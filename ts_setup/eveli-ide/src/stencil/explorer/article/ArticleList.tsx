@@ -72,10 +72,10 @@ export const ArticleList: React.FC<{ searchString: string }> = ({ searchString }
           slots={{ collapseIcon: ArrowDropDownIcon, expandIcon: ArrowDropDownIcon, endIcon: EndIcon }}
           onExpandedItemsChange={handleExpanded}>
 
-          {treeItems.map((view) => <>
+          {treeItems.map((view) => <React.Fragment key={view.article.id}>
             <ArticleItem key={view.article.id} articleId={view.article.id} options={articleOptions} />
             <Divider />
-          </>
+          </React.Fragment>
           )}
         </SimpleTreeView>
       </ArticlesListRoot>

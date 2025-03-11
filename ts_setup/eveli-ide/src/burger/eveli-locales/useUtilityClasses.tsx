@@ -47,7 +47,7 @@ export const EveliLocalesLanguageSelect = styled(Popover, {
     '& .MuiPaper-root': {
       minWidth: 200
     },
-    '& p:first-child': {
+    '& p:first-of-type': {
       fontWeight: 'bold',
       padding: theme.spacing(2)
     },
