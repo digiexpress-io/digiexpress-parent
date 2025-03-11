@@ -1,70 +1,43 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemArticle, ExplorerItemArticlePages, toTab } from './stencil-nav-types';
-
-import { useTabs } from '@/burger';
-
-export type NavInput = (
-  'ACTIVITIES'|
-  'SERVICES'|
-  'LINKS'|
-  'LOCALES'|
-  'MIGRATIONS'|
-  'TEMPLATES' |
-  'RELEASES' |
-
-  ExplorerItemArticle |
-  ExplorerItemArticlePages |
-  { type: 'ARTICLE_LINKS', article: string } |
-  { type: 'ARTICLE_WORKFLOWS', article: string }
-)
+import { ExplorerItem, ExplorerItemArticle, toExplorerId } from './stencil-nav-types';
 
 
-function toExplorerItem(input: NavInput): ExplorerItem {
-  const data: ExplorerItem = ((input as any)['type'] ? input : { type: input }) as any;
-  return data;
-}
 
 
 function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]): ExplorerItem[]  {
-  const newItemId = toTab(newExplorerItem).id;
-  const explorer = [...prev.filter(explorer => toTab(explorer).id !== newItemId), newExplorerItem];
+  const newItemId = toExplorerId(newExplorerItem);
+  const explorer = [...prev.filter(explorer => toExplorerId(explorer) !== newItemId), newExplorerItem];
   return explorer;
 }
 
 
 export function useStencilNav(): { 
   activeItem: ExplorerItem | undefined;
-  onNav: (newItem: NavInput) => void;
+  onNav: (newItem: ExplorerItem) => void;
+
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
-  getArticle: () => ExplorerItemArticle
+  getArticle: () => ExplorerItemArticle;
+
+  explorer: ExplorerItem[];
 } {
   const navigate = useNavigate();
-  const tabs = useTabs();
-  
-  const { explorer } = useSearch({ from: '/secured/$locale/assets/stencil/' });
-  const activeItem = explorer.find(explorer => toTab(explorer).id === tabs.session.activeTab?.id);
+  const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/stencil/' });
+  const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
 
-  function onNav(input: NavInput) {
-    const newItem = toExplorerItem(input);
-    const newTab = toTab(newItem);
-    tabs.handleTabAdd(newTab);
-
-    const other: {} = newItem;
-
+  function onNav(input: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
       search: (prev) => ({
-        ...prev, 
-        ...other,
-        explorer: calculateNextSearch(newItem, prev.explorer),
+        ...prev,
+        explorer: calculateNextSearch(input, prev.explorer),
       })
     });
   }
 
   function findTab(newItem: ExplorerItem['type'], articleId?: string): ExplorerItem | undefined {
-    return tabs.session.tabs
-      .filter(tab => tab.data?.type === newItem)
-      .find(tab => articleId ? tab.data?.article === articleId : true)?.data;
+    return explorer
+      .filter(tab => tab?.type === newItem)
+      .find(tab => articleId ? (tab as any)['article'] === articleId : true);
   }
 
   function getArticle(): ExplorerItemArticle {
@@ -72,5 +45,5 @@ export function useStencilNav(): {
     return article ?? { type: 'ARTICLES', article: undefined, expanded: []};
   }
 
-  return { activeItem, onNav, findTab, getArticle }
+  return { activeItem, onNav, findTab, getArticle, explorer }
 }

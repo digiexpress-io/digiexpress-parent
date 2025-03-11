@@ -1,4 +1,3 @@
-export * from './LoadTabsFromSearchParams'
 export * from './stencil-nav-types'
 export * from './useStencilNav'
 export * from './useStencilTabClose'

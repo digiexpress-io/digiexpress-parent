@@ -1,6 +1,3 @@
-import { OneTab } from '@/burger';
-
-
 export interface ExplorerItemArticlePages {
   type: 'ARTICLE_PAGES';
   article: string;
@@ -31,7 +28,7 @@ export type ExplorerItem = (
   { type: 'ARTICLE_WORKFLOWS', article: string }
 )
 
-export function toTab(data: ExplorerItem): OneTab<any> {
+export function toExplorerId(data: ExplorerItem): string {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => {
       if (data.type === 'ARTICLES') {
@@ -40,9 +37,8 @@ export function toTab(data: ExplorerItem): OneTab<any> {
 
       return key === 'type' || key === 'article'
     })
-    .reduce((result, [key, value]) => result + '/' + value, ''));
-  const label = data.type ? data.type.toLowerCase() : 'no type';
-  return { id, label, data };
+    .reduce((result, [, value]) => result + '/' + value, ''));
+  return id;
 }
 
 

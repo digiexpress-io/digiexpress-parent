@@ -1,18 +1,18 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toTab } from './stencil-nav-types';
+import { ExplorerItem, toExplorerId } from './stencil-nav-types';
 
-import { OneTab } from '@/burger';
+
 
 export function useStencilTabClose() {
   const navigate = useNavigate();
 
-  function onTabClose(tab: OneTab<any>, nextActive: OneTab<any> | undefined) {
+  function onTabClose(tab: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
       search: (prev) => {
-        
-        const explorer = [...prev.explorer].filter(t => toTab(t).id !== tab.id);
-        const newItem: ExplorerItem | undefined = nextActive?.data;
+        const targetId = toExplorerId(tab);
+        const explorer = [...prev.explorer].filter(t => toExplorerId(t) !== targetId);
+        const newItem: ExplorerItem | undefined = explorer[explorer.length-1];
   
         if(newItem) {
           const itemIndex = explorer.indexOf(newItem);

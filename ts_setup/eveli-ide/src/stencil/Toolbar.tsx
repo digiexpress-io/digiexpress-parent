@@ -9,7 +9,7 @@ import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from './context';
@@ -60,7 +60,7 @@ export const Toolbar: React.FC<{}> = () => {
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
       <div>
-        <IconButton onClick={() => onNav('ACTIVITIES')}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <IconButton onClick={() => onNav({ type: 'ACTIVITIES'})}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
       </div>
 

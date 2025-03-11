@@ -83,25 +83,25 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<AccountTreeOutlinedIcon />}
-          onClick={() => onNav('SERVICES')}>
+          onClick={() => onNav({type: 'SERVICES'})}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 
         <Button variant={activeItem?.type === 'LINKS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<InsertLinkOutlinedIcon />}
-          onClick={() => onNav('LINKS')}>
+          onClick={() => onNav({ type: 'LINKS'})}>
           {intl.formatMessage({ id: 'menu.links' })}
         </Button>
 
         <Button variant={activeItem?.type === 'LOCALES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<TranslateOutlinedIcon />}
-          onClick={() => onNav('LOCALES')}>
+          onClick={() => onNav({type: 'LOCALES'})}>
           {intl.formatMessage({ id: 'menu.locales' })}
         </Button>
 
         <Button variant={activeItem?.type === 'TEMPLATES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<FormatShapesOutlinedIcon />}
-          onClick={() => onNav('TEMPLATES')}>
+          onClick={() => onNav({type: 'TEMPLATES'})}>
           {intl.formatMessage({ id: 'menu.templates' })}
         </Button>
 
@@ -113,7 +113,7 @@ const Secondary: React.FC<{}> = () => {
 
         <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<NewReleasesOutlinedIcon />}
-          onClick={() => onNav('RELEASES')}>
+          onClick={() => onNav({type: 'RELEASES'})}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
 

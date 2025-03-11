@@ -1,30 +1,30 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import * as Burger from '@/burger';
+
 import {
   ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
   ReleasesView, LocalesView, ArticlesView
 } from './';
+
 import { TemplatesView } from './template';
 import { Composer } from './context';
 import { LinksView } from './link';
-import { ExplorerItem } from './nav';
+import { ExplorerItem, useStencilNav } from './nav';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
 const Main: React.FC<{}> = () => {
-  const { session: tabs } = Burger.useTabs();
-  const activeTab = tabs.activeTab;
   const site = Composer.useSite();
+  const { activeItem } = useStencilNav();
 
   return React.useMemo(() => {
     if (site.contentType === "NO_CONNECTION") {
       return (<Box>{site.contentType}</Box>);
     }
-    if (!activeTab) {
+    if (!activeItem) {
       return (<Box sx={root}></Box>)
     }
-    const explorer: ExplorerItem | undefined = activeTab.data;
+    const explorer: ExplorerItem | undefined = activeItem;
     if(!explorer) {
       return (<Box sx={root}></Box>)
     }
@@ -45,7 +45,7 @@ const Main: React.FC<{}> = () => {
       case 'ARTICLE_WORKFLOWS': return (<Box sx={root}><ArticleWorkflowsComposer key={explorer.article + "-workflows"} articleId={explorer.article} /></Box>)
     }
     return (<Box sx={root}></Box>)
-  }, [activeTab, site]);
+  }, [activeItem, site]);
 }
 export { Main }
 
