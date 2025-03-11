@@ -31,28 +31,31 @@ export const FrontdeskApp: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/** config context will update context path to whatever /config.serviceUrl will return */}
-      <FetchProvider tree={fetchtree} initContextPath='/'>
-        <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+      <LocaleProvider>
+        <SnackbarProvider maxSnack={3} ref={notistackRef}
+          action={(key) => (<Button onClick={handleCloseNotification(key)}><FormattedMessage id='button.dismiss' /></Button>)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        >
 
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={siteTheme}>
-              <LocaleProvider>
-                <SnackbarProvider maxSnack={3} ref={notistackRef}
-                  action={(key) => (<Button onClick={handleCloseNotification(key)}><FormattedMessage id='button.dismiss' /></Button>)}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                >
+          {/** config context will update context path to whatever /config.serviceUrl will return */}
+          <FetchProvider tree={fetchtree} initContextPath='/'>
+            <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={siteTheme}>
 
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />
                   </IamBackendProvider>
 
-                </SnackbarProvider>
-              </LocaleProvider>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </ConfigContextProvider>
-      </FetchProvider>
+                </ThemeProvider>
+              </StyledEngineProvider>
+              
+            </ConfigContextProvider>
+          </FetchProvider>
+
+        </SnackbarProvider>
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }
