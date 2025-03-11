@@ -31,10 +31,8 @@ import { TaskRoleDialog } from './TaskRoleDialog';
 import { AttachmentTable } from './AttachmentTable';
 import { CommentThread } from './CommentThread';
 
-import { Attachment, User } from '../../types';
-import { UserGroup } from '../../types/UserGroup';
+import { Attachment } from '../../types';
 import { Task, TaskStatus } from '../../types/task/Task';
-import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
 
 import { useAttachmentConfig } from '../../context/AttachmentContext';
@@ -44,6 +42,7 @@ import * as Yup from 'yup';
 import { TaskFeedback } from './TaskFeedback';
 import { StatusIndicator } from '../../../feedback';
 import { DialobReview } from '../../../dialob-review';
+import { IamApi } from '@/burger';
 
 
 
@@ -189,8 +188,8 @@ const classes = {
 
 type Props = {
   id: string
-  groups: UserGroup[]
-  getUsers: (groupName: string[]) => Promise<GroupMember[]>
+  groups: IamApi.UserGroup[]
+  getUsers: (groupName: string[]) => Promise<IamApi.GroupMember[]>
   editTask: Task
   handleSubmit: (task: Task) => void
   cancel: () => void
@@ -199,13 +198,13 @@ type Props = {
   comments: Comment[]
   reloadComments: () => void
   userSelectionFree?: boolean
-  currentUser: Partial<User>
+  currentUser: Partial<IamApi.User>
   supressConfirmation?: boolean | undefined
 }
 
 type AllProps = Props & WrappedComponentProps;
 type State = {
-  userList: GroupMember[];
+  userList: IamApi.GroupMember[];
   dialogOpen: boolean;
 }
 
@@ -348,7 +347,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
   }
 
-  handleRoleChange = (roles: UserGroup[],
+  handleRoleChange = (roles: IamApi.UserGroup[],
     setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void) => {
     const groupList = roles.map(r => r.id);
     setFieldValue("assignedRoles", groupList);
@@ -705,7 +704,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
               </Box>
               {this.state.dialogOpen && <TaskRoleDialog
                 assignedRoles={values.assignedRoles} groups={this.props.groups}
-                acceptDialog={(roles: UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
+                acceptDialog={(roles: IamApi.UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
                 closeDialog={this.onDialogClose} />
               }
             </Form>

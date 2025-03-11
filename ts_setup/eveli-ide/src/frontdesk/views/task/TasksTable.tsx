@@ -12,12 +12,11 @@ import { FormattedDate, useIntl } from 'react-intl';
 import moment from 'moment';
 
 import { localizeTable } from '../../util/localizeTable';
-import { mapIamRolesList } from '@/burger';
+import { IamApi, mapIamRolesList } from '@/burger';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
 
 import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
-import { UserGroup } from '../../types/UserGroup';
 
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
@@ -46,7 +45,7 @@ function getPriorityCode(status: TaskPriority | undefined) {
 
 type Props = {
   loadTasks: (query: Query<Task>, columns: Column<any>[], defaultOrder?: OrderByCollection[]) => Promise<QueryResult<Task>>
-  groups: UserGroup[]
+  groups: IamApi.UserGroup[]
   taskOpenHandler: (id?: string) => void
   taskDeletableHandler?: () => boolean
   newTasks: string[]

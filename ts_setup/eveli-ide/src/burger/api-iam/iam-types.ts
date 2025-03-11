@@ -29,4 +29,20 @@ export declare namespace IamApi {
     user: User;
     getUser: () => Promise<User>
   }
+
+
+  export interface UserGroup {
+    id: string,
+    groupName: string
+  }
+
+  export interface GroupMember {
+    userName: string
+    userEmail: string
+  }
+
+  export interface Group {
+    name: string
+    description: string
+  }
 }

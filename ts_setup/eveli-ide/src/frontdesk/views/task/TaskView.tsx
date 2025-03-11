@@ -3,21 +3,19 @@ import { useNavigate } from '@tanstack/react-router';
 import { LinearProgress, Container } from '@mui/material';
 
 import { TaskCreate } from './TaskCreate';
-import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
 
 import { ComponentResolver } from '../../context/ComponentResolver';
-import { UserGroup } from '../../types/UserGroup';
 import { Task } from '../../types/task/Task';
 import { TableHeader } from '../../components/TableHeader';
-import { useIam } from '@/burger';
+import { useIam, IamApi } from '@/burger';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 type OwnProps = {
   taskId?: string
   taskUpdateCallback?: ()=>void
-  groups: UserGroup[]
-  getUsers: (groupName:string[])=>Promise<GroupMember[]>
+  groups: IamApi.UserGroup[]
+  getUsers: (groupName:string[])=>Promise<IamApi.GroupMember[]>
   componentResolver?: ComponentResolver
   externalThreads?: boolean
   userSelectionFree?: boolean

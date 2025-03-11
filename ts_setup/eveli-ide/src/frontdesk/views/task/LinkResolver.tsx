@@ -2,8 +2,7 @@ import React from 'react';
 import { TaskLinkComponent, TaskLinkOpenCallback, TaskLinkPdfCallback, TaskLinkProps } from '../../components/task/TaskLinkComponent';
 import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
 import { MenuItem, Tooltip } from '@mui/material';
-import { mapIamRole } from '@/burger';
-import { UserGroup } from '../../types/UserGroup';
+import { mapIamRole, IamApi } from '@/burger';
 import { ComponentResolver } from '../../context/ComponentResolver';
 
 
@@ -22,7 +21,7 @@ export class TasksComponentResolver implements ComponentResolver {
     return null;
   }
 
-  groupListItemResolver = (groups: UserGroup[]) => {
+  groupListItemResolver = (groups: IamApi.UserGroup[]) => {
     let result:JSX.Element[] = [];
     groups.forEach(group=> {
       result.push( 

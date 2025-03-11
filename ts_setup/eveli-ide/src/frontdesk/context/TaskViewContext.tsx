@@ -1,11 +1,11 @@
-import { User } from "../types";
-import { UserGroup } from "../types/UserGroup";
+
+import { IamApi } from '@/burger'
 import React from 'react'
 
 type TaskViewConfig = {
   taskUpdateCallback: ()=>void
-  users: User[]
-  groups: UserGroup[]
+  users: IamApi.User[]
+  groups: IamApi.UserGroup[]
   externalThreads?: boolean
   userSelectionFree: boolean
 }

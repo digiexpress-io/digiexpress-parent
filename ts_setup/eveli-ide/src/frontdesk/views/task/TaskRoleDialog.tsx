@@ -5,15 +5,15 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { FormattedMessage, useIntl } from "react-intl";
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { IamApi } from '@/burger';
 
-import { UserGroup } from '../../types/UserGroup';
 
 
 export type TaskRoleDialogProps = {
   assignedRoles: string[]
-  groups: UserGroup[]
+  groups: IamApi.UserGroup[]
   closeDialog: () => void
-  acceptDialog: (selectedRoles: UserGroup[]) => void
+  acceptDialog: (selectedRoles: IamApi.UserGroup[]) => void
 }
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;

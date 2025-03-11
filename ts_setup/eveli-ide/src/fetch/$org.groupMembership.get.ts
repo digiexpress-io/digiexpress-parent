@@ -1,6 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { GroupMember } from '../frontdesk/types/GroupMember';
-import { ROLE_AUTHORIZED } from '@/burger';
+
+import { ROLE_AUTHORIZED, IamApi } from '@/burger';
 
 
 export const Hook = createFileFetch('$org/groupMembership.GET')({
@@ -13,7 +13,7 @@ function hook(props: {}) {
   const { url } = params;
 
   return {
-    getUsers: async (groupName: string[]): Promise<GroupMember[]> => {
+    getUsers: async (groupName: string[]): Promise<IamApi.GroupMember[]> => {
 
       if (!groupName || groupName.length === 0) {
         return [];

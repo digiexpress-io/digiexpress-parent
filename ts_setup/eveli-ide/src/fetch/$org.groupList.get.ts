@@ -1,15 +1,14 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query'
-import { Group as OrgGroup } from '../frontdesk/types/Group';
-import { ROLE_AUTHORIZED } from '@/burger';
-import { UserGroup } from '../frontdesk/types/UserGroup';
+import { ROLE_AUTHORIZED, IamApi } from '@/burger';
 
 export const Hook = createFileFetch('$org/groupList.GET')({
   hook
 }) 
 
-function hook(props: {}): { groups: UserGroup[] } {
+
+function hook(props: {}): { groups: IamApi.UserGroup[] } {
   const intl = useIntl();
   const params = Hook.useParams();
   const { url } = params;
@@ -20,9 +19,9 @@ function hook(props: {}): { groups: UserGroup[] } {
     queryKey: [query],
     queryFn: () => params.fetch(query)
       .then(resp => resp.json())
-      .then((data: OrgGroup[]) => data ?? [])
+      .then((data: IamApi.Group[]) => data ?? [])
       .then(data => {
-        const result: UserGroup[] = data.map(response => {
+        const result: IamApi.UserGroup[] = data.map(response => {
           return {
             id: response.name,
             groupName: response.description
