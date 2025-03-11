@@ -12,16 +12,12 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     unsaved: ['unsaved'],
-
-    
     itemDisabled: ['itemDisabled'],
     itemActive: ['itemActive'],
     textActive: ['textActive'],
     logoContainer: ['logoContainer'],
     logo: ['logo'],
     composeButton: ['composeButton'],
-    menuButton: ['menuButton'],
-    menuButtonActive: ['menuButtonActive'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -40,8 +36,6 @@ export const EveliShellRoot = styled('div', {
       styles.logoContainer,
       styles.logo,
       styles.composeButton,
-      styles.menuButton,
-      styles.menuButtonActive,
     ];
   },
 })<{
@@ -127,41 +121,6 @@ export const EveliShellRoot = styled('div', {
       ':hover': {
         backgroundColor: theme.palette.background.default
       },
-    },
-
-    '& .EveliShell-menuButton': {
-      justifyContent: 'left',
-      marginTop: theme.spacing(0.5),
-      borderRadius: theme.spacing(3),
-      paddingLeft: theme.spacing(2),
-      border: `1px solid ${theme.palette.secondary.main}`,
-      ...theme.typography.body1,
-      color: theme.palette.text.secondary,
-      width: '100%',
-      ':hover': {
-        backgroundColor: theme.palette.secondary.dark,
-        border: `1px solid ${theme.palette.secondary.main}`,
-      }
-    },
-
-    '& .EveliShell-menuButtonActive': {
-      justifyContent: 'left',
-      marginTop: theme.spacing(0.5),
-      borderRadius: theme.spacing(3),
-      paddingLeft: theme.spacing(2),
-      border: `1px solid ${theme.palette.divider}`,
-      ...theme.typography.body1,
-      fontWeight: 'bold',
-      color: theme.palette.text.secondary,
-      width: '100%',
-      backgroundColor: theme.palette.secondary.dark,
-      '& .MuiSvgIcon-root': {
-        color: theme.palette.primary.main
-      },
-      ':hover': {
-        backgroundColor: theme.palette.secondary.dark,
-        border: `1px solid ${theme.palette.divider}`,
-      }
     },
     '& .EveliShellBase .MuiDrawer-paper': {
       backgroundColor: theme.palette.secondary.main,

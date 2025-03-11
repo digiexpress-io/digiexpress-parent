@@ -1,6 +1,13 @@
 import { createTheme, alpha, darken } from "@mui/material/styles";
 import { } from "@mui/styles";
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    explorerInactive: true;
+    explorerActive: true;
+
+  }
+}
 
 declare module 'react' {
   interface CSSProperties {
@@ -15,7 +22,7 @@ declare module 'react' {
 const siteTheme = createTheme({
   palette: {
     mode: 'light',
-  
+
     primary: {
       main: 'rgb(81, 11, 200)',           // primary color for buttons, active items
       contrastText: '#fff',
@@ -35,7 +42,7 @@ const siteTheme = createTheme({
     error: {
       main: '#e53935',
     },
-    
+
     info: {
       main: '#03045E',
       contrastText: '#FFFFFF',
@@ -113,7 +120,7 @@ const siteTheme = createTheme({
     MuiTabs: {
       styleOverrides: {
         root: ({ ownerState, theme }) => {
-          if(ownerState.orientation === "vertical") {
+          if (ownerState.orientation === "vertical") {
             return {
 
             }
@@ -126,13 +133,13 @@ const siteTheme = createTheme({
               backgroundColor: theme.palette.primary.main,
               marginRight: "49px"
             },
-  
+
             "& .MuiTab-root": {
-              minHeight: 'unset', 
+              minHeight: 'unset',
               color: "secondary.main",
-              "&:focus": { color: theme.palette.primary.main } 
+              "&:focus": { color: theme.palette.primary.main }
             },
-  
+
             "& .MuiSvgIcon-root": {
               m: 0,
               color: theme.palette.primary.main,
@@ -140,7 +147,7 @@ const siteTheme = createTheme({
                 color: "secondary.main"
               }
             }
-  
+
           })
         }
       }
@@ -166,7 +173,7 @@ const siteTheme = createTheme({
     },
     MuiCardHeader: {
       styleOverrides: {
-        root: ({theme}) => ({
+        root: ({ theme }) => ({
           backgroundColor: theme.palette.secondary.main,
           padding: theme.spacing(1),
         })
@@ -183,31 +190,31 @@ const siteTheme = createTheme({
 
     MuiDialog: {
       defaultProps: {
-        fullWidth: true, 
+        fullWidth: true,
         maxWidth: 'md',
       }
     },
     MuiDialogContent: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
-          color: theme.palette.text.primary, 
+          color: theme.palette.text.primary,
           fontWeight: '400',
         })
       }
     },
     MuiDialogTitle: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => {
           return {
             ...theme.typography.h1,
             color: theme.palette.primary.main,
-            mb: 2, 
+            mb: 2,
           }
         }
       }
     },
     MuiTextField: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           marginTop: theme.spacing(1),
           color: theme.palette.primary.contrastText,
@@ -268,21 +275,21 @@ const siteTheme = createTheme({
                 borderColor: theme.palette.primary.main,
               },
             }
-          }), 
+          }),
         }
       ]
     },
 
     MuiIconButton: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
-          color: 'rgb(58, 55, 55)', 
+          color: 'rgb(58, 55, 55)',
         })
       }
     },
 
     MuiRadio: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           marginLeft: theme.spacing(1.5),
           color: theme.palette.primary.main,
@@ -291,9 +298,9 @@ const siteTheme = createTheme({
           }
         })
       },
-    },    
+    },
     MuiSwitch: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           '& .MuiSwitch-switchBase.Mui-checked': {
             color: theme.palette.primary.main,
@@ -308,7 +315,7 @@ const siteTheme = createTheme({
       },
     },
     MuiCheckbox: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           color: theme.palette.primary.main,
           '&.Mui-checked': {
@@ -362,6 +369,47 @@ const siteTheme = createTheme({
             },
           }),
         },
+        {
+          props: { variant: 'explorerInactive' },
+          style: ({ theme }) => ({
+            justifyContent: 'left',
+            textTransform: 'capitalize',
+            marginTop: theme.spacing(0.5),
+            borderRadius: theme.spacing(3),
+            paddingLeft: theme.spacing(2),
+            border: `1px solid ${theme.palette.secondary.main}`,
+            ...theme.typography.body1,
+            color: theme.palette.text.secondary,
+            width: '100%',
+            ':hover': {
+              backgroundColor: theme.palette.secondary.dark,
+              border: `1px solid ${theme.palette.secondary.main}`,
+            }
+          }),
+        },
+        {
+          props: { variant: 'explorerActive' },
+          style: ({ theme }) => ({
+            justifyContent: 'left',
+            textTransform: 'capitalize',
+            marginTop: theme.spacing(0.5),
+            borderRadius: theme.spacing(3),
+            paddingLeft: theme.spacing(2),
+            border: `1px solid ${theme.palette.divider}`,
+            ...theme.typography.body1,
+            fontWeight: 'bold',
+            color: theme.palette.text.secondary,
+            width: '100%',
+            backgroundColor: theme.palette.secondary.dark,
+            '& .MuiSvgIcon-root': {
+              color: theme.palette.primary.main
+            },
+            ':hover': {
+              backgroundColor: theme.palette.secondary.dark,
+              border: `1px solid ${theme.palette.divider}`,
+            }
+          }),
+        },
       ],
       defaultProps: {
         variant: 'contained',
@@ -370,7 +418,7 @@ const siteTheme = createTheme({
 
     MuiPaper: {
       styleOverrides: {
-        root: ({theme}) => ({
+        root: ({ theme }) => ({
           elevation: 1,
           borderColor: theme.palette.secondary.main,
           transition: 'unset'

@@ -75,44 +75,44 @@ const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.compose' })}
         </Button>
 
-        <Button variant='text' startIcon={<MenuBookOutlinedIcon />}
-          className={activeItem?.type === 'ARTICLES' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'ARTICLES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<MenuBookOutlinedIcon />}
           onClick={() => onNav({ type: 'ARTICLES' })}>
           {intl.formatMessage({ id: 'menu.articles' })}
         </Button>
 
-        <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
-          className={activeItem?.type === 'SERVICES' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<AccountTreeOutlinedIcon />}
           onClick={() => onNav('SERVICES')}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
 
-        <Button variant='text' startIcon={<InsertLinkOutlinedIcon />}
-          className={activeItem?.type === 'LINKS' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'LINKS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<InsertLinkOutlinedIcon />}
           onClick={() => onNav('LINKS')}>
           {intl.formatMessage({ id: 'menu.links' })}
         </Button>
 
-        <Button variant='text' startIcon={<TranslateOutlinedIcon />}
-          className={activeItem?.type === 'LOCALES' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'LOCALES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<TranslateOutlinedIcon />}
           onClick={() => onNav('LOCALES')}>
           {intl.formatMessage({ id: 'menu.locales' })}
         </Button>
 
-        <Button variant='text' startIcon={<FormatShapesOutlinedIcon />}
-          className={activeItem?.type === 'TEMPLATES' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'TEMPLATES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<FormatShapesOutlinedIcon />}
           onClick={() => onNav('TEMPLATES')}>
           {intl.formatMessage({ id: 'menu.templates' })}
         </Button>
 
-        <Button variant='text' startIcon={<UploadFileOutlinedIcon />}
-          className={activeItem?.type === 'MIGRATIONS' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'MIGRATIONS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<UploadFileOutlinedIcon />}
           onClick={() => setMigrationsDialogOpen(true)}>
           {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
-        <Button variant='text' startIcon={<NewReleasesOutlinedIcon />}
-          className={activeItem?.type === 'RELEASES' ? classes.menuButtonActive : classes.menuButton}
+        <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<NewReleasesOutlinedIcon />}
           onClick={() => onNav('RELEASES')}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>

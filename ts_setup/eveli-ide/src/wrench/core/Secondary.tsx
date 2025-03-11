@@ -55,7 +55,8 @@ export const Secondary: React.FC<{}> = () => {
 
         <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
 
-        <Button variant='text' startIcon={<AccountTreeOutlinedIcon />}
+        <Button
+          startIcon={<AccountTreeOutlinedIcon />}
           className={activeButton === 'FLOWS' ? classes.menuButtonActive : classes.menuButton}
           onClick={() => tabs.handleTabAdd({ id: 'flows', label: "Flows" })}>
           {intl.formatMessage({ id: 'menu.flows' })}
