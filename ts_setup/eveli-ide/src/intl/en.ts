@@ -339,6 +339,8 @@ export const en = {
   'search.services': 'Services',
   'search.links': 'Links',
   'search.templates': 'Templates',
+  'search.flows': 'Flows',
+  'search.decisions': 'Decisions',
   'activities.title': 'Activities',
   'activities.desc': 'Create, view, and navigate site resources',
   'activities.article.title': 'Article',
