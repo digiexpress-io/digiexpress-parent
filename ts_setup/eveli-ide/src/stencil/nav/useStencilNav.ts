@@ -1,5 +1,6 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { ExplorerItem, ExplorerItemArticle, toExplorerId } from './stencil-nav-types';
+import { useStencilTabClose } from './useStencilTabClose';
 
 
 
@@ -18,9 +19,12 @@ export function useStencilNav(): {
 
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
   getArticle: () => ExplorerItemArticle;
-
+  onTabCurrentClose: () => void;
+  onTabClose: (tab: ExplorerItem) => void;
   explorer: ExplorerItem[];
 } {
+  const { onTabClose } = useStencilTabClose();
+
   const navigate = useNavigate();
   const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/stencil/' });
   const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
@@ -49,5 +53,9 @@ export function useStencilNav(): {
     return article ?? { type: 'ARTICLES', article: undefined, expanded: []};
   }
 
-  return { activeItem, activeItemId, explorer, onNav, findTab, getArticle }
+  function onTabCurrentClose() {
+    onTabClose(activeItem);
+  }
+
+  return { activeItem, activeItemId, explorer, onNav, onTabCurrentClose, findTab, getArticle, onTabClose }
 }

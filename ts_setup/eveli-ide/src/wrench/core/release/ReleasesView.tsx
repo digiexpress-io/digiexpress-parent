@@ -7,13 +7,13 @@ import ReleasesTable from './ReleasesTable';
 import type { Release } from './release-types';
 import { ReleaseBranch } from './release-types';
 import { Composer } from '../context';
-import * as Burger from '@/burger';
+import { useWrenchNav } from '../nav';
 
 
 const ReleasesView: React.FC<{}> = () => {
 
   const { site } = Composer.useComposer();
-  const layout = Burger.useTabs();
+  const { onTabCurrentClose, onNav } = useWrenchNav();
   const releases = Object.values(site.tags);
   const branches = Object.values(site.branches);
 
@@ -50,8 +50,8 @@ const ReleasesView: React.FC<{}> = () => {
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc"} /></Typography>
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc.additional"} /></Typography>
 
-      <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
-      <Button onClick={() => layout.handleTabAdd({ id: 'compare', label: "Compare" })} variant='text'><FormattedMessage id='releases.button.compare' /></Button>
+      <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+      <Button onClick={() => onNav({ type: 'COMPARE' })} variant='text'><FormattedMessage id='releases.button.compare' /></Button>
 
       <ReleasesTable releases={formattedReleases} />
     </>

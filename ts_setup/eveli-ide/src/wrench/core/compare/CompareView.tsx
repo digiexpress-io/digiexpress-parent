@@ -10,6 +10,7 @@ import { OutputFormatType } from "diff2html/lib/types";
 import { Composer } from "../context";
 import { HdesApi } from "../client";
 import * as Burger from '@/burger';
+import { useWrenchNav } from "../nav";
 
 
 
@@ -113,7 +114,6 @@ const CompareView: React.FC = () => {
   const intl = useIntl();
 
   const { service } = Composer.useComposer();
-  const layout = Burger.useTabs();
   const [base, setBase] = React.useState<string>("");
   const [target, setTarget] = React.useState<string>("");
   const [baseSummary, setBaseSummary] = React.useState<HdesApi.AstTagSummary>();
@@ -121,6 +121,7 @@ const CompareView: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState<boolean>(false);
   const [diff, setDiff] = React.useState<HdesApi.DiffResponse>();
+  const { onTabCurrentClose } = useWrenchNav();
 
   React.useEffect(() => {
     if (base) {
@@ -154,7 +155,7 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Button  onClick={() => layout.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button  onClick={() => onTabCurrentClose()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
           <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>

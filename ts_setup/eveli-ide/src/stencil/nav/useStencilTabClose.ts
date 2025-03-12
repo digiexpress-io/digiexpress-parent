@@ -21,7 +21,6 @@ export function useStencilTabClose() {
             explorer.push(newItem);
           }
         }
-  
         return { ...prev, explorer: explorer.filter(e => !!e) };
       }
     });

@@ -2,9 +2,8 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import * as Burger from '@/burger';
-
 import Activities from './activities';
+
 import { Composer } from './context';
 import { FlowEdit, FlowsView } from './flow';
 import { DecisionEdit } from './decision';
@@ -15,31 +14,27 @@ import { ReleasesView } from './release';
 
 import { CompareView } from './compare';
 import { DecisionsView } from './decision/DecisionsView';
-import { ExplorerItem } from './nav';
+import { useWrenchNav } from './nav';
 
 
 const root: SxProps = { height: `100%`,  padding: 1, backgroundColor: "primary.contrastText" };
 
 
 const Main: React.FC<{}> = () => {
-  const layout = Burger.useTabs();
   const { site, session } = Composer.useComposer();
-  const tabs = layout.session.tabs;
-  const active = tabs.length ? tabs[layout.session.history.open] : undefined;
+  const { activeItem } = useWrenchNav();
 
   return React.useMemo(() => {
     
     if (site.contentType === "NO_CONNECTION") {
       return (<Box>{site.contentType}</Box>);
     }
-    if (!active) {
-      return null;
-    }
-    const explorer: ExplorerItem | undefined = active.data;
-    if (!explorer) {
+
+
+    if (!activeItem) {
       return (<Box sx={root}></Box>)
     }
-    switch (explorer.type) {
+    switch (activeItem.type) {
       case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
       case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
       case 'DEBUG': return (<Box sx={root}><DebugView /></Box>);
@@ -48,7 +43,7 @@ const Main: React.FC<{}> = () => {
       case 'FLOWS': return (<Box sx={root}><FlowsView /></Box>);
       case 'DECISIONS': return (<Box sx={root}><DecisionsView /></Box>);
       case 'ENTITY_EDITOR': {
-        const entity = active ? session.getEntity(explorer.id) : undefined;
+        const entity = session.getEntity(activeItem.id);
         if (!entity) {
           return (<>not found</>)
         }
@@ -64,7 +59,7 @@ const Main: React.FC<{}> = () => {
       default: return (<></>)
     }
 
-  }, [active, site, session]);
+  }, [activeItem, site, session]);
 }
 export { Main }
 

@@ -3,8 +3,6 @@ import React from 'react';
 import { Container as MuiContainer, Stack, Drawer, AppBar, IconButton, Typography, Divider } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
-
-import { EveliAppTabs } from './EveliAppTabs';
 import { 
   EveliShell, EveliShellClassName, 
   EveliShellMiniBarClassName, EveliShellMiniBarTopClassName, EveliShellLargeBarClassName, 
@@ -14,7 +12,6 @@ import {
 } from '../eveli-shell';
 import { EveliFooter } from '../eveli-footer';
 import { EveliLogin } from '../eveli-login';
-import { OneTab, TabsProvider } from '../api-tabs';
 
 import { IconbarProvider } from '../api-iconbar';
 import { FormattedMessage } from 'react-intl';
@@ -52,9 +49,6 @@ export interface ContainerProps {
   toolbar: React.FC;
   tabs?: React.FC;
 
-  onTabClose?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
-  onTabChange?: (tab: OneTab<any>, nextActive: OneTab<any> | undefined) => void;
-
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
   footerHeight?: number;
   drawerWidth?: number;
@@ -67,29 +61,27 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
 
   return (
     <IconbarProvider>
-      <TabsProvider onTabClose={components.onTabClose} onTabChange={components.onTabChange}>
-        <EveliShell 
-          drawerOpen={true} 
-          toolbarHeight={components.toolbarHeight} 
-          drawerWidth={components.drawerWidth} 
-          footerHeight={components.footerHeight}>
-          
-          <ToggleDrawer {...components} />
+      <EveliShell 
+        drawerOpen={true} 
+        toolbarHeight={components.toolbarHeight} 
+        drawerWidth={components.drawerWidth} 
+        footerHeight={components.footerHeight}>
+        
+        <ToggleDrawer {...components} />
 
-          <AppBar position='fixed' className={EveliShellClassName}>
-            {UserTabs ? <UserTabs /> : <EveliAppTabs />}
-          </AppBar>
+        <AppBar position='fixed' className={EveliShellClassName}>
+          {UserTabs ? <UserTabs /> : <></>}
+        </AppBar>
 
-          <main role='main'>
-            <MuiContainer><UserContent /></MuiContainer>
-          </main>
+        <main role='main'>
+          <MuiContainer><UserContent /></MuiContainer>
+        </main>
 
-          <footer role='footer'>
-            <EveliFooter />
-          </footer>
+        <footer role='footer'>
+          <EveliFooter />
+        </footer>
 
-          <>{components.children}</>
-        </EveliShell>
-      </TabsProvider>
+        <>{components.children}</>
+      </EveliShell>
     </IconbarProvider>);
 }

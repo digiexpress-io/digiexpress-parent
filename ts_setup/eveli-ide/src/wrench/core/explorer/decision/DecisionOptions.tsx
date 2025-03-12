@@ -22,7 +22,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<HdesApi.StoreError>();
-  const tabs = Burger.useTabs();
+  const { onTabClose, findTab } = useWrenchNav();
 
   const decision = decisions[decisionId];
   let editor = (<></>);
@@ -43,14 +43,16 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   const handleSubmit = () => {
     setErrors(undefined);
     setApply(true);
-    var decisionTab = tabs.session.tabs.find(tab => tab.id === decisionId);
+    const decisionTab = findTab('ENTITY_EDITOR', decisionId);
     service.delete().decision(decisionId)
-      .then(data => {
-        if (decisionTab) {
-          tabs.handleTabClose(decisionTab);
-        }
+      .then(async data => {
+
         enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
-        actions.handleLoadSite(data);
+        await actions.handleLoadSite(data);
+
+        if (decisionTab) {
+          onTabClose(decisionTab);
+        }
         onClose();
       })
       .catch((error: HdesApi.StoreError) => {

@@ -1,7 +1,3 @@
-import { OneTab } from '@/burger';
-
-
-
 export interface ExplorerItemEntity {
   type: 'ENTITY_EDITOR';
   id: string
@@ -38,7 +34,7 @@ export type ExplorerItem = (
   { type: 'MIGRATIONS' }
 )
 
-export function toTab(data: ExplorerItem): OneTab<any> {
+export function toExplorerId(data: ExplorerItem): string {
   const id = JSON.stringify(Object.entries(data)
     .filter(([key]) => {
 
@@ -49,8 +45,7 @@ export function toTab(data: ExplorerItem): OneTab<any> {
       return key === 'type' || key === 'id'
     })
     .reduce((result, [key, value]) => result + '/' + value, ''));
-  const label = data.type ? data.type.toLowerCase() : 'no type';
-  return { id, label, data };
+  return id;
 }
 
 

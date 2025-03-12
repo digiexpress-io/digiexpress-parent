@@ -5,6 +5,7 @@ import * as Burger from '@/burger';
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
+import { useWrenchNav } from '../nav';
 
 declare namespace WrenchComposerApi {
 
@@ -123,11 +124,11 @@ namespace WrenchComposerApi {
   }
 
   export const useDebug = () => {
-    const layout = Burger.useTabs();
+    const { onNav } = useWrenchNav();
     const { session, actions } = useComposer();
 
     const handleDebugInit = (selected: HdesApi.EntityId) => {
-      layout.handleTabAdd({ id: 'debug', label: "Debug" })
+      onNav({ type: 'DEBUG' })
 
       if (session.debug.selected && session.debug.selected !== selected) {
         const previous = session.debug.values[selected];

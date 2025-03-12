@@ -1,7 +1,6 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toTab } from './wrench-nav-types';
-
-import { useTabs } from '@/burger';
+import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toExplorerId } from './wrench-nav-types';
+import { useWrenchTabClose } from './useWrenchTabClose';
 
 
 
@@ -12,34 +11,36 @@ function toExplorerItem(input: ExplorerItem): ExplorerItem {
 
 
 function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]): ExplorerItem[]  {
-  const newItemId = toTab(newExplorerItem).id;
-  const explorer = [...prev.filter(explorer => toTab(explorer).id !== newItemId), newExplorerItem];
+  const newItemId = toExplorerId(newExplorerItem);
+  const explorer = [...prev.filter(explorer => toExplorerId(explorer) !== newItemId), newExplorerItem];
   return explorer;
 }
 
 
 export function useWrenchNav(): { 
   activeItem: ExplorerItem | undefined;
+  explorer: ExplorerItem[];
   onNav: (newItem: ExplorerItem) => void;
+  onNavReset: (newItem: ExplorerItem[]) => void;
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
 
-
+  onTabClose: (tab: ExplorerItem) => void;
+  onTabCurrentClose: () => void;
   getFlows: () => ExplorerItemFlows;
   getDecisions: () => ExplorerItemDecisions;
   getServices: () => ExplorerItemServices;
 
 } {
-  const navigate = useNavigate();
-  const tabs = useTabs();
+
+  const { onTabClose } = useWrenchTabClose();
   
-  const { explorer } = useSearch({ from: '/secured/$locale/assets/wrench/' });
-  const activeItem = explorer.find(explorer => toTab(explorer).id === tabs.session.activeTab?.id);
+  const navigate = useNavigate();
+
+  const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/wrench/' });
+  const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
 
   function onNav(input: ExplorerItem) {
     const newItem = toExplorerItem(input);
-    const newTab = toTab(newItem);
-    tabs.handleTabAdd(newTab);
-
     const other: {} = newItem;
 
     navigate({ 
@@ -53,9 +54,9 @@ export function useWrenchNav(): {
   }
 
   function findTab(newItem: ExplorerItem['type'], articleId?: string): ExplorerItem | undefined {
-    return tabs.session.tabs
-      .filter(tab => tab.data?.type === newItem)
-      .find(tab => articleId ? tab.data?.article === articleId : true)?.data;
+    return explorer
+      .filter(tab => toExplorerId(tab) === newItem)
+      .find(tab => articleId ? (tab as any).id === articleId : true);
   }
 
   function getFlows(): ExplorerItemFlows {
@@ -73,5 +74,24 @@ export function useWrenchNav(): {
     return article ?? { type: 'SERVICES', id: undefined, expanded: [] };
   }
 
-  return { activeItem, onNav, findTab, getFlows, getDecisions, getServices }
+  function onTabCurrentClose() {
+    if(activeItem) {
+      onTabClose(activeItem);
+    }
+  }
+
+  function onNavReset(newItem: ExplorerItem[]) {
+    const last = newItem[newItem.length - 1];
+
+    navigate({ 
+      from: '/secured/$locale/assets/wrench', 
+      search: (prev) => ({
+        ...prev,
+        explorer: [...newItem],
+        explorerActive: last ? toExplorerId(last) : undefined
+      })
+    });
+  }
+
+  return { activeItem, explorer, onNav, findTab, getFlows, getDecisions, getServices, onTabCurrentClose, onTabClose, onNavReset }
 }

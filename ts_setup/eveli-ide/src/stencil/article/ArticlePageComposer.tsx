@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, useTheme } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import { Composer, StencilApi } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import ArticlePageItem from '../explorer/article/ArticlePageItem';
-import { ArticlesListRoot } from '../explorer/article';
 import { SimpleTreeView } from '@mui/x-tree-view';
 
 const regexp_starts_with = new RegExp('^# .');

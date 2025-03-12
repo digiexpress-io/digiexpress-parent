@@ -1,20 +1,18 @@
 import { useNavigate } from '@tanstack/react-router';
+import { ExplorerItem, toExplorerId } from './wrench-nav-types';
 
-import { OneTab } from '@/burger';
+
 
 export function useWrenchTabChange() {
   const navigate = useNavigate();
 
-  function onTabChange(tab: OneTab<any>, nextActive: OneTab<any> | undefined) {
-    const explorer = nextActive; 
-
-    if(!explorer) {
+  function onTabChange(nextActive: ExplorerItem | undefined) {
+    if(!nextActive) {
       return;
     }
-
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
-      search: (prev) => ({ ...prev, explorerActive: explorer.id })
+      search: (prev) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
     });
   }
 

@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { Composer, StencilApi } from '../context';
+import { useStencilNav } from '../nav';
 
 /*
 const comparator = (o1: StencilApi.Workflow, o2: StencilApi.Workflow) => ((o1.body.devMode ? "a-" : "b-") + o1.body.value)
@@ -13,7 +14,7 @@ const comparator = (o1: StencilApi.Workflow, o2: StencilApi.Workflow) => ((o1.bo
 const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
-  const layout = Burger.useTabs();
+  const { onTabCurrentClose } = useStencilNav();
 
   const view = session.getArticleView(props.articleId);
   const workflows: StencilApi.Workflow[] = Object.values(site.workflows)
@@ -35,7 +36,7 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
     console.log("saving selected services" + selectedWorkflows);
     service.update().article(entity)
       .then(_success => actions.handleLoadSite())
-      .then(() => layout.handleTabCloseCurrent())
+      .then(() => onTabCurrentClose())
     enqueueSnackbar(message, { variant: 'success' });
   }
 
@@ -60,7 +61,7 @@ const ArticleWorkflowsComposer: React.FC<{ articleId: StencilApi.ArticleId }> = 
         selected={view.workflows.map(l => l.workflow.id)}
         cancel={{
           label: 'button.cancel',
-          onClick: () => layout.handleTabCloseCurrent()
+          onClick: () => onTabCurrentClose()
         }}
         submit={{
           label: "button.apply",

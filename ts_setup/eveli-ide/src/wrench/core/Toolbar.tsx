@@ -26,8 +26,7 @@ import { useWrenchNav } from './nav';
 const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
   const composer = Composer.useComposer();
-  const tabs = Burger.useTabs();
-  const { onNav } = useWrenchNav();
+  const { onNav, activeItem } = useWrenchNav();
   const { enqueueSnackbar } = useSnackbar();
 
   const classes = useUtilityClasses();
@@ -35,14 +34,14 @@ const Toolbar: React.FC<{}> = () => {
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
   const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    if (newValue === 'toolbar.save' && unsavedPages) {
-      if (unsavedPages.length === 0) {
-        return;
-      }
-      const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
+  const handleSave = (_event: React.SyntheticEvent) => {
+    if (!unsavedPages || unsavedPages.length === 0) {
+      return;
+    }
 
-      const article = active ? composer.session.getEntity(active.id) : undefined;
+    if(activeItem?.type === 'ENTITY_EDITOR') {
+
+      const article = composer.session.getEntity(activeItem.id);
       if (!article) {
         return;
       }
@@ -52,35 +51,31 @@ const Toolbar: React.FC<{}> = () => {
       }
 
       const unsavedArticlePages: Composer.PageUpdate = toBeSaved[0];
-      composer.service.update(article.id, unsavedArticlePages.value).then(success => {
+      composer.service.update(article.id, unsavedArticlePages.value).then(async success => {
+        await composer.actions.handleLoadSite(success)
         composer.actions.handlePageUpdateRemove([article.id]);
-        enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: article.ast?.name }} />);
-        composer.actions.handleLoadSite(success);
+        enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: article.ast?.name }} />);  
       }).catch((error) => {
 
       });
-
-    } else if (newValue === 'toolbar.activities') {
-      onNav({ type: 'ACTIVITIES' })
-    } 
-
+    }
   };
 
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
       <div>
-        <IconButton onClick={(event) => handleChange(event, 'toolbar.activities')}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <IconButton onClick={(event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
       </div>
 
       <div>
-        <IconButton className={saveIconClassName} onClick={(event) => handleChange(event, 'toolbar.save')} ><SaveOutlinedIcon /></IconButton>
+        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.save' /></Typography>
       </div>
 
       <div>
-        <IconButton onClick={(event) => handleChange(event, 'toolbar.search')}><SearchIcon /></IconButton>
+        <IconButton onClick={(event) => {}}><SearchIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.search' /></Typography>
       </div>
 

@@ -21,6 +21,7 @@ import { ReleaseComposer } from './ReleaseComposer';
 import { ReleaseBranch } from './release-types';
 import { AssetMapper } from '../compare/CompareView'
 import { ErrorView } from '../styles';
+import { ExplorerItem, useWrenchNav } from "../nav";
 
 type SortOptions = 'name' | 'created';
 type SortDirections = 'asc' | 'desc';
@@ -34,10 +35,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-const handleTabs = (actions: Burger.TabsContextType) => {
-  actions.handleTabCloseAll();
-  actions.handleTabAdd({ id: 'activities', label: "Activities" });
-  actions.handleTabAdd({ id: 'releases', label: "Releases" });
+const handleTabs = (actions: (items: ExplorerItem[]) => void) => {
+  actions([
+    {type: "ACTIVITIES"},
+    {type: "RELEASES"},
+  ]);
 }
 
 const resolveNewBranchName = (releaseName: string, branches: HdesApi.AstBranch[]): string => {
@@ -100,7 +102,7 @@ const useSort = (releases: Release[], sort: SortOptions, direction: SortDirectio
 
 const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => void, }> = ({ asset, onClose }) => {
   const { service, actions } = Composer.useComposer();
-  const tabs = Burger.useTabs();
+  const { onNavReset } = useWrenchNav();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<HdesApi.StoreError>();
@@ -135,10 +137,10 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
     if (isBranch) {
       const key = enqueueSnackbar(<FormattedMessage id="release.branch.deleting" values={{ name }} />, { persist: true });
       service.delete().branch(id)
-        .then((data) => {
+        .then(async (data) => {
           actions.handleBranchUpdate("default");
-          actions.handleLoadSite(data);
-          handleTabs(tabs);
+          await actions.handleLoadSite(data);
+          handleTabs(onNavReset);
           closeSnackbar(key);
           enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
         })
@@ -225,8 +227,7 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
 const RelRow: React.FC<{ release: Release }> = ({ release }) => {
   const { service, actions, site } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const intl = useIntl();
-  const tabs = Burger.useTabs();
+  const { onNavReset } = useWrenchNav();
   const branches = Object.values(site.branches).map((b) => b.ast!);
   const [assetToDelete, setAssetToDelete] = React.useState<ReleaseBranch | Release>();
   //const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
@@ -267,7 +268,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
       .then((data) => {
         actions.handleBranchUpdate(branchName);
         actions.handleLoadSite(data);
-        handleTabs(tabs);
+        handleTabs(onNavReset);
         closeSnackbar(key);
         enqueueSnackbar(<FormattedMessage id="release.branch.created" values={{ name: branchName }} />);
       })
@@ -278,10 +279,10 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
 
   const handleCheckout = (branchName: string) => {
     service.getSite()
-      .then((data) => {
+      .then(async (data) => {
         actions.handleBranchUpdate(branchName);
-        actions.handleLoadSite(data);
-        handleTabs(tabs);
+        await actions.handleLoadSite(data);
+        handleTabs(onNavReset);
         enqueueSnackbar(<FormattedMessage id="release.branch.checkout" values={{ name: branchName }} />);
       })
       .catch((error: HdesApi.StoreError) => {

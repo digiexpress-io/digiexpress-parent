@@ -20,7 +20,7 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<Client.StoreError>();
-  const tabs = Burger.useTabs();
+  const { findTab, onTabClose } = useWrenchNav();
 
   const flow = flows[flowId];
   let editor = (<></>);
@@ -40,14 +40,14 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
   const handleDelete = () => {
     setErrors(undefined);
     setApply(true);
-    var flowTab = tabs.session.tabs.find(tab => tab.id === flowId);
+    const flowTab = findTab('ENTITY_EDITOR', flowId);
     service.delete().flow(flowId)
-      .then(data => {
+      .then(async data => {
+        await actions.handleLoadSite(data);
         if (flowTab) {
-          tabs.handleTabClose(flowTab);
+          onTabClose(flowTab);
         }
         enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
-        actions.handleLoadSite(data);
         onClose();
       })
       .catch((error: Client.StoreError) => {

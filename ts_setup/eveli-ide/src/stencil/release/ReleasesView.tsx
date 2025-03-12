@@ -2,16 +2,17 @@ import React from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-
-import * as Burger from '@/burger';
 import { Composer } from '../context';
 import { ReleaseComposer } from './';
 import { ReleaseTable } from './ReleaseTable';
+import { useStencilNav } from '../nav';
 
 
 const ReleasesView: React.FC<{}> = () => {
   const { site } = Composer.useComposer();
-  const layout = Burger.useTabs();
+  const { onTabCurrentClose } = useStencilNav();
+
+
   const releases = Object.values(site.releases);
   const [releaseComposer, setReleaseComposer] = React.useState(false);
 
@@ -25,10 +26,7 @@ const ReleasesView: React.FC<{}> = () => {
           <Typography variant="body2"><FormattedMessage id="release.desc" /></Typography>
         </Box>
         <Box flexGrow={1} />
-        <Button onClick={() => layout.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel' /></Button>
-        <Button variant='text' onClick={() => layout.handleTabAdd({ id: 'graph', label: "Release Graph" })}>
-          <FormattedMessage id="button.releasegraph" />
-        </Button>
+        <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
         <Button variant='contained' onClick={() => setReleaseComposer(true)}>
           <FormattedMessage id="button.create" />
         </Button>

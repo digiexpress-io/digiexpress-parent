@@ -1,4 +1,3 @@
-export * from './LoadTabsFromSearchParams'
 export * from './wrench-nav-types'
 export * from './useWrenchNav'
 export * from './useWrenchTabClose'

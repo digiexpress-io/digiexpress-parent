@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 
 import { Composer, StencilApi } from '../context';
+import { useStencilNav } from '../nav';
+
 import * as Burger from '@/burger';
 
 
@@ -11,17 +13,19 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const [pageId, setPageId] = React.useState('');
-  const tabs = Burger.useTabs();
+  const { onTabClose, findTab } = useStencilNav();
 
   const handleDelete = () => {
-    var pageTab = tabs.session.tabs.find(tab => tab.id === props.articleId)
-    service.delete().page(pageId).then(_success => {
+    const pageTab =  findTab('ARTICLE_PAGES', props.articleId)
+
+    service.delete().page(pageId).then(async _success => {
       if (pageTab) {
-        tabs.handleTabClose(pageTab);
+        onTabClose(pageTab);
       }
+
+      await actions.handleLoadSite();
       enqueueSnackbar(message, { variant: 'warning' });
       props.onClose();
-      actions.handleLoadSite();
     })
   }
 

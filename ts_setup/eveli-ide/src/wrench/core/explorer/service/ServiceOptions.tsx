@@ -16,10 +16,10 @@ import { useWrenchNav } from '../../nav';
 const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
   const { services } = Composer.useSite();
   const { service: composerService, actions } = Composer.useComposer();
-  const tabs = Burger.useTabs();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<Client.StoreError>();
+  const { findTab, onTabClose } = useWrenchNav();
 
   const service = services[serviceId];
   let editor = (<></>);
@@ -39,14 +39,14 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
   const handleDelete = () => {
     setErrors(undefined);
     setApply(true);
-    var serviceTab = tabs.session.tabs.find(tab => tab.id === serviceId);
+    const serviceTab = findTab('ENTITY_EDITOR', serviceId);
     composerService.delete().service(serviceId)
-      .then(data => {
+      .then(async data => {
+        await actions.handleLoadSite(data);
         if (serviceTab) {
-          tabs.handleTabClose(serviceTab);
+          onTabClose(serviceTab);
         }
         enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
-        actions.handleLoadSite(data);
         onClose();
       })
       .catch((error: Client.StoreError) => {
