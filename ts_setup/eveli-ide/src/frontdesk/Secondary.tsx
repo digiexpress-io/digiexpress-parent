@@ -44,12 +44,6 @@ export const Secondary: React.FC = () => {
   };
 
 
-
-  function handleMenuButtonClick(buttonId: NavType) {
-    setActiveButton(buttonId)
-
-  }
-
   return (<>
     <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
 
@@ -101,11 +95,12 @@ export const Secondary: React.FC = () => {
 
       <Button startIcon={<BuildOutlinedIcon />}
         variant={activeButton === 'WRENCH' ?  'explorerActive' : 'explorerInactive'}
-      /*  onClick={() => navigate({
+        onClick={() => navigate({
           from: '/secured/$locale',
-          to: '/secured/$locale/assets/wrench'
+          to: '/secured/$locale/assets/wrench',
+          search: { explorer: [] }
         })}
-          */
+        
       >
         {intl.formatMessage({ id: 'menu.flow' })}
       </Button>
