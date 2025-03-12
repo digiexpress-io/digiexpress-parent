@@ -338,7 +338,6 @@ export const en = {
   'search.articles': 'Articles',
   'search.services': 'Services',
   'search.links': 'Links',
-  'search.migrations': 'Migrations',
   'search.templates': 'Templates',
   'activities.title': 'Activities',
   'activities.desc': 'Create, view, and navigate site resources',

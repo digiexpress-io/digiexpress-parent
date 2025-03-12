@@ -13,7 +13,6 @@ export const SearchView: React.FC = () => {
       <Chip label={intl.formatMessage({ id: 'search.articles' })} />
       <Chip label={intl.formatMessage({ id: 'search.services' })} />
       <Chip label={intl.formatMessage({ id: 'search.links' })} />
-      <Chip label={intl.formatMessage({ id: 'search.migrations' })} />
       <Chip label={intl.formatMessage({ id: 'search.templates' })} />
     </EveliSearch>
   )
