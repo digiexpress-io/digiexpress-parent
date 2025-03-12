@@ -9,6 +9,8 @@ import { WorkflowEdit } from '../../workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 import { WorkflowsListRoot, useUtilityClasses } from './useUtilityClasses';
 
+import * as Burger from '@/burger';
+
 const findMainId = (values: string[]) => {
   const result = values.filter(id => !id.endsWith("-nested"));
   if (result.length) {
@@ -60,8 +62,7 @@ export const WorkflowList: React.FC<{ searchString: string }> = ({ searchString 
             .map((w) => (w.w))
             .map((view, index) => (
               <WorkflowItem key={index} workflowId={view.workflow.id} />
-              //TODO Make alert for views with no items
-            )) : 'Nothing to see here - please make an alert for this'}
+            )) : <Burger.EveliAlert title={intl.formatMessage({ id: 'stencil.services.found.none' })} />}
         </SimpleTreeView>
       </WorkflowsListRoot>
     </>

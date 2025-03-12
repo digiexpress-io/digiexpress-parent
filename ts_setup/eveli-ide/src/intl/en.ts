@@ -439,6 +439,7 @@ export const en = {
   'toolbar.services': 'Services',
   'toolbar.import': 'Import data',
   'toolbar.tasks': 'Tasks',
+  'stencil.services.found.none': 'No services found',
   'link.type.internal': 'Internal',
   'link.type.external': 'External',
   'link.type.phone': 'Phone number',

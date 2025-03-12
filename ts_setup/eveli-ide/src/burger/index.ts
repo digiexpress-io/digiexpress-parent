@@ -11,6 +11,7 @@ export * from './api-locale';
 export * from './api-iconbar';
 export * from './eveli-shell-compose';
 export * from './eveli-search';
+export * from './eveli-alert';
 
 export { siteTheme } from './theme/siteTheme';
 
