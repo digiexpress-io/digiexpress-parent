@@ -12,6 +12,7 @@ import { LinksView } from './link';
 import { ExplorerItem, useStencilNav } from './nav';
 import { SearchView } from './search';
 
+//TODO == remove this
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
 const Main: React.FC<{}> = () => {

@@ -1,10 +1,8 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-
 import { EveliSearch } from '../../burger'
 
-export type AssetType = 'ARTICLES' | 'SERVICES' | 'LINKS' | 'MIGRATIONS' | 'LOCALES' | 'TEMPLATES' | 'ALL';
 
 export const SearchView: React.FC = () => {
   const intl = useIntl();
