@@ -13,6 +13,7 @@ function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]
 
 export function useStencilNav(): { 
   activeItem: ExplorerItem | undefined;
+  activeItemId: string | undefined;
   onNav: (newItem: ExplorerItem) => void;
 
   findTab: (newItem: ExplorerItem['type'], articleId?: string) => ExplorerItem | undefined;
@@ -24,12 +25,15 @@ export function useStencilNav(): {
   const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/stencil/' });
   const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
 
+  const activeItemId = activeItem ? toExplorerId(activeItem): undefined;
+
   function onNav(input: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
       search: (prev) => ({
         ...prev,
         explorer: calculateNextSearch(input, prev.explorer),
+        explorerActive: toExplorerId(input)
       })
     });
   }
@@ -45,5 +49,5 @@ export function useStencilNav(): {
     return article ?? { type: 'ARTICLES', article: undefined, expanded: []};
   }
 
-  return { activeItem, onNav, findTab, getArticle, explorer }
+  return { activeItem, activeItemId, explorer, onNav, findTab, getArticle }
 }

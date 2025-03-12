@@ -53,7 +53,7 @@ const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tab
   },
   {
     composer: (handleClose) => (<LinkComposer onClose={handleClose} />),
-    onView: () => tabs.onNav('LINKS'),
+    onView: () => tabs.onNav({type: 'LINKS'}),
     title: "activities.link.title",
     desc: "activities.link.desc",
     type: "link",
@@ -63,7 +63,7 @@ const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tab
 
   {
     composer: (handleClose) => (<WorkflowComposer onClose={handleClose} />),
-    onView: () => tabs.onNav('SERVICES'),
+    onView: () => tabs.onNav({type: 'SERVICES'}),
     title: "services",
     desc: "services.desc",
     type: "workflow",
@@ -73,7 +73,7 @@ const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tab
 
   {
     composer: (handleClose) => (<LocaleComposer onClose={handleClose} />),
-    onView: () => tabs.onNav('LOCALES'),
+    onView: () => tabs.onNav({type: 'LOCALES'}),
     title: "activities.locale.title",
     desc: "activities.locale.desc",
     type: "locale",
@@ -83,7 +83,7 @@ const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tab
 
   {
     composer: (handleClose) => (<ReleaseComposer onClose={handleClose} />),
-    onView: () => tabs.onNav('RELEASES'),
+    onView: () => tabs.onNav({type: 'RELEASES'}),
     title: "activities.release.title",
     desc: "activities.release.desc",
     type: "release",
@@ -93,7 +93,7 @@ const createCards: (tabs: ReturnType<typeof useStencilNav>) => CardData[] = (tab
   },
   {
     composer: (handleClose) => <TemplateComposer onClose={handleClose} />,
-    onView: () => tabs.onNav('TEMPLATES'),
+    onView: () => tabs.onNav({type: 'TEMPLATES'}),
     title: "activities.templates.title",
     desc: "activities.templates.desc",
     type: "templates",

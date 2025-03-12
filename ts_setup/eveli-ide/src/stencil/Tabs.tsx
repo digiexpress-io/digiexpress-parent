@@ -20,7 +20,7 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
     return <span style={{
       paddingLeft: "5px",
       fontSize: '30px',
-      color: theme.palette.secondary.light,
+      color: theme.palette.primary.main,
       display: saved ? "none" : undefined
     }}>*</span>
   }
@@ -33,13 +33,10 @@ export const Tabs: React.FC<{}> = () => {
   const { onTabClose } = useStencilTabClose();
   const { onTabChange } = useStencilTabChange();
 
-  
   const handleTabClose = (_event: React.ChangeEvent<{}>, newValue: number) => {
     _event.stopPropagation();
     onTabClose(explorer[newValue]);
   }
-
-              
   const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
     onTabChange(explorer.find(exp => toExplorerId(exp) === newValue));
   }

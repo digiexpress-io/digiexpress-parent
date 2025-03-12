@@ -22,39 +22,40 @@ export const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const composer = Composer.useComposer();
-  const tabs = Burger.useTabs();
-
-  const {onNav} = useStencilNav();
+  const { onNav, activeItem } = useStencilNav();
   const secondaryCtx = Burger.useIconbar();
 
   const classes = useUtilityClasses();
-
-  const active = tabs.session.tabs.length ? tabs.session.tabs[tabs.session.history.open] : undefined;
-  const article = active ? composer.site.articles[active.id] : undefined;
-  const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
+  const article = activeItem?.type === "ARTICLE_PAGES" ? composer.site.articles[activeItem.article] : undefined;
+  
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
   const unsavedArticlePages: Composer.PageUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.body.article === article.id) : []);
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+  const handleSearch = (_event: React.SyntheticEvent) => {
+    secondaryCtx.handleActiveId("toolbar.search")
+  };
 
-    if (newValue === 'toolbar.save' && articlePagesView && article) {
+
+  const handleSave = (_event: React.SyntheticEvent) => {
+    if (article) {
       if (unsavedArticlePages.length === 0) {
         return;
       }
-      const update: StencilApi.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      const update: StencilApi.PageMutator[] = unsavedArticlePages
+        .map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      
       composer.service.update().pages(update).then(success => {
-        enqueueSnackbar(message, { variant: 'success' });
-        composer.actions.handlePageUpdateRemove(success.map(p => p.id));
-      }).then(() => {
-        composer.actions.handleLoadSite();
+        return composer.actions.handleLoadSite().then(() => {
+          enqueueSnackbar(message, { variant: 'success' });
+          composer.actions.handlePageUpdateRemove(success.map(p => p.id));
+        })
       });
 
-    } else if (newValue === 'toolbar.search') {
-      secondaryCtx.handleActiveId("toolbar.search")
     }
   };
+
   const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
   return (
@@ -65,12 +66,12 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton className={saveIconClassName} onClick={(event) => handleChange(event, 'toolbar.save')} ><SaveOutlinedIcon /></IconButton>
+        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.save' /></Typography>
       </div>
 
       <div>
-        <IconButton onClick={(event) => handleChange(event, 'toolbar.search')}><SearchIcon /></IconButton>
+        <IconButton onClick={handleSearch}><SearchIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.search' /></Typography>
       </div>
 

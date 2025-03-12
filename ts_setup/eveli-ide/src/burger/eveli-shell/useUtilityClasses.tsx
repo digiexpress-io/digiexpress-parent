@@ -188,6 +188,7 @@ export const EveliShellMiniBarRoot = styled('div', {
       styles.unsaved
     ];
   },
+  shouldForwardProp: (prop) => prop !== 'toolbarHeight' && prop !== 'ownerState',
 })<{ ownerState: { unsaved?: boolean } }>(({ theme, ownerState }) => {
 
   return {
