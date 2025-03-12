@@ -10,6 +10,7 @@ import { TemplatesView } from './template';
 import { Composer } from './context';
 import { LinksView } from './link';
 import { ExplorerItem, useStencilNav } from './nav';
+import { SearchView } from './search';
 
 const root = { height: `100%`, padding: 1, backgroundColor: "primary.contrastText" };
 
@@ -34,6 +35,7 @@ const Main: React.FC<{}> = () => {
       case 'ACTIVITIES': return (<Box sx={root}><ActivitiesView /></Box>);
       case 'LOCALES': return (<Box sx={root}><LocalesView /></Box>);
       case 'SERVICES': return (<Box sx={root}><WorkflowsView /></Box>);
+      case 'SEARCH': return (<Box sx={root}><SearchView /></Box>);
       case 'TEMPLATES': return (<Box sx={root}><TemplatesView /></Box>);
       case 'ARTICLES': return (<Box sx={root}><ArticlesView /></Box>);
       case 'LINKS': return (<Box sx={root}><LinksView /></Box>);

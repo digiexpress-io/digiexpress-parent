@@ -25,7 +25,8 @@ export type ExplorerItem = (
 
 
   { type: 'ARTICLE_LINKS', article: string } |
-  { type: 'ARTICLE_WORKFLOWS', article: string }
+  { type: 'ARTICLE_WORKFLOWS', article: string } |
+  { type: 'SEARCH' }
 )
 
 export function toExplorerId(data: ExplorerItem): string {

@@ -71,7 +71,7 @@ export const Toolbar: React.FC<{}> = () => {
       </div>
 
       <div>
-        <IconButton onClick={handleSearch}><SearchIcon /></IconButton>
+        <IconButton onClick={() => onNav({ type: 'SEARCH' })}><SearchIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.search' /></Typography>
       </div>
 

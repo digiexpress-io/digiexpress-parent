@@ -10,6 +10,7 @@ export * from './api-config';
 export * from './api-locale';
 export * from './api-iconbar';
 export * from './eveli-shell-compose';
+export * from './eveli-search';
 
 export { siteTheme } from './theme/siteTheme';
 
