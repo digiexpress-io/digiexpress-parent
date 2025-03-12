@@ -1,24 +1,24 @@
 import React from 'react';
 import { Chip } from '@mui/material';
+import { useIntl } from 'react-intl';
 
 import { EveliSearch } from '../../burger'
 
-export type AssetType = 'ARTICLES' | 'SERVICES' | 'LINKS' | 'MIGRATIONS' | 'LOCALES' | 'PAGES' | 'TEMPLATES' | 'ALL';
+export type AssetType = 'ARTICLES' | 'SERVICES' | 'LINKS' | 'MIGRATIONS' | 'LOCALES' | 'TEMPLATES' | 'ALL';
 
 export const SearchView: React.FC = () => {
-  
+  const intl = useIntl();
+
   return (
-      <EveliSearch>
-        <Chip label="All" />
-        <Chip label="Articles" />
-        <Chip label="Pages" />
-        <Chip label="Services" />
-        <Chip label="Links" />
-        <Chip label="Locales" />
-        <Chip label="Migrations" />
-        <Chip label="Templates" />
-      </EveliSearch>
-   )
+    <EveliSearch>
+      <Chip label={intl.formatMessage({ id: 'search.all' })} />
+      <Chip label={intl.formatMessage({ id: 'search.articles' })} />
+      <Chip label={intl.formatMessage({ id: 'search.services' })} />
+      <Chip label={intl.formatMessage({ id: 'search.links' })} />
+      <Chip label={intl.formatMessage({ id: 'search.migrations' })} />
+      <Chip label={intl.formatMessage({ id: 'search.templates' })} />
+    </EveliSearch>
+  )
 }
 
 

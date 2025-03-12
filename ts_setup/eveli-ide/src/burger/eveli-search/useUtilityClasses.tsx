@@ -10,7 +10,6 @@ export interface EveliSearchClasses {
   searchField: string;
   searchFieldContainerTitle: string;
   searchFilterActive: string;
-  searchFilter: string;
 }
 
 export type EveliSearchClassKey = keyof EveliSearchClasses;
@@ -23,7 +22,6 @@ export const useUtilityClasses = () => {
     searchFieldContainer: ['searchFieldContainer'],
     searchFieldContainerTitle: ['searchFieldContainerTitle'],
     searchFilterActive: ['searchFilterActive'],
-    searchFilter: ['searchFilter']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -41,7 +39,6 @@ export const EveliSearchRoot = styled("div", {
       styles.searchField,
       styles.searchFieldContainerTitle,
       styles.searchFilterActive,
-      styles.searchFilter
     ];
   },
 })<{ ownerState: EveliSearchProps }>(({ theme }) => {
@@ -70,15 +67,19 @@ export const EveliSearchRoot = styled("div", {
       ...theme.typography.h1
     },
 
+    //TODO
     '& .EveliSearch-searchFilterActive': {
       minWidth: '8ch',
       border: `1px solid #CED8DE`,
     },
 
-    '& .EveliSearch-searchFilter': {
+    '& .MuiChip-root': {
       minWidth: '8ch',
-      backgroundColor: 'white',
-      border: `1px solid white`,
+      cursor: 'pointer',
+      backgroundColor: theme.palette.background.default,
+      ':hover': {
+        backgroundColor: theme.palette.secondary.dark,
+      }
     },
 
   }
