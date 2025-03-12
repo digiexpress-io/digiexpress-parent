@@ -11,18 +11,27 @@ import { ExplorerItemArticlePages, useStencilNav } from '../../nav';
 
 
 
-const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.PageView, saved?: boolean }> = (props) => {
+const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.PageView}> = (props) => {
 
   const theme = useTheme<Theme>();
-  const localeIconColor = theme.palette.secondary.contrastText;
-
-
   const { onNav, findTab } = useStencilNav();
+  const { session } = Composer.useComposer();
 
   const page = props.page.page;
   const article = props.article.article;
   const itemId = props.page.page.id
+  const localeIconColor = theme.palette.secondary.contrastText;
   const nav: ExplorerItemArticlePages | undefined = findTab('ARTICLE_PAGES', article.id) as any;
+
+
+
+  const isPageSaved = () => {
+    const update = session.pages[itemId];
+    if (!update) {
+      return true;
+    }
+    return update.saved;
+  }
 
   const onLeftEdit = () => onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: page.body.locale })
   const onRightEdit = () => {
@@ -54,9 +63,10 @@ const ArticlePageItem: React.FC<{ article: Composer.ArticleView, page: Composer.
       onClick={onLeftEdit}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={icon} color={props.saved === false ? 
-            "secondary.light": 
-            (nav?.locale1 === page.body.locale ? localeIconColor : "inherit")} />
+          <Box component={icon} color={isPageSaved() ? 
+            (nav?.locale1 === page.body.locale ? localeIconColor : "inherit")
+            : "secondary.light"
+          } />
           
           <Typography
             variant="body2"

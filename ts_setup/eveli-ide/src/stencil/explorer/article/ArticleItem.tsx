@@ -87,15 +87,6 @@ const ArticleItem: React.FC<{
   const { article, pages, workflows, links } = view;
   const saved = isArticleSaved(article);
 
-
-  const isPageSaved = (pageView: Composer.PageView) => {
-    const update = session.pages[pageView.page.id];
-    if (!update) {
-      return true;
-    }
-    return update.saved;
-  }
-
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
@@ -119,7 +110,6 @@ const ArticleItem: React.FC<{
           labelInfo={`${pages.length}`}
           labelcolor={saved ? "page" : "secondary.light"}>
           {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
-            saved={isPageSaved(pageView)}
             article={view}
             page={pageView} />))}
         </Burger.TreeItem>
