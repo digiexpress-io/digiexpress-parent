@@ -1,5 +1,5 @@
 ID,Info,en,fi,sv,my
-booleanValue.true,,Yes,Kyllä,Ja,ya
+booleanValue.true,,Yes,Kyllä,Ja,Ya
 booleanValue.false,,No,Ei,Inga,Tidak
 // -------------------- START CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,
 cust.inbox.message.sender-name.org-user,,Info desk,Info,Infodisk,Meja maklumat
@@ -21,13 +21,13 @@ footer.column4.address,,Visiting address: 1234 Any Street MyTown,"Käyntiosoite:
 footer.column4.postalCode,,Postal code: 1234,Postinumero: 1234,Postnummer: 1234,Poskod: 1234
 // --------------------END CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,
 // ------------------- GAMUT GENERAL ----------------------,,,,#VALUE!,
-gamut.forms,,Forms,Lomake,Blanketter,Borang
+gamut.forms,,Forms,Lomake,Formulär,Borang
 gamut.new-messages,,New messages,Uusi viesti,Nya meddelanden,Mesej baharu
 gamut.services,,Services,Palvelut,Tjänster,Perkhidmatan
 gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,Tempahan kalendar
 gamut.noValueIndicator,,-,-,-,-
-gamut.noValueIndicatorColon,," "," "," "," "
-gamut.textSeparator,," "," "," "," "
+gamut.noValueIndicatorColon,, , , , 
+gamut.textSeparator,, , , , 
 gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan
 // ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,
 gamut.public.servicesHome,,Services home,Palvelut pääsivu,Tjänster hem,Perkhidmatan rumah
@@ -38,24 +38,24 @@ gamut.buttons.logout,,Log out,Kirjaudu ulos,Logga ut,Log keluar
 gamut.buttons.search,,Search,Hae,Söka,Cari
 gamut.buttons.cancel,,Cancel,Peruuta,Avboka,Batal
 gamut.buttons.select,,Select,Valitse,Välja,Pilih
-gamut.buttons.close,,Close,Sulje,Nära,tutup
+gamut.buttons.close,,Close,Sulje,Nära,Tutup
 gamut.buttons.reply,,Reply,Vastaa,Svar,Balas
 gamut.buttons.delete,,Delete,Poista,Radera,Padam
 gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami
 gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran
 // ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,
-gamut.locale.en,,English,Englanti,engelska,Inggeris
-gamut.locale.fi,,Finnish,Suomi,finska,bahasa Finland
-gamut.locale.sv,,Swedish,Ruotsi,svenska,bahasa Sweden
-gamut.locale.my,,Malay,Malaiji,malajisk,bahasa Melayu
+gamut.locale.en,,English,Englanti,Engelska,Inggeris
+gamut.locale.fi,,Finnish,Suomi,Finska,Bahasa Finland
+gamut.locale.sv,,Swedish,Ruotsi,Svenska,Bahasa Sweden
+gamut.locale.my,,Malay,Malaiji,Malajisk,Bahasa Melayu
 // ------------------- GAMUT SEARCH -----------------------,,,,#VALUE!,
 gamut.search.placeholder,,Search our services,Hae palvelua,Sök i våra tjänster,Cari perkhidmatan kami
 gamut.search.popover.title,,Search our site,Hae sivustolta,Sök på vår sida,Cari tapak kami
 gamut.search.popover.input.placeholder,,What are you looking for?,Mitä etsi,Vad letar du efter?,Apa yang anda cari?
 gamut.search.popover.result.chip.form,,Form,Lomake,Form,Borang
 gamut.search.popover.result.chip.link,,Link,Linkki,Länk,Pautan
-gamut.search.popover.result.chip.phone,,Phone,Puhelin,Telefon,telefon
-gamut.search.popover.result.chip.content,,Content,Sisältö,Innehåll,kandungan
+gamut.search.popover.result.chip.phone,,Phone,Puhelin,Telefon,Telefon
+gamut.search.popover.result.chip.content,,Content,Sisältö,Innehåll,Kandungan
 gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bentuk
 gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon
 gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan
@@ -63,13 +63,13 @@ gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Se
 gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,Semua keputusan
 gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,Tiada hasil
 gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,Perkhidmatan
-gamut.search.results.formLinks,,Forms,Lomakkeet,Blanketter,Borang
-gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,telefon
+gamut.search.results.formLinks,,Forms,Lomakkeet,Formulär,Borang
+gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,Telefon
 gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan
 gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan
 gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
-gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Blanketter,Borang
+gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
 // -------------------- GAMUT FORMS ---------------------------,,,,#VALUE!,
 gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama
@@ -78,7 +78,7 @@ gamut.forms.status,,Status,Tila,Status,Status
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung
 gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi
 gamut.forms.status.COMPLETED,,Completed,Valmis käsittelyyn,Avslutad,Selesai
-gamut.forms.status.REJECTED,,Rejected,Poistettu,Avvisad,ditolak
+gamut.forms.status.REJECTED,,Rejected,Poistettu,Avvisad,Ditolak
 gamut.forms.lastModified,,Last modified,Viimeksi muutettu,Senast ändrad,Terakhir diubah suai
 gamut.forms.files,,Files,Liitteet,Filer,Fail
 gamut.forms.messages,,Messages,Viestit,Meddelanden,Mesej
@@ -87,7 +87,7 @@ gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komp
 gamut.forms.page.stepper,,{start} of {end},{start} of {end},{start} av {slut},{start} of {end}
 gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {stepNumber} out of {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps}
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
-gamut.forms.page.complete,,Complete,Valmis,Komplett,lengkap
+gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
 gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini
@@ -108,12 +108,12 @@ gamut.forms.answer.date.placeholder.month,,mm,kk,mm,bb
 gamut.forms.answer.date.placeholder.year,,yyyy,vvvv,åååå,tttt
 gamut.forms.answer.date.placeholder.hour,,hh,tt,hh,jj
 gamut.forms.answer.date.placeholder.minute,,mm,mm,mm,mm
-gamut.forms.answer.boolean.yes,,Yes,Kyllä,Ja,ya
+gamut.forms.answer.boolean.yes,,Yes,Kyllä,Ja,Ya
 gamut.forms.answer.boolean.no,,No,Ei,Inga,Tidak
 gamut.forms.unfinished.none,,You do not have any unfinished forms,Sinulla ei ole keskeneräisiä lomakkeita,Du har inga oavslutade formulär,Anda tidak mempunyai sebarang borang yang belum selesai
 gamut.forms.awaitingDecision.none,,You do not have any forms awaiting a decision,Sinulla ei ole keskeneräisiä asiointipyyntöjä,Du har inga blanketter som väntar på beslut,Anda tidak mempunyai sebarang borang menunggu keputusan
 gamut.forms.page.selection.start,,Start,Aloita,Start,Mulakan
-gamut.forms.page.selection.complete,,Complete,Valmis,Komplett,lengkap
+gamut.forms.page.selection.complete,,Complete,Valmis,Komplett,Lengkap
 gamut.forms.unfinished.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai
 gamut.forms.unfinished.subtitle,,Processing has not started - Please select a form to continue filling or cancel,Käsittelyä ei ole aloitettu - Valitse lomake jatkaaksesi täyttämistä tai peruuta,Bearbetningen har inte startat - Välj ett formulär för att fortsätta fylla eller avbryta,Pemprosesan belum bermula - Sila pilih borang untuk terus mengisi atau membatalkan
 gamut.forms.awaitingDecision.title,,Forms awaiting decision,"Lomakkeet, jotka odottavast päätöstä",Blanketter som väntar på beslut,Borang menunggu keputusan
@@ -127,13 +127,13 @@ gamut.offers.deleteForm.deleteButton,,Yes delete this form,Kyllä haluan poistaa
 // -------------------- GAMUT INBOX ---------------------------,,,,#VALUE!,
 gamut.inbox.title,,Inbox,Saapuneet,Inkorg,Peti masuk
 gamut.inbox.subtitle,,Messages and files related to your forms,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden och filer relaterade till dina formulär,Mesej dan fail yang berkaitan dengan borang anda
-gamut.inbox.sender,,Sender,Lähettäjä,Avsändare,penghantar
+gamut.inbox.sender,,Sender,Lähettäjä,Avsändare,Penghantar
 gamut.inbox.files,,Files,Tiedostot,Filer,Fail
 gamut.inbox.messages,,Messages: {count},Viestejä: {count],Meddelanden: {count},Mesej: {count}
 gamut.inbox.messages.title,,Messages,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden,Mesej
 gamut.inbox.formName,,Form name,Lomakkeen nimi,Formnamn,Nama borang
 gamut.inbox.message-preview,,Message preview,Viestin esikatselu,Förhandsgranskning av meddelande,Pratonton mesej
-gamut.inbox.message-date,,Date,Päivämäärä,Datum,tarikh
+gamut.inbox.message-date,,Date,Päivämäärä,Datum,Tarikh
 gamut.inbox.subjectAttachment.title,,Attachments,Liitteet,Bilagor,Lampiran
 gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,Skriv ditt meddelande,Sila tulis mesej anda
 gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada
@@ -184,7 +184,7 @@ gamut.feedback.table.sorted.desc,,Sorted descending,Lajiteltu laskevassa järjes
 gamut.feedback.table.sorted.asc,,Sorted ascending,Lajiteltu nousevassa järjestyksessä,Sorterat stigande,Diisih menaik
 gamut.feedback.table.topic,,Topic,Aihe,Ämne,Topik
 gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik
-gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,tarikh
+gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,Tarikh
 gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas
 gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk
 gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,Tiada data
@@ -197,4 +197,4 @@ gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespon
 gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi
 // ----------------------- DIALOB REVIEW -------------------------,,,,,
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang
-dialob.review.button.close,,Close,Sulje,stäng,tutup
+dialob.review.button.close,,Close,Sulje,Stäng,Tutup
