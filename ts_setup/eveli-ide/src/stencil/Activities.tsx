@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Card, CardHeader, CardActions, CardContent, Typography, Box, Button } from '@mui/material';
+import { Card, CardHeader, CardActions, CardContent, Box, Button } from '@mui/material';
 
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ArticleComposer } from './article';
 import { LinkComposer } from './link';
 import { WorkflowComposer } from './workflow';
