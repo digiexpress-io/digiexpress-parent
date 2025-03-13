@@ -5,6 +5,7 @@ import { useLocale, EveliApp } from '@/burger'
 
 import { Secondary } from '../frontdesk/Secondary';
 import { Toolbar } from '../frontdesk/Toolbar';
+import { Box } from '@mui/material';
 
 
 export const Route = createFileRoute('/secured/$locale/worker')({
@@ -17,5 +18,13 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<EveliApp main={Outlet} secondary={Secondary} toolbar={Toolbar} />)
+  return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
+}
+
+
+const Main: React.FC<{}> = () => {
+
+  return (<Box p={1}>
+    <Outlet />
+  </Box>)
 }

@@ -20,7 +20,6 @@ import { useNavigate } from '@tanstack/react-router'
 import {  useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 
 import logo from '../uiDev/logoLifeDigitalDark.svg';
-import { ComposeSelect } from '../uiDev/ComposeSelect';
 import * as Burger from '@/burger';
 
 type NavType = 'TASKS' | 'DASHBOARD' | 'PROCESSES' | 'FORMS' | 'WRENCH' | 'STENCIL' | 'WORKFLOWS' | 'FEEDBACK' | 'QUEUES' | 'PUBLICATIONS';
@@ -44,14 +43,18 @@ export const Secondary: React.FC = () => {
 
 
   return (<>
-    <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
 
     <Burger.EveliShellExplorer>
       <div className={classes.logoContainer}>
         <img src={logo} className={classes.logo} />
       </div>
 
-      <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
+      <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={() => {
+        navigate({
+          from: '/secured/$locale',
+          to: 'worker/tasks/create'
+        })
+      }}>Compose</Button>
 
       <Button startIcon={<TaskOutlinedIcon />}
         variant={activeButton === 'TASKS' ? 'explorerActive' : 'explorerInactive'} 
