@@ -26,10 +26,10 @@ export const StencilApp: React.FC = () => {
   const { create } = useFetch('worker/rest/api/assets/stencil/$assetType.POST', {});
   const { update } = useFetch('worker/rest/api/assets/stencil/$assetType.PUT', {});
   const { getReleaseContent } = useFetch('worker/rest/api/assets/stencil/releases/$releaseId.GET', {});
-  const { version } = useFetch('worker/rest/api/assets/stencil/version.GET', {});
+  
 
   const store: StencilApi.StencilRestApi = React.useMemo(() => ({
-    getSite, delete: del, create, update, getReleaseContent, version
+    getSite, delete: del, create, update, getReleaseContent
   }), []);
 
   const service = StencilClient.service({ store });

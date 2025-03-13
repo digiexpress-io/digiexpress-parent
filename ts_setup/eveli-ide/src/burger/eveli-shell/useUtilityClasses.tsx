@@ -143,6 +143,7 @@ export const EveliShellRoot = styled('div', {
       }),
     },
     '& .EveliFooter-root': {
+      marginLeft: `${drawerWidth}px`,
       height: `${footerHeight}px`
     },
 

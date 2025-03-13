@@ -16,14 +16,38 @@ import { useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { MigrationComposer } from './migration';
 import { useStencilNav } from './nav';
+import { ActivityProps, useActivities } from './Activities';
 
 import * as Burger from '@/burger';
 
+
+
+
+const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }> = (props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const handleClose = () => { 
+    setOpen(false) 
+    //props.onClick();
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  }
+  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  return (
+    <>
+      <Composer onClose={handleClose}/>
+      <MenuItem onClick={handleOpen}>
+        <ListItemText>{props.data.buttonCreate}</ListItemText>
+      </MenuItem>
+    </>
+  )
+}
 
 const Secondary: React.FC<{}> = () => {
   const intl = useIntl();
   const classes = useUtilityClasses();
   const { activeItem, onNav } = useStencilNav();
+  const activities = useActivities();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)
@@ -38,29 +62,7 @@ const Secondary: React.FC<{}> = () => {
   return (
     <>
       <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
-        <MenuList dense>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Article</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Page</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Service</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Link</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Locale</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Migration</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={handleComposeSelectClose}>
-            <ListItemText>Template</ListItemText>
-          </MenuItem>
-        </MenuList>
+        {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
       </Burger.EveliShellCompose>
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 

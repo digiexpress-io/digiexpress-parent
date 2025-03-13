@@ -4,7 +4,6 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, But
 
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { useSnackbar } from 'notistack';
 import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
@@ -35,7 +34,6 @@ export interface NewReleaseProps {
 
 export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { wrenchTags } = useFetch('worker/rest/api/assets/any-tags/wrench-tags.GET', {});
   const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});

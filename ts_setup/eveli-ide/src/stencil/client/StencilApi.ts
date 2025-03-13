@@ -205,13 +205,8 @@ export declare namespace StencilApi {
     create(): CreateBuilder;
     delete(): DeleteBuilder;
     update(): UpdateBuilder;
-    version(): Promise<VersionEntity>;
   }
 
-  export interface VersionEntity {
-    version: string;
-    built: string;
-  }
 
   export interface CreateArticle {
     parentId?: ArticleId;
@@ -308,7 +303,6 @@ export declare namespace StencilApi {
     create(): CreateBuilder;
     delete(): DeleteBuilder;
     update(): UpdateBuilder;
-    version(): Promise<VersionEntity>;
   }
   
   export interface ErrorMsg {

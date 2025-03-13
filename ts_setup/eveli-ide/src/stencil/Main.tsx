@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import {
-  ActivitiesView, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
+  Activities, ArticlePageComposer, ArticleWorkflowsComposer, ArticleLinksComposer, WorkflowsView,
   ReleasesView, LocalesView, ArticlesView
 } from './';
 
@@ -33,7 +33,7 @@ const Main: React.FC<{}> = () => {
 
     switch(explorer.type) {
       case 'RELEASES': return (<Box sx={root}><ReleasesView /></Box>);
-      case 'ACTIVITIES': return (<Box sx={root}><ActivitiesView /></Box>);
+      case 'ACTIVITIES': return (<Box sx={root}><Activities /></Box>);
       case 'LOCALES': return (<Box sx={root}><LocalesView /></Box>);
       case 'SERVICES': return (<Box sx={root}><WorkflowsView /></Box>);
       case 'SEARCH': return (<Box sx={root}><SearchView /></Box>);

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Card, CardHeader, CardContent, CardActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-
+import * as Burger from '@/burger'
 
 import { FlowComposer } from '../flow';
 import { DecisionComposer } from '../decision';
@@ -10,19 +10,24 @@ import { ServiceComposer } from '../service';
 import ReleaseComposer from '../release';
 import MigrationComposer from '../migration';
 
-import { ActivityItem, ActivityData } from './ActivityItem';
-
 import composerVersion from '../version';
 import { Composer } from '../context';
 import { useWrenchNav } from '../nav';
 
-interface ActivityType {
+
+interface ActivityData {
   type: "releases" | "decisions" | "flows" | "services" | "migration" | "templates" | "debug" | "compare";
+  title: string;
+  desc: string;
+  buttonCreate: string;
+  buttonViewAll?: string;
+  buttonTertiary?: string;
+  onView?: () => void;
   composer?: (handleClose: () => void) => React.ReactChild;
   onCreate?: () => void;
 }
 
-const createCards: (tabs: ReturnType<typeof useWrenchNav>) => (ActivityData & ActivityType)[] = (tabs) => ([
+const createCards: (tabs: ReturnType<typeof useWrenchNav>) => ActivityData[] = (tabs) => ([
   {
     composer: (handleClose) => (<FlowComposer onClose={handleClose} />),
     onView: undefined,
@@ -111,24 +116,26 @@ const Activities: React.FC<{}> = () => {
   }, [service, setCoreVersion]);
 
   return (
-    <>
-      <Typography variant="h1" fontWeight="bold" sx={{ p: 1, m: 1 }}>
-        <FormattedMessage id={"activities.title"} />
-        <Typography variant="body2">
-          <FormattedMessage id={"activities.desc"} />
-        </Typography>
-      </Typography>
-      <Box sx={{ margin: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {composer}
-
-        {cards.map((card, index) => (<ActivityItem key={index} data={card} onCreate={() => {
-          if (card.composer) {
-            setOpen(index);
-          } else if (card.onCreate) {
-            card.onCreate();
-          }
-        }} />))}
-      </Box>
+    <>      
+      {composer}
+      <Burger.EveliActivities>
+        {cards.map((card, index) => (
+          <Card>
+            <CardHeader title={<FormattedMessage id={card.title} />} />
+            <CardContent><FormattedMessage id={card.desc} /></CardContent>
+            <CardActions>
+              {card.buttonViewAll && card.onView ? <Button variant='text' onClick={card.onView} children={<FormattedMessage id={card.buttonViewAll} />} /> : <Box />}
+              <Button onClick={() => {
+                if (card.composer) {
+                  setOpen(index);
+                } else if (card.onCreate) {
+                  card.onCreate();
+                }
+              }} children={<FormattedMessage id={card.buttonCreate} />} />
+            </CardActions>
+          </Card>
+        ))}
+      </Burger.EveliActivities>
       <Typography variant="caption" sx={{ pt: 1 }} display={'flex'} flexDirection={'column'} alignItems={'center'}>
         <FormattedMessage id={"activities.version.composer"} values={{ version: composerVersion.tag, date: composerVersion.built }} />
         <Typography variant="caption" sx={{ pt: 1 }} >

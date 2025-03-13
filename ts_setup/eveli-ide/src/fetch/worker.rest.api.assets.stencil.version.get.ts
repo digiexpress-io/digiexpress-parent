@@ -1,19 +1,39 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Composer, StencilApi } from '../stencil';
+import { StencilApi } from '../stencil';
+import composerVersion from '../version';
+import { useQuery } from '@tanstack/react-query';
 
 
+// TODO, should be rest api version ....
 export const Hook = createFileFetch('worker/rest/api/assets/stencil/version.GET')({
   hook
 }) 
 
-function hook(props: {}) {
+export interface VersionEntity {
+  version: string;
+  built: string;
+}
+
+function hook(props: {}): {
+  frontend: VersionEntity,
+  backend: VersionEntity
+} | undefined {
   const params = Hook.useParams();
   const { url, method } = params;
-  
-  return {
-    version: async (): Promise<StencilApi.VersionEntity> => {
-      return params.fetch(url({ }), { method })
-        .then(resp => resp.json())
-    }
-  }
+  const query = url({ });
+
+  const { data, error, refetch, isPending } = useQuery({
+    staleTime: 15000,
+    queryKey: [query],
+    queryFn: () => params.fetch(query)
+      .then(resp => resp.json())
+      .then((data: VersionEntity) => (
+        {
+          frontend:  { version: composerVersion.tag, built: composerVersion.built },
+          backend: data
+        })),
+  });
+
+  return data;
+
 }

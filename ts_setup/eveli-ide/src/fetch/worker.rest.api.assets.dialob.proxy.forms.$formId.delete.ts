@@ -1,5 +1,4 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Workflow } from '../frontdesk/types/Workflow';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';
 

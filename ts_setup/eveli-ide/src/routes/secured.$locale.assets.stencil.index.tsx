@@ -24,14 +24,13 @@ function Component() {
   const { create } = useFetch('worker/rest/api/assets/stencil/$assetType.POST', {});
   const { update } = useFetch('worker/rest/api/assets/stencil/$assetType.PUT', {});
   const { getReleaseContent } = useFetch('worker/rest/api/assets/stencil/releases/$releaseId.GET', {});
-  const { version } = useFetch('worker/rest/api/assets/stencil/version.GET', {});
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   const service = React.useMemo(() => {
-    const store: StencilApi.StencilRestApi = {getSite, delete: del, create, update, getReleaseContent, version};
+    const store: StencilApi.StencilRestApi = {getSite, delete: del, create, update, getReleaseContent};
     return StencilClient.service({ store });
-  }, [getSite, del, create, update, getReleaseContent, version]);
+  }, [getSite, del, create, update, getReleaseContent]);
 
   return (
     <Composer.Provider service={service} >
