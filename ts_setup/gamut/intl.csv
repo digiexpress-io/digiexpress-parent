@@ -26,8 +26,8 @@ gamut.new-messages,,New messages,Uusi viesti,Nya meddelanden,Mesej baharu
 gamut.services,,Services,Palvelut,Tjänster,Perkhidmatan
 gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,Tempahan kalendar
 gamut.noValueIndicator,,-,-,-,-
-gamut.noValueIndicatorColon,,,,#VALUE!,
-gamut.textSeparator,,,,#VALUE!,
+gamut.noValueIndicatorColon,," "," "," "," "
+gamut.textSeparator,," "," "," "," "
 gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan
 // ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,
 gamut.public.servicesHome,,Services home,Palvelut pääsivu,Tjänster hem,Perkhidmatan rumah
@@ -60,14 +60,14 @@ gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bent
 gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon
 gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan
 gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Semua perkhidmatan
-gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,
-gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,
-gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,
-gamut.search.results.formLinks,,Forms,Lomakkeet,Blanketter,
-gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,
-gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,
-gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,
-gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,
+gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,Semua keputusan
+gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,Tiada hasil
+gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,Perkhidmatan
+gamut.search.results.formLinks,,Forms,Lomakkeet,Blanketter,Borang
+gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,telefon
+gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan
+gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan
+gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
 gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Blanketter,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
@@ -89,7 +89,7 @@ gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {step
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
 gamut.forms.page.complete,,Complete,Valmis,Komplett,lengkap
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
-gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,,
+gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini
 gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi
 gamut.forms.filling.start.button,,Continue to form,Jatka lomakkeella,Fortsätt att bilda,Teruskan membentuk
@@ -176,7 +176,7 @@ gamut.userOverview.decided-forms.detail.title,,Forms with final decision,"Lomakk
 gamut.userOverview.inbox.detail.title,,Inbox,Viestit,Inkorg,Peti masuk
 gamut.userOverview.bookings.detail.title,,Calendar bookings,Kalenteri varaukseni,Kalenderbokningar,Tempahan kalendar
 gamut.userOverview.personal-info.detail.title,,My personal info,Minum tiedot,Min personliga information,Maklumat peribadi saya
-gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail dan menempah janji temu dengan kami
+gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail serta menempah janji temu dengan kami
 // -------------------- SERVICES SELECT -------------------------,,,,#VALUE!,
 gamut.services.subtitle,,Select or search for a service to view available forms,Valitse tai etsi palvelu nähdäksesi saatavilla olevat lomakkeet,Välj eller sök efter en tjänst för att se tillgängliga formulär,Pilih atau cari perkhidmatan untuk melihat borang yang tersedia
 // -------------------- FEEDBACK SELECT -------------------------,,,,#VALUE!,
@@ -187,11 +187,11 @@ gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik
 gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,tarikh
 gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas
 gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk
-gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,
+gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,Tiada data
 gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?,Var detta svar till hjälp?,Adakah jawapan ini membantu?
 gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu"
 gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu
-gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,,,
+gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,Sinun on kirjauduttava sisään arvioidaksesi palautetta,Du måste vara inloggad för att betygsätta feedback,Anda mesti log masuk untuk menilai maklum balas
 gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat datum,Tarikh dikemas kini
 gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan
 gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi
