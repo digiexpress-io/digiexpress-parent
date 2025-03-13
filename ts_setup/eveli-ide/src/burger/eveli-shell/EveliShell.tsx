@@ -6,7 +6,23 @@ import { EveliShellProps, EveliShellToolbarHeightOptions } from './EveliShellPro
 import { EveliShellRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
+const toolbarHeight: EveliShellToolbarHeightOptions = {
+  xs: 64,
+  sm: 64,
+  md: 64,
+  lg: 64,
+  xl: 64,
+};
 
+
+function nonEmpty<T extends Record<string, any>>(any: T | undefined): T {
+  return Object.entries(any ?? {})
+    .filter(([, value]) => value !== undefined && value !== null)
+    .reduce((collector, [key, value]) => {
+      collector[key] = value;
+      return collector;
+    }, {} as any);
+}
 
 export const EveliShell: React.FC<EveliShellProps> = (initProps) => {
   const themeProps = useThemeProps({
@@ -14,40 +30,44 @@ export const EveliShell: React.FC<EveliShellProps> = (initProps) => {
     name: MUI_NAME,
   });
 
+  const ownerState = {
+    footerHeight: 50,
+    drawerWidth: 300,
+    minibarWidth: 60,
+    ...nonEmpty(themeProps),
+    toolbarHeight: { ...toolbarHeight, ...nonEmpty(themeProps.toolbarHeight) },
+  }
   return (
-    <EveliShellProvider drawerOpen={themeProps.drawerOpen ?? true}>
+    <EveliShellProvider 
+      drawerOpen={themeProps.drawerOpen ?? true} 
+      drawerWidth={ownerState.drawerWidth} 
+      footerHeight={ownerState.footerHeight}
+      minibarWidth={ownerState.minibarWidth}
+      toolbarHeight={ownerState.toolbarHeight}>
+      
       <CssBaseline />
-      <EveliShellInternal {...themeProps}>{themeProps.children}</EveliShellInternal>
+      <EveliShellInternal {...ownerState}>{themeProps.children}</EveliShellInternal>
     </EveliShellProvider>
   );
 }
 
 
 const EveliShellInternal: React.FC<EveliShellProps> = (initProps) => {
-  const toolbarOptions: EveliShellToolbarHeightOptions = {
-    xs: 64,
-    sm: 64,
-    md: 64,
-    lg: 64,
-    xl: 64,
-    ...(initProps.toolbarHeight ?? {})
-  };
-
-  const toolbarHeight = useToolbarHeight(toolbarOptions);
-  const { open: drawerOpen } = useEveliShell();
+  const { open: drawerOpen, toolbarHeight: userToolbarHeight, drawerWidth, footerHeight } = useEveliShell();
+  const toolbarHeight = useToolbarHeight(userToolbarHeight);
 
   const ownerState = {
-    footerHeight: 50,
-    drawerWidth: 450,
     ...initProps,
     drawerOpen,
+    drawerWidth,
     toolbarHeight,
+    footerHeight,
   };
 
   const classes = useUtilityClasses();
   const Root = initProps.component ?? EveliShellRoot;
   return (
-    <Root ownerState={ownerState} className={classes.root}>{initProps.children}</Root>
+    <Root ownerState={ownerState as any} className={classes.root}>{initProps.children}</Root>
   );
 }
 

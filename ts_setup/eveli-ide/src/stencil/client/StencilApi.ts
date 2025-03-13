@@ -198,10 +198,6 @@ export declare namespace StencilApi {
     flowName: string,
   }
 
-  export interface FetchIntegration {
-    fetch<T>(path: string, init?: RequestInit): Promise<T>;
-  }
-
   export interface Service {
     getSite(): Promise<Site>,
     getReleaseContent(releaseId: string): Promise<{}>,
@@ -209,14 +205,8 @@ export declare namespace StencilApi {
     create(): CreateBuilder;
     delete(): DeleteBuilder;
     update(): UpdateBuilder;
-    version(): Promise<VersionEntity>;
-    assets(): AssetRepository;
   }
 
-  export interface VersionEntity {
-    version: string;
-    built: string;
-  }
 
   export interface CreateArticle {
     parentId?: ArticleId;
@@ -299,27 +289,20 @@ export declare namespace StencilApi {
     workflow(workflow: WorkflowMutator): Promise<Workflow>;
     template(template: TemplateMutator): Promise<Template>;
   }
-
-  export interface Store {
-    fetch<T>(path: string, init?: RequestInit): Promise<T>;
-  }
-
-  export interface StoreConfig {
-    url: string;
-    oidc?: string;
-    status?: string;
-    csrf?: { key: string, value: string }
-  }
-
   export interface DialobTagAsset {
     formLabel: string;
     formName: string;
     tagFormId: string;
     tagName: string;
   }
-  export interface AssetRepository {
-    flowNames(): Promise<string[]>;
-    dialobForms(): Promise<DialobTagAsset[]>;
+
+  export interface StencilRestApi {
+    getSite(): Promise<Site>,
+    getReleaseContent(releaseId: string): Promise<{}>,
+
+    create(): CreateBuilder;
+    delete(): DeleteBuilder;
+    update(): UpdateBuilder;
   }
   
   export interface ErrorMsg {
@@ -333,8 +316,3 @@ export declare namespace StencilApi {
     errors: any[];
   }
 }
-
-
-
-
-

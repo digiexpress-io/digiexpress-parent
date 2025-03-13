@@ -8,13 +8,13 @@ import Graph from './graph';
 import { AutocompleteVisitor, FlowAstAutocomplete, AutocompleteTask } from './autocomplete';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
+import { useWrenchNav } from '../nav';
 
 
 type GuidedHint = (cm: CodeMirror.Editor, data: CodeMirror.Hints, cur: CodeMirror.Hint) => void;
 
 const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flow, site }) => {
-  
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
 
   return (
     <Graph flow={flow} site={site}
@@ -27,8 +27,8 @@ const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flo
         if(!article) {
           article = site.services[id];
         }
-        if(article) {
-          nav.handleInTab({ article })
+        if (article) {
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         }
       }} 
     />

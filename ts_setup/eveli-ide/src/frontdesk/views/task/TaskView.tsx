@@ -1,22 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from '@tanstack/react-router';
 import { LinearProgress, Container } from '@mui/material';
 
 import { TaskCreate } from './TaskCreate';
-import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
-import { TaskBackendContext } from '../../context/TaskApiConfigContext';
+
 import { ComponentResolver } from '../../context/ComponentResolver';
-import { UserGroup } from '../../types/UserGroup';
 import { Task } from '../../types/task/Task';
-import { useUserInfo } from '../../context/UserContext';
 import { TableHeader } from '../../components/TableHeader';
+import { useIam, IamApi } from '@/burger';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 type OwnProps = {
-  taskId?: number
+  taskId?: string
   taskUpdateCallback?: ()=>void
-  groups: UserGroup[]
-  getUsers: (groupName:string[])=>Promise<GroupMember[]>
+  groups: IamApi.UserGroup[]
+  getUsers: (groupName:string[])=>Promise<IamApi.GroupMember[]>
   componentResolver?: ComponentResolver
   externalThreads?: boolean
   userSelectionFree?: boolean
@@ -27,12 +26,18 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   const [supressConfirmation, setSupressConfirmation] = useState<boolean>();
   const [taskData, setTaskData] = useState<Task|null>(null);
   const [commentData, setCommentData] = useState<Comment[]>([]);
-  const taskContext = useContext(TaskBackendContext);
+  const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
+  const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
+  const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
+  const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
 
-  const userInfo = useUserInfo();
+  const { user } = useIam();
 
   const navigateBack = ()=> {
-    navigate('/ui/tasks');
+    navigate({
+      from: '/secured/$locale/worker',
+      to: '/secured/$locale/worker/tasks'
+    });
   }
 
   const cancel= () => {
@@ -41,16 +46,23 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   }
   const loadCommentData = () => {
     if (taskData) {
-      taskContext.getTaskComments(taskData)
-      .then(data => setCommentData(data));
+      getTaskComments(taskData).then(data => setCommentData(data));
     }
     else {
       setCommentData([]);
     }
   }
 
+  function saveTask(task: Task) {
+    if (task.id) {
+      return updateTask(task);
+    } 
+    return createTask(task)
+  }
+  
+
   const accept = (task:Task) => {
-    taskContext.saveTask(task)
+    saveTask(task)
       .then(result => {
         setSupressConfirmation(true);
         return result;
@@ -64,7 +76,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
 
   useEffect(()=>{
     if (props.taskId) {
-      taskContext.getTask(props.taskId)
+      getTask(props.taskId)
       .then(task => {
         setTaskData(task);
       });
@@ -109,7 +121,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
         comments={commentData}
         reloadComments={loadCommentData}
         userSelectionFree={props.userSelectionFree}
-        currentUser={userInfo?.user}
+        currentUser={user}
         supressConfirmation={supressConfirmation}
       />
     </Container>

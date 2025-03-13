@@ -7,6 +7,8 @@ import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
+import { useStencilNav } from '../nav';
+
 
 
 const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId }> = (props) => {
@@ -16,7 +18,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
   const [template, setTemplate] = React.useState<StencilApi.TemplateId | ''>('');
   const [articleId, setArticleId] = React.useState(props.articleId ? props.articleId : '');
   const [devMode, setDevMode] = React.useState<boolean>(false);
-  const { handleInTab } = Composer.useNav();
+  const { onNav } = useStencilNav();
 
   const handleCreate = () => {
 
@@ -28,7 +30,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
       props.onClose();
       actions.handleLoadSite().then(() => {
         const article = site.articles[articleId];
-        handleInTab({ article, type: "ARTICLE_PAGES", locale })
+        onNav({ article:  article.id, type: "ARTICLE_PAGES", locale1: locale })
       });
 
     })

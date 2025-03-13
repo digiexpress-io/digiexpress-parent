@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import { Composer, StencilApi } from '../context';
 import * as Burger from '@/burger';
 import { LocaleLabels } from '../locale';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 
@@ -34,15 +35,11 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [flowName, setFlowName] = React.useState<string>(workflow.body.flowName || '');
   const [formName, setFormName] = React.useState<string>(workflow.body.formName || '');
   const [formTag, setFormTag] = React.useState<string>(workflow.body.formTag || '');
-  const [allDialobTags, setAllDialobTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
-  const [allFlows, setAllFlows] = React.useState<string[]>([]);
   const [changeInProgress, setChangeInProgress] = React.useState(false);
 
+  const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
+  const { allTags: allDialobTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
-  React.useEffect(()=> {
-    service.assets().dialobForms().then(setAllDialobTags);
-    service.assets().flowNames().then(setAllFlows);
-  }, []);
 
   const handleCreate = () => {
     const entity: StencilApi.WorkflowMutator = { 
@@ -108,7 +105,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           <Box flexGrow={1}>
             <Burger.Select label="services.flowName" onChange={setFlowName}
               selected={flowName}
-              items={allFlows.map((flow)=>{return {id:flow, value: flow}})}
+              items={allFlows.map((flow)=>({id:flow, value: flow}))}
             />
           </Box>
           <Box sx={{ ml: 1 }}>

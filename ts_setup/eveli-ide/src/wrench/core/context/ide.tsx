@@ -1,25 +1,13 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
 import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
 
 import { HdesApi } from '../client';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
+import { useWrenchNav } from '../nav';
 
 declare namespace WrenchComposerApi {
-
-  interface Nav {
-    value?: string | null;
-  }
-
-  interface TabData {
-    nav?: Nav
-    withNav(nav: Nav): TabData;
-  }
-  interface Tab extends BurgerApi.TabSession<TabData> {
-
-  }
 
   interface DebugSession {
     error?: HdesApi.StoreError;
@@ -83,25 +71,6 @@ declare namespace WrenchComposerApi {
 namespace WrenchComposerApi {
   const sessionData = new SessionData({});
 
-  export class ImmutableTabData implements TabData {
-    private _nav: Nav;
-  
-    constructor(props: { nav: Nav }) {
-      this._nav = props.nav;
-    }
-    get nav() {
-      return this._nav;
-    }
-    withNav(nav: Nav) {
-      return new ImmutableTabData({
-        nav: {
-          value: nav.value === undefined ? this._nav.value : nav.value
-        }
-      });
-    }
-  }
-  export const createTab = (props: { nav: Nav, page?: HdesApi.Entity<any> }) => new ImmutableTabData(props);
-
   export const ComposerContext = React.createContext<ContextType>({
     session: sessionData,
     actions: {} as Actions,
@@ -138,55 +107,28 @@ namespace WrenchComposerApi {
     return result.session.branchName;
   }
 
+  export const useQueryHeaders = () => {
+    const branchName = useBranchName();
+    const headers: Record<string, string> = {  };
+    if (branchName && branchName !== "default") {
+      headers["Branch-Name"] = branchName;
+    }
+    headers["Content-Type"] = "application/json;charset=UTF-8";
+    return headers;
+  }
+
+
   export const useSession = () => {
     const result: ContextType = React.useContext(ComposerContext);
     return result.session;
   }
-  export const useNav = () => {
-    const layout = Burger.useTabs();
-
-
-    const handleInTab = (props: { article: HdesApi.Entity<any> }) => {
-      const nav = { value: props.article.id };
-
-      const icon = <ArticleTabIndicator entity={props.article} />;
-      const tab: Tab = {
-        id: props.article.id,
-        label: props.article.ast ? props.article.ast?.name : props.article.id,
-        icon,
-        data: createTab({ nav })
-      };
-
-      const oldTab = layout.session.findTab(props.article.id);
-      if (oldTab !== undefined) {
-        layout.actions.handleTabData(props.article.id, (oldData: TabData) => oldData.withNav(nav));
-      } else {
-        // open or add the tab
-        layout.actions.handleTabAdd(tab);
-      }
-
-    }
-    const findTab = (article: HdesApi.Entity<any>): Tab | undefined => {
-      const oldTab = layout.session.findTab(article.id);
-      if (oldTab !== undefined) {
-        const tabs = layout.session.tabs;
-        const active = tabs[layout.session.history.open];
-        const tab: Tab = active;
-        return tab;
-      }
-      return undefined;
-    }
-
-
-    return { handleInTab, findTab }
-  }
 
   export const useDebug = () => {
-    const layout = Burger.useTabs();
+    const { onNav } = useWrenchNav();
     const { session, actions } = useComposer();
 
     const handleDebugInit = (selected: HdesApi.EntityId) => {
-      layout.actions.handleTabAdd({ id: 'debug', label: "Debug" })
+      onNav({ type: 'DEBUG' })
 
       if (session.debug.selected && session.debug.selected !== selected) {
         const previous = session.debug.values[selected];
@@ -203,20 +145,13 @@ namespace WrenchComposerApi {
 
   export const Provider: React.FC<{ children: React.ReactNode, service: HdesApi.Service }> = ({ children, service: init }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
-    const [service, setService] = React.useState<HdesApi.Service>(init);
-    const branchName = session.branchName;
-
-    React.useEffect(() => {
-      setService(prev => prev.withBranch(branchName));
-    }, [branchName]);
+    const service = React.useMemo<HdesApi.Service>(() => init, [init]);
 
     const actions = React.useMemo(() => {
-      console.log("init ide dispatch");
       return new ReducerDispatch(dispatch, service);
     }, [dispatch, service]);
 
     React.useLayoutEffect(() => {
-      console.log("init ide data");
       actions.handleLoad();
     }, [service, actions]);
 
@@ -225,20 +160,6 @@ namespace WrenchComposerApi {
     </ComposerContext.Provider>);
   };
 }
-
-const ArticleTabIndicator: React.FC<{ entity: HdesApi.Entity<any> }> = ({ entity }) => {
-  const theme = useTheme();
-  const { isArticleSaved } = WrenchComposerApi.useComposer();
-  const saved = isArticleSaved(entity);
-  return <span style={{
-    paddingLeft: "5px",
-    fontSize: '30px',
-    color: theme.palette.secondary.light,
-    display: saved ? "none" : undefined
-  }}>*</span>
-}
-
-
 
 export default WrenchComposerApi;
 

@@ -41,7 +41,7 @@ const TemplateDelete: React.FC<TemplateDeleteProps> = ({ templateId, onClose }) 
         <FormattedMessage id='button.cancel'/>
       </Button>
       <Button onClick={handleDelete}>
-        <FormattedMessage id='button.delete'/>
+          <FormattedMessage id='button.delete.template' />
       </Button>
     </DialogActions>
   </Dialog>

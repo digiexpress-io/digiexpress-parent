@@ -2,13 +2,11 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DialogContent, DialogTitle, Box, TextField, Divider, Typography, FormHelperText, Dialog, Button } from '@mui/material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { useConfig } from '../../context/ConfigContext';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
 import { DEFAULT_FORM, DialobForm, DialobFormEntry } from '../../types';
-import { handleErrors } from '../../util/cFetch';
-import { enqueueSnackbar } from 'notistack';
-import { useContext } from 'react';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 import { TableHeader } from '../../components/TableHeader';
+
 
 interface CreateDialogProps {
   createModalOpen: boolean;
@@ -29,8 +27,8 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
   formConfiguration,
 }) => {
   const intl = useIntl();
-  const { serviceUrl } = useConfig();
-  const session = useContext(SessionRefreshContext);
+  const { getForm } = useFetch('worker/rest/api/assets/dialob/proxy/forms/$formId.GET', {})
+  const { saveForm } = useFetch('worker/rest/api/assets/dialob/proxy/forms.POST', {})
 
   const tagFormSchema = () => Yup.object().shape({
     name: Yup.string().required(intl.formatMessage({id: "error.valueRequired"})).matches(/^[_\-a-zA-Z\d]*$/g,intl.formatMessage({id: "dialobForm.error.invalidFormName"})),
@@ -40,72 +38,24 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
     const handleResponse = async (response: any) => {
       refresh();
       handleCreateModalClose();
-    };
+    }
 
-    const getForm = (formId: string) => {
-      let url = `${serviceUrl}worker/rest/api/assets/dialob/proxy/forms/${formId}`;
-      return session.cFetch(`${url}`,{
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
-        }
+    if (formConfiguration) {
+      // Copy
+      getForm(formConfiguration.id!).then(json => {
+        delete json._id;
+        delete json._rev;
+        json.name = values.name!;
+        json.metadata.label = values.label || "";
+        saveForm(json).then(json => handleResponse(json));
       })
-      .then((response:Response)=>handleErrors(response))
-      .then((response:Response) => response.json())
-      .then ((json:any)=>{
-          return json;
-      })
-      .catch((error:any) => {
-        enqueueSnackbar(intl.formatMessage({id: 'dialobForm.downloadFailed'}, {cause: (error.message || 'N/A')}), {variant: 'error'});
-      });
-    }
-    const saveForm = (form: Partial<DialobForm>) => {
-      let url = `${serviceUrl}worker/rest/api/assets/dialob/proxy/forms/`;
-      return session.cFetch(`${url}`,{
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json'
-        },
-        body:form
-      })
-      .then((response:Response)=>handleErrors(response))
-      .then((response:Response) => response.json())
-      .then ((json:any)=>{
-          return json;
-      })
-      .catch((error:any) => {
-        enqueueSnackbar(intl.formatMessage({id: 'dialobForm.saveFailed'}, {cause: (error.message || 'N/A')}), {variant: 'error'});
-      });
-    }
-  
-    if (formConfiguration) {    // Copy
-      try {
-        getForm(formConfiguration.id!)
-        .then(json=> {
-          delete json._id;
-          delete json._rev;
-          json.name = values.name!;
-          json.metadata.label = values.label || "";
-          saveForm(json)
-          .then(json=> {
-            handleResponse(json);
-          });
-        })
-      } catch (ex:any) {
-        enqueueSnackbar(intl.formatMessage({id: 'dialobForm.saveFailed'}, {cause: (ex?.message || 'N/A')}), {variant: 'error'});
-      }
-    } else {    // Create new
+
+    } else {    
+      // Create new
       const result: Partial<DialobForm> = DEFAULT_FORM;
       result.name = values.name!;
       result.metadata!.label = values.label || "";
-      try {
-        saveForm(result)
-        .then(json=> {
-          handleResponse(json);
-        });
-      } catch (ex:any) {
-        enqueueSnackbar(intl.formatMessage({id: 'dialobForm.saveFailed'}, {cause: (ex?.message || 'N/A')}), {variant: 'error'});
-      }
+      saveForm(result).then(json => handleResponse(json));
     }
   };
 

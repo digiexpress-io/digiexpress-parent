@@ -27,11 +27,7 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   const message = <FormattedMessage id="snack.migration.createdMessage" />
-  
 
-
-
-  
   return (
   <Dialog open={true} onClose={onClose}>
     <DialogTitle><FormattedMessage id='toolbar.import' /></DialogTitle>

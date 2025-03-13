@@ -4,13 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { Composer, StencilApi } from '../context';
+import { useStencilNav } from '../nav';
 
 
 
 const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site, session } = Composer.useComposer();
-  const tabs = Burger.useTabs();
+  const { onTabCurrentClose } = useStencilNav();
   const view = session.getArticleView(props.articleId);
 
   const links: StencilApi.Link[] = Object.values(site.links)
@@ -31,7 +32,7 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
     };
     service.update().article(entity)
       .then(_success => actions.handleLoadSite())
-      .then(() => tabs.actions.handleTabCloseCurrent())
+      .then(() => onTabCurrentClose())
     enqueueSnackbar(message, { variant: 'success' });
   }
   const message = <FormattedMessage id="snack.link.editedMessage" />
@@ -54,7 +55,7 @@ const ArticleLinksComposer: React.FC<{ articleId: StencilApi.ArticleId }> = (pro
         selected={view.links.map(l => l.link.id)}
         cancel={{
           label: 'button.cancel',
-          onClick: () => tabs.actions.handleTabCloseCurrent()
+          onClick: () => onTabCurrentClose()
         }}
         submit={{
           label: "button.apply",

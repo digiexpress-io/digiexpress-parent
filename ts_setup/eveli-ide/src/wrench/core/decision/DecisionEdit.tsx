@@ -11,7 +11,6 @@ import UploadIcon from '@mui/icons-material/Upload';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import * as Burger from '@/burger';
 import { Composer } from '../context';
 import { HdesApi } from '../client';
 import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';

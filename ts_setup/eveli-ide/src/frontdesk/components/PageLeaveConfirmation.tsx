@@ -1,39 +1,41 @@
-import React from 'react';
 import { useIntl } from 'react-intl';
-import { useLocation } from 'react-router-dom';
+import { useBlocker } from '@tanstack/react-router'
 import { ConfirmationDialog } from './ConfirmationDialog';
-import ReactRouterPrompt from 'react-router-prompt';
 
 interface Props {
-  when?: boolean;
-  navigate: (path: string) => void;
   navigationConfirmationRequired: () => boolean;
 }
 
-export const PageLeavingConfirmation = ({
-  navigate,
-  navigationConfirmationRequired,
-}: Props) => {
-  const intl = useIntl();
-  const location = useLocation(); 
+export const PageLeavingConfirmation = ({ navigationConfirmationRequired }: Props) => {
   
-  const shouldBlockNavigation = navigationConfirmationRequired();
-
-  return (
-    <ReactRouterPrompt when={shouldBlockNavigation}>
-      {({ isActive, onConfirm, onCancel }) => (
-        <ConfirmationDialog
-          open={isActive}
-          text={intl.formatMessage({ id: 'confirm.unsavedChanges' })}
-          onClose={onCancel}
-          onAccept={() => {
-            onConfirm(); 
-            navigate(location.pathname); 
-          }}
-          onCancel={onCancel}
-          title={intl.formatMessage({ id: 'confirm.close.title' })}
-        />
-      )}
-    </ReactRouterPrompt>
+  const intl = useIntl();
+  const { proceed, reset, status } = useBlocker({
+    shouldBlockFn: ({ current, next }) => {
+      return navigationConfirmationRequired();
+    },
+    enableBeforeUnload: false,
+    withResolver: true,
+  })
+  return (    
+    <ConfirmationDialog
+      open={status === 'blocked'}
+      text={intl.formatMessage({ id: 'confirm.unsavedChanges' })}
+      onClose={() => {
+        if(reset) {
+          reset();
+        }
+      }}
+      onAccept={() => {
+        if(proceed) {
+          proceed() 
+        }
+      }}
+    onCancel={() => {
+      if(reset) {
+        reset();
+      }
+    }}
+    title={intl.formatMessage({ id: 'confirm.close.title' })}
+  />
   );
 };

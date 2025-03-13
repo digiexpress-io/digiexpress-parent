@@ -72,7 +72,10 @@ const LocalesView: React.FC<{}> = () => {
       </Dialog>) : null
     }
 
-    <Typography variant="h3">{title}{": "}{locales.length}</Typography>
+    <Typography variant="h1">{title}{": "}{locales.length}</Typography>
+    <Typography variant="body2"><FormattedMessage id='locales.overview.description' /></Typography>
+
+    <Box mb={1} />
 
     <TableContainer component={Paper}>
       <Table size="small">

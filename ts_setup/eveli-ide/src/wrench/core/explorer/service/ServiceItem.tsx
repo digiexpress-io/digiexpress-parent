@@ -1,11 +1,10 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 
@@ -17,6 +16,7 @@ import MsgTreeItem from '../MsgTreeItem';
 import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import ServiceOptions from './ServiceOptions';
+import { useWrenchNav } from '../../nav';
 
 
 const ErrorItem: React.FC<{
@@ -112,10 +112,9 @@ interface RefFlow {
 }
 
 const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) => {
-
+  const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
-  const nav = Composer.useNav();
-
+  const { onNav } = useWrenchNav();
 
   const service = session.site.services[serviceId];
 
@@ -133,23 +132,24 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
   
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
-      labelIcon={ArticleOutlinedIcon}
-      labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color="error" />}
-      labelcolor={saved ? "explorerItem" : "secondary.light"}>
+      labelIcon={CodeOutlinedIcon}
+      labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color='error' />}
+      labelcolor={saved ? "explorerItem" : "secondary.light"}
+    >
 
       {/** Service options */}
       <Burger.TreeItem itemId={service.id + 'options-nested'}
         labelText={<FormattedMessage id="options" />}
-        labelIcon={EditIcon}>
+      >
         <ServiceOptions service={service} />
       </Burger.TreeItem>
 
       {/** Service status */}
       <Burger.TreeItem itemId={service.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${service.status}`} />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${service.errors.length + service.warnings.length}`}
-        labelcolor={Burger.colors.red}>
+        labelcolor={theme.palette.primary.dark}
+      >
 
         {service.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {service.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -159,13 +159,12 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
       {/** Flow options */}
       <Burger.TreeItem itemId={service.id + 'flows-nested'}
         labelText={<FormattedMessage id="flows" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${flows.length}`}
         labelcolor="primary">
 
         {flows.map(view => (<FlowItem key={view.ref.ref} nodeId={`${service.id}-fl-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />)
         )}
       </Burger.TreeItem>
@@ -173,13 +172,12 @@ const ServiceItem: React.FC<{ serviceId: Client.ServiceId }> = ({ serviceId }) =
       {/** Internal decision options */}
       <Burger.TreeItem itemId={service.id + 'internal-decisions-nested'}
         labelText={<FormattedMessage id="internal-decisions" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
         labelcolor="page">
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${service.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'DECISIONS' }) : undefined}
         />))}
 
       </Burger.TreeItem>

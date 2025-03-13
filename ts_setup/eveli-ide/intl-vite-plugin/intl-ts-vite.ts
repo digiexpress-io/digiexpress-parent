@@ -47,6 +47,7 @@ export function intlTsVite(options: Partial<Config> = {}): Plugin {
     }
     setLock(true)
     try {
+      console.log('\u{1F30D} generated new intl');
       const config = userConfig;
       const root = process.cwd();
       const csvFile = createFilePath([root], config.csv);
@@ -56,7 +57,7 @@ export function intlTsVite(options: Partial<Config> = {}): Plugin {
         const path = createFilePath([root, config.intlDirectory], newFile.fileName);
         writeFile({ fullPath: path.fullPath, content: newFile.content });
       }
-      console.log('\u{1F30D} generated new intl');
+
     } catch (err) {
       console.error(err)
       console.info()

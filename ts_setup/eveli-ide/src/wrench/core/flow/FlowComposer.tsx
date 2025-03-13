@@ -9,11 +9,12 @@ import { useSnackbar } from 'notistack';
 import { Composer } from '../context';
 import { HdesApi as Client } from '../client';
 import { ErrorView } from '../styles';
+import { useWrenchNav } from '../nav';
 
 
 const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { service, actions } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
 
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState("");
@@ -29,7 +30,7 @@ const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         enqueueSnackbar(<FormattedMessage id="flows.composer.createdMessage" values={{ name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.flows).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
 
         onClose();

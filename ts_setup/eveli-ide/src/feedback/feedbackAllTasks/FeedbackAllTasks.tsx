@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
 import * as Burger from '@/burger';
 import { useFeedback } from '../feedback-api';
@@ -39,10 +39,12 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
     setState(prev => prev.withFilterBySubCategory(value))
   }
 
-  function handleFeedbackNav(taskId: string) {
-    console.log(taskId)
-    navigate(`/feedback/${taskId}`);
-
+  function handleFeedbackNav(feedbackId: string) {
+    navigate({
+      from: '/secured/$locale',
+      params: { feedbackId },
+      to: '/secured/$locale/worker/feedback/$feedbackId'
+    });
   }
 
   return (

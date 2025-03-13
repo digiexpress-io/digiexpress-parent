@@ -1,11 +1,10 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
-import { DialogContentText,  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { Composer, StencilApi } from '../context';
-import * as Burger from '@/burger';
 
 
 interface LinkDeleteProps {
@@ -39,7 +38,7 @@ const LinkDelete: React.FC<LinkDeleteProps> = ({ linkId, onClose }) => {
         <FormattedMessage id='button.cancel'/>
       </Button>
       <Button onClick={handleDelete}>
-        <FormattedMessage id='link.delete'/>
+          <FormattedMessage id='button.delete.link' />
       </Button>
     </DialogActions>
   </Dialog>

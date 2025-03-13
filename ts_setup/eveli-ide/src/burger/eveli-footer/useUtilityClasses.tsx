@@ -38,11 +38,9 @@ export const EveliFooterRoot = styled("div", {
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column'
     },
-    marginTop: 'auto',
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingTop: theme.spacing(3),
-    gap: theme.spacing(3),
+    paddingLeft: theme.spacing(1),
+    alignItems: 'center',
+    gap: theme.spacing(1),
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main
   };

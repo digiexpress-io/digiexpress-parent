@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button  } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
@@ -13,6 +13,7 @@ import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi } from '../../client';
 import { ErrorView } from '../../styles';
+import { useWrenchNav } from '../../nav';
 
 
 const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
@@ -21,7 +22,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<HdesApi.StoreError>();
-  const tabs = Burger.useTabs();
+  const { onTabClose, findTab } = useWrenchNav();
 
   const decision = decisions[decisionId];
   let editor = (<></>);
@@ -42,14 +43,16 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
   const handleSubmit = () => {
     setErrors(undefined);
     setApply(true);
-    var decisionTab = tabs.session.tabs.find(tab => tab.id === decisionId);
+    const decisionTab = findTab('ENTITY_EDITOR', decisionId);
     service.delete().decision(decisionId)
-      .then(data => {
-        if (decisionTab) {
-          tabs.actions.handleTabClose(decisionTab);
-        }
+      .then(async data => {
+
         enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
-        actions.handleLoadSite(data);
+        await actions.handleLoadSite(data);
+
+        if (decisionTab) {
+          onTabClose(decisionTab);
+        }
         onClose();
       })
       .catch((error: HdesApi.StoreError) => {
@@ -63,10 +66,10 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
         <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
+          <FormattedMessage id='button.cancel' />
         </Button>
         <Button onClick={handleSubmit} disabled={apply}>
-          <FormattedMessage id='buttons.delete'/>
+          <FormattedMessage id='buttons.delete' />
         </Button>
       </DialogActions>
     </Dialog>
@@ -76,8 +79,8 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
 
 const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'DecisionDelete' | 'DecisionCopy'>(undefined);
-  const nav = Composer.useNav();
-  const {handleDebugInit} = Composer.useDebug();
+  const { onNav } = useWrenchNav()
+  const { handleDebugInit } = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
@@ -94,7 +97,7 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
         enqueueSnackbar(<FormattedMessage id="decisions.composer.copiedMessage" values={{ name: decision.ast?.name, newName: name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.decisions).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
       }).catch((error: HdesApi.StoreError) => {
@@ -129,37 +132,41 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
       <Burger.TreeItemOption nodeId={decision.id + 'edit-nested'}
         color='page'
         icon={EditIcon}
-        onClick={() => nav.handleInTab({ article: decision })}
+        onClick={() => onNav({ type: 'ENTITY_EDITOR', id: decision.id })}
         labelText={<FormattedMessage id="decisions.edit.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'simulate-nested'}
         color='page'
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(decision.id)}
         labelText={<FormattedMessage id="decisions.simulate.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'delete-nested'}
         color='page'
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('DecisionDelete')}
         labelText={<FormattedMessage id="decisions.delete.title" />}>
       </Burger.TreeItemOption>
+
       <Burger.TreeItemOption nodeId={decision.id + 'copyas-nested'}
         color='page'
         icon={EditIcon}
         onClick={() => setDialogOpen('DecisionCopy')}
         labelText={<FormattedMessage id="decisions.copyas.title" />}>
       </Burger.TreeItemOption>
+
       {dialogOpen === 'DecisionCopy' ? (
         <Dialog open={true} onClose={handleDialogClose}>
           <DialogTitle><FormattedMessage id='decisions.composer.copyTitle' /></DialogTitle>
           <DialogContent>{editor}</DialogContent>
           <DialogActions>
             <Button variant='text' onClick={handleDialogClose}>
-              <FormattedMessage id='button.cancel'/>
+              <FormattedMessage id='button.cancel' />
             </Button>
             <Button onClick={() => handleCopy()} disabled={apply}>
-              <FormattedMessage id='buttons.copy'/>
+              <FormattedMessage id='buttons.copy' />
             </Button>
           </DialogActions>
         </Dialog>

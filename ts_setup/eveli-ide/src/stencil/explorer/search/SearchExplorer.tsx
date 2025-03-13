@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box, Typography, TextField, TextFieldProps, InputAdornment } from '@mui/material';
+import { Box, Typography, TextField, TextFieldProps, InputAdornment, useTheme } from '@mui/material';
 import { styled } from "@mui/material/styles";
 import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SearchIcon from '@mui/icons-material/Search';
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/ModeEdit';
@@ -20,6 +19,7 @@ import { LinkEdit } from '../../link/';
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../../context';
 
+import { useStencilNav } from '../../nav';
 
 //color: theme.palette.secondary.contrastText,
 //backgroundColor: theme.palette.secondary.main,
@@ -75,7 +75,7 @@ const findMainId = (values: string[]) => {
 
 
 const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, keyword }) => {
-
+  const theme = useTheme();
   const [linkEditOpen, setLinkEditOpen] = React.useState<boolean>(false);
 
   const items: React.ReactElement[] = [];
@@ -101,7 +101,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
       <Burger.TreeItem
         itemId={view.link.id}
         labelText={view.link.body.value}
-        labelcolor={Burger.colors.purple}
+        labelcolor={theme.palette.primary.light}
         labelIcon={view.link.body.devMode ? ConstructionIcon : LinkIcon}>
         {items}
       </Burger.TreeItem>
@@ -109,7 +109,7 @@ const LinkItem: React.FC<{ view: Composer.LinkView, searchResult: Composer.Searc
 }
 
 const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, keyword }) => {
-
+  const theme = useTheme();
   const [workflowEditOpen, setWorkflowEditOpen] = React.useState<boolean>(false);
 
   const items: React.ReactElement[] = [];
@@ -138,7 +138,7 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
       <Burger.TreeItem
         itemId={view.workflow.id}
         labelText={<span>{findMatch(view.workflow.body.value, keyword, true)}</span>}
-        labelcolor={Burger.colors.red}
+        labelcolor={theme.palette.primary.dark}
         labelIcon={view.workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
         {items}
       </Burger.TreeItem>
@@ -148,8 +148,8 @@ const WorkflowItem: React.FC<{ view: Composer.WorkflowView, searchResult: Compos
 const ArticleItem: React.FC<{ view: Composer.ArticleView, searchResult: Composer.SearchResult, keyword: string }> = ({ view, searchResult, keyword }) => {
 
   const { article } = view;
-  const { handleInTab } = Composer.useNav();
-  const onLeftEdit = (page: StencilApi.Page) => handleInTab({ article, type: "ARTICLE_PAGES", locale: page.body.locale })
+  const { onNav } = useStencilNav();
+  const onLeftEdit = (page: StencilApi.Page) => onNav({ article: article.id, type: "ARTICLE_PAGES", locale1: page.body.locale })
 
   const [articleEditOpen, setArticleEditOpen] = React.useState<boolean>(false);
   const [noCollapseIcon, setNoCollapseIcon] = React.useState<boolean>(false)

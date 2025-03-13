@@ -1,9 +1,8 @@
 import React from 'react';
+import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button, useTheme } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
@@ -11,15 +10,16 @@ import * as Burger from '@/burger';
 import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import { ErrorView } from '../../styles';
+import { useWrenchNav } from '../../nav';
 
 
 const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
   const { services } = Composer.useSite();
   const { service: composerService, actions } = Composer.useComposer();
-  const tabs = Burger.useTabs();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
   const [errors, setErrors] = React.useState<Client.StoreError>();
+  const { findTab, onTabClose } = useWrenchNav();
 
   const service = services[serviceId];
   let editor = (<></>);
@@ -39,14 +39,14 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
   const handleDelete = () => {
     setErrors(undefined);
     setApply(true);
-    var serviceTab = tabs.session.tabs.find(tab => tab.id === serviceId);
+    const serviceTab = findTab('ENTITY_EDITOR', serviceId);
     composerService.delete().service(serviceId)
-      .then(data => {
+      .then(async data => {
+        await actions.handleLoadSite(data);
         if (serviceTab) {
-          tabs.actions.handleTabClose(serviceTab);
+          onTabClose(serviceTab);
         }
         enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
-        actions.handleLoadSite(data);
         onClose();
       })
       .catch((error: Client.StoreError) => {
@@ -71,8 +71,9 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
 
 const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = ({ service }) => {
 
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceDelete' | 'ServiceCopy'>(undefined);
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
   const {handleDebugInit} = Composer.useDebug();
   const handleDialogClose = () => setDialogOpen(undefined);
   const { service: clientService, actions } = Composer.useComposer();
@@ -90,7 +91,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
         enqueueSnackbar(<FormattedMessage id="services.composer.copiedMessage" values={{ name: service.ast?.name, newName: name }} />);
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.services).filter(d => d.ast?.name === name);
-          nav.handleInTab({ article })
+          onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
       }).catch((error: Client.StoreError) => {
@@ -121,26 +122,24 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
     <>
       {dialogOpen === 'ServiceDelete' ? <ServiceDelete serviceId={service.id} onClose={handleDialogClose} /> : null}
       <Burger.TreeItemOption nodeId={service.id + 'edit-nested'}
-        color={Burger.colors.purple}
-        icon={EditIcon}
-        onClick={() => nav.handleInTab({ article: service })}
+        color={theme.palette.primary.light}
+        onClick={() => onNav({ type: 'ENTITY_EDITOR', id: service.id })}
         labelText={<FormattedMessage id="services.edit.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'simulate-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={ScienceOutlinedIcon}
         onClick={() => handleDebugInit(service.id)}
         labelText={<FormattedMessage id="services.simulate.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'delete-nested'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={DeleteOutlineOutlinedIcon}
         onClick={() => setDialogOpen('ServiceDelete')}
         labelText={<FormattedMessage id="services.delete.title" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={service.id + 'copyas-nested'}
-        color={Burger.colors.purple}
-        icon={EditIcon}
+        color={theme.palette.primary.light}
         onClick={() => setDialogOpen('ServiceCopy')}
         labelText={<FormattedMessage id="services.copyas.title" />}>
       </Burger.TreeItemOption>

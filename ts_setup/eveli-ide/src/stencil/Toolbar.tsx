@@ -1,108 +1,113 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
+import { IconButton, Typography } from '@mui/material';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import SearchIcon from '@mui/icons-material/Search';
+import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 
-import { Tabs, Tab, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom'
 
 import * as Burger from '@/burger';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-
 import { Composer, StencilApi } from './context';
-import { LocaleFilter } from './explorer/filter';
+import { EveliShellMiniBarRoot, useUtilityClasses, EveliShellMiniBarClassName } from '../burger/eveli-shell/useUtilityClasses';
+import { useNavigate } from '@tanstack/react-router';
+import { useStencilNav } from './nav';
 
 
-const Toolbar: React.FC<{}> = () => {
+export const Toolbar: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
   const composer = Composer.useComposer();
-  const tabsCtx = Burger.useTabs();
-  const secondaryCtx = Burger.useSecondary();
+  const { onNav, activeItem } = useStencilNav();
+  const secondaryCtx = Burger.useIconbar();
 
-  const tabsActions = tabsCtx.actions;
-  const secondaryActions = secondaryCtx.actions;
-
-
-
-  const active = tabsCtx.session.tabs.length ? tabsCtx.session.tabs[tabsCtx.session.history.open] : undefined;
-  const article = active ? composer.site.articles[active.id] : undefined;
-  const articlePagesView = active?.data?.nav?.type === "ARTICLE_PAGES";
+  const classes = useUtilityClasses();
+  const article = activeItem?.type === "ARTICLE_PAGES" ? composer.site.articles[activeItem.article] : undefined;
+  
   const unsavedPages = Object.values(composer.session.pages).filter(p => !p.saved);
   const unsavedArticlePages: Composer.PageUpdate[] = (article ? unsavedPages.filter(p => !p.saved).filter(p => p.origin.body.article === article.id) : []);
-
   const message = <FormattedMessage id="snack.page.savedMessage" />
 
-  function handleBack() {
-    navigate('/');
-  }
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+  const handleSearch = (_event: React.SyntheticEvent) => {
+    secondaryCtx.handleActiveId("toolbar.search")
+  };
 
-    if (newValue === 'toolbar.save' && articlePagesView && article) {
+
+  const handleSave = (_event: React.SyntheticEvent) => {
+    if (article) {
       if (unsavedArticlePages.length === 0) {
         return;
       }
-      const update: StencilApi.PageMutator[] = unsavedArticlePages.map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      const update: StencilApi.PageMutator[] = unsavedArticlePages
+        .map(p => ({ pageId: p.origin.id, locale: p.origin.body.locale, content: p.value, devMode: p.origin.body.devMode }));
+      
       composer.service.update().pages(update).then(success => {
-        enqueueSnackbar(message, { variant: 'success' });
-        composer.actions.handlePageUpdateRemove(success.map(p => p.id));
-      }).then(() => {
-        composer.actions.handleLoadSite();
+        return composer.actions.handleLoadSite().then(() => {
+          enqueueSnackbar(message, { variant: 'success' });
+          composer.actions.handlePageUpdateRemove(success.map(p => p.id));
+        })
       });
-
-
-    } else if (newValue === 'toolbar.activities') {
-      tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
-
-    } else if (newValue === 'toolbar.articles') {
-      secondaryCtx.actions.handleSecondary("toolbar.articles")
-
-    } else if (newValue === 'toolbar.search') {
-      secondaryCtx.actions.handleSecondary("toolbar.search")
-
-    } else if (newValue === 'toolbar.import') {
-      tabsActions.handleTabAdd({ id: 'import', label: 'Import' })
 
     }
   };
 
-
-  // open dashboard
-  React.useLayoutEffect(() => {
-    secondaryActions.handleSecondary("toolbar.articles")
-    tabsActions.handleTabAdd({ id: 'newItem', label: "Activities" });
-  }, [tabsActions, secondaryActions]);
-
-  const saveSx = unsavedPages.length ? { color: "secondary.light" } : undefined;
+  const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
   return (
-    <>
-        <Tabs orientation="vertical"
-          onChange={handleChange}
-          value={secondaryCtx.session.secondary}>
+    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
+      <div>
+        <IconButton onClick={() => onNav({ type: 'ACTIVITIES'})}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.activities' /></Typography>
+      </div>
 
-          <Tab value='toolbar.activities' icon={<DashboardIcon />} />
-          <Tab value='toolbar.save'
-            icon={<SaveIcon sx={saveSx} />}
-            disabled={unsavedArticlePages.length === 0}
-            label={unsavedPages.length ? (<Box sx={saveSx}>{unsavedPages.length}</Box>) : undefined} />
-          <Tab value='toolbar.search' icon={<SearchOutlinedIcon />} />
-          <Tab value='toolbar.articles' icon={<ArticleOutlinedIcon />} />
-          <Tab value='toolbar.help' icon={<HelpOutlineOutlinedIcon onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")} />} />
-          <Tab value='toolbar.back-to-tasks' icon={<HomeOutlinedIcon />} onClick={handleBack} />
-        </Tabs>
+      <div>
+        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.save' /></Typography>
+      </div>
 
-        <Box flexGrow={1} />
-        <LocaleFilter />
-    </>
+      <div>
+        <IconButton onClick={() => onNav({ type: 'SEARCH' })}><SearchIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.search' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/stencil',
+          to: '/secured/$locale'
+        })}>
+          <TaskOutlinedIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale/assets/stencil',
+          to: '/secured/$locale/assets/wrench',
+          search: { explorer: [] }
+        })}>
+          <BuildOutlinedIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
+      </div>
+
+      <div>
+        <IconButton disabled className={classes.itemActive}><EditNoteOutlinedIcon /></IconButton>
+        <Typography className={classes.textActive}><FormattedMessage id='toolbar.stencil' /></Typography>
+      </div>
+
+      <div>
+        <IconButton onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
+          <HelpOutlineOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.help' /></Typography>
+      </div>
+
+      <Burger.EveliLocales />
+    </EveliShellMiniBarRoot>
   );
 }
-
-
-export default Toolbar;

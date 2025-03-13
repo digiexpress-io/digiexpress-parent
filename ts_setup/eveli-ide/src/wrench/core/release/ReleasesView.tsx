@@ -1,19 +1,19 @@
 import React from 'react';
 
-import { Box, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import ReleasesTable from './ReleasesTable';
 import type { Release } from './release-types';
 import { ReleaseBranch } from './release-types';
 import { Composer } from '../context';
-import * as Burger from '@/burger';
+import { useWrenchNav } from '../nav';
 
 
 const ReleasesView: React.FC<{}> = () => {
 
   const { site } = Composer.useComposer();
-  const layout = Burger.useTabs();
+  const { onTabCurrentClose, onNav } = useWrenchNav();
   const releases = Object.values(site.tags);
   const branches = Object.values(site.branches);
 
@@ -43,16 +43,15 @@ const ReleasesView: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h3">
+      <Typography variant="h1">
         <FormattedMessage id="activities.releases.title" />: {releases.length}
       </Typography>
 
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc"} /></Typography>
       <Typography variant="body2"><FormattedMessage id={"activities.releases.desc.additional"} /></Typography>
 
-      <Button  onClick={() => layout.actions.handleTabCloseCurrent()} variant='text'><FormattedMessage id='button.cancel'/></Button>
-      <Button  onClick={() => layout.actions.handleTabAdd({ id: 'graph', label: "Release Graph" })} variant='text'><FormattedMessage id='activities.releases.graph'/></Button>
-      <Button  onClick={() => layout.actions.handleTabAdd({ id: 'compare', label: "Compare" })}  variant='text'><FormattedMessage id='releases.button.compare'/></Button>
+      <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+      <Button onClick={() => onNav({ type: 'COMPARE' })} variant='text'><FormattedMessage id='releases.button.compare' /></Button>
 
       <ReleasesTable releases={formattedReleases} />
     </>

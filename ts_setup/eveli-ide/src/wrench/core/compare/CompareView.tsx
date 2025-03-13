@@ -1,15 +1,18 @@
 import React from "react";
-
-import { FormattedMessage } from "react-intl";
-import { Composer } from "../context";
-import { HdesApi } from "../client";
 import { Box, Button, ListItemText, Typography, Dialog, DialogTitle, DialogContent, DialogActions, ListItem, List, ButtonGroup } from "@mui/material";
+import { FormattedMessage, useIntl } from "react-intl";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import * as Burger from '@/burger';
 
 import * as Diff2Html from "diff2html";
 import "diff2html/bundles/css/diff2html.min.css";
 import { OutputFormatType } from "diff2html/lib/types";
+
+import { Composer } from "../context";
+import { HdesApi } from "../client";
+import * as Burger from '@/burger';
+import { useWrenchNav } from "../nav";
+
+
 
 interface CompareDialogProps {
   open: boolean;
@@ -108,8 +111,9 @@ const CompareDialog: React.FC<CompareDialogProps> = ({ open, setOpen, diff }) =>
 
 
 const CompareView: React.FC = () => {
+  const intl = useIntl();
+
   const { service } = Composer.useComposer();
-  const layout = Burger.useTabs();
   const [base, setBase] = React.useState<string>("");
   const [target, setTarget] = React.useState<string>("");
   const [baseSummary, setBaseSummary] = React.useState<HdesApi.AstTagSummary>();
@@ -117,6 +121,7 @@ const CompareView: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(true);
   const [open, setOpen] = React.useState<boolean>(false);
   const [diff, setDiff] = React.useState<HdesApi.DiffResponse>();
+  const { onTabCurrentClose } = useWrenchNav();
 
   React.useEffect(() => {
     if (base) {
@@ -140,17 +145,17 @@ const CompareView: React.FC = () => {
   }, [base, target]);
 
   return (
-    <Box sx={{ paddingBottom: 1, m: 2 }}>
+    <Box sx={{ paddingBottom: 1 }}>
       <Box display="flex">
         <Box alignSelf="center">
-          <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "secondary.main" }}>
+          <Typography variant="h1" sx={{ p: 1 }}>
             <FormattedMessage id="activities.compare.title" />
-            <Typography variant="body2" sx={{ pt: 1 }}><FormattedMessage id={"activities.compare.desc"} /></Typography>
+            <Typography variant="body2"><FormattedMessage id={"activities.compare.desc"} /></Typography>
           </Typography>
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Button  onClick={() => layout.actions.handleTabCloseCurrent()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button  onClick={() => onTabCurrentClose()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
           <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>

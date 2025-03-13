@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 import { Composer, StencilApi } from '../context';
 import { LocaleLabels } from '../locale';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 const selectSub = { ml: 2, color: "article.dark" }
 
@@ -29,13 +30,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [flowName, setFlowName] = React.useState<string>('');
   const [formName, setFormName] = React.useState<string>('');
   const [formTag, setFormTag] = React.useState<string>('');
-  const [allTags, setAllTags] = React.useState<StencilApi.DialobTagAsset[]>([]);
-  const [allFlows, setAllFlows] = React.useState<string[]>([]);
 
-  React.useEffect(()=> {
-    service.assets().dialobForms().then(setAllTags);
-    service.assets().flowNames().then(setAllFlows);
-  }, []);
+  const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
+  const { allTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
+
 
   const handleCreate = () => {
     const entity: StencilApi.CreateWorkflow = { 

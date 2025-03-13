@@ -1,96 +1,123 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, TextField, TextFieldProps, alpha, Typography, Button } from '@mui/material';
-import { styled } from "@mui/material/styles";
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Button, ListItemText, MenuItem, MenuList } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
+import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
+
+import { useIntl } from 'react-intl';
 
 
-import { FlowExplorer, ServiceExplorer, DecisionExplorer } from './explorer';
-import { Composer } from './context';
+import { useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
+import logo from '../../uiDev/logoLifeDigitalDark.svg';
+import * as Burger from '@/burger';
+import { useWrenchNav } from './nav';
+import { useActivities, ActivityProps } from './Activities';
 
 
-const TextFieldRoot = styled(TextField)<TextFieldProps>(({ theme }) => ({
 
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.secondary.main,
-  '& .MuiOutlinedInput-input': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiOutlinedInput-root': {
-    fontSize: '10pt',
-    height: '2rem',
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.secondary.contrastText,
-    },
-  },
-  '& .MuiFormLabel-root': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiFormHelperText-root': {
-    color: theme.palette.primary.contrastText,
-    marginLeft: 1
+
+
+const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }> = (props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const handleClose = () => { 
+    setOpen(false) 
+    //props.onClick();
+  };
+  const handleOpen = () => {
+    setOpen(true);
   }
-}));
-
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.primary.contrastText,
-    fontSize: '9pt',
-    paddingLeft: '.5rem',
-    paddingRight: '.5rem'
-  },
-  "&.Mui-selected": {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
-  },
-}));
-
-const StyledTabs = styled(Tabs)<TabsProps>(() => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: "unset",
-  }
-}));
-
-
-const Secondary: React.FC<{}> = () => {
-  const intl = useIntl();
-  const activeBranch = Composer.useBranchName();
-  const branchName = activeBranch || intl.formatMessage({ id: 'explorer.active.branch.default' });
-  const getLabel = (id: string) => intl.formatMessage({ id });
-
-  const [tab, setTab] = React.useState("tabs.flows")
-  const [searchString, setSearchString] = React.useState("");
-
-  let component = <></>;
-  if (tab === 'tabs.flows') {
-    component = (<FlowExplorer />)
-  } else if (tab === 'tabs.services') {
-    component = (<ServiceExplorer />)
-  } else if (tab === 'tabs.decisions') {
-    component = (<DecisionExplorer />);
-  }
-
-  return (<Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>
-    <Box display="flex" flexDirection='column'>
-      
-      <TextFieldRoot sx={{mx: 1}} focused placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
-
-      <StyledTabs value={tab} onChange={(_event: any, value: string) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.flows")} value='tabs.flows' />
-        <StyledTab label={getLabel("explorer.tabs.services")} value='tabs.services' />
-        <StyledTab label={getLabel("explorer.tabs.decisions")} value='tabs.decisions' />
-      </StyledTabs>
-
-    </Box>
-    {component}
-    <Box sx={{ position: 'absolute', bottom: '2%', left: '15%' }}>
-      <Typography sx={{ color: 'white' }}><FormattedMessage id='explorer.active.branch' values={{ name: branchName }} /></Typography>
-    </Box>
-
-  </Box>)
+  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  return (
+    <>
+      <Composer onClose={handleClose}/>
+      <MenuItem onClick={handleOpen}>
+        <ListItemText>{props.data.buttonCreate} {props.data.title}</ListItemText>
+      </MenuItem>
+    </>
+  )
 }
-export { Secondary }
+
+
+export const Secondary: React.FC<{}> = () => {
+  const intl = useIntl();
+  const classes = useUtilityClasses();
+
+  const { onNav, activeItem } = useWrenchNav();
+  const activities = useActivities();
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  function handleComposeSelectClick(event: React.MouseEvent<HTMLButtonElement>) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleComposeSelectClose() {
+    setAnchorEl(null);
+  }
+
+  return (
+    <>
+      
+      <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
+        <MenuList>
+          {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
+        </MenuList>
+      </Burger.EveliShellCompose>
+
+      <Burger.EveliShellExplorer>
+        <div className={classes.logoContainer}>
+          <img src={logo} className={classes.logo} />
+        </div>
+
+        <Button startIcon={<CreateOutlinedIcon />}
+          className={classes.composeButton}
+          onClick={handleComposeSelectClick}>
+          {intl.formatMessage({ id: 'menu.compose' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'FLOWS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<AccountTreeOutlinedIcon />}
+          onClick={() => onNav({ type: 'FLOWS' })}>
+          {intl.formatMessage({ id: 'menu.flows' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'DECISIONS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<TableChartOutlinedIcon />}
+          onClick={() => onNav({ type: 'DECISIONS' })}>
+          {intl.formatMessage({ id: 'menu.decisions' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<CodeOutlinedIcon />}
+          onClick={() => onNav({ type: 'SERVICES' })}>
+          {intl.formatMessage({ id: 'menu.services' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'DEBUG' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<BugReportOutlinedIcon />}
+          onClick={() => onNav({ type: 'DEBUG' })}>
+          {intl.formatMessage({ id: 'menu.debug' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'COMPARE' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<CompareArrowsOutlinedIcon />}
+          onClick={() => onNav({ type: 'COMPARE' })}>
+          {intl.formatMessage({ id: 'menu.compare' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<NewReleasesOutlinedIcon />}
+          onClick={() => onNav({ type: 'RELEASES' })}>
+          {intl.formatMessage({ id: 'menu.releases' })}
+        </Button>
+      </Burger.EveliShellExplorer>
+    </>
+  )
+}
+
 
 

@@ -19,7 +19,6 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     setEnabled(undefined);
 
     isTaskFeedbackEnabled(props.taskId).then((enabled) => {
-
       if(enabled) {
         getOneFeedback(props.taskId).then(setFeedback)
       }

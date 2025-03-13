@@ -39,6 +39,7 @@ import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
+import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
@@ -84,6 +85,10 @@ public class EveliAutoConfigWorker {
   public PortalAccessValidator portalAccessValidator(ProcessClient client) {
       return new PortalAccessValidatorImpl(client);
   }
+  @Bean
+  public WorkerIamController workerIamController(AuthClient authClient) {
+    return new WorkerIamController(authClient);
+  } 
 
   @Bean 
   public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {

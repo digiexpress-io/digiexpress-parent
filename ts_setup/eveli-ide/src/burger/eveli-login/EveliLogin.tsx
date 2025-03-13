@@ -1,13 +1,15 @@
 import React from 'react';
-import { useThemeProps, Button, SvgIconTypeMap } from '@mui/material';
+import { useThemeProps, Button, SvgIconTypeMap, Typography, Stack } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { FormattedMessage } from 'react-intl';
-import { EveliLoginRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { EveliLoginRoot, EveliLogoutButton, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 import { EveliOverridableComponent } from '../api-variants';
-import { useConfig } from '../../frontdesk/context/ConfigContext';
-import { useUserInfo } from '../../frontdesk/context/UserContext';
+
+import { useIam } from '../api-iam';
+import { useConfig } from '../api-config';
 
 
 export interface EveliLoginProps {
@@ -27,37 +29,30 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
   }
 
   const config = useConfig();
-  const userInfo = useUserInfo();
-  const label = userInfo.isAuthenticated() ? 'explorer.logout' : 'explorer.login';
-  const location = userInfo.isAuthenticated() ? config.logoutUrl || '/logout' : config.loginUrl || '/oauth2/authorization/oidcprovider';
+  const { user } = useIam();
+  const location = user.authenticated ? config.logoutUrl : config.loginUrl;
 
   const { icon: StartIcon = PersonOutlinedIcon } = props;
   const Root = props.component ?? EveliLoginRoot;
 
+  function handleOnClick() {
+    window.location.href = location
+  }
+
   return (
     <>
       <Root ownerState={ownerState} className={classes.root}>
-        <Button type='submit' variant='contained' startIcon={<StartIcon />} onClick={() => window.location.href = location}>
-          <FormattedMessage id={label} />
-        </Button>
+        {user.authenticated ? 
+        (<EveliLogoutButton className={classes.logout} variant="text" startIcon={<LogoutIcon />} onClick={handleOnClick}>
+          <Stack spacing={0} alignItems="flex-start">
+            <Typography><FormattedMessage id={'menu.logout'} /></Typography>
+            <Typography variant="caption">{user.name}</Typography>
+          </Stack>
+        </EveliLogoutButton>) :
+        (<Button type='submit' variant='contained' startIcon={<StartIcon />} onClick={handleOnClick}>
+          <FormattedMessage id='explorer.login' />
+        </Button>)}
       </Root>
     </>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

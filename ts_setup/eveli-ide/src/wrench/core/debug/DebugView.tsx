@@ -1,7 +1,9 @@
 import React from 'react';
-import { Box, TableContainer, Table, TableBody, RadioGroup, FormControlLabel, Button, Checkbox, Radio,  Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import {
+  Box, TableContainer, Typography, Table, TableBody, RadioGroup, FormControlLabel,
+  Button, Checkbox, Radio, Dialog, DialogTitle, DialogContent, DialogActions
+} from '@mui/material';
 
-import * as Burger from '@/burger';
 import { Composer } from '../context';
 import { HdesApi } from '../client';
 import { DebugDrawer } from './drawer/DebugDrawer';
@@ -16,6 +18,7 @@ import { DebugInput } from './DebugInput';
 import { DebugOutput } from './outputs/DebugOutput';
 import { DebugOptionType } from './api';
 import { useIntl, FormattedMessage } from 'react-intl';
+import { useWrenchNav } from '../nav';
 
 
 const getData = (session: Composer.Session): {
@@ -42,7 +45,8 @@ const getData = (session: Composer.Session): {
 
 const DebugView: React.FC<{}> = ({ }) => {
   const { service, session, actions } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
+
   const { ast, debug, entity, debugValues } = getData(session);
   const [option, setOption] = React.useState<DebugOptionType | undefined>();
   const [dialogShow, setDialogShow] = React.useState(false);
@@ -230,8 +234,9 @@ const DebugView: React.FC<{}> = ({ }) => {
     </>
   );
 
-
+  //nav.handleInTab({ article: entity })}
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
+    <Typography variant='h1'>{intl.formatMessage({ id: 'main.debug' })}</Typography>
 
     <DebugDrawer selected={selected} open={option === "DRAWER"} onClose={() => setOption(undefined)} onSelect={setOption} />
 
@@ -248,7 +253,7 @@ const DebugView: React.FC<{}> = ({ }) => {
             (<Button variant='contained' children={`${ast?.bodyType} - ${ast?.name}`} onClick={() => setOption('SELECT_ASSET')} />) :
             (<Button variant='contained'  onClick={() => setOption('SELECT_ASSET')} ><FormattedMessage id='debug.toolbar.noAsset'/></Button>)
           }
-          <Button variant='contained' disabled={selected ? false : true}  onClick={() => entity && nav.handleInTab({ article: entity })} sx={{ ml: 1 }} ><FormattedMessage id='debug.toolbar.openAsset'/></Button>
+          <Button variant='contained' disabled={selected ? false : true} onClick={() => entity && onNav({ type: 'ENTITY_EDITOR', id: entity.id })} sx={{ ml: 1 }} ><FormattedMessage id='debug.toolbar.openAsset' /></Button>
           <Button variant='contained'  onClick={() => setOption('DRAWER')} sx={{ ml: 1 }} ><FormattedMessage id='debug.toolbar.options'/></Button>
           <Button variant='contained' disabled={selected ? false : true}  onClick={() => handleExecute()} sx={{ ml: 1 }} ><FormattedMessage id='debug.toolbar.execute'/></Button>
           {inputType === 'CSV' && debug?.debug?.bodyCsv ? <Button variant='contained' disabled={selected ? false : true}  onClick={() => setDialogShow(true)} sx={{ ml: 1 }} ><FormattedMessage id='debug.toolbar.download'/></Button> : null}

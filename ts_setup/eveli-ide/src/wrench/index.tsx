@@ -1,49 +1,13 @@
 
-import React from 'react';
 import { Main } from './core/Main';
+import { Tabs } from './core/Tabs';
 import { Secondary } from './core/Secondary';
 import { Composer } from './core/context';
 
-
+export * from './core/nav';
 import WrenchClient, { HdesApi } from './core/client';
 import Toolbar from './core/Toolbar';
 
-
-import { SnackbarProvider } from 'notistack';
-import * as Burger from '@/burger';
-import { BurgerApi } from '@/burger';
-
-
-interface WrenchComposerProps {
-  service: HdesApi.Service,
-  locked?: boolean;
-};
-
-
-const WrenchComposer: React.FC<WrenchComposerProps> = ({ service, locked }) => {
-  if (locked === true) {
-    return (<div>Content editing locked by deployment.</div>)
-  }
-
-  const composer: BurgerApi.App<Composer.ContextType> = {
-    id: "wrench-composer",
-    components: { primary: Main, secondary: Secondary, toolbar: Toolbar },
-    state: [
-      (children: React.ReactNode, restorePoint?: BurgerApi.AppState<Composer.ContextType>) => (<>{children}</>),
-      () => ({})
-    ]
-  };
-  return (
-    /* @ts-ignore */
-    <SnackbarProvider maxSnack={3}>
-      <Composer.Provider service={service} >
-        <Burger.Provider children={[composer]} secondary='toolbar.activities' />
-      </Composer.Provider>
-    </SnackbarProvider>
-  );
-}
-
-
-
-export type { WrenchComposerProps, HdesApi };
-export { WrenchComposer, WrenchClient };
+export type { HdesApi };
+export const WrenchComponents = { Toolbar, Main, Secondary, Tabs };
+export { WrenchClient, Composer };

@@ -1,69 +1,24 @@
 
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Container } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { useIntl } from 'react-intl';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
 //import { ReviewDialog } from './ReviewDialog';
-import { useFetch } from '../../hooks/useFetch';
-
-import { ROLE_AUTHORIZED } from '../../util/rolemapper';
 
 import { AttachmentContextProvider } from '../../context/AttachmentContext';
-import { useConfig } from '../../context/ConfigContext';
-import { SessionRefreshContext } from '../../context/SessionRefreshContext';
 
-import { GroupMember } from '../../types/GroupMember';
-import { UserGroup } from '../../types/UserGroup';
 import { TaskLink } from '../../types/task/TaskLink';
-import { Group as OrgGroup } from '../../types/Group';
-
 import { TaskView } from './TaskView';
 import { TasksComponentResolver } from './LinkResolver';
 
 
-type Props = {
-  taskId?: number
-}
-
-export const TaskContainer: React.FC<Props> = (props) => {
-  const params = useParams();
-  const { response: groupResponse } = useFetch<OrgGroup[]>(`/groupsList`);
-  const intl = useIntl();
-  const { serviceUrl } = useConfig();
-  const session = useContext(SessionRefreshContext);
-
+export const TaskContainer: React.FC<{ taskId?: string }> = (props) => {
   let id: any = props.taskId;
-  if (!id) {
-    id = params.id;
-  }
 
-  const groups: UserGroup[] = useMemo(() => {
-    if (groupResponse) {
-      let result = groupResponse.map(response => {
-        return {
-          id: response.name,
-          groupName: response.description
-        }
-      });
-      result.push({ id: ROLE_AUTHORIZED, groupName: intl.formatMessage({ id: 'task.role.assignedAllUsers' }) });
-      return result;
-    }
-    return [];
-  }, [groupResponse, intl]);
-
-  const getUsers = useCallback(async (groupName: string[]): Promise<GroupMember[]> => {
-    if (!groupName || groupName.length === 0) {
-      return [];
-    }
-    const filteredGroups = groupName.filter(name => name !== ROLE_AUTHORIZED).join(',');
-    if (!filteredGroups) {
-      return [];
-    }
-    return await session.cFetch(`/groupMembership?groupName=${filteredGroups}`)
-      .then(response => response.json());
-  }, [session]);
+  const { groups } = useFetch('$org/groupList.GET', {});
+  const { getUsers } = useFetch('$org/groupMembership.GET', {});
+  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
 
   const openTaskLinkCallback = (link: TaskLink) => {
     setLink(link);
@@ -71,10 +26,7 @@ export const TaskContainer: React.FC<Props> = (props) => {
       setReviewDialogOpen(true);
     }
   }
-  const pdfTaskLinkCallback = (link: TaskLink, taskId: number) => {
-    let url = `${serviceUrl}worker/rest/api/pdf?taskId=${taskId}&questionnaireId=${link.linkAddress}`;
-    window.open(url);
-  }
+
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [link, setLink] = useState<TaskLink | null>(null);

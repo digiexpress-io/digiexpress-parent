@@ -1,11 +1,10 @@
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import EditIcon from '@mui/icons-material/ModeEdit';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
@@ -15,25 +14,24 @@ import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
 
 
-
-function WorkflowItem(props: {
+interface WorkflowItemProps {
   labelText: string;
   nodeId: string;
   children?: React.ReactChild;
   devMode?: boolean,
   onClick: () => void;
-}) {
+}
 
+const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
+  const theme = useTheme();
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={Burger.colors.red} sx={{ pl: 1, mr: 1 }} />
-          <Typography noWrap={true} maxWidth="300px" variant="body2"
-            sx={{ fontWeight: "inherit", flexGrow: 1 }}
-          >
+          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={theme.palette.primary.dark} sx={{ pl: 1, mr: 1 }} />
+          <Typography noWrap={true} sx={{ fontWeight: "inherit", flexGrow: 1 }}>
             {props.labelText}
           </Typography>
         </Box>
@@ -51,13 +49,15 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = (props) => {
+  const theme = useTheme();
+
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
+          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -80,30 +80,26 @@ const ArticleItem: React.FC<{
   nodeId?: string,
   options?: ArticleItemOptions
 }> = ({ articleId, nodeId, options }) => {
+  const theme = useTheme();
 
   const { session, isArticleSaved } = Composer.useComposer();
   const view = session.getArticleView(articleId);
   const { article, pages, workflows, links } = view;
   const saved = isArticleSaved(article);
 
-
-  const isPageSaved = (pageView: Composer.PageView) => {
-    const update = session.pages[pageView.page.id];
-    if (!update) {
-      return true;
-    }
-    return update.saved;
-  }
-
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
-      <Burger.TreeItem itemId={nodeId ? nodeId : article.id} labelText={articleName.name} labelIcon={article.body.devMode ? ConstructionIcon : ArticleOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
+      <Burger.TreeItem itemId={nodeId ? nodeId : article.id}
+        labelText={articleName.name}
+        labelIcon={article.body.devMode ? ConstructionIcon : MenuBookOutlinedIcon}
+      //labelcolor={saved ? "explorerItem" : "secondary.light"}
+      >
 
         {/** Article options */
           options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
             labelText={<FormattedMessage id="options" />}
-            labelIcon={EditIcon}>
+          >
             <ArticleOptions article={article} />
           </Burger.TreeItem>) : null
         }
@@ -111,11 +107,9 @@ const ArticleItem: React.FC<{
         {/** Pages */}
         <Burger.TreeItem itemId={article.id + 'pages-nested'}
           labelText={<FormattedMessage id="pages" />}
-          labelIcon={FolderOutlinedIcon}
           labelInfo={`${pages.length}`}
           labelcolor={saved ? "page" : "secondary.light"}>
           {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
-            saved={isPageSaved(pageView)}
             article={view}
             page={pageView} />))}
         </Burger.TreeItem>
@@ -124,9 +118,8 @@ const ArticleItem: React.FC<{
         {/** Workflows options */
           options ? (<Burger.TreeItem itemId={article.id + 'workflows-nested'}
             labelText={<FormattedMessage id="services" />}
-            labelIcon={FolderOutlinedIcon}
             labelInfo={`${workflows.length}`}
-            labelcolor={Burger.colors.red}>
+            labelcolor={theme.palette.primary.dark}>
 
             {workflows
               .map((w) => ({ w, name: session.getWorkflowName(w.workflow.id)?.name }))
@@ -145,9 +138,8 @@ const ArticleItem: React.FC<{
         {/** Links options */
           options ? (<Burger.TreeItem itemId={article.id + 'links-nested'}
             labelText={<FormattedMessage id="links" />}
-            labelIcon={FolderOutlinedIcon}
             labelInfo={`${links.length}`}
-            labelcolor={Burger.colors.purple}>
+            labelcolor={theme.palette.primary.light}>
 
             {links
               .map((w) => ({ w, name: session.getLinkName(w.link.id)?.name }))
@@ -156,7 +148,7 @@ const ArticleItem: React.FC<{
               .map(view => (<LinkItem key={view.link.id}
                 labelText={session.getLinkName(view.link.id).name}
                 nodeId={view.link.id}
-                onClick={() => options.setEditLink(view.link.id)} 
+                onClick={() => options.setEditLink(view.link.id)}
                 devMode={view.link.body.devMode} />)
               )}
           </Burger.TreeItem>) : null

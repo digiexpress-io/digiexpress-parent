@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 
 import { Composer, StencilApi } from '../context';
+import { useStencilNav } from '../nav';
+
 import * as Burger from '@/burger';
 
 
@@ -11,28 +13,37 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
   const [pageId, setPageId] = React.useState('');
-  const tabs = Burger.useTabs();
+  const { onTabClose, findTab } = useStencilNav();
 
   const handleDelete = () => {
-    var pageTab = tabs.session.tabs.find(tab => tab.id === props.articleId)
-    service.delete().page(pageId).then(_success => {
+    const pageTab =  findTab('ARTICLE_PAGES', props.articleId)
+
+    service.delete().page(pageId).then(async _success => {
       if (pageTab) {
-        tabs.actions.handleTabClose(pageTab);
+        onTabClose(pageTab);
       }
+
+      await actions.handleLoadSite();
       enqueueSnackbar(message, { variant: 'warning' });
       props.onClose();
-      actions.handleLoadSite();
     })
   }
 
   const message = <FormattedMessage id="snack.page.deletedMessage" />
   const articlePages: StencilApi.Page[] = Object.values(site.pages).filter(p => p.body.article === props.articleId);
 
+  const articleName = articlePages.map(articlePage => {
+    const articleId = articlePage.body.article;
+    const article = site.articles[articleId];
+    return article.body.name;
+  });
+
+
   return (
     <Dialog open={true} onClose={props.onClose}>
-      <DialogTitle><FormattedMessage id='pages.delete' /></DialogTitle>
+      <DialogTitle><FormattedMessage id='page.delete.dialog.title' />{articleName}</DialogTitle>
       <DialogContent>
-        <FormattedMessage id='pages.delete.message' />
+        <FormattedMessage id='page.delete.description' />
         <Burger.Select
           selected={pageId}
           onChange={setPageId}
@@ -48,7 +59,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={handleDelete} disabled={!pageId}>
-          <FormattedMessage id='button.delete'/>
+          <FormattedMessage id='button.delete.page' />
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -10,18 +11,19 @@ import { ArticleEdit, ArticleDelete } from '../../article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../page';
 import { Composer, StencilApi } from '../../context';
 import * as Burger from '@/burger';
+import { useStencilNav } from '../../nav';
 
 interface ArticleOptionsProps {
   article: StencilApi.Article,
 
 }
 const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
-
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ArticleEdit' | 'NewPage' | 'PageEdit' | 'PageEditDev' | 'PageDelete' | 'ArticleDelete' | 'LinkComposer' | 'WorkflowComposer'>(undefined);
 
   const { site } = Composer.useComposer();
   const handleDialogClose = () => setDialogOpen(undefined);
-  const { handleInTab } = Composer.useNav();
+  const { activeItem, onNav } = useStencilNav();
 
   return (
     <>
@@ -74,30 +76,30 @@ const ArticleOptions: React.FC<ArticleOptionsProps> = ({ article }) => {
         labelText={<FormattedMessage id="pages.delete" />}>
       </Burger.TreeItemOption>
       <Burger.TreeItemOption nodeId={article.id + 'resource.create.workflows'}
-        color={Burger.colors.red}
+        color={theme.palette.primary.dark}
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('WorkflowComposer')}
         labelText={<FormattedMessage id="services.add" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.workflows'}
-        color={Burger.colors.red}
+        color={theme.palette.primary.dark}
         icon={EditIcon}
-        onClick={() => handleInTab({ article, type: "ARTICLE_WORKFLOWS" })}
+        onClick={() => onNav({ article: article.id, type: "ARTICLE_WORKFLOWS" })}
         labelText={<FormattedMessage id="services.change" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.create.links'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={AddCircleOutlineIcon}
         onClick={() => setDialogOpen('LinkComposer')}
         labelText={<FormattedMessage id="link.create" />}>
       </Burger.TreeItemOption>
 
       <Burger.TreeItemOption nodeId={article.id + 'resource.edit.links'}
-        color={Burger.colors.purple}
+        color={theme.palette.primary.light}
         icon={EditIcon}
-        onClick={() => handleInTab({ article, type: "ARTICLE_LINKS" })}
+        onClick={() => onNav({ article: article.id, type: "ARTICLE_LINKS" })}
         labelText={<FormattedMessage id="links.change" />}>
       </Burger.TreeItemOption>
 

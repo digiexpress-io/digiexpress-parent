@@ -7,14 +7,14 @@ import { TaskLink } from '../../types/task/TaskLink';
 
 export type TaskLinkProps = {
   link: TaskLink
-  taskId?: number
+  taskId?: string
 }
 
 export interface TaskLinkOpenCallback {
   (link: TaskLink):void
 }
 export interface TaskLinkPdfCallback {
-  (link: TaskLink, taskId: number):void
+  (link: TaskLink, taskId: string):void
 }
 
 type Props = {

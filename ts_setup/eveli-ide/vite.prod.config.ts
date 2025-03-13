@@ -1,13 +1,13 @@
 import { ConfigEnv, UserConfig } from 'vite';
 import dts from 'vite-plugin-dts'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
-
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 import { alias } from './vite.paths.config';
 import { intlTsVite } from './intl-vite-plugin';
+import { fetchVite } from './fetch-vite-plugin';
 
 // https://vitejs.dev/config/
 export default function defineConfig(props: ConfigEnv): UserConfig {
@@ -19,10 +19,11 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     resolve: { alias },
     plugins: [
       react({ }),
-      dts({ rollupTypes: true }),
+      dts({ rollupTypes: false }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
-      intlTsVite({})
+      intlTsVite({}),
+      fetchVite()
     ],
     
     build: {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { UserGroup } from '../types/UserGroup';
-import { User } from '../types';
+
 import { TaskLinkProps } from '../components/task/TaskLinkComponent';
+import { IamApi } from '@/burger';
 
 export interface ComponentResolver {
   taskLinkResolver?: (props:TaskLinkProps)=>JSX.Element|null;
-  groupListItemResolver?:(groups:UserGroup[])=>JSX.Element[];
-  userListItemResolver?:(users?:User[])=>JSX.Element[];
+  groupListItemResolver?:(groups: IamApi.UserGroup[])=>JSX.Element[];
+  userListItemResolver?:(users?: IamApi.User[])=>JSX.Element[];
 }

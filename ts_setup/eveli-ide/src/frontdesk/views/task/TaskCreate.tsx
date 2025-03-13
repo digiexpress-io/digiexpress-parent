@@ -16,7 +16,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from '@tanstack/react-router';
 
 
 import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
@@ -25,16 +25,14 @@ import { Priority } from '../../components/task/Priority';
 import { Datepicker } from '../../components/Datepicker';
 import { TaskLinkProps } from '../../components/task/TaskLinkComponent';
 
-import { withRouter, WithRouterProps } from '../../hooks/withRouter';
+
 
 import { TaskRoleDialog } from './TaskRoleDialog';
 import { AttachmentTable } from './AttachmentTable';
 import { CommentThread } from './CommentThread';
 
-import { Attachment, User } from '../../types';
-import { UserGroup } from '../../types/UserGroup';
+import { Attachment } from '../../types';
 import { Task, TaskStatus } from '../../types/task/Task';
-import { GroupMember } from '../../types/GroupMember';
 import { Comment } from '../../types/task/Comment';
 
 import { useAttachmentConfig } from '../../context/AttachmentContext';
@@ -44,6 +42,7 @@ import * as Yup from 'yup';
 import { TaskFeedback } from './TaskFeedback';
 import { StatusIndicator } from '../../../feedback';
 import { DialobReview } from '../../../dialob-review';
+import { IamApi } from '@/burger';
 
 
 
@@ -96,6 +95,18 @@ const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
       <InfoOutlinedIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
       <Typography variant='subtitle2'><FormattedMessage id={id} /></Typography>
     </Paper>)
+}
+
+
+const NavigateToTasksButton: React.FC<{ }> = ({  }) => {
+  const navigate = useNavigate();
+  function handleBack() {
+    navigate({
+      from: '/secured/$locale/worker',
+      to: '/secured/$locale/worker/tasks'
+    });
+  }
+  return (<Button onClick={handleBack}  variant='text'><FormattedMessage id='taskButton.cancel'/></Button>)
 }
 
 
@@ -177,8 +188,8 @@ const classes = {
 
 type Props = {
   id: string
-  groups: UserGroup[]
-  getUsers: (groupName: string[]) => Promise<GroupMember[]>
+  groups: IamApi.UserGroup[]
+  getUsers: (groupName: string[]) => Promise<IamApi.GroupMember[]>
   editTask: Task
   handleSubmit: (task: Task) => void
   cancel: () => void
@@ -187,30 +198,34 @@ type Props = {
   comments: Comment[]
   reloadComments: () => void
   userSelectionFree?: boolean
-  currentUser: Partial<User>
+  currentUser: Partial<IamApi.User>
   supressConfirmation?: boolean | undefined
 }
 
-type AllProps = Props & WrappedComponentProps & WithRouterProps;
+type AllProps = Props & WrappedComponentProps;
 type State = {
-  userList: GroupMember[];
+  userList: IamApi.GroupMember[];
   dialogOpen: boolean;
 }
 
 const minLength = 3;
 
 
-const FeedbackButton: React.FC<{ taskId: number | undefined }> = ({ taskId }) => {
+const FeedbackButton: React.FC<{ taskId: string | undefined }> = ({ taskId }) => {
   const navigate = useNavigate();
 
   function handleFeedback() {
-    navigate(`/feedback/${taskId}`);
+    navigate({
+      from: '/secured/$locale/worker',
+      params: { feedbackId: `${taskId}`},
+      to: '/secured/$locale/worker/feedback/$feedbackId'
+    });
   }
 
   return (<Button  onClick={handleFeedback} variant='text'><FormattedMessage id='task.form.feedback.manage'/></Button>);
 }
 
-const FormReview: React.FC<{ sessionId: string | undefined, taskId: number | undefined }> = ({ sessionId, taskId }) => {
+const FormReview: React.FC<{ sessionId: string | undefined, taskId: string | undefined }> = ({ sessionId, taskId }) => {
   const [open, setOpen] = React.useState(false);
 
   if (!sessionId || !taskId) {
@@ -332,7 +347,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
   }
 
-  handleRoleChange = (roles: UserGroup[],
+  handleRoleChange = (roles: IamApi.UserGroup[],
     setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void) => {
     const groupList = roles.map(r => r.id);
     setFieldValue("assignedRoles", groupList);
@@ -371,6 +386,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     const { formatMessage } = this.props.intl;
     const readonly = (editTask.status === TaskStatus.COMPLETED ||
       editTask.status === TaskStatus.REJECTED);
+
+
     return (
       <Formik
         initialValues={{
@@ -394,9 +411,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
         {
           ({ values, submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
             <Form>
-              <PageLeavingConfirmation navigate={(path) => this.props.navigate(path)}
-                navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true}
-              />
+              <PageLeavingConfirmation  navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
               <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="center">
                   <Grid2 size={{ xs: 12, md: 4 }}>
@@ -674,7 +689,9 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
               <Box sx={{ position: 'sticky', bottom: 10, width: 'fit-content', float: 'right' }}>
                 <Paper elevation={2} sx={{ padding: 1, marginRight: 2 }}>
                   <Stack direction="row" spacing={1} justifyContent='flex-end'>
-                    <Button onClick={() => this.props.navigate('/ui/tasks')}  variant='text'><FormattedMessage id='taskButton.cancel'/></Button>
+                    
+                    <NavigateToTasksButton />
+
                     {(!editTask.keyWords || editTask.keyWords.length === 0) && (
                       <Box display='flex' gap={1}>
                         <FormReview sessionId={editTask.questionnaireId} taskId={editTask.id} />
@@ -687,7 +704,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
               </Box>
               {this.state.dialogOpen && <TaskRoleDialog
                 assignedRoles={values.assignedRoles} groups={this.props.groups}
-                acceptDialog={(roles: UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
+                acceptDialog={(roles: IamApi.UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
                 closeDialog={this.onDialogClose} />
               }
             </Form>
@@ -699,4 +716,4 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
   }
 }
 
-export const TaskCreate = injectIntl(withRouter(TaskCreateInternal))
+export const TaskCreate = injectIntl(TaskCreateInternal)

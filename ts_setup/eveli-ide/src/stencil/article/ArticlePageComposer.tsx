@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import { Composer, StencilApi } from '../context';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import { colors } from '@/burger'
-
+import ArticlePageItem from '../explorer/article/ArticlePageItem';
+import { SimpleTreeView } from '@mui/x-tree-view';
 
 const regexp_starts_with = new RegExp('^# .');
 
@@ -39,14 +39,21 @@ const templateCommand = (template: StencilApi.Template): ICommand => ({
   },
 });
 
-const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site) => {
+
+const MdLocaleSelect: React.FC<{locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site, onClick: () => void}> = ({ locale, color, site, onClick }) => {
+  return (
+    <div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center', color }} onClick={onClick}>
+      <FormattedMessage id='pages.locale.selected' defaultMessage='selected'/> {locale?.body.value}
+    </div>);
+}
+
+const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site, onClick: () => void) => {
   const localeTitle: ICommand = {
     name: locale?.body.value,
     groupName: 'title',
     keyCommand: 'title1',
-    buttonProps: { 'aria-label': locale?.body.value },
-    icon: (<div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center', color }}>{locale?.body.value}</div>)
-
+    buttonProps: { },
+    icon: (<MdLocaleSelect locale={locale} color={color} site={site} onClick={onClick}/>)
   };
 
 
@@ -87,12 +94,34 @@ type PageComposerProps = {
 }
 
 
+const ArticlePageSelect: React.FC<{ articleId: StencilApi.ArticleId, open: boolean, onClose: () => void }> = ({ open, articleId, onClose }) => {
+  const { session } = Composer.useComposer();
+  const view = session.getArticleView(articleId);
+
+  return (
+    <Dialog open={open}>
+      <DialogTitle>
+        <FormattedMessage id='pages.select.locale' defaultMessage='Select article locale'/>
+      </DialogTitle>
+      <DialogContent>
+        <SimpleTreeView>
+          {view.pages.map(pageView => (<ArticlePageItem key={pageView.page.id} article={view} page={pageView} />))}
+        </SimpleTreeView>
+      </DialogContent>
+      <DialogActions>
+        <Button variant='contained' onClick={onClose}><FormattedMessage id='button.close'/></Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 
 const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, locale2 }) => {
+
   const theme = useTheme();
   const { actions, session } = Composer.useComposer();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [localeSelect, setLocaleSelect] = React.useState(false);
   const [errors, setErrors] = React.useState(new Set<StencilApi.PageId>());
 
   const { site } = session;
@@ -139,8 +168,13 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
   if (value2 === undefined || !page2) {
     return (<>
       <Box data-color-mode="light" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
-        <MDEditor key={1} value={value1} onChange={(value) => handleChange({ page: page1, value })} toolbarHeight={40}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site)}
+        <ArticlePageSelect articleId={articleId} open={localeSelect} onClose={() => setLocaleSelect(false)}/>
+
+        <MDEditor 
+          key={1} value={value1} 
+          onChange={(value) => handleChange({ page: page1, value })} 
+          
+          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site, () => setLocaleSelect(true))}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -151,10 +185,10 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap">
-
+      <ArticlePageSelect articleId={articleId} open={localeSelect} onClose={() => setLocaleSelect(false)}/>
       <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={2} value={value1} onChange={(value) => handleChange({ page: page1, value })}
-          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site)}
+          commands={getMdCommands(session.site.locales[page1.body.locale], theme.palette.secondary.contrastText, site, () => setLocaleSelect(true))}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />
@@ -162,7 +196,7 @@ const ArticlePageComposer: React.FC<PageComposerProps> = ({ articleId, locale1, 
       </Box>
       <Box data-color-mode="light" flex="1" sx={{ fontWeight: theme.typography.body2.fontWeight }}>
         <MDEditor key={3} value={value2} onChange={(value) => handleChange({ page: page2, value })}
-          commands={getMdCommands(session.site.locales[page2.body.locale], colors.purple, site)}
+          commands={getMdCommands(session.site.locales[page2.body.locale], theme.palette.primary.light, site, () => setLocaleSelect(true))}
           textareaProps={{ placeholder: '# Title' }}
           height={800}
         />

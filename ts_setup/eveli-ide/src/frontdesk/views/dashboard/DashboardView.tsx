@@ -1,13 +1,11 @@
 import { Box } from '@mui/material';
 import { Container, Grid2, Paper, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { useConfig } from '../../context/ConfigContext';
-import { useFetch } from '../../hooks/useFetch';
-import { OverdueByGroupStatistics, TaskPriorityStatistics, TaskStatusStatistics, TaskStatusTimelineStatistics } from '../../types/TaskStatistics';
-import { mapRole } from '../../util/rolemapper';
+
 import { TaskPriority, TaskStatus } from '../../types/task/Task';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 const chartPaperStyle = {
   flex: '1',
@@ -26,12 +24,7 @@ const FILL_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 type StatusColorMap = {
   [status in TaskStatus]: string
 }
-type StatusTitleMap = {
-  [status in TaskStatus]: string
-}
-type PriorityTitleMap = {
-  [priority in TaskPriority]: string
-}
+
 
 const statusColorMap: StatusColorMap = {
   NEW: 'brown',
@@ -50,17 +43,8 @@ const priorityColorMap: PriorityColorMap = {
   HIGH: 'red',
 };
 
-const taskStatusMapping: StatusTitleMap = {
-  'NEW': 'task.status.new',
-  'OPEN': 'task.status.open',
-  'REJECTED': 'task.status.rejected',
-  'COMPLETED': 'task.status.completed',
-}
-const taskPriorityMapping: PriorityTitleMap = {
-  'LOW': 'task.priority.low',
-  'NORMAL': 'task.priority.normal',
-  'HIGH': 'task.priority.high',
-}
+
+
 
 const BarLabel = (props: any) => {
   const {
@@ -82,51 +66,11 @@ const BarLabel = (props: any) => {
 };
 
 export const DashboardView: React.FC = () => {
-  const { serviceUrl } = useConfig();
-  const { response: taskStatusStats } = useFetch<TaskStatusStatistics[]>(`${serviceUrl}statistics/status`);
-  const { response: taskPriorityStats } = useFetch<TaskPriorityStatistics[]>(`${serviceUrl}statistics/priority`);
-  const { response: taskTimelineStats } = useFetch<TaskStatusTimelineStatistics[]>(`${serviceUrl}statistics/status-timeline`);
-  const { response: overdueStats } = useFetch<OverdueByGroupStatistics[]>(`${serviceUrl}statistics/task-overdue`);
-
-
+  const { taskStatusNames, taskStatusMapping, taskStatusStats } = useFetch('statistics/status.GET', {});
+  const { taskPriorityNames, taskPriorityStats } = useFetch('statistics/priority.GET', {});
+  const { taskTimelineStats } = useFetch('statistics/status-timeline.GET', {});
+  const { tasksOverdue } = useFetch('statistics/task-overdue.GET', {});
   const intl = useIntl();
-
-  const taskStatusNames = useMemo(() => {
-    if (!taskStatusStats) {
-      return;
-    }
-    return taskStatusStats.map(stats => {
-      return {
-        status: intl.formatMessage({ id: taskStatusMapping[stats.status] }),
-        count: stats.count
-      }
-    });
-  }, [intl, taskStatusStats]);
-
-  const taskPriorityNames = useMemo(() => {
-    if (!taskPriorityStats) {
-      return;
-    }
-    return taskPriorityStats.map(stats => {
-      return {
-        priority: intl.formatMessage({ id: taskPriorityMapping[stats.priority] }),
-        count: stats.count
-      }
-    });
-  }, [intl, taskPriorityStats]);
-
-  const tasksOverdue = useMemo(() => {
-    if (!overdueStats) {
-      return;
-    }
-    return overdueStats.map(stats => {
-      return {
-        assignedId: mapRole(stats.assignedId),
-        count: stats.count
-      }
-    });
-  }, [overdueStats]);
-
 
   return (
     <Container maxWidth='lg'>

@@ -39,6 +39,7 @@ import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
+import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 
@@ -109,8 +110,10 @@ public class AuthenticationConfigFakeUser  {
       }
       @Override
       public Liveness getLiveness() {
-        // TODO Auto-generated method stub
-        return null;
+        return ImmutableLiveness.builder()
+            .issuedAtTime(System.currentTimeMillis())
+            .expiresIn(1000)
+            .build();
       }
     };
   }

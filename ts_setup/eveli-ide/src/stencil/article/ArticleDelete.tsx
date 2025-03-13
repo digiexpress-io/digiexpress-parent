@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { Composer, StencilApi } from '../context';
-import * as Burger from '@/burger';
 
 
 interface ArticleDeleteProps {
@@ -27,13 +26,13 @@ const ArticleDelete: React.FC<ArticleDeleteProps> = ({ articleId, onClose }) => 
   return (
     <Dialog open={true} onClose={onClose}>
       <DialogTitle><FormattedMessage id='article.delete.title' /></DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent><FormattedMessage id='article.delete.description' /></DialogContent>
       <DialogActions>
         <Button variant='text' onClick={onClose}>
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={handleDelete} >
-          <FormattedMessage id='button.delete'/>
+          <FormattedMessage id='button.delete.article' />
         </Button>
       </DialogActions>
     </Dialog>

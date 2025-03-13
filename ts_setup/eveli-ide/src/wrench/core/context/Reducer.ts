@@ -71,7 +71,6 @@ const Reducer = (state: Ide.Session, action: Action): Ide.Session => {
   switch (action.type) {
     case ActionType.setSite: {
       if (action.setSite) {
-        console.log("new site", action.setSite.site);
         return state.withSite(action.setSite.site);
       }
       console.error("Action data error", action);

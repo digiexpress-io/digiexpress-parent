@@ -1,8 +1,4 @@
 import React from "react";
-
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 
 import { FormattedMessage } from 'react-intl';
@@ -27,10 +23,10 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
         itemId={link.id}
         labelText={workflowName.name}
         labelcolor="explorerItem"
-        labelIcon={link.body.devMode ? ConstructionIcon : LinkIcon}
+        labelIcon={link.body.devMode ? ConstructionIcon : undefined}
         >
 
-        <Burger.TreeItem itemId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
+        <Burger.TreeItem itemId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />}>
           <LinkOptions link={link} />
         </Burger.TreeItem>
 
@@ -38,7 +34,6 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
         {/** Article options */}
         <Burger.TreeItem itemId={link.id + 'articles-nested'}
           labelText={<FormattedMessage id="articles" />}
-          labelIcon={FolderOutlinedIcon}
           labelInfo={`${link.body.articles.length}`}
           labelcolor="primary">
 

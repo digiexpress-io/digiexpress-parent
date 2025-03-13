@@ -10,8 +10,15 @@ class CsvReadVisitor {
   visitLine(object: Record<string, string>) {
     this._index++;
     const intlKey = this.visitIntlKey(object);
+    const isEmptyLine = Object.entries(object).length === 0;
+
+    if (isEmptyLine) {
+      console.log(`Skipping empty line: ${this._index}`);
+      return;
+    }
+
     if(!intlKey) {
-      console.error('unknown column', this._index, object);
+      console.error('unknown column: ' + this._index + '/' + Object.keys(object));
       return;
     }
     if(this.visitComment(intlKey)) {

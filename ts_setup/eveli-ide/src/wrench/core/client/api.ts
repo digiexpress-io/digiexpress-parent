@@ -360,8 +360,6 @@ export declare namespace HdesApi {
   }
 
   export interface Service {
-    withBranch(branchName?: string): Service;
-    branch: string | undefined;
     delete(): DeleteBuilder;
     create(): CreateBuilder;
     update(id: string, body: AstCommand[]): Promise<Site>;
@@ -373,10 +371,6 @@ export declare namespace HdesApi {
     diff(input: DiffRequest): Promise<DiffResponse>
     summary(tagId: string): Promise<AstTagSummary>
   }
-  export interface Store {
-    fetch<T>(path: string, init?: RequestInit): Promise<T>;
-  }
-
 
   export interface StoreError extends Error {
     text: string;
@@ -390,6 +384,4 @@ export declare namespace HdesApi {
     status?: string;
     csrf?: { key: string, value: string }
   }
-
-
 }

@@ -14,7 +14,7 @@ export enum TaskStatus {
 }
 
 export interface Task {
-  id?: number;
+  id?: string;
   taskRef?: string;
   version?: number;
   created?: Date;

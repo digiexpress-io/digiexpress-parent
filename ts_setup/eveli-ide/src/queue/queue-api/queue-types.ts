@@ -4,10 +4,6 @@ export namespace QueueApi {
 }
 
 export declare namespace QueueApi {
-  export type FetchQueueConfigGET = () => Promise<Response>;
-  export type FetchQueueMessagesGET = () => Promise<Response>;
-  export type FetchQueueDeliveriesGET = () => Promise<Response>;
-
   export interface ChannelConfig {
     channel: Channel;
     queues: Queue[];

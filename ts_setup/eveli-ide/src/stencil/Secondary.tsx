@@ -1,103 +1,129 @@
 import React from 'react';
-import { Tabs, Tab, Box, TabProps, TabsProps, TextFieldProps, TextField, alpha } from '@mui/material';
-import { styled } from "@mui/material/styles";
+import { Button, MenuList, MenuItem, ListItemText } from '@mui/material';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
+import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
+import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+
 import { useIntl } from 'react-intl';
+
+import { useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
+
+import logo from '../uiDev/logoLifeDigitalDark.svg';
+import { MigrationComposer } from './migration';
+import { useStencilNav } from './nav';
+import { ActivityProps, useActivities } from './Activities';
+
 import * as Burger from '@/burger';
-import { ArticleExplorer, WorkflowExplorer, LinkExplorer, SearchExplorer } from './explorer';
 
 
-const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
-  "&.MuiButtonBase-root": {
-    minWidth: "unset",
-    color: theme.palette.primary.contrastText,
-    fontSize: '9pt',
-    paddingLeft: '.5rem',
-    paddingRight: '.5rem'
-  },
-  "&.Mui-selected": {
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: alpha(theme.palette.secondary.contrastText, .2),
-  },
-}));
 
-const StyledTabs = styled(Tabs)<TabsProps>(() => ({
-  "& .MuiTabs-indicator": {
-    backgroundColor: "unset",
+
+const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }> = (props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const handleClose = () => { 
+    setOpen(false) 
+    //props.onClick();
+  };
+  const handleOpen = () => {
+    setOpen(true);
   }
-}));
-
-
-const StyledSearch = styled(TextField)<TextFieldProps>(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.secondary.main,
-  '& .MuiOutlinedInput-input': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiOutlinedInput-root': {
-    fontSize: '10pt',
-    height: '2rem',
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.secondary.contrastText,
-    },
-  },
-  '& .MuiFormLabel-root': {
-    color: theme.palette.primary.contrastText,
-  },
-  '& .MuiFormHelperText-root': {
-    color: theme.palette.primary.contrastText,
-    marginLeft: 1
-  }
-}));
-
-
-
-const SecondaryExplorer: React.FC<{}> = () => {
-  const intl = useIntl();
-  const getLabel = (id: string) => intl.formatMessage({ id });
-  const [tab, setTab] = React.useState("toolbar.articles");
-  const [searchString, setSearchString] = React.useState<string>("");
-
-  let component = <></>;
-
-  if (tab === 'toolbar.services') {
-    component = (<WorkflowExplorer searchString={searchString.toLocaleLowerCase()} />)
-  } else if (tab === 'toolbar.links') {
-    component = (<LinkExplorer searchString={searchString.toLocaleLowerCase()} />)
-  } else {
-    component = <ArticleExplorer searchString={searchString.toLocaleLowerCase()} />;
-  }
-
-  return (<>
-    <Box display="flex" flexDirection='column'>
-
-    <StyledSearch focused  sx={{ mx: 1 }}
-          type="search"
-          placeholder={getLabel("explorer.tabs.search")}
-          value={searchString}
-          onChange={({ target }) => setSearchString(target.value)} />
-
-      <StyledTabs value={tab} onChange={(_event, value) => setTab(value)}>
-        <StyledTab label={getLabel("explorer.tabs.articles")} value='toolbar.articles' />
-        <StyledTab label={getLabel("explorer.tabs.services")} value='toolbar.services' />
-        <StyledTab label={getLabel("explorer.tabs.links")} value='toolbar.links' />
-      </StyledTabs>
-      
-    </Box>
-    {component}
-  </>);
+  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  return (
+    <>
+      <Composer onClose={handleClose}/>
+      <MenuItem onClick={handleOpen}>
+        <ListItemText>{props.data.buttonCreate}</ListItemText>
+      </MenuItem>
+    </>
+  )
 }
 
-
 const Secondary: React.FC<{}> = () => {
-  const {session} = Burger.useSecondary();
+  const intl = useIntl();
+  const classes = useUtilityClasses();
+  const { activeItem, onNav } = useStencilNav();
+  const activities = useActivities();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
-  let component = <></>;
-  if (session.secondary === 'toolbar.search') {
-    component = (<SearchExplorer />)
-  } else {
-    component = <SecondaryExplorer />;
+  const [migrationsDialogOpen, setMigrationsDialogOpen] = React.useState(false)
+
+  const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   }
-  return (<Box sx={{ backgroundColor: "secondary.main", height: '100%' }}>{component}</Box>)
+  const handleComposeSelectClose = () => {
+    setAnchorEl(null);
+  }
+
+  return (
+    <>
+      <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
+        <MenuList>
+          {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
+        </MenuList>
+      </Burger.EveliShellCompose>
+      {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
+
+      <Burger.EveliShellExplorer>
+        <div className={classes.logoContainer}>
+          <img src={logo} className={classes.logo} />
+        </div>
+
+        <Button startIcon={<CreateOutlinedIcon />}
+          className={classes.composeButton}
+          onClick={handleComposeSelectClick}>
+          {intl.formatMessage({ id: 'menu.compose' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'ARTICLES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<MenuBookOutlinedIcon />}
+          onClick={() => onNav({ type: 'ARTICLES' })}>
+          {intl.formatMessage({ id: 'menu.articles' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<AccountTreeOutlinedIcon />}
+          onClick={() => onNav({type: 'SERVICES'})}>
+          {intl.formatMessage({ id: 'menu.services' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'LINKS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<InsertLinkOutlinedIcon />}
+          onClick={() => onNav({ type: 'LINKS'})}>
+          {intl.formatMessage({ id: 'menu.links' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'LOCALES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<TranslateOutlinedIcon />}
+          onClick={() => onNav({type: 'LOCALES'})}>
+          {intl.formatMessage({ id: 'menu.locales' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'TEMPLATES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<FormatShapesOutlinedIcon />}
+          onClick={() => onNav({type: 'TEMPLATES'})}>
+          {intl.formatMessage({ id: 'menu.templates' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'MIGRATIONS' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<UploadFileOutlinedIcon />}
+          onClick={() => setMigrationsDialogOpen(true)}>
+          {intl.formatMessage({ id: 'menu.migrations' })}
+        </Button>
+
+        <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<NewReleasesOutlinedIcon />}
+          onClick={() => onNav({type: 'RELEASES'})}>
+          {intl.formatMessage({ id: 'menu.releases' })}
+        </Button>
+
+      </Burger.EveliShellExplorer>
+    </>
+  )
 }
 export { Secondary }
 

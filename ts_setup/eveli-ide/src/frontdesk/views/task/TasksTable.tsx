@@ -1,28 +1,27 @@
 import React, { useContext, useRef, useMemo, forwardRef, useEffect, useState } from 'react';
-import { Box, IconButton, Link } from '@mui/material';
+import { Box, IconButton, Link, LinkProps as MuiLinkProps } from '@mui/material';
 import MaterialTable, { Column, OrderByCollection, Query, QueryResult } from '@material-table/core';
 import LockIcon from '@mui/icons-material/Lock';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Link as RouterLink } from '@tanstack/react-router'
 
 import { FormattedDate, useIntl } from 'react-intl';
-import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
 
 import { localizeTable } from '../../util/localizeTable';
-import { mapRolesList } from '../../util/rolemapper';
+import { IamApi, mapIamRolesList } from '@/burger';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
-import { TaskBackendContext } from '../../context/TaskApiConfigContext';
 
 import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
-import { UserGroup } from '../../types/UserGroup';
 
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
 import { TableHeader } from '../../components/TableHeader';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 function getStatusCode(status: TaskStatus | undefined) {
@@ -46,10 +45,10 @@ function getPriorityCode(status: TaskPriority | undefined) {
 
 type Props = {
   loadTasks: (query: Query<Task>, columns: Column<any>[], defaultOrder?: OrderByCollection[]) => Promise<QueryResult<Task>>
-  groups: UserGroup[]
-  taskOpenHandler: (id?: number) => void
+  groups: IamApi.UserGroup[]
+  taskOpenHandler: (id?: string) => void
   taskDeletableHandler?: () => boolean
-  newTasks: number[]
+  newTasks: string[]
 }
 
 interface TableState {
@@ -59,8 +58,7 @@ interface TableState {
 
 type LinkProps = {
   title: string
-  address?: string
-  id?: number
+  id?: string
   keywords?: string[]
 }
 
@@ -79,12 +77,13 @@ const useRefresh = (): UseRefreshReturnType => {
 export const TasksTable: React.FC<Props> =
   ({ loadTasks, groups, taskOpenHandler, taskDeletableHandler, newTasks }) => {
 
-    const taskBackend = useContext(TaskBackendContext);
+
     const intl = useIntl();
     const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
     const tableRef = useRef<any>();
     const tableContext = useContext(TableStateContext);
     const { isFirstRenderAfterRefresh, setRefreshed } = useRefresh();
+    const { deleteTask } = useFetch('worker/rest/api/tasks/$taskId.DELETE', {});
 
     useEffect(() => {
       try {
@@ -107,13 +106,6 @@ export const TasksTable: React.FC<Props> =
 
     const addTask = () => {
       taskOpenHandler();
-    }
-
-    const deleteTask = (taskId: any) => {
-      return taskBackend.deleteTask(taskId)
-        .then(result => {
-          return result;
-        })
     }
 
     const formatTime = (time: any) => {
@@ -139,19 +131,17 @@ export const TasksTable: React.FC<Props> =
       return "-";
     }
 
-    const TaskLink: React.FC<LinkProps> = ({ title, address, id, keywords }) => {
+    const TaskLink: React.FC<LinkProps> = ({ title, id, keywords }) => {
       const renderLink = useMemo(
-    // @ts-ignore
-        () => forwardRef((itemProps, ref) => <RouterLink to={{ pathname: address }} ref={ref} {...itemProps} />),
-        [address],
+        () => forwardRef<any, MuiLinkProps>((itemProps, ref) => <RouterLink
+            ref={ref}
+            from='/secured/$locale/worker'
+            to='/secured/$locale/worker/tasks/$taskId' 
+            params={{ taskId: `${id}`}} 
+            children={itemProps.children}
+          />),
+        [],
       );
-      if (!address) {
-        return (
-          <React.Fragment>
-            {title}
-          </React.Fragment>
-        );
-      }
       const link = (
         <Link href="#" component={renderLink as any}>
           {title}
@@ -203,7 +193,7 @@ export const TasksTable: React.FC<Props> =
       columns: [
         {
           render: (data) => {
-            return <div onClick={() => deleteTask(data.id)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
+            return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
           },
           hidden: isDeleteHidden
         },
@@ -227,7 +217,7 @@ export const TasksTable: React.FC<Props> =
           field: 'subject',
           headerStyle: { fontWeight: 'bold' },
           defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'subject')?.value || "",
-          render: data => <TaskLink title={(data.subject || '') + ' ' + (data.taskRef || '') || '-'} address={`/ui/tasks/task/${data.id}`} id={data.id} keywords={data?.keyWords} />,
+          render: data => <TaskLink title={(data.subject || '') + ' ' + (data.taskRef || '') || '-'} id={data.id} keywords={data?.keyWords} />,
           hidden: tableRef.current?.state.columns.find((column: any) => column.field === "subject").hidden,
 
         },
@@ -258,7 +248,7 @@ export const TasksTable: React.FC<Props> =
           field: 'assignedRoles',
           headerStyle: { fontWeight: 'bold' },
           defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'assignedRoles')?.value || '',
-          render: data => mapRolesList(data.assignedRoles).join(),
+          render: data => mapIamRolesList(data.assignedRoles).join(),
           sorting: false,
           hidden: tableRef.current?.state.columns.find((column: any) => column.field === "assignedRoles").hidden
         },

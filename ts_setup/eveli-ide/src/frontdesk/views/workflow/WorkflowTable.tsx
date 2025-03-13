@@ -1,14 +1,10 @@
 import React, { useRef, useState } from 'react';
 import MaterialTable, { Column } from '@material-table/core';
 
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { useIntl } from 'react-intl';
 
-import { useConfig } from '../../context/ConfigContext';
-import { useFetch } from '../../hooks/useFetch';
-import { DialobFormTag } from '../../types';
 import { Workflow } from '../../types/Workflow';
 
 import { localizeTable } from '../../util/localizeTable';
@@ -16,6 +12,7 @@ import { DateTimeFormatter } from '../../components/DateTimeFormatter';
 import { TableHeader } from '../../components/TableHeader';
 import { CreateOrEditWorkflowDialog } from './CreateOrEditWorkflowDialog';
 import { Box, IconButton, Tooltip } from '@mui/material';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 interface TableState {
@@ -30,11 +27,10 @@ interface WorkflowTableProps {
 
 export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refreshWorkflows, historyView = false }) => {
   const intl = useIntl();
-  const config = useConfig();
   const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
   const tableRef = useRef();
 
-  const { response: formTags } = useFetch<DialobFormTag[]>(`${config.serviceUrl}worker/rest/api/assets/dialob/tags`);
+  const { allTags: formTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
   const [open, setOpen] = useState(false);
   const [workflow, setWorkflow] = useState<Workflow | null>(null);

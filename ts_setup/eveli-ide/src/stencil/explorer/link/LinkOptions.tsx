@@ -1,7 +1,6 @@
 import React from 'react';
+import { useTheme } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import EditIcon from '@mui/icons-material/ModeEdit';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 import { LinkDelete } from '../../link/LinkDelete';
 import { LinkEdit } from '../../link';
@@ -9,7 +8,7 @@ import { StencilApi } from '../../context';
 import * as Burger from '@/burger';
 
 const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
-
+  const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'LinkEdit' | 'LinkDelete'>(undefined);
   const handleDialogClose = () => setDialogOpen(undefined);
 
@@ -19,16 +18,14 @@ const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
       { dialogOpen === 'LinkDelete' ? <LinkDelete linkId={link.id} onClose={handleDialogClose} /> : null}
 
       <Burger.TreeItemOption nodeId={link.id + 'link.edit'}
-        color={Burger.colors.purple}
-        icon={EditIcon}
+        color={theme.palette.primary.light}
         onClick={() => setDialogOpen('LinkEdit')}
         labelText={<FormattedMessage id="link.edit.title" />}>
       </Burger.TreeItemOption>
 
 
       <Burger.TreeItemOption nodeId={link.id + 'link.delete'}
-        color={Burger.colors.purple}
-        icon={DeleteOutlineOutlinedIcon}
+        color={theme.palette.primary.light}
         onClick={() => setDialogOpen('LinkDelete')}
         labelText={<FormattedMessage id="link.delete.title" />}>
       </Burger.TreeItemOption>

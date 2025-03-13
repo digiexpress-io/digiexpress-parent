@@ -1,11 +1,9 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
@@ -19,6 +17,7 @@ import { Composer } from '../../context';
 import { HdesApi as Client } from '../../client';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
+import { useWrenchNav } from '../../nav';
 
 
 
@@ -53,13 +52,14 @@ const ServiceItem: React.FC<{
   children?: React.ReactChild;
   onClick: () => void;
 }> = (props) => {
+  const theme = useTheme();
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
         <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={LinkIcon} color={Burger.colors.purple} sx={{ pl: 1, mr: 1 }} />
+          <Box component={LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
           <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
             sx={{ fontWeight: "inherit", flexGrow: 1 }}
           >
@@ -117,9 +117,9 @@ interface RefService {
 }
 
 const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
-
+  const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
-  const nav = Composer.useNav();
+  const { onNav } = useWrenchNav();
 
   const flow = session.site.flows[flowId];
 
@@ -142,17 +142,15 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
 
       {/** Flow options */}
       <Burger.TreeItem itemId={flow.id + 'options-nested'}
-        labelText={<FormattedMessage id="options" />}
-        labelIcon={EditIcon} >
+        labelText={<FormattedMessage id="options" />}>
         <FlowOptions flow={flow} />
       </Burger.TreeItem>
 
       {/** Flow status */}
       <Burger.TreeItem itemId={flow.id + 'status-nested'}
         labelText={<FormattedMessage id={`program.status.${flow.status}`} />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${flow.errors.length + flow.warnings.length}`}
-        labelcolor={Burger.colors.red}>
+        labelcolor={theme.palette.primary.dark}>
 
         {flow.errors.map((view, index) => (<ErrorItem key={index} msg={view} nodeId={`${view.id}-error-${index}`} />))}
         {flow.warnings.map((view, index) => (<WarningItem key={index} msg={view} nodeId={`${view.id}-warning-${index}`} />))}
@@ -161,13 +159,12 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       {/** Decision options */}
       <Burger.TreeItem itemId={flow.id + 'decisions-nested'}
         labelText={<FormattedMessage id="decisions" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${decisions.length}`}
         labelcolor="page">
 
         {decisions.map(view => (<DecisionItem key={view.ref.ref} nodeId={`${flow.id}-dt-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />))}
       </Burger.TreeItem>
 
@@ -175,13 +172,12 @@ const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
       {/** Service options */}
       <Burger.TreeItem itemId={flow.id + 'services-nested'}
         labelText={<FormattedMessage id="services" />}
-        labelIcon={FolderOutlinedIcon}
         labelInfo={`${services.length}`}
-        labelcolor={Burger.colors.purple}>
+        labelcolor={theme.palette.primary.light}>
 
         {services.map(view => (<ServiceItem key={view.ref.ref} nodeId={`${flow.id}-st-${view.ref.ref}`}
           labelText={view.ref.ref}
-          onClick={() => view.entity ? nav.handleInTab({ article: view.entity }) : undefined}
+          onClick={() => view.entity ? onNav({ type: 'ENTITY_EDITOR', id: view.entity.id }) : undefined}
         />)
         )}
       </Burger.TreeItem>

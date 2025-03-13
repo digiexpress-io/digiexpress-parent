@@ -1,7 +1,14 @@
-import { createTheme, PaletteOptions, Theme, alpha, darken } from "@mui/material/styles";
-import {} from "@mui/styles";
-import { colors } from '../eveli-colors';
+import { createTheme, alpha, darken } from "@mui/material/styles";
+import Button from '@mui/material/Button';
+import { } from "@mui/styles";
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    explorerInactive: true;
+    explorerActive: true;
+
+  }
+}
 
 declare module 'react' {
   interface CSSProperties {
@@ -16,27 +23,29 @@ declare module 'react' {
 const siteTheme = createTheme({
   palette: {
     mode: 'light',
-  
+
     primary: {
-      main: colors.blue,
+      main: 'rgb(81, 11, 200)',           // primary color for buttons, active items
       contrastText: '#fff',
-      dark: 'rgb(50, 41, 224)',
-      light: 'rgb(84, 76, 230)',
+      dark: '#D14343',                      // colors.red for red icons
+      light: '#a0548b',                     // colors.purple for purple icons
     },
 
     secondary: {
-      main: 'rgb(17, 24, 39)', // background colour, dark grey-black
-      dark: 'rgb(255, 255, 255)', //unused
-      light: 'rgb(253, 205, 73)',
+      main: 'rgb(246, 249, 253)',         // Explorer (Secondary) background color
+      dark: 'rgb(236, 239, 243)',         // Toolbar background color
+      light: '#CED8DE',                     // don't use for dividers! //TODO
       contrastText: 'rgb(16, 185, 129)'
     },
+
+    divider: '#CED8DE',                     // Borders and dividers
 
     error: {
       main: '#e53935',
     },
-    
+
     info: {
-      main: '##03045E',
+      main: '#03045E',
       contrastText: '#FFFFFF',
     },
     warning: {
@@ -46,59 +55,62 @@ const siteTheme = createTheme({
     success: {
       main: '#4caf50',
     },
+
     text: {
       primary: 'rgba(0,0,0,0.86)',
-      secondary: 'rgba(0,0,0,0.55)',
+      secondary: 'rgb(58, 55, 55)', // Icon and text color
       disabled: 'rgba(0,0,0,0.36)'
+    },
+
+    background: {
+      default: '#FFFFFF'
     }
   },
 
   typography: {
-    fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+    fontFamily: '"Ubuntu", sans-serif',
     h1: {
       fontSize: "2rem",
-      lineHeight: 2,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+      lineHeight: 1.5,
       fontWeight: 600,
     },
     h2: {
       fontSize: "1.9rem",
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-      fontWeight: 400,
+      fontWeight: 500,
       paddingTop: 15,
       paddingBottom: 15,
     },
     h3: {
       fontSize: "1.6rem",
+      fontWeight: 300,
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-      fontWeight: 'bold',
       paddingTop: 15,
       paddingBottom: 15,
     },
     h4: {
       fontSize: "1.3rem",
       lineHeight: 1,
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     h5: {
       fontSize: "1.1rem",
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     h6: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontWeight: 300
     },
     body1: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
-      fontWeight: 300,
+      fontSize: "1rem",
+      fontWeight: 400,
     },
     body2: {
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
       fontSize: "1rem",
+      fontWeight: 400,
+    },
+    caption: {
+      fontSize: "0.7rem",
+      fontWeight: 500,
     }
   },
 
@@ -108,8 +120,8 @@ const siteTheme = createTheme({
 
     MuiTabs: {
       styleOverrides: {
-        root: ({ ownerState }) => {
-          if(ownerState.orientation === "vertical") {
+        root: ({ ownerState, theme }) => {
+          if (ownerState.orientation === "vertical") {
             return {
 
             }
@@ -119,40 +131,52 @@ const siteTheme = createTheme({
             flexGrow: 1,
 
             "& .MuiTabs-indicator": {
-              backgroundColor: colors.blue,
+              backgroundColor: theme.palette.primary.main,
               marginRight: "49px"
             },
-  
+
             "& .MuiTab-root": {
-              minHeight: 'unset', 
+              minHeight: 'unset',
               color: "secondary.main",
-              "&:focus": { color: colors.blue } 
+              "&:focus": { color: theme.palette.primary.main }
             },
-  
+
             "& .MuiSvgIcon-root": {
               m: 0,
-              color: colors.blue,
+              color: theme.palette.primary.main,
               "&:hover": {
                 color: "secondary.main"
               }
             }
-  
+
           })
         }
       }
     },
     MuiTableHead: {
       styleOverrides: {
-        root: () => ({
-          backgroundColor: colors.grey
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.secondary.main
+        })
+      }
+    },
+    MuiCard: {
+      defaultProps: {
+        variant: 'outlined'
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderRadius: 'unset',
+          border: `1px solid ${theme.palette.divider}`,
+          variant: 'outlined',
         })
       }
     },
     MuiCardHeader: {
       styleOverrides: {
-        root: ({theme}) => ({
-          backgroundColor: colors.grey,
-          padding: theme.spacing(1)
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.secondary.main,
+          padding: theme.spacing(1),
         })
       }
     },
@@ -167,33 +191,31 @@ const siteTheme = createTheme({
 
     MuiDialog: {
       defaultProps: {
-        fullWidth: true, 
-        maxWidth: 'md'
+        fullWidth: true,
+        maxWidth: 'md',
       }
     },
     MuiDialogContent: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
-          color: theme.palette.secondary.main, 
-          fontWeight: '400'
+          color: theme.palette.text.primary,
+          fontWeight: '400',
         })
       }
     },
     MuiDialogTitle: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => {
           return {
-            color: theme.palette.primary.contrastText,
-            fontWeight: 'bold',
-            borderBottom: '1px solid gray',
-            mb: 2, 
-            backgroundColor: alpha(colors.blue, 0.9)
+            ...theme.typography.h1,
+            color: theme.palette.primary.main,
+            mb: 2,
           }
         }
       }
     },
     MuiTextField: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           marginTop: theme.spacing(1),
           color: theme.palette.primary.contrastText,
@@ -204,11 +226,11 @@ const siteTheme = createTheme({
           },
           '& .MuiOutlinedInput-root': {
             '&.Mui-focused fieldset': {
-              borderColor: colors.blue,
+              borderColor: theme.palette.primary.main,
             },
           },
           '& .MuiSvgIcon-root': {
-            color: colors.blue
+            color: theme.palette.primary.main
           }
         })
       },
@@ -221,6 +243,7 @@ const siteTheme = createTheme({
           marginTop: 0,
           marginBottom: 0,
         },
+        /*
         primary: ({theme}) => ({
           color: theme.palette.text.primary,
           "&:hover": {
@@ -236,7 +259,7 @@ const siteTheme = createTheme({
             fontWeight: 'bold',
           }
         })
-
+*/
       }
     },
 
@@ -246,58 +269,58 @@ const siteTheme = createTheme({
           props: { variant: 'outlined' },
           style: ({ theme }) => ({
             marginTop: theme.spacing(2),
-            color: colors.blue,
+            color: theme.palette.primary.main,
             backgroundColor: theme.palette.background.paper,
             '& .MuiOutlinedInput-root': {
               '&.Mui-focused fieldset': {
-                borderColor: colors.blue,
+                borderColor: theme.palette.primary.main,
               },
             }
-          }), 
+          }),
         }
       ]
     },
 
     MuiIconButton: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
-          color: colors.blue, 
+          color: 'rgb(58, 55, 55)',
         })
       }
     },
 
     MuiRadio: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           marginLeft: theme.spacing(1.5),
-          color: colors.blue,
+          color: theme.palette.primary.main,
           '&.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
           }
         })
       },
-    },    
+    },
     MuiSwitch: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
           '& .MuiSwitch-switchBase.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
             },
           },
           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: alpha(colors.blue, 0.5),
+            backgroundColor: alpha(theme.palette.primary.main, 0.5),
           },
         })
       },
     },
     MuiCheckbox: {
-      styleOverrides:  {
+      styleOverrides: {
         root: ({ ownerState, theme }) => ({
-          color: colors.blue,
+          color: theme.palette.primary.main,
           '&.Mui-checked': {
-            color: colors.blue,
+            color: theme.palette.primary.main,
           }
         })
       },
@@ -310,24 +333,24 @@ const siteTheme = createTheme({
             fontVariant: 'body2',
             textTransform: 'capitalize',
             borderWidth: '2px solid !important',
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             fontWeight: 'bold',
-            backgroundColor: colors.blue,
+            backgroundColor: theme.palette.primary.main,
             '&:hover': {
-              backgroundColor: darken(colors.blue, 0.2),
+              backgroundColor: darken(theme.palette.primary.main, 0.2),
             },
           }),
         },
         {
           props: { variant: 'text' },
           style: ({ theme }) => ({
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
-            color: colors.blue,
+            color: theme.palette.primary.main,
             textTransform: 'capitalize',
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
               border: 'none',
             },
           }),
@@ -336,15 +359,56 @@ const siteTheme = createTheme({
         {
           props: { variant: 'outlined' },
           style: ({ theme }) => ({
-            borderRadius: theme.spacing(1),
+            borderRadius: 'unset',
             borderWidth: 0,
             fontWeight: 'bold',
-            color: colors.blue,
+            color: theme.palette.primary.main,
             textTransform: 'capitalize',
             '&:hover': {
-              backgroundColor: alpha(colors.blue, 0.1),
+              backgroundColor: alpha(theme.palette.primary.main, 0.1),
               border: 'none',
             },
+          }),
+        },
+        {
+          props: { variant: 'explorerInactive' },
+          style: ({ theme }) => ({
+            justifyContent: 'left',
+            textTransform: 'capitalize',
+            marginTop: theme.spacing(0.5),
+            borderRadius: theme.spacing(3),
+            paddingLeft: theme.spacing(2),
+            border: `1px solid ${theme.palette.secondary.main}`,
+            ...theme.typography.body1,
+            color: theme.palette.text.secondary,
+            width: '100%',
+            ':hover': {
+              backgroundColor: theme.palette.secondary.dark,
+              border: `1px solid ${theme.palette.secondary.main}`,
+            }
+          }),
+        },
+        {
+          props: { variant: 'explorerActive' },
+          style: ({ theme }) => ({
+            justifyContent: 'left',
+            textTransform: 'capitalize',
+            marginTop: theme.spacing(0.5),
+            borderRadius: theme.spacing(3),
+            paddingLeft: theme.spacing(2),
+            border: `1px solid ${theme.palette.divider}`,
+            ...theme.typography.body1,
+            fontWeight: 'bold',
+            color: theme.palette.text.secondary,
+            width: '100%',
+            backgroundColor: theme.palette.secondary.dark,
+            '& .MuiSvgIcon-root': {
+              color: theme.palette.primary.main
+            },
+            ':hover': {
+              backgroundColor: theme.palette.secondary.dark,
+              border: `1px solid ${theme.palette.divider}`,
+            }
           }),
         },
       ],
@@ -355,7 +419,7 @@ const siteTheme = createTheme({
 
     MuiPaper: {
       styleOverrides: {
-        root: ({theme}) => ({
+        root: ({ theme }) => ({
           elevation: 1,
           borderColor: theme.palette.secondary.main,
           transition: 'unset'
