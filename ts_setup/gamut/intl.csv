@@ -60,14 +60,14 @@ gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bent
 gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon
 gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan
 gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Semua perkhidmatan
-gamut.search.results.allResults,,All results,,,
-gamut.search.results.noResults,,No results,,,
-gamut.search.results.serviceLinks,,Services,,,
-gamut.search.results.formLinks,,Forms,,,
-gamut.search.results.phoneLinks,,Phones,,,
-gamut.search.results.internalExternalLinks,,Links,,,
-gamut.search.results.internalLinks,,Links,,,
-gamut.search.results.externalLinks,,External links,,,
+gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,
+gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,
+gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,
+gamut.search.results.formLinks,,Forms,Lomakkeet,Blanketter,
+gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,
+gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,
+gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,
+gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
 gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Blanketter,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
@@ -150,8 +150,8 @@ gamut.bookings.subtitle,,Manage your existing appointments and reservations here
 gamut.bookings.serviceName,,Name of service,Palvelun nimi,Tjänstens namn,Nama perkhidmatan
 gamut.bookings.bookingDateTime,,Scheduled date and time,Varaa aika,Schemalagt datum och tid,Tarikh dan masa yang dijadualkan
 gamut.bookings.deleteBooking.title,,Cancel calendar reservation,Peruuta aika,Avboka kalenderreservation,Batalkan tempahan kalendar
-gamut.bookings.deleteBooking.content,,Are you sure you want to cancel your reservation? You can not undo this action.,,Är du säker på att du vill avboka din bokning? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu membatalkan tempahan anda? Anda tidak boleh membuat asal tindakan ini.
-gamut.bookings.deleteBooking.cancelButton,,No keep my reservation,Haluatko varmasti peruuttaa varauksesi? Et voi kumota tätä toimintoa.,"Nej, behåll min reservation",Jangan simpan tempahan saya
+gamut.bookings.deleteBooking.content,,Are you sure you want to cancel your reservation? You can not undo this action.,Haluatko varmasti peruuttaa varauksesi? Et voi kumota tätä toimintoa.,Är du säker på att du vill avboka din bokning? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu membatalkan tempahan anda? Anda tidak boleh membuat asal tindakan ini.
+gamut.bookings.deleteBooking.cancelButton,,No keep my reservation,Ei haluan pitää varaukseni,"Nej, behåll min reservation",Jangan simpan tempahan saya
 gamut.bookings.deleteBooking.deleteButton,,Yes cancel this reservation,Kyllä haluan peruuttaa varauksen,Ja avboka denna reservation,Ya batalkan tempahan ini
 // -------------------- USER OVERVIEW BUTTONS -----------------,,,,#VALUE!,
 gamut.userOverview.services.detail.title,,Find services and start forms,Etsi palveluja ja lomakkeita,Hitta tjänster och startformulär,Cari perkhidmatan dan mulakan borang
@@ -187,7 +187,7 @@ gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik
 gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,tarikh
 gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas
 gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk
-gamut.feedback.table.nodata,,No data,,,
+gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,
 gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?,Var detta svar till hjälp?,Adakah jawapan ini membantu?
 gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu"
 gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu
