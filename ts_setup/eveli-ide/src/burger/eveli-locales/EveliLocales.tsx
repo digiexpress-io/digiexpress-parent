@@ -21,6 +21,7 @@ export interface EveliLocalesProps {
 export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
   const navigate = useNavigate();
   const params = useParams({ from: '/secured/$locale' });
+  
 
   const { anchorProps, onClick: anchorOnClick, onClose: anchorOnClose } = useAnchor();
 
@@ -46,8 +47,8 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
   function handleChange(locale: string) {
     navigate({
       to: '.',
-      from: '/secured/$locale',
-      params: { locale }
+      params: (params) => ({ ...params, locale }),
+      search: prev => prev
     });
     
     onClick ? onClick(locale) : null;

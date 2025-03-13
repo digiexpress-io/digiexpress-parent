@@ -26,7 +26,6 @@ import * as Burger from '@/burger';
 type NavType = 'TASKS' | 'DASHBOARD' | 'PROCESSES' | 'FORMS' | 'WRENCH' | 'STENCIL' | 'WORKFLOWS' | 'FEEDBACK' | 'QUEUES' | 'PUBLICATIONS';
 
 
-
 export const Secondary: React.FC = () => {
   const intl = useIntl();
   const navigate = useNavigate();
