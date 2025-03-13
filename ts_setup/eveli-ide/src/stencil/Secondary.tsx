@@ -62,7 +62,9 @@ const Secondary: React.FC<{}> = () => {
   return (
     <>
       <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
-        {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
+        <MenuList>
+          {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
+        </MenuList>
       </Burger.EveliShellCompose>
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 

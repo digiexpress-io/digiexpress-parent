@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { SxProps } from '@mui/system';
 
-import Activities from './activities';
+import { Activities } from './Activities';
 
 import { Composer } from './context';
 import { FlowEdit, FlowsView } from './flow';

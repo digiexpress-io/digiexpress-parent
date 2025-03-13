@@ -1,23 +1,45 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, ListItemText, MenuItem, MenuList } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
-import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 
 import { useIntl } from 'react-intl';
 
-import { ComposeSelect } from '../../uiDev/ComposeSelect';
+
 import { useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
 import logo from '../../uiDev/logoLifeDigitalDark.svg';
 import * as Burger from '@/burger';
-import { ServiceComposer } from './service';
-import { MigrationComposer } from './migration/MigrationComposer';
 import { useWrenchNav } from './nav';
+import { useActivities, ActivityProps } from './Activities';
+
+
+
+
+
+const ActivitiesViewItem: React.FC<{ data: ActivityProps, onClick: () => void }> = (props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const handleClose = () => { 
+    setOpen(false) 
+    //props.onClick();
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  }
+  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  return (
+    <>
+      <Composer onClose={handleClose}/>
+      <MenuItem onClick={handleOpen}>
+        <ListItemText>{props.data.buttonCreate} {props.data.title}</ListItemText>
+      </MenuItem>
+    </>
+  )
+}
 
 
 export const Secondary: React.FC<{}> = () => {
@@ -25,10 +47,9 @@ export const Secondary: React.FC<{}> = () => {
   const classes = useUtilityClasses();
 
   const { onNav, activeItem } = useWrenchNav();
+  const activities = useActivities();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [serviceComposerOpen, setServiceComposerOpen] = React.useState(false);
-  const [migrationComposerOpen, setMigrationComposerOpen] = React.useState(false);
 
   function handleComposeSelectClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -40,16 +61,23 @@ export const Secondary: React.FC<{}> = () => {
 
   return (
     <>
-      <ComposeSelect open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose} />
-      {serviceComposerOpen && <ServiceComposer onClose={() => setServiceComposerOpen(false)} />}
-      {migrationComposerOpen && <MigrationComposer onClose={() => setMigrationComposerOpen(false)} />}
+      
+      <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
+        <MenuList>
+          {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
+        </MenuList>
+      </Burger.EveliShellCompose>
 
       <Burger.EveliShellExplorer>
         <div className={classes.logoContainer}>
           <img src={logo} className={classes.logo} />
         </div>
 
-        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={handleComposeSelectClick}>Compose</Button>
+        <Button startIcon={<CreateOutlinedIcon />}
+          className={classes.composeButton}
+          onClick={handleComposeSelectClick}>
+          {intl.formatMessage({ id: 'menu.compose' })}
+        </Button>
 
         <Button variant={activeItem?.type === 'FLOWS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<AccountTreeOutlinedIcon />}
@@ -79,12 +107,6 @@ export const Secondary: React.FC<{}> = () => {
           startIcon={<CompareArrowsOutlinedIcon />}
           onClick={() => onNav({ type: 'COMPARE' })}>
           {intl.formatMessage({ id: 'menu.compare' })}
-        </Button>
-
-        <Button variant={activeItem?.type === 'MIGRATIONS' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<UploadFileOutlinedIcon />}
-          onClick={() => setMigrationComposerOpen(true)}>
-          {intl.formatMessage({ id: 'menu.migrations' })}
         </Button>
 
         <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
