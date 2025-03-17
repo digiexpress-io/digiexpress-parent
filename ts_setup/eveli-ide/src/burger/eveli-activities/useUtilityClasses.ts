@@ -38,7 +38,7 @@ export const EveliActivitiesRoot = styled("div", {
     justifyContent: 'center',
 
     '.MuiCard-root': {
-      margin: 3,
+      margin: 30,
       width: '20vw',
       display: 'flex',
       flexDirection: 'column',
