@@ -128,7 +128,7 @@ export const sv = {
   'gamut.inbox.newMessage.replyingTo': 'Svarar på',
   'gamut.inbox.newMessage.sendNew': 'Skicka ett nytt meddelande',
   'gamut.inbox.newMessage.replyingTo.subject': 'Ämne',
-  'gamut.inbox.newMessage.notAllowed1': 'Detta formulär har behandlats fullständigt och nya meddelanden kan inte längre skickas.',
+  'gamut.inbox.newMessage.notAllowed1': 'Messages are not enabled.',
   'gamut.inbox.newMessage.notAllowed2': 'Vi ber om ursäkt för besväret.',
   'gamut.inbox.newMessage.notAllowed.questions': 'Kontakta oss gärna via telefon eller e-post med ytterligare frågor.',
   'gamut.inbox.noMessages': 'Inga meddelanden',

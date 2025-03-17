@@ -127,7 +127,7 @@ export const fi = {
   'gamut.inbox.newMessage.replyingTo': 'Vastaa viestiin',
   'gamut.inbox.newMessage.sendNew': 'Lähetä uusi viesti',
   'gamut.inbox.newMessage.replyingTo.subject': 'Aihe',
-  'gamut.inbox.newMessage.notAllowed1': 'Palvelupyyntösi on käsitelty ja uusia viestejä ei voi siihen voi enää lähettää.',
+  'gamut.inbox.newMessage.notAllowed1': 'Viestit eivät ole käytössä.',
   'gamut.inbox.newMessage.notAllowed2': 'Pahoittelemme häiriötä.',
   'gamut.inbox.newMessage.notAllowed.questions': 'Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.',
   'gamut.inbox.noMessages': 'Ei viestejä',

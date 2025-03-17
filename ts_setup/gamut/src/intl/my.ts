@@ -128,7 +128,7 @@ export const my = {
   'gamut.inbox.newMessage.replyingTo': 'Membalas kepada',
   'gamut.inbox.newMessage.sendNew': 'Hantar mesej baharu',
   'gamut.inbox.newMessage.replyingTo.subject': 'Subjek',
-  'gamut.inbox.newMessage.notAllowed1': 'Borang ini telah diproses sepenuhnya dan mesej baharu tidak boleh dihantar lagi.',
+  'gamut.inbox.newMessage.notAllowed1': 'Mesej tidak didayakan.',
   'gamut.inbox.newMessage.notAllowed2': 'Kami memohon maaf atas kesulitan ini.',
   'gamut.inbox.newMessage.notAllowed.questions': 'Sila hubungi kami melalui telefon atau e-mel untuk pertanyaan lanjut.',
   'gamut.inbox.noMessages': 'Tiada mesej',
