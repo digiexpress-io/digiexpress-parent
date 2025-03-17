@@ -103,7 +103,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         </div>
 
 
-        {contract?.status === 'COMPLETED' || contract?.status === 'REJECTED' ?
+        {contract?.status === 'COMPLETED' || contract?.status === 'REJECTED' || subject.exchange.length === 0 ?
           (<div className={classes.msgNotAllowedRoot}><GInboxMessageNotAllowed /></div>) : (
             <div className={classes.newMessage}>
               <NewMessage offerName={offerName} onReplyTo={(messageText: string) => handleReplyTo(subject.id, messageText)} contract={contract} />
