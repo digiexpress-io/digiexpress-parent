@@ -338,10 +338,8 @@
                   <goal>jar</goal>
                 </goals>
               </execution>
-              <configuration>
-                <additionalOptions>
-                    <additionalOption>-Xdoclint:none</additionalOption>
-                </additionalOptions>
+              <configuration> <!-- add this to disable checking -->
+                <additionalparam>-Xdoclint:none</additionalparam>
               </configuration>
             </executions>
           </plugin>
