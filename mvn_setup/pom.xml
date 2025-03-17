@@ -338,10 +338,11 @@
                   <goal>jar</goal>
                 </goals>
               </execution>
-              <configuration> <!-- add this to disable checking -->
-                <additionalparam>-Xdoclint:none</additionalparam>
-              </configuration>
             </executions>
+            
+            <configuration>
+              <failOnError>false</failOnError>
+            </configuration>
           </plugin>
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
