@@ -84,9 +84,7 @@ public class MergeMissionBuilder implements MergeMission {
     super();
     final var start = container.getMissions().values().iterator().next();
     this.nextTransitives = ImmutableGrimMissionTransitives.builder()
-        .from(start.getTransitives())
-        .treeUpdatedAt(logger.getCreatedAt())
-        .treeUpdatedBy(logger.getAuthor());
+        .from(start.getTransitives());
     
     this.container = container;
     this.logger = logger;
@@ -160,6 +158,8 @@ public class MergeMissionBuilder implements MergeMission {
   }
   @Override
   public <T> MergeMission setAllAssignees(String assigneeType, List<T> replacments, Function<T, Consumer<NewAssignment>> callbacks) {
+    
+    
     // clear old
     final var intermed = this.batch.build()
         .getAssignments().stream()
@@ -210,6 +210,8 @@ public class MergeMissionBuilder implements MergeMission {
     
     this.batch.addAllDeleteAssignments(toBeDeleted);
     
+    
+    updateVersion();
     return this;
   }
 
@@ -253,6 +255,8 @@ public class MergeMissionBuilder implements MergeMission {
       this.batch.addMissionLabels(built);
 
     }
+    
+    updateVersion();
     return this;
   }
 
@@ -290,6 +294,8 @@ public class MergeMissionBuilder implements MergeMission {
       all_links.put(built.getId(), built);
       this.batch.addLinks(built);
     }
+    
+    updateVersion();
     return this;
   }
 
@@ -300,6 +306,8 @@ public class MergeMissionBuilder implements MergeMission {
     assignment.accept(builder);
     final var built = builder.close();
     this.batch.addAssignments(built);
+    
+    updateVersion();
     return this;
   }
 
@@ -314,6 +322,8 @@ public class MergeMissionBuilder implements MergeMission {
     label.accept(builder);
     final var built = builder.close();
     this.batch.addMissionLabels(built);
+    
+    updateVersion();
     return this;
   }
 
@@ -324,6 +334,8 @@ public class MergeMissionBuilder implements MergeMission {
     link.accept(builder);
     final var built = builder.close();
     this.batch.addLinks(built);
+    
+    updateVersion();
     return this;
   }
 
@@ -341,6 +353,8 @@ public class MergeMissionBuilder implements MergeMission {
     remark.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    updateVersion();
     return this;
   }
   @Override
@@ -352,6 +366,8 @@ public class MergeMissionBuilder implements MergeMission {
         .createdAt(logger.getCreatedAt())
         .id(OidUtils.gen())
         .build());
+    
+    updateVersion();
     return this;
   }
   @Override
@@ -360,6 +376,8 @@ public class MergeMissionBuilder implements MergeMission {
     objective.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    updateVersion();
     return this;
   }
   @Override
@@ -368,6 +386,9 @@ public class MergeMissionBuilder implements MergeMission {
     viewer.accept(delegate);
     final var viewed = delegate.close();
     this.batch.addCommitViewers(viewed);
+    
+    // do not update version with commit viewer, viewing should not change the version of mission
+    // updateVersion();
     return this;
   }
   @Override
@@ -378,6 +399,10 @@ public class MergeMissionBuilder implements MergeMission {
     mergeGoal.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    // forces version change on the mission
+    updateVersion();
+    
     return this;
   }
 
@@ -389,6 +414,10 @@ public class MergeMissionBuilder implements MergeMission {
     mergeObjective.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    // forces version change on the mission
+    updateVersion();
+    
     return this;
   }
 
@@ -398,6 +427,9 @@ public class MergeMissionBuilder implements MergeMission {
     mergeRemark.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    updateVersion();
+    
     return this;
   }
   @Override
@@ -406,12 +438,19 @@ public class MergeMissionBuilder implements MergeMission {
     mergeLink.accept(builder);
     final var built = builder.close();
     this.batch.from(built);
+    
+    updateVersion();
+    
     return this;
   }
   @Override
   public MergeMission removeGoal(String goalId) {
     final var currentGoal = container.getGoals().get(goalId);
     RepoAssert.notNull(currentGoal, () -> "Can't find goal with id: '" + goalId + "' for mission: '" + missionId + "'!");
+    
+    // forces version change on the mission
+    updateVersion();
+    
     this.batch.addDeleteGoals(currentGoal);
     this.logger.rm(currentGoal);
     
@@ -447,6 +486,10 @@ public class MergeMissionBuilder implements MergeMission {
   public MergeMission removeObjective(String objectiveId) {
     final var currentObjective = container.getObjectives().get(objectiveId);
     RepoAssert.notNull(currentObjective, () -> "Can't find objective with id: '" + objectiveId + "' for mission: '" + missionId + "'!");
+    
+    
+    updateVersion();
+    
     this.batch.addDeleteObjectives(currentObjective);
     this.logger.rm(currentObjective);
     
@@ -481,7 +524,9 @@ public class MergeMissionBuilder implements MergeMission {
   public MergeMission removeRemark(String remarkId) {
     final var currentRemark = container.getRemarks().get(remarkId);
     RepoAssert.notNull(currentRemark, () -> "Can't find remark with id: '" + remarkId + "' for mission: '" + missionId + "'!");
-    
+
+
+    updateVersion();
     this.logger.rm(currentRemark);
     this.batch.addDeleteRemarks(currentRemark);
     this.container.getLinks().values().stream()
@@ -510,6 +555,7 @@ public class MergeMissionBuilder implements MergeMission {
     });
     return this;
   }
+  
   @Override
   public MergeMission onCurrentState(Consumer<GrimMissionContainer> handleCurrentState) {
     this.handleCurrentState = handleCurrentState;
@@ -539,19 +585,22 @@ public class MergeMissionBuilder implements MergeMission {
       if(isDelete) {
         logger.rm(previous);
         batch.addDeleteData(previous);
+        updateVersion();
         nextTransitives.dataExtension(null);
       } if(isModified) {
         data = ImmutableGrimMissionData.builder()
             .from(data)
             .commitId(this.logger.getCommitId())
             .build();
+        updateVersion();
         logger.merge(previous, data);
         batch.addUpdateData(data);
-        nextTransitives.dataExtension(data.getDataExtension());
         
+        nextTransitives.dataExtension(data.getDataExtension());
       } else if(isInsert) {
         logger.add(data);
         batch.addData(data);
+        updateVersion();
         nextTransitives.dataExtension(data.getDataExtension());
       }
       
@@ -564,24 +613,30 @@ public class MergeMissionBuilder implements MergeMission {
       final var isModified = !mission.equals(previous);
       
       if(isModified) {
+        updateVersion();
         mission = ImmutableGrimMission.builder()
             .from(mission)
             .commitId(this.logger.getCommitId())
             .updatedTreeWithCommitId(this.logger.getCommitId())
+            .transitives(nextTransitives.build())
             .build();
         logger.merge(previous, mission);
-        batch.addUpdateMissions(mission);
-      } else if(!batch.build().isEmpty()) {
-        mission = ImmutableGrimMission.builder()
-            .from(mission)
-            .updatedTreeWithCommitId(this.logger.getCommitId())
-            .build();
         batch.addUpdateMissions(mission);
       }
     }
     
     return batch.build();
   }
+  
+  
+  private void updateVersion() {
+    // forces version change on the mission
+    nextTransitives
+      .treeUpdatedAt(logger.getCreatedAt())
+      .treeUpdatedBy(logger.getAuthor());
+  }
+  
+  
   @Override
   public GrimMissionContainer getCurrentState() {
     return container;

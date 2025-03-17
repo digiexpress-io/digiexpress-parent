@@ -82,12 +82,12 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("commit#2")
-    .commitAuthor("jane.doe@morgue.com")
-    .missionId(missionId)
-    .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("housing").build()).build())
-    .build()
-    .await().atMost(Duration.ofMinutes(1)).getMission();
+      .commitMessage("commit#2")
+      .commitAuthor("jane.doe@morgue.com")
+      .missionId(missionId)
+      .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("housing").build()).build())
+      .build()
+      .await().atMost(Duration.ofMinutes(1)).getMission();
     
     version_2 =
         getClient().grim(repo).find().missionQuery().get(missionId)  
@@ -95,12 +95,12 @@ public class SimpleGrimUpdateViewerTest extends DbTestTemplate {
           .await().atMost(Duration.ofMinutes(1));
     
     getClient().grim(repo).commit().modifyOneMission()
-    .commitMessage("commit#3")
-    .commitAuthor("jane.doe@morgue.com")
-    .missionId(missionId)
-    .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("roofing").build()).build())
-    .build()
-    .await().atMost(Duration.ofMinutes(1)).getMission();
+      .commitMessage("commit#3")
+      .commitAuthor("jane.doe@morgue.com")
+      .missionId(missionId)
+      .modifyMission(mergeMission -> mergeMission.addLabels(newLabel -> newLabel.labelType("keyword").labelValue("roofing").build()).build())
+      .build()
+      .await().atMost(Duration.ofMinutes(1)).getMission();
     
     version_3 =
         getClient().grim(repo).find().missionQuery().get(missionId)  
