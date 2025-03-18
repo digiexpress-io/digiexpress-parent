@@ -11,6 +11,8 @@ function Component() {
   const { locale } = Route.useParams();
   const { setLocale } = useLocale();
 
+  
+
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   return (<DashboardView />)

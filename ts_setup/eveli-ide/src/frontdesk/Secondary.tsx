@@ -1,45 +1,31 @@
 import React from 'react';
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Button} from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
-import ListIcon from '@mui/icons-material/ListAlt';
-import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
-
 import { useIntl } from 'react-intl';
-import { useNavigate } from '@tanstack/react-router'
+import { useLocation, useNavigate } from '@tanstack/react-router'
+
 
 import {  useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 
 import logo from '../uiDev/logoLifeDigitalDark.svg';
 import * as Burger from '@/burger';
 
-type NavType = 'TASKS' | 'DASHBOARD' | 'PROCESSES' | 'FORMS' | 'WRENCH' | 'STENCIL' | 'WORKFLOWS' | 'FEEDBACK' | 'QUEUES' | 'PUBLICATIONS';
-
 
 export const Secondary: React.FC = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const classes = useUtilityClasses();
+  const location = useLocation()
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const [activeButton, setActiveButton] = React.useState<NavType>('TASKS')
-
-  const handleComposeSelectClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleComposeSelectClose = () => {
-    setAnchorEl(null);
-  };
 
 
   return (<>
@@ -57,7 +43,7 @@ export const Secondary: React.FC = () => {
       }}>{intl.formatMessage({ id: 'button.compose' })}</Button>
 
       <Button startIcon={<TaskOutlinedIcon />}
-        variant={activeButton === 'TASKS' ? 'explorerActive' : 'explorerInactive'} 
+        variant={location.pathname.endsWith('tasks')  ? 'explorerActive' : 'explorerInactive'} 
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/tasks'
@@ -67,7 +53,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button startIcon={<DashboardCustomizeOutlinedIcon />}
-        variant={activeButton === 'DASHBOARD' ?  'explorerActive' : 'explorerInactive'}
+        variant={location.pathname.endsWith('dashboard')  ?  'explorerActive' : 'explorerInactive'}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/dashboard'
@@ -77,7 +63,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button startIcon={<NetworkCheckIcon />}
-        variant={activeButton === 'PROCESSES' ?  'explorerActive' : 'explorerInactive'}
+        variant={location.pathname.endsWith('monitoring')  ?  'explorerActive' : 'explorerInactive'}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/monitoring'
@@ -86,48 +72,8 @@ export const Secondary: React.FC = () => {
         {intl.formatMessage({ id: 'menu.processes' })}
       </Button>
 
-      <Button startIcon={<ListIcon />}
-      variant={activeButton === 'FORMS' ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/assets/forms'
-        })}>
-        {intl.formatMessage({ id: 'menu.forms' })}
-      </Button>
-
-      <Button startIcon={<BuildOutlinedIcon />}
-        variant={activeButton === 'WRENCH' ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/assets/wrench',
-          search: { explorer: [] }
-        })}
-        
-      >
-        {intl.formatMessage({ id: 'menu.flow' })}
-      </Button>
-
-      <Button startIcon={<EditNoteOutlinedIcon />}
-        variant={activeButton === 'STENCIL' ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/assets/stencil',
-          search: { explorer: [] }
-        })}>
-        {intl.formatMessage({ id: 'menu.content' })}
-      </Button>
-
-      <Button startIcon={<SettingsOutlinedIcon />}
-        variant={activeButton === 'WORKFLOWS' ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/assets/services'
-        })}>
-        {intl.formatMessage({ id: 'menu.workflows' })}
-      </Button>
-
       <Button startIcon={<ThumbUpAltOutlinedIcon />}
-        variant={activeButton === 'FEEDBACK' ?  'explorerActive' : 'explorerInactive'}
+        variant={location.pathname.endsWith('feedback')  ?  'explorerActive' : 'explorerInactive'}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/feedback'
@@ -137,7 +83,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button startIcon={<CloudQueueIcon />}
-        variant={activeButton === 'QUEUES' ?  'explorerActive' : 'explorerInactive'}
+        variant={location.pathname.endsWith('queues')  ?  'explorerActive' : 'explorerInactive'}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/queues'
@@ -147,7 +93,7 @@ export const Secondary: React.FC = () => {
       </Button>
 
       <Button startIcon={<BeenhereOutlinedIcon />}
-        variant={activeButton === 'PUBLICATIONS' ?  'explorerActive' : 'explorerInactive'}
+        variant={location.pathname.endsWith('publications')  ?  'explorerActive' : 'explorerInactive'}
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/publications'
@@ -155,8 +101,6 @@ export const Secondary: React.FC = () => {
       >
         {intl.formatMessage({ id: 'menu.publications' })}
       </Button>
-
-
 
     </Burger.EveliShellExplorer>
   </>

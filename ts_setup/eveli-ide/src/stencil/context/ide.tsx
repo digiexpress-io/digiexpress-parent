@@ -164,16 +164,14 @@ namespace StencilComposerApi {
   export const Provider: React.FC<{ children: React.ReactNode, service: StencilApi.Service }> = ({ children, service }) => {
     const [session, dispatch] = React.useReducer(Reducer, sessionData);
     const actions = React.useMemo(() => {
-      console.log("init ide dispatch");
       return new ReducerDispatch(dispatch, service)
     }, [dispatch, service]);
 
     React.useLayoutEffect(() => {
-      console.log("init ide data");
       actions.handleLoad();
     }, [service, actions]);
 
-    return (<ComposerContext.Provider value={{ session, actions, service }}>{session.site.contentType !== 'NO_CONNECTION' && children}</ComposerContext.Provider>);
+    return (<ComposerContext.Provider value={{ session, actions, service }}>{children}</ComposerContext.Provider>);
   };
 }
 

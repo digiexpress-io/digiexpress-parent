@@ -8,7 +8,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
@@ -90,6 +91,27 @@ export const Toolbar: React.FC<{}> = () => {
       <div>
         <IconButton disabled className={classes.itemActive}><EditNoteOutlinedIcon /></IconButton>
         <Typography className={classes.textActive}><FormattedMessage id='toolbar.stencil' /></Typography>
+      </div>
+      <div>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/assets/services'
+        })}>
+
+          <SettingsOutlinedIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='menu.workflows' /></Typography>
+      </div>
+
+
+      <div>
+        <IconButton onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/assets/forms'
+          })}>
+          <ListIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='menu.forms' /></Typography>
       </div>
 
       <div>

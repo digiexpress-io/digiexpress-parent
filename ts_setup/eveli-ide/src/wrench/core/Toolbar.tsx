@@ -4,13 +4,13 @@ import { IconButton, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
-
-import { FormattedMessage, useIntl } from 'react-intl';
+import ListIcon from '@mui/icons-material/ListAlt';
+import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
@@ -94,6 +94,27 @@ const Toolbar: React.FC<{}> = () => {
           <EditNoteOutlinedIcon />
         </IconButton>
         <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+      </div>
+      <div>
+        <IconButton onClick={() => navigate({
+          from: '/secured/$locale',
+          to: '/secured/$locale/assets/services'
+        })}>
+
+          <SettingsOutlinedIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='menu.workflows' /></Typography>
+      </div>
+
+
+      <div>
+        <IconButton onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/assets/forms'
+          })}>
+          <ListIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='menu.forms' /></Typography>
       </div>
 
       <div>
