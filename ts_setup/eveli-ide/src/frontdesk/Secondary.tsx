@@ -54,7 +54,7 @@ export const Secondary: React.FC = () => {
           from: '/secured/$locale',
           to: 'worker/tasks/create'
         })
-      }}>Compose</Button>
+      }}>{intl.formatMessage({ id: 'button.compose' })}</Button>
 
       <Button startIcon={<TaskOutlinedIcon />}
         variant={activeButton === 'TASKS' ? 'explorerActive' : 'explorerInactive'} 

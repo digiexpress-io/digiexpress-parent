@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 import { useQuery } from '@tanstack/react-query'
 import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
@@ -23,7 +21,7 @@ export interface PopulateOfferContext {
   createOffer: (request: OfferApi.OfferRequest) => Promise<OfferApi.Offer>;
   cancelOffer: (offerId: string) => Promise<void>;
   fetchOffer: (offerId: string) => Promise<OfferApi.Offer>;
-  getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;
+  getLocalisedOfferName: (site: SiteApi.Site, workflowName: string | undefined) => string;
   refresh(): Promise<void>;
 }
 
@@ -41,9 +39,9 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   });
 
   // Get the offer (form) name based on the topic link
-  const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string): string => {
-    const linkName: string = Object.values(site.links).find(link => link.value === workflowName)?.name!;
-    return linkName;
+  const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string | undefined): string => {
+    const link = Object.values(site.links).find(link => link.value === workflowName);
+    return link ? link.name : '-';
   };
 
 

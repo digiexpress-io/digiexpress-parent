@@ -6,6 +6,7 @@ export const fi = {
   'cust.email': 'info@lifeDigital.com',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Avoimen lähdekoodin alusta palvelujen digitalisointiin',
+  'footer.column3.title': 'Pikalinkkejä',
   'footer.column3.link.acessibility': 'Saavutettavuus seloste',
   'footer.column3.link.dataProtection': 'Tietosuoja',
   'footer.column3.link.feedback': 'Palautteet',
