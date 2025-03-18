@@ -64,15 +64,6 @@ const Toolbar: React.FC<{}> = () => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
-      <div>
-        <IconButton onClick={(event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.activities' /></Typography>
-      </div>
-
-      <div>
-        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.save' /></Typography>
-      </div>
 
       <div>
         <IconButton onClick={(event) => {}}><SearchIcon /></IconButton>
@@ -113,6 +104,17 @@ const Toolbar: React.FC<{}> = () => {
       </div>
 
       <Burger.EveliLocales />
+
+      <div>
+        <IconButton onClick={(event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.activities' /></Typography>
+      </div>
+
+      <div>
+        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
+        <Typography><FormattedMessage id='toolbar.save' /></Typography>
+      </div>
+
     </EveliShellMiniBarRoot>
   );
 }
