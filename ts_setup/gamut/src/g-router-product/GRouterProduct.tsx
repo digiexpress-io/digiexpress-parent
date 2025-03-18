@@ -17,7 +17,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 import { SiteApi } from '../api-site';
 
-import { GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot, GRouterProductRoot, GRouterProductTitleRoot, useUtilityClasses } from './useUtilityClasses';
+import { GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot, GRouterProductRoot, GRouterProductTitleRoot, GRouterProductButtonsRoot, useUtilityClasses } from './useUtilityClasses';
 
 export interface GRouterProductProps {
   productId: string,
@@ -88,6 +88,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
 
   const { topicLink, topic, locale, anonymousUser, allowed } = props.ownerState;
   const productId = topicLink?.id;
+  const classes = useUtilityClasses();
 
 
   // article links
@@ -129,10 +130,11 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
     })
   }
 
-  return (<>
+  return (
+    <GRouterProductButtonsRoot className={classes.root}>
       <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
       <Button variant='contained' disabled={!allowed} onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
-  </>)
+    </GRouterProductButtonsRoot>)
 }
 
 const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {

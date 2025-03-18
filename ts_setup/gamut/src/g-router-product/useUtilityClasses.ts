@@ -78,6 +78,22 @@ export const GRouterProductTitleRoot = styled("div", {
   }
 });
 
+export const GRouterProductButtonsRoot = styled("div", {
+  name: MUI_NAME,
+  slot: 'ProductButtons',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+})(({ theme }) => {
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(1),
+  }
+});
+
 export const GRouterProductBreadcrumbsRoot = styled(Breadcrumbs, {
   name: MUI_NAME,
   slot: 'ProductBreadcrumbs',
