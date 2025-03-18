@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, Popover, Typography, IconButton, Divider, MenuList, ListItemText, MenuItem } from '@mui/material';
+import { useThemeProps, Typography, IconButton, Divider, MenuList, ListItemText, MenuItem } from '@mui/material';
 import LanguageIcon from '@mui/icons-material/Language';
 
 import { FormattedMessage } from 'react-intl';
@@ -45,12 +45,12 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
 
 
   function handleChange(locale: string) {
+
     navigate({
       to: '.',
       params: (params) => ({ ...params, locale }),
       search: prev => prev
     });
-    
     onClick ? onClick(locale) : null;
   }
 
