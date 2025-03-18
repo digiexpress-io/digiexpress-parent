@@ -51,9 +51,9 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
       return;
     }
     nav({
-      from: '/secured/$locale/views/$newViewId',
-      params: { newViewId },
-      to: '/secured/$locale/views/$newViewId',
+      from: '/secured/$locale/views/$viewId',
+      params: { viewId },
+      to: '/secured/$locale/views/$viewId',
     })
   }, []);
 

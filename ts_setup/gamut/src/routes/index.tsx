@@ -1,6 +1,6 @@
-import { createFileRoute, redirect, Navigate } from '@tanstack/react-router'
+import { createFileRoute, Navigate } from '@tanstack/react-router'
 import { useIam } from '../api-iam';
-import React from 'react';
+
 
 export const Route = createFileRoute('/')({
   component: Component,
@@ -14,7 +14,7 @@ function Component() {
     return <Navigate {...{
       from: '/',
       to: '/public/$locale',
-      params: { viewId: '', locale: 'en' }
+      params: { locale: 'en' }
     }}/>
   } else {
     return <Navigate {...{

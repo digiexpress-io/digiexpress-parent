@@ -5,10 +5,12 @@ export namespace LegacyProcessApi {
     name: string;
     created: string;  // "2023-05-15T08:51:40.380479"
     updated: string;  // "2023-05-15T08:51:40.380479"
-    
+
+
     inputContextId: string;
     inputParentContextId: string;
     taskId?: string | undefined;
+    taskRef?: string | undefined;
     // process status
     status: (
       'CREATED'  // When a new process is created. Process contains information about wrench workflow, status, info about task and dialob questionnaire id

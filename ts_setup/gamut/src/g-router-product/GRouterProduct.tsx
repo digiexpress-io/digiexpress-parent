@@ -123,7 +123,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       } else {
         nav({
           params: { locale, pageId, productId, offerId: offer.id },
-          to: '/secured/$locale/pages/${props.ownerState.pageId}/products/$productId/offers/$offerId',
+          to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
         })
       }
     })
