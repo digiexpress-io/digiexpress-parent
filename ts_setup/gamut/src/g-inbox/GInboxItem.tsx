@@ -11,6 +11,7 @@ export interface GInboxItemProps {
   children: React.ReactNode
   id: string;
   title: string;
+  taskRefId: string,
   subTitle: string;
   senderName: string;
   sentAt: DateTime;
@@ -24,7 +25,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const { title, subTitle, senderName, sentAt, onClick, id, contractStatus } = props;
+  const { title, subTitle, senderName, sentAt, onClick, id, contractStatus, taskRefId } = props;
   const classes = useUtilityClasses();
 
   return (
@@ -38,6 +39,11 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
       <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
         <div className={classes.itemText}>
           <Typography component='span' className={classes.itemTitle}>{title}{intl.formatMessage({ id: 'gamut.noValueIndicator' })}</Typography>
+          <Typography className={classes.itemTitle}>
+            {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
+            {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
+            {taskRefId}
+          </Typography>
           <Typography component='span' className={classes.itemSubTitle}>{subTitle}</Typography>
         </div>
       </Grid>

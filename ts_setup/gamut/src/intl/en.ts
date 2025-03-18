@@ -63,6 +63,7 @@ export const en = {
   'gamut.article.pagelinks.forms.title': 'Forms',
   'gamut.article.pagelinks.otherlinks.title': 'Links',
   'gamut.forms.formName': 'Name',
+  'gamut.forms.taskRefId': 'Reference Id',
   'gamut.forms.started': 'Started',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'In progress',

@@ -85,6 +85,7 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
 
           return (<InboxItem
             id={subject.id}
+            taskRefId={contract.referenceId}
             key={subject.id}
             onClick={props.slotProps.item.onClick!}
             senderName={getSenderName(subject, iam, intl)}

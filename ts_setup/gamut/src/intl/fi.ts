@@ -62,6 +62,7 @@ export const fi = {
   'gamut.article.pagelinks.forms.title': 'Lomakkeet',
   'gamut.article.pagelinks.otherlinks.title': 'Linkit',
   'gamut.forms.formName': 'Lomakkeen nimi',
+  'gamut.forms.taskRefId': 'Viitetunnus',
   'gamut.forms.started': 'Aloitettu',
   'gamut.forms.status': 'Tila',
   'gamut.forms.status.OPEN': 'Käsittelyssä',

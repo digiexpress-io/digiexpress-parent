@@ -9,6 +9,7 @@ export interface GContractsClasses {
   root: string;
   item: string;
   status: string;
+  taskRefId: string;
   lastModified: string;
   messages: string;
   files: string;
@@ -25,6 +26,7 @@ export const useUtilityClasses = () => {
     item: ['item'],
     status: ['status'],
     lastModified: ['lastModified'],
+    taskRefId: ['taskRefId'],
     messages: ['messages'],
     files: ['files'],
     messagesCount: ['messagesCount'],
@@ -42,6 +44,7 @@ export const GContractItemRoot = styled("div", {
     return [
       styles.root,
       styles.status,
+      styles.taskRefId,
       styles.lastModified,
       styles.messages,
       styles.files,
@@ -65,6 +68,10 @@ export const GContractItemRoot = styled("div", {
       alignItems: 'center'
     },
     '& .GContracts-status': {
+      fontWeight: 'bold',
+      marginRight: theme.spacing(0.5)
+    },
+    '& .GContracts-taskRefId': {
       fontWeight: 'bold',
       marginRight: theme.spacing(0.5)
     },

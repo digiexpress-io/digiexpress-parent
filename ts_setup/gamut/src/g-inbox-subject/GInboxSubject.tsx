@@ -72,7 +72,6 @@ export const GInboxSubject: React.FC<GInboxSubjectProps> = (initProps) => {
       <>
         <div className={classes.header}>
           <FormReview formName={subject.name} formId={subject.formId} />
-
           {subject?.documents.map((doc) => (
             <div className={classes.attachments}>
               <Attachments name={offerName}

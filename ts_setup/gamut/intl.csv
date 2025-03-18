@@ -73,6 +73,7 @@ gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
 // -------------------- GAMUT FORMS ---------------------------,,,,#VALUE!,
 gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama
+gamut.forms.taskRefId,,Reference Id,Viitetunnus,,
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula
 gamut.forms.status,,Status,Tila,Status,Status
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung

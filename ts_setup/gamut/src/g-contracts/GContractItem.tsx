@@ -10,6 +10,7 @@ import { GContractItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClas
 
 export interface GContractItemProps {
   exchangeId: string;
+  referenceId: string;
   name: string;
   status: string;
   lastModified: DateTime;
@@ -34,7 +35,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { lastModified, name, status, documents, messages, onClick, slotProps = {}, exchangeId } = props;
+  const { lastModified, name, status, documents, messages, onClick, slotProps = {}, exchangeId, referenceId } = props;
 
   const ownerState = {
     ...props,
@@ -48,6 +49,15 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
             <Typography>{name}</Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+            <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
+              <Typography component='span' className={classes.taskRefId}>
+                {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
+              </Typography>
+            </GFlex>
+            <Typography component='span'>{referenceId}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
