@@ -1,5 +1,6 @@
 import { ConfigEnv, UserConfig } from 'vite';
 import dts from 'vite-plugin-dts'
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
@@ -18,6 +19,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     base: process.env.PUBLIC_URL || '',
     resolve: { alias },
     plugins: [
+      TanStackRouterVite(),
       react({ }),
       dts({ rollupTypes: false }),
       checker({ typescript: true }),
