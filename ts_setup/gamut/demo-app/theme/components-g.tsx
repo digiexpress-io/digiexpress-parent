@@ -1,10 +1,32 @@
 import { Theme, Components } from '@mui/material';
 import logoLifeDigitalLight from './logoLifeDigitalLight.svg';
 import logoLifeDigitalDark from './logoLifeDigitalDark.svg';
+import user_logo_dark from './user_logo_dark.svg'
+import user_logo_light from './user_logo_light.svg'
 import { DemoFooter } from './DemoFooter';
 
 
 export const components_g: Components<Omit<Theme, 'components'>> = {
+
+  GLogo: {
+    defaultProps: {
+
+    },
+    variants: [
+      {
+        props: { variant: 'black_lg', img: user_logo_light },
+        style: { width: '200px', height: '70px' }
+      },
+      {
+        props: { variant: 'black_sm', img: user_logo_light },
+        style: { width: '150px', height: '50px' }
+      },
+      {
+        props: { variant: 'black_sm_mob', img: user_logo_light },
+        style: { width: '120px', height: '40px' }
+      }
+    ]
+  },
 
   GShell: {
     defaultProps: {
@@ -56,34 +78,6 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GOffers: {},
   GContracts: {},
-  GLogo: {
-    defaultProps: {
-
-    },
-    variants: [
-      {
-        props: { variant: 'white_lg', img: logoLifeDigitalLight },
-        style: { width: '300px', height: '100px' }
-      },
-      {
-        props: { variant: 'white_sm', img: logoLifeDigitalLight },
-        style: { width: '150px', height: '50px' }
-      },
-      {
-        props: { variant: 'black_lg', img: logoLifeDigitalDark },
-        style: { width: '200px', height: '70px' }
-      },
-      {
-        props: { variant: 'black_sm', img: logoLifeDigitalDark },
-        style: { width: '150px', height: '50px' }
-      },
-      {
-        props: { variant: 'black_sm_mob', img: logoLifeDigitalDark },
-        style: { width: '120px', height: '40px' }
-      }
-    ]
-  },
-
   GRouterBookings: {},
   GRouterFormsAwaitingDecision: {},
   GRouterFormsWithDecision: {},
