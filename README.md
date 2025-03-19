@@ -30,21 +30,6 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 
 ## Documentation 
 
-### Installation and local development
-
-1. [Installing prerequisites](/docs/README_PREREQUISITES.md)
-2. [Installing and running the application](/docs/README_RUNNING_APP.md)
-3. [Common database operations](/docs/README_DB_OPS.md)
-4. [Troubleshooting](/docs/README_TROUBLESHOOTING.md)
-
-### DigiExpress child projects
-
-5. TODO [Thena](/docs/README_THENA.md)
-6. TODO [Dialob](/docs/README_DIALOB.md)
-7. TODO [The Wrench](/docs/README_WRENCH.md)
-8. TODO [The Stencil](/docs/README_STENCIL.md)
-9. TODO Other
-
 ### Contributing
 
 1. [Contribution guidelines](/docs/README_CONTRIBUTION_GUIDELINES.md): Branch organisation, creating feature branches, creating issues, making pull requests
