@@ -42,7 +42,7 @@ To run either frontend:
 ## 3. Database Setup
 1. Navigate to the Docker setup directory:
    ```bash
-   cd /Users/kaur/development/digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
+   cd /digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
    ```
 
 2. Start the Docker containers:
