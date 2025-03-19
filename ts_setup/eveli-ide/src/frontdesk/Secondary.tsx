@@ -14,9 +14,8 @@ import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
 
-import {  useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
+import { useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 
-import logo from '../uiDev/logoLifeDigitalDark.svg';
 import * as Burger from '@/burger';
 
 
@@ -31,9 +30,7 @@ export const Secondary: React.FC = () => {
   return (<>
 
     <Burger.EveliShellExplorer>
-      <div className={classes.logoContainer}>
-        <img src={logo} className={classes.logo} />
-      </div>
+      <Burger.EveliLogo />
 
       <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={() => {
         navigate({

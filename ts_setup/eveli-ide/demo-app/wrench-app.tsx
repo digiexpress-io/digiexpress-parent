@@ -4,15 +4,10 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl'
 
 
-import { WrenchClient, intl, siteTheme, WrenchComposer, WrenchComponents } from '@dxs-ts/eveli-ide';
+import { WrenchClient, intl, WrenchComposer, WrenchComponents } from '@dxs-ts/eveli-ide';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliApp } from '@/burger';
-
-
-const init = {
-  locale: 'en',
-  url: "http://localhost:8081/assets", //spring-app
-};
+import { userTheme } from './theme';
 
 const getLocale = (): 'en' | 'sv' | 'fi' => {
   let locale = (navigator.languages && navigator.languages[0]) || navigator.language || (navigator as any).userLanguage || 'en-US';
@@ -48,7 +43,7 @@ export const WrenchApp: React.FC = () => {
   return (
     <IntlProvider locale={locale} messages={intl[locale]}>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={siteTheme}>
+        <ThemeProvider theme={userTheme}>
           <WrenchComposer.Provider service={service}>
             <EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />
           </WrenchComposer.Provider>

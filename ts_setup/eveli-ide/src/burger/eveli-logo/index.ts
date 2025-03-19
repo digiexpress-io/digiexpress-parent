@@ -1,2 +1,2 @@
-export * from './GLogo';
-export type { GLogoClassKey, GLogoClasses } from './useUtilityClasses';
+export * from './EveliLogo';
+export type { EveliLogoClassKey, EveliLogoClasses } from './useUtilityClasses';

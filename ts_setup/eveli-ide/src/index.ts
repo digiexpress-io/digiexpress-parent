@@ -3,7 +3,8 @@ export { tree as fetchtree } from './fetchTree.gen'
 export { LocaleProvider, IamBackendProvider, ConfigContextProvider } from '@/burger';
 
 export { intl }
-export { siteTheme } from './burger';
+export { eveliTheme } from './burger';
+export type { EveliComponents } from './burger';
 export type { StencilApi } from './stencil';
 export type { HdesApi } from './wrench';
 export type { QueueApi } from './queue'
