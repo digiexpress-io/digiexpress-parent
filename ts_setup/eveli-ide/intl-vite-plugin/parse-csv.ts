@@ -54,7 +54,7 @@ class CsvReadVisitor {
   }
 
   visitIntlValue(locale: string, object: Record<string, string>): string {
-    return object[locale] ?? '';
+    return object[locale].replace("\\'", "'").replace("'", "\\'") ?? '';
   }
   
   visitIntlFileLine(props: {locale: string, intlKey: string, intlValue: string}) {

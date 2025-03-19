@@ -545,7 +545,7 @@ export const en = {
   'pages.add': 'Add a page',
   'pages.change': 'Change a page locale',
   'pages.change.info': 'Select a page from this Article and enter a new value for its locale.',
-  'pages.change.devmode': 'Change a page development mode',
+  'pages.change.devmode': 'Change a page\'s development mode',
   'pages.change.devmode.info': 'Select a page from this Article and change its development mode.',
   'pages.devmode.helper': 'If Development mode is active, this page will only appear in the development environment for testing. It will not be included in production releases.',
   'pages.devmode': 'Development mode',
