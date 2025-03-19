@@ -48,8 +48,8 @@ export const EveliLocales: React.FC<EveliLocalesProps> = (initProps) => {
 
     navigate({
       to: '.',
-      params: (params) => ({ ...params, locale }),
-      search: prev => prev
+      params: (params: any) => ({ ...params, locale }),
+      search: (prev: any) => prev
     });
     onClick ? onClick(locale) : null;
   }
