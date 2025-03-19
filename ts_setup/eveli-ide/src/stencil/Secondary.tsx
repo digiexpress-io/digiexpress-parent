@@ -13,7 +13,6 @@ import { useIntl } from 'react-intl';
 
 import { useUtilityClasses } from '../burger/eveli-shell/useUtilityClasses';
 
-import logo from '../uiDev/logoLifeDigitalDark.svg';
 import { MigrationComposer } from './migration';
 import { useStencilNav } from './nav';
 import { ActivityProps, useActivities } from './Activities';
@@ -69,9 +68,7 @@ const Secondary: React.FC<{}> = () => {
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 
       <Burger.EveliShellExplorer>
-        <div className={classes.logoContainer}>
-          <img src={logo} className={classes.logo} />
-        </div>
+        <Burger.EveliLogo />
 
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}

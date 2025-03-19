@@ -11,11 +11,27 @@ import { SnackbarProvider } from 'notistack';
 import {
   fetchtree, FetchProvider, LocaleProvider,
   IamBackendProvider, ConfigContextProvider,
-  siteTheme, router,
+  EveliComponents, 
+  router
 } from '@dxs-ts/eveli-ide';
 
+import { userTheme } from './theme';
 
 const queryClient = new QueryClient();
+
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
+// Register eveli components
+declare module '@mui/material' {
+  export interface Components<Theme = unknown> extends EveliComponents<Theme> { }
+}
+
 
 export const FrontdeskApp: React.FC = () => {
   const notistackRef = React.createRef<SnackbarProvider>();
@@ -26,6 +42,7 @@ export const FrontdeskApp: React.FC = () => {
   async function handleExpire() {
     console.log("SESSION EXPIRED");
   }
+  
   const logoutUrl = '/logout';
   const loginUrl = '/oauth2/authorization/oidcprovider';
 
@@ -42,7 +59,7 @@ export const FrontdeskApp: React.FC = () => {
             <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
 
               <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={siteTheme}>
+                <ThemeProvider theme={userTheme}>
 
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />

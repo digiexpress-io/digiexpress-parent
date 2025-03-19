@@ -12,7 +12,6 @@ import { useIntl } from 'react-intl';
 
 
 import { useUtilityClasses } from '../../burger/eveli-shell/useUtilityClasses';
-import logo from '../../uiDev/logoLifeDigitalDark.svg';
 import * as Burger from '@/burger';
 import { useWrenchNav } from './nav';
 import { useActivities, ActivityProps } from './Activities';
@@ -69,9 +68,7 @@ export const Secondary: React.FC<{}> = () => {
       </Burger.EveliShellCompose>
 
       <Burger.EveliShellExplorer>
-        <div className={classes.logoContainer}>
-          <img src={logo} className={classes.logo} />
-        </div>
+        <Burger.EveliLogo />
 
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}

@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.128",
+  "version": "0.0.132",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/src/index.d.ts",
@@ -18,7 +18,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@dxs-ts/gamut": "^1.0.59",
+    "@dxs-ts/gamut": "^1.0.61",
     "@uiw/react-md-editor": "^4.0.4",
     "@xyflow/react": "^12.4.4",
     "codemirror": "^5.65.18",

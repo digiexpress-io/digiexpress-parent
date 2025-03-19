@@ -2,6 +2,8 @@
 
 export * from './eveli-app';
 export * from './eveli-login';
+export * from './eveli-logo';
+export * from './eveli-props';
 export * from './eveli-locales';
 export * from './eveli-shell-explorer';
 
@@ -13,8 +15,7 @@ export * from './eveli-shell-compose';
 export * from './eveli-search';
 export * from './eveli-alert';
 export * from './eveli-activities';
-
-export { siteTheme } from './theme/siteTheme';
+export * from './eveli-theme';
 
 export { 
   StyledTreeItem as TreeItem, 
