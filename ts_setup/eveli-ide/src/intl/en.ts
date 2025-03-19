@@ -1,4 +1,5 @@
 export const en = {
+  'document.title': ' Eveli app title',
   'tasksView.title': 'Tasks',
   'tasksTableHeader.taskName': 'Task name',
   'tasksTableHeader.category': 'Type',
