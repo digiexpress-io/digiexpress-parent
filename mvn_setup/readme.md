@@ -25,11 +25,11 @@ There are two **TypeScript frontend** applications:
 ### **Eveli-IDE**
 - Mikki refers to it as "front office, front desk".
 - Vahur refers to it as "task management".
-- This is the **worker interface** for managing tasks.
+- This is the **worker interface** for managing tasks. This is the interface designed for workers or officials who oversee and manage tasks submitted by citizens. They can review, respond to, and make decisions on applications or requests submitted through the Gamut portal. The worker interface facilitates the decision-making process, approvals, and replies to the citizen tasks.
 
 ### **Gamut**
 - Mikki and Vahur call it the "portal".
-- This is the **citizen interface**.
+- This is the **citizen interface**. This is the interface for citizens to submit requests, applications, or tasks. Citizens interact with the Gamut portal to initiate processes, make inquiries, or provide necessary information, which is then reviewed and processed by the workers using the Eveli-IDE interface.
 
 To run any of these frontend applications:
 
