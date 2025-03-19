@@ -2,7 +2,9 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
+
+
+//import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
@@ -20,6 +22,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
 
   return (<>
     <QueryClientProvider client={queryClient}>
+      {/*
       <DialobProvider
         fetchActionGet={'not-implemented' as any}
         fetchActionPost={'not-implemented' as any}
@@ -37,6 +40,8 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
           </DialogActions>
         </Dialog>
       </DialobProvider>
+      */
+    }
     </QueryClientProvider>
   </>)
 }
