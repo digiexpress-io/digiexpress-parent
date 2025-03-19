@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from '@tanstack/react-router'
-import { router } from '@dxs-ts/gamut';
+import { GComponents, router } from '@dxs-ts/gamut';
 
 import { DemoApp } from './DemoApp';
 
@@ -17,4 +17,9 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
   }
+}
+
+// Register gamut components
+declare module "@mui/material" {
+  export interface Components<Theme = unknown> extends GComponents<Theme> { }
 }

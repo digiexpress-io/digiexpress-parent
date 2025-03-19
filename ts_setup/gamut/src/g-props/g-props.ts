@@ -99,11 +99,6 @@ import { GRouterUnfinishedFormsClassKey, GRouterUnfinishedFormsProps } from '../
 import { GRouterUnsecuredClassKey, GRouterUnsecuredProps } from '../g-router-unsecured';
 import { GRouterUserOverviewClassKey, GRouterUserOverviewProps } from '../g-router-user-overview';
 
-declare module "@mui/material" {
-  export interface Components<Theme = unknown> extends GComponents<Theme> { }
-}
-
-
 
 /**
  * MUI theme integration
