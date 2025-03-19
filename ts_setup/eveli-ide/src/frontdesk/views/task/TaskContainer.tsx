@@ -16,7 +16,7 @@ import { TasksComponentResolver } from './LinkResolver';
 export const TaskContainer: React.FC<{ taskId?: string }> = (props) => {
   let id: any = props.taskId;
 
-  const { groups } = useFetch('$org/groupList.GET', {});
+  const { groups } = useFetch('$org/groupsList.GET', {});
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
   const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
 

@@ -14,7 +14,7 @@ export const TasksView: React.FC = () => {
   const { taskDeleteGroups } = useConfig();
   const { user } = useIam();
   const [newTasks, setNewTasks] = useState<string[]>([]);
-  const { groups } = useFetch('$org/groupList.GET', {});
+  const { groups } = useFetch('$org/groupsList.GET', {});
   const { loadTasks } = useFetch('worker/rest/api/tasks.GET', {});
   const { loadNewTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
 
