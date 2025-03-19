@@ -19,7 +19,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     base: process.env.PUBLIC_URL || '',
     plugins: [
       react({ }),
-      dts({ rollupTypes: true }),
+      dts({ rollupTypes: true, exclude: ["demo-app"] }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
       intlTsVite({})
