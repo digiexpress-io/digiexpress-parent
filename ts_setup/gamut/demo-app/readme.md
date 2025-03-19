@@ -61,7 +61,7 @@ There are two types of logos: **lg** (large) and **sm** (small), and they can be
 
 ### Step 3: Modify the `components_g` Object
 
-The `components_g` object contains all the components and their variants. You can modify any of the properties and styles as required for your project.
+The `components_g` object contains the components and their variants. You can modify any of the properties and styles as required for your project.
 
 Example of the `GLogo` customization:
 
@@ -87,6 +87,5 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
       }
     ]
   },
-  // Other component customizations can go here
 }
 ```
