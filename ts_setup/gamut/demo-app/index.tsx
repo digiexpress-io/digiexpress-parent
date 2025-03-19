@@ -10,3 +10,11 @@ const container = document.getElementById('root');
 const root = createRoot(container!);
 
 root.render(<DemoApp><RouterProvider router={router} /></DemoApp>);
+
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
