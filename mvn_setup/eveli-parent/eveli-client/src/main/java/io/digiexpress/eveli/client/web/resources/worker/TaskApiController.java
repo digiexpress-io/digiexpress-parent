@@ -177,8 +177,18 @@ public class TaskApiController {
     final var comments = taskClient.queryTaskComments().findAllByTaskId(id).await().atMost(timeout);
     return new ResponseEntity<>(comments, HttpStatus.OK);
   }
-
   
+  @PostMapping(value="/{id}/comments")
+  public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
+  {
+    final var worker = securityClient.getUser().getPrincipal();
+    final var newComment = taskClient.taskBuilder()
+        .userId(worker.getUsername(), worker.getEmail())
+        .createTaskComment(command).await().atMost(timeout);
+    
+    mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
+    return new ResponseEntity<>(newComment, HttpStatus.CREATED);
+  }
   
   @GetMapping(value="/{id}/reviews")
   public ResponseEntity<?> getTaskFormReview(@PathVariable("id") String id)

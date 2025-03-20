@@ -56,15 +56,5 @@ public class CommentApiController
     return ResponseEntity.ok(taskClient.queryTaskComments().getOneById(id).await().atMost(timeout));
   }
   
-  @PostMapping
-  public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
-  {
-    final var worker = securityClient.getUser().getPrincipal();
-    final var newComment = taskClient.taskBuilder()
-        .userId(worker.getUsername(), worker.getEmail())
-        .createTaskComment(command).await().atMost(timeout);
-    
-    mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
-    return new ResponseEntity<>(newComment, HttpStatus.CREATED);
-  }
+  
 }
