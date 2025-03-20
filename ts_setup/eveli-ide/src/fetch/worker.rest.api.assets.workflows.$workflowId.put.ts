@@ -1,7 +1,8 @@
-import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Workflow } from '../frontdesk/types/Workflow';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';
+
+import { PublicationApi } from '@/burger';
+import { createFileFetch } from '@dxs-ts/eveli-fetch';
 
 export const Hook = createFileFetch('worker/rest/api/assets/workflows/$workflowId.PUT')({
   hook
@@ -14,7 +15,7 @@ function hook(props: {}) {
   const intl = useIntl();
 
   return {
-    update: async(workflowCommand: Workflow, onOk: () => void) => {
+    update: async(workflowCommand:  PublicationApi.AssetService, onOk: () => void) => {
 
       return params.fetch(url({workflowId: workflowCommand.id}), {
         method,

@@ -1,13 +1,13 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Workflow } from '../frontdesk/types/Workflow';
 import { useQuery } from '@tanstack/react-query';
+import { PublicationApi  } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/assets/workflows.GET')({
   hook
 }) 
 
 function hook(props: {}): {
-  workflows: Workflow[] | undefined, refreshWorkflows: typeof refetch
+  workflows: PublicationApi.AssetService[] | undefined, refreshWorkflows: typeof refetch
 } {
   const params = Hook.useParams();
   const { url, method } = params;
@@ -19,7 +19,7 @@ function hook(props: {}): {
     queryKey: [query],
     queryFn: () => params
       .fetch(query).then(resp => resp.json())
-      .then((data: Workflow[]) => data),
+      .then((data: PublicationApi.AssetService[]) => data),
   });
 
   return { workflows: data, refreshWorkflows: refetch }
