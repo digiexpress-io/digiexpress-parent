@@ -96,7 +96,7 @@
     ]
   },
   "exports": {
-    "./build/index.css": {
+    "./build/style.css": {
       "import": "./build/style.css"
     }
   },
