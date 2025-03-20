@@ -1,5 +1,5 @@
 import { Theme, Components } from '@mui/material';
-import user_logo_light from './logoLifeDigitalLight.svg';
+import user_logo_light from './logoLifeDigitalDark.svg';
 import { DemoFooter } from './DemoFooter';
 
 
@@ -94,6 +94,11 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GAuth: {
     defaultProps: {
       action: "http://localhost:3001/secured/en/views/user-overview",
+    }
+  },
+  GAuthFormStart: {
+    defaultProps: {
+      action: "/portal/login",
     }
   },
   GAuthRepCompany: {

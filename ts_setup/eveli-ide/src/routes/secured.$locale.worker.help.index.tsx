@@ -1,8 +1,9 @@
 import React from 'react'
+import { Box, Container, Paper, Typography } from '@mui/material'
 import { createFileRoute } from '@tanstack/react-router'
+import { FormattedMessage } from 'react-intl'
 import { useLocale } from '@/burger'
 
-import { HelpView } from '../frontdesk/views/help/HelpView';
 
 export const Route = createFileRoute('/secured/$locale/worker/help/')({
   component: Component,
@@ -14,5 +15,14 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<HelpView />)
+  return (
+    <Container maxWidth='lg'>
+      <Typography variant='h6' gutterBottom>
+        <FormattedMessage id='help.title' />
+      </Typography>
+      <Paper variant="outlined">
+        <Box padding={1}></Box>
+      </Paper>
+    </Container>
+  );
 }

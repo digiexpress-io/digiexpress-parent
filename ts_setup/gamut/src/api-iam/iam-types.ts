@@ -77,6 +77,8 @@ export declare namespace IamApi {
 
     liveness: number | undefined;
 
-    getUser: () => Promise<User | undefined>
+    getUser: () => Promise<User | undefined>;
+    fetchUserGET: IamApi.FetchUserGET;
+    reload: () => Promise<void>
   }
 }

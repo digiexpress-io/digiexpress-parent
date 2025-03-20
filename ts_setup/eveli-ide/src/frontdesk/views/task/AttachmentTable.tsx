@@ -6,9 +6,9 @@ import { Box, Button} from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import { localizeTable } from '../../util/localizeTable';
+
 import { useAttachmentConfig } from '../../context/AttachmentContext';
-import { TaskApi } from '@/burger';
+import { TaskApi, useMaterialTableLabels } from '@/burger';
 
 const classes = {
     addButton: {
@@ -36,7 +36,7 @@ interface Props {
 export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments, setAttachments }) =>{
 
   const intl = useIntl();
-  const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
+  const tableLocalization = useMaterialTableLabels();
   const tableRef = useRef();
   const attachmentContext = useAttachmentConfig();
 

@@ -1,7 +1,8 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
-import { Publication } from '../frontdesk/types/Publication';
+import { PublicationApi } from '@/burger';
+
 
 
 
@@ -40,7 +41,7 @@ function hook(props: {}) {
   const { enqueueSnackbar } = useSnackbar();
 
   return {
-    getRelease: async (releaseTag: Publication) => {
+    getRelease: async (releaseTag: PublicationApi.Publication) => {
       return params.fetch(url({ deploymentId: releaseTag.name }), {
         headers: {
           'Accept': 'application/json'

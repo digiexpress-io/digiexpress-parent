@@ -1,7 +1,7 @@
 import React from 'react'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
-import { TasksView } from '../frontdesk/views/task';
+import { createFileRoute } from '@tanstack/react-router'
+import { useLocale, EveliTasks } from '@/burger'
+
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/')({
   component: Component,
@@ -13,5 +13,5 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<TasksView />)
+  return (<EveliTasks />)
 }

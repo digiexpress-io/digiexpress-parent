@@ -1,18 +1,20 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
+import { useQuery } from '@tanstack/react-query'
 
 export const Hook = createFileFetch('worker/rest/api/tasks/unread.GET')({
   hook
 })
 
-function hook(props: {}) {
+function hook(props: {}): { unreadTasks: string[] } {
   const params = Hook.useParams();
-  const { path, contextPath, method, url } = params;
-
+  const { path, url } = params;
+  
+  const { data, error, refetch, isPending } = useQuery({
+    queryKey: ['tasks/unread'],
+    queryFn: () => params.fetch(url({path})).then(resp => resp.json())
+  });
 
   return {
-    loadNewTasks: async (): Promise<string[]> => {
-      return params.fetch(url({path}))
-        .then(response => response.json());
-    }
+    unreadTasks: data ?? []
   }
 }

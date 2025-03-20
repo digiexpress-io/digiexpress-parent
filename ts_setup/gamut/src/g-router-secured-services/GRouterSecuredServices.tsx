@@ -72,7 +72,6 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     withDrawer: withDrawer,
     onForm,
     onTopic: setTopic,
-    onHome: () => handleNav('user-overview')
   }
 
   React.useEffect(() => {

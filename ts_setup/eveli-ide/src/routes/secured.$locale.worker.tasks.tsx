@@ -1,7 +1,7 @@
 import React from 'react'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
-import { TaskSessionContext } from '../frontdesk/context/TaskSessionContext';
+import { useLocale, EveliTaskTableProvider } from '@/burger'
+;
 import { FeedbackProvider } from '../feedback';
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks')({
@@ -15,9 +15,9 @@ function Component() {
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   return (
-    <TaskSessionContext>
+    <EveliTaskTableProvider>
       <FeedbackProvider>
         <Outlet />
       </FeedbackProvider>
-    </TaskSessionContext>)
+    </EveliTaskTableProvider>)
 }

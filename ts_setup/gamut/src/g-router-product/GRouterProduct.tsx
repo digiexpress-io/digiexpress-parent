@@ -18,6 +18,7 @@ import { useIntl } from 'react-intl';
 import { SiteApi } from '../api-site';
 
 import { GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot, GRouterProductRoot, GRouterProductTitleRoot, GRouterProductButtonsRoot, useUtilityClasses } from './useUtilityClasses';
+import { GAuthFormStart } from '../g-auth-form-start';
 
 export interface GRouterProductProps {
   productId: string,
@@ -32,7 +33,7 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)
   const anonymousUser = anon.authType === 'ANON';
-  const anonLink: boolean =  anonymousUser && topicLink?.anon === true;
+  const anonLink: boolean = anonymousUser && topicLink?.anon === true;
   const allowed: boolean = (!anonymousUser || anonLink) && !!topicLink;
   const ownerState = {
     topic,
@@ -111,12 +112,12 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
   }
 
   function handleCreateOffer() {
-    if(!productId) {
+    if (!productId) {
       return;
     }
 
     offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
-      if(anonymousUser) {
+      if (anonymousUser) {
         nav({
           params: { locale, pageId },
           to: '/public/$locale/pages/$pageId',
@@ -129,11 +130,21 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       }
     })
   }
+  //<Button variant='contained'  onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
+  //<Button variant='contained'  onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
 
   return (
     <GRouterProductButtonsRoot className={classes.root}>
       <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
-      <Button variant='contained' disabled={!allowed} onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
+
+      {!allowed ? (
+        <GAuthFormStart forced>
+          <Button type='submit' variant='contained'>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
+        </GAuthFormStart>
+      ) : (
+        <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>)
+      }
+
     </GRouterProductButtonsRoot>)
 }
 
@@ -154,14 +165,14 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
             <Typography className={classes.productBodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.start.info1' })}</Typography>
           </ListItemText>
         </ListItem>
-        { !allowed && (
-        <ListItem>
-          <ListItemText>
-            <Alert severity='error'>
-              <Typography className={classes.productBodyTextError}>{intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}</Typography>
-            </Alert>
-          </ListItemText>
-        </ListItem>)}
+        {!allowed && (
+          <ListItem>
+            <ListItemText>
+              <Alert severity='error'>
+                <Typography className={classes.productBodyTextError}>{intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}</Typography>
+              </Alert>
+            </ListItemText>
+          </ListItem>)}
       </List>
     </GRouterProductTitleRoot>
   )

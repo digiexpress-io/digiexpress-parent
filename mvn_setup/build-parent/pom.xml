@@ -24,8 +24,8 @@
     <spring.security.version>6.4.2</spring.security.version>
     <spring.version>6.4.2</spring.version>
     
-    <spring.cloud.version>2023.0.3</spring.cloud.version>
-    <spring-cloud-gcp.version>3.4.0</spring-cloud-gcp.version>    
+    <spring.cloud.version>2024.0.1</spring.cloud.version>
+    <spring-cloud-gcp.version>6.0.1</spring-cloud-gcp.version>    
     <jackson.version>2.18.2</jackson.version>
 
     <quarkus.version>3.15.3</quarkus.version>
