@@ -36,6 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Storage;
 
+import io.digiexpress.eveli.app.config.AppProperties;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
@@ -90,11 +91,11 @@ public class Application {
   }
   
   @Bean
-  public AttachmentCommands attachmentCommands() {
-    String downloadBucket = null;
-    Storage storage = null;
-    ResourceLoader resourceLoader = null;
-    return new AttachmentCommandsGoogle(downloadBucket, storage, resourceLoader);
+  public AttachmentCommands attachmentCommands(
+      ResourceLoader resourceLoader,
+      Storage storage,
+      AppProperties properties) {
+    return new AttachmentCommandsGoogle(properties.getDownloadBucket(), storage, resourceLoader);
   }
 
   @Bean
