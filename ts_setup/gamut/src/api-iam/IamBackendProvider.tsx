@@ -2,6 +2,7 @@ import React from 'react';
 import { IamApi } from './iam-types'
 
 import { IamLiveness } from './IamLiveness'
+import { useQuery } from '@tanstack/react-query';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -18,18 +19,11 @@ export interface IamBackendProviderProps {
 }
 
 export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => {
-  const [user, setUser] = React.useState<IamApi.User>();
-  const [pending, setPending] = React.useState<boolean>(true);
   const [userRolesProducts, setUserRolesProducts] = React.useState<{userRoles: IamApi.UserRoles | undefined, userProducts: IamApi.UserProducts | undefined}>();
 
-  // load user and related data
-  React.useEffect(() => { 
-    getUser(props).then(newUser => {
-      setUser(newUser);
-      setPending(false);
-    }).catch(ex => setPending(false))
-  }, [props]);
-  
+  const { user, isFirstLoad, reload } = useUser(props);
+
+
   React.useEffect(() => { 
     if(user) {
       getUserRoles(props).then(async userRoles => {
@@ -43,11 +37,11 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
 
   // create the context
   const contextValue: IamApi.IamBackendContextType = React.useMemo(() => 
-    createContext(props, user, userRolesProducts?.userRoles, userRolesProducts?.userProducts ), 
-    [props, user, userRolesProducts]
+    createContext(props, user, userRolesProducts?.userRoles, userRolesProducts?.userProducts, reload),
+    [props, user, userRolesProducts, reload]
   );
 
-  if(pending) {
+  if (isFirstLoad) {
     return (<>I'm loading...</>);
   }
 
@@ -66,7 +60,8 @@ function createContext(
   props: IamBackendProviderProps, 
   user: IamApi.User | undefined,
   userRoles: IamApi.UserRoles | undefined,
-  userProducts: IamApi.UserProducts | undefined): IamApi.IamBackendContextType {
+  userProducts: IamApi.UserProducts | undefined,
+  reload: () => Promise<IamApi.User | undefined>): IamApi.IamBackendContextType {
 
   let authType: IamApi.AuthType = 'ANON';
   if(user && user.representedCompany) {
@@ -80,22 +75,62 @@ function createContext(
   return Object.freeze({
     authType, user, userRoles, userProducts,
     liveness: props.liveness,
-    getUser: () => getUser(props)
+    fetchUserGET: props.fetchUserGET,
+    getUser: () => reload(),
+    reload: async () => {
+      await reload()
+    },
   });
 }
 
-async function getUser(props: IamBackendProviderProps): Promise<IamApi.User | undefined> {
-  try {
-    const user = await props.fetchUserGET();
-    if(user.ok) {
-      return user.json().then(json=>json.principal);
+
+function useUser(props: IamBackendProviderProps): {
+  user: IamApi.User | undefined,
+  isPending: boolean,
+  isFirstLoad: boolean,
+  reload: () => Promise<IamApi.User | undefined>
+} {
+
+  const [isFirstLoad, setFirstLoad] = React.useState(true);
+
+  const staleTime = 1000 * 60;
+  const refetchInterval = staleTime;
+  const { data, isPending, refetch } = useQuery({
+    staleTime,
+    refetchInterval,
+    queryKey: ['iam/user'],
+    queryFn: async () => {
+      try {
+        const resp = await props.fetchUserGET();
+        if (!resp.ok) {
+          setFirstLoad(false);
+          console.log("ANON user", resp.status);
+          return null;
+        }
+        const json = await resp.json();
+        setFirstLoad(false);
+        return json.principal;
+      } catch (e) {
+        setFirstLoad(false);
+        console.error("IAM failed!");
+        return null;
+      }
     }
-    return undefined;
-  } catch(error) {
-    console.log("ANON user");
-    return undefined;
-  }
+  });
+
+  const reload = React.useCallback(async () => {
+    const result = await refetch();
+    return result.data;
+  }, [refetch]);
+
+  return {
+    user: data ?? undefined,
+    isPending,
+    isFirstLoad,
+    reload
+  };
 }
+
 
 async function getUserRoles(props: IamBackendProviderProps): Promise<IamApi.UserRoles | undefined> {
   try {

@@ -98,6 +98,7 @@ import { GRouterSecuredServicesClassKey, GRouterSecuredServicesProps } from '../
 import { GRouterUnfinishedFormsClassKey, GRouterUnfinishedFormsProps } from '../g-router-unfinished-forms';
 import { GRouterUnsecuredClassKey, GRouterUnsecuredProps } from '../g-router-unsecured';
 import { GRouterUserOverviewClassKey, GRouterUserOverviewProps } from '../g-router-user-overview';
+import { GAuthFormStartClassKey, GAuthFormStartProps } from '../g-auth-form-start';
 
 
 /**
@@ -189,6 +190,7 @@ export interface GComponentsPropsList {
   GShell: GShellProps;
 
   GAuth: GAuthProps;
+  GAuthFormStart: GAuthFormStartProps;
   GAuthRepPerson: GAuthRepPersonProps;
   GAuthRepCompany: GAuthRepCompanyProps;
   GAuthUn: GAuthUnProps;
@@ -284,6 +286,7 @@ export interface GComponentNameToClassKey {
   GShell: GShellClassKey;
 
   GAuth: GAuthClassKey;
+  GAuthFormStart: GAuthFormStartClassKey;
   GAuthRepCompany: GAuthRepCompanyClassKey;
   GAuthRepPerson: GAuthRepPersonClassKey;
   GAuthUn: GAuthUnClassKey;
@@ -353,8 +356,6 @@ export interface GComponents<Theme = unknown> {
     styleOverrides?: GComponentsOverrides<Theme>['GRouterUserOverview'];
     variants?: GComponentsVariants['GRouterUserOverview'];
   },
-
-
   GFormReviewBoolean?: {
     defaultProps?: GComponentsProps['GFormReviewBoolean'];
     styleOverrides?: GComponentsOverrides<Theme>['GFormReviewBoolean'];
@@ -645,6 +646,11 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GAuth'];
     styleOverrides?: GComponentsOverrides<Theme>['GAuth'];
     variants?: GComponentsVariants['GAuth'];
+  },
+  GAuthFormStart?: {
+    defaultProps?: GComponentsProps['GAuthFormStart'];
+    styleOverrides?: GComponentsOverrides<Theme>['GAuthFormStart'];
+    variants?: GComponentsVariants['GAuthFormStart'];
   },
   GAuthRepCompany?: {
     defaultProps?: GComponentsProps['GAuthRepCompany'];

@@ -81,6 +81,7 @@ export const sv = {
   'gamut.forms.filling.welcome': 'Välkomna!',
   'gamut.forms.filling.must_be_authenticated': 'Du måste vara inloggad för att fylla i detta formulär',
   'gamut.forms.filling.start': 'Du är på väg att starta detta formulär',
+  'gamut.forms.filling.login-then-start.button': 'Log in now',
   'gamut.forms.filling.start.info1': 'Dina formulärförlopp sparas automatiskt när du går',
   'gamut.forms.filling.start.button': 'Fortsätt att bilda',
   'gamut.forms.filling.cancel.button': 'Avboka',
