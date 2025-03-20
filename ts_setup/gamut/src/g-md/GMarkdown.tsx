@@ -31,6 +31,15 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
           h6: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
           p: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
           ul: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
+          a: linkRenderer
         }} />
     </Root>)
+}
+
+function linkRenderer(props: any) {
+  return (
+    <a href={props.href} target="_blank" rel="noreferrer">
+      {props.children}
+    </a>
+  );
 }
