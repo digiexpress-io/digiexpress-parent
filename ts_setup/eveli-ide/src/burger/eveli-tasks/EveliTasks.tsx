@@ -120,7 +120,7 @@ export const EveliTasks: React.FC = ({  }) => {
             icon: AddIcon,
             isFreeAction: true,
             tooltip: intl.formatMessage({ id: 'taskButton.addTask' }),
-            onClick: taskOpenHandler
+            onClick: ()=>taskOpenHandler(undefined)
           }
         ]}
         data={query => {
