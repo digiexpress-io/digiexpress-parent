@@ -130,6 +130,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
     })
   }
 
+
   return (
     <GRouterProductButtonsRoot className={classes.root}>
       <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
