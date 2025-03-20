@@ -98,7 +98,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   },
   GAuthFormStart: {
     defaultProps: {
-      action: "https://account.resys.io/login?response_type=code&client_id=jujun4nvhad9h3tqao9fu3s1&scope=openid%20profile&state=VxBiYpggk874yU-UJvTc3ZzGkDX2rjoyoT7PXJ7EhQc%3D&redirect_uri=https://demo-app.digiexpress.io/login/oauth2/code/default&nonce=9wZG3zsiorBgerEaRiPZv8AbigkKZhab-OEJrmYixn8",
+      action: "",
     }
   },
   GAuthRepCompany: {
