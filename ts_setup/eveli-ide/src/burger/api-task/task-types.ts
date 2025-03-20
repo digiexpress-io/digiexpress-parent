@@ -5,6 +5,18 @@ export namespace TaskApi {
     FRONTDESK = "FRONTDESK",
     PORTAL = "PORTAL"
   }
+  export enum TaskPriority {
+    LOW = 'LOW',
+    NORMAL = 'NORMAL',
+    HIGH = 'HIGH',
+  }
+
+  export enum TaskStatus {
+    NEW = 'NEW',
+    OPEN = 'OPEN',
+    COMPLETED = 'COMPLETED',
+    REJECTED = 'REJECTED'
+  }
 }
 
 export declare namespace TaskApi {
@@ -40,18 +52,7 @@ export declare namespace TaskApi {
     linkKey: string
     linkAddress: string
   }
-  export enum TaskPriority {
-    LOW = 'LOW',
-    NORMAL = 'NORMAL',
-    HIGH = 'HIGH',
-  }
 
-  export enum TaskStatus {
-    NEW = 'NEW',
-    OPEN = 'OPEN',
-    COMPLETED = 'COMPLETED',
-    REJECTED = 'REJECTED'
-  }
 
   export interface Task {
     id?: string;
