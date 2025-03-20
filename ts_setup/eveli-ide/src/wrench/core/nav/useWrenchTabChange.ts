@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toExplorerId } from './wrench-nav-types';
+import { ExplorerItem, toExplorerId, WrenchRouteSearchParams } from './wrench-nav-types';
 
 
 
@@ -12,7 +12,7 @@ export function useWrenchTabChange() {
     }
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
-      search: (prev) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
+      search: (prev: WrenchRouteSearchParams) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
     });
   }
 

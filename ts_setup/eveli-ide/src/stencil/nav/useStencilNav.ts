@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemArticle, toExplorerId } from './stencil-nav-types';
+import { ExplorerItem, ExplorerItemArticle, StencilRouteSearchParams, toExplorerId } from './stencil-nav-types';
 import { useStencilTabClose } from './useStencilTabClose';
 
 
@@ -26,15 +26,18 @@ export function useStencilNav(): {
   const { onTabClose } = useStencilTabClose();
 
   const navigate = useNavigate();
-  const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/stencil/' });
-  const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
+  const search = useSearch({ from: '/secured/$locale/assets/stencil/' });
+  const explorer: ExplorerItem[] = search.explorer;
+  const explorerActive: string | undefined = search.explorerActive;
+
+  const activeItem = explorer.find((explorer: ExplorerItem) => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
 
   const activeItemId = activeItem ? toExplorerId(activeItem): undefined;
 
   function onNav(input: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev) => ({
+      search: (prev: StencilRouteSearchParams) => ({
         ...prev,
         explorer: calculateNextSearch(input, prev.explorer),
         explorerActive: toExplorerId(input)
@@ -44,8 +47,8 @@ export function useStencilNav(): {
 
   function findTab(newItem: ExplorerItem['type'], articleId?: string): ExplorerItem | undefined {
     return explorer
-      .filter(tab => tab?.type === newItem)
-      .find(tab => articleId ? (tab as any)['article'] === articleId : true);
+      .filter((tab: ExplorerItem) => tab?.type === newItem)
+      .find((tab: ExplorerItem) => articleId ? (tab as any)['article'] === articleId : true);
   }
 
   function getArticle(): ExplorerItemArticle {

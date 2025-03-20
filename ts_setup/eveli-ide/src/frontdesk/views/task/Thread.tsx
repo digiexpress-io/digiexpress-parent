@@ -1,13 +1,12 @@
 import React from 'react';
 import { List } from '@mui/material';
 
-import { Task } from '../../types/task/Task';
-import { Comment as CommentData } from '../../types/task/Comment';
+import { TaskApi } from '@/burger';
 import { CommentLocal } from './CommentLocal';
 
 type Props = {
-  comments: CommentData[]
-  task: Task
+  comments: TaskApi.Comment[]
+  task: TaskApi.Task
   loadData: ()=>void
   isExternalThread?: boolean
   isThreaded?: boolean

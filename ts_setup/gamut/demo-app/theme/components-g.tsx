@@ -1,8 +1,5 @@
 import { Theme, Components } from '@mui/material';
-import logoLifeDigitalLight from './logoLifeDigitalLight.svg';
-import logoLifeDigitalDark from './logoLifeDigitalDark.svg';
-import user_logo_dark from './user_logo_dark.svg'
-import user_logo_light from './user_logo_light.svg'
+import user_logo_light from './logoLifeDigitalLight.svg';
 import { DemoFooter } from './DemoFooter';
 
 

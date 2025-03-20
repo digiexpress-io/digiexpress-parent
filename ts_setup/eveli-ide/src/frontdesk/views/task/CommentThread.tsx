@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState, } from 'react';
 import { Box, Grid2, Button } from '@mui/material';
 
-import { Task } from '../../types/task/Task';
-import { Comment as CommentData } from '../../types/task/Comment';
+
 import { CommentAdd } from './CommentAdd';
 import mapNestedEntities from '../../util/mapNestedEntities';
 import { Thread } from './Thread';
 import { FormattedMessage } from 'react-intl';
+import { TaskApi } from '@/burger';
 
 
 type CommentThreadProps = {
-  task: Task
+  task: TaskApi.Task
   isExternalThread?: boolean,
-  comments: CommentData[],
+  comments: TaskApi.Comment[],
   loadData: () => void,
   isThreaded?: boolean
 }
@@ -42,7 +42,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({ task, isExternalTh
     toggleComment();
   }
 
-  const getThread = (value: CommentData[], task: Task) => {
+  const getThread = (value: TaskApi.Comment[], task: TaskApi.Task) => {
     if (!task) return null;
     let comments = value;
     if (typeof isExternalThread !== 'undefined') {

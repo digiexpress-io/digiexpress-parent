@@ -3,12 +3,11 @@ import { useNavigate } from '@tanstack/react-router';
 import { LinearProgress, Container } from '@mui/material';
 
 import { TaskCreate } from './TaskCreate';
-import { Comment } from '../../types/task/Comment';
 
 import { ComponentResolver } from '../../context/ComponentResolver';
-import { Task } from '../../types/task/Task';
 import { TableHeader } from '../../components/TableHeader';
-import { useIam, IamApi } from '@/burger';
+
+import { useIam, IamApi, TaskApi } from '@/burger';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 type OwnProps = {
@@ -24,8 +23,8 @@ type OwnProps = {
 export const TaskView: React.FC<OwnProps> = (props) => {
   const navigate = useNavigate();
   const [supressConfirmation, setSupressConfirmation] = useState<boolean>();
-  const [taskData, setTaskData] = useState<Task|null>(null);
-  const [commentData, setCommentData] = useState<Comment[]>([]);
+  const [taskData, setTaskData] = useState<TaskApi.Task|null>(null);
+  const [commentData, setCommentData] = useState<TaskApi.Comment[]>([]);
   const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
@@ -53,7 +52,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
     }
   }
 
-  function saveTask(task: Task) {
+  function saveTask(task: TaskApi.Task) {
     if (task.id) {
       return updateTask(task);
     } 
@@ -61,7 +60,7 @@ export const TaskView: React.FC<OwnProps> = (props) => {
   }
   
 
-  const accept = (task:Task) => {
+  const accept = (task: TaskApi.Task) => {
     saveTask(task)
       .then(result => {
         setSupressConfirmation(true);

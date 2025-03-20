@@ -4,8 +4,9 @@ import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-import { TaskPriority, TaskStatus } from '../../types/task/Task';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { TaskApi } from '@/burger';
 
 const chartPaperStyle = {
   flex: '1',
@@ -22,7 +23,7 @@ const chartStyle = {
 const FILL_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 type StatusColorMap = {
-  [status in TaskStatus]: string
+  [status in TaskApi.TaskStatus]: string
 }
 
 
@@ -34,7 +35,7 @@ const statusColorMap: StatusColorMap = {
 };
 
 type PriorityColorMap = {
-  [priority in TaskPriority]: string
+  [priority in TaskApi.TaskPriority]: string
 }
 
 const priorityColorMap: PriorityColorMap = {
@@ -147,7 +148,7 @@ export const DashboardView: React.FC = () => {
                   <YAxis allowDecimals={false} />
                   <Tooltip />
                   <Legend verticalAlign='bottom' />
-                  {(['NEW', 'COMPLETED', 'REJECTED'] as TaskStatus[]).map((status, index) => {
+                  {(['NEW', 'COMPLETED', 'REJECTED'] as TaskApi.TaskStatus[]).map((status, index) => {
                     return (<Bar key={index} dataKey={status.toLowerCase()}
                       name={intl.formatMessage({ id: taskStatusMapping[status] })}
                       fill={statusColorMap[status]} label={<BarLabel />}

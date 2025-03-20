@@ -10,7 +10,6 @@ function hook(props: {}) {
 
 
   return {
-  
     loadNewTasks: async (): Promise<string[]> => {
       return params.fetch(url({path}))
         .then(response => response.json());

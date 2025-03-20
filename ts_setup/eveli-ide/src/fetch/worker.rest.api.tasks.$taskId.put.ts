@@ -1,5 +1,5 @@
+import { TaskApi } from '@/burger';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Task } from '../frontdesk/types/task/Task';
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId.PUT')({
   hook
@@ -11,7 +11,7 @@ function hook(props: {}) {
 
   return {
 
-    updateTask: async (task: Task): Promise<Task> => {
+    updateTask: async (task: TaskApi.Task): Promise<TaskApi.Task> => {
       return params
         .fetch(url({ taskId: task.id! }), { method, body: JSON.stringify(task) })
         .then(response => response.json());

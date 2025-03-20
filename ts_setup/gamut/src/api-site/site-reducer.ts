@@ -1,12 +1,15 @@
 import { SiteApi } from './site-types';
 
 export class SiteCache {
-  private _site: SiteApi.Site ;
+  private _site: SiteApi.Site;
   private _topics: Record<SiteApi.TopicId, SiteApi.TopicView> = {};
   private _children: Record<SiteApi.TopicId, SiteApi.Topic[]> = {};
+  private _visitViewOrder: (topic: SiteApi.Topic) => number;
 
-  constructor(site: SiteApi.Site ) {
+  constructor(site: SiteApi.Site) {
     this._site = site;
+    this._visitViewOrder = this.visitViewOrder;
+
     const topics = Object.values(site.topics).sort((l0, l1) => l0.id.localeCompare(l1.id));
 
     topics.filter(t => t.parent).forEach(topic => {
@@ -22,6 +25,18 @@ export class SiteCache {
   get topics() {
     return this._topics;
   }
+
+  private visitViewOrder(topic: SiteApi.Topic): number {
+    try {
+      const firstThree = topic.id.slice(0, 3);
+      const parsedOrderNumber = parseInt(firstThree);
+      return parsedOrderNumber;
+    } catch (e) {
+      console.log(e);
+      return 0;
+    }
+  }
+
   private visitView(topic: SiteApi.Topic) {
     const blob: SiteApi.Blob | undefined = topic.blob ? this._site.blobs[topic.blob] : undefined;
     const parent: SiteApi.Topic | undefined = topic.parent ? this._site.topics[topic.parent] : undefined;
@@ -32,12 +47,16 @@ export class SiteCache {
     const phones: SiteApi.TopicLink[] = links.filter(t => t.type === "phone");
     const workflows: SiteApi.TopicLink[] = links.filter(t => t.type === "dialob" || t.type === "workflow");
 
-    return new ImmutableTopicView({ id: topic.id, name: topic.name, topic, blob, parent, children, links, internalExternal, phones, workflows });
+
+    const order: number = this.visitViewOrder(topic);
+    return new ImmutableTopicView({ id: topic.id, name: topic.name, topic, blob, parent, children, links, internalExternal, phones, workflows, order });
   }
+
 }
 
 export class ImmutableTopicView implements SiteApi.TopicView {
   private _topic: SiteApi.Topic;
+  private _order: number;
   private _blob?: SiteApi.Blob
   private _parent?: SiteApi.Topic;
   private _children: SiteApi.Topic[];
@@ -49,6 +68,7 @@ export class ImmutableTopicView implements SiteApi.TopicView {
 
   constructor(init: SiteApi.TopicView) {
     this._topic = init.topic;
+    this._order = init.order;
     this._blob = init.blob;
     this._parent = init.parent;
     this._children = init.children;
@@ -58,9 +78,10 @@ export class ImmutableTopicView implements SiteApi.TopicView {
     this._phones = init.phones;
     this._workflows = init.workflows;
   }
-  get id(): SiteApi.TopicId { return this._topic.id };
-  get name(): string { return this._topic.name };
-  get topic(): SiteApi.Topic { return this._topic };
+  get id(): SiteApi.TopicId { return this._topic.id }
+  get order(): number { return this._order }
+  get name(): string { return this._topic.name }
+  get topic(): SiteApi.Topic { return this._topic }
   get blob(): SiteApi.Blob | undefined { return this._blob }
   get parent(): SiteApi.Topic | undefined { return this._parent }
   get children(): SiteApi.Topic[] { return this._children }
@@ -69,3 +90,4 @@ export class ImmutableTopicView implements SiteApi.TopicView {
   get phones(): SiteApi.TopicLink[] { return this._phones }
   get workflows(): SiteApi.TopicLink[] { return this._workflows }
 }
+

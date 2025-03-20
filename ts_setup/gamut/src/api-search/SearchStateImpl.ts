@@ -39,7 +39,7 @@ class SearchReducer {
       forms: this._forms.sort((a, b) => a.label.localeCompare(b.label)),
       internal: this._internal.sort((a, b) => a.name.localeCompare(b.name)),
       phones: this._phones.sort((a, b) => a.name.localeCompare(b.name)),
-      topics: this._topics.sort((a, b) => a.name.localeCompare(b.name))
+      topics: this._topics.sort((a, b) => a.order - b.order),
     };
   }
   private visitView(view: SiteApi.TopicView) {

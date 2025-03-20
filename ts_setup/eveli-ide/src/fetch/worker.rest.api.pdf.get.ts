@@ -1,5 +1,5 @@
+import { TaskApi } from '@/burger';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { TaskLink } from '../frontdesk/types/task/TaskLink';
 
 
 export const Hook = createFileFetch('worker/rest/api/pdf.GET')({
@@ -12,7 +12,7 @@ function hook(props: {}) {
 
   return {
 
-    pdfTaskLinkCallback: (link: TaskLink, taskId: string) => {
+    pdfTaskLinkCallback: (link: TaskApi.TaskLink, taskId: string) => {
       window.open(`${url({})}?taskId=${taskId}&questionnaireId=${link.linkAddress}`);
     }
 

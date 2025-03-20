@@ -1,13 +1,14 @@
-import { TaskPriority, TaskStatus } from "./task/Task"
+import { TaskApi } from "@/burger"
+
 
 export type TaskPriorityStatistics = {
   count: number
-  priority: TaskPriority
+  priority: TaskApi.TaskPriority
 }
 
 export type TaskStatusStatistics = {
   count: number
-  status: TaskStatus
+  status: TaskApi.TaskStatus
 }
 
 export type OverdueByGroupStatistics = {

@@ -46,7 +46,9 @@ export const useUtilityClasses = (ownerState: EveliLogoProps) => {
 
 
 export function getVariant(theme: Theme, variant: string | undefined) {
+  //@ts-ignore
   const variants = theme.components?.EveliLogo?.variants;
+  //@ts-ignore
   const target = variants?.find(({ props }) => props.variant === variant);
   return target;
 }

@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toExplorerId } from './wrench-nav-types';
+import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toExplorerId, WrenchRouteSearchParams } from './wrench-nav-types';
 import { useWrenchTabClose } from './useWrenchTabClose';
 
 
@@ -36,7 +36,12 @@ export function useWrenchNav(): {
   
   const navigate = useNavigate();
 
-  const { explorer, explorerActive } = useSearch({ from: '/secured/$locale/assets/wrench/' });
+  const search = useSearch({ from: '/secured/$locale/assets/wrench/' });
+  const explorer: ExplorerItem[] = search.explorer;
+  const explorerActive: string | undefined = search.explorerActive;
+
+
+
   const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
 
   function onNav(input: ExplorerItem) {
@@ -45,7 +50,7 @@ export function useWrenchNav(): {
 
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
-      search: (prev) => ({
+      search: (prev: WrenchRouteSearchParams) => ({
         ...prev, 
         ...other,
         explorer: calculateNextSearch(newItem, prev.explorer),
@@ -85,7 +90,7 @@ export function useWrenchNav(): {
 
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
-      search: (prev) => ({
+      search: (prev: WrenchRouteSearchParams) => ({
         ...prev,
         explorer: [...newItem],
         explorerActive: last ? toExplorerId(last) : undefined

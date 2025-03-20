@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useIntl } from 'react-intl';
 import { TaskPriorityStatistics } from '../frontdesk/types/TaskStatistics';
-import { TaskPriority, TaskStatus } from '../frontdesk/types/task/Task';
+import { TaskApi } from '@/burger';
+
 
 
 
@@ -15,7 +16,7 @@ export const Hook = createFileFetch('statistics/priority.GET')({
 
 
 type PriorityTitleMap = {
-  [priority in TaskPriority]: string
+  [priority in TaskApi.TaskPriority]: string
 }
 
 const taskPriorityMapping: PriorityTitleMap = {

@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toExplorerId } from './stencil-nav-types';
+import { ExplorerItem, StencilRouteSearchParams, toExplorerId } from './stencil-nav-types';
 
 
 
@@ -9,7 +9,7 @@ export function useStencilTabClose() {
   function onTabClose(tab: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev) => {
+      search: (prev: StencilRouteSearchParams) => {
         const targetId = toExplorerId(tab);
         const explorer = [...prev.explorer].filter(t => toExplorerId(t) !== targetId);
         const newItem: ExplorerItem | undefined = explorer[explorer.length-1];

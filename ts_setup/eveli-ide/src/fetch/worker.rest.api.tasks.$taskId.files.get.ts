@@ -1,5 +1,5 @@
+import { TaskApi } from '@/burger';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Attachment } from '../frontdesk/types';
 
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId/files.GET')({
@@ -12,7 +12,7 @@ function hook(props: {}) {
 
   return {
 
-    loadAttachments: async (taskId: string): Promise<Attachment[]> => {
+    loadAttachments: async (taskId: string): Promise<TaskApi.Attachment[]> => {
       return params.fetch(url({ taskId }) + '/', { method })
         .then(response => response.json());
     },
