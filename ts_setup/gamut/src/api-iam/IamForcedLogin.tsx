@@ -21,6 +21,7 @@ function awaitTillLoggedIn(props: IamForcedLoginProps): Promise<void> {
     // timeout in case login is required but not logged in
     setTimeout(() => reject(), 60000);
 
+    console.log("iam forced login")
     const loop = () => {
       props.user().then((response) => {
 
