@@ -1,5 +1,4 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { QueueApi } from '../queue';
 
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId/files/$filename.GET')({

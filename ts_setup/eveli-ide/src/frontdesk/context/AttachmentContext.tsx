@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from 'react'
-import { Attachment } from '../types'
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { TaskApi } from '@/burger';
 
 export interface AttachmentContextType {
-  loadAttachments:(taskId: string) => Promise<Attachment[]>
+  loadAttachments:(taskId: string) => Promise<TaskApi.Attachment[]>
   addAttachment:(taskId: string, file: File) => Promise<Response|void>;
   downloadAttachmentLink:(taskId: string, filename: string) => string;
 }

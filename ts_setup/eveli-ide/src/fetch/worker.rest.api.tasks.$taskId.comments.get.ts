@@ -1,6 +1,6 @@
+import { TaskApi } from '@/burger';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Comment } from '../frontdesk/types/task/Comment';
-import { Task } from '../frontdesk/types/task/Task';
+
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId/comments.GET')({
   hook
@@ -12,7 +12,7 @@ function hook(props: {}) {
 
   return {
 
-    getTaskComments: async (task: Task): Promise<Comment[]> => {
+    getTaskComments: async (task: TaskApi.Task): Promise<TaskApi.Comment[]> => {
       if (!task.id) {
         return [];
       }

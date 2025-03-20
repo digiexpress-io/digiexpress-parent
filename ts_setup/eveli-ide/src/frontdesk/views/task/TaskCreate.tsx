@@ -31,9 +31,6 @@ import { TaskRoleDialog } from './TaskRoleDialog';
 import { AttachmentTable } from './AttachmentTable';
 import { CommentThread } from './CommentThread';
 
-import { Attachment } from '../../types';
-import { Task, TaskStatus } from '../../types/task/Task';
-import { Comment } from '../../types/task/Comment';
 
 import { useAttachmentConfig } from '../../context/AttachmentContext';
 import { ComponentResolver } from '../../context/ComponentResolver';
@@ -42,19 +39,19 @@ import * as Yup from 'yup';
 import { TaskFeedback } from './TaskFeedback';
 import { StatusIndicator } from '../../../feedback';
 import { DialobReview } from '../../../dialob-review';
-import { IamApi } from '@/burger';
+import { IamApi, TaskApi } from '@/burger';
 
 
 
-const AttachmentTableWrapper: React.FC<{ editTask: Task, readonly: boolean }> = ({ editTask, readonly }) => {
+const AttachmentTableWrapper: React.FC<{ editTask: TaskApi.Task, readonly: boolean }> = ({ editTask, readonly }) => {
   const taskId = editTask.id;
   const attachmentContext = useAttachmentConfig();
-  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [attachments, setAttachments] = useState<TaskApi.Attachment[]>([]);
 
   useEffect(() => {
     if (taskId) {
       attachmentContext.loadAttachments(taskId)
-        .then((result: Attachment[]) => {
+        .then((result: TaskApi.Attachment[]) => {
           setAttachments(result);
         });
     }
@@ -190,12 +187,12 @@ type Props = {
   id: string
   groups: IamApi.UserGroup[]
   getUsers: (groupName: string[]) => Promise<IamApi.GroupMember[]>
-  editTask: Task
-  handleSubmit: (task: Task) => void
+  editTask: TaskApi.Task
+  handleSubmit: (task: TaskApi.Task) => void
   cancel: () => void
   componentResolver?: ComponentResolver
   externalThreads?: boolean
-  comments: Comment[]
+  comments: TaskApi.Comment[]
   reloadComments: () => void
   userSelectionFree?: boolean
   currentUser: Partial<IamApi.User>
@@ -318,7 +315,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
       return undefined;
   }
 
-  taskFromValues = (values: any): Task => {
+  taskFromValues = (values: any): TaskApi.Task => {
     const { editTask } = this.props;
     return {
       id: editTask?.id,
@@ -370,7 +367,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     return roles.map(role => this.findRoleDescription(role)).join(", ");
   }
 
-  getTaskKeywords = (editTask: Task) => {
+  getTaskKeywords = (editTask: TaskApi.Task) => {
     return editTask.keyWords!.flatMap(element => element.split(','));
   }
 
@@ -384,8 +381,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
   render() {
     const { editTask, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
     const { formatMessage } = this.props.intl;
-    const readonly = (editTask.status === TaskStatus.COMPLETED ||
-      editTask.status === TaskStatus.REJECTED);
+    const readonly = (editTask.status === TaskApi.TaskStatus.COMPLETED ||
+      editTask.status === TaskApi.TaskStatus.REJECTED);
 
 
     return (

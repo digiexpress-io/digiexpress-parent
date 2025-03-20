@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toExplorerId } from './wrench-nav-types';
+import { ExplorerItem, toExplorerId, WrenchRouteSearchParams } from './wrench-nav-types';
 
 
 export function useWrenchTabClose() {
@@ -8,7 +8,7 @@ export function useWrenchTabClose() {
   function onTabClose(tab: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/wrench', 
-      search: (prev) => {
+      search: (prev: WrenchRouteSearchParams) => {
         
         const targetId = toExplorerId(tab);
         const explorer = [...prev.explorer].filter(t => toExplorerId(t) !== targetId);

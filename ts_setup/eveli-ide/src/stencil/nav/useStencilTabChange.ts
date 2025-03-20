@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { ExplorerItem, toExplorerId } from './stencil-nav-types';
+import { ExplorerItem, StencilRouteSearchParams, toExplorerId } from './stencil-nav-types';
 
 
 export function useStencilTabChange() {
@@ -12,7 +12,7 @@ export function useStencilTabChange() {
 
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
+      search: (prev: StencilRouteSearchParams) => ({ ...prev, explorerActive: toExplorerId(nextActive) })
     });
   }
 

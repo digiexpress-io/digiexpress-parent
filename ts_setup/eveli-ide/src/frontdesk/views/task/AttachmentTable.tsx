@@ -7,8 +7,8 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { localizeTable } from '../../util/localizeTable';
-import { Attachment } from '../../types';
 import { useAttachmentConfig } from '../../context/AttachmentContext';
+import { TaskApi } from '@/burger';
 
 const classes = {
     addButton: {
@@ -23,14 +23,14 @@ const classes = {
   };
 
 interface TableState  {
-  columns: Array<Column<Attachment>>;
+  columns: Array<Column<TaskApi.Attachment>>;
 }
 
 interface Props {
   taskId: string,
   readonly: boolean,
-  attachments: Attachment[], 
-  setAttachments: React.Dispatch<React.SetStateAction<Attachment[]>>
+  attachments: TaskApi.Attachment[], 
+  setAttachments: React.Dispatch<React.SetStateAction<TaskApi.Attachment[]>>
 }
 
 export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments, setAttachments }) =>{
@@ -73,7 +73,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
       })
     }
   }
-  const handleDownloadClick = (data: Attachment | Attachment[]) => {
+  const handleDownloadClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
     let attachment = Array.isArray(data) ? data[0] : data;
     const link = attachmentContext.downloadAttachmentLink(taskId, attachment.name);
     window.open(link);

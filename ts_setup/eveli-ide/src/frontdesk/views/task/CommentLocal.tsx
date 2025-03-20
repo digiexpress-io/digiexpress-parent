@@ -3,15 +3,15 @@ import { ListItem, Link, Typography, Grid2, Box, alpha } from '@mui/material';
 import { FormattedDate, useIntl } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 
-import { Task } from '../../types/task/Task';
-import { Comment as CommentData, CommentSource } from '../../types/task/Comment';
+
 import { CommentAdd } from './CommentAdd';
+import { TaskApi } from '@/burger';
 
 
 type CommentLocalProps = {
-  comment: CommentData;
+  comment: TaskApi.Comment;
   children: React.ReactNode;
-  task: Task;
+  task: TaskApi.Task;
   loadData: () => void;
   isExternalThread?: boolean;
   isThreaded?: boolean;
@@ -36,7 +36,7 @@ export const CommentLocal: React.FC<CommentLocalProps> =
     }
 
     function getCommentAlignment() {
-      if (isExternalThread && comment.source && comment.source === CommentSource.FRONTDESK) {
+      if (isExternalThread && comment.source && comment.source === TaskApi.CommentSource.FRONTDESK) {
         return "right";
       }
       return "left";

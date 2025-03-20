@@ -1,6 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Task } from '../frontdesk/types/task/Task';
-import { ROLE_AUTHORIZED } from '@/burger';
+import { ROLE_AUTHORIZED, TaskApi } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.POST')({
   hook
@@ -11,7 +10,7 @@ function hook(props: {}) {
   const { path, contextPath, method, url } = params;
 
   return {
-    createTask: async (task: Task): Promise<Task> => {
+    createTask: async (task: TaskApi.Task): Promise<TaskApi.Task> => {
       // default label for created task
       if (!(task.keyWords && task.keyWords?.length >0)) {
         task.keyWords = ['Manual'];

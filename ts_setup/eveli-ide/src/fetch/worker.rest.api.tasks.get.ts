@@ -4,9 +4,9 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
-import { Task } from '../frontdesk/types/task/Task';
 import { TableStateContext } from '../frontdesk/context/TaskSessionContext';
 import { createQueryString } from '../frontdesk/util/tableQuery';
+import { TaskApi } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook
@@ -19,7 +19,7 @@ function hook(props: {}) {
 
 
   return {
-    getTasks: async (page=0, size=20): Promise<QueryResult<Task>> => {
+    getTasks: async (page=0, size=20): Promise<QueryResult<TaskApi.Task>> => {
       return params.fetch(url({}) + `?page=${page}&size=${size}`)
         .then(response => response.json())
         .then(json => {
@@ -31,7 +31,7 @@ function hook(props: {}) {
         });
     },
 
-    loadTasks: async (query:Query<Task>, columns:Column<any>[]) => {
+    loadTasks: async (query:Query<TaskApi.Task>, columns:Column<any>[]) => {
       // store paging info to allow restoring of page on navigation back
       let page = query.page;
       let pageSize = query.pageSize;

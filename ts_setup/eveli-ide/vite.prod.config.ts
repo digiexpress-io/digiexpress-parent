@@ -21,7 +21,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     plugins: [
       TanStackRouterVite(),
       react({ }),
-      dts({ rollupTypes: true, exclude: 'demo-app' }),
+      dts({ rollupTypes: false, exclude: 'demo-app' }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
       intlTsVite({}),

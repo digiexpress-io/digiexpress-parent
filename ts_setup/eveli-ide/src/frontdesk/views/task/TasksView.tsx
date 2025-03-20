@@ -4,9 +4,8 @@ import { Container } from '@mui/material';
 import { useNavigate } from "@tanstack/react-router";
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { useIam } from '@/burger';
+import { useIam, useConfig } from '@/burger';
 import { TasksTable } from './TasksTable';
-import { useConfig } from '@/burger';
 
 
 export const TasksView: React.FC = () => {

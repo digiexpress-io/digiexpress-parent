@@ -7,10 +7,13 @@ export * from './eveli-props';
 export * from './eveli-locales';
 export * from './eveli-shell-explorer';
 
+export * from './api-task';
 export * from './api-iam';
 export * from './api-config';
 export * from './api-locale';
 export * from './api-iconbar';
+
+
 export * from './eveli-shell-compose';
 export * from './eveli-search';
 export * from './eveli-alert';

@@ -4,14 +4,14 @@ import { useQuery } from '@tanstack/react-query'
 
 import { useIntl } from 'react-intl';
 import { TaskStatusStatistics } from 'frontdesk/types/TaskStatistics';
-import { TaskStatus } from '../frontdesk/types/task/Task';
+import { TaskApi } from '@/burger';
 
 export const Hook = createFileFetch('statistics/status.GET')({
   hook
 }) 
 
 type StatusTitleMap = {
-  [status in TaskStatus]: string
+  [status in TaskApi.TaskStatus]: string
 }
 const taskStatusMapping: StatusTitleMap = {
   'NEW': 'task.status.new',

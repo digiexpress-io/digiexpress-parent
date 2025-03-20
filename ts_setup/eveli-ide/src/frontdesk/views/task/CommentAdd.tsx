@@ -4,14 +4,14 @@ import { OutlinedInput, Grid2, Stack, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 
-import { Comment } from '../../types/task/Comment';
-import { Task } from '../../types/task/Task';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { TaskApi } from '@/burger';
 
 
 type CommentAddProps = {
-  parentComment?: Comment
-  task: Task
+  parentComment?: TaskApi.Comment
+  task: TaskApi.Task
   onAdded: () => void
   onCancel: () => void
   isExternalThread?: boolean

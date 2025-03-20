@@ -8,9 +8,9 @@ import { QUESTIONNAIRE_REVIEW } from '../../components/task/TaskLinkKey';
 
 import { AttachmentContextProvider } from '../../context/AttachmentContext';
 
-import { TaskLink } from '../../types/task/TaskLink';
 import { TaskView } from './TaskView';
 import { TasksComponentResolver } from './LinkResolver';
+import { TaskApi } from '@/burger';
 
 
 export const TaskContainer: React.FC<{ taskId?: string }> = (props) => {
@@ -20,7 +20,7 @@ export const TaskContainer: React.FC<{ taskId?: string }> = (props) => {
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
   const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
 
-  const openTaskLinkCallback = (link: TaskLink) => {
+  const openTaskLinkCallback = (link: TaskApi.TaskLink) => {
     setLink(link);
     if (link.linkKey === QUESTIONNAIRE_REVIEW) {
       setReviewDialogOpen(true);
@@ -29,7 +29,7 @@ export const TaskContainer: React.FC<{ taskId?: string }> = (props) => {
 
 
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [link, setLink] = useState<TaskLink | null>(null);
+  const [link, setLink] = useState<TaskApi.TaskLink | null>(null);
   const componentResolver = new TasksComponentResolver(openTaskLinkCallback, pdfTaskLinkCallback);
 
 

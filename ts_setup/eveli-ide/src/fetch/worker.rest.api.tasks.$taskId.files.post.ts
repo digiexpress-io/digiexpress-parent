@@ -1,7 +1,7 @@
 
+import { TaskApi } from '@/burger';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useSnackbar } from 'notistack';
-import { AttachmentUploadResponse } from '../frontdesk/types';
 import { useIntl } from 'react-intl';
 
 
@@ -24,7 +24,7 @@ function hook(props: {}) {
     return response;
   }
 
-  async function uploadFile(file: File, uploadResponse: AttachmentUploadResponse) {
+  async function uploadFile(file: File, uploadResponse: TaskApi.AttachmentUploadResponse) {
     return params
     .fetch(uploadResponse.putRequestUrl, {method:'PUT', body: file, headers: {'Content-Type': file.type || 'application/octet-stream'}})
     .then(handleErrors)
@@ -42,7 +42,7 @@ function hook(props: {}) {
         .fetch(url({ taskId }) + `/?filename=${fileName}`, { method, headers: {'Content-Type': file.type || 'application/octet-stream'}})
         .then(handleErrors)
         .then(response => response.json())
-        .then((uploadResponse: AttachmentUploadResponse) => uploadFile(file, uploadResponse))
+        .then((uploadResponse: TaskApi.AttachmentUploadResponse) => uploadFile(file, uploadResponse))
         .catch(_error => {
           enqueueSnackbar(intl.formatMessage({id: 'attachment.uploadFailed'}, { fileName }), { variant: 'error' });
         });

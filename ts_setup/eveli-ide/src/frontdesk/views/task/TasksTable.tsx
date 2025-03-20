@@ -12,11 +12,10 @@ import { FormattedDate, useIntl } from 'react-intl';
 import moment from 'moment';
 
 import { localizeTable } from '../../util/localizeTable';
-import { IamApi, mapIamRolesList } from '@/burger';
+import { IamApi, TaskApi, mapIamRolesList } from '@/burger';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
 
-import { Task, TaskPriority, TaskStatus } from '../../types/task/Task';
 
 import { PriorityView } from '../../components/task/Priority';
 import { StatusViewComponent } from '../../components/task/Status';
@@ -24,27 +23,27 @@ import { TableHeader } from '../../components/TableHeader';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
-function getStatusCode(status: TaskStatus | undefined) {
+function getStatusCode(status: TaskApi.TaskStatus | undefined) {
   switch (status) {
-    case TaskStatus.NEW: return 1;
-    case TaskStatus.OPEN: return 2;
-    case TaskStatus.COMPLETED: return 3;
-    case TaskStatus.REJECTED: return 4;
+    case TaskApi.TaskStatus.NEW: return 1;
+    case TaskApi.TaskStatus.OPEN: return 2;
+    case TaskApi.TaskStatus.COMPLETED: return 3;
+    case TaskApi.TaskStatus.REJECTED: return 4;
     default: return 0;
   }
 }
 
-function getPriorityCode(status: TaskPriority | undefined) {
+function getPriorityCode(status: TaskApi.TaskPriority | undefined) {
   switch (status) {
-    case TaskPriority.LOW: return 1;
-    case TaskPriority.NORMAL: return 2;
-    case TaskPriority.HIGH: return 3;
+    case TaskApi.TaskPriority.LOW: return 1;
+    case TaskApi.TaskPriority.NORMAL: return 2;
+    case TaskApi.TaskPriority.HIGH: return 3;
     default: return 0;
   }
 }
 
 type Props = {
-  loadTasks: (query: Query<Task>, columns: Column<any>[], defaultOrder?: OrderByCollection[]) => Promise<QueryResult<Task>>
+  loadTasks: (query: Query<TaskApi.Task>, columns: Column<any>[], defaultOrder?: OrderByCollection[]) => Promise<QueryResult<TaskApi.Task>>
   groups: IamApi.UserGroup[]
   taskOpenHandler: (id?: string) => void
   taskDeletableHandler?: () => boolean
@@ -52,7 +51,7 @@ type Props = {
 }
 
 interface TableState {
-  columns: Array<Column<Task>>;
+  columns: Array<Column<TaskApi.Task>>;
 }
 
 
@@ -329,7 +328,7 @@ export const TasksTable: React.FC<Props> =
           }
         }
         onOrderCollectionChange={onOrderCollectionChange}
-        onChangeColumnHidden={(hiddenColumn: Column<Task>, hidden: boolean) => {
+        onChangeColumnHidden={(hiddenColumn: Column<TaskApi.Task>, hidden: boolean) => {
           if (tableRef.current)
             tableRef.current.onQueryChange();
         }}
