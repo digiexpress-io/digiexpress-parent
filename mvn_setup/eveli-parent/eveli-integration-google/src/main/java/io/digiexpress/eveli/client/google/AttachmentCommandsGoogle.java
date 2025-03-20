@@ -51,7 +51,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
-public class AttachmentCommandsImpl implements AttachmentCommands {
+public class AttachmentCommandsGoogle implements AttachmentCommands {
 
   private final String downloadBucket;
   private final Storage storage;
@@ -208,11 +208,11 @@ public class AttachmentCommandsImpl implements AttachmentCommands {
     private Storage storage;
     private ResourceLoader resourceLoader;
 
-    public AttachmentCommandsImpl build() {
+    public AttachmentCommandsGoogle build() {
       AttachmentAssert.notEmpty(downloadBucket, () -> "downloadBucket must be defiend!");
       AttachmentAssert.notNull(storage, () -> "storage must be defiend!");
       AttachmentAssert.notNull(resourceLoader, () -> "resourceLoader must be defiend!");
-      return new AttachmentCommandsImpl(downloadBucket, storage, resourceLoader);
+      return new AttachmentCommandsGoogle(downloadBucket, storage, resourceLoader);
     }
   }
 }

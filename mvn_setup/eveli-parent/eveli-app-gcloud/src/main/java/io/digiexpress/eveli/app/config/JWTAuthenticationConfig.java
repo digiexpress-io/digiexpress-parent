@@ -1,0 +1,102 @@
+package io.digiexpress.eveli.app.config;
+
+import java.io.ByteArrayInputStream;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Map;
+
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.converter.RsaKeyConverters;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+
+import io.digiexpress.eveli.client.spi.auth.SpringJwtAuthClient;
+import io.digiexpress.eveli.client.spi.auth.SpringJwtCrmClient;
+import jakarta.inject.Inject;
+
+@Configuration
+@EnableConfigurationProperties( value = {
+    EveliPropsJwt.class, 
+    EveliPropsCrm.class
+})
+public class JWTAuthenticationConfig {
+  @Inject
+  private EveliPropsJwt jwtProps;
+  
+  @Inject
+  private EveliPropsCrm crmProps;
+  
+  @Bean
+  public SpringJwtAuthClient authClientJwt() {
+    return new SpringJwtAuthClient();
+  }
+
+  @Bean
+  public SpringJwtCrmClient crmClientJwt() {
+    final var restTemplate = new RestTemplate();
+    final String crmHost = crmProps.getHost();
+    if(crmHost != null && !crmHost.trim().isEmpty()) {
+      restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(crmHost));
+    }
+    return new SpringJwtCrmClient(restTemplate, crmProps.getServicePathCompany(), crmProps.getServicePathPerson());
+  }
+
+  @Bean
+  JwtIssuerAuthenticationManagerResolver authenticationManagerResolver() {
+    Map<String, AuthenticationManager> decoders;
+    decoders = Map.of(jwtProps.getEveliIssuer(), authenticationManager(jwtDecoder(jwtProps.getEveliPublicKeyValue()), jwtAuthenticationConverter()), 
+        jwtProps.getGamutIssuer(), authenticationManager(jwtDecoder(jwtProps.getGamutPublicKeyValue()), jwtPortalAuthenticationConverter()));
+    return new JwtIssuerAuthenticationManagerResolver(decoders::get);
+  }
+
+  @Bean
+  AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+  private JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    grantedAuthoritiesConverter.setAuthorityPrefix("");
+    grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+    return jwtAuthenticationConverter;
+  }
+
+  private JwtAuthenticationConverter jwtPortalAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+    return jwtAuthenticationConverter;
+  }
+
+
+  private AuthenticationManager authenticationManager(JwtDecoder decoder, JwtAuthenticationConverter converter) {
+    JwtAuthenticationProvider provider = new JwtAuthenticationProvider(decoder);
+    if (converter != null) {
+      provider.setJwtAuthenticationConverter(converter);
+    }
+    return new ProviderManager(provider);
+  }
+
+  private JwtDecoder jwtDecoder(String publicKeyValue) {
+    RSAPublicKey rsaPublicKey = RsaKeyConverters.x509()
+          .convert(new ByteArrayInputStream(publicKeyValue.replace("\\n", "\n").getBytes()));
+    return NimbusJwtDecoder.withPublicKey(rsaPublicKey)
+        .signatureAlgorithm(org.springframework.security.oauth2.jose.jws.SignatureAlgorithm.RS256).build();
+  }
+
+}

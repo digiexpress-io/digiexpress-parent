@@ -19,6 +19,7 @@
     -->
     <module>eveli-integration-google</module>
     <module>eveli-app</module>
+    <module>eveli-app-gcloud</module>
     <module>dialob-client</module>
   </modules>
 </project>

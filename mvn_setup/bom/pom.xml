@@ -16,7 +16,12 @@
         <groupId>io.digiexpress</groupId>
         <artifactId>eveli-client</artifactId>
         <version>${project.version}</version>
-      </dependency>    
+      </dependency>
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-integration-google</artifactId>
+        <version>${project.version}</version>
+      </dependency>        
       <dependency>
         <groupId>io.digiexpress</groupId>
         <artifactId>thena-db-client</artifactId>
