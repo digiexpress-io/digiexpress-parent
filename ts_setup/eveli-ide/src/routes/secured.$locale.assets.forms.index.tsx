@@ -1,10 +1,17 @@
 import React from 'react'
+import { Box } from '@mui/system';
+
+import { useIntl } from "react-intl";
+import { useSnackbar } from "notistack";
+
+import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
+import { useFetch } from '@dxs-ts/eveli-fetch';
 import { createFileRoute } from '@tanstack/react-router'
+
 import { useLocale, EveliApp } from '@/burger'
-import { DialobAdminView } from '../frontdesk/views/forms/DialobAdminView';
+
 import { Secondary } from '../frontdesk/Secondary';
 import { Toolbar } from '../frontdesk/Toolbar';
-import { Box } from '@mui/system';
 
 export const Route = createFileRoute('/secured/$locale/assets/forms/')({
   component: Component,
@@ -12,7 +19,7 @@ export const Route = createFileRoute('/secured/$locale/assets/forms/')({
 
 function Component() {
   const { locale } = Route.useParams();
-  
+
   const { setLocale } = useLocale();
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
@@ -21,5 +28,20 @@ function Component() {
 }
 
 const Main: React.FC<{}> = () => {
-  return (<Box sx={{ p: 1 }}><DialobAdminView /></Box>)
+  const intl = useIntl();
+  const { enqueueSnackbar } = useSnackbar();
+  const { dialobUrl } = useFetch('dialob.GET', {});
+  const dialobAdminConfig: DialobAdminConfig | undefined = React.useMemo(() => {
+    return {
+      csrf: undefined,
+      dialobApiUrl: dialobUrl,
+      setLoginRequired: () => { },
+      setTechnicalError: () => { },
+      language: intl.locale
+    }
+  }, [dialobUrl, intl.locale])
+
+  return (<Box sx={{ p: 1 }}>
+    <DialobAdmin showNotification={enqueueSnackbar} config={dialobAdminConfig} />
+  </Box>)
 }
