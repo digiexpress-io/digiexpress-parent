@@ -98,7 +98,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   },
   GAuthFormStart: {
     defaultProps: {
-      action: "",
+      action: "/portal/login",
     }
   },
   GAuthRepCompany: {
