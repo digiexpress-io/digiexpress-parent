@@ -49,7 +49,6 @@ export class SiteCache {
 
 
     const order: number = this.visitViewOrder(topic);
-    console.log("order", order, topic)
     return new ImmutableTopicView({ id: topic.id, name: topic.name, topic, blob, parent, children, links, internalExternal, phones, workflows, order });
   }
 
