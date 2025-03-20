@@ -124,6 +124,10 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
     )
   }
 
+  const triggerFileInput = () => {
+    document.getElementById('contained-button-file')?.click();
+  }
+
   return (
     <Box>
         <input
@@ -155,7 +159,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
               tooltip: intl.formatMessage({id: 'attachmentButton.addAttachment'}),
               disabled: readonly,
               hidden: readonly,
-              onClick: ()=>{}
+              onClick: triggerFileInput
             },
             {
               icon: DownloadIcon,
