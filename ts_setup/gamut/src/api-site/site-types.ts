@@ -73,6 +73,7 @@ export declare namespace SiteApi {
   }
   export interface TopicView {
     id: TopicId;
+    order: number; // 3-number index for ordering topics found the beginning of topic.id: ex: 001_
     name: string;
     topic: Topic;
     blob?: Blob
