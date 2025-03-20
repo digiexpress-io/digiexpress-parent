@@ -13,3 +13,4 @@ build/
 pom.xml.versionsBackup
 ts_setup/gamut/demo-app/theme/user_logo_dark.svg
 ts_setup/gamut/demo-app/theme/user_logo_light.svg
+ts_setup/eveli-ide/demo-app/theme/user_logo_light.svg
