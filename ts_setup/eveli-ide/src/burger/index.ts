@@ -13,6 +13,7 @@ export * from './api-config';
 export * from './api-locale';
 export * from './api-iconbar';
 export * from './api-publications';
+export * from './api-proc-execution';
 
 
 export * from './eveli-shell-compose';
@@ -24,6 +25,10 @@ export * from './eveli-publications';
 export * from './eveli-services';
 export * from './eveli-datepicker';
 export * from './eveli-datetime-formatter';
+export * from './eveli-task-stats';
+export * from './eveli-proc-execution';
+export * from './eveli-tasks';
+
 
 export { 
   StyledTreeItem as TreeItem, 

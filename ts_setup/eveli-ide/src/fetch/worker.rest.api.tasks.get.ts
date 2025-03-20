@@ -4,9 +4,9 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
-import { TableStateContext } from '../frontdesk/context/TaskSessionContext';
+
 import { createQueryString } from '../frontdesk/util/tableQuery';
-import { TaskApi } from '@/burger';
+import { TaskApi, EveliTaskTableContext } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook
@@ -15,7 +15,7 @@ export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
 function hook(props: {}) {
   const params = Hook.useParams();
   const { path, contextPath, method, url } = params;
-  const tableContext = React.useContext(TableStateContext);
+  const tableContext = React.useContext(EveliTaskTableContext);
 
 
   return {

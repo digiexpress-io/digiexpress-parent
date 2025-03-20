@@ -3,8 +3,7 @@ import { Column, Query } from '@material-table/core';
 
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { createQueryString } from '../frontdesk/util/tableQuery';
-import { Process } from '../frontdesk/types/Process';
-
+import { ProcExecutionApi } from '@/burger';
 
 
 
@@ -17,7 +16,7 @@ function hook(props: {}) {
   const { path, contextPath, method, url } = params;
 
   return {
-    loadProcesses: async (query: Query<Process>,  columns: Array<Column<Process>>): Promise<QueryResult<Process>> => {
+    loadProcesses: async (query: Query<ProcExecutionApi.ProcessExecution>,  columns: Array<Column<ProcExecutionApi.ProcessExecution>>): Promise<QueryResult<ProcExecutionApi.ProcessExecution>> => {
       const queryString = createQueryString(query, columns);
       return params.fetch(url({}) + `?${queryString}`, {
         headers: {
