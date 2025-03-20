@@ -1,7 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
-import { PublicationsView } from '../frontdesk/views/publications/PublicationsView';
+import { useLocale, PublicationsTable } from '@/burger'
 
 export const Route = createFileRoute('/secured/$locale/worker/publications/')({
   component: Component,
@@ -13,5 +12,5 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<PublicationsView />)
+  return (<PublicationsTable />)
 }

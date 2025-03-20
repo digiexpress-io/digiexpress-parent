@@ -7,9 +7,8 @@ import { TextField } from 'formik-mui';
 import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { AssetTag } from '../../types/AssetTag';
-import { PublicationInit } from '../../types/Publication';
-import { Datepicker } from '../../components/Datepicker';
+import { PublicationApi } from '../api-publications'
+import { EveliDatePicker } from '../eveli-datepicker';
 
 
 
@@ -43,8 +42,8 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     setOpen(false);
   }
 
-  const handleSubmit = (assetReleaseCommand: PublicationInit): void => {
-    let init: PublicationInit = { ...assetReleaseCommand }
+  const handleSubmit = (assetReleaseCommand: PublicationApi.PublicationInit): void => {
+    let init: PublicationApi.PublicationInit = { ...assetReleaseCommand }
     // clear markers for new release creation
     if (assetReleaseCommand.stencilTag === NEW_TAG_VALUE) {
       init.stencilTag = null;
@@ -61,7 +60,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
 
   const requiredValidator = (value: any) => !value ? intl.formatMessage(messages.requiredError) : undefined;
 
-  const TagComponent: React.FC<{ name: string, labelId: string, tags?: AssetTag[], newTag: string }> =
+  const TagComponent: React.FC<{ name: string, labelId: string, tags?: PublicationApi.AssetTag[], newTag: string }> =
     ({ name, labelId, tags, newTag }) => (
       <Field component={TextField} select name={name} label={intl.formatMessage({ id: labelId })}
         fullWidth InputProps={{ margin: 'dense' }}>
@@ -73,7 +72,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     )
 
   return (
-    <>
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
         <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'publications.dialogTitle' })}</DialogTitle>
         <Formik
@@ -97,7 +95,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
                   <Stack spacing={1}>
                     <Field
                       name='liveDate'
-                      component={Datepicker}
+                      component={EveliDatePicker}
                       disableMaskedInput
                       label={intl.formatMessage({ id: 'publications.liveDate' })}
                       fullWidth
@@ -123,6 +121,5 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
           }
         </Formik>
       </Dialog>
-    </>
   );
 }

@@ -7,26 +7,26 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import MaterialTable, { Column } from '@material-table/core';
-import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button, DialogTitle, Stack } from '@mui/material';
+import { Box, IconButton, Tooltip, DialogContent, Dialog, DialogContentText, DialogActions, Button, DialogTitle, Stack, Typography } from '@mui/material';
 
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { localizeTable } from '../../util/localizeTable';
-import { Publication } from '../../types/Publication';
+import { useConfig } from '../api-config';
+import { PublicationApi } from '../api-publications';
+import { useMaterialTableLabels } from '../api-locale';
+import { EveliDateTimeFormatter } from '../eveli-datetime-formatter';
+
 import { NewPublicationDialog } from './NewPublicationDialog';
-import { DateTimeFormatter } from '../../components/DateTimeFormatter';
-import { TableHeader } from '../../components/TableHeader';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
-import { useConfig } from '@/burger';
+
 
 
 interface TableState {
-  columns: Array<Column<Publication>>;
+  columns: Array<Column<PublicationApi.Publication>>;
 }
 
-
-const DeploymentInfo: React.FC<Publication> = ({description}) => {
+const DeploymentInfo: React.FC<PublicationApi.Publication> = ({description}) => {
   const [open, setOpen] = useState(false);
 
   function handleOpen() {
@@ -62,7 +62,7 @@ function parseErrors(errors: any): any[] {
   return  errors?.map?.errors || [];
 }
 
-const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
+const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
   const intl = useIntl();
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const { saveDeployment } = useFetch('worker/rest/api/assets/deployments/$deploymentId.PUT', {})
@@ -130,7 +130,7 @@ const PublicationStatus: React.FC<Publication & { onSubmit: () => void}> = ({sta
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
   const config = useConfig();
-  const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
+  const tableLocalization = useMaterialTableLabels();
   const tableRef = useRef();
   const { assetReleases, refreshAssetReleases, isLoading } = useFetch('worker/rest/api/assets/publications.GET', {});
   const { getRelease } = useFetch('worker/rest/api/assets/deployments/$deploymentId.GET', {});
@@ -161,7 +161,7 @@ export const PublicationsTable: React.FC = () => {
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => <DateTimeFormatter value={data.startsAt} />,
+        render: data => <EveliDateTimeFormatter value={data.startsAt} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {
@@ -170,7 +170,7 @@ export const PublicationsTable: React.FC = () => {
         filtering: false,
         type: 'date',
         defaultSort: 'desc',
-        render: data => <DateTimeFormatter value={data.createdAt} />,
+        render: data => <EveliDateTimeFormatter value={data.createdAt} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {
@@ -195,7 +195,11 @@ export const PublicationsTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={<TableHeader id='publicationsTable.title' />}
+        title={        
+          <Typography variant='h1'>
+            <FormattedMessage id='publicationsTable.title'/>
+          </Typography>
+        }
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

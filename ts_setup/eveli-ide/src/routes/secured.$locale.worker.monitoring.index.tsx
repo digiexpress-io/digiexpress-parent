@@ -1,7 +1,7 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/burger'
-import { ProcessView } from '../frontdesk/views/process/ProcessView';
+import { ProcessTable } from '../frontdesk/views/process/ProcessTable';
 
 export const Route = createFileRoute('/secured/$locale/worker/monitoring/')({
   component: Component,
@@ -13,5 +13,5 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<ProcessView />)
+  return (<ProcessTable />)
 }

@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format } from 'date-fns';
 
-type Props = {
+export type EveliDatePickerProps = {
   field: any
   form: any
   meta: any
@@ -14,7 +14,7 @@ type Props = {
   [x:string]: any;
 }
 
-export const Datepicker:React.FC<Props> = ({field,form:{touched, setFieldValue, setFieldError},
+export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({field,form:{touched, setFieldValue, setFieldError},
   label, id, readonly, fullWidth, ...other}) => {
   const dateFormat = 'dd.MM.yyyy';
   let dateValue = field.value;

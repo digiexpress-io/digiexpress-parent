@@ -1,7 +1,8 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
-import { PublicationUpload } from '../frontdesk/types/Publication';
+import { PublicationApi } from '@/burger';
+
 
 
 export const Hook = createFileFetch('worker/rest/api/assets/deployments.POST')({
@@ -24,7 +25,7 @@ function hook(props: {}) {
   const { enqueueSnackbar } = useSnackbar();
 
   return {
-    saveDeployment: async (init: PublicationUpload, onSucess: () => void): Promise<void> => {
+    saveDeployment: async (init: PublicationApi.PublicationUpload, onSucess: () => void): Promise<void> => {
       return params.fetch(url({}), {
       method,
       headers: {

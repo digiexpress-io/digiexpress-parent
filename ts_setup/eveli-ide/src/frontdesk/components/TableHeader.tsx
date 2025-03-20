@@ -1,13 +1,13 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 
 export const TableHeader: React.FC<{ id: string, children?: React.ReactNode }> = ({ id, children }) => {
-  const intl = useIntl();
 
   return (
-    <Typography variant='h1'>{intl.formatMessage({ id })}
+    <Typography variant='h1'>
+      <FormattedMessage id={id}/>
       {children}
     </Typography>
   )

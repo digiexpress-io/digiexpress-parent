@@ -6,7 +6,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import * as Burger from '@/burger';
 
-import { PublicationUpload } from '../../types/Publication';
+import { PublicationApi } from '../api-publications';
 
 
 export interface UploadReleaseProps {
@@ -18,7 +18,7 @@ export interface UploadReleaseProps {
 export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
   const [file, setFile] = React.useState<string | undefined>();
-  const init: PublicationUpload | undefined = file ? JSON.parse(file) : undefined;
+  const init: PublicationApi.PublicationUpload | undefined = file ? JSON.parse(file) : undefined;
 
   const { saveDeployment } = useFetch('worker/rest/api/assets/deployments.POST', {});
 

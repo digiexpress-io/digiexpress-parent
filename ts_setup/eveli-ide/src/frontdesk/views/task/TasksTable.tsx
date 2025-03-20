@@ -11,8 +11,8 @@ import { Link as RouterLink } from '@tanstack/react-router'
 import { FormattedDate, useIntl } from 'react-intl';
 import moment from 'moment';
 
-import { localizeTable } from '../../util/localizeTable';
-import { IamApi, TaskApi, mapIamRolesList } from '@/burger';
+
+import { IamApi, TaskApi, mapIamRolesList, useMaterialTableLabels } from '@/burger';
 
 import { TableStateContext } from '../../context/TaskSessionContext';
 
@@ -78,7 +78,7 @@ export const TasksTable: React.FC<Props> =
 
 
     const intl = useIntl();
-    const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
+    const tableLocalization = useMaterialTableLabels();
     const tableRef = useRef<any>();
     const tableContext = useContext(TableStateContext);
     const { isFirstRenderAfterRefresh, setRefreshed } = useRefresh();

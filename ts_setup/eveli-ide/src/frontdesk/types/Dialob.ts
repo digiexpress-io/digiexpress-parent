@@ -47,12 +47,7 @@ export interface DialobCreateFormCommand {
   title: string;
 };
 
-export interface DialobFormTag {
-  formLabel: string;
-  formName: string;
-  tagFormId: string;
-  tagName: string;
-};
+
 
 export interface DialobQuestionnaireMetadata {
   status: 'NEW' | 'OPEN' | 'COMPLETED';

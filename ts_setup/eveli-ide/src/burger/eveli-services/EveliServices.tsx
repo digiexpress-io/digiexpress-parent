@@ -3,39 +3,36 @@ import MaterialTable, { Column } from '@material-table/core';
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Workflow } from '../../types/Workflow';
-
-import { localizeTable } from '../../util/localizeTable';
-import { DateTimeFormatter } from '../../components/DateTimeFormatter';
-import { TableHeader } from '../../components/TableHeader';
-import { CreateOrEditWorkflowDialog } from './CreateOrEditWorkflowDialog';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
+import { CreateOrEditWorkflowDialog } from './CreateOrEditWorkflowDialog';
+import { PublicationApi } from '../api-publications';
+import { useMaterialTableLabels } from '../api-locale';
+import { EveliDateTimeFormatter } from '../eveli-datetime-formatter';
+
+
 interface TableState {
-  columns: Array<Column<Workflow>>;
+  columns: Array<Column<PublicationApi.AssetService>>;
 }
 
-interface WorkflowTableProps {
-  workflows?: Workflow[]
-  refreshWorkflows: () => void
-  historyView?: boolean
-}
 
-export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refreshWorkflows, historyView = false }) => {
-  const intl = useIntl();
-  const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
-  const tableRef = useRef();
 
+export const EveliServices: React.FC<{}> = ({  }) => {
+  const { workflows, refreshWorkflows } = useFetch('worker/rest/api/assets/workflows.GET', {});
   const { allTags: formTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
-  const [open, setOpen] = useState(false);
-  const [workflow, setWorkflow] = useState<Workflow | null>(null);
+  const intl = useIntl();
+  const tableLocalization = useMaterialTableLabels();
+  const tableRef = useRef();
 
-  const formName = (data: Workflow) => {
+  const [open, setOpen] = useState(false);
+  const [workflow, setWorkflow] = useState<PublicationApi.AssetService | null>(null);
+
+  const formName = (data: PublicationApi.AssetService) => {
     let formLabel = data.body.formName;
     const tag = formTags?.find(t => t.formName === data.body.formName && t.tagName === data.body.formTag);
     if (tag) {
@@ -44,11 +41,11 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
     return `${formLabel} / ${data.body.formTag}`;
   }
 
-  const searchForms = (filter: any, rowData: Workflow, columnDef: Column<Workflow>) => {
+  const searchForms = (filter: any, rowData: PublicationApi.AssetService, columnDef: Column<PublicationApi.AssetService>) => {
     return formName(rowData).toLowerCase().includes(filter);
   }
 
-  const sortForms = (form1: Workflow, form2: Workflow) => {
+  const sortForms = (form1: PublicationApi.AssetService, form2: PublicationApi.AssetService) => {
     return formName(form1).localeCompare(formName(form2));
   }
 
@@ -78,7 +75,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
         field: 'body.updated',
         filtering: false,
         type: 'date',
-        render: data => <DateTimeFormatter value={data.body.updated} />,
+        render: data => <EveliDateTimeFormatter value={data.body.updated} />,
         headerStyle: { fontWeight: 'bold' }
       },
       {
@@ -86,7 +83,7 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
           <Box justifySelf='end'>
             <Tooltip title={intl.formatMessage({ id: 'workflowTable.editButton' })}>
               <IconButton onClick={() => {
-                setWorkflow(data as Workflow);
+                setWorkflow(data as PublicationApi.AssetService);
                 setOpen(true);
               }}>
                 <EditIcon color='primary' />
@@ -101,7 +98,11 @@ export const WorkflowTable: React.FC<WorkflowTableProps> = ({ workflows, refresh
   return (
     <>
       <MaterialTable
-        title={<TableHeader id='workflowTable.title' />}
+        title={
+        <Typography variant='h1'>
+          <FormattedMessage id='workflowTable.title'/>
+        </Typography>}
+        
         localization={tableLocalization}
         columns={tableState.columns}
         tableRef={tableRef}

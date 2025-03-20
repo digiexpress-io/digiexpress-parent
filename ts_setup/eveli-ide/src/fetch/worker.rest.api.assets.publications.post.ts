@@ -1,7 +1,8 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { PublicationInit } from '../frontdesk/types/Publication';
+
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
+import { PublicationApi } from '@/burger';
 
 
 export const Hook = createFileFetch('worker/rest/api/assets/publications.POST')({
@@ -24,7 +25,7 @@ function hook(props: {}) {
   const { enqueueSnackbar } = useSnackbar();
 
   return {
-    savePublication: async (init: PublicationInit, onSucess: () => void): Promise<void> => {
+    savePublication: async (init: PublicationApi.PublicationInit, onSucess: () => void): Promise<void> => {
       return params.fetch(url({}), {
         method,
         headers: { 'Accept': 'application/json' },

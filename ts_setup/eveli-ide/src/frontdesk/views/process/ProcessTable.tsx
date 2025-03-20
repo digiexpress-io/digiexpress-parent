@@ -5,8 +5,9 @@ import { useIntl } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { Process } from '../../types/Process';
-import { localizeTable } from '../../util/localizeTable';
+
 import { TableHeader } from '../../components/TableHeader';
+import { useMaterialTableLabels } from '@/burger';
 
 
 interface TableState {
@@ -17,7 +18,7 @@ export const ProcessTable: React.FC = () => {
   const intl = useIntl();
   const { loadProcesses } = useFetch('worker/rest/api/processes.GET', {})
 
-  const tableLocalization = localizeTable((id: string) => intl.formatMessage({ id }));
+  const tableLocalization = useMaterialTableLabels();
 
   const tableState: TableState = {
     columns: [

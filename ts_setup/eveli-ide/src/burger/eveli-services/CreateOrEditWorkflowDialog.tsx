@@ -5,8 +5,7 @@ import { TextField } from 'formik-mui';
 import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
-import { Workflow } from '../../types/Workflow';
-import { DialobFormTag } from '../../types';
+import { PublicationApi } from '../api-publications';
 
 
 const messages = defineMessages(
@@ -22,10 +21,10 @@ const messages = defineMessages(
 
 export interface CreateOrEditWorkflowDialogProps {
   onSubmit: () => void;
-  workflow: Workflow | null;
+  workflow: PublicationApi.AssetService | null;
   open: boolean;
   setOpen: (open: boolean) => void;
-  dialobTags: DialobFormTag[];
+  dialobTags: PublicationApi.AssetFormTag[];
 }
 
 export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProps> = ({ onSubmit, workflow, open, setOpen, dialobTags }) => {
@@ -63,7 +62,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values as Workflow, () => {
+            handleSubmit(values as PublicationApi.AssetService, () => {
               setOpen(false);
               onSubmit();
             });

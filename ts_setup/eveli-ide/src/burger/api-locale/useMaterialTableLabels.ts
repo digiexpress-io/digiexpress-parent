@@ -1,6 +1,11 @@
+import { Localization } from "@material-table/core";
+import { useIntl } from "react-intl";
 
-export const localizeTable = (t: (id: string) => string) => (
-  {
+export function useMaterialTableLabels(): Localization { 
+  const intl = useIntl();
+  const t = (id: string) => intl.formatMessage({ id })
+
+  return {
     body: {
       emptyDataSourceMessage: t('table.body.emptyDataSourceMessage'),
       deleteTooltip: t('table.body.deleteTooltip'),
@@ -35,4 +40,4 @@ export const localizeTable = (t: (id: string) => string) => (
       addRemoveColumns: t('table.toolbar.addRemoveColumns')
     }
   }
-);
+}

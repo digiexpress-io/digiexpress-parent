@@ -1,10 +1,10 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
+import moment from 'moment'; // TODO: dead lib, replace with luxon
 
-import moment from 'moment';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
-export const DateTimeFormatter: React.FC<{ value: any }> = ({ value }) => {
+export const EveliDateTimeFormatter: React.FC<{ value: any }> = ({ value }) => {
   if (value) {
     const localTime = moment.utc(value).local().toDate();
 

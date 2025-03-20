@@ -22,7 +22,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
 import { StatusComponent } from '../../components/task/Status';
 import { Priority } from '../../components/task/Priority';
-import { Datepicker } from '../../components/Datepicker';
 import { TaskLinkProps } from '../../components/task/TaskLinkComponent';
 
 
@@ -39,7 +38,7 @@ import * as Yup from 'yup';
 import { TaskFeedback } from './TaskFeedback';
 import { StatusIndicator } from '../../../feedback';
 import { DialobReview } from '../../../dialob-review';
-import { IamApi, TaskApi } from '@/burger';
+import { EveliDatePicker, IamApi, TaskApi } from '@/burger';
 
 
 
@@ -434,7 +433,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                   <Grid2 size={{ xs: 12, md: 4 }}>
                     <Field
                       name='dueDate'
-                      component={Datepicker}
+                      component={EveliDatePicker}
                       disableMaskedInput
                       label={formatMessage({ id: 'taskDialog.dueDate' })}
                       fullWidth={true}
