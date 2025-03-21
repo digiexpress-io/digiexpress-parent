@@ -1,9 +1,9 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.142",
+  "version": "0.0.148",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
-  "types": "build/src/index.d.ts",
+  "types": "build/index.d.ts",
   "type": "module",
   "files": [
     "build"
@@ -31,7 +31,7 @@
     "yup": "^1.4.0"
   },
   "peerDependencies": {
-    "@dialob/dashboard-material": "1.2.6",
+    "@dialob/dashboard-material": "^1.2.8",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@material-table/core": "^6.4.4",

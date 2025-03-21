@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@dialob/dashboard-material':
-    specifier: 1.2.6
-    version: 1.2.6(@mui/icons-material@6.4.8)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/x-date-pickers@7.28.0)(@types/react-dom@18.3.5)(@types/react@18.3.19)(date-fns@4.1.0)(react-dom@18.3.1)(react-intl@6.8.9)(react@18.3.1)
+    specifier: ^1.2.8
+    version: 1.2.8(@mui/icons-material@6.4.8)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/x-date-pickers@7.28.0)(@types/react-dom@18.3.5)(@types/react@18.3.19)(date-fns@4.1.0)(react-dom@18.3.1)(react-intl@6.8.9)(react@18.3.1)
   '@dxs-ts/gamut':
     specifier: ^1.0.61
-    version: 1.0.65(@date-io/date-fns@2.17.0)(@date-io/moment@1.3.13)(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@mui/icons-material@6.4.8)(@mui/lab@6.0.0-beta.10)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/types@7.2.24)(@mui/utils@6.4.8)(@mui/x-date-pickers@7.28.0)(@tanstack/react-query@5.69.0)(@tanstack/react-router@1.114.25)(@tanstack/store@0.4.1)(clsx@2.1.1)(date-fns-tz@3.2.0)(date-fns@4.1.0)(leaflet-geosearch@4.2.0)(leaflet@1.9.4)(lodash@4.17.21)(luxon@3.5.0)(moment@2.30.1)(numbro@2.5.0)(react-calendar@5.1.0)(react-clock@5.1.0)(react-date-picker@11.0.0)(react-dom@18.3.1)(react-intl@6.8.9)(react-leaflet@4.2.1)(react-markdown@9.1.0)(react-scrollable-feed@1.3.2)(react-time-picker@7.0.0)(react@18.3.1)(remark-gfm@1.0.0)(ts-md5@1.3.1)(unified@11.0.5)(unist-util-visit@5.0.0)
+    version: 1.0.70(@date-io/date-fns@2.17.0)(@date-io/moment@1.3.13)(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@mui/icons-material@6.4.8)(@mui/lab@6.0.0-beta.10)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/types@7.2.24)(@mui/utils@6.4.8)(@mui/x-date-pickers@7.28.0)(@tanstack/react-query@5.69.0)(@tanstack/react-router@1.114.25)(@tanstack/store@0.4.1)(clsx@2.1.1)(date-fns-tz@3.2.0)(date-fns@4.1.0)(leaflet-geosearch@4.2.0)(leaflet@1.9.4)(lodash@4.17.21)(luxon@3.5.0)(moment@2.30.1)(numbro@2.5.0)(react-calendar@5.1.0)(react-clock@5.1.0)(react-date-picker@11.0.0)(react-dom@18.3.1)(react-intl@6.8.9)(react-leaflet@4.2.1)(react-markdown@9.1.0)(react-scrollable-feed@1.3.2)(react-time-picker@7.0.0)(react@18.3.1)(remark-gfm@1.0.0)(ts-md5@1.3.1)(unified@11.0.5)(unist-util-visit@5.0.0)
   '@emotion/react':
     specifier: ^11.13.3
     version: 11.14.0(@types/react@18.3.19)(react@18.3.1)
@@ -406,8 +406,8 @@ packages:
       moment: 2.30.1
     dev: false
 
-  /@dialob/dashboard-material@1.2.6(@mui/icons-material@6.4.8)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/x-date-pickers@7.28.0)(@types/react-dom@18.3.5)(@types/react@18.3.19)(date-fns@4.1.0)(react-dom@18.3.1)(react-intl@6.8.9)(react@18.3.1):
-    resolution: {integrity: sha512-PF4Z1SRM/xn2CFowxO4u+xSiMjaWpFzIfy2ETYM9Bo8Vh4RnJJOgTY2SVyQ7knquM4oVvi/1n4Q3OpAuuLPhgA==}
+  /@dialob/dashboard-material@1.2.8(@mui/icons-material@6.4.8)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/x-date-pickers@7.28.0)(@types/react-dom@18.3.5)(@types/react@18.3.19)(date-fns@4.1.0)(react-dom@18.3.1)(react-intl@6.8.9)(react@18.3.1):
+    resolution: {integrity: sha512-SNiJxZL1B1h+ke1flHNEPqf6ikY/LNlij/2zEkwexSZDGId5o/BDVXo9BACMm/esWmuXXIzlaST0JEYqni8JFw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@mui/icons-material': ^5.1.0
@@ -433,8 +433,8 @@ packages:
       react-intl: 6.8.9(react@18.3.1)(typescript@5.8.2)
     dev: false
 
-  /@dxs-ts/gamut@1.0.65(@date-io/date-fns@2.17.0)(@date-io/moment@1.3.13)(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@mui/icons-material@6.4.8)(@mui/lab@6.0.0-beta.10)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/types@7.2.24)(@mui/utils@6.4.8)(@mui/x-date-pickers@7.28.0)(@tanstack/react-query@5.69.0)(@tanstack/react-router@1.114.25)(@tanstack/store@0.4.1)(clsx@2.1.1)(date-fns-tz@3.2.0)(date-fns@4.1.0)(leaflet-geosearch@4.2.0)(leaflet@1.9.4)(lodash@4.17.21)(luxon@3.5.0)(moment@2.30.1)(numbro@2.5.0)(react-calendar@5.1.0)(react-clock@5.1.0)(react-date-picker@11.0.0)(react-dom@18.3.1)(react-intl@6.8.9)(react-leaflet@4.2.1)(react-markdown@9.1.0)(react-scrollable-feed@1.3.2)(react-time-picker@7.0.0)(react@18.3.1)(remark-gfm@1.0.0)(ts-md5@1.3.1)(unified@11.0.5)(unist-util-visit@5.0.0):
-    resolution: {integrity: sha512-9j4PNOrtNyYRC8TnFwQ6dCUjgjpnSlDC3RxCAQNoHHJPsLW+ZJLc8bxHYKwd7IzZFHNGa+gDXrHYq5yJeTH7+A==}
+  /@dxs-ts/gamut@1.0.70(@date-io/date-fns@2.17.0)(@date-io/moment@1.3.13)(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@mui/icons-material@6.4.8)(@mui/lab@6.0.0-beta.10)(@mui/material@6.4.8)(@mui/system@6.4.8)(@mui/types@7.2.24)(@mui/utils@6.4.8)(@mui/x-date-pickers@7.28.0)(@tanstack/react-query@5.69.0)(@tanstack/react-router@1.114.25)(@tanstack/store@0.4.1)(clsx@2.1.1)(date-fns-tz@3.2.0)(date-fns@4.1.0)(leaflet-geosearch@4.2.0)(leaflet@1.9.4)(lodash@4.17.21)(luxon@3.5.0)(moment@2.30.1)(numbro@2.5.0)(react-calendar@5.1.0)(react-clock@5.1.0)(react-date-picker@11.0.0)(react-dom@18.3.1)(react-intl@6.8.9)(react-leaflet@4.2.1)(react-markdown@9.1.0)(react-scrollable-feed@1.3.2)(react-time-picker@7.0.0)(react@18.3.1)(remark-gfm@1.0.0)(ts-md5@1.3.1)(unified@11.0.5)(unist-util-visit@5.0.0):
+    resolution: {integrity: sha512-vAZdgWUDNyKZpLPriK6Rw6A57pycsr4tB+tjg+rSo8luR/nsV6RZzHFGgYJC4vxEKDL7YGKcSzt/4L70w7lD7A==}
     peerDependencies:
       '@date-io/date-fns': ^2.11.0
       '@date-io/moment': 1.3.13

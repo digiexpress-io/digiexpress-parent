@@ -3,7 +3,6 @@ import React, { useRef } from 'react';
 import { FormattedDate, FormattedNumber, FormattedTime, useIntl, } from 'react-intl';
 import MaterialTable, { Column, MTableAction  } from '@material-table/core';
 import { Box, Button} from '@mui/material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 
 
@@ -125,6 +124,10 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
     )
   }
 
+  const triggerFileInput = () => {
+    document.getElementById('contained-button-file')?.click();
+  }
+
   return (
     <Box>
         <input
@@ -151,12 +154,12 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
           }}
           actions={[
             {
-              icon: FileUploadIcon,
+              icon: 'upload',
               isFreeAction: true,
               tooltip: intl.formatMessage({id: 'attachmentButton.addAttachment'}),
               disabled: readonly,
               hidden: readonly,
-              onClick: ()=>{}
+              onClick: triggerFileInput
             },
             {
               icon: DownloadIcon,
