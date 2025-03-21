@@ -1,4 +1,4 @@
-import { Theme, Components } from '@mui/material';
+import { Theme, Components, alpha } from '@mui/material';
 import user_logo_light from './logoLifeDigitalDark.svg';
 import { DemoFooter } from './DemoFooter';
 
@@ -37,6 +37,29 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
         lg: 90,
         xl: 90
       }
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        // margin around page  
+        [theme.breakpoints.up('md')]: {
+          marginLeft: theme.spacing(4),
+          marginRight: theme.spacing(4),
+        },
+        '.GRouterUnsecured-root': {
+          borderLeft: `1px solid ${theme.palette.divider}`,
+          borderRight: `1px solid ${theme.palette.divider}`,
+        },
+        // margin around drawer on secured page
+        '.MuiDrawer-root.GShellBase .MuiPaper-root': {
+          // because drawer has position fixed we need to duplicate the margin
+          marginLeft: theme.spacing(4),
+        },
+        '& .MuiToolbar-root.GShellBase': {
+          boxShadow: `0 4px 6px -1px ${alpha(theme.palette.text.primary, 0.2)},  0 2px 4px -1px ${alpha(theme.palette.text.primary, 0.1)}`,
+          borderLeft: `1px solid ${theme.palette.divider}`,
+          borderRight: `1px solid ${theme.palette.divider}`,
+        }
+      })
     }
   },
   GForm: {
