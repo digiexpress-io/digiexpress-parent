@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/gamut",
-  "version": "1.0.74",
+  "version": "1.0.75",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
