@@ -6,7 +6,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 import { useIntl } from 'react-intl';
 import { GInboxNewMessageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-import { ContractApi } from '../api-contract';
+import { ContractApi, useContracts } from '../api-contract';
 
 export interface GInboxNewMessageProps {
   senderName?: string;
@@ -18,7 +18,7 @@ export interface GInboxNewMessageProps {
 
 export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => {
   const intl = useIntl();
-
+  const { appendContractAttachment, refresh } = useContracts();
   const [messageText, setMessageText] = React.useState('');
   const emptyMessage = messageText.trim() === '';
 
@@ -43,16 +43,14 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
   }
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
 
-    if (files && files.length > 0) {
-      Array.from(files).forEach((file) => {
-        console.log(`Name: ${file.name}`);
-        console.log(`Size: ${file.size} bytes`);
-        console.log(`Type: ${file.type}`);
-        console.log(`Contract ID: ${props.contract.id}`);
-      });
+    const files = event.currentTarget.files;
+    if (!files || files.length === 0) {
+      return;
     }
+    appendContractAttachment(ownerState.contract.id, files).then(() => {
+      refresh();
+    });
   };
 
   const triggerFileInput = () => {
