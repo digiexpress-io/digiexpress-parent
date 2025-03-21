@@ -60,7 +60,12 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           getAllOffers={offerFetch.fetchAllGet} 
           options={{ staleTime, queryKey: processesQueryKey }}>
           
-          <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+          <ContractProvider 
+            appendContractAttachment={contractFetch.appendContractAttachment} 
+            getContracts={contractFetch.fetchGet} 
+            getContractAttachment={contractFetch.fetchContractAttachment}
+            options={{ staleTime, queryKey: processesQueryKey }}>
+
           <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
             <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
               {children}

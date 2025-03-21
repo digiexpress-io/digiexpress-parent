@@ -12,6 +12,7 @@ export const ContractProvider: React.FC<{
   options: { staleTime: number, queryKey: string };
   appendContractAttachment: ContractApi.AppendContractAttachmentFetchPOST;
   getContracts: ContractApi.GetContractFetchGET;
+  getContractAttachment: ContractApi.ContractAttachmentFetchGET;
 }> = (props) => {
   const data = usePopulateContext(props);
 
@@ -28,6 +29,7 @@ export const ContractProvider: React.FC<{
       },
       refresh: data.refresh,
       appendContractAttachment: data.appendContractAttachment,
+      getContractAttachment: data.getContractAttachment,
       contractStats: Object.freeze({ awaitingDecision: awaitingDecision.length, decided: decided.length })
     };
     return (

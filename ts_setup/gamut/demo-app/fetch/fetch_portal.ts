@@ -84,5 +84,15 @@ export function createContractFetch(url: (string | undefined) = '/portal/secured
     });
     return response;
   }
-  return { fetchGet, appendContractAttachment };
+
+  const fetchContractAttachment: ContractApi.ContractAttachmentFetchGET = async (id, filename) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(`${url}/${id}/attachments/${filename}`, {
+      method: 'GET',
+      headers: undefined,
+      credentials: undefined,
+    });
+    return response;
+  }
+  return { fetchGet, appendContractAttachment, fetchContractAttachment};
 }

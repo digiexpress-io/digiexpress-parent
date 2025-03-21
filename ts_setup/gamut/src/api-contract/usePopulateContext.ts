@@ -14,6 +14,7 @@ import { useSite } from '../api-site';
 export interface UsePropulateProps {
   options: { staleTime: number, queryKey: string };
   appendContractAttachment: ContractApi.AppendContractAttachmentFetchPOST;
+  getContractAttachment: ContractApi.ContractAttachmentFetchGET;
   getContracts: ContractApi.GetContractFetchGET;
 }
 
@@ -21,6 +22,7 @@ export interface PopulateContractContext {
   contracts: readonly ContractApi.Contract[];
   isPending: boolean;
   appendContractAttachment: (contractId: ContractApi.ContractId, files: FileList) => Promise<ContractApi.Contract>;
+  getContractAttachment: (contractId: ContractApi.ContractId, fileName: string) => Promise<{ download: string }>;
   refresh(): Promise<void>;
 }
 
@@ -52,6 +54,15 @@ export function usePopulateContext(props: UsePropulateProps): PopulateContractCo
 
   }, [refetch, props.appendContractAttachment, site]);
 
+
+
+    // Create new contract and reload after that
+    const getContractAttachment: (contractId: ContractApi.ContractId, fileName: string) => Promise<{ download: string }> = React.useCallback(async (contractId, fileName) => {
+      const resp = await props.getContractAttachment(contractId, fileName);
+      const json = await resp.json();
+      return json;
+    }, [refetch, props.appendContractAttachment, site]);
+
   // Reload all data
   const refresh: () => Promise<void> = React.useCallback(async () => {
     return refetch().then(() => { });
@@ -73,6 +84,6 @@ export function usePopulateContext(props: UsePropulateProps): PopulateContractCo
 
   // cache the end result
   return React.useMemo(() => {
-    return { contracts: contractData?.contracts ?? [], isPending: !isContextLoaded, appendContractAttachment, refresh };
+    return { contracts: contractData?.contracts ?? [], isPending: !isContextLoaded, appendContractAttachment, refresh, getContractAttachment };
   }, [contractData?.hash, isContextLoaded, appendContractAttachment, refresh]);
 }

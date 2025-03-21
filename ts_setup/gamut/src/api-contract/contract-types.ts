@@ -41,6 +41,7 @@ export declare namespace ContractApi {
   }
 
   export type GetContractFetchGET = () => Promise<Response>;
+  export type ContractAttachmentFetchGET = (contractId: ContractId, filename: string) => Promise<Response>;
   export type AppendContractAttachmentFetchPOST = (contractId: ContractId, files: FileList) => Promise<void>;
 
   export interface ContractContextType {
@@ -49,6 +50,7 @@ export declare namespace ContractApi {
     contractStats: { awaitingDecision: number, decided: number },
     getContract(contractId: ContractId): Contract | undefined;
     appendContractAttachment: (contractId: ContractId, files: FileList) => Promise<Contract>;
+    getContractAttachment: (contractId: ContractId, fileName: string) => Promise<{ download: string }>;
     refresh(): Promise<void>;
   }
 
