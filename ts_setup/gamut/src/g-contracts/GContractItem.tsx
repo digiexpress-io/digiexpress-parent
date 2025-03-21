@@ -47,11 +47,11 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
 
       <GFlex variant='body'>
         <Grid container>
-          <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
             <Typography>{name}</Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
             <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
               <Typography component='span' className={classes.taskRefId}>
                 {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
@@ -60,7 +60,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
             <Typography component='span'>{referenceId}</Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={12} md={12} lg={2} xl={2}>
             <GFlex variant='hidden' hiddenOn={(br) => br.up('lg')}>
               <Typography component='span' className={classes.status}>
                 {intl.formatMessage({ id: 'gamut.forms.status' })}
