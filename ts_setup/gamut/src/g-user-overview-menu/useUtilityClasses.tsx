@@ -9,6 +9,8 @@ export interface GUserOverviewMenuClasses {
   root: string;
   item: string;
   menuButton: string;
+  menuButtonLayout: string;
+  userOrRepOrCompanyNameStyle: string;
   icon: string;
   formCount: string;
 }
@@ -40,6 +42,8 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
       styles.root,
       styles.item,
       styles.menuButton,
+      styles.menuButtonLayout,
+      styles.userOrRepOrCompanyNameStyle,
       styles.icon,
       styles.formCount
     ];
@@ -49,6 +53,14 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
     '& .GUserOverviewMenu-icon': {
       justifyContent: 'right',
       color: theme.palette.primary.main,
+    },
+    '& .GUserOverviewMenu-menuButtonLayout': {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start"
+    },
+    '& .GUserOverviewMenu-userOrRepOrCompanyNameStyle': {
+      ...theme.typography.caption
     },
     '& .MuiButtonBase-root': {
       justifyContent: 'space-between',
@@ -77,6 +89,8 @@ export const useUtilityClasses = () => {
     root: ['root'],
     item: ['item'],
     menuButton: ['menuButton'],
+    menuButtonLayout: ['menuButtonLayout'],
+    userOrRepOrCompanyNameStyle: ['userOrRepOrCompanyNameStyle'],
     icon: ['icon'],
     formCount: ['formCount']
   };
