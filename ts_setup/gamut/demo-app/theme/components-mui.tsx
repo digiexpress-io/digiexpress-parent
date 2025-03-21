@@ -83,7 +83,12 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
   MuiContainer: {
     defaultProps: {
       disableGutters: true,
-    }
+    },
+    styleOverrides: {
+      root: {
+        marginTop: '0px !important'
+      }
+    },
   },
   MuiPaper: {
     defaultProps: {
