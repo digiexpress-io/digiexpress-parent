@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Formik, Form, Field } from 'formik';
 import {
   TextField, Grid2, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
@@ -10,79 +10,31 @@ import {
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import AttachmentIcon from '@mui/icons-material/Attachment';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 import { useNavigate } from '@tanstack/react-router';
-
-
-import { PageLeavingConfirmation } from '../../components/PageLeaveConfirmation';
-import { StatusComponent } from '../../components/task/Status';
-import { Priority } from '../../components/task/Priority';
-import { TaskLinkProps } from '../../components/task/TaskLinkComponent';
-
-
-
-import { TaskRoleDialog } from './TaskRoleDialog';
-import { AttachmentTable } from './AttachmentTable';
-import { CommentThread } from './CommentThread';
-
-
-import { useAttachmentConfig } from '../../context/AttachmentContext';
-import { ComponentResolver } from '../../context/ComponentResolver';
 import * as Yup from 'yup';
 
-import { TaskFeedback } from './TaskFeedback';
-import { StatusIndicator } from '../../../feedback';
-import { DialobReview } from '../../../dialob-review';
-import { EveliDatePicker, IamApi, TaskApi } from '@/burger';
+import { UpsertOneFeedback, StatusIndicator } from '@/feedback';
 
+import { IamApi } from '../api-iam';
+import { TaskApi } from '../api-task';
+import { EveliTaskComments } from '../eveli-task-comments';
+import { EveliDatePicker } from '../eveli-datepicker';
+import { DialobReview } from '../../dialob-review';
 
+import { StatusComponent } from './Status';
+import { Priority } from './Priority';
 
-const AttachmentTableWrapper: React.FC<{ editTask: TaskApi.Task, readonly: boolean }> = ({ editTask, readonly }) => {
-  const taskId = editTask.id;
-  const attachmentContext = useAttachmentConfig();
-  const [attachments, setAttachments] = useState<TaskApi.Attachment[]>([]);
+import { PageLeavingConfirmation } from './PageLeaveConfirmation';
+import { AttachmentTableWrapper } from './AttachmentTableWrapper';
+import { TaskRoleDialog } from './TaskRoleDialog';
+import { classes } from './useMuiClasses';
+import { TaskLinkProps, ComponentResolver } from './TaskComponentResolver';
 
-  useEffect(() => {
-    if (taskId) {
-      attachmentContext.loadAttachments(taskId)
-        .then((result: TaskApi.Attachment[]) => {
-          setAttachments(result);
-        });
-    }
-    else {
-      setAttachments([]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId]);
-
-  return (
-    <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1bh-content"
-        id="panel1bh-header"
-        sx={classes.accordionSummary}
-      >
-        <Typography sx={classes.accordionTitle}>
-          <FormattedMessage id="attachmentView.title" />
-        </Typography>
-        <Badge badgeContent={attachments?.length} color='secondary'>
-          <AttachmentIcon />
-        </Badge>
-      </AccordionSummary>
-      <AccordionDetails sx={classes.accordionDetails}>
-        {!!editTask.id &&
-          <AttachmentTable taskId={editTask.id} readonly={readonly} attachments={attachments} setAttachments={setAttachments} />
-        }
-      </AccordionDetails>
-    </Accordion>
-  )
-}
 
 const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
   const theme = useTheme();
@@ -125,62 +77,6 @@ const messages = defineMessages(
 )
 
 
-const classes = {
-  formControl: {
-    margin: '1em',
-    minWidth: 120,
-    maxWidth: 300,
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-  noLabel: {
-    marginTop: '3em',
-  },
-  accordionSummary: {
-    display: "flex",
-    "& .Mui-expanded": {
-      marginBottom: - 1,
-      marginTop: 0
-    }
-  },
-  accordionTitle: {
-    fontWeight: 'bolder',
-    width: "max-content",
-    mr: 2
-  },
-  accordionDetails: {
-    pt: 0
-  },
-  taskRoleList: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 1,
-    paddingTop: 0,
-    paddingBottom: 1,
-    paddingX: 1
-  },
-  taskRoleFieldset: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 10,
-    width: "90%",
-    marginBottom: 8,
-    minHeight: 64
-  },
-  taskRoleLegend: {
-    marginLeft: 8,
-    paddingLeft: 24
-  },
-  keywordChip: {
-    width: "max-content",
-    ml: 1
-  },
-};
 
 type Props = {
   id: string
@@ -512,7 +408,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         </Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <CommentThread
+                        <EveliTaskComments
                           task={editTask}
                           isExternalThread={true}
                           comments={comments}
@@ -540,7 +436,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <TaskFeedback taskId={editTask.id! + ''} reload={comments?.length}/>
+                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => {}} reload={comments?.length ?? 0}/>
                       </AccordionDetails>
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
@@ -567,7 +463,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
 
-                        <CommentThread
+                        <EveliTaskComments
                           task={editTask}
                           isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
                           comments={comments}

@@ -7,7 +7,7 @@ export declare namespace ProcExecutionApi {
   export interface ProcessExecution {
     id: number;
     status: string;
-    questionnaire: string;
+    questionnaireId: string;
     task?: string;
     userId?: string;
     created: Date;

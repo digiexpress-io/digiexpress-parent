@@ -4,10 +4,10 @@ import { FormattedDate, FormattedNumber, FormattedTime, useIntl, } from 'react-i
 import MaterialTable, { Column, MTableAction  } from '@material-table/core';
 import { Box, Button} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import { TaskApi } from '../api-task';
+import { useMaterialTableLabels } from '../api-mui-table';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
-
-import { useAttachmentConfig } from '../../context/AttachmentContext';
-import { TaskApi, useMaterialTableLabels } from '@/burger';
 
 const classes = {
     addButton: {
@@ -25,19 +25,23 @@ interface TableState  {
   columns: Array<Column<TaskApi.Attachment>>;
 }
 
-interface Props {
+export interface EveliTaskAttachmentsProps {
   taskId: string,
   readonly: boolean,
   attachments: TaskApi.Attachment[], 
   setAttachments: React.Dispatch<React.SetStateAction<TaskApi.Attachment[]>>
 }
 
-export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments, setAttachments }) =>{
+export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ taskId, readonly, attachments, setAttachments }) =>{
 
   const intl = useIntl();
   const tableLocalization = useMaterialTableLabels();
   const tableRef = useRef();
-  const attachmentContext = useAttachmentConfig();
+
+  const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
+  const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
+  const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
+
 
   const formatTime = (time:any) => {
     if (time) {
@@ -62,9 +66,9 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
     if (files) {
       const arrFiles = Array.from(files)
       arrFiles.forEach((file, index) => {
-        attachmentContext.addAttachment(taskId, file)
-        ?.then(response=>{
-          attachmentContext.loadAttachments(taskId)
+        addAttachment(taskId, file)
+        ?.then(response => {
+          loadAttachments(taskId)
           .then(attachments => {
             setAttachments(attachments);
           });
@@ -74,7 +78,7 @@ export const AttachmentTable:React.FC<Props> = ({ taskId, readonly, attachments,
   }
   const handleDownloadClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
     let attachment = Array.isArray(data) ? data[0] : data;
-    const link = attachmentContext.downloadAttachmentLink(taskId, attachment.name);
+    const link = downloadAttachmentLink(taskId, attachment.name);
     window.open(link);
   };
 

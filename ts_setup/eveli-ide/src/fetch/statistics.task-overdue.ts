@@ -1,8 +1,7 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useQuery } from '@tanstack/react-query'
 
-import { OverdueByGroupStatistics } from '../frontdesk/types/TaskStatistics';
-import { mapIamRole } from '@/burger';
+import { mapIamRole, TaskApi } from '@/burger';
 
 
 export const Hook = createFileFetch('statistics/task-overdue.GET')({
@@ -21,7 +20,7 @@ function hook(props: {}): {
     queryKey: [query],
     queryFn: () => params
       .fetch(query).then(resp => resp.json())
-      .then((data: OverdueByGroupStatistics[]) => (data ?? []))
+      .then((data: TaskApi.OverdueByGroupStatistics[]) => (data ?? []))
       .catch(err => [])
       .then(data => data.map(stats => ({
             assignedId: mapIamRole(stats.assignedId),

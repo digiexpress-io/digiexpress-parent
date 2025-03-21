@@ -5,7 +5,7 @@ import { toZonedTime } from 'date-fns-tz';
 
 
 import { CommentAdd } from './CommentAdd';
-import { TaskApi } from '@/burger';
+import { TaskApi } from '../api-task';
 
 
 type CommentLocalProps = {

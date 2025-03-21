@@ -5,8 +5,8 @@ import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
 
-import { createQueryString } from '../frontdesk/util/tableQuery';
-import { TaskApi, EveliTaskTableContext } from '@/burger';
+
+import { TaskApi, EveliTaskTableContext, createMuiTableQueryString } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook
@@ -50,7 +50,7 @@ function hook(props: {}) {
         }
       })
   
-      let queryString = createQueryString(
+      let queryString = createMuiTableQueryString(
         {...query, 
           filters: query.filters.filter((item: any) => !hiddenColumns.includes(item.column.field)), 
           orderByCollection: query.orderByCollection.reduce((accumulator: any[], item: any) => {

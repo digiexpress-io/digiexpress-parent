@@ -1,12 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { OutlinedInput, Grid2, Stack, Button } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
 
-
-
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { TaskApi } from '@/burger';
+import { TaskApi } from '../api-task';
 
 
 type CommentAddProps = {
@@ -19,7 +17,7 @@ type CommentAddProps = {
 
 export const CommentAdd: React.FC<CommentAddProps> = (props) => {
   let input: HTMLTextAreaElement | null = null;
-  const [inputValue, setInputValue] = useState<string | null>(null);
+  const [inputValue, setInputValue] = React.useState<string | null>(null);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value);
   const { saveComment } = useFetch('worker/rest/api/tasks/$taskId/comments.POST', {});
 

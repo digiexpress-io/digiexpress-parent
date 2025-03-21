@@ -1,21 +1,23 @@
 import React from "react";
 import { useIntl, FormattedDate } from "react-intl";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Column } from '@material-table/core';
-
 import { IconButton } from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import moment from 'moment'; // TODO dead library
+
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
-
 import { TaskApi } from '../api-task';
-import { mapIamRolesList, useIam } from '../api-iam';
 import { useConfig } from "../api-config";
+import { mapIamRolesList, useIam } from '../api-iam';
 
 
-import moment from 'moment';
+
+
 import { EveliTaskTableContext } from "./EveliTaskTableProvider";
 import { TaskLink } from "./TaskLink";
-import { PriorityView } from "../../frontdesk/components/task/Priority";
-import { StatusViewComponent } from "../../frontdesk/components/task/Status";
+import { TaskStatusIndicator } from "./TaskStatusIndicator";
+import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
 
 
 const formatTime = (time: any) => {
@@ -91,13 +93,6 @@ export function useTasksTableState(): TableState {
     tableRef, 
     columns: [
       {
-        render: (data) => {
-          return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
-        },
-        hidden: isDeleteHidden
-      },
-
-      {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.priority' }),
         field: 'priority',
         lookup: {
@@ -107,7 +102,7 @@ export function useTasksTableState(): TableState {
         },
         headerStyle: { fontWeight: 'bold' },
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'priority')?.value || [],
-        render: data => (<PriorityView withLabel value={data.priority} meta={{}} />),
+        render: data => (<TaskPriorityIndicator value={data.priority} />),
         customSort: (a, b) => a.priority && b.priority ? getPriorityCode(a.priority) - getPriorityCode(b.priority) : 0,
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "priority").hidden
       },
@@ -138,7 +133,7 @@ export function useTasksTableState(): TableState {
         },
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'status')?.value || ['NEW', 'OPEN'],
         headerStyle: { fontWeight: 'bold' },
-        render: data => (<StatusViewComponent withLabel value={data.status} meta={{}} />),
+        render: data => (<TaskStatusIndicator value={data.status} />),
         customSort: (a, b) => a.status && b.status ? getStatusCode(a.status) - getStatusCode(b.status) : 0,
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "status").hidden
       },
@@ -174,6 +169,12 @@ export function useTasksTableState(): TableState {
         render: data => formatDate(data.created),
         headerStyle: { fontWeight: 'bold' },
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "created").hidden
+      },
+      {
+        hidden: isDeleteHidden,
+        render: (data) => {
+          return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
+        },   
       }
     ]
   }

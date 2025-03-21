@@ -4,25 +4,24 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { FormattedMessage } from 'react-intl';
 import { useField, FieldInputProps } from 'formik';
 
-import { COLORS, ColorMap } from './ColorMap';
+import { TaskApi } from '@/burger';
 
-import * as Burger from '@/burger';
 
 interface CommonProps extends FieldInputProps<""> {
   label: string;
   readonly?: boolean;
   messages: Record<string, { id: string; defaultMessage: string }>;
-  colorMap: ColorMap;
+  colorMap: TaskApi.ColorMap;
   handleCallback?: (newValue: string) => void;
 }
 
-const getColor = (color: COLORS) => {
+const getColor = (color: TaskApi.Colors) => {
   switch (color) {
-    case COLORS.YELLOW: return 'brown';
-    case COLORS.BLUE: return 'blue';
-    case COLORS.GREEN: return 'green';
-    case COLORS.GREY: return 'grey';
-    case COLORS.RED: return 'red';
+    case TaskApi.Colors.YELLOW: return 'brown';
+    case TaskApi.Colors.BLUE: return 'blue';
+    case TaskApi.Colors.GREEN: return 'green';
+    case TaskApi.Colors.GREY: return 'grey';
+    case TaskApi.Colors.RED: return 'red';
     default: return '';
   }
 }
@@ -70,7 +69,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
           size='small'
           sx={{ 
             color: getColor(colorMap[field.value]), 
-            borderColor: getColor(colorMap[field.value] || COLORS.BLUE), 
+            borderColor: getColor(colorMap[field.value] || TaskApi.Colors.BLUE), 
             width: "max-content" , 
             borderRadius: 1, 
             borderWidth: 1,
@@ -78,7 +77,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
             textTransform: "uppercase",
             "&:hover": {
                 borderWidth: 1,
-                borderColor: getColor(colorMap[field.value] || COLORS.BLUE),
+                borderColor: getColor(colorMap[field.value] || TaskApi.Colors.BLUE),
             }
           }}
           onClick={handleClick}

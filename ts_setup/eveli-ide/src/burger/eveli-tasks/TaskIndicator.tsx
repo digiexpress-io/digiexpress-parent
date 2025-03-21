@@ -1,17 +1,17 @@
 import React from 'react';
 import { Typography, Chip, Button } from '@mui/material';
-import { COLORS } from './ColorMap';
+import { TaskApi } from '../api-task';
 
 
-type Props = {
+export interface TaskIndicatorProps {
   inactive?:boolean, 
   withLabel?:boolean, 
-  color?: COLORS,
+  color?: TaskApi.Colors,
   children:any, 
   [x:string]:any
 }
 
-const Indicator:React.FC<Props> = ({ inactive, withLabel, children, color, ...restProps })=> {
+export const TaskIndicator: React.FC<TaskIndicatorProps> = ({ inactive, withLabel, children, color, ...restProps })=> {
   const extraProps:any = restProps;
   
   let content:JSX.Element|null = null;
@@ -31,11 +31,11 @@ const Indicator:React.FC<Props> = ({ inactive, withLabel, children, color, ...re
   if (color) {
     let background;
     switch (color) {
-      case COLORS.YELLOW: background = 'yellow'; break;
-      case COLORS.BLUE: background = 'lightblue'; break;
-      case COLORS.GREEN: background = 'lightgreen'; break;
-      case COLORS.GREY: background = 'lightgrey'; break;
-      case COLORS.RED: background = 'red'; break;
+      case TaskApi.Colors.YELLOW: background = 'yellow'; break;
+      case TaskApi.Colors.BLUE: background = 'lightblue'; break;
+      case TaskApi.Colors.GREEN: background = 'lightgreen'; break;
+      case TaskApi.Colors.GREY: background = 'lightgrey'; break;
+      case TaskApi.Colors.RED: background = 'red'; break;
     }
     extraProps['style'] = {backgroundColor: background};
   }
@@ -51,5 +51,3 @@ const Indicator:React.FC<Props> = ({ inactive, withLabel, children, color, ...re
     </Button>
   );
 }
-
-export default Indicator;

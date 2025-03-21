@@ -1,16 +1,31 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import MaterialTable, { Column } from '@material-table/core';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { ProcExecutionApi } from '../api-proc-execution';
-import { useMaterialTableLabels } from '../api-locale';
+import { useMaterialTableLabels } from '../api-mui-table';
+import moment from 'moment';
 
 
 
 interface TableState {
   columns: Array<Column<ProcExecutionApi.ProcessExecution>>;
+}
+
+const formatDate = (time: any) => {
+  if (time) {
+    const localTime = moment.utc(time)
+      .subtract(2, 'hour') // bad idea
+      .toDate();
+    return (
+      <React.Fragment>
+        <FormattedDate value={localTime} /> - <FormattedTime value={localTime} />
+      </React.Fragment>
+    )
+  }
+  return "-";
 }
 
 export const EveliProcExecution: React.FC = () => {
@@ -28,7 +43,7 @@ export const EveliProcExecution: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: 'processTableHeader.questionnaireId' }),
-        field: 'questionnaire',
+        field: 'questionnaireId',
         filtering: false,
         headerStyle: { fontWeight: 'bold' },
       },
@@ -50,6 +65,7 @@ export const EveliProcExecution: React.FC = () => {
         title: intl.formatMessage({ id: 'processTableHeader.created' }),
         field: 'created',
         filtering: false,
+        render: data => formatDate(data.created),
         headerStyle: { fontWeight: 'bold' },
       }
     ]

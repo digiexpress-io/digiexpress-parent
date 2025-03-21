@@ -3,13 +3,13 @@ import { Box, Grid2, Button } from '@mui/material';
 
 
 import { CommentAdd } from './CommentAdd';
-import mapNestedEntities from '../../util/mapNestedEntities';
+import mapNestedEntities from './mapNestedEntities';
 import { Thread } from './Thread';
 import { FormattedMessage } from 'react-intl';
-import { TaskApi } from '@/burger';
+import { TaskApi } from '../api-task';
 
 
-type CommentThreadProps = {
+export type EveliTaskCommentsProps = {
   task: TaskApi.Task
   isExternalThread?: boolean,
   comments: TaskApi.Comment[],
@@ -17,7 +17,7 @@ type CommentThreadProps = {
   isThreaded?: boolean
 }
 
-export const CommentThread: React.FC<CommentThreadProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
+export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);

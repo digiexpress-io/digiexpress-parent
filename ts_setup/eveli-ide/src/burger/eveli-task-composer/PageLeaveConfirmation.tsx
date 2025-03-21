@@ -1,10 +1,52 @@
-import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, Button } from '@mui/material';
 import React from 'react';
+import { useIntl, FormattedMessage } from 'react-intl';
+import { useBlocker } from '@tanstack/react-router'
 
-import * as Burger from '@/burger';
-import { FormattedMessage } from 'react-intl';
+import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, Button } from '@mui/material';
 
-export interface ConfirmationDialogProps {
+
+
+interface Props {
+  navigationConfirmationRequired: () => boolean;
+}
+
+export const PageLeavingConfirmation = ({ navigationConfirmationRequired }: Props) => {
+  
+  const intl = useIntl();
+  const { proceed, reset, status } = useBlocker({
+    shouldBlockFn: ({ current, next }) => {
+      return navigationConfirmationRequired();
+    },
+    enableBeforeUnload: false,
+    withResolver: true,
+  })
+  return (    
+    <ConfirmationDialog
+      open={status === 'blocked'}
+      text={intl.formatMessage({ id: 'confirm.unsavedChanges' })}
+      onClose={() => {
+        if(reset) {
+          reset();
+        }
+      }}
+      onAccept={() => {
+        if(proceed) {
+          proceed() 
+        }
+      }}
+    onCancel={() => {
+      if(reset) {
+        reset();
+      }
+    }}
+    title={intl.formatMessage({ id: 'confirm.close.title' })}
+  />
+  );
+};
+
+
+
+interface ConfirmationDialogProps {
   title?: string;
   accept?: string;
   cancel?: string;
@@ -18,7 +60,7 @@ export interface ConfirmationDialogProps {
   onCancel: () => void;
 };
 
-export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
   const { open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions } = props;
 
   const handleCancel: React.MouseEventHandler<HTMLElement> = (event) => {

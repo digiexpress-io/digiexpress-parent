@@ -1,6 +1,6 @@
 import { Column, Query } from "@material-table/core";
 
-export const createQueryString = <T extends {}> (query:Query<T>, columns:Column<any>[], dateFields?: string[]) => {
+export const createMuiTableQueryString = <T extends {}> (query:Query<T>, columns:Column<any>[], dateFields?: string[]) => {
   let result = `page=${query.page || 0}&size=${query.pageSize || 20}`;
   if (query.orderByCollection && query.orderByCollection.length >0) {
     query.orderByCollection.forEach(el => {

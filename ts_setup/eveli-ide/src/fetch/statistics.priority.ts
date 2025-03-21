@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 
 import { useIntl } from 'react-intl';
-import { TaskPriorityStatistics } from '../frontdesk/types/TaskStatistics';
+
 import { TaskApi } from '@/burger';
 
 
@@ -27,7 +27,7 @@ const taskPriorityMapping: PriorityTitleMap = {
 
 function hook(props: {}): { 
   taskPriorityNames: { priority: string, count: number }[] | undefined;
-  taskPriorityStats: TaskPriorityStatistics[] | undefined;
+  taskPriorityStats: TaskApi.TaskPriorityStatistics[] | undefined;
   taskPriorityMapping: PriorityTitleMap;
 } {
 
@@ -40,7 +40,7 @@ function hook(props: {}): {
     queryKey: [query],
     queryFn: () => params
       .fetch(query).then(resp => resp.json())
-      .then((data: TaskPriorityStatistics[]) => (data ?? []))
+      .then((data: TaskApi.TaskPriorityStatistics[]) => (data ?? []))
       .catch(_err => [])
       .then(taskPriorityStats => {
         return {

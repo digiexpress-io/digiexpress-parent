@@ -7,7 +7,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { TaskApi, useMaterialTableLabels } from '@/burger';
+import { TaskApi } from '../api-task';
+import { useMaterialTableLabels } from '../api-mui-table';
 
 import { EveliTaskTableContext } from './EveliTaskTableProvider';
 import { useTasksTableState } from './useTasksTableState';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from '@mui/material';
 
-import { TaskApi } from '@/burger';
+import { TaskApi } from '../api-task';
 import { CommentLocal } from './CommentLocal';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   setReply: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Thread:React.FC<Props> = ({comments, task, loadData, isExternalThread, isThreaded, setReply}) => {
+export const Thread: React.FC<Props> = ({comments, task, loadData, isExternalThread, isThreaded, setReply}) => {
   return (
     <List component='div' dense>
       {comments.map((comment) => (

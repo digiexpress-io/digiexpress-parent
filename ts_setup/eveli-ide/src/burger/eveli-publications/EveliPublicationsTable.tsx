@@ -14,7 +14,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { useConfig } from '../api-config';
 import { PublicationApi } from '../api-publications';
-import { useMaterialTableLabels } from '../api-locale';
+import { useMaterialTableLabels } from '../api-mui-table';
 import { EveliDateTimeFormatter } from '../eveli-datetime-formatter';
 
 import { NewPublicationDialog } from './NewPublicationDialog';
