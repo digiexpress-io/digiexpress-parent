@@ -65,7 +65,8 @@ export const GArticleRoot = styled("div", {
     },
     '& .GArticle-pageLinks': {
       [theme.breakpoints.up('md')]: {
-        width: '30%',
+        width: '35%',
+        paddingRight: theme.spacing(1),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch'
