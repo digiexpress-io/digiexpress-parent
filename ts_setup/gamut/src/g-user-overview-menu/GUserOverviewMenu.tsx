@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, ListItemButton, ListItemIcon, Avatar } from '@mui/material';
+import { useThemeProps, ListItemButton, ListItemIcon, Avatar, Typography, Box } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -35,15 +35,16 @@ export type GUserOverviewMenuView = OverridableStringUnion<
   'requests-in-progress' |
   'awaiting-decision' | 'with-decision' |
   'bookings' | 'inbox' |
-  'product' | 
-  
-  'login-representative' | 'login-company' |   
+  'product' |
+
+  'login-representative' | 'login-company' |
   'logout-representative' | 'logout-company' | 'logout',
   GUserOverviewMenuViewOverrides>;
 
 export interface GUserOverviewMenuItemSlotProps {
   id: GUserOverviewMenuView;
   endAdornment?: React.ReactNode | undefined;
+  userOrRepOrCompanyName?: string | undefined;
   onClick: (view: GUserOverviewMenuView) => void;
   hidden?: boolean;
   active: GUserOverviewMenuView
@@ -114,14 +115,14 @@ export const GUserOverviewMenu: React.FC<GUserOverviewMenuProps> = (initProps) =
   }
 
   function handleLoginRepresentative() {
-    if(props.onClick('login-representative') === false) {
+    if (props.onClick('login-representative') === false) {
       return;
     }
     authRepresentativeRef.current?.click();
   }
 
   function handleLoginCompany() {
-    if(props.onClick('login-company') === false) {
+    if (props.onClick('login-company') === false) {
       return;
     }
     authCompanyRef.current?.click();
@@ -141,29 +142,51 @@ export const GUserOverviewMenu: React.FC<GUserOverviewMenuProps> = (initProps) =
 
       {iam.authType === 'REP_PERSON' && (
         <GAuthUnRepPerson ref={authUnRepresentativeRef}>
-          <Item id='logout-representative' onClick={handleLogoutRepresentative} endAdornment={<><AdminPanelSettingsOutlinedIcon /><LogoutOutlinedIcon /></>} ownerState={ownerState} active={active} />
+          <Item id='logout-representative'
+            onClick={handleLogoutRepresentative}
+            endAdornment={<><AdminPanelSettingsOutlinedIcon /><LogoutOutlinedIcon /></>}
+            ownerState={ownerState}
+            active={active}
+            userOrRepOrCompanyName={iam.user?.representedPerson?.name}
+          />
         </GAuthUnRepPerson>)
       }
 
       {iam.authType === 'REP_COMPANY' && (
         <GAuthUnRepCompany ref={authUnCompanyRef}>
-          <Item id='logout-company' onClick={handleLogoutCompany} endAdornment={<><BusinessOutlinedIcon /><LogoutOutlinedIcon /></>} ownerState={ownerState} active={active} />
+          <Item id='logout-company' onClick={handleLogoutCompany}
+            endAdornment={<><BusinessOutlinedIcon /><LogoutOutlinedIcon /></>}
+            ownerState={ownerState} active={active}
+            userOrRepOrCompanyName={iam.user?.representedCompany?.name}
+          />
         </GAuthUnRepCompany>)
       }
 
       {iam.authType === 'USER' && (
         <>
           <GAuthRepPerson ref={authRepresentativeRef} >
-            <Item id='login-representative' onClick={handleLoginRepresentative} endAdornment={<><AdminPanelSettingsOutlinedIcon /><LoginOutlinedIcon /></>} ownerState={ownerState} active={active} />
+            <Item id='login-representative' onClick={handleLoginRepresentative}
+              endAdornment={<><AdminPanelSettingsOutlinedIcon /><LoginOutlinedIcon /></>}
+              ownerState={ownerState}
+              active={active}
+            />
           </GAuthRepPerson>
           <GAuthRepCompany ref={authCompanyRef} >
-            <Item id='login-company' onClick={handleLoginCompany} endAdornment={<><BusinessOutlinedIcon /><LoginOutlinedIcon /></>} ownerState={ownerState} active={active} />
+            <Item id='login-company' onClick={handleLoginCompany}
+              endAdornment={<><BusinessOutlinedIcon /><LoginOutlinedIcon /></>}
+              ownerState={ownerState}
+              active={active}
+            />
           </GAuthRepCompany>
         </>)
       }
 
       <GAuthUn ref={authUnRef}>
-        <Item id='logout' onClick={handleLogout} endAdornment={<><AccountCircleOutlinedIcon /><LogoutOutlinedIcon /></>} ownerState={ownerState} active={active} />
+        <Item id='logout' onClick={handleLogout}
+          endAdornment={<><AccountCircleOutlinedIcon /><LogoutOutlinedIcon /></>}
+          ownerState={ownerState} active={active}
+          userOrRepOrCompanyName={`${iam.user?.firstName}` + " " + `${iam.user?.lastName}`}
+        />
       </GAuthUn>
 
       {Extra && <Extra />}
@@ -184,7 +207,7 @@ const Item: React.FC<GUserOverviewMenuItemSlotProps & { ownerState: GUserOvervie
   const slotProps = initProps.ownerState.slotProps;
   const overrides = slotProps && slotProps[initProps.id] ? slotProps[initProps.id] : {};
   const props = { ...initProps, ...overrides };
-  const { id, endAdornment, onClick, hidden, active } = props;
+  const { id, endAdornment, onClick, hidden, active, userOrRepOrCompanyName } = props;
 
   function handleOnClick() {
     onClick(id);
@@ -195,7 +218,11 @@ const Item: React.FC<GUserOverviewMenuItemSlotProps & { ownerState: GUserOvervie
   return (
     <GUserOverviewMenuItemRoot className={classes.item}>
       <ListItemButton onClick={handleOnClick} selected={props.id === active} className={classes.menuButton}>
-        <FormattedMessage id={`gamut.userOverview.buttons.${id}`} />
+        <Box className={classes.menuButtonLayout}>
+          <FormattedMessage id={`gamut.userOverview.buttons.${id}`} />
+          {userOrRepOrCompanyName && (<Typography className={classes.userOrRepOrCompanyNameStyle}>{userOrRepOrCompanyName}</Typography>
+          )}
+        </Box>
         {endAdornment && <ListItemIcon className={classes.icon}>{endAdornment}</ListItemIcon>}
       </ListItemButton>
     </GUserOverviewMenuItemRoot>
