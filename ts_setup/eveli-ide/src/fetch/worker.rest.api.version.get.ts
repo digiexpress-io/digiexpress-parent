@@ -1,11 +1,9 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { StencilApi } from '../stencil';
 import composerVersion from '../version';
 import { useQuery } from '@tanstack/react-query';
 
 
-// TODO, should be rest api version ....
-export const Hook = createFileFetch('worker/rest/api/assets/stencil/version.GET')({
+export const Hook = createFileFetch('worker/rest/api/version.GET')({
   hook
 }) 
 
@@ -13,6 +11,7 @@ export interface VersionEntity {
   version: string;
   built: string;
 }
+
 
 function hook(props: {}): {
   frontend: VersionEntity,

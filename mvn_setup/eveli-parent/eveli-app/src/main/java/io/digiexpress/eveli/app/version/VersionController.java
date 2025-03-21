@@ -33,8 +33,8 @@ public class VersionController {
   public ResponseEntity<VersionInfo> getVersionInfo() 
   {
     VersionInfo result = new VersionInfo();
-    result.setVersionBuildInfo(VersionProperties.DESCRIBE);
-    result.setVersionBuildTimestamp(VersionProperties.BUILD_TIME);
+    result.setVersion(VersionProperties.DESCRIBE);
+    result.setBuilt(VersionProperties.BUILD_TIME);
     return ResponseEntity.ok(result);
   }
 }
