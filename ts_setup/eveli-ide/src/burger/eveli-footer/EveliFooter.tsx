@@ -17,7 +17,7 @@ export const EveliFooter: React.FC<EveliFooterProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const info = useFetch('worker/rest/api/assets/stencil/version.GET', {});
+  const info = useFetch('worker/rest/api/version.GET', {});
   const classes = useUtilityClasses(props);
   const ownerState = {
     ...props

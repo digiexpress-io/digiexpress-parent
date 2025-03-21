@@ -24,6 +24,6 @@ import lombok.Data;
 
 @Data
 public class VersionInfo {
-  private String versionBuildTimestamp;
-  private String versionBuildInfo;
+  private String version;
+  private String built;
 }

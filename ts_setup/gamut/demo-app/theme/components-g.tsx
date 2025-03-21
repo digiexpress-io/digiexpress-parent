@@ -40,24 +40,30 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        // border around everything
+        borderRight: `1px solid ${theme.palette.divider}`,
+        borderLeft: `1px solid ${theme.palette.divider}`,
+
         // margin around page  
         [theme.breakpoints.up('md')]: {
           marginLeft: theme.spacing(4),
           marginRight: theme.spacing(4),
         },
-        '.GRouterUnsecured-root': {
+        // border on left of appBar
+        '.GRouterSecuredServices-root': {
           borderLeft: `1px solid ${theme.palette.divider}`,
-          borderRight: `1px solid ${theme.palette.divider}`,
         },
+
         // margin around drawer on secured page
         '.MuiDrawer-root.GShellBase .MuiPaper-root': {
           // because drawer has position fixed we need to duplicate the margin
           marginLeft: theme.spacing(4),
+          // border on left of drawer
+          borderLeft: `1px solid ${theme.palette.divider}`,
         },
+        // remove box shadow on the sides of appBar without removing it on bottom
         '& .MuiToolbar-root.GShellBase': {
           boxShadow: `0 4px 6px -1px ${alpha(theme.palette.text.primary, 0.2)},  0 2px 4px -1px ${alpha(theme.palette.text.primary, 0.1)}`,
-          borderLeft: `1px solid ${theme.palette.divider}`,
-          borderRight: `1px solid ${theme.palette.divider}`,
         }
       })
     }
@@ -189,7 +195,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     defaultProps: {
       locales: ['en', 'fi']
     },
-     
+
   },
 
   GMarkdown: {
