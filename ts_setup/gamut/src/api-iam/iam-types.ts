@@ -79,6 +79,6 @@ export declare namespace IamApi {
 
     getUser: () => Promise<User | undefined>;
     fetchUserGET: IamApi.FetchUserGET;
-    reload: () => Promise<void>
+    reload: () => Promise<User | undefined>
   }
 }

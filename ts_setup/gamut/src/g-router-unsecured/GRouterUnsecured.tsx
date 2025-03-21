@@ -1,20 +1,17 @@
 import React from 'react';
-import { Container, Stack, Toolbar } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 
 import {
-  GShell, GLogo,
-  GLocales,
-  GLogin,
+  GShell,
   GPopoverSearch,
-  GLayout,
   GFooter,
   GArticle,
-  GShellClassName,
   GPopoverTopics,
   SiteApi,
   useLocale,
   useSite,
+  GAppBar,
 } from '../';
 
 import { GRouterUnsecuredRoot } from './useUtilityClasses';
@@ -24,12 +21,6 @@ import { useUtilityClasses } from './useUtilityClasses';
 export interface GRouterUnsecuredProps {
   pageId: string
 }
-
-
-const FlexSpacerRow: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (<Stack spacing={1} direction='row'>{children}</Stack>)
-}
-
 
 const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
   const nav = useNavigate();
@@ -65,17 +56,7 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
 
   return (
     <>
-      <Toolbar className={GShellClassName} >
-        <GLayout variant={'toolbar-n-rows-2-columns'}>
-          <GLogo variant='black_lg' />
-          <FlexSpacerRow>
-            <GLocales value={locale} onClick={handleLocale} />
-            <GLogin />
-          </FlexSpacerRow>
-
-        </GLayout>
-      </Toolbar >
-
+      <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => { }} />
       <main role='main'>
         <Container>
           <GRouterUnsecuredRoot className={classes.root}>
@@ -91,7 +72,6 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
       <footer role='footer'>
         <GFooter />
       </footer>
-
     </>
   );
 }
