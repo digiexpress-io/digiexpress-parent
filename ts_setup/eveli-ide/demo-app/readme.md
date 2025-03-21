@@ -152,3 +152,27 @@ Example from `manifest.json`:
 ```
 
 - Please refer to this link for further info on ['manifest.json'](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest)
+
+
+# Eveli-IDE Localization
+
+Localization in **Eveli-IDE** is managed through **CSV files**, which are used to generate localization TypeScript files for different languages (e.g., `localization = en,sv,fi`...etc.).
+
+## Key Points
+
+- **Localization values** are initially provided via CSV files, which are then used to generate the corresponding TypeScript files.
+- These localization values **can be overwritten** in your user project to meet specific requirements.
+  
+  For example, you may need to adjust text strings, error messages, or other UI elements to fit the needs of your project.
+
+## Commonly Overwritten Localization Properties
+
+Some of the most commonly overwritten localization properties include:
+
+### 1. **Login Dialog**
+   - **Title**:
+     - `login.dialog.title` = **"Unauthenticated User"**
+   - **Message**:
+     - `login.dialog.message` = **"Descriptive message for unauthenticated user in the dialog"**
+
+These keys can be found in the CSV files and are typically adjusted based on project requirements.
