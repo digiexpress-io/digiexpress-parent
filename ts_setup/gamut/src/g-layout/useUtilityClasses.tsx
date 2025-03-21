@@ -85,6 +85,7 @@ export const GLayoutRoot = styled('div', {
       [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2),
         margin: theme.spacing(1),
+        textAlign: 'center'
       },
       display: 'flex',
       flexDirection: 'column',
@@ -105,6 +106,7 @@ export const GLayoutRoot = styled('div', {
         flexDirection: 'column',
         width: '100%',
         gap: theme.spacing(1),
+        alignItems: 'center'
       },
     },
 
