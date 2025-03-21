@@ -36,6 +36,7 @@ export const GAppBarRoot = styled("div", {
     display: 'flex',
     '& .GAppBar-rightSideLayout': {
       display: 'flex'
-    }
+    },
+
   };
 });

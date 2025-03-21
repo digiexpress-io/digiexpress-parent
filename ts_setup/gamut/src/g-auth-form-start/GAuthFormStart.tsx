@@ -45,8 +45,12 @@ export const GAuthFormStart: React.FC<GAuthFormStartProps> = (initProps) => {
       }
 
       loginOn401().then(() => {
-        //console.log("reload ok");
-        reload();
+        reload().then((data) => {
+
+          if (onSubmit && data) {
+            onSubmit(event)
+          }
+        });
       });
 
     } else if(onSubmit) {

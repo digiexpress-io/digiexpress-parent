@@ -78,7 +78,8 @@ function createContext(
     fetchUserGET: props.fetchUserGET,
     getUser: () => reload(),
     reload: async () => {
-      await reload()
+      const data = await reload();
+      return data;
     },
   });
 }

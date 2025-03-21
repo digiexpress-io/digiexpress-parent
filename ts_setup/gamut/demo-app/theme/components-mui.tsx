@@ -83,12 +83,6 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
   MuiContainer: {
     defaultProps: {
       disableGutters: true,
-    },
-    styleOverrides: {
-      root: ({ theme }) => ({
-        padding: theme.spacing(20),
-
-      })
     }
   },
   MuiPaper: {

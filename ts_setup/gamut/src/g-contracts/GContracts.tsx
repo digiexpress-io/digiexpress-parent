@@ -64,9 +64,9 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
     <Root className={classes.root} ownerState={props}>
       <GFlex variant='header'>
         <Grid container>
-          <Grid item lg={4} xl={4}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography></Grid>
-          <Grid item lg={3} xl={3}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography></Grid>
-          <Grid item lg={3} xl={3}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.status' })}</Typography></Grid>
+          <Grid item lg={3} xl={3}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography></Grid>
+          <Grid item lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography></Grid>
+          <Grid item lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.status' })}</Typography></Grid>
           <Grid item lg={1} xl={1}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.files' })}</Typography></Grid>
           <Grid item lg={1} xl={1}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.messages' })}</Typography></Grid>
           <Grid item lg={3} xl={3}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography></Grid>

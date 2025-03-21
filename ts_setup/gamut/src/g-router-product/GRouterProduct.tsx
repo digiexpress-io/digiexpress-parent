@@ -130,19 +130,25 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       }
     })
   }
-  //<Button variant='contained'  onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
-  //<Button variant='contained'  onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
+
+  function handleAfterLogin() {
+    nav({
+      from: '/public/$locale/pages/$pageId/products/$productId',
+      to: '/secured/$locale/pages/$pageId/products/$productId',
+    })
+  }
 
   return (
     <GRouterProductButtonsRoot className={classes.root}>
       <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
 
-      {!allowed ? (
-        <GAuthFormStart forced>
-          <Button type='submit' variant='contained'>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
-        </GAuthFormStart>
+      {allowed ? (
+        <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
       ) : (
-        <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>)
+        <GAuthFormStart forced onSubmit={handleAfterLogin}>
+          <Button type='submit' variant='contained'>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
+        </GAuthFormStart>)
+
       }
 
     </GRouterProductButtonsRoot>)
