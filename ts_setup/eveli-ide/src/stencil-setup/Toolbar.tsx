@@ -64,67 +64,6 @@ export const Toolbar: React.FC<{}> = () => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
-
-      <div>
-        <IconButton onClick={() => onNav({ type: 'SEARCH' })}><SearchIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.search' /></Typography>
-      </div>
-
-      <div>
-        <IconButton onClick={() => navigate({
-          from: '/secured/$locale/assets/stencil',
-          to: '/secured/$locale'
-        })}>
-          <TaskOutlinedIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='toolbar.tasks' /></Typography>
-      </div>
-
-      <div>
-        <IconButton onClick={() => navigate({
-          from: '/secured/$locale/assets/stencil',
-          to: '/secured/$locale/assets/wrench',
-          search: { explorer: [] }
-        })}>
-          <BuildOutlinedIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
-      </div>
-
-      <div>
-        <IconButton disabled className={classes.itemActive}><EditNoteOutlinedIcon /></IconButton>
-        <Typography className={classes.textActive}><FormattedMessage id='toolbar.stencil' /></Typography>
-      </div>
-      <div>
-        <IconButton onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/assets/services'
-        })}>
-
-          <SettingsOutlinedIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='menu.workflows' /></Typography>
-      </div>
-
-
-      <div>
-        <IconButton onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/assets/forms'
-          })}>
-          <ListIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='menu.forms' /></Typography>
-      </div>
-
-      <div>
-        <IconButton onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
-          <HelpOutlineOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.help' /></Typography>
-      </div>
-
-      <EveliLocales />
-
       <div>
         <IconButton onClick={() => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>

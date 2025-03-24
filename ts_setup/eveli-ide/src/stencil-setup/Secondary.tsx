@@ -8,7 +8,7 @@ import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
-
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { useIntl } from 'react-intl';
 
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
@@ -119,6 +119,11 @@ const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
 
+        <Button variant='explorerInactive'
+          startIcon={<HelpOutlineOutlinedIcon />}
+          onClick={() => window.open("https://github.com/the-stencil-io/the-stencil-composer/wiki", "_blank")}>
+          {intl.formatMessage({ id: 'menu.help' })}
+        </Button>
       </EveliShellExplorer>
     </>
   )

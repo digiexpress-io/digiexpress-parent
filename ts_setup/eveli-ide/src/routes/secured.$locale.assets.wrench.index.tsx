@@ -7,6 +7,7 @@ import { WrenchComposerApi, WrenchSetup } from '@/wrench-setup';
 import { EveliApp } from '@/eveli-app';
 import { parseWrenchSearchParams, WrenchRouteSearchParams } from '@/wrench-nav';
 import { useLocale } from '@/api-locale';
+import { EveliSetup } from '@/eveli-setup';
 
 
 
@@ -14,6 +15,13 @@ export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): WrenchRouteSearchParams => parseWrenchSearchParams(search)
 })
+
+const MergedToolbar: React.FC = () => {
+  return <>
+    <EveliSetup.Toolbar />
+    <WrenchSetup.Toolbar />
+  </>
+}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -35,10 +43,10 @@ function Component() {
   const service = React.useMemo(() => new HdesApi.ServiceImpl({
     update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag,
   }), [update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag]);
-  const { Main, Secondary, Toolbar, Tabs } = WrenchSetup;
+  const { Main, Secondary, Tabs } = WrenchSetup;
   
   return (
     <WrenchComposerApi.Provider service={service}>
-      <EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} tabs={Tabs} />
+      <EveliApp main={Main} secondary={Secondary} toolbar={MergedToolbar} tabs={Tabs} />
     </WrenchComposerApi.Provider>)
 }

@@ -6,7 +6,6 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
-import BeenhereOutlinedIcon from '@mui/icons-material/BeenhereOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
@@ -40,7 +39,7 @@ export const Secondary: React.FC = () => {
       }}>{intl.formatMessage({ id: 'button.compose' })}</Button>
 
       <Button startIcon={<TaskOutlinedIcon />}
-        variant={location.pathname.endsWith('tasks')  ? 'explorerActive' : 'explorerInactive'} 
+        variant={location.pathname.includes('tasks')  ? 'explorerActive' : 'explorerInactive'} 
         onClick={() => navigate({
           from: '/secured/$locale',
           to: '/secured/$locale/worker/tasks'
@@ -87,16 +86,6 @@ export const Secondary: React.FC = () => {
         })}
       >
         {intl.formatMessage({ id: 'menu.queues' })}
-      </Button>
-
-      <Button startIcon={<BeenhereOutlinedIcon />}
-        variant={location.pathname.endsWith('publications')  ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/publications'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.publications' })}
       </Button>
 
     </EveliShellExplorer>

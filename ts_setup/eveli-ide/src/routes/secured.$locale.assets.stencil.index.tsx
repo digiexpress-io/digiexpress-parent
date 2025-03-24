@@ -7,12 +7,21 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { StencilApi } from '@/api-stencil';
 import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
 import { StencilComposerApi, StencilSteup } from '@/stencil-setup';
+import { EveliSetup } from '@/eveli-setup';
 import { EveliApp } from '@/eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
 })
+
+
+const MergedToolbar: React.FC = () => {
+  return <>
+    <EveliSetup.Toolbar />
+    <StencilSteup.Toolbar />
+  </>
+}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -37,7 +46,7 @@ function Component() {
         tabs={StencilSteup.Tabs}
         main={StencilSteup.Main} 
         secondary={StencilSteup.Secondary} 
-        toolbar={StencilSteup.Toolbar} 
+        toolbar={MergedToolbar} 
       />
     </StencilComposerApi.Provider>)
 }

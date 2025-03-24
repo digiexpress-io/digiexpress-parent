@@ -17,10 +17,10 @@ import { Route as SecuredLocaleIndexImport } from './routes/secured.$locale.inde
 import { Route as SecuredLocaleWorkerImport } from './routes/secured.$locale.worker'
 import { Route as SecuredLocaleAssetsImport } from './routes/secured.$locale.assets'
 import { Route as PublicLocaleAuthImport } from './routes/public.$locale.auth'
+import { Route as SecuredLocalePublicationsIndexImport } from './routes/secured.$locale.publications.index'
 import { Route as SecuredLocaleWorkerTasksImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerTasksIndexImport } from './routes/secured.$locale.worker.tasks.index'
 import { Route as SecuredLocaleWorkerQueuesIndexImport } from './routes/secured.$locale.worker.queues.index'
-import { Route as SecuredLocaleWorkerPublicationsIndexImport } from './routes/secured.$locale.worker.publications.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexImport } from './routes/secured.$locale.worker.monitoring.index'
 import { Route as SecuredLocaleWorkerHelpIndexImport } from './routes/secured.$locale.worker.help.index'
 import { Route as SecuredLocaleWorkerFeedbackIndexImport } from './routes/secured.$locale.worker.feedback.index'
@@ -73,6 +73,13 @@ const PublicLocaleAuthRoute = PublicLocaleAuthImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SecuredLocalePublicationsIndexRoute =
+  SecuredLocalePublicationsIndexImport.update({
+    id: '/publications/',
+    path: '/publications/',
+    getParentRoute: () => SecuredLocaleRoute,
+  } as any)
+
 const SecuredLocaleWorkerTasksRoute = SecuredLocaleWorkerTasksImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -90,13 +97,6 @@ const SecuredLocaleWorkerQueuesIndexRoute =
   SecuredLocaleWorkerQueuesIndexImport.update({
     id: '/queues/',
     path: '/queues/',
-    getParentRoute: () => SecuredLocaleWorkerRoute,
-  } as any)
-
-const SecuredLocaleWorkerPublicationsIndexRoute =
-  SecuredLocaleWorkerPublicationsIndexImport.update({
-    id: '/publications/',
-    path: '/publications/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 
@@ -244,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerTasksImport
       parentRoute: typeof SecuredLocaleWorkerImport
     }
+    '/secured/$locale/publications/': {
+      id: '/secured/$locale/publications/'
+      path: '/publications'
+      fullPath: '/secured/$locale/publications'
+      preLoaderRoute: typeof SecuredLocalePublicationsIndexImport
+      parentRoute: typeof SecuredLocaleImport
+    }
     '/secured/$locale/assets/forms/': {
       id: '/secured/$locale/assets/forms/'
       path: '/forms'
@@ -298,13 +305,6 @@ declare module '@tanstack/react-router' {
       path: '/monitoring'
       fullPath: '/secured/$locale/worker/monitoring'
       preLoaderRoute: typeof SecuredLocaleWorkerMonitoringIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
-    }
-    '/secured/$locale/worker/publications/': {
-      id: '/secured/$locale/worker/publications/'
-      path: '/publications'
-      fullPath: '/secured/$locale/worker/publications'
-      preLoaderRoute: typeof SecuredLocaleWorkerPublicationsIndexImport
       parentRoute: typeof SecuredLocaleWorkerImport
     }
     '/secured/$locale/worker/queues/': {
@@ -404,7 +404,6 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerFeedbackIndexRoute: typeof SecuredLocaleWorkerFeedbackIndexRoute
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
-  SecuredLocaleWorkerPublicationsIndexRoute: typeof SecuredLocaleWorkerPublicationsIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
@@ -419,8 +418,6 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerHelpIndexRoute: SecuredLocaleWorkerHelpIndexRoute,
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,
-  SecuredLocaleWorkerPublicationsIndexRoute:
-    SecuredLocaleWorkerPublicationsIndexRoute,
   SecuredLocaleWorkerQueuesIndexRoute: SecuredLocaleWorkerQueuesIndexRoute,
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute:
     SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute,
@@ -437,12 +434,14 @@ interface SecuredLocaleRouteChildren {
   SecuredLocaleAssetsRoute: typeof SecuredLocaleAssetsRouteWithChildren
   SecuredLocaleWorkerRoute: typeof SecuredLocaleWorkerRouteWithChildren
   SecuredLocaleIndexRoute: typeof SecuredLocaleIndexRoute
+  SecuredLocalePublicationsIndexRoute: typeof SecuredLocalePublicationsIndexRoute
 }
 
 const SecuredLocaleRouteChildren: SecuredLocaleRouteChildren = {
   SecuredLocaleAssetsRoute: SecuredLocaleAssetsRouteWithChildren,
   SecuredLocaleWorkerRoute: SecuredLocaleWorkerRouteWithChildren,
   SecuredLocaleIndexRoute: SecuredLocaleIndexRoute,
+  SecuredLocalePublicationsIndexRoute: SecuredLocalePublicationsIndexRoute,
 }
 
 const SecuredLocaleRouteWithChildren = SecuredLocaleRoute._addFileChildren(
@@ -457,6 +456,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
+  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
@@ -465,7 +465,6 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/publications': typeof SecuredLocaleWorkerPublicationsIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -481,6 +480,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
@@ -489,7 +489,6 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/publications': typeof SecuredLocaleWorkerPublicationsIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -508,6 +507,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
+  '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/services/': typeof SecuredLocaleAssetsServicesIndexRoute
   '/secured/$locale/assets/stencil/': typeof SecuredLocaleAssetsStencilIndexRoute
@@ -516,7 +516,6 @@ export interface FileRoutesById {
   '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/publications/': typeof SecuredLocaleWorkerPublicationsIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
@@ -536,6 +535,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker'
     | '/secured/$locale/'
     | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/services'
     | '/secured/$locale/assets/stencil'
@@ -544,7 +544,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/monitoring'
-    | '/secured/$locale/worker/publications'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/feedback/$feedbackId'
@@ -559,6 +558,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale'
+    | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/services'
     | '/secured/$locale/assets/stencil'
@@ -567,7 +567,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback'
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/monitoring'
-    | '/secured/$locale/worker/publications'
     | '/secured/$locale/worker/queues'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/worker/feedback/$feedbackId'
@@ -584,6 +583,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker'
     | '/secured/$locale/'
     | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/publications/'
     | '/secured/$locale/assets/forms/'
     | '/secured/$locale/assets/services/'
     | '/secured/$locale/assets/stencil/'
@@ -592,7 +592,6 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/feedback/'
     | '/secured/$locale/worker/help/'
     | '/secured/$locale/worker/monitoring/'
-    | '/secured/$locale/worker/publications/'
     | '/secured/$locale/worker/queues/'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
@@ -638,7 +637,8 @@ export const routeTree = rootRoute
       "children": [
         "/secured/$locale/assets",
         "/secured/$locale/worker",
-        "/secured/$locale/"
+        "/secured/$locale/",
+        "/secured/$locale/publications/"
       ]
     },
     "/public/$locale/auth": {
@@ -663,7 +663,6 @@ export const routeTree = rootRoute
         "/secured/$locale/worker/feedback/",
         "/secured/$locale/worker/help/",
         "/secured/$locale/worker/monitoring/",
-        "/secured/$locale/worker/publications/",
         "/secured/$locale/worker/queues/",
         "/secured/$locale/worker/feedback/$feedbackId/",
         "/secured/$locale/worker/queues/deliveries/",
@@ -682,6 +681,10 @@ export const routeTree = rootRoute
         "/secured/$locale/worker/tasks/$taskId/",
         "/secured/$locale/worker/tasks/create/"
       ]
+    },
+    "/secured/$locale/publications/": {
+      "filePath": "secured.$locale.publications.index.tsx",
+      "parent": "/secured/$locale"
     },
     "/secured/$locale/assets/forms/": {
       "filePath": "secured.$locale.assets.forms.index.tsx",
@@ -713,10 +716,6 @@ export const routeTree = rootRoute
     },
     "/secured/$locale/worker/monitoring/": {
       "filePath": "secured.$locale.worker.monitoring.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/publications/": {
-      "filePath": "secured.$locale.worker.publications.index.tsx",
       "parent": "/secured/$locale/worker"
     },
     "/secured/$locale/worker/queues/": {

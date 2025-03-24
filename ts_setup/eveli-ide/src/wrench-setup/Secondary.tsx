@@ -7,6 +7,7 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 import { useIntl } from 'react-intl';
 
@@ -112,6 +113,12 @@ export const Secondary: React.FC<{}> = () => {
           startIcon={<NewReleasesOutlinedIcon />}
           onClick={() => onNav({ type: 'RELEASES' })}>
           {intl.formatMessage({ id: 'menu.releases' })}
+        </Button>
+
+        <Button variant='explorerInactive'
+          startIcon={<HelpOutlineOutlinedIcon />}
+          onClick={() => window.open("https://github.com/the-wrench-io/hdes-parent/wiki", "_blank")}>
+          {intl.formatMessage({ id: 'menu.help' })}
         </Button>
       </EveliShellExplorer>
     </>

@@ -9,8 +9,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { createFileRoute } from '@tanstack/react-router'
 
 
-import { Secondary } from '../eveli-setup/Secondary';
-import { Toolbar } from '../eveli-setup/Toolbar';
+import { EveliSetup } from '@/eveli-setup';
 import { useLocale } from '@/api-locale';
 import { EveliApp } from '@/eveli-app';
 
@@ -24,7 +23,7 @@ function Component() {
   const { setLocale } = useLocale();
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
+  return (<EveliApp main={Main} secondary={() => <></>} toolbar={EveliSetup.Toolbar} />)
 
 }
 
