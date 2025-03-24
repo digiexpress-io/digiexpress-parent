@@ -1,6 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
+import { useLocale } from '@/api-locale'
 import { FeedbackAllTasks, FeedbackProvider } from '../feedback';
 
 
