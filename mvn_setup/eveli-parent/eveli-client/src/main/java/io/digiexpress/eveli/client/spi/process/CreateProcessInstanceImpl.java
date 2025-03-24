@@ -1,6 +1,6 @@
 package io.digiexpress.eveli.client.spi.process;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /*-
  * #%L
@@ -43,7 +43,7 @@ public class CreateProcessInstanceImpl implements CreateProcessInstance {
   private String workflowName;
   private String articleName;
   private String parentArticleName;
-  private LocalDateTime expiresAt;
+  private OffsetDateTime expiresAt;
   private Long expiresInSeconds;
   
   private boolean anon = false;

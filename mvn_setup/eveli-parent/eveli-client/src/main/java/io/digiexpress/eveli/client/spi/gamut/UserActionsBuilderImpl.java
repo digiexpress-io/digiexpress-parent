@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -135,7 +136,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .questionnaireId(sessionId)
           .userId(request.getIdentity())
           .expiresInSeconds(expiresInSeconds)
-          .expiresAt(stencilService.getEndDate())
+          .expiresAt(stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime())
           .anon(anon)
           
           .workflowName(stencilService.getValue())

@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.api;
  */
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -154,8 +155,8 @@ public interface GamutClient {
     String getMessagesUri();
     String getFormUri();
     String getFormId();
-    LocalDateTime getCreated();
-    LocalDateTime getUpdated();
+    OffsetDateTime getCreated();
+    OffsetDateTime getUpdated();
     
     @Nullable String getInputContextId();
     @Nullable String getInputParentContextId();
