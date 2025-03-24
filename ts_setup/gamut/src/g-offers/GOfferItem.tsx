@@ -35,7 +35,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
   const { created, updated, name, offerId, slotProps = {}, onOpen } = props;
   const ownerState = {
     ...props,
-    dateVariant: slotProps.date?.variant ?? 'relative'
+    dateVariant: slotProps.date?.variant ?? 'date-only'
   }
 
 
@@ -57,7 +57,7 @@ export const GOfferItem: React.FC<GOfferItemProps> = (initProps) => {
       cancelItemMeta={<>
         {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
         {intl.formatMessage({ id: 'gamut.textSeparator' })}
-        <GDate variant='relative' date={props.updated} />
+        <GDate variant='date-only' date={props.updated} />
       </>
       }
       title={intl.formatMessage({ id: 'gamut.offers.deleteForm.title' })}

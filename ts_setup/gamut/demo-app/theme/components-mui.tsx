@@ -92,13 +92,13 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
   },
   MuiPaper: {
     defaultProps: {
-      variant: 'elevation',
-      elevation: 4
+      variant: 'outlined',
     },
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
         borderRadius: 0,
-      }
+        backgroundColor: theme.palette.background.default
+      })
     }
   },
 

@@ -17,7 +17,7 @@ export const GDate: React.FC<GDateProps> = (props) => {
     return <>{relative}</>;
   }
   if (props.variant === 'date-only') {
-    const dateTime = props.date.setLocale('fi-FI').toLocaleString(DateTime.DATE_FULL);
+    const dateTime = props.date.setLocale('fi-FI').toLocaleString(DateTime.DATE_SHORT);
     return <>{dateTime}</>;
   }
   return <>{props.date.setLocale('fi-FI').toLocaleString(DateTime.DATETIME_SHORT)}</>
