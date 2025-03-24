@@ -1,11 +1,6 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale, EveliApp, HdesApi } from '@/burger'
-import {
-  Composer,
-  WrenchComponents,
-  WrenchRouteSearchParams, parseWrenchSearchParams
-} from '../wrench';
+import { useLocale, EveliApp, HdesApi, WrenchRouteSearchParams, parseWrenchSearchParams, WrenchComposerApi, WrenchSetup } from '@/burger'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
@@ -35,10 +30,10 @@ function Component() {
   const service = React.useMemo(() => new HdesApi.ServiceImpl({
     update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag,
   }), [update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag]);
-  const { Main, Secondary, Toolbar, Tabs } = WrenchComponents;
+  const { Main, Secondary, Toolbar, Tabs } = WrenchSetup;
   
   return (
-    <Composer.Provider service={service}>
+    <WrenchComposerApi.Provider service={service}>
       <EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} tabs={Tabs} />
-    </Composer.Provider>)
+    </WrenchComposerApi.Provider>)
 }

@@ -11,9 +11,6 @@ export type { QueueApi } from './queue'
 export type { FeedbackApi } from './feedback'
 
 export { StencilClient, Composer as StencilComposer, StencilComponents } from './stencil';
-export { Composer as WrenchComposer, WrenchComponents } from './wrench';
 
 export { router } from './router'
-
-
 export { FetchProvider } from './eveli-fetch';

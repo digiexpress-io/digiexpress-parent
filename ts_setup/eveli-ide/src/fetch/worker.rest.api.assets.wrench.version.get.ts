@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Composer } from '../wrench';
+import { WrenchComposerApi as Composer } from '@/burger';
 import { HdesApi } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/assets/wrench/version.GET')({
