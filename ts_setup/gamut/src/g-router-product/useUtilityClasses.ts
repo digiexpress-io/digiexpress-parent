@@ -10,6 +10,7 @@ export interface GRouterProductClasses {
   productTitle: string;
   productSubTitle: string;
   productBodyText: string;
+  loginButton: string;
 }
 
 export type GRouterProductClassKey = keyof GRouterProductClasses;
@@ -22,7 +23,8 @@ export const useUtilityClasses = () => {
     productTitle: ['productTitle'],
     productSubTitle: ['productSubTitle'],
     productBodyText: ['productBodyText'],
-    productBodyTextError: ['productBodyTextError']
+    productBodyTextError: ['productBodyTextError'],
+    formStartButton: ['formStartButton']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -38,12 +40,21 @@ export const GRouterProductRoot = styled("div", {
       styles.root,
       styles.productTitle,
       styles.productSubTitle,
-      styles.productBodyText
+      styles.productBodyText,
+      styles.formStartButton
     ];
   },
 })(({ theme }) => {
   return {
-
+    '.GRouterProduct-formStartButton': {
+      animation: 'pulse 1.5s ease-in-out 5',
+      transition: 'transform 0.3s ease-in-out',
+    },
+    '@keyframes pulse': {
+      '0%': { transform: 'scale(1)', opacity: 1 },
+      '50%': { transform: 'scale(1.05)', opacity: 0.8 },
+      '100%': { transform: 'scale(1)', opacity: 1 },
+    },
     '.GRouterProduct-productTitle': {
       textAlign: 'center',
       marginBottom: theme.spacing(3),

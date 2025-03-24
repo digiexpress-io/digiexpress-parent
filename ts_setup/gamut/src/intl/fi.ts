@@ -81,6 +81,8 @@ export const fi = {
   'gamut.forms.page.complete': 'Valmis',
   'gamut.forms.filling.welcome': 'Tervetuloa',
   'gamut.forms.filling.must_be_authenticated': 'Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen',
+  'gamut.forms.filling.authenticated_and_welcome': 'Hello {userName}!',
+  'gamut.forms.filling.authenticated_and_proceed': 'Please click below to start the form',
   'gamut.forms.filling.start': 'Olet aloittamassa lomaketta',
   'gamut.forms.filling.login-then-start.button': 'Log in now',
   'gamut.forms.filling.start.info1': 'Lomake päivittyy automaatisesti sitä täytettäessä',
