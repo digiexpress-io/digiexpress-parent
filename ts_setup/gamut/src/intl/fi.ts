@@ -79,6 +79,7 @@ export const fi = {
   'gamut.forms.page.selection.key': 'Step {stepNumber} out of {totalSteps}',
   'gamut.forms.page.next': 'Seuraava',
   'gamut.forms.page.complete': 'Valmis',
+  'gamut.forms.page.cancel': 'Cancel',
   'gamut.forms.filling.welcome': 'Tervetuloa',
   'gamut.forms.filling.must_be_authenticated': 'Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen',
   'gamut.forms.filling.authenticated_and_welcome': 'Hello {userName}!',

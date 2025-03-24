@@ -78,6 +78,7 @@ export const sv = {
   'gamut.forms.page.selection.key': 'Steg {stepNumber} av {totalSteps}',
   'gamut.forms.page.next': 'Nästa',
   'gamut.forms.page.complete': 'Komplett',
+  'gamut.forms.page.cancel': 'Cancel',
   'gamut.forms.filling.welcome': 'Välkomna!',
   'gamut.forms.filling.must_be_authenticated': 'Du måste vara inloggad för att fylla i detta formulär',
   'gamut.forms.filling.start': 'Du är på väg att starta detta formulär',

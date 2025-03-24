@@ -89,6 +89,7 @@ gamut.forms.page.stepper,,{start} of {end},{start} of {end},{start} av {slut},{s
 gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {stepNumber} out of {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps}
 gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
 gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap
+gamut.forms.page.cancel,,Cancel,Cancel,Cancel,
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
 gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini
 gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Hello {userName}!,,

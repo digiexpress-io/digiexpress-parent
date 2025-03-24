@@ -11,6 +11,7 @@ import {
   GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
   GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
 } from './useUtilityClasses';
+import { useNavigate } from '@tanstack/react-router';
 
 
 
@@ -46,7 +47,7 @@ export interface GFormPageProps {
 export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
+  const nav = useNavigate();
   const { ownerState, classes, props } = useThemeInfra(initProps);
 
   function handlePageChange(id: string) {
@@ -65,6 +66,13 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
 
   function handleComplete() {
     props.onComplete();
+  }
+  function handleCancel() {
+    nav({
+      from: '/secured/$locale/pages/$pageId/products/$productId',
+      params: { viewId: 'user-overview' },
+      to: '/secured/$locale/views/$viewId'
+    })
   }
 
   if (!props.active) {
@@ -110,6 +118,12 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
       </GFormPageBody>
 
       <GFormPageFooter ownerState={ownerState} className={classes.footer} as={ownerState.slots?.footer}>
+
+        {
+          <Button onClick={handleCancel} variant='outlined' color='primary' autoFocus>
+            <FormattedMessage id='gamut.forms.page.cancel' />
+          </Button>
+        }
 
         {props.pages.length !== props.pageNumber &&
           <Button variant='contained' onClick={handleNextPage} endIcon={<ChevronRightIcon />}>

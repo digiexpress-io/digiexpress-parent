@@ -79,6 +79,7 @@ export const en = {
   'gamut.forms.page.selection.key': 'Step {stepNumber} out of {totalSteps}',
   'gamut.forms.page.next': 'Next',
   'gamut.forms.page.complete': 'Complete',
+  'gamut.forms.page.cancel': 'Cancel',
   'gamut.forms.filling.welcome': 'Welcome!',
   'gamut.forms.filling.must_be_authenticated': 'You must be logged in to fill this form',
   'gamut.forms.filling.authenticated_and_welcome': 'Hello {userName}!',
