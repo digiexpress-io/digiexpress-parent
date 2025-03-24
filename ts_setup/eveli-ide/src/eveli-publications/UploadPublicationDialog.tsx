@@ -4,7 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Stack, DialogContent
 
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { PublicationApi } from '../api-publications';
 

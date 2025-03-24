@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListItemText } from '@mui/material';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { BooleanBuilder } from './'
 
 

@@ -9,7 +9,7 @@ import { OutputFormatType } from "diff2html/lib/types";
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { useWrenchNav } from "../wrench-nav";
 
 

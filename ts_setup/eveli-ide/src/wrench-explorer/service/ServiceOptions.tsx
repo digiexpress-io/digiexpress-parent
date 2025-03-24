@@ -5,7 +5,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 
 import { useSnackbar } from 'notistack';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';

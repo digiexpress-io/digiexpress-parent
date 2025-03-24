@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 
 import { useIntl } from 'react-intl';
-import { TaskApi } from '@/burger';
+import { TaskApi } from '@/api-task';
 
 export const Hook = createFileFetch('statistics/status.GET')({
   hook

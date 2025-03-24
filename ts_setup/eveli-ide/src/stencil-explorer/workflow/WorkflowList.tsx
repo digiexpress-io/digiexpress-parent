@@ -10,7 +10,7 @@ import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 import { WorkflowsListRoot, useUtilityClasses } from './useUtilityClasses';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 const findMainId = (values: string[]) => {
   const result = values.filter(id => !id.endsWith("-nested"));

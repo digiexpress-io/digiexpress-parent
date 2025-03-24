@@ -16,7 +16,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { ArticleEdit } from '../../stencil-article';
 import { WorkflowEdit } from '../../stencil-workflow/';
 import { LinkEdit } from '../../stencil-link';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { StencilApi } from '@/api-stencil';
 

@@ -6,7 +6,7 @@ import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import { Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 import { useSnackbar } from 'notistack';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';

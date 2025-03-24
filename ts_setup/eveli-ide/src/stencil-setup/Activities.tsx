@@ -13,7 +13,7 @@ import { MigrationComposer } from '../stencil-migration';
 import { TemplateComposer } from '../stencil-template';
 import { useStencilNav } from '../stencil-nav';
 
-import * as Burger from '@/burger'
+import * as Burger from '@/eveli-styles'
 
 export interface ActivityProps {
   title: React.ReactNode;

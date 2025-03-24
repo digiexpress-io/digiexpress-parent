@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { useFeedback, FeedbackApi } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';

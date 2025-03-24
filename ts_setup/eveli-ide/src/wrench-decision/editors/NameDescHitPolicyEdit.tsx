@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
 

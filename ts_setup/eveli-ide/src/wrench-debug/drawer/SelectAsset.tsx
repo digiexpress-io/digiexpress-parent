@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';

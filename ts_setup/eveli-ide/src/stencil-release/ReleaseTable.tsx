@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl"
 import { StencilApi } from '@/api-stencil'
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { ReleaseDelete } from './ReleaseDelete'
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 interface ReleaseTableProps {
   releases: StencilApi.Release[];

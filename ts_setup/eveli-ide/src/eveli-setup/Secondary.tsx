@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 export const Secondary: React.FC = () => {

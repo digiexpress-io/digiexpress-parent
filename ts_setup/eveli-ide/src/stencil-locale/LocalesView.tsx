@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { LocalesOverview } from './LocalesOverview';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 

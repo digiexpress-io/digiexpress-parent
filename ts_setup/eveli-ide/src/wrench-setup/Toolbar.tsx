@@ -13,7 +13,7 @@ import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../eveli-shell/useUtilityClasses';

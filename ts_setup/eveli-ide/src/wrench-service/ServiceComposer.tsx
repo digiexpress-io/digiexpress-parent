@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box,  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { useSnackbar } from 'notistack';
 

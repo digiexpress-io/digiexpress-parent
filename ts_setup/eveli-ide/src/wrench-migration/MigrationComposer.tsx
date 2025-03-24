@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { FormattedMessage } from 'react-intl';
 

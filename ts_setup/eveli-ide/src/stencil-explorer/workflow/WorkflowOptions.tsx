@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { WorkflowDelete } from '../../stencil-workflow/WorkflowDelete';
 import { WorkflowEdit } from '../../stencil-workflow';
 import { StencilApi } from '@/api-stencil'
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 const WorkflowOptions: React.FC<{workflow: StencilApi.Workflow}> = ({ workflow }) => {
   const theme = useTheme();

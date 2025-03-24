@@ -17,7 +17,7 @@ import { MigrationComposer } from '../stencil-migration';
 import { useStencilNav } from '../stencil-nav';
 import { ActivityProps, useActivities } from './Activities';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';

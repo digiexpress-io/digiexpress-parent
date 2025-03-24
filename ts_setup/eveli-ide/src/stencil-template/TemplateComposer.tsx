@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 

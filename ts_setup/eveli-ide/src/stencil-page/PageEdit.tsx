@@ -5,7 +5,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {

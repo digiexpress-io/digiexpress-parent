@@ -1,5 +1,5 @@
 
-import { TaskApi } from '@/burger';
+import { TaskApi } from '@/api-task';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';

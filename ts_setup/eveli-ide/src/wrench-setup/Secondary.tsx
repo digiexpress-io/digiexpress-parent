@@ -12,7 +12,7 @@ import { useIntl } from 'react-intl';
 
 
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { useWrenchNav } from '../wrench-nav';
 import { useActivities, ActivityProps } from './Activities';
 

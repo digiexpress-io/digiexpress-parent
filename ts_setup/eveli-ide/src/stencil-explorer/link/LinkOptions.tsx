@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { LinkDelete } from '../../stencil-link/LinkDelete';
 import { LinkEdit } from '../../stencil-link';
 import { StencilApi } from '@/api-stencil'
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {
   const theme = useTheme();

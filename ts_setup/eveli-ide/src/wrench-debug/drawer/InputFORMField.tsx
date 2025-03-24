@@ -1,6 +1,6 @@
 import React from "react";
 import { ListItemText } from "@mui/material";
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from "react-intl";
 

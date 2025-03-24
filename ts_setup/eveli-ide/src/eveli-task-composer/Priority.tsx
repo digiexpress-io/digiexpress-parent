@@ -1,6 +1,6 @@
 import { FieldInputProps } from 'formik';
 import RadioGroupPopover from './RadioGroupPopover';
-import { TaskApi } from '@/burger'
+import { TaskApi } from '@/api-task'
 
 interface Props extends FieldInputProps<""> {
   label: string

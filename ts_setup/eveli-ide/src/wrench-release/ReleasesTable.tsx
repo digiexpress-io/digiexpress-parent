@@ -13,7 +13,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import fileDownload from 'js-file-download'
 import { useSnackbar } from 'notistack';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { Release } from "./release-types";

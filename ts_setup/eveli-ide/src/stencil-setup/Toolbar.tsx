@@ -12,7 +12,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi } from './ide';
 
 import { StencilApi } from '../api-stencil';

@@ -6,7 +6,7 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import { FormattedMessage } from 'react-intl';
 
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';

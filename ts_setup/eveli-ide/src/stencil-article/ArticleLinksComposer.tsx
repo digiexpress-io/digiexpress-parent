@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';

@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';

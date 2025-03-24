@@ -8,7 +8,7 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { ArticleOptions } from './ArticleOptions';

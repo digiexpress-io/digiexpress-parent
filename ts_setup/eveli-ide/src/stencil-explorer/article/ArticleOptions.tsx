@@ -11,7 +11,7 @@ import { ArticleEdit, ArticleDelete } from '../../stencil-article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../stencil-page';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { StencilApi } from '@/api-stencil';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { useStencilNav } from '../../stencil-nav';
 
 interface ArticleOptionsProps {

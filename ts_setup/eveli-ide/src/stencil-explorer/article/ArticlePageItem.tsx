@@ -5,7 +5,7 @@ import LeftEditIcon from "@mui/icons-material/BorderLeft";
 import RightEditIcon from "@mui/icons-material/BorderRight";
 import ConstructionIcon from '@mui/icons-material/Construction';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { ExplorerItemArticlePages, useStencilNav } from '../../stencil-nav';
 

@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 interface NewArticlePageProps {

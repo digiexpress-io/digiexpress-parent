@@ -3,7 +3,7 @@ import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon,
 import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { StringBuilder } from './'
 
 

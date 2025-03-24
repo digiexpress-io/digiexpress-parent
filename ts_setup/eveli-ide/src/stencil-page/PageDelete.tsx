@@ -7,7 +7,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 
 
 const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {

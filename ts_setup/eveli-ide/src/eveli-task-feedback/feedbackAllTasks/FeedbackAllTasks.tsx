@@ -3,7 +3,7 @@ import { Box, Divider, FormControl, List, ListItem, ListItemButton, MenuItem, Se
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
-import * as Burger from '@/burger';
+import * as Burger from '@/eveli-styles';
 import { useFeedback } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { FeedbackReducer } from './FeedbackReducer';
