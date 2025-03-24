@@ -149,6 +149,24 @@ public class SearchMissionsTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1))
         .getObjects().size());
     
+    // ref number using title column
+    Assertions.assertEquals(1, getClient().grim(repo).find()
+        .missionQuery()
+        .addAssignment("worker", false, "sam-from-the")
+        .likeReporterId("jane.doe@housing.com")
+        .likeTitle("1")
+        .findAll()
+        .await().atMost(Duration.ofMinutes(1))
+        .getObjects().size());
+    Assertions.assertEquals(0, getClient().grim(repo).find()
+        .missionQuery()
+        .addAssignment("worker", false, "sam-from-the")
+        .likeReporterId("jane.doe@housing.com")
+        .likeTitle("100")
+        .findAll()
+        .await().atMost(Duration.ofMinutes(1))
+        .getObjects().size());
+    
     
     // description like query
     Assertions.assertEquals(1, getClient().grim(repo).find()
