@@ -49,10 +49,6 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
           marginLeft: theme.spacing(4),
           marginRight: theme.spacing(4),
         },
-        // border on left of appBar
-        '.GRouterSecuredServices-root': {
-          borderLeft: `1px solid ${theme.palette.divider}`,
-        },
 
         // margin around drawer on secured page
         '.MuiDrawer-root.GShellBase .MuiPaper-root': {
