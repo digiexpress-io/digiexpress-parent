@@ -40,9 +40,6 @@ public class EveliPropsAssets {
   private Boolean overwrite;
 
 
-  private Integer timezoneOffset = 2;
-  
-  
   /**
    * json of type Deployment, used for importing WRENCH, STENCIL, DIALOB, WORKFLOWS into empty DB
    */
