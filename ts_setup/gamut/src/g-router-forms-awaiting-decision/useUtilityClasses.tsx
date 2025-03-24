@@ -50,28 +50,28 @@ export const GRouterFormsAwaitingDecisionRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
-    '.GFormsAwaitingDecision-awaitingDecisionTitleLayout': {
+    '.GRouterFormsAwaitingDecision-awaitingDecisionTitleLayout': {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
-    '.GFormsAwaitingDecision-awaitingDecisionTitle': {
+    '.GRouterFormsAwaitingDecision-awaitingDecisionTitle': {
       textAlign: 'center',
       ...theme.typography.h1
     },
-    '.GFormsAwaitingDecision-avatar': {
+    '.GRouterFormsAwaitingDecision-avatar': {
       height: '50px',
       width: '50px',
       alignContent: 'center',
       marginRight: theme.spacing(1),
       backgroundColor: theme.palette.warning.main,
     },
-    '.GFormsAwaitingDecision-awaitingDecisionBodyText': {
+    '.GRouterFormsAwaitingDecision-awaitingDecisionBodyText': {
       ...theme.typography.body1,
       marginTop: theme.spacing(0.5),
       marginBottom: theme.spacing(0.5)
     },
-    '.GFormsAwaitingDecision-awaitingDecisionBreadcrumbs': {
+    '.GRouterFormsAwaitingDecision-awaitingDecisionBreadcrumbs': {
 
     }
 
