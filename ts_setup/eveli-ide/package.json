@@ -10,9 +10,6 @@
   ],
   "repository": "git@github.com:digiexpress-io/digiexpress-parent.git",
   "scripts": {
-    "start-wrench": "START_MODE=wrench vite",
-    "start-stencil": "START_MODE=stencil vite",
-    "start-frontdesk": "START_MODE=frontdesk vite",
     "start": "START_MODE=frontdesk vite",
     "build": "NODE_ENV=production vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"

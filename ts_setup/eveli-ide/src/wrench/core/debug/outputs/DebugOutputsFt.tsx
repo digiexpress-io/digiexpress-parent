@@ -5,13 +5,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 import CodeEditor from '../../../code-editor';
 import { toYaml } from './utils'
 
 
-const DebugOutputsFt: React.FC<{ debug: Client.ServiceResult }> = ({ debug }) => {
+const DebugOutputsFt: React.FC<{ debug:HdesApi.ServiceResult }> = ({ debug }) => {
   const [expanded, setExpanded] = React.useState(false);
   
   return (<>

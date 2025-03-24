@@ -1,12 +1,12 @@
 import React from 'react';
 import { DebugOutputCsvRow } from './DebugOutputCsvRow';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
-const mapCsvRows = (debug: string): Client.CsvRow[] => {
+const mapCsvRows = (debug: string):HdesApi.CsvRow[] => {
     if (!debug) {
         return [];
     }
-    const result: Client.CsvRow[] = [];
+    const result:HdesApi.CsvRow[] = [];
     // remove carriage returns
     if (debug.includes('\r')) {
         debug = debug.replace(/\r/g, '');
@@ -47,7 +47,7 @@ const mapCsvRows = (debug: string): Client.CsvRow[] => {
             }
         }
         const rowId = outputValues[0];
-        const csvRow: Client.CsvRow = { id: rowId, inputs: [], outputs: [] };
+        const csvRow:HdesApi.CsvRow = { id: rowId, inputs: [], outputs: [] };
         for (let j = 0; j < inputValues.length; j++) {
             csvRow.inputs.push({
                 name: inputHeaders[j],
@@ -70,7 +70,7 @@ const mapCsvRows = (debug: string): Client.CsvRow[] => {
 const DebugOutputCsv: React.FC<{ debug: string }> = ({ debug }) => {
     const csvRows = mapCsvRows(debug);
     return (<>
-      {csvRows.map((csvRow: Client.CsvRow) => <DebugOutputCsvRow key={csvRow.id} csvRow={csvRow} index={csvRow.id}/>)}
+      {csvRows.map((csvRow:HdesApi.CsvRow) => <DebugOutputCsvRow key={csvRow.id} csvRow={csvRow} index={csvRow.id}/>)}
     </>);
 }
   

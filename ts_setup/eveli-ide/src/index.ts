@@ -6,12 +6,12 @@ export { intl }
 export { eveliTheme } from './burger';
 export type { EveliComponents } from './burger';
 export type { StencilApi } from './stencil';
-export type { HdesApi } from './wrench';
+
 export type { QueueApi } from './queue'
 export type { FeedbackApi } from './feedback'
 
 export { StencilClient, Composer as StencilComposer, StencilComponents } from './stencil';
-export { WrenchClient, Composer as WrenchComposer, WrenchComponents } from './wrench';
+export { Composer as WrenchComposer, WrenchComponents } from './wrench';
 
 export { router } from './router'
 

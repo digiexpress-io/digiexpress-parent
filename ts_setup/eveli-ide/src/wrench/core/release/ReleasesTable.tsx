@@ -14,7 +14,7 @@ import fileDownload from 'js-file-download'
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { Composer } from "../context";
 import { Release } from "./release-types";
 import { ReleaseComposer } from './ReleaseComposer';

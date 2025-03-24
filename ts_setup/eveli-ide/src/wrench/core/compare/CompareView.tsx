@@ -8,7 +8,7 @@ import "diff2html/bundles/css/diff2html.min.css";
 import { OutputFormatType } from "diff2html/lib/types";
 
 import { Composer } from "../context";
-import { HdesApi } from "../client";
+import { HdesApi } from '@/burger';
 import * as Burger from '@/burger';
 import { useWrenchNav } from "../nav";
 

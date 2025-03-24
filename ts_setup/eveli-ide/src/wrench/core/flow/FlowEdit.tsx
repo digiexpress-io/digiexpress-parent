@@ -3,7 +3,7 @@ import { Box, Divider, IconButton, Tooltip } from '@mui/material';
 
 import CodeEditor, { HintProps } from '../../code-editor';
 import { Composer } from '../context';
-import { HdesApi as Client } from '../client';
+import { HdesApi } from '@/burger';
 import Graph from './graph';
 import { AutocompleteVisitor, FlowAstAutocomplete, AutocompleteTask } from './autocomplete';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -13,14 +13,14 @@ import { useWrenchNav } from '../nav';
 
 type GuidedHint = (cm: CodeMirror.Editor, data: CodeMirror.Hints, cur: CodeMirror.Hint) => void;
 
-const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flow, site }) => {
+const SticyGraph: React.FC<{ flow:HdesApi.AstFlow, site:HdesApi.Site }> = ({ flow, site }) => {
   const { onNav } = useWrenchNav();
 
   return (
     <Graph flow={flow} site={site}
       onClick={() => console.log("single")}
       onDoubleClick={(id) => {
-        let article: Client.Entity<any> = site.decisions[id];
+        let article:HdesApi.Entity<any> = site.decisions[id];
         if(!article) {
           article = site.flows[id];
         }
@@ -36,12 +36,12 @@ const SticyGraph: React.FC<{ flow: Client.AstFlow, site: Client.Site }> = ({ flo
 }
 
 
-const FlowEdit: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) => {
+const FlowEdit: React.FC<{ flow:HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow }) => {
   const { session, actions, service } = Composer.useComposer();
   const { site } = session;
   const update = session.pages[flow.id];
   
-  const [ast, setAst] = React.useState<Client.AstFlow | undefined>(flow.ast);
+  const [ast, setAst] = React.useState<HdesApi.AstFlow | undefined>(flow.ast);
   const [guided, setGuided] = React.useState<{ cm: CodeMirror.Editor, data: CodeMirror.Hints, cur: CodeMirror.Hint, guided: FlowAstAutocomplete }>();
   const [showGraph, setShowGraph] = React.useState<boolean>(true);
   const commands = React.useMemo(() => update ? update.value : flow.source.commands, [flow, update]);

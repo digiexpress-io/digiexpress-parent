@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Divider } from '@mui/material';
 
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 
 
 

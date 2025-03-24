@@ -4,14 +4,14 @@ import { Box, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedMessage } from 'react-intl'
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 const DecisionTableHeader: React.FC<{
-  ast: Client.AstDecision,
-  headers: Client.TypeDef[],
+  ast:HdesApi.AstDecision,
+  headers:HdesApi.TypeDef[],
   children: React.ReactNode,
-  onClick: (header: Client.TypeDef) => void
+  onClick: (header:HdesApi.TypeDef) => void
 }> = ({ ast, headers, children, onClick }) => {
   const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 1;
 

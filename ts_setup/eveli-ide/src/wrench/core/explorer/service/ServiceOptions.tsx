@@ -8,17 +8,17 @@ import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
 
 import { Composer } from '../../context';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import { ErrorView } from '../../styles';
 import { useWrenchNav } from '../../nav';
 
 
-const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
+const ServiceDelete: React.FC<{ serviceId:HdesApi.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
   const { services } = Composer.useSite();
   const { service: composerService, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
   const { findTab, onTabClose } = useWrenchNav();
 
   const service = services[serviceId];
@@ -49,7 +49,7 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
         enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
         onClose();
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error:HdesApi.StoreError) => {
         setErrors(error);
       });
   }
@@ -69,7 +69,7 @@ const ServiceDelete: React.FC<{ serviceId: Client.ServiceId, onClose: () => void
   </Dialog>);
 }
 
-const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = ({ service }) => {
+const ServiceOptions: React.FC<{ service:HdesApi.Entity<HdesApi.AstService> }> = ({ service }) => {
 
   const theme = useTheme();
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'ServiceDelete' | 'ServiceCopy'>(undefined);
@@ -80,7 +80,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState(service.ast?.name + "_Copy");
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   const handleCopy = () => {
     setErrors(undefined);
@@ -94,7 +94,7 @@ const ServiceOptions: React.FC<{ service: Client.Entity<Client.AstService> }> = 
           onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
-      }).catch((error: Client.StoreError) => {
+      }).catch((error:HdesApi.StoreError) => {
         setErrors(error);
       });
   }

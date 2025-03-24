@@ -1,8 +1,6 @@
 import React from 'react';
-import { useTheme } from '@mui/material';
-import * as Burger from '@/burger';
 
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
 import { useWrenchNav } from '../nav';

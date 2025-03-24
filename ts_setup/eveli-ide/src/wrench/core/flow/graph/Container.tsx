@@ -3,13 +3,13 @@ import { Box } from '@mui/material';
 
 import { Vis } from '../../../vis';
 import GraphAPI from './GraphAPI';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 
 interface ContainerProps {
-  flow: Client.AstFlow;
-  site: Client.Site;
+  flow:HdesApi.AstFlow;
+  site:HdesApi.Site;
   onClick: (id: string) => void;
   onDoubleClick: (id: string) => void;
 };

@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { Composer,  } from '../../context';
-import { HdesApi } from '../../client';
+import { HdesApi } from '@/burger';
 import DecisionOptions from './DecisionOptions';
 import { useWrenchNav } from "../../nav";
 

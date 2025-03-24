@@ -2,28 +2,28 @@ import React from 'react';
 
 import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 interface RenderCellProps {
-  row: Client.AstDecisionRow;
-  header: Client.TypeDef;
-  cell: Client.AstDecisionCell;
+  row:HdesApi.AstDecisionRow;
+  header:HdesApi.TypeDef;
+  cell:HdesApi.AstDecisionCell;
 }
 
 interface RenderRowProps {
-  headers: Client.TypeDef[];
-  row: Client.AstDecisionRow;
+  headers:HdesApi.TypeDef[];
+  row:HdesApi.AstDecisionRow;
   renderCell: (props: RenderCellProps) => React.ReactNode;
 }
 
 interface RenderHeaderProps {
-  ast: Client.AstDecision;
-  headers: Client.TypeDef[];
+  ast:HdesApi.AstDecision;
+  headers:HdesApi.TypeDef[];
 }
 
 const DecisionTable: React.FC<{
-  ast: Client.AstDecision;
+  ast:HdesApi.AstDecision;
   renderHeader: (props: RenderHeaderProps) => React.ReactNode;
   renderRow: (props: RenderRowProps) => React.ReactNode;
   renderCell: (props: RenderCellProps) => React.ReactNode;
@@ -39,10 +39,10 @@ const DecisionTable: React.FC<{
     setPage(0);
   };
 
-  const accepts: Client.TypeDef[] = ast ? [...ast.headers.acceptDefs].sort((a, b) => a.order - b.order) : [];
-  const returns: Client.TypeDef[] = ast ? [...ast.headers.returnDefs].sort((a, b) => a.order - b.order) : [];
+  const accepts:HdesApi.TypeDef[] = ast ? [...ast.headers.acceptDefs].sort((a, b) => a.order - b.order) : [];
+  const returns:HdesApi.TypeDef[] = ast ? [...ast.headers.returnDefs].sort((a, b) => a.order - b.order) : [];
   const rows = React.useMemo(() => ast ? ast.rows.sort((a, b) => a.order - b.order) : [], [ast]);
-  const headers: Client.TypeDef[] = [...accepts, ...returns];
+  const headers:HdesApi.TypeDef[] = [...accepts, ...returns];
 
   if (!ast) {
     return <span>syntax error</span>

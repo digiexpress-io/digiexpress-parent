@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import { Composer } from '../context';
 import { ErrorView } from '../styles';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { useWrenchNav } from '../nav';
 
 

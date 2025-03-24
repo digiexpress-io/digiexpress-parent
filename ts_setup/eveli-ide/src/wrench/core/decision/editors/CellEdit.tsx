@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 import Builder, { 
   EditBoolean,
@@ -14,15 +14,15 @@ import { ValueSetChooser } from './builders/ValueSetChooser';
 
 
 interface CellEditProps {
-  dt: Client.AstDecision,
-  cell: Client.AstDecisionCell;
+  dt:HdesApi.AstDecision,
+  cell:HdesApi.AstDecisionCell;
   onClose: () => void;
-  onChange: (commands: Client.AstCommand) => void
+  onChange: (commands:HdesApi.AstCommand) => void
 };
 
 const CellEdit: React.FC<CellEditProps> = (props) => {
 
-  const header: Client.TypeDef = [...props.dt.headers.acceptDefs, ...props.dt.headers.returnDefs]
+  const header:HdesApi.TypeDef = [...props.dt.headers.acceptDefs, ...props.dt.headers.returnDefs]
     .filter(t => t.id === props.cell.header)[0];
 
   const [value, setValue] = React.useState<{ value?: string, builder: any }>({
@@ -88,7 +88,7 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={() => {
-            const command: Client.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
+            const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
             props.onChange(command);
             props.onClose();
           }}>

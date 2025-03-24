@@ -4,12 +4,12 @@ import { TextareaAutosize, Box, Divider, Chip, Typography,  Dialog, DialogTitle,
 import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/burger';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 interface InputCSVProps {
   value: string;
-  selected?: Client.EntityId;
+  selected?: HdesApi.EntityId;
   onClose: () => void;
   onSelect: (csv: string) => void;
 }

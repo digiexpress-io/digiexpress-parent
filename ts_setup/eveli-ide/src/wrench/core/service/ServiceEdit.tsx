@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 
 import CodeEditor from '../../code-editor';
 import { Composer } from '../context';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 
 const ServiceEdit: React.FC<{service: HdesApi.Entity<HdesApi.AstService>}> = ({service}) => {
   const { actions, session } = Composer.useComposer();

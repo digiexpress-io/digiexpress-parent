@@ -1,5 +1,5 @@
 import { Node, Edge, Model } from '../../../vis';
-import { HdesApi } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow';

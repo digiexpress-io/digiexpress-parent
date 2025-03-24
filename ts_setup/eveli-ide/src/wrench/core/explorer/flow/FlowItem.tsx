@@ -14,7 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { Composer } from '../../context';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
 import { useWrenchNav } from '../../nav';
@@ -72,7 +72,7 @@ const ServiceItem: React.FC<{
 }
 
 const ErrorItem: React.FC<{
-  msg: Client.ProgramMessage;
+  msg:HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -89,7 +89,7 @@ const ErrorItem: React.FC<{
 }
 
 const WarningItem: React.FC<{
-  msg: Client.ProgramMessage;
+  msg:HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -108,15 +108,15 @@ const WarningItem: React.FC<{
 
 
 interface RefDecision {
-  entity?: Client.Entity<Client.AstDecision>;
-  ref: Client.ProgramAssociation;
+  entity?:HdesApi.Entity<HdesApi.AstDecision>;
+  ref:HdesApi.ProgramAssociation;
 }
 interface RefService {
-  entity?: Client.Entity<Client.AstService>;
-  ref: Client.ProgramAssociation;
+  entity?:HdesApi.Entity<HdesApi.AstService>;
+  ref:HdesApi.ProgramAssociation;
 }
 
-const FlowItem: React.FC<{ flowId: Client.FlowId }> = ({ flowId }) => {
+const FlowItem: React.FC<{ flowId:HdesApi.FlowId }> = ({ flowId }) => {
   const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
   const { onNav } = useWrenchNav();

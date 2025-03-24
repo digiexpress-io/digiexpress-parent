@@ -9,17 +9,17 @@ import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
 
 import { Composer } from '../../context';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import {ErrorView} from '../../styles';
 import { useWrenchNav } from '../../nav';
 
 
-const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ flowId, onClose }) => {
+const FlowDelete: React.FC<{ flowId:HdesApi.FlowId, onClose: () => void }> = ({ flowId, onClose }) => {
   const { flows } = Composer.useSite();
   const { service, actions } = Composer.useComposer();
   const { enqueueSnackbar } = useSnackbar();
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
   const { findTab, onTabClose } = useWrenchNav();
 
   const flow = flows[flowId];
@@ -50,7 +50,7 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
         enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
         onClose();
       })
-      .catch((error: Client.StoreError) => {
+      .catch((error:HdesApi.StoreError) => {
         setErrors(error);
       });
   }
@@ -70,7 +70,7 @@ const FlowDelete: React.FC<{ flowId: Client.FlowId, onClose: () => void }> = ({ 
 }
 
 
-const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }) => {
+const FlowOptions: React.FC<{ flow:HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow }) => {
 
   const [dialogOpen, setDialogOpen] = React.useState<undefined | 'FlowDelete' | 'FlowCopy'>(undefined);
   const { onNav } = useWrenchNav();
@@ -80,7 +80,7 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
   const { enqueueSnackbar } = useSnackbar();
   const [name, setName] = React.useState(flow.ast?.name + "_copy");
   const [apply, setApply] = React.useState(false);
-  const [errors, setErrors] = React.useState<Client.StoreError>();
+  const [errors, setErrors] = React.useState<HdesApi.StoreError>();
 
   const handleCopy = () => {
     setErrors(undefined);
@@ -94,7 +94,7 @@ const FlowOptions: React.FC<{ flow: Client.Entity<Client.AstFlow> }> = ({ flow }
           onNav({ type: 'ENTITY_EDITOR', id: article.id })
         });
         handleDialogClose();
-      }).catch((error: Client.StoreError) => {
+      }).catch((error:HdesApi.StoreError) => {
         setErrors(error);
       });
   }

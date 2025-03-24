@@ -3,13 +3,13 @@ import React from 'react';
 import { Box, TableCell, Typography, useTheme, lighten, alpha, darken } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 const DecisionTableCell: React.FC<{
-  row: Client.AstDecisionRow,
-  header: Client.TypeDef,
-  cell: Client.AstDecisionCell,
+  row:HdesApi.AstDecisionRow,
+  header:HdesApi.TypeDef,
+  cell:HdesApi.AstDecisionCell,
   onClick: () => void
 }> = ({ header, cell, onClick }) => {
 

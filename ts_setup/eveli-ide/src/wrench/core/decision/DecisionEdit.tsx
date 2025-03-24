@@ -12,7 +12,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Composer } from '../context';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
 import fileDownload from 'js-file-download'
 

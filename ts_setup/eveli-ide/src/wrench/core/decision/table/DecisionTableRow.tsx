@@ -2,20 +2,20 @@ import React from 'react';
 
 import { TableCell, TableRow } from '@mui/material';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 const DecisionTableRow: React.FC<{
-  row: Client.AstDecisionRow,
-  headers: Client.TypeDef[],
+  row:HdesApi.AstDecisionRow,
+  headers:HdesApi.TypeDef[],
   renderCell: (props: {
-    row: Client.AstDecisionRow;
-    header: Client.TypeDef;
-    cell: Client.AstDecisionCell;
+    row:HdesApi.AstDecisionRow;
+    header:HdesApi.TypeDef;
+    cell:HdesApi.AstDecisionCell;
   }) => React.ReactNode
 }> = ({ row, headers, renderCell }) => {
 
-  const cells: Record<string, Client.AstDecisionCell> = {};
+  const cells: Record<string,HdesApi.AstDecisionCell> = {};
   row.cells.forEach(e => cells[e.header] = e);
 
   return (<TableRow hover role="checkbox" tabIndex={-1} key={row.id}>

@@ -1,4 +1,4 @@
-import {HdesApi} from '../../../client';
+import { HdesApi } from '@/burger';
 
 
 type Operator = { key: string, value: string, text: string }

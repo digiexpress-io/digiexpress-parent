@@ -5,12 +5,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 import CodeEditor from '../../../code-editor';
 import { toYaml } from './utils'
 
-const DebugStep: React.FC<{ debug: Client.FlowResultLog }> = ({ debug }) => {
+const DebugStep: React.FC<{ debug:HdesApi.FlowResultLog }> = ({ debug }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   return (<>
@@ -37,7 +37,7 @@ const DebugStep: React.FC<{ debug: Client.FlowResultLog }> = ({ debug }) => {
   </>);
 }
 
-const DebugOutputsFl: React.FC<{ debug: Client.FlowResult }> = ({ debug }) => {
+const DebugOutputsFl: React.FC<{ debug:HdesApi.FlowResult }> = ({ debug }) => {
   return (<>{debug.logs.map(e => <DebugStep key={`${e.id}-step`} debug={e} />)}</>);
 }
 

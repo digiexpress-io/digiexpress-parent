@@ -7,7 +7,7 @@ import * as Burger from '@/burger';
 import { useSnackbar } from 'notistack';
 
 import { Composer } from '../context';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { ErrorView } from '../styles';
 import { useWrenchNav } from '../nav';
 

@@ -4,7 +4,7 @@ import { Box, Typography, Grid2, Button, Dialog, DialogTitle, DialogContent, Dia
 import { FormattedMessage } from 'react-intl'
 
 import { Composer } from '../../context';
-import { HdesApi } from '../../client';
+import { HdesApi } from '@/burger';
 import { InputFORMField } from './InputFORMField';
 
 interface InputFORMProps {

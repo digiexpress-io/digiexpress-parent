@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { FormattedMessage } from 'react-intl';
 import CodeEditor from '../../../code-editor';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import { toYaml } from './utils'
 
 type Rule = {
@@ -19,7 +19,7 @@ type Rule = {
 type RuleRow = { order: number, rules: Rule[], outputs?: Object };
 
 
-const createRejections = (debug: Client.DecisionResult): RuleRow[] => {
+const createRejections = (debug:HdesApi.DecisionResult): RuleRow[] => {
   if (debug.rejections.length === 0) {
     return [];
   }
@@ -43,7 +43,7 @@ const createRejections = (debug: Client.DecisionResult): RuleRow[] => {
   return result;
 }
 
-const createMatches = (debug: Client.DecisionResult): RuleRow[] => {
+const createMatches = (debug:HdesApi.DecisionResult): RuleRow[] => {
 
   if (debug.matches.length === 0) {
     return [];
@@ -74,7 +74,7 @@ const createMatches = (debug: Client.DecisionResult): RuleRow[] => {
   return result;
 }
 
-const DebugOutputsDt: React.FC<{ debug: Client.DecisionResult }> = ({ debug }) => {
+const DebugOutputsDt: React.FC<{ debug:HdesApi.DecisionResult }> = ({ debug }) => {
   const [accepted, setAccepted] = React.useState(false);
   const [rejects, setRejects] = React.useState(debug.rejections.length < 1);
   const rejections = createRejections(debug);

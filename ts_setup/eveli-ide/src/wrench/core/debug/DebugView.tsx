@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 
 import { Composer } from '../context';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
 import { DebugDrawer } from './drawer/DebugDrawer';
 import { SelectAsset } from './drawer/SelectAsset';
 import { InputCSV } from './drawer/InputCSV';

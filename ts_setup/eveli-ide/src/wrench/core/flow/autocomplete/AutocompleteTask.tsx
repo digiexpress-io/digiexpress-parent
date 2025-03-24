@@ -4,13 +4,13 @@ import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog,
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
+import { HdesApi } from '@/burger';
 
 import { Composer } from '../../context';
-import { HdesApi as Client } from '../../client';
 import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';
 
 
-const SelectTask: React.FC<{ value: Client.Entity<Client.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
+const SelectTask: React.FC<{ value:HdesApi.Entity<HdesApi.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
   const { ast } = value;
   if (!ast) {
     return null;
@@ -35,7 +35,7 @@ const SelectTask: React.FC<{ value: Client.Entity<Client.AstBody>, onClick: () =
 
 interface AutocompleteTaskProps {
   onClose: () => void;
-  flow: Client.Entity<Client.AstFlow>;
+  flow:HdesApi.Entity<HdesApi.AstFlow>;
   cm: CodeMirror.Editor;
   data: CodeMirror.Hints;
   cur: CodeMirror.Hint;
@@ -49,15 +49,15 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
   const { actions, service } = Composer.useComposer();
   const [name, setName] = React.useState("");
   const [apply, setApply] = React.useState(false);
-  const [type, setType] = React.useState<Client.AstBodyType | string>(guided.guided === "decision-task" ? "DT" : "FLOW_TASK");
-  const [link, setLink] = React.useState<Client.AstBody>();
+  const [type, setType] = React.useState<HdesApi.AstBodyType | string>(guided.guided === "decision-task" ? "DT" : "FLOW_TASK");
+  const [link, setLink] = React.useState<HdesApi.AstBody>();
   const usedLinks = flow.associations.filter(l => l.id && l.owner).map(l => l.id);
   const usedNames = [...Object.values(decisions).map(d => d.ast?.name), ...Object.values(services).map(d => d.ast?.name)]
 
-  const assets: Client.Entity<Client.AstBody>[] = React.useMemo(() => {
-    const target: Client.Entity<Client.AstBody>[] = type === "DT" ? Object.values(decisions) : Object.values(services);
+  const assets:HdesApi.Entity<HdesApi.AstBody>[] = React.useMemo(() => {
+    const target:HdesApi.Entity<HdesApi.AstBody>[] = type === "DT" ? Object.values(decisions) : Object.values(services);
     const keyword = name.toLowerCase();
-    const result: Client.Entity<Client.AstBody>[] = target.filter(t => t.ast && (
+    const result:HdesApi.Entity<HdesApi.AstBody>[] = target.filter(t => t.ast && (
       t.ast?.name.toLowerCase().indexOf(keyword) > -1 ||
       (t.ast?.description && t.ast?.description?.toLowerCase().indexOf(keyword) > -1)));
     return result;
@@ -146,8 +146,9 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided
         }).sort((a, b) => a.comp.localeCompare(b.comp) )
           .map(a => <SelectTask key={a.entity.id} value={a.entity} linked={a.linked} onClick={() => {
           setLink(a.entity.ast);
-          setName((a.entity.ast as Client.AstBody).name);
+          setName((a.entity.ast as HdesApi.AstBody).name);
         }} />)}
+
       </List>
     </DialogContent>
     <DialogActions>

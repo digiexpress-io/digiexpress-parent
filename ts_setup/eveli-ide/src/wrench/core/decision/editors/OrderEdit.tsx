@@ -4,20 +4,20 @@ import { FormattedMessage } from 'react-intl'
 import { ListItemText, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 
 
 type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN";
 
 interface DelegateProps {
-  decision: Client.AstDecision;
-  onChange: (commands: Client.AstCommand) => void;
+  decision:HdesApi.AstDecision;
+  onChange: (commands:HdesApi.AstCommand) => void;
 }
 
 interface OrderEditProps {
-  decision: Client.AstDecision;
+  decision:HdesApi.AstDecision;
   onClose: () => void;
-  onChange: (commands: Client.AstCommand[]) => void;
+  onChange: (commands:HdesApi.AstCommand[]) => void;
 }
 
 
@@ -187,7 +187,7 @@ const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
 }
 
 const OrderEdit: React.FC<OrderEditProps> = (props) => {
-  const [commands, setCommands] = React.useState<Client.AstCommand>();
+  const [commands, setCommands] = React.useState<HdesApi.AstCommand>();
   const [operation, setOperation] = React.useState<OperationType | string>('');
 
   const delegate: DelegateProps = { onChange: setCommands, decision: props.decision };

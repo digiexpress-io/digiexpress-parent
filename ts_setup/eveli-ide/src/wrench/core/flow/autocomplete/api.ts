@@ -1,4 +1,4 @@
-import { HdesApi } from '../../client';
+import { HdesApi } from '@/burger';
 
 const KEY_ID = "id";
 const FIELD = ":";

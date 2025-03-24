@@ -3,7 +3,7 @@ import React from 'react'
 import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import { FormattedMessage } from 'react-intl';
 
 const hitPolicyOptions = [
@@ -13,9 +13,9 @@ const hitPolicyOptions = [
 
 
 const NameDescHitPolicyEdit: React.FC<{
-  decision: Client.AstDecision;
+  decision:HdesApi.AstDecision;
   onClose: () => void;
-  onChange: (commands: Client.AstCommand[]) => void;
+  onChange: (commands:HdesApi.AstCommand[]) => void;
 }> = ({ onChange, decision, onClose }) => {
   const [name, setName] = React.useState(decision.name);
   const [desc, setDesc] = React.useState(decision.description);
@@ -40,7 +40,7 @@ const NameDescHitPolicyEdit: React.FC<{
         <FormattedMessage id='button.cancel'/>
       </Button>
       <Button onClick={() => {
-          const commands: Client.AstCommand[] = [];
+          const commands:HdesApi.AstCommand[] = [];
           if (name !== decision.name) {
             commands.push({ type: "SET_NAME", value: name, id: "" });
           }

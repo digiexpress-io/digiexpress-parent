@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-import { HdesApi } from '../../../client';
+import { HdesApi } from '@/burger';
 
 import NumberBuilder from './TypeNumberBuilder';
 import StringBuilder from './TypeStringBuilder';

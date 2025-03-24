@@ -1,5 +1,6 @@
 import Ide from './ide';
-import { HdesApi } from '../client';
+import { HdesApi } from '@/burger';
+
 
 
 enum ActionType {

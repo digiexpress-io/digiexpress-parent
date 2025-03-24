@@ -1,12 +1,12 @@
 import React from 'react'
 import { TextareaAutosize, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import { FormattedMessage } from 'react-intl';
 
 
 interface UploadCSVProps {
   onClose: () => void;
-  onChange: (commands: Client.AstCommand[]) => void;
+  onChange: (commands:HdesApi.AstCommand[]) => void;
 }
 
 const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
@@ -26,7 +26,7 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={() => {
-            const commands: Client.AstCommand[] = [];
+            const commands:HdesApi.AstCommand[] = [];
             if (csv.trim().length > 0) {
               commands.push({ type: 'IMPORT_ORDERED_CSV', value: csv, id: '' });
             }

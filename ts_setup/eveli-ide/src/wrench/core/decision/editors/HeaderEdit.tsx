@@ -2,16 +2,16 @@ import React from 'react';
 
 import { Box, Grid2, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import * as Burger from '@/burger';
-import { HdesApi as Client } from '../../client';
+import { HdesApi } from '@/burger';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';
 
 
 interface HeaderEditProps {
-  dt: Client.AstDecision,
-  header: Client.TypeDef;
+  dt:HdesApi.AstDecision,
+  header:HdesApi.TypeDef;
   onClose: () => void;
-  onChange: (commands: Client.AstCommand[]) => void
+  onChange: (commands:HdesApi.AstCommand[]) => void
 };
 
 /**
@@ -23,8 +23,8 @@ interface HeaderEditProps {
           case 'expression': return {type: 'SET_HEADER_EXPRESSION', id: id, value: change.get('expression')} }
  */
 
-const addCommand = (command: Client.AstCommand, commands: Client.AstCommand[]) => {
-  const result: Client.AstCommand[] = [];
+const addCommand = (command:HdesApi.AstCommand, commands:HdesApi.AstCommand[]) => {
+  const result:HdesApi.AstCommand[] = [];
   for (const previous of commands) {
     if (command.type === previous.type) {
       
@@ -37,7 +37,7 @@ const addCommand = (command: Client.AstCommand, commands: Client.AstCommand[]) =
 }
 
 const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }) => {
-  const [commands, setCommands] = React.useState<Client.AstCommand[]>([]);
+  const [commands, setCommands] = React.useState<HdesApi.AstCommand[]>([]);
   const [exp, setExp] = React.useState<string>('');
   const [name, setName] = React.useState<string>(header.name);
   const [script, setScript] = React.useState<string>('');
