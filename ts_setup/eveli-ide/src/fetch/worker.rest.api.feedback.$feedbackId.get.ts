@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { FeedbackApi } from '../feedback';
+import { FeedbackApi } from '../api-feedback';
 
 
 export const Hook = createFileFetch('worker/rest/api/feedback/$feedbackId.GET')({

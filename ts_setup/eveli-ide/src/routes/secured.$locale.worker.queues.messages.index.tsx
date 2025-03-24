@@ -1,7 +1,8 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/burger'
-import { FindAllMessages, QueueProvider } from '../queue';
+import { FindAllMessages } from '../eveli-task-queue';
+import { QueueProvider } from '../api-queue';
 
 export const Route = createFileRoute('/secured/$locale/worker/queues/messages/')({
   component: Component,
