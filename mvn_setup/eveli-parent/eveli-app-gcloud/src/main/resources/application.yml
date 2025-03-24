@@ -45,7 +45,6 @@ spring.datasource.password: "password123"
 
 eveli.attachment-config.download-bucket:
 eveli.task.adminsearch: true
-eveli.assets.timezoneOffset: +2
 eveli.assets.use-form-id: false
 
 # dialob related config

@@ -1,28 +1,7 @@
 package io.digiexpress.eveli.client.spi.gamut;
 
 import java.time.Duration;
-
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -157,7 +136,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
 
       userMessages.add(UserMessagesQueryImpl.visitUserMessage(msg, user));
       
-      final var msgCreated = msg.getCreated().toLocalDateTime();
+      final var msgCreated = msg.getCreated().toOffsetDateTime();
       if(lastUpdate.isBefore(msgCreated)) {
         lastUpdate = msgCreated;
       }
@@ -236,6 +215,6 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private static class UserMessagesContext {
     private final List<UserMessage> messages;
     private final boolean viewed;
-    private final LocalDateTime updated;
+    private final OffsetDateTime updated;
   }
 }

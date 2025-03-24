@@ -451,7 +451,7 @@ delete from process;
 
             doc.getId(), //id
             doc.getInput_context_id().orElse(null),  //article_name
-            doc.getCreated(),//created
+            doc.getCreated().atZone(source.getZoneId()).toOffsetDateTime(),//created
             null,//expires_at
             null,//expires_in_seconds
             null,//flow_body
@@ -464,7 +464,7 @@ delete from process;
             doc.getStatus().orElse(null),//status
             null, //stencil_tag_name
             doc.getTask_id().map(e -> String.valueOf(e)).orElse(null), //task_id
-            doc.getUpdated(),//updated
+            doc.getUpdated().atZone(source.getZoneId()).toOffsetDateTime(),//updated
             doc.getUser_id().orElse(null),//user_id
             doc.getWorkflow_name(),//workflow_name
             null,//wrench_tag_name
