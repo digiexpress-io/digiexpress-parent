@@ -63,7 +63,7 @@ export const WorkflowList: React.FC<{ searchString: string }> = ({ searchString 
             .map((w) => (w.w))
             .map((view, index) => (
               <WorkflowItem key={index} workflowId={view.workflow.id} />
-            )) : <Burger.EveliAlert title={intl.formatMessage({ id: 'stencil.services.found.none' })} />}
+            )) : <EveliAlert title={intl.formatMessage({ id: 'stencil.services.found.none' })} />}
         </SimpleTreeView>
       </WorkflowsListRoot>
     </>

@@ -1,4 +1,4 @@
-import { useIamForcedLogin } from '@/burger';
+import { useIamForcedLogin } from '@/api-iam';
 import { createRootFileFetch } from '@dxs-ts/eveli-fetch';
 
 

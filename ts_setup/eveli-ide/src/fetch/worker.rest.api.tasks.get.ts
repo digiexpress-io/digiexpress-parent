@@ -4,9 +4,11 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
+import { TaskApi } from '@/api-task';
 
+import { createMuiTableQueryString } from '@/api-mui-table';
+import { EveliTaskTableContext } from '@/eveli-tasks';
 
-import { TaskApi, EveliTaskTableContext, createMuiTableQueryString } from '@/burger';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook

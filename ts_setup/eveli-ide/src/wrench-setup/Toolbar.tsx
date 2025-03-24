@@ -13,19 +13,18 @@ import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import * as Burger from '@/eveli-styles';
-
-
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { useNavigate } from '@tanstack/react-router';
 import { useWrenchNav } from '../wrench-nav';
-import { WrenchComposerApi as Composer } from '.';
+
+import { EveliLocales } from '@/eveli-locales';
+import { WrenchComposerApi } from './ide';
 
 
 
 export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const composer = Composer.useComposer();
+  const composer = WrenchComposerApi.useComposer();
   const { onNav, activeItem } = useWrenchNav();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -50,7 +49,7 @@ export const Toolbar: React.FC<{}> = () => {
         return;
       }
 
-      const unsavedArticlePages: Composer.PageUpdate = toBeSaved[0];
+      const unsavedArticlePages: WrenchComposerApi.PageUpdate = toBeSaved[0];
       composer.service.update(article.id, unsavedArticlePages.value).then(async success => {
         await composer.actions.handleLoadSite(success)
         composer.actions.handlePageUpdateRemove([article.id]);
@@ -124,7 +123,7 @@ export const Toolbar: React.FC<{}> = () => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
-      <Burger.EveliLocales />
+      <EveliLocales />
 
       <div>
         <IconButton onClick={(event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>

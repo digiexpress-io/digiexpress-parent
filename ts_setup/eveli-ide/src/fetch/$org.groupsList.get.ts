@@ -1,7 +1,7 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query'
-import { ROLE_AUTHORIZED, IamApi } from '@/burger';
+import { ROLE_AUTHORIZED, IamApi } from '@/api-iam';
 
 export const Hook = createFileFetch('$org/groupsList.GET')({
   hook

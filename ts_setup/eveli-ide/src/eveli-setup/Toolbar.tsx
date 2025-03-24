@@ -13,12 +13,13 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 
-import * as Burger from '@/eveli-styles';
+import { useIconbar } from '@/api-iconbar';
+import { EveliLocales } from '@/eveli-locales';
 
 
 export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const secondary = Burger.useIconbar();
+  const secondary = useIconbar();
   const classes = useUtilityClasses();
   const location = useLocation();
 
@@ -118,7 +119,7 @@ export const Toolbar: React.FC<{}> = () => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
-      <Burger.EveliLocales />
+      <EveliLocales />
     </EveliShellMiniBarRoot>
   );
 }

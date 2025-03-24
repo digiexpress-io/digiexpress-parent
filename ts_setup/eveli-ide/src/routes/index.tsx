@@ -1,5 +1,5 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { useIam } from '@/burger';
+import { useIam } from '@/api-iam';
 
 
 export const Route = createFileRoute('/')({

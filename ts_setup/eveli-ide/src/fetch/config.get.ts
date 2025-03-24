@@ -2,7 +2,7 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useQuery } from '@tanstack/react-query'
 
 import { useIntl } from 'react-intl';
-import { Config } from '@/burger';
+import { Config } from '@/api-config';
 
 
 export const Hook = createFileFetch('config.GET')({

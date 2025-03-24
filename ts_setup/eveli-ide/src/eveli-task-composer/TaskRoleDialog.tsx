@@ -5,7 +5,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { FormattedMessage, useIntl } from "react-intl";
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { IamApi } from '@/burger';
+import { IamApi } from '@/api-iam';
 
 
 

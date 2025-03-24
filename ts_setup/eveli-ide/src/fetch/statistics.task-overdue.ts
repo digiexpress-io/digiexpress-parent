@@ -1,7 +1,8 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useQuery } from '@tanstack/react-query'
 
-import { mapIamRole, TaskApi } from '@/burger';
+import { mapIamRole } from '@/api-iam';
+import { TaskApi } from '@/api-task';
 
 
 export const Hook = createFileFetch('statistics/task-overdue.GET')({

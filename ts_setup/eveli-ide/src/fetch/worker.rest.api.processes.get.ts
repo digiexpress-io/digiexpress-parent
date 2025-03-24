@@ -3,7 +3,8 @@ import { Column, Query } from '@material-table/core';
 
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 
-import { ProcExecutionApi, createMuiTableQueryString } from '@/burger';
+import { ProcExecutionApi } from '@/api-proc-execution';
+import { createMuiTableQueryString } from '@/api-mui-table';
 
 
 

@@ -127,8 +127,8 @@ export function useActivities() {
 export const Activities: React.FC<{}> = () => {
   const activities = useActivities();
   return (
-    <Burger.EveliActivities>
+    <EveliActivities>
       {activities.map((card, index) => (<ActivitiesViewItem key={index} data={card} />))}
-    </Burger.EveliActivities>
+    </EveliActivities>
   );
 }

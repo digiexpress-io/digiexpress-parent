@@ -1,5 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { ROLE_AUTHORIZED, TaskApi } from '@/burger';
+import { ROLE_AUTHORIZED } from '@/api-iam';
+import { TaskApi } from '@/api-task';
 
 export const Hook = createFileFetch('worker/rest/api/tasks.POST')({
   hook

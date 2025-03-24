@@ -15,8 +15,8 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 
 
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
-
-import * as Burger from '@/eveli-styles';
+import { EveliShellExplorer } from '@/eveli-shell-explorer';
+import { EveliLogo } from '@/eveli-logo';
 
 
 export const Secondary: React.FC = () => {
@@ -29,8 +29,8 @@ export const Secondary: React.FC = () => {
 
   return (<>
 
-    <Burger.EveliShellExplorer>
-      <Burger.EveliLogo />
+    <EveliShellExplorer>
+      <EveliLogo />
 
       <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={() => {
         navigate({
@@ -99,7 +99,7 @@ export const Secondary: React.FC = () => {
         {intl.formatMessage({ id: 'menu.publications' })}
       </Button>
 
-    </Burger.EveliShellExplorer>
+    </EveliShellExplorer>
   </>
   )
 }

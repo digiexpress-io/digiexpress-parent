@@ -12,13 +12,14 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 
-import * as Burger from '@/eveli-styles';
 import { StencilComposerApi } from './ide';
 
 import { StencilApi } from '../api-stencil';
 import { EveliShellMiniBarRoot, useUtilityClasses, EveliShellMiniBarClassName } from '../eveli-shell/useUtilityClasses';
 import { useNavigate } from '@tanstack/react-router';
 import { useStencilNav } from '../stencil-nav';
+import { EveliLocales } from '@/eveli-locales';
+import { useIconbar } from '@/api-iconbar';
 
 
 export const Toolbar: React.FC<{}> = () => {
@@ -26,7 +27,7 @@ export const Toolbar: React.FC<{}> = () => {
   const navigate = useNavigate();
   const composer = StencilComposerApi.useComposer();
   const { onNav, activeItem } = useStencilNav();
-  const secondaryCtx = Burger.useIconbar();
+  const secondaryCtx = useIconbar();
 
   const classes = useUtilityClasses();
   const article = activeItem?.type === "ARTICLE_PAGES" ? composer.site.articles[activeItem.article] : undefined;
@@ -122,7 +123,7 @@ export const Toolbar: React.FC<{}> = () => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
-      <Burger.EveliLocales />
+      <EveliLocales />
 
       <div>
         <IconButton onClick={() => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>

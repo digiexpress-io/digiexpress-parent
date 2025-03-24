@@ -60,15 +60,15 @@ const Secondary: React.FC<{}> = () => {
 
   return (
     <>
-      <Burger.EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
+      <EveliShellCompose open={!!anchorEl} anchorEl={anchorEl} onClose={handleComposeSelectClose}>
         <MenuList>
           {activities.map((activity, index) => (<ActivitiesViewItem key={index} data={activity} onClick={handleComposeSelectClose}/>))}
         </MenuList>
-      </Burger.EveliShellCompose>
+      </EveliShellCompose>
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 
-      <Burger.EveliShellExplorer>
-        <Burger.EveliLogo />
+      <EveliShellExplorer>
+        <EveliLogo />
 
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}
@@ -118,7 +118,7 @@ const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
 
-      </Burger.EveliShellExplorer>
+      </EveliShellExplorer>
     </>
   )
 }

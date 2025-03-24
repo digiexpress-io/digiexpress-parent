@@ -4,7 +4,10 @@ import { useLocale } from '@/api-locale'
 
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { EveliApp, StencilApi, StencilRouteSearchParams, parseStencilSearchParams, StencilSteup, StencilComposerApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
+import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
+import { StencilComposerApi, StencilSteup } from '@/stencil-setup';
+import { EveliApp } from '@/eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,

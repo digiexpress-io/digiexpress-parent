@@ -2,7 +2,7 @@ import { Button, Popover, Box, Grid2, Typography, Divider } from '@mui/material'
 import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import { FormattedMessage } from 'react-intl';
-import { mapIamRole, useIam } from '@/burger';
+import { mapIamRole, useIam } from '@/api-iam';
 
 
 export const Impersonation: React.FC = () => {
