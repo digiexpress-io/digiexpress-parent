@@ -1,0 +1,164 @@
+import * as React from "react";
+import { Box, Typography, useTheme } from "@mui/material";
+
+import LinkIcon from '@mui/icons-material/Link';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+
+import ConstructionIcon from '@mui/icons-material/Construction';
+import { FormattedMessage } from 'react-intl';
+
+import * as Burger from '@/burger';
+import { StencilComposerApi as Composer } from '../../stencil-setup';
+import { StencilApi } from '@/burger';
+import { ArticleOptions } from './ArticleOptions';
+import ArticlePageItem from './ArticlePageItem';
+
+
+interface WorkflowItemProps {
+  labelText: string;
+  nodeId: string;
+  children?: React.ReactChild;
+  devMode?: boolean,
+  onClick: () => void;
+}
+
+const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
+  const theme = useTheme();
+  return (
+    <Burger.TreeItemRoot
+      itemId={props.nodeId}
+      onClick={props.onClick}
+      label={
+        <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
+          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={theme.palette.primary.dark} sx={{ pl: 1, mr: 1 }} />
+          <Typography noWrap={true} sx={{ fontWeight: "inherit", flexGrow: 1 }}>
+            {props.labelText}
+          </Typography>
+        </Box>
+      }
+    />
+  );
+}
+
+interface LinkItemProps {
+  labelText: string;
+  nodeId: string;
+  children?: React.ReactChild;
+  onClick: () => void;
+  devMode?: boolean;
+}
+
+const LinkItem: React.FC<LinkItemProps> = (props) => {
+  const theme = useTheme();
+
+  return (
+    <Burger.TreeItemRoot
+      itemId={props.nodeId}
+      onClick={props.onClick}
+      label={
+        <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
+          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
+          <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
+            sx={{ fontWeight: "inherit", flexGrow: 1 }}
+          >
+            {props.labelText}
+          </Typography>
+        </Box>
+      }
+    />
+  );
+}
+
+
+interface ArticleItemOptions {
+  setEditWorkflow: (workflowId: StencilApi.WorkflowId) => void,
+  setEditLink: (linkId: StencilApi.LinkId) => void
+}
+
+const ArticleItem: React.FC<{
+  articleId: StencilApi.ArticleId,
+  nodeId?: string,
+  options?: ArticleItemOptions
+}> = ({ articleId, nodeId, options }) => {
+  const theme = useTheme();
+
+  const { session, isArticleSaved } = Composer.useComposer();
+  const view = session.getArticleView(articleId);
+  const { article, pages, workflows, links } = view;
+  const saved = isArticleSaved(article);
+
+  const articleName = session.getArticleName(view.article.id);
+  return (
+    <>
+      <Burger.TreeItem itemId={nodeId ? nodeId : article.id}
+        labelText={articleName.name}
+        labelIcon={article.body.devMode ? ConstructionIcon : MenuBookOutlinedIcon}
+      //labelcolor={saved ? "explorerItem" : "secondary.light"}
+      >
+
+        {/** Article options */
+          options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
+            labelText={<FormattedMessage id="options" />}
+          >
+            <ArticleOptions article={article} />
+          </Burger.TreeItem>) : null
+        }
+
+        {/** Pages */}
+        <Burger.TreeItem itemId={article.id + 'pages-nested'}
+          labelText={<FormattedMessage id="pages" />}
+          labelInfo={`${pages.length}`}
+          labelcolor={saved ? "page" : "secondary.light"}>
+          {pages.map(pageView => (<ArticlePageItem key={pageView.page.id}
+            article={view}
+            page={pageView} />))}
+        </Burger.TreeItem>
+
+
+        {/** Workflows options */
+          options ? (<Burger.TreeItem itemId={article.id + 'workflows-nested'}
+            labelText={<FormattedMessage id="services" />}
+            labelInfo={`${workflows.length}`}
+            labelcolor={theme.palette.primary.dark}>
+
+            {workflows
+              .map((w) => ({ w, name: session.getWorkflowName(w.workflow.id)?.name }))
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((w) => w.w)
+              .map(view => (<WorkflowItem
+                key={view.workflow.id}
+                labelText={session.getWorkflowName(view.workflow.id).name}
+                devMode={view.workflow.body.devMode}
+                nodeId={view.workflow.id}
+
+                onClick={() => options.setEditWorkflow(view.workflow.id)} />))}
+          </Burger.TreeItem>) : null
+        }
+
+        {/** Links options */
+          options ? (<Burger.TreeItem itemId={article.id + 'links-nested'}
+            labelText={<FormattedMessage id="links" />}
+            labelInfo={`${links.length}`}
+            labelcolor={theme.palette.primary.light}>
+
+            {links
+              .map((w) => ({ w, name: session.getLinkName(w.link.id)?.name }))
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((w) => w.w)
+              .map(view => (<LinkItem key={view.link.id}
+                labelText={session.getLinkName(view.link.id).name}
+                nodeId={view.link.id}
+                onClick={() => options.setEditLink(view.link.id)}
+                devMode={view.link.body.devMode} />)
+              )}
+          </Burger.TreeItem>) : null
+
+        }
+
+      </Burger.TreeItem>
+    </>)
+}
+
+export type { ArticleItemOptions }
+export default ArticleItem;
