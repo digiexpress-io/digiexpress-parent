@@ -1,6 +1,7 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale, EveliTaskStats } from '@/burger'
+import { useLocale } from '@/api-locale';
+import { EveliTaskStats } from '@/eveli-task-stats';
 
 export const Route = createFileRoute('/secured/$locale/worker/dashboard/')({
   component: Component,

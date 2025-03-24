@@ -8,10 +8,11 @@ import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useLocale, EveliApp } from '@/burger'
 
 import { Secondary } from '../eveli-setup/Secondary';
 import { Toolbar } from '../eveli-setup/Toolbar';
+import { useLocale } from '@/api-locale';
+import { EveliApp } from '@/eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/assets/forms/')({
   component: Component,

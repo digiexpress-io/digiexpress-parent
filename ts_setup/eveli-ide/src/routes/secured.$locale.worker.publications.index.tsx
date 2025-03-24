@@ -1,6 +1,8 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale, PublicationsTable } from '@/burger'
+import { useLocale } from '@/api-locale';
+import { PublicationsTable } from '@/eveli-publications';
+
 
 export const Route = createFileRoute('/secured/$locale/worker/publications/')({
   component: Component,

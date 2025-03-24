@@ -1,7 +1,12 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale, EveliApp, HdesApi, WrenchRouteSearchParams, parseWrenchSearchParams, WrenchComposerApi, WrenchSetup } from '@/burger'
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { HdesApi } from '@/api-wrench';
+import { WrenchComposerApi, WrenchSetup } from '@/wrench-setup';
+import { EveliApp } from '@/eveli-app';
+import { parseWrenchSearchParams, WrenchRouteSearchParams } from '@/wrench-nav';
+import { useLocale } from '@/api-locale';
 
 
 
