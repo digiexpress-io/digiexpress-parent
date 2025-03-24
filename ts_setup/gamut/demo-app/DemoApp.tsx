@@ -52,7 +52,13 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchFeedbackGet={authFeedbackFetch.fetchFeedbackGet}
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
 
-      <DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
+      <DialobProvider 
+        fetchActionGet={dialobFetch.fetchActionGet} 
+        fetchActionPost={dialobFetch.fetchActionPost} 
+        fetchReviewGet={dialobFetch.fetchReviewGet}
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}
+        >
+        
         <OfferProvider 
           cancelOffer={offerFetch.fetchDelete}
           createOffer={offerFetch.fetchPost} 
@@ -86,7 +92,8 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <DialobProvider 
         fetchActionGet={dialobPublicFetch.fetchActionGet} 
         fetchActionPost={dialobPublicFetch.fetchActionPost} 
-        fetchReviewGet={dialobPublicFetch.fetchReviewGet}>
+        fetchReviewGet={dialobPublicFetch.fetchReviewGet}
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}>
         
         <OfferProvider 
           cancelOffer={publicOfferFetch.fetchDelete} 

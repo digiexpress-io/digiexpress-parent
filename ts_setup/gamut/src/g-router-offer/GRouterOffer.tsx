@@ -11,7 +11,7 @@ import {
   GLayout,
   useIam
 } from '../';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { GRouterOfferRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
@@ -61,7 +61,7 @@ export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
 
         <main role='main'>
           <Container>
-            <GForm variant={productId} onAfterComplete={onAfterComplete}>{formId}</GForm>
+            <GForm executionId={props.offerId} variant={productId} onAfterComplete={onAfterComplete}>{formId}</GForm>
           </Container>
         </main>
 

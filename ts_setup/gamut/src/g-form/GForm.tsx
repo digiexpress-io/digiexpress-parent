@@ -7,6 +7,7 @@ import { CircularProgress } from '@mui/material';
 
 
 export interface GFormProps {
+  executionId: string;
   children: string | undefined; // dialob sessionId
   variant: string; // form technical name for overrides
   onAfterComplete: () => void;
@@ -21,7 +22,7 @@ export const GForm: React.FC<GFormProps> = (props) => {
   if (!props.children) {
     return null;
   }
-  return (<FormProvider variant={props.variant} id={props.children} onAfterComplete={props.onAfterComplete}><GFormTip {...props} /></FormProvider>);
+  return (<FormProvider variant={props.variant} executionId={props.executionId} id={props.children} onAfterComplete={props.onAfterComplete}><GFormTip {...props} /></FormProvider>);
 }
 
 // Internal component to access the provider

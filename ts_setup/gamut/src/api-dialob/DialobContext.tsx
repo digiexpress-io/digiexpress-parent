@@ -8,6 +8,7 @@ export interface DialobProps {
   fetchActionPost: DialobApi.FetchActionPOST;
   fetchActionGet: DialobApi.FetchActionGET;
   fetchReviewGet: DialobApi.FetchReviewGET;
+  fetchAttachmentPost: DialobApi.FetchAttachmentPOST;
 
   syncWait?: number | undefined;
   children: React.ReactNode;
@@ -15,11 +16,11 @@ export interface DialobProps {
 export const DialobContext = React.createContext<DialobApi.DialobContextType>({} as any);
 
 export const DialobProvider: React.FC<DialobProps> = (props) => {
-  const { fetchActionPost, fetchActionGet, fetchReviewGet, syncWait } = props;
+  const { fetchActionPost, fetchActionGet, fetchReviewGet, fetchAttachmentPost, syncWait } = props;
 
   const contextValue: DialobApi.DialobContextType = React.useMemo(() => {
-    return Object.freeze({ fetchActionPost, fetchActionGet, fetchReviewGet, syncWait })
-  }, [fetchActionPost, fetchActionGet, fetchReviewGet, syncWait]);
+    return Object.freeze({ fetchActionPost, fetchActionGet, fetchReviewGet, fetchAttachmentPost, syncWait })
+  }, [fetchActionPost, fetchActionGet, fetchReviewGet, fetchAttachmentPost, syncWait]);
 
   return (<DialobContext.Provider value={contextValue}>{props.children}</DialobContext.Provider >);
 }

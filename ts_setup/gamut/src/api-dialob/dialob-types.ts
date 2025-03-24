@@ -92,11 +92,14 @@ export declare namespace DialobApi {
 
   // Web methods
   export type FetchActionPOST = (sessionId: string, actions: Action[], rev: number) => Promise<Response>
+  export type FetchAttachmentPOST = (processExecutionIdThisIsNotDialobSessionId: string, files: FileList) => Promise<void>
+
   export type FetchActionGET = (sessionId: string) => Promise<Response>
   export type FetchReviewGET = (sessionId: string) => Promise<Response>
 
   export interface DialobContextType {
     fetchActionPost: FetchActionPOST;
+    fetchAttachmentPost: FetchAttachmentPOST;
     fetchActionGet: FetchActionGET;
     fetchReviewGet: FetchReviewGET
     syncWait?: number | undefined;
@@ -214,6 +217,7 @@ export declare namespace DialobApi {
   export interface FormContextType {
     store: DialobApi.FormStore;
     variant: string;
+    executionId: string;
     onAfterComplete: () => void;
   }
 }

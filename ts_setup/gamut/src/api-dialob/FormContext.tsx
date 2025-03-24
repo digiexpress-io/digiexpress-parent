@@ -9,6 +9,7 @@ export const FormContext = React.createContext<DialobApi.FormContextType>({} as 
 
 export interface FormProviderProps {
   id: string;
+  executionId: string;
   variant: string;
   onAfterComplete: () => void;
   children: React.ReactNode;
@@ -16,9 +17,9 @@ export interface FormProviderProps {
 
 export const FormProvider: React.FC<FormProviderProps> = (props) => {
 
-  const { id, variant, onAfterComplete } = props;
+  const { id, executionId, variant, onAfterComplete } = props;
   const store = useFormStore({ id });
-  const contextValue = React.useMemo(() => Object.freeze({ store, variant, onAfterComplete }), [store, variant, onAfterComplete])
+  const contextValue = React.useMemo(() => Object.freeze({ store, variant, executionId, onAfterComplete }), [store, variant, executionId, onAfterComplete])
 
   React.useEffect(() => {
     if(store.pending) {
