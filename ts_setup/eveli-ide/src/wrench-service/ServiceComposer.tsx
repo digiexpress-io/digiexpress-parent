@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { ErrorView } from '../wrench-styles';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { useWrenchNav } from '../wrench-nav';
 
 const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {

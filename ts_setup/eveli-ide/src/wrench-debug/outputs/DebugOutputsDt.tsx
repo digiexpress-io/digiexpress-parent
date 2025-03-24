@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { FormattedMessage } from 'react-intl';
 import CodeEditor from '../../wrench-code-editor';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { toYaml } from './utils'
 
 type Rule = {

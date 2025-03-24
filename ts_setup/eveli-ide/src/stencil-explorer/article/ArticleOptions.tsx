@@ -10,7 +10,7 @@ import { WorkflowComposer } from '../../stencil-workflow';
 import { ArticleEdit, ArticleDelete } from '../../stencil-article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../stencil-page';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/burger';
 import { useStencilNav } from '../../stencil-nav';
 

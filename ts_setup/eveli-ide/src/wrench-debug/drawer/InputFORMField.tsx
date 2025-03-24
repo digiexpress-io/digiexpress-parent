@@ -1,7 +1,7 @@
 import React from "react";
 import { ListItemText } from "@mui/material";
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from "react-intl";
 
 interface InputFORMFieldProps {

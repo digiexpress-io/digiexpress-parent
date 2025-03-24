@@ -1,5 +1,5 @@
 import { WrenchComposerApi } from './ide';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 class SiteCache {
   private _site: HdesApi.Site;

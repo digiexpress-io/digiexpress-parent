@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
 import { useWrenchNav } from '../wrench-nav';

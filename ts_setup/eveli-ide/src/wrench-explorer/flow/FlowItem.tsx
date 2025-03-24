@@ -14,7 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import FlowOptions from './FlowOptions';
 import MsgTreeItem from '../MsgTreeItem';
 import { useWrenchNav } from '../../wrench-nav';

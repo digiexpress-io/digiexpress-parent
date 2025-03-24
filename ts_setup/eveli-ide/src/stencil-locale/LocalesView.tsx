@@ -15,8 +15,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { LocalesOverview } from './LocalesOverview';
 import * as Burger from '@/burger';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 
 
 const Header: React.FC<{ label: string }> = ({ label }) => {

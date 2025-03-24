@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 import CodeEditor from '../wrench-code-editor';
 import { toYaml } from './outputs/utils'

@@ -3,8 +3,8 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
-import { StencilComposerApi as Composer } from '../stencil-setup'
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup'
+import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
 
 /*

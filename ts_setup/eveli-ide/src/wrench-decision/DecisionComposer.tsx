@@ -7,7 +7,7 @@ import * as Burger from '@/burger';
 import { useSnackbar } from 'notistack';
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { ErrorView } from '../wrench-styles';
 import { useWrenchNav } from '../wrench-nav';
 

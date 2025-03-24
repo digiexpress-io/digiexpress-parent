@@ -1,4 +1,4 @@
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 export interface Release {
   id: string;

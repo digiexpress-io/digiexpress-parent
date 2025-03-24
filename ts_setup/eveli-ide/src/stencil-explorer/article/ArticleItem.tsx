@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
 

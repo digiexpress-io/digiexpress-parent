@@ -5,7 +5,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useIntl } from 'react-intl'
 
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 import { WorkflowsListRoot, useUtilityClasses } from './useUtilityClasses';

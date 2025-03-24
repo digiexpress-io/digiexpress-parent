@@ -1,4 +1,4 @@
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 
 

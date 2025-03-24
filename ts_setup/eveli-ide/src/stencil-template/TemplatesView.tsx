@@ -8,8 +8,8 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { FormattedMessage } from 'react-intl';
 
 import { TemplateComposer, TemplateDelete, TemplateEdit } from '.';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
 
 

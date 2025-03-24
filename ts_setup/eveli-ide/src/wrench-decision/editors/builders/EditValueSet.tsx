@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 interface EditValueSetProps {
   valueSet: string[];

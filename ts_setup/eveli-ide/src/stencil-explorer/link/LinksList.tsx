@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl'
 
 
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 import { LinkEdit } from '../../stencil-link/LinkEdit';
 import LinkItem from './LinkItem';
 import { LinksListRoot, useUtilityClasses } from './useUtilityClasses';

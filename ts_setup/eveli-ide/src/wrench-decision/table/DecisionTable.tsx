@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 
 interface RenderCellProps {

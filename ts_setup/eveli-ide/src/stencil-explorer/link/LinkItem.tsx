@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 
 import { LinkOptions } from './LinkOptions';
 import ArticleItem from '../article/ArticleItem';

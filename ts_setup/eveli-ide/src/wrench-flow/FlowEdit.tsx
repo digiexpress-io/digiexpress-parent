@@ -5,7 +5,7 @@ import CodeEditor, { HintProps } from '../wrench-code-editor';
 
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import Graph from './graph';
 import { AutocompleteVisitor, FlowAstAutocomplete, AutocompleteTask } from './autocomplete';
 import { Visibility, VisibilityOff } from '@mui/icons-material';

@@ -4,7 +4,7 @@ import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog,
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';

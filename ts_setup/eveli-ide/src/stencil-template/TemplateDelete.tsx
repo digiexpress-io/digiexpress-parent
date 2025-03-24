@@ -6,8 +6,8 @@ import { useSnackbar } from 'notistack';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 
 
 interface TemplateDeleteProps {

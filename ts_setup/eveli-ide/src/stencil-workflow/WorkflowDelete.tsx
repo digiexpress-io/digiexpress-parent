@@ -2,8 +2,8 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 
 
 interface WorkflowDeleteProps {

@@ -4,7 +4,7 @@ import { Box, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedMessage } from 'react-intl'
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 
 const DecisionTableHeader: React.FC<{

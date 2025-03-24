@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { StencilComposerApi as Composer } from '../stencil-setup';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { ReleaseComposer } from '.';
 import { ReleaseTable } from './ReleaseTable';
 import { useStencilNav } from '../stencil-nav';

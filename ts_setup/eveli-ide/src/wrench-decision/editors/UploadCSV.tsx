@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextareaAutosize, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
 
 

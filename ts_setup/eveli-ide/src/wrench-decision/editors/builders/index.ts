@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 import NumberBuilder from './TypeNumberBuilder';
 import StringBuilder from './TypeStringBuilder';

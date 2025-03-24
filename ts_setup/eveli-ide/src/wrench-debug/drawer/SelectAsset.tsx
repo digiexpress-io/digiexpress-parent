@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import * as Burger from '@/burger';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 const SelectTask: React.FC<{ value: HdesApi.Entity<HdesApi.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
   const { ast } = value;

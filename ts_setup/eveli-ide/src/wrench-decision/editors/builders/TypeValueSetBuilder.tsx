@@ -1,4 +1,4 @@
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 class ValueSetBuilder {
   private _values: string[];

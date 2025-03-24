@@ -4,7 +4,7 @@ import { Box, Typography, Grid2, Button, Dialog, DialogTitle, DialogContent, Dia
 import { FormattedMessage } from 'react-intl'
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { InputFORMField } from './InputFORMField';
 
 interface InputFORMProps {

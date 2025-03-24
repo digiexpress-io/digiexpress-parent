@@ -18,7 +18,7 @@ import { WorkflowEdit } from '../../stencil-workflow/';
 import { LinkEdit } from '../../stencil-link';
 import * as Burger from '@/burger';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 
 import { useStencilNav } from '../../stencil-nav';
 

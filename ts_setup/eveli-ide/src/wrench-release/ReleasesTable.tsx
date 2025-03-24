@@ -14,7 +14,7 @@ import fileDownload from 'js-file-download'
 import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { Release } from "./release-types";
 import { ReleaseComposer } from './ReleaseComposer';

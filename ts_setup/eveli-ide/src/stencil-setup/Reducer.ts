@@ -1,5 +1,5 @@
 
-import { StencilApi } from '@/burger';
+import { StencilApi } from '@/api-stencil';
 import { StencilComposerApi } from './ide';
 
 enum ActionType {

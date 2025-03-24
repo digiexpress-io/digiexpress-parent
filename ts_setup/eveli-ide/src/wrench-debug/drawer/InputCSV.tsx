@@ -4,7 +4,7 @@ import { TextareaAutosize, Box, Divider, Chip, Typography,  Dialog, DialogTitle,
 import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 
 interface InputCSVProps {

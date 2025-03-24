@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as Burger from '@/burger';
 
 import { WrenchComposerApi } from '../../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import DecisionOptions from './DecisionOptions';
 import { useWrenchNav } from "../../wrench-nav";
 

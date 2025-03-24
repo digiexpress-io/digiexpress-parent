@@ -1,6 +1,6 @@
 import React from 'react';
 import { DebugOutputCsvRow } from './DebugOutputCsvRow';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 const mapCsvRows = (debug: string):HdesApi.CsvRow[] => {
     if (!debug) {

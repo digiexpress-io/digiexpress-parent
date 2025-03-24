@@ -12,8 +12,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 
 
 interface SelectedValue {

@@ -4,8 +4,8 @@ import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
 
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
 
 import { FormattedMessage } from 'react-intl';

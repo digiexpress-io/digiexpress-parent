@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import MDEditor from '@uiw/react-md-editor';
 
 import * as Burger from '@/burger';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 
 
 interface TemplateEditProps {

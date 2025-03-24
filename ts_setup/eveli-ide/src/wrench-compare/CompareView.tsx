@@ -8,7 +8,7 @@ import "diff2html/bundles/css/diff2html.min.css";
 import { OutputFormatType } from "diff2html/lib/types";
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import * as Burger from '@/burger';
 import { useWrenchNav } from "../wrench-nav";
 

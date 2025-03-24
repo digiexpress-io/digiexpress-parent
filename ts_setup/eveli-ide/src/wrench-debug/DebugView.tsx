@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 
 import { WrenchComposerApi as Composer } from '../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { DebugDrawer } from './drawer/DebugDrawer';
 import { SelectAsset } from './drawer/SelectAsset';
 import { InputCSV } from './drawer/InputCSV';

@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { StencilApi } from '@/burger';;
+import { StencilApi } from '@/api-stencil';;
 
 
 export const Hook = createFileFetch('worker/rest/api/assets/stencil/$assetType.PUT')({

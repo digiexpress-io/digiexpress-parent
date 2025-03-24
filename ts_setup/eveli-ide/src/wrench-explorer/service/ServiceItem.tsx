@@ -14,7 +14,7 @@ import * as Burger from '@/burger';
 
 import MsgTreeItem from '../MsgTreeItem';
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import ServiceOptions from './ServiceOptions';
 import { useWrenchNav } from '../../wrench-nav';
 

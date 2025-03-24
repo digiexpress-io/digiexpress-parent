@@ -3,8 +3,8 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/burger';
 
 const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {

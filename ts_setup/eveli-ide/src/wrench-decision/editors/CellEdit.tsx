@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 import Builder, { 
   EditBoolean,

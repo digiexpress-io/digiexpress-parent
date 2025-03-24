@@ -5,8 +5,8 @@ import fileDownload from 'js-file-download'
 
 import React from "react";
 import { FormattedMessage } from "react-intl"
-import { StencilApi } from '@/burger'
-import { StencilComposerApi as Composer } from '../stencil-setup';
+import { StencilApi } from '@/api-stencil'
+import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { ReleaseDelete } from './ReleaseDelete'
 import * as Burger from '@/burger';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { DebugOutputCsv } from './DebugOutputCsv';
 import { DebugOutputsDt } from './DebugOutputsDt';
 import { DebugOutputsFl } from './DebugOutputsFl';

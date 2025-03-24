@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 
 import { Vis } from '../../wrench-vis';
 import GraphAPI from './GraphAPI';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 
 

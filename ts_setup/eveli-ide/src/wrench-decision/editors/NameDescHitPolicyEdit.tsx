@@ -3,7 +3,7 @@ import React from 'react'
 import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/burger';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
 
 const hitPolicyOptions = [

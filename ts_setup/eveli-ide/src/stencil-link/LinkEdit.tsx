@@ -6,8 +6,8 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { StencilComposerApi as Composer } from '../stencil-setup';
-import { StencilApi } from '@/burger';
+import { StencilComposerApi as Composer } from '@/stencil-setup';
+import { StencilApi } from '@/api-stencil';
 import { LocaleLabels } from '../stencil-locale';
 
 const selectSub = { ml: 2, color: "article.dark" }

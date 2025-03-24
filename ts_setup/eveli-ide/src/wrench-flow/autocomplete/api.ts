@@ -1,4 +1,4 @@
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 const KEY_ID = "id";
 const FIELD = ":";

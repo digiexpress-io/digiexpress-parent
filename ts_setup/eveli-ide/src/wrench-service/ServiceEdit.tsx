@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 
 import CodeEditor from '../wrench-code-editor';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
-import { HdesApi } from '@/burger';
+import { HdesApi } from '@/api-wrench';
 
 const ServiceEdit: React.FC<{service: HdesApi.Entity<HdesApi.AstService>}> = ({service}) => {
   const { actions, session } = Composer.useComposer();
