@@ -9,7 +9,7 @@ function openLoginWindow(props: IamForcedLoginProps): boolean {
   if (__login_window == null) {
     const left = window.screenX + 30;
     const top = window.screenY + 30;
-    __login_window = window.open(props.loginUrl, "_blank", `height=600,width=400,left=${left},top=${top}`);
+    __login_window = window.open(props.loginUrl, "_blank", `height=800,width=800,left=${left},top=${top}`);
     return true;
   }
   return false;

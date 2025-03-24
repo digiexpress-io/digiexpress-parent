@@ -130,6 +130,9 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
       }
     },
   },
+  MuiAlert: {
+
+  },
   MuiButton: {
     variants: [
       // Main contained button for primary actions

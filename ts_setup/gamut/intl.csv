@@ -91,6 +91,8 @@ gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
 gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
 gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini
+gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Hello {userName}!,,
+gamut.forms.filling.authenticated_and_proceed,,"Please click below to start the form","Please click below to start the form",,
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini
 gamut.forms.filling.login-then-start.button,,Log in now,Log in now,Log in now,Log in now
 gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi
