@@ -26,7 +26,8 @@ export const useUtilityClasses = () => {
     productBodyText: ['productBodyText'],
     productBodyTextError: ['productBodyTextError'],
     formStartButton: ['formStartButton'],
-    loginAlert: ['loginAlert']
+    loginAlert: ['loginAlert'],
+    formAuthButton: ['formAuthButton'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -52,6 +53,10 @@ export const GRouterProductRoot = styled("div", {
     '.GRouterProduct-formStartButton': {
       animation: 'pulse 1.5s ease-in-out 5',
       transition: 'transform 0.3s ease-in-out',
+      width: '100%',
+    },
+    '.GRouterProduct-formAuthButton':{
+      width: '100%',
     },
     '@keyframes pulse': {
       '0%': { transform: 'scale(1)', opacity: 1 },
@@ -104,9 +109,17 @@ export const GRouterProductButtonsRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: theme.spacing(1),
+    },
+    [theme.breakpoints.down('md')]: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(1),
+      width: '100%'
+    },
   }
 });
 
