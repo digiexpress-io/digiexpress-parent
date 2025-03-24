@@ -9,7 +9,5 @@ export type { EveliComponents } from './burger';
 export type { QueueApi } from './queue'
 export type { FeedbackApi } from './feedback'
 
-export { Composer as StencilComposer, StencilComponents } from './stencil';
-
 export { router } from './router'
 export { FetchProvider } from './eveli-fetch';

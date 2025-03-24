@@ -34,9 +34,13 @@ export * from './eveli-tasks';
 export * from './eveli-task-composer';
 
 
-export * from './wrench-nav';
+export { parseWrenchSearchParams } from './wrench-nav';
+export type { WrenchRouteSearchParams } from './wrench-nav';
 export * from './wrench-setup';
 
+export { parseStencilSearchParams } from './stencil-nav';
+export type { StencilRouteSearchParams } from './stencil-nav';
+export * from './stencil-setup';
 
 
 export { 

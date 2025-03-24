@@ -2,18 +2,14 @@ import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/burger'
 
-import {
-  Composer,
-  StencilComponents,
-  StencilRouteSearchParams, parseStencilSearchParams,
-} from '../stencil';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { EveliApp, StencilApi } from '@/burger';
+import { EveliApp, StencilApi, StencilRouteSearchParams, parseStencilSearchParams, StencilSteup, StencilComposerApi } from '@/burger';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
-}) 
+})
 
 function Component() {
   const { locale } = Route.useParams();
@@ -33,12 +29,12 @@ function Component() {
   }, [getSite, del, create, update, getReleaseContent]);
 
   return (
-    <Composer.Provider service={service} >
+    <StencilComposerApi.Provider service={service} >
       <EveliApp 
-        tabs={StencilComponents.Tabs}
-        main={StencilComponents.Main} 
-        secondary={StencilComponents.Secondary} 
-        toolbar={StencilComponents.Toolbar} 
+        tabs={StencilSteup.Tabs}
+        main={StencilSteup.Main} 
+        secondary={StencilSteup.Secondary} 
+        toolbar={StencilSteup.Toolbar} 
       />
-    </Composer.Provider>)
+    </StencilComposerApi.Provider>)
 }
