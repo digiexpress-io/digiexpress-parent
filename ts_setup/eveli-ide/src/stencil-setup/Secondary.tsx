@@ -16,8 +16,9 @@ import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { MigrationComposer } from '../stencil-migration';
 import { useStencilNav } from '../stencil-nav';
 import { ActivityProps, useActivities } from './Activities';
-
-import * as Burger from '@/eveli-styles';
+import { EveliShellCompose } from '@/eveli-shell-compose';
+import { EveliShellExplorer } from '@/eveli-shell-explorer';
+import { EveliLogo } from '@/eveli-logo';
 
 
 

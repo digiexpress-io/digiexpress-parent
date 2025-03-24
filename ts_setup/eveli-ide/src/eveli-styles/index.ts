@@ -7,6 +7,16 @@ export {
   StyledSelect as Select, 
   StyledSelectMultiple as SelectMultiple 
 } from './StyledSelect';
+
+export { 
+  StyledSwitch as Switch,
+} from './StyledSwitch';
+
+export { 
+  StyledTransferList as TransferList,
+} from './StyledTransferList';
+
+
 export { 
   StyledTextField as TextField, 
   StyledNumberField as NumberField, 

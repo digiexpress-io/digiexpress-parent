@@ -1,7 +1,8 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { EveliSearch } from '@/burger'
+import { EveliSearch } from '@/eveli-search';
+
 
 
 export const SearchView: React.FC = () => {

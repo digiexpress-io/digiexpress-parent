@@ -4,10 +4,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 
-import * as Burger from '@/eveli-styles';
 import { useFeedback, FeedbackApi } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';
+import { EveliDateTimeFormatter } from '@/eveli-datetime-formatter';
 
 export interface UpdateOneFeedbackProps {
   taskId: string;
@@ -76,7 +76,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Box>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<Burger.DateTimeFormatter timestamp={feedback.updatedOnDate} /></Typography>
+      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<EveliDateTimeFormatter value={feedback.updatedOnDate} /></Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
       <Divider sx={{ my: 2 }} />
       <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>

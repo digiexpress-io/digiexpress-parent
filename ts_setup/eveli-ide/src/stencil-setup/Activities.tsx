@@ -12,8 +12,8 @@ import { NewPage } from '../stencil-page';
 import { MigrationComposer } from '../stencil-migration';
 import { TemplateComposer } from '../stencil-template';
 import { useStencilNav } from '../stencil-nav';
+import { EveliActivities } from '@/eveli-activities';
 
-import * as Burger from '@/eveli-styles'
 
 export interface ActivityProps {
   title: React.ReactNode;

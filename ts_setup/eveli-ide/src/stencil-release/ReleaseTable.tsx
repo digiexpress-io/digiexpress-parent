@@ -8,7 +8,8 @@ import { FormattedMessage } from "react-intl"
 import { StencilApi } from '@/api-stencil'
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { ReleaseDelete } from './ReleaseDelete'
-import * as Burger from '@/eveli-styles';
+import { EveliDateTimeFormatter } from "@/eveli-datetime-formatter";
+
 
 interface ReleaseTableProps {
   releases: StencilApi.Release[];
@@ -97,7 +98,7 @@ const Row: React.FC<{ release: StencilApi.Release }> = ({ release }) => {
 
       <TableRow key={release.id}>
         <TableCell align="left" >{release.body.name}</TableCell>
-        <TableCell align="left"><Burger.DateTimeFormatter timestamp={release.body.created} /></TableCell>
+        <TableCell align="left"><EveliDateTimeFormatter value={release.body.created} /></TableCell>
         <TableCell align="left">{release.body.note}</TableCell>
         <TableCell align="center" >
           <IconButton onClick={() => onDownload(release.id)}><GetAppIcon /> </IconButton>

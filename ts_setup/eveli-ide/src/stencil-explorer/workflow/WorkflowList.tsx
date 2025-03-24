@@ -9,8 +9,8 @@ import { StencilApi } from '@/api-stencil';
 import { WorkflowEdit } from '../../stencil-workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 import { WorkflowsListRoot, useUtilityClasses } from './useUtilityClasses';
+import { EveliAlert } from '@/eveli-alert';
 
-import * as Burger from '@/eveli-styles';
 
 const findMainId = (values: string[]) => {
   const result = values.filter(id => !id.endsWith("-nested"));

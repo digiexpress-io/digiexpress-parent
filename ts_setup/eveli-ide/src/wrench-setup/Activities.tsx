@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Card, CardHeader, CardContent, CardActions, Button } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import * as Burger from '@/eveli-styles'
 
 import { FlowComposer } from '../wrench-flow';
 import { DecisionComposer } from '../wrench-decision';
@@ -10,6 +9,7 @@ import { useWrenchNav } from '../wrench-nav';
 
 import ReleaseComposer from '../wrench-release';
 import MigrationComposer from '../wrench-migration';
+import { EveliActivities } from '@/eveli-activities';
 
 
 
