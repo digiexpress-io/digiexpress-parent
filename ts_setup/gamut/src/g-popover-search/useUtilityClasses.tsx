@@ -92,7 +92,11 @@ export const GSearchMuiPopover = styled(Popover, {
     '& .GPopoverSearch-titleContainer': {
       display: 'flex',
       alignItems: 'center',
-      gap: 3
+      gap: 3,
+
+      [theme.breakpoints.up('md')]: {
+        justifyContent: 'center',
+      }
     },
     '& .GPopoverSearch-layoutContainer': {
       [theme.breakpoints.up('md')]: {
@@ -105,6 +109,7 @@ export const GSearchMuiPopover = styled(Popover, {
     '& .GPopoverSearch-quickSearch': {
       [theme.breakpoints.up('md')]: {
         paddingTop: theme.spacing(2),
+        textAlignLast: 'center',
       },
 
       [theme.breakpoints.down('md')]: {
