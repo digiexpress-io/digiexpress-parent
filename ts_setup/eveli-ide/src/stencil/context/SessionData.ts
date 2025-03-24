@@ -1,5 +1,5 @@
 import StencilComposerApi from './ide';
-import { StencilApi } from '../client';
+import { StencilApi } from '@/burger';
 
 class ImmutableSearchData implements StencilComposerApi.SearchData {
   private _articles: ImmutableArticleSearchEntry[];

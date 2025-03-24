@@ -1,5 +1,5 @@
 import Ide from './ide';
-import {StencilApi} from '../client';
+import { StencilApi } from '@/burger';
 
 
 enum ActionType {

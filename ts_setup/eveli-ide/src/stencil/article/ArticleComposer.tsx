@@ -4,7 +4,8 @@ import { useSnackbar } from 'notistack';
 
 import * as Burger from '@/burger';
 
-import { Composer, StencilApi } from '../context';
+import { Composer } from '../context';
+import { StencilApi } from '@/burger';
 import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
 
 import { FormattedMessage } from 'react-intl';

@@ -15,7 +15,8 @@ export * from './api-iconbar';
 export * from './api-mui-table';
 export * from './api-publications';
 export * from './api-proc-execution';
-export * from './api-wrench'
+export * from './api-wrench';
+export * from './api-stencil';
 
 
 export * from './eveli-shell-compose';
@@ -33,8 +34,8 @@ export * from './eveli-tasks';
 export * from './eveli-task-composer';
 
 
-export * from './wrench-nav'
-export * from './wrench-setup'
+export * from './wrench-nav';
+export * from './wrench-setup';
 
 
 

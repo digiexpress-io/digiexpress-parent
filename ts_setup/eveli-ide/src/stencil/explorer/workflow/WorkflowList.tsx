@@ -4,7 +4,8 @@ import { SimpleTreeView } from "@mui/x-tree-view";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useIntl } from 'react-intl'
 
-import { Composer, StencilApi } from '../../context';
+import { Composer } from '../../context';
+import { StencilApi } from '@/burger';
 import { WorkflowEdit } from '../../workflow/WorkflowEdit';
 import WorkflowItem from './WorkflowItem';
 import { WorkflowsListRoot, useUtilityClasses } from './useUtilityClasses';

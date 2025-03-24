@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
-import { Composer, StencilApi } from '../context';
+import { Composer } from '../context';
+import { StencilApi } from '@/burger';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import ArticlePageItem from '../explorer/article/ArticlePageItem';

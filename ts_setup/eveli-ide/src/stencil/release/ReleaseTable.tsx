@@ -5,7 +5,7 @@ import fileDownload from 'js-file-download'
 
 import React from "react";
 import { FormattedMessage } from "react-intl"
-import { StencilApi } from '../client'
+import { StencilApi } from '@/burger'
 import { Composer } from '../context';
 import { ReleaseDelete } from './ReleaseDelete'
 import * as Burger from '@/burger';

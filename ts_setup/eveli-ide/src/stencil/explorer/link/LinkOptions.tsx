@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LinkDelete } from '../../link/LinkDelete';
 import { LinkEdit } from '../../link';
-import { StencilApi } from '../../context';
+import { StencilApi } from '@/burger'
 import * as Burger from '@/burger';
 
 const LinkOptions: React.FC<{ link: StencilApi.Link }> = ({ link }) => {

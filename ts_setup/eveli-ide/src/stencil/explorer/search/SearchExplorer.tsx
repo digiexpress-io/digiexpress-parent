@@ -17,7 +17,8 @@ import { ArticleEdit } from '../../article';
 import { WorkflowEdit } from '../../workflow/';
 import { LinkEdit } from '../../link/';
 import * as Burger from '@/burger';
-import { Composer, StencilApi } from '../../context';
+import { Composer } from '../../context';
+import { StencilApi } from '@/burger';
 
 import { useStencilNav } from '../../nav';
 

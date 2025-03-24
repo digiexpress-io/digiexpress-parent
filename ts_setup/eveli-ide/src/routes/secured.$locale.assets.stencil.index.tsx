@@ -3,12 +3,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/burger'
 
 import {
-  Composer, StencilApi,
-  StencilClient, StencilComponents,
+  Composer,
+  StencilComponents,
   StencilRouteSearchParams, parseStencilSearchParams,
 } from '../stencil';
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { EveliApp } from '@/burger';
+import { EveliApp, StencilApi } from '@/burger';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
@@ -29,7 +29,7 @@ function Component() {
 
   const service = React.useMemo(() => {
     const store: StencilApi.StencilRestApi = {getSite, delete: del, create, update, getReleaseContent};
-    return StencilClient.service({ store });
+    return StencilApi.service({ store });
   }, [getSite, del, create, update, getReleaseContent]);
 
   return (

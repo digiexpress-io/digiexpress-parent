@@ -7,7 +7,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { FormattedMessage } from 'react-intl';
 
-import { StencilApi } from '../context';
+import { StencilApi } from '@/burger';
 
 
 

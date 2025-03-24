@@ -3,7 +3,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
-import { Composer, StencilApi } from '../context';
+import { Composer } from '../context';
+import { StencilApi } from '@/burger';
 
 
 interface ReleaseDeleteProps {

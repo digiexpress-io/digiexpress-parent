@@ -9,7 +9,8 @@ import { LinkComposer } from '../../link';
 import { WorkflowComposer } from '../../workflow';
 import { ArticleEdit, ArticleDelete } from '../../article';
 import { NewPage, PageEdit, PageDelete, PageEditDevMode } from '../../page';
-import { Composer, StencilApi } from '../../context';
+import { Composer } from '../../context';
+import { StencilApi } from '@/burger';
 import * as Burger from '@/burger';
 import { useStencilNav } from '../../nav';
 

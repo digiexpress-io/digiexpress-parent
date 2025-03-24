@@ -5,12 +5,11 @@ export { LocaleProvider, IamBackendProvider, ConfigContextProvider } from '@/bur
 export { intl }
 export { eveliTheme } from './burger';
 export type { EveliComponents } from './burger';
-export type { StencilApi } from './stencil';
 
 export type { QueueApi } from './queue'
 export type { FeedbackApi } from './feedback'
 
-export { StencilClient, Composer as StencilComposer, StencilComponents } from './stencil';
+export { Composer as StencilComposer, StencilComponents } from './stencil';
 
 export { router } from './router'
 export { FetchProvider } from './eveli-fetch';

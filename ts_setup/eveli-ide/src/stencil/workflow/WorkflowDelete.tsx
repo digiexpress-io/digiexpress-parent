@@ -2,7 +2,8 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import { Composer, StencilApi } from '../context';
+import { Composer } from '../context';
+import { StencilApi } from '@/burger';
 
 
 interface WorkflowDeleteProps {

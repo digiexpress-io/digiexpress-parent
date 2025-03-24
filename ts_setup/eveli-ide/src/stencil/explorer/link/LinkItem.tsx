@@ -4,7 +4,8 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilApi } from '../../context';
+import { Composer } from '../../context';
+import { StencilApi } from '@/burger';
 
 import { LinkOptions } from './LinkOptions';
 import ArticleItem from '../article/ArticleItem';

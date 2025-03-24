@@ -4,9 +4,7 @@ import { Toolbar } from './Toolbar';
 import { Tabs } from './Tabs';
 
 export * from './nav';
-export * from './client';
 export * from './context'
-export * from './client';
 export * from './Activities';
 export * from './page';
 export * from './link';

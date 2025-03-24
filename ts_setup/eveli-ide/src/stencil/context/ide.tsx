@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StencilApi } from '../client';
+import { StencilApi } from '@/burger'
 import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
 

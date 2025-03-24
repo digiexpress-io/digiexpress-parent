@@ -5,7 +5,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useIntl } from 'react-intl'
 
 
-import { Composer, StencilApi } from '../../context';
+import { Composer } from '../../context';
+import { StencilApi } from '@/burger';
 import { LinkEdit } from '../../link/LinkEdit';
 import LinkItem from './LinkItem';
 import { LinksListRoot, useUtilityClasses } from './useUtilityClasses';

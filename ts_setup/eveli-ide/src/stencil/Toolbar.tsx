@@ -13,7 +13,8 @@ import ListIcon from '@mui/icons-material/ListAlt';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/burger';
-import { Composer, StencilApi } from './context';
+import { StencilApi } from '@/burger';
+import { Composer } from './context';
 import { EveliShellMiniBarRoot, useUtilityClasses, EveliShellMiniBarClassName } from '../burger/eveli-shell/useUtilityClasses';
 import { useNavigate } from '@tanstack/react-router';
 import { useStencilNav } from './nav';

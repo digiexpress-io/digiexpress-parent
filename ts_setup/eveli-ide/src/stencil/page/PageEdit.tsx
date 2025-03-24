@@ -3,7 +3,8 @@ import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
-import { Composer, StencilApi } from '../context';
+import { Composer } from '../context';
+import { StencilApi } from '@/burger';
 import * as Burger from '@/burger';
 
 
