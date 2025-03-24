@@ -21,7 +21,7 @@ export const palette: PaletteOptions = {
     disabled: 'rgba(55, 65, 81, 0.48)'
   },
   success: {
-    main: '#7fa81d',
+    main: '#2e7D32',
     contrastText: '#FFFFFF'
   },
   info: {
@@ -36,9 +36,7 @@ export const palette: PaletteOptions = {
     contrastText: '#000000'
   },
   error: {
-    main: '#D14343',
-    light: '#DA6868',
-    dark: '#922E2E',
+    main: '#D32F2F',
     contrastText: '#FFFFFF'
   },
 

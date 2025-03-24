@@ -183,7 +183,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
         {allowed ? (
           <ListItem>
             <ListItemText>
-              <Alert severity='success' variant='standard'>
+              <Alert severity='success' variant='filled' className={classes.loginAlert}>
                 <AlertTitle>{intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
                 {intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_proceed' }, { userName })}
               </Alert>
@@ -192,7 +192,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
         ) : (
           <ListItem>
             <ListItemText>
-              <Alert severity='error'>
+                <Alert severity='error' variant='filled' className={classes.loginAlert}>
                 <Typography className={classes.productBodyTextError}>{intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}</Typography>
               </Alert>
             </ListItemText>

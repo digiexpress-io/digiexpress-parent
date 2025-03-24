@@ -131,7 +131,22 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
     },
   },
   MuiAlert: {
-
+    variants: [
+      {
+        props: { variant: 'filled', severity: 'success' },
+        style: ({ theme }) => ({
+          backgroundColor: theme.palette.success.main,
+          color: theme.palette.success.contrastText
+        }),
+      },
+      {
+        props: { variant: 'filled', severity: 'error' },
+        style: ({ theme }) => ({
+          backgroundColor: theme.palette.error.main,
+          color: theme.palette.error.contrastText
+        }),
+      },
+    ]
   },
   MuiButton: {
     variants: [
