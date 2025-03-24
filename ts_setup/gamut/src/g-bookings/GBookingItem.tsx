@@ -33,7 +33,7 @@ export const GBookingItem: React.FC<GBookingItemProps> = (initProps) => {
   const { scheduledAt, name, slotProps = {}, onClick } = props;
   const ownerState = {
     ...props,
-    dateVariant: slotProps.date?.variant ?? 'date-time'
+    dateVariant: slotProps.date?.variant ?? 'date-only'
   }
 
 
