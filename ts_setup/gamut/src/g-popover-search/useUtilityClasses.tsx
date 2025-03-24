@@ -93,10 +93,7 @@ export const GSearchMuiPopover = styled(Popover, {
       display: 'flex',
       alignItems: 'center',
       gap: 3,
-
-      [theme.breakpoints.up('md')]: {
-        justifyContent: 'center',
-      }
+      justifyContent: 'center',
     },
     '& .GPopoverSearch-layoutContainer': {
       [theme.breakpoints.up('md')]: {
