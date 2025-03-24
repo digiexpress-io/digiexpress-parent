@@ -68,10 +68,6 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
           {hyperlinks.map(link => <GLinkHyper key={link.id} label={link.name} value={link.value} />)}
           {phoneLinks.map(link => <GLinkPhone key={link.id} label={link.name} value={link.value} />)}
           {infoLinks.map(link => <GLinkInfo key={link.id} label={link.name} value={link.value} />)}
-
-          {/* TODO REMOVE THIS AFTER TESTING IS DONE */}
-          <GLinkInfo label='Info link and stuff'
-            value='Here is the content for the info link Here is the content for the info link Here is the content for the info link' />
         </GLinks> : <></>
       }
     </GLinksPageRoot>);
