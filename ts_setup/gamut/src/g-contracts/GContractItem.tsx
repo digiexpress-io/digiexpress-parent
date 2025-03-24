@@ -39,7 +39,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
 
   const ownerState = {
     ...props,
-    dateVariant: slotProps.date?.variant ?? 'relative'
+    dateVariant: slotProps.date?.variant ?? 'date-only'
   }
 
   return (

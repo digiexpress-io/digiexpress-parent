@@ -1,6 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 
-import { ROLE_AUTHORIZED, IamApi } from '@/burger';
+import { ROLE_AUTHORIZED, IamApi } from '@/api-iam';
 
 
 export const Hook = createFileFetch('$org/groupMembership.GET')({

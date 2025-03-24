@@ -199,8 +199,14 @@ public class GrimMissionSqlFilterBuilder {
     // title
     if(filter.getLikeTitle() != null) {
       and();
-      builder.append(" LOWER(mission.mission_title) like $").append(index++).ln();
+      builder
+        .append("(")
+        .append(" LOWER(mission.mission_title) like $").append(index).ln()
+        .append(" OR ")
+        .append(" LOWER(mission.mission_ref) like $").append(index).ln()
+        .append(")");
       params.add("%" + filter.getLikeTitle().toLowerCase() + "%");
+      index++;
     }
     
     // description

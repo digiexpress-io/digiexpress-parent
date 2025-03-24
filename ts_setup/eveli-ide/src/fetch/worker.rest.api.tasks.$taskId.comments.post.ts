@@ -1,5 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { useIam, TaskApi } from '@/burger';
+import { useIam } from '@/api-iam';
+import { TaskApi } from '@/api-task';
 
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId/comments.POST')({

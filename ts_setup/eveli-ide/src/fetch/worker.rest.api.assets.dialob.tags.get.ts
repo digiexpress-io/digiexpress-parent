@@ -1,6 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useQuery } from '@tanstack/react-query'
-import { StencilApi } from '../stencil';
+import { StencilApi } from '@/api-stencil';;
 
 export const Hook = createFileFetch('worker/rest/api/assets/dialob/tags.GET')({
   hook

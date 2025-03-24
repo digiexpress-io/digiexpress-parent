@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { DialobApi } from '../api-dialob';
 import { UnknownSlot } from './UnknownSlot';
 
-
+import { GInputUpload, GInputUploadProps } from '../g-input-upload';
 import { GInputText, GInputTextProps } from '../g-input-text';
 import { GInputTextArea, GInputTextAreaProps } from '../g-input-textarea';
 import { GInputBoolean, GInputBooleanProps } from '../g-input-boolean';
@@ -73,6 +73,7 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
     }];
     return result;
   }
+
   if (variant === 'text') {
     const errors = store.form.toErrors(element.id);
     const desc = store.form.toDescription(element.id);
@@ -85,6 +86,24 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
       errors: errors,
       value: element.value,
       variant: 'text',
+      labelPosition,
+      onChange: () => {}
+    }];
+    return result;
+  }
+
+  if (variant === 'text-fileUpload') {
+    const errors = store.form.toErrors(element.id);
+    const desc = store.form.toDescription(element.id);
+    const labelPosition = getLabelPosition(element, store);
+
+    const result: [React.ElementType, GInputUploadProps] = [GInputUpload, {
+      id: element.id,
+      label: element.label,
+      description: desc,
+      errors: errors,
+      value: element.value,
+      variant: 'upload',
       labelPosition,
       onChange: () => {}
     }];
@@ -382,6 +401,7 @@ export function useSlot(props: GFormBaseElementProps): GFormBaseSlot<any> {
 
 interface GFormBaseSlots {
   'text': React.ElementType<GInputTextProps>;
+  'text-fileUpload': React.ElementType<GInputUploadProps>;
   'text-textBox': React.ElementType<GInputTextAreaProps>;
   'text-address': React.ElementType<GInputTextProps>;
 
@@ -425,6 +445,9 @@ function getSlotVariant(element: DialobApi.ActionItem, store: DialobApi.FormStor
   }
   if(element.type === 'group' && element.view === 'page') {
     return { variant: 'page' };
+  }
+  if(element.type === 'text' && element.view === 'text' && element.props?.controlType === 'fileUpload') {
+    return { variant: 'text-fileUpload' };
   }
   if(element.type === 'text' && element.view === 'text') {
     return { variant: 'text' };

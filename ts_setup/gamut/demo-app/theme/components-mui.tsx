@@ -83,17 +83,22 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
   MuiContainer: {
     defaultProps: {
       disableGutters: true,
-    }
-  },
-  MuiPaper: {
-    defaultProps: {
-      variant: 'elevation',
-      elevation: 4
     },
     styleOverrides: {
       root: {
-        borderRadius: 0,
+        marginTop: '0px !important'
       }
+    },
+  },
+  MuiPaper: {
+    defaultProps: {
+      variant: 'outlined',
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        borderRadius: 0,
+        backgroundColor: theme.palette.background.default
+      })
     }
   },
 
@@ -124,6 +129,24 @@ export const components_mui: Components<Omit<Theme, 'components'>> = {
         }
       }
     },
+  },
+  MuiAlert: {
+    variants: [
+      {
+        props: { variant: 'filled', severity: 'success' },
+        style: ({ theme }) => ({
+          backgroundColor: theme.palette.success.main,
+          color: theme.palette.success.contrastText
+        }),
+      },
+      {
+        props: { variant: 'filled', severity: 'error' },
+        style: ({ theme }) => ({
+          backgroundColor: theme.palette.error.main,
+          color: theme.palette.error.contrastText
+        }),
+      },
+    ]
   },
   MuiButton: {
     variants: [

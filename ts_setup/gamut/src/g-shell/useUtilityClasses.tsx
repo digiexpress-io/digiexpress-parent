@@ -61,7 +61,7 @@ export const GShellRoot = styled('div', {
       flexDirection: 'column',
       paddingLeft: 'unset',
       paddingRight: 'unset',
-      position: 'absolute',
+      //position: 'absolute',
       zIndex: theme.zIndex.drawer + 1,
       width: '100%',
       backgroundColor: theme.palette.background.paper,

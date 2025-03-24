@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { IamApi } from '@/burger';
+import { IamApi } from '@/api-iam';
 
 export const Hook = createFileFetch('$org/userInfo.GET')({
   hook

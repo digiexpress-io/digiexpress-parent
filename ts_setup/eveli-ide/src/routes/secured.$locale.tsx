@@ -1,4 +1,4 @@
-import { useIam } from '@/burger';
+import { useIam } from '@/api-iam';
 import { Navigate, Outlet, createFileRoute } from '@tanstack/react-router'
 
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Container, Paper, Typography } from '@mui/material'
 import { createFileRoute } from '@tanstack/react-router'
 import { FormattedMessage } from 'react-intl'
-import { useLocale } from '@/burger'
+import { useLocale } from '@/api-locale'
 
 
 export const Route = createFileRoute('/secured/$locale/worker/help/')({

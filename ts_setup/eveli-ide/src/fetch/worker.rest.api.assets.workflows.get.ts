@@ -1,6 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useQuery } from '@tanstack/react-query';
-import { PublicationApi  } from '@/burger';
+import { PublicationApi  } from '@/api-publications';
 
 export const Hook = createFileFetch('worker/rest/api/assets/workflows.GET')({
   hook

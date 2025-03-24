@@ -8,10 +8,10 @@ import { DialobAdmin, DialobAdminConfig } from "@dialob/dashboard-material";
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useLocale, EveliApp } from '@/burger'
 
-import { Secondary } from '../frontdesk/Secondary';
-import { Toolbar } from '../frontdesk/Toolbar';
+import { EveliSetup } from '@/eveli-setup';
+import { useLocale } from '@/api-locale';
+import { EveliApp } from '@/eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/assets/forms/')({
   component: Component,
@@ -23,7 +23,7 @@ function Component() {
   const { setLocale } = useLocale();
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} />)
+  return (<EveliApp main={Main} secondary={() => <></>} toolbar={EveliSetup.Toolbar} />)
 
 }
 

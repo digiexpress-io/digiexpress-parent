@@ -1,7 +1,9 @@
 import React from 'react';
-import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar, Alert } from '@mui/material';
+import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar, Alert, AlertTitle } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SaveIcon from '@mui/icons-material/Save';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+
 import {
   GShell,
   GFooter,
@@ -17,7 +19,11 @@ import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 import { SiteApi } from '../api-site';
 
-import { GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot, GRouterProductRoot, GRouterProductTitleRoot, GRouterProductButtonsRoot, useUtilityClasses } from './useUtilityClasses';
+import {
+  GRouterProductAnonBreadcrumbsRoot, GRouterProductBreadcrumbsRoot,
+  GRouterProductRoot, GRouterProductTitleRoot, GRouterProductButtonsRoot,
+  useUtilityClasses
+} from './useUtilityClasses';
 import { GAuthFormStart } from '../g-auth-form-start';
 
 export interface GRouterProductProps {
@@ -143,10 +149,10 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
       <Button variant='outlined' onClick={handleCancelOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.cancel.button' })}</Button>
 
       {allowed ? (
-        <Button variant='contained' onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
+        <Button variant='contained' className={classes.formStartButton} onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
       ) : (
         <GAuthFormStart forced onSubmit={handleAfterLogin}>
-          <Button type='submit' variant='contained'>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
+            <Button type='submit' variant='contained' startIcon={<PersonOutlinedIcon />}>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
         </GAuthFormStart>)
 
       }
@@ -158,6 +164,9 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   const { topicLink, allowed } = props.ownerState;
   const intl = useIntl();
   const classes = useUtilityClasses();
+  const { user } = useIam();
+
+  const userName = user?.firstName + " " + user?.lastName || user?.representedCompany?.name || user?.representedPerson?.name || 'no user name';
 
   return (
     <GRouterProductTitleRoot>
@@ -171,14 +180,24 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
             <Typography className={classes.productBodyText}>{intl.formatMessage({ id: 'gamut.forms.filling.start.info1' })}</Typography>
           </ListItemText>
         </ListItem>
-        {!allowed && (
+        {allowed ? (
           <ListItem>
             <ListItemText>
-              <Alert severity='error'>
+              <Alert severity='success' variant='filled' className={classes.loginAlert}>
+                <AlertTitle>{intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
+                {intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_proceed' }, { userName })}
+              </Alert>
+            </ListItemText>
+          </ListItem>
+        ) : (
+          <ListItem>
+            <ListItemText>
+                <Alert severity='error' variant='filled' className={classes.loginAlert}>
                 <Typography className={classes.productBodyTextError}>{intl.formatMessage({ id: 'gamut.forms.filling.must_be_authenticated' })}</Typography>
               </Alert>
             </ListItemText>
-          </ListItem>)}
+          </ListItem>
+        )}
       </List>
     </GRouterProductTitleRoot>
   )

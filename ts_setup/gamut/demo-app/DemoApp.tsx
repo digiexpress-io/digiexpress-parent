@@ -52,7 +52,13 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       fetchFeedbackGet={authFeedbackFetch.fetchFeedbackGet}
       fetchFeedbackRatingPut={authFeedbackFetch.fetchFeedbackRatingPut} >
 
-      <DialobProvider fetchActionGet={dialobFetch.fetchActionGet} fetchActionPost={dialobFetch.fetchActionPost} fetchReviewGet={dialobFetch.fetchReviewGet}>
+      <DialobProvider 
+        fetchActionGet={dialobFetch.fetchActionGet} 
+        fetchActionPost={dialobFetch.fetchActionPost} 
+        fetchReviewGet={dialobFetch.fetchReviewGet}
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}
+        >
+        
         <OfferProvider 
           cancelOffer={offerFetch.fetchDelete}
           createOffer={offerFetch.fetchPost} 
@@ -60,7 +66,12 @@ const SecuredSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           getAllOffers={offerFetch.fetchAllGet} 
           options={{ staleTime, queryKey: processesQueryKey }}>
           
-          <ContractProvider appendContractAttachment={contractFetch.appendContractAttachment} getContracts={contractFetch.fetchGet} options={{ staleTime, queryKey: processesQueryKey }}>
+          <ContractProvider 
+            appendContractAttachment={contractFetch.appendContractAttachment} 
+            getContracts={contractFetch.fetchGet} 
+            getContractAttachment={contractFetch.fetchContractAttachment}
+            options={{ staleTime, queryKey: processesQueryKey }}>
+
           <CommsProvider getSubjects={subjectFetch.fetchGet} replyTo={subjectFetch.fetchPost} options={{ staleTime, queryKey: processesQueryKey }}>
             <BookingProvider getBookings={bookingFetch.fetchGet} cancelBooking={bookingFetch.fetchPost} options={{ staleTime, queryKey: 'bookings' }}>
               {children}
@@ -81,7 +92,8 @@ const PublicSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <DialobProvider 
         fetchActionGet={dialobPublicFetch.fetchActionGet} 
         fetchActionPost={dialobPublicFetch.fetchActionPost} 
-        fetchReviewGet={dialobPublicFetch.fetchReviewGet}>
+        fetchReviewGet={dialobPublicFetch.fetchReviewGet}
+        fetchAttachmentPost={dialobFetch.fetchAttachmentPost}>
         
         <OfferProvider 
           cancelOffer={publicOfferFetch.fetchDelete} 

@@ -85,7 +85,7 @@ public interface GrimQueryActions {
     MissionQuery overdue(Boolean overdue); // include the tasks where dueDate > current_date
     
     MissionQuery likeReporterId(String reporterId);
-    MissionQuery likeTitle(String likeTitle);
+    MissionQuery likeTitle(String likeTitle); // will combine ref number and title in search
     MissionQuery likeDescription(String likeDescription);
     
     

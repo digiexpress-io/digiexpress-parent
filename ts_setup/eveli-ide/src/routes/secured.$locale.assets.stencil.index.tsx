@@ -1,19 +1,27 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
+import { useLocale } from '@/api-locale'
 
-import {
-  Composer, StencilApi,
-  StencilClient, StencilComponents,
-  StencilRouteSearchParams, parseStencilSearchParams,
-} from '../stencil';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
-import { EveliApp } from '@/burger';
+import { StencilApi } from '@/api-stencil';
+import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
+import { StencilComposerApi, StencilSteup } from '@/stencil-setup';
+import { EveliSetup } from '@/eveli-setup';
+import { EveliApp } from '@/eveli-app';
 
 export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
-}) 
+})
+
+
+const MergedToolbar: React.FC = () => {
+  return <>
+    <EveliSetup.Toolbar />
+    <StencilSteup.Toolbar />
+  </>
+}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -29,16 +37,16 @@ function Component() {
 
   const service = React.useMemo(() => {
     const store: StencilApi.StencilRestApi = {getSite, delete: del, create, update, getReleaseContent};
-    return StencilClient.service({ store });
+    return StencilApi.service({ store });
   }, [getSite, del, create, update, getReleaseContent]);
 
   return (
-    <Composer.Provider service={service} >
+    <StencilComposerApi.Provider service={service} >
       <EveliApp 
-        tabs={StencilComponents.Tabs}
-        main={StencilComponents.Main} 
-        secondary={StencilComponents.Secondary} 
-        toolbar={StencilComponents.Toolbar} 
+        tabs={StencilSteup.Tabs}
+        main={StencilSteup.Main} 
+        secondary={StencilSteup.Secondary} 
+        toolbar={MergedToolbar} 
       />
-    </Composer.Provider>)
+    </StencilComposerApi.Provider>)
 }

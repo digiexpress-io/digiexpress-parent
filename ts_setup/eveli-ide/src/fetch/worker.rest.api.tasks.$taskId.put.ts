@@ -1,4 +1,4 @@
-import { TaskApi } from '@/burger';
+import { TaskApi } from '@/api-task';
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 
 export const Hook = createFileFetch('worker/rest/api/tasks/$taskId.PUT')({

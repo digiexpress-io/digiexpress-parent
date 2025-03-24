@@ -68,16 +68,15 @@ export const GRouterUnfinishedFormsRoot = styled("div", {
       flexDirection: 'row',
       alignItems: 'center'
     },
-
+    '& .GRouterUnfinishedForms-titleText': {
+      ...theme.typography.h1
+    },
     '& .GRouterUnfinishedForms-titleAvatar': {
       height: '50px',
       width: '50px',
       alignContent: 'center',
       marginRight: theme.spacing(1),
       backgroundColor: theme.palette.primary.main
-    },
-    '& .GRouterUnfinishedForms-titleText': {
-      ...theme.typography.h1
     },
     '& .GRouterUnfinishedForms-subTitleText': {
       ...theme.typography.body1,

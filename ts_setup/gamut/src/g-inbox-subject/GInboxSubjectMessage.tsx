@@ -38,7 +38,7 @@ export const GInboxSubjectMessage: React.FC<GInboxSubjectMessageProps> = (initPr
 
         <Grid item xs={12} sm={3} md={3} lg={3} xl={3} className={classes.msgItemSentat}>
           <Typography>
-            <GDate variant='date-time' date={created} />
+            <GDate variant='date-only' date={created} />
           </Typography>
         </Grid>
 

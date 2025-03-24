@@ -1,5 +1,5 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { Composer, StencilApi } from '../stencil';
+import { StencilApi } from '@/api-stencil'
 
 
 export const Hook = createFileFetch('worker/rest/api/assets/stencil/$assetType.POST')({

@@ -2,7 +2,7 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 
 import { useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
-import { PublicationApi } from '@/burger';
+import { PublicationApi } from '@/api-publications'
 
 
 export const Hook = createFileFetch('worker/rest/api/assets/publications.POST')({

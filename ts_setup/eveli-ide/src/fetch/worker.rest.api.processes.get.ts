@@ -2,8 +2,9 @@ import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
-import { createQueryString } from '../frontdesk/util/tableQuery';
-import { ProcExecutionApi } from '@/burger';
+
+import { ProcExecutionApi } from '@/api-proc-execution';
+import { createMuiTableQueryString } from '@/api-mui-table';
 
 
 
@@ -17,7 +18,7 @@ function hook(props: {}) {
 
   return {
     loadProcesses: async (query: Query<ProcExecutionApi.ProcessExecution>,  columns: Array<Column<ProcExecutionApi.ProcessExecution>>): Promise<QueryResult<ProcExecutionApi.ProcessExecution>> => {
-      const queryString = createQueryString(query, columns);
+      const queryString = createMuiTableQueryString(query, columns);
       return params.fetch(url({}) + `?${queryString}`, {
         headers: {
           'Accept': 'application/json'

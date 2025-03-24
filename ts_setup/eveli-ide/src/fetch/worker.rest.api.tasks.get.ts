@@ -4,9 +4,11 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { QueryResult } from '@material-table/core'
 import { Column, Query } from '@material-table/core';
 
+import { TaskApi } from '@/api-task';
 
-import { createQueryString } from '../frontdesk/util/tableQuery';
-import { TaskApi, EveliTaskTableContext } from '@/burger';
+import { createMuiTableQueryString } from '@/api-mui-table';
+import { EveliTaskTableContext } from '@/eveli-tasks';
+
 
 export const Hook = createFileFetch('worker/rest/api/tasks.GET')({
   hook
@@ -50,7 +52,7 @@ function hook(props: {}) {
         }
       })
   
-      let queryString = createQueryString(
+      let queryString = createMuiTableQueryString(
         {...query, 
           filters: query.filters.filter((item: any) => !hiddenColumns.includes(item.column.field)), 
           orderByCollection: query.orderByCollection.reduce((accumulator: any[], item: any) => {

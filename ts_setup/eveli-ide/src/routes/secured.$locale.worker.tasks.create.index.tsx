@@ -1,7 +1,9 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale } from '@/burger'
-import { TaskContainer } from '../frontdesk/views/task/TaskContainer';
+
+import { Container } from '@mui/system';
+import { useLocale } from '@/api-locale';
+import { EveliTaskComposer } from '@/eveli-task-composer';
 
 export const Route = createFileRoute('/secured/$locale/worker/tasks/create/')({
   component: Component,
@@ -13,5 +15,11 @@ function Component() {
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<TaskContainer />)
+  return (
+
+  <Container maxWidth='lg'>
+    <EveliTaskComposer />
+  </Container>
+
+  )
 }

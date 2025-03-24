@@ -1,17 +1,27 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useLocale, EveliApp } from '@/burger'
-import {
-  Composer,
-  WrenchClient, WrenchComponents,
-  WrenchRouteSearchParams, parseWrenchSearchParams
-} from '../wrench';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { HdesApi } from '@/api-wrench';
+import { WrenchComposerApi, WrenchSetup } from '@/wrench-setup';
+import { EveliApp } from '@/eveli-app';
+import { parseWrenchSearchParams, WrenchRouteSearchParams } from '@/wrench-nav';
+import { useLocale } from '@/api-locale';
+import { EveliSetup } from '@/eveli-setup';
+
+
 
 export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
   component: Component,
   validateSearch: (search: Record<string, unknown>): WrenchRouteSearchParams => parseWrenchSearchParams(search)
 })
+
+const MergedToolbar: React.FC = () => {
+  return <>
+    <EveliSetup.Toolbar />
+    <WrenchSetup.Toolbar />
+  </>
+}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -29,16 +39,14 @@ function Component() {
   const { update } = useFetch('worker/rest/api/assets/wrench/resources.PUT', {})
   const { remove } = useFetch('worker/rest/api/assets/wrench/resources/$id.DELETE', {})
   const { summary } = useFetch('worker/rest/api/assets/wrench/summary/$tagId.GET', {})
-  const { version } = useFetch('worker/rest/api/assets/wrench/version.GET', {})
-
-
-  const service = React.useMemo(() => new WrenchClient.ServiceImpl({
-    update, createAsset, ast, getSite, debug, copy, version, diff, summary, remove, importTag,
-  }), [update, createAsset, ast, getSite, debug, copy, version, diff, summary, remove, importTag]);
-  const { Main, Secondary, Toolbar, Tabs } = WrenchComponents;
+  
+  const service = React.useMemo(() => new HdesApi.ServiceImpl({
+    update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag,
+  }), [update, createAsset, ast, getSite, debug, copy, diff, summary, remove, importTag]);
+  const { Main, Secondary, Tabs } = WrenchSetup;
   
   return (
-    <Composer.Provider service={service}>
-      <EveliApp main={Main} secondary={Secondary} toolbar={Toolbar} tabs={Tabs} />
-    </Composer.Provider>)
+    <WrenchComposerApi.Provider service={service}>
+      <EveliApp main={Main} secondary={Secondary} toolbar={MergedToolbar} tabs={Tabs} />
+    </WrenchComposerApi.Provider>)
 }

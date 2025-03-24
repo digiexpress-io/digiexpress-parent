@@ -1,6 +1,8 @@
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { EveliProcExecution, useLocale } from '@/burger'
+import { EveliProcExecution } from '@/eveli-proc-execution';
+import { useLocale } from '@/api-locale';
+
 
 
 export const Route = createFileRoute('/secured/$locale/worker/monitoring/')({

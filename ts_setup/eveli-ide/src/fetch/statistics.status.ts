@@ -3,8 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 
 import { useIntl } from 'react-intl';
-import { TaskStatusStatistics } from 'frontdesk/types/TaskStatistics';
-import { TaskApi } from '@/burger';
+import { TaskApi } from '@/api-task';
 
 export const Hook = createFileFetch('statistics/status.GET')({
   hook
@@ -22,7 +21,7 @@ const taskStatusMapping: StatusTitleMap = {
 
 function hook(props: {}): { 
   taskStatusNames: { status: string, count: number }[] | undefined,
-  taskStatusStats: TaskStatusStatistics[] | undefined,
+  taskStatusStats: TaskApi.TaskStatusStatistics[] | undefined,
   taskStatusMapping: StatusTitleMap
 } {
   const params = Hook.useParams();
@@ -34,7 +33,7 @@ function hook(props: {}): {
     queryKey: [query],
     queryFn: () => params
       .fetch(query).then(resp => resp.json())
-      .then((data: TaskStatusStatistics[]) => (data ?? []))
+      .then((data: TaskApi.TaskStatusStatistics[]) => (data ?? []))
       .catch(err => [])
       .then(taskStatusStats => {
 

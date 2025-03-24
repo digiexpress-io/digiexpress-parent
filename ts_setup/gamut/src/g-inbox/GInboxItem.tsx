@@ -50,7 +50,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
       <Grid item xs={12} sm={12} md={12} lg={2} xl={2} className={classes.itemSentAt}>
         <Typography>
-          <GDate variant='relative' date={sentAt} />
+          <GDate variant='date-only' date={sentAt} />
         </Typography>
       </Grid>
 

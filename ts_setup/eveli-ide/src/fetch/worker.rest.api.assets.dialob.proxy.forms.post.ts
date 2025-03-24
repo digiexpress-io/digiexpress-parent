@@ -3,7 +3,7 @@ import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { useSnackbar } from 'notistack';
 import { useIntl } from 'react-intl';
 
-import { DialobForm } from '../frontdesk/types/Dialob';
+import { DialobForm } from './worker.rest.api.assets.dialob.get';
 
 export const Hook = createFileFetch('worker/rest/api/assets/dialob/proxy/forms.POST')({
   hook
