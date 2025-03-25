@@ -10,8 +10,8 @@ import LowPriorityIcon from '@mui/icons-material/LowPriority';
 
 import { FormattedMessage } from 'react-intl';
 
-
 import * as Burger from '@/eveli-styles';
+import { EveliPermissions } from "@/eveli-permissions";
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
@@ -72,7 +72,7 @@ const ServiceItem: React.FC<{
 }
 
 const ErrorItem: React.FC<{
-  msg:HdesApi.ProgramMessage;
+  msg: HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -89,7 +89,7 @@ const ErrorItem: React.FC<{
 }
 
 const WarningItem: React.FC<{
-  msg:HdesApi.ProgramMessage;
+  msg: HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -108,15 +108,15 @@ const WarningItem: React.FC<{
 
 
 interface RefDecision {
-  entity?:HdesApi.Entity<HdesApi.AstDecision>;
-  ref:HdesApi.ProgramAssociation;
+  entity?: HdesApi.Entity<HdesApi.AstDecision>;
+  ref: HdesApi.ProgramAssociation;
 }
 interface RefService {
-  entity?:HdesApi.Entity<HdesApi.AstService>;
-  ref:HdesApi.ProgramAssociation;
+  entity?: HdesApi.Entity<HdesApi.AstService>;
+  ref: HdesApi.ProgramAssociation;
 }
 
-const FlowItem: React.FC<{ flowId:HdesApi.FlowId }> = ({ flowId }) => {
+const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
   const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
   const { onNav } = useWrenchNav();
@@ -125,7 +125,7 @@ const FlowItem: React.FC<{ flowId:HdesApi.FlowId }> = ({ flowId }) => {
 
   const saved = isArticleSaved(flow);
   const flowName = flow.ast ? flow.ast.name : flow.id;
-  
+
   const decisions: RefDecision[] = flow.associations
     .filter(a => a.refType === "DT")
     .map(a => ({ entity: session.getDecision(a.ref), ref: a }));
@@ -141,10 +141,12 @@ const FlowItem: React.FC<{ flowId:HdesApi.FlowId }> = ({ flowId }) => {
       labelInfo={flow.status === "UP" ? undefined : <ConstructionIcon color="error" />}>
 
       {/** Flow options */}
-      <Burger.TreeItem itemId={flow.id + 'options-nested'}
-        labelText={<FormattedMessage id="options" />}>
-        <FlowOptions flow={flow} />
-      </Burger.TreeItem>
+      <EveliPermissions id='EDIT_WRENCH_ASSET'>
+        <Burger.TreeItem itemId={flow.id + 'options-nested'}
+          labelText={<FormattedMessage id="options" />}>
+          <FlowOptions flow={flow} />
+        </Burger.TreeItem>
+      </EveliPermissions>
 
       {/** Flow status */}
       <Burger.TreeItem itemId={flow.id + 'status-nested'}

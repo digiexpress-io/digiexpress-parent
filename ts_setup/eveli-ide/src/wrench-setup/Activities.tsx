@@ -10,7 +10,7 @@ import { useWrenchNav } from '../wrench-nav';
 import ReleaseComposer from '../wrench-release';
 import MigrationComposer from '../wrench-migration';
 import { EveliActivities } from '@/eveli-activities';
-
+import { EveliPermissions, PermissionType } from '@/eveli-permissions';
 
 
 const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
@@ -18,19 +18,27 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
 
-  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  const Composer: React.FC<{ onClose: () => void }> = open === false ? () => (<></>) : props.data.composer;
+
 
   return (
     <>
-    <Composer onClose={handleClose}/>
-    <Card>
-      <CardHeader title={props.data.title} />
-      <CardContent>{props.data.desc}</CardContent>
-      <CardActions>
-        {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
-        <Button onClick={handleOpen} children={props.data.buttonCreate}/>
-      </CardActions>
-    </Card>
+      <Composer onClose={handleClose} />
+      <Card>
+        <CardHeader title={props.data.title} />
+        <CardContent>{props.data.desc}</CardContent>
+
+        <CardActions>
+          <EveliPermissions id={props.data.permissionTypeView}>
+            {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
+          </EveliPermissions>
+
+          <EveliPermissions id={props.data.permissionTypeCreate}>
+            <Button onClick={handleOpen} children={props.data.buttonCreate} />
+          </EveliPermissions>
+        </CardActions>
+
+      </Card >
     </>
   )
 }
@@ -38,10 +46,12 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
 export interface ActivityProps {
   title: React.ReactNode;
   desc: React.ReactNode;
+  permissionTypeCreate: PermissionType;
+  permissionTypeView: PermissionType | undefined;
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
   onView?: () => void;
-  composer: React.FC< {onClose: () => void}>;
+  composer: React.FC<{ onClose: () => void }>;
 }
 
 export function useActivities(): ActivityProps[] {
@@ -51,24 +61,30 @@ export function useActivities(): ActivityProps[] {
       composer: FlowComposer,
       onView: undefined,
       title: <FormattedMessage id="activities.flows.title" />,
-      desc: <FormattedMessage id="activities.flows.desc"/>,
-      buttonCreate: <FormattedMessage id="buttons.create"/>,
+      desc: <FormattedMessage id="activities.flows.desc" />,
+      buttonCreate: <FormattedMessage id="buttons.create" />,
+      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: DecisionComposer,
       onView: undefined,
-      title: <FormattedMessage id="activities.decisions.title"/>,
-      desc: <FormattedMessage id="activities.decisions.desc"/>,
-      buttonCreate: <FormattedMessage id="buttons.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.decisions.title" />,
+      desc: <FormattedMessage id="activities.decisions.desc" />,
+      buttonCreate: <FormattedMessage id="buttons.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: ServiceComposer,
       onView: undefined,
-      title: <FormattedMessage id="activities.services.title"/>,
-      desc: <FormattedMessage id="activities.services.desc"/>,
-      buttonCreate: <FormattedMessage id="buttons.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.services.title" />,
+      desc: <FormattedMessage id="activities.services.desc" />,
+      buttonCreate: <FormattedMessage id="buttons.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: () => {
@@ -80,18 +96,22 @@ export function useActivities(): ActivityProps[] {
         return (<></>)
       },
       onView: undefined,
-      title: <FormattedMessage id="activities.debug.title"/>,
-      desc: <FormattedMessage id="activities.debug.desc"/>,
-      buttonCreate: <FormattedMessage id="activities.debug.view"/>,
+      title: <FormattedMessage id="activities.debug.title" />,
+      desc: <FormattedMessage id="activities.debug.desc" />,
+      buttonCreate: <FormattedMessage id="activities.debug.view" />,
       buttonViewAll: undefined,
+      permissionTypeCreate: 'NAV_TO_WRENCH_DEBUG',
+      permissionTypeView: undefined
     },
     {
       composer: ReleaseComposer,
       onView: () => nav.onNav({ type: 'RELEASES' }),
-      title: <FormattedMessage id="activities.releases.title"/>,
-      desc: <FormattedMessage id="activities.releases.desc"/>,
-      buttonCreate: <FormattedMessage id="buttons.create"/>,
-      buttonViewAll: <FormattedMessage id="activities.releases.view"/>,
+      title: <FormattedMessage id="activities.releases.title" />,
+      desc: <FormattedMessage id="activities.releases.desc" />,
+      buttonCreate: <FormattedMessage id="buttons.create" />,
+      buttonViewAll: <FormattedMessage id="activities.releases.view" />,
+      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
+      permissionTypeView: 'NAV_TO_WRENCH_RELEASES'
     },
     {
       composer: () => {
@@ -103,18 +123,22 @@ export function useActivities(): ActivityProps[] {
         return (<></>)
       },
       onView: undefined,
-      title: <FormattedMessage id="activities.compare.title"/>,
-      desc: <FormattedMessage id="activities.compare.desc"/>,
-      buttonCreate: <FormattedMessage id="activities.compare.view"/>,
+      title: <FormattedMessage id="activities.compare.title" />,
+      desc: <FormattedMessage id="activities.compare.desc" />,
+      buttonCreate: <FormattedMessage id="activities.compare.view" />,
       buttonViewAll: undefined,
+      permissionTypeCreate: 'NAV_TO_WRENCH_COMPARE',
+      permissionTypeView: undefined
     },
     {
       composer: MigrationComposer,
       onView: undefined,
-      title: <FormattedMessage id="activities.migration.title"/>,
-      desc: <FormattedMessage id="activities.migration.desc"/>,
-      buttonCreate: <FormattedMessage id="buttons.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.migration.title" />,
+      desc: <FormattedMessage id="activities.migration.desc" />,
+      buttonCreate: <FormattedMessage id="buttons.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_WRENCH_ASSET',
+      permissionTypeView: undefined
     },
   ]);
 }

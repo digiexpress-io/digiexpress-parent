@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-type PermissionType =
+export type PermissionType =
   'NAV_TO_WRENCH' |
   'NAV_TO_STENCIL' |
   'NAV_TO_TASKS' |
@@ -30,15 +30,16 @@ type PermissionType =
   'NAV_TO_WRENCH_COMPARE' |
   'NAV_TO_WRENCH_RELEASES' |
 
-
   'CREATE_TASK' |
   'CREATE_STENCIL_ASSET' |
   'CREATE_WRENCH_ASSET' |
-  
+
+  'EDIT_WRENCH_ASSET' |
+
   'DELETE_TASK';
 
 
-export const EveliPermissions: React.FC<{ children: React.ReactNode, id: PermissionType }> = ({ children, id }) => {
+export const EveliPermissions: React.FC<{ children: React.ReactNode, id: PermissionType | undefined }> = ({ children, id }) => {
 
   return (<>{children}</>)
 }

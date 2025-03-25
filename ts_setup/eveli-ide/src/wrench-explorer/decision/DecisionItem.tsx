@@ -5,7 +5,7 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
 import { FormattedMessage } from 'react-intl';
 
-
+import { EveliPermissions } from "@/eveli-permissions";
 import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi } from '../../wrench-setup';
@@ -43,10 +43,10 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
 
   const { session, isArticleSaved } = WrenchComposerApi.useComposer();
   const { onNav } = useWrenchNav();
-  
-  
+
+
   const decision = session.site.decisions[decisionId];
-  
+
   const saved = isArticleSaved(decision);
   const decisionName = decision.ast ? decision.ast.name : decision.id;
 
@@ -56,12 +56,13 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
     <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={TableChartOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>
 
       {/** Decision options */}
-      <Burger.TreeItem itemId={decision.id + 'options-nested'}
-        labelText={<FormattedMessage id="options" />}
-      >
-        <DecisionOptions decision={decision} />
-      </Burger.TreeItem>
-
+      <EveliPermissions id='EDIT_WRENCH_ASSET'>
+        <Burger.TreeItem itemId={decision.id + 'options-nested'}
+          labelText={<FormattedMessage id="options" />}
+        >
+          <DecisionOptions decision={decision} />
+        </Burger.TreeItem>
+      </EveliPermissions>
 
       {/** Decision options */}
       <Burger.TreeItem itemId={decision.id + 'flows-nested'}
