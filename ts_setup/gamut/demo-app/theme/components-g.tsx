@@ -40,20 +40,21 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        backgroundColor: theme.palette.primary.main,
         // border around everything
-        borderRight: `1px solid ${theme.palette.divider}`,
-        borderLeft: `1px solid ${theme.palette.divider}`,
+        // borderRight: `1px solid ${theme.palette.divider}`,
+        // borderLeft: `1px solid ${theme.palette.divider}`,
 
         // margin around page  
         [theme.breakpoints.up('md')]: {
-          marginLeft: theme.spacing(4),
-          marginRight: theme.spacing(4),
+          paddingLeft: theme.spacing(35),
+          paddingRight: theme.spacing(35),
         },
 
         // margin around drawer on secured page
         '.MuiDrawer-root.GShellBase .MuiPaper-root': {
           // because drawer has position fixed we need to duplicate the margin
-          marginLeft: theme.spacing(4),
+          marginLeft: theme.spacing(35),
           // border on left of drawer
           borderLeft: `1px solid ${theme.palette.divider}`,
         },
