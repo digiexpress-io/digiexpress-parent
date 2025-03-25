@@ -38,8 +38,6 @@ public interface CommsClient {
     CustomerMessageBuilder messageId(String messageId);
     
     CustomerMessageBuilder ssn(String ssn);
-    CustomerMessageBuilder crn(String crn);
-  
     void build();
   }
 

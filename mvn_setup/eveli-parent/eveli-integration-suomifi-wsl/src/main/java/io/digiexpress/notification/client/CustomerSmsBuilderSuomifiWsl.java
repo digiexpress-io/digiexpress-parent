@@ -62,12 +62,7 @@ public class CustomerSmsBuilderSuomifiWsl implements CustomerMessageBuilder {
   }
   @Override
   public CustomerMessageBuilder ssn(String ssn) {
-    request.client(Client.builder().clientId(ssn).clientType(ClientType.SSN).build());
-    return this;
-  }
-  @Override
-  public CustomerMessageBuilder crn(String crn) {
-    request.client(Client.builder().clientId(crn).clientType(ClientType.CRN).build());
+    request.client(Client.builder().clientId(ssn).clientType(ssn.length() == 9 ? ClientType.CRN : ClientType.SSN).build());
     return this;
   }
   @Override

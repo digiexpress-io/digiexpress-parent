@@ -62,10 +62,6 @@ public class CustomerSmsBuilderSuomifiRest implements CustomerMessageBuilder {
     return this;
   }
   @Override
-  public CustomerMessageBuilder crn(String crn) {
-    return this;
-  }
-  @Override
   public void build() {
     final var request = this.request
       .emailTitle(emails.stream().collect(Collectors.toMap(e -> e.locale(), e -> e.title())))
