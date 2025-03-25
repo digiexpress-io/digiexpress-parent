@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
+
 import io.resys.thena.api.actions.GrimQueryActions.MissionCommitQuery;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimCommands;
@@ -39,6 +41,7 @@ import io.resys.thena.api.entities.grim.GrimObjective;
 import io.resys.thena.api.entities.grim.GrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimCommands;
+import io.resys.thena.api.entities.grim.ImmutableGrimCommitTree;
 import io.resys.thena.api.entities.grim.ImmutableGrimContainerVersion;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionContainer;
@@ -61,8 +64,10 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.grim.GrimState;
+import io.resys.thena.support.OidUtils;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -86,8 +91,58 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
     return Uni.combine().all().unis(
       tx.query().commit().findAllByMissionId(missionId),
       tx.query().commitTree().findAllByMissionId(missionId)
-    ).asTuple();
+    )
+    .asTuple()
+    .onItem().transformToUni(tuple -> {
+      
+      if(tuple.getItem2().isEmpty()) {
+        return getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(tx, missionId, tuple.getItem1())
+            .onItem().transform(latestData -> Tuple2.of(tuple.getItem1(), latestData));
+      }
+      return Uni.createFrom().item(tuple);
+    });
   }
+  
+  
+  private Uni<List<GrimCommitTree>> getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(GrimState tx, String missionId, List<GrimCommit> commits) {
+    return tx.query().missions()
+    .missionId(missionId)
+    .excludeDocs(GrimDocType.GRIM_COMMIT, GrimDocType.GRIM_COMMIT_VIEWER)
+    .findAll()
+    .collect().asList().onItem().transform(e -> {
+      final var container = e.iterator().next();
+      final var firstCommit = commits.stream().filter(c -> c.getParentCommitId() == null)
+          .findFirst()
+          .orElseThrow(() -> new IllegalArgumentException("Can't find first commit!"));
+      
+      return ImmutableList.builder()
+        .add(container.getMission())
+        .addAll(container.getLinks().values())
+        .addAll(container.getMissionLabels().values())
+        .addAll(container.getRemarks().values())
+        .addAll(container.getObjectives().values())
+        .addAll(container.getGoals().values())
+        .addAll(container.getData().values())
+        .addAll(container.getAssignments().values())
+        .addAll(container.getCommands().values())
+        .build()
+        .stream().map(entity -> {
+          
+          final GrimCommitTree tree = ImmutableGrimCommitTree.builder()
+            .id(OidUtils.gen())
+            .commitId(firstCommit.getCommitId())
+            .operationType(GrimCommitTreeOperation.ADD)
+            .bodyAfter(JsonObject.mapFrom(entity))
+            .build();
+          
+          return tree;
+        })
+        .toList();
+      
+    });
+  }
+  
+
   
   private QueryEnvelope<GrimContainerVersion> visitResponse(
       GrimState tx, 
