@@ -20,42 +20,44 @@ package io.digiexpress.eveli.client.spi.comms;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.CommsClient.CustomerSmsBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.CustomerMessageBuilder;
 
-public class CustomerSmsBuilderImpl implements CustomerSmsBuilder {
+public class CustomerSmsBuilderImpl implements CustomerMessageBuilder {
+
+
 
   @Override
-  public CustomerSmsBuilder title(String title) {
+  public CustomerMessageBuilder ssn(String userId) {
     return this;
   }
 
   @Override
-  public CustomerSmsBuilder content(String content) {
-    return this;
-  }
-
-  @Override
-  public CustomerSmsBuilder userId(String userId) {
-    return this;
-  }
-
-  @Override
-  public CustomerSmsBuilder ssn(String userId) {
-    return this;
-  }
-
-  @Override
-  public CustomerSmsBuilder crn(String userId) {
-    return this;
-  }
-
-  @Override
-  public CustomerSmsBuilder notificationId(String notificationId) {
+  public CustomerMessageBuilder crn(String userId) {
     return this;
   }
 
   @Override
   public void build() {
+  }
+
+  @Override
+  public CustomerMessageBuilder sms(String title, String content) {
+    return this;
+  }
+
+  @Override
+  public CustomerMessageBuilder email(String locale, String title, String content) {
+    return this;
+  }
+
+  @Override
+  public CustomerMessageBuilder senderId(String senderId) {
+    return this;
+  }
+
+  @Override
+  public CustomerMessageBuilder messageId(String messageId) {
+    return this;
   }
 
 }

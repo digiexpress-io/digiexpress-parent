@@ -38,10 +38,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Storage;
 
+import fi.suomi.asiointitili.ObjectFactory;
 import io.digiexpress.eveli.app.config.AppProperties;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.api.CommsClient.CustomerSmsBuilder;
+import io.digiexpress.eveli.client.api.CommsClient.CustomerMessageBuilder;
 import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
@@ -59,6 +60,10 @@ import io.digiexpress.eveli.client.spi.comms.CustomerSmsBuilderImpl;
 import io.digiexpress.eveli.client.spi.comms.EmailBuilderDummy;
 import io.digiexpress.eveli.client.spi.comms.EmailBuilderJakarta;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
+import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiRest;
+import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiWsl;
+import io.digiexpress.notification.client.NotificationRestServiceClient;
+import io.digiexpress.notification.client.NotificationWebServiceClient;
 import io.digiexpress.notification.client.SuomiFiRestProperties;
 import io.digiexpress.notification.client.SuomiFiWSLProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -115,14 +120,20 @@ public class Application {
   }
 
   @Bean
-  public CommsClient commsClient(SuomiFiRestProperties restApi, SuomiFiWSLProperties wslApi, EveliPropsEmail email) {
-    final Supplier<CustomerSmsBuilder> createCustomerSms;  
+  public CommsClient commsClient(
+      SuomiFiRestProperties restApi, 
+      SuomiFiWSLProperties wslApi, 
+      EveliPropsEmail email,
+      ObjectMapper mapper,
+      ObjectFactory factory) {
+    
+    final Supplier<CustomerMessageBuilder> createCustomerSms;  
     final Supplier<EmailBuilder> createEmail;
 
     if(restApi.isEnabled()) {
-      createCustomerSms = null;
+      createCustomerSms = () -> new CustomerSmsBuilderSuomifiRest(new NotificationRestServiceClient(restApi, mapper));
     } else if(wslApi.isEnabled()) {
-      createCustomerSms = null;
+      createCustomerSms =  () -> new CustomerSmsBuilderSuomifiWsl(new NotificationWebServiceClient(wslApi, factory));
     } else {
       createCustomerSms = () -> new CustomerSmsBuilderImpl();
     }
@@ -134,7 +145,7 @@ public class Application {
     }
     
     return new CommsClient() {
-      @Override public CustomerSmsBuilder createCustomerSms() { return createCustomerSms.get(); }
+      @Override public CustomerMessageBuilder createCustomerSms() { return createCustomerSms.get(); }
       @Override public EmailBuilder createEmail() { return createEmail.get(); }
     };
   }
