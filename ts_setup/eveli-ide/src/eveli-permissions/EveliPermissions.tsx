@@ -1,30 +1,6 @@
 import React from 'react';
 
 
-/*
-  "permissions": [
-    "WRENCH_VIEW",     --> 'NAV_TO_WRENCH'
-    "STENCIL_VIEW",    --> 'NAV_TO_STENCIL'
-    "FEEDBACK_VIEW",   --> 'NAV_TO_FEEDBACK'
-    "DASHBOARD_VIEW",  --> 'NAV_TO_DASHBOARD'
-    "TASK_ALL_VIEW",   --> 'NAV_TO_TASKS'
-    "RELEASE_VIEW",    --> 'NAV_TO_RELEASES'
-    "DEPLOYMENT_VIEW", --> 'NAV_TO_DEPLOYMENTS'
-    "TASK_GROUP_VIEW", --> 'NAV_TO_TASK_GROUP'
-  
-    "TASK_ALL_DELETE", --> 'DELETE_TASK_ALL'
-    
-    "FEEDBACK_EDIT",   --> 'EDIT_FEEDBACK'
-    "STENCIL_EDIT",    --> 'EDIT_STENCIL'
-    "WRENCH_EDIT",     --> 'EDIT_WRENCH'
-    "TASK_GROUP_EDIT", --> 'EDIT_TASK_GROUP'
-    "RELEASE_EDIT",    --> 'EDIT_RELEASE'
-    "TASK_ALL_EDIT",   --> 'EDIT_TASK_ALL'
-    "DEPLOYMENT_EDIT", --> 'EDIT_DEPLOYMENT'
-
-    ],
-*/
-
 type PermissionType =
   'NAV_TO_WRENCH' |
   'NAV_TO_STENCIL' |
@@ -53,9 +29,6 @@ type PermissionType =
   'NAV_TO_WRENCH_DEBUG' |
   'NAV_TO_WRENCH_COMPARE' |
   'NAV_TO_WRENCH_RELEASES' |
-
-
-
 
 
   'CREATE_TASK' |

@@ -18,6 +18,7 @@ import { EveliTaskTableContext } from "./EveliTaskTableProvider";
 import { TaskLink } from "./TaskLink";
 import { TaskStatusIndicator } from "./TaskStatusIndicator";
 import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
+import { EveliPermissions } from "@/eveli-permissions";
 
 
 const formatTime = (time: any) => {
@@ -89,8 +90,8 @@ export function useTasksTableState(): TableState {
   const isDeleteHidden: boolean | undefined = !taskDeletableHandler();
 
 
-  return  {
-    tableRef, 
+  return {
+    tableRef,
     columns: [
       {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.priority' }),
@@ -173,8 +174,11 @@ export function useTasksTableState(): TableState {
       {
         hidden: isDeleteHidden,
         render: (data) => {
-          return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
-        },   
+          return (<EveliPermissions id='DELETE_TASK'>
+            <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>
+          </EveliPermissions>
+          )
+        },
       }
     ]
   }

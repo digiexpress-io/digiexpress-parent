@@ -14,6 +14,7 @@ import { EveliTaskTableContext } from './EveliTaskTableProvider';
 import { useTasksTableState } from './useTasksTableState';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { useNavigate } from '@tanstack/react-router';
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 
@@ -30,6 +31,23 @@ const useRefresh = (): UseRefreshReturnType => {
   return { isFirstRenderAfterRefresh, setRefreshed: setRefreshed.current };
 };
 
+
+const AddTaskAction: React.FC<{}> = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <EveliPermissions id='CREATE_TASK'>
+      <div style={{ cursor: 'pointer' }} onClick={() => {
+        navigate({
+          from: '/secured/$locale/worker/tasks',
+          to: '/secured/$locale/worker/tasks/create',
+        });
+      }}>
+        <AddIcon />
+      </div>
+    </EveliPermissions>
+  );
+};
 
 export const EveliTasks: React.FC = ({  }) => {
   const navigate = useNavigate();
@@ -58,25 +76,6 @@ export const EveliTasks: React.FC = ({  }) => {
       localStorage.removeItem("filters");
     }
   }, [tableContext.filters]);
-
-  const taskOpenHandler = (taskId: string | undefined) => {
-    
-
-    if(taskId) {
-      navigate({
-        from: '/secured/$locale/worker/tasks',
-        params: { taskId },
-        to: '/secured/$locale/worker/tasks/$taskId',
-      });
-    } else {
-      navigate({
-        from: '/secured/$locale/worker/tasks',
-        to: '/secured/$locale/worker/tasks/create',
-      });
-    }
-  }
-
-
 
   const orderCollection = tableContext.sort || [
     { orderBy: 0, orderByField: "priority", orderDirection: 'desc', sortOrder: 1 },
@@ -118,10 +117,10 @@ export const EveliTasks: React.FC = ({  }) => {
             onClick: () => tableState.tableRef.current.onQueryChange()
           },
           {
-            icon: AddIcon,
+            icon: AddTaskAction as any,
             isFreeAction: true,
             tooltip: intl.formatMessage({ id: 'taskButton.addTask' }),
-            onClick: ()=>taskOpenHandler(undefined)
+            onClick: () => { }
           }
         ]}
         data={query => {
