@@ -13,17 +13,18 @@ import { MigrationComposer } from '../stencil-migration';
 import { TemplateComposer } from '../stencil-template';
 import { useStencilNav } from '../stencil-nav';
 import { EveliActivities } from '@/eveli-activities';
+import { EveliPermissions, EveliPermissionType } from '@/eveli-permissions';
 
 
 export interface ActivityProps {
   title: React.ReactNode;
   desc: React.ReactNode;
-
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
-
+  permissionTypeCreate: EveliPermissionType;
+  permissionTypeView: EveliPermissionType | undefined;
   onView?: () => void;
-  composer: React.FC< {onClose: () => void}>;
+  composer: React.FC<{ onClose: () => void }>;
 }
 
 const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
@@ -31,93 +32,114 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
 
-  const Composer: React.FC< {onClose: () => void}> = open === false ? () => (<></>) : props.data.composer;
+  const Composer: React.FC<{ onClose: () => void }> = open === false ? () => (<></>) : props.data.composer;
 
   return (
     <>
-    <Composer onClose={handleClose}/>
-    <Card>
-      <CardHeader title={props.data.title} />
-      <CardContent>{props.data.desc}</CardContent>
-      <CardActions>
-        {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
-        <Button onClick={handleOpen} children={props.data.buttonCreate}/>
-      </CardActions>
-    </Card>
+      <Composer onClose={handleClose} />
+      <Card>
+        <CardHeader title={props.data.title} />
+        <CardContent>{props.data.desc}</CardContent>
+
+        <CardActions>
+          <EveliPermissions id={props.data.permissionTypeView}>
+            {props.data.buttonViewAll && props.data.onView ? <Button variant='text' onClick={props.data.onView} children={props.data.buttonViewAll} /> : <Box />}
+          </EveliPermissions>
+
+          <EveliPermissions id={props.data.permissionTypeCreate}>
+            <Button onClick={handleOpen} children={props.data.buttonCreate} />
+          </EveliPermissions>
+        </CardActions>
+      </Card>
     </>
   )
 }
 
-export function useActivities() {
+export function useActivities(): ActivityProps[] {
   const nav = useStencilNav();
   return ([
     {
       composer: ArticleComposer,
       onView: () => nav.onNav({ type: 'ARTICLES' }),
-      title: <FormattedMessage id="activities.article.title"/>,
-      desc: <FormattedMessage id="activities.article.desc"/>,
-      buttonCreate: <FormattedMessage id="article.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.article.title" />,
+      desc: <FormattedMessage id="activities.article.desc" />,
+      buttonCreate: <FormattedMessage id="article.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: NewPage,
       onView: () => console.log("nothing to see here"),
-      title: <FormattedMessage id="activities.page.title"/>,
-      desc: <FormattedMessage id="activities.page.desc"/>,
-  
-      buttonCreate: <FormattedMessage id="page.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.page.title" />,
+      desc: <FormattedMessage id="activities.page.desc" />,
+      buttonCreate: <FormattedMessage id="page.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: LinkComposer,
-      onView: () => nav.onNav({type: 'LINKS'}),
-      title: <FormattedMessage id="activities.link.title"/>,
-      desc: <FormattedMessage id="activities.link.desc"/>,
-      buttonCreate: <FormattedMessage id="link.create"/>,
-      buttonViewAll: undefined
+      onView: () => nav.onNav({ type: 'LINKS' }),
+      title: <FormattedMessage id="activities.link.title" />,
+      desc: <FormattedMessage id="activities.link.desc" />,
+      buttonCreate: <FormattedMessage id="link.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
-  
+
     {
       composer: WorkflowComposer,
-      onView: () => nav.onNav({type: 'SERVICES'}),
-      title: <FormattedMessage id="services"/>,
-      desc: <FormattedMessage id="services.desc"/>,
-      buttonCreate: <FormattedMessage id="services.create"/>,
-      buttonViewAll: undefined
+      onView: () => nav.onNav({ type: 'SERVICES' }),
+      title: <FormattedMessage id="services" />,
+      desc: <FormattedMessage id="services.desc" />,
+      buttonCreate: <FormattedMessage id="services.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
-  
+
     {
       composer: LocaleComposer,
-      onView: () => nav.onNav({type: 'LOCALES'}),
-      title: <FormattedMessage id="activities.locale.title"/>,
-      desc: <FormattedMessage id="activities.locale.desc"/>,
-      buttonCreate: <FormattedMessage id="locale.create"/>,
-      buttonViewAll: <FormattedMessage id="button.view.all.locales"/>,
+      onView: () => nav.onNav({ type: 'LOCALES' }),
+      title: <FormattedMessage id="activities.locale.title" />,
+      desc: <FormattedMessage id="activities.locale.desc" />,
+      buttonCreate: <FormattedMessage id="locale.create" />,
+      buttonViewAll: <FormattedMessage id="button.view.all.locales" />,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: 'NAV_TO_STENCIL_LOCALES'
     },
-  
+
     {
       composer: ReleaseComposer,
-      onView: () => nav.onNav({type: 'RELEASES'}),
-      title: <FormattedMessage id="activities.release.title"/>,
-      desc: <FormattedMessage id="activities.release.desc"/>,
-      buttonCreate: <FormattedMessage id="release.create"/>,
-      buttonViewAll: <FormattedMessage id="button.view.all.releases"/>,
+      onView: () => nav.onNav({ type: 'RELEASES' }),
+      title: <FormattedMessage id="activities.release.title" />,
+      desc: <FormattedMessage id="activities.release.desc" />,
+      buttonCreate: <FormattedMessage id="release.create" />,
+      buttonViewAll: <FormattedMessage id="button.view.all.releases" />,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: 'NAV_TO_STENCIL_RELEASES'
     },
     {
       composer: TemplateComposer,
-      onView: () => nav.onNav({type: 'TEMPLATES'}),
-      title: <FormattedMessage id="activities.templates.title"/>,
-      desc: <FormattedMessage id="activities.templates.desc"/>,
-      buttonCreate: <FormattedMessage id="template.create"/>,
-      buttonViewAll: <FormattedMessage id="button.view.all.templates"/>,
+      onView: () => nav.onNav({ type: 'TEMPLATES' }),
+      title: <FormattedMessage id="activities.templates.title" />,
+      desc: <FormattedMessage id="activities.templates.desc" />,
+      buttonCreate: <FormattedMessage id="template.create" />,
+      buttonViewAll: <FormattedMessage id="button.view.all.templates" />,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
     {
       composer: MigrationComposer,
       onView: undefined,
-      title: <FormattedMessage id="activities.migration.title"/>,
-      desc: <FormattedMessage id="activities.migration.desc"/>,
-      buttonCreate: <FormattedMessage id="migration.create"/>,
-      buttonViewAll: undefined
+      title: <FormattedMessage id="activities.migration.title" />,
+      desc: <FormattedMessage id="activities.migration.desc" />,
+      buttonCreate: <FormattedMessage id="migration.create" />,
+      buttonViewAll: undefined,
+      permissionTypeCreate: 'CREATE_STENCIL_ASSET',
+      permissionTypeView: undefined
     },
   ])
 }

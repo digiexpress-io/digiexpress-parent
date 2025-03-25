@@ -1,10 +1,10 @@
-package suomifi.notification.wsdl;
+package io.digiexpress.notification.client;
 
 /*-
  * #%L
- * eveli-client
+ * eveli-integration-suomifi-rest
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,25 @@ package suomifi.notification.wsdl;
  * #L%
  */
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import java.util.List;
 
 import lombok.Data;
 
+public class MailboxesActiveTypes {
 
-@Data
-@Component
-@ConfigurationProperties(prefix = "app.organization")
-public class OrganizationProperties {
-  private String id;
-  private String serviceId;
-  private String messageVersion;
-  private String messageCertCName;
-  private String organizationName;
+  @Data
+  public static class MailboxesActiveRequest {
+    private List<EndUserId> endUsers;
+  }
+  @Data
+  public static class MailboxesActiveResponse {
+    private List<EndUserId> endUsersWithActiveMailbox;
+  }
+
+  @Data
+  public static class EndUserId {
+    private String id;
+  }
+
+  
 }

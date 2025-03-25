@@ -17,10 +17,11 @@ import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import ServiceOptions from './ServiceOptions';
 import { useWrenchNav } from '../../wrench-nav';
+import { EveliPermissions } from "@/eveli-permissions";
 
 
 const ErrorItem: React.FC<{
-  msg:HdesApi.ProgramMessage;
+  msg: HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -37,7 +38,7 @@ const ErrorItem: React.FC<{
 }
 
 const WarningItem: React.FC<{
-  msg:HdesApi.ProgramMessage;
+  msg: HdesApi.ProgramMessage;
   nodeId: string;
 }> = (props) => {
   return (
@@ -103,15 +104,15 @@ function FlowItem(props: {
 }
 
 interface RefDecision {
-  entity?:HdesApi.Entity<HdesApi.AstDecision>;
-  ref:HdesApi.ProgramAssociation;
+  entity?: HdesApi.Entity<HdesApi.AstDecision>;
+  ref: HdesApi.ProgramAssociation;
 }
 interface RefFlow {
-  entity?:HdesApi.Entity<HdesApi.AstFlow>;
-  ref:HdesApi.ProgramAssociation;
+  entity?: HdesApi.Entity<HdesApi.AstFlow>;
+  ref: HdesApi.ProgramAssociation;
 }
 
-const ServiceItem: React.FC<{ serviceId:HdesApi.ServiceId }> = ({ serviceId }) => {
+const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) => {
   const theme = useTheme();
   const { session, isArticleSaved } = Composer.useComposer();
   const { onNav } = useWrenchNav();
@@ -121,7 +122,7 @@ const ServiceItem: React.FC<{ serviceId:HdesApi.ServiceId }> = ({ serviceId }) =
   const saved = isArticleSaved(service);
   const serviceName = service.ast ? service.ast.name : service.id;
 
-  
+
   const decisions: RefDecision[] = service.associations
     .filter(a => a.refType === "DT")
     .map(a => ({ entity: session.getDecision(a.ref), ref: a }));
@@ -129,7 +130,7 @@ const ServiceItem: React.FC<{ serviceId:HdesApi.ServiceId }> = ({ serviceId }) =
     .filter(a => a.owner && a.refType === "FLOW")
     .map(a => ({ entity: session.getFlow(a.ref), ref: a }));
 
-  
+
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
       labelIcon={CodeOutlinedIcon}
@@ -138,11 +139,13 @@ const ServiceItem: React.FC<{ serviceId:HdesApi.ServiceId }> = ({ serviceId }) =
     >
 
       {/** Service options */}
-      <Burger.TreeItem itemId={service.id + 'options-nested'}
-        labelText={<FormattedMessage id="options" />}
-      >
-        <ServiceOptions service={service} />
-      </Burger.TreeItem>
+      <EveliPermissions id='EDIT_WRENCH_ASSET'>
+        <Burger.TreeItem itemId={service.id + 'options-nested'}
+          labelText={<FormattedMessage id="options" />}
+        >
+          <ServiceOptions service={service} />
+        </Burger.TreeItem>
+      </EveliPermissions>
 
       {/** Service status */}
       <Burger.TreeItem itemId={service.id + 'status-nested'}

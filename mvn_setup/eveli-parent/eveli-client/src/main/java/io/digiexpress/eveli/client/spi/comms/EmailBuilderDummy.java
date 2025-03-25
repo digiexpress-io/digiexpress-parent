@@ -20,33 +20,45 @@ package io.digiexpress.eveli.client.spi.comms;
  * #L%
  */
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.client.RestTemplate;
+import java.util.List;
 
 import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.config.EveliPropsEmail;
-import io.digiexpress.eveli.client.config.EveliPropsNotification;
+import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+/**
+ * Email notification builder implementation based on Jakarta mail transport.
+ */
 
 @RequiredArgsConstructor
-public class CommsClientImpl implements CommsClient {
+@Setter @Accessors(fluent = true)
+public class EmailBuilderDummy implements CommsClient.EmailBuilder {
 
-  private final EveliPropsNotification notificationProps;
-  private final EveliPropsEmail emailProps;
-  private final RestTemplate client;
-  
-  
   @Override
-  public EmailBuilder createEmail() {
-    if (StringUtils.isNotBlank(emailProps.getServiceUrl())) {
-      return new EmailBuilderDelegate(emailProps, client);
-    }
-    return new EmailBuilderJakarta(emailProps);
+  public EmailBuilder recipientAddress(String recipientAddress) {
+    return this;
+  }
+  @Override
+  public EmailBuilder recipientAddress(List<String> recipientAddress) {
+    return this;
+  }
+  @Override
+  public EmailBuilder title(String title) {
+    return this;
+  }
+  @Override
+  public EmailBuilder message(String message) {
+    return this;
+  }
+  @Override
+  public EmailBuilder refId(String refId) {
+    return this;
   }
   
   @Override
-  public NotificationBuilder create() {
-    return new NotificationBuilderDelegate(notificationProps, client);
+  public void build() {
+    
   }
-
 }

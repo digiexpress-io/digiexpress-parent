@@ -5,19 +5,15 @@ import { IconButton } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import moment from 'moment'; // TODO dead library
 
-
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '../api-task';
-import { useConfig } from "../api-config";
-import { mapIamRolesList, useIam } from '../api-iam';
-
-
-
+import { mapIamRolesList } from '../api-iam';
 
 import { EveliTaskTableContext } from "./EveliTaskTableProvider";
 import { TaskLink } from "./TaskLink";
 import { TaskStatusIndicator } from "./TaskStatusIndicator";
 import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
+import { EveliPermissions } from "@/eveli-permissions";
 
 
 const formatTime = (time: any) => {
@@ -72,25 +68,9 @@ export function useTasksTableState(): TableState {
   const intl = useIntl();
   const tableContext = React.useContext(EveliTaskTableContext);
   const tableRef = React.useRef<any>();
-  const { taskDeleteGroups } = useConfig();
-  const { user } = useIam();
 
-
-  const taskDeletableHandler = () => {
-    if (taskDeleteGroups && taskDeleteGroups.length > 0) {
-      if (user.hasRole(...taskDeleteGroups)) {
-        return true;
-      }
-      return false;
-    }
-    return true;
-  }
-
-  const isDeleteHidden: boolean | undefined = !taskDeletableHandler();
-
-
-  return  {
-    tableRef, 
+  return {
+    tableRef,
     columns: [
       {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.priority' }),
@@ -171,10 +151,12 @@ export function useTasksTableState(): TableState {
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "created").hidden
       },
       {
-        hidden: isDeleteHidden,
         render: (data) => {
-          return <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>;
-        },   
+          return (<EveliPermissions id='DELETE_TASK'>
+            <div onClick={() => deleteTask(data.id!)}><IconButton color='error'><DeleteForeverIcon /></IconButton></div>
+          </EveliPermissions>
+          )
+        },
       }
     ]
   }

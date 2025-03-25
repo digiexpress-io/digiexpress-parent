@@ -17,6 +17,7 @@ import { LocalesOverview } from './LocalesOverview';
 import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 const Header: React.FC<{ label: string }> = ({ label }) => {
@@ -56,7 +57,7 @@ const LocalesView: React.FC<{}> = () => {
 
   const onClose = () => setEditLocale(undefined);
   return (<>
-    { editLocale ?
+    {editLocale ?
       (<Dialog open={true} onClose={onClose}>
         <DialogTitle><FormattedMessage id={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"} /></DialogTitle>
         <DialogContent>
@@ -64,10 +65,10 @@ const LocalesView: React.FC<{}> = () => {
         </DialogContent>
         <DialogActions>
           <Button variant='text' onClick={onClose}>
-            <FormattedMessage id='button.cancel'/>
+            <FormattedMessage id='button.cancel' />
           </Button>
           <Button onClick={editLocale.body.enabled ? () => handleEnable(editLocale, false) : () => handleEnable(editLocale, true)}>
-            <FormattedMessage id={editLocale.body.enabled ? "button.disable" : "button.enable"}/>
+            <FormattedMessage id={editLocale.body.enabled ? "button.disable" : "button.enable"} />
           </Button>
         </DialogActions>
       </Dialog>) : null
@@ -90,21 +91,24 @@ const LocalesView: React.FC<{}> = () => {
           {locales.map((locale) => (
             <TableRow key={locale.id} hover>
               <TableCell align="left">{locale.body.value}</TableCell>
-              <TableCell>
-                <Burger.Switch
-                  checked={locale.body.enabled}
-                  onChange={() => setEditLocale(locale)}
-                  label={undefined}
-                  helperText={undefined}
-                />
-                {locale.body.enabled ? <FormattedMessage id="locales.enabledMessage" /> : <FormattedMessage id="locales.disabledMessage" />}
-              </TableCell>
+              <EveliPermissions id='EDIT_STENCIL_ASSET'>
+                <TableCell>
+
+                  <Burger.Switch
+                    checked={locale.body.enabled}
+                    onChange={() => setEditLocale(locale)}
+                    label={undefined}
+                    helperText={undefined}
+                  />
+                  {locale.body.enabled ? <FormattedMessage id="locales.enabledMessage" /> : <FormattedMessage id="locales.disabledMessage" />}
+                </TableCell>
+              </EveliPermissions>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-    <Box paddingTop={3}/>
+    <Box paddingTop={3} />
     <LocalesOverview site={site} />
   </>
   );

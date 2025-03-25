@@ -1,8 +1,8 @@
-package io.digiexpress.eveli.client.config;
+package io.digiexpress.notification.client;
 
 /*-
  * #%L
- * eveli-client
+ * eveli-integration-suomifi-rest
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,22 +20,26 @@ package io.digiexpress.eveli.client.config;
  * #L%
  */
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpStatusCode;
 
-import io.digiexpress.eveli.client.api.CommsClient;
-import io.digiexpress.eveli.client.spi.comms.CommsClientImpl;
-
-@Configuration
-public class EveliAutoConfigNotification {
-
-  @Bean
-  public CommsClient commsClient(
-      EveliPropsNotification notificationProps, 
-      EveliPropsEmail emailProps, 
-      RestTemplate client) {
-    
-    return new CommsClientImpl(notificationProps, emailProps, client);
+public class RestApiCallException extends RuntimeException {
+  private static final long serialVersionUID = 1L;
+  
+  private final RestErrorResponse response;
+  private final HttpStatusCode code;
+  
+  public RestApiCallException(RestErrorResponse response, HttpStatusCode httpStatusCode) {
+    super(response.getReason());
+    this.response = response;
+    this.code = httpStatusCode;
   }
+
+  public RestErrorResponse getResponse() {
+    return response;
+  }
+
+  public HttpStatusCode getCode() {
+    return code;
+  }
+
 }

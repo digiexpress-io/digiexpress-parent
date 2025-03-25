@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button} from '@mui/material';
+import { Button } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 
@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliLogo } from '@/eveli-logo';
-
+import { EveliPermissions } from '@/eveli-permissions';
 
 export const Secondary: React.FC = () => {
   const intl = useIntl();
@@ -25,68 +25,83 @@ export const Secondary: React.FC = () => {
   const location = useLocation()
 
 
-
   return (<>
 
     <EveliShellExplorer>
       <EveliLogo />
 
-      <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton} onClick={() => {
-        navigate({
-          from: '/secured/$locale',
-          to: 'worker/tasks/create'
-        })
-      }}>{intl.formatMessage({ id: 'button.compose' })}</Button>
+      <EveliPermissions id='CREATE_TASK'>
+        <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton}
+          onClick={() => {
+            navigate({
+              from: '/secured/$locale',
+              to: 'worker/tasks/create'
+            })
+          }}>
+          {intl.formatMessage({ id: 'button.compose' })}
+        </Button>
+      </EveliPermissions>
 
-      <Button startIcon={<TaskOutlinedIcon />}
-        variant={location.pathname.includes('tasks')  ? 'explorerActive' : 'explorerInactive'} 
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/tasks'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.tasks' })}
-      </Button>
+      <EveliPermissions id='NAV_TO_TASKS'>
+        <Button startIcon={<TaskOutlinedIcon />}
+          variant={location.pathname.includes('tasks') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/tasks'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.tasks' })}
+        </Button>
+      </EveliPermissions>
 
-      <Button startIcon={<DashboardCustomizeOutlinedIcon />}
-        variant={location.pathname.endsWith('dashboard')  ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/dashboard'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.dashboard' })}
-      </Button>
+      <EveliPermissions id='NAV_TO_TASKS_DASHBOARD'>
+        <Button startIcon={<DashboardCustomizeOutlinedIcon />}
+          variant={location.pathname.endsWith('dashboard') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/dashboard'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.dashboard' })}
+        </Button>
+      </EveliPermissions>
 
-      <Button startIcon={<NetworkCheckIcon />}
-        variant={location.pathname.endsWith('monitoring')  ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/monitoring'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.processes' })}
-      </Button>
+      <EveliPermissions id='NAV_TO_TASKS_MONITORING'>
+        <Button startIcon={<NetworkCheckIcon />}
+          variant={location.pathname.endsWith('monitoring') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/monitoring'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.processes' })}
+        </Button>
+      </EveliPermissions>
 
-      <Button startIcon={<ThumbUpAltOutlinedIcon />}
-        variant={location.pathname.endsWith('feedback')  ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/feedback'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.feedback' })}
-      </Button>
 
-      <Button startIcon={<CloudQueueIcon />}
-        variant={location.pathname.endsWith('queues')  ?  'explorerActive' : 'explorerInactive'}
-        onClick={() => navigate({
-          from: '/secured/$locale',
-          to: '/secured/$locale/worker/queues'
-        })}
-      >
-        {intl.formatMessage({ id: 'menu.queues' })}
-      </Button>
+      <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
+        <Button startIcon={<ThumbUpAltOutlinedIcon />}
+          variant={location.pathname.endsWith('feedback') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/feedback'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.feedback' })}
+        </Button>
+      </EveliPermissions>
+
+      <EveliPermissions id='NAV_TO_TASKS_QUEUES'>
+        <Button startIcon={<CloudQueueIcon />}
+          variant={location.pathname.endsWith('queues') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/queues'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.queues' })}
+        </Button>
+      </EveliPermissions>
 
     </EveliShellExplorer>
   </>

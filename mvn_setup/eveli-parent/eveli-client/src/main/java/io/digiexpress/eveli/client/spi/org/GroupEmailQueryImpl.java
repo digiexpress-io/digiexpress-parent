@@ -34,7 +34,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import io.digiexpress.eveli.client.api.OrgClient.GroupEmailQuery;
 import io.digiexpress.eveli.client.spi.asserts.IntegrationAssert;
-import io.digiexpress.eveli.client.spi.comms.EmailBuilderDelegate.EmailRequest;
 import lombok.RequiredArgsConstructor;
 
 
@@ -79,7 +78,7 @@ public class GroupEmailQueryImpl implements GroupEmailQuery {
   private HttpEntity<?> createRequest() {
     final var headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    final HttpEntity<EmailRequest> requestEntity = new HttpEntity<>(headers);
+    final HttpEntity<?> requestEntity = new HttpEntity<>(headers);
     return requestEntity;
   }
   

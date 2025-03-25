@@ -24,10 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.http.ResponseEntity;
 
-import io.digiexpress.eveli.client.spi.comms.EmailBuilderDelegate.EmailResponse;
-import io.vertx.core.json.JsonObject;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import lombok.Builder;
@@ -200,20 +197,6 @@ public class EmailBuilderLogger {
     return this;
   }
 
-  public EmailBuilderLogger emailFailed(ResponseEntity<EmailResponse> resp) {
-    events.add(LogEvent.builder()
-        .props(Map.of(
-            "text", "failed to send any emails using rest api",
-            "status code", String.valueOf(resp.getStatusCode().value()),
-            "body", JsonObject.mapFrom(resp.getBody()).encode()
-        ))
-        .type(LogEventType.EMAIL_SENDING_ERROR)
-        .build()
-      );
-    return this;
-  }
-
-  
   public EmailBuilderLogger emailDisabled() {
     if(log.isInfoEnabled()) {
       events.add(LogEvent.builder()

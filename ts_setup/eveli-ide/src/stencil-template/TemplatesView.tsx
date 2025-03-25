@@ -11,6 +11,7 @@ import { TemplateComposer, TemplateDelete, TemplateEdit } from '.';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 
@@ -38,7 +39,10 @@ const TemplatesView: React.FC<{}> = () => {
       <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
       <Box flexGrow={1} />
       <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
-      <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
+
+      <EveliPermissions id='CREATE_STENCIL_ASSET'>
+        <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
+      </EveliPermissions>
     </Box>
 
     <TableContainer component={Paper}>
@@ -52,15 +56,19 @@ const TemplatesView: React.FC<{}> = () => {
         </TableHead>
 
         <TableBody>
-          {templates.map((template, index) => (
-            <TableRow hover>
+          {templates.map((template) => (
+            <TableRow hover key={template.id}>
               <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                <IconButton onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
+                <EveliPermissions id='EDIT_STENCIL_ASSET'>
+                  <IconButton onClick={() => setTemplateEdit(template.id)}><EditIcon /></IconButton>
+                </EveliPermissions>
               </TableCell>
               <TableCell>{template.body.name}</TableCell>
               <TableCell>{template.body.description}</TableCell>
               <TableCell align="left" sx={{ fontWeight: 'bold', width: "80px" }}>
-                <IconButton onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
+                <EveliPermissions id='DELETE_STENCIL_ASSET'>
+                  <IconButton onClick={() => setTemplateDelete(template.id)}><DeleteOutlineOutlinedIcon /></IconButton>
+                </EveliPermissions>
               </TableCell>
             </TableRow>))
           }

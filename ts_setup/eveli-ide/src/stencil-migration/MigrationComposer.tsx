@@ -40,7 +40,7 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <FormattedMessage id='button.cancel'/>
       </Button>
       <Button onClick={handleCreate} disabled={loading || !file }>
-        <FormattedMessage id='imports.import.action"'/>
+          <FormattedMessage id='imports.import.action' />
       </Button>
     </DialogActions>
   </Dialog>

@@ -110,6 +110,14 @@
       <artifactId>eveli-integration-google</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.digiexpress</groupId>    
+      <artifactId>eveli-integration-suomifi-wsl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>    
+      <artifactId>eveli-integration-suomifi-rest</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
     </dependency>

@@ -1,10 +1,10 @@
-package suomifi.notification.wsdl;
+package io.digiexpress.notification.client;
 
 /*-
  * #%L
- * eveli-client
+ * eveli-integration-suomifi-rest
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,22 @@ package suomifi.notification.wsdl;
  */
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-@Component
-@ConfigurationProperties(prefix = "app.config.soapwebapi")
+
 @Data
-public class SoapClientProperties {
-  private String serviceUri;
+@Component
+@ConfigurationProperties(prefix = "eveli.suomifi.rest")
+public class SuomiFiRestProperties {
+  // system id, old viranomaistunnus
+  private String id;
+  // old palvelutunnus
+  private String serviceId;
   
-  private Resource signingCertificate;
-  private String signingStorePassword;
-  private String signingCertificateKeyAlias ="certificate";
-
-  private String serverCertificatePem;
+  private boolean enabled;
+  private String endpoint;
+  private String password;
+  private boolean markdownEnabled;
 }
-

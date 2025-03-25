@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommsClientDummy implements CommsClient {
   @Override
-  public NotificationBuilder create() {
+  public CustomerMessageBuilder createCustomerSms() {
     return null;
   }
 

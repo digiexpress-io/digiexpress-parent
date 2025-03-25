@@ -12,91 +12,97 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 
-
 import { EveliLocales } from '@/eveli-locales';
+import { EveliPermissions } from '@/eveli-permissions';
 
-
-export const Toolbar: React.FC<{  }> = ({  }) => {
+export const Toolbar: React.FC<{}> = ({ }) => {
   const navigate = useNavigate();
   const classes = useUtilityClasses();
   const location = useLocation();
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: false }}>
-      <div>
-        <IconButton { ...(location.pathname.includes('tasks') ? { disabled: true, className: classes.itemActive} : {}) }
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/tasks',
-            search: { explorer: [] }
-          })}>
-          <TaskOutlinedIcon />
-        </IconButton>
-        <Typography { ...(location.pathname.includes('tasks') ? { className: classes.textActive } : {})}>
-          <FormattedMessage id='toolbar.tasks' />
-        </Typography>
+      <div> {/* divs needed to maintain IconButton styling, otherwise background stretches */}
+        <EveliPermissions id='NAV_TO_TASKS'>
+          <IconButton {...(location.pathname.includes('tasks') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/tasks',
+              search: { explorer: [] }
+            })}>
+            <TaskOutlinedIcon />
+          </IconButton>
+          <Typography {...(location.pathname.includes('tasks') ? { className: classes.textActive } : {})}>
+            <FormattedMessage id='toolbar.tasks' />
+          </Typography>
+        </EveliPermissions>
       </div>
 
       <div>
-        <IconButton 
-          { ...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive} : {}) }
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/assets/wrench',
-            search: { explorer: [] }
-          })}>
-          <BuildOutlinedIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
+        <EveliPermissions id='NAV_TO_WRENCH'>
+          <IconButton
+            {...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/assets/wrench',
+              search: { explorer: [] }
+            })}>
+            <BuildOutlinedIcon />
+          </IconButton>
+          <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
+        </EveliPermissions>
       </div>
 
       <div>
-        <IconButton 
-          { ...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive} : {}) }
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/assets/stencil',
-            search: { explorer: [] }
-          })}>
-          <EditNoteOutlinedIcon />
-        </IconButton>
-        <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+        <EveliPermissions id='NAV_TO_STENCIL'>
+          <IconButton
+            {...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/assets/stencil',
+              search: { explorer: [] }
+            })}>
+            <EditNoteOutlinedIcon />
+          </IconButton>
+          <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+        </EveliPermissions>
       </div>
 
       <div>
-        <IconButton { ...(location.pathname.endsWith('forms') ? { disabled: true, className: classes.itemActive } : {}) }
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/assets/forms'
-          })}>
-          <ListIcon />
-        </IconButton>
-        <Typography { ...(location.pathname.endsWith('forms') ? { className: classes.textActive } : {})
-        }>
-          <FormattedMessage id='menu.forms' />
-        </Typography>
+        <EveliPermissions id='NAV_TO_DIALOB'>
+          <IconButton {...(location.pathname.endsWith('forms') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/assets/forms'
+            })}>
+            <ListIcon />
+          </IconButton>
+          <Typography {...(location.pathname.endsWith('forms') ? { className: classes.textActive } : {})
+          }>
+            <FormattedMessage id='menu.forms' />
+          </Typography>
+        </EveliPermissions>
       </div>
 
       <div>
-        <IconButton { ...(location.pathname.endsWith('publications') ? { disabled: true, className: classes.itemActive } : {}) }
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/publications'
-          })}>
+        <EveliPermissions id='NAV_TO_DEPLOYMENTS'>
+          <IconButton {...(location.pathname.endsWith('publications') ? { disabled: true, className: classes.itemActive } : {})}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/publications'
+            })}>
+            <BeenhereOutlinedIcon />
+          </IconButton>
 
-          <BeenhereOutlinedIcon />
-        </IconButton>
-      
-        <Typography {...(location.pathname.endsWith('publications') ? { className: classes.textActive } : {})}>
-          <FormattedMessage id='menu.publications' />
-        </Typography>      
+          <Typography {...(location.pathname.endsWith('publications') ? { className: classes.textActive } : {})}>
+            <FormattedMessage id='menu.publications' />
+          </Typography>
+        </EveliPermissions>
       </div>
 
 
       <div>
-        <IconButton 
-          onClick={() => window.open("https://github.com/digiexpress-io/digiexpress-parent/wiki", "_blank")}>
-          
+        <IconButton onClick={() => window.open("https://github.com/digiexpress-io/digiexpress-parent/wiki", "_blank")}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
         <Typography><FormattedMessage id='toolbar.help' /></Typography>

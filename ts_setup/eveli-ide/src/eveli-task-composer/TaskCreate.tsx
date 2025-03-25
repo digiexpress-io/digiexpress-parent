@@ -24,6 +24,8 @@ import { IamApi } from '../api-iam';
 import { TaskApi } from '../api-task';
 import { EveliTaskComments } from '../eveli-task-comments';
 import { EveliDatePicker } from '../eveli-datepicker';
+import { EveliPermissions } from '@/eveli-permissions';
+
 import { DialobReview } from '../dialob-review';
 
 import { StatusComponent } from './Status';
@@ -587,7 +589,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     {(!editTask.keyWords || editTask.keyWords.length === 0) && (
                       <Box display='flex' gap={1}>
                         <FormReview sessionId={editTask.questionnaireId} taskId={editTask.id} />
-                        <FeedbackButton taskId={editTask.id} />
+                        <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'><FeedbackButton taskId={editTask.id} /></EveliPermissions>
                       </Box>
                     )}
                     {!readonly && <Button variant='contained' disabled={isSubmitting || !isValid || !dirty} onClick={submitForm}  ><FormattedMessage id='taskButton.accept'/></Button>}

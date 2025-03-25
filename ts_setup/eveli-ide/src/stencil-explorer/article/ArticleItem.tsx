@@ -13,6 +13,7 @@ import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { ArticleOptions } from './ArticleOptions';
 import ArticlePageItem from './ArticlePageItem';
+import { EveliPermissions } from "@/eveli-permissions";
 
 
 interface WorkflowItemProps {
@@ -97,13 +98,14 @@ const ArticleItem: React.FC<{
       //labelcolor={saved ? "explorerItem" : "secondary.light"}
       >
 
-        {/** Article options */
-          options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'}
-            labelText={<FormattedMessage id="options" />}
-          >
-            <ArticleOptions article={article} />
-          </Burger.TreeItem>) : null
-        }
+        {/** Article options */}
+        <EveliPermissions id='EDIT_STENCIL_ASSET'>
+          {
+            options ? (<Burger.TreeItem itemId={article.id + 'article-options-nested'} labelText={<FormattedMessage id="options" />}>
+              <ArticleOptions article={article} />
+            </Burger.TreeItem>) : null
+          }
+        </EveliPermissions>
 
         {/** Pages */}
         <Burger.TreeItem itemId={article.id + 'pages-nested'}
