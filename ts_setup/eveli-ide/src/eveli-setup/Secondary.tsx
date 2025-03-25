@@ -54,7 +54,7 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliPermissions>
 
-      <EveliPermissions id='NAV_TO_DASHBOARD'>
+      <EveliPermissions id='NAV_TO_TASKS_DASHBOARD'>
         <Button startIcon={<DashboardCustomizeOutlinedIcon />}
           variant={location.pathname.endsWith('dashboard') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
@@ -66,7 +66,7 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliPermissions>
 
-      <EveliPermissions id='NAV_TO_MONITORING'>
+      <EveliPermissions id='NAV_TO_TASKS_MONITORING'>
         <Button startIcon={<NetworkCheckIcon />}
           variant={location.pathname.endsWith('monitoring') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
@@ -79,7 +79,7 @@ export const Secondary: React.FC = () => {
       </EveliPermissions>
 
 
-      <EveliPermissions id='NAV_TO_FEEDBACK'>
+      <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
         <Button startIcon={<ThumbUpAltOutlinedIcon />}
           variant={location.pathname.endsWith('feedback') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
@@ -91,7 +91,7 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliPermissions>
 
-      <EveliPermissions id='NAV_TO_QUEUES'>
+      <EveliPermissions id='NAV_TO_TASKS_QUEUES'>
         <Button startIcon={<CloudQueueIcon />}
           variant={location.pathname.endsWith('queues') ? 'explorerActive' : 'explorerInactive'}
           onClick={() => navigate({
