@@ -49,8 +49,7 @@ const AddTaskAction: React.FC<{}> = (props) => {
   );
 };
 
-export const EveliTasks: React.FC = ({  }) => {
-  const navigate = useNavigate();
+export const EveliTasks: React.FC = ({ }) => {
   const intl = useIntl();
   const tableLocalization = useMaterialTableLabels();
   const tableContext = useContext(EveliTaskTableContext);

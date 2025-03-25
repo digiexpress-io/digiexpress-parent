@@ -19,6 +19,7 @@ import { EveliDateTimeFormatter } from '../eveli-datetime-formatter';
 
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 
@@ -26,7 +27,7 @@ interface TableState {
   columns: Array<Column<PublicationApi.Publication>>;
 }
 
-const DeploymentInfo: React.FC<PublicationApi.Publication> = ({description}) => {
+const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
 
   function handleOpen() {
@@ -39,30 +40,30 @@ const DeploymentInfo: React.FC<PublicationApi.Publication> = ({description}) => 
 
 
   return (
-  <>
-    <Dialog open={open} fullWidth maxWidth='md'>
-      <DialogContent>
-        <DialogContentText sx={{whiteSpace: 'pre-wrap'}} variant='body2'>
-          {description}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}><FormattedMessage id='button.accept' /></Button>
-      </DialogActions>
-    </Dialog>
-    <Box width='200px' height='46px' textOverflow='ellipsis' overflow='hidden' sx={{cursor: 'pointer'}} onClick={handleOpen}>
-      {description}
-    </Box>
-  </>);
+    <>
+      <Dialog open={open} fullWidth maxWidth='md'>
+        <DialogContent>
+          <DialogContentText sx={{ whiteSpace: 'pre-wrap' }} variant='body2'>
+            {description}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}><FormattedMessage id='button.accept' /></Button>
+        </DialogActions>
+      </Dialog>
+      <Box width='200px' height='46px' textOverflow='ellipsis' overflow='hidden' sx={{ cursor: 'pointer' }} onClick={handleOpen}>
+        {description}
+      </Box>
+    </>);
 }
 
 
 
 function parseErrors(errors: any): any[] {
-  return  errors?.map?.errors || [];
+  return errors?.map?.errors || [];
 }
 
-const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () => void}> = ({status, id, onSubmit, external, errors}) => {
+const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () => void }> = ({ status, id, onSubmit, external, errors }) => {
   const intl = useIntl();
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const { saveDeployment } = useFetch('worker/rest/api/assets/deployments/$deploymentId.PUT', {})
@@ -89,11 +90,11 @@ const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () =>
   }
 
   let color: 'success' | 'error' | 'primary' | 'warning';
-  if(status == 'DEPLOYED') {
+  if (status == 'DEPLOYED') {
     color = 'success';
-  } else if(status == 'ERROR') {
+  } else if (status == 'ERROR') {
     color = 'error';
-  } else if(status == 'READY') {
+  } else if (status == 'READY') {
     color = 'primary';
   } else {
     color = 'warning';
@@ -102,30 +103,53 @@ const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () =>
 
 
   return (<div>
-      <Dialog open={statusDialogOpen} onClose={handleClose} maxWidth='md' fullWidth>
-        <DialogTitle fontWeight='bold'>{intl.formatMessage({ id: 'publications.changeStatus' })}</DialogTitle>
-        <DialogContent>
-          <Stack spacing={1}>
-            { external === true ? 
-              (<>
+    <Dialog open={statusDialogOpen} onClose={handleClose} maxWidth='md' fullWidth>
+      <DialogTitle fontWeight='bold'>{intl.formatMessage({ id: 'publications.changeStatus' })}</DialogTitle>
+      <DialogContent>
+        <Stack spacing={1}>
+          {external === true ?
+            (<>
               <span>{intl.formatMessage({ id: 'publications.external' })}</span>
               <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
-              </>) : (<>
+            </>) : (<>
               <span>{intl.formatMessage({ id: 'publications.currentStatus' })} {status}</span>
               <Button disabled={status === 'READY'} variant='outlined' color='error' startIcon={<DeleteIcon />} onClick={handleUnDeployed}>{intl.formatMessage({ id: 'publications.remove' })}</Button>
               <Button disabled={status === 'DEPLOYED'} variant='contained' endIcon={<SendIcon />} onClick={handleDeploy}>{intl.formatMessage({ id: 'publications.deploy' })}</Button>
-              </>)}
+            </>)}
 
-              {parseErrors(errors).map((e, key) => (<div key={key}>{JSON.stringify(e)}</div>))}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
-        </DialogActions>
-      </Dialog>
-      <IconButton onClick={handleOpen}><CircleIcon color={color}/></IconButton>
-    </div>);
+          {parseErrors(errors).map((e, key) => (<div key={key}>{JSON.stringify(e)}</div>))}
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} variant='text'><FormattedMessage id='button.cancel' /></Button>
+      </DialogActions>
+    </Dialog>
+    <IconButton onClick={handleOpen}><CircleIcon color={color} /></IconButton>
+  </div>);
 }
+
+const AddPublicationAction: React.FC = () => {
+
+  return (
+    <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+      <div style={{ cursor: 'pointer' }}>
+        <AddIcon />
+      </div>
+    </EveliPermissions>
+  );
+};
+
+const UploadPublicationAction: React.FC = () => {
+
+  return (
+    <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+      <div style={{ cursor: 'pointer' }}>
+        <FileUploadIcon />
+      </div>
+    </EveliPermissions>
+  );
+};
+
 
 export const PublicationsTable: React.FC = () => {
   const intl = useIntl();
@@ -142,7 +166,7 @@ export const PublicationsTable: React.FC = () => {
   const tableState: TableState = {
     columns: [
       {
-        render: data => <PublicationStatus {...data} onSubmit={() => refreshAssetReleases()}/>,
+        render: data => <PublicationStatus {...data} onSubmit={() => refreshAssetReleases()} />,
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.name' }),
@@ -153,7 +177,7 @@ export const PublicationsTable: React.FC = () => {
         title: intl.formatMessage({ id: 'publicationsTableHeader.description' }),
         field: 'description',
         headerStyle: { fontWeight: 'bold' },
-        render: (data) => <DeploymentInfo {...data}/>,
+        render: (data) => <DeploymentInfo {...data} />,
       },
       {
         title: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
@@ -181,11 +205,13 @@ export const PublicationsTable: React.FC = () => {
       {
         render: data => (
           <Box justifySelf='end'>
-            <Tooltip title={intl.formatMessage({ id: 'publicationsTable.exportButton' })}>
-              <IconButton onClick={() => { !Array.isArray(data) && getRelease(data) }}>
-                <SaveIcon color='primary' />
-              </IconButton>
-            </Tooltip>
+            <EveliPermissions id='EXPORT_EVELI_PUBLICATION'>
+              <Tooltip title={intl.formatMessage({ id: 'publicationsTable.exportButton' })}>
+                <IconButton onClick={() => { !Array.isArray(data) && getRelease(data) }}>
+                  <SaveIcon color='primary' />
+                </IconButton>
+              </Tooltip>
+            </EveliPermissions>
           </Box>
         )
       }
@@ -195,9 +221,9 @@ export const PublicationsTable: React.FC = () => {
   return (
     <>
       <MaterialTable
-        title={        
+        title={
           <Typography variant='h1'>
-            <FormattedMessage id='publicationsTable.title'/>
+            <FormattedMessage id='publicationsTable.title' />
           </Typography>
         }
         localization={tableLocalization}
@@ -214,14 +240,14 @@ export const PublicationsTable: React.FC = () => {
         }}
         actions={[
           {
-            icon: AddIcon,
+            icon: AddPublicationAction as any,
             tooltip: intl.formatMessage({ id: 'publicationsTable.addButton' }),
             isFreeAction: true,
             hidden: !config.modifiableAssets,
             onClick: () => { setNewDialogOpen(true); }
           },
           {
-            icon: FileUploadIcon,
+            icon: UploadPublicationAction as any,
             tooltip: intl.formatMessage({ id: 'publicationsTable.uploadButton' }),
             isFreeAction: true,
             onClick: () => { setUploadDialogOpen(true); }
