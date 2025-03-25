@@ -120,6 +120,11 @@ public class Application {
   }
 
   @Bean
+  public ObjectFactory objectFactory() {
+    return new ObjectFactory();
+  }
+  
+  @Bean
   public CommsClient commsClient(
       SuomiFiRestProperties restApi, 
       SuomiFiWSLProperties wslApi, 
