@@ -136,7 +136,7 @@ public class UserActionsBuilderImpl implements UserActionBuilder {
           .questionnaireId(sessionId)
           .userId(request.getIdentity())
           .expiresInSeconds(expiresInSeconds)
-          .expiresAt(stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime())
+          .expiresAt(stencilService.getEndDate() != null ? stencilService.getEndDate().atZone(ZoneId.systemDefault()).toOffsetDateTime() : null)
           .anon(anon)
           
           .workflowName(stencilService.getValue())
