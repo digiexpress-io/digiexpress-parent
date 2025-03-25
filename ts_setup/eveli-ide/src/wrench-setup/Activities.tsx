@@ -10,7 +10,7 @@ import { useWrenchNav } from '../wrench-nav';
 import ReleaseComposer from '../wrench-release';
 import MigrationComposer from '../wrench-migration';
 import { EveliActivities } from '@/eveli-activities';
-import { EveliPermissions, PermissionType } from '@/eveli-permissions';
+import { EveliPermissions, EveliPermissionType } from '@/eveli-permissions';
 
 
 const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
@@ -46,8 +46,8 @@ const ActivitiesViewItem: React.FC<{ data: ActivityProps }> = (props) => {
 export interface ActivityProps {
   title: React.ReactNode;
   desc: React.ReactNode;
-  permissionTypeCreate: PermissionType;
-  permissionTypeView: PermissionType | undefined;
+  permissionTypeCreate: EveliPermissionType;
+  permissionTypeView: EveliPermissionType | undefined;
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
   onView?: () => void;

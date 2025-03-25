@@ -8,6 +8,8 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import { FormattedMessage } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
+import { EveliPermissions } from "@/eveli-permissions";
+
 import { StencilComposerApi as Composer } from '../../stencil-setup';
 import { StencilApi } from '@/api-stencil';
 
@@ -30,9 +32,11 @@ const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflo
         labelcolor="explorerItem"
         labelIcon={workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
 
-        <Burger.TreeItem itemId={workflow.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
-          <WorkflowOptions workflow={workflow} />
-        </Burger.TreeItem>
+        <EveliPermissions id='EDIT_STENCIL_ASSET'>
+          <Burger.TreeItem itemId={workflow.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
+            <WorkflowOptions workflow={workflow} />
+          </Burger.TreeItem>
+        </EveliPermissions>
 
 
         {/** Article options */}
@@ -43,7 +47,7 @@ const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflo
           labelcolor="primary">
 
           {workflow.body.articles.map((id => session.getArticleView(id))).map(view => (
-            <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${workflow.id}-${view.article.id}-nested`}/>
+            <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${workflow.id}-${view.article.id}-nested`} />
           ))}
         </Burger.TreeItem>
 

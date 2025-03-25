@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 
@@ -31,31 +32,33 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const message = <FormattedMessage id="snack.release.createdMessage" />
 
   return (
-  <Dialog open={true} onClose={onClose}>
-    <DialogTitle><FormattedMessage id='release.composer.title' /></DialogTitle>
-    <DialogContent>
-      {site.contentType === 'EMPTY' ? <Typography variant="h4" sx={{
-        color: 'error.main',
-        fontWeight: 'bold',
-        p: 2,
-        borderRadius: 3,
-        textAlign: 'center',
-        border: '1px solid',
-        borderColor: 'error.main'
-      }}>
-        <FormattedMessage id={'site.content.empty'} /></Typography> : null}
-      <Burger.TextField label='release.composer.label' onChange={setName} value={name} />
-      <Burger.TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
-    </DialogContent>
-    <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
-      <Button onClick={handleCreate} disabled={!name || site.contentType === 'EMPTY'}>
-        <FormattedMessage id='button.create'/>
-      </Button>
-    </DialogActions>
-  </Dialog>
+    <Dialog open={true} onClose={onClose}>
+      <DialogTitle><FormattedMessage id='release.composer.title' /></DialogTitle>
+      <DialogContent>
+        {site.contentType === 'EMPTY' ? <Typography variant="h4" sx={{
+          color: 'error.main',
+          fontWeight: 'bold',
+          p: 2,
+          borderRadius: 3,
+          textAlign: 'center',
+          border: '1px solid',
+          borderColor: 'error.main'
+        }}>
+          <FormattedMessage id={'site.content.empty'} /></Typography> : null}
+        <Burger.TextField label='release.composer.label' onChange={setName} value={name} />
+        <Burger.TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
+      </DialogContent>
+      <DialogActions>
+        <Button variant='text' onClick={onClose}>
+          <FormattedMessage id='button.cancel' />
+        </Button>
+        <EveliPermissions id='CREATE_STENCIL_ASSET'>
+          <Button onClick={handleCreate} disabled={!name || site.contentType === 'EMPTY'}>
+            <FormattedMessage id='button.create' />
+          </Button>
+        </EveliPermissions>
+      </DialogActions>
+    </Dialog>
   );
 }
 

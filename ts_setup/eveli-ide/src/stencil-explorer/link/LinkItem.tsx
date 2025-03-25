@@ -9,6 +9,7 @@ import { StencilApi } from '@/api-stencil';
 
 import { LinkOptions } from './LinkOptions';
 import ArticleItem from '../article/ArticleItem';
+import { EveliPermissions } from "@/eveli-permissions";
 
 const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
   const { session } = Composer.useComposer();
@@ -25,11 +26,12 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
         labelText={workflowName.name}
         labelcolor="explorerItem"
         labelIcon={link.body.devMode ? ConstructionIcon : undefined}
-        >
-
-        <Burger.TreeItem itemId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />}>
-          <LinkOptions link={link} />
-        </Burger.TreeItem>
+      >
+        <EveliPermissions id='EDIT_STENCIL_ASSET'>
+          <Burger.TreeItem itemId={link.id + 'options-nested'} labelText={<FormattedMessage id="options" />}>
+            <LinkOptions link={link} />
+          </Burger.TreeItem>
+        </EveliPermissions>
 
 
         {/** Article options */}
@@ -39,7 +41,7 @@ const LinkItem: React.FC<{ linkId: StencilApi.LinkId }> = ({ linkId }) => {
           labelcolor="primary">
 
           {link.body.articles.map((id => session.getArticleView(id))).map(view => (
-            <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${link.id}-${view.article.id}-nested`}/>
+            <ArticleItem key={view.article.id} articleId={view.article.id} nodeId={`${link.id}-${view.article.id}-nested`} />
           ))}
         </Burger.TreeItem>
 
