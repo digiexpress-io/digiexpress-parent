@@ -7,9 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } from '../eveli-shell/useUtilityClasses';
-import { useNavigate } from '@tanstack/react-router';
 import { useWrenchNav } from '../wrench-nav';
-
 
 import { WrenchComposerApi } from './ide';
 
@@ -46,7 +44,7 @@ export const Toolbar: React.FC<{}> = () => {
         await composer.actions.handleLoadSite(success)
         composer.actions.handlePageUpdateRemove([article.id]);
         enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: article.ast?.name }} />);  
-      }).catch((error) => {
+      }).catch((_error) => {
 
       });
     }
@@ -56,7 +54,7 @@ export const Toolbar: React.FC<{}> = () => {
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
       <div>
-        <IconButton onClick={(event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
+        <IconButton onClick={(_event) => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
       </div>
 

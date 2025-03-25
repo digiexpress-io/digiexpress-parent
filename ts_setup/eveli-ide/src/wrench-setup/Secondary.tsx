@@ -18,7 +18,7 @@ import { useActivities, ActivityProps } from './Activities';
 import { EveliShellCompose } from '@/eveli-shell-compose';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliLogo } from '@/eveli-logo';
-
+import { EveliPermissions } from '@/eveli-permissions';
 
 
 
@@ -73,47 +73,61 @@ export const Secondary: React.FC<{}> = () => {
       <EveliShellExplorer>
         <EveliLogo />
 
+        <EveliPermissions id='CREATE_WRENCH_ASSET'>
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}
           onClick={handleComposeSelectClick}>
           {intl.formatMessage({ id: 'menu.compose' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_FLOWS'>
         <Button variant={activeItem?.type === 'FLOWS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<AccountTreeOutlinedIcon />}
           onClick={() => onNav({ type: 'FLOWS' })}>
           {intl.formatMessage({ id: 'menu.flows' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_DECISIONS'>
         <Button variant={activeItem?.type === 'DECISIONS' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<TableChartOutlinedIcon />}
           onClick={() => onNav({ type: 'DECISIONS' })}>
           {intl.formatMessage({ id: 'menu.decisions' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_SERVICES'>
         <Button variant={activeItem?.type === 'SERVICES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<CodeOutlinedIcon />}
           onClick={() => onNav({ type: 'SERVICES' })}>
           {intl.formatMessage({ id: 'menu.services' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_DEBUG'>
         <Button variant={activeItem?.type === 'DEBUG' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<BugReportOutlinedIcon />}
           onClick={() => onNav({ type: 'DEBUG' })}>
           {intl.formatMessage({ id: 'menu.debug' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_COMPARE'>
         <Button variant={activeItem?.type === 'COMPARE' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<CompareArrowsOutlinedIcon />}
           onClick={() => onNav({ type: 'COMPARE' })}>
           {intl.formatMessage({ id: 'menu.compare' })}
         </Button>
+        </EveliPermissions>
 
+        <EveliPermissions id='NAV_TO_WRENCH_RELEASES'>
         <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<NewReleasesOutlinedIcon />}
           onClick={() => onNav({ type: 'RELEASES' })}>
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
+        </EveliPermissions>
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}
