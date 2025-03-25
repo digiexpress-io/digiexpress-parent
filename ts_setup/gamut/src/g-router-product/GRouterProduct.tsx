@@ -152,7 +152,7 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
         <Button variant='contained' className={classes.formStartButton} onClick={handleCreateOffer}>{intl.formatMessage({ id: 'gamut.forms.filling.start.button' })}</Button>
       ) : (
         <GAuthFormStart forced onSubmit={handleAfterLogin}>
-            <Button className={classes.formAuthButton} type='submit' variant='contained' startIcon={<PersonOutlinedIcon />}>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
+          <Button className={classes.formAuthButton} type='submit' variant='contained' startIcon={<PersonOutlinedIcon />}>{intl.formatMessage({ id: 'gamut.forms.filling.login-then-start.button' })}</Button>
         </GAuthFormStart>)
 
       }
