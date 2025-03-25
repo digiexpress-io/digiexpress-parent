@@ -47,11 +47,11 @@ export const GLinksRoot = styled("div", {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
     },
-    '& .GLinkFormSecured-root': {
+    '& .GLinkFormLocked-root': {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
-    '& .GLinkFormUnsecured-root': {
+    '& .GLinkFormUnlocked-root': {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
