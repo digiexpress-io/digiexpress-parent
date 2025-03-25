@@ -135,7 +135,7 @@ export const EveliTasks: React.FC = ({ }) => {
           }
         }
         onOrderCollectionChange={onOrderCollectionChange}
-        onChangeColumnHidden={(hiddenColumn: Column<TaskApi.Task>, hidden: boolean) => {
+        onChangeColumnHidden={(hiddenColumn: Column<TaskApi.Task>) => {
           if (tableState.tableRef.current)
             tableState.tableRef.current.onQueryChange();
         }}

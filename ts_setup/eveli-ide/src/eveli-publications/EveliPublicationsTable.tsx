@@ -243,7 +243,6 @@ export const PublicationsTable: React.FC = () => {
             icon: AddPublicationAction as any,
             tooltip: intl.formatMessage({ id: 'publicationsTable.addButton' }),
             isFreeAction: true,
-            hidden: !config.modifiableAssets,
             onClick: () => { setNewDialogOpen(true); }
           },
           {

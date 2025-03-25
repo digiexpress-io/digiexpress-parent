@@ -9,9 +9,7 @@ export interface Config {
   taskDeleteGroups?: string[];
     // TODO:: will be deleted
   taskAdminGroups?: string[];
-    // TODO:: will be deleted
-  modifiableAssets?: boolean; //enable releases and other asset operations
-
+  // TODO:: will be deleted
   serviceUrl: string;
   loginUrl: string;
   logoutUrl: string;
