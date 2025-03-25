@@ -38,7 +38,4 @@ public class EveliPropsEmail {
   private String senderPassword;
   private List<String> allowedRecipients;
   private List<String> enabledDomains;
-  
-  // in case of using separate service
-  private String serviceUrl;
 }

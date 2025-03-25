@@ -77,19 +77,31 @@ eveli.jwt.eveli-issuer: https://frontdesk.digiexpress.io/gateway/issuer
 eveli.jwt.gamut-public-key-value: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkb8vttXCPPraVCQBkFR/\nNIVP4PXnYS9Ik3KBX3Th684d3P1OdEnQ4EMU3gn+jnG5+qQSs+KpXBvwcCsyE1jx\ncIeSQ5GpuXC1BwhCTSM6RY78I2A+mcnt4h45a9ipPi6W9PHfk+PzYFrrp9jgFflZ\n6fyJt5Hfaz3yhnPb7Y/GE5zz9v+HgoCLDbu7xj98BOgt7rIZ27End90Q1iFyQpu1\nYbyyvGy/61hUv/rDeL7gsypyfvjL1n5a1mJ2A3VheXLyLJIleu4vNw8yejtXqp7S\nHc9EiCCf+ccEQnQgAAWLOvgYMaIvaXmuT/MszCjSpsQyqbGV5k9TrlZ7X7gxvcOJ\njQIDAQAB\n-----END PUBLIC KEY-----\n"
 eveli.jwt.gamut-issuer: "https://portal.digiexpress.io/gateway/issuer"
 
+
+
+# Comms email - io.digiexpress.eveli.client.config.EveliPropsEmail
 eveli.email.enabled: false
-# In case of using jakarta email transport implementation
 eveli.email.host-name: 
 eveli.email.host-port: 
 eveli.email.sender-email: 
 eveli.email.sender-password: 
 eveli.email.allowed-recipients: 
 eveli.email.enabled-domains:
-#in case of REST API implementation, if defined it is used
-eveli.email.service-url:
 
-eveli.notification.enabled: false
-eveli.notification.service-url: 
+# Comms sms WSL - io.digiexpress.notification.client.SuomiFiWSLProperties
+eveli.suomifi.wsl.enabled: false
+eveli.suomifi.wsl.id: 
+eveli.suomifi.wsl.service-id: 
+eveli.suomifi.wsl.message-version: 
+eveli.suomifi.wsl.message-cert-c-name: 
+eveli.suomifi.wsl.organization-name: 
+
+# Comms sms REST - io.digiexpress.notification.client.SuomiFiRestProperties
+eveli.suomifi.rest.enabled: false  
+eveli.suomifi.rest.service-id: 
+eveli.suomifi.rest.endpoint: 
+eveli.suomifi.rest.password: 
+eveli.suomifi.rest.markdown-enabled: 
  
 eveli.org.service-url:
 

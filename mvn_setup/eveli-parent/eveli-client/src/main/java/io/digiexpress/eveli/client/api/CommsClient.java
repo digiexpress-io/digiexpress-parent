@@ -26,17 +26,17 @@ import java.util.List;
 
 
 public interface CommsClient {
-  NotificationBuilder create();
+  CustomerSmsBuilder createCustomerSms();  
   EmailBuilder createEmail();
 
 
-  interface NotificationBuilder {
-    NotificationBuilder title(String title);
-    NotificationBuilder content(String content);
-    NotificationBuilder userId(String userId);
-    NotificationBuilder ssn(String userId);
-    NotificationBuilder crn(String userId);
-    NotificationBuilder notificationId(String notificationId);
+  interface CustomerSmsBuilder {
+    CustomerSmsBuilder title(String title);
+    CustomerSmsBuilder content(String content);
+    CustomerSmsBuilder userId(String userId);
+    CustomerSmsBuilder ssn(String userId);
+    CustomerSmsBuilder crn(String userId);
+    CustomerSmsBuilder notificationId(String notificationId);
     void build();
   }
 
