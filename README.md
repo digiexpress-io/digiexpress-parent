@@ -75,6 +75,8 @@ There are two **TypeScript frontend** applications:
 
 To run any of these frontend applications:
 
+- Node version used for installing and testing this was v22.5.1
+
 1. **Install the required dependencies**:
    ```bash
    pnpm install
