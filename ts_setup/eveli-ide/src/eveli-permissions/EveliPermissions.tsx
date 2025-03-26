@@ -1,51 +1,67 @@
+import { IamApi, useIam } from '@/api-iam';
 import React from 'react';
 
+function oneOf(type: IamApi.UserPermission[]): IamApi.UserPermission[] {
+  return type;
+}
 
-export type EveliPermissionType =
-  'NAV_TO_WRENCH' |
-  'NAV_TO_STENCIL' |
-  'NAV_TO_TASKS' |
-  'NAV_TO_DIALOB' |
-  'NAV_TO_RELEASES' |
-  'NAV_TO_DEPLOYMENTS' |
-  'NAV_TO_TASK_GROUP' |
+const EveliPermissionMapping = {
+  'NAV_TO_WRENCH': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_STENCIL': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_TASKS': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE']),
+  'NAV_TO_DIALOB': oneOf(['DIALOB_VIEW', 'DIALOB_EDIT']),
+  'NAV_TO_RELEASES': oneOf(['RELEASE_VIEW', 'RELEASE_EDIT']), //eveli publications
+  'NAV_TO_TASK_GROUP': oneOf(['TASK_GROUP_VIEW', 'TASK_GROUP_EDIT']),
 
-  'NAV_TO_TASKS_FEEDBACK' |
-  'NAV_TO_TASKS_DASHBOARD' |
-  'NAV_TO_TASKS_MONITORING' |
-  'NAV_TO_TASKS_QUEUES' |
+  'NAV_TO_TASKS_FEEDBACK': oneOf(['FEEDBACK_VIEW', 'FEEBACK_EDIT']),
+  'NAV_TO_TASKS_DASHBOARD': oneOf(['TASK_ALL_VIEW', 'DASHBOARD_VIEW']),
+  'NAV_TO_TASKS_MONITORING': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT']),
+  'NAV_TO_TASKS_QUEUES': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT']),
 
-  'NAV_TO_STENCIL_ARTICLES' |
-  'NAV_TO_STENCIL_SERVICES' |
-  'NAV_TO_STENCIL_LINKS' |
-  'NAV_TO_STENCIL_LOCALES' |
-  'NAV_TO_STENCIL_TEMPLATES' |
-  'NAV_TO_STENCIL_MIGRATIONS' |
-  'NAV_TO_STENCIL_RELEASES' |
+  'NAV_TO_STENCIL_ARTICLES': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_SERVICES': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_LINKS': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_LOCALES': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_TEMPLATES': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_MIGRATIONS': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'NAV_TO_STENCIL_RELEASES': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
 
-  'NAV_TO_WRENCH_FLOWS' |
-  'NAV_TO_WRENCH_DECISIONS' |
-  'NAV_TO_WRENCH_SERVICES' |
-  'NAV_TO_WRENCH_DEBUG' |
-  'NAV_TO_WRENCH_COMPARE' |
-  'NAV_TO_WRENCH_RELEASES' |
+  'NAV_TO_WRENCH_FLOWS': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_DECISIONS': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_SERVICES': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_MIGRATIONS': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_DEBUG': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_COMPARE': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'NAV_TO_WRENCH_RELEASES': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
 
-  'CREATE_TASK' |
-  'CREATE_EVELI_PUBLICATION' |
-  'CREATE_STENCIL_ASSET' |
-  'CREATE_WRENCH_ASSET' |
+  'CREATE_TASK': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE']),
+  'CREATE_EVELI_PUBLICATION': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT', 'WRENCH_VIEW', 'WRENCH_EDIT', 'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'RELEASE_VIEW', 'RELEASE_EDIT']),
+  'CREATE_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+  'CREATE_WRENCH_ASSET': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
 
-  'EXPORT_EVELI_PUBLICATION' |
+  'EXPORT_EVELI_PUBLICATION': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT', 'WRENCH_VIEW', 'WRENCH_EDIT', 'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'RELEASE_VIEW', 'RELEASE_EDIT']),
 
-  'EDIT_WRENCH_ASSET' |
-  'EDIT_STENCIL_ASSET' |
+  'EDIT_WRENCH_ASSET': oneOf(['WRENCH_VIEW', 'WRENCH_EDIT']),
+  'EDIT_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
 
-  'DELETE_TASK' |
-  'DELETE_STENCIL_ASSET';
+  'DELETE_TASK': oneOf(['TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE']),
+  'DELETE_STENCIL_ASSET': oneOf(['STENCIL_VIEW', 'STENCIL_EDIT']),
+}
+
+export type EveliPermissionType = keyof typeof EveliPermissionMapping;
 
 
-export const EveliPermissions: React.FC<{ children: React.ReactNode, id: EveliPermissionType | undefined }> = ({ children, id }) => {
+export const EveliPermissions: React.FC<{ children: React.ReactNode, id: EveliPermissionType }> = ({ children, id }) => {
+  const { user } = useIam();
+  const required = EveliPermissionMapping[id];
 
+  const isAccessGranted = user.permissions.find((permission) => {
+    return required.includes(permission);
+  });
 
-  return (<div onClick={() => console.log('EveliPermissionType:', id)}>{children}</div>)
+  if (isAccessGranted) {
+    return <>{children}</>
+  }
+
+  return (<></>)
 }

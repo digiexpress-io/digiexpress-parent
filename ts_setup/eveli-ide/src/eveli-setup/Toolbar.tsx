@@ -22,8 +22,9 @@ export const Toolbar: React.FC<{}> = ({ }) => {
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: false }}>
-      <div> {/* divs needed to maintain IconButton styling, otherwise background stretches */}
-        <EveliPermissions id='NAV_TO_TASKS'>
+
+      <EveliPermissions id='NAV_TO_TASKS'>
+        <div> {/* divs needed to maintain IconButton styling, otherwise IconButton background stretches */}
           <IconButton {...(location.pathname.includes('tasks') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
               from: '/secured/$locale',
@@ -35,11 +36,12 @@ export const Toolbar: React.FC<{}> = ({ }) => {
           <Typography {...(location.pathname.includes('tasks') ? { className: classes.textActive } : {})}>
             <FormattedMessage id='toolbar.tasks' />
           </Typography>
-        </EveliPermissions>
-      </div>
+        </div>
+      </EveliPermissions>
 
-      <div>
-        <EveliPermissions id='NAV_TO_WRENCH'>
+
+      <EveliPermissions id='NAV_TO_WRENCH'>
+        <div>
           <IconButton
             {...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
@@ -50,11 +52,12 @@ export const Toolbar: React.FC<{}> = ({ }) => {
             <BuildOutlinedIcon />
           </IconButton>
           <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
-        </EveliPermissions>
-      </div>
+        </div>
+      </EveliPermissions>
 
-      <div>
-        <EveliPermissions id='NAV_TO_STENCIL'>
+
+      <EveliPermissions id='NAV_TO_STENCIL'>
+        <div>
           <IconButton
             {...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
@@ -65,11 +68,12 @@ export const Toolbar: React.FC<{}> = ({ }) => {
             <EditNoteOutlinedIcon />
           </IconButton>
           <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
-        </EveliPermissions>
-      </div>
+        </div>
+      </EveliPermissions>
 
-      <div>
-        <EveliPermissions id='NAV_TO_DIALOB'>
+
+      <EveliPermissions id='NAV_TO_DIALOB'>
+        <div>
           <IconButton {...(location.pathname.endsWith('forms') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
               from: '/secured/$locale',
@@ -81,11 +85,12 @@ export const Toolbar: React.FC<{}> = ({ }) => {
           }>
             <FormattedMessage id='menu.forms' />
           </Typography>
-        </EveliPermissions>
-      </div>
+        </div>
+      </EveliPermissions>
 
-      <div>
-        <EveliPermissions id='NAV_TO_DEPLOYMENTS'>
+
+      <EveliPermissions id='NAV_TO_RELEASES'>
+        <div>
           <IconButton {...(location.pathname.endsWith('publications') ? { disabled: true, className: classes.itemActive } : {})}
             onClick={() => navigate({
               from: '/secured/$locale',
@@ -97,8 +102,9 @@ export const Toolbar: React.FC<{}> = ({ }) => {
           <Typography {...(location.pathname.endsWith('publications') ? { className: classes.textActive } : {})}>
             <FormattedMessage id='menu.publications' />
           </Typography>
-        </EveliPermissions>
-      </div>
+        </div>
+      </EveliPermissions>
+
 
 
       <div>

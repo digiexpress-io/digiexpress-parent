@@ -2,7 +2,19 @@ export namespace IamApi {
 
 }
 
+
 export declare namespace IamApi {
+
+  export type UserPermission =
+    'WRENCH_VIEW' | 'WRENCH_EDIT' |
+    'STENCIL_VIEW' | 'STENCIL_EDIT' |
+    'TASK_ALL_VIEW' | 'TASK_ALL_EDIT' | 'TASK_ALL_DELETE' |
+    'TASK_GROUP_VIEW' | 'TASK_GROUP_EDIT' |
+    'RELEASE_VIEW' | 'RELEASE_EDIT' |
+    'DEPLOYMENT_VIEW' | 'DEPLOYMENT_EDIT' |
+    'DASHBOARD_VIEW' |
+    'FEEDBACK_VIEW' | 'FEEBACK_EDIT' |
+    'DIALOB_VIEW' | 'DIALOB_EDIT' 
 
   export interface User {
     userId: string;
@@ -11,6 +23,7 @@ export declare namespace IamApi {
     roles: string[];
     authenticated: boolean;
     authorized: boolean;
+    permissions: UserPermission[];
 
     hasRole(...roles: string[]): boolean;
   }

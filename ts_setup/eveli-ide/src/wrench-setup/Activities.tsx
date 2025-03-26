@@ -47,7 +47,7 @@ export interface ActivityProps {
   title: React.ReactNode;
   desc: React.ReactNode;
   permissionTypeCreate: EveliPermissionType;
-  permissionTypeView: EveliPermissionType | undefined;
+  permissionTypeView: EveliPermissionType;
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
   onView?: () => void;
@@ -64,7 +64,7 @@ export function useActivities(): ActivityProps[] {
       desc: <FormattedMessage id="activities.flows.desc" />,
       buttonCreate: <FormattedMessage id="buttons.create" />,
       permissionTypeCreate: 'CREATE_WRENCH_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_FLOWS'
     },
     {
       composer: DecisionComposer,
@@ -74,7 +74,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="buttons.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_WRENCH_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_DECISIONS'
     },
     {
       composer: ServiceComposer,
@@ -84,7 +84,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="buttons.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_WRENCH_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_SERVICES'
     },
     {
       composer: () => {
@@ -101,7 +101,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="activities.debug.view" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'NAV_TO_WRENCH_DEBUG',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_DEBUG'
     },
     {
       composer: ReleaseComposer,
@@ -128,7 +128,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="activities.compare.view" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'NAV_TO_WRENCH_COMPARE',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_COMPARE'
     },
     {
       composer: MigrationComposer,
@@ -138,7 +138,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="buttons.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_WRENCH_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_WRENCH_MIGRATIONS'
     },
   ]);
 }
