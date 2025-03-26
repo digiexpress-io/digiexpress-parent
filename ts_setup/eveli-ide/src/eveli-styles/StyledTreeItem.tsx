@@ -40,7 +40,7 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
     ...other
   } = props;
 
-
+  const labelTypeToShow = typeof labelInfo === "string" ? <Badge color='primary' badgeContent={labelInfo} /> : <>{labelInfo}</>;
 
   return (
     <StyledTreeItemRoot
@@ -52,7 +52,7 @@ const StyledTreeItem: React.FC<StyledTreeItemProps> = (props) => {
           <Typography noWrap={true} fontWeight='bold' pr={1}>
             {labelText}
           </Typography>
-          <Badge color='primary' badgeContent={labelInfo} sx={{ marginLeft: 1 }} />
+          <Box sx={{ marginLeft: 1, display: 'flex', alignItems: 'center' }}>{labelTypeToShow}</Box>
         </Box>
       }
 
