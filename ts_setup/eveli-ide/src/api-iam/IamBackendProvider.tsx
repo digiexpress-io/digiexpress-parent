@@ -41,6 +41,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   }, [props]);
   
 
+
   // create the context
   const contextValue: IamApi.IamBackendContextType = React.useMemo(() => {
     const authType: IamApi.AuthType = (user?.authenticated ?? false) ? 'USER' : 'ANON';
