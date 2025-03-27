@@ -142,7 +142,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                           <>
                             <ResultsDivider searchState={state} title={group[0].linkToForm.name} className={classes.resultsDividerTitle} isHidden={Object.values(state.groupedForms).length === 0} />
                             {group.map((form) => (
-                              <GLinkFormUnlocked key={form.linkToForm.id} label={form.topic.name} value={form.linkToForm.name}
+                              <GLinkFormUnlockedGrouped key={form.linkToForm.id} label={form.topic.name} value={form.linkToForm.name}
                                 onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }); }}
                               />
                             ))}
@@ -157,7 +157,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                         {group.length === 1 && (
                           <>
                             {group.map((form) => (
-                              <GLinkFormUnlocked
+                              <GLinkFormUnlockedGrouped
                                 key={form.linkToForm.id}
                                 label={form.linkToForm.name}
                                 value={form.linkToForm.name}
