@@ -53,6 +53,7 @@ import io.resys.hdes.client.api.programs.ImmutableFlowProgramStepThenPointer;
 import io.resys.hdes.client.api.programs.ImmutableFlowProgramStepWhenThenPointer;
 import io.resys.hdes.client.spi.flow.ast.AstFlowNodesFactory;
 
+
 public class FlowProgramBuilder {
   private static final FlowProgramStepEndPointer END_STEP_POINTER = ImmutableFlowProgramStepEndPointer.builder().type(FlowProgramStepPointerType.END).build();
   private static final FlowProgramStep END_STEP = ImmutableFlowProgramStep.builder()
@@ -114,24 +115,46 @@ public class FlowProgramBuilder {
   }
 
   public FlowProgramStepBody visitStepBody(AstFlowTaskNode task) {
-    if(task.getDecisionTable() == null && task.getService() == null) {
+    if(task.getDecisionTable() == null && task.getService() == null && task.getReturns() == null) {
       return null;
     }
 
-    final var collection = AstFlowNodesFactory.getBooleanValue(task.getRef().getCollection());
-    final var ref = AstFlowNodesFactory.getStringValue(task.getRef().getRef());
+    final var collection = task.getReturns() != null ? AstFlowNodesFactory.getBooleanValue(task.getReturns().getCollection()) : AstFlowNodesFactory.getBooleanValue(task.getRef().getCollection());
+    final var ref =  task.getReturns() != null ? "" : AstFlowNodesFactory.getStringValue(task.getRef().getRef());
+    
     final var inputs = new HashMap<String, String>();
-    if (task.getRef().getObjectInput() != null) {
-      inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+    
+    // use reference input
+    if(task.getRef() != null) {
+      if (task.getRef().getObjectInput() != null) {
+        inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+      } else {
+        for (Map.Entry<String, AstFlowNode> entry : task.getRef().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        }
+      }
+      // use returns input mapping
     } else {
-      for (Map.Entry<String, AstFlowNode> entry : task.getRef().getInputs().entrySet()) {
-        inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+      if (task.getReturns().getObjectInput() != null) {
+        inputs.put(OBJECT_INPUT_FLAG, task.getRef().getObjectInput());
+      } else {
+        for (Map.Entry<String, AstFlowNode> entry : task.getReturns().getInputs().entrySet()) {
+          inputs.put(entry.getKey(), AstFlowNodesFactory.getStringValue(entry.getValue()));
+        }
       }
     }
     
-    final var refType = task.getDecisionTable() != null ? FlowProgramStepRefType.DT : FlowProgramStepRefType.SERVICE;
+    final FlowProgramStepRefType refType;
+    if(task.getDecisionTable() != null) {
+      refType = FlowProgramStepRefType.DT;
+    } else if(task.getService() != null) {
+      refType = FlowProgramStepRefType.SERVICE;
+    } else {
+      refType = FlowProgramStepRefType.RETURNS;
+    }
     return ImmutableFlowProgramStepBody.builder()
-        .ref(ref).refType(refType)
+        .ref(ref)
+        .refType(refType)
         .collection(collection)
         .inputMapping(inputs)
         .build();

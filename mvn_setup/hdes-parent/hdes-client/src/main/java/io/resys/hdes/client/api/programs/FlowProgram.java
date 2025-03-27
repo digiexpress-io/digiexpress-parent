@@ -79,7 +79,9 @@ public interface FlowProgram extends Program {
     String getStepId();
     String getShortHistory();
     List<FlowResultLog> getLogs();
+    List<FlowResultLog> getLastLogs();
     FlowExecutionStatus getStatus();
+    boolean isReturnsCollection();
     Map<String, Serializable> getAccepts();
     Map<String, Serializable> getReturns();
   }
@@ -92,6 +94,7 @@ public interface FlowProgram extends Program {
     LocalDateTime getEnd();
     List<FlowResultErrorLog> getErrors();
     FlowExecutionStatus getStatus();
+    boolean isReturnsCollection();
     Map<String, Serializable> getAccepts();
     Map<String, Serializable> getReturns();
     @Nullable
@@ -105,6 +108,6 @@ public interface FlowProgram extends Program {
   }
   
   enum FlowProgramStepPointerType { SWITCH, THEN, END }
-  enum FlowProgramStepRefType { SERVICE, DT } 
+  enum FlowProgramStepRefType { SERVICE, DT, RETURNS } 
   enum FlowExecutionStatus { COMPLETED, ERROR }
 }

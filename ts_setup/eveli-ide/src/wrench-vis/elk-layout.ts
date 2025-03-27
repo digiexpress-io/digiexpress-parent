@@ -40,7 +40,7 @@ class ModelMapper {
     if(data.type === 'switch') {
       return { height: 200, weight: 200 }
     }
-    if(data.type === 'decisionTable') {
+    if(data.type === 'decisionTable' || data.type === 'returns') {
       return { height: 100, width: 200 }
     }
     if(data.type === 'service') {

@@ -1,10 +1,23 @@
 import React from 'react';
 
-import { Box, TableCell, Typography, useTheme, lighten, alpha, darken } from '@mui/material';
+import { Box, TableCell, Typography, useTheme, lighten, alpha, darken, SxProps, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { HdesApi } from '@/api-wrench';
 
+
+
+function getOutTextFormatting(cell: HdesApi.TypeDef): SxProps {
+  if(cell.valueType !== 'STRING') {
+    return {};
+  }
+
+  return {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    maxWidth: '200px'
+  }
+}
 
 const DecisionTableCell: React.FC<{
   row:HdesApi.AstDecisionRow,
@@ -29,12 +42,16 @@ const DecisionTableCell: React.FC<{
   return (<TableCell 
     key={cell.header} 
     onClick={() => onClick()} 
-    sx={{ cursor: "pointer", borderRight: `1px ${borderColor} solid` }}>
+    sx={{ 
+      cursor: "pointer", 
+      borderRight: `1px ${borderColor} solid`,
+       ...getOutTextFormatting(header)
+    }}>
     
-    <Typography noWrap display="flex">
+    <Typography noWrap>
       { cell?.value ? cell?.value : edit }
     </Typography>
-    
+
   </TableCell>);
 }
 export { DecisionTableCell };

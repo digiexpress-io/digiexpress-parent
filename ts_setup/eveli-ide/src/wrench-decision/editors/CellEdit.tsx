@@ -43,7 +43,7 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
       <ValueSetChooser builder={value.builder} valueSet={header.valueSet} onChange={handleChangeValue} /> :
       (input ?
       <EditString builder={value.builder} onChange={handleChangeValue} /> :
-      <EditStringSimple builder={value.builder} onChange={handleChangeValue} />)
+      <EditStringSimple dt={props.dt} header={header} builder={value.builder} onChange={handleChangeValue} />)
 
   } else if (type === 'INTEGER' || type === 'LONG' || type === 'DECIMAL') {
     editor = input ?
@@ -73,8 +73,9 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
       <FormattedMessage id='decisions.cells.dialog.title' values={{
         name: props.dt.name,
         column: header.name,
-        value: props.cell.value
+        value: ''
       }} />
+      
     </DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>

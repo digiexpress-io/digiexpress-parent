@@ -259,6 +259,7 @@ export declare namespace HdesApi {
     userTask: AstFlowRefNode;
     decisionTable: AstFlowRefNode;
     service: AstFlowRefNode;
+    returns: AstFlowRefNode;
     switch: Record<string, AstFlowSwitchNode>;
   }
   export interface AstFlowRefNode extends AstFlowNode {

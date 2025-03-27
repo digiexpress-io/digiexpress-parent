@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -66,49 +67,50 @@ public class FlowProgramExecutor {
   private final Map<String, FlowResultLog> stepLogs = new HashMap<>();
   private final LocalDateTime start = LocalDateTime.now();
   private final StringBuilder shortHistory = new StringBuilder();
-  private final FlowTaskExpressionContext expressionContext;
   
   public FlowProgramExecutor(FlowProgram program, ProgramContext context, HdesTypesMapper factory) {
     super();
     this.program = program;
     this.context = context;
     this.factory = factory;
-    this.expressionContext = new FlowTaskExpressionContext() {
-      @Override
-      public Object apply(String name) {
-        return visitVariableOnPath(name);
-      }
-    };
   }
 
   public FlowResult run() {
     
     accepted.putAll(visitAcceptedDef(program, context));
     
-    FlowResultLog last;
+    List<FlowResultLog> last;
     FlowExecutionStatus status = FlowExecutionStatus.COMPLETED;
     try {
       last = visitStep(program.getStartStepId());
     } catch(StepException e) {
       LOGGER.error(e.getMessage(), e);
       status = FlowExecutionStatus.ERROR;
-      last = visitException(e);
+      last = Arrays.asList(visitException(e));
     }
     
     final List<FlowResultLog> logs = new ArrayList<>(stepLogs.values());
     if(last != null && status == FlowExecutionStatus.ERROR) {
-      logs.add(last);
+      logs.addAll(last);
     }
     Collections.sort(logs, (o1, o2) -> Integer.compare(o1.getId(), o2.getId()));
     
+    final var isArray = last != null && last.size() > 1;
+  
     return ImmutableFlowResult.builder()
         .logs(logs)
-        .stepId(last.getStepId())
+        .lastLogs(last)
+        .stepId(last.iterator().next().getStepId())
         .status(status)
         .accepts(accepted)
-        .returns(last.getReturns())
+        .isReturnsCollection(isArray)
+        .returns(isArray ? Map.<String, Serializable>of("", mergeResults(last)) : last.iterator().next().getReturns())
         .shortHistory(shortHistory.toString())
         .build();
+  }
+  
+  private ArrayList<Map<String, Serializable>> mergeResults(List<FlowResultLog> last) {
+    return new ArrayList<>(last.stream().map(e -> e.getReturns()).toList());
   }
   
   private FlowResultLog visitException(Exception e) {
@@ -139,6 +141,7 @@ public class FlowProgramExecutor {
           .end(LocalDateTime.now())
           .status(FlowExecutionStatus.ERROR)
           .addAllErrors(messages)
+          .isReturnsCollection(false)
           .build();        
     } else {
       lastLog = ImmutableFlowResultLog.builder()
@@ -156,14 +159,14 @@ public class FlowProgramExecutor {
   }
 
   
-  private FlowResultLog visitStep(String stepId) {
+  private List<FlowResultLog> visitStep(String stepId) {
     final var step = program.getSteps().get(stepId);    
     final var log = visitBody(step);
     
     switch (step.getPointer().getType()) {
     case THEN: return visitThenPointer(step);
     case SWITCH: return visitSwitchPointer(step);
-    case END: return log;
+    case END: return Arrays.asList(log);
     default: throw new ProgramException("Step pointer: '" + step.getPointer().getType() + "' not implemented!");
     }
   }
@@ -179,6 +182,7 @@ public class FlowProgramExecutor {
           .start(start)
           .end(LocalDateTime.now())
           .status(FlowExecutionStatus.COMPLETED)
+          .isReturnsCollection(false)
           .build());
     }
     
@@ -197,6 +201,7 @@ public class FlowProgramExecutor {
           .stepId(step.getId())
           .start(start)
           .end(LocalDateTime.now())
+          .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
           .status(FlowExecutionStatus.COMPLETED)
           .build()); 
     }
@@ -205,6 +210,7 @@ public class FlowProgramExecutor {
     final var merged = ImmutableFlowResultLog.builder()
       .id(this.stepLogs.size() + 1)
       .stepId(step.getId())
+      .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
       .start(start)
       .status(FlowExecutionStatus.COMPLETED);
     
@@ -249,6 +255,33 @@ public class FlowProgramExecutor {
   private FlowResultLog visitSingleInput(FlowProgramStep step, Map<String, Serializable> inputs) {
     
     switch (step.getBody().getRefType()) {
+      case RETURNS: {
+        try {
+          final var outputs = visitReturnMapping(step);
+          return visitStepLog(ImmutableFlowResultLog.builder()
+              .id(this.stepLogs.size() + 1)
+              .stepId(step.getId())
+              .start(start)
+              .end(LocalDateTime.now())
+              .status(FlowExecutionStatus.COMPLETED)
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
+              .accepts(inputs)
+              .returns(outputs)
+              .returnsValue((Serializable) outputs)
+              .build());
+        } catch(Exception e) {
+          visitStepLog(ImmutableFlowResultLog.builder()
+              .id(this.stepLogs.size() + 1)
+              .stepId(step.getId())
+              .start(start)
+              .end(LocalDateTime.now())
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
+              .status(FlowExecutionStatus.ERROR)
+              .accepts(inputs)
+              .build());
+          throw new StepException(e.getMessage(), e);
+        }
+      }
       case DT: {
         final var program = context.getDecision(step.getBody().getRef());
         try {
@@ -264,6 +297,7 @@ public class FlowProgramExecutor {
               .end(LocalDateTime.now())
               .status(FlowExecutionStatus.COMPLETED)
               .accepts(inputs)
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
               .returns(toNonNull(outputs))
               .returnsValue((Serializable) outputs)
               .build());
@@ -273,6 +307,7 @@ public class FlowProgramExecutor {
               .stepId(step.getId())
               .start(start)
               .end(LocalDateTime.now())
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
@@ -293,6 +328,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.COMPLETED)
               .accepts(inputs)
               .returnsValue((Serializable) result.getValue())
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
               .returns(toNonNull(outputs))
               .build());
         } catch(Exception e) {
@@ -301,6 +337,7 @@ public class FlowProgramExecutor {
               .stepId(step.getId())
               .start(start)
               .end(LocalDateTime.now())
+              .isReturnsCollection(Boolean.TRUE.equals(step.getBody().getCollection()))
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
@@ -351,20 +388,131 @@ public class FlowProgramExecutor {
     return Collections.unmodifiableList(allInputs);
   }
   
-  private FlowResultLog visitThenPointer(FlowProgramStep step) {
+  private Map<String, ? extends Serializable> visitReturnMapping(FlowProgramStep step) {
+    final ArrayList<Map<String, Serializable>> returns = new ArrayList<>();
+    
+    final var inputMappings = step.getBody().getInputMapping();
+    
+    final var arrays = new InputMappingResolver(inputMappings, (path) -> visitVariableOnPath(path)).accept();
+    
+    
+    for(final var mapping : arrays) {
+      
+      final Map<String, Serializable> result = new HashMap<>();
+      returns.add(result);
+      
+      for(final var entry : mapping.entrySet()) {
+        final String nameOnService = entry.getKey();
+        
+        try {
+          // Flat mapping
+          Serializable value;
+          if(accepted.containsKey(entry.getValue())) {
+            value = accepted.get(entry.getValue());
+          } else {
+            value = visitVariableOnPath(entry.getValue());
+          }
+          
+          if(value != null) {
+            result.put(nameOnService, value);
+          }
+          
+        } catch(Exception e) {
+          throw new ProgramException(
+              "Failed to get parameter: '" + entry.getKey() + ":" + entry.getValue() + "' while mapping step: '" + step.getId() + "'" + System.lineSeparator() + 
+              e.getMessage(), e);
+        }
+      }
+    }
+
+    if(Boolean.TRUE.equals(step.getBody().getCollection())) {
+      return Map.of("", returns);
+    }
+    return returns.iterator().next();
+  }
+  
+  private List<FlowResultLog> visitThenPointer(FlowProgramStep step) {
     final var stepId = ((FlowProgramStepThenPointer) step.getPointer()).getStepId();
     return visitStep(stepId);
   }
   
-  private FlowResultLog visitSwitchPointer(FlowProgramStep step) {
-    for(final var whenThen : ((FlowProgramStepWhenThenPointer) step.getPointer()).getConditions()) {
-      boolean isMatch = (Boolean) whenThen.getExpression().run(expressionContext).getValue();
-      if(isMatch) {
-        return visitStep(whenThen.getStepId());
+  private List<FlowResultLog> visitSwitchPointer(FlowProgramStep step) {
+    final List<FlowResultLog> visited = new ArrayList<>();
+    final var inputMapping = visitSwitchInputMapping(step);
+    for(final var mappingEntry : inputMapping) {
+      
+      boolean isMatch = false;
+      for(final var whenThen : ((FlowProgramStepWhenThenPointer) step.getPointer()).getConditions()) {
+        final var expressionContext = new FlowTaskExpressionContext() {
+          @Override
+          public Object apply(String name) {
+            if(mappingEntry.containsKey(name)) {
+              return mappingEntry.get(name);
+            }
+            
+            return mappingEntry.entrySet().stream()
+              .filter(e -> e.getKey().startsWith(name + "."))
+              .collect(Collectors.toMap(e -> e.getKey().substring(name.length() + 1), e -> e.getValue()));
+          }
+        };      
+        isMatch = (Boolean) whenThen.getExpression().run(expressionContext).getValue();
+        if(isMatch) {
+          visited.addAll(visitStep(whenThen.getStepId()));
+          break;
+        }     
+      }
+      
+      if(!isMatch) {
+        throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
       }
     }
-    throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
+
+    return visited;
   }
+  
+  
+  private List<Map<String, Serializable>> visitSwitchInputMapping(FlowProgramStep step) {
+    final List<Map<String, Serializable>> allInputs = new ArrayList<>();    
+
+    final var inputMappings = new HashMap<String, String>();
+    for(final var whenThen : ((FlowProgramStepWhenThenPointer) step.getPointer()).getConditions()) {
+      whenThen.getExpression().getConstants().forEach(e -> inputMappings.put(e, e));
+    }
+    
+    final var arrays = new InputMappingResolver(inputMappings, (path) -> visitVariableOnPath(path)).accept();
+    for(final var mapping : arrays) {
+      
+      final Map<String, Serializable> result = new HashMap<>();
+      allInputs.add(result);
+      
+      for(final var entry : mapping.entrySet()) {
+        final String nameOnService = entry.getKey();
+        
+        try {
+          // Flat mapping
+          Serializable value;
+          if(accepted.containsKey(entry.getValue())) {
+            value = accepted.get(entry.getValue());
+          } else {
+            value = visitVariableOnPath(entry.getValue());
+          }
+          
+          if(value != null) {
+            result.put(nameOnService, value);
+          }
+          
+        } catch(Exception e) {
+          throw new ProgramException(
+              "Failed to get parameter: '" + entry.getKey() + ":" + entry.getValue() + "' while mapping step: '" + step.getId() + "'" + System.lineSeparator() + 
+              e.getMessage(), e);
+        }
+      }
+    }
+
+    return Collections.unmodifiableList(allInputs);
+  }
+  
+  
   
   private Map<String, Serializable> visitAcceptedDef(FlowProgram program, ProgramContext context) {
     Map<String, Serializable> result = new HashMap<>();
@@ -421,9 +569,33 @@ public class FlowProgramExecutor {
         }
       
         // resolve from executed steps
+        // TODO: refactor this mess
         if(stepLogs.containsKey(path)) {
           FlowResultLog target = stepLogs.get(path);
-          prev = target.getReturns();
+          
+          final var returnVariables = new HashMap<String, Serializable>(target.getReturns());
+          if(target.isReturnsCollection()) {
+
+            if(returnVariables.containsKey("")) {
+              final var readonlyCollectionType = returnVariables.get(""); 
+              if(readonlyCollectionType instanceof Collection) {
+                final var mutableCollectionType = new ArrayList<>();
+                
+                for(final var readonlyEntry : (Collection<?>) readonlyCollectionType) {
+                  final var mutableEntry = new HashMap<>((Map<String, Serializable>) readonlyEntry);
+                  target.getAccepts().entrySet().forEach(e -> mutableEntry.put("_" + e.getKey(), e.getValue()));      
+                  mutableCollectionType.add(mutableEntry);
+                }
+                
+                returnVariables.put("", mutableCollectionType);
+              }
+            }
+          } else {
+            target.getAccepts().entrySet().forEach(e -> returnVariables.put("_" + e.getKey(), e.getValue()));  
+          }
+          
+          
+          prev = returnVariables;
           if(isLast) {
             return (Serializable) prev;
           }

@@ -101,7 +101,11 @@ public class InputMappingResolver {
       
       expandedMapping.put(expanded.getKey(), expanded.getValue());
     }
-    expanded.add(expandedMapping);
+    if(expanded.size() < index + 1) {
+      expanded.add(expandedMapping);      
+    } else {
+      expanded.get(index).putAll(expandedMapping);
+    }
   }
 
   @SuppressWarnings("rawtypes")

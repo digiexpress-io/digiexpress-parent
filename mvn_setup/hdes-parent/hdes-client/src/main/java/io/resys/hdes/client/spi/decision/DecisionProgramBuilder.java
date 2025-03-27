@@ -22,6 +22,7 @@ package io.resys.hdes.client.spi.decision;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,16 @@ public class DecisionProgramBuilder {
       final var program = ImmutableDecisionProgram.builder().hitPolicy(ast.getHitPolicy());
       
       final var accepts = ast.getHeaders().getAcceptDefs().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
-      final var returns = ast.getHeaders().getReturnDefs().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+      
+      final var returns = new HashMap<>(ast.getHeaders()
+          .getReturnDefs().stream()
+          .collect(Collectors.toMap(e -> e.getId(), e -> e)));
+      
+      accepts.values().forEach(e -> {
+        returns.put("_" + e.getId(), e);
+      });
+      
+      
       final List<AstDecisionRow> rows = new ArrayList<>(ast.getRows());
       Collections.sort(rows, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
       
