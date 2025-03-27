@@ -56,5 +56,7 @@ export { EditDateTime } from './EditDateTime';
 export { EditDateTimeSimple } from './EditDateTimeSimple';
 export { EditDate } from './EditDate';
 export { EditDateSimple } from './EditDateSimple';
+export { EditIntlValueSet } from './EditIntlValueSet';
+
 export {NumberBuilder, StringBuilder, DateBuilder, BooleanBuilder}
 export default Builder;

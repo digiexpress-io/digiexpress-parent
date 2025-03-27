@@ -103,7 +103,7 @@ export declare namespace HdesApi {
   export type Direction = "IN" | "OUT";
   export type ValueType = "TIME" | "DATE" | "DATE_TIME" | "INSTANT" | "PERIOD" | "DURATION" |
     "STRING" | "INTEGER" | "LONG" | "BOOLEAN" | "PERCENT" | "OBJECT" | "ARRAY" | "DECIMAL" | 
-    "MAP" | "FLOW_CONTEXT";
+    "MAP" | "FLOW_CONTEXT" | 'INTL';
   export type ProgramStatus = "UP" | "AST_ERROR" | "PROGRAM_ERROR" | "DEPENDENCY_ERROR";
 
   export type HitPolicy = "FIRST" | "ALL";

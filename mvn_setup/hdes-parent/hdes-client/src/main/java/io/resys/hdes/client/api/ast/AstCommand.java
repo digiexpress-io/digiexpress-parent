@@ -1,7 +1,6 @@
 package io.resys.hdes.client.api.ast;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -41,8 +40,6 @@ public interface AstCommand extends Serializable {
   @Nullable
   String getValue();
   
-  @Nullable
-  List<String> getSubValues();
   AstCommandValue getType();
 
   

@@ -1,5 +1,13 @@
 package io.resys.hdes.client.api.ast;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * hdes-client-api
@@ -21,12 +29,6 @@ package io.resys.hdes.client.api.ast;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 
 
 @Value.Immutable
@@ -56,8 +58,6 @@ public abstract class TypeDef implements Serializable, Comparable<TypeDef> {
   public abstract String getRef();
   @Nullable
   public abstract List<String> getValueSet();
-  @Nullable
-  public abstract List<String> getIntlCodes();
   
   @JsonIgnore
   public abstract Deserializer getDeserializer();
