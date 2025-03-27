@@ -149,7 +149,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </Decision.Header>
       )}
       renderRow={rowProps => <Decision.Row {...rowProps} />}
-      renderCell={cellProps => <Decision.Cell {...cellProps} onClick={() => setEdit({ cell: cellProps.cell })} />}
+      renderCell={cellProps => <Decision.Cell {...cellProps} dt={ast} onClick={() => setEdit({ cell: cellProps.cell })} />}
     />
   </Box >);
 }

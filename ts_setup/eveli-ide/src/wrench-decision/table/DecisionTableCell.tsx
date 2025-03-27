@@ -1,55 +1,69 @@
 import React from 'react';
-
-import { Box, TableCell, Typography, useTheme, lighten, alpha, darken, SxProps, Tooltip } from '@mui/material';
+import { Box, TableCell, Typography, useTheme, lighten, alpha, darken, Button, ButtonGroup, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { HdesApi } from '@/api-wrench';
+import { CellEditIntl } from '../editors/CellEditIntl';
 
 
-
-function getOutTextFormatting(cell: HdesApi.TypeDef): SxProps {
-  if(cell.valueType !== 'STRING') {
-    return {};
-  }
-
-  return {
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    maxWidth: '200px'
-  }
-}
 
 const DecisionTableCell: React.FC<{
-  row:HdesApi.AstDecisionRow,
-  header:HdesApi.TypeDef,
-  cell:HdesApi.AstDecisionCell,
+  dt: HdesApi.AstDecision,
+  row: HdesApi.AstDecisionRow,
+  header: HdesApi.TypeDef,
+  cell: HdesApi.AstDecisionCell,
   onClick: () => void
-}> = ({ header, cell, onClick }) => {
-
+}> = ({ header, cell, onClick, dt }) => {
+  const [openIntl, setOpenIntl] = React.useState<{ open: boolean, locale: string }>({ open: false, locale: '' });
   const theme = useTheme();
   const borderColor = theme.palette.mode === 'light' ? lighten(alpha(theme.palette.divider, 1), 0.88) : darken(alpha(theme.palette.divider, 1), 0.68);
-
   const edit = <EditIcon />;
 
+
   if (header.direction === "IN") {
-    return (<TableCell key={cell.header} onClick={() => onClick()} sx={{ cursor: "pointer", borderRight: `1px ${borderColor} solid` }}>
-      <Typography noWrap display="flex">
-        {cell?.value ? cell.value : <Box sx={{ fontWeight: "bold" }} component="span">{edit}</Box>}
-      </Typography>
-    </TableCell>);
+    return (
+      <TableCell key={cell.header} onClick={() => onClick()} sx={{ cursor: "pointer", borderRight: `1px ${borderColor} solid` }}>
+        <Typography noWrap display="flex">
+          {cell?.value ? cell.value : <Box sx={{ fontWeight: "bold" }} component="span">{edit}</Box>}
+        </Typography>
+      </TableCell>);
   }
 
-  return (<TableCell 
-    key={cell.header} 
-    onClick={() => onClick()} 
-    sx={{ 
-      cursor: "pointer", 
+  if (header.valueType === "INTL") {
+
+    function toggleDialog(locale: string) {
+      if (openIntl.open === true) {
+        setOpenIntl({ open: false, locale });
+      } else {
+        setOpenIntl({ open: true, locale });
+      }
+    }
+
+    console.log(openIntl.open + "")
+
+
+    return (
+      <TableCell key={cell.header} sx={{ cursor: "pointer", borderRight: `1px ${borderColor} solid` }}>
+        {openIntl && <CellEditIntl dt={dt} cell={cell} onClose={() => { }} onChange={() => { }} />}
+        <ButtonGroup variant='text'>
+          {(header.valueSet ?? []).map(locale => (
+            <Tooltip title={openIntl.locale} key={header.id}>
+              <Button onClick={() => toggleDialog(locale)}>{locale}</Button>
+            </Tooltip>
+          ))}
+        </ButtonGroup>
+      </TableCell>);
+  }
+
+  return (<TableCell
+    key={cell.header}
+    onClick={() => onClick()}
+    sx={{
+      cursor: "pointer",
       borderRight: `1px ${borderColor} solid`,
-       ...getOutTextFormatting(header)
     }}>
-    
     <Typography noWrap>
-      { cell?.value ? cell?.value : edit }
+      {cell?.value ? cell?.value : edit}
     </Typography>
 
   </TableCell>);

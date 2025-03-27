@@ -26,6 +26,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
       <DialobProvider
         fetchActionGet={'not-implemented' as any}
         fetchActionPost={'not-implemented' as any}
+        fetchAttachmentPost={'not-implemented' as any}
         fetchReviewGet={fetchReviewGet}>
 
         <Dialog open={true} onClose={props.onClose} maxWidth='md' fullWidth>
