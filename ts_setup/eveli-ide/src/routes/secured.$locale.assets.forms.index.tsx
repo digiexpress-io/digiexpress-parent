@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 import { useIntl } from "react-intl";
 import { useSnackbar } from "notistack";
@@ -12,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { EveliSetup } from '@/eveli-setup';
 import { useLocale } from '@/api-locale';
 import { EveliApp } from '@/eveli-app';
+import { Button } from '@mui/material';
 
 export const Route = createFileRoute('/secured/$locale/assets/forms/')({
   component: Component,
@@ -23,12 +25,14 @@ function Component() {
   const { setLocale } = useLocale();
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
-  return (<EveliApp main={Main} secondary={() => <></>} toolbar={EveliSetup.Toolbar} />)
+  return (<EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} />)
 
 }
 
 const Main: React.FC<{}> = () => {
   const intl = useIntl();
+  const theme = useTheme();
+
   const { enqueueSnackbar } = useSnackbar();
   const { dialobUrl } = useFetch('dialob.GET', {});
   const dialobAdminConfig: DialobAdminConfig | undefined = React.useMemo(() => {
@@ -41,7 +45,20 @@ const Main: React.FC<{}> = () => {
     }
   }, [dialobUrl, intl.locale])
 
-  return (<Box sx={{ p: 1 }}>
+  return (<Box sx={{ p: theme.spacing(1) }}>
     <DialobAdmin showNotification={enqueueSnackbar} config={dialobAdminConfig} />
+  </Box>)
+}
+
+const Secondary: React.FC = () => {
+  const intl = useIntl();
+  const theme = useTheme();
+
+  return (<Box p={theme.spacing(1)}>
+    <Button variant='explorerInactive'
+      startIcon={<HelpOutlineOutlinedIcon />}
+      onClick={() => window.open("https://github.com/dialob/dialob-parent/wiki", "_blank")}>
+      {intl.formatMessage({ id: 'menu.help' })}
+    </Button>
   </Box>)
 }
