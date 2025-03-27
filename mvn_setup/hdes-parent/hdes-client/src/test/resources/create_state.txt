@@ -17,4 +17,4 @@ Trees
     5: FLOW-1
 
 Blobs
-  - 5: {"id":"FLOW-1","body":[{"id":null,"type":"SET_BODY","value":"id: firstFlow","subValues":null}],"hash":"","bodyType":"FLOW"}
+  - 5: {"id":"FLOW-1","body":[{"id":null,"type":"SET_BODY","value":"id: firstFlow"}],"hash":"","bodyType":"FLOW"}

@@ -79,6 +79,7 @@ public class HdesTypeDefsFactory implements HdesTypesMapper {
     deserializers.put(ValueType.TIME, new TimeDataTypeDeserializer(objectMapper));
 
     deserializers.put(ValueType.OBJECT, new JsonObjectDataTypeDeserializer(objectMapper));
+    deserializers.put(ValueType.INTL, new JsonObjectDataTypeDeserializer(objectMapper));
     deserializers.put(ValueType.STRING, new GenericDataTypeDeserializer(objectMapper, String.class));
     deserializers.put(ValueType.BOOLEAN, new GenericDataTypeDeserializer(objectMapper, Boolean.class));
     deserializers.put(ValueType.DECIMAL, new GenericDataTypeDeserializer(objectMapper, BigDecimal.class));
@@ -105,6 +106,7 @@ public class HdesTypeDefsFactory implements HdesTypesMapper {
     serializers.put(ValueType.PERCENT, dataTypeSerializer);
     serializers.put(ValueType.DATE, dataTypeSerializer);
     serializers.put(ValueType.DATE_TIME, dataTypeSerializer);
+    serializers.put(ValueType.INTL, dataTypeSerializer);
 
     Map<Class<?>, ValueType> valueTypes = new HashMap<>();
     valueTypes.put(List.class, ValueType.ARRAY);
