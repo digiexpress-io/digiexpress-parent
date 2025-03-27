@@ -43,15 +43,12 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isH
     return (<></>);
   }
 
-  if (searchState.searchOptionType === 'ALL' || searchState.searchOptionType === 'FORM_LINKS') {
     return (
       <>
         <Divider className={className} />
         <Typography className={className}>{intl.formatMessage({ id: title })}</Typography>
       </>
     )
-  }
-  return (<></>)
 }
 
 export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
@@ -84,7 +81,6 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
 
   const groupedForms = Object.values(state.groupedForms)
-  console.log("groupedForms", groupedForms);
 
 
   return (
@@ -109,13 +105,13 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                 label={intl.formatMessage({ id: 'gamut.search.results.allResults' })}
                 onClick={() => handleFilterByType('ALL')} className={classes.quickSearchFilterItem} />
               <Chip
-                color={state.searchOptionType === 'TOPICS' ? 'primary' : undefined}
-                label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
-                onClick={() => handleFilterByType('TOPICS')} className={classes.quickSearchFilterItem} />
-              <Chip
                 color={state.searchOptionType === 'FORM_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })}
                 onClick={() => handleFilterByType('FORM_LINKS')} className={classes.quickSearchFilterItem} />
+              <Chip
+                color={state.searchOptionType === 'TOPICS' ? 'primary' : undefined}
+                label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
+                onClick={() => handleFilterByType('TOPICS')} className={classes.quickSearchFilterItem} />
               <Chip
                 color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
@@ -140,13 +136,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                     <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
                     {state.topics.map((topic) => (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>))}
 
-                    <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
-
                     {groupedForms.map((group, index) => (
                       <div key={index}>
                         {group.length > 1 && (
                           <>
-                            <Typography variant="h6">{group[0].linkToForm.name}</Typography>
+                            <ResultsDivider searchState={state} title={group[0].linkToForm.name} className={classes.resultsDividerTitle} isHidden={Object.values(state.groupedForms).length === 0} />
                             {group.map((form) => (
                               <GLinkFormUnlocked key={form.linkToForm.id} label={form.topic.name} value={form.linkToForm.name}
                                 onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }); }}
@@ -157,9 +151,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                       </div>
                     ))}
 
-                    <Divider />
-
-                    <Typography variant="h6">{intl.formatMessage({ id: 'gamut.search.results.otherForms' })}</Typography>
+                    <ResultsDivider searchState={state} title={'gamut.search.results.otherForms'} className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
                     {groupedForms.map((group, index) => (
                       <div key={index}>
                         {group.length === 1 && (

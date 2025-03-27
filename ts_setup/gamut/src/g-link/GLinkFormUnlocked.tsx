@@ -28,7 +28,7 @@ const useUtilityClasses = (ownerState: GLinkFormUnlockedProps) => {
   return composeClasses(slots, getUtilityClass, {});
 }
 
-
+//TODO Perhaps this can be deleted, but let's wait and see
 export const GLinkFormUnlocked: React.FC<GLinkFormUnlockedProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
@@ -67,7 +67,7 @@ export const GLinkFormUnlockedGrouped: React.FC<GLinkFormUnlockedProps> = (initP
     <Root ownerState={ownerState} className={classes.root} onClick={props.onClick}>
       <Link>
         <span>
-          <CircleIcon color='info' sx={{ height: '10px', width: '10px', ml: 2 }} />
+          <CircleIcon color='info' sx={{ height: '10px', width: '10px' }} />
           <Typography>{props.label}</Typography>
         </span>
       </Link>
