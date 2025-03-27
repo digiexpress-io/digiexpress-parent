@@ -10,9 +10,9 @@
 
 DigiExpress is an all-in-one solution that covers a full range of organizational management requirements:
 1. Online data collection via customizable forms (Dialob)
-2. Business process automation to streamline workflows (the Wrench)
+2. Business process automation to streamline workflows (theWrench)
 3. Content management: Creating end-user content and linking it with forms and services (the Stencil)
-4. User portal for providing content and forms to users (the Stencil)
+4. User portal for providing content and forms to users (theStencil)
 5. Worker / employee front office portal for handing tasks, communicating with customers, etc. 
 6. Task management system
 7. [Access / user-rights management](/docs/README_ACCESS_MGMT.md)
