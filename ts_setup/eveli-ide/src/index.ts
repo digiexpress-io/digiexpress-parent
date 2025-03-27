@@ -26,7 +26,7 @@ export * from './eveli-proc-execution';
 export * from './eveli-tasks';
 export * from './eveli-task-composer';
 export * from './eveli-permissions';
-
+export * from './eveli-permissions-none';
 
 export * from './api-task';
 export * from './api-iam';

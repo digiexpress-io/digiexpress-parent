@@ -10,9 +10,9 @@
 
 DigiExpress is an all-in-one solution that covers a full range of organizational management requirements:
 1. Online data collection via customizable forms (Dialob)
-2. Business process automation to streamline workflows (the Wrench)
+2. Business process automation to streamline workflows (theWrench)
 3. Content management: Creating end-user content and linking it with forms and services (the Stencil)
-4. User portal for providing content and forms to users (the Stencil)
+4. User portal for providing content and forms to users (theStencil)
 5. Worker / employee front office portal for handing tasks, communicating with customers, etc. 
 6. Task management system
 7. [Access / user-rights management](/docs/README_ACCESS_MGMT.md)
@@ -74,6 +74,8 @@ There are two **TypeScript frontend** applications:
 - This is the **citizen interface**. This is the interface for citizens to submit requests, applications, or tasks. Citizens interact with the Gamut portal to initiate processes, make inquiries, or provide necessary information, which is then reviewed and processed by the workers using the Eveli-IDE interface.
 
 To run any of these frontend applications:
+
+- Node version used for installing and testing this was v22.5.1
 
 1. **Install the required dependencies**:
    ```bash

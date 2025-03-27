@@ -16,9 +16,7 @@ interface TableState {
 
 const formatDate = (time: any) => {
   if (time) {
-    const localTime = moment.utc(time)
-      .subtract(2, 'hour') // bad idea
-      .toDate();
+    const localTime = new Date(time);
     return (
       <React.Fragment>
         <FormattedDate value={localTime} /> - <FormattedTime value={localTime} />

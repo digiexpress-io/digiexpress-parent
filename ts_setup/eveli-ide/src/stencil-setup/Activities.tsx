@@ -22,7 +22,7 @@ export interface ActivityProps {
   buttonCreate: React.ReactNode;
   buttonViewAll?: React.ReactNode;
   permissionTypeCreate: EveliPermissionType;
-  permissionTypeView: EveliPermissionType | undefined;
+  permissionTypeView: EveliPermissionType;
   onView?: () => void;
   composer: React.FC<{ onClose: () => void }>;
 }
@@ -66,7 +66,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="article.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_ARTICLES'
     },
     {
       composer: NewPage,
@@ -76,7 +76,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="page.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_ARTICLES'
     },
     {
       composer: LinkComposer,
@@ -86,7 +86,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="link.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_LINKS'
     },
 
     {
@@ -97,7 +97,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="services.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_SERVICES'
     },
 
     {
@@ -129,7 +129,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="template.create" />,
       buttonViewAll: <FormattedMessage id="button.view.all.templates" />,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_TEMPLATES'
     },
     {
       composer: MigrationComposer,
@@ -139,7 +139,7 @@ export function useActivities(): ActivityProps[] {
       buttonCreate: <FormattedMessage id="migration.create" />,
       buttonViewAll: undefined,
       permissionTypeCreate: 'CREATE_STENCIL_ASSET',
-      permissionTypeView: undefined
+      permissionTypeView: 'NAV_TO_STENCIL_MIGRATIONS'
     },
   ])
 }

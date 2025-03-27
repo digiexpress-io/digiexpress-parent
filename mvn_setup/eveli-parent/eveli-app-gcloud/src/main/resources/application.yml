@@ -101,7 +101,7 @@ eveli.suomifi.rest.enabled: false
 eveli.suomifi.rest.service-id: 
 eveli.suomifi.rest.endpoint: 
 eveli.suomifi.rest.password: 
-eveli.suomifi.rest.markdown-enabled: 
+eveli.suomifi.rest.markdown-enabled: true
  
 eveli.org.service-url:
 

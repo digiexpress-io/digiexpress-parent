@@ -2,9 +2,8 @@ import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 
-import ConstructionIcon from '@mui/icons-material/Construction';
+import DangerousOutlinedIcon from '@mui/icons-material/DangerousOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 
@@ -134,7 +133,7 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
       labelIcon={CodeOutlinedIcon}
-      labelInfo={service.status === "UP" ? undefined : <ConstructionIcon color='error' />}
+      labelInfo={service.status === "UP" ? undefined : <DangerousOutlinedIcon color='error' fontSize='small' />}
       labelcolor={saved ? "explorerItem" : "secondary.light"}
     >
 

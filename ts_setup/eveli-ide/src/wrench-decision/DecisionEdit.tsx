@@ -53,7 +53,7 @@ const DrawerOption: React.FC<{
   label: string;
   icon: React.ReactElement;
 }> = ({ icon, onClick, label }) => {
-  const itemSx: SxProps = { color: "primary.contrastText" }
+  const itemSx: SxProps = { color: "text.primary" }
   return (<ListItemButton onClick={onClick}>
     <ListItemIcon sx={itemSx}>{icon}</ListItemIcon>
     <ListItemText sx={itemSx}>

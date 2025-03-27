@@ -12,10 +12,13 @@ interface InternalUserShape {
   roles?: string[] | undefined;
   authenticated?: boolean | undefined;
   authorized?: boolean | undefined;
+  permissions?: IamApi.UserPermission[] | undefined;
 }
 
 function toFailSafeUser(json: InternalUserShape | undefined): IamApi.User {
   const roles: string[] = json?.roles ?? [];
+  const permissions = json?.permissions ?? []; 
+
   return {
     name: json?.name ?? '',
     userId: json?.userId ?? '',
@@ -23,6 +26,8 @@ function toFailSafeUser(json: InternalUserShape | undefined): IamApi.User {
     authenticated: json?.authenticated ?? false,
     authorized: json?.authorized ?? false,
     roles,
+    permissions,
+
     // TODO  fix naming
     hasRole: (...roles: string[]) => (roles.filter(role => roles.indexOf(role) > -1).length > 0)
   }

@@ -11,11 +11,23 @@ export default defineMock({
     sse.end()
   }*/
 
+
   body: {
     authenticated: true,
     authorized: true,
     userId: 'vorst x viiner',
     email: 'super user @ super dot things',
-    name: 'Carrot Top'
+    name: 'John Smith',
+    permissions: [
+      'WRENCH_VIEW', 'WRENCH_EDIT',
+      'STENCIL_VIEW', 'STENCIL_EDIT',
+      'FEEDBACK_VIEW', 'FEEBACK_EDIT',
+      'DEPLOYMENT_VIEW', 'DEPLOYMENT_EDIT',
+      'TASK_GROUP_VIEW', 'TASK_GROUP_EDIT',
+      'RELEASE_VIEW', 'RELEASE_EDIT',
+      'DIALOB_VIEW', 'DIALOB_EDIT',
+      'DASHBOARD_VIEW',
+      'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE',
+    ]
   }
 })
