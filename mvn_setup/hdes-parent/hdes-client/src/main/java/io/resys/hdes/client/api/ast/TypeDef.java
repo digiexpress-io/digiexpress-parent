@@ -56,6 +56,8 @@ public abstract class TypeDef implements Serializable, Comparable<TypeDef> {
   public abstract String getRef();
   @Nullable
   public abstract List<String> getValueSet();
+  @Nullable
+  public abstract List<String> getIntlCodes();
   
   @JsonIgnore
   public abstract Deserializer getDeserializer();
@@ -91,8 +93,22 @@ public abstract class TypeDef implements Serializable, Comparable<TypeDef> {
   public enum AssociationType { ONE_TO_ONE, ONE_TO_MANY }
   public enum Direction { IN, OUT }
   public enum ValueType {
-    TIME, DATE, DATE_TIME, INSTANT, PERIOD, DURATION, 
-    STRING, INTEGER, LONG, DECIMAL, BOOLEAN, PERCENT, OBJECT, ARRAY,
-    MAP, FLOW_CONTEXT;
+    TIME, 
+    DATE, 
+    DATE_TIME, 
+    INSTANT, 
+    PERIOD, 
+    DURATION, 
+    STRING,
+    INTL,
+    INTEGER, 
+    LONG, 
+    DECIMAL, 
+    BOOLEAN, 
+    PERCENT, 
+    OBJECT, 
+    ARRAY,
+    MAP, 
+    FLOW_CONTEXT;
   }
 }

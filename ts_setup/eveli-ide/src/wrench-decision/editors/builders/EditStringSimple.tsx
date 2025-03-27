@@ -56,7 +56,7 @@ export const EditStringSimple: React.FC<{
   onChange: (value: string) => void
 }> = ({ builder, onChange, dt, header }) => {
 
-  if(dt.name.endsWith('locale') && header.name.length === 2) {
+  if(dt.name.endsWith('locale') || dt.name.endsWith('intl')) {
     return (
       <MDEditor 
         value={builder.value} 
