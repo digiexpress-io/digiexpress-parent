@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Divider, Box } from '@mui/material';
+import { InputLabel, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Divider, Box, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -48,18 +48,12 @@ export const EditIntlValueSet: React.FC<EditIntlValueSetProps> = ({ valueSet, se
 
   const list = valueSet && valueSet.length > 0 && valueSet.map((value, index) => (
     <ListItem disablePadding key={index}>
-      <Box display="flex">
-        <Box flexGrow={0}>
-          <ListItemButton onClick={() => handleRemoveValue(index)}>
-            <ListItemIcon>
-              <DeleteOutlineIcon />
-            </ListItemIcon>
-          </ListItemButton>
-        </Box>
-        <Box flexGrow={1}>
-          <ListItemText primary={value} />
-        </Box>
-      </Box>
+      <ListItemButton onClick={() => handleRemoveValue(index)}>
+        <ListItemIcon>
+          <DeleteOutlineIcon color='error' />
+        </ListItemIcon>
+        <Typography fontWeight='bold'>{value}</Typography>
+      </ListItemButton>
     </ListItem>
   ));
 
@@ -71,7 +65,7 @@ export const EditIntlValueSet: React.FC<EditIntlValueSetProps> = ({ valueSet, se
         value={value}
         onChange={setValue}
         onEnter={() => {
-          handleAddValue(value)
+          handleAddValue(value.toLocaleUpperCase())
           setValue('')
         }} />
       <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.addLocale.current' /></InputLabel>
