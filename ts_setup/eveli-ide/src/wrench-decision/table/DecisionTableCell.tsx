@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { HdesApi } from '@/api-wrench';
 import { CellEditIntl } from '../editors/CellEditIntl';
+import IntlBuilder from '../editors/builders/TypeIntlBuilder';
 
 
 
@@ -12,8 +13,9 @@ const DecisionTableCell: React.FC<{
   row: HdesApi.AstDecisionRow,
   header: HdesApi.TypeDef,
   cell: HdesApi.AstDecisionCell,
-  onClick: () => void
-}> = ({ header, cell, onClick, dt }) => {
+  onClick: () => void,
+  onChange: (newCommands: HdesApi.AstCommand[]) => void
+}> = ({ header, cell, onClick, dt, onChange }) => {
   const [openIntl, setOpenIntl] = React.useState<{ open: boolean, locale: string }>({ open: false, locale: '' });
   const theme = useTheme();
   const borderColor = theme.palette.mode === 'light' ? lighten(alpha(theme.palette.divider, 1), 0.88) : darken(alpha(theme.palette.divider, 1), 0.68);
@@ -31,24 +33,23 @@ const DecisionTableCell: React.FC<{
 
   if (header.valueType === "INTL") {
 
-    function toggleDialog(locale: string) {
-      if (openIntl.open === true) {
-        setOpenIntl({ open: false, locale });
-      } else {
-        setOpenIntl({ open: true, locale });
-      }
+    function handleClose() {
+      setOpenIntl(({ open: false, locale: '' }));
     }
 
-    console.log(openIntl.open + "")
-
-
+    function handleOpen(locale: string) {
+      setOpenIntl(({ open: true, locale }));
+    }
     return (
       <TableCell key={cell.header} sx={{ cursor: "pointer", borderRight: `1px ${borderColor} solid` }}>
-        {openIntl && <CellEditIntl dt={dt} cell={cell} onClose={() => { }} onChange={() => { }} />}
+        {openIntl.open && <CellEditIntl dt={dt} cell={cell} locale={openIntl.locale} onClose={handleClose} onChange={onChange} />}
         <ButtonGroup variant='text'>
           {(header.valueSet ?? []).map(locale => (
-            <Tooltip title={openIntl.locale} key={header.id}>
-              <Button onClick={() => toggleDialog(locale)}>{locale}</Button>
+            <Tooltip
+              title={new IntlBuilder({ value: cell.value ?? '{}', header }).getLocaleValue(locale)}
+              key={header.id}>
+
+              <Button onClick={() => handleOpen(locale)}>{locale}</Button>
             </Tooltip>
           ))}
         </ButtonGroup>

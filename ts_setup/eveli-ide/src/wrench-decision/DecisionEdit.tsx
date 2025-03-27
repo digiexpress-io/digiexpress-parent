@@ -90,7 +90,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
 
   React.useEffect(() => {
     service.ast(decisionId, commands).then(data => {
-      console.log("new commands applied");
+      console.log("new commands applied", commands, data);
       setAst(data.ast);
     });
 
@@ -149,7 +149,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </Decision.Header>
       )}
       renderRow={rowProps => <Decision.Row {...rowProps} />}
-      renderCell={cellProps => <Decision.Cell {...cellProps} dt={ast} onClick={() => setEdit({ cell: cellProps.cell })} />}
+      renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} onClick={() => setEdit({ cell: cellProps.cell })} />}
     />
   </Box >);
 }

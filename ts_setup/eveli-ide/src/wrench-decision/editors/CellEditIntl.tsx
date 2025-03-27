@@ -4,8 +4,8 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui
 import { HdesApi } from '@/api-wrench';
 
 import MDEditor, { ICommand, commands } from '@uiw/react-md-editor';
-import { TextareaAutosize } from '@mui/material';
-import Builder from './builders';
+import IntlBuilder from './builders/TypeIntlBuilder';
+
 
 
 const MdLocaleSelect: React.FC<{ locale: string }> = ({ locale }) => {
@@ -57,30 +57,21 @@ const getMdCommands = (
 interface CellEditIntlProps {
   dt:HdesApi.AstDecision,
   cell:HdesApi.AstDecisionCell;
+  locale: string;
   onClose: () => void;
-  onChange: (commands:HdesApi.AstCommand) => void
+  onChange: (commands: HdesApi.AstCommand[]) => void
 };
 
 const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
 
   const header:HdesApi.TypeDef = [...props.dt.headers.acceptDefs, ...props.dt.headers.returnDefs]
     .filter(t => t.id === props.cell.header)[0];
+  const [value, setValue] = React.useState(new IntlBuilder({ header, value: props.cell.value ?? '' }));
 
-  const [value, setValue] = React.useState<{ value?: string, builder: any }>({
-    value: props.cell.value,
-    builder: Builder({ header, value: props.cell.value }) as any
-  });
-  const input = header.direction === 'IN'
-  const type = header.valueType;
 
   const handleChangeValue = (value: string) => {
-    const builder = Builder({ header, value }) as any;
-    setValue({ value, builder });
+    setValue(prev => prev.withLocale(props.locale, value));
   }
-
-//value={builder.value} 
-//onChange={(value) => onChange(value ?? '')} 
-        
 
   return (<Dialog open={true} onClose={props.onClose}>
     <DialogTitle>
@@ -96,12 +87,14 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
         commands={getMdCommands(props.dt, header)}
         textareaProps={{ placeholder: '# Title' }}
         height={800}
+        value={value.getLocaleValue(props.locale)}
+        onChange={(value) => handleChangeValue(value ?? '')}
+
       />;
     </DialogContent>
     <DialogActions>
         <Button variant='text' onClick={() => {
-            const builder = Builder({ header, value: undefined }) as any;
-            setValue({ value: undefined, builder });
+        setValue(prev => prev.withLocale(props.locale, ''));
           }}>
           <FormattedMessage id="decisions.cells.newvalue.clear"/>
         </Button>
@@ -110,7 +103,7 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
         </Button>
         <Button onClick={() => {
             const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
-            props.onChange(command);
+        props.onChange([command]);
             props.onClose();
           }}>
           <FormattedMessage id='buttons.apply'/>

@@ -21,12 +21,14 @@ class IntlBuilder {
   private _intl: Record<string, string>;
 
   constructor(props: { header: HdesApi.TypeDef, value: string }) {
+    console.log(props);
     this._value = props.value
     this._type = props.header
     this._valid = !props.value || validate(this);
     try {
-      this._intl = JSON.parse(props.value);
+      this._intl = JSON.parse(props.value ?? '{}');
     } catch(error) {
+      console.error(error);
       this._valid = false;
       this._intl = {}
     }
@@ -41,10 +43,10 @@ class IntlBuilder {
   get value() {
     return this._value;
   }
-  withLocale(locale: string, value: string) {
+  withLocale(locale: string, value: string): IntlBuilder {
     const result = {...this._intl};
     result[locale] = value;
-    return result;
+    return new IntlBuilder({ header: this._type, value: JSON.stringify(result) });
   }
 
   getLocaleValue(locale: string): string {
