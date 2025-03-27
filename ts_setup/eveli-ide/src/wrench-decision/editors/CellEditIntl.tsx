@@ -23,7 +23,7 @@ const getMdCommands = (
     name: header.name,
     groupName: 'title',
     keyCommand: 'title1',
-    buttonProps: { },
+    buttonProps: {},
     icon: (<MdLocaleSelect locale={header.name} />)
   };
 
@@ -55,8 +55,8 @@ const getMdCommands = (
 
 
 interface CellEditIntlProps {
-  dt:HdesApi.AstDecision,
-  cell:HdesApi.AstDecisionCell;
+  dt: HdesApi.AstDecision,
+  cell: HdesApi.AstDecisionCell;
   locale: string;
   onClose: () => void;
   onChange: (commands: HdesApi.AstCommand[]) => void
@@ -64,7 +64,7 @@ interface CellEditIntlProps {
 
 const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
 
-  const header:HdesApi.TypeDef = [...props.dt.headers.acceptDefs, ...props.dt.headers.returnDefs]
+  const header: HdesApi.TypeDef = [...props.dt.headers.acceptDefs, ...props.dt.headers.returnDefs]
     .filter(t => t.id === props.cell.header)[0];
   const [value, setValue] = React.useState(new IntlBuilder({ header, value: props.cell.value ?? '' }));
 
@@ -80,10 +80,10 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
         column: header.name,
         value: ''
       }} />
-      
+
     </DialogTitle>
     <DialogContent>
-      <MDEditor 
+      <MDEditor
         commands={getMdCommands(props.dt, header)}
         textareaProps={{ placeholder: '# Title' }}
         height={800}
@@ -93,21 +93,21 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
       />;
     </DialogContent>
     <DialogActions>
-        <Button variant='text' onClick={() => {
+      <Button variant='text' onClick={() => {
         setValue(prev => prev.withLocale(props.locale, ''));
-          }}>
-          <FormattedMessage id="decisions.cells.newvalue.clear"/>
-        </Button>
-        <Button variant='text' onClick={props.onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
-        <Button onClick={() => {
-            const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
+      }}>
+        <FormattedMessage id="decisions.cells.newvalue.clear" />
+      </Button>
+      <Button variant='text' onClick={props.onClose}>
+        <FormattedMessage id='button.cancel' />
+      </Button>
+      <Button onClick={() => {
+        const command: HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
         props.onChange([command]);
-            props.onClose();
-          }}>
-          <FormattedMessage id='buttons.apply'/>
-        </Button>
+        props.onClose();
+      }}>
+        <FormattedMessage id='buttons.apply' />
+      </Button>
     </DialogActions>
   </Dialog>
   );

@@ -48,8 +48,7 @@ const DecisionTableCell: React.FC<{
             <Tooltip
               title={new IntlBuilder({ value: cell.value ?? '{}', header }).getLocaleValue(locale)}
               key={header.id}>
-
-              <Button onClick={() => handleOpen(locale)}>{locale}</Button>
+              <Button onClick={() => handleOpen(locale)}><Typography textTransform='uppercase' fontWeight='bold'>{locale}</Typography></Button>
             </Tooltip>
           ))}
         </ButtonGroup>

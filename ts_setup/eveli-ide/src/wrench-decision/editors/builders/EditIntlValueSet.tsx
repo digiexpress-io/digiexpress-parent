@@ -18,7 +18,7 @@ const addCommand = (command: HdesApi.AstCommand, commands: HdesApi.AstCommand[])
   const result: HdesApi.AstCommand[] = [];
   for (const previous of commands) {
     if (command.type === previous.type) {
-      
+
     } else {
       result.push(previous);
     }
@@ -66,15 +66,15 @@ export const EditIntlValueSet: React.FC<EditIntlValueSetProps> = ({ valueSet, se
 
   return (
     <>
-      <Divider sx={{ mt: 2 }}/>
-      <InputLabel sx={{ mt: 1, fontWeight: 'bold', color: '#000' }}><FormattedMessage id='decisions.valueSet' /></InputLabel>
-      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.valueSet.description' /></InputLabel>
       <Burger.TextField
-        label='decisions.valueSet.add'
+        label='decisions.addLocale.addNew'
         value={value}
         onChange={setValue}
-        onEnter={() => handleAddValue(value)} />
-      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.valueSet.current' /></InputLabel>
+        onEnter={() => {
+          handleAddValue(value)
+          setValue('')
+        }} />
+      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.addLocale.current' /></InputLabel>
       <List>{list}</List>
     </>
   );
