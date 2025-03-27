@@ -21,14 +21,13 @@ class IntlBuilder {
   private _intl: Record<string, string>;
 
   constructor(props: { header: HdesApi.TypeDef, value: string }) {
-    console.log(props);
     this._value = props.value
     this._type = props.header
     this._valid = !props.value || validate(this);
     try {
-      this._intl = JSON.parse(props.value ?? '{}');
+      this._intl = JSON.parse(!!props.value ? props.value : '{}');
     } catch(error) {
-      console.error(error);
+      //console.error(error);
       this._valid = false;
       this._intl = {}
     }

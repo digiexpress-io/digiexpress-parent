@@ -90,7 +90,6 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
 
   React.useEffect(() => {
     service.ast(decisionId, commands).then(data => {
-      console.log("new commands applied", commands, data);
       setAst(data.ast);
     });
 
