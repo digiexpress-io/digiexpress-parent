@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.168",
+  "version": "0.0.169",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
