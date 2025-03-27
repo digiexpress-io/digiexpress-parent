@@ -26,8 +26,7 @@ class IntlBuilder {
     this._valid = !props.value || validate(this);
     try {
       this._intl = JSON.parse(!!props.value ? props.value : '{}');
-    } catch(error) {
-      //console.error(error);
+    } catch (error) {
       this._valid = false;
       this._intl = {}
     }

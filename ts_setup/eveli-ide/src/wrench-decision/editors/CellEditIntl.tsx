@@ -78,7 +78,7 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
       <FormattedMessage id='decisions.cells.dialog.title' values={{
         name: props.dt.name,
         column: header.name,
-        value: ''
+        value: props.locale
       }} />
 
     </DialogTitle>

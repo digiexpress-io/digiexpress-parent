@@ -65,7 +65,7 @@ export const EditIntlValueSet: React.FC<EditIntlValueSetProps> = ({ valueSet, se
         value={value}
         onChange={setValue}
         onEnter={() => {
-          handleAddValue(value.toLocaleUpperCase())
+          handleAddValue(value.toLocaleLowerCase())
           setValue('')
         }} />
       <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.addLocale.current' /></InputLabel>
