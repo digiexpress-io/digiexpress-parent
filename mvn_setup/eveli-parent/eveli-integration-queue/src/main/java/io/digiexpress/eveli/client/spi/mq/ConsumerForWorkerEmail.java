@@ -56,7 +56,7 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   public MessageResponse accept(QueueMessage msg) {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
-      notification.getUpdaterId();
+      final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
       
       return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
     } catch (Exception e) {
