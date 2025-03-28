@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.mq;
 
 import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 
 /*-
  * #%L
@@ -51,7 +52,17 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   
   @Override
   public MessageResponse accept(QueueMessage msg) {
-    log.info("Accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
-    return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
+    try {
+      final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
+      
+      
+      return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
+    } catch (Exception e) {
+      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
+      return ImmutableMessageResponse.builder()
+          .ack(MessageResponseStatus.ERROR)
+          .build();
+    }
+
   }
 }

@@ -1,6 +1,9 @@
 package io.digiexpress.eveli.client.spi.mq;
 
+import com.google.common.collect.ImmutableSet;
+
 import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 
 /*-
  * #%L
@@ -51,7 +54,45 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
   
   @Override
   public MessageResponse accept(QueueMessage msg) {
-    log.info("Accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
-    return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
+    try {
+      final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
+      
+      // no point to notify user who made the change 
+      if(notification.getCustomerId().equals(notification.getUpdaterId())) {
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("Message skipped because receiver is same as sender")
+            .build();        
+      }
+      
+      final var customerLocale = notification.getCustomerLocale();
+      
+      final var builder = commsClient.createCustomerSms()
+          .messageId(msg.getId())
+          .sms(
+              notification.getTitle().get(customerLocale), 
+              notification.getMessage().get(customerLocale)
+          );
+      
+      for(final var emailLocale : ImmutableSet.<String>builder()
+          .addAll(notification.getEmail().keySet())
+          .addAll(notification.getTitle().keySet())
+          .addAll(notification.getMessage().keySet()).build()) {
+       
+        final var emailTitle = notification.getTitle().get(customerLocale);
+        final var emailMessage = notification.getEmail().get(emailLocale);
+        
+        builder.email(emailLocale, emailTitle, emailMessage);
+      }
+      
+      builder.build();
+      
+      return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
+    } catch (Exception e) {
+      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
+      return ImmutableMessageResponse.builder()
+          .ack(MessageResponseStatus.ERROR)
+          .build();
+    }
   }
 }

@@ -59,6 +59,7 @@ public class WrenchFlowCommand {
     
       
       for(final var diffValue : diff.getValues()) {
+        final var language = Optional.ofNullable( diff.getTask().getClientLanguage()).orElse(default_locale);
         final FlowResult run = envir.getWrench()
             .inputMap(Map.of(
                 "operation", diffValue.getOp().operationName().toLowerCase(),
@@ -66,7 +67,7 @@ public class WrenchFlowCommand {
                 "taskRef",  diff.getTask().getTaskRef(),
                 "clientId", diff.getTask().getClientIdentificator(),
                 "taskGroupId", taskGroupId,
-                "clientLanguage", Optional.ofNullable( diff.getTask().getClientLanguage()).orElse(default_locale)
+                "clientLanguage", language
             ))
             .flow(flowName)
             .andGetBody();
@@ -80,7 +81,8 @@ public class WrenchFlowCommand {
             final var json = JsonObject
                 .mapFrom(match)
                 .put("taskId", diff.getTask().getId())
-                .put("updaterId", diff.getTask().getUpdaterId());
+                .put("updaterId", diff.getTask().getUpdaterId())
+                .put("customerLocale", language);
             
             final var notification = json.mapTo(TaskNotification.class);
             queues.add(notification);
@@ -90,7 +92,7 @@ public class WrenchFlowCommand {
         }
       }
       return queues;
-    } catch(Exception e) {e.printStackTrace();
+    } catch(Exception e) {
       log.error("Failed to resolved flow queues of task diff:\r\n{}\r\n{}", diff, e.getMessage(), e);
       return Collections.emptyList();
     }
@@ -104,6 +106,7 @@ public class WrenchFlowCommand {
     String getChangeType();
     String getQueue();
 
+    String getCustomerLocale();
     String getCustomerId();
     String getTaskRef();
     String getTaskId();
