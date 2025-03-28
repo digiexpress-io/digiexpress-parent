@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.mq;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.groovy.parser.antlr4.util.StringUtils;
 
@@ -42,7 +43,8 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   
   private final CommsClient commsClient;
   private final OrgClient orgClient;
-  
+  private final String email_locale = "fi";
+
   @Override
   public String getRoutingKey() {
     return "queue.task.worker_email";
@@ -60,18 +62,12 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   public MessageResponse accept(QueueMessage msg) {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
-      final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
       
-      final var recipientAddress = StringUtils.isEmpty(notification.getTaskGroupId()) ? 
-        Arrays.asList(notification.getAssigneeEmail()) : 
-        orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId());
-      
-      final var emailLocale = "fi";
-
       commsClient.createEmail()
-        .message(notification.getEmail().get(emailLocale))
+        .message(getMessage(notification))
+        .title(getTitle(notification))
         .refId(notification.getTaskRef())
-        .recipientAddress(recipientAddress)
+        .recipientAddress(getEmails(notification))
         .build();
       
       return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
@@ -81,6 +77,30 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
           .ack(MessageResponseStatus.ERROR)
           .build();
     }
-
+  }
+  
+  private String getMessage(TaskNotification notification) {
+    return notification.getEmail().get(email_locale);
+  }
+  
+  private String getTitle(TaskNotification notification) {
+    return notification.getTitle().get(email_locale);
+  }
+  
+  private List<String> getEmails(TaskNotification notification) {
+    final List<String> emails = (StringUtils.isEmpty(notification.getTaskGroupId()) ? 
+        Arrays.asList(notification.getAssigneeEmail()) : 
+        orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId())
+    );
+    
+    final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
+    
+    if(updaterIsAssignee) {
+      return emails.stream()
+        .filter(e -> updaterIsAssignee ? !e.equals(notification.getAssigneeEmail()) : true)
+        .toList();
+    }
+    
+    return emails;
   }
 }
