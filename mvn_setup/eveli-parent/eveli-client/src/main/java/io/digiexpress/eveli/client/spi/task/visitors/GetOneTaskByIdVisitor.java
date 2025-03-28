@@ -76,6 +76,10 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
   @Override
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var container = commit.iterator().next();
-    return Uni.createFrom().item(TaskMapper.map(container.getMission(), container.getAssignments().values(), container.getRemarks().values()));
+    return Uni.createFrom().item(TaskMapper.map(
+        container.getMission(), 
+        container.getAssignments().values(), 
+        container.getRemarks().values(),
+        container.getLinks().values()));
   }
 }

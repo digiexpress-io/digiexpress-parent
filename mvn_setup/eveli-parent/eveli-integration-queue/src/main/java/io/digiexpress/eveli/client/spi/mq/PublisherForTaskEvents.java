@@ -33,6 +33,7 @@ import org.springframework.context.event.EventListener;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher.MqEvent;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
@@ -42,28 +43,18 @@ import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStat
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 @RequiredArgsConstructor
-public class QueueWriter {
+public class PublisherForTaskEvents {
   private final TaskClient taskClient;
   private final ThenaMqClient mqClient;
   private final EveliEnvirClient envir;
   private final String flowName = "task_mq_router";
-  
-  
-  @Data
-  @AllArgsConstructor
-  public static class MqEvent {
-    private final String taskId;
-    private final String commitId;
-  }
-  
+  private final String default_locale = "fi";
   
   @EventListener(MqEvent.class)
   public void publishMessageToQueue(MqEvent event) {
@@ -76,10 +67,14 @@ public class QueueWriter {
       final var queues = getQueues(diff, runtime);
       return createMessage(diff.getTask(), queues);
     }).await().atMost(Duration.ofMinutes(10));
-    
   }
   
   private Uni<Optional<QueueMessage>> createMessage(Task task, List<String> routingKeys) {
+    if(routingKeys.isEmpty()) {
+      log.debug("Skipping queue, nowhere to route");
+      return Uni.createFrom().item(Optional.empty());
+    }
+    
     return mqClient.messageBuilder()
       .routingKey(routingKeys)
       .bodyId(task.getId())
@@ -105,18 +100,26 @@ public class QueueWriter {
   private List<String> getQueues(TaskDiff diff, EveliRuntime envir) {
     try {
       final List<String> queues = new ArrayList<>();
-
+      final var taskGroupId = diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next();
+      
+      
       for(final var diffValue : diff.getValues()) {
         final FlowResult run = envir.getWrench()
             .inputMap(Map.of(
-                "operation", diffValue.getOp().operationName(),
-                "path", diffValue.getPath()
+                "operation", diffValue.getOp().operationName().toLowerCase(),
+                "path", diffValue.getPath(),
+                "taskRef",  diff.getTask().getTaskRef(),
+                "clientId", diff.getTask().getClientIdentificator(),
+                "taskGroupId", taskGroupId,
+                "clientLanguage", Optional.ofNullable( diff.getTask().getClientLanguage()).orElse(default_locale)
             ))
             .flow(flowName)
             .andGetBody();
-        final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");
         
-
+        final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");
+        if(dtMatches == null) {
+          continue;
+        }
         for(final var match : dtMatches) {
           if(!Boolean.TRUE.equals(match.get("enabled"))) {
             continue;
@@ -133,5 +136,4 @@ public class QueueWriter {
       return Collections.emptyList();
     }
   }
-
 }

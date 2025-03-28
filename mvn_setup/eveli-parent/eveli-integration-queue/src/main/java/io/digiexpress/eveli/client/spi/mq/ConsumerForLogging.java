@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class LoggingThenaMqConsumer implements ThenaMqConsumer {
+public class ConsumerForLogging implements ThenaMqConsumer {
   @Override
   public String getRoutingKey() {
     return "#.log";

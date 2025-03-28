@@ -457,7 +457,23 @@ public class FlowProgramExecutor {
         };      
         isMatch = (Boolean) whenThen.getExpression().run(expressionContext).getValue();
         if(isMatch) {
-          visited.addAll(visitStep(whenThen.getStepId()));
+          
+          //switch leads to end
+          if(FlowProgramBuilder.END_STEP.getId().equals(whenThen.getStepId())) {
+            visited.add(visitStepLog(
+                ImmutableFlowResultLog.builder()
+                .id(this.stepLogs.size() + 1)
+                .stepId(step.getId())
+                .start(start)
+                .end(LocalDateTime.now())
+                .status(FlowExecutionStatus.COMPLETED)
+                .isReturnsCollection(false)
+                .build()));
+              
+          } else {
+            visited.addAll(visitStep(whenThen.getStepId()));  
+          }
+          
           break;
         }     
       }
@@ -465,6 +481,19 @@ public class FlowProgramExecutor {
       if(!isMatch) {
         throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
       }
+    }
+    
+    // nothing found nowhere to route
+    if(visited.isEmpty()) {
+      visited.add(visitStepLog(
+          ImmutableFlowResultLog.builder()
+          .id(this.stepLogs.size() + 1)
+          .stepId(step.getId())
+          .start(start)
+          .end(LocalDateTime.now())
+          .status(FlowExecutionStatus.COMPLETED)
+          .isReturnsCollection(false)
+          .build()));
     }
 
     return visited;

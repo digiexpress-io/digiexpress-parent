@@ -90,7 +90,11 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
         .findFirst().get();
     
     final var comment = TaskMapper.map(createdRemark);
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks());
     
     if (comment.getExternal()) {
       notificator.sendNewCommentNotificationToClient(comment, task);

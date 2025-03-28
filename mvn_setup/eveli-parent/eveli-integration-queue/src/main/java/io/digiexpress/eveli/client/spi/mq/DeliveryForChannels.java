@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MqScheduler {
+public class DeliveryForChannels {
   
   private final ThenaMqAppConfig config;
   private final ThenaMqClient client;

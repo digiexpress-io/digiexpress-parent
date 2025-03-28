@@ -106,6 +106,10 @@
       <artifactId>eveli-client</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>eveli-integration-queue</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.digiexpress</groupId>    
       <artifactId>eveli-integration-google</artifactId>
     </dependency>
