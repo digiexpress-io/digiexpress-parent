@@ -31,6 +31,7 @@ import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
@@ -108,6 +109,7 @@ public interface GrimCommitActions {
     @Nullable GrimMission getMission();
     List<GrimAssignment> getAssignments(); // assignments that are linked to mission 
     List<GrimRemark> getRemarks(); // remarks that are linked to mission
+    List<GrimMissionLink> getLinks(); // remarks that are linked to mission
   }
   
   @Value.Immutable

@@ -57,7 +57,7 @@ const DecisionTable: React.FC<{
         <TableBody>
           {rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => renderRow({ row, renderCell, headers: headers }))
+            .map((row) => <React.Fragment key={row.id}>{renderRow({ row, renderCell, headers: headers })}</React.Fragment>)
           }
         </TableBody>
       </Table>

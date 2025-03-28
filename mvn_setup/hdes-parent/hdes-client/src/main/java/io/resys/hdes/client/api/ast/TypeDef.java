@@ -1,5 +1,13 @@
 package io.resys.hdes.client.api.ast;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * hdes-client-api
@@ -21,12 +29,6 @@ package io.resys.hdes.client.api.ast;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 
 
 @Value.Immutable
@@ -91,8 +93,22 @@ public abstract class TypeDef implements Serializable, Comparable<TypeDef> {
   public enum AssociationType { ONE_TO_ONE, ONE_TO_MANY }
   public enum Direction { IN, OUT }
   public enum ValueType {
-    TIME, DATE, DATE_TIME, INSTANT, PERIOD, DURATION, 
-    STRING, INTEGER, LONG, DECIMAL, BOOLEAN, PERCENT, OBJECT, ARRAY,
-    MAP, FLOW_CONTEXT;
+    TIME, 
+    DATE, 
+    DATE_TIME, 
+    INSTANT, 
+    PERIOD, 
+    DURATION, 
+    STRING,
+    INTL,
+    INTEGER, 
+    LONG, 
+    DECIMAL, 
+    BOOLEAN, 
+    PERCENT, 
+    OBJECT, 
+    ARRAY,
+    MAP, 
+    FLOW_CONTEXT;
   }
 }

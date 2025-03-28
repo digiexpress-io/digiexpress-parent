@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import org.springframework.context.ApplicationEventPublisher;
+
 /*-
  * #%L
  * eveli-client
@@ -89,14 +91,16 @@ public class EveliAutoConfigWorker {
   public WorkerIamController workerIamController(AuthClient authClient) {
     return new WorkerIamController(authClient);
   } 
-
   @Bean 
   public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
     return new FeedbackApiController(authClient, feedbackClient);
   }
-  
   @Bean 
   public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
     return new QueueApiController(client, config);
+  }
+  @Bean
+  public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
+    return new MqEventPublisher(publisher);
   }
 }

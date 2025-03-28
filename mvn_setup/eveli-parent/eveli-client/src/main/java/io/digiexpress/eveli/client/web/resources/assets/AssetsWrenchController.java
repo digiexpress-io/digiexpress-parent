@@ -40,6 +40,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.digiexpress.eveli.client.spi.assets.HdesDefaultAssets;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.HdesComposer;
 import io.resys.hdes.client.api.HdesComposer.ComposerEntity;
@@ -51,7 +52,9 @@ import io.resys.hdes.client.api.HdesComposer.DebugResponse;
 import io.resys.hdes.client.api.HdesComposer.StoreDump;
 import io.resys.hdes.client.api.HdesComposer.UpdateEntity;
 import io.resys.hdes.client.api.HdesStore.HistoryEntity;
+import io.resys.hdes.client.api.HdesStore.StoreEntity;
 import io.resys.hdes.client.api.ImmutableDiffRequest;
+import io.resys.hdes.client.api.ast.AstCommand;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
 import io.resys.hdes.client.api.diff.TagDiff;
@@ -72,7 +75,11 @@ public class AssetsWrenchController {
   
   private static final Duration timeout = Duration.ofMillis(10000);
 
-
+  @GetMapping(path = "/defaultAssets", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Uni<List<StoreEntity>> defaultAssets() {
+    return new HdesDefaultAssets(composer.getClient(), true).accept();
+  }
+  
   @GetMapping(path = "/dataModels", produces = MediaType.APPLICATION_JSON_VALUE)
   public ComposerState dataModels(@RequestHeader(value = "Branch-Name", required = false) String branchName) {
     return composer.withBranch(branchName).get().await().atMost(timeout);
@@ -87,6 +94,13 @@ public class AssetsWrenchController {
   public ComposerEntity<?> commands(@RequestBody String body, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
     final var command = objectMapper.readValue(body, UpdateEntity.class);
     return composer.withBranch(branchName).dryRun(command).onItem().invoke(() -> envir.invalidateCache()).await().atMost(timeout);
+  }
+  
+  @GetMapping(path = "/commands/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public List<AstCommand> getCommands(@PathVariable String id, @RequestHeader(value = "Branch-Name", required = false) String branchName) throws JsonMappingException, JsonProcessingException {
+    return composer.withBranch(branchName)
+          .getCommands(id)
+          .await().atMost(timeout);
   }
 
   @PostMapping(path = "/debugs", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

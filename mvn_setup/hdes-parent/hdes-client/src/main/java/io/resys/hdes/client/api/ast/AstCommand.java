@@ -1,5 +1,11 @@
 package io.resys.hdes.client.api.ast;
 
+import java.io.Serializable;
+
+import javax.annotation.Nullable;
+
+import org.immutables.value.Value;
+
 /*-
  * #%L
  * hdes-client-api
@@ -23,10 +29,6 @@ package io.resys.hdes.client.api.ast;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
-import java.io.Serializable;
 
 @JsonSerialize(as = ImmutableAstCommand.class)
 @JsonDeserialize(as = ImmutableAstCommand.class)
@@ -37,6 +39,7 @@ public interface AstCommand extends Serializable {
   String getId();
   @Nullable
   String getValue();
+  
   AstCommandValue getType();
 
   

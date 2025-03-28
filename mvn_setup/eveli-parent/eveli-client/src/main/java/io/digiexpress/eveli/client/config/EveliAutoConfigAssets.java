@@ -32,7 +32,6 @@ import org.springframework.context.annotation.DependsOn;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.spi.assets.HdesDefaultAssets;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
@@ -192,11 +191,14 @@ public class EveliAutoConfigAssets {
    * Call this for get/create wrench/stencil db-s only needed for edit envir
    */
   public static Uni<EveliEditEnvir> getOrCreateDb(EveliEditEnvir envir) {
-    final var createdWrench = envir.getWrench().repo().create()
-        .onItem().transformToUni(init -> 
+    final var createdWrench = envir.getWrench().repo().create();
+        /*
+         * Creates default wrench assets
+         * .onItem().transformToUni(init -> 
           new HdesDefaultAssets(init, Boolean.TRUE.equals(envir.getAssetProps().getOverwrite())).accept()
           .onItem().transform(junk -> init)
         );
+        */
     final var createdStencil = envir.getStencil().repo().create();
     return Uni.combine().all()
         .unis(createdWrench, createdStencil)

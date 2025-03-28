@@ -34,6 +34,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Storage;
@@ -44,6 +45,7 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.CommsClient.CustomerMessageBuilder;
 import io.digiexpress.eveli.client.api.CommsClient.EmailBuilder;
+import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
@@ -56,10 +58,13 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.client.config.EveliProps;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
 import io.digiexpress.eveli.client.config.EveliPropsEmail;
+import io.digiexpress.eveli.client.config.EveliPropsOrg;
 import io.digiexpress.eveli.client.google.AttachmentCommandsGoogle;
 import io.digiexpress.eveli.client.spi.comms.CustomerSmsBuilderImpl;
 import io.digiexpress.eveli.client.spi.comms.EmailBuilderDummy;
 import io.digiexpress.eveli.client.spi.comms.EmailBuilderJakarta;
+import io.digiexpress.eveli.client.spi.mq.EveliAutoConfigMq;
+import io.digiexpress.eveli.client.spi.org.OrgClientImpl;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiRest;
 import io.digiexpress.notification.client.CustomerSmsBuilderSuomifiWsl;
@@ -124,6 +129,11 @@ public class Application {
   @Bean
   public ObjectFactory objectFactory() {
     return new ObjectFactory();
+  }
+  
+  @Bean
+  public OrgClient orgClient(RestTemplate client, EveliPropsOrg orgProps) {
+    return new OrgClientImpl(client, orgProps.getServiceUrl());    
   }
   
   @Bean

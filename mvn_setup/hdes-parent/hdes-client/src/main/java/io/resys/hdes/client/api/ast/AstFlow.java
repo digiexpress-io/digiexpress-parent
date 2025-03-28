@@ -76,8 +76,11 @@ public interface AstFlow extends AstBody, Serializable {
     AstFlowRefNode getUserTask();
     AstFlowRefNode getDecisionTable();
     AstFlowRefNode getService();
+    AstFlowRefNode getReturns();
+    
     Map<String, AstFlowSwitchNode> getSwitch();
   }
+  
 
   interface AstFlowRefNode extends AstFlowNode {
     AstFlowNode getRef();

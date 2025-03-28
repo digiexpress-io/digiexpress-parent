@@ -58,7 +58,9 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
     previousVersion = TaskMapper.map(
         merge.getCurrentState().getMission(), 
         merge.getCurrentState().getAssignments().values(),
-        merge.getCurrentState().getRemarks().values());
+        merge.getCurrentState().getRemarks().values(),
+        merge.getCurrentState().getLinks().values()
+        );
     
     if(command.getVersion() != null && !previousVersion.getVersion().equals(command.getVersion())) {
       throw TaskException.builder("MODIFY_ONE_TASK_FAIL_LOCK_VERSION_MISMATCH")
@@ -130,7 +132,11 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(),
+        commited.getLinks());
     notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }

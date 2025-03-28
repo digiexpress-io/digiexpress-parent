@@ -17,6 +17,7 @@
     <module>eveli-integration-suomifi-rest</module>
     <module>eveli-integration-suomifi-wsl</module>
     <module>eveli-integration-google</module>
+    <module>eveli-integration-queue</module>
     <module>eveli-app</module>
     <module>eveli-app-gcloud</module>
     <module>dialob-client</module>

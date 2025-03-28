@@ -21,7 +21,7 @@ export declare namespace SearchApi {
     internal: readonly SiteApi.TopicLink[];
     phones: readonly SiteApi.TopicLink[];
     forms: readonly LinkToForm[];
-
+    groupedForms: Record<string, LinkToForm[]>; // label
     find(newSearchString: string): SearchState;
     filterMode(type: FilterMode): SearchState;
   }

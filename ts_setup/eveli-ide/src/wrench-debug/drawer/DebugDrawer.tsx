@@ -17,7 +17,7 @@ const DrawerOption: React.FC<{
   icon: React.ReactElement;
   disabled: boolean;
 }> = ({ icon, onClick, label, disabled }) => {
-  const itemSx: SxProps = { color: "primary.contrastText" }
+  const itemSx: SxProps = { color: "text.primary" }
   return (<ListItemButton disabled={disabled} onClick={onClick}><ListItemIcon sx={itemSx}>{icon}</ListItemIcon><ListItemText sx={itemSx}><Box component="span" sx={itemSx}><FormattedMessage id={label} /></Box></ListItemText></ListItemButton>);
 }
 const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {

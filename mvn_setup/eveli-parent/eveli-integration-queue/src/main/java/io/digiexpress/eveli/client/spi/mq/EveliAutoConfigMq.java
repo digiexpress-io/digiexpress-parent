@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.client.config;
+package io.digiexpress.eveli.client.spi.mq;
 
 /*-
  * #%L
@@ -23,18 +23,16 @@ package io.digiexpress.eveli.client.config;
 import java.time.Duration;
 import java.util.List;
 
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
+import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.spi.mq.LoggingThenaMqConsumer;
-import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
-import io.digiexpress.eveli.client.spi.mq.MqScheduler;
-import io.digiexpress.eveli.client.spi.mq.QueueWriter;
+import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
@@ -93,23 +91,27 @@ public class EveliAutoConfigMq {
   }
   
   @Bean 
-  public MqScheduler mqScheduler(ThenaMqClient client, ThenaMqAppConfig config) {
-    return new MqScheduler(config, client);
+  public DeliveryForChannels mqScheduler(ThenaMqClient client, ThenaMqAppConfig config) {
+    return new DeliveryForChannels(config, client);
   }
 
   @Bean
-  public ThenaMqConsumer loggingThenaMqConsumer() {
-    return new LoggingThenaMqConsumer() ;
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client) {
+    return new ConsumerForCustomerNotification(client);
   }
-
   @Bean
-  public QueueWriter queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
-    return new QueueWriter(taskClient, mqClient, envir);
+  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient) {
+    return new ConsumerForWorkerEmail(client, orgClient);
   }
   
+  
   @Bean
-  public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
-    return new MqEventPublisher(publisher);
+  public ThenaMqConsumer loggingThenaMqConsumer() {
+    return new ConsumerForLogging();
+  }
+  @Bean
+  public PublisherForTaskEvents queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
+    return new PublisherForTaskEvents(taskClient, mqClient, envir);
   }
   
   @Bean

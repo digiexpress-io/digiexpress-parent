@@ -4,6 +4,7 @@ export const my = {
   'cust.inbox.message.sender-name.org-user': 'Meja maklumat',
   'cust.phone': 'Telefon: 123 456 7890',
   'cust.email': 'info@lifeDigital.com',
+  'header.userIdentity.label': 'Sedang masuk sebagai',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Platform sumber terbuka untuk perkhidmatan pendigitalan',
   'footer.column3.title': 'Pautan pantas',

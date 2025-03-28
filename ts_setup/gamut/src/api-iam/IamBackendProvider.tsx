@@ -57,23 +57,28 @@ export const useIam = () => {
 
 
 function createContext(
-  props: IamBackendProviderProps, 
+  props: IamBackendProviderProps,
   user: IamApi.User | undefined,
   userRoles: IamApi.UserRoles | undefined,
   userProducts: IamApi.UserProducts | undefined,
   reload: () => Promise<IamApi.User | undefined>): IamApi.IamBackendContextType {
 
   let authType: IamApi.AuthType = 'ANON';
+  let userName: string | undefined;
   if(user && user.representedCompany) {
     authType = 'REP_COMPANY';
+    userName = user.representedCompany.name;
   } else if(user && user.representedPerson) {
     authType = 'REP_PERSON';
+    userName = user.representedPerson.name;
   } else if(user) {
-    authType = 'USER';
+    authType = 'USER'; 
+    userName = user.firstName + ' ' + user.lastName;
   }
 
   return Object.freeze({
     authType, user, userRoles, userProducts,
+    userName, 
     liveness: props.liveness,
     fetchUserGET: props.fetchUserGET,
     getUser: () => reload(),

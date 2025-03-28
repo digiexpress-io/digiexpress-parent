@@ -116,6 +116,7 @@ public interface TaskClient {
 
     // optional props
     @Nullable String getDescription();
+    @Nullable String getClientLanguage();
     @Nullable String getClientIdentificator();
     @Nullable LocalDate getDueDate();
     
@@ -184,12 +185,13 @@ public interface TaskClient {
     @Nullable String getQuestionnaireId();
     @Nullable String getDescription();
     @Nullable String getClientIdentificator();
+    @Nullable String getClientLanguage();
     @Nullable LocalDate getDueDate();
     
     @Nullable String getAssignedId();
-    @Nullable String getAssignedUser();    
+    @Nullable String getAssignedUser();
     @Nullable String getAssignedUserEmail();
-    
+
     String getSubject();
     TaskPriority getPriority();
 

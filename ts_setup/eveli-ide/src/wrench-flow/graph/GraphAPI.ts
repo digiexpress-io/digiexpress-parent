@@ -2,7 +2,7 @@ import { Node, Edge, Model } from '../../wrench-vis';
 import { HdesApi } from '../../api-wrench';
 
 
-type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow';
+type ModelType = 'switch' | 'decisionTable' | 'service' | 'flow' | 'returns';
 
 
 class ModelVisitor {
@@ -106,7 +106,7 @@ class ModelVisitor {
 
     if (group === "switch") {
       this.visitSwitch(step, { parent: node, index: props.index });
-    } else if (group === "decisionTable") {
+    } else if (group === "decisionTable" || group === "returns") {
       this.visitThen(step.then, { parent: node, index: props.index });
     } else if (group === "service") {
       if(ref) {
@@ -234,10 +234,11 @@ class ModelVisitor {
       return "decisionTable";
     } else if (step.service) {
       return "service";
+    } else if (step.returns) {
+        return "returns";
     } else if (step.switch) {
       return "switch";
     }
-
     return "service";
   }
 

@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import org.apache.groovy.parser.antlr4.util.StringUtils;
+
 /*-
  * #%L
  * eveli-client
@@ -35,6 +37,7 @@ import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.smallrye.mutiny.Uni;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -91,6 +94,14 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
 
   @Override
   public CreateOneMission start(GrimStructuredTenant config, CreateOneMission builder) {
+    
+
+    if(command.getQuestionnaireId() != null && StringUtils.isEmpty(command.getClientLanguage())) {
+      throw TaskException.builder("CREATE_TASKS_SAVE_FAIL")
+        .add("clientLanguageMustBeDefined", "command is missing clientLanguage", JsonObject.of("questionnaireId", command.getQuestionnaireId()))
+        .build(); 
+    }
+    
     builder.mission(newMission -> createTask(command, newMission));
     return builder
         .commitAuthor(userId)
@@ -107,7 +118,11 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
 
   @Override
   public Uni<Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks());
     notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }

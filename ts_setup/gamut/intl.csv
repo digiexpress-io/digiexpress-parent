@@ -5,6 +5,8 @@ booleanValue.false,,No,Ei,Inga,Tidak
 cust.inbox.message.sender-name.org-user,,Info desk,Info,Infodisk,Meja maklumat
 cust.phone,,Phone: 123 456 7890,Puhelin: 12345,Telefon: 123 456 7890,Telefon: 123 456 7890
 cust.email,,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com
+// -------------------- CUSTOMER HEADER --------------------------,,,,#VALUE!,
+header.userIdentity.label,,You are logged in as,Kirjauduttu käyttäjänä,Inloggad som,Sedang masuk sebagai
 // -------------------- CUSTOMER FOOTER --------------------------,,,,#VALUE!,
 footer.column2.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress
 footer.column2.subtitle,,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan
@@ -68,6 +70,7 @@ gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,Telefon
 gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan
 gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan
 gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar
+gamut.search.results.otherForms,,Other forms,Other forms,,
 // ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
 gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang
 gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
