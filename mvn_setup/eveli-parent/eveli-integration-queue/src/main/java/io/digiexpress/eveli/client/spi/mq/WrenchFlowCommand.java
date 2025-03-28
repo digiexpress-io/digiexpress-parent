@@ -82,7 +82,9 @@ public class WrenchFlowCommand {
                 .mapFrom(match)
                 .put("taskId", diff.getTask().getId())
                 .put("updaterId", diff.getTask().getUpdaterId())
-                .put("customerLocale", language);
+                .put("customerLocale", language)
+                .put("assigneeId", diff.getTask().getAssignedId())
+                .put("assigneeEmail", diff.getTask().getAssignedUserEmail());
             
             final var notification = json.mapTo(TaskNotification.class);
             queues.add(notification);
@@ -103,6 +105,8 @@ public class WrenchFlowCommand {
   @Value.Immutable
   public interface TaskNotification {
     String getUpdaterId();
+    String getAssigneeId();
+    String getAssigneeEmail();
     String getChangeType();
     String getQueue();
 
