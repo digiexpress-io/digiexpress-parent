@@ -80,6 +80,10 @@ public interface ProgramEnvir {
     String getMsg();
     @JsonIgnore
     @Nullable
+    Integer getRow();
+    @Nullable
+    Integer getColumn();
+    @Nullable
     Exception getException();
   }
   

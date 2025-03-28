@@ -69,6 +69,7 @@ export const GRouterSecuredServicesRoot = styled("div", {
       padding: theme.spacing(1),
     },
     '& .GRouterSecuredServices-resultsDividerTitle': {
+      paddingBotton: theme.spacing(1),
 
       [theme.breakpoints.down('md')]: {
         ...theme.typography.h1,

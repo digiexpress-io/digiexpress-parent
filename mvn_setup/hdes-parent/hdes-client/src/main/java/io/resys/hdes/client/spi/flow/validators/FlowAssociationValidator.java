@@ -182,7 +182,7 @@ public class FlowAssociationValidator {
               node.getSource().getValue().length(),
               "Task: " + taskModel.getKeyword() + " mapping: '" + entry.getKey() + "' is missing value!");
         } else if (!serviceTypes.containsKey(entry.getKey())) {
-          error(toValidate,
+          warning(toValidate,
               node.getStart(),
               node.getSource().getValue().length(),
               "Task: " + taskModel.getKeyword() + ", has unknown input: '" + entry.getKey() + "'!");

@@ -63,7 +63,11 @@ public class AddCustomerCommitViewer implements TaskStoreConfig.MergeTaskVisitor
 
   @Override
   public Uni<TaskClient.Task> end(GrimStructuredTenant config, OneMissionEnvelope commited) {
-    final var task = TaskMapper.map(commited.getMission(), commited.getAssignments(), commited.getRemarks());
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks());
     return Uni.createFrom().item(task);
   }
 }

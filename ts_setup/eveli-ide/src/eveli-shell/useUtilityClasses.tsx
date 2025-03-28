@@ -190,15 +190,10 @@ export const EveliShellMiniBarRoot = styled('div', {
     ];
   },
   shouldForwardProp: (prop) => prop !== 'toolbarHeight' && prop !== 'ownerState',
-})<{ ownerState: { unsaved?: boolean } }>(({ theme, ownerState }) => {
+})<{}>(({ theme }) => {
 
   return {
 
-    '& .EveliShell-unsaved': {
-      color: ownerState.unsaved ? theme.palette.common.black : theme.palette.text.secondary,
-      backgroundColor: alpha(theme.palette.warning.main, 0.8),
-      padding: theme.spacing(1)
-    },
     '& .EveliShell-itemDisabled': {
       color: theme.palette.action.disabled
     },

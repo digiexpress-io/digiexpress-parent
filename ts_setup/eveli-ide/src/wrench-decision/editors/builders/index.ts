@@ -24,6 +24,7 @@ import StringBuilder from './TypeStringBuilder';
 import DateBuilder from './TypeDateBuilder';
 import BooleanBuilder from './TypeBooleanBuilder';
 import ValueSetBuilder from './TypeValueSetBuilder';
+import IntlBuilder from './TypeIntlBuilder';
 
 const Builder = (props: {header: HdesApi.TypeDef, value?: string, values?: string[]}) => {
   const value = props.value ? props.value : '';
@@ -43,6 +44,8 @@ const Builder = (props: {header: HdesApi.TypeDef, value?: string, values?: strin
     return new DateBuilder({value, header});
   } else if(type === 'BOOLEAN') {
     return new BooleanBuilder({value, header});
+  } else if(type === 'INTL') {
+    return new IntlBuilder({value, header});
   }
   return {};
 }
@@ -56,5 +59,7 @@ export { EditDateTime } from './EditDateTime';
 export { EditDateTimeSimple } from './EditDateTimeSimple';
 export { EditDate } from './EditDate';
 export { EditDateSimple } from './EditDateSimple';
+export { EditIntlValueSet } from './EditIntlValueSet';
+
 export {NumberBuilder, StringBuilder, DateBuilder, BooleanBuilder}
 export default Builder;

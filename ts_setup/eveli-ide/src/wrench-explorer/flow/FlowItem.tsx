@@ -133,6 +133,8 @@ const FlowItem: React.FC<{ flowId: HdesApi.FlowId }> = ({ flowId }) => {
     .filter(a => a.owner && a.refType === "FLOW_TASK")
     .map(a => ({ entity: session.getService(a.ref), ref: a }));
 
+    console.log(flow);
+
   return (
     <Burger.TreeItem itemId={flow.id}
       labelText={flowName}

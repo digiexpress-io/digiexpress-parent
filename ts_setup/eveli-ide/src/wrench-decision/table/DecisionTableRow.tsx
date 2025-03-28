@@ -19,7 +19,7 @@ const DecisionTableRow: React.FC<{
   row.cells.forEach(e => cells[e.header] = e);
 
   return (<TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-    <TableCell align="left" sx={{
+    <TableCell key='_reserved' align="left" sx={{
       position: "sticky",
       left: 0,
       backgroundColor: "secondary.contrastText",
@@ -28,7 +28,7 @@ const DecisionTableRow: React.FC<{
     }}>
       {row.order}
     </TableCell>
-    {headers.map(header => renderCell({ header, row, cell: cells[header.id]}))}
+    {headers.map(header => (<React.Fragment key={header.id}>{renderCell({ header, row, cell: cells[header.id] })}</React.Fragment>))}
   </TableRow>);
 }
 export { DecisionTableRow };

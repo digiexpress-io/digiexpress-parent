@@ -60,6 +60,7 @@ export const fi = {
   'gamut.search.results.internalExternalLinks': 'Linkit',
   'gamut.search.results.internalLinks': 'Linkit',
   'gamut.search.results.externalLinks': 'Ulkoiset linkit',
+  'gamut.search.results.otherForms': 'Other forms',
   'gamut.article.pagelinks.forms.title': 'Lomakkeet',
   'gamut.article.pagelinks.otherlinks.title': 'Linkit',
   'gamut.forms.formName': 'Lomakkeen nimi',

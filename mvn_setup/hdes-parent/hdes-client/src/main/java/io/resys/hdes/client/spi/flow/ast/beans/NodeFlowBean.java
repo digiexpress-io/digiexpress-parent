@@ -31,9 +31,9 @@ import io.resys.hdes.client.api.ast.AstFlow.AstFlowInputNode;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowInputType;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowNode;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowRefNode;
+import io.resys.hdes.client.api.ast.AstFlow.AstFlowRoot;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowSwitchNode;
 import io.resys.hdes.client.api.ast.AstFlow.AstFlowTaskNode;
-import io.resys.hdes.client.api.ast.AstFlow.AstFlowRoot;
 import io.resys.hdes.client.api.exceptions.FlowAstException;
 
 public class NodeFlowBean extends NodeBean implements AstFlowRoot {
@@ -48,6 +48,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
   public static final String KEY_REQ = "required";
   public static final String KEY_TYPE = "type";
   public static final String KEY_DT = "decisionTable";
+  public static final String KEY_RETURNS = "returns";
   public static final String KEY_USER_TASK = "userTask";
   public static final String KEY_REF = "ref";
   public static final String KEY_COLLECTION = "collection";
@@ -224,6 +225,7 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     private NodeRefBean decisionTable;
     private NodeRefBean userTask;
     private NodeRefBean service;
+    private NodeRefBean returns;
     private NodeCasesBean cases;
 
     public NodeTaskBean(AstChangeset source, int order, int indent, String keyword, String value, NodeBean parent) {
@@ -257,6 +259,12 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
           addChild(service);
         }
         return service;
+      } else if(KEY_RETURNS.equals(keyword)) {
+        if(returns == null) {
+          returns = new NodeRefBean(source, indent, keyword, value, this);
+          addChild(returns);
+        }
+        return returns;
       } else if(KEY_ID.equals(keyword)) {
         if(VALUE_END.equalsIgnoreCase(value) || VALUE_NEXT.equalsIgnoreCase(value) ) {
           throw new FlowAstException(String.format("Value: %s is reserved and can't be used!", value));
@@ -287,6 +295,10 @@ public class NodeFlowBean extends NodeBean implements AstFlowRoot {
     @Override
     public AstFlowRefNode getUserTask() {
       return userTask;
+    }
+    @Override
+    public AstFlowRefNode getReturns() {
+      return returns;
     }
     @Override
     public AstFlowRefNode getRef() {

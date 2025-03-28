@@ -22,6 +22,7 @@ package io.resys.hdes.client.spi.envir;
 
 import io.resys.hdes.client.api.ast.AstBody.AstBodyType;
 import io.resys.hdes.client.api.ast.AstBody.AstSource;
+import io.resys.hdes.client.api.ast.AstBody.CommandMessageType;
 import io.resys.hdes.client.api.ast.AstBranch;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstDecision.HitPolicy;
@@ -170,10 +171,10 @@ public class AssociationVisitor {
         }
         
         final var step = entry.getStep();
-        if(step != null) {
+        if(step != null && step.getBody().getRefType() != FlowProgramStepRefType.RETURNS) {
           final var ref = entry.getStep().getBody().getRef();
           
-          entry.getMessages().forEach(msg -> {
+          entry.getMessages().stream().filter(e -> e.getType() == CommandMessageType.ERROR).forEach(msg -> {
             final var progMsg = ImmutableProgramMessage.builder().id("dependency-error").msg("line: " + msg.getLine() + ": " + msg.getValue()).build();          
             externalIdToDependencyErrors.get(wrapper.getId()).add(progMsg);
           });
@@ -185,7 +186,7 @@ public class AssociationVisitor {
               .from(assoc.get())
               .refStatus(ProgramStatus.DEPENDENCY_ERROR)
               .build());
-        } else {
+        } else if(step != null) {
           entry.getMessages().forEach(msg -> {
             final var progMsg = ImmutableProgramMessage.builder().id("dependency-warning").msg("line: " + msg.getLine() + ": " + msg.getValue()).build();          
             externalIdToDependencyWarnings.get(wrapper.getId()).add(progMsg);
@@ -240,6 +241,8 @@ public class AssociationVisitor {
     } else if(refType == FlowProgramStepRefType.DT) {
       bodyType = AstBodyType.DT;
       refs = typeToExternalId.get(AstBodyType.DT);
+    } else if(refType == FlowProgramStepRefType.RETURNS) {
+      return null;
     } else {
       bodyType = AstBodyType.FLOW;
     }

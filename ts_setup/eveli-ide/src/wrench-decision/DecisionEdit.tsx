@@ -18,6 +18,7 @@ import fileDownload from 'js-file-download'
 
 
 import Decision from './table';
+import { useFetch } from '@dxs-ts/eveli-fetch';
 
 
 interface EditMode {
@@ -27,6 +28,14 @@ interface EditMode {
   upload?: boolean,
   rowsColumns?: boolean,
   options?: boolean
+}
+
+function quotation(input: any) {
+  if(input === null || input === undefined) {
+    return null;
+  }
+
+  return "\"" + input.replaceAll('"', '\\"') + "\""  
 }
 
 const saveCsv = (decision: HdesApi.AstDecision) => {
@@ -80,6 +89,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
   const [ast, setAst] = React.useState<HdesApi.AstDecision | undefined>();
   const [edit, setEdit] = React.useState<EditMode | undefined>();
   const intl = useIntl(); 
+  const { getCommands } = useFetch('worker/rest/api/assets/wrench/commands/$id.GET', {});
 
 
   const onChange = (newCommands: HdesApi.AstCommand[]) => {
@@ -90,7 +100,6 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
 
   React.useEffect(() => {
     service.ast(decisionId, commands).then(data => {
-      console.log("new commands applied");
       setAst(data.ast);
     });
 
@@ -99,7 +108,6 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
   if (!ast) {
     return <span>loading ...</span>
   }
-
 
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
@@ -118,6 +126,20 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         <DrawerSection>
           <DrawerOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => saveCsv(ast)} />
           <DrawerOption label='decisions.toolbar.csvUpload' icon={<UploadIcon />} onClick={() => setEdit({ upload: true })} />
+          <DrawerOption label='decisions.toolbar.copyCommands' icon={<FileDownloadDoneIcon/>} onClick={async function() {
+              const commands = await getCommands(decision.id);
+
+
+              const javaCommands = commands.map(command => 
+                (`ImmutableAstCommand.builder().type(AstCommandValue.${command.type}).value(${quotation(command.value)}).id(${quotation(command.id)}).build()`)
+              ).join(",\r\n");
+
+              const text = JSON.stringify(commands, null, 2) + "\r\n"+ "\r\n" + javaCommands;
+              setTimeout(() => {
+                navigator.clipboard.writeText(text);
+                console.log(text);
+              })
+          }} />
         </DrawerSection>
         <DrawerSection>
           <DrawerOption label="decisions.toolbar.nameAndHitpolicy" icon={<EditIcon />} onClick={() => setEdit({ meta: true })} />
@@ -125,6 +147,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </DrawerSection>
       </Box>
     </Drawer>
+
 
     <Decision.Table ast={ast}
       renderHeader={headerProps => (
@@ -149,7 +172,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </Decision.Header>
       )}
       renderRow={rowProps => <Decision.Row {...rowProps} />}
-      renderCell={cellProps => <Decision.Cell {...cellProps} onClick={() => setEdit({ cell: cellProps.cell })} />}
+      renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} errors={decision.errors} onClick={() => setEdit({ cell: cellProps.cell })} />}
     />
   </Box >);
 }

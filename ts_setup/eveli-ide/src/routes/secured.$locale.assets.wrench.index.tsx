@@ -8,7 +8,7 @@ import { EveliApp } from '@/eveli-app';
 import { parseWrenchSearchParams, WrenchRouteSearchParams } from '@/wrench-nav';
 import { useLocale } from '@/api-locale';
 import { EveliSetup } from '@/eveli-setup';
-
+import { WrenchStickySave } from '@/wrench-sticky-save';
 
 
 export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
@@ -16,12 +16,6 @@ export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
   validateSearch: (search: Record<string, unknown>): WrenchRouteSearchParams => parseWrenchSearchParams(search)
 })
 
-const MergedToolbar: React.FC = () => {
-  return <>
-    <EveliSetup.Toolbar />
-    <WrenchSetup.Toolbar />
-  </>
-}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -47,6 +41,8 @@ function Component() {
   
   return (
     <WrenchComposerApi.Provider service={service}>
-      <EveliApp main={Main} secondary={Secondary} toolbar={MergedToolbar} tabs={Tabs} />
+      <EveliApp main={Main} secondary={Secondary} toolbar={EveliSetup.Toolbar} tabs={Tabs}>
+        <WrenchStickySave />
+      </EveliApp>
     </WrenchComposerApi.Provider>)
 }

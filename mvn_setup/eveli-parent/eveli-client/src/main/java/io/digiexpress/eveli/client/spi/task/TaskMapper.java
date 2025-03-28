@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 
@@ -42,6 +43,8 @@ public class TaskMapper {
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
   public static final String LABEL_TYPE_KEYWORD = "keyword";
+  public static final String LINK_TYPE_CLIENT_LOCALE = "client_locale";
+  
   public static final String VIEWER_WORKER = "WORKER";
   public static final String VIEWER_CUSTOMER = "CUSTOMER";
   
@@ -73,10 +76,18 @@ public class TaskMapper {
   
 
   public static TaskClient.Task map(GrimMissionContainer cont) {
-    return map(cont.getMission(), cont.getAssignments().values(), cont.getRemarks().values());
+    return map(
+        cont.getMission(), 
+        cont.getAssignments().values(), 
+        cont.getRemarks().values(),
+        cont.getLinks().values());
   }
   
-  public static TaskClient.Task map(GrimMission commited, Collection<GrimAssignment> assignments, Collection<GrimRemark> remarks) {
+  public static TaskClient.Task map(
+      GrimMission commited, 
+      Collection<GrimAssignment> assignments, 
+      Collection<GrimRemark> remarks,
+      Collection<GrimMissionLink> links) {
 
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))
@@ -86,6 +97,12 @@ public class TaskMapper {
         .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE.equals(e.getAssignmentType()))
         .map(e -> e.getAssignee())
         .toList();
+
+    
+    final var clientLocale = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_CLIENT_LOCALE.equals(e.getLinkType()))
+        .map(e -> e.getLinkBody().getString(LINK_TYPE_CLIENT_LOCALE))
+        .findFirst();
     
     /* JPA version
     
@@ -111,9 +128,11 @@ public class TaskMapper {
     final var task = ImmutableTask.builder()
       .version(commited.getCommitId())
       .clientIdentificator(commited.getReporterId())
+      .clientLanguage(clientLocale.orElse(null))
       .description(commited.getDescription())
       .dueDate(commited.getDueDate())
       .id(commited.getId())
+      
 
       .completed(TaskMapper.toZoned(commited.getCompletedAt()))
       .created(TaskMapper.toZoned(commited.getTransitives().getCreatedAt()))

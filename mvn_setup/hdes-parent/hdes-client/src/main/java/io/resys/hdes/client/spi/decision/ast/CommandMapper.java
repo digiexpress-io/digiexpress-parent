@@ -38,7 +38,15 @@ import java.util.stream.Collectors;
 
 public class CommandMapper {
   private final static List<String> headerTypes = Collections.unmodifiableList(
-      Arrays.asList(ValueType.STRING,  ValueType.BOOLEAN, ValueType.INTEGER, ValueType.LONG, ValueType.DECIMAL, ValueType.DATE, ValueType.DATE_TIME).stream()
+      Arrays.asList(
+          ValueType.STRING,
+          ValueType.BOOLEAN, 
+          ValueType.INTEGER, 
+          ValueType.LONG, 
+          ValueType.DECIMAL, 
+          ValueType.DATE, 
+          ValueType.DATE_TIME,
+          ValueType.INTL).stream()
       .map(v -> v.name()).collect(Collectors.toList()));
   
   private final static Map<ValueType, List<String>> headerExpressions = Collections.unmodifiableMap(Map.of(

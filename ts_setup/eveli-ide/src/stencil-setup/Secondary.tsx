@@ -9,6 +9,8 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
+
 import { useIntl } from 'react-intl';
 
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
@@ -135,6 +137,13 @@ const Secondary: React.FC<{}> = () => {
             {intl.formatMessage({ id: 'menu.releases' })}
           </Button>
         </EveliPermissions>
+
+        <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<DashboardCustomizeOutlinedIcon />}
+          onClick={() => onNav({ type: 'ACTIVITIES' })}>
+          {intl.formatMessage({ id: 'menu.activities' })}
+        </Button>
+
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}

@@ -5,6 +5,7 @@ import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';
+import { EditIntlValueSet } from './builders';
 
 
 interface HeaderEditProps {
@@ -45,12 +46,13 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
   const [valueSet, setValueSet] = React.useState<string[]>(header.valueSet ? header.valueSet : []);
   const expressions = dt.headerExpressions[header.valueType] ;
   const intl = useIntl();
+
   const editor = (
     <Box component="form" noValidate autoComplete="off">
       <Grid2 container spacing={2}>
 
         {/** name and type */}
-        <Grid2 size={{ xs: 6 }}>
+        <Grid2 size={{ xs: 12 }}>
           <Burger.TextField label={intl.formatMessage({ id: 'dt.header.name' })}
             value={name}
             onChange={(value: string) => {
@@ -58,7 +60,8 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
               setName(value);
             }} />
         </Grid2>
-        <Grid2 size={{ xs: 6 }}>
+
+        <Grid2 size={{ xs: 12 }}>
           <Burger.Select label={intl.formatMessage({ id: 'dt.header.dataType' })}
             selected={valueType}
             onChange={(value) => {
@@ -66,14 +69,28 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
               setValueType(value);
             }}
             empty={{ id: '', label: intl.formatMessage({ id: 'dt.header.dataType' }) }}
-            items={dt.headerTypes.map((type) => ({
-              id: type,
-              value: (<ListItemText primary={type} />)
-            }))}
+            items={dt.headerTypes
+              .filter(type => {
+                if(header.direction === 'IN' && type === 'INTL') {
+                  return false;
+                }
+                return true;
+              })
+              .map((type) => ({
+                id: type,
+                value: (<ListItemText primary={type} />)
+              }))}
           />
         </Grid2>
+        <Grid2 size={{ xs: 12 }}>
+          {valueType === 'INTL' && <EditIntlValueSet valueSet={valueSet} 
+            setValueSet={setValueSet} 
+            commands={commands} 
+            setCommands={setCommands} 
+            headerId={header.id} />}
+        </Grid2>
 
-        <Grid2 size={{ xs: 6 }}>
+        <Grid2 size={{ xs: 12 }}>
           {header.direction === 'OUT' ? null : (
             <Burger.Select label={intl.formatMessage({ id: 'dt.header.expression' })}
               selected={exp}

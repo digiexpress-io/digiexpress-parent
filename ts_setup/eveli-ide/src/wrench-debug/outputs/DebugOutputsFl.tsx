@@ -4,14 +4,20 @@ import { Box, TableCell, TableRow, IconButton, Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
+import Editor from '@monaco-editor/react';
 
 import { HdesApi } from '@/api-wrench';
+import { toYaml } from './utils';
 
-import CodeEditor from '../../wrench-code-editor';
-import { toYaml } from './utils'
+
 
 const DebugStep: React.FC<{ debug:HdesApi.FlowResultLog }> = ({ debug }) => {
   const [expanded, setExpanded] = React.useState(false);
+
+  const resp: any = {...debug};
+  delete resp['returnsValue']
+
+  const yaml = toYaml(resp);
 
   return (<>
     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} key={`${debug.id}-summary`}>
@@ -29,7 +35,12 @@ const DebugStep: React.FC<{ debug:HdesApi.FlowResultLog }> = ({ debug }) => {
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
-            <CodeEditor id="debug-input" mode="yaml" src={toYaml(debug)} onChange={(value) => { console.log(value); }} />
+            <Editor
+              value={yaml}
+              onChange={() => {}}
+              defaultLanguage='yaml'
+              height='500px'
+            />
           </Box>
         </Collapse>
       </TableCell>

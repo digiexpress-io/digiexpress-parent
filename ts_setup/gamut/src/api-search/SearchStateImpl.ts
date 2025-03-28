@@ -175,7 +175,6 @@ class SearchReducer {
   }
 }
 
-
 export class SearchStateImpl implements SearchApi.SearchState {
   private _source: readonly SiteApi.TopicView[];
   private _searchString: string | undefined;
@@ -187,6 +186,7 @@ export class SearchStateImpl implements SearchApi.SearchState {
   private _external: readonly SiteApi.TopicLink[];
   private _phones: readonly SiteApi.TopicLink[];
   private _topics: readonly SiteApi.TopicView[];
+  private _groupedForms: Record<string, SearchApi.LinkToForm[]>
 
   constructor(props: {
     source: readonly SiteApi.TopicView[],
@@ -205,6 +205,13 @@ export class SearchStateImpl implements SearchApi.SearchState {
     this._internal = search.internal;
     this._phones = search.phones;
     this._topics = search.topics;
+    this._groupedForms = search.forms.reduce((collector, form) => {
+      if (!collector[form.linkToForm.name]) {
+        collector[form.linkToForm.name] = [];
+      }
+      collector[form.linkToForm.name].push(form);
+      return collector;
+    }, {} as Record<string, SearchApi.LinkToForm[]>);
 
   }
   find(newSearchString: string): SearchApi.SearchState {
@@ -213,6 +220,8 @@ export class SearchStateImpl implements SearchApi.SearchState {
   filterMode(type: SearchApi.FilterMode): SearchApi.SearchState {
     return new SearchStateImpl({ source: this._source, searchString: this.searchString, searchOptionType: type, noValueIndicatorColon: this._noValueIndicatorColon });
   }
+
+  get groupedForms(): Record<string, SearchApi.LinkToForm[]> { return this._groupedForms; }
   get searchString() { return this._searchString }
   get searchOptionType() { return this._searchOptionType }
   get forms() { return this._forms }

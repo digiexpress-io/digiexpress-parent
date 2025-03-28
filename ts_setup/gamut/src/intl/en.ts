@@ -60,6 +60,7 @@ export const en = {
   'gamut.search.results.internalExternalLinks': 'Links',
   'gamut.search.results.internalLinks': 'Links',
   'gamut.search.results.externalLinks': 'External links',
+  'gamut.search.results.otherForms': 'Other forms',
   'gamut.article.pagelinks.forms.title': 'Forms',
   'gamut.article.pagelinks.otherlinks.title': 'Links',
   'gamut.forms.formName': 'Name',
