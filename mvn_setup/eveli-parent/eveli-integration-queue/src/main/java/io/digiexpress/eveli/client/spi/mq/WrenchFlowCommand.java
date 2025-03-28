@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -105,8 +107,8 @@ public class WrenchFlowCommand {
   @JsonDeserialize(as = ImmutableTaskNotification.class)
   @Value.Immutable
   public interface TaskNotification {
-    String getUpdaterId();
-    String getAssigneeId();
+    @Nullable String getUpdaterId();
+    @Nullable String getAssigneeId();
     String getAssigneeEmail();
     String getChangeType();
     String getQueue();
