@@ -1,5 +1,9 @@
 package io.digiexpress.eveli.client.spi.mq;
 
+import java.util.Arrays;
+
+import org.apache.groovy.parser.antlr4.util.StringUtils;
+
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
@@ -57,6 +61,18 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
       final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
+      
+      final var recipientAddress = StringUtils.isEmpty(notification.getTaskGroupId()) ? 
+        Arrays.asList(notification.getAssigneeEmail()) : 
+        orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId());
+      
+      final var emailLocale = "fi";
+
+      commsClient.createEmail()
+        .message(notification.getEmail().get(emailLocale))
+        .refId(notification.getTaskRef())
+        .recipientAddress(recipientAddress)
+        .build();
       
       return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
     } catch (Exception e) {

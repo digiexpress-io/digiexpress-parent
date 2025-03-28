@@ -84,6 +84,7 @@ public class WrenchFlowCommand {
                 .put("updaterId", diff.getTask().getUpdaterId())
                 .put("customerLocale", language)
                 .put("assigneeId", diff.getTask().getAssignedId())
+                .put("taskGroupId", diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next())
                 .put("assigneeEmail", diff.getTask().getAssignedUserEmail());
             
             final var notification = json.mapTo(TaskNotification.class);
@@ -114,6 +115,7 @@ public class WrenchFlowCommand {
     String getCustomerId();
     String getTaskRef();
     String getTaskId();
+    String getTaskGroupId();
     MessageType getMessageType();
       
     // Locale based message data, locale(fi/sv/en) - "translated message"
