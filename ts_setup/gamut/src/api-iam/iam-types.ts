@@ -72,6 +72,7 @@ export declare namespace IamApi {
 
     user: User | undefined;
 
+    userName: string | undefined;
     userRoles: UserRoles | undefined;
     userProducts: UserProducts | undefined;
 
