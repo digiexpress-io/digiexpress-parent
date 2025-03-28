@@ -88,7 +88,7 @@ const CellEditIntl: React.FC<CellEditIntlProps> = (props) => {
         textareaProps={{ placeholder: '# Title' }}
         height={800}
         value={value.getLocaleValue(props.locale)}
-        onChange={(value) => handleChangeValue(value ?? '')}
+        onChange={(value: any) => handleChangeValue(value ?? '')}
 
       />;
     </DialogContent>

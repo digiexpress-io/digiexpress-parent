@@ -176,9 +176,13 @@ const MoveColumn: React.FC<DelegateProps> = ({ onChange, decision }) => {
 }
 const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   const headers = [...decision.headers.acceptDefs, ...decision.headers.returnDefs];
+  const [to, setTo] = React.useState<string>('');
   return (<Burger.Select label="decisions.toolbar.organize.action.deleteColumn" helperText="decisions.toolbar.organize.action.deleteColumn.helper"
-    onChange={value => onChange({ id: value as any, type: "DELETE_HEADER" })}
-    selected=''
+    onChange={value => {
+      setTo(value);
+      onChange({ id: value as any, type: "DELETE_HEADER" });
+    }}
+    selected={to}
     items={headers.map(v => ({
       id: v.id,
       value: (<ListItemText primary={v.name} />)

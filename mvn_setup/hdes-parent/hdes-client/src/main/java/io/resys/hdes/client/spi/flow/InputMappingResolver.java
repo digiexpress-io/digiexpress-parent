@@ -64,6 +64,7 @@ public class InputMappingResolver {
     final var someList = getCollectionType(getVariable.apply(parentPath));
     
     if(someList.isEmpty()) {
+      isExpanded = true;
       return;
     }
     

@@ -24,11 +24,29 @@ public class DecisionProgramException extends RuntimeException {
 
   private static final long serialVersionUID = -7154685569622201632L;
 
+  private final Integer row;
+  private final Integer column;
+  
   public DecisionProgramException(String message) {
     super(message);
+    this.row = null;
+    this.column = null;
   }
   public DecisionProgramException(String message, Throwable cause) {
     super(message, cause);
+    this.row = null;
+    this.column = null;
+  }
+  public DecisionProgramException(int row, int column, String message, Throwable cause) {
+    super(message, cause);
+    this.row = row;
+    this.column = column;
+  }
+  public Integer getRow() {
+    return row;
+  }
+  public Integer getColumn() {
+    return column;
   }
 
 }

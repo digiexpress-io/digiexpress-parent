@@ -42,6 +42,7 @@ import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstFlow;
 import io.resys.hdes.client.api.ast.AstService;
 import io.resys.hdes.client.api.ast.AstTag;
+import io.resys.hdes.client.api.exceptions.DecisionProgramException;
 import io.resys.hdes.client.api.programs.BranchProgram;
 import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.FlowProgram;
@@ -235,7 +236,9 @@ public class ProgramEnvirFactory {
             .append(e.getMessage()).append(System.lineSeparator())
             .append("  - decision source: ").append(this.hdesFactory.commandsString(src.getCommands()))
             .toString(), e);
-        builder.status(ProgramStatus.PROGRAM_ERROR).addAllErrors(visitException(e));
+        builder
+          .status(ProgramStatus.PROGRAM_ERROR)
+          .addAllErrors(visitException(e));
       }
     }
     
@@ -522,6 +525,18 @@ public class ProgramEnvirFactory {
   }
   
   private List<ProgramMessage> visitException(Exception e) {
+    if(e instanceof DecisionProgramException) {
+      final var dex = (DecisionProgramException) e;
+      return Arrays.asList(ImmutableProgramMessage.builder()
+          .id("exception")
+          .msg(e.getMessage() == null ? "no-desc-available": e.getMessage().replaceAll("\"", "'"))
+          .exception(e)
+          .row(dex.getRow())
+          .column(dex.getColumn())
+          .build()
+        ); 
+    }
+    
     return Arrays.asList(ImmutableProgramMessage.builder()
           .id("exception")
           .msg(e.getMessage() == null ? "no-desc-available": e.getMessage().replaceAll("\"", "'"))

@@ -82,6 +82,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
   const intl = useIntl(); 
 
 
+
   const onChange = (newCommands: HdesApi.AstCommand[]) => {
     actions.handlePageUpdate(decision.id, [...commands, ...newCommands])
   }
@@ -148,7 +149,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </Decision.Header>
       )}
       renderRow={rowProps => <Decision.Row {...rowProps} />}
-      renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} onClick={() => setEdit({ cell: cellProps.cell })} />}
+      renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} errors={decision.errors} onClick={() => setEdit({ cell: cellProps.cell })} />}
     />
   </Box >);
 }

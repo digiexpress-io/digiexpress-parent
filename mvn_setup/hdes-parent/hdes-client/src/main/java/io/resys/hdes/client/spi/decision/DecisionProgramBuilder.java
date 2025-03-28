@@ -30,6 +30,7 @@ import io.resys.hdes.client.api.HdesClient.HdesTypesMapper;
 import io.resys.hdes.client.api.ast.AstDecision;
 import io.resys.hdes.client.api.ast.AstDecision.AstDecisionCell;
 import io.resys.hdes.client.api.ast.AstDecision.AstDecisionRow;
+import io.resys.hdes.client.api.ast.TypeDef.ValueType;
 import io.resys.hdes.client.api.exceptions.DecisionProgramException;
 import io.resys.hdes.client.api.programs.DecisionProgram;
 import io.resys.hdes.client.api.programs.ImmutableDecisionProgram;
@@ -64,7 +65,9 @@ public class DecisionProgramBuilder {
       final List<AstDecisionRow> rows = new ArrayList<>(ast.getRows());
       Collections.sort(rows, (o1, o2) -> Integer.compare(o1.getOrder(), o2.getOrder()));
       
+
       for(var row : rows) {
+
         final var programRow = ImmutableDecisionRow.builder().order(row.getOrder());
         for(AstDecisionCell value : row.getCells()) {
           
@@ -78,11 +81,11 @@ public class DecisionProgramBuilder {
                 .expression(typesFactory.expression(typeDef.getValueType(), value.getValue()))
                 .build());
           } else {
-            if(value.getValue() == null) {
+            final var typeDef = returns.get(value.getHeader());
+            if(value.getValue() == null && typeDef.getValueType() != ValueType.INTL) {
               continue;
             }
             
-            final var typeDef = returns.get(value.getHeader());
             try {
               programRow.addReturns(ImmutableDecisionRowReturns.builder()
                   .key(typeDef)
@@ -91,6 +94,7 @@ public class DecisionProgramBuilder {
             } catch(Exception e) {
 
               throw new DecisionProgramException(
+                  row.getOrder(), typeDef.getOrder(),
                   "Failed to create expression: '" + value.getValue() + "'!" +
                   System.lineSeparator() + e.getMessage(), e);
               
@@ -100,6 +104,8 @@ public class DecisionProgramBuilder {
         program.addRows(programRow.build());
       }
       return program.build();
+    } catch(DecisionProgramException ex) {
+      throw ex;
     } catch(Exception e) {
       throw new DecisionProgramException(
           "Failed to create decision program from ast: '" + ast.getName() + "'!" +
