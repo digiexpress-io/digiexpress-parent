@@ -21,6 +21,7 @@ package io.digiexpress.eveli.client.spi.mq;
  */
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.context.event.EventListener;
@@ -53,25 +54,26 @@ public class PublisherForTaskEvents {
     final String taskId = event.getTaskId();
     final String commitId = event.getCommitId();
     
-    taskClient.queryTasks()
+    final List<Optional<QueueMessage>> result = taskClient.queryTasks()
       .getOneTaskDiff(taskId, commitId)
       .onItem().transformToMulti(diff -> {
         return new WrenchFlowCommand(envir).getQueueMessages(diff)
           .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()))
-          .onItem().transform(notification -> createMessage(diff, notification));
+          
+          .onItem().transformToUni(notification -> createMessage(diff, notification))
+          .concatenate();
       })
       .collect().asList()
-      .await().atMost(Duration.ofMinutes(10));
+      .onFailure().invoke(t -> {
+        log.error("Failed to start MQ config because of:\r\n{}", t);
+      })
+      .await().atMost(Duration.ofSeconds(10))
+      ;
+    
+    log.debug("Mq published: {}", result);
   }
   
   private Uni<Optional<QueueMessage>> createMessage(TaskDiff task, TaskNotification notification) {
-    
-    /*
-    if(routingKeys.isEmpty()) {
-      log.debug("Skipping queue, nowhere to route");
-      return Uni.createFrom().item(Optional.empty());
-    }*/
-    
     return mqClient.messageBuilder()
       .routingKey(notification.getQueue())
       .bodyId(task.getTaskId())
