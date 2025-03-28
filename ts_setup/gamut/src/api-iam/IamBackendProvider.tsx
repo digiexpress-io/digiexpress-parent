@@ -57,7 +57,7 @@ export const useIam = () => {
 
 
 function createContext(
-  props: IamBackendProviderProps, 
+  props: IamBackendProviderProps,
   user: IamApi.User | undefined,
   userRoles: IamApi.UserRoles | undefined,
   userProducts: IamApi.UserProducts | undefined,

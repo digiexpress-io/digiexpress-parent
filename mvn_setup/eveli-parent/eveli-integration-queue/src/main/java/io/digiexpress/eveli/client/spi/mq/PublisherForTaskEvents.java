@@ -1,10 +1,8 @@
 package io.digiexpress.eveli.client.spi.mq;
 
-import java.time.Duration;
-
 /*-
  * #%L
- * eveli-client
+ * eveli-integration-queue
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -22,25 +20,20 @@ import java.time.Duration;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.context.event.EventListener;
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher.MqEvent;
-import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
-import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.api.entities.QueueMessage;
 import io.digiexpress.thena.mq.client.api.entities.ThenaMqEnvelope.OperationStatus;
-import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -53,37 +46,42 @@ public class PublisherForTaskEvents {
   private final TaskClient taskClient;
   private final ThenaMqClient mqClient;
   private final EveliEnvirClient envir;
-  private final String flowName = "task_mq_router";
-  private final String default_locale = "fi";
   
   @EventListener(MqEvent.class)
   public void publishMessageToQueue(MqEvent event) {
-    final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
+    
     final String taskId = event.getTaskId();
     final String commitId = event.getCommitId();
     
-    taskClient.queryTasks().getOneTaskDiff(taskId, commitId)
-    .onItem().transformToUni(diff -> {
-      final var queues = getQueues(diff, runtime);
-      return createMessage(diff.getTask(), queues);
-    }).await().atMost(Duration.ofMinutes(10));
+    taskClient.queryTasks()
+      .getOneTaskDiff(taskId, commitId)
+      .onItem().transformToMulti(diff -> {
+        return new WrenchFlowCommand(envir).getQueueMessages(diff)
+          .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()))
+          .onItem().transform(notification -> createMessage(diff, notification));
+      })
+      .collect().asList()
+      .await().atMost(Duration.ofMinutes(10));
   }
   
-  private Uni<Optional<QueueMessage>> createMessage(Task task, List<String> routingKeys) {
+  private Uni<Optional<QueueMessage>> createMessage(TaskDiff task, TaskNotification notification) {
+    
+    /*
     if(routingKeys.isEmpty()) {
       log.debug("Skipping queue, nowhere to route");
       return Uni.createFrom().item(Optional.empty());
-    }
+    }*/
     
     return mqClient.messageBuilder()
-      .routingKey(routingKeys)
-      .bodyId(task.getId())
+      .routingKey(notification.getQueue())
+      .bodyId(task.getTaskId())
       .bodyType("TASK")
-      .bodyValue(JsonObject.mapFrom(task))
+      .bodyValue(JsonObject.mapFrom(notification))
       .comment("Created by calling flow")
-      .createdBy(flowName)
+      .createdBy(PublisherForTaskEvents.class.getSimpleName())
       .build()
       .onItem().transform(resp -> {
+        
         if( resp.getOperationStatus() == OperationStatus.ERROR || 
             resp.getOperationStatus() == OperationStatus.CONFLICT) {
           
@@ -95,45 +93,5 @@ public class PublisherForTaskEvents {
         return Optional.ofNullable(resp.getObject());
       });
   }
-  
-  @SuppressWarnings("unchecked")
-  private List<String> getQueues(TaskDiff diff, EveliRuntime envir) {
-    try {
-      final List<String> queues = new ArrayList<>();
-      final var taskGroupId = diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next();
-      
-      
-      for(final var diffValue : diff.getValues()) {
-        final FlowResult run = envir.getWrench()
-            .inputMap(Map.of(
-                "operation", diffValue.getOp().operationName().toLowerCase(),
-                "path", diffValue.getPath(),
-                "taskRef",  diff.getTask().getTaskRef(),
-                "clientId", diff.getTask().getClientIdentificator(),
-                "taskGroupId", taskGroupId,
-                "clientLanguage", Optional.ofNullable( diff.getTask().getClientLanguage()).orElse(default_locale)
-            ))
-            .flow(flowName)
-            .andGetBody();
-        
-        final List<Map<String, Object>> dtMatches = (List<Map<String, Object>>) run.getReturns().get("");
-        if(dtMatches == null) {
-          continue;
-        }
-        for(final var match : dtMatches) {
-          if(!Boolean.TRUE.equals(match.get("enabled"))) {
-            continue;
-          }
-          final var queueName = match.get("queue");
-          if(queueName != null) {
-            queues.add(queueName.toString());            
-          }
-        }
-      }
-      return queues;
-    } catch(Exception e) {e.printStackTrace();
-      log.error("Failed to resolved flow queues of task diff:\r\n{}\r\n{}", diff, e.getMessage(), e);
-      return Collections.emptyList();
-    }
-  }
+ 
 }
