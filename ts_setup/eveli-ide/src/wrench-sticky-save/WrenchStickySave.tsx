@@ -15,12 +15,12 @@ function useSave() {
   const composer = WrenchComposerApi.useComposer();
   const { activeItem } = useWrenchNav();
 
-  if(activeItem?.type !== 'ENTITY_EDITOR') {
-    return { enabled: false, onSave: () => {} }
+  if (activeItem?.type !== 'ENTITY_EDITOR') {
+    return { enabled: false, onSave: () => { } }
   }
   const entity = composer.session.getEntity(activeItem.id);
   if (!entity) {
-    return { enabled: false, onSave: () => {} }
+    return { enabled: false, onSave: () => { } }
   }
 
   const unsaved = Object.values(composer.session.pages)
@@ -30,7 +30,7 @@ function useSave() {
   const enabled = !!unsaved;
 
   function onSave() {
-    if(!enabled || !entity) {
+    if (!enabled || !entity) {
       return;
     }
     const unsavedArticlePages: WrenchComposerApi.PageUpdate = unsaved;
@@ -46,7 +46,7 @@ function useSave() {
 }
 
 
-export const WrenchStickySave: React.FC<{}> = ({  }) => {
+export const WrenchStickySave: React.FC<{}> = ({ }) => {
   const intl = useIntl();
   const theme = useTheme();
   const { enabled, onSave } = useSave();
@@ -63,8 +63,16 @@ export const WrenchStickySave: React.FC<{}> = ({  }) => {
         right: 16,
         zIndex: 1100,
         position: 'fixed',
+        padding: theme.spacing(2),
         backgroundColor: theme.palette.warning.main,
         color: theme.palette.text.primary,
+        animation: 'pulse 1.5s ease-in-out infinite',
+        transition: 'transform 0.3s ease-in-out',
+        '@keyframes pulse': {
+          '0%': { transform: 'scale(1)', opacity: 1 },
+          '50%': { transform: 'scale(1.1)', opacity: 0.8 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
         ':hover': {
           backgroundColor: lighten(theme.palette.warning.main, 0.2),
         }

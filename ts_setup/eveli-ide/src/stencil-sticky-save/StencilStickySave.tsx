@@ -72,6 +72,13 @@ export const StencilStickySave: React.FC = () => {
         padding: theme.spacing(2),
         backgroundColor: theme.palette.warning.main,
         color: theme.palette.text.primary,
+        animation: 'pulse 1.5s ease-in-out infinite',
+        transition: 'transform 0.3s ease-in-out',
+        '@keyframes pulse': {
+          '0%': { transform: 'scale(1)', opacity: 1 },
+          '50%': { transform: 'scale(1.1)', opacity: 0.8 },
+          '100%': { transform: 'scale(1)', opacity: 1 },
+        },
         ':hover': {
           backgroundColor: lighten(theme.palette.warning.main, 0.2),
         }
