@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.event;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,9 @@ package io.digiexpress.eveli.client.event;
  * #L%
  */
 
-import java.util.HashSet;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.digiexpress.eveli.client.api.TaskClient;
-import io.digiexpress.eveli.client.event.TaskEvent.TaskEventType;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +37,7 @@ public class NotificationMessagingComponent implements TaskNotificator {
   
   @Override
   public void sendNewCommentNotificationToClient(TaskClient.TaskComment comment, TaskClient.Task taskModel) {
+    /*
     if (publisher != null) {
       TaskEvent event = TaskEvent.builder().task(taskModel).comment(comment).taskEventType(TaskEventType.TASK_COMMENT_SAVE).build();
       log.info("Sending new comment event {}", event);
@@ -48,12 +45,13 @@ public class NotificationMessagingComponent implements TaskNotificator {
     }
     else {
       log.debug("Event handler for new comment {}, no publisher configured", comment);
-    }
+    }*/
     
   }
 
   @Override
   public void handleTaskUpdate(TaskClient.Task newTask, TaskClient.Task previous, String currentUserEmail) {
+    /*
     if (publisher != null) {
       var builder = TaskEvent.builder().task(newTask).taskEventType(TaskEventType.TASK_SAVE);
       if (newTask.getStatus() != previous.getStatus()) {
@@ -90,10 +88,12 @@ public class NotificationMessagingComponent implements TaskNotificator {
     else {
       log.debug("Event handler for task {} update, no pubsub configured", newTask);
     }
+    */
   }
   
   @Override
   public void handleTaskCreation(TaskClient.Task createdTask, String currentUserEmail) {
+    /*
     if (publisher != null) {
       var builder = TaskEvent.builder().task(createdTask).taskEventType(TaskEventType.TASK_SAVE);
       if (!StringUtils.isBlank(createdTask.getAssignedUser())) {
@@ -117,6 +117,7 @@ public class NotificationMessagingComponent implements TaskNotificator {
     else {
       log.debug("Event handler for task {} update, no pubsub configured", createdTask);
     }
+    */
   }
 
   private Object createEventLogValue(TaskEvent event) {

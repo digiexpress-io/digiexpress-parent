@@ -42,7 +42,7 @@ logging.level.io.resys.hdes.client.spi.envir: OFF
 logging.level.io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory: DEBUG
 logging.level.io.digiexpress.eveli.envir.spi.actions.DeploymentBuilderLogger: DEBUG
 logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: DEBUG 
-
+logging.level.io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir: OFF
 
 # SQL-s
 #logging.level.io.resys.thena.show_sql: DEBUG
