@@ -52,8 +52,12 @@ import java.util.Map;
  * Provides mutability of the assets.
  */
 public interface HdesComposer {  
+  HdesClient getClient();
+  
   Uni<ComposerState> get();
   Uni<ComposerEntity<?>> get(String idOrName);
+  Uni<List<AstCommand>> getCommands(String idOrName);
+  
   Uni<HistoryEntity> getHistory(String id);
   Uni<ComposerState> update(UpdateEntity asset);
   Uni<ComposerState> create(CreateEntity asset);

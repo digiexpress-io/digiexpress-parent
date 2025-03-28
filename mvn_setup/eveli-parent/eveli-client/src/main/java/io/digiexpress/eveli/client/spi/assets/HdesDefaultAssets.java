@@ -144,27 +144,97 @@ inputs:
     type: STRING
   operation:
     required: true
+    type: STRING  
+  clientLanguage:
+    required: true
     type: STRING
-
+  clientId:
+    required: true
+    type: STRING
+  taskGroupId:
+    required: true
+    type: STRING
+  taskRef:
+    required: true
+    type: STRING
 tasks:
-  - match all events:
-      id: "task_events"
-      then: "task_event_queues"
+  - generate events:
+      id: task_events
+      then: task_event_queues
       decisionTable:
-        ref: task_events_dt
+        ref: event_types
         collection: true
         inputs:
           path: path
           op: operation
-        
+
   - map events to queues:
-      id: "task_event_queues"
-      then: "end"
+      id: task_event_queues
+      then: notification_content
       decisionTable:
-        ref: task_queues_dt
+        ref: event_queues
         collection: true
         inputs:
           event: task_events.event
+
+  - select notification content:
+      id: notification_content
+      switch:
+        - internal worker notification:
+            when: "task_event_queues.queue == 'queue.task.worker_email'"
+            then: worker_message_contents
+        - customer notification using suomifi:
+            when: "task_event_queues.queue == 'queue.task.suomifi'"
+            then: suomifi_message_contents
+
+  - suomifi message contents:
+      id: suomifi_message_contents
+      then: format_suomifi_message
+      decisionTable:
+        ref: event_message_suomifi_intl
+        collection: true
+        inputs:
+          change_type: task_event_queues._event
+          queue: task_event_queues.queue
+
+  - format suomifi message:
+      id: format_suomifi_message
+      then: end
+      returns:
+        collection: true
+        inputs:
+          changeType: suomifi_message_contents._change_type
+          queue: suomifi_message_contents._queue
+          customerId: clientId
+          taskRef: taskRef
+          message: suomifi_message_contents.message
+          title: suomifi_message_contents.title
+          email: suomifi_message_contents.email
+          messageType: "SUOMIFI_MSG"
+
+  - worker message contents:
+      id: worker_message_contents
+      then: format_worker_message
+      decisionTable:
+        ref: event_message_worker_intl
+        collection: true
+        inputs:
+          change_type: task_event_queues._event
+          queue: task_event_queues.queue
+
+  - format worker message:
+      id: format_worker_message
+      then: end
+      returns:
+        collection: true
+        inputs:
+          changeType: worker_message_contents._change_type
+          queue: worker_message_contents._queue
+          message: worker_message_contents.message
+          title: worker_message_contents.title
+          customerId: clientId
+          taskRef: taskRef
+          messageType: "WORKER_MSG"
 """;
     return ImmutableCreateEntity.builder()
         .name("task_mq_router")
@@ -175,10 +245,10 @@ tasks:
   }
   
   public CreateEntity events_dt() {
-    final var name = "task_events_dt";
+    final var name = "event_types";
     
     final var commands = Arrays.asList(
-      ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value("task_events_dt").build(),
+      ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value("event_types").build(),
       ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").build(),
       
       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_IN).build(),
@@ -297,7 +367,7 @@ tasks:
   
   
   public CreateEntity queues_dt() {
-    final var name = "task_queues_dt";
+    final var name = "task_event_queues";
      final var commands = Arrays.asList(
         ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value(name).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").build(),
@@ -414,6 +484,99 @@ tasks:
         .build();
   }
   
+  
+  public CreateEntity event_message_suomifi_intl() {
+    final var name = "event_message_suomifi_intl";
+    final var commands = Arrays.asList(
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_IN).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("change_type").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("STRING").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_OUT).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("message").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("INTL").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("fi, en, sv").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_OUT).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("title").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("INTL").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("fi, sv, en").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_OUT).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("email").id("3").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("3").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("INTL").id("3").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("fi, sv, en").id("3").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in[\"TASK_COMPLETED\",\"TASK_CREATED\"]").id("5").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"fi\":\"\",\"en\":\"\",\"sv\":\"\"}").id("6").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"en\":\"\",\"fi\":\"\"}").id("7").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"fi\":\"\",\"sv\":\"\",\"en\":\"\"}").id("8").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in[\"EXTERNAL_COMMENT_ADDED\"]").id("10").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"en\":\"\",\"fi\":\"\"}").id("11").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"en\":\"\"}").id("12").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"en\":\"\",\"sv\":\"\"}").id("13").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value(name).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_DESCRIPTION).value(null).id(null).build()
+    );
+    return ImmutableCreateEntity.builder()
+        .name(name)
+        .desc("Intl table")
+        .body(commands)
+        .type(AstBodyType.DT)
+        .build();
+  }
+  
+  
+  
+  public CreateEntity event_message_worker_intl() {
+    final var name = "event_message_worker_intl";
+    final var commands = Arrays.asList(
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_IN).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("change_type").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("STRING").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("").id("0").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_OUT).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("message").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("INTL").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("fi, sv, en").id("1").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_HEADER_OUT).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_REF).value("title").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_SCRIPT).value(null).id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HEADER_TYPE).value("INTL").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_VALUE_SET).value("fi, sv, en").id("2").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in[\"TASK_CREATED\"]").id("4").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("{\"fi\":\"task created\"}").id("5").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("6").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in [\"TASK_ASSIGNEE_UPDATED\"]").id("8").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("9").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("10").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in [\"TASK_ROLES_UPDATED\"]").id("12").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("13").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("14").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.ADD_ROW).value(null).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value("in [\"EXTERNAL_COMMENT_ADDED\"]").id("16").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("17").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_CELL_VALUE).value(null).id("18").build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value(name).id(null).build(),
+       ImmutableAstCommand.builder().type(AstCommandValue.SET_DESCRIPTION).value(null).id(null).build()
+    );
+    return ImmutableCreateEntity.builder()
+        .name(name)
+        .desc("Intl table")
+        .body(commands)
+        .type(AstBodyType.DT)
+        .build();
+  }
   
   
   private String in(String exp) {

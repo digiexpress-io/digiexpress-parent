@@ -26,6 +26,7 @@ import io.resys.hdes.client.api.HdesStore.HistoryEntity;
 import io.resys.hdes.client.api.HdesStore.StoreState;
 import io.resys.hdes.client.api.ImmutableComposerState;
 import io.resys.hdes.client.api.ImmutableUpdateStoreEntity;
+import io.resys.hdes.client.api.ast.AstCommand;
 import io.resys.hdes.client.api.ast.AstTag;
 import io.resys.hdes.client.api.ast.AstTagSummary;
 import io.resys.hdes.client.api.diff.TagDiff;
@@ -52,6 +53,16 @@ public class HdesComposerImpl implements HdesComposer {
     super();
     this.client = client;
     this.opt = new AstCommandOptimiser(client);
+  }
+  
+  @Override
+  public Uni<List<AstCommand>> getCommands(String idOrName) {
+    return get(idOrName).onItem()
+        .transform(e -> {
+          
+          return opt.optimise(e.getSource().getCommands(), e.getAst().getBodyType());
+          
+        });
   }
 
   @Override
