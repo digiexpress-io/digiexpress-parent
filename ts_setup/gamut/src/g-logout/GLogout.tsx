@@ -42,9 +42,7 @@ export const GLogout: React.FC<GLogoutProps> = (initProps) => {
           {showIdentity && (
             <div className={classes.userIdentityLabel}>
               <div className={classes.userIdentityText}>
-                <FormattedMessage
-                  id="gamut.userIdentity.label"               
-                />
+                <FormattedMessage id="header.userIdentity.label" />
               </div>
               <div className={classes.userDisplayName}>
                 {userName}

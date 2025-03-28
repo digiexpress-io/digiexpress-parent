@@ -4,6 +4,7 @@ export const fi = {
   'cust.inbox.message.sender-name.org-user': 'Info',
   'cust.phone': 'Puhelin: 12345',
   'cust.email': 'info@lifeDigital.com',
+  'header.userIdentity.label': 'Kirjauduttu käyttäjänä',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Avoimen lähdekoodin alusta palvelujen digitalisointiin',
   'footer.column3.title': 'Pikalinkkejä',
