@@ -21,7 +21,7 @@ export const Toolbar: React.FC<{}> = ({ }) => {
   const location = useLocation();
 
   return (
-    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: false }}>
+    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName}>
 
       <EveliPermissions id='NAV_TO_TASKS'>
         <div> {/* divs needed to maintain IconButton styling, otherwise IconButton background stretches */}

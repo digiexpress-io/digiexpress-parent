@@ -29,6 +29,7 @@ export * from './eveli-permissions';
 export * from './eveli-permissions-none';
 
 export * from './wrench-sticky-save';
+export * from './stencil-sticky-save';
 
 export * from './api-task';
 export * from './api-iam';

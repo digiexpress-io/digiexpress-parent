@@ -43,18 +43,12 @@ export const Toolbar: React.FC<{}> = () => {
     }
   };
 
-  const saveIconClassName = unsavedPages.length ? classes.unsaved : classes.itemDisabled;
 
   return (
-    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName} ownerState={{ unsaved: unsavedPages.length > 0 }}>
+    <EveliShellMiniBarRoot className={EveliShellMiniBarClassName}>
       <div>
         <IconButton onClick={() => onNav({ type: 'ACTIVITIES' })}><DashboardCustomizeOutlinedIcon /></IconButton>
         <Typography><FormattedMessage id='toolbar.activities' /></Typography>
-      </div>
-
-      <div>
-        <IconButton className={saveIconClassName} onClick={handleSave} ><SaveOutlinedIcon /></IconButton>
-        <Typography><FormattedMessage id='toolbar.save' /></Typography>
       </div>
     </EveliShellMiniBarRoot>
   );

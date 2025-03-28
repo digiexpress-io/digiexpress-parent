@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, Typography, lighten, useTheme } from '@mui/material';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 import { WrenchComposerApi } from '@/wrench-setup';
@@ -14,6 +14,7 @@ function useSave() {
   const { enqueueSnackbar } = useSnackbar();
   const composer = WrenchComposerApi.useComposer();
   const { activeItem } = useWrenchNav();
+
   if(activeItem?.type !== 'ENTITY_EDITOR') {
     return { enabled: false, onSave: () => {} }
   }
@@ -46,6 +47,7 @@ function useSave() {
 
 
 export const WrenchStickySave: React.FC<{}> = ({  }) => {
+  const intl = useIntl();
   const theme = useTheme();
   const { enabled, onSave } = useSave();
 
@@ -67,8 +69,9 @@ export const WrenchStickySave: React.FC<{}> = ({  }) => {
           backgroundColor: lighten(theme.palette.warning.main, 0.2),
         }
       }}>
-      <Typography fontWeight='bold'>SAVE CHANGES</Typography>
-    </Button>)
+      <Typography fontWeight='bold'>{intl.formatMessage({ id: 'toolbar.save' })}</Typography>
+    </Button>
+  )
 }
 
 /*
