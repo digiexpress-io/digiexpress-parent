@@ -29,6 +29,7 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
+import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -94,10 +95,19 @@ public class EveliAutoConfigMq {
   }
 
   @Bean
-  public ThenaMqConsumer loggingThenaMqConsumer() {
-    return new ConsumerForLogging() ;
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client) {
+    return new ConsumerForCustomerNotification(client);
   }
-
+  @Bean
+  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client) {
+    return new ConsumerForWorkerEmail(client);
+  }
+  
+  
+  @Bean
+  public ThenaMqConsumer loggingThenaMqConsumer() {
+    return new ConsumerForLogging();
+  }
   @Bean
   public PublisherForTaskEvents queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
     return new PublisherForTaskEvents(taskClient, mqClient, envir);
