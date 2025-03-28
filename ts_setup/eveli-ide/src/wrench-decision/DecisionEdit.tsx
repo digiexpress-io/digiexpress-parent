@@ -14,7 +14,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
-import { EveliStickySave } from '../eveli-sticky-save';
 import fileDownload from 'js-file-download'
 
 
