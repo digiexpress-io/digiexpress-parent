@@ -8,6 +8,7 @@ import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 
 import { useIntl } from 'react-intl';
 
@@ -128,6 +129,12 @@ export const Secondary: React.FC<{}> = () => {
           {intl.formatMessage({ id: 'menu.releases' })}
         </Button>
         </EveliPermissions>
+
+        <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
+          startIcon={<DashboardCustomizeOutlinedIcon />}
+          onClick={() => onNav({ type: 'ACTIVITIES' })}>
+          {intl.formatMessage({ id: 'menu.activities' })}
+        </Button>
 
         <Button variant='explorerInactive'
           startIcon={<HelpOutlineOutlinedIcon />}

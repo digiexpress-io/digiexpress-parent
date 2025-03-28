@@ -16,12 +16,6 @@ export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
 })
 
 
-const MergedToolbar: React.FC = () => {
-  return <>
-    <EveliSetup.Toolbar />
-    <StencilSteup.Toolbar />
-  </>
-}
 
 function Component() {
   const { locale } = Route.useParams();
@@ -42,7 +36,7 @@ function Component() {
 
   return (
     <StencilComposerApi.Provider service={service} >
-      <EveliApp tabs={StencilSteup.Tabs} main={StencilSteup.Main} secondary={StencilSteup.Secondary} toolbar={MergedToolbar}>
+      <EveliApp tabs={StencilSteup.Tabs} main={StencilSteup.Main} secondary={StencilSteup.Secondary} toolbar={EveliSetup.Toolbar}>
         <StencilStickySave />
       </EveliApp>
     </StencilComposerApi.Provider>)
