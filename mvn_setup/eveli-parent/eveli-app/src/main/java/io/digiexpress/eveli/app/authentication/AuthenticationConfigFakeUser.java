@@ -60,7 +60,7 @@ import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 @Profile("fake-user")
 public class AuthenticationConfigFakeUser  {
   
-  String[] ROLES = {"USER","ADMIN","Authorized"};
+  String[] ROLES = {"TASK_ADMIN","TASK_WORKER","FEEDBACK_ADMIN","FEEDBACK_VIEWER","ASSET_ADMIN","Authorized"};
 
   @Bean
   public AuthenticationManager authenticationManager() {
