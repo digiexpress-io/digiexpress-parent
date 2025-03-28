@@ -2,6 +2,7 @@ package io.digiexpress.eveli.app.authentication;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
@@ -53,6 +60,8 @@ import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 @Profile("fake-user")
 public class AuthenticationConfigFakeUser  {
   
+  String[] ROLES = {"USER","ADMIN","Authorized"};
+
   @Bean
   public AuthenticationManager authenticationManager() {
     return new AuthenticationManager() {
@@ -84,14 +93,28 @@ public class AuthenticationConfigFakeUser  {
           }
           @Override
           public Collection<? extends GrantedAuthority> getAuthorities() {
-            return null;
+            return Arrays.stream(ROLES).map(role->new SimpleGrantedAuthority("ROLE_"+role)).collect(Collectors.toList());
           }
         };
       }
     };
   }
 
+  @Bean
+  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    UserDetails userDetails = 
+      org.springframework.security.core.userdetails.User.withUsername("tester")
+      .password(passwordEncoder.encode("password"))
+      .roles(ROLES)
+      .build();
 
+    return new InMemoryUserDetailsManager(userDetails);
+  }
+  
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+  }
   
   @Bean
   public AuthClient authClientFakeUser() {
@@ -104,7 +127,7 @@ public class AuthenticationConfigFakeUser  {
                 .isAdmin(true)
                 .username("tester")
                 .email("tester@resys.io")
-                .roles(Arrays.asList())
+                .roles(Arrays.stream(ROLES).map(r->"ROLE_"+r).collect(Collectors.toList()))
                 .build())
             .build();
       }
