@@ -94,6 +94,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @EnableConfigurationProperties(value = {
     EveliPropsEmail.class,
+    EveliPropsOrg.class,
     SuomiFiWSLProperties.class,
     SuomiFiRestProperties.class,
     
