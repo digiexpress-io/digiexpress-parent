@@ -44,6 +44,7 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
 import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
+import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.client.config.EveliProps;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
@@ -65,7 +66,8 @@ import lombok.extern.slf4j.Slf4j;
     DialobAutoConfig.class,
     EveliAutoConfigGamut.class,
     EveliAutoConfigWorker.class,
-    EveliAutoConfigEnvir.class
+    EveliAutoConfigEnvir.class,
+    EveliAutoConfigPermissions.class
 })
 public class Application {
   public static void main(String[] args) throws Exception {
