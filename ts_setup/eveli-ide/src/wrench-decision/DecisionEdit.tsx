@@ -14,6 +14,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { CellEdit, NameDescHitPolicyEdit, UploadCSV, OrderEdit, HeaderEdit } from './editors';
+import { EveliStickySave } from '../eveli-sticky-save';
 import fileDownload from 'js-file-download'
 
 
@@ -109,7 +110,6 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     return <span>loading ...</span>
   }
 
-
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.rowsColumns ? <OrderEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
@@ -148,6 +148,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
         </DrawerSection>
       </Box>
     </Drawer>
+
 
     <Decision.Table ast={ast}
       renderHeader={headerProps => (

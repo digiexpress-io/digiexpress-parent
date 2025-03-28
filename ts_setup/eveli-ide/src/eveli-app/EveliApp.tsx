@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container as MuiContainer, Stack, Drawer, AppBar, IconButton, Typography, Divider } from '@mui/material';
+import { Container as MuiContainer, Drawer, AppBar, IconButton, Typography, Divider } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
 import { 

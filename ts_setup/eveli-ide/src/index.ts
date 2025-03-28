@@ -28,6 +28,8 @@ export * from './eveli-task-composer';
 export * from './eveli-permissions';
 export * from './eveli-permissions-none';
 
+export * from './wrench-sticky-save';
+
 export * from './api-task';
 export * from './api-iam';
 export * from './api-config';
