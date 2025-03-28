@@ -52,7 +52,6 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
-import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.client.config.EveliProps;

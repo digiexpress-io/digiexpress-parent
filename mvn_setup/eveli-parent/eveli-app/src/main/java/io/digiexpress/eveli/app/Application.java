@@ -43,15 +43,14 @@ import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfig;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
 import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
-import io.digiexpress.eveli.client.spi.mq.EveliAutoConfigMq;
 import io.digiexpress.eveli.client.config.EveliAutoConfigEnvir;
 import io.digiexpress.eveli.client.config.EveliAutoConfigGamut;
 import io.digiexpress.eveli.client.config.EveliAutoConfigJpa;
-import io.digiexpress.eveli.client.config.EveliAutoConfigMq;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.config.EveliAutoConfigWorker;
 import io.digiexpress.eveli.client.config.EveliProps;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
+import io.digiexpress.eveli.client.spi.mq.EveliAutoConfigMq;
 import io.digiexpress.eveli.dialob.config.DialobAutoConfig;
 import lombok.extern.slf4j.Slf4j;
 
