@@ -30,6 +30,7 @@ import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -99,8 +100,8 @@ public class EveliAutoConfigMq {
     return new ConsumerForCustomerNotification(client);
   }
   @Bean
-  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client) {
-    return new ConsumerForWorkerEmail(client);
+  public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient) {
+    return new ConsumerForWorkerEmail(client, orgClient);
   }
   
   

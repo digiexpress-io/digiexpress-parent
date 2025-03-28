@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.mq;
 
 import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 
 /*-
@@ -36,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   
   private final CommsClient commsClient;
+  private final OrgClient orgClient;
   
   @Override
   public String getRoutingKey() {
