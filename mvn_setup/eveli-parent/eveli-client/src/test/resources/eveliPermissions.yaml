@@ -1,0 +1,10 @@
+eveli:
+  authorization:
+    value: tree
+    worker:
+    - path-pattern: /worker/rest/api/tasks/**
+      method: GET
+      roles: ROLE_USER,ROLE_ADMIN
+    - path-pattern: /worker/rest/api/tasks/**
+      method: POST,PUT,DELETE
+      roles: ROLE_ADMIN
