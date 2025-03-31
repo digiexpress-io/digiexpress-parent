@@ -34,7 +34,7 @@ export const GPopoverTopicsRoot = styled('div', {
   },
 })(({ theme }) => {
   return {   
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       paddingLeft: theme.spacing(2)
     },
   };
