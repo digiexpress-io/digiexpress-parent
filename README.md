@@ -39,13 +39,35 @@ https://central.sonatype.com/artifact/io.digiexpress/digiexpress-parent
 ### Licensing 
 DigiExpress is [Apache 2.0](/LICENSE) licensed.
 
-
+___
 
 ### Project Setup Guide
 
-This project consists of three main applications: a **Java backend** and two **TypeScript frontends**. Below are the details on how to set up and run each component.
+This project consists of three main applications: a **Java backend** and two **TypeScript frontends**. Below are the details on how to set up and run each component in the correct order.
 
-#### 1. Backend (Java)
+---
+
+> **⚠️ Note for Windows users:**  
+> Docker setup may not work directly in native Windows environments. However, it works inside **Windows Subsystem for Linux (WSL)**. If you encounter issues starting the database containers, try running the setup inside WSL.
+
+
+#### 1. Database Setup
+
+Before starting the backend, make sure the database is up and running.
+
+1. **Navigate to the Docker setup directory**:
+   ```bash
+   cd /digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
+   ```
+
+2. **Start the Docker containers**:
+   ```bash
+   docker compose up
+   ```
+
+
+#### 2. Backend (Java)
+
 The **Java Backend** is the core of the project and handles all business logic and data processing.
 
 To build and run the backend:
@@ -61,21 +83,23 @@ To build and run the backend:
    mvn clean spring-boot:run
    ```
 
-#### 2. Frontend Applications (TypeScript)
+
+#### 3. Frontend Applications (TypeScript)
+
 There are two **TypeScript frontend** applications:
 
 ##### **Eveli-IDE**
 - Mikki refers to it as "front office, front desk".
 - Vahur refers to it as "task management".
-- This is the **worker interface** for managing tasks. This is the interface designed for workers or officials who oversee and manage tasks submitted by citizens. They can review, respond to, and make decisions on applications or requests submitted through the Gamut portal. The worker interface facilitates the decision-making process, approvals, and replies to the citizen tasks.
+- This is the **worker interface** for managing tasks. It’s designed for officials to review, respond to, and make decisions on citizen-submitted applications via the Gamut portal.
 
 ##### **Gamut**
 - Mikki and Vahur call it the "portal".
-- This is the **citizen interface**. This is the interface for citizens to submit requests, applications, or tasks. Citizens interact with the Gamut portal to initiate processes, make inquiries, or provide necessary information, which is then reviewed and processed by the workers using the Eveli-IDE interface.
+- This is the **citizen interface** for submitting applications, requests, or tasks. Citizens use Gamut to initiate processes that are later handled in Eveli-IDE.
 
-To run any of these frontend applications:
+To run either of the frontend applications:
 
-- Node version used for installing and testing this was v22.5.1
+- Node version used for installing and testing this was `v22.5.1`.
 
 1. **Install the required dependencies**:
    ```bash
@@ -87,22 +111,9 @@ To run any of these frontend applications:
    pnpm start
    ```
 
-#### 3. Database Setup
-To set up the database using Docker, follow these steps:
-
-1. **Navigate to the Docker setup directory**:
-   ```bash
-   cd /digiexpress-parent/mvn_setup/eveli-parent/eveli-local-docker
-   ```
-
-2. **Start the Docker containers**:
-   ```bash
-   docker compose up
-   ```
 
 #### 4. Project Overview
 
 - **Eveli-IDE**: Task management interface for workers.
 - **Gamut**: Portal interface for citizens.
 - **Backend**: Java-based service handling core business logic and operations.
-
