@@ -12,6 +12,7 @@ export namespace OfferApi {
 
 export declare namespace OfferApi {
   export type OfferId = string;
+  export type OfferSortOrder = 'ASC' | 'DESC';
 
   export interface Offer {
     id: OfferId;
@@ -49,6 +50,9 @@ export declare namespace OfferApi {
     createOffer: (request: OfferRequest) => Promise<Offer>;
     cancelOffer: (offerId: OfferId) => Promise<void>;
     fetchOffer: (offerId: OfferId) => Promise<Offer>;
+
+    toggleOfferSortOrder(): void;
+    sortOrder: OfferSortOrder;
 
     getOffer(offerId: OfferId): Offer | undefined;
     getLocalisedOfferName: (site: SiteApi.Site, workflowName: string) => string;

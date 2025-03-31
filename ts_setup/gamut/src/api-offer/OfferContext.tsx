@@ -18,10 +18,23 @@ export const OfferProvider: React.FC<{
 }> = (props) => {
   const data = usePopulateContext(props);
 
+  const [sortOrder, setSortOrder] = React.useState<OfferApi.OfferSortOrder>('DESC');
+  const sortedByDate = data.offers
+    .filter((c) => !!c.updated)
+    .sort((a, b) => {
+      const dateA = a.updated ? a.updated.toMillis() : 0;
+      const dateB = b.updated ? b.updated.toMillis() : 0;
+      return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
+    });
+
+  const toggleOfferSortOrder = () => {
+    setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
+  };
+
   return React.useMemo(() => {
 
     const contextValue: OfferApi.OfferContextType = {
-      offers: data.offers,
+      offers: sortedByDate,
       isPending: data.isPending,
       
       getOffer: (id) => data.offers.find((offer) => offer.id === id),
@@ -30,6 +43,8 @@ export const OfferProvider: React.FC<{
       cancelOffer: data.cancelOffer,
       fetchOffer: data.fetchOffer,
       getLocalisedOfferName: data.getLocalisedOfferName,
+      sortOrder,
+      toggleOfferSortOrder
     };
 
     return (<OfferContext.Provider value={contextValue}>{props.children}</OfferContext.Provider>);

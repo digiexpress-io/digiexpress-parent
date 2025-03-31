@@ -84,6 +84,12 @@ export const GOffersRoot = styled("div", {
       '.MuiAlert-icon': {
         color: theme.palette.info.dark,
       }
-    }
+    },
+    '& .GSort-root': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      width: '100%',
+      marginBottom: theme.spacing(1)
+    },
   };
 });

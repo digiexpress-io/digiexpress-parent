@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Grid, Typography, useThemeProps } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { GFlex, OfferApi, useOffers, useSite } from '../';
+import { GFlex, GSort, OfferApi, useOffers, useSite } from '../';
 import { GOffersRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
 import { GOfferItemProps, GOfferItem } from './GOfferItem';
 import { GOverridableComponent } from '../g-override';
@@ -20,7 +20,7 @@ export interface GOffersProps {
 
 export const GOffers: React.FC<GOffersProps> = (initProps) => {
   const intl = useIntl();
-  const { offers, cancelOffer, getLocalisedOfferName } = useOffers();
+  const { offers, cancelOffer, getLocalisedOfferName, toggleOfferSortOrder, sortOrder } = useOffers();
   const { site } = useSite();
   const classes = useUtilityClasses();
 
@@ -53,6 +53,7 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
 
   return (
     <Root className={classes.root} ownerState={ownerState}>
+      <GSort onClick={toggleOfferSortOrder} direction={sortOrder} label={intl.formatMessage({ id: 'gamut.buttons.sort-date.contracts' })} />
       {offers.length ? (
         <GFlex variant='header'>
           <Grid container>

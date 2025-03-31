@@ -139,6 +139,7 @@ export const GContractsRoot = styled("div", {
       display: 'flex',
       justifyContent: 'flex-end',
       width: '100%',
+      marginBottom: theme.spacing(1)
     },
   };
 });
