@@ -98,6 +98,12 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'flex-start'
       }
     },
+    '& .GSort-root': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      width: '100%',
+      marginBottom: theme.spacing(1)
+    },
   };
 });
 

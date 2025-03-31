@@ -27,7 +27,7 @@ export const OfferProvider: React.FC<{
       return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
     });
 
-  const toggleOfferSortOrder = () => {
+  function toggleOfferSortOrder() {
     setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
   };
 

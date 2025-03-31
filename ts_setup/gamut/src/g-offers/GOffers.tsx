@@ -53,7 +53,7 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
 
   return (
     <Root className={classes.root} ownerState={ownerState}>
-      <GSort onClick={toggleOfferSortOrder} direction={sortOrder} label={intl.formatMessage({ id: 'gamut.buttons.sort-date.contracts' })} />
+      <GSort onClick={toggleOfferSortOrder} direction={sortOrder} label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified.offers' })} />
       {offers.length ? (
         <GFlex variant='header'>
           <Grid container>

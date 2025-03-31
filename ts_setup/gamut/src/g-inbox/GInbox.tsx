@@ -6,6 +6,7 @@ import { IntlShape, useIntl } from 'react-intl';
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
 import { GInboxAttachments, GInboxAttachmentsProps } from '../g-inbox-attachments';
+import { GSort } from '../g-sort';
 
 import { CommsApi, useComms } from '../api-comms';
 import { IamApi, useIam } from '../api-iam';
@@ -40,12 +41,13 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { subjects } = useComms();
+  const { subjects, toggleSubjectSortOrder, sortOrder } = useComms();
   const { getContract } = useContracts();
   const { getLocalisedOfferName } = useOffers();
   const iam = useIam();
 
   const { site } = useSite();
+
 
   const InboxItem: React.ElementType<GInboxItemProps> = props.slots?.item ?? GInboxItem;
   const Attachments: React.ElementType<GInboxAttachmentsProps> = props.slots?.attachment ?? GInboxAttachments;
@@ -65,6 +67,10 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
   };
   return (
     <GInboxRoot className={classes.root}>
+      <GSort onClick={toggleSubjectSortOrder}
+        label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified.inbox' })}
+        direction={sortOrder}
+      />
       {subjects
         .map((subject) => {
           const contract = getContract(subject.contractId);
@@ -74,7 +80,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
             contractUpdated: contract?.updated ? contract.updated.toJSDate() : new Date(0),
           };
         })
-        .sort((a, b) => new Date(b.contractUpdated).getTime() - new Date(a.contractUpdated).getTime())
         .map((subject) => {
           const contractId = subject.contractId;
           const contract = getContract(contractId);
@@ -110,5 +115,6 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
             ))}
           </InboxItem>)
         })}
-    </GInboxRoot>)
+    </GInboxRoot>
+  )
 }

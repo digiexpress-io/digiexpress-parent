@@ -25,7 +25,7 @@ export const ContractProvider: React.FC<{
       return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
     });
 
-  const toggleContractSortOrder = () => {
+  function toggleContractSortOrder() {
     setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
   };
 

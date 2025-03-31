@@ -64,8 +64,8 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
 
   return (
     <Root className={classes.root} ownerState={props}>
-      <GSort onClick={() => toggleContractSortOrder()}
-        label={intl.formatMessage({ id: 'gamut.buttons.sort-date.contracts' })}
+      <GSort onClick={toggleContractSortOrder}
+        label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified.contracts' })}
         direction={sortOrder}
       />
 

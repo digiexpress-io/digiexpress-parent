@@ -9,6 +9,7 @@ export declare namespace CommsApi {
 
 
   export type SubjectId = string;
+  export type SubjectSortOrder = 'ASC' | 'DESC';
 
   export interface Subject {
     id: SubjectId; // internally process id
@@ -52,6 +53,9 @@ export declare namespace CommsApi {
     isPending: boolean;
     subjectStats: { exchanges: number },
     getSubject(contractId: SubjectId): Subject | undefined;
+
+    toggleSubjectSortOrder(): void;
+    sortOrder: SubjectSortOrder;
 
     replyTo(comment: ReplyTo): Promise<void>; 
     refresh(): Promise<void>;
