@@ -3,28 +3,28 @@ eveli:
     worker:
     - path-pattern: /worker/rest/api/tasks/**
       method: GET,POST,PUT
-      roles: ROLE_USER,ROLE_ADMIN
+      roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/tasks/**
       method: DELETE
-      roles: ROLE_ADMIN
+      roles: ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/comments/**
       method: GET
-      roles: ROLE_USER,ROLE_ADMIN
+      roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/feedback/**
       method: GET,POST,PUT,DELETE
-      roles: ROLE_USER,ROLE_ADMIN
+      roles: ROLE_FEEDBACK_VIEWER,ROLE_FEEDBACK_ADMIN
     - path-pattern: /worker/rest/api/processes/**
       method: GET
-      roles: ROLE_ADMIN
+      roles: ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/queues/**
       method: GET
-      roles: ROLE_ADMIN
+      roles: ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/pdf/**
       method: GET
-      roles: ROLE_USER,ROLE_ADMIN
+      roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/assets/**
       method: GET,POST,PUT,DELETE
-      roles: ROLE_ADMIN
+      roles: ROLE_ASSET_ADMIN
     - path-pattern: /worker/rest/api/iam/**
       method: GET
       roles: ROLE_Authorized

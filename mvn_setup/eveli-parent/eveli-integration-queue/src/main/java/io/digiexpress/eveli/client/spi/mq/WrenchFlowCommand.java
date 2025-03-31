@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -105,6 +106,7 @@ public class WrenchFlowCommand {
   
   @JsonSerialize(as = ImmutableTaskNotification.class)
   @JsonDeserialize(as = ImmutableTaskNotification.class)
+  @JsonIgnoreProperties(ignoreUnknown = true)
   @Value.Immutable
   public interface TaskNotification {
     @Nullable String getUpdaterId();
