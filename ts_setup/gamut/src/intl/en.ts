@@ -38,6 +38,7 @@ export const en = {
   'gamut.buttons.delete': 'Delete',
   'gamut.buttons.serviceSelect': 'Our services',
   'gamut.buttons.attachment.add': 'Add attachment',
+  'gamut.buttons.sort-date.contracts': 'Sort by last modified',
   'gamut.locale.en': 'English',
   'gamut.locale.fi': 'Finnish',
   'gamut.locale.sv': 'Swedish',

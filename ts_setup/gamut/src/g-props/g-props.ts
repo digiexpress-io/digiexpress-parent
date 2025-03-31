@@ -27,6 +27,8 @@ import { GInboxMessageNotAllowed, GInboxMessageNotAllowedProps } from '../g-inbo
 import { GInboxMessagesClassKey, GInboxMessagesProps } from '../g-inbox-messages';
 import { GInboxFormReviewClassKey, GInboxFormReviewProps } from '../g-inbox-form-review';
 
+import { GSortClassKey, GSortProps } from '../g-sort';
+
 import { GLocalesClassKey, GLocalesProps } from '../g-locales';
 import { GShellClassKey, GShellProps } from '../g-shell';
 import { GLoginClassKey, GLoginProps } from '../g-login';
@@ -141,6 +143,8 @@ export interface GComponentsPropsList {
   GArticleFeedbackViewer: GArticleFeedbackViewerProps;
   GBookings: GBookingsProps;
 
+  GSort: GSortProps;
+
   GPopoverButton: GPopoverButtonProps;
   GPopoverTopics: GPopoverTopicsProps;
   GPopoverSearch: GPopoverSearchProps;
@@ -229,6 +233,7 @@ export interface GComponentNameToClassKey {
   GFormReviewTime: GFormReviewTimeClassKey;
   GFormReviewMultiChoice: GFormReviewMultiChoiceClassKey;
 
+  GSort: GSortClassKey;
 
   GAppBar: GAppBarClassKey;
   GArticle: GArticleClassKey;
@@ -432,6 +437,11 @@ export interface GComponents<Theme = unknown> {
     variants?: GComponentsVariants['GFormReviewTime'];
   },
 
+  GSort?: {
+    defaultProps?: GComponentsProps['GSort'];
+    styleOverrides?: GComponentsOverrides<Theme>['GSort'];
+    variants?: GComponentsVariants['GSort'];
+  },
 
   GAppBar?: {
     defaultProps?: GComponentsProps['GAppBar'];

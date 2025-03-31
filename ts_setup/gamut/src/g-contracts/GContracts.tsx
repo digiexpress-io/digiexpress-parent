@@ -9,6 +9,7 @@ import { useComms } from '../api-comms';
 import { GOverridableComponent } from '../g-override';
 import { useOffers } from '../api-offer';
 import { useSite } from '../api-site';
+import { GSort } from '../g-sort';
 
 
 export interface GContractsProps {
@@ -32,7 +33,7 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
   });
 
   const classes = useUtilityClasses();
-  const { contracts } = useContracts();
+  const { contracts, toggleContractSortOrder, sortOrder } = useContracts();
   const { site } = useSite();
   const { getLocalisedOfferName } = useOffers();
   const { getSubject } = useComms();
@@ -60,8 +61,14 @@ export const GContracts: React.FC<GContractsProps> = (initProps) => {
   }
   const Root = props.component ?? GContractsRoot
 
+
   return (
     <Root className={classes.root} ownerState={props}>
+      <GSort onClick={() => toggleContractSortOrder()}
+        label={intl.formatMessage({ id: 'gamut.buttons.sort-date.contracts' })}
+        direction={sortOrder}
+      />
+
       <GFlex variant='header'>
         <Grid container>
           <Grid item lg={3} xl={3}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography></Grid>

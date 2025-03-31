@@ -33,6 +33,8 @@ export * from './g-loader'
 
 export * from './g-confirm'
 
+export * from './g-sort';
+
 export * from './g-date'
 
 export * from './g-tooltip'

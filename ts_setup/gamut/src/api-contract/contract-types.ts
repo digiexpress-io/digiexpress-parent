@@ -8,9 +8,11 @@ export namespace ContractApi {
 
 }
 
+
 export declare namespace ContractApi {
   // process ID
   export type ContractId = string;
+  export type ContractSortOrder = 'ASC' | 'DESC';
 
   export type ContractStatus = (
     'NEW' // task worker has not started working on the task
@@ -48,6 +50,8 @@ export declare namespace ContractApi {
     contracts: readonly Contract[];
     isPending: boolean;
     contractStats: { awaitingDecision: number, decided: number },
+    toggleContractSortOrder(): void;
+    sortOrder: ContractSortOrder;
     getContract(contractId: ContractId): Contract | undefined;
     appendContractAttachment: (contractId: ContractId, files: FileList) => Promise<Contract>;
     getContractAttachment: (contractId: ContractId, fileName: string) => Promise<{ download: string }>;

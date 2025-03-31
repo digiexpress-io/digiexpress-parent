@@ -135,6 +135,10 @@ export const GContractsRoot = styled("div", {
   },
 })(({ theme }) => {
   return {
-
+    '& .GSort-root': {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      width: '100%',
+    },
   };
 });

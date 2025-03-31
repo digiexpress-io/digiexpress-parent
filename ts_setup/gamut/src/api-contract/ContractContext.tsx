@@ -16,17 +16,31 @@ export const ContractProvider: React.FC<{
 }> = (props) => {
   const data = usePopulateContext(props);
 
-  return React.useMemo(() => {
+  const [sortOrder, setSortOrder] = React.useState<ContractApi.ContractSortOrder>('DESC');
+  const sortedByDate = data.contracts
+    .filter((c) => !!c.updated)
+    .sort((a, b) => {
+      const dateA = a.updated ? a.updated.toMillis() : 0;
+      const dateB = b.updated ? b.updated.toMillis() : 0;
+      return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
+    });
 
+  const toggleContractSortOrder = () => {
+    setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
+  };
+
+  return React.useMemo(() => {
     const awaitingDecision = data.contracts.filter((c) => c.status === 'OPEN' || c.status === 'NEW' );
     const decided = data.contracts.filter((c) => c.status === 'COMPLETED' || c.status === 'REJECTED');
 
     const contextValue: ContractApi.ContractContextType = {
-      contracts: data.contracts,
+      contracts: sortedByDate,
       isPending: data.isPending,
       getContract: (id) => {
         return data.contracts.find((contract) => contract.id === id);
       },
+      toggleContractSortOrder,
+      sortOrder,
       refresh: data.refresh,
       appendContractAttachment: data.appendContractAttachment,
       getContractAttachment: data.getContractAttachment,
@@ -37,7 +51,7 @@ export const ContractProvider: React.FC<{
         {props.children}
       </ContractContext.Provider>);
 
-  }, [data, props]);
+  }, [data, props, sortOrder]);
 }
 
 

@@ -38,6 +38,7 @@ export const fi = {
   'gamut.buttons.delete': 'Poista',
   'gamut.buttons.serviceSelect': 'Palvelumme',
   'gamut.buttons.attachment.add': 'Lisää liite',
+  'gamut.buttons.sort-date.contracts': ' Sort by last modified',
   'gamut.locale.en': 'Englanti',
   'gamut.locale.fi': 'Suomi',
   'gamut.locale.sv': 'Ruotsi',

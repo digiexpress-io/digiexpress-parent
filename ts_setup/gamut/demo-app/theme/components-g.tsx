@@ -235,6 +235,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   GLinkFormUnlocked: {},
 
   GLinksPage: {},
+  GSort: {},
 
   // ---------------------- DIALOB REVIEW ------------------------
   GFormReviewBoolean: {},

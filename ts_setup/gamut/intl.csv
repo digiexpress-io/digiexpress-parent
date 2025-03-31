@@ -45,6 +45,7 @@ gamut.buttons.reply,,Reply,Vastaa,Svar,Balas
 gamut.buttons.delete,,Delete,Poista,Radera,Padam
 gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami
 gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran
+gamut.buttons.sort-date.contracts,,Sort by last modified, Sort by last modified,,,
 // ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,
 gamut.locale.en,,English,Englanti,Engelska,Inggeris
 gamut.locale.fi,,Finnish,Suomi,Finska,Bahasa Finland
