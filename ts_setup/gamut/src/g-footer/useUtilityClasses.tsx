@@ -35,7 +35,7 @@ export const GFooterRoot = styled("div", {
 })<{ ownerState: GFooterProps }>(({ theme }) => {
   return {
     display: 'flex',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       flexDirection: 'column'
     },
     marginTop: 'auto',
