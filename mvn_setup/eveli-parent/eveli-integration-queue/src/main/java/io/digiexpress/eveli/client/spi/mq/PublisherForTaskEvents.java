@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
@@ -49,6 +50,7 @@ public class PublisherForTaskEvents {
   private final EveliEnvirClient envir;
   
   @EventListener(MqEvent.class)
+  @Async
   public void publishMessageToQueue(MqEvent event) {
     
     final String taskId = event.getTaskId();
@@ -67,7 +69,7 @@ public class PublisherForTaskEvents {
       .onFailure().invoke(t -> {
         log.error("Failed to start MQ config because of:\r\n{}", t);
       })
-      .await().atMost(Duration.ofSeconds(10))
+      .await().atMost(Duration.ofSeconds(60))
       ;
     
     log.debug("Mq published: {}", result);
