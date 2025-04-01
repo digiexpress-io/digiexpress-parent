@@ -55,7 +55,7 @@ public class MergeLinkBuilder implements MergeLink {
   @Override
   public MergeLink linkValue(String linkValue) {
     RepoAssert.notEmpty(linkValue, () -> "linkValue must be defined!");
-    this.nextLink.externalId(linkValue);
+    this.nextLink.linkValue(linkValue);
     return this;
   }
   @Override

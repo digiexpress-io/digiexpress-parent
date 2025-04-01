@@ -248,7 +248,7 @@ public class GrimPrinter {
             .sorted((a, b) -> ComparisonChain.start()
                 .compare(ID.apply(a.getCommitId()), ID.apply(b.getCommitId()))
                 .compare(a.getLinkType(), b.getLinkType())
-                .compare(a.getExternalId(), b.getExternalId())
+                .compare(a.getLinkValue(), b.getLinkValue())
                 .compare(RELS.apply(a.getRelation()), RELS.apply(b.getRelation()))
                 .result())
             .toList()) {

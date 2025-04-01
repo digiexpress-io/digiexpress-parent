@@ -107,7 +107,7 @@ public interface ThenaGrimContainers extends ThenaContainer {
             .map(e -> e.getUpdatedAt())
             .or(() -> getCreatedAt(mission.getCommitId()))
             .map(e -> (Comparable) e)
-            .orElse((Comparable) mission.getLinkType() + "/" + mission.getExternalId());
+            .orElse((Comparable) mission.getLinkType() + "/" + mission.getLinkValue());
       };
       
       final Function<GrimRemark, Comparable> getRemarksKey = (mission) -> {

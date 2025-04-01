@@ -146,7 +146,7 @@ public class GrimCommitLogger {
       final GrimMissionLink a2 = (GrimMissionLink) b;
       return ComparisonChain.start()
         .compare(a1.getLinkType(), a2.getLinkType())
-        .compare(a1.getExternalId() + "", a2.getExternalId() + "")
+        .compare(a1.getLinkValue() + "", a2.getLinkValue() + "")
         .result();
     }
     }

@@ -82,6 +82,29 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
       );
     }
     
+    
+    // set client locale    
+    if(commmand.getClientLanguage() != null) {
+      mission
+      .addLink(newLink -> newLink
+        .linkValue(commmand.getClientLanguage())
+        .linkType(TaskMapper.LINK_TYPE_CLIENT_LOCALE)
+        .build()
+      );
+    }
+    
+    
+    // set additional info 
+    if(commmand.getAdditionalInfo() != null) {
+      mission
+      .addLink(newLink -> newLink
+        .linkValue(commmand.getAdditionalInfo())
+        .linkType(TaskMapper.LINK_TYPE_ADDITIONAL_INFO)
+        .build()
+      );
+    }
+    
+    // set the keywords
     for(final var keyword : commmand.getKeyWords()) {
       mission.addLabels(newLabel -> newLabel
           .labelType(TaskMapper.LABEL_TYPE_KEYWORD)
@@ -89,6 +112,14 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
           .build());
     }
 
+    // set the features
+    for(final var feature : commmand.getFeatures()) {
+      mission.addLabels(newLabel -> newLabel
+          .labelType(TaskMapper.LABEL_TYPE_FEATURES)
+          .labelValue(feature)
+          .build());
+    }
+    
     mission.build();
   }
 
@@ -122,7 +153,8 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
         commited.getMission(), 
         commited.getAssignments(), 
         commited.getRemarks(), 
-        commited.getLinks());
+        commited.getLinks(),
+        commited.getLabels());
     notificator.handleTaskCreation(task, userId); 
     return Uni.createFrom().item(task);
   }

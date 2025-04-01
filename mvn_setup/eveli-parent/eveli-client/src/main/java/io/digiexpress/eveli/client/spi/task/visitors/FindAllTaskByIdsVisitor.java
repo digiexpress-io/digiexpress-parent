@@ -79,7 +79,8 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
             container.getMission(), 
             container.getAssignments().values(), 
             container.getRemarks().values(),
-            container.getLinks().values()))
+            container.getLinks().values(),
+            container.getMissionLabels().values()))
         .toList();
     
     return Uni.createFrom().item(tasks);

@@ -115,6 +115,7 @@ public interface TaskClient {
     @Nullable ZonedDateTime getCompleted();
 
     // optional props
+    @Nullable String getAdditionalInfo();
     @Nullable String getDescription();
     @Nullable String getClientLanguage();
     @Nullable String getClientIdentificator();
@@ -130,6 +131,7 @@ public interface TaskClient {
     @Nullable TaskPriority getPriority();
 
     List<String> getKeyWords();
+    List<String> getFeatures();
     Set<String> getAssignedRoles();
   }
   
@@ -146,6 +148,7 @@ public interface TaskClient {
     @Nullable String getClientIdentificator();
     @Nullable LocalDate getDueDate();
     @Nullable String getAssignedId();
+    @Nullable String getAdditionalInfo();
     
     @Nullable String getAssignedUser();    
     @Nullable String getAssignedUserEmail();
@@ -186,6 +189,7 @@ public interface TaskClient {
     @Nullable String getDescription();
     @Nullable String getClientIdentificator();
     @Nullable String getClientLanguage();
+    @Nullable String getAdditionalInfo();
     @Nullable LocalDate getDueDate();
     
     @Nullable String getAssignedId();
@@ -196,6 +200,7 @@ public interface TaskClient {
     TaskPriority getPriority();
 
     List<String> getKeyWords();
+    List<String> getFeatures();
     Set<String> getAssignedRoles();
     
     List<TaskComment> getComments();

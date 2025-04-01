@@ -43,9 +43,9 @@ public interface GrimMissionLink extends IsGrimObject, TenantEntity {
   String getCommitId();
   String getCreatedWithCommitId();
   String getMissionId();
-  String getExternalId();
-
+  String getLinkValue();
   String getLinkType();
+  
   @Nullable JsonObject getLinkBody();
   @Nullable GrimMissionLinkTransitives getTransitives();
   

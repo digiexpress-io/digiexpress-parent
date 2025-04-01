@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -42,8 +43,12 @@ import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer
 public class TaskMapper {
   public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
+  
   public static final String LABEL_TYPE_KEYWORD = "keyword";
+  public static final String LABEL_TYPE_FEATURES = "features";
+  
   public static final String LINK_TYPE_CLIENT_LOCALE = "client_locale";
+  public static final String LINK_TYPE_ADDITIONAL_INFO = "additional_info";
   
   public static final String VIEWER_WORKER = "WORKER";
   public static final String VIEWER_CUSTOMER = "CUSTOMER";
@@ -80,14 +85,17 @@ public class TaskMapper {
         cont.getMission(), 
         cont.getAssignments().values(), 
         cont.getRemarks().values(),
-        cont.getLinks().values());
+        cont.getLinks().values(),
+        cont.getMissionLabels().values()
+        );
   }
   
   public static TaskClient.Task map(
       GrimMission commited, 
       Collection<GrimAssignment> assignments, 
       Collection<GrimRemark> remarks,
-      Collection<GrimMissionLink> links) {
+      Collection<GrimMissionLink> links,
+      Collection<GrimMissionLabel> labels) {
 
     final var assignee = assignments.stream()
       .filter(e -> TaskMapper.ASSIGNMENT_TYPE_TASK_USER.equals(e.getAssignmentType()))
@@ -98,10 +106,25 @@ public class TaskMapper {
         .map(e -> e.getAssignee())
         .toList();
 
+
+    final var keywords = labels.stream()
+        .filter(e -> TaskMapper.LABEL_TYPE_KEYWORD.equals(e.getLabelType()))
+        .map(e -> e.getLabelValue())
+        .toList();
+
+    final var features = labels.stream()
+        .filter(e -> TaskMapper.LABEL_TYPE_FEATURES.equals(e.getLabelType()))
+        .map(e -> e.getLabelValue())
+        .toList();    
     
     final var clientLocale = links.stream()
         .filter(e -> TaskMapper.LINK_TYPE_CLIENT_LOCALE.equals(e.getLinkType()))
-        .map(e -> e.getLinkBody().getString(LINK_TYPE_CLIENT_LOCALE))
+        .map(e -> e.getLinkValue())
+        .findFirst();
+
+    final var additionalInfo = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_ADDITIONAL_INFO.equals(e.getLinkType()))
+        .map(e -> e.getLinkValue())
         .findFirst();
     
     /* JPA version
@@ -132,7 +155,6 @@ public class TaskMapper {
       .description(commited.getDescription())
       .dueDate(commited.getDueDate())
       .id(commited.getId())
-      
 
       .completed(TaskMapper.toZoned(commited.getCompletedAt()))
       .created(TaskMapper.toZoned(commited.getTransitives().getCreatedAt()))
@@ -150,6 +172,10 @@ public class TaskMapper {
       .assignedRoles(assignedRoles)
 
       .comments(remarks.stream().map(TaskMapper::map).toList())
+      
+      .keyWords(keywords)
+      .features(features)
+      .additionalInfo(additionalInfo.orElse(null))
       
       .build();
     

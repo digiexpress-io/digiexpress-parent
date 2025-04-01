@@ -67,7 +67,8 @@ public class AddCustomerCommitViewer implements TaskStoreConfig.MergeTaskVisitor
         commited.getMission(), 
         commited.getAssignments(), 
         commited.getRemarks(), 
-        commited.getLinks());
+        commited.getLinks(),
+        commited.getLabels());
     return Uni.createFrom().item(task);
   }
 }

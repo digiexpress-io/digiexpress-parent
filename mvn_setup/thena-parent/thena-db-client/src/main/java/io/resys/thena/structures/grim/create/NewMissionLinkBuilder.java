@@ -74,7 +74,7 @@ public class NewMissionLinkBuilder implements ThenaGrimNewObject.NewLink {
   }
   @Override
   public NewLink linkValue(String linkValue) {
-    this.next.externalId(linkValue);
+    this.next.linkValue(linkValue);
     return this;
   }
   @Override
@@ -95,10 +95,10 @@ public class NewMissionLinkBuilder implements ThenaGrimNewObject.NewLink {
         )
         .filter(a -> 
           a.getLinkType().equals(built.getLinkType()) &&
-          a.getExternalId().equals(built.getExternalId())
+          a.getLinkValue().equals(built.getLinkValue())
         )
         .count() == 0
-        , () -> "can't have duplicate link of type: " + built.getLinkType() + ", with value: " + built.getExternalId() + "!");
+        , () -> "can't have duplicate link of type: " + built.getLinkType() + ", with value: " + built.getLinkValue() + "!");
     
     this.logger.add(built);
     return built;

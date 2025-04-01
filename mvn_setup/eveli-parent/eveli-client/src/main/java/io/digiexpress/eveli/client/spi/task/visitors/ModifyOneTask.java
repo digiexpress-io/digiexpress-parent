@@ -59,7 +59,8 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         merge.getCurrentState().getMission(), 
         merge.getCurrentState().getAssignments().values(),
         merge.getCurrentState().getRemarks().values(),
-        merge.getCurrentState().getLinks().values()
+        merge.getCurrentState().getLinks().values(),
+        merge.getCurrentState().getMissionLabels().values()
         );
     
     if(command.getVersion() != null && !previousVersion.getVersion().equals(command.getVersion())) {
@@ -85,6 +86,20 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
           .assignmentType(TaskMapper.ASSIGNMENT_TYPE_TASK_USER)
           .assignee(newAssignee)
           .assigneeContact(command.getAssignedUserEmail())
+          .build());
+    }
+    
+    
+    // overwrite additional info    
+    if(command.getAdditionalInfo() == null) {
+      merge.setAllLinks(TaskMapper.LINK_TYPE_ADDITIONAL_INFO, Collections.emptyList(), null);
+    } else {
+      merge.setAllLinks(
+          TaskMapper.LINK_TYPE_ADDITIONAL_INFO, 
+          Arrays.asList(command.getAdditionalInfo()), 
+          newlink -> (builder) -> builder
+          .linkType(TaskMapper.LINK_TYPE_ADDITIONAL_INFO)
+          .linkValue(command.getAdditionalInfo())
           .build());
     }
     
@@ -136,7 +151,8 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
         commited.getMission(), 
         commited.getAssignments(), 
         commited.getRemarks(),
-        commited.getLinks());
+        commited.getLinks(),
+        commited.getLabels());
     notificator.handleTaskUpdate(task, previousVersion, email);
     return Uni.createFrom().item(task);
   }

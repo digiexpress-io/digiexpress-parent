@@ -108,7 +108,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getCommitId(),
                 doc.getLinkType(),
-                doc.getExternalId(),
+                doc.getLinkValue(),
                 doc.getLinkBody(),
                 doc.getId(), 
              }))
@@ -145,7 +145,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
                 doc.getRelation() == null ? null : doc.getRelation().getRemarkId(),
                     
                 doc.getLinkType(),
-                doc.getExternalId(),
+                doc.getLinkValue(),
                 doc.getLinkBody()
              }))
             .collect(Collectors.toList()))
@@ -238,7 +238,7 @@ public class GrimMissionLinkRegistrySqlImpl implements GrimMissionLinkRegistry {
             .build()
           )
           .linkType(row.getString("link_type"))
-          .externalId(row.getString("external_id"))
+          .linkValue(row.getString("external_id"))
           .linkBody(row.getJsonObject("link_body"))
           .build();
     };

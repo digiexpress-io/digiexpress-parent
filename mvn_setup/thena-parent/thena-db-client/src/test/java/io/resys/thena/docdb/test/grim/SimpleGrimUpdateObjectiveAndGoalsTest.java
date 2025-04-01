@@ -192,9 +192,9 @@ author: jane.doe@morgue.com, message: batching tests
   + 21::GRIM_ASSIGNMENT
     {"docType":"GRIM_ASSIGNMENT","id":"21","commitId":"4","missionId":"5","assignee":"jane-from-the-roofing","assignmentType":"worker","assigneeContact":null,"relation":null}
   + 26::GRIM_MISSION_LINKS
-    {"docType":"GRIM_MISSION_LINKS","id":"26","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null}
+    {"docType":"GRIM_MISSION_LINKS","id":"26","commitId":"4","createdWithCommitId":"4","missionId":"5","linkValue":"site.com/plans/1","linkType":"project-plans","linkBody":null,"transitives":null,"relation":null}
   + 25::GRIM_MISSION_LINKS
-    {"docType":"GRIM_MISSION_LINKS","id":"25","commitId":"4","createdWithCommitId":"4","missionId":"5","externalId":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
+    {"docType":"GRIM_MISSION_LINKS","id":"25","commitId":"4","createdWithCommitId":"4","missionId":"5","linkValue":"site.com/permits/5","linkType":"permits","linkBody":null,"transitives":null,"relation":null}
   + 14::GRIM_REMARK
     {"docType":"GRIM_REMARK","id":"14","commitId":"4","createdWithCommitId":"4","missionId":"5","parentId":null,"transitives":null,"remarkText":"Created main task for building a house!","reporterId":"jane.doe","remarkStatus":null,"remarkType":null,"remarkSource":null,"relation":null}
   + 13::GRIM_REMARK
