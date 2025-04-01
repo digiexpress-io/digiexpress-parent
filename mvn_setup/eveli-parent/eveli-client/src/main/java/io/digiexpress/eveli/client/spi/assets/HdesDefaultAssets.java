@@ -371,7 +371,7 @@ tasks:
   
   
   public CreateEntity queues_dt() {
-    final var name = "task_event_queues";
+    final var name = "event_queues";
      final var commands = Arrays.asList(
         ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value(name).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").build(),
