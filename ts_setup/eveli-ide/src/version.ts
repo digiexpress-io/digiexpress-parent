@@ -1,2 +1,2 @@
-const version = {tag: 'eveli-ide-0.0.177', built: '28/03/2025'};
+const version = {tag: 'eveli-ide-0.0.178', built: '01/04/2025'};
 export default version;
