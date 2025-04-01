@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Divider, Typography, useThemeProps } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { GTooltip } from '../g-tooltip';
 import { GInboxMessagesRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
@@ -77,10 +76,7 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
         </Typography>
       </Box>
       <Box className={classes.title}>
-        <GTooltip title={'This is a tooltip with a test sentence. It is very helpful indeed!'}>
-          <Typography><FormattedMessage id='gamut.inbox.subjectAttachment.title' /></Typography>
-        </GTooltip>
-
+        <Typography><FormattedMessage id='gamut.inbox.subjectAttachment.title' /></Typography>
       </Box>
       <>
         <div className={classes.header}>
