@@ -89,7 +89,7 @@ const CompareDialog: React.FC<CompareDialogProps> = ({ open, setOpen, diff }) =>
   return (
     <Dialog open={open} onClose={() => setOpen(false)} maxWidth='xl'>
       <DialogTitle>
-        <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "secondary.main" }}>
+        <Typography variant="h3" sx={{ p: 1, fontWeight: "bold", color: "text.primary" }}>
           <FormattedMessage id="compare.dialog.title" values={{ base: diff?.baseName, target: diff?.targetName }} />
         </Typography>
       </DialogTitle>
