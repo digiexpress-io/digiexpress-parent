@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import ReleasesTable from './ReleasesTable';
@@ -43,19 +43,40 @@ const ReleasesView: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h1">
-        <FormattedMessage id="activities.releases.title" />: {releases.length}
+      <Box display="flex" sx={{ paddingBottom: 1 }}>
+        <Box>
+          <Typography variant="h1" sx={{ p: 1 }}>
+            <FormattedMessage id="activities.releases.title" />: {releases.length}
+          </Typography>
+          <Typography variant="body2" sx={{ px: 1 }}>
+            <FormattedMessage id="activities.releases.desc" />
+          </Typography>
+        </Box> 
+        <Box flexGrow={1} />
+        <Box alignSelf="center">
+          <Button
+            onClick={() => onTabCurrentClose()}
+            sx={{ marginRight: 1 }}
+            variant="text"
+          >
+            <FormattedMessage id="button.cancel" />
+          </Button>
+          <Button
+            onClick={() => onNav({ type: 'COMPARE' })}
+            variant="contained"
+          >
+            <FormattedMessage id="releases.button.compare" />
+          </Button>
+        </Box>
+      </Box>
+  
+      <Typography variant="body2" sx={{ px: 1, marginBottom: 2 }}>
+        <FormattedMessage id="activities.releases.desc.additional" />
       </Typography>
-
-      <Typography variant="body2"><FormattedMessage id={"activities.releases.desc"} /></Typography>
-      <Typography variant="body2"><FormattedMessage id={"activities.releases.desc.additional"} /></Typography>
-
-      <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
-      <Button onClick={() => onNav({ type: 'COMPARE' })} variant='text'><FormattedMessage id='releases.button.compare' /></Button>
-
+  
       <ReleasesTable releases={formattedReleases} />
     </>
-  );
+  );  
 }
 
 
