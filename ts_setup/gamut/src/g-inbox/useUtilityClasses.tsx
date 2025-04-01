@@ -6,13 +6,12 @@ export const MUI_NAME = 'GInbox';
 
 export interface GInboxClasses {
   root: string,
-
   itemRoot: string,
-  itemText: string,
   itemTitle: string,
   itemSubTitle: string,
   itemLayout: string,
   itemSentAt: string,
+  itemAttachments: string,
 
 }
 export type GInboxClassKey = keyof GInboxClasses;
@@ -20,13 +19,12 @@ export type GInboxClassKey = keyof GInboxClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-
     itemRoot: ['itemRoot'],
-    itemText: ['itemText'],
     itemTitle: ['itemTitle'],
     itemSubTitle: ['itemSubTitle'],
     itemLayout: ['itemLayout'],
-    itemSentAt: ['itemSentAt']
+    itemSentAt: ['itemSentAt'],
+    itemAttachments: ['itemAttachments']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -40,13 +38,12 @@ export const GInboxRoot = styled("div", {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
-
       styles.itemRoot,
-      styles.itemText,
       styles.itemTitle,
       styles.itemSubTitle,
       styles.itemLayout,
-      styles.itemSentAt
+      styles.itemSentAt,
+      styles.itemAttachments
     ];
   },
 })(({ theme }) => {
@@ -55,7 +52,8 @@ export const GInboxRoot = styled("div", {
     '.GInbox-itemRoot': {
       cursor: 'pointer',
       alignItems: 'center',
-      padding: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
       backgroundColor: `${lighten(theme.palette.action.disabled, 0.85)}`,
       borderWidth: '1px',
       borderBottomStyle: 'solid',
@@ -66,16 +64,11 @@ export const GInboxRoot = styled("div", {
         boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
       },
     },
-    '.GInbox-itemText': {
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      maxWidth: '80rem',
-      whiteSpace: 'pre',
-      textAlign: 'left',
-    },
     '.GInbox-itemTitle': {
-      fontWeight: 'bold',
-      fontSize: theme.typography.body2.fontSize
+      fontSize: theme.typography.body2.fontSize,
+      [theme.breakpoints.down('sm')]: {
+        textAlign: 'right',
+      }
     },
     '.GInbox-itemSubTitle': {
       fontSize: theme.typography.body2.fontSize
@@ -85,24 +78,38 @@ export const GInboxRoot = styled("div", {
       flexDirection: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
-      padding: theme.spacing(1)
     },
 
     // date positioning
     '.GInbox-itemSentAt': {
       display: 'flex',
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('sm')]: {
+        alignItems: 'flex-end',
+        flexDirection: 'column'
+      },
+      [theme.breakpoints.down('md')]: {
+        justifyContent: 'space-between',
+      }
+    },
+    '.GInbox-itemAttachments': {
+      display: 'flex',
+      [theme.breakpoints.up('sm')]: {
         justifyContent: 'flex-end'
       },
-      [theme.breakpoints.down('lg')]: {
-        justifyContent: 'flex-start'
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-start',
       }
     },
     '& .GSort-root': {
       display: 'flex',
-      justifyContent: 'flex-end',
       width: '100%',
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
+      [theme.breakpoints.up('sm')]: {
+        justifyContent: 'flex-end'
+      },
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center'
+      }
     },
   };
 });
