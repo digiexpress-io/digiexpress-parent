@@ -142,6 +142,7 @@ export const en = {
   'gamut.inbox.newMessage.notAllowed2': 'We apologize for the inconvenience.',
   'gamut.inbox.newMessage.notAllowed.questions': 'Please contact us by phone or email with further questions.',
   'gamut.inbox.noMessages': 'No messages',
+  'gamut.inbox.newMessageFrom': 'New message from ',
   'gamut.subjectMessage.title': 'Messages regarding {subject}',
   'gamut.bookings.title': 'Calendar reservations',
   'gamut.bookings.subtitle': 'Manage your existing appointments and reservations here',

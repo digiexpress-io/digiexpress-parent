@@ -142,6 +142,7 @@ export const fi = {
   'gamut.inbox.newMessage.notAllowed2': 'Pahoittelemme häiriötä.',
   'gamut.inbox.newMessage.notAllowed.questions': 'Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.',
   'gamut.inbox.noMessages': 'Ei viestejä',
+  'gamut.inbox.newMessageFrom': ' New message from ',
   'gamut.subjectMessage.title': 'Viestit koskien {subject}',
   'gamut.bookings.title': 'Kalenterivaraukset',
   'gamut.bookings.subtitle': 'Hallinnoi kalenterivarauksiasi',

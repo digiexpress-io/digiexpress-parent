@@ -26,16 +26,14 @@ export const GInboxMessageNotAllowed: React.FC<GInboxMessageNotAllowedProps> = (
     <GInboxMessageNotAllowedRoot className={classes.root}>
       <Box className={classes.msgNotAllowedContentSpacing}>
         <div className={classes.msgNotAllowedContentFlex}>
-          <InfoIcon className={classes.msgNotAllowedIcon} />
+          <InfoIcon className={classes.msgNotAllowedIconError} />
           <Typography>{intl.formatMessage({ id: 'gamut.inbox.newMessage.notAllowed1' })}</Typography>
         </div>
         <Typography className={classes.msgNotAllowedContent}>{intl.formatMessage({ id: 'gamut.inbox.newMessage.notAllowed2' })}</Typography>
         <Typography className={classes.msgNotAllowedContent}>{intl.formatMessage({ id: 'gamut.inbox.newMessage.notAllowed.questions' })}</Typography>
 
-        <div className={classes.msgNotAllowedContentSpacing} />
         <Divider />
         <div className={classes.msgNotAllowedContentSpacing} />
-
         <div className={classes.msgNotAllowedContentFlex}>
           <LocalPhoneIcon className={classes.msgNotAllowedIcon} /><Typography>{intl.formatMessage({ id: 'cust.phone' })}</Typography>
         </div>

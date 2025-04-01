@@ -155,6 +155,7 @@ gamut.inbox.newMessage.notAllowed1,,Messages are not enabled.,Viestit eivät ole
 gamut.inbox.newMessage.notAllowed2,,We apologize for the inconvenience.,Pahoittelemme häiriötä.,Vi ber om ursäkt för besväret.,Kami memohon maaf atas kesulitan ini.
 gamut.inbox.newMessage.notAllowed.questions,,Please contact us by phone or email with further questions.,"Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.",Kontakta oss gärna via telefon eller e-post med ytterligare frågor.,Sila hubungi kami melalui telefon atau e-mel untuk pertanyaan lanjut.
 gamut.inbox.noMessages,,No messages,Ei viestejä,Inga meddelanden,Tiada mesej
+gamut.inbox.newMessageFrom,,New message from , New message from ,,,
 gamut.subjectMessage.title,,Messages regarding {subject},Viestit koskien {subject},Meddelanden om {ämne},Mesej berkenaan {subject}
 // -------------------- GAMUT RESERVATIONS ---------------------,,,,#VALUE!,
 gamut.bookings.title,,Calendar reservations,Kalenterivaraukset,Kalenderreservationer,Tempahan kalendar

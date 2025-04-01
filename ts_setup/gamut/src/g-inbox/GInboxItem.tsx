@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Divider, Grid, Tooltip, Typography, useThemeProps } from '@mui/material';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { Avatar, Grid, Tooltip, Typography, useThemeProps } from '@mui/material';
+import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
@@ -32,7 +32,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   });
   const { title, subTitle, senderName, sentAt, onClick, id, contractStatus, taskRefId } = props;
 
-  const tooltipContent = subTitle ? senderName + "said: " + props.subTitle : 'no messages';
+  const tooltipContent = subTitle && intl.formatMessage({ id: 'gamut.inbox.newMessageFrom' }) + senderName + ": " + props.subTitle;
   const subject = getSubject(id);
   const isViewed = subject?.isViewed;
 
@@ -40,8 +40,11 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   return (
     <GInboxItemRoot container className={classes.itemRoot} onClick={() => onClick(id)}>
 
-      <Grid item xs={6} sm={2} md={2} lg={2} xl={2}>
-        {isViewed ? <></> : <EmailOutlinedIcon />}
+      <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
+
+        {isViewed ? <></> : <Tooltip title={tooltipContent}>
+          <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
+        </Tooltip>}
         <Typography variant='caption'>
           {intl.formatMessage({ id: 'gamut.forms.taskRefId' })}
           {intl.formatMessage({ id: 'gamut.noValueIndicatorColon' })}
@@ -50,9 +53,8 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
       </Grid>
 
       <Grid item xs={6} sm={3} md={2} lg={2} xl={2} className={classes.itemTitle}>
-        <Tooltip title={tooltipContent}>
           <Typography component='span'>{title}</Typography>
-        </Tooltip>
+
       </Grid>
 
       <Grid item xs={12} sm={5} md={6} lg={7} xl={7} className={classes.itemAttachments}>

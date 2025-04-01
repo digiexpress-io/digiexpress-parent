@@ -12,7 +12,8 @@ export interface GInboxClasses {
   itemLayout: string,
   itemSentAt: string,
   itemAttachments: string,
-
+  taskRefLayout: string,
+  newMsgIndicator: string
 }
 export type GInboxClassKey = keyof GInboxClasses;
 
@@ -24,7 +25,9 @@ export const useUtilityClasses = () => {
     itemSubTitle: ['itemSubTitle'],
     itemLayout: ['itemLayout'],
     itemSentAt: ['itemSentAt'],
-    itemAttachments: ['itemAttachments']
+    itemAttachments: ['itemAttachments'],
+    taskRefLayout: ['taskRefLayout'],
+    newMsgIndicator: ['newMsgIndicator']
 
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
@@ -43,7 +46,9 @@ export const GInboxRoot = styled("div", {
       styles.itemSubTitle,
       styles.itemLayout,
       styles.itemSentAt,
-      styles.itemAttachments
+      styles.itemAttachments,
+      styles.taskRefLayout,
+      styles.newMsgIndicator
     ];
   },
 })(({ theme }) => {
@@ -72,6 +77,21 @@ export const GInboxRoot = styled("div", {
     },
     '.GInbox-itemSubTitle': {
       fontSize: theme.typography.body2.fontSize
+    },
+    '.GInbox-newMsgIndicator': {
+      marginRight: theme.spacing(1),
+      color: theme.palette.error.main,
+      animation: 'pulse 1.5s ease-in-out infinite',
+      transition: 'transform 0.3s ease-in-out',
+    },
+    '@keyframes pulse': {
+      '0%': { transform: 'scale(1)', opacity: 1 },
+      '50%': { transform: 'scale(1.1)', opacity: 0.8 },
+      '100%': { transform: 'scale(1)', opacity: 1 },
+    },
+    '.GInbox-taskRefLayout': {
+      display: 'flex',
+      alignItems: 'center'
     },
     '.GInbox-itemLayout': {
       display: 'flex',

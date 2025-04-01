@@ -31,6 +31,7 @@ export interface GInboxMessagesClasses {
   msgNotAllowedContentSpacing: string;
   msgNotAllowedContentFlex: string;
   msgNotAllowedIcon: string;
+  msgNotAllowedIconError: string;
 }
 export type GInboxMessagesClassKey = keyof GInboxMessagesClasses;
 
@@ -65,7 +66,8 @@ export const GInboxMessagesRoot = styled("div", {
       styles.msgNotAllowedContent,
       styles.msgNotAllowedContentSpacing,
       styles.msgNotAllowedContentFlex,
-      styles.msgNotAllowedIcon
+      styles.msgNotAllowedIcon,
+      styles.msgNotAllowedIconError
 
     ];
   },
@@ -129,21 +131,26 @@ export const GInboxMessagesRoot = styled("div", {
 
     '.GInboxMessages-msgNotAllowedRoot': {
       paddingLeft: theme.spacing(3),
-      paddingRight: theme.spacing(3),
+      paddingRight: theme.spacing(2),
       paddingBottom: theme.spacing(3),
     },
 
     '.GInboxMessages-msgNotAllowedContentSpacing': {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1.5),
     },
 
     '.GInboxMessages-msgNotAllowedContent': {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
+      marginLeft: theme.spacing(5)
     },
 
     '.GInboxMessages-msgNotAllowedIcon': {
       color: theme.palette.primary.main,
+      marginRight: theme.spacing(2)
+    },
+    '.GInboxMessages-msgNotAllowedIconError': {
+      color: theme.palette.error.main,
       marginRight: theme.spacing(2)
     },
 
@@ -334,7 +341,8 @@ export const useUtilityClasses = () => {
     msgNotAllowedContent: ['msgNotAllowedContent'],
     msgNotAllowedContentSpacing: ['msgNotAllowedContentSpacing'],
     msgNotAllowedContentFlex: ['msgNotAllowedContentFlex'],
-    msgNotAllowedIcon: ['msgNotAllowedIcon']
+    msgNotAllowedIcon: ['msgNotAllowedIcon'],
+    msgNotAllowedIconError: ['msgNotAllowedIconError']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
