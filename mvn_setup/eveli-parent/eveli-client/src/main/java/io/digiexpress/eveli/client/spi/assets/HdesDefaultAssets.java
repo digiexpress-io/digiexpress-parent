@@ -65,6 +65,10 @@ public class HdesDefaultAssets {
     visitFlow(state, builder, events_flow());
     visitDt(state, builder, events_dt());
     visitDt(state, builder, queues_dt());
+    
+    visitDt(state, builder, event_message_worker_intl());
+    visitDt(state, builder, event_message_suomifi_intl());
+    
     return builder.build();
   }
   
