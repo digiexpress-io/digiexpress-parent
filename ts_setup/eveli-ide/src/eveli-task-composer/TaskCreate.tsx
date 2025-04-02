@@ -226,7 +226,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
       version: editTask?.version,
       keyWords: editTask?.keyWords,
       clientIdentificator: values.clientIdentificator,
-      assignedRoles: values.assignedRoles
+      assignedRoles: values.assignedRoles,
+      additionalInfo: values.additionalInfo
     }
   }
 
@@ -285,6 +286,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     return (
       <Formik
         initialValues={{
+          additionalInfo: editTask.additionalInfo || '',
           priority: editTask.priority,
           subject: editTask.subject || '',
           description: editTask.description || '',
@@ -357,6 +359,20 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       required
                       error={!!errors.subject}
                       helperText={errors.subject}
+                      fullWidth={true}
+                      inputProps={{
+                        readOnly: readonly
+                      }}
+                    />
+                  </Grid2>
+
+                  <Grid2 size={{ xs: 12, md: 12 }}>
+                    <Field
+                      name='additionalInfo' as={TextField}
+                      label={formatMessage({ id: 'taskDialog.additionalInfo' })}
+                      required
+                      error={!!errors.additionalInfo}
+                      helperText={errors.additionalInfo}
                       fullWidth={true}
                       inputProps={{
                         readOnly: readonly
