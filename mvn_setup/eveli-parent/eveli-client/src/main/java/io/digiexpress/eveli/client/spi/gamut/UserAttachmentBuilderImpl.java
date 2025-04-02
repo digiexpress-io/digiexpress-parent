@@ -88,9 +88,7 @@ public class UserAttachmentBuilderImpl implements UserAttachmentBuilder {
   private UserActionAttachment visitAttachment(ProcessInstance process, UserAttachmentUploadInit file) throws AttachmentUploadUrlException {
     final var taskId = process.getTaskId();
     final var filename = file.getName();
-    final Optional<AttachmentUpload> uploadUrl = taskId == null ?
-        attachmentCommands.upload().encodePath(filename).processId(actionId) :
-        attachmentCommands.upload().encodePath(filename).taskId(taskId.toString());
+    final Optional<AttachmentUpload> uploadUrl = attachmentCommands.upload().encodePath(filename).processId(actionId);
 
     if(uploadUrl.isEmpty()) {
       throw new AttachmentUploadUrlException("Can't create upload url for: " + filename + "!");
