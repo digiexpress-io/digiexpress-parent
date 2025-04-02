@@ -105,7 +105,7 @@ public class EveliDeploymentCompilerImpl implements EveliDeploymentCompiler {
     if(errors1 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());
     }
-    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment, stencil, logger).accept();
+    final var errors2 = new DeploymentEnvirDialobUploader(dialobClient, deployment.getSources(), stencil, logger).accept();
     if(errors2 > 0 && !forced) {
       return Tuple2.of(EveliDeploymentStatus.ERROR, logger.getErrors());      
     }

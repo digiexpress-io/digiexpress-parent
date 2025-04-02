@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
+import io.digiexpress.eveli.client.web.resources.assets.AssetsMigrationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsStencilController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsWorkflowController;
@@ -115,6 +116,18 @@ public class EveliAutoConfigAssets {
   ) {
     return new AssetsPublicationController(envir, context.getStencil(), context.getWrench(), dialobClient, security, publisher);
   }
+  
+  @Bean 
+  public AssetsMigrationController assetsMigrationController(
+      EveliEditEnvir context, 
+      AuthClient security,
+      DialobClient dialobClient,
+      EveliEnvirClient envir,
+      ApplicationEventPublisher publisher
+  ) {
+    return new AssetsMigrationController(context.getStencil(), context.getWrench(), dialobClient);
+  }
+  
   @Bean
   public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
     return new AssetsDialobController(client, objectMapper);
