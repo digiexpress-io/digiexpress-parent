@@ -61,6 +61,12 @@ class SearchReducer {
   // GET ALL TOPICS
   private visitTopic(topic: SiteApi.TopicView) {
 
+    // do not collect yourself
+    const isEnabled = topic.topic.searchOnly;
+    if (isEnabled) {
+      return
+    }
+
     if (this._searchString) {
       const foundTopic = topic.name.toLocaleLowerCase().indexOf(this._searchString) > -1;
       const found = foundTopic;
@@ -79,6 +85,12 @@ class SearchReducer {
   }
 
   private visitForm(topic: SiteApi.TopicView, linkToForm: SiteApi.TopicLink) {
+    // search forms only from hidden grouping topics
+    const isEnabled = topic.topic.searchOnly;
+    if (!isEnabled) {
+      return
+    }
+
 
     if (this._searchString) {
       const foundTopic = topic.name.toLocaleLowerCase().indexOf(this._searchString) > -1;
@@ -95,8 +107,8 @@ class SearchReducer {
     if (!enabled) {
       return;
     }
-
-    const form: SearchApi.LinkToForm = { linkToForm, topic, label: linkToForm.name + this._noValueIndicatorColon + topic.name };
+    //const form: SearchApi.LinkToForm = { linkToForm, topic, label: linkToForm.name + this._noValueIndicatorColon + topic.name };
+    const form: SearchApi.LinkToForm = { linkToForm, topic, label: linkToForm.name };
     this._forms.push(form);
   }
 
@@ -186,7 +198,6 @@ export class SearchStateImpl implements SearchApi.SearchState {
   private _external: readonly SiteApi.TopicLink[];
   private _phones: readonly SiteApi.TopicLink[];
   private _topics: readonly SiteApi.TopicView[];
-  private _groupedForms: Record<string, SearchApi.LinkToForm[]>
 
   constructor(props: {
     source: readonly SiteApi.TopicView[],
@@ -205,14 +216,6 @@ export class SearchStateImpl implements SearchApi.SearchState {
     this._internal = search.internal;
     this._phones = search.phones;
     this._topics = search.topics;
-    this._groupedForms = search.forms.reduce((collector, form) => {
-      if (!collector[form.linkToForm.name]) {
-        collector[form.linkToForm.name] = [];
-      }
-      collector[form.linkToForm.name].push(form);
-      return collector;
-    }, {} as Record<string, SearchApi.LinkToForm[]>);
-
   }
   find(newSearchString: string): SearchApi.SearchState {
     return new SearchStateImpl({ source: this._source, searchString: newSearchString, searchOptionType: this._searchOptionType, noValueIndicatorColon: this._noValueIndicatorColon });
@@ -221,7 +224,6 @@ export class SearchStateImpl implements SearchApi.SearchState {
     return new SearchStateImpl({ source: this._source, searchString: this.searchString, searchOptionType: type, noValueIndicatorColon: this._noValueIndicatorColon });
   }
 
-  get groupedForms(): Record<string, SearchApi.LinkToForm[]> { return this._groupedForms; }
   get searchString() { return this._searchString }
   get searchOptionType() { return this._searchOptionType }
   get forms() { return this._forms }
@@ -229,6 +231,4 @@ export class SearchStateImpl implements SearchApi.SearchState {
   get external() { return this._external }
   get phones() { return this._phones }
   get topics() { return this._topics }
-
-
 }

@@ -37,6 +37,7 @@ export declare namespace SiteApi {
     headings: TopicHeading[];
     parent?: string | null;
     blob?: string;
+    searchOnly?: true;
   }
 
   export interface TopicLink {

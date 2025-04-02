@@ -36,6 +36,6 @@ function createTopicGroups(topics: SiteApi.TopicView[], itemsInColumn: number): 
   return slices.map((topics, column) => ({ column, topics, next: column < totalColumns.length - 1 }));
 }
 function getSortedTopics(views: Record<string, SiteApi.TopicView>) {
-  return Object.values(views ?? []).sort((a, b) => a.order - b.order);
+  return Object.values(views ?? []).filter(e => !e.topic.searchOnly).sort((a, b) => a.order - b.order);
 
 }

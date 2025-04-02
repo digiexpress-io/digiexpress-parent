@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { SiteApi } from './site-types';
 import { SiteCache } from './site-reducer';
 import { useLocale } from '../api-locale';
+import { getSearchTopics } from './search-topics';
+import { useIntl } from 'react-intl';
 
 
 export interface  SiteBackendProviderProps {
@@ -34,6 +36,7 @@ const refetchInterval = staleTime;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
   const { locale: selectedLocale } = useLocale();
+  const intl = useIntl();
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])
   const fetchFeedbackGet: SiteApi.FetchFeedbackGET = React.useMemo(() => props.fetchFeedbackGet, [props.fetchFeedbackGet])
   const fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT = React.useMemo(() => props.fetchFeedbackRatingPut, [props.fetchFeedbackRatingPut])
@@ -48,7 +51,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
         throw new SiteRequestError('Failure during fetch', response.status);
       }
       const site: SiteApi.Site = await response.json();
-      return { site, views: new SiteCache(site).topics }
+      const siteExtensions = getSearchTopics(site, intl);
+      return { site, views: new SiteCache(site, siteExtensions).topics }
     }),
   });
 
@@ -72,7 +76,7 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   const feedback = siteQuery.isPending ? [] : (feedbackQuery.data ?? []);
 
   const contextValue: SiteBackendContextType = React.useMemo(() => {
-    function voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void> {
+    async function voteOnReply(body: SiteApi.UpsertFeedbackRankingCommand): Promise<void> {
       return fetchFeedbackRatingPut(body).then(_data => feedbackQuery.refetch()).then(_junk => { });
     }
     return Object.freeze({ site, views: views ?? {}, pending, locale: selectedLocale, feedback, voteOnReply });
