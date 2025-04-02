@@ -52,7 +52,7 @@ export const GLinkFormUnlocked: React.FC<GLinkFormUnlockedProps> = (initProps) =
   )
 }
 
-export const GLinkFormUnlockedGrouped: React.FC<GLinkFormUnlockedProps> = (initProps) => {
+export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,

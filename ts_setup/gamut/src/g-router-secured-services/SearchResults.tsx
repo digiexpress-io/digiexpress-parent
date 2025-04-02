@@ -4,7 +4,7 @@ import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material'
 import {
   GLinkPhone,
   GLinkHyper,
-  GLinkFormUnlockedGrouped,
+  GLinkFormUnlockedSearchResults,
 } from '../';
 
 import { GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
@@ -70,9 +70,9 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
             {search.forms.map((form) => (
               <ListItem dense>
-                <GLinkFormUnlockedGrouped
-                  key={form.linkToForm.id}
-                  label={form.linkToForm.name}
+              <GLinkFormUnlockedSearchResults
+                key={form.linkToForm.id}
+                label={form.linkToForm.name}
                 value={form.linkToForm.value}
                 onClick={() => { onForm(form) }}
               />
