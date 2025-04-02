@@ -14,6 +14,7 @@ import { TaskLink } from "./TaskLink";
 import { TaskStatusIndicator } from "./TaskStatusIndicator";
 import { TaskPriorityIndicator } from "./TaskPriorityIndicator";
 import { EveliPermissions } from "@/eveli-permissions";
+import { TaskAdditionalInfo } from "./TaskAdditionalInfo";
 
 
 const formatTime = (time: any) => {
@@ -149,6 +150,16 @@ export function useTasksTableState(): TableState {
         render: data => formatDate(data.created),
         headerStyle: { fontWeight: 'bold' },
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "created").hidden
+      },
+
+      {
+        title: intl.formatMessage({ id: 'spoTasksTableHeader.additionalInfo' }),
+        field: 'additionalInfo',
+        filtering: true,
+        render: data => (<TaskAdditionalInfo task={data}/>),
+        defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'additionalInfo')?.value || "",
+        headerStyle: { fontWeight: 'bold' },
+        hidden: tableRef.current?.state.columns.find((column: any) => column.field === "additionalInfo").hidden
       },
       {
         render: (data) => {

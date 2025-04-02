@@ -71,6 +71,7 @@ public class TaskApiController {
   @GetMapping
   public ResponseEntity<Page<Task>> taskSearch(
       @RequestParam(name="subject", defaultValue = "") String subject, 
+      @RequestParam(name="additionalInfo", defaultValue = "") String additionalInfo, 
       @RequestParam(name="clientIdentificator", defaultValue = "") String clientIdentificator, 
       @RequestParam(name="assignedUser", defaultValue = "") String assignedUser, 
       @RequestParam(name="assignedRoles", defaultValue = "") String searchRole,
@@ -84,6 +85,7 @@ public class TaskApiController {
     final var query = taskClient.paginateTasks()
         .subject(subject)
         .clientIdentificator(clientIdentificator)
+        .additionalInfo(additionalInfo)
         .assignedUser(assignedUser)
         .role(searchRole)
         .dueDate(dueDate)

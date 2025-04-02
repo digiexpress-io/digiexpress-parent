@@ -373,9 +373,11 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       required
                       error={!!errors.additionalInfo}
                       helperText={errors.additionalInfo}
+                      
                       fullWidth={true}
                       inputProps={{
-                        readOnly: readonly
+                        readOnly: readonly,
+                        maxLength: 100
                       }}
                     />
                   </Grid2>

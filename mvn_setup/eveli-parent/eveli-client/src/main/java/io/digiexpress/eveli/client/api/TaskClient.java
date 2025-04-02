@@ -84,6 +84,7 @@ public interface TaskClient {
     PaginateTasks subject(@Nullable String subject); 
     PaginateTasks clientIdentificator(@Nullable String clientIdentificator);
     PaginateTasks assignedUser(@Nullable String assignedUser);
+    PaginateTasks additionalInfo(@Nullable String additionalInfo);
     PaginateTasks status(@Nullable List<TaskStatus> status);
     PaginateTasks priority(@Nullable List<TaskPriority> priority);
     PaginateTasks dueDate(@Nullable String dueDate);
