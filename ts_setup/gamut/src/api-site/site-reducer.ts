@@ -6,11 +6,13 @@ export class SiteCache {
   private _children: Record<SiteApi.TopicId, SiteApi.Topic[]> = {};
   private _visitViewOrder: (topic: SiteApi.Topic) => number;
 
-  constructor(site: SiteApi.Site) {
+  constructor(site: SiteApi.Site, siteExtensions: {
+    topics: SiteApi.Topic[]
+  }) {
     this._site = site;
     this._visitViewOrder = this.visitViewOrder;
 
-    const topics = Object.values(site.topics).sort((l0, l1) => l0.id.localeCompare(l1.id));
+    const topics = [...Object.values(site.topics).sort((l0, l1) => l0.id.localeCompare(l1.id)), ...siteExtensions.topics];
 
     topics.filter(t => t.parent).forEach(topic => {
       if (topic.parent && this._children[topic.parent]) {

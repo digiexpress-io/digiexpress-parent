@@ -16,8 +16,8 @@ export interface GLinkFormUnlockedClasses {
 export type GLinkFormUnlockedClassKey = keyof GLinkFormUnlockedClasses;
 
 export interface GLinkFormUnlockedProps {
-  label: string;
-  value: string;
+  label: string; // topic name
+  value: string; // link name - locale based
   onClick: () => void;
   component?: GOverridableComponent<GLinkFormUnlockedProps>;
 }
