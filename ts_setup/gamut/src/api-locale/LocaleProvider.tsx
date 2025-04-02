@@ -11,6 +11,7 @@ export type LocalCode = string;
 export interface LocaleProviderProps {
   children: React.ReactNode;
   options?: LocaleApi.Localizations;
+  disableErrors?: boolean;
 }
 
 export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
@@ -22,7 +23,7 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
   const intlMessages = messages[locale];
 
   return (<LocaleContext.Provider value={contextValue}>
-    <IntlProvider locale={locale} messages={intlMessages}>
+    <IntlProvider locale={locale} messages={intlMessages} onError={props.disableErrors ? ((err) => {}) : undefined}>
       {props.children}
     </IntlProvider>
   </LocaleContext.Provider>);
