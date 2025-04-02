@@ -3,9 +3,9 @@ import React from 'react';
 import { Box, TableCell, TableRow, IconButton, Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
+import MonacoReact from '@monaco-editor/react';
 import { FormattedMessage } from 'react-intl';
-import CodeEditor from '../../wrench-code-editor';
+
 import { toYaml } from './utils';
 import { HdesApi } from '@/api-wrench';
 
@@ -28,10 +28,7 @@ const DebugOutputCsvRow: React.FC<{ csvRow:HdesApi.CsvRow, index: string }> = ({
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <CodeEditor id="csv-debug-result" mode="yaml" src={toYaml(csvRow)}
-                onChange={(value) => {
-                  console.log(value);
-                }} />
+              <MonacoReact value={toYaml(csvRow)} defaultLanguage='yaml'/>
             </Box>
           </Collapse>
         </TableCell>

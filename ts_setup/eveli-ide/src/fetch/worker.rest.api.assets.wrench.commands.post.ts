@@ -17,7 +17,8 @@ function hook(props: {}) {
     ast: (id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Entity<any>> => {
       return params
       .fetch(url({}), { method, body: JSON.stringify({ id, body }), headers })
-      .then(resp => resp.json());
+      .then(resp => resp.json())
+      .then(data => data);
     }
   }
 }

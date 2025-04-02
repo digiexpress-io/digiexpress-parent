@@ -3,6 +3,7 @@ import React from 'react'
 import { Box, List, ListItem, ListItemText, Typography, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useSnackbar } from 'notistack';
+import * as monaco_editor from 'monaco-editor';
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 
@@ -35,14 +36,12 @@ const SelectTask: React.FC<{ value:HdesApi.Entity<HdesApi.AstBody>, onClick: () 
 
 interface AutocompleteTaskProps {
   onClose: () => void;
-  flow:HdesApi.Entity<HdesApi.AstFlow>;
-  cm: CodeMirror.Editor;
-  data: CodeMirror.Hints;
-  cur: CodeMirror.Hint;
-  guided: FlowAstAutocomplete
+  flow: HdesApi.Entity<HdesApi.AstFlow>;
+  guided: FlowAstAutocomplete;
+  cm: typeof monaco_editor;
 }
 
-const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, cm, guided, flow }) => {
+const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, flow, cm }) => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const { decisions, services } = Composer.useSite();

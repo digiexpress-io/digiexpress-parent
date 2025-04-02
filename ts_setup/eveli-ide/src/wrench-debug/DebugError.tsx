@@ -4,10 +4,9 @@ import { Box, TableCell, TableRow, IconButton, Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FormattedMessage } from 'react-intl';
-
+import MonacoReact from '@monaco-editor/react';
 import { HdesApi } from '@/api-wrench';
 
-import CodeEditor from '../wrench-code-editor';
 import { toYaml } from './outputs/utils'
 
 const DebugError: React.FC<{ error: HdesApi.StoreError }> = ({ error }) => {
@@ -29,7 +28,7 @@ const DebugError: React.FC<{ error: HdesApi.StoreError }> = ({ error }) => {
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
-            <CodeEditor id="debug-input" mode="yaml" src={toYaml(error)} onChange={(value) => { console.log(value); }} />
+            <MonacoReact key="debug-input" value={toYaml(error)} defaultLanguage='yaml'/>
           </Box>
         </Collapse>
       </TableCell>

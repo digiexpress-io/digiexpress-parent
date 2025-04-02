@@ -3,9 +3,9 @@ import React from 'react';
 import { Box, TableCell, TableRow, IconButton, Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
+import MonacoReact from '@monaco-editor/react';
 import { FormattedMessage } from 'react-intl';
-import CodeEditor from '../../wrench-code-editor';
+
 import { HdesApi } from '@/api-wrench';
 import { toYaml } from './utils'
 
@@ -96,10 +96,9 @@ const DebugOutputsDt: React.FC<{ debug:HdesApi.DecisionResult }> = ({ debug }) =
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
         <Collapse in={accepted} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
-            <CodeEditor id="debug-input" mode="yaml" src={toYaml(matches)}
-              onChange={(value) => {
-                console.log(value);
-              }} />
+            <MonacoReact 
+              value={toYaml(matches)}
+              defaultLanguage='yaml'/>
           </Box>
         </Collapse>
       </TableCell>
@@ -121,10 +120,9 @@ const DebugOutputsDt: React.FC<{ debug:HdesApi.DecisionResult }> = ({ debug }) =
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
         <Collapse in={rejects} timeout="auto" unmountOnExit>
           <Box sx={{ margin: 1 }}>
-            <CodeEditor id="debug-input" mode="yaml" src={toYaml(rejections)}
-              onChange={(value) => {
-                console.log(value);
-              }} />
+            <MonacoReact key="debug-input"
+              value={toYaml(rejections)}
+              defaultLanguage='yaml'/>
           </Box>
         </Collapse>
       </TableCell>

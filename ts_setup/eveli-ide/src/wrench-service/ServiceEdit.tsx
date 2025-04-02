@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import CodeEditor from '../wrench-code-editor';
+import MonacoReact, { useMonaco } from '@monaco-editor/react';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 
 const ServiceEdit: React.FC<{service: HdesApi.Entity<HdesApi.AstService>}> = ({service}) => {
+  const monaco = useMonaco();
   const { actions, session } = Composer.useComposer();
 
   const handleChange = (value: string | undefined) => {
@@ -16,7 +17,10 @@ const ServiceEdit: React.FC<{service: HdesApi.Entity<HdesApi.AstService>}> = ({s
   const src = update && update.value.length > 0 ? update.value[0].value : service.ast?.value;
 
   return (<Box height="calc(100vh - 64px)">
-    <CodeEditor id={service.id} mode="groovy" src={src ? src : "#--failed-to-parse"} onChange={handleChange} />
+    <MonacoReact 
+      onChange={handleChange}
+      value={src ? src : "#--failed-to-parse"}
+      defaultLanguage='java'/>
   </Box>);
 }
 
