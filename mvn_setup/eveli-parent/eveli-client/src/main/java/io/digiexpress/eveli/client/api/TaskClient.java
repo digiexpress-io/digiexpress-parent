@@ -130,6 +130,7 @@ public interface TaskClient {
     
     String getSubject();
     @Nullable TaskPriority getPriority();
+    @Nullable String getFeaturesAsCsv();
 
     List<String> getKeyWords();
     List<String> getFeatures();

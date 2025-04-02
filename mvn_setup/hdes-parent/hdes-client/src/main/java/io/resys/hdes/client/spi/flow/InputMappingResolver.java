@@ -23,7 +23,6 @@ package io.resys.hdes.client.spi.flow;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class InputMappingResolver {
     mapping.entrySet().forEach(this::visitMapping);
     
     if(isOk && isExpanded) {
-      return expanded;
+      return expanded; 
     }
     
     return Arrays.asList(this.mapping);
@@ -62,6 +61,10 @@ public class InputMappingResolver {
 
     final var parentPath = String.join(".", Arrays.copyOf(paths, paths.length-1));
     final var someList = getCollectionType(getVariable.apply(parentPath));
+    
+    if(someList == null) {
+      return;
+    }
     
     if(someList.isEmpty()) {
       isExpanded = true;
@@ -112,21 +115,16 @@ public class InputMappingResolver {
   @SuppressWarnings("rawtypes")
   public static List getCollectionType(Object possiblyList) {
     if(!(possiblyList instanceof Map)) {
-      return Collections.emptyList();
+      return null;
     }
     final var someMap = ((Map) possiblyList).values();
     if(someMap.size() != 1) {
-      return Collections.emptyList();
+      return null;
     }
     final var firstValue = someMap.iterator().next();
     if(!(firstValue instanceof List)) {
-      return Collections.emptyList();
+      return null;
     }
-    final var someList = (List) firstValue;
-    if(someList.isEmpty()) {
-      return Collections.emptyList();
-    }
-    
-    return someList;
+    return (List) firstValue;
   }
 }

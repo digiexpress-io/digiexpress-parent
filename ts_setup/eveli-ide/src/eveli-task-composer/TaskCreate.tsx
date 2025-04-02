@@ -441,6 +441,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
                   }
                 </Grid2>
+                
+                {editTask.features && editTask.features.includes('feedback') && (
                 <Grid2 size={{ xs: 12 }}>
                   {editTask.id && externalThreads ?
                     <Accordion>
@@ -461,7 +463,9 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
                   }
-                </Grid2>
+                </Grid2>)
+                }
+
                 <Grid2 size={{ xs: 12 }}>
                   {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
                 </Grid2>

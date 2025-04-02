@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -324,7 +325,15 @@ public class ServiceAstBuilderImpl implements ServiceAstBuilder {
           || field.getName().startsWith("$") || field.getName().startsWith("_")) {
         continue;
       }
-      final var typeDef = dataTypeRepository.dataType().id(field.getName()).order(index++).name(field.getName()).direction(direction).beanType(field.getType()).build();
+      
+      final var typeDef = dataTypeRepository.dataType()
+          .id(field.getName())
+          .order(index++)
+          .name(field.getName())
+          .direction(direction)
+          .beanType(field.getType())
+          .required(Arrays.asList(field.getAnnotations()).stream().filter(ann -> ann.annotationType().getSimpleName().equals("Nullable")).findFirst().isEmpty())
+          .build();
       result.add(typeDef);
     }
     return result;
