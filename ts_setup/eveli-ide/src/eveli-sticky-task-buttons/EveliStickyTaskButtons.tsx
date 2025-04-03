@@ -70,6 +70,7 @@ export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ e
     <Box sx={{
       bottom: 10,
       width: 'fit-content',
+      height: 'fit-content',
       top: 35,
       right: 16,
       zIndex: 1100,
