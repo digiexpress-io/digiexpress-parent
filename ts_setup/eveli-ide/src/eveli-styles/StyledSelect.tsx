@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputLabel, FormControl, MenuItem, Select, FormControlProps, FormHelperText, Theme, SxProps, styled } from '@mui/material';
+import { InputLabel, FormControl, MenuItem, Select, FormHelperText, Theme, SxProps } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 

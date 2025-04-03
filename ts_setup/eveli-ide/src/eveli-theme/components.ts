@@ -186,6 +186,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
       })
     },
   },
+
   MuiSwitch: {
     styleOverrides: {
       root: ({ ownerState, theme }) => ({
@@ -246,13 +247,12 @@ export const components: Components<Omit<Theme, 'components'>> = {
         props: { variant: 'outlined' },
         style: ({ theme }) => ({
           borderRadius: 'unset',
-          borderWidth: 0,
+          borderWidth: '1px',
           fontWeight: 'bold',
           color: theme.palette.primary.main,
           textTransform: 'capitalize',
           '&:hover': {
-            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-            border: 'none',
+            borderWidth: '1px',
           },
         }),
       },
@@ -304,11 +304,13 @@ export const components: Components<Omit<Theme, 'components'>> = {
   },
 
   MuiPaper: {
+    defaultProps: {
+      variant: 'outlined',
+    },
     styleOverrides: {
       root: ({ theme }) => ({
-        elevation: 1,
-        borderColor: theme.palette.secondary.main,
-        transition: 'unset'
+        borderColor: theme.palette.divider,
+        borderRadius: '0px'
       })
     },
   }
