@@ -1,212 +1,214 @@
-ID,Info,en,fi,sv,my
-booleanValue.true,,Yes,Kyllä,Ja,Ya
-booleanValue.false,,No,Ei,Inga,Tidak
-// -------------------- START CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,
-cust.inbox.message.sender-name.org-user,,Info desk,Info,Infodisk,Meja maklumat
-cust.phone,,Phone: 123 456 7890,Puhelin: 12345,Telefon: 123 456 7890,Telefon: 123 456 7890
-cust.email,,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com
-// -------------------- CUSTOMER HEADER --------------------------,,,,#VALUE!,
-header.userIdentity.label,,You are logged in as,Kirjauduttu käyttäjänä,Inloggad som,Sedang masuk sebagai
-// -------------------- CUSTOMER FOOTER --------------------------,,,,#VALUE!,
-footer.column2.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress
-footer.column2.subtitle,,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan
-footer.column3.title,,Quick links,Pikalinkkejä,Snabblänkar,Pautan pantas
-footer.column3.link.acessibility,,Accessibility statement,Saavutettavuus seloste,Tillgänglighetsförklaring,Kenyataan kebolehcapaian
-footer.column3.link.dataProtection,,Data protection,Tietosuoja,Dataskydd,Perlindungan data
-footer.column3.link.feedback,,Feedback and development ideas,Palautteet,Feedback och utvecklingsidéer,Maklum balas dan idea pembangunan
-footer.column3.link.siteInfo,,Information about the site,Lisätieto tästä sivustosta,Information om webbplatsen,Maklumat mengenai tapak
-footer.column3.link.newsletter,,Subscribe to the newsletter,Tilaa uutiskirje,Prenumerera på nyhetsbrevet,Langgan surat berita
-footer.column4.title,,DigiExpress info,DigiExpress info,DigiExpress info,Maklumat DigiExpress
-footer.column4.email,,Email: info@digiExpress.io,Sähköposti: info@digiExpress.io,E-post: info@digiExpress.io,E-mel: info@digiExpress.io
-footer.column4.phone,,Phone: 123 456 7890,Phone: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890
-footer.column4.address,,Visiting address: 1234 Any Street MyTown,"Käyntiosoite: 1234 Suomentie 4, Suomi",Besöksadress: 1234 Any Street MyTown,Alamat lawatan: 1234 Any Street MyTown
-footer.column4.postalCode,,Postal code: 1234,Postinumero: 1234,Postnummer: 1234,Poskod: 1234
-// --------------------END CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,
-// ------------------- GAMUT GENERAL ----------------------,,,,#VALUE!,
-gamut.forms,,Forms,Lomake,Formulär,Borang
-gamut.new-messages,,New messages,Uusi viesti,Nya meddelanden,Mesej baharu
-gamut.services,,Services,Palvelut,Tjänster,Perkhidmatan
-gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,Tempahan kalendar
-gamut.noValueIndicator,,-,-,-,-
-gamut.noValueIndicatorColon,, , , , 
-gamut.textSeparator,, , , , 
-gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan
-// ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,
-gamut.public.servicesHome,,Services home,Palvelut pääsivu,Tjänster hem,Perkhidmatan rumah
-gamut.public.forms.summary.button.backToServicesHome,,Back to Services Home,Takaisin Palvelut pääsivulle,Tillbaka till Tjänster Hem,Kembali ke Laman Utama Perkhidmatan
-// ------------------- GAMUT GENERAL BUTTONS --------------,,,,#VALUE!,
-gamut.buttons.login,,Log in,Kirjaudu sisään,Logga in,Log masuk
-gamut.buttons.logout,,Log out,Kirjaudu ulos,Logga ut,Log keluar
-gamut.buttons.search,,Search,Hae,Söka,Cari
-gamut.buttons.cancel,,Cancel,Peruuta,Avboka,Batal
-gamut.buttons.select,,Select,Valitse,Välja,Pilih
-gamut.buttons.close,,Close,Sulje,Nära,Tutup
-gamut.buttons.reply,,Reply,Vastaa,Svar,Balas
-gamut.buttons.delete,,Delete,Poista,Radera,Padam
-gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami
-gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran
-gamut.buttons.sort-last-modified.contracts,,Sort by last modified, Sort by last modified,,,
-gamut.buttons.sort-last-modified.offers,,Sort by last modified, Sort by last modified,,,
-gamut.buttons.sort-last-modified.inbox,,Sort by last modified, Sort by last modified,,,
-
-// ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,
-gamut.locale.en,,English,Englanti,Engelska,Inggeris
-gamut.locale.fi,,Finnish,Suomi,Finska,Bahasa Finland
-gamut.locale.sv,,Swedish,Ruotsi,Svenska,Bahasa Sweden
-gamut.locale.my,,Malay,Malaiji,Malajisk,Bahasa Melayu
-// ------------------- GAMUT SEARCH -----------------------,,,,#VALUE!,
-gamut.search.placeholder,,Search our services,Hae palvelua,Sök i våra tjänster,Cari perkhidmatan kami
-gamut.search.popover.title,,Search our site,Hae sivustolta,Sök på vår sida,Cari tapak kami
-gamut.search.popover.input.placeholder,,What are you looking for?,Mitä etsi,Vad letar du efter?,Apa yang anda cari?
-gamut.search.popover.result.chip.form,,Form,Lomake,Form,Borang
-gamut.search.popover.result.chip.link,,Link,Linkki,Länk,Pautan
-gamut.search.popover.result.chip.phone,,Phone,Puhelin,Telefon,Telefon
-gamut.search.popover.result.chip.content,,Content,Sisältö,Innehåll,Kandungan
-gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bentuk
-gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon
-gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan
-gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Semua perkhidmatan
-gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,Semua keputusan
-gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,Tiada hasil
-gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,Perkhidmatan
-gamut.search.results.formLinks,,Forms,Lomakkeet,Formulär,Borang
-gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,Telefon
-gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan
-gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan
-gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar
-gamut.search.results.otherForms,,Other forms,Other forms,,
-// ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,
-gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang
-gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan
-// -------------------- GAMUT FORMS ---------------------------,,,,#VALUE!,
-gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama
-gamut.forms.taskRefId,,Reference Id,Viitetunnus,,
-gamut.forms.started,,Started,Aloitettu,Startade,Bermula
-gamut.forms.status,,Status,Tila,Status,Status
-gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung
-gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi
-gamut.forms.status.COMPLETED,,Completed,Valmis käsittelyyn,Avslutad,Selesai
-gamut.forms.status.REJECTED,,Rejected,Poistettu,Avvisad,Ditolak
-gamut.forms.lastModified,,Last modified,Viimeksi muutettu,Senast ändrad,Terakhir diubah suai
-gamut.forms.files,,Files,Liitteet,Filer,Fail
-gamut.forms.messages,,Messages,Viestit,Meddelanden,Mesej
-gamut.forms.page.subtitle,,Next:{nextPageTitle},Seuraava:{nextPageTitle},Nästa:{nextPageTitle},Seterusnya:{nextPageTitle}
-gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komplett,Seterusnya: Lengkap
-gamut.forms.page.stepper,,{start} of {end},{start} of {end},{start} av {slut},{start} of {end}
-gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {stepNumber} out of {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps}
-gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya
-gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap
-gamut.forms.page.cancel,,Cancel,Cancel,Cancel,
-gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!
-gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini
-gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Hello {userName}!,,
-gamut.forms.filling.authenticated_and_proceed,,"Please click below to start the form","Please click below to start the form",,
-gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini
-gamut.forms.filling.login-then-start.button,,Log in now,Log in now,Log in now,Log in now
-gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi
-gamut.forms.filling.start.button,,Continue to form,Jatka lomakkeella,Fortsätt att bilda,Teruskan membentuk
-gamut.forms.filling.cancel.button,,Cancel,Peruuta,Avboka,Batal
-gamut.forms.filling.summary,,You have completed the form,Lomake on valmis,Du har fyllt i formuläret,Anda telah melengkapkan borang
-gamut.forms.filling.summary.thank-you,,Thank you!,Kiitos!,Tack!,terima kasih!
-gamut.forms.filling.summary.info1,,Our staff has been notified of your request and will begin processing soon.,Saat ilmoituksen kun palvelupyyntös on otettu käsittelyyn,Vår personal har underrättats om din förfrågan och kommer att börja behandla snart.,Kakitangan kami telah dimaklumkan tentang permintaan anda dan akan mula memproses tidak lama lagi.
-gamut.forms.filling.summary.info2,,Be sure to check My Overview regularly for,Muistahan välillä tarkistaa Minun asiat osiota,Se till att kontrollera Min översikt regelbundet för,Pastikan anda menyemak Gambaran Keseluruhan Saya dengan kerap untuk
-gamut.forms.filling.summary.info3,,Form processing status updates,Lomaakkeen käsittelyn tila,Statusuppdateringar för formulärbearbetning,Kemas kini status pemprosesan borang
-gamut.forms.filling.summary.info4,,New messages from our staff regarding your request,Uudet koskien pyyntöäsi,Nya meddelanden från vår personal angående din förfrågan,Mesej baharu daripada kakitangan kami mengenai permintaan anda
-gamut.forms.filling.summary.info5,,New files we have sent to you or requested from you,"Uudet tiedostot, jotka olemme toimittaneet sinulle tai pyytäneet sinulta",Nya filer som vi har skickat till dig eller begärt av dig,Fail baharu yang telah kami hantar kepada anda atau diminta daripada anda
-gamut.forms.filling.summary.info6,,Still have questions? Contact us by phone at xxxx-xxxx with questions,Jäikö kysyttävää? Ota yhteyttä puhelimitse numeroon xxxx-xxxx kysymyksiä varten.,Har du fortfarande frågor? Kontakta oss per telefon på xxxx-xxxx med frågor,Masih ada soalan? Hubungi kami melalui telefon di xxxx-xxxx dengan pertanyaan
-gamut.forms.summary.button.back-to-overview,,Back to My Overview,Takaisin Minun Asiat sivulle,Tillbaka till Min översikt,Kembali ke Gambaran Keseluruhan Saya
-gamut.forms.answer.date.placeholder.day,,dd,pp,dd,hh
-gamut.forms.answer.date.placeholder.month,,mm,kk,mm,bb
-gamut.forms.answer.date.placeholder.year,,yyyy,vvvv,åååå,tttt
-gamut.forms.answer.date.placeholder.hour,,hh,tt,hh,jj
-gamut.forms.answer.date.placeholder.minute,,mm,mm,mm,mm
-gamut.forms.answer.boolean.yes,,Yes,Kyllä,Ja,Ya
-gamut.forms.answer.boolean.no,,No,Ei,Inga,Tidak
-gamut.forms.unfinished.none,,You do not have any unfinished forms,Sinulla ei ole keskeneräisiä lomakkeita,Du har inga oavslutade formulär,Anda tidak mempunyai sebarang borang yang belum selesai
-gamut.forms.awaitingDecision.none,,You do not have any forms awaiting a decision,Sinulla ei ole keskeneräisiä asiointipyyntöjä,Du har inga blanketter som väntar på beslut,Anda tidak mempunyai sebarang borang menunggu keputusan
-gamut.forms.page.selection.start,,Start,Aloita,Start,Mulakan
-gamut.forms.page.selection.complete,,Complete,Valmis,Komplett,Lengkap
-gamut.forms.unfinished.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai
-gamut.forms.unfinished.subtitle,,Processing has not started - Please select a form to continue filling or cancel,Käsittelyä ei ole aloitettu - Valitse lomake jatkaaksesi täyttämistä tai peruuta,Bearbetningen har inte startat - Välj ett formulär för att fortsätta fylla eller avbryta,Pemprosesan belum bermula - Sila pilih borang untuk terus mengisi atau membatalkan
-gamut.forms.awaitingDecision.title,,Forms awaiting decision,"Lomakkeet, jotka odottavast päätöstä",Blanketter som väntar på beslut,Borang menunggu keputusan
-gamut.forms.awaitingDecision.subtitle,,Processing has begun - Our staff is working on your request,Palvelupyyntösi on otettu käsittelyyn,Behandlingen har påbörjats - Vår personal arbetar med din förfrågan,Pemprosesan telah bermula - Kakitangan kami sedang mengusahakan permintaan anda
-gamut.forms.withDecision.title,,Forms with final decision,Palvelupyyntösi jotka odottavat päätöstä,Blanketter med slutligt beslut,Borang dengan keputusan muktamad
-gamut.forms.withDecision.subtitle,,Processing is complete and finalised,Palvelupyyntösi on valmis,Bearbetningen är klar och slutförd,Pemprosesan selesai dan dimuktamadkan
-gamut.offers.deleteForm.title,,Delete unfinished form,Poista keskeneräiset lomakkeet,Ta bort oavslutat formulär,Padamkan borang yang belum selesai
-gamut.offers.deleteForm.content,,Are you sure you want to delete this form? You can not undo this action.,Haluatko varmasti poistaa tämän lomakkeen? Et voi kumota tätä toimintoa.,Är du säker på att du vill ta bort det här formuläret? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu memadamkan borang ini? Anda tidak boleh membuat asal tindakan ini.
-gamut.offers.deleteForm.cancelButton,,No keep this form,Älä poista tätä lomaketta,"Nej, behåll detta formulär",Jangan simpan borang ini
-gamut.offers.deleteForm.deleteButton,,Yes delete this form,Kyllä haluan poistaa tämän lomakkeen,"Ja, ta bort detta formulär",Ya padamkan borang ini
-// -------------------- GAMUT INBOX ---------------------------,,,,#VALUE!,
-gamut.inbox.title,,Inbox,Saapuneet,Inkorg,Peti masuk
-gamut.inbox.subtitle,,Messages and files related to your forms,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden och filer relaterade till dina formulär,Mesej dan fail yang berkaitan dengan borang anda
-gamut.inbox.sender,,Sender,Lähettäjä,Avsändare,Penghantar
-gamut.inbox.files,,Files,Tiedostot,Filer,Fail
-gamut.inbox.messages,,Messages: {count},Viestejä: {count],Meddelanden: {count},Mesej: {count}
-gamut.inbox.messages.title,,Messages,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden,Mesej
-gamut.inbox.formName,,Form name,Lomakkeen nimi,Formnamn,Nama borang
-gamut.inbox.message-preview,,Message preview,Viestin esikatselu,Förhandsgranskning av meddelande,Pratonton mesej
-gamut.inbox.message-date,,Date,Päivämäärä,Datum,Tarikh
-gamut.inbox.subjectAttachment.title,,Attachments,Liitteet,Bilagor,Lampiran
-gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,Skriv ditt meddelande,Sila tulis mesej anda
-gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada
-gamut.inbox.newMessage.sendNew,,Send a new message,Lähetä uusi viesti,Skicka ett nytt meddelande,Hantar mesej baharu
-gamut.inbox.newMessage.replyingTo.subject,,Subject,Aihe,Ämne,Subjek
-gamut.inbox.newMessage.notAllowed1,,Messages are not enabled.,Viestit eivät ole käytössä.,Messages are not enabled.,Mesej tidak didayakan.
-gamut.inbox.newMessage.notAllowed2,,We apologize for the inconvenience.,Pahoittelemme häiriötä.,Vi ber om ursäkt för besväret.,Kami memohon maaf atas kesulitan ini.
-gamut.inbox.newMessage.notAllowed.questions,,Please contact us by phone or email with further questions.,"Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.",Kontakta oss gärna via telefon eller e-post med ytterligare frågor.,Sila hubungi kami melalui telefon atau e-mel untuk pertanyaan lanjut.
-gamut.inbox.noMessages,,No messages,Ei viestejä,Inga meddelanden,Tiada mesej
-gamut.subjectMessage.title,,Messages regarding {subject},Viestit koskien {subject},Meddelanden om {ämne},Mesej berkenaan {subject}
-// -------------------- GAMUT RESERVATIONS ---------------------,,,,#VALUE!,
-gamut.bookings.title,,Calendar reservations,Kalenterivaraukset,Kalenderreservationer,Tempahan kalendar
-gamut.bookings.subtitle,,Manage your existing appointments and reservations here,Hallinnoi kalenterivarauksiasi,Hantera dina befintliga möten och bokningar här,Uruskan janji temu dan tempahan anda yang sedia ada di sini
-gamut.bookings.serviceName,,Name of service,Palvelun nimi,Tjänstens namn,Nama perkhidmatan
-gamut.bookings.bookingDateTime,,Scheduled date and time,Varaa aika,Schemalagt datum och tid,Tarikh dan masa yang dijadualkan
-gamut.bookings.deleteBooking.title,,Cancel calendar reservation,Peruuta aika,Avboka kalenderreservation,Batalkan tempahan kalendar
-gamut.bookings.deleteBooking.content,,Are you sure you want to cancel your reservation? You can not undo this action.,Haluatko varmasti peruuttaa varauksesi? Et voi kumota tätä toimintoa.,Är du säker på att du vill avboka din bokning? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu membatalkan tempahan anda? Anda tidak boleh membuat asal tindakan ini.
-gamut.bookings.deleteBooking.cancelButton,,No keep my reservation,Ei haluan pitää varaukseni,"Nej, behåll min reservation",Jangan simpan tempahan saya
-gamut.bookings.deleteBooking.deleteButton,,Yes cancel this reservation,Kyllä haluan peruuttaa varauksen,Ja avboka denna reservation,Ya batalkan tempahan ini
-// -------------------- USER OVERVIEW BUTTONS -----------------,,,,#VALUE!,
-gamut.userOverview.services.detail.title,,Find services and start forms,Etsi palveluja ja lomakkeita,Hitta tjänster och startformulär,Cari perkhidmatan dan mulakan borang
-gamut.userOverview.buttons.logout-representative,,Log out as representative,Kirjaudu ulos edustajana,Logga ut som representant,Log keluar sebagai wakil
-gamut.userOverview.buttons.login-representative,,Log in as representative,Kirjaudu sisään edustajana,Logga in som representant,Log masuk sebagai wakil
-gamut.userOverview.buttons.logout,,Log out,Kirjaudu ulos edustajana,Logga ut,Log keluar
-gamut.userOverview.buttons.logout-company,,Log out as company,Kirjaudu ulos yrityksen edustajana,Logga ut som företag,Log keluar sebagai syarikat
-gamut.userOverview.buttons.login-company,,Log in as company,Kirjaudu sisään yrityksen edustajana,Logga in som företag,Log masuk sebagai syarikat
-gamut.userOverview.buttons.user-overview,,User overview home,Käyttäjän tiedot,Användaröversikt hem,Rumah gambaran keseluruhan pengguna
-gamut.userOverview.buttons.services,,Find services and start forms,Etsi palveluja ja lomakkeita,Hitta tjänster och startformulär,Cari perkhidmatan dan mulakan borang
-gamut.userOverview.buttons.requests-in-progress,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai
-gamut.userOverview.buttons.awaiting-decision,,Forms awaiting decision,"Lomakkeet, jotka odottavat käsittelyä",Blanketter som väntar på beslut,Borang menunggu keputusan
-gamut.userOverview.buttons.with-decision,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad
-gamut.userOverview.buttons.inbox,,Inbox,Viestit,Inkorg,Peti masuk
-gamut.userOverview.buttons.bookings,,Calendar reservations,Kalenterivaraukset,Kalenderreservationer,Tempahan kalendar
-// -------------------- USER OVERVIEW --------------------------,,,,#VALUE!,
-gamut.userOverview.home,,User overview home,Käyttäjän tiedot,Användaröversikt hem,Rumah gambaran keseluruhan pengguna
-gamut.userOverview.welcome.title,,Welcome to my Overview,Tervetuloa minun tietoihin,Välkommen till min översikt,Selamat datang ke Gambaran Keseluruhan saya
-gamut.userOverview.unfinished-forms.detail.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai
-gamut.userOverview.waiting-forms.detail.title,,Forms awaiting decision,"Lomakkeet, jotka odottavat käsittelyä",Blanketter som väntar på beslut,Borang menunggu keputusan
-gamut.userOverview.decided-forms.detail.title,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad
-gamut.userOverview.inbox.detail.title,,Inbox,Viestit,Inkorg,Peti masuk
-gamut.userOverview.bookings.detail.title,,Calendar bookings,Kalenteri varaukseni,Kalenderbokningar,Tempahan kalendar
-gamut.userOverview.personal-info.detail.title,,My personal info,Minum tiedot,Min personliga information,Maklumat peribadi saya
-gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail serta menempah janji temu dengan kami
-// -------------------- SERVICES SELECT -------------------------,,,,#VALUE!,
-gamut.services.subtitle,,Select or search for a service to view available forms,Valitse tai etsi palvelu nähdäksesi saatavilla olevat lomakkeet,Välj eller sök efter en tjänst för att se tillgängliga formulär,Pilih atau cari perkhidmatan untuk melihat borang yang tersedia
-// -------------------- FEEDBACK SELECT -------------------------,,,,#VALUE!,
-gamut.feedback.table.sorted.desc,,Sorted descending,Lajiteltu laskevassa järjestyksessä,Sorterat fallande,Diisih menurun
-gamut.feedback.table.sorted.asc,,Sorted ascending,Lajiteltu nousevassa järjestyksessä,Sorterat stigande,Diisih menaik
-gamut.feedback.table.topic,,Topic,Aihe,Ämne,Topik
-gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik
-gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,Tarikh
-gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas
-gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk
-gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,Tiada data
-gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?,Var detta svar till hjälp?,Adakah jawapan ini membantu?
-gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu"
-gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu
-gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,Sinun on kirjauduttava sisään arvioidaksesi palautetta,Du måste vara inloggad för att betygsätta feedback,Anda mesti log masuk untuk menilai maklum balas
-gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat datum,Tarikh dikemas kini
-gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan
-gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi
-// ----------------------- DIALOB REVIEW -------------------------,,,,,
-dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang
-dialob.review.button.close,,Close,Sulje,Stäng,Tutup
+ID,Info,en,fi,sv,my,bs
+booleanValue.true,,Yes,Kyllä,Ja,Ya,Da
+booleanValue.false,,No,Ei,Inga,Tidak,Ne
+// -------------------- START CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,,
+cust.inbox.message.sender-name.org-user,,Info desk,Info,Infodisk,Meja maklumat,Info pult
+cust.phone,,Phone: 123 456 7890,Puhelin: 12345,Telefon: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890
+cust.email,,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com
+// -------------------- CUSTOMER HEADER --------------------------,,,,#VALUE!,,
+header.userIdentity.label,,You are logged in as,Kirjauduttu käyttäjänä,Inloggad som,Sedang masuk sebagai,Prijavljeni ste kao
+// -------------------- CUSTOMER FOOTER --------------------------,,,,#VALUE!,,
+footer.column2.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
+footer.column2.subtitle,,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan,Open-source platforma za usluge digitalizacije
+footer.column3.title,,Quick links,Pikalinkkejä,Snabblänkar,Pautan pantas,Brzi linkovi
+footer.column3.link.acessibility,,Accessibility statement,Saavutettavuus seloste,Tillgänglighetsförklaring,Kenyataan kebolehcapaian,Izjava o pristupačnosti
+footer.column3.link.dataProtection,,Data protection,Tietosuoja,Dataskydd,Perlindungan data,Zaštita podataka
+footer.column3.link.feedback,,Feedback and development ideas,Palautteet,Feedback och utvecklingsidéer,Maklum balas dan idea pembangunan,Povratne informacije i razvojne ideje
+footer.column3.link.siteInfo,,Information about the site,Lisätieto tästä sivustosta,Information om webbplatsen,Maklumat mengenai tapak,Informacije o stranici
+footer.column3.link.newsletter,,Subscribe to the newsletter,Tilaa uutiskirje,Prenumerera på nyhetsbrevet,Langgan surat berita,Pretplatite se na newsletter
+footer.column4.title,,DigiExpress info,DigiExpress info,DigiExpress info,Maklumat DigiExpress,DigiExpress info
+footer.column4.email,,Email: info@digiExpress.io,Sähköposti: info@digiExpress.io,E-post: info@digiExpress.io,E-mel: info@digiExpress.io,Email: info@digiExpress.io
+footer.column4.phone,,Phone: 123 456 7890,Phone: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890,Telefon: 123 456 7890
+footer.column4.address,,Visiting address: 1234 Any Street MyTown,"Käyntiosoite: 1234 Suomentie 4, Suomi",Besöksadress: 1234 Any Street MyTown,Alamat lawatan: 1234 Any Street MyTown,Adresa za posjetu: 1234 Any Street MyTown
+footer.column4.postalCode,,Postal code: 1234,Postinumero: 1234,Postnummer: 1234,Poskod: 1234,Poštanski broj: 1234
+// --------------------END CUSTOMER-SPECIFIC --------------------------,,,,#VALUE!,,
+// ------------------- GAMUT GENERAL ----------------------,,,,#VALUE!,,
+gamut.forms,,Forms,Lomake,Formulär,Borang,Obrasci
+gamut.new-messages,,New messages,Uusi viesti,Nya meddelanden,Mesej baharu,Nove poruke
+gamut.services,,Services,Palvelut,Tjänster,Perkhidmatan,Usluge
+gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,Tempahan kalendar,Kalendarske rezervacije
+gamut.noValueIndicator,,-,-,-,-,-
+gamut.noValueIndicatorColon,,,,,,
+gamut.textSeparator,,,,,,
+gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan,Učitavanje sadržaja
+// ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,,
+gamut.public.servicesHome,,Services home,Palvelut pääsivu,Tjänster hem,Perkhidmatan rumah,Usluge
+gamut.public.forms.summary.button.backToServicesHome,,Back to Services Home,Takaisin Palvelut pääsivulle,Tillbaka till Tjänster Hem,Kembali ke Laman Utama Perkhidmatan,Povratak na usluge
+// ------------------- GAMUT GENERAL BUTTONS --------------,,,,#VALUE!,,
+gamut.buttons.login,,Log in,Kirjaudu sisään,Logga in,Log masuk,Prijava
+gamut.buttons.logout,,Log out,Kirjaudu ulos,Logga ut,Log keluar,Odjava
+gamut.buttons.search,,Search,Hae,Söka,Cari,Pretraga
+gamut.buttons.cancel,,Cancel,Peruuta,Avboka,Batal,Otkaži
+gamut.buttons.select,,Select,Valitse,Välja,Pilih,Odaberi
+gamut.buttons.close,,Close,Sulje,Nära,Tutup,Zatvori
+gamut.buttons.reply,,Reply,Vastaa,Svar,Balas,Odgovori
+gamut.buttons.delete,,Delete,Poista,Radera,Padam,Izbriši
+gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami,Naše usluge
+gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran,Dodaj prilog
+gamut.buttons.sort-last-modified.contracts,,Sort by last modified,Sort by last modified,,,Sortiraj prema posljednjoj izmjeni
+gamut.buttons.sort-last-modified.offers,,Sort by last modified,Sort by last modified,,,
+gamut.buttons.sort-last-modified.inbox,,Sort by last modified,Sort by last modified,,,
+,,,,,,
+// ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,,
+gamut.locale.en,,English,Englanti,Engelska,Inggeris,Engleski
+gamut.locale.fi,,Finnish,Suomi,Finska,Bahasa Finland,Finski
+gamut.locale.sv,,Swedish,Ruotsi,Svenska,Bahasa Sweden,Švedski
+gamut.locale.my,,Malay,Malaiji,Malajisk,Bahasa Melayu,Malajski
+gamut.locale.bs,,Bosnian,,,,Bosanski
+// ------------------- GAMUT SEARCH -----------------------,,,,#VALUE!,,
+gamut.search.placeholder,,Search our services,Hae palvelua,Sök i våra tjänster,Cari perkhidmatan kami,Pretraga naših usluga
+gamut.search.popover.title,,Search our site,Hae sivustolta,Sök på vår sida,Cari tapak kami,Pretraga naše stranice
+gamut.search.popover.input.placeholder,,What are you looking for?,Mitä etsi,Vad letar du efter?,Apa yang anda cari?,Unesi pojam za pretragu
+gamut.search.popover.result.chip.form,,Form,Lomake,Form,Borang,Obrasci
+gamut.search.popover.result.chip.link,,Link,Linkki,Länk,Pautan,Link
+gamut.search.popover.result.chip.phone,,Phone,Puhelin,Telefon,Telefon,Telefon
+gamut.search.popover.result.chip.content,,Content,Sisältö,Innehåll,Kandungan,Sadržaj
+gamut.search.popover.allForms,,All forms,Kaikki lomakkeet,Alla former,Semua bentuk,Sve forme
+gamut.search.popover.allPhones,,All phone numbers,Kaikki puhelin numerot,Alla telefonnummer,Semua nombor telefon,Svi brojevi telefona
+gamut.search.popover.allLinks,,All links,Kaikki linkit,Alla länkar,Semua pautan,Svi linkovi
+gamut.search.popover.allServices,,All services,Kaikki palvelut,Alla tjänster,Semua perkhidmatan,Sve usluge
+gamut.search.results.allResults,,All results,Kaikki hakutulokset,Alla sökresultat,Semua keputusan,Svi rezultati
+gamut.search.results.noResults,,No results,Ei hakutuloksia,Inga sökträffar,Tiada hasil,Nema rezultata
+gamut.search.results.serviceLinks,,Services,Palvelut,Tjänster,Perkhidmatan,Usluge
+gamut.search.results.formLinks,,Forms,Lomakkeet,Formulär,Borang,Obrasci
+gamut.search.results.phoneLinks,,Phones,Puhelin,Telefon,Telefon,Telefoni
+gamut.search.results.internalExternalLinks,,Links,Linkit,Hyperlänkar,Pautan,Linkovi
+gamut.search.results.internalLinks,,Links,Linkit,Hyperlänkar,Pautan,Linkovi
+gamut.search.results.externalLinks,,External links,Ulkoiset linkit,Externa länkar,Pautan luar,Eksterni linkovi
+gamut.search.results.otherForms,,Other forms,Other forms,,,Ostali obrasci
+// ------------------- GAMUT ARTICLES  -----------------------,,,,#VALUE!,,
+gamut.article.pagelinks.forms.title,,Forms,Lomakkeet,Formulär,Borang,Obrasci
+gamut.article.pagelinks.otherlinks.title,,Links,Linkit,Länkar,Pautan,Linkovi
+// -------------------- GAMUT FORMS ---------------------------,,,,#VALUE!,,
+gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama,Ime
+gamut.forms.taskRefId,,Reference Id,Viitetunnus,,,Referentni broj
+gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
+gamut.forms.status,,Status,Tila,Status,Status,Status
+gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
+gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi,Obrada počinje uskoro
+gamut.forms.status.COMPLETED,,Completed,Valmis käsittelyyn,Avslutad,Selesai,Završeno
+gamut.forms.status.REJECTED,,Rejected,Poistettu,Avvisad,Ditolak,Odbijeno
+gamut.forms.lastModified,,Last modified,Viimeksi muutettu,Senast ändrad,Terakhir diubah suai,Zadnje izmijenjeno
+gamut.forms.files,,Files,Liitteet,Filer,Fail,Datoteke
+gamut.forms.messages,,Messages,Viestit,Meddelanden,Mesej,Poruke
+gamut.forms.page.subtitle,,Next:{nextPageTitle},Seuraava:{nextPageTitle},Nästa:{nextPageTitle},Seterusnya:{nextPageTitle},Sljedeće:{nextPageTitle}
+gamut.forms.page.subtitle.complete,,Next: Complete,Seuraava: Valmis,Nästa: Komplett,Seterusnya: Lengkap,Sljedeće: Završi
+gamut.forms.page.stepper,,{start} of {end},{start} of {end},{start} av {slut},{start} of {end},{start] od {end}
+gamut.forms.page.selection.key,,Step {stepNumber} out of {totalSteps},Step {stepNumber} out of {totalSteps},Steg {stepNumber} av {totalSteps},Langkah {stepNumber} daripada {totalSteps},Korak {stepNumber} od {totalSteps}
+gamut.forms.page.next,,Next,Seuraava,Nästa,Seterusnya,Sledeći
+gamut.forms.page.complete,,Complete,Valmis,Komplett,Lengkap,Završi
+gamut.forms.page.cancel,,Cancel,Cancel,Cancel,,Otkaži
+gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!,Dobrodošli!
+gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini,Za popunjavanje obrasca potrebno je biti prijavljen
+gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Hello {userName}!,,,Zdravo {userName}!
+gamut.forms.filling.authenticated_and_proceed,,Please click below to start the form,Please click below to start the form,,,Kliknite ispod da pokrenete obrazac
+gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini,Popunjavanje obrasca započinje
+gamut.forms.filling.login-then-start.button,,Log in now,Log in now,Log in now,Log in now,Prijavi se sada
+gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi,Obrazac se automatski sprema tokom popunjavanja
+gamut.forms.filling.start.button,,Continue to form,Jatka lomakkeella,Fortsätt att bilda,Teruskan membentuk,Nastavak na obrazac
+gamut.forms.filling.cancel.button,,Cancel,Peruuta,Avboka,Batal,Otkaži
+gamut.forms.filling.summary,,You have completed the form,Lomake on valmis,Du har fyllt i formuläret,Anda telah melengkapkan borang,Obrazac je uspješno popunjen
+gamut.forms.filling.summary.thank-you,,Thank you!,Kiitos!,Tack!,terima kasih!,Hvala!
+gamut.forms.filling.summary.info1,,Our staff has been notified of your request and will begin processing soon.,Saat ilmoituksen kun palvelupyyntös on otettu käsittelyyn,Vår personal har underrättats om din förfrågan och kommer att börja behandla snart.,Kakitangan kami telah dimaklumkan tentang permintaan anda dan akan mula memproses tidak lama lagi.,Osoblje je obaviješteno o zahtjevu i uskoro će početi s obradom.
+gamut.forms.filling.summary.info2,,Be sure to check My Overview regularly for,Muistahan välillä tarkistaa Minun asiat osiota,Se till att kontrollera Min översikt regelbundet för,Pastikan anda menyemak Gambaran Keseluruhan Saya dengan kerap untuk,Preporučuje se redovno provjeravati Moj pregled
+gamut.forms.filling.summary.info3,,Form processing status updates,Lomaakkeen käsittelyn tila,Statusuppdateringar för formulärbearbetning,Kemas kini status pemprosesan borang,Ažuriranje statusa obrade obrasca
+gamut.forms.filling.summary.info4,,New messages from our staff regarding your request,Uudet koskien pyyntöäsi,Nya meddelanden från vår personal angående din förfrågan,Mesej baharu daripada kakitangan kami mengenai permintaan anda,Nove poruke osoblja u vezi sa zahtjevom
+gamut.forms.filling.summary.info5,,New files we have sent to you or requested from you,"Uudet tiedostot, jotka olemme toimittaneet sinulle tai pyytäneet sinulta",Nya filer som vi har skickat till dig eller begärt av dig,Fail baharu yang telah kami hantar kepada anda atau diminta daripada anda,Nove poslane ili zatražene datoteke
+gamut.forms.filling.summary.info6,,Still have questions? Contact us by phone at xxxx-xxxx with questions,Jäikö kysyttävää? Ota yhteyttä puhelimitse numeroon xxxx-xxxx kysymyksiä varten.,Har du fortfarande frågor? Kontakta oss per telefon på xxxx-xxxx med frågor,Masih ada soalan? Hubungi kami melalui telefon di xxxx-xxxx dengan pertanyaan,Za dodatna pitanja moguće je kontaktirati telefonom na xxxx-xxxx
+gamut.forms.summary.button.back-to-overview,,Back to My Overview,Takaisin Minun Asiat sivulle,Tillbaka till Min översikt,Kembali ke Gambaran Keseluruhan Saya,Povratak na Moj pregled
+gamut.forms.answer.date.placeholder.day,,dd,pp,dd,hh,dd
+gamut.forms.answer.date.placeholder.month,,mm,kk,mm,bb,mm
+gamut.forms.answer.date.placeholder.year,,yyyy,vvvv,åååå,tttt,gggg
+gamut.forms.answer.date.placeholder.hour,,hh,tt,hh,jj,ss
+gamut.forms.answer.date.placeholder.minute,,mm,mm,mm,mm,mm
+gamut.forms.answer.boolean.yes,,Yes,Kyllä,Ja,Ya,Da
+gamut.forms.answer.boolean.no,,No,Ei,Inga,Tidak,Ne
+gamut.forms.unfinished.none,,You do not have any unfinished forms,Sinulla ei ole keskeneräisiä lomakkeita,Du har inga oavslutade formulär,Anda tidak mempunyai sebarang borang yang belum selesai,Nema nedovršenih obrazaca
+gamut.forms.awaitingDecision.none,,You do not have any forms awaiting a decision,Sinulla ei ole keskeneräisiä asiointipyyntöjä,Du har inga blanketter som väntar på beslut,Anda tidak mempunyai sebarang borang menunggu keputusan,Nema obrazaca koji čekaju odluku
+gamut.forms.page.selection.start,,Start,Aloita,Start,Mulakan,Početak
+gamut.forms.page.selection.complete,,Complete,Valmis,Komplett,Lengkap,Kraj
+gamut.forms.unfinished.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
+gamut.forms.unfinished.subtitle,,Processing has not started - Please select a form to continue filling or cancel,Käsittelyä ei ole aloitettu - Valitse lomake jatkaaksesi täyttämistä tai peruuta,Bearbetningen har inte startat - Välj ett formulär för att fortsätta fylla eller avbryta,Pemprosesan belum bermula - Sila pilih borang untuk terus mengisi atau membatalkan,"Obrada nije započeta - Potrebno je odabrati formu za nastavak popunjavanja, ili otkazati"
+gamut.forms.awaitingDecision.title,,Forms awaiting decision,"Lomakkeet, jotka odottavast päätöstä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
+gamut.forms.awaitingDecision.subtitle,,Processing has begun - Our staff is working on your request,Palvelupyyntösi on otettu käsittelyyn,Behandlingen har påbörjats - Vår personal arbetar med din förfrågan,Pemprosesan telah bermula - Kakitangan kami sedang mengusahakan permintaan anda,Obrada je započeta - Naše osoblje radi na ovom zahtjevu
+gamut.forms.withDecision.title,,Forms with final decision,Palvelupyyntösi jotka odottavat päätöstä,Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa konačnom odlukom
+gamut.forms.withDecision.subtitle,,Processing is complete and finalised,Palvelupyyntösi on valmis,Bearbetningen är klar och slutförd,Pemprosesan selesai dan dimuktamadkan,Obrada je završena
+gamut.offers.deleteForm.title,,Delete unfinished form,Poista keskeneräiset lomakkeet,Ta bort oavslutat formulär,Padamkan borang yang belum selesai,Izbrisati nedovršene obrasce
+gamut.offers.deleteForm.content,,Are you sure you want to delete this form? You can not undo this action.,Haluatko varmasti poistaa tämän lomakkeen? Et voi kumota tätä toimintoa.,Är du säker på att du vill ta bort det här formuläret? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu memadamkan borang ini? Anda tidak boleh membuat asal tindakan ini.,Želiš li izbrisati ovu formu? Ova radnja se ne može poništiti.
+gamut.offers.deleteForm.cancelButton,,No keep this form,Älä poista tätä lomaketta,"Nej, behåll detta formulär",Jangan simpan borang ini,"Ne, zadrži ovaj obrazac"
+gamut.offers.deleteForm.deleteButton,,Yes delete this form,Kyllä haluan poistaa tämän lomakkeen,"Ja, ta bort detta formulär",Ya padamkan borang ini,"Da, izbriši ovaj obrazac"
+// -------------------- GAMUT INBOX ---------------------------,,,,#VALUE!,,
+gamut.inbox.title,,Inbox,Saapuneet,Inkorg,Peti masuk,Dolazne poruke
+gamut.inbox.subtitle,,Messages and files related to your forms,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden och filer relaterade till dina formulär,Mesej dan fail yang berkaitan dengan borang anda,Poruke i datoteke povezane sa obrascima
+gamut.inbox.sender,,Sender,Lähettäjä,Avsändare,Penghantar,Pošiljalac
+gamut.inbox.files,,Files,Tiedostot,Filer,Fail,Datoteke
+gamut.inbox.messages,,Messages: {count},Viestejä: {count],Meddelanden: {count},Mesej: {count},Poruke: {count}
+gamut.inbox.messages.title,,Messages,Viestit ja tiedostot liittyen lomakkeisiin,Meddelanden,Mesej,Poruke
+gamut.inbox.formName,,Form name,Lomakkeen nimi,Formnamn,Nama borang,Naziv obrasca
+gamut.inbox.message-preview,,Message preview,Viestin esikatselu,Förhandsgranskning av meddelande,Pratonton mesej,Pregled poruke
+gamut.inbox.message-date,,Date,Päivämäärä,Datum,Tarikh,Datum
+gamut.inbox.subjectAttachment.title,,Attachments,Liitteet,Bilagor,Lampiran,Prilozi
+gamut.inbox.newMessage.placeholder,,Please write your message,Kirjoita viestisi,Skriv ditt meddelande,Sila tulis mesej anda,Unesi poruku
+gamut.inbox.newMessage.replyingTo,,Replying to,Vastaa viestiin,Svarar på,Membalas kepada,Odgovor na
+gamut.inbox.newMessage.sendNew,,Send a new message,Lähetä uusi viesti,Skicka ett nytt meddelande,Hantar mesej baharu,Pošalji novu poruku
+gamut.inbox.newMessage.replyingTo.subject,,Subject,Aihe,Ämne,Subjek,Predmet
+gamut.inbox.newMessage.notAllowed1,,Messages are not enabled.,Viestit eivät ole käytössä.,Messages are not enabled.,Mesej tidak didayakan.,Ovaj obrazac je uspješno obrađen i slanje novih poruka je onemogućeno.
+gamut.inbox.newMessage.notAllowed2,,We apologize for the inconvenience.,Pahoittelemme häiriötä.,Vi ber om ursäkt för besväret.,Kami memohon maaf atas kesulitan ini.,Izvinjavamo se zbog neugodnosti.
+gamut.inbox.newMessage.notAllowed.questions,,Please contact us by phone or email with further questions.,"Ota meihin yhteyttä puhelimitse tai sähköpostitse, jos sinulla on lisäkysymyksiä.",Kontakta oss gärna via telefon eller e-post med ytterligare frågor.,Sila hubungi kami melalui telefon atau e-mel untuk pertanyaan lanjut.,Za dodatna pitanja moguće je kontaktirati telefonom ili e-mailom.
+gamut.inbox.noMessages,,No messages,Ei viestejä,Inga meddelanden,Tiada mesej,Nema poruka
+gamut.inbox.newMessageFrom,,New message from,New message from,,,Nova poruka od
+gamut.subjectMessage.title,,Messages regarding {subject},Viestit koskien {subject},Meddelanden om {ämne},Mesej berkenaan {subject},Poruke o {subject}
+// -------------------- GAMUT RESERVATIONS ---------------------,,,,#VALUE!,,
+gamut.bookings.title,,Calendar reservations,Kalenterivaraukset,Kalenderreservationer,Tempahan kalendar,Kalendarske rezervacije
+gamut.bookings.subtitle,,Manage your existing appointments and reservations here,Hallinnoi kalenterivarauksiasi,Hantera dina befintliga möten och bokningar här,Uruskan janji temu dan tempahan anda yang sedia ada di sini,Upravljanje postojećim terminima i rezervacijama ovdje
+gamut.bookings.serviceName,,Name of service,Palvelun nimi,Tjänstens namn,Nama perkhidmatan,Naziv usluge
+gamut.bookings.bookingDateTime,,Scheduled date and time,Varaa aika,Schemalagt datum och tid,Tarikh dan masa yang dijadualkan,Zakazani datum i vrijeme
+gamut.bookings.deleteBooking.title,,Cancel calendar reservation,Peruuta aika,Avboka kalenderreservation,Batalkan tempahan kalendar,Otkazivanje rezervacije
+gamut.bookings.deleteBooking.content,,Are you sure you want to cancel your reservation? You can not undo this action.,Haluatko varmasti peruuttaa varauksesi? Et voi kumota tätä toimintoa.,Är du säker på att du vill avboka din bokning? Du kan inte ångra den här åtgärden.,Adakah anda pasti mahu membatalkan tempahan anda? Anda tidak boleh membuat asal tindakan ini.,Želite li otkazati ovu rezervaciju? Ova radnja se ne može poništiti.
+gamut.bookings.deleteBooking.cancelButton,,No keep my reservation,Ei haluan pitää varaukseni,"Nej, behåll min reservation",Jangan simpan tempahan saya,"Ne, zadrži moju rezervaciju"
+gamut.bookings.deleteBooking.deleteButton,,Yes cancel this reservation,Kyllä haluan peruuttaa varauksen,Ja avboka denna reservation,Ya batalkan tempahan ini,"Da, otkaži ovu rezervaciju"
+// -------------------- USER OVERVIEW BUTTONS -----------------,,,,#VALUE!,,
+gamut.userOverview.services.detail.title,,Find services and start forms,Etsi palveluja ja lomakkeita,Hitta tjänster och startformulär,Cari perkhidmatan dan mulakan borang,Pronađi uslugu i pokreni obrazac
+gamut.userOverview.buttons.logout-representative,,Log out as representative,Kirjaudu ulos edustajana,Logga ut som representant,Log keluar sebagai wakil,Odjava predstavnika
+gamut.userOverview.buttons.login-representative,,Log in as representative,Kirjaudu sisään edustajana,Logga in som representant,Log masuk sebagai wakil,Prijava predstavnika
+gamut.userOverview.buttons.logout,,Log out,Kirjaudu ulos edustajana,Logga ut,Log keluar,Odjava
+gamut.userOverview.buttons.logout-company,,Log out as company,Kirjaudu ulos yrityksen edustajana,Logga ut som företag,Log keluar sebagai syarikat,Odjava kompanije
+gamut.userOverview.buttons.login-company,,Log in as company,Kirjaudu sisään yrityksen edustajana,Logga in som företag,Log masuk sebagai syarikat,Prijava kompanije
+gamut.userOverview.buttons.user-overview,,User overview home,Käyttäjän tiedot,Användaröversikt hem,Rumah gambaran keseluruhan pengguna,Moj pregled
+gamut.userOverview.buttons.services,,Find services and start forms,Etsi palveluja ja lomakkeita,Hitta tjänster och startformulär,Cari perkhidmatan dan mulakan borang,Pronađi uslugu i pokreni obrazac
+gamut.userOverview.buttons.requests-in-progress,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
+gamut.userOverview.buttons.awaiting-decision,,Forms awaiting decision,"Lomakkeet, jotka odottavat käsittelyä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
+gamut.userOverview.buttons.with-decision,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa konačnom odlukom
+gamut.userOverview.buttons.inbox,,Inbox,Viestit,Inkorg,Peti masuk,Dolazne poruke
+gamut.userOverview.buttons.bookings,,Calendar reservations,Kalenterivaraukset,Kalenderreservationer,Tempahan kalendar,Kalendarske rezervacije
+// -------------------- USER OVERVIEW --------------------------,,,,#VALUE!,,
+gamut.userOverview.home,,User overview home,Käyttäjän tiedot,Användaröversikt hem,Rumah gambaran keseluruhan pengguna,Moj pregled
+gamut.userOverview.welcome.title,,Welcome to my Overview,Tervetuloa minun tietoihin,Välkommen till min översikt,Selamat datang ke Gambaran Keseluruhan saya,Dobrodošli na Moj pregled
+gamut.userOverview.unfinished-forms.detail.title,,Unfinished forms,Keskeneräiset lomakkeet,Oavslutade former,Borang yang belum selesai,Nedovršeni obrasci
+gamut.userOverview.waiting-forms.detail.title,,Forms awaiting decision,"Lomakkeet, jotka odottavat käsittelyä",Blanketter som väntar på beslut,Borang menunggu keputusan,Obrasci koji čekaju na odluku
+gamut.userOverview.decided-forms.detail.title,,Forms with final decision,"Lomakkeet, jotka on käsitelty",Blanketter med slutligt beslut,Borang dengan keputusan muktamad,Obrasci sa odlukom
+gamut.userOverview.inbox.detail.title,,Inbox,Viestit,Inkorg,Peti masuk,Dolazne poruke
+gamut.userOverview.bookings.detail.title,,Calendar bookings,Kalenteri varaukseni,Kalenderbokningar,Tempahan kalendar,Kalendarske rezervacije
+gamut.userOverview.personal-info.detail.title,,My personal info,Minum tiedot,Min personliga information,Maklumat peribadi saya,Moje lične informacije
+gamut.userOverview.welcome.desc,,From here you can search and apply for our services view the status of your applications send messages and files and book appointments with us,"Täältä voit etsiä ja hakea palveluitamme, tarkastella hakemustesi tilaa, lähettää viestejä ja tiedostoja sekä varata aikoja kanssamme.",Härifrån kan du söka och ansöka om våra tjänster se status för dina applikationer skicka meddelanden och filer och boka möten med oss,Dari sini anda boleh mencari dan memohon perkhidmatan kami melihat status aplikasi anda menghantar mesej dan fail serta menempah janji temu dengan kami,"Odavde je moguće pretraživati i prijaviti se za naše usluge, pregledati status prijava, slati poruke i datoteke, te rezervisati termine."
+// -------------------- SERVICES SELECT -------------------------,,,,#VALUE!,,
+gamut.services.subtitle,,Select or search for a service to view available forms,Valitse tai etsi palvelu nähdäksesi saatavilla olevat lomakkeet,Välj eller sök efter en tjänst för att se tillgängliga formulär,Pilih atau cari perkhidmatan untuk melihat borang yang tersedia,Odaberi ili pretraži usluge za pregled dostupnih obrazaca
+// -------------------- FEEDBACK SELECT -------------------------,,,,#VALUE!,,
+gamut.feedback.table.sorted.desc,,Sorted descending,Lajiteltu laskevassa järjestyksessä,Sorterat fallande,Diisih menurun,Sortirano opadajuće
+gamut.feedback.table.sorted.asc,,Sorted ascending,Lajiteltu nousevassa järjestyksessä,Sorterat stigande,Diisih menaik,Sortirano rastuće
+gamut.feedback.table.topic,,Topic,Aihe,Ämne,Topik,Tema
+gamut.feedback.table.subtopic,,Sub topic,Aliaihe,Underämne,Sub topik,Podtema
+gamut.feedback.table.updatedOnDate,,Date,Päivämäärä,Datum,Tarikh,Datum
+gamut.feedback.table.title,,Feedback,Palaute,Feed-back,Maklum balas,Povratna informacija
+gamut.feedback.table.topicTitle,,Title,Otsikko,Titel,Tajuk,Naziv
+gamut.feedback.table.nodata,,No data,Ei tietoja,Ingen data,Tiada data,Nema podataka
+gamut.feedback.vote.title,,Was this answer helpful?,Oliko vastauksesta hyötyä?,Var detta svar till hjälp?,Adakah jawapan ini membantu?,Da li je odgovor bio od pomoći?
+gamut.feedback.vote.notHelpful,,No this was not helpful,Ei vastauksesta ei ollut apua,"Nej, detta var inte till hjälp.","Tidak, ini tidak membantu","Ne, nije bio od pomoći"
+gamut.feedback.vote.yesHelpful,,Yes this was helpful,Kyllä vastauksesta oli apua,"Ja, detta var hjälpsamt.",Ya ini membantu,"Da, bio je od pomoći"
+gamut.feedback.vote.loginReq,,You must be logged in to rate feedback,Sinun on kirjauduttava sisään arvioidaksesi palautetta,Du måste vara inloggad för att betygsätta feedback,Anda mesti log masuk untuk menilai maklum balas,Za ocjenjivanje povratne informacije potrebno je biti prijavljen
+gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat datum,Tarikh dikemas kini,Ažuriran datum
+gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan,Povratna informacija klijenta
+gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi,Odgovor organizacije
+// ----------------------- DIALOB REVIEW -------------------------,,,,,,
+dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
+dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori

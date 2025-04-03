@@ -180,7 +180,7 @@ tasks:
         collection: true
         inputs:
           event: task_events.event
-
+ 
   - select notification content:
       id: notification_content
       switch:
@@ -190,6 +190,8 @@ tasks:
         - customer notification using suomifi:
             when: "task_event_queues.queue == 'queue.task.suomifi'"
             then: suomifi_message_contents
+        - other cases:
+            then: end
 
   - suomifi message contents:
       id: suomifi_message_contents
@@ -371,7 +373,7 @@ tasks:
   
   
   public CreateEntity queues_dt() {
-    final var name = "task_event_queues";
+    final var name = "event_queues";
      final var commands = Arrays.asList(
         ImmutableAstCommand.builder().type(AstCommandValue.SET_NAME).value(name).build(),
         ImmutableAstCommand.builder().type(AstCommandValue.SET_HIT_POLICY).value("ALL").build(),

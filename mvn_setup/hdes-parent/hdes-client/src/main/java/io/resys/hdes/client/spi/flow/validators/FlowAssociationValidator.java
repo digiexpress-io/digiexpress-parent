@@ -114,7 +114,7 @@ public class FlowAssociationValidator {
             }
             taskInputs.remove(input.getName());
             unusedInputs.remove(taskInput.getDataType().getName());
-          } else {
+          } else if(input.isRequired()) {
             error(entry,
                 taskModel.getRef().getInputsNode() == null ? taskModel.getRef().getStart() : taskModel.getRef().getInputsNode().getStart(),
                 taskModel.getRef().getInputsNode() == null ? taskModel.getRef().getStart() : taskModel.getRef().getInputsNode().getSource().getValue().length(),

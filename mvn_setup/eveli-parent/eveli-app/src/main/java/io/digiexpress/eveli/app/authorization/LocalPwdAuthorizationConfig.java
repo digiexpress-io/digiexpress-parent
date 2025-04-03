@@ -27,20 +27,26 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
+import io.digiexpress.eveli.app.authentication.AuthenticationConfigFakeUser;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.CrmClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
 
 @Configuration
-public class AuthorizationConfig {
+@Profile("local-pwd")
+public class LocalPwdAuthorizationConfig {
 
 //Worker security filter
  @Bean
- @Profile("!jwt")
  public SecurityFilterChain workerSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -61,7 +67,6 @@ public class AuthorizationConfig {
  
  // Customer security filter
  @Bean
- @Profile("!jwt")
  public SecurityFilterChain portalSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -80,6 +85,23 @@ public class AuthorizationConfig {
      .build();
  }
  
+
+
+ @Bean
+ public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+   UserDetails userDetails = 
+     org.springframework.security.core.userdetails.User.withUsername("tester")
+     .password(passwordEncoder.encode("password"))
+     .roles(AuthenticationConfigFakeUser.ROLES)
+     .build();
+
+   return new InMemoryUserDetailsManager(userDetails);
+ }
+ 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
   
   @Bean
   public SpringSecurityPolicy authorization(AuthClient auth, CrmClient crm, EveliAutoConfigPermissions props) {

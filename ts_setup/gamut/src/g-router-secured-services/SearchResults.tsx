@@ -4,7 +4,7 @@ import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material'
 import {
   GLinkPhone,
   GLinkHyper,
-  GLinkFormUnlockedGrouped,
+  GLinkFormUnlockedSearchResults,
 } from '../';
 
 import { GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
@@ -49,10 +49,6 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
     search.internal.length === 0 &&
     search.external.length === 0;
 
-
-  const groupedForms = Object.values(search.groupedForms)
-
-
   return (
     <GRouterSecuredServicesSearchResultsRoot className={classes.searchResults}>
       {noResults ? (
@@ -71,43 +67,17 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             ))}
           </List>
 
-
-            {groupedForms.map((group, index) => (
-              <div key={index}>
-                {group.length > 1 && (
-                  <>
-                    <ResultsDivider searchState={search} title={group[0].linkToForm.name} className={classes.resultsDividerTitle} isHidden={Object.values(search.groupedForms).length === 0} />
-                    {group.map((form) => (
-                      <ListItem dense key={form.topic.id}>
-                        <GLinkFormUnlockedGrouped key={form.linkToForm.id} label={form.topic.name} value={form.linkToForm.name}
-                          onClick={() => { onForm(form) }}
-                        />
-                      </ListItem>
-                    ))}
-                  </>
-                )}
-              </div>
-            ))}
-
-            <ResultsDivider searchState={search} title={'gamut.search.results.otherForms'} className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
-            {groupedForms.map((group, index) => (
-              <div key={index}>
-                {group.length === 1 && (
-                  <>
-                    {group.map((form) => (
-                      <ListItem dense>
-                        <GLinkFormUnlockedGrouped
-                          key={form.linkToForm.id}
-                          label={form.linkToForm.name}
-                          value={form.linkToForm.name}
-                          onClick={() => { onForm(form) }}
-                        />
-                      </ListItem>
-                    ))}
-                  </>
-              )}
-              </div>
-            ))}
+            <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
+            {search.forms.map((form) => (
+              <ListItem dense>
+              <GLinkFormUnlockedSearchResults
+                key={form.linkToForm.id}
+                label={form.linkToForm.name}
+                value={form.linkToForm.value}
+                onClick={() => { onForm(form) }}
+              />
+            </ListItem>
+          ))}
 
             <ResultsDivider searchState={search} title='gamut.search.results.phoneLinks' isHidden={search.phones.length === 0} />
             <List dense>

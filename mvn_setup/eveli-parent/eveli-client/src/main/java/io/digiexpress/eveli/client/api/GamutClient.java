@@ -4,7 +4,7 @@ package io.digiexpress.eveli.client.api;
  * #%L
  * eveli-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package io.digiexpress.eveli.client.api;
  * #L%
  */
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;

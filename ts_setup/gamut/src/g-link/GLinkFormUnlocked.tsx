@@ -16,8 +16,8 @@ export interface GLinkFormUnlockedClasses {
 export type GLinkFormUnlockedClassKey = keyof GLinkFormUnlockedClasses;
 
 export interface GLinkFormUnlockedProps {
-  label: string;
-  value: string;
+  label: string; // topic name
+  value: string; // link name - locale based
   onClick: () => void;
   component?: GOverridableComponent<GLinkFormUnlockedProps>;
 }
@@ -52,7 +52,7 @@ export const GLinkFormUnlocked: React.FC<GLinkFormUnlockedProps> = (initProps) =
   )
 }
 
-export const GLinkFormUnlockedGrouped: React.FC<GLinkFormUnlockedProps> = (initProps) => {
+export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,

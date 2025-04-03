@@ -3,15 +3,18 @@ import React from 'react';
 import { Box, Table, TableCell, TableBody, TableHead, TableRow, IconButton, Collapse } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import MonacoReact from '@monaco-editor/react';
 
 import { FormattedMessage } from 'react-intl'
-import CodeEditor from '../wrench-code-editor';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 
 const InputSectionJson: React.FC<{ json: string, csv: string, type: Composer.DebugInputType }> = (props) => {
 
   if (props.type === "CSV") {
-    return (<CodeEditor id="debug-input" mode="json" src={props.csv} onChange={(value) => { console.log(value); }} />);
+    return (
+      <MonacoReact key="debug-input"
+        value={props.csv}
+        defaultLanguage='json'/>);
   }
 
   let entity: object | undefined;
@@ -31,7 +34,7 @@ const InputSectionJson: React.FC<{ json: string, csv: string, type: Composer.Deb
   }
 
   if (!entity) {
-    return (<CodeEditor id="debug-input" mode="json" src={props.json} onChange={(value) => { console.log(value); }} />);
+    return (<MonacoReact key="debug-input" value={props.json} defaultLanguage='json'/>);
   }
 
   return (<Table size="small">

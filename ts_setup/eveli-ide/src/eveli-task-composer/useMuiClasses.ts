@@ -19,7 +19,7 @@ export const classes = {
     display: "flex",
     "& .Mui-expanded": {
       marginBottom: - 1,
-      marginTop: 0
+      marginTop: 0,
     }
   },
   accordionTitle: {
@@ -28,7 +28,7 @@ export const classes = {
     mr: 2
   },
   accordionDetails: {
-    pt: 0
+    pt: 0,
   },
   taskRoleList: {
     display: "flex",

@@ -49,9 +49,21 @@ export interface StencilRouteSearchParams {
 }
 
 export function parseStencilSearchParams(search: Record<string, unknown>): StencilRouteSearchParams {
+  const explorer = parseExplorerItems(search);
+  const possiblyExplorerId = search.explorerActive;
+  const explorerActive: ExplorerItem = explorer.find(item => toExplorerId(item) === possiblyExplorerId) ?? explorer[0];
+  return { explorer, explorerActive: toExplorerId(explorerActive) }
+}
+
+export function mergeStencilSearchParams(activeItem: ExplorerItem, prev: StencilRouteSearchParams): StencilRouteSearchParams {
+  const newItemId = toExplorerId(activeItem);
+  const isTabCreated: boolean = !!prev.explorer.find(tab => toExplorerId(tab) === newItemId)
+
   return {
-    explorer: parseExplorerItems(search),
-    explorerActive: search.explorerActive as any
+    explorer: isTabCreated ?
+      prev.explorer.map(item => toExplorerId(item) === newItemId ? activeItem : item) :     // -+
+      [...prev.explorer, activeItem], // all open tabs + 1 new at the end
+    explorerActive: toExplorerId(activeItem) // id of the active tab
   }
 }
 

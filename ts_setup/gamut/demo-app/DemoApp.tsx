@@ -123,7 +123,7 @@ export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LocaleProvider>
+      <LocaleProvider disableErrors>
         <DemoTheme>
           <IamBackendProvider liveness={liveness} onExpire={handleExpire}
             fetchUserGET={iamFetch.fetchUserGET}

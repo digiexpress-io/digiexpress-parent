@@ -1,4 +1,8 @@
 import { HdesApi } from '@/api-wrench';
+import { Position, languages, editor, IRange } from 'monaco-editor';
+import * as monaco_editor from 'monaco-editor';
+
+export const EXTERNAL_DIALOG = 'EXTERNAL_DIALOG';
 
 const KEY_ID = "id";
 const FIELD = ":";
@@ -36,8 +40,10 @@ interface TaskBodyPos {
 
 export interface FlowAstAutocomplete {
   id: string
-  value: string[];
+  value: string;
   append: boolean;
+  position: Position;
+  range: IRange;
   guided?: GuidedType;
 }
 
@@ -45,16 +51,26 @@ export type GuidedType = 'service-task' | 'decision-task';
 export class AutocompleteVisitor {
 
   private _flow: HdesApi.AstFlow;
-  private _result: FlowAstAutocomplete[] = [];
-  private _pos: CodeMirror.Position;
+  private _result: languages.CompletionItem[] = [];
+  private _pos: { line: number, ch: number };
   private _site: HdesApi.Site;
+  private _model: editor.ITextModel;
+  private _modelPosition: Position;
   private _decisionsByName: Record<string, HdesApi.Entity<HdesApi.AstDecision>> = {};
   private _servicesByName: Record<string, HdesApi.Entity<HdesApi.AstService>> = {};
 
-  constructor(flow: HdesApi.AstFlow, site: HdesApi.Site, pos: CodeMirror.Position) {
+
+  constructor(
+    flow: HdesApi.AstFlow, 
+    site: HdesApi.Site, 
+    model: editor.ITextModel, 
+    modelPosition: Position) {
+    
     this._flow = flow;
     this._site = site;
-    this._pos = { line: pos.line, ch: pos.ch, sticky: pos.sticky };
+    this._model = model;
+    this._pos = { line: modelPosition.lineNumber - 1, ch: modelPosition.column - 1 };
+    this._modelPosition = modelPosition;
     Object.values(site.decisions).forEach(d => {
       if (d.ast) {
         this._decisionsByName[d.ast?.name] = d;
@@ -66,6 +82,11 @@ export class AutocompleteVisitor {
       }
     });
   }
+
+  private ac() {
+    return new AcBuilder(this._model, this._modelPosition);
+  };
+
   private hasNonNull(name: string, node: HdesApi.AstFlowNode): boolean {
     return this.get(name, node) ? true : false;
   }
@@ -74,10 +95,10 @@ export class AutocompleteVisitor {
     return result;
   }
 
-  visit() {
+  visit(): languages.CompletionItem[] {
     this.visitRoot(this._flow.src);
-    //console.log("generating hints", this._result);
-    return this._result;
+    console.log("generating hints", this._result);
+    return [...this._result];
   }
   visitRoot(flow: HdesApi.AstFlowRoot) {
     this.visitId(flow);
@@ -154,10 +175,12 @@ export class AutocompleteVisitor {
       if(inputs.children[typeDef.name]) {
         continue;
       }
-      this._result.push(ac()
+      this._result.push(
+        this.ac()
         .id("add missing mapping: " + typeDef.name + " " + typeDef.valueType)
         .addField(typeDef.name, { indent: 10 })
-        .build());
+        .build()
+      );
     }
 
     // change mapping
@@ -165,7 +188,7 @@ export class AutocompleteVisitor {
       if (value.end === this._pos.line) {
 
         for (const typeDef of this._flow.headers.acceptDefs) {
-          this._result.push(ac()
+          this._result.push(this.ac()
             .id("flow input: " + typeDef.name + " " + typeDef.valueType)
             .addField(key, { indent: 10, value: typeDef.name })
             .build());
@@ -209,7 +232,7 @@ export class AutocompleteVisitor {
       }
 
       for (const typeDef of headers) {
-        this._result.push(ac()
+        this._result.push(this.ac()
           .id("task output: " + task.id.value + "." + typeDef.name + " " + typeDef.valueType)
           .addField(props.key, { indent: 10, value: task.id.value + '.' + typeDef.name })
           .build());
@@ -233,7 +256,7 @@ export class AutocompleteVisitor {
     const refs = decisionTable ? Object.values(this._site.decisions) : Object.values(this._site.services);
     for (const asset of refs) {
       const sufix = ref.value === asset.ast?.name ? " - currently selected" : "";
-      this._result.push(ac()
+      this._result.push(this.ac()
         .id("ref: " + asset.ast?.name + sufix)
         .addField("ref", { indent: 8, value: asset.ast?.name })
         .build());
@@ -258,16 +281,17 @@ export class AutocompleteVisitor {
     if (then && this._pos.line === then.end) {
       for (const taskName of getTasks()) {
         const sufix = then.value === taskName.id ? " - currently selected" : "";
-        this._result.push(ac()
+        this._result.push(this.ac()
           .id("then: " + taskName.text + sufix)
           .addField("then", { indent: 6, value: taskName.id })
           .build());
       }
     } else if (!then && Object.keys(switchNode ? switchNode : {}).length === 0 && id && this.isBefore([service, decisionTable])) {
       for (const taskName of getTasks()) {
-        this._result.push(ac()
+        this._result.push(this.ac()
           .id(taskName.text)
-          .append(this._pos.sticky === "before")
+          //.append(this._pos.sticky === "before")
+          .append(true)
           .addField("then", { indent: 6, value: taskName.id })
           .build());
       }
@@ -293,7 +317,7 @@ export class AutocompleteVisitor {
     }
 
     if (isAround || isEndOfLine) {
-      this._result.push(ac()
+      this._result.push(this.ac()
         .id("new switch task")
         .append(isEndOfLine)
         .addField("- name", { indent: 2 })
@@ -307,7 +331,7 @@ export class AutocompleteVisitor {
         .addField("then", { indent: 12, value: "next-task-id" })
         .build());
 
-      this._result.push(ac()
+      this._result.push(this.ac()
         .id("new service task")
         .append(isEndOfLine)
         .addField("- {name}", { indent: 2 })
@@ -320,7 +344,7 @@ export class AutocompleteVisitor {
         .guided("service-task")
         .build());
 
-      this._result.push(ac()
+      this._result.push(this.ac()
         .id("new decision task")
         .append(isEndOfLine)
         .addField("- {name}", { indent: 2 })
@@ -341,6 +365,8 @@ export class AutocompleteVisitor {
     if (!inputs) {
       return;
     }
+
+
     let isAround = this.in(inputs, this.get(KEY_TASKS, flow));
     let isEndOfLine = false;
     const allInputs: HdesApi.AstFlowNode[] = Object.values(inputs.children);
@@ -353,8 +379,11 @@ export class AutocompleteVisitor {
         isAround = false;
       }
     }
+
+    
+    
     if (isAround || isEndOfLine) {
-      this._result.push(ac().id("new input")
+      this._result.push(this.ac().id("new input")
         .append(isEndOfLine)
         .addField("{name}", { indent: 2 })
         .addField("required", { indent: 4, value: "true" })
@@ -387,7 +416,7 @@ export class AutocompleteVisitor {
       return;
     }
     for (const type of TYPES) {
-      this._result.push(ac().id("type: " + type).addField("type", { indent: 4, value: type }).build());
+      this._result.push(this.ac().id("type: " + type).addField("type", { indent: 4, value: type }).build());
     }
   }
 
@@ -395,15 +424,15 @@ export class AutocompleteVisitor {
     if (input.required && this._pos.line !== input.required.start) {
       return;
     }
-    this._result.push(ac().id("required: true").addField("required", { indent: 4, value: "true" }).build());
-    this._result.push(ac().id("required: false").addField("required", { indent: 4, value: "false" }).build());
+    this._result.push(this.ac().id("required: true").addField("required", { indent: 4, value: "true" }).build());
+    this._result.push(this.ac().id("required: false").addField("required", { indent: 4, value: "false" }).build());
   }
 
   visitDebugValue(input: HdesApi.AstFlowInputNode) {
     if (input.debugValue) {
       return;
     }
-    const builder = ac().id("debugValue");
+    const builder = this.ac().id("debugValue");
     if (this.in(input)) {
       builder.addValue("").append(true);
     }
@@ -423,7 +452,7 @@ export class AutocompleteVisitor {
     if (!after.length) {
       return;
     }
-    this._result.push(ac().id("inputs block")
+    this._result.push(this.ac().id("inputs block")
       .addField(KEY_INPUTS)
       .addField("myInputParam", { indent: 2 })
       .addField("required", { indent: 4, value: true })
@@ -442,7 +471,7 @@ export class AutocompleteVisitor {
     if (!this.isAfter([inputs])) {
       return;
     }
-    this._result.push(ac().id("tasks block").addField(KEY_TASKS).build());
+    this._result.push(this.ac().id("tasks block").addField(KEY_TASKS).build());
   }
 
   visitId(flow: HdesApi.AstFlowRoot) {
@@ -459,7 +488,7 @@ export class AutocompleteVisitor {
     if (!this.isBefore(before)) {
       return;
     }
-    this._result.push(ac().id("id").addField(KEY_ID).build());
+    this._result.push(this.ac().id("id").addField(KEY_ID).build());
   }
 
   visitDesc(flow: HdesApi.AstFlowRoot) {
@@ -478,10 +507,11 @@ export class AutocompleteVisitor {
       return;
     }
 
-    this._result.push(ac().id('description').addField(KEY_DESC).build());
+    this._result.push(this.ac().id('description').addField(KEY_DESC).build());
   }
   isEndOfLine(node: HdesApi.AstFlowNode) {
     const sameLine = node.end === this._pos.line;
+
     if (!sameLine) {
       return false;
     }
@@ -519,13 +549,18 @@ export class AutocompleteVisitor {
   }
 }
 
-
-
 class AcBuilder {
   private _id?: string;
-  private value: string[] = [];
+  private _value: string = '';
   private _append = false;
   private _guided: GuidedType | undefined;
+  private _model: editor.ITextModel;
+  private _position: Position;
+
+  constructor(model: editor.ITextModel, position: Position) {
+    this._model = model;
+    this._position = position;
+  }
 
   id(id: string): AcBuilder {
     this._id = id;
@@ -552,27 +587,60 @@ class AcBuilder {
   }) {
     const prefix = props?.indent ? this.getIndent(props.indent) : '';
     const sufix = props?.value ? ' ' + props.value : '';
-    this.value.push(prefix + fieldName + FIELD + sufix);
+
+    if(this._value) {
+      this._value += '\r\n'
+    }
+
+    this._value += prefix + fieldName + FIELD + sufix;
     return this;
   }
-  addValue(value: string | string[]) {
-    const toArray: string[] = Array.isArray(value) ? value as string[] : [value as string];
-    this.value.push(...toArray);
+  addValue(value: string) {
+    this._value += value;
     return this;
   }
-  build(): FlowAstAutocomplete {
+  build(): languages.CompletionItem {
     if (!this._id) {
       throw new Error("id must be defined!");
     }
-    return { id: this._id, value: this.value, append: this._append, guided: this._guided }
+
+    const line = 
+      this._model.getLineContent(this._position.lineNumber);
+
+		const range: IRange = {
+			startLineNumber: this._position.lineNumber,
+			endLineNumber: this._position.lineNumber,
+			startColumn: 1,//1,
+			endColumn: 1//line.length == 0 ? 1 : line.length,
+		};
+
+    const insertText = this._append ? line + '\r\n' + this._value : this._value;
+
+    const autocomplete: FlowAstAutocomplete | undefined = this._guided ? {
+      id: this._id,
+      value: insertText,
+      guided: this._guided,
+      append: this._append,
+      position: this._position,
+      range
+    } : undefined;
+
+    return {
+      label: this._id,
+      kind: languages.CompletionItemKind.Function,
+      insertText: this._guided ? '' : insertText,
+      range: range,
+      filterText: line,
+      command: this._guided ? { 
+        id: EXTERNAL_DIALOG, 
+        title: this._guided,
+        arguments: [{ autocomplete }],
+      } : undefined
+    }
   }
 }
-const ac = () => new AcBuilder();
 
-
-
-
-const parseTemplate = (toBeReplaced: any, template: string[]) => {
+const parseTemplate = (toBeReplaced: any, template: string[]): string[] => {
   const result: string[] = [];
   for (let v of template) {
     let line: string = v;
@@ -589,6 +657,7 @@ const parseTemplate = (toBeReplaced: any, template: string[]) => {
     }
     result.push(line)
   }
+
   return result
 }
 
@@ -602,24 +671,26 @@ const toLowerCamelCase = (value: string) => {
 }
 
 
-const executeTemplate = (cm: CodeMirror.Editor, value: any, guided: FlowAstAutocomplete, asset?: HdesApi.AstBody) => {
-  const doc = cm.getDoc()
-  const cursor = doc.getCursor()
-  const content = cm.getLine(cursor.line)
+const executeTemplate = (cm: typeof monaco_editor, value: any, guided: FlowAstAutocomplete, asset?: HdesApi.AstBody) => {
+  const [model] = cm.editor.getModels();
+  const content = model.getLineContent(guided.position.lineNumber);
 
   const lines: string[] = [];
   if (guided.append) {
     lines.push(content);
+  } else {
+    lines.push('');
   }
-  lines.push(...parseTemplate(value, guided.value));
+  lines.push(...parseTemplate(value, [guided.value]));
+
   if (asset) {
     const params = asset.headers.acceptDefs.map(p => '          ' + p.name + ':');
     lines.push(...params)
   }
-
-  doc.replaceRange([...lines],
-    { line: cursor.line, ch: 0 },
-    { line: cursor.line, ch: content.length }, '+input')
+  model.applyEdits([{
+    range: guided.range,
+    text: lines.join('\r\n') + '\r\n'
+  }]);
 }
 
 export { parseTemplate, toLowerCamelCase, executeTemplate };

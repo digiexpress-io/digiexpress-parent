@@ -2,6 +2,7 @@ package io.digiexpress.eveli.app.authentication;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
@@ -29,15 +30,16 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
@@ -60,8 +62,49 @@ import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 @Profile("fake-user")
 public class AuthenticationConfigFakeUser  {
   
-  String[] ROLES = {"TASK_ADMIN","TASK_WORKER","FEEDBACK_ADMIN","FEEDBACK_VIEWER","ASSET_ADMIN","Authorized"};
+  public static String[] ROLES = {"TASK_ADMIN","TASK_WORKER","FEEDBACK_ADMIN","FEEDBACK_VIEWER","ASSET_ADMIN","Authorized"};
 
+  
+//Worker security filter
+ @Bean
+ public SecurityFilterChain workerSecurity(
+     HttpSecurity http, 
+     AuthorizationManager<RequestAuthorizationContext> auth,
+     AuthenticationManager authenticationManager) throws Exception {
+   
+   return http
+     .securityMatchers(matcher -> matcher.requestMatchers("/worker/**"))
+     .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
+     .csrf(t -> t.disable())
+     .httpBasic(Customizer.withDefaults())
+     .formLogin(form -> form
+         .loginPage("/login-worker")
+         .permitAll()
+     )
+     .authenticationManager(authenticationManager)
+     .build();
+ }
+ 
+ // Customer security filter
+ @Bean
+ public SecurityFilterChain portalSecurity(
+     HttpSecurity http, 
+     AuthorizationManager<RequestAuthorizationContext> auth,
+     AuthenticationManager authenticationManager) throws Exception {
+   
+   return http
+     .securityMatchers(matcher -> matcher.requestMatchers("/portal/secured/**"))
+     .authorizeHttpRequests(authorize -> authorize.anyRequest().access(auth))
+     .csrf(t -> t.disable())
+     .httpBasic(Customizer.withDefaults())
+     .formLogin(form -> form
+         .loginPage("/login-customer")
+         .permitAll()
+     )
+     .authenticationManager(authenticationManager)
+     .build();
+ }
+  
   @Bean
   public AuthenticationManager authenticationManager() {
     return new AuthenticationManager() {
@@ -98,22 +141,6 @@ public class AuthenticationConfigFakeUser  {
         };
       }
     };
-  }
-
-  @Bean
-  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-    UserDetails userDetails = 
-      org.springframework.security.core.userdetails.User.withUsername("tester")
-      .password(passwordEncoder.encode("password"))
-      .roles(ROLES)
-      .build();
-
-    return new InMemoryUserDetailsManager(userDetails);
-  }
-  
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-      return new BCryptPasswordEncoder();
   }
   
   @Bean
@@ -175,6 +202,19 @@ public class AuthenticationConfigFakeUser  {
             .identifier(customer.getPrincipal().getSsn())
             .username(customer.getPrincipal().getUsername())
             .build();
+      }
+    };
+  }
+  
+  @Bean
+  public AuthorizationManager allowAll() {
+    return new AuthorizationManager<RequestAuthorizationContext>() {
+      @Override
+      public AuthorizationDecision check(
+          Supplier<Authentication> authentication,
+          RequestAuthorizationContext object) {
+
+        return new AuthorizationDecision(true);
       }
     };
   }

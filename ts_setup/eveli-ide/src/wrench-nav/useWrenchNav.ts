@@ -1,20 +1,7 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, toExplorerId, WrenchRouteSearchParams } from './wrench-nav-types';
+import { ExplorerItem, ExplorerItemDecisions, ExplorerItemFlows, ExplorerItemServices, mergeWrenchSearchParams, toExplorerId, WrenchRouteSearchParams } from './wrench-nav-types';
 import { useWrenchTabClose } from './useWrenchTabClose';
 
-
-
-function toExplorerItem(input: ExplorerItem): ExplorerItem {
-  const data: ExplorerItem = ((input as any)['type'] ? input : { type: input }) as any;
-  return data;
-}
-
-
-function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]): ExplorerItem[]  {
-  const newItemId = toExplorerId(newExplorerItem);
-  const explorer = [...prev.filter(explorer => toExplorerId(explorer) !== newItemId), newExplorerItem];
-  return explorer;
-}
 
 
 export function useWrenchNav(): { 
@@ -33,28 +20,16 @@ export function useWrenchNav(): {
 } {
 
   const { onTabClose } = useWrenchTabClose();
-  
   const navigate = useNavigate();
-
   const search = useSearch({ from: '/secured/$locale/assets/wrench/' });
   const explorer: ExplorerItem[] = search.explorer;
   const explorerActive: string | undefined = search.explorerActive;
-
-
-
-  const activeItem = explorer.find(explorer => toExplorerId(explorer) === explorerActive) ?? explorer[explorer.length -1];
+  const activeItem = explorer.find((explorer: ExplorerItem) => toExplorerId(explorer) === explorerActive);
 
   function onNav(input: ExplorerItem) {
-    const newItem = toExplorerItem(input);
-    const other: {} = newItem;
-
     navigate({ 
-      from: '/secured/$locale/assets/wrench', 
-      search: (prev: WrenchRouteSearchParams) => ({
-        ...prev, 
-        ...other,
-        explorer: calculateNextSearch(newItem, prev.explorer),
-      })
+      from: '/secured/$locale/assets/wrench',
+      search: (prev: WrenchRouteSearchParams) => mergeWrenchSearchParams(input, prev)
     });
   }
 

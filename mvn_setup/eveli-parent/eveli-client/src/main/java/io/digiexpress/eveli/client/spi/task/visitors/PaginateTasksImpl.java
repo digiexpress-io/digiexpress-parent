@@ -65,6 +65,7 @@ public class PaginateTasksImpl implements PaginateTasks {
   private String role = "";
   
   private String dueDate;
+  private String additionalInfo;
   private List<TaskStatus> status = new ArrayList<>();
   private List<TaskPriority> priority = new ArrayList<>();
   private List<String> requireAnyRoles;
@@ -120,7 +121,11 @@ public class PaginateTasksImpl implements PaginateTasks {
     this.requireAnyRoles = requireAnyRoles;
     return this;
   }
-
+  @Override
+  public PaginateTasks additionalInfo(String additionalInfo) {
+    this.additionalInfo = additionalInfo;
+    return this;
+  }
   @Override
   public Uni<Page<Task>> findAll() {
     final var config = ctx.getConfig();
@@ -229,6 +234,9 @@ public class PaginateTasksImpl implements PaginateTasks {
     if(!(role == null || role.trim().isEmpty())) {
       builder.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, role);
     }
+    if(!(additionalInfo == null || additionalInfo.trim().isEmpty())) {    
+      builder.addLink(TaskMapper.LINK_TYPE_ADDITIONAL_INFO, additionalInfo);
+    }
     
     builder
       .status(statuses)
@@ -273,5 +281,6 @@ public class PaginateTasksImpl implements PaginateTasks {
     final Page<Task> page = new PageImpl<Task>(tasks, pageable, commit.getTotalObjectsOnPages());
     return Uni.createFrom().item((Object) page).map(e -> (Page<Task>) e);
   }
+
   
 }

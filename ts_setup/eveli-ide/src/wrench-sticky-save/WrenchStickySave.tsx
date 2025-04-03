@@ -59,7 +59,7 @@ export const WrenchStickySave: React.FC<{}> = ({ }) => {
     <Button startIcon={<SaveOutlinedIcon fontSize='inherit' />}
       onClick={onSave}
       sx={{
-        top: 80,
+        top: 15,
         right: 16,
         zIndex: 1100,
         position: 'fixed',

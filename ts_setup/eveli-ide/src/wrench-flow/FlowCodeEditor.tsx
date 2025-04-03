@@ -1,0 +1,91 @@
+import React from 'react';
+
+
+import MonacoReact, { useMonaco, OnChange, BeforeMount } from '@monaco-editor/react';
+import * as monaco_editor from 'monaco-editor';
+
+import { HdesApi } from '@/api-wrench';
+import { AutocompleteTask, AutocompleteVisitor, EXTERNAL_DIALOG, FlowAstAutocomplete } from './autocomplete';
+import { WrenchComposerApi } from '@/wrench-setup';
+
+export const FlowCodeEditor: React.FC<{
+  id: string;
+  src: string;
+  messages: HdesApi.FlowAstCommandMessage[];
+  onChange: (newText: string) => void;
+  ast: HdesApi.AstFlow | undefined;
+  flow: HdesApi.Entity<HdesApi.AstFlow>
+}> = (props) => {
+
+  const { site } = WrenchComposerApi.useComposer();
+  const { messages, onChange, ast } = props;
+  const monaco: typeof monaco_editor | null = useMonaco();
+  const [guided, setGuided] = React.useState<FlowAstAutocomplete>();
+
+  React.useEffect(() => {
+    if(!monaco) {
+      return;
+    }
+    const [model] = monaco.editor.getModels();
+    if(!model) {
+      return;
+    }
+
+
+    monaco.editor.setModelMarkers(model, "owner", 
+      messages.map(msg => {
+        const content = model.getLineContent(msg.line+1);
+        return {
+          message: msg.value,
+          severity: msg.type === 'WARNING' ? monaco.MarkerSeverity.Warning : monaco.MarkerSeverity.Error,
+          startLineNumber: msg.line+1,
+          endLineNumber: msg.line+1,
+
+          startColumn: 1,
+          endColumn: content.length+1,
+        }
+    }))
+
+  }, [messages, monaco]);
+
+  React.useEffect(() => {
+    if(!monaco) {
+      return;
+    }
+  }, []);
+
+
+  const handleChange: OnChange = (newValue) => {
+    onChange(newValue ?? '');
+  }
+
+  const beforeMount: BeforeMount = React.useCallback((editor) => {
+
+    editor.editor.addCommand({
+      id: EXTERNAL_DIALOG, 
+      run: function(...args) {
+        setGuided(args[1].autocomplete)
+      }
+    });
+
+    editor.languages.registerCompletionItemProvider('yaml', {
+      provideCompletionItems: function (model, position, context) {
+        const suggestions = ast ? new AutocompleteVisitor(ast, site, model, position).visit() : [];
+        return { suggestions }
+      }
+    });
+  }, []);
+
+  return (
+  <>
+    {guided && monaco ? <AutocompleteTask onClose={() => setGuided(undefined)} flow={props.flow} guided={guided} cm={monaco}/> : undefined}
+    <MonacoReact 
+      beforeMount={beforeMount}
+      onChange={handleChange}
+      value={props.src} 
+      options={{
+        wordBasedSuggestions: 'off',
+      }}
+      defaultLanguage='yaml'/>
+  </>);
+}

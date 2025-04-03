@@ -1,15 +1,7 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { ExplorerItem, ExplorerItemArticle, StencilRouteSearchParams, toExplorerId } from './stencil-nav-types';
+import { ExplorerItem, ExplorerItemArticle, mergeStencilSearchParams, StencilRouteSearchParams, toExplorerId } from './stencil-nav-types';
 import { useStencilTabClose } from './useStencilTabClose';
 
-
-
-
-function calculateNextSearch(newExplorerItem: ExplorerItem, prev: ExplorerItem[]): ExplorerItem[]  {
-  const newItemId = toExplorerId(newExplorerItem);
-  const explorer = [...prev.filter(explorer => toExplorerId(explorer) !== newItemId), newExplorerItem];
-  return explorer;
-}
 
 
 export function useStencilNav(): { 
@@ -37,11 +29,7 @@ export function useStencilNav(): {
   function onNav(input: ExplorerItem) {
     navigate({ 
       from: '/secured/$locale/assets/stencil', 
-      search: (prev: StencilRouteSearchParams) => ({
-        ...prev,
-        explorer: calculateNextSearch(input, prev.explorer),
-        explorerActive: toExplorerId(input)
-      })
+      search: (prev: StencilRouteSearchParams) => mergeStencilSearchParams(input, prev)
     });
   }
 

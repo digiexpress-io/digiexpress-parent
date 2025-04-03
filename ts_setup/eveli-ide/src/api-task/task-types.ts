@@ -134,6 +134,9 @@ export declare namespace TaskApi {
     subject?: string;
     description?: string;
     priority?: TaskPriority;
+    additionalInfo?: string;
+
+    features?: string[]; 
     keyWords?: string[];
     taskLinks?: TaskLink[];
     // For UI purposes

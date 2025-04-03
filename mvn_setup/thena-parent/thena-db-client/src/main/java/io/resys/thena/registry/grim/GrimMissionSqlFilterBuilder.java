@@ -179,10 +179,10 @@ public class GrimMissionSqlFilterBuilder {
         builder
           .append(appendOr ? " OR" : "").ln()
           .append(" (link_type = $").append(index++).ln()
-          .append(" and external_id = $").append(index++).append(")").ln();
+          .append(" and external_id LIKE $").append(index++).append(")").ln();
         
         params.add(link.getLinkType());
-        params.add(link.getLinkValue());
+        params.add("%" + link.getLinkValue() + "%");
         appendOr = true;
       }
       builder.append("  ))").ln();

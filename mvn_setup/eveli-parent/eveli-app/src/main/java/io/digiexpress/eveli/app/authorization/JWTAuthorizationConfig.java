@@ -31,12 +31,17 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtIss
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
+import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
+import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
+
 @Configuration
+@Profile("jwt")
 public class JWTAuthorizationConfig {
 
 //Worker security filter
  @Bean
- @Profile("jwt")
  public SecurityFilterChain workerSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -55,7 +60,6 @@ public class JWTAuthorizationConfig {
  
  // Customer security filter
  @Bean
- @Profile("jwt")
  public SecurityFilterChain portalSecurity(
      HttpSecurity http, 
      AuthorizationManager<RequestAuthorizationContext> auth,
@@ -72,5 +76,8 @@ public class JWTAuthorizationConfig {
      .build();
  }
  
-
+ @Bean
+ public SpringSecurityPolicy authorization(AuthClient auth, CrmClient crm, EveliAutoConfigPermissions props) {
+   return new SpringSecurityPolicy(auth, crm, props);
+ }
 }

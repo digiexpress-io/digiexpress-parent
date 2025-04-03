@@ -2,11 +2,10 @@ import React, { ReactNode } from 'react';
 import { Formik, Form, Field } from 'formik';
 import {
   TextField, Grid2, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
-  Stack, Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
-  useTheme,
-  alpha,
-  Button
+  Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
+  useTheme, alpha, Button
 } from '@mui/material';
+import { classes } from './useMuiClasses';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -15,18 +14,17 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
-import { useNavigate } from '@tanstack/react-router';
 import * as Yup from 'yup';
 
 import { UpsertOneFeedback, StatusIndicator } from '../eveli-task-feedback';
 
 import { IamApi } from '../api-iam';
 import { TaskApi } from '../api-task';
+
 import { EveliTaskComments } from '../eveli-task-comments';
 import { EveliDatePicker } from '../eveli-datepicker';
-import { EveliPermissions } from '@/eveli-permissions';
+import { EveliStickyTaskButtons } from '@/eveli-sticky-task-buttons';
 
-import { DialobReview } from '../dialob-review';
 
 import { StatusComponent } from './Status';
 import { Priority } from './Priority';
@@ -34,7 +32,6 @@ import { Priority } from './Priority';
 import { PageLeavingConfirmation } from './PageLeaveConfirmation';
 import { AttachmentTableWrapper } from './AttachmentTableWrapper';
 import { TaskRoleDialog } from './TaskRoleDialog';
-import { classes } from './useMuiClasses';
 import { TaskLinkProps, ComponentResolver } from './TaskComponentResolver';
 
 
@@ -45,18 +42,6 @@ const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
       <InfoOutlinedIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
       <Typography variant='subtitle2'><FormattedMessage id={id} /></Typography>
     </Paper>)
-}
-
-
-const NavigateToTasksButton: React.FC<{ }> = ({  }) => {
-  const navigate = useNavigate();
-  function handleBack() {
-    navigate({
-      from: '/secured/$locale/worker',
-      to: '/secured/$locale/worker/tasks'
-    });
-  }
-  return (<Button onClick={handleBack}  variant='text'><FormattedMessage id='taskButton.cancel'/></Button>)
 }
 
 
@@ -104,35 +89,6 @@ type State = {
 
 const minLength = 3;
 
-
-const FeedbackButton: React.FC<{ taskId: string | undefined }> = ({ taskId }) => {
-  const navigate = useNavigate();
-
-  function handleFeedback() {
-    navigate({
-      from: '/secured/$locale/worker',
-      params: { feedbackId: `${taskId}`},
-      to: '/secured/$locale/worker/feedback/$feedbackId'
-    });
-  }
-
-  return (<Button  onClick={handleFeedback} variant='text'><FormattedMessage id='task.form.feedback.manage'/></Button>);
-}
-
-const FormReview: React.FC<{ sessionId: string | undefined, taskId: string | undefined }> = ({ sessionId, taskId }) => {
-  const [open, setOpen] = React.useState(false);
-
-  if (!sessionId || !taskId) {
-    return (<></>)
-  }
-
-  return (
-    <>
-      <Button  onClick={() => setOpen(true)} variant='text'><FormattedMessage id='task.form.review'/></Button>
-      {open && <DialobReview taskId={taskId + ""} onClose={() => setOpen(false)} />}
-    </>
-  )
-}
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
   formRef = React.createRef<any>();
@@ -226,7 +182,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
       version: editTask?.version,
       keyWords: editTask?.keyWords,
       clientIdentificator: values.clientIdentificator,
-      assignedRoles: values.assignedRoles
+      assignedRoles: values.assignedRoles,
+      additionalInfo: values.additionalInfo
     }
   }
 
@@ -285,6 +242,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     return (
       <Formik
         initialValues={{
+          additionalInfo: editTask.additionalInfo || '',
           priority: editTask.priority,
           subject: editTask.subject || '',
           description: editTask.description || '',
@@ -305,7 +263,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
         {
           ({ values, submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
             <Form>
-              <PageLeavingConfirmation  navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
+              <PageLeavingConfirmation navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
               <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="center">
                   <Grid2 size={{ xs: 12, md: 4 }}>
@@ -360,6 +318,22 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       fullWidth={true}
                       inputProps={{
                         readOnly: readonly
+                      }}
+                    />
+                  </Grid2>
+
+                  <Grid2 size={{ xs: 12, md: 12 }}>
+                    <Field
+                      name='additionalInfo' as={TextField}
+                      label={formatMessage({ id: 'taskDialog.additionalInfo' })}
+                      required
+                      error={!!errors.additionalInfo}
+                      helperText={errors.additionalInfo}
+                      
+                      fullWidth={true}
+                      inputProps={{
+                        readOnly: readonly,
+                        maxLength: 100
                       }}
                     />
                   </Grid2>
@@ -423,6 +397,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
                   }
                 </Grid2>
+                
+                {editTask.features && editTask.features.includes('feedback') && (
                 <Grid2 size={{ xs: 12 }}>
                   {editTask.id && externalThreads ?
                     <Accordion>
@@ -438,12 +414,14 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => {}} reload={comments?.length ?? 0}/>
+                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => { }} reload={comments?.length ?? 0} />
                       </AccordionDetails>
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
                   }
-                </Grid2>
+                </Grid2>)
+                }
+
                 <Grid2 size={{ xs: 12 }}>
                   {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
                 </Grid2>
@@ -497,7 +475,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         </fieldset>
 
                       </Box>
-                      <Button variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles'/></Button>
+                      <Button variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles' /></Button>
 
                     </Grid2>
                   }
@@ -580,22 +558,8 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                 </Grid2>
               </Paper>
 
-              <Box sx={{ position: 'sticky', bottom: 10, width: 'fit-content', float: 'right' }}>
-                <Paper elevation={2} sx={{ padding: 1, marginRight: 2 }}>
-                  <Stack direction="row" spacing={1} justifyContent='flex-end'>
-                    
-                    <NavigateToTasksButton />
+              <EveliStickyTaskButtons editTask={editTask} dirty={dirty} isSubmitting={isSubmitting} isValid={isValid} readonly={readonly} submitForm={submitForm} />
 
-                    {(!editTask.keyWords || editTask.keyWords.length === 0) && (
-                      <Box display='flex' gap={1}>
-                        <FormReview sessionId={editTask.questionnaireId} taskId={editTask.id} />
-                        <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'><FeedbackButton taskId={editTask.id} /></EveliPermissions>
-                      </Box>
-                    )}
-                    {!readonly && <Button variant='contained' disabled={isSubmitting || !isValid || !dirty} onClick={submitForm}  ><FormattedMessage id='taskButton.accept'/></Button>}
-                  </Stack>
-                </Paper>
-              </Box>
               {this.state.dialogOpen && <TaskRoleDialog
                 assignedRoles={values.assignedRoles} groups={this.props.groups}
                 acceptDialog={(roles: IamApi.UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
