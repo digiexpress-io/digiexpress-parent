@@ -48,13 +48,13 @@ export const GAppBarRoot = styled("div", {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
-  
+
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'center',
       gap: 0,
     },
-  },  
+  },
 
   '& .GAppBar-buttonLayout': {
     display: 'flex',
@@ -66,25 +66,22 @@ export const GAppBarRoot = styled("div", {
       order: 1,
       flexWrap: 'wrap',
     },
-  },  
+  },
 
   '& .GAppBar-userIdentityLabel': {
-    textAlign: 'right',
     color: theme.palette.text.secondary,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'baseline',
     gap: theme.spacing(0.5),
-  
+
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'row',
-      alignItems: 'baseline',
-      justifyContent: 'flex-center',
+      justifyContent: 'center',
       order: 2,
       width: '100%',
     },
-  
+
     '& .GAppBar-userIdentityText': {
       color: theme.palette.text.secondary,
       fontSize: 'small',
@@ -95,12 +92,12 @@ export const GAppBarRoot = styled("div", {
         display: 'none',
       },
     },
-  
+
     '& .GAppBar-userDisplayName': {
       fontWeight: theme.typography.fontWeightBold,
       color: theme.palette.text.primary,
       fontSize: 'large',
-  
+
       [theme.breakpoints.down('sm')]: {
         fontSize: 'medium',
         overflow: 'hidden',
@@ -110,7 +107,7 @@ export const GAppBarRoot = styled("div", {
         display: 'inline-block',
       },
     },
-  },  
-
+  },
 }));
+
 
