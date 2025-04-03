@@ -64,6 +64,14 @@ public class EveliAutoConfigMq {
       .addQueue(b -> b
           .queueName("queue.task.log")
           .comment("task logging queue")
+          .build())
+      .addQueue(b -> b
+          .queueName("queue.task.worker_email")
+          .comment("task queue for internal worker emails")
+          .build())
+      .addQueue(b -> b
+          .queueName("queue.task.suomifi")
+          .comment("task queue for sms notifications")
           .build());
 
     for(final var consumer : consumers) {
