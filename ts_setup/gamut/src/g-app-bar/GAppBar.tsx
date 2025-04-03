@@ -10,10 +10,10 @@ import { GLogout } from '../g-logout';
 import { MUI_NAME, useUtilityClasses, GAppBarRoot } from './useUtilityClasses';
 import { useIam } from '../api-iam';
 import { GOverridableComponent } from '../g-override';
+import { FormattedMessage } from 'react-intl';
 
-
-export interface GNavSlotProps { }
-export interface GSearchSlotProps { }
+export interface GNavSlotProps {}
+export interface GSearchSlotProps {}
 
 export interface GAppBarProps {
   locale: string;
@@ -23,11 +23,10 @@ export interface GAppBarProps {
 
   onLogoClick?: (view: GUserOverviewMenuView | undefined) => void;
   slots?: {
-    nav?: React.ElementType<GNavSlotProps> | undefined,
-    search?: React.ElementType<GSearchSlotProps> | undefined,
-  },
+    nav?: React.ElementType<GNavSlotProps> | undefined;
+    search?: React.ElementType<GSearchSlotProps> | undefined;
+  };
 }
-
 
 export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
   const iam = useIam();
@@ -37,8 +36,8 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
   });
   const classes = useUtilityClasses(props);
   const ownerState = {
-    ...props
-  }
+    ...props,
+  };
 
   const Nav = props.slots?.nav;
   const Search = props.slots?.search;
@@ -51,14 +50,36 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
 
   const Root = props.component ?? GAppBarRoot;
 
+  const GUserIdentity = ({
+    userName,
+    classes,
+  }: {
+    userName: string;
+    classes: ReturnType<typeof useUtilityClasses>;
+  }) => {
+    return (
+      <div className={classes.userIdentityLabel}>
+        <div className={classes.userIdentityText}>
+          <FormattedMessage id="header.userIdentity.label" />
+        </div>
+        <div className={classes.userDisplayName}>{userName}</div>
+      </div>
+    );
+  };
+
   return (
     <Root ownerState={ownerState} className={classes.root}>
       <Toolbar className={GShellClassName}>
         <GLayout variant={'toolbar-n-rows-2-columns'}>
-          <GLogo variant='black_lg' onClick={handleClick} />
-          <div className={classes.rightSideLayout}> 
-            <GLocales value={props.locale} onClick={props.onLocale} />
-            {iam.authType === 'ANON' ? <GLogin /> : <GLogout showIdentity />}
+          <GLogo variant="black_lg" onClick={handleClick} />
+          <div className={classes.rightSideLayout}>
+              {iam.authType !== 'ANON' && (
+                <GUserIdentity userName={iam.userName ?? ''} classes={classes} />
+              )}
+            <div className={classes.buttonLayout}>
+              <GLocales value={props.locale} onClick={props.onLocale} />
+              <GLogout />
+            </div>
           </div>
           <>
             {Nav && <Nav />}
@@ -67,5 +88,5 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
         </GLayout>
       </Toolbar>
     </Root>
-  )
-}
+  );
+};

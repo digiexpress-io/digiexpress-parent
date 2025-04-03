@@ -31,7 +31,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
       footerHeight: 300,
       drawerWidth: 350,
       toolbarHeight: {
-        xs: 150,
+        xs: 155,
         sm: 150,
         md: 90,
         lg: 90,
