@@ -441,7 +441,7 @@ public class FlowProgramExecutor {
     final var inputMapping = visitSwitchInputMapping(step);
     for(final var mappingEntry : inputMapping) {
       
-      boolean isMatch = false;
+      boolean isAtleastOneMatch = false;
       for(final var whenThen : ((FlowProgramStepWhenThenPointer) step.getPointer()).getConditions()) {
         final var expressionContext = new FlowTaskExpressionContext() {
           @Override
@@ -455,9 +455,9 @@ public class FlowProgramExecutor {
               .collect(Collectors.toMap(e -> e.getKey().substring(name.length() + 1), e -> e.getValue()));
           }
         };      
-        isMatch = (Boolean) whenThen.getExpression().run(expressionContext).getValue();
-        if(isMatch) {
-          
+        
+        if((Boolean) whenThen.getExpression().run(expressionContext).getValue()) {
+          isAtleastOneMatch = true;
           //switch leads to end
           if(FlowProgramBuilder.END_STEP.getId().equals(whenThen.getStepId())) {
             visited.add(visitStepLog(
@@ -478,7 +478,7 @@ public class FlowProgramExecutor {
         }     
       }
       
-      if(!isMatch) {
+      if(!isAtleastOneMatch) {
         throw new ProgramException("Flow switch: '" + step.getId() + "' does not match any expressions!");
       }
     }

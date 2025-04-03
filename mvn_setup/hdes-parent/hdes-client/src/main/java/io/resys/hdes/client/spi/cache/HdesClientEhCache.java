@@ -125,4 +125,8 @@ public class HdesClientEhCache implements HdesCache {
     cache.remove(entity.getId());
     cache.remove(entity.getSource().getHash());
   }
+  @Override
+  public void flushAll() {
+    getCache().clear();
+  }
 }
