@@ -69,7 +69,7 @@ public class CustomerSmsBuilderSuomifiRest implements CustomerMessageBuilder {
   @Override
   public CustomerMessageBuilder senderId(String senderId) {
     this.senderId = senderId;
-    return null;
+    return this;
   }
   @Override
   public CustomerMessageBuilder messageId(String messageId) {
