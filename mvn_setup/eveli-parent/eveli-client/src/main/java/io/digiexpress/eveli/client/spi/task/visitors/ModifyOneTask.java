@@ -115,7 +115,7 @@ public class ModifyOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
           .build())
       
       // change is viewed by worker who created it
-      .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).build())
+      .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
       
       // normal data
       .reporterId(command.getClientIdentificator())

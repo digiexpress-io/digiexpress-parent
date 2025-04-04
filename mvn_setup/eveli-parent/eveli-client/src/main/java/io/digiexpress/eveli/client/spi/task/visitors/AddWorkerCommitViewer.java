@@ -41,7 +41,7 @@ public class AddWorkerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<T
 
     merge
     // change is viewed by worker who created it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).build())
+    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTreeCommit().build())
     .build();
   }
   

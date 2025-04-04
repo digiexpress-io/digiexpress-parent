@@ -33,11 +33,14 @@ import lombok.RequiredArgsConstructor;
 public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
   private final OffsetDateTime createdAt;
   private final String missionId;
-  private final String commitId;
+  private final String currentCommit;
+  private final String currentTreeCommit;
   
   private boolean built;
   private String userId;
   private String usedFor;
+  private String commitId;
+  
   
   @Override
   public NewMissionCommitViewer userId(String userId) {
@@ -50,6 +53,21 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
     return this;
   }
   @Override
+  public NewMissionCommitViewer currentTxCommit() {
+    this.commitId = currentCommit;
+    return this;
+  }
+  @Override
+  public NewMissionCommitViewer currentTreeCommit() {
+    this.commitId = currentTreeCommit;
+    return this;
+  }
+  @Override
+  public NewMissionCommitViewer commitId(String commitId) {
+    this.commitId = commitId;
+    return this;
+  }
+  @Override
   public void build() {
     this.built = true;
   }
@@ -57,7 +75,8 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
   public ImmutableGrimCommitViewer close() {
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
     RepoAssert.notEmpty(userId, () -> "userId must be defined!");
-    RepoAssert.notEmpty(usedFor, () -> "usedFor  must be defined!");
+    RepoAssert.notEmpty(usedFor, () -> "usedFor must be defined!");
+    RepoAssert.notEmpty(commitId, () -> "commitId must be defined!");
     
     return ImmutableGrimCommitViewer.builder()
         .id(OidUtils.gen())

@@ -63,7 +63,7 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
       // internally store new comment id
       setRemarkId(remarkId);
     })
-    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).build())
+    .addViewer(newViewer -> newViewer.userId(userId).usedFor(usedFor).currentTxCommit().build())
     .build();
   }
 
@@ -72,7 +72,7 @@ public class CreateOneTaskComment implements TaskStoreConfig.MergeTaskVisitor<Ta
     builder.missionId(command.getTaskId()).modifyMission(merge -> createTaskComment(command, merge));
     return builder
         .commitAuthor(userId)
-        .commitMessage("Creating tasks by: " + CreateOneTask.class.getSimpleName());
+        .commitMessage("Creating tasks by: " + CreateOneTaskComment.class.getSimpleName());
   }
 
   @Override

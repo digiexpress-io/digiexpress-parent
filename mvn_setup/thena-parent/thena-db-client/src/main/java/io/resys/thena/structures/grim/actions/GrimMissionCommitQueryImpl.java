@@ -1,5 +1,8 @@
 package io.resys.thena.structures.grim.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -81,13 +84,13 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
   @Override
   public Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId) {
     return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
-      return visitCommit(tx, missionId, currentCommitId)
+      return visitCommit(tx, missionId)
           .onItem()
           .transform(commit -> visitResponse(tx, commit, missionId, currentCommitId));
     });
   }
 
-  private Uni<Tuple2<List<GrimCommit>, List<GrimCommitTree>>> visitCommit(GrimState tx, String missionId, String currentCommitId) {
+  private Uni<Tuple2<List<GrimCommit>, List<GrimCommitTree>>> visitCommit(GrimState tx, String missionId) {
     return Uni.combine().all().unis(
       tx.query().commit().findAllByMissionId(missionId),
       tx.query().commitTree().findAllByMissionId(missionId)
@@ -95,39 +98,131 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
     .asTuple()
     .onItem().transformToUni(tuple -> {
       
-      if(tuple.getItem2().isEmpty()) {
-        return getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(tx, missionId, tuple.getItem1())
-            .onItem().transform(latestData -> Tuple2.of(tuple.getItem1(), latestData));
+      final var commitsWithTrees = getCommitsWithTrees(tuple.getItem1(), tuple.getItem2());
+      final var firstCommitWithTree = commitsWithTrees.stream().filter(e -> e.getParentCommitId() == null).findFirst();
+      final var isHistoryLimit = firstCommitWithTree.isEmpty();
+      
+      if(isHistoryLimit) {
+        final var customCommits = getCommitsAfterCutOff(tx, missionId, tuple.getItem1(), tuple.getItem2());
+        return getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(tx, missionId, customCommits, tuple.getItem2())
+            .onItem().transform(latestData -> Tuple2.of(customCommits, latestData));
       }
-      return Uni.createFrom().item(tuple);
+      return Uni.createFrom().item(Tuple2.of(commitsWithTrees, tuple.getItem2()));
     });
   }
   
+  private List<GrimCommit> getCommitsWithTrees(List<GrimCommit> commits, List<GrimCommitTree> trees) {
+    final var treesByCommitId = trees.stream()
+        .collect(Collectors.groupingBy(e -> e.getCommitId()));
+    
+    final var result = new ArrayList<GrimCommit>();
+    for(final var commit : commits) {
+      if(treesByCommitId.containsKey(commit.getCommitId())) {
+        result.add(commit);
+      }
+    }
+    return Collections.unmodifiableList(result);
+  }
   
-  private Uni<List<GrimCommitTree>> getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(GrimState tx, String missionId, List<GrimCommit> commits) {
+
+  private List<GrimCommit> getCommitsWithoutTrees(List<GrimCommit> commits, List<GrimCommitTree> trees) {
+    final var treesByCommitId = trees.stream()
+        .collect(Collectors.groupingBy(e -> e.getCommitId()));
+    
+    final var result = new ArrayList<GrimCommit>();
+    for(final var commit : commits) {
+      if(!treesByCommitId.containsKey(commit.getCommitId())) {
+        result.add(commit);
+      }
+    }
+    return Collections.unmodifiableList(result);
+  }
+  
+  
+  private List<GrimCommit> getCommitsAfterCutOff(GrimState tx, String missionId, List<GrimCommit> commits, List<GrimCommitTree> trees) {
+    final var treesByCommitId = trees.stream().collect(Collectors.groupingBy(e -> e.getCommitId()));
+    final var result = new ArrayList<GrimCommit>();
+    final var commitsSorted = commits.stream().sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt())).toList();
+    
+    
+    var isFirstTreeFound = false;
+    for(final var commit : commitsSorted) {
+      final var isTreeDefined = treesByCommitId.containsKey(commit.getCommitId());
+      
+      if(isTreeDefined) {
+        isFirstTreeFound = true;
+      }
+      
+      if(isTreeDefined || !isFirstTreeFound) {
+        result.add(commit);        
+      } 
+    }
+    return result;
+  }
+  
+  
+  
+  private Uni<List<GrimCommitTree>> getLatestDataAsCommitTreeUsedInCaseHistoryIsNotAvailable(
+      GrimState tx, 
+      String missionId, 
+      List<GrimCommit> commits,
+      List<GrimCommitTree> trees) {
+    
     return tx.query().missions()
     .missionId(missionId)
     .excludeDocs(GrimDocType.GRIM_COMMIT, GrimDocType.GRIM_COMMIT_VIEWER)
     .findAll()
     .collect().asList().onItem().transform(e -> {
       final var container = e.iterator().next();
+      
+      
       final var firstCommit = commits.stream().filter(c -> c.getParentCommitId() == null)
           .findFirst()
           .orElseThrow(() -> new IllegalArgumentException("Can't find first commit!"));
       
-      return ImmutableList.builder()
+      
+      final var commitsWithoutTrees = getCommitsWithoutTrees(commits, trees)
+          .stream().map(c -> c.getCommitId()).toList();
+      
+      final List<GrimCommitTree> firstCommitTree = ImmutableList.builder()
         .add(container.getMission())
-        .addAll(container.getLinks().values())
-        .addAll(container.getMissionLabels().values())
-        .addAll(container.getRemarks().values())
-        .addAll(container.getObjectives().values())
-        .addAll(container.getGoals().values())
-        .addAll(container.getData().values())
-        .addAll(container.getAssignments().values())
-        .addAll(container.getCommands().values())
+        
+        .addAll(container.getLinks().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCreatedWithCommitId()))
+            .toList())
+        
+        .addAll(container.getMissionLabels().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCommitId()))
+            .toList())
+        
+        .addAll(container.getRemarks().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCreatedWithCommitId()))
+            .toList())
+        
+        .addAll(container.getObjectives().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCreatedWithCommitId()))
+            .toList())
+        
+        .addAll(container.getGoals().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCreatedWithCommitId()))
+            .toList())
+        
+        .addAll(container.getData().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCreatedWithCommitId()))
+            .toList())
+        
+        .addAll(container.getAssignments().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCommitId()))
+            .toList())
+        
+        .addAll(container.getCommands().values().stream()
+            .filter(entry -> commitsWithoutTrees.contains(entry.getCommitId()))
+            .toList())
+        
         .build()
-        .stream().map(entity -> {
-          
+        .stream()
+        .map(entity -> {
+      
           final GrimCommitTree tree = ImmutableGrimCommitTree.builder()
             .id(OidUtils.gen())
             .commitId(firstCommit.getCommitId())
@@ -139,6 +234,11 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
         })
         .toList();
       
+      
+      return ImmutableList.<GrimCommitTree>builder()
+            .addAll(firstCommitTree)
+            .addAll(trees)
+            .build();
     });
   }
   

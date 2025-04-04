@@ -87,7 +87,7 @@ public class MissionCommitViewerTest extends DbTestTemplate {
     .commitAuthor("jane.doe@morgue.com")
     .missionId(missionId)
     .modifyMission(mergeMission -> mergeMission
-      .addViewer(v -> v.usedFor("WORKER").userId("X").build())
+      .addViewer(v -> v.usedFor("WORKER").userId("X").currentTxCommit().build())
       .addRemark(newRemark -> newRemark.remarkType("external").remarkText("Created main task for building a house!").reporterId("jane.doe").build())
       .addRemark(newRemark -> newRemark.remarkText("Waiting for results already!").reporterId("the.bob.clown").build())
       .build())

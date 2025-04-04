@@ -125,6 +125,9 @@ public interface ThenaGrimNewObject {
   interface NewMissionCommitViewer {
     NewMissionCommitViewer userId(String userId);
     NewMissionCommitViewer usedFor(String usedFor);
+    NewMissionCommitViewer commitId(String commitId);
+    NewMissionCommitViewer currentTxCommit(); // ongoing tx commit
+    NewMissionCommitViewer currentTreeCommit(); // whatever is last tree updated commit 
     void build(); 
   }
 }

@@ -42,9 +42,10 @@ public class GrimCommitBuilder {
   private final String author;
   private final ImmutableGrimCommit.Builder commit;
   private final ImmutableGrimBatchMissions.Builder next;
+  
   private final GrimCommitLogger logger;
   private final OffsetDateTime createdAt;
-  
+  private boolean isTreePresent = false;
   
   public GrimCommitBuilder(String tenantId, GrimCommit commit) {
     super();
@@ -69,6 +70,7 @@ public class GrimCommitBuilder {
     return createdAt;
   }
   public GrimCommitBuilder add(IsGrimObject entity) {
+    isTreePresent = true;
     this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
@@ -92,7 +94,7 @@ public class GrimCommitBuilder {
       return this;
     }
     
-    
+    isTreePresent = true;
     this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
@@ -104,6 +106,7 @@ public class GrimCommitBuilder {
     return this;
   }
   public GrimCommitBuilder rm(IsGrimObject current) {
+    isTreePresent = true;
     this.next.addCommitTrees(ImmutableGrimCommitTree.builder()
         .id(OidUtils.gen())
         .commitId(commitId)
@@ -114,10 +117,12 @@ public class GrimCommitBuilder {
     this.logger.remove(current);
     return this;
   }
-  public ImmutableGrimBatchMissions close() { 
-    return this.next
-        .addCommits(this.commit.commitLog(this.logger.build()).build())
-        .log("").build();
+  public ImmutableGrimBatchMissions close() {
+    if(this.isTreePresent) {
+      this.next.addCommits(this.commit.commitLog(this.logger.build()).build());
+    }
+    
+    return this.next.log("").build();
   }
   
   public GrimCommitBuilder withMissionId(String missionId) {

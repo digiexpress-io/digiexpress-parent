@@ -382,7 +382,7 @@ public class MergeMissionBuilder implements MergeMission {
   }
   @Override
   public MergeMission addViewer(Consumer<NewMissionCommitViewer> viewer) {
-    final var delegate = new NewMissionCommitViewerBuilder(logger.getCreatedAt(), missionId, logger.getCommitId());
+    final var delegate = new NewMissionCommitViewerBuilder(logger.getCreatedAt(), missionId, logger.getCommitId(), container.getMission().getUpdatedTreeWithCommitId());
     viewer.accept(delegate);
     final var viewed = delegate.close();
     this.batch.addCommitViewers(viewed);
