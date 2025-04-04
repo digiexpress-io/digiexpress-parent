@@ -1,4 +1,4 @@
-import { styled, generateUtilityClass, alpha } from '@mui/material'
+import { styled, generateUtilityClass } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 
 
