@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, TextField, } from '@mui/material';
 
 import { HdesApi } from '@/api-wrench';
 
@@ -76,7 +76,11 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
         value: props.cell.value
       }} />
     </DialogTitle>
-    <DialogContent>{editor}</DialogContent>
+    <DialogContent sx={{ pt: 2, pb: 1, px: 3 }}>
+      <Box display="flex" flexDirection="column" gap={2}>
+        {editor}
+      </Box>
+    </DialogContent>
     <DialogActions>
         <Button variant='text' onClick={() => {
             const builder = Builder({ header, value: undefined }) as any;

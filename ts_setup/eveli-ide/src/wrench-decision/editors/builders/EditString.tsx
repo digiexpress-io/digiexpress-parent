@@ -28,8 +28,8 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
   const list = props.builder.getValues()
     .map((value, index) => (
       <ListItem disablePadding key={index}>
-        <Box display="flex">
-          <Box flexGrow={0}>
+        <Box display="flex" width="100%" alignItems="center">
+          <Box flexShrink={0}>
             <ListItemButton onClick={() => handleRemoveValue(index)}>
               <ListItemIcon>
                 <DeleteOutlineIcon />
@@ -43,8 +43,9 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
       </ListItem>));
 
 
-  return (<>
-
+  return (
+  
+  <Box width="100%" display="flex" flexDirection="column" gap={2}>
     <Grid2 container spacing={2}>
       <Grid2 size={{ xs: 3 }}>
         <Burger.Select
@@ -67,9 +68,10 @@ export const EditString: React.FC<{ builder: StringBuilder, onChange: (value: st
       </Grid2>
     </Grid2>
 
-    <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected' /></InputLabel>
-    <List>{list}</List>
-
-  </>);
-
+    <Box>
+      <InputLabel sx={{ mt: 1 }}><FormattedMessage id='decisions.cells.newvalue.string.selected' /></InputLabel>
+      <List>{list}</List>
+    </Box>
+  </Box>
+  );
 }
