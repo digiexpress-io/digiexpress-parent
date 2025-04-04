@@ -3,6 +3,7 @@ package io.digiexpress.eveli.client.spi.mq;
 import com.google.common.collect.ImmutableSet;
 
 import io.digiexpress.eveli.client.api.CommsClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.spi.mq.WrenchFlowCommand.TaskNotification;
 
 /*-
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumerForCustomerNotification implements ThenaMqConsumer {
 
   private final CommsClient commsClient;
+  private final ProcessClient processClient;
   
   @Override
   public String getRoutingKey() {
@@ -57,6 +59,8 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
     try {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
       
+      final var process = processClient.queryInstances().findOneByTaskId(notification.getTaskId());
+      
       // no point to notify user who made the change 
       if(notification.getCustomerId().equals(notification.getUpdaterId())) {
         return ImmutableMessageResponse.builder()
@@ -69,6 +73,7 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
       
       final var builder = commsClient.createCustomerSms()
           .messageId(msg.getId())
+          .senderId(process.get().getUserId())
           .sms(
               notification.getTitle().get(customerLocale), 
               notification.getMessage().get(customerLocale)

@@ -31,6 +31,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.OrgClient;
+import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -102,17 +103,14 @@ public class EveliAutoConfigMq {
   public DeliveryForChannels mqScheduler(ThenaMqClient client, ThenaMqAppConfig config) {
     return new DeliveryForChannels(config, client);
   }
-
   @Bean
-  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client) {
-    return new ConsumerForCustomerNotification(client);
+  public ThenaMqConsumer consumerForCustomerNotification(CommsClient client, ProcessClient proc) {
+    return new ConsumerForCustomerNotification(client, proc);
   }
   @Bean
   public ThenaMqConsumer consumerForWorkerEmail(CommsClient client, OrgClient orgClient) {
     return new ConsumerForWorkerEmail(client, orgClient);
   }
-  
-  
   @Bean
   public ThenaMqConsumer loggingThenaMqConsumer() {
     return new ConsumerForLogging();
@@ -121,14 +119,12 @@ public class EveliAutoConfigMq {
   public PublisherForTaskEvents queueWriter(TaskClient taskClient, ThenaMqClient mqClient, EveliEnvirClient envir) {
     return new PublisherForTaskEvents(taskClient, mqClient, envir);
   }
-  
   @Bean
   public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
     final var eventMulticaster = new SimpleApplicationEventMulticaster();
     eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
     return eventMulticaster;
   }
-  
   public static class EveliAutoConfigMqException extends RuntimeException {
     private static final long serialVersionUID = 6360677780999109334L;
     public EveliAutoConfigMqException(String message) {
