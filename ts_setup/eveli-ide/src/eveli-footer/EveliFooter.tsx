@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, useThemeProps } from '@mui/material';
+
 import { useUtilityClasses, MUI_NAME, EveliFooterRoot } from './useUtilityClasses';
 import { EveliOverridableComponent } from '../api-variants';
 import { FormattedMessage } from 'react-intl';
@@ -27,10 +28,10 @@ export const EveliFooter: React.FC<EveliFooterProps> = (initProps) => {
   return (
     <Root ownerState={ownerState} className={classes.root}>
       {props.children}            
-      <Typography>
+      <Typography variant='caption'>
         <FormattedMessage id={"activities.version.composer"} values={{ version: info?.frontend.version, date: info?.frontend.built }} />
       </Typography>
-      <Typography>
+      <Typography variant='caption'>
         <FormattedMessage id={"activities.version.core"} values={{ version: info?.backend.version, date: info?.backend.built }} />
       </Typography>
     </Root>

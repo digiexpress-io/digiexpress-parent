@@ -35,13 +35,12 @@ export const EveliFooterRoot = styled("div", {
 })<{ ownerState: EveliFooterProps }>(({ theme }) => {
   return {
     display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column'
-    },
-    paddingLeft: theme.spacing(1),
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'left',
+    padding: theme.spacing(1),
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.secondary.main,
+    borderTop: `1px solid ${theme.palette.divider}`
   };
 });

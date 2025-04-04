@@ -31,7 +31,7 @@ export const EveliShell: React.FC<EveliShellProps> = (initProps) => {
   });
 
   const ownerState = {
-    footerHeight: 50,
+    footerHeight: 100,
     drawerWidth: 300,
     minibarWidth: 70,
     ...nonEmpty(themeProps),
