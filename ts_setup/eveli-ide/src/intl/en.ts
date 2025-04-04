@@ -199,6 +199,7 @@ export const en = {
   'spoTasksTableHeader.assignedUser': 'User',
   'spoTasksTableHeader.created': 'Created',
   'spoTasksTableHeader.clientName': 'Client',
+  'spoTasksTableHeader.additionalInfo': 'Info',
   'taskDialog.clientIdentificator': 'Client name',
   'taskDialog.assignedUserEmail': 'User\'s email',
   'task.editRoles': 'Task groups',

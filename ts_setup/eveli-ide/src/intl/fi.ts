@@ -197,6 +197,7 @@ export const fi = {
   'spoTasksTableHeader.assignedUser': 'Käyttäjä',
   'spoTasksTableHeader.created': 'Luotu',
   'spoTasksTableHeader.clientName': 'Asiakas',
+  'spoTasksTableHeader.additionalInfo': 'Info',
   'taskDialog.clientIdentificator': 'Asiakas',
   'taskDialog.assignedUserEmail': 'Käyttäjän sähköposti',
   'task.editRoles': 'Tehtäväryhmät',

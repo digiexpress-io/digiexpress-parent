@@ -2,7 +2,7 @@ import React, { useContext, useRef, forwardRef, useEffect, useState } from 'reac
 
 import MaterialTable, { Column } from '@material-table/core';
 
-import { Container, Typography } from '@mui/material';
+import { alpha, Container, Typography, useTheme } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -51,6 +51,7 @@ const AddTaskAction: React.FC<{}> = (props) => {
 
 export const EveliTasks: React.FC = ({ }) => {
   const intl = useIntl();
+  const theme = useTheme();
   const tableLocalization = useMaterialTableLabels();
   const tableContext = useContext(EveliTaskTableContext);
   const { isFirstRenderAfterRefresh, setRefreshed } = useRefresh();
@@ -78,7 +79,7 @@ export const EveliTasks: React.FC = ({ }) => {
 
   const orderCollection = tableContext.sort || [
     { orderBy: 0, orderByField: "priority", orderDirection: 'desc', sortOrder: 1 },
-    { orderBy: 6, orderByField: "dueDate", orderDirection: 'asc', sortOrder: 2 }
+    { orderBy: 7, orderByField: "dueDate", orderDirection: 'asc', sortOrder: 2 }
   ];
 
   const onOrderCollectionChange = (orderByCollection: any) => {
@@ -94,7 +95,42 @@ export const EveliTasks: React.FC = ({ }) => {
         title={<Typography variant='h1'><FormattedMessage id='tasksView.title' /></Typography>}
         localization={tableLocalization}
         columns={tableState.columns}
+
+        sx={{
+          '& .MuiInputBase-root': {
+            height: '3rem',
+            alignContent: 'center',
+            paddingLeft: '0px !important',
+            paddingRight: '0px !important',
+          },
+          '& .MuiInputBase-inputTypeSearch': {
+            paddingLeft: '0px !important',
+          },
+          '& .MuiSelect-select': {
+            height: '3rem',
+            alignContent: 'center',
+          },
+          '& .MuiTableRow-root:nth-of-type(even)': {
+            backgroundColor: alpha(theme.palette.secondary.main, 0.7),
+          },
+          '& .MuiTableRow-root:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+          },
+          '& .MuiTableRow-root.MuiTableRow-head': {
+            backgroundColor: alpha(theme.palette.secondary.main, 0.7),
+          },
+          '& .MuiTableCell-root': {
+            borderBottom: `1px solid ${theme.palette.divider}`
+          },
+
+        }}
         options={{
+          filterCellStyle: {
+            paddingBottom: theme.spacing(2),
+            paddingTop: 'unset',
+            paddingLeft: theme.spacing(0.5),
+            paddingRight: theme.spacing(0.5)
+          },
           columnsButton: true,
           filtering: true,
           search: false,
@@ -106,7 +142,7 @@ export const EveliTasks: React.FC = ({ }) => {
           idSynonym: 'id',
           maxColumnSort: 3,
           defaultOrderByCollection: orderCollection,
-          showColumnSortOrder: true
+          showColumnSortOrder: true,
         }}
         actions={[
           {
@@ -143,3 +179,4 @@ export const EveliTasks: React.FC = ({ }) => {
     </Container>
   );
 }
+

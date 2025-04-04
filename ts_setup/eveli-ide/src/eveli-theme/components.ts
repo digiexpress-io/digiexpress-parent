@@ -103,7 +103,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
   MuiTextField: {
     styleOverrides: {
       root: ({ ownerState, theme }) => ({
-        marginTop: theme.spacing(1),
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.background.paper,
         '& .MuiInputBase-input': {

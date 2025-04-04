@@ -143,7 +143,7 @@ public class PaginateTasksImpl implements PaginateTasks {
     final var offset = pageable.getOffset();
     final var limit = pageable.getPageSize();
     final var pageNumber = pageable.getPageNumber();
-    final var orders = pageable.getSort().get().map(this::sortOrder).toList();
+    final var orders = pageable.getSort().get().map(this::sortOrder).filter(s -> s != null).toList();
     
     return ImmutablePageQuery.<MissionOrderByType>builder()
         .offset(offset)
@@ -167,7 +167,7 @@ public class PaginateTasksImpl implements PaginateTasks {
       case "assignedUser": type.property(MissionOrderByType.MISSION_ASSIGNMENT_VALUE).propertyType(TaskMapper.ASSIGNMENT_TYPE_TASK_USER); break;
       case "subject": type.property(MissionOrderByType.MISSION_TITLE).propertyType(assignedUser); break;
       
-      default: throw new IllegalArgumentException("Unexpected value: " + order.getProperty());
+      default: return null;
     }
 
     return type.build();
