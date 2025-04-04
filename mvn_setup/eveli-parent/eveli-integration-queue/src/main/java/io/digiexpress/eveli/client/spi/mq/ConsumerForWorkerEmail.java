@@ -1,6 +1,7 @@
 package io.digiexpress.eveli.client.spi.mq;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.groovy.parser.antlr4.util.StringUtils;
@@ -89,7 +90,7 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   
   private List<String> getEmails(TaskNotification notification) {
     final List<String> emails = (StringUtils.isEmpty(notification.getTaskGroupId()) ? 
-        Arrays.asList(notification.getAssigneeEmail()) : 
+        (StringUtils.isEmpty(notification.getAssigneeEmail()) ? Collections.emptyList() : Arrays.asList(notification.getAssigneeEmail())) : 
         orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId())
     );
     

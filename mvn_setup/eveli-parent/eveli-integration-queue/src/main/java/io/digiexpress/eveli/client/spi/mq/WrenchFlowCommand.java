@@ -111,7 +111,7 @@ public class WrenchFlowCommand {
   public interface TaskNotification {
     @Nullable String getUpdaterId();
     @Nullable String getAssigneeId();
-    String getAssigneeEmail();
+    @Nullable String getAssigneeEmail();
     String getChangeType();
     String getQueue();
 
