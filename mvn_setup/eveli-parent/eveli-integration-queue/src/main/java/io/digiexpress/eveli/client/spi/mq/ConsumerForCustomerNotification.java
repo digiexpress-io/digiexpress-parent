@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.mq;
 
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableSet;
 
 import io.digiexpress.eveli.client.api.CommsClient;
@@ -60,9 +62,19 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
       final var notification = msg.getBodyValue().mapTo(TaskNotification.class);
       
       final var process = processClient.queryInstances().findOneByTaskId(notification.getTaskId());
+      final Optional<String> userId = process.map(p->p.getUserId());
       
+      if (userId.isEmpty()) {
+        log.debug("Message for task {} is skipped because user id is missing", notification.getTaskRef());
+        // message requires user id, skip, if not present
+        return ImmutableMessageResponse.builder()
+            .ack(MessageResponseStatus.OK)
+            .comment("Message skipped because no user ID")
+            .build();     
+      }
       // no point to notify user who made the change 
       if(notification.getCustomerId().equals(notification.getUpdaterId())) {
+        log.debug("Message for task {} is skipped because user is same as sender", notification.getTaskRef());
         return ImmutableMessageResponse.builder()
             .ack(MessageResponseStatus.OK)
             .comment("Message skipped because receiver is same as sender")
@@ -73,7 +85,7 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
       
       final var builder = commsClient.createCustomerSms()
           .messageId(msg.getId())
-          .senderId(process.get().getUserId())
+          .senderId(userId.get())
           .sms(
               notification.getTitle().get(customerLocale), 
               notification.getMessage().get(customerLocale)
@@ -94,7 +106,7 @@ public class ConsumerForCustomerNotification implements ThenaMqConsumer {
       
       return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
     } catch (Exception e) {
-      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
+      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily(), e);
       return ImmutableMessageResponse.builder()
           .ack(MessageResponseStatus.ERROR)
           .build();
