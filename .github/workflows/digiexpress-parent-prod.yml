@@ -29,7 +29,7 @@ jobs:
         java-version: '17'
         gpg-private-key: ${{ secrets.GPG_KEY }}
         gpg-passphrase: GPG_KEY_SEC
-        server-id: s01.oss.sonatype.org
+        server-id: central
         server-username: OSSRH_USER
         server-password: OSSRH_PASS
     
