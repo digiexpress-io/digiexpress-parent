@@ -475,8 +475,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         </fieldset>
 
                       </Box>
-                      <Button variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles' /></Button>
-
+                      <Button disabled={readonly} variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles' /></Button>
                     </Grid2>
                   }
                   {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }} sx={{ mt: 1 }}>

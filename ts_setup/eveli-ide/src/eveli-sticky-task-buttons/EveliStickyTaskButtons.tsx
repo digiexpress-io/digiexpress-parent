@@ -65,7 +65,7 @@ export interface EveliStickTaskButtonsProps {
 export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ editTask, isSubmitting, isValid, dirty, submitForm, readonly }) => {
   const theme = useTheme();
 
-
+  console.log("edittask questionnaireId", editTask.questionnaireId)
   return (
     <Box sx={{
       bottom: 10,
@@ -81,7 +81,7 @@ export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ e
 
           <NavigateToTasksButton />
 
-          {(!editTask.keyWords || editTask.keyWords.length === 0) && (
+          {(editTask.questionnaireId) && (
             <Box display='flex' gap={1}>
               <FormReviewButton sessionId={editTask.questionnaireId} taskId={editTask.id} />
               <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'><FeedbackButton taskId={editTask.id} /></EveliPermissions>
