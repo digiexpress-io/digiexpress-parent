@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
-import { VerticalButtonColumn } from './RotatedButtons';
+import { VerticalButtonColumn } from './VerticalButtonColumn';
 
 
 export const EveliTable: React.FC = () => {
