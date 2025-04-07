@@ -118,9 +118,16 @@ export const EveliTasks: React.FC = ({ }) => {
           },
           '& .MuiTableRow-root.MuiTableRow-head': {
             backgroundColor: alpha(theme.palette.secondary.main, 0.7),
+            textTransform: 'uppercase',
+            '.MuiButtonBase-root': { // font for table headers that are buttons
+              fontSize: '10pt'
+            },
+            'div': {
+              fontSize: '10pt', // table headers that are not buttons
+            }
           },
           '& .MuiTableCell-root': {
-            borderBottom: `1px solid ${theme.palette.divider}`
+            borderBottom: `1px solid ${theme.palette.divider}`,
           },
 
         }}
