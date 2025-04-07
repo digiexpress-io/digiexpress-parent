@@ -35,6 +35,7 @@ public class EveliPropsEmail {
   private String hostName;
   private String hostPort;
   private String senderEmail;
+  private String senderName;
   private String senderPassword;
   private List<String> allowedRecipients;
   private List<String> enabledDomains;

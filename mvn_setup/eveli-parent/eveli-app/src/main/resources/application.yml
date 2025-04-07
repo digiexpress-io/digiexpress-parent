@@ -75,6 +75,7 @@ eveli.email.enabled: false
 eveli.email.host-name: 
 eveli.email.host-port: 
 eveli.email.sender-email: 
+eveli.email.sender-name: 
 eveli.email.sender-password: 
 eveli.email.allowed-recipients: 
 eveli.email.enabled-domains:
