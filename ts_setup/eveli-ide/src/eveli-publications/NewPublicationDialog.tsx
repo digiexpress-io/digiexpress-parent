@@ -70,12 +70,14 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
         label={intl.formatMessage({ id: labelId })}
         fullWidth 
         slotProps={{ input: { margin: 'dense' } }}
-        onChange={(event) => setForm(prev => {
-          const next = {...prev};
-          next[name] = event.currentTarget.value;
-          return next;
-        }) }
-        >
+        onChange={(event) => {
+          const newValue = event.target.value;
+          setForm(prev => {
+            const next = {...prev};
+            next[name] = newValue;
+            return next;
+          }) 
+        }}>
         
         <MenuItem key='-1' value={NEW_TAG_VALUE}>{intl.formatMessage({ id: 'publications.createNewTag' }, { tag: newTag })}</MenuItem>
         { tags?.map(tag => <MenuItem key={tag.name} value={tag.name}>{tag.name} / {tag.description}</MenuItem>) }
@@ -105,11 +107,15 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               error={!form.name}
               helperText={!!form.name ? null : intl.formatMessage({ id: 'error.valueRequired'})} 
               slotProps={{ input: { margin: 'dense' } }}
-              onChange={element => setForm(prev => {
-                const next = {...prev};
-                next.name = element.currentTarget.value;
-                return next;
-              })}
+              onChange={element => {
+                const newValue = element.target.value;
+
+                setForm(prev => {
+                  const next = {...prev};
+                  next.name = newValue;
+                  return next;
+                })
+            }}
             />
 
             <TextField 
@@ -117,11 +123,14 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               label={intl.formatMessage({ id: 'publications.description' })} 
               fullWidth
               slotProps={{ input: { margin: 'dense' } }}
-              onChange={element => setForm(prev => {
-                const next = {...prev};
-                next.description = element.currentTarget.value;
-                return next;
-              })}
+              onChange={element => {
+                const newValue = element.target.value;
+                setForm(prev => {
+                  const next = {...prev};
+                  next.description = newValue;
+                  return next;
+                })
+              }}
             />
 
             <TagComponent name='stencilTag' labelId='publications.contentTag' newTag={form.name} tags={contentTags} />

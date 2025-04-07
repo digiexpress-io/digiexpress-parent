@@ -118,7 +118,7 @@ export const EveliServices: React.FC<{}> = ({  }) => {
         isLoading={false}
         data={workflows || []}
       />
-      <CreateOrEditWorkflowDialog open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()} dialobTags={formTags || []} />
+      {workflow && <CreateOrEditWorkflowDialog open={open} setOpen={setOpen} workflow={workflow} onSubmit={() => refreshWorkflows()} dialobTags={formTags || []} />}
     </>
   );
 }
