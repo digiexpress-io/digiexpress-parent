@@ -1,27 +1,15 @@
 import React from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Stack, Button, TextField } from '@mui/material';
 
-import { Field, Form, Formik } from 'formik';
-import { TextField } from 'formik-mui';
-import { useIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { PublicationApi } from '../api-publications'
-import { EveliDatePicker } from '../eveli-datepicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTime } from 'luxon';
 
 
-
-const messages = defineMessages(
-  {
-    requiredError: {
-      id: "error.valueRequired"
-    },
-    minLengthError: {
-      id: "error.minTextLength"
-    }
-  }
-);
 
 const NEW_TAG_VALUE = '-1';
 
@@ -33,93 +21,124 @@ export interface NewReleaseProps {
 
 export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open, setOpen }) => {
   const intl = useIntl();
-
   const { wrenchTags } = useFetch('worker/rest/api/assets/any-tags/wrench-tags.GET', {});
   const { contentTags } = useFetch('worker/rest/api/assets/any-tags/stencil-tags.GET', {});
   const { savePublication } = useFetch('worker/rest/api/assets/publications.POST', {});
+  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
+  
+  const [form, setForm] = React.useState<PublicationApi.PublicationInit>({
+    name: '',
+    description: '',
+    liveDate: null,
+    wrenchTag: NEW_TAG_VALUE,
+    stencilTag: NEW_TAG_VALUE
+  });
+
+  console.log(form);
+
+  const isValid = (
+    // required fields
+    !!form.name
+
+  );
 
   const handleClose = () => {
     setOpen(false);
   }
 
-  const handleSubmit = (assetReleaseCommand: PublicationApi.PublicationInit): void => {
-    let init: PublicationApi.PublicationInit = { ...assetReleaseCommand }
+  const handleSubmit = (): void => {
+    setSubmitting(true)
+    let init: PublicationApi.PublicationInit = { ...form }
     // clear markers for new release creation
-    if (assetReleaseCommand.stencilTag === NEW_TAG_VALUE) {
+    if (init.stencilTag === NEW_TAG_VALUE) {
       init.stencilTag = null;
     }
-    if (assetReleaseCommand.wrenchTag === NEW_TAG_VALUE) {
+    if (init.wrenchTag === NEW_TAG_VALUE) {
       init.wrenchTag = null;
     }
 
     savePublication(init, () => {
       setOpen(false);
       onSubmit();
+      setSubmitting(false)
     });
   }
 
-  const requiredValidator = (value: any) => !value ? intl.formatMessage(messages.requiredError) : undefined;
 
-  const TagComponent: React.FC<{ name: string, labelId: string, tags?: PublicationApi.AssetTag[], newTag: string }> =
+
+
+  const TagComponent: React.FC<{ name: 'wrenchTag' | 'stencilTag', labelId: string, tags?: PublicationApi.AssetTag[], newTag: string }> =
     ({ name, labelId, tags, newTag }) => (
-      <Field component={TextField} select name={name} label={intl.formatMessage({ id: labelId })}
-        fullWidth InputProps={{ margin: 'dense' }}>
+      <TextField select 
+        name={name} 
+        value={form[name] ?? NEW_TAG_VALUE}
+        label={intl.formatMessage({ id: labelId })}
+        fullWidth 
+        slotProps={{ input: { margin: 'dense' } }}
+        onChange={(event) => setForm(prev => {
+          const next = {...prev};
+          next[name] = event.currentTarget.value;
+          return next;
+        }) }
+        >
+        
         <MenuItem key='-1' value={NEW_TAG_VALUE}>{intl.formatMessage({ id: 'publications.createNewTag' }, { tag: newTag })}</MenuItem>
-        {
-          tags?.map(tag => <MenuItem key={tag.name} value={tag.name}>{tag.name} / {tag.description}</MenuItem>)
-        }
-      </Field>
+        { tags?.map(tag => <MenuItem key={tag.name} value={tag.name}>{tag.name} / {tag.description}</MenuItem>) }
+      </TextField>
     )
 
   return (
       <Dialog open={open} onClose={handleClose} aria-labelledby='new-form-dialog-title' maxWidth='md' fullWidth>
         <DialogTitle fontWeight='bold' id='new-form-dialog-title'>{intl.formatMessage({ id: 'publications.dialogTitle' })}</DialogTitle>
-        <Formik
-          initialValues={{
-            name: '',
-            description: '',
-            liveDate: null,
-            wrenchTag: NEW_TAG_VALUE,
-            stencilTag: NEW_TAG_VALUE
-          }}
-          enableReinitialize={true}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values);
-            setSubmitting(false);
-          }}
-        >
-          {
-            ({ submitForm, isSubmitting, values, errors, isValid }) => (
-              <Form>
-                <DialogContent>
-                  <Stack spacing={1}>
-                    <Field
-                      name='liveDate'
-                      component={EveliDatePicker}
-                      disableMaskedInput
-                      label={intl.formatMessage({ id: 'publications.liveDate' })}
-                      fullWidth
-                    />
 
-                    <Field component={TextField} name='name' label={intl.formatMessage({ id: 'publications.name' })}
-                      fullWidth required validate={requiredValidator} error={!!errors?.name}
-                      helperText={errors?.name} InputProps={{ margin: 'dense' }} />
+        <DialogContent>
+          <Stack spacing={1}>
+            <DatePicker
+              format='dd.MM.yyyy'
+              value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
+              label={intl.formatMessage({ id: 'publications.liveDate' })}
+              slots={{textField: textFieldProps => <TextField fullWidth {...textFieldProps} />}}
+              onChange={date => setForm(prev => {
+                const next = {...prev};
+                next.liveDate = date ? DateTime.fromJSDate(date).plus({ seconds: 1}).toLocal().toISO({ includeOffset: false,  }) : null;
+                return next;
+              })}
+            />
 
+            <TextField fullWidth required name='name' 
+              label={intl.formatMessage({ id: 'publications.name' })}
+              error={!form.name}
+              helperText={!!form.name ? null : intl.formatMessage({ id: 'error.valueRequired'})} 
+              slotProps={{ input: { margin: 'dense' } }}
+              onChange={element => setForm(prev => {
+                const next = {...prev};
+                next.name = element.currentTarget.value;
+                return next;
+              })}
+            />
 
-                    <Field component={TextField} name='description' label={intl.formatMessage({ id: 'publications.description' })} fullWidth InputProps={{ margin: 'dense' }} />
+            <TextField 
+              name='description' 
+              label={intl.formatMessage({ id: 'publications.description' })} 
+              fullWidth
+              slotProps={{ input: { margin: 'dense' } }}
+              onChange={element => setForm(prev => {
+                const next = {...prev};
+                next.description = element.currentTarget.value;
+                return next;
+              })}
+            />
 
-                    <TagComponent name='stencilTag' labelId='publications.contentTag' newTag={values.name} tags={contentTags} />
-                    <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={values.name} tags={wrenchTags} />
-                  </Stack>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
-                  <Button variant='contained' onClick={submitForm} disabled={isSubmitting || !isValid}  ><FormattedMessage id='button.accept'/></Button>
-                </DialogActions>
-              </Form>
-            )
-          }
-        </Formik>
+            <TagComponent name='stencilTag' labelId='publications.contentTag' newTag={form.name} tags={contentTags} />
+            <TagComponent name='wrenchTag' labelId='publications.wrenchTag' newTag={form.name} tags={wrenchTags} />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <Button variant='contained' onClick={handleSubmit} disabled={isSubmitting || !isValid}>
+            <FormattedMessage id='button.accept'/>
+          </Button>
+        </DialogActions>
       </Dialog>
   );
 }
