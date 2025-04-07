@@ -34,8 +34,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
     stencilTag: NEW_TAG_VALUE
   });
 
-  console.log(form);
-
   const isValid = (
     // required fields
     !!form.name
@@ -63,9 +61,6 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
       setSubmitting(false)
     });
   }
-
-
-
 
   const TagComponent: React.FC<{ name: 'wrenchTag' | 'stencilTag', labelId: string, tags?: PublicationApi.AssetTag[], newTag: string }> =
     ({ name, labelId, tags, newTag }) => (
