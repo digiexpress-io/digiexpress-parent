@@ -15,6 +15,7 @@ import { useTasksTableState } from './useTasksTableState';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { useNavigate } from '@tanstack/react-router';
 import { EveliPermissions } from '@/eveli-permissions';
+import { EveliTable } from '@/eveli-table/EveliTable';
 
 
 
@@ -89,6 +90,7 @@ export const EveliTasks: React.FC = ({ }) => {
 
   return (
     <Container maxWidth='xl'>
+
       <MaterialTable
         tableRef={tableState.tableRef}
         icons={{ Filter: forwardRef(() => <div />) }}

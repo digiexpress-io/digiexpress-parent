@@ -1,0 +1,140 @@
+import { styled, generateUtilityClass } from '@mui/material'
+import composeClasses from '@mui/utils/composeClasses'
+
+export const EveliTableRootClassName = 'EveliTable';
+
+
+const cellPadding = '10px';
+
+export const useUtilityClasses = () => {
+  const slots = {
+    root: ['root'],
+    headerRow: ['headerRow'],
+    headerCell: ['headerCell'],
+    row: ['row'],
+    rowCell: ['rowCell'],
+    col: ['col']
+  };
+  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRootClassName, slot);
+  return composeClasses(slots, getUtilityClass, {});
+}
+
+export const EveliTableRoot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'Root',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root
+    ];
+  },
+
+})<{}>(({ theme }) => {
+
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+  };
+});
+
+export const EveliTableHeaderRoot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'HeaderRow',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+      styles.headerRow,
+      styles.headerCell
+    ];
+  },
+
+})<{}>(({ theme }) => {
+
+  return {
+    backgroundColor: theme.palette.secondary.main,
+    borderRadius: '10px 0px 0px 0px',
+    border: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
+    padding: cellPadding,
+    '.MuiTypography-root': {
+      fontSize: '10pt'
+    },
+
+    '& .EveliTable-headerCell': {
+      flex: 1,
+      borderRight: `2px solid ${theme.palette.divider}`,
+      paddingLeft: cellPadding,
+      paddingRight: cellPadding,
+      display: 'flex',
+      alignItems: 'center',
+      '.MuiTypography-root': {
+        fontWeight: 'bolder',
+      },
+      '&:last-of-type': {
+        borderRight: 'none', // remove right border from the last cell
+        paddingRight: 'unset'
+      },
+      '.MuiSvgIcon-root': {
+        color: theme.palette.primary.main,
+        ':hover': {
+          cursor: 'pointer'
+        }
+      }
+    },
+  };
+});
+
+
+export const EveliTableRowRoot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'Row',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+      styles.row,
+      styles.rowCell
+    ];
+  },
+
+})<{}>(({ theme }) => {
+
+  return {
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.divider}`,
+    borderTop: 'none',
+    display: 'flex',
+    padding: cellPadding,
+    '.MuiTypography-root': {
+      fontSize: '10pt'
+    },
+    '&:last-of-type': { // target the last row to round the bottom left corner
+      borderRadius: '0px 0px 0px 10px',
+    },
+    '& .EveliTable-rowCell': {
+      flex: 1,
+      paddingLeft: cellPadding,
+      paddingRight: cellPadding,
+      display: 'flex',
+      alignItems: 'center',
+    }
+
+  };
+});
+
+
+
+export const EveliTableColRoot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'Col',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+      styles.col
+    ];
+  },
+
+})<{ width: string }>(({ theme, width }) => {
+
+  return {
+    width,
+  };
+});
