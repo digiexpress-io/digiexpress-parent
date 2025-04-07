@@ -65,7 +65,6 @@ export interface EveliStickTaskButtonsProps {
 export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ editTask, isSubmitting, isValid, dirty, submitForm, readonly }) => {
   const theme = useTheme();
 
-  console.log("edittask questionnaireId", editTask.questionnaireId)
   return (
     <Box sx={{
       bottom: 10,

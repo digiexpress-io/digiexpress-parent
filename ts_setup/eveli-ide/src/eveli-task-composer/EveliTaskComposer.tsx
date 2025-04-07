@@ -56,7 +56,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
     const saved = await (task.id ? updateTask(task) : createTask(task));
     setSupressConfirmation(true);
     setTaskData(null);
-    return saved;
+    return;
   }
 
   React.useEffect(()=>{
