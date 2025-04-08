@@ -4,9 +4,18 @@ import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowR
 import { EveliTableVerticalButtonColumn } from './EveliTableVerticalButtonColumn';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
+import { EveliTableVerticalMenu } from './EveliTableVerticalMenu';
+
 
 export const EveliTable: React.FC = () => {
   const classes = useUtilityClasses();
+  const [vertMenuOpen, setVertMenuOpen] = React.useState(false); //TODO
+
+  function toggleVertMenu() {
+    setVertMenuOpen(prev => !prev);
+  }
+
+
   return (
     <Box sx={{ p: 2 }}> {/* mock container / wrapper */}
       <EveliTableRoot className={classes.root}>
@@ -48,13 +57,14 @@ export const EveliTable: React.FC = () => {
           </EveliTableRowRoot>
         </EveliTableColRoot>
 
+        {vertMenuOpen && <EveliTableVerticalMenu width='15%' />} 
         <EveliTableColRoot width='3%'>
-          <EveliTableVerticalButtonColumn />
+          <EveliTableVerticalButtonColumn onClick={toggleVertMenu} />
         </EveliTableColRoot>
+
       </EveliTableRoot>
     </Box>
   )
-
 }
 
 const EveliTableHeaderCell: React.FC<{ title: string, className: string }> = ({ title, className }) => {

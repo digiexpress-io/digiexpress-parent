@@ -1,15 +1,16 @@
+import React from "react";
 import { Button, generateUtilityClass, styled, Typography } from "@mui/material";
 
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import composeClasses from "@mui/utils/composeClasses";
 
-const RotatedButton: React.FC<{ label: string, icon: React.ReactNode }> = ({ label, icon }) => {
+const RotatedButton: React.FC<{ label: string, icon: React.ReactNode, onClick: () => void }> = ({ label, icon, onClick }) => {
   const classes = useUtilityClasses();
 
   return (
     <RotatedButtonsRoot className={classes.root}>
-      <Button variant='text' startIcon={icon}>
+      <Button variant='text' startIcon={icon} onClick={onClick} disableRipple>
         <Typography>{label}</Typography>
       </Button>
     </RotatedButtonsRoot>
@@ -17,13 +18,13 @@ const RotatedButton: React.FC<{ label: string, icon: React.ReactNode }> = ({ lab
 };
 
 
-export const EveliTableVerticalButtonColumn: React.FC = () => {
+export const EveliTableVerticalButtonColumn: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const classes = useUtilityClasses();
 
   return (
     <VerticalButtonsColumnRoot className={classes.root}>
-      <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} />
-      <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} />
+      <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} onClick={onClick} />
+      <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} onClick={onClick} />
     </VerticalButtonsColumnRoot>
   );
 };
@@ -82,9 +83,11 @@ const RotatedButtonsRoot = styled('div', {
     '.MuiButtonBase-root': {
       writingMode: 'vertical-rl',
       transform: 'rotate(360deg)',
+      backgroundColor: 'transparent',
       ':hover': {
         backgroundColor: 'transparent'
       },
+
       '.MuiButton-icon': {
         marginRight: '0px',
         marginLeft: '0px',
