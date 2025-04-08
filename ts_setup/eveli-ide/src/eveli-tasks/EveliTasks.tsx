@@ -90,7 +90,6 @@ export const EveliTasks: React.FC = ({ }) => {
 
   return (
     <Container maxWidth='xl'>
-
       <MaterialTable
         tableRef={tableState.tableRef}
         icons={{ Filter: forwardRef(() => <div />) }}
@@ -184,7 +183,8 @@ export const EveliTasks: React.FC = ({ }) => {
           if (tableState.tableRef.current)
             tableState.tableRef.current.onQueryChange();
         }}
-      /> 
+      />
+
     </Container>
   );
 }

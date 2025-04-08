@@ -17,7 +17,7 @@ const RotatedButton: React.FC<{ label: string, icon: React.ReactNode }> = ({ lab
 };
 
 
-export const VerticalButtonColumn: React.FC = () => {
+export const EveliTableVerticalButtonColumn: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (

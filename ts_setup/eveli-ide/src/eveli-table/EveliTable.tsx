@@ -1,10 +1,9 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { Box, Typography } from '@mui/material';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
-import { VerticalButtonColumn } from './VerticalButtonColumn';
-
+import { EveliTableVerticalButtonColumn } from './EveliTableVerticalButtonColumn';
+import { EveliTableColumnOptions } from './EveliTableColumnOptions';
+import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 
 export const EveliTable: React.FC = () => {
   const classes = useUtilityClasses();
@@ -50,7 +49,7 @@ export const EveliTable: React.FC = () => {
         </EveliTableColRoot>
 
         <EveliTableColRoot width='3%'>
-          <VerticalButtonColumn />
+          <EveliTableVerticalButtonColumn />
         </EveliTableColRoot>
       </EveliTableRoot>
     </Box>
@@ -63,8 +62,8 @@ const EveliTableHeaderCell: React.FC<{ title: string, className: string }> = ({ 
     <div className={className}>
       <Typography>{title}</Typography>
       <div style={{ flexGrow: 1 }} />
-      <FilterListIcon fontSize='small' />
-      <MoreVertIcon fontSize='small' />
+      <EveliTableColumnFilter />
+      <EveliTableColumnOptions />
     </div>
   )
 }

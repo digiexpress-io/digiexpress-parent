@@ -51,7 +51,7 @@ export const EveliTableHeaderRoot = styled('div', {
 
   return {
     backgroundColor: theme.palette.secondary.main,
-    borderRadius: '10px 0px 0px 0px',
+    borderRadius: `${theme.spacing(1)} 0px 0px 0px`,
     border: `1px solid ${theme.palette.divider}`,
     display: 'flex',
     padding: cellPadding,
@@ -107,7 +107,7 @@ export const EveliTableRowRoot = styled('div', {
       fontSize: '10pt'
     },
     '&:last-of-type': { // target the last row to round the bottom left corner
-      borderRadius: '0px 0px 0px 10px',
+      borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
     '& .EveliTable-rowCell': {
       flex: 1,
