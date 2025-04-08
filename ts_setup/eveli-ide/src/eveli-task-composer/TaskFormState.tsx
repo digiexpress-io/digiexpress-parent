@@ -52,7 +52,6 @@ export const TaskFormState: React.FC<{
   children: React.FC<TaskFormDelegateProps>;
   onSubmit: (task: TaskApi.Task) => Promise<void>;
 }> = (props) => {
-
   const { user: currentUser } = useIam();  
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
 

@@ -44,8 +44,17 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   }
 
   const loadCommentData = () => {
-    if (taskData) {
-      getTaskComments(taskData).then(data => setCommentData(data));
+    if (taskData && taskData?.id) {
+
+      Promise
+        .all([getTaskComments(taskData), getTask(taskData.id)])
+        .then(([comments, task]) => {
+          setCommentData(comments);
+          if(taskData.version !== task.version) {
+            setTaskData(prev => ({...prev, version: task.version}))
+          }
+        });
+
     } else {
       setCommentData([]);
     }
