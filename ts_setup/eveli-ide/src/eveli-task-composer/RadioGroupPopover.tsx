@@ -2,16 +2,17 @@ import React from 'react';
 import { Box, Button, FormControlLabel, Popover, Radio, RadioGroup, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { FormattedMessage } from 'react-intl';
-import { useField, FieldInputProps } from 'formik';
+
 
 import { TaskApi } from '@/api-task';
 
 
-interface CommonProps extends FieldInputProps<""> {
+interface CommonProps {
   label: string;
   readonly?: boolean;
   messages: Record<string, { id: string; defaultMessage: string }>;
   colorMap: TaskApi.ColorMap;
+  value: string | undefined
   handleCallback?: (newValue: string) => void;
 }
 
@@ -26,8 +27,8 @@ const getColor = (color: TaskApi.Colors) => {
   }
 }
 
-const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback, ...props }: CommonProps) => {
-  const [field, , helpers] = useField(props);
+const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback, value }: CommonProps) => {
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [radioValue, setRadioValue] = React.useState<string | undefined>();
 
@@ -50,7 +51,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
 
   const handleConfirm = () => {
     if (radioValue) {
-      helpers.setValue(radioValue);
+
       if(handleCallback){
         handleCallback(radioValue);
       }
@@ -68,8 +69,8 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
           variant="outlined"
           size='small'
           sx={{ 
-            color: getColor(colorMap[field.value]), 
-            borderColor: getColor(colorMap[field.value] || TaskApi.Colors.BLUE), 
+            color: getColor(colorMap[value ?? '']), 
+            borderColor: getColor(colorMap[value ?? ''] || TaskApi.Colors.BLUE), 
             width: "max-content" , 
             borderRadius: 1, 
             borderWidth: 1,
@@ -77,14 +78,14 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
             textTransform: "uppercase",
             "&:hover": {
                 borderWidth: 1,
-                borderColor: getColor(colorMap[field.value] || TaskApi.Colors.BLUE),
+                borderColor: getColor(colorMap[value ?? ''] || TaskApi.Colors.BLUE),
             }
           }}
           onClick={handleClick}
           endIcon={<ArrowDropDownIcon />}
           disabled={!!readonly}
         >
-          {field.value ? <FormattedMessage {...messages[field.value]} /> : <FormattedMessage id='button.select' />}
+          {value ? <FormattedMessage {...messages[value]} /> : <FormattedMessage id='button.select' />}
         </Button>
       </Box>
       <Popover
@@ -101,7 +102,7 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
         }}
       >
         <Box sx={{ p: 2 }}>
-          <RadioGroup value={radioValue ? radioValue : field.value || ''} onChange={handleChange}>
+          <RadioGroup value={radioValue ? radioValue : value || ''} onChange={handleChange}>
             {entries.map(([value, color]) =>
               <FormControlLabel
                 key={value}

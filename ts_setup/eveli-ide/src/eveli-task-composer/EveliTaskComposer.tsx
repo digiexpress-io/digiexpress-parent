@@ -25,7 +25,6 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
 
   const { groups } = useFetch('$org/groupsList.GET', {});
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
-  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
   const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
@@ -45,8 +44,17 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   }
 
   const loadCommentData = () => {
-    if (taskData) {
-      getTaskComments(taskData).then(data => setCommentData(data));
+    if (taskData && taskData?.id) {
+
+      Promise
+        .all([getTaskComments(taskData), getTask(taskData.id)])
+        .then(([comments, task]) => {
+          setCommentData(comments);
+          if(taskData.version !== task.version) {
+            setTaskData(prev => ({...prev, version: task.version}))
+          }
+        });
+
     } else {
       setCommentData([]);
     }
@@ -56,7 +64,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
     const saved = await (task.id ? updateTask(task) : createTask(task));
     setSupressConfirmation(true);
     setTaskData(null);
-    return saved;
+    return;
   }
 
   React.useEffect(()=>{
@@ -103,7 +111,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
         handleSubmit={accept}
         groups={groups}
         getUsers={getUsers}
-        componentResolver={new TasksComponentResolver(() => {}, pdfTaskLinkCallback)}
+        componentResolver={new TasksComponentResolver(() => {})}
         externalThreads={true}
         comments={commentData}
         reloadComments={loadCommentData}

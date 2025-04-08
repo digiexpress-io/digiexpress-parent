@@ -38,17 +38,17 @@ const FeedbackButton: React.FC<{ taskId: string | undefined }> = ({ taskId }) =>
   return (<Button onClick={handleFeedback} variant='contained'><FormattedMessage id='task.form.feedback.manage' /></Button>);
 }
 
-const FormReviewButton: React.FC<{ sessionId: string | undefined, taskId: string | undefined }> = ({ sessionId, taskId }) => {
+const FormReviewButton: React.FC<{ questionnaireId: string | undefined, taskId: string | undefined }> = ({ questionnaireId, taskId }) => {
   const [open, setOpen] = React.useState(false);
 
-  if (!sessionId || !taskId) {
+  if (!questionnaireId || !taskId) {
     return (<></>)
   }
 
   return (
     <>
       <Button onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
-      {open && <DialobReview taskId={taskId + ""} onClose={() => setOpen(false)} />}
+      {open && <DialobReview taskId={taskId} questionnaireId={questionnaireId} onClose={() => setOpen(false)} />}
     </>
   )
 }
@@ -65,7 +65,6 @@ export interface EveliStickTaskButtonsProps {
 export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ editTask, isSubmitting, isValid, dirty, submitForm, readonly }) => {
   const theme = useTheme();
 
-  console.log("edittask questionnaireId", editTask.questionnaireId)
   return (
     <Box sx={{
       bottom: 10,
@@ -83,8 +82,8 @@ export const EveliStickyTaskButtons: React.FC<EveliStickTaskButtonsProps> = ({ e
 
           {(editTask.questionnaireId) && (
             <Box display='flex' gap={1}>
-              <FormReviewButton sessionId={editTask.questionnaireId} taskId={editTask.id} />
-              <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'><FeedbackButton taskId={editTask.id} /></EveliPermissions>
+              <FormReviewButton questionnaireId={editTask.questionnaireId} taskId={editTask.id} />
+              {editTask.features?.includes('feedback') && <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'><FeedbackButton taskId={editTask.id} /></EveliPermissions> }
             </Box>
           )}
           {!readonly && <Button variant='contained' endIcon={<CheckIcon />} disabled={isSubmitting || !isValid || !dirty} onClick={submitForm} >

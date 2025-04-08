@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import { Formik, Form, Field } from 'formik';
 import {
   TextField, Grid2, MenuItem, Chip, InputLabel, Typography, ListItemText, Checkbox,
   Box, Paper, Accordion, AccordionSummary, AccordionDetails, Badge, Autocomplete,
@@ -12,9 +11,8 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
-import { injectIntl, defineMessages, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
+import { injectIntl, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
-import * as Yup from 'yup';
 
 import { UpsertOneFeedback, StatusIndicator } from '../eveli-task-feedback';
 
@@ -33,6 +31,7 @@ import { PageLeavingConfirmation } from './PageLeaveConfirmation';
 import { AttachmentTableWrapper } from './AttachmentTableWrapper';
 import { TaskRoleDialog } from './TaskRoleDialog';
 import { TaskLinkProps, ComponentResolver } from './TaskComponentResolver';
+import { TaskFormState } from './TaskFormState';
 
 
 const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
@@ -44,33 +43,12 @@ const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
     </Paper>)
 }
 
-
-const messages = defineMessages(
-  {
-    requiredError: {
-      id: "error.valueRequired"
-    },
-    minLengthError: {
-      id: "error.minTextLength"
-    },
-    statusOpenError: {
-      id: "error.statusOpenError"
-    },
-    cancel: {
-      id: 'taskButton.cancel'
-    }
-
-  }
-)
-
-
-
 type Props = {
   id: string
   groups: IamApi.UserGroup[]
   getUsers: (groupName: string[]) => Promise<IamApi.GroupMember[]>
   editTask: TaskApi.Task
-  handleSubmit: (task: TaskApi.Task) => void
+  handleSubmit: (task: TaskApi.Task) => Promise<void>
   cancel: () => void
   componentResolver?: ComponentResolver
   externalThreads?: boolean
@@ -87,25 +65,8 @@ type State = {
   dialogOpen: boolean;
 }
 
-const minLength = 3;
-
 
 class TaskCreateInternal extends React.Component<AllProps, State> {
-  formRef = React.createRef<any>();
-
-  validationSchema = Yup.object().shape({
-    subject: Yup.string()
-      .required(this.props.intl.formatMessage(messages.requiredError))
-      .min(3, this.props.intl.formatMessage(messages.minLengthError, { minLength })),
-    assignedUser: Yup.string()
-      .test('assignedUser-validation', this.props.intl.formatMessage(messages.statusOpenError), function (value) {
-        const { status } = this.parent;
-        if (!value && status === 'OPEN') {
-          return false;
-        }
-        return true;
-      })
-  });
 
   constructor(props: AllProps) {
     super(props);
@@ -168,25 +129,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
       return undefined;
   }
 
-  taskFromValues = (values: any): TaskApi.Task => {
-    const { editTask } = this.props;
-    return {
-      id: editTask?.id,
-      priority: values.priority,
-      subject: values.subject,
-      description: values.description,
-      dueDate: values.dueDate,
-      status: values.status,
-      assignedUser: values.assignedUser,
-      assignedUserEmail: values.assignedUserEmail,
-      version: editTask?.version,
-      keyWords: editTask?.keyWords,
-      clientIdentificator: values.clientIdentificator,
-      assignedRoles: values.assignedRoles,
-      additionalInfo: values.additionalInfo
-    }
-  }
-
   openDialog = () => {
     this.setState({ dialogOpen: true });
   }
@@ -196,13 +138,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
   onDialogAccept = () => {
     this.setState({ dialogOpen: false });
 
-  }
-
-  handleRoleChange = (roles: IamApi.UserGroup[],
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void) => {
-    const groupList = roles.map(r => r.id);
-    setFieldValue("assignedRoles", groupList);
-    this.getGroupUsers(groupList);
   }
 
   findRoleDescription = (role: string) => {
@@ -225,13 +160,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
     return editTask.keyWords!.flatMap(element => element.split(','));
   }
 
-  handleStatusCallback = async (newValue: string) => {
-    if (newValue === "OPEN" && (this.formRef?.current?.values.status === "NEW" || this.formRef?.current?.values.status === undefined)) {
-      await this.formRef.current.setFieldValue("assignedUser", this.props?.currentUser?.name || "");
-      await this.formRef.current.setFieldValue("assignedUserEmail", this.props?.currentUser?.email || "");
-    }
-  }
-
   render() {
     const { editTask, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
     const { formatMessage } = this.props.intl;
@@ -240,29 +168,9 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
 
     return (
-      <Formik
-        initialValues={{
-          additionalInfo: editTask.additionalInfo || '',
-          priority: editTask.priority,
-          subject: editTask.subject || '',
-          description: editTask.description || '',
-          dueDate: editTask.dueDate,
-          status: editTask.status,
-          assignedUser: editTask.assignedUser || '',
-          assignedUserEmail: editTask.assignedUserEmail || '',
-          clientIdentificator: editTask.clientIdentificator || '',
-          assignedRoles: editTask.assignedRoles || []
-        }}
-        validationSchema={this.validationSchema}
-        enableReinitialize={true}
-        onSubmit={(values) => {
-          handleSubmit(this.taskFromValues(values));
-        }}
-        innerRef={this.formRef}
-      >
-        {
-          ({ values, submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
-            <Form>
+      <TaskFormState task={editTask} onSubmit={handleSubmit}>
+        { ({ currentState: values, onSubmit: submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
+            <>
               <PageLeavingConfirmation navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
               <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
                 <Grid2 container spacing={2} alignItems="center">
@@ -287,30 +195,29 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                     </Typography>
                   </Grid2>
                   <Grid2 size={{ xs: 12, md: 4 }}>
-                    <Field
-                      name='dueDate'
-                      component={EveliDatePicker}
-                      disableMaskedInput
+                    <EveliDatePicker
                       label={formatMessage({ id: 'taskDialog.dueDate' })}
                       fullWidth={true}
                       readonly={readonly}
+                      value={values.dueDate}
+                      onChange={newDate => setFieldValue('dueDate', newDate)}
                     />
                   </Grid2>
                 </Grid2>
                 <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
                   <Grid2 size={{ xs: 12, md: 6 }}>
-                    <Field
-                      name='clientIdentificator' as={TextField}
+                    <TextField
                       label={formatMessage({ id: 'taskDialog.clientIdentificator' })}
                       fullWidth={true}
                       inputProps={{
                         readOnly: readonly
                       }}
+                      value={values.clientIdentificator}
+                      onChange={event => setFieldValue('clientIdentificator', event.target.value)}
                     />
                   </Grid2>
                   <Grid2 size={{ xs: 12, md: 6 }}>
-                    <Field
-                      name='subject' as={TextField}
+                    <TextField
                       label={formatMessage({ id: 'taskDialog.subject' })}
                       required
                       error={!!errors.subject}
@@ -319,22 +226,21 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                       inputProps={{
                         readOnly: readonly
                       }}
+                      value={values.subject}
+                      onChange={event => setFieldValue('subject', event.target.value)}
                     />
                   </Grid2>
 
                   <Grid2 size={{ xs: 12, md: 12 }}>
-                    <Field
-                      name='additionalInfo' as={TextField}
+                    <TextField
                       label={formatMessage({ id: 'taskDialog.additionalInfo' })}
-                      required
-                      error={!!errors.additionalInfo}
-                      helperText={errors.additionalInfo}
-                      
                       fullWidth={true}
                       inputProps={{
                         readOnly: readonly,
                         maxLength: 100
                       }}
+                      value={values.additionalInfo}
+                      onChange={event => setFieldValue('additionalInfo', event.target.value)}
                     />
                   </Grid2>
                 </Grid2>
@@ -468,7 +374,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                             <InputLabel size='small' shrink={true}><FormattedMessage id='taskDialog.assignedTo' /></InputLabel>
                           </legend>
                           <Box id='task-role-list' sx={classes.taskRoleList}>
-                            {values.assignedRoles.map((value: any) => (
+                            {values.assignedRoles?.map((value: any) => (
                               <Chip key={value} label={this.findRoleDescription(value)} />
                             ))}
                           </Box>
@@ -484,7 +390,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         id="assignedUser"
                         freeSolo
                         options={this.state.userList}
-                        getOptionLabel={option => (typeof option === "string") ? option : option.userName}
+                        getOptionLabel={option => (typeof option === "string") ? option : option.userName ?? ''}
                         value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
                         onInputChange={(event, newInputValue) => {
 
@@ -527,18 +433,19 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                   }
 
                   <Grid2 size={{ xs: 12, md: 6 }}>
-                    <Field
-                      name='status' as={StatusComponent}
+                    <StatusComponent
                       label={formatMessage({ id: 'taskDialog.status' })}
                       readonly={readonly}
-                      handleCallback={this.handleStatusCallback}
+                      value={values.status}
+                      handleCallback={newValue => setFieldValue('status', newValue as any)}
                     />
                   </Grid2>
                   <Grid2 size={{ xs: 12, md: 6 }}>
-                    <Field
-                      name='priority' as={Priority}
+                    <Priority
+                      value={values.priority}
                       label={formatMessage({ id: 'taskDialog.priority' })}
                       readonly={readonly}
+                      handleCallback={newValue => setFieldValue('priority', newValue as any)}
                     />
                   </Grid2>
                 </Grid2>
@@ -560,14 +467,21 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
               <EveliStickyTaskButtons editTask={editTask} dirty={dirty} isSubmitting={isSubmitting} isValid={isValid} readonly={readonly} submitForm={submitForm} />
 
               {this.state.dialogOpen && <TaskRoleDialog
-                assignedRoles={values.assignedRoles} groups={this.props.groups}
-                acceptDialog={(roles: IamApi.UserGroup[]) => { this.handleRoleChange(roles, setFieldValue); this.onDialogClose(); }}
-                closeDialog={this.onDialogClose} />
+                assignedRoles={values.assignedRoles ?? []} 
+                groups={this.props.groups}
+                closeDialog={this.onDialogClose} 
+                acceptDialog={(roles: IamApi.UserGroup[]) => { 
+                  const groupList = roles.map(r => r.id);
+                  setFieldValue("assignedRoles", groupList);
+                  this.getGroupUsers(groupList);
+                  this.onDialogClose(); 
+                }}
+                />
               }
-            </Form>
+          </>  
           )
         }
-      </Formik>
+      </TaskFormState>
 
     );
   }

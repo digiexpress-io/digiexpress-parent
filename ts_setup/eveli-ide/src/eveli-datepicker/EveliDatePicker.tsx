@@ -4,46 +4,40 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format } from 'date-fns';
 
 export type EveliDatePickerProps = {
-  field: any
-  form: any
-  meta: any
-  id: String
   label: String
   readonly?: boolean,
   fullWidth?: boolean,
-  [x:string]: any;
+  value: string | Date | undefined | null;
+  onChange?: (newValue: Date | null) => void
 }
 
-export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({field,form:{touched, setFieldValue, setFieldError},
-  label, id, readonly, fullWidth, ...other}) => {
-  const dateFormat = 'dd.MM.yyyy';
-  let dateValue = field.value;
+
+const dateFormat = 'dd.MM.yyyy';
+
+export const EveliDatePicker: React.FC<EveliDatePickerProps> = ({label, readonly, fullWidth, value, onChange}) => {
+  const dateValue: Date | null = value ? new Date(value) : null;
+  
   if (readonly) {
-    if (!dateValue) {
-      dateValue = '';
-    }
-    else {
-      if (typeof(dateValue) === 'string') {
-        dateValue = new Date(dateValue);
-      }
-      dateValue = format(dateValue, dateFormat);
-    }
     return (
-      <TextField label={label} fullWidth={fullWidth} value={dateValue} inputProps={{ readOnly : true }}
+      <TextField label={label} fullWidth={fullWidth} value={dateValue ? format(dateValue, dateFormat) : ''} inputProps={{ readOnly : true }}
         InputLabelProps={{
           shrink: true,
         }}
       />
     );
   }
+
   return (
-        <DatePicker
-          format={dateFormat}
-          value={dateValue || null}
-          label={label}
-          slots={{textField: textFieldProps => <TextField fullWidth={fullWidth} {...textFieldProps} />}}
-          onChange={date => setFieldValue(field.name, date, false)}
-          {...other}
-        />
+    <DatePicker
+      format={dateFormat}
+      value={dateValue || null}
+      label={label}
+      slots={{textField: textFieldProps => <TextField fullWidth={fullWidth} {...textFieldProps} />}}
+      onChange={date => {
+        if(onChange) {
+          onChange(date);
+        }
+      }}
+    />
   );
 }

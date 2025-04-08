@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.194",
+  "version": "0.0.199",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -17,16 +17,16 @@
   "dependencies": {
     "@dxs-ts/gamut": "^1.0.61",
     "@monaco-editor/react": "^4.7.0",
-    "monaco-editor": "^0.52.2",
     "@uiw/react-md-editor": "^4.0.4",
     "@xyflow/react": "^12.4.4",
     "diff2html": "^3.4.48",
     "elkjs": "^0.9.3",
     "js-file-download": "^0.4.12",
     "jshint": "^2.13.6",
+    "luxon": "^3.6.1",
+    "monaco-editor": "^0.52.2",
     "react-markdown": "^9.0.1",
-    "yaml": "^2.6.0",
-    "yup": "^1.4.0"
+    "yaml": "^2.6.0"
   },
   "peerDependencies": {
     "@dialob/dashboard-material": "^1.2.8",
@@ -46,8 +46,6 @@
     "@tanstack/store": "^0.4.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "~3.2.0",
-    "formik": "^2.4.6",
-    "formik-mui": "5.0.0-alpha.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
     "notistack": "^3.0.1",
@@ -59,6 +57,7 @@
   "devDependencies": {
     "@types/d3": "^7.4.3",
     "@types/jest": "^29.5.13",
+    "@types/luxon": "^3.6.2",
     "@types/node": "^22.7.6",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
