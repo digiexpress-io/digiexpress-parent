@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
 
@@ -10,6 +10,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 
 export interface DialobReviewProps {
   taskId: string;
+  questionnaireId: string;
   onClose: () => void;
 }
 
@@ -19,6 +20,7 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
   const intl = useIntl();
   const queryClient = new QueryClient()
   const { fetchReviewGet } = useFetch('worker/rest/api/tasks/$taskId/reviews.GET', {});
+  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
 
   return (<>
     <QueryClientProvider client={queryClient}>
@@ -37,6 +39,9 @@ export const DialobReview: React.FC<DialobReviewProps> = (props) => {
           </DialogContent>
 
           <DialogActions>
+            <Button variant='outlined' endIcon={<ArrowRightIcon/>} onClick={()=> pdfTaskLinkCallback(props.questionnaireId, props.taskId)}>
+              <FormattedMessage id='taskLink.pdf.open' />
+            </Button>
             <Button variant='contained' onClick={props.onClose}><FormattedMessage id='button.close'/></Button>
           </DialogActions>
         </Dialog>

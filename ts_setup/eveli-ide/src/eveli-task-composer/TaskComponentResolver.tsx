@@ -1,15 +1,11 @@
 
 
 import React from 'react';
-import { MenuItem, Tooltip, Button, Stack } from '@mui/material';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { FormattedMessage } from 'react-intl';
+import { MenuItem, Tooltip} from '@mui/material';
 
 import { TaskApi } from '../api-task';
 import { mapIamRole, IamApi } from '../api-iam';
 
-
-export const QUESTIONNAIRE_REVIEW = 'questionnaireId';
 
 export interface ComponentResolver {
   taskLinkResolver?: (props:TaskLinkProps)=>JSX.Element|null;
@@ -37,18 +33,13 @@ type Props = {
 
 export class TasksComponentResolver implements ComponentResolver {
   callback: TaskLinkOpenCallback;
-  pdfCallback: TaskLinkPdfCallback;
 
-  public constructor(openCallback: TaskLinkOpenCallback, pdfCallback: TaskLinkPdfCallback) {
+  public constructor(openCallback: TaskLinkOpenCallback) {
     this.callback = openCallback;
-    this.pdfCallback = pdfCallback;
   }
 
   taskLinkResolver =  (props: TaskLinkProps)=> {
     const linkType = props.link.linkKey;
-    if (linkType === QUESTIONNAIRE_REVIEW) {
-      return <TaskComponentLink key={props.link.id} link={props.link} taskId={props.taskId} openCallback={this.callback} pdfCallback={this.pdfCallback}/>
-    }
     return null;
   }
 
@@ -67,37 +58,4 @@ export class TasksComponentResolver implements ComponentResolver {
     });
     return result;
   }
-}
-
-
-const TaskComponentLink: React.FC<Props & TaskLinkProps> = (props) => {
-  const link = props.link;
-  const taskId = props.taskId;
-  const pdfCallback = props.pdfCallback;
-  return (
-    <Stack direction='row' spacing={2}>
-      <Button
-        onClick={()=>props.openCallback(link)}
-        size='small'
-        color='secondary'
-        variant='contained'
-        sx={{borderRadius: 1}}
-        endIcon={<ArrowRightIcon/>}
-      >
-        <FormattedMessage id='taskLink.button.open' />
-      </Button>
-      { taskId && (
-        <Button
-          onClick={()=>pdfCallback(link, taskId)}
-          size='small'
-          color='secondary'
-          variant='contained'
-          sx={{borderRadius: 1}}
-          endIcon={<ArrowRightIcon/>}
-        >
-          <FormattedMessage id='taskLink.pdf.open' />
-        </Button>
-      )}
-    </Stack>
-  )
 }

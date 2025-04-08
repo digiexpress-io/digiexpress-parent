@@ -12,8 +12,8 @@ function hook(props: {}) {
 
   return {
 
-    pdfTaskLinkCallback: (link: TaskApi.TaskLink, taskId: string) => {
-      window.open(`${url({})}?taskId=${taskId}&questionnaireId=${link.linkAddress}`);
+    pdfTaskLinkCallback: (questionnaireId: string, taskId: string) => {
+      window.open(`${url({})}?taskId=${taskId}&questionnaireId=${questionnaireId}`);
     }
 
   }

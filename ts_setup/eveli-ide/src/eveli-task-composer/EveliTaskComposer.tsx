@@ -25,7 +25,6 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
 
   const { groups } = useFetch('$org/groupsList.GET', {});
   const { getUsers } = useFetch('$org/groupMembership.GET', {});
-  const { pdfTaskLinkCallback } = useFetch('worker/rest/api/pdf.GET', {});
   const { getTaskComments } = useFetch('worker/rest/api/tasks/$taskId/comments.GET', {});
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
@@ -103,7 +102,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
         handleSubmit={accept}
         groups={groups}
         getUsers={getUsers}
-        componentResolver={new TasksComponentResolver(() => {}, pdfTaskLinkCallback)}
+        componentResolver={new TasksComponentResolver(() => {})}
         externalThreads={true}
         comments={commentData}
         reloadComments={loadCommentData}
