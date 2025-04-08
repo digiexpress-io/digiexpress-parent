@@ -28,7 +28,10 @@ const DecisionComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     service.create().decision(name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="decisions.composer.createdMessage" values={{ name }} />);
+        enqueueSnackbar(<FormattedMessage id="decisions.composer.createdMessage" values={{ name }} />,
+          { variant: 'success' }
+        );
+
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.decisions).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

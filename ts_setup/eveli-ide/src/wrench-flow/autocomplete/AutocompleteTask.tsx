@@ -79,10 +79,14 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, fl
       onClose();
     } else if (type === "DT") {
       const serviceName = toBeReplaced.name;
-      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{name: serviceName, type}}/>);
+      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{ name: serviceName, type }} />,
+        { variant: 'info' }
+      );      
       
       service.create().decision(serviceName).then(newSite => {
-        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{name: serviceName, type}}/>);
+        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{ name: serviceName, type }}/>,
+          { variant: 'success' }
+        );
                 
         const newAsset = Object.values(newSite.services).filter(a => a.ast?.name === serviceName);
         if (newAsset.length === 1) {
@@ -93,9 +97,13 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, fl
       });
     } else if (type === "FLOW_TASK") {
       const serviceName = toBeReplaced.name.charAt(0).toUpperCase() + toBeReplaced.name.slice(1);
-      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{name: serviceName, type}}/>);
+      enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.creating" values={{name: serviceName, type}}/>,
+        { variant: 'info' }
+      );
       service.create().service(serviceName).then(newSite => {
-        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{name: serviceName, type}}/>);
+        enqueueSnackbar(<FormattedMessage id="flows.autocomplete.task.snackbar.created" values={{name: serviceName, type}}/>,
+          { variant: 'success' }
+        );
         
         const newAsset = Object.values(newSite.services).filter(a => a.ast?.name === serviceName);
         if (newAsset.length === 1) {

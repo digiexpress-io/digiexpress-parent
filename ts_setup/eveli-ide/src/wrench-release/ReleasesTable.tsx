@@ -136,14 +136,20 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
     setApply(true);
 
     if (isBranch) {
-      const key = enqueueSnackbar(<FormattedMessage id="release.branch.deleting" values={{ name }} />, { persist: true });
+      const key = enqueueSnackbar(
+        <FormattedMessage id="release.branch.deleting" values={{ name }} />,
+        { persist: true, variant: 'info' }
+      );
       service.delete().branch(id)
         .then(async (data) => {
           actions.handleBranchUpdate("default");
           await actions.handleLoadSite(data);
           handleTabs(onNavReset);
           closeSnackbar(key);
-          enqueueSnackbar(<FormattedMessage id="release.branch.deleted" values={{ name }} />);
+          enqueueSnackbar(
+            <FormattedMessage id="release.branch.deleted" values={{ name }} />,
+            { variant: 'success' }
+          );
         })
         .catch((error: HdesApi.StoreError) => {
           setErrors(error);
@@ -151,7 +157,10 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
     } else {
       service.delete().tag(id)
         .then(data => {
-          enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name }} />);
+          enqueueSnackbar(
+            <FormattedMessage id="release.deleted.message" values={{ name }} />,
+            { variant: 'success' }
+          );
           actions.handleLoadSite(data);
           onClose();
         })
@@ -201,7 +210,10 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
 
     service.delete().tag(release.id)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="release.deleted.message" values={{ name: release.body.name }} />);
+        enqueueSnackbar(
+          <FormattedMessage id="release.deleted.message" values={{ name: release.body.name }} />,
+          { variant: 'success' }
+        );        
         actions.handleLoadSite(data);
         onClose();
       })
@@ -264,14 +276,20 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
       value: branchName,
       id: releaseId
     }
-    const key = enqueueSnackbar(<FormattedMessage id="release.branch.creating" values={{ name: branchName }} />, { persist: true });
+    const key = enqueueSnackbar(
+      <FormattedMessage id="release.branch.creating" values={{ name: branchName }} />,
+      { persist: true, variant: 'info' }
+    );
     service.create().branch([command])
       .then((data) => {
         actions.handleBranchUpdate(branchName);
         actions.handleLoadSite(data);
         handleTabs(onNavReset);
         closeSnackbar(key);
-        enqueueSnackbar(<FormattedMessage id="release.branch.created" values={{ name: branchName }} />);
+        enqueueSnackbar(
+          <FormattedMessage id="release.branch.created" values={{ name: branchName }} />,
+          { variant: 'success' }
+        );
       })
       .catch((error: HdesApi.StoreError) => {
         console.error(error)
@@ -284,7 +302,10 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
         actions.handleBranchUpdate(branchName);
         await actions.handleLoadSite(data);
         handleTabs(onNavReset);
-        enqueueSnackbar(<FormattedMessage id="release.branch.checkout" values={{ name: branchName }} />);
+        enqueueSnackbar(
+          <FormattedMessage id="release.branch.checkout" values={{ name: branchName }} />,
+          { variant: 'success' }
+        );        
       })
       .catch((error: HdesApi.StoreError) => {
         console.error(error)

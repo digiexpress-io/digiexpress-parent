@@ -27,7 +27,10 @@ const FlowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     service.create().flow(name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="flows.composer.createdMessage" values={{ name }} />);
+        enqueueSnackbar(<FormattedMessage id="flows.composer.createdMessage" values={{ name }} />,
+          { variant: 'success' }
+        );
+  
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.flows).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

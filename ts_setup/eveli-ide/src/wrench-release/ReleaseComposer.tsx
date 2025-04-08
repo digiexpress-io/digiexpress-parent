@@ -28,7 +28,9 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     service.create().tag({ name, desc })
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="releases.composer.createdMessage" values={{ name }} />);
+        enqueueSnackbar(<FormattedMessage id="releases.composer.createdMessage" values={{ name }} />,
+          { variant: 'success' }
+        );
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.flows).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

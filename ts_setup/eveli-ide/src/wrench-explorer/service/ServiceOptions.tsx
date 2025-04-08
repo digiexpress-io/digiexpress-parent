@@ -46,7 +46,9 @@ const ServiceDelete: React.FC<{ serviceId:HdesApi.ServiceId, onClose: () => void
         if (serviceTab) {
           onTabClose(serviceTab);
         }
-        enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />);
+        enqueueSnackbar(<FormattedMessage id="services.deleted.message" values={{ name: service.ast?.name }} />,
+          { variant: 'success' }
+        );        
         onClose();
       })
       .catch((error:HdesApi.StoreError) => {
@@ -88,7 +90,9 @@ const ServiceOptions: React.FC<{ service:HdesApi.Entity<HdesApi.AstService> }> =
 
     clientService.copy(service.id, name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="services.composer.copiedMessage" values={{ name: service.ast?.name, newName: name }} />);
+        enqueueSnackbar(<FormattedMessage id="services.composer.copiedMessage" values={{ name: service.ast?.name, newName: name }} />,
+          { variant: 'success' }
+        );        
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.services).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

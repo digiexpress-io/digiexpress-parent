@@ -47,7 +47,9 @@ const FlowDelete: React.FC<{ flowId:HdesApi.FlowId, onClose: () => void }> = ({ 
         if (flowTab) {
           onTabClose(flowTab);
         }
-        enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />);
+        enqueueSnackbar(<FormattedMessage id="flows.deleted.message" values={{ name: flow.ast?.name }} />,
+          { variant: 'success' }
+        );
         onClose();
       })
       .catch((error:HdesApi.StoreError) => {
@@ -88,7 +90,9 @@ const FlowOptions: React.FC<{ flow:HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow 
 
     service.copy(flow.id, name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="flows.composer.copiedMessage" values={{ name: flow.ast?.name, newName: name }} />);
+        enqueueSnackbar(<FormattedMessage id="flows.composer.copiedMessage" values={{ name: flow.ast?.name, newName: name }} />,
+          { variant: 'success' }
+        );        
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.flows).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

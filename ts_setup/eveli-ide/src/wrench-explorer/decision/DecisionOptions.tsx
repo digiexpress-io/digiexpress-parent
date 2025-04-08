@@ -47,7 +47,10 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
     service.delete().decision(decisionId)
       .then(async data => {
 
-        enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />);
+        enqueueSnackbar(<FormattedMessage id="decisions.deleted.message" values={{ name: decision.ast?.name }} />,
+          { variant: 'success' }
+        );
+        
         await actions.handleLoadSite(data);
 
         if (decisionTab) {
@@ -94,7 +97,10 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
 
     service.copy(decision.id, name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="decisions.composer.copiedMessage" values={{ name: decision.ast?.name, newName: name }} />);
+        enqueueSnackbar(<FormattedMessage id="decisions.composer.copiedMessage" values={{ name: decision.ast?.name, newName: name }} />,
+          { variant: 'success' }
+        );
+        
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.decisions).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })

@@ -46,33 +46,39 @@ export const FrontdeskApp: React.FC = () => {
   const logoutUrl = '/logout';
   const loginUrl = '/oauth2/authorization/oidcprovider';
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <LocaleProvider>
-        <SnackbarProvider maxSnack={3} ref={notistackRef}
-          action={(key) => (<Button onClick={handleCloseNotification(key)}><FormattedMessage id='button.dismiss' /></Button>)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        >
+ return (
+  <QueryClientProvider client={queryClient}>
+    <LocaleProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={userTheme}>
 
-          {/** config context will update context path to whatever /config.serviceUrl will return */}
-          <FetchProvider tree={fetchtree} initContextPath='/'>
-            <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+          <SnackbarProvider
+            maxSnack={3}
+            ref={notistackRef}
+            action={(key) => (
+              <Button onClick={handleCloseNotification(key)}>
+                <FormattedMessage id='button.dismiss' />
+              </Button>
+            )}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          >
 
-              <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={userTheme}>
+            <FetchProvider tree={fetchtree} initContextPath='/'>
+              <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
 
-                  <IamBackendProvider onExpire={handleExpire}>
-                    <RouterProvider router={router} />
-                  </IamBackendProvider>
+                <IamBackendProvider onExpire={handleExpire}>
+                  <RouterProvider router={router} />
+                </IamBackendProvider>
 
-                </ThemeProvider>
-              </StyledEngineProvider>
-              
-            </ConfigContextProvider>
-          </FetchProvider>
+              </ConfigContextProvider>
+            </FetchProvider>
 
-        </SnackbarProvider>
-      </LocaleProvider>
-    </QueryClientProvider>
-  );
+          </SnackbarProvider>
+
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </LocaleProvider>
+  </QueryClientProvider>
+);
+
 }

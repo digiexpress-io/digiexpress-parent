@@ -37,7 +37,10 @@ function useSave() {
     composer.service.update(entity.id, unsavedArticlePages.value).then(async success => {
       await composer.actions.handleLoadSite(success)
       composer.actions.handlePageUpdateRemove([entity.id]);
-      enqueueSnackbar(<FormattedMessage id="activities.assets.saveSuccess" values={{ name: entity.ast?.name }} />);
+      enqueueSnackbar(
+        <FormattedMessage id="activities.assets.saveSuccess" values={{ name: entity.ast?.name }} />,
+        { variant: 'success' }
+      );      
     }).catch((_error) => {
 
     });

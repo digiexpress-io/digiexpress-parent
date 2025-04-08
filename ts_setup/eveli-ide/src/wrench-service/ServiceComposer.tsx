@@ -26,7 +26,10 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     service.create().service(name)
       .then(data => {
-        enqueueSnackbar(<FormattedMessage id="services.composer.createdMessage" values={{ name }} />);
+        enqueueSnackbar(
+          <FormattedMessage id="services.composer.createdMessage" values={{ name }} />,
+          { variant: 'success' }
+        );        
         actions.handleLoadSite(data).then(() => {
           const [article] = Object.values(data.services).filter(d => d.ast?.name === name);
           onNav({ type: 'ENTITY_EDITOR', id: article.id })
