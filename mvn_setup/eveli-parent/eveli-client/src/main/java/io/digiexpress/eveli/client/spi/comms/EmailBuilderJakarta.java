@@ -131,7 +131,12 @@ public class EmailBuilderJakarta implements CommsClient.EmailBuilder {
     msg.setHeader("Auto-Submitted", "auto-generated");
     msg.setHeader("X-Auto-Response-Suppress", "DR, RN, NRN, OOF, AutoReply");
 
-    Transport.send(msg);
+    if (StringUtils.isNoneBlank(config.getServerUserName(), config.getServerPassword())) {
+      Transport.send(msg, config.getServerUserName(), config.getServerPassword());
+    }
+    else {
+      Transport.send(msg);
+    }
   }
 
   private List<InternetAddress> visitInternetAddresses(List<String> emailAddresses) {
