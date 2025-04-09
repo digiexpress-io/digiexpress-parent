@@ -8,6 +8,7 @@ import { GOverridableComponent } from '../g-override';
 
 export interface GMarkdownProps {
   children: string | undefined;
+  remarkPlugins?: any[] | undefined
   component?: GOverridableComponent<GMarkdownProps>;
 }
 
@@ -22,6 +23,7 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
   return (
     <Root ownerState={props} className={classes.root}>
       <ReactMarkdown
+        remarkPlugins={props.remarkPlugins ?? undefined}
         children={props.children ?? "no children to render"} components={{
           h1: (props) => (<Typography variant={'h1'}>{props.children}</Typography>),
           h2: (props) => (<Typography variant={'h2'}>{props.children}</Typography>),
