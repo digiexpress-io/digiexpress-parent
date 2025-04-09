@@ -8,6 +8,7 @@ import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomi
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -30,15 +31,28 @@ export const Secondary: React.FC = () => {
     <EveliShellExplorer>
       <EveliLogo />
 
+
       <EveliPermissions id='CREATE_TASK'>
         <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton}
           onClick={() => {
             navigate({
               from: '/secured/$locale',
-              to: 'worker/tasks/create'
+              to: '/secured/$locale/worker/tasks'
             })
           }}>
           {intl.formatMessage({ id: 'button.compose' })}
+        </Button>
+      </EveliPermissions>
+
+      <EveliPermissions id='NAV_TO_TABLES_V2'>
+        <Button startIcon={<TableChartOutlinedIcon />}
+          variant={location.pathname.includes('tables') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/tables'
+          })}
+        >
+          tables
         </Button>
       </EveliPermissions>
 

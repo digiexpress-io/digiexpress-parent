@@ -76,6 +76,12 @@ const EveliTableColumnFilterRoot = styled('div', {
       '&:hover': {
         backgroundColor: 'transparent',
       }
+    },
+    '.MuiSvgIcon-root': {
+      ':hover': {
+        backgroundColor: theme.palette.secondary.dark,
+        borderRadius: theme.spacing(0.5)
+      }
     }
 
   };

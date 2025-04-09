@@ -43,10 +43,11 @@ export const EveliTableSearchFieldRoot = styled('div', {
     '.MuiInputBase-root': {
       paddingLeft: 0,
       fontSize: '10pt',
+      height: '2rem',
+
     },
     '.MuiInputBase-input': {
       padding: theme.spacing(0.5),
-      height: '1.5rem',
     },
     '.filters-icon': {
       color: theme.palette.primary.main,

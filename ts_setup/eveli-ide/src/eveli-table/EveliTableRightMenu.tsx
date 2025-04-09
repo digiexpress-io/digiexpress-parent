@@ -5,22 +5,22 @@ import composeClasses from '@mui/utils/composeClasses';
 import { EveliTableSearchField } from './EveliTableSearchField';
 
 
-export const EveliTableVerticalMenu: React.FC<{ width: string }> = ({ width }) => {
+export const EveliTableRightMenu: React.FC<{ width: string, children: React.ReactNode }> = ({ width, children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableVerticalMenuRoot className={classes.root} width={width}>
+    <EveliTableRightMenuRoot className={classes.root} width={width}>
       <EveliTableSearchField />
-
-    </EveliTableVerticalMenuRoot>
+      {children}
+    </EveliTableRightMenuRoot>
   )
 }
 
 
-export const EveliTableVerticalMenuRootClassName = 'EveliTableVerticalMenu';
+export const EveliTableRightMenuRootClassName = 'EveliTableRightMenu';
 
-export const EveliTableVerticalMenuRoot = styled('div', {
-  name: EveliTableVerticalMenuRootClassName,
+export const EveliTableRightMenuRoot = styled('div', {
+  name: EveliTableRightMenuRootClassName,
   slot: 'VerticalMenuRoot',
   overridesResolver: (_props, styles) => {
     return [
@@ -36,7 +36,6 @@ export const EveliTableVerticalMenuRoot = styled('div', {
     top: 0,
     bottom: 0,
     boxShadow: '-2px 0px 8px rgba(0, 0, 0, 0.1)',
-    padding: theme.spacing(1),
     right: '3%',
     backgroundColor: theme.palette.secondary.main,
     border: `1px solid ${theme.palette.divider}`,
@@ -48,6 +47,6 @@ const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableVerticalMenuRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRightMenuRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }

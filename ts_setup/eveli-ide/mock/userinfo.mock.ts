@@ -28,6 +28,7 @@ export default defineMock({
       'DIALOB_VIEW', 'DIALOB_EDIT',
       'DASHBOARD_VIEW',
       'TASK_ALL_VIEW', 'TASK_ALL_EDIT', 'TASK_ALL_DELETE',
+      'TABLES_V2'
     ]
   }
 })

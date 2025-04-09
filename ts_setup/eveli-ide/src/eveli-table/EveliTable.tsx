@@ -1,19 +1,29 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
-import { EveliTableVerticalButtonColumn } from './EveliTableVerticalButtonColumn';
+import { EveliTableRightMenuButtonColumn } from './EveliTableRightMenuButtonColumn';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
-import { EveliTableVerticalMenu } from './EveliTableVerticalMenu';
+import { EveliTableRightMenu } from './EveliTableRightMenu';
+import { EveliTableRightMenuCols } from './EveliTableRightMenuCols';
+import { EveliTableRightMenuFilters } from './EveliTableRightMenuFilters';
 
 
 export const EveliTable: React.FC = () => {
   const classes = useUtilityClasses();
-  const [vertMenuOpen, setVertMenuOpen] = React.useState(false); //TODO
+  const [colsMenuOpen, setColsMenuOpen] = React.useState(false);
+  const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
 
-  function toggleVertMenu() {
-    setVertMenuOpen(prev => !prev);
+  function toggleColsMenu() {
+    setColsMenuOpen(prev => !prev);
+    setFiltersMenuOpen(false);
   }
+
+  function toggleFiltersMenu() {
+    setFiltersMenuOpen(prev => !prev);
+    setColsMenuOpen(false);
+  }
+
 
 
   return (
@@ -57,9 +67,11 @@ export const EveliTable: React.FC = () => {
           </EveliTableRowRoot>
         </EveliTableColRoot>
 
-        {vertMenuOpen && <EveliTableVerticalMenu width='15%' />} 
+        {colsMenuOpen && <EveliTableRightMenu width='15%' children={<EveliTableRightMenuCols />} />}
+        {filtersMenuOpen && <EveliTableRightMenu width='15%' children={<EveliTableRightMenuFilters />} />} 
+
         <EveliTableColRoot width='3%'>
-          <EveliTableVerticalButtonColumn onClick={toggleVertMenu} />
+          <EveliTableRightMenuButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
         </EveliTableColRoot>
 
       </EveliTableRoot>

@@ -80,6 +80,12 @@ const EveliTableColumnOptionsRoot = styled('div', {
       '&:hover': {
         backgroundColor: 'transparent',
       }
+    },
+    '.MuiSvgIcon-root': {
+      ':hover': {
+        backgroundColor: theme.palette.secondary.dark,
+        borderRadius: theme.spacing(0.5)
+      }
     }
   };
 });
@@ -97,7 +103,6 @@ const StyledMenu = styled(Menu, {
   '& .MuiPaper-root': {
     backgroundColor: 'white',
     borderRadius: theme.spacing(1),
-
   },
   '& .MuiMenuItem-root': {
     fontSize: '10pt',
