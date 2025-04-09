@@ -10,6 +10,7 @@ import { EveliOverridableComponent } from '../api-variants';
 
 import { useIam } from '../api-iam';
 import { useConfig } from '../api-config';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 
 export interface EveliLoginProps {
@@ -29,6 +30,7 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
   }
 
   const config = useConfig();
+
   const { user } = useIam();
   const location = user.authenticated ? config.logoutUrl : config.loginUrl;
 
@@ -40,7 +42,7 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
   }
 
   return (
-    <>
+    <EveliTenantFeatureEnabled id='LOGIN_BUTTON'>
       <Root ownerState={ownerState} className={classes.root}>
         {user.authenticated ? 
         (<EveliLogoutButton className={classes.logout} variant="text" startIcon={<LogoutIcon />} onClick={handleOnClick}>
@@ -53,6 +55,6 @@ export const EveliLogin: React.FC<EveliLoginProps> = (initProps) => {
           <FormattedMessage id='explorer.login' />
         </Button>)}
       </Root>
-    </>
+    </EveliTenantFeatureEnabled>
   )
 }

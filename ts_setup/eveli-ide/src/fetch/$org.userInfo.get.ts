@@ -1,5 +1,6 @@
 import { createFileFetch } from '@dxs-ts/eveli-fetch';
 import { IamApi } from '@/api-iam';
+import { useTenantConfig } from '@/api-tenant-config';
 
 export const Hook = createFileFetch('$org/userInfo.GET')({
   hook
@@ -33,14 +34,30 @@ function toFailSafeUser(json: InternalUserShape | undefined): IamApi.User {
   }
 }
 
-function hook(props: {}): {  
 
+function toWrenchOnlyUser(): IamApi.User {
+
+  return {
+    name: 'wrench-user',
+    userId: 'wrench-user',
+    email: 'wrench-user@resys.io',
+    authenticated: true,
+    authorized: true,
+    roles: [],
+    permissions:[
+      'WRENCH_VIEW', 'WRENCH_EDIT'
+    ],
+    // TODO  fix naming
+    hasRole: (...roles: string[]) => (roles.filter(role => roles.indexOf(role) > -1).length > 0)
+  }
+}
+
+function hook(props: {}): {  
   getUser: () => Promise<IamApi.User>,
   getEmptyUser: () => IamApi.User,
-
 } {
 
-
+  const { features } = useTenantConfig();
   const params = Hook.useNativeParams();
   const { url, method } = params;
   const query = url({ org: '' }).substring(1);
@@ -49,6 +66,10 @@ function hook(props: {}): {
 
     getEmptyUser: () => toFailSafeUser({}),
     getUser: async () => {
+
+      if(features.includes('wrench-only')) {
+        return toWrenchOnlyUser();
+      }
       try {
         const response = await window.fetch(query, { method });
         if(!response.ok) {
@@ -61,49 +82,4 @@ function hook(props: {}): {
       }
     }
    }
-
 }
-
-
-/*
-import React, { createContext, PropsWithChildren, useContext } from 'react';
-import { User } from '../types';
-import { useFetch } from '@dxs-ts/eveli-fetch';
-
-
-export interface UserContextType {
-  user: Partial<User>,
-  isAuthenticated: () => boolean;
-  isAuthorized: () => boolean;
-  hasRole: (...roles: string[]) => boolean;
-  refresh: ()=>void;
-};
-
-const INITIAL_USER: UserContextType = {
-  user: {
-    name: '',
-    roles: null
-  },
-  isAuthenticated: () => false,
-  isAuthorized: () => false,
-  hasRole: (...roles: String[]) => false,
-  refresh: ()=>{},
-};
-
-export const UserContext = createContext<UserContextType>(INITIAL_USER);
-
-export const UserContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const { user: response, refresh, } = useFetch('$org/userInfo.GET', {});
-  const user = response || INITIAL_USER.user;
-  const isAuthenticated = () =>  !!user.authenticated;
-  const isAuthorized = () => !!user.authorized;
-  const hasRole = (...roles: string[]) => (!!user?.roles && user.roles.filter(role=> roles.indexOf(role) > -1).length > 0);
-  return (
-    <UserContext.Provider value={{ user, isAuthenticated, isAuthorized, hasRole, refresh }}>
-      {children}
-    </UserContext.Provider>
-  );
-}
-
-export const useUserInfo = () => useContext(UserContext);
-*/

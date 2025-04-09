@@ -1,0 +1,45 @@
+spring:
+
+server:
+  port: 8080
+  use-forward-headers: true
+  servlet:
+    context-path: "/"
+    session.timeout: 7200
+  error:
+    include-stacktrace: never
+
+host: "http://localhost:${server.port}"
+
+management:
+  server:
+    servlet.context-path: "/manage"
+    add-application-context-header: false
+
+
+wrench.fake-security.enabled: true
+# -- read assets from classpath
+# --   classpath*:assets/**/migration/*.json
+# --   classpath*:assets/**/dump/*.json
+# --   classpath*:assets/**/dt/*.json
+# --   classpath*:assets/**/flowtask/*.json
+# --   classpath*:assets/**/flow/*.json
+wrench.inmemory.enabled: true
+
+# -- git configuration
+wrench.git.enabled: false
+wrench.git.privateKey: "path-to-git-private-key-related-files: .known_hosts; id_rsa; id_rsa.known_hosts"
+wrench.git.repositoryUrl: "ssh-git-url"
+wrench.git.branchSpecifier: "main"
+wrench.git.repositoryPath: "~/clone-git-repo-to"
+wrench.git.path: src/main/resources
+
+# -- postgresql configuration
+wrench.pg.enabled: false
+wrench.pg.autoCreate: true
+wrench.pg.repositoryName: "test-repo-1"
+wrench.pg.branchSpecifier: "main"
+wrench.pg.pgHost: "localhost"
+wrench.pg.pgDb: "postgres"
+wrench.pg.pgUser: "postgres"
+wrench.pg.pgPass: "example"
