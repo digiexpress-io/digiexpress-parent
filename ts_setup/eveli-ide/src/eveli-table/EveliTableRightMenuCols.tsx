@@ -1,4 +1,4 @@
-import { Box, generateUtilityClass, styled, Typography } from '@mui/material';
+import { generateUtilityClass, styled, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import composeClasses from '@mui/utils/composeClasses';
@@ -10,32 +10,37 @@ export const EveliTableRightMenuCols: React.FC = () => {
 
   return (
     <EveliTableRightMenuColsRoot className={classes.root}>
-      <EveliTableRightMenuColItem colTitle='Header cell 1' />
-      <EveliTableRightMenuColItem colTitle='Header' />
-      <EveliTableRightMenuColItem colTitle='Header cell 3' />
+      <ColItem colTitle='Priority' />
+      <ColItem colTitle='Name' />
+      <ColItem colTitle='Client' />
+      <ColItem colTitle='Status' />
+      <ColItem colTitle='Assignee' />
+      <ColItem colTitle='Info' />
+      <ColItem colTitle='Due' />
+      <ColItem colTitle='Created' />
     </EveliTableRightMenuColsRoot>
   )
 }
 
 
 
-export const EveliTableRightMenuColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+const ColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableRightMenuColItemRoot className={classes.root}>
+    <ColItemRoot className={classes.root}>
       <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
       <Typography>{colTitle}</Typography>
-    </EveliTableRightMenuColItemRoot>
+    </ColItemRoot>
   )
 }
 
 
 
-const EveliTableRightMenuColsRootClassName = 'EveliTableRightMenuCols';
+const ColsRootClassName = 'EveliTableRightMenuCols';
 
 const EveliTableRightMenuColsRoot = styled('div', {
-  name: EveliTableRightMenuColsRootClassName,
+  name: ColsRootClassName,
   slot: 'RightMenuColumnsSelect',
   overridesResolver: (_props, styles) => {
     return [
@@ -56,8 +61,8 @@ const EveliTableRightMenuColsRoot = styled('div', {
 });
 
 
-const EveliTableRightMenuColItemRoot = styled('div', {
-  name: EveliTableRightMenuColsRootClassName,
+const ColItemRoot = styled('div', {
+  name: ColsRootClassName,
   slot: 'RightMenuColumnItem',
   overridesResolver: (_props, styles) => {
     return [
@@ -90,6 +95,6 @@ const useUtilityClasses = () => {
     root: ['root'],
 
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRightMenuColsRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(ColsRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
