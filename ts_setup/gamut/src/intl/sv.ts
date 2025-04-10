@@ -5,6 +5,7 @@ export const sv = {
   'cust.phone': 'Telefon: 123 456 7890',
   'cust.email': 'info@lifeDigital.com',
   'header.userIdentity.label': 'Inloggad som',
+  'document.title': 'DigiExpress',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Öppen källkodsplattform för digitaliseringstjänster',
   'footer.column3.title': 'Snabblänkar',

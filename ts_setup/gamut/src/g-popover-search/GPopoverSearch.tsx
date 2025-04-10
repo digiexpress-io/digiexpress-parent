@@ -14,11 +14,13 @@ import { SearchApi } from '../api-search';
 
 export interface GPopoverSearchProps {
   itemsInColumn?: number | undefined;
-  onFormLink: (target: { pageId: string, productId: string }) => void;
   pageId: SiteApi.TopicId;
-  onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent) => void;
   slots?: { link?: React.ElementType<GSearchResultProps> }
   component?: GOverridableComponent<GPopoverSearchProps>
+
+  getEnabledOptions?: () => SearchApi.FilterMode[];
+  onFormLink: (target: { pageId: string, productId: string }) => void;
+  onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent) => void;
 }
 
 export interface GSearchResultProps {
@@ -68,6 +70,8 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     state.phones.length === 0 &&
     state.internal.length === 0 &&
     state.external.length === 0;
+  
+  const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
 
   function handleOnTopic(topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     props.onTopic(topic, event);
@@ -79,6 +83,12 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   }
   const Root = props.component ?? GPopoverSearchRoot;
 
+  function isOptionEnabled(option: SearchApi.FilterMode): boolean {
+    if(enabledOptions) {
+      return enabledOptions.includes(option);
+    }
+    return true;
+  }
 
   return (
     <Root className={classes.root} ownerState={props}>
@@ -97,26 +107,31 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
             <Grid2 size={{ lg: 3, xl: 3 }} />
 
             <Grid2 size={{ lg: 9, xl: 9 }} className={classes.quickSearch}>
-              <Chip
+              { isOptionEnabled('ALL') && <Chip
                 color={state.searchOptionType === 'ALL' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.results.allResults' })}
                 onClick={() => handleFilterByType('ALL')} className={classes.quickSearchFilterItem} />
-              <Chip
+              }
+              { isOptionEnabled('FORM_LINKS') && <Chip
                 color={state.searchOptionType === 'FORM_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allForms' })}
                 onClick={() => handleFilterByType('FORM_LINKS')} className={classes.quickSearchFilterItem} />
-              <Chip
+              }
+              { isOptionEnabled('TOPICS') && <Chip
                 color={state.searchOptionType === 'TOPICS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allServices' })}
                 onClick={() => handleFilterByType('TOPICS')} className={classes.quickSearchFilterItem} />
-              <Chip
+              }
+              { isOptionEnabled('PHONE_LINKS') && <Chip
                 color={state.searchOptionType === 'PHONE_LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allPhones' })}
                 onClick={() => handleFilterByType('PHONE_LINKS')} className={classes.quickSearchFilterItem} />
-              <Chip
+              }
+              { isOptionEnabled('LINKS') && <Chip
                 color={state.searchOptionType === 'LINKS' ? 'primary' : undefined}
                 label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })}
                 onClick={() => handleFilterByType('LINKS')} className={classes.quickSearchFilterItem} />
+              }
             </Grid2>
           </Grid2>
 

@@ -17,11 +17,15 @@ export function useSite() {
     return site.links[linkId];
   }
 
-  function getTopicGroups(itemsInColumn: number | undefined = 8): SiteApi.TopicGroup[] {
+  function getTopicGroups(
+    topics: SiteApi.TopicView[],
+    itemsInColumn: number | undefined = 8
+  ): SiteApi.TopicGroup[] {
+  
     return createTopicGroups(topics, itemsInColumn);
   }
 
-  return { getTopicGroups, getLink, site, views, feedback, voteOnReply };
+  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply };
 }
 
 

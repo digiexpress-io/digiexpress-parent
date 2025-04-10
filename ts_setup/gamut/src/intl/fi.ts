@@ -5,6 +5,7 @@ export const fi = {
   'cust.phone': 'Puhelin: 12345',
   'cust.email': 'info@lifeDigital.com',
   'header.userIdentity.label': 'Kirjauduttu käyttäjänä',
+  'document.title': 'DigiExpress',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Avoimen lähdekoodin alusta palvelujen digitalisointiin',
   'footer.column3.title': 'Pikalinkkejä',

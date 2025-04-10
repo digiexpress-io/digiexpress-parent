@@ -10,6 +10,7 @@ import { GOverridableComponent } from '../g-override';
 export interface GLocalesProps {
   value?: string; // en, fi, sv
   locales?: string[]; //en, fi, sv
+  localeToCountryCode?: Record<string, string>;
   hidden?: boolean;
   onClick?: (newLocale: string) => void;
   component?: GOverridableComponent<GLocalesProps>;
@@ -37,7 +38,11 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
   const localeToCountryCode: Record<string, string> = {
     en: 'gb', // Great Britain English for correct flag
     fi: 'fi',
-    sv: 'se'
+    sv: 'se',
+    et: 'ee',
+    my: 'my',
+    bs: 'ba',
+    ...(props.localeToCountryCode ?? {})
   };
 
   function handleChange(newLocale: string) {

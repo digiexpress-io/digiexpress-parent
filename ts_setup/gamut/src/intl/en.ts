@@ -5,6 +5,7 @@ export const en = {
   'cust.phone': 'Phone: 123 456 7890',
   'cust.email': 'info@lifeDigital.com',
   'header.userIdentity.label': 'You are logged in as',
+  'document.title': 'DigiExpress',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Open source platform for digitalisation services',
   'footer.column3.title': 'Quick links',

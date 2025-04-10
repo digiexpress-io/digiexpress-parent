@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Stack } from '@mui/material';
+import { Container, useThemeProps } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 
 import {
@@ -14,19 +14,26 @@ import {
   GAppBar,
 } from '../';
 
-import { GRouterUnsecuredRoot } from './useUtilityClasses';
+import { GRouterUnsecuredRoot, MUI_NAME } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface GRouterUnsecuredProps {
-  pageId: string
+  pageId: string;
+  backgroundImage?: string;
+  height?: string | number
 }
 
-const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
+const Internal: React.FC<GRouterUnsecuredProps> = (props) => {
+  const { pageId } = props;
   const nav = useNavigate();
   const { locale } = useLocale();
   const { views } = useSite();
   const classes = useUtilityClasses();
+  const ownerState = useThemeProps({
+    props: props,
+    name: MUI_NAME,
+  });
 
   const landingTopic = Object.values(views).find(a => a.id === pageId);
 
@@ -59,7 +66,7 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
       <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => { }} />
       <main role='main'>
         <Container>
-          <GRouterUnsecuredRoot className={classes.root}>
+          <GRouterUnsecuredRoot className={classes.root} ownerState={ownerState}>
             <div className={classes.menuButtonContainer}>
               <GPopoverTopics onTopic={handleTopicChange} />
               <GPopoverSearch onTopic={handleTopicChange} pageId={pageId} onFormLink={({ pageId, productId }) => handleUnSecureLink(pageId, productId)} />
@@ -78,10 +85,10 @@ const Internal: React.FC<{ pageId: string }> = ({ pageId }) => {
 
 
 
-export const GRouterUnsecured: React.FC<GRouterUnsecuredProps> = ({ pageId }) => {
+export const GRouterUnsecured: React.FC<GRouterUnsecuredProps> = (props) => {
   return (
     <GShell drawerOpen={false}>
-      <Internal pageId={pageId} />
+      <Internal {...props} />
     </GShell>
   );
 }

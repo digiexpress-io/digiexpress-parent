@@ -1,5 +1,5 @@
 import { Theme, Components, alpha } from '@mui/material';
-import user_logo_light from './logoLifeDigitalDark.svg';
+import user_logo_light from './digi_express_logo.png';
 import { DemoFooter } from './DemoFooter';
 
 
@@ -12,15 +12,15 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     variants: [
       {
         props: { variant: 'black_lg', img: user_logo_light },
-        style: { width: '200px', height: '70px' }
+        style: { width: '200px', height: 'auto' }
       },
       {
         props: { variant: 'black_sm', img: user_logo_light },
-        style: { width: '150px', height: '50px' }
+        style: { width: '150px', height: 'auto' }
       },
       {
         props: { variant: 'black_sm_mob', img: user_logo_light },
-        style: { width: '120px', height: '40px' }
+        style: { width: '120px', height: 'auto' }
       }
     ]
   },

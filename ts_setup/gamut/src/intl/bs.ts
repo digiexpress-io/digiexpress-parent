@@ -5,6 +5,7 @@ export const bs = {
   'cust.phone': 'Telefon: 123 456 7890',
   'cust.email': 'info@lifeDigital.com',
   'header.userIdentity.label': 'Prijavljeni ste kao',
+  'document.title': 'DigiExpress',
   'footer.column2.title': 'DigiExpress',
   'footer.column2.subtitle': 'Open-source platforma za usluge digitalizacije',
   'footer.column3.title': 'Brzi linkovi',

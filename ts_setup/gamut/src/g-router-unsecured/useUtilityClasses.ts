@@ -1,6 +1,7 @@
 import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import city1 from './city1.jpg'
+import { GRouterUnsecuredProps } from "./GRouterUnsecured";
 
 
 export const MUI_NAME = 'GRouterUnsecured';
@@ -32,7 +33,7 @@ export const GRouterUnsecuredRoot = styled("div", {
       styles.menuButtonContainer
     ];
   },
-})(({ theme }) => {
+})<{ ownerState: GRouterUnsecuredProps }>(({ theme, ownerState }) => {
   return {
     '& .GRouterUnsecured-menuButtonContainer': {
       [theme.breakpoints.down('md')]: {
@@ -40,13 +41,13 @@ export const GRouterUnsecuredRoot = styled("div", {
         gap: theme.spacing(1),
       },
       position: 'relative',
-      backgroundImage: `url(${city1})`,
+      backgroundImage: `url(${ownerState.backgroundImage ?? city1})`,
       backgroundSize: 'cover',
       alignContent: 'center',
       display: 'flex',
       flexWrap: 'wrap',
       padding: 1,
-      height: 400,
+      height: ownerState.height ?? 400,
       zIndex: 1,
     }
   }
