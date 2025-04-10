@@ -11,9 +11,8 @@ import {
   GLayout,
   useIam
 } from '../';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { GRouterOfferRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
-
 
 export interface GRouterOfferProps {
   offerId: string;
