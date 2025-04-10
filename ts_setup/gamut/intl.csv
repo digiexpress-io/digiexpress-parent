@@ -7,6 +7,7 @@ cust.phone,,Phone: 123 456 7890,Puhelin: 12345,Telefon: 123 456 7890,Telefon: 12
 cust.email,,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com,info@lifeDigital.com
 // -------------------- CUSTOMER HEADER --------------------------,,,,#VALUE!,,
 header.userIdentity.label,,You are logged in as,Kirjauduttu käyttäjänä,Inloggad som,Sedang masuk sebagai,Prijavljeni ste kao
+document.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
 // -------------------- CUSTOMER FOOTER --------------------------,,,,#VALUE!,,
 footer.column2.title,,DigiExpress,DigiExpress,DigiExpress,DigiExpress,DigiExpress
 footer.column2.subtitle,,Open source platform for digitalisation services,Avoimen lähdekoodin alusta palvelujen digitalisointiin,Öppen källkodsplattform för digitaliseringstjänster,Platform sumber terbuka untuk perkhidmatan pendigitalan,Open-source platforma za usluge digitalizacije

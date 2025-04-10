@@ -1,5 +1,5 @@
 export const en = {
-  'document.title': ' Eveli app title',
+  'document.title': ' DigiExpress',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',
   'eveli.permissions.none.desc2': 'Please contact your system administrator.',
