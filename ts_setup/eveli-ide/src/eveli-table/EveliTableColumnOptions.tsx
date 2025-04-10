@@ -5,7 +5,6 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -23,17 +22,7 @@ export const EveliTableColumnOptions: React.FC = () => {
   const classes = useUtilityClasses();
   return (
     <EveliTableColumnOptionsRoot className={classes.root}>
-      <IconButton
-        onClick={handleClick}
-        disableRipple
-        disableFocusRipple
-        sx={{
-          padding: 0,
-          '&:hover': {
-            backgroundColor: 'transparent',
-          },
-        }}
-      >
+      <IconButton onClick={handleClick} disableRipple disableFocusRipple>
         <MoreVertIcon />
       </IconButton>
 
@@ -86,8 +75,18 @@ const EveliTableColumnOptionsRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-
-
+    '.MuiIconButton-root': {
+      padding: 0,
+      '&:hover': {
+        backgroundColor: 'transparent',
+      }
+    },
+    '.MuiSvgIcon-root': {
+      ':hover': {
+        backgroundColor: theme.palette.secondary.dark,
+        borderRadius: theme.spacing(0.5)
+      }
+    }
   };
 });
 
@@ -95,12 +94,15 @@ const EveliTableColumnOptionsRoot = styled('div', {
 const StyledMenu = styled(Menu, {
   name: MUI_NAME,
   slot: 'MenuContainer',
-  overridesResolver: (_props, styles) => styles.root,
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+    ];
+  },
 })(({ theme }) => ({
   '& .MuiPaper-root': {
     backgroundColor: 'white',
     borderRadius: theme.spacing(1),
-    
   },
   '& .MuiMenuItem-root': {
     fontSize: '10pt',
@@ -110,4 +112,5 @@ const StyledMenu = styled(Menu, {
     color: theme.palette.primary.main,
     fontSize: 'medium'
   }
-}));
+}
+));

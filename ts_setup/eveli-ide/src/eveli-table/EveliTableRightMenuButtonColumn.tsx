@@ -1,15 +1,16 @@
+import React from "react";
 import { Button, generateUtilityClass, styled, Typography } from "@mui/material";
 
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import composeClasses from "@mui/utils/composeClasses";
 
-const RotatedButton: React.FC<{ label: string, icon: React.ReactNode }> = ({ label, icon }) => {
+const RotatedButton: React.FC<{ label: string, icon: React.ReactNode, onClick: () => void }> = ({ label, icon, onClick }) => {
   const classes = useUtilityClasses();
 
   return (
     <RotatedButtonsRoot className={classes.root}>
-      <Button variant='text' startIcon={icon}>
+      <Button variant='text' startIcon={icon} onClick={onClick} disableRipple>
         <Typography>{label}</Typography>
       </Button>
     </RotatedButtonsRoot>
@@ -17,19 +18,22 @@ const RotatedButton: React.FC<{ label: string, icon: React.ReactNode }> = ({ lab
 };
 
 
-export const EveliTableVerticalButtonColumn: React.FC = () => {
+export const EveliTableRightMenuButtonColumn: React.FC<{
+  onColumnsClick: () => void,
+  onFiltersClick: () => void
+}> = ({ onColumnsClick, onFiltersClick }) => {
   const classes = useUtilityClasses();
 
   return (
-    <VerticalButtonsColumnRoot className={classes.root}>
-      <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} />
-      <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} />
-    </VerticalButtonsColumnRoot>
+    <EveliTableRightMenuButtonsColumnRoot className={classes.root}>
+      <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} onClick={onColumnsClick} />
+      <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} onClick={onFiltersClick} />
+    </EveliTableRightMenuButtonsColumnRoot>
   );
 };
 
 
-const MUI_NAME = 'EveliVerticalButtonColumn';
+const MUI_NAME = 'EveliTableRightMenuButtonColumn';
 const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
@@ -38,7 +42,7 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 }
 
-const VerticalButtonsColumnRoot = styled('div', {
+const EveliTableRightMenuButtonsColumnRoot = styled('div', {
   name: MUI_NAME,
   slot: 'VerticalButtonsColumn',
   overridesResolver: (_props, styles) => {
@@ -82,13 +86,16 @@ const RotatedButtonsRoot = styled('div', {
     '.MuiButtonBase-root': {
       writingMode: 'vertical-rl',
       transform: 'rotate(360deg)',
+      backgroundColor: 'transparent',
       ':hover': {
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
       },
+
       '.MuiButton-icon': {
         marginRight: '0px',
         marginLeft: '0px',
-        marginBottom: theme.spacing(1)
+        marginBottom: theme.spacing(1),
+
       }
     },
     '.MuiTypography-root': {

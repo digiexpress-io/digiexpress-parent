@@ -16,6 +16,7 @@ import {
 } from '@dxs-ts/eveli-ide';
 
 import { userTheme } from './theme';
+import { TenantConfigContextProvider } from '@/api-tenant-config'
 
 const queryClient = new QueryClient();
 
@@ -65,11 +66,11 @@ export const FrontdeskApp: React.FC = () => {
 
             <FetchProvider tree={fetchtree} initContextPath='/'>
               <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
-
-                <IamBackendProvider onExpire={handleExpire}>
-                  <RouterProvider router={router} />
-                </IamBackendProvider>
-
+                <TenantConfigContextProvider>
+                  <IamBackendProvider onExpire={handleExpire}>
+                    <RouterProvider router={router} />
+                  </IamBackendProvider>
+                </TenantConfigContextProvider>
               </ConfigContextProvider>
             </FetchProvider>
 

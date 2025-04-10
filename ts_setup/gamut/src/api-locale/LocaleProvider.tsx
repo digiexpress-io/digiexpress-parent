@@ -11,6 +11,8 @@ export type LocalCode = string;
 export interface LocaleProviderProps {
   children: React.ReactNode;
   options?: LocaleApi.Localizations;
+  enabledLocales?: string[],
+  defaultLocale?: () => string;
   disableErrors?: boolean;
 }
 
@@ -18,7 +20,7 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
   const { options = {} } = props;
 
   const messages: any = React.useMemo(() => merge(options), [options]);
-  const [locale, setLocale] = React.useState<string>(getLocale());
+  const [locale, setLocale] = React.useState<string>(getLocale(props, messages));
   const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale }), [locale]);
   const intlMessages = messages[locale];
 
@@ -48,7 +50,7 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
   return merged;
 }
 
-const getLocale = () => {
+const getLocale = (props: LocaleProviderProps, messages: Record<string, any>) => {
   let selectedLocale = '';
 
   let nextIsLocale = false;
@@ -66,8 +68,7 @@ const getLocale = () => {
   let locale = 'en';
   if (selectedLocale) {
     locale = selectedLocale;
-  }
-  else {
+  } else {
     const language = navigator.language;
     if (language.length > 2) {
       locale = language.split("-")[0];
@@ -76,8 +77,11 @@ const getLocale = () => {
       locale = language;
     }
   }
-  if (locale !== 'en' && locale !== 'fi') {
-    return 'en';
+
+  const supported = props.enabledLocales ?? Object.keys(messages)
+  if (!supported.includes(locale)) {
+    const resolved =  props.defaultLocale ? props.defaultLocale() : undefined;
+    return resolved ?? 'en';
   }
   return locale;
 }

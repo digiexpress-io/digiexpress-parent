@@ -20,6 +20,7 @@ import { Route as PublicLocaleAuthImport } from './routes/public.$locale.auth'
 import { Route as SecuredLocalePublicationsIndexImport } from './routes/secured.$locale.publications.index'
 import { Route as SecuredLocaleWorkerTasksImport } from './routes/secured.$locale.worker.tasks'
 import { Route as SecuredLocaleWorkerTasksIndexImport } from './routes/secured.$locale.worker.tasks.index'
+import { Route as SecuredLocaleWorkerTablesIndexImport } from './routes/secured.$locale.worker.tables.index'
 import { Route as SecuredLocaleWorkerQueuesIndexImport } from './routes/secured.$locale.worker.queues.index'
 import { Route as SecuredLocaleWorkerMonitoringIndexImport } from './routes/secured.$locale.worker.monitoring.index'
 import { Route as SecuredLocaleWorkerHelpIndexImport } from './routes/secured.$locale.worker.help.index'
@@ -92,6 +93,13 @@ const SecuredLocaleWorkerTasksIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerTasksRoute,
+  } as any)
+
+const SecuredLocaleWorkerTablesIndexRoute =
+  SecuredLocaleWorkerTablesIndexImport.update({
+    id: '/tables/',
+    path: '/tables/',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
 
 const SecuredLocaleWorkerQueuesIndexRoute =
@@ -329,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecuredLocaleWorkerQueuesIndexImport
       parentRoute: typeof SecuredLocaleWorkerImport
     }
+    '/secured/$locale/worker/tables/': {
+      id: '/secured/$locale/worker/tables/'
+      path: '/tables'
+      fullPath: '/secured/$locale/worker/tables'
+      preLoaderRoute: typeof SecuredLocaleWorkerTablesIndexImport
+      parentRoute: typeof SecuredLocaleWorkerImport
+    }
     '/secured/$locale/worker/tasks/': {
       id: '/secured/$locale/worker/tasks/'
       path: '/'
@@ -422,6 +437,7 @@ interface SecuredLocaleWorkerRouteChildren {
   SecuredLocaleWorkerHelpIndexRoute: typeof SecuredLocaleWorkerHelpIndexRoute
   SecuredLocaleWorkerMonitoringIndexRoute: typeof SecuredLocaleWorkerMonitoringIndexRoute
   SecuredLocaleWorkerQueuesIndexRoute: typeof SecuredLocaleWorkerQueuesIndexRoute
+  SecuredLocaleWorkerTablesIndexRoute: typeof SecuredLocaleWorkerTablesIndexRoute
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
   SecuredLocaleWorkerQueuesMessagesIndexRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
@@ -436,6 +452,7 @@ const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
   SecuredLocaleWorkerMonitoringIndexRoute:
     SecuredLocaleWorkerMonitoringIndexRoute,
   SecuredLocaleWorkerQueuesIndexRoute: SecuredLocaleWorkerQueuesIndexRoute,
+  SecuredLocaleWorkerTablesIndexRoute: SecuredLocaleWorkerTablesIndexRoute,
   SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute:
     SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute,
   SecuredLocaleWorkerQueuesDeliveriesIndexRoute:
@@ -484,6 +501,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
@@ -509,6 +527,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
@@ -537,6 +556,7 @@ export interface FileRoutesById {
   '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
   '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
   '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables/': typeof SecuredLocaleWorkerTablesIndexRoute
   '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
   '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
   '/secured/$locale/worker/queues/deliveries/': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
@@ -566,6 +586,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
+    | '/secured/$locale/worker/tables'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/feedback/$feedbackId'
     | '/secured/$locale/worker/queues/deliveries'
@@ -590,6 +611,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help'
     | '/secured/$locale/worker/monitoring'
     | '/secured/$locale/worker/queues'
+    | '/secured/$locale/worker/tables'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/worker/feedback/$feedbackId'
     | '/secured/$locale/worker/queues/deliveries'
@@ -616,6 +638,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker/help/'
     | '/secured/$locale/worker/monitoring/'
     | '/secured/$locale/worker/queues/'
+    | '/secured/$locale/worker/tables/'
     | '/secured/$locale/worker/tasks/'
     | '/secured/$locale/worker/feedback/$feedbackId/'
     | '/secured/$locale/worker/queues/deliveries/'
@@ -688,6 +711,7 @@ export const routeTree = rootRoute
         "/secured/$locale/worker/help/",
         "/secured/$locale/worker/monitoring/",
         "/secured/$locale/worker/queues/",
+        "/secured/$locale/worker/tables/",
         "/secured/$locale/worker/feedback/$feedbackId/",
         "/secured/$locale/worker/queues/deliveries/",
         "/secured/$locale/worker/queues/messages/"
@@ -748,6 +772,10 @@ export const routeTree = rootRoute
     },
     "/secured/$locale/worker/queues/": {
       "filePath": "secured.$locale.worker.queues.index.tsx",
+      "parent": "/secured/$locale/worker"
+    },
+    "/secured/$locale/worker/tables/": {
+      "filePath": "secured.$locale.worker.tables.index.tsx",
       "parent": "/secured/$locale/worker"
     },
     "/secured/$locale/worker/tasks/": {

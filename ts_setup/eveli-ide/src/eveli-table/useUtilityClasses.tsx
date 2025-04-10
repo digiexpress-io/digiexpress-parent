@@ -33,6 +33,7 @@ export const EveliTableRoot = styled('div', {
   return {
     display: 'flex',
     flexDirection: 'row',
+    position: 'relative'
   };
 });
 

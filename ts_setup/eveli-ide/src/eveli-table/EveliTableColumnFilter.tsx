@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { generateUtilityClass, IconButton, InputAdornment, ListItemIcon, Menu, MenuItem, styled, TextField } from '@mui/material';
+import { generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import SearchIcon from '@mui/icons-material/Search';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import composeClasses from '@mui/utils/composeClasses';
+
+import { EveliTableSearchField } from './EveliTableSearchField';
 
 
 export const EveliTableColumnFilter: React.FC = () => {
@@ -20,30 +21,12 @@ export const EveliTableColumnFilter: React.FC = () => {
   const classes = useUtilityClasses();
   return (
     <EveliTableColumnFilterRoot className={classes.root}>
-      <IconButton
-        onClick={handleClick}
-        disableRipple
-        disableFocusRipple
-        sx={{
-          padding: 0,
-          '&:hover': {
-            backgroundColor: 'transparent',
-          },
-        }}
-      >
+      <IconButton onClick={handleClick} disableRipple disableFocusRipple>
         <FilterListIcon />
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <TextField placeholder='Search' slotProps={{
-          input: {
-            startAdornment: <InputAdornment position="start">
-              <SearchIcon className='filters-adornment-icon' />
-            </InputAdornment>
-          }
-        }}
-        >
-        </TextField>
+        <EveliTableSearchField />
 
         <MenuItem onClick={handleClose}>
           <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
@@ -88,7 +71,18 @@ const EveliTableColumnFilterRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-
+    '.MuiIconButton-root': {
+      padding: 0,
+      '&:hover': {
+        backgroundColor: 'transparent',
+      }
+    },
+    '.MuiSvgIcon-root': {
+      ':hover': {
+        backgroundColor: theme.palette.secondary.dark,
+        borderRadius: theme.spacing(0.5)
+      }
+    }
 
   };
 });
@@ -106,18 +100,6 @@ const StyledMenu = styled(Menu, {
   '& .MuiMenuItem-root': {
     fontSize: '10pt',
     fontWeight: 400
-  },
-  '.MuiFormControl-root': {
-    margin: theme.spacing(1),
-  },
-  '.MuiInputBase-root': {
-    paddingLeft: 0,
-    minHeight: '1rem',
-    fontSize: '10pt',
-  },
-  '.MuiInputBase-input': {
-    padding: theme.spacing(1),
-    height: 'auto',
   },
   '.filters-icon': {
     color: theme.palette.primary.main,

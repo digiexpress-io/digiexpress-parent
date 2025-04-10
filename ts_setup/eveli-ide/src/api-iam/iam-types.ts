@@ -14,7 +14,8 @@ export declare namespace IamApi {
     'DEPLOYMENT_VIEW' | 'DEPLOYMENT_EDIT' |
     'DASHBOARD_VIEW' |
     'FEEDBACK_VIEW' | 'FEEBACK_EDIT' |
-    'DIALOB_VIEW' | 'DIALOB_EDIT' 
+    'DIALOB_VIEW' | 'DIALOB_EDIT' |
+    'TABLES_V2'
 
   export interface User {
     userId: string;

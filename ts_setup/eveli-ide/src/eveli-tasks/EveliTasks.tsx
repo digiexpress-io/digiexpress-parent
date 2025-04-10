@@ -183,8 +183,7 @@ export const EveliTasks: React.FC = ({ }) => {
           if (tableState.tableRef.current)
             tableState.tableRef.current.onQueryChange();
         }}
-      />
-
+      /> 
     </Container>
   );
 }
