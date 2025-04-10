@@ -18,14 +18,14 @@ export function useSite() {
   }
 
   function getTopicGroups(
-    itemsInColumn: number | undefined = 8, 
-    filterTopic: ((topic: SiteApi.TopicView) => boolean) | undefined
+    topics: SiteApi.TopicView[],
+    itemsInColumn: number | undefined = 8
   ): SiteApi.TopicGroup[] {
   
-    return createTopicGroups(topics.filter(topic => filterTopic ? filterTopic(topic) : true), itemsInColumn);
+    return createTopicGroups(topics, itemsInColumn);
   }
 
-  return { getTopicGroups, getLink, site, views, feedback, voteOnReply };
+  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply };
 }
 
 
