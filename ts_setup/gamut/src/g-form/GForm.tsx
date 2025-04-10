@@ -9,7 +9,6 @@ import { GOverridableComponent } from '../g-override';
 
 export interface GFormProps {
   executionId: string;
-  children: string | undefined; // dialob sessionId
   variant: string; // form technical name for overrides
   onAfterComplete: () => void;
   component?: GOverridableComponent<GFormProps>;
@@ -31,17 +30,11 @@ export const GForm: React.FC<GFormProps> = (initProps) => {
     return <Root {...initProps} ownerState={themeProps} className=''/>
   }
 
-  if (!themeProps.children) {
-    return null;
-  }
-  return (<FormProvider variant={themeProps.variant} executionId={themeProps.executionId} id={themeProps.children} onAfterComplete={themeProps.onAfterComplete}><GFormTip {...themeProps} /></FormProvider>);
+  return (<FormProvider variant={themeProps.variant} executionId={themeProps.executionId} onAfterComplete={themeProps.onAfterComplete}><GFormTip {...themeProps} /></FormProvider>);
 }
 
 // Internal component to access the provider
 const GFormTip: React.FC<GFormProps> = (props) => {
-  if (!props.children) {
-    return null;
-  }
   const tip = useFormTip();
 
   const ownerState: OwnerState = {

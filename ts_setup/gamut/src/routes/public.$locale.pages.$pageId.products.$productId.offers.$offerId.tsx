@@ -12,24 +12,11 @@ export const Route = createFileRoute('/public/$locale/pages/$pageId/products/$pr
 
 function Component() {
   const { locale, offerId, productId } = Route.useParams();
-  const offers = useOffers();
-  const [offer, setOffer] = React.useState<OfferApi.Offer>();
-
-  React.useEffect(() => {
-    offers.fetchOffer(offerId).then(setOffer);
-  }, [offerId]);
-
-  const formId = offer?.formId;
-  return React.useMemo(() => (<ChooseComponent locale={locale} offerId={offerId} productId={productId} formId={formId}/>), [locale, productId, offerId, formId])
+  return React.useMemo(() => (<ChooseComponent locale={locale} offerId={offerId} productId={productId}/>), [locale, productId, offerId])
 }
 
-function ChooseComponent(props: { locale: string, offerId: string, productId: string, formId?: string }) {
-
-  if(!props.formId) {
-    return (<>Loading offer...</>);
-  }
+function ChooseComponent(props: { locale: string, offerId: string, productId: string }) {
   return (<GRouterOffer 
-    formId={props.formId}
     offerId={props.offerId} 
     productId={props.productId} 
   />)

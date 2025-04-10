@@ -2,13 +2,13 @@ import React from 'react'
 
 import { DialobApi } from './dialob-types';
 import { useFormStore } from './useFormStore';
-
+import { OfferApi, useOffers } from '../api-offer';
+import { useIam } from '../api-iam';
 
 
 export const FormContext = React.createContext<DialobApi.FormContextType>({} as any);
 
 export interface FormProviderProps {
-  id: string;
   executionId: string;
   variant: string;
   onAfterComplete: () => void;
@@ -16,7 +16,30 @@ export interface FormProviderProps {
 }
 
 export const FormProvider: React.FC<FormProviderProps> = (props) => {
+  const { authType } = useIam();
+  const offers = useOffers();
+  const [offer, setOffer] = React.useState<OfferApi.Offer>();
 
+  React.useEffect(() => {
+
+    if(authType === 'ANON') {
+      const offer = offers.getOffer(props.executionId);
+      setOffer(offer);
+    } else {
+      offers.fetchOffer(props.executionId).then(setOffer);
+    }
+  }, [props.executionId, authType]);
+
+  const formId = offer?.formId;
+
+  if (!offer || !formId) {
+    return null;
+  }
+  return (<WithFormProvider {...props} id={formId}>{props.children}</WithFormProvider>);
+}
+
+const WithFormProvider: React.FC<FormProviderProps & { id: string }> = (props) => {
+  
   const { id, executionId, variant, onAfterComplete } = props;
   const store = useFormStore({ id });
   const contextValue = React.useMemo(() => Object.freeze({ store, variant, executionId, onAfterComplete }), [store, variant, executionId, onAfterComplete])
