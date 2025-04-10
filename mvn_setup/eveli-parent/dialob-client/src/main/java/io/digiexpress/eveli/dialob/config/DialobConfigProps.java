@@ -32,9 +32,9 @@ import lombok.Data;
 public class DialobConfigProps {
   private Boolean enabled;
   // api  url. Should be full path, typically ending with /dialob/api. If specified then it is used.
-  private Optional<String> apiUrl;
+  private Optional<String> apiUrl = Optional.empty();
   // session  url. Should be full path, typically ending with /session/dialob. If specified then it is used.
-  private Optional<String> sessionUrl;
+  private Optional<String> sessionUrl = Optional.empty();
   // service url, specifying base url for dialob services. required if optional values are missing.
   // can be used when both services are behind same address (e.g. proxied).
   private String serviceUrl;
