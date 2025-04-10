@@ -78,7 +78,7 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
               )}
             <div className={classes.buttonLayout}>
               <GLocales value={props.locale} onClick={props.onLocale} />
-              <GLogout />
+              {iam.authType === 'ANON' ? <GLogin /> : <GLogout/>}
             </div>
           </div>
           <>
