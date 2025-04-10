@@ -17,8 +17,12 @@ export function useSite() {
     return site.links[linkId];
   }
 
-  function getTopicGroups(itemsInColumn: number | undefined = 8): SiteApi.TopicGroup[] {
-    return createTopicGroups(topics, itemsInColumn);
+  function getTopicGroups(
+    itemsInColumn: number | undefined = 8, 
+    filterTopic: ((topic: SiteApi.TopicView) => boolean) | undefined
+  ): SiteApi.TopicGroup[] {
+  
+    return createTopicGroups(topics.filter(topic => filterTopic ? filterTopic(topic) : true), itemsInColumn);
   }
 
   return { getTopicGroups, getLink, site, views, feedback, voteOnReply };

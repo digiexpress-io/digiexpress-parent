@@ -13,7 +13,11 @@ import { GOverridableComponent } from '../g-override';
 export interface GPopoverTopicsProps {
   itemsInColumn?: number | undefined;
   onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent) => void;
-  slots?: { link?: React.ElementType<GTopicLinkProps> }
+  filterTopic?: (topic: SiteApi.TopicView) => boolean; 
+
+  slots?: { 
+    link?: React.ElementType<GTopicLinkProps> 
+  }
   component?: GOverridableComponent<GPopoverTopicsProps>
 }
 
@@ -21,7 +25,6 @@ export interface GTopicLinkProps {
   children: SiteApi.TopicView
   onClick?: (topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
-
 
 export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
   const { getTopicGroups } = useSite();
@@ -46,7 +49,7 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
     anchor.anchorProps.onClose();
   }
 
-  const topics = getTopicGroups(themeProps.itemsInColumn);
+  const topics = getTopicGroups(themeProps.itemsInColumn, themeProps.filterTopic);
 
   React.useEffect(() => {
     setIconRotated(anchor.anchorProps.open);
@@ -63,7 +66,8 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
 
       <GTopicsMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open} className={classes.popover}>
         <GTopics className={classes.topics}>
-          {topics.map((column, index) => (
+          {topics
+            .map((column, index) => (
             <React.Fragment key={column.column}>
               <div className={classes.topicsLayout}>
                 {column.topics.map(topic => <GTopicLinkSlot key={topic.id} children={topic} onClick={handleOnTopic} />)}

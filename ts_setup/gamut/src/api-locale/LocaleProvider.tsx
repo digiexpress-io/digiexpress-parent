@@ -11,14 +11,15 @@ export type LocalCode = string;
 export interface LocaleProviderProps {
   children: React.ReactNode;
   options?: LocaleApi.Localizations;
+  defaultLocale?: () => string;
   disableErrors?: boolean;
 }
 
 export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
-  const { options = {} } = props;
+  const { options = {}, defaultLocale } = props;
 
   const messages: any = React.useMemo(() => merge(options), [options]);
-  const [locale, setLocale] = React.useState<string>(getLocale());
+  const [locale, setLocale] = React.useState<string>(getLocale(defaultLocale));
   const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale }), [locale]);
   const intlMessages = messages[locale];
 
@@ -48,7 +49,7 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
   return merged;
 }
 
-const getLocale = () => {
+const getLocale = (defaultLocale: (() => string) | undefined) => {
   let selectedLocale = '';
 
   let nextIsLocale = false;
@@ -77,7 +78,7 @@ const getLocale = () => {
     }
   }
   if (locale !== 'en' && locale !== 'fi') {
-    return 'en';
+    return defaultLocale ? defaultLocale() : 'en';
   }
   return locale;
 }
