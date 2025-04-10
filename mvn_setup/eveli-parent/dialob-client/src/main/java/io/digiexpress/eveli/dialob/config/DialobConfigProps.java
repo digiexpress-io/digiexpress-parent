@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.dialob.config;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * eveli-client
@@ -29,6 +31,12 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "eveli.dialob")
 public class DialobConfigProps {
   private Boolean enabled;
+  // api  url. Should be full path, typically ending with /dialob/api. If specified then it is used.
+  private Optional<String> apiUrl;
+  // session  url. Should be full path, typically ending with /session/dialob. If specified then it is used.
+  private Optional<String> sessionUrl;
+  // service url, specifying base url for dialob services. required if optional values are missing.
+  // can be used when both services are behind same address (e.g. proxied).
   private String serviceUrl;
   
   private String tenantId;

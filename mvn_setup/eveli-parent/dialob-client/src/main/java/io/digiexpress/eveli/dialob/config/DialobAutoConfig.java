@@ -66,12 +66,12 @@ public class DialobAutoConfig {
     final var interceptors = Collections.singletonList(interceptor);
     
     final var api = new RestTemplateBuilder()
-        .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/dialob/api"))
+        .uriTemplateHandler(new DefaultUriBuilderFactory(props.getApiUrl().orElse(serviceUrl + "/dialob/api")))
         .additionalInterceptors(interceptors)
         .build();
 
     final var sessions = new RestTemplateBuilder()
-      .uriTemplateHandler(new DefaultUriBuilderFactory(serviceUrl + "/session/dialob"))
+      .uriTemplateHandler(new DefaultUriBuilderFactory(props.getSessionUrl().orElse(serviceUrl + "/session/dialob")))
       .additionalInterceptors(interceptors)
       .build();
   
