@@ -23,11 +23,18 @@ export const GSortRoot = styled("div", {
   slot: 'Root',
   overridesResolver: (_props, styles) => [
     styles.root,
-
   ],
 })(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  paddingTop: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 
-paddingTop: theme.spacing(1),
-paddingRight: theme.spacing(1)
-
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'center',
+  },
+  [theme.breakpoints.up('sm')]: {
+    justifyContent: 'flex-end',
+  },
 }));
