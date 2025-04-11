@@ -9,6 +9,5 @@ export default defineConfig((props) => {
   if (command === 'serve') {
     return serveDev(props);
   }
-
   return buildProd(props);
 });
