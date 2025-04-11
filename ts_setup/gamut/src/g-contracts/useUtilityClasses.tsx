@@ -137,9 +137,14 @@ export const GContractsRoot = styled("div", {
   return {
     '& .GSort-root': {
       display: 'flex',
-      justifyContent: 'flex-end',
       width: '100%',
-      marginBottom: theme.spacing(1)
-    },
+      marginBottom: theme.spacing(1),
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
+      },
+      [theme.breakpoints.up('sm')]: {
+        justifyContent: 'flex-end',
+      },
+    },    
   };
 });
