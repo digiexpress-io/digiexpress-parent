@@ -35,7 +35,7 @@ jobs:
             node-version: 20
             cache: 'pnpm'
             cache-dependency-path: ts_setup/gamut/pnpm-lock.yaml
-            registry-url: 'https://registry.npmjs.org'
+            registry-url: 'https://registry.npmjs.org/'
 
         - name: Install dependencies 📦
           run: pnpm install -r --prefer-frozen-lockfile
