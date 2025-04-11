@@ -12,7 +12,6 @@ const alias: { find: string, replacement: string }[] = [
   { find: '@dxs-ts/gamut', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
 
 ];
-
 // https://vitejs.dev/config/
 export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
