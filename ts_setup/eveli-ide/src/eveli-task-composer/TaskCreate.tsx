@@ -53,7 +53,7 @@ const FeedbackAccordion: React.FC<{ editTask: TaskApi.Task, comments: TaskApi.Co
       </AccordionSummary>
       <AccordionDetails sx={classes.accordionDetails}>
         <UpsertOneFeedback taskId={editTask.id! + ''} reload={comments?.length ?? 0}
-          onComplete={() => enqueueSnackbar(intl.formatMessage({ id: 'task.form.feedback.published' }, { variant: 'success' }))} />
+          onComplete={() => enqueueSnackbar(intl.formatMessage({ id: 'task.form.feedback.updated' }, { variant: 'success' }))} />
       </AccordionDetails>
     </Accordion>
   )

@@ -34,7 +34,7 @@ export const en = {
   'task.status.rejected': 'Rejected',
   'task.form.review': 'View completed form',
   'task.form.feedback.manage': 'Manage feedback',
-  'task.form.feedback.published': 'Feedback published',
+  'task.form.feedback.updated': 'Feedback update successful',
   'task.created': 'Created',
   'task.updated': 'Updated',
   'comments': 'Comments',
