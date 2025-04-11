@@ -96,6 +96,15 @@ export function useTasksTableState(): TableState {
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "subject").hidden,
       },
       {
+        title: intl.formatMessage({ id: 'spoTasksTableHeader.additionalInfo' }),
+        field: 'additionalInfo',
+        filtering: true,
+        render: data => (<TaskAdditionalInfo task={data} />),
+        defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'additionalInfo')?.value || "",
+        headerStyle: { fontWeight: 'bold' },
+        hidden: tableRef.current?.state.columns.find((column: any) => column.field === "additionalInfo").hidden
+      },
+      {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.clientName' }),
         field: 'clientIdentificator',
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'clientIdentificator')?.value || "",
@@ -132,15 +141,6 @@ export function useTasksTableState(): TableState {
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'assignedUser')?.value || '',
         headerStyle: { fontWeight: 'bold' },
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "assignedUser").hidden
-      },
-      {
-        title: intl.formatMessage({ id: 'spoTasksTableHeader.additionalInfo' }),
-        field: 'additionalInfo',
-        filtering: true,
-        render: data => (<TaskAdditionalInfo task={data} />),
-        defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'additionalInfo')?.value || "",
-        headerStyle: { fontWeight: 'bold' },
-        hidden: tableRef.current?.state.columns.find((column: any) => column.field === "additionalInfo").hidden
       },
       {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.dueDate' }),
