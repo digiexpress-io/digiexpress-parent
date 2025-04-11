@@ -19,21 +19,20 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
   const { authType } = useIam();
   const offers = useOffers();
   const [offer, setOffer] = React.useState<OfferApi.Offer>();
-
   React.useEffect(() => {
-
+    
     if(authType === 'ANON') {
+      offers.fetchOffer(props.executionId).then(setOffer);
+    } else {
       const offer = offers.getOffer(props.executionId);
       setOffer(offer);
-    } else {
-      offers.fetchOffer(props.executionId).then(setOffer);
     }
-  }, [props.executionId, authType]);
+  }, [props.executionId, authType, offers]);
 
   const formId = offer?.formId;
 
   if (!offer || !formId) {
-    return null;
+    return <>Failed to load form...</>;
   }
   return (<WithFormProvider {...props} id={formId}>{props.children}</WithFormProvider>);
 }
