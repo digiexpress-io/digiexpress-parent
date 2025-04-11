@@ -54,6 +54,12 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
       justifyContent: 'right',
       color: theme.palette.primary.main,
     },
+    '& .MuiButtonBase-root.Mui-selected .GUserOverviewMenu-icon': {
+      color: theme.palette.primary.contrastText,
+    },
+    '& .MuiButtonBase-root.Mui-selected:hover .GUserOverviewMenu-icon': {
+      color: theme.palette.primary.contrastText,
+    },
     '& .GUserOverviewMenu-menuButtonLayout': {
       display: "flex",
       flexDirection: "column",
