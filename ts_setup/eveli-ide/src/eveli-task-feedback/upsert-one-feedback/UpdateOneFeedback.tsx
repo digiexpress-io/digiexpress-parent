@@ -65,7 +65,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   if (!feedback) {
     return (<CircularProgress />)
   }
-
+  
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
       <Box display='flex' alignItems='center'>

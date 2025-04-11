@@ -56,7 +56,7 @@ type Props = {
   reloadComments: () => void
   userSelectionFree?: boolean
   currentUser: Partial<IamApi.User>
-  supressConfirmation?: boolean | undefined
+  supressConfirmation?: boolean | undefined,
 }
 
 type AllProps = Props & WrappedComponentProps;
@@ -159,6 +159,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
   getTaskKeywords = (editTask: TaskApi.Task) => {
     return editTask.keyWords!.flatMap(element => element.split(','));
   }
+  
 
   render() {
     const { editTask, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
@@ -306,7 +307,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                 
                 {editTask.features && editTask.features.includes('feedback') && (
                 <Grid2 size={{ xs: 12 }}>
-                  {editTask.id && externalThreads ?
+                  {editTask.id ?
                     <Accordion>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -320,7 +321,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                         <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
                       </AccordionSummary>
                       <AccordionDetails sx={classes.accordionDetails}>
-                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => { }} reload={comments?.length ?? 0} />
+                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => {}} reload={comments?.length ?? 0} />
                       </AccordionDetails>
                     </Accordion>
                     : <NewTaskAccordianMsg id='task.comments.external.createTask' />
