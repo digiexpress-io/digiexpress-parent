@@ -11,7 +11,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
-import { injectIntl, WrappedComponentProps, FormattedMessage, FormattedDate } from 'react-intl';
+import { injectIntl, WrappedComponentProps, FormattedMessage, FormattedDate, useIntl } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 
 import { UpsertOneFeedback, StatusIndicator } from '../eveli-task-feedback';
@@ -32,7 +32,32 @@ import { AttachmentTableWrapper } from './AttachmentTableWrapper';
 import { TaskRoleDialog } from './TaskRoleDialog';
 import { TaskLinkProps, ComponentResolver } from './TaskComponentResolver';
 import { TaskFormState } from './TaskFormState';
+import { useSnackbar } from 'notistack';
 
+
+const FeedbackAccordion: React.FC<{ editTask: TaskApi.Task, comments: TaskApi.Comment[] }> = ({ editTask, comments }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const intl = useIntl();
+
+  return (
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1bh-content"
+        id="panel1bh-header"
+      >
+        <Typography sx={classes.accordionTitle}>
+          <FormattedMessage id="task.feedback.published" />
+        </Typography>
+        <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
+      </AccordionSummary>
+      <AccordionDetails sx={classes.accordionDetails}>
+        <UpsertOneFeedback taskId={editTask.id! + ''} reload={comments?.length ?? 0}
+          onComplete={() => enqueueSnackbar(intl.formatMessage({ id: 'task.form.feedback.published' }, { variant: 'success' }))} />
+      </AccordionDetails>
+    </Accordion>
+  )
+}
 
 const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
   const theme = useTheme();
@@ -159,7 +184,7 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
   getTaskKeywords = (editTask: TaskApi.Task) => {
     return editTask.keyWords!.flatMap(element => element.split(','));
   }
-  
+
 
   render() {
     const { editTask, handleSubmit, groups, externalThreads, comments, reloadComments } = this.props;
@@ -170,317 +195,300 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
     return (
       <TaskFormState task={editTask} onSubmit={handleSubmit}>
-        { ({ currentState: values, onSubmit: submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
-            <>
-              <PageLeavingConfirmation navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
-              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
-                <Grid2 container spacing={2} alignItems="center">
-                  <Grid2 size={{ xs: 12, md: 4 }}>
-                    {editTask.keyWords && editTask.keyWords.length > 0 && (
-                      <Box display='flex' alignItems='center'>
-                        <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: </InputLabel>
-                        <Chip
-                          label={this.getTaskKeywords(editTask).includes('Protected') ? formatMessage({ id: 'Protected' }) : formatMessage({ id: 'Normal' })}
-                          color={this.getTaskKeywords(editTask).includes('Protected') ? 'error' : 'primary'}
-                          sx={classes.keywordChip}
-                        />
-                      </Box>
-                    )}
-                    {(!editTask.keyWords || editTask.keyWords.length === 0) && (
-                      <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: -</InputLabel>
-                    )}
-                  </Grid2>
-                  <Grid2 size={{ xs: 12, md: 4 }}>
-                    <Typography>
-                      <FormattedMessage id={'task.created'} />:&nbsp;{this.formatTimestamp(editTask.created)}
-                    </Typography>
-                  </Grid2>
-                  <Grid2 size={{ xs: 12, md: 4 }}>
-                    <EveliDatePicker
-                      label={formatMessage({ id: 'taskDialog.dueDate' })}
-                      fullWidth={true}
-                      readonly={readonly}
-                      value={values.dueDate}
-                      onChange={newDate => setFieldValue('dueDate', newDate)}
-                    />
-                  </Grid2>
+        {({ currentState: values, onSubmit: submitForm, isSubmitting, errors, isValid, dirty, setFieldValue }) => (
+          <>
+            <PageLeavingConfirmation navigationConfirmationRequired={() => dirty && this.props.supressConfirmation !== true} />
+            <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
+              <Grid2 container spacing={2} alignItems="center">
+                <Grid2 size={{ xs: 12, md: 4 }}>
+                  {editTask.keyWords && editTask.keyWords.length > 0 && (
+                    <Box display='flex' alignItems='center'>
+                      <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: </InputLabel>
+                      <Chip
+                        label={this.getTaskKeywords(editTask).includes('Protected') ? formatMessage({ id: 'Protected' }) : formatMessage({ id: 'Normal' })}
+                        color={this.getTaskKeywords(editTask).includes('Protected') ? 'error' : 'primary'}
+                        sx={classes.keywordChip}
+                      />
+                    </Box>
+                  )}
+                  {(!editTask.keyWords || editTask.keyWords.length === 0) && (
+                    <InputLabel>{formatMessage({ id: 'taskDialog.category' })}: -</InputLabel>
+                  )}
                 </Grid2>
-                <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      label={formatMessage({ id: 'taskDialog.clientIdentificator' })}
-                      fullWidth={true}
-                      inputProps={{
-                        readOnly: readonly
-                      }}
-                      value={values.clientIdentificator}
-                      onChange={event => setFieldValue('clientIdentificator', event.target.value)}
-                    />
-                  </Grid2>
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    <TextField
-                      label={formatMessage({ id: 'taskDialog.subject' })}
-                      required
-                      error={!!errors.subject}
-                      helperText={errors.subject}
-                      fullWidth={true}
-                      inputProps={{
-                        readOnly: readonly
-                      }}
-                      value={values.subject}
-                      onChange={event => setFieldValue('subject', event.target.value)}
-                    />
-                  </Grid2>
-
-                  <Grid2 size={{ xs: 12, md: 12 }}>
-                    <TextField
-                      label={formatMessage({ id: 'taskDialog.additionalInfo' })}
-                      fullWidth={true}
-                      inputProps={{
-                        readOnly: readonly,
-                        maxLength: 100
-                      }}
-                      value={values.additionalInfo}
-                      onChange={event => setFieldValue('additionalInfo', event.target.value)}
-                    />
-                  </Grid2>
+                <Grid2 size={{ xs: 12, md: 4 }}>
+                  <Typography>
+                    <FormattedMessage id={'task.created'} />:&nbsp;{this.formatTimestamp(editTask.created)}
+                  </Typography>
                 </Grid2>
-                <Grid2 container spacing={2} alignItems="center" sx={{ mt: 1 }}>
-                  {!!editTask.taskLinks && editTask.taskLinks.length > 0 &&
-                    <Grid2 size={{ xs: 12, md: 6 }}>
-                      <Box display="flex" gap={1} flexWrap="wrap">
-                        {editTask.taskLinks.map(taskLink => {
-                          return this.renderTaskLink({ link: taskLink, taskId: editTask.id })
-                        })}
-                      </Box>
-                    </Grid2>
-                  }
-                  <Grid2 size={{ xs: 12, md: !!editTask.taskLinks && editTask.taskLinks.length > 0 ? 6 : 12 }}>
-                    {editTask.keyWords && editTask.keyWords.length > 0 && (
-                      <Box display='flex' alignItems='center'>
-                        <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: </InputLabel>
-
-                        <Chip
-                          label={this.getTaskKeywords(editTask).includes('Manual') ? formatMessage({ id: 'Internal' }) : formatMessage({ id: 'CustomerCreated' })}
-                          color='primary'
-                          sx={classes.keywordChip}
-                        />
-                      </Box>
-                    )}
-
-                  </Grid2>
-                </Grid2>
-              </Paper>
-
-
-              <Grid2 container spacing={2}>
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id && externalThreads ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="externalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        <EveliTaskComments
-                          task={editTask}
-                          isExternalThread={true}
-                          comments={comments}
-                          loadData={reloadComments}
-                          isThreaded={false}
-                        />
-
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
-                  }
-                </Grid2>
-                
-                {editTask.features && editTask.features.includes('feedback') && (
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                      //sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="task.feedback.published" />
-                        </Typography>
-                        <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => {}} reload={comments?.length ?? 0} />
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
-                  }
-                </Grid2>)
-                }
-
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
-                </Grid2>
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="internalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-
-                        <EveliTaskComments
-                          task={editTask}
-                          isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
-                          comments={comments}
-                          loadData={reloadComments}
-                          isThreaded={true}
-                        />
-
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
+                <Grid2 size={{ xs: 12, md: 4 }}>
+                  <EveliDatePicker
+                    label={formatMessage({ id: 'taskDialog.dueDate' })}
+                    fullWidth={true}
+                    readonly={readonly}
+                    value={values.dueDate}
+                    onChange={newDate => setFieldValue('dueDate', newDate)}
+                  />
                 </Grid2>
               </Grid2>
+              <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    label={formatMessage({ id: 'taskDialog.clientIdentificator' })}
+                    fullWidth={true}
+                    inputProps={{
+                      readOnly: readonly
+                    }}
+                    value={values.clientIdentificator}
+                    onChange={event => setFieldValue('clientIdentificator', event.target.value)}
+                  />
+                </Grid2>
+                <Grid2 size={{ xs: 12, md: 6 }}>
+                  <TextField
+                    label={formatMessage({ id: 'taskDialog.subject' })}
+                    required
+                    error={!!errors.subject}
+                    helperText={errors.subject}
+                    fullWidth={true}
+                    inputProps={{
+                      readOnly: readonly
+                    }}
+                    value={values.subject}
+                    onChange={event => setFieldValue('subject', event.target.value)}
+                  />
+                </Grid2>
 
+                <Grid2 size={{ xs: 12, md: 12 }}>
+                  <TextField
+                    label={formatMessage({ id: 'taskDialog.additionalInfo' })}
+                    fullWidth={true}
+                    inputProps={{
+                      readOnly: readonly,
+                      maxLength: 100
+                    }}
+                    value={values.additionalInfo}
+                    onChange={event => setFieldValue('additionalInfo', event.target.value)}
+                  />
+                </Grid2>
+              </Grid2>
+              <Grid2 container spacing={2} alignItems="center" sx={{ mt: 1 }}>
+                {!!editTask.taskLinks && editTask.taskLinks.length > 0 &&
+                  <Grid2 size={{ xs: 12, md: 6 }}>
+                    <Box display="flex" gap={1} flexWrap="wrap">
+                      {editTask.taskLinks.map(taskLink => {
+                        return this.renderTaskLink({ link: taskLink, taskId: editTask.id })
+                      })}
+                    </Box>
+                  </Grid2>
+                }
+                <Grid2 size={{ xs: 12, md: !!editTask.taskLinks && editTask.taskLinks.length > 0 ? 6 : 12 }}>
+                  {editTask.keyWords && editTask.keyWords.length > 0 && (
+                    <Box display='flex' alignItems='center'>
+                      <InputLabel>{formatMessage({ id: 'taskDialog.source' })}: </InputLabel>
 
-              <Paper elevation={2} sx={{ p: 2, mb: 2, mt: 2 }}>
-                <Grid2 container spacing={2} alignItems="top">
-                  {!!groups.length &&
-                    <Grid2 size={{ xs: 12, md: 6 }}>
-                      <Box display="flex" alignItems="center">
-                        <fieldset style={classes.taskRoleFieldset}>
-                          <legend style={classes.taskRoleLegend}>
-                            <InputLabel size='small' shrink={true}><FormattedMessage id='taskDialog.assignedTo' /></InputLabel>
-                          </legend>
-                          <Box id='task-role-list' sx={classes.taskRoleList}>
-                            {values.assignedRoles?.map((value: any) => (
-                              <Chip key={value} label={this.findRoleDescription(value)} />
-                            ))}
-                          </Box>
-                        </fieldset>
-
-                      </Box>
-                      <Button disabled={readonly} variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles' /></Button>
-                    </Grid2>
-                  }
-                  {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }} sx={{ mt: 1 }}>
-                    {!readonly &&
-                      <Autocomplete
-                        id="assignedUser"
-                        freeSolo
-                        options={this.state.userList}
-                        getOptionLabel={option => (typeof option === "string") ? option : option.userName ?? ''}
-                        value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
-                        onInputChange={(event, newInputValue) => {
-
-                          if (newInputValue === values.assignedUser) {
-                            return;
-                          }
-                          setFieldValue("assignedUserEmail", this.state.userList.find(el => el.userName === newInputValue)?.userEmail || '');
-                          setFieldValue("assignedUser", newInputValue);
-                        }}
-                        renderInput={(params) => (
-                          <TextField {...params}
-                            name='assignedUser'
-                            fullWidth={true}
-                            label={formatMessage({ id: 'taskDialog.assignedUser' })}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            error={!!errors.assignedUser}
-                            helperText={errors.assignedUser}
-                          />
-                        )}
+                      <Chip
+                        label={this.getTaskKeywords(editTask).includes('Manual') ? formatMessage({ id: 'Internal' }) : formatMessage({ id: 'CustomerCreated' })}
+                        color='primary'
+                        sx={classes.keywordChip}
                       />
-                    }
-                    {readonly &&
-                      <TextField
-                        name='assignedUser'
-                        value={values.assignedUser}
-                        fullWidth={true}
-                        inputProps={{
-                          readOnly: readonly
-                        }}
-                        label={formatMessage({ id: 'taskDialog.assignedUser' })}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      >
-                      </TextField>
-                    }
-                  </Grid2>
-                  }
+                    </Box>
+                  )}
 
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    <StatusComponent
-                      label={formatMessage({ id: 'taskDialog.status' })}
-                      readonly={readonly}
-                      value={values.status}
-                      handleCallback={newValue => setFieldValue('status', newValue as any)}
-                    />
-                  </Grid2>
-                  <Grid2 size={{ xs: 12, md: 6 }}>
-                    <Priority
-                      value={values.priority}
-                      label={formatMessage({ id: 'taskDialog.priority' })}
-                      readonly={readonly}
-                      handleCallback={newValue => setFieldValue('priority', newValue as any)}
-                    />
-                  </Grid2>
                 </Grid2>
-              </Paper>
+              </Grid2>
+            </Paper>
 
-              <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
-                <Grid2 container spacing={2}>
-                  {editTask?.id &&
-                    <Grid2 size={{ xs: 12, md: 6 }} container justifyContent="flex-start">
-                      <Typography variant="caption" display="block" gutterBottom>
-                        <FormattedMessage id={'task.updated'} />:&nbsp;{this.formatTimestamp(editTask.updated)}&nbsp;&nbsp;
-                        {editTask.updaterId || ''}
+
+            <Grid2 container spacing={2}>
+              <Grid2 size={{ xs: 12 }}>
+                {editTask.id && externalThreads ?
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1bh-content"
+                      id="panel1bh-header"
+                      sx={classes.accordionSummary}
+                    >
+                      <Typography sx={classes.accordionTitle}>
+                        <FormattedMessage id="externalComments" />
                       </Typography>
-                    </Grid2>
+                      <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
+                        <ChatBubbleOutlineIcon />
+                      </Badge>
+                    </AccordionSummary>
+                    <AccordionDetails sx={classes.accordionDetails}>
+                      <EveliTaskComments
+                        task={editTask}
+                        isExternalThread={true}
+                        comments={comments}
+                        loadData={reloadComments}
+                        isThreaded={false}
+                      />
+
+                    </AccordionDetails>
+                  </Accordion>
+                  : <NewTaskAccordianMsg id='task.comments.external.createTask' />
+                }
+              </Grid2>
+
+              {editTask.features && editTask.features.includes('feedback') && (
+                <Grid2 size={{ xs: 12 }}>
+                  {editTask.id ? <FeedbackAccordion comments={comments} editTask={editTask} /> : <NewTaskAccordianMsg id='task.comments.external.createTask' />}
+                </Grid2>
+              )
+              }
+
+              <Grid2 size={{ xs: 12 }}>
+                {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
+              </Grid2>
+              <Grid2 size={{ xs: 12 }}>
+                {editTask.id ?
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1bh-content"
+                      id="panel1bh-header"
+                      sx={classes.accordionSummary}
+                    >
+                      <Typography sx={classes.accordionTitle}>
+                        <FormattedMessage id="internalComments" />
+                      </Typography>
+                      <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
+                        <ChatBubbleOutlineIcon />
+                      </Badge>
+                    </AccordionSummary>
+                    <AccordionDetails sx={classes.accordionDetails}>
+
+                      <EveliTaskComments
+                        task={editTask}
+                        isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
+                        comments={comments}
+                        loadData={reloadComments}
+                        isThreaded={true}
+                      />
+
+                    </AccordionDetails>
+                  </Accordion>
+                  : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
+              </Grid2>
+            </Grid2>
+
+
+            <Paper elevation={2} sx={{ p: 2, mb: 2, mt: 2 }}>
+              <Grid2 container spacing={2} alignItems="top">
+                {!!groups.length &&
+                  <Grid2 size={{ xs: 12, md: 6 }}>
+                    <Box display="flex" alignItems="center">
+                      <fieldset style={classes.taskRoleFieldset}>
+                        <legend style={classes.taskRoleLegend}>
+                          <InputLabel size='small' shrink={true}><FormattedMessage id='taskDialog.assignedTo' /></InputLabel>
+                        </legend>
+                        <Box id='task-role-list' sx={classes.taskRoleList}>
+                          {values.assignedRoles?.map((value: any) => (
+                            <Chip key={value} label={this.findRoleDescription(value)} />
+                          ))}
+                        </Box>
+                      </fieldset>
+
+                    </Box>
+                    <Button disabled={readonly} variant='contained' onClick={() => { this.openDialog() }}  ><FormattedMessage id='button.editRoles' /></Button>
+                  </Grid2>
+                }
+                {<Grid2 size={{ xs: 12, md: !!groups.length ? 6 : 12 }} sx={{ mt: 1 }}>
+                  {!readonly &&
+                    <Autocomplete
+                      id="assignedUser"
+                      freeSolo
+                      options={this.state.userList}
+                      getOptionLabel={option => (typeof option === "string") ? option : option.userName ?? ''}
+                      value={{ userName: values.assignedUser, userEmail: values.assignedUserEmail }}
+                      onInputChange={(event, newInputValue) => {
+
+                        if (newInputValue === values.assignedUser) {
+                          return;
+                        }
+                        setFieldValue("assignedUserEmail", this.state.userList.find(el => el.userName === newInputValue)?.userEmail || '');
+                        setFieldValue("assignedUser", newInputValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params}
+                          name='assignedUser'
+                          fullWidth={true}
+                          label={formatMessage({ id: 'taskDialog.assignedUser' })}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          error={!!errors.assignedUser}
+                          helperText={errors.assignedUser}
+                        />
+                      )}
+                    />
+                  }
+                  {readonly &&
+                    <TextField
+                      name='assignedUser'
+                      value={values.assignedUser}
+                      fullWidth={true}
+                      inputProps={{
+                        readOnly: readonly
+                      }}
+                      label={formatMessage({ id: 'taskDialog.assignedUser' })}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    >
+                    </TextField>
                   }
                 </Grid2>
-              </Paper>
+                }
 
-              <EveliStickyTaskButtons editTask={editTask} dirty={dirty} isSubmitting={isSubmitting} isValid={isValid} readonly={readonly} submitForm={submitForm} />
+                <Grid2 size={{ xs: 12, md: 6 }}>
+                  <StatusComponent
+                    label={formatMessage({ id: 'taskDialog.status' })}
+                    readonly={readonly}
+                    value={values.status}
+                    handleCallback={newValue => setFieldValue('status', newValue as any)}
+                  />
+                </Grid2>
+                <Grid2 size={{ xs: 12, md: 6 }}>
+                  <Priority
+                    value={values.priority}
+                    label={formatMessage({ id: 'taskDialog.priority' })}
+                    readonly={readonly}
+                    handleCallback={newValue => setFieldValue('priority', newValue as any)}
+                  />
+                </Grid2>
+              </Grid2>
+            </Paper>
 
-              {this.state.dialogOpen && <TaskRoleDialog
-                assignedRoles={values.assignedRoles ?? []} 
-                groups={this.props.groups}
-                closeDialog={this.onDialogClose} 
-                acceptDialog={(roles: IamApi.UserGroup[]) => { 
-                  const groupList = roles.map(r => r.id);
-                  setFieldValue("assignedRoles", groupList);
-                  this.getGroupUsers(groupList);
-                  this.onDialogClose(); 
-                }}
-                />
-              }
-          </>  
-          )
+            <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
+              <Grid2 container spacing={2}>
+                {editTask?.id &&
+                  <Grid2 size={{ xs: 12, md: 6 }} container justifyContent="flex-start">
+                    <Typography variant="caption" display="block" gutterBottom>
+                      <FormattedMessage id={'task.updated'} />:&nbsp;{this.formatTimestamp(editTask.updated)}&nbsp;&nbsp;
+                      {editTask.updaterId || ''}
+                    </Typography>
+                  </Grid2>
+                }
+              </Grid2>
+            </Paper>
+
+            <EveliStickyTaskButtons editTask={editTask} dirty={dirty} isSubmitting={isSubmitting} isValid={isValid} readonly={readonly} submitForm={submitForm} />
+
+            {this.state.dialogOpen && <TaskRoleDialog
+              assignedRoles={values.assignedRoles ?? []}
+              groups={this.props.groups}
+              closeDialog={this.onDialogClose}
+              acceptDialog={(roles: IamApi.UserGroup[]) => {
+                const groupList = roles.map(r => r.id);
+                setFieldValue("assignedRoles", groupList);
+                this.getGroupUsers(groupList);
+                this.onDialogClose();
+              }}
+            />
+            }
+          </>
+        )
         }
       </TaskFormState>
 

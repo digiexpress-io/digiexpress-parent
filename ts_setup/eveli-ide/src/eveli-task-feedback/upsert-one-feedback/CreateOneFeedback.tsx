@@ -86,16 +86,16 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 
         <TextField onChange={(e) => setReply(e.target.value)}
-            sx={{ mb: 3 }}
-            multiline
-            minRows={4}
-            placeholder='Write a reply here'
+          sx={{ mb: 3 }}
+          multiline
+          minRows={4}
+          placeholder='Write a reply here'
           value={command?.reply ?? ''}
-          />
+        />
 
       </div>
       <Box display='flex' gap={1}>
-        <Button onClick={handleCancel}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+        <Button onClick={handleCancel} variant='text'><FormattedMessage id='button.cancel' /></Button>
         <Button variant='contained' onClick={handlePublish} disabled={!command?.reply}><FormattedMessage id='button.publish' /></Button>
       </Box>
     </>

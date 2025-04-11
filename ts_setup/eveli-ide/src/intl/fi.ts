@@ -32,6 +32,7 @@ export const fi = {
   'task.status.rejected': 'Hylätty',
   'task.form.review': 'Katso täytetty lomake',
   'task.form.feedback.manage': 'Hallita palautetta',
+  'task.form.feedback.published': 'Feedback published',
   'task.created': 'Luotu',
   'task.updated': 'Päivitetty',
   'comments': 'Kommentit',
