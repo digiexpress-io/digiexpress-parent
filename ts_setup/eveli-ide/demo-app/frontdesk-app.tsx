@@ -34,6 +34,21 @@ declare module '@mui/material' {
 }
 
 
+function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof window.fetch  {
+  return async (input: RequestInfo | URL, init?: RequestInit) => {
+
+    // my custom fetch, override init
+
+    alert("Attachments not supported");
+
+    return parentFetch(input, init)
+      .then(response => {
+
+        return response;
+      });
+  }
+}
+
 export const FrontdeskApp: React.FC = () => {
   const notistackRef = React.createRef<SnackbarProvider>();
   const handleCloseNotification = (key: string | number | undefined) => () => {
@@ -64,7 +79,10 @@ export const FrontdeskApp: React.FC = () => {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           >
 
-            <FetchProvider tree={fetchtree} initContextPath='/'>
+            <FetchProvider tree={fetchtree} initContextPath='/' 
+              overrides={{
+                'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
+              }}>
               <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
                 <TenantConfigContextProvider>
                   <IamBackendProvider onExpire={handleExpire}>
