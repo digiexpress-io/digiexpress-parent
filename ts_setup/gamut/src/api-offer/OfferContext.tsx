@@ -18,6 +18,7 @@ export const OfferProvider: React.FC<{
 }> = (props) => {
   const data = usePopulateContext(props);
 
+
   const [sortOrder, setSortOrder] = React.useState<OfferApi.OfferSortOrder>('DESC');
   const sortedByDate = data.offers
     .filter((c) => !!c.updated)
@@ -26,6 +27,8 @@ export const OfferProvider: React.FC<{
       const dateB = b.updated ? b.updated.toMillis() : 0;
       return sortOrder === 'ASC' ? dateA - dateB : dateB - dateA;
     });
+
+
 
   function toggleOfferSortOrder() {
     setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));

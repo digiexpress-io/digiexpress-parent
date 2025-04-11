@@ -87,7 +87,7 @@ export function createOfferFetch(url: (string | undefined) = '/portal/secured/ac
 
   const fetchOneGet: OfferApi.GetOfferFetchGET = async (id) => {
     // await new Promise((res) => setTimeout(() => { }, 2000));
-    const response = await window.fetch(`${url}/${id}`, {
+    const response = await window.fetch(`${url}?id=${id}`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,
