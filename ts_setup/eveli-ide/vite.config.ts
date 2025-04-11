@@ -7,7 +7,6 @@ import buildProd from './vite.prod.config';
 export default defineConfig((props) => {
   const { command } = props;
   const serve = command === 'serve';
-
   const frontdeskMode = serve && process.env.START_MODE === 'frontdesk';
 
   if (frontdeskMode) {
