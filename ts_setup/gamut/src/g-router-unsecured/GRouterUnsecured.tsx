@@ -21,6 +21,7 @@ import { useUtilityClasses } from './useUtilityClasses';
 export interface GRouterUnsecuredProps {
   pageId: string;
   backgroundImage?: string;
+  height?: string | number
 }
 
 const Internal: React.FC<GRouterUnsecuredProps> = (props) => {

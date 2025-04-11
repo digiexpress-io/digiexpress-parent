@@ -51,6 +51,11 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
 }
 
 const getLocale = (props: LocaleProviderProps, messages: Record<string, any>) => {
+  const resolvedDefault =  props.defaultLocale ? props.defaultLocale() : undefined;
+  if(resolvedDefault) {
+    return resolvedDefault;
+  }
+
   let selectedLocale = '';
 
   let nextIsLocale = false;
@@ -80,8 +85,8 @@ const getLocale = (props: LocaleProviderProps, messages: Record<string, any>) =>
 
   const supported = props.enabledLocales ?? Object.keys(messages)
   if (!supported.includes(locale)) {
-    const resolved =  props.defaultLocale ? props.defaultLocale() : undefined;
-    return resolved ?? 'en';
+    
+    return 'en';
   }
   return locale;
 }

@@ -85,7 +85,8 @@ public class GamutUserActionsController {
   }
   @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    return dialob.createProxy().sessionGet(sessionId);
+    ResponseEntity<String> responseEntity = dialob.createProxy().sessionGet(sessionId);
+    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
   @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
@@ -99,7 +100,7 @@ public class GamutUserActionsController {
         .create();
       publisher.publishEvent(event);
     }
-    return resp; 
+    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody()); 
   }
   @GetMapping(value="/review/{sessionId}")
   public ResponseEntity<?> reviewProxyGet(@PathVariable("sessionId") String sessionId) {

@@ -47,7 +47,7 @@ export const GRouterUnsecuredRoot = styled("div", {
       display: 'flex',
       flexWrap: 'wrap',
       padding: 1,
-      height: 400,
+      height: ownerState.height ?? 400,
       zIndex: 1,
     }
   }
