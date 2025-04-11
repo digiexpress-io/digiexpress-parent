@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Drawer, useTheme, useMediaQuery } from '@mui/material';
+import { Container, Drawer, useTheme, useMediaQuery, useThemeProps } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
 
@@ -14,7 +14,7 @@ import {
   GUserOverviewMenuView,
   GArticle
 } from '../';
-import { GRouterSecuredServicesRoot, useUtilityClasses, OwnerState } from './useUtilityClasses';
+import { GRouterSecuredServicesRoot, useUtilityClasses, OwnerState, MUI_NAME } from './useUtilityClasses';
 import { SearchApi } from '../api-search';
 import { SearchFilters } from './SearchFilter';
 import { SearchResults } from './SearchResults';
@@ -24,19 +24,35 @@ import { Nav } from './Nav';
 export interface GRouterSecuredServicesProps {
   locale: string;
   viewId: GUserOverviewMenuView;
+  defaultViewId?: string;
 }
 
-
-
-export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ locale, viewId }) => {
+export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (initProps) => {
   const { views } = useSite();
   const intl = useIntl();
   const nav = useNavigate();
   const classes = useUtilityClasses();
   const theme = useTheme();
-
   const withDrawer = !useMediaQuery(theme.breakpoints.down("md"));
   const [topic, setTopic] = React.useState<SiteApi.TopicView>();
+
+  const props = useThemeProps({
+    props: initProps,
+    name: MUI_NAME,
+  });
+
+  
+  const ownerState: OwnerState = {
+    defaultViewId: props.defaultViewId ?? '000_index',
+    locale: props.locale,
+    viewId: props.viewId,
+    topic,
+    withDrawer: withDrawer,
+    onForm,
+    onTopic: setTopic,
+  }
+
+
 
   function onForm(form: SearchApi.LinkToForm) {
     const productId = form.linkToForm.id;
@@ -52,7 +68,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     }
     nav({
       from: '/secured/$locale/views/$viewId',
-      params: { viewId },
+      params: { viewId: ownerState.viewId },
       to: '/secured/$locale/views/$viewId',
     })
   }, []);
@@ -65,18 +81,9 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     })
   }
 
-
-  const ownerState: OwnerState = {
-    viewId,
-    topic,
-    withDrawer: withDrawer,
-    onForm,
-    onTopic: setTopic,
-  }
-
   React.useEffect(() => {
     if (!topic && withDrawer) {
-      const defaultTopic = Object.values(views).find((view: SiteApi.TopicView) => view.id === "000_index");
+      const defaultTopic = Object.values(views).find((view: SiteApi.TopicView) => view.id === ownerState.defaultViewId);
       setTopic(defaultTopic);
     }
   }, [topic, views]);
@@ -101,7 +108,7 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = ({ 
     <SearchApi.SearchProvider>
       <GShell>
         <GRouterSecuredServicesRoot className={classes.root}>
-          <GAppBar locale={locale} onLocale={handleLocale} onLogoClick={() => handleNav('user-overview')} viewId={viewId} />
+          <GAppBar locale={ownerState.locale} onLocale={handleLocale} onLogoClick={() => handleNav('user-overview')} viewId={ownerState.viewId} />
 
           {ownerState.withDrawer && (
             <Drawer variant='permanent' open={false} className={GShellClassName}>

@@ -19,6 +19,8 @@ export type GRouterSecuredServicesClassKey = keyof GRouterSecuredServicesClasses
 
 
 export interface OwnerState {
+  locale: string;
+  defaultViewId: string;
   viewId: GUserOverviewMenuView;
   topic: SiteApi.TopicView | undefined;
   withDrawer: boolean;
