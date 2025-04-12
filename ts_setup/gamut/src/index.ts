@@ -85,7 +85,7 @@ export * from './g-router-secured-services'
 export * from './g-router-unfinished-forms'
 export * from './g-router-unsecured'
 export * from './g-router-user-overview'
-
+export * from './g-override'
 
 
 const logo = `
