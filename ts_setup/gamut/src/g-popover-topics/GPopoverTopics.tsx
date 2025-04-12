@@ -1,6 +1,7 @@
 import React from 'react';
-import { useThemeProps, Divider, Link } from '@mui/material';
+import { useThemeProps, Divider, Link, Box, IconButton, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { FormattedMessage } from 'react-intl'
 import { GDivider } from '../g-divider';
@@ -9,14 +10,15 @@ import { useAnchor } from './useAnchor';
 import { GPopoverButton } from '../g-popover-button';
 import { GPopoverTopicsRoot, GTopicsMuiPopover, GTopics, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
+import { GLogo } from '../g-logo';
 
 export interface GPopoverTopicsProps {
   itemsInColumn?: number | undefined;
   onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent) => void;
-  filterTopic?: (topic: SiteApi.TopicView) => boolean; 
+  filterTopic?: (topic: SiteApi.TopicView) => boolean;
   groupTopics?: (topic: SiteApi.TopicView[], itemsInColumn?: number | undefined) => SiteApi.TopicGroup[];
-  slots?: { 
-    link?: React.ElementType<GTopicLinkProps> 
+  slots?: {
+    link?: React.ElementType<GTopicLinkProps>
   }
   component?: GOverridableComponent<GPopoverTopicsProps>
 }
@@ -50,7 +52,7 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
   }
 
   const topics = themeProps.filterTopic ? allTopics.filter(themeProps.filterTopic) : allTopics;
-  const groups = themeProps.groupTopics ? themeProps.groupTopics(topics, themeProps.itemsInColumn): getTopicGroups(topics, themeProps.itemsInColumn);
+  const groups = themeProps.groupTopics ? themeProps.groupTopics(topics, themeProps.itemsInColumn) : getTopicGroups(topics, themeProps.itemsInColumn);
 
   React.useEffect(() => {
     setIconRotated(anchor.anchorProps.open);
@@ -60,12 +62,17 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
 
   return (
     <Root ownerState={themeProps} className={classes.root}>
-      <GPopoverButton 
+      <GPopoverButton
         onClick={anchor.onClick} iconRotated={iconRotated}
         label={<FormattedMessage id='gamut.buttons.serviceSelect' />}
         icon={<KeyboardArrowDownIcon />} />
+      <GTopicsMuiPopover {...anchor.anchorProps} marginThreshold={0}
+        open={anchor.anchorProps.open} className={classes.popover} anchorReference="anchorEl">
+        <Box className={classes.logoBox}>
+          <GLogo variant='black_sm' />
+          <Box onClick={() => anchor.anchorProps.onClose()}><CloseIcon /></Box>
+        </Box>
 
-      <GTopicsMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open} className={classes.popover}>
         <GTopics className={classes.topics}>
           {groups.map((column, index) => (
             <React.Fragment key={column.column}>

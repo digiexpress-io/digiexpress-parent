@@ -1,6 +1,7 @@
 import { Popover, styled, generateUtilityClass } from "@mui/material";
 import { GPopoverTopicsProps } from "./GPopoverTopics";
 import composeClasses from "@mui/utils/composeClasses";
+import { margin } from "@mui/system";
 
 export interface GPopoverTopicsClasses {
   root: string;
@@ -14,7 +15,8 @@ export const useUtilityClasses = (ownerState: GPopoverTopicsProps) => {
     root: ['root'],
     popover: ['popover'],
     topics: ['topics'],
-    topicsLayout: ['topicsLayout']
+    topicsLayout: ['topicsLayout'],
+    logoBox: ['logoBox']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -29,7 +31,8 @@ export const GPopoverTopicsRoot = styled('div', {
       styles.root,
       styles.topics,
       styles.topicsLayout,
-      styles.popover
+      styles.popover,
+      styles.logoBox
     ];
   },
 })(({ theme }) => {
@@ -50,9 +53,6 @@ export const GTopicsMuiPopover = styled(Popover, {
   },
 })(({ theme }) => {
   return {
-    [theme.breakpoints.down('sm')]: {
-      maxHeight: '400px'
-    },
     '& .GPopoverTopics-topicsLayout': {
       [theme.breakpoints.up('md')]: {
         width: '32vw'
@@ -62,7 +62,24 @@ export const GTopicsMuiPopover = styled(Popover, {
       minWidth: '100%',
       left: '0px !important',
       borderRadius: 'unset',
-      padding: theme.spacing(1),
+      overflow: 'hidden',
+
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(2),
+        width: '100vw',
+        minHeight: '100vh',
+        overflow: 'auto',
+        top: '0px !important',
+      },
+    },
+    '.GPopoverTopics-logoBox': {
+      [theme.breakpoints.up('sm')]: {
+        display: 'none'
+      },
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(3),
+      justifyContent: 'space-between'
     },
     '& .MuiDivider-root': {
       margin: theme.spacing(1)
@@ -96,16 +113,11 @@ export const GTopics = styled('div', {
       flexDirection: 'row',
       padding: theme.spacing(1),
       '& .MuiDivider-root': {
-        borderRight: `1px solid ${theme.palette.text.disabled}`,
+        borderRight: `3px solid ${theme.palette.primary.main}`,
+      },
+      '& .MuiDivider-root:last-of-type': {
+        display: 'none',
       },
     },
-
-    [theme.breakpoints.down('md')]: {
-      display: 'flex',
-      flexDirection: 'column',
-      '& .MuiDivider-root': {
-        display: 'none'
-      }
-    }
   };
 });
