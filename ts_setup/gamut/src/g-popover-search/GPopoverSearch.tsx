@@ -1,11 +1,13 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
 import { useAnchor } from './useAnchor';
-import { GLinkFormUnlockedSearchResults, GLinkPhone, GPopoverButton } from '../';
+import { GLinkFormUnlockedSearchResults, GLinkPhone, GLogo, GPopoverButton } from '../';
 import { useUtilityClasses, GPopoverSearchRoot, GSearchMuiPopover, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 import { GLinkHyper } from '../';
@@ -93,7 +95,12 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   return (
     <Root className={classes.root} ownerState={props}>
       <GPopoverButton onClick={anchor.onClick} label={<FormattedMessage id='gamut.buttons.search' />} icon={<SearchIcon />} />
-      <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open}>
+      <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open} marginThreshold={0}>
+        <Box className={classes.logoBox}>
+          <GLogo variant='black_sm' />
+          <Box onClick={() => anchor.anchorProps.onClose()}><CloseIcon /></Box>
+        </Box>
+
         <div className={classes.layoutContainer}>
           <Grid2>
             <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>

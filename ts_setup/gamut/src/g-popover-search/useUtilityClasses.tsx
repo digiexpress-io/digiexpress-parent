@@ -18,6 +18,8 @@ export interface GPopoverSearchClasses {
   resultsDividerTitle: string;
   inputField: string;
   inputFieldContainer: string;
+
+  logoBox: string;
 }
 
 export type GPopoverSearchClassKey = keyof GPopoverSearchClasses;
@@ -34,6 +36,7 @@ export const useUtilityClasses = (ownerState: GPopoverSearchProps) => {
     inputField: ['inputField'],
     inputFieldContainer: ['inputFieldContainer'],
     resultsDividerTitle: ['resultsDividerTitle'],
+    logoBox: ['logoBox']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -70,6 +73,7 @@ export const GSearchMuiPopover = styled(Popover, {
       styles.inputField,
       styles.inputFieldContainer,
       styles.resultsDividerTitle,
+      styles.logoBox
     ];
   },
 })(({ theme }) => {
@@ -94,6 +98,15 @@ export const GSearchMuiPopover = styled(Popover, {
       alignItems: 'center',
       gap: 3,
       justifyContent: 'center',
+    },
+    '& .GPopoverSearch-logoBox': {
+      [theme.breakpoints.up('sm')]: {
+        display: 'none'
+      },
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(3),
+      justifyContent: 'space-between'
     },
     '& .GPopoverSearch-layoutContainer': {
       [theme.breakpoints.up('md')]: {
@@ -151,7 +164,15 @@ export const GSearchMuiPopover = styled(Popover, {
       padding: theme.spacing(1),
       maxHeight: '60vh',
       overflowY: 'auto',
-      transform: 'translateY(0)'
+      transform: 'translateY(0)',
+
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(2),
+        width: '100vw',
+        minHeight: '100vh',
+        overflow: 'auto',
+        top: '0px !important',
+      },
     },
     '& .MuiLink-root': {
       display: 'block',

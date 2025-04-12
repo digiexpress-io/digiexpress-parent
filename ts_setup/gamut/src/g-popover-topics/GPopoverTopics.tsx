@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeProps, Divider, Link, Box, IconButton, Typography } from '@mui/material';
+import { useThemeProps, Divider, Link, Box } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -72,7 +72,6 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
           <GLogo variant='black_sm' />
           <Box onClick={() => anchor.anchorProps.onClose()}><CloseIcon /></Box>
         </Box>
-
         <GTopics className={classes.topics}>
           {groups.map((column, index) => (
             <React.Fragment key={column.column}>
