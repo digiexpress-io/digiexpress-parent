@@ -20,6 +20,9 @@ export interface GLinkFormUnlockedProps {
   value: string; // link name - locale based
   onClick: () => void;
   component?: GOverridableComponent<GLinkFormUnlockedProps>;
+  slots?: {
+    link?: React.ElementType<Omit<GLinkFormUnlockedProps, 'component' | 'slots'>>,
+  };
 }
 
 const useUtilityClasses = (ownerState: GLinkFormUnlockedProps) => {
@@ -39,17 +42,24 @@ export const GLinkFormUnlocked: React.FC<GLinkFormUnlockedProps> = (initProps) =
     ...props
   }
   const Root = props.component ?? GLinkFormUnlockedRoot
-
+  const LinkSlot = props.slots?.link ?? GLinkFormUnlockedSlot
   return (
-    <Root ownerState={ownerState} className={classes.root} onClick={props.onClick}>
-      <Link>
-        <span>
-          <ForwardIcon color='info' />
-          <Typography>{props.label}</Typography>
-        </span>
-      </Link>
+    <Root ownerState={ownerState} className={classes.root}>
+      <LinkSlot {...props}/>
     </Root>
   )
+}
+
+export const GLinkFormUnlockedSlot: React.FC<GLinkFormUnlockedProps> = (props) => {
+
+  return (
+    <Link onClick={props.onClick}>
+      <span>
+        <ForwardIcon color='info' />
+        <Typography>{props.label}</Typography>
+      </span>
+    </Link>
+  );
 }
 
 export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedProps> = (initProps) => {
