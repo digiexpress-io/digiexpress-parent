@@ -32,6 +32,7 @@ export interface GTopicLinkProps {
 export type GPopoverTopicsSlotProps = AnchorProps & {
   topics: SiteApi.TopicView[];
   groups: SiteApi.TopicGroup[];
+  onTopic: (topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
 export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
@@ -53,7 +54,7 @@ export const GPopoverTopics: React.FC<GPopoverTopicsProps> = (initProps) => {
         icon={<KeyboardArrowDownIcon />} />
 
       {isPopoverSlotEnabled ? 
-        (<PopoverSlot {...anchor.anchorProps} topics={topics} groups={groups}/>) :
+        (<PopoverSlot {...anchor.anchorProps} topics={topics} groups={groups} onTopic={handleOnTopic}/>) :
         (<GTopicsMuiPopover {...anchor.anchorProps} marginThreshold={0} open={anchor.anchorProps.open} className={classes.popover} anchorReference="anchorEl">
           <Box className={classes.logoBox}>
             <GLogo variant='black_sm' />
