@@ -56,6 +56,12 @@ export const PopoverButton = styled(Typography, {
       zIndex: -1,
       borderRadius: 'inherit',
     },
+    '.MuiTypography-root': {
+      ...theme.typography.h3,
+      [theme.breakpoints.down('sm')]: {
+        ...theme.typography.h1
+      }
+    },
 
     '& .GPopoverButton-iconButton ': {
       transform: ownerState.iconRotated ? 'rotate(180deg)' : 'rotate(0deg)',

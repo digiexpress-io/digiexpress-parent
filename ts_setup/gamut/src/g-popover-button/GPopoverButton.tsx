@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, useThemeProps } from '@mui/material';
+import { IconButton, Typography, useThemeProps } from '@mui/material';
 import { GPopoverButtonRoot, useUtilityClasses, MUI_NAME, PopoverButton } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 
@@ -25,7 +25,7 @@ export const GPopoverButton: React.FC<GPopoverButtonProps> = (initProps) => {
 
     <Root className={classes.root} ownerState={props}>
       <PopoverButton onClick={props.onClick} className={classes.button} ownerState={props}>
-        {props.label}
+        <Typography>{props.label}</Typography>
         {props.icon && <IconButton className={classes.iconButton}>{props.icon}</IconButton>}
       </PopoverButton>
     </Root>
