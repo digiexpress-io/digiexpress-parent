@@ -10,6 +10,7 @@ export const IamBackendContext = React.createContext<IamApi.IamBackendContextTyp
 export interface IamBackendProviderProps {
   children: React.ReactNode
   liveness: number | undefined;
+  staleTime?: number | undefined;
   onExpire: () => void;
 
   fetchUserGET: IamApi.FetchUserGET
@@ -93,13 +94,13 @@ function createContext(
 function useUser(props: IamBackendProviderProps): {
   user: IamApi.User | undefined,
   isPending: boolean,
-  isFirstLoad: boolean,
+  isFirstLoad: boolean
   reload: () => Promise<IamApi.User | undefined>
 } {
 
   const [isFirstLoad, setFirstLoad] = React.useState(true);
 
-  const staleTime = 1000 * 60;
+  const staleTime = props.staleTime === undefined ? 1000 * 60 : props.staleTime;
   const refetchInterval = staleTime;
   const { data, isPending, refetch } = useQuery({
     staleTime,
