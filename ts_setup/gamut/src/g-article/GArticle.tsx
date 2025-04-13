@@ -15,7 +15,7 @@ export interface GArticleProps {
     pageBottom?: GArticleSlot;
     pageFeedback?: GArticleSlot;
 
-    pageAdditionalInfo: (topic: SiteApi.TopicView | undefined) => GArticleSlot | undefined,
+    pageAdditionalInfo?: (topic: SiteApi.TopicView | undefined) => GArticleSlot | undefined,
 
   };
   component?: GOverridableComponent<GArticleProps>;
