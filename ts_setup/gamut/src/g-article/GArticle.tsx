@@ -14,6 +14,9 @@ export interface GArticleProps {
     pageLinks?: GArticleSlot;
     pageBottom?: GArticleSlot;
     pageFeedback?: GArticleSlot;
+
+    pageAdditionalInfo: (topic: SiteApi.TopicView | undefined) => GArticleSlot | undefined,
+
   };
   component?: GOverridableComponent<GArticleProps>;
 }
@@ -38,6 +41,7 @@ export const GArticle: React.FC<GArticleProps> = (initProps) => {
   const PageLinks: GArticleSlot = slots?.pageLinks ?? GLinksPage;
   const PageBottom: GArticleSlot = slots?.pageBottom ?? (() => <div></div>);
   const PageFeedback: GArticleSlot = slots?.pageFeedback ?? GArticleFeedback;
+  const PageAdditionlInfo: GArticleSlot = (slots?.pageAdditionalInfo && slots?.pageAdditionalInfo(props.children)) ?? (() => <></>)
 
   const Root = props.component ?? GArticleRoot;
 
@@ -49,6 +53,7 @@ export const GArticle: React.FC<GArticleProps> = (initProps) => {
           <div className={classes.content}>
             <div className={classes.page}>
               <Page>{topic}</Page>
+              <PageAdditionlInfo>{topic}</PageAdditionlInfo>
             </div>
             <div className={classes.pageLinks}>
               <PageLinks>{topic}</PageLinks>
