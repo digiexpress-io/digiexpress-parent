@@ -35,7 +35,10 @@ export const PopoverButton = styled(Typography, {
   },
 })<{ ownerState: GPopoverButtonProps }>(({ theme, ownerState }) => {
   return {
-    fontSize: theme.typography.h3.fontSize,
+    ...theme.typography.h3,
+    [theme.breakpoints.down('sm')]: {
+      ...theme.typography.h1
+    },
     display: 'inline-flex',
     height: 'max-content',
     alignItems: "center",
@@ -56,13 +59,6 @@ export const PopoverButton = styled(Typography, {
       zIndex: -1,
       borderRadius: 'inherit',
     },
-    '.MuiTypography-root': {
-      ...theme.typography.h3,
-      [theme.breakpoints.down('sm')]: {
-        ...theme.typography.h1
-      }
-    },
-
     '& .GPopoverButton-iconButton ': {
       transform: ownerState.iconRotated ? 'rotate(180deg)' : 'rotate(0deg)',
       transition: "transform 0.3s ease-in-out",
