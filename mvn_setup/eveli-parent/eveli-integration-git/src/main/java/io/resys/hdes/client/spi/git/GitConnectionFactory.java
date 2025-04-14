@@ -1,5 +1,33 @@
 package io.resys.hdes.client.spi.git;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+
 /*-
  * #%L
  * hdes-client-api
@@ -21,9 +49,7 @@ package io.resys.hdes.client.spi.git;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+
 import io.resys.hdes.client.api.HdesStore.HdesCredsSupplier;
 import io.resys.hdes.client.spi.GitConfig;
 import io.resys.hdes.client.spi.GitConfig.GitEntry;
@@ -32,39 +58,6 @@ import io.resys.hdes.client.spi.ImmutableGitConfig;
 import io.resys.hdes.client.spi.staticresources.StoreEntityLocation;
 import io.resys.hdes.client.spi.util.FileUtils;
 import io.resys.hdes.client.spi.util.HdesAssert;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.transport.JschConfigSessionFactory;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.transport.SshTransport;
-import org.eclipse.jgit.util.FS;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class GitConnectionFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(GitConnectionFactory.class);
@@ -73,12 +66,14 @@ public class GitConnectionFactory {
   public static GitConfig create(GitInit config, HdesCredsSupplier creds, ObjectMapper objectMapper) throws IOException,
       RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
     
-    final var path = StringUtils.isEmpty(config.getRemote()) ? Files.createTempDirectory("git_repo") : new File(config.getStorage()).toPath();
+    final var path = new File(config.getStorage()).toPath();
     final var resolver = new PathMatchingResourcePatternResolver();
     final var privateKey = copyKey(resolver, path, config.getSshPath(), "id_rsa", "Define git respository private key for assets");
-    final var knownHosts = copyKey(resolver, path, config.getSshPath() + ".known_hosts", "id_rsa.known_hosts", "Define git respository known hosts for assets");
-    final var sshSessionFactory = createSshSessionFactory(privateKey, knownHosts);
+    final var publicKey = copyKey(resolver, path, config.getSshPath(), "id_rsa.pub", "Define git respository public key for assets");
+    final var knownHosts = copyKey(resolver, path, new File(config.getSshPath()).getParent() + "/known_hosts", "known_hosts", "Define git respository .known_hosts for assets");
     final var clone = new File(path + "/clone");
+    final var sshSessionFactory = createSshSessionFactory(privateKey, publicKey, knownHosts, clone);
+    
 
     final TransportConfigCallback callback = transport -> ((SshTransport) transport).setSshSessionFactory(sshSessionFactory);
     final Git git;
@@ -158,27 +153,32 @@ public class GitConnectionFactory {
     return result;
   }
 
-  private static SshSessionFactory createSshSessionFactory(File privateKey, File knownHosts) {
-    return new JschConfigSessionFactory() {
+  private static SshSessionFactory createSshSessionFactory(File privateKey, File publicKey, File knownHosts, File homeDirectory) {    
+    return new SshdSessionFactoryBuilder()
+        .setSshDirectory(privateKey.getParentFile())
+        .setHomeDirectory(homeDirectory)
+        .build(null);
+        
+        /*
+        new JschConfigSessionFactory() {
       @Override
       protected void configure(Host host, Session session) {
       }
       @Override
       protected JSch createDefaultJSch(FS fs) throws JSchException {
         JSch defaultJSch = new JSch();
-        configureKnownHosts(defaultJSch, fs, knownHosts);
 
-        defaultJSch.addIdentity(privateKey.getAbsolutePath());
+
+        configureKnownHosts(defaultJSch, fs, knownHosts);
+        defaultJSch
+          .addIdentity(privateKey.getAbsolutePath());
         return defaultJSch;
       }
-    };
+    };*/
   }
-
+  /*
   private static void configureKnownHosts(JSch sch, FS fs, File knownHosts) throws JSchException {
-    final File home = fs.userHome();
-    if (home == null) {
-      return;
-    }
+    
     try {
       final FileInputStream in = new FileInputStream(knownHosts);
       try {
@@ -186,11 +186,10 @@ public class GitConnectionFactory {
       } finally {
         in.close();
       }
-    } catch (FileNotFoundException none) {
-      // Oh well. They don't have a known hosts in home.
     } catch (IOException err) {
-      // Oh well. They don't have a known hosts in home.
+      throw new RuntimeException("Failed to set up known hosts file! error: " + err.getMessage(), err);
     }
   }
+  */
   
 }

@@ -17,29 +17,39 @@ management:
     add-application-context-header: false
 
 
+logging.level.org.eclipse.jgit.transport.sshd: DEBUG
+logging.level.io.digiexpress.eveli.appwrenchonly: DEBUG
+
 wrench.fake-security.enabled: true
-# -- read assets from classpath
+
+# -- inmemory - read following assets from classpath
 # --   classpath*:assets/**/migration/*.json
 # --   classpath*:assets/**/dump/*.json
 # --   classpath*:assets/**/dt/*.json
 # --   classpath*:assets/**/flowtask/*.json
 # --   classpath*:assets/**/flow/*.json
-wrench.inmemory.enabled: true
+wrench.assets.inmemory.enabled: false
 
 # -- git configuration
-wrench.git.enabled: false
-wrench.git.privateKey: "path-to-git-private-key-related-files: .known_hosts; id_rsa; id_rsa.known_hosts"
-wrench.git.repositoryUrl: "ssh-git-url"
-wrench.git.branchSpecifier: "main"
-wrench.git.repositoryPath: "~/clone-git-repo-to"
-wrench.git.path: src/main/resources
+wrench.assets.git.enabled: true
+wrench.assets.git.repository-url: "git@github.com:digiexpress-io/wrench-git-db.git"
+wrench.assets.git.branch-specifier: main
+wrench.assets.git.repository-path: /Users/olevmutso/Development/_wrench_only_persistence
+
+
+# basically "ssh" home folder that will be copied with 3 files in it: known_host, id_rsa, id_rsa.pub 
+wrench.assets.git.path: src/main/resources/git_auth
+# private key location from classpath
+wrench.assets.git.private-key: classpath:git_auth/id_rsa
+
+
 
 # -- postgresql configuration
-wrench.pg.enabled: false
-wrench.pg.autoCreate: true
-wrench.pg.repositoryName: "test-repo-1"
-wrench.pg.branchSpecifier: "main"
-wrench.pg.pgHost: "localhost"
-wrench.pg.pgDb: "postgres"
-wrench.pg.pgUser: "postgres"
-wrench.pg.pgPass: "example"
+wrench.assets.pg.enabled: false
+wrench.assets.pg.autoCreate: true
+wrench.assets.pg.repositoryName: "test-repo-1"
+wrench.assets.pg.branchSpecifier: "main"
+wrench.assets.pg.pgHost: "localhost"
+wrench.assets.pg.pgDb: "postgres"
+wrench.assets.pg.pgUser: "postgres"
+wrench.assets.pg.pgPass: "example"
