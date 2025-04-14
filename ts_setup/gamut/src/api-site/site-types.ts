@@ -38,6 +38,7 @@ export declare namespace SiteApi {
     parent?: string | null;
     blob?: string;
     searchOnly?: true;
+    matchingPolicy?: string | undefined;
   }
 
   export interface TopicLink {
