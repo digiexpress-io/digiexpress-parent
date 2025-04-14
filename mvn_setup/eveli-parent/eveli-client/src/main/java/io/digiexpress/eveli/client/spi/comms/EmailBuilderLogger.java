@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.comms;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * eveli-client
@@ -34,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class EmailBuilderLogger {
-  private List<LogEvent> events;
+  private List<LogEvent> events = new ArrayList<>();
 
   private final long start = System.currentTimeMillis();
   
