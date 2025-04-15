@@ -17,7 +17,7 @@ import { SearchApi } from '../api-search';
 export interface GPopoverSearchProps {
   itemsInColumn?: number | undefined;
   pageId: SiteApi.TopicId;
-  slots?: { link?: React.ElementType<GSearchResultProps> }
+  slots?: { topicLink?: React.ElementType<GSearchResultProps> }
   component?: GOverridableComponent<GPopoverSearchProps>
 
   getEnabledOptions?: () => SearchApi.FilterMode[];
@@ -106,7 +106,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     return true;
   }
 
-  const LinkSlot: React.ElementType<GSearchResultProps> = props.slots?.link ? props.slots?.link : DefaultLinkSlot;
+  const TopicLinkSlot: React.ElementType<GSearchResultProps> = props.slots?.topicLink ? props.slots?.topicLink : DefaultLinkSlot;
 
   return (
     <Root className={classes.root} ownerState={props}>
@@ -171,14 +171,14 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                     <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
                     {
                       state.topics.map((topic) => (
-                        <LinkSlot 
+                        <TopicLinkSlot 
                           key={topic.id}
                           onClose={anchor.anchorProps.onClose} 
                           onClick={(event, topic) => {
                             props.onTopic(topic, event);
                           }}>
                             {topic}
-                        </LinkSlot>))
+                        </TopicLinkSlot>))
                     }
 
                     <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
