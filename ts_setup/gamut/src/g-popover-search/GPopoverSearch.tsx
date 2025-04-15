@@ -26,10 +26,13 @@ export interface GPopoverSearchProps {
 }
 
 export interface GSearchResultProps {
-  children: SiteApi.TopicView
-  onClick?: (
-    topic: SiteApi.TopicView,
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  children: SiteApi.TopicView;
+  onClick: (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    topic: SiteApi.TopicView
+  ) => void;
+  onClose: () => void;
+  
 }
 
 interface ResultsDividerProps {
@@ -55,6 +58,20 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isH
   )
 }
 
+const DefaultLinkSlot: React.FC<GSearchResultProps> = (props) => {
+  const { children: topic } = props;
+
+
+  function handleOnTopic(
+    topic: SiteApi.TopicView, 
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    props.onClick(event, topic);
+    props.onClose();
+  }
+
+  return (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)
+}
+
 export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
@@ -75,14 +92,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   
   const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
 
-  function handleOnTopic(topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
-    props.onTopic(topic, event);
-    anchor.anchorProps.onClose();
-  }
 
   function handleFilterByType(type: SearchApi.FilterMode) {
     setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
   }
+  
   const Root = props.component ?? GPopoverSearchRoot;
 
   function isOptionEnabled(option: SearchApi.FilterMode): boolean {
@@ -91,6 +105,8 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     }
     return true;
   }
+
+  const LinkSlot: React.ElementType<GSearchResultProps> = props.slots?.link ? props.slots?.link : DefaultLinkSlot;
 
   return (
     <Root className={classes.root} ownerState={props}>
@@ -153,7 +169,17 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               ) : (
                 <>
                     <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
-                    {state.topics.map((topic) => (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>))}
+                    {
+                      state.topics.map((topic) => (
+                        <LinkSlot 
+                          key={topic.id}
+                          onClose={anchor.anchorProps.onClose} 
+                          onClick={(event, topic) => {
+                            props.onTopic(topic, event);
+                          }}>
+                            {topic}
+                        </LinkSlot>))
+                    }
 
                     <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
                     {state.forms.map((form) => (
