@@ -65,31 +65,27 @@ export const TableTester: React.FC = () => {
 
   return (
     <EveliTable>
-      <thead>
-        {table.getHeaderGroups().map(headerGroup => (
-          <EveliTableHeaderRoot key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
-              <EveliTableHeaderCell1 key={header.id}>
-                {header.isPlaceholder ? null : flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </EveliTableHeaderCell1>
-            ))}
-          </EveliTableHeaderRoot>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map(row => (
-          <EveliTableRowRoot key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <EveliTableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </EveliTableCell>
-            ))}
-          </EveliTableRowRoot>
-        ))}
-      </tbody>
+      {table.getHeaderGroups().map(headerGroup => (
+        <EveliTableHeaderRoot key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <EveliTableHeaderCell1 key={header.id}>
+              {header.isPlaceholder ? null : flexRender(
+                header.column.columnDef.header,
+                header.getContext()
+              )}
+            </EveliTableHeaderCell1>
+          ))}
+        </EveliTableHeaderRoot>
+      ))}
+      {table.getRowModel().rows.map(row => (
+        <EveliTableRowRoot key={row.id}>
+          {row.getVisibleCells().map(cell => (
+            <EveliTableCell key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </EveliTableCell>
+          ))}
+        </EveliTableRowRoot>
+      ))}
 
       <tfoot>
         {table.getFooterGroups().map(footerGroup => (
