@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, styled, useThemeProps, generateUtilityClass, Link } from '@mui/material';
 import ForwardIcon from '@mui/icons-material/Forward';
-import CircleIcon from '@mui/icons-material/Circle';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '../g-override';
 
@@ -60,29 +59,6 @@ export const GLinkFormUnlockedSlot: React.FC<GLinkFormUnlockedProps> = (props) =
       </span>
     </Link>
   );
-}
-
-export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedProps> = (initProps) => {
-  const props = useThemeProps({
-    props: initProps,
-    name: MUI_NAME,
-  });
-  const classes = useUtilityClasses(props);
-  const ownerState = {
-    ...props
-  }
-  const Root = props.component ?? GLinkFormUnlockedRoot
-
-  return (
-    <Root ownerState={ownerState} className={classes.root} onClick={props.onClick}>
-      <Link>
-        <span>
-          <CircleIcon color='info' sx={{ height: '10px', width: '10px' }} />
-          <Typography>{props.label}</Typography>
-        </span>
-      </Link>
-    </Root>
-  )
 }
 
 const GLinkFormUnlockedRoot = styled("div", {

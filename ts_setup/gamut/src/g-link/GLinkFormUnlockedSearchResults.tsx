@@ -51,7 +51,7 @@ const GLinkFormUnlockedSearchResultsRoot = styled("div", {
   }
 });
 
-export const GLinkFormUnlockedSearchResultsSearchResults: React.FC<GLinkFormUnlockedSearchResultsProps> = (initProps) => {
+export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedSearchResultsProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
