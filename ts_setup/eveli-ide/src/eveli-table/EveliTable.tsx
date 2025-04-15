@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
 
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
-import { EveliTableDrawerCols } from './EveliTableDrawerCols';
+import { EveliTableDrawerCols, DrawerColItem } from './EveliTableDrawerCols';
 import { EveliTableDrawerFilters } from './EveliTableDrawerFilters';
 import { EveliTableDrawer } from './EveliTableDrawer';
 
@@ -37,14 +37,14 @@ export const EveliTable: React.FC = () => {
       <EveliTableRoot className={classes.root}>
         <EveliTableColRoot width='97%'>
           <EveliTableHeaderRoot className={classes.headerRow}>
-            <EveliTableHeaderCell children='Priority' />
-            <EveliTableHeaderCell children='Name' />
-            <EveliTableHeaderCell children='Client' />
-            <EveliTableHeaderCell children='Status' />
-            <EveliTableHeaderCell children='Assignee' />
-            <EveliTableHeaderCell children='Info' />
-            <EveliTableHeaderCell children='Due' />
-            <EveliTableHeaderCell children='Created' />
+            <EveliTableHeaderCell children='Priority' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Name' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Client' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Status' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Assignee' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Info' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Due' filterItems={['value1', 'value2']} />
+            <EveliTableHeaderCell children='Created' filterItems={['value1', 'value2']} />
           </EveliTableHeaderRoot>
 
           <EveliTableRowRoot className={classes.row}>
@@ -138,8 +138,35 @@ export const EveliTable: React.FC = () => {
           </EveliTableRowRoot>
         </EveliTableColRoot>
 
-        {colsMenuOpen && <EveliTableDrawer width='15%' children={<EveliTableDrawerCols />} />}
-        {filtersMenuOpen && <EveliTableDrawer width='15%' children={<EveliTableDrawerFilters />} />}
+        {colsMenuOpen && <EveliTableDrawer children={<EveliTableDrawerCols>
+          <DrawerColItem colTitle='Priority' />
+          <DrawerColItem colTitle='Name' />
+          <DrawerColItem colTitle='Client' />
+          <DrawerColItem colTitle='Status' />
+          <DrawerColItem colTitle='Assignee' />
+          <DrawerColItem colTitle='Info' />
+          <DrawerColItem colTitle='Due' />
+          <DrawerColItem colTitle='Created' />
+        </EveliTableDrawerCols>} />}
+        {filtersMenuOpen && <EveliTableDrawer children={<EveliTableDrawerFilters
+          status={
+            <>
+              <IndicatorStatus type='NEW' />
+              <IndicatorStatus type='OPEN' />
+              <IndicatorStatus type='COMPLETED' />
+              <IndicatorStatus type='REJECTED' />
+            </>
+          }
+          priority={
+            <>
+              <IndicatorPriority type='LOW' />
+              <IndicatorPriority type='MEDIUM' />
+              <IndicatorPriority type='HIGH' />
+            </>
+          }
+        />}
+        />
+        }
 
         <EveliTableColRoot width='3%'>
           <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
@@ -150,12 +177,12 @@ export const EveliTable: React.FC = () => {
   )
 }
 
-const EveliTableHeaderCell: React.FC<{ children: string }> = ({ children }) => {
+const EveliTableHeaderCell: React.FC<{ children: string, filterItems: string[] }> = ({ children, filterItems }) => {
   return (
     <div className='headerCell'>
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
-      <EveliTableColumnFilter />
+      <EveliTableColumnFilter filterItems={filterItems} />
       <EveliTableColumnOptions />
     </div>
   )

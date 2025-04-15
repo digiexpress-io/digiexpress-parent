@@ -5,26 +5,19 @@ import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 
 
-export const EveliTableDrawerCols: React.FC = () => {
+export const EveliTableDrawerCols: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
     <EveliTableDrawerColsRoot className={classes.root}>
-      <DrawerColItem colTitle='Priority' />
-      <DrawerColItem colTitle='Name' />
-      <DrawerColItem colTitle='Client' />
-      <DrawerColItem colTitle='Status' />
-      <DrawerColItem colTitle='Assignee' />
-      <DrawerColItem colTitle='Info' />
-      <DrawerColItem colTitle='Due' />
-      <DrawerColItem colTitle='Created' />
+      {children}
     </EveliTableDrawerColsRoot>
   )
 }
 
 
 
-const DrawerColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+export const DrawerColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
   const classes = useUtilityClasses();
 
   return (

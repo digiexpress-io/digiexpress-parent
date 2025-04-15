@@ -3,11 +3,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
-import { IndicatorStatus } from './IndicatorStatus';
-import { IndicatorPriority } from './IndicatorPriority';
 
 
-export const EveliTableDrawerFilters: React.FC = () => {
+
+export const EveliTableDrawerFilters: React.FC<{ status: React.ReactNode, priority: React.ReactNode }> = ({ status, priority }) => {
   const classes = useUtilityClasses();
   const [statusOpen, setStatusOpen] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -21,15 +20,11 @@ export const EveliTableDrawerFilters: React.FC = () => {
 
 
   return (
-    <RightMenuFiltersRoot className={classes.root}>
-
+    <DrawerFiltersRoot className={classes.root}>
       <FilterItem filterTitle='Status' onClick={toggleStatus}>
         {statusOpen && (
           <FilterChildren className={classes.root}>
-            <IndicatorStatus type='NEW' />
-            <IndicatorStatus type='OPEN' />
-            <IndicatorStatus type='COMPLETED' />
-            <IndicatorStatus type='REJECTED' />
+            {status}
           </FilterChildren>
         )}
       </FilterItem>
@@ -37,13 +32,11 @@ export const EveliTableDrawerFilters: React.FC = () => {
       <FilterItem filterTitle='Priority' onClick={toggleFilters}>
         {filtersOpen && (
           <FilterChildren className={classes.root}>
-            <IndicatorPriority type='LOW' />
-            <IndicatorPriority type='MEDIUM' />
-            <IndicatorPriority type='HIGH' />
+            {priority}
           </FilterChildren>
         )}
       </FilterItem>
-    </RightMenuFiltersRoot>
+    </DrawerFiltersRoot>
   )
 }
 
@@ -85,9 +78,9 @@ const FilterChildren = styled('div', {
   };
 });
 
-const RightMenuFiltersRoot = styled('div', {
+const DrawerFiltersRoot = styled('div', {
   name: FiltersRootClassName,
-  slot: 'RightMenuFiltersSelect',
+  slot: 'DrawerFiltersSelect',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -110,7 +103,7 @@ const RightMenuFiltersRoot = styled('div', {
 
 const FilterItemRoot = styled('div', {
   name: FiltersRootClassName,
-  slot: 'RightMenuFilterItem',
+  slot: 'DrawerFilterItem',
   overridesResolver: (_props, styles) => {
     return [
       styles.root

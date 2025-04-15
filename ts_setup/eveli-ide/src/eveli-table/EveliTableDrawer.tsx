@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import { EveliTableSearchField } from './EveliTableSearchField';
 
 
-export const EveliTableDrawer: React.FC<{ width: string, children: React.ReactNode }> = ({ width, children }) => {
+export const EveliTableDrawer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableDrawerRoot className={classes.root} width={width}>
+    <EveliTableDrawerRoot className={classes.root}>
       <EveliTableSearchField />
       {children}
     </EveliTableDrawerRoot>
@@ -28,9 +28,9 @@ export const EveliTableDrawerRoot = styled('div', {
     ];
   },
 
-})<{ width: string }>(({ theme, width }) => {
+})(({ theme }) => {
   return {
-    width,
+    width: '15%',
     position: 'absolute',
     overflow: 'scroll',
     top: 0,
