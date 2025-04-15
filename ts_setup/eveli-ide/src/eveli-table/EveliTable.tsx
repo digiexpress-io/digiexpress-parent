@@ -3,12 +3,13 @@ import { Box, Typography } from '@mui/material';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
 
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
-import { EveliTableDrawerCols, DrawerColItem } from './EveliTableDrawerCols';
+import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 import { EveliTableDrawerFilters } from './EveliTableDrawerFilters';
 import { EveliTableDrawer } from './EveliTableDrawer';
 
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
+import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
 
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
@@ -138,16 +139,16 @@ export const EveliTable: React.FC = () => {
           </EveliTableRowRoot>
         </EveliTableColRoot>
 
-        {colsMenuOpen && <EveliTableDrawer children={<EveliTableDrawerCols>
-          <DrawerColItem colTitle='Priority' />
-          <DrawerColItem colTitle='Name' />
-          <DrawerColItem colTitle='Client' />
-          <DrawerColItem colTitle='Status' />
-          <DrawerColItem colTitle='Assignee' />
-          <DrawerColItem colTitle='Info' />
-          <DrawerColItem colTitle='Due' />
-          <DrawerColItem colTitle='Created' />
-        </EveliTableDrawerCols>} />}
+        {colsMenuOpen && <EveliTableDrawer children={<EveliTableColSelect>
+          <ColSelectItem colTitle='Priority' />
+          <ColSelectItem colTitle='Name' />
+          <ColSelectItem colTitle='Client' />
+          <ColSelectItem colTitle='Status' />
+          <ColSelectItem colTitle='Assignee' />
+          <ColSelectItem colTitle='Info' />
+          <ColSelectItem colTitle='Due' />
+          <ColSelectItem colTitle='Created' />
+        </EveliTableColSelect>} />}
         {filtersMenuOpen && <EveliTableDrawer children={<EveliTableDrawerFilters
           status={
             <>
@@ -178,13 +179,17 @@ export const EveliTable: React.FC = () => {
 }
 
 const EveliTableHeaderCell: React.FC<{ children: string, filterItems: string[] }> = ({ children, filterItems }) => {
-  return (
+  const [open, setOpen] = React.useState(false);
+
+  return (<>
+    <EveliTableColumnFilterDialog open={open} onClose={() => setOpen(false)} />
     <div className='headerCell'>
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
       <EveliTableColumnFilter filterItems={filterItems} />
-      <EveliTableColumnOptions />
+      <EveliTableColumnOptions onChooseCols={() => setOpen(true)} />
     </div>
+  </>
   )
 }
 

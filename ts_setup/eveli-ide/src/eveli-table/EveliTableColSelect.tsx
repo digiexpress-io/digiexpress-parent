@@ -5,34 +5,34 @@ import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 
 
-export const EveliTableDrawerCols: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EveliTableColSelect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableDrawerColsRoot className={classes.root}>
+    <EveliTableColSelectRoot className={classes.root}>
       {children}
-    </EveliTableDrawerColsRoot>
+    </EveliTableColSelectRoot>
   )
 }
 
 
 
-export const DrawerColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+export const ColSelectItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
   const classes = useUtilityClasses();
 
   return (
-    <DrawerColItemRoot className={classes.root}>
+    <ColSelectItemRoot className={classes.root}>
       <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
       <Typography>{colTitle}</Typography>
-    </DrawerColItemRoot>
+    </ColSelectItemRoot>
   )
 }
 
 
 
-const DrawerColsRootClassName = 'DrawerColsRoot';
+const DrawerColsRootClassName = 'ColSelectItemRoot';
 
-const EveliTableDrawerColsRoot = styled('div', {
+const EveliTableColSelectRoot = styled('div', {
   name: DrawerColsRootClassName,
   slot: 'DrawerColSelect',
   overridesResolver: (_props, styles) => {
@@ -54,9 +54,9 @@ const EveliTableDrawerColsRoot = styled('div', {
 });
 
 
-const DrawerColItemRoot = styled('div', {
+const ColSelectItemRoot = styled('div', {
   name: DrawerColsRootClassName,
-  slot: 'DrawerColItem',
+  slot: 'ColSelectItem',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
