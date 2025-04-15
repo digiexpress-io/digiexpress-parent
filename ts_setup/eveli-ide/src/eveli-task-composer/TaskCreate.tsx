@@ -33,6 +33,8 @@ import { TaskRoleDialog } from './TaskRoleDialog';
 import { TaskLinkProps, ComponentResolver } from './TaskComponentResolver';
 import { TaskFormState } from './TaskFormState';
 
+import { ExternalCommentsAccordion, InternalCommentsAccordion, PublishedReplyAccordion } from './TaskCreateAccordions';
+
 
 const NewTaskAccordianMsg: React.FC<{ id: string }> = ({ id }) => {
   const theme = useTheme();
@@ -269,101 +271,46 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
 
                   </Grid2>
                 </Grid2>
-              </Paper>
+            </Paper>
+            <Grid2 container spacing={2}>
 
-
-              <Grid2 container spacing={2}>
+              <Grid2 size={{ xs: 12 }}>
+                <ExternalCommentsAccordion
+                  task={editTask}
+                  comments={comments}
+                  reloadComments={reloadComments}
+                  externalThreads={externalThreads}
+                  classes={classes}
+                />
+              </Grid2>
+              {editTask.features?.includes('feedback') && (
                 <Grid2 size={{ xs: 12 }}>
-                  {editTask.id && externalThreads ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="externalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === true).length} color='warning'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        <EveliTaskComments
-                          task={editTask}
-                          isExternalThread={true}
-                          comments={comments}
-                          loadData={reloadComments}
-                          isThreaded={false}
-                        />
-
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
-                  }
+                  <PublishedReplyAccordion
+                    task={editTask}
+                    comments={comments}
+                    reloadComments={reloadComments}
+                    externalThreads={externalThreads}
+                    classes={classes}
+                  />
                 </Grid2>
-                
-                {editTask.features && editTask.features.includes('feedback') && (
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id && externalThreads ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                      //sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="task.feedback.published" />
-                        </Typography>
-                        <Badge badgeContent={<StatusIndicator size='SMALL' taskId={editTask.id + ""} />}><SupportAgentIcon /></Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-                        <UpsertOneFeedback taskId={editTask.id! + ''} onComplete={() => { }} reload={comments?.length ?? 0} />
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.external.createTask' />
-                  }
-                </Grid2>)
-                }
-
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id ? <AttachmentTableWrapper readonly={readonly} editTask={editTask} /> : <NewTaskAccordianMsg id='task.attachments.createTask' />}
-                </Grid2>
-                <Grid2 size={{ xs: 12 }}>
-                  {editTask.id ?
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                        sx={classes.accordionSummary}
-                      >
-                        <Typography sx={classes.accordionTitle}>
-                          <FormattedMessage id="internalComments" />
-                        </Typography>
-                        <Badge badgeContent={comments?.filter(comment => comment.external === false).length} color='primary'>
-                          <ChatBubbleOutlineIcon />
-                        </Badge>
-                      </AccordionSummary>
-                      <AccordionDetails sx={classes.accordionDetails}>
-
-                        <EveliTaskComments
-                          task={editTask}
-                          isExternalThread={typeof externalThreads === 'undefined' ? externalThreads : false}
-                          comments={comments}
-                          loadData={reloadComments}
-                          isThreaded={true}
-                        />
-
-                      </AccordionDetails>
-                    </Accordion>
-                    : <NewTaskAccordianMsg id='task.comments.internal.createTask' />}
-                </Grid2>
+              )}
+              <Grid2 size={{ xs: 12 }}>
+                <AttachmentTableWrapper
+                  readonly={readonly}
+                  editTask={editTask}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 12 }}>
+                <InternalCommentsAccordion
+                  task={editTask}
+                  comments={comments}
+                  reloadComments={reloadComments}
+                  externalThreads={externalThreads}
+                  classes={classes}
+                />
               </Grid2>
 
-
+            </Grid2>
               <Paper elevation={2} sx={{ p: 2, mb: 2, mt: 2 }}>
                 <Grid2 container spacing={2} alignItems="top">
                   {!!groups.length &&

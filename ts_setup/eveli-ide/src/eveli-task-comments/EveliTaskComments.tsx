@@ -15,9 +15,10 @@ export type EveliTaskCommentsProps = {
   comments: TaskApi.Comment[],
   loadData: () => void,
   isThreaded?: boolean
+  onCommentPosted?: () => void;
 }
 
-export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, comments, loadData, isThreaded }) => {
+export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, comments, loadData, isThreaded, onCommentPosted }) => {
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -38,7 +39,8 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
 
   const handleCommentAdding = () => {
     setReply(false);
-    loadData();
+    loadData(); 
+    onCommentPosted?.();
     toggleComment();
   }
 
@@ -82,7 +84,7 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
       </Box>
       <Grid2 container spacing={1}>
         {writingComment && <CommentAdd task={task}
-          onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread} />}
+          onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread}  />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>
             <Button variant='contained' onClick={toggleComment}><FormattedMessage id={buttonId}/></Button>
