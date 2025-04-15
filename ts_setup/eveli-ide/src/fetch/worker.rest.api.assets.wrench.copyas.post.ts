@@ -13,9 +13,9 @@ function hook(props: {}) {
   
 
   return {
-    copy: async(id: string, name: string): Promise<HdesApi.Site> => {
+    copy: async(id: string, name: string, branchName: string | undefined): Promise<HdesApi.Site> => {
       return params
-        .fetch(url({}), { method, body: JSON.stringify({ id, name }), headers })
+        .fetch(url({}), { method, body: JSON.stringify({ id, name }), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }

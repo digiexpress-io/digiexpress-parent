@@ -9,9 +9,7 @@ const cellPadding = '10px';
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    headerRow: ['headerRow'],
     headerCell: ['headerCell'],
-    row: ['row'],
     rowCell: ['rowCell'],
     col: ['col']
   };
@@ -31,9 +29,9 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    display: 'flex',
-    flexDirection: 'row',
-    position: 'relative'
+    // display: 'flex',
+    //flexDirection: 'row',
+    //position: 'relative'
   };
 });
 

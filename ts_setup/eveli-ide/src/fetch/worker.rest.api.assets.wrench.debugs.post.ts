@@ -12,9 +12,9 @@ function hook(props: {}) {
   const headers = Composer.useQueryHeaders();
 
   return {
-    debug: async (debug: HdesApi.DebugRequest): Promise<HdesApi.DebugResponse> => {
+    debug: async (debug: HdesApi.DebugRequest, branchName: string | undefined): Promise<HdesApi.DebugResponse> => {
       return params
-        .fetch(url({}), { method, body: JSON.stringify(debug), headers })
+        .fetch(url({}), { method, body: JSON.stringify(debug), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }

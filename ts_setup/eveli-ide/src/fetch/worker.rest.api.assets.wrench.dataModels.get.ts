@@ -13,9 +13,9 @@ function hook(props: {}) {
   
 
   return {
-    getSite: async (): Promise<HdesApi.Site> => {
+    getSite: async (branchName: string | undefined): Promise<HdesApi.Site> => {
       return params
-        .fetch(url({}), { method, headers })
+        .fetch(url({}), { method, headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }

@@ -40,13 +40,13 @@ devDependencies:
     version: 7.28.3(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@mui/material@6.4.11)(@mui/system@6.4.11)(@types/react@18.3.20)(date-fns@2.30.0)(luxon@3.6.1)(moment@2.30.1)(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
     specifier: ^5.50.1
-    version: 5.72.2(react@18.3.1)
+    version: 5.74.3(react@18.3.1)
   '@tanstack/react-router':
     specifier: ^1.114.23
-    version: 1.115.3(react-dom@18.3.1)(react@18.3.1)
+    version: 1.116.0(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/router-vite-plugin':
     specifier: ^1.114.23
-    version: 1.115.3(@tanstack/react-router@1.115.3)(vite@5.4.18)
+    version: 1.116.1(@tanstack/react-router@1.116.0)(vite@5.4.18)
   '@tanstack/store':
     specifier: ^0.4.1
     version: 0.4.1
@@ -79,7 +79,7 @@ devDependencies:
     version: 5.62.0(typescript@5.8.3)
   '@vitejs/plugin-react':
     specifier: ^4.2.1
-    version: 4.3.4(vite@5.4.18)
+    version: 4.4.0(vite@5.4.18)
   chokidar:
     specifier: ^4.0.3
     version: 4.0.3
@@ -974,8 +974,8 @@ packages:
     dev: true
     optional: true
 
-  /@eslint-community/eslint-utils@4.5.1(eslint@8.57.1):
-    resolution: {integrity: sha512-soEIOALTfTK6EjmKMMoLugwaP0rzkad90iIWd1hMO9ARkSAyjfMfkRRhLvD5qH7vvM0Cg72pieUfR6yh6XxC4w==}
+  /@eslint-community/eslint-utils@4.6.0(eslint@8.57.1):
+    resolution: {integrity: sha512-WhCn7Z7TauhBtmzhvKpoQs0Wwb/kBcy4CwpuI0/eEIr2Lx2auxmulAzLr91wVZJaz47iUZdkXOK7WlAfxGKCnA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -1927,21 +1927,21 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /@tanstack/query-core@5.72.2:
-    resolution: {integrity: sha512-fxl9/0yk3mD/FwTmVEf1/H6N5B975H0luT+icKyX566w6uJG0x6o+Yl+I38wJRCaogiMkstByt+seXfDbWDAcA==}
+  /@tanstack/query-core@5.74.3:
+    resolution: {integrity: sha512-Mqk+5o3qTuAiZML248XpNH8r2cOzl15+LTbUsZQEwvSvn1GU4VQhvqzAbil36p+MBxpr/58oBSnRzhrBevDhfg==}
     dev: true
 
-  /@tanstack/react-query@5.72.2(react@18.3.1):
-    resolution: {integrity: sha512-SVNHzyBUYiis+XiCl+8yiPZmMYei2AKYY94wM/zpvB5l1jxqOo82FQTziSJ4pBi96jtYqvYrTMxWynmbQh3XKw==}
+  /@tanstack/react-query@5.74.3(react@18.3.1):
+    resolution: {integrity: sha512-QrycUn0wxjVPzITvQvOxFRdhlAwIoOQSuav7qWD4SWCoKCdLbyRZ2vji2GuBq/glaxbF4wBx3fqcYRDOt8KDTA==}
     peerDependencies:
       react: ^18 || ^19
     dependencies:
-      '@tanstack/query-core': 5.72.2
+      '@tanstack/query-core': 5.74.3
       react: 18.3.1
     dev: true
 
-  /@tanstack/react-router@1.115.3(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-5mV9t0hW/gMdUeBabY+/lU3HuvGdaYUMDvlLpCG5dQJXBU0UzHwPAM2xy2UTte9Ty1tqxJqeA7DQoyNe/u5SEw==}
+  /@tanstack/react-router@1.116.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-ZBAg5Q6zJf0mnP9DYPiaaQ/wLDH2ujCMi/2RllpH86VUkdkyvQQzpAyKoiYJ891wh9OPgj6W6tPrzB4qy5FpRA==}
     engines: {node: '>=12'}
     peerDependencies:
       react: '>=18.0.0 || >=19.0.0'
@@ -1978,28 +1978,28 @@ packages:
       tiny-invariant: 1.3.3
     dev: true
 
-  /@tanstack/router-generator@1.115.3(@tanstack/react-router@1.115.3):
-    resolution: {integrity: sha512-DnhC49ZtLRdEweUSEvVGVQtM/6Lpe8CqzRyqJGq4XSYodaoLhcOdICDVBuuwCBAJjMXAOH97rNxfL8PPPEvUJA==}
+  /@tanstack/router-generator@1.116.0(@tanstack/react-router@1.116.0):
+    resolution: {integrity: sha512-XhCp85zP87G2bpSXnosiP3fiMo8HMQD2mvWqFFTFKz87WocabQYGlfhmNYWmBwI50EuS7Ph9lwXsSkV0oKh0xw==}
     engines: {node: '>=12'}
     peerDependencies:
-      '@tanstack/react-router': ^1.115.3
+      '@tanstack/react-router': ^1.116.0
     peerDependenciesMeta:
       '@tanstack/react-router':
         optional: true
     dependencies:
-      '@tanstack/react-router': 1.115.3(react-dom@18.3.1)(react@18.3.1)
+      '@tanstack/react-router': 1.116.0(react-dom@18.3.1)(react@18.3.1)
       '@tanstack/virtual-file-routes': 1.115.0
       prettier: 3.5.3
       tsx: 4.19.3
       zod: 3.24.2
     dev: true
 
-  /@tanstack/router-plugin@1.115.3(@tanstack/react-router@1.115.3)(vite@5.4.18):
-    resolution: {integrity: sha512-lqX467nCZbXZgqvLGKkfDhw7TIBSU2aDvKycaaVncPenrl12yrFb1B/EPZzfyfMD7ztsCD+kJ1xhnUPoSxzw0g==}
+  /@tanstack/router-plugin@1.116.1(@tanstack/react-router@1.116.0)(vite@5.4.18):
+    resolution: {integrity: sha512-9A8DAyRejTzvkVOzgVPUY6l2aH7xOMEXSJJtV9GNbi4NtE6AXUCoFe3mtvYnHSzRqAUMCO0wnfVENCjXQoQYZw==}
     engines: {node: '>=12'}
     peerDependencies:
       '@rsbuild/core': '>=1.0.2'
-      '@tanstack/react-router': ^1.115.3
+      '@tanstack/react-router': ^1.116.0
       vite: '>=5.0.0 || >=6.0.0'
       vite-plugin-solid: ^2.11.2
       webpack: '>=5.92.0'
@@ -2021,9 +2021,9 @@ packages:
       '@babel/template': 7.27.0
       '@babel/traverse': 7.27.0
       '@babel/types': 7.27.0
-      '@tanstack/react-router': 1.115.3(react-dom@18.3.1)(react@18.3.1)
+      '@tanstack/react-router': 1.116.0(react-dom@18.3.1)(react@18.3.1)
       '@tanstack/router-core': 1.115.3
-      '@tanstack/router-generator': 1.115.3(@tanstack/react-router@1.115.3)
+      '@tanstack/router-generator': 1.116.0(@tanstack/react-router@1.116.0)
       '@tanstack/router-utils': 1.115.0
       '@tanstack/virtual-file-routes': 1.115.0
       '@types/babel__core': 7.20.5
@@ -2048,11 +2048,11 @@ packages:
       diff: 7.0.0
     dev: true
 
-  /@tanstack/router-vite-plugin@1.115.3(@tanstack/react-router@1.115.3)(vite@5.4.18):
-    resolution: {integrity: sha512-6Qb6qnG8LUCQD3O6JPfVPbp192i6KYzV7ukYEZar4lrVQIn1Fv+OeY5vcEgvT28YjwVNhV3qgjYlH136zDFsrg==}
+  /@tanstack/router-vite-plugin@1.116.1(@tanstack/react-router@1.116.0)(vite@5.4.18):
+    resolution: {integrity: sha512-pc9NfZWnz6GVuPWnYGdAahaBQ3hvxI2rvE/XVfdb1Tk1g4o6TZMtLBRumq3S9nTEun/Eofj7VaL63EGX1VMahA==}
     engines: {node: '>=12'}
     dependencies:
-      '@tanstack/router-plugin': 1.115.3(@tanstack/react-router@1.115.3)(vite@5.4.18)
+      '@tanstack/router-plugin': 1.116.1(@tanstack/react-router@1.116.0)(vite@5.4.18)
     transitivePeerDependencies:
       - '@rsbuild/core'
       - '@tanstack/react-router'
@@ -2352,7 +2352,7 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.6.0(eslint@8.57.1)
       '@types/json-schema': 7.0.15
       '@types/semver': 7.7.0
       '@typescript-eslint/scope-manager': 5.59.7
@@ -2386,8 +2386,8 @@ packages:
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
     dev: true
 
-  /@vitejs/plugin-react@4.3.4(vite@5.4.18):
-    resolution: {integrity: sha512-SCCPBJtYLdE8PX/7ZQAs1QAZ8Jqwih+0VBLum1EGqmCCQal+MIUqLCzj3ZUy8ufbC0cAM4LRlSTm7IQJwWT4ug==}
+  /@vitejs/plugin-react@4.4.0(vite@5.4.18):
+    resolution: {integrity: sha512-x/EztcTKVj+TDeANY1WjNeYsvZjZdfWRMP/KXi5Yn8BoTzpa13ZltaQqKfvWYbX8CE10GOHHdC5v86jY9x8i/g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0
@@ -2396,7 +2396,7 @@ packages:
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.10)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.10)
       '@types/babel__core': 7.20.5
-      react-refresh: 0.14.2
+      react-refresh: 0.17.0
       vite: 5.4.18(@types/node@18.19.86)
     transitivePeerDependencies:
       - supports-color
@@ -2648,7 +2648,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001713
-      electron-to-chromium: 1.5.136
+      electron-to-chromium: 1.5.137
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.4)
     dev: true
@@ -2917,8 +2917,8 @@ packages:
       tslib: 2.8.1
     dev: true
 
-  /electron-to-chromium@1.5.136:
-    resolution: {integrity: sha512-kL4+wUTD7RSA5FHx5YwWtjDnEEkIIikFgWHR4P6fqjw1PPLlqYkxeOb++wAauAssat0YClCy8Y3C5SxgSkjibQ==}
+  /electron-to-chromium@1.5.137:
+    resolution: {integrity: sha512-/QSJaU2JyIuTbbABAo/crOs+SuAZLS+fVVS10PVrIT9hrRkmZl8Hb0xPSkKRUUWHQtYzXHpQUW3Dy5hwMzGZkA==}
     dev: true
 
   /entities@4.5.0:
@@ -3050,7 +3050,7 @@ packages:
     deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.6.0(eslint@8.57.1)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.1
@@ -4545,8 +4545,8 @@ packages:
       - supports-color
     dev: true
 
-  /react-refresh@0.14.2:
-    resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
+  /react-refresh@0.17.0:
+    resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
     dev: true
 

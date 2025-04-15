@@ -14,9 +14,9 @@ function hook(props: {}) {
   
 
   return {
-    getCommands: async (id: string): Promise<HdesApi.AstCommand[]> => {
+    getCommands: async (id: string, branchName: string | undefined): Promise<HdesApi.AstCommand[]> => {
       return params
-      .fetch(url({ id }), { method, headers })
+      .fetch(url({ id }), { method, headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
       .then(resp => resp.json());
     }
   }

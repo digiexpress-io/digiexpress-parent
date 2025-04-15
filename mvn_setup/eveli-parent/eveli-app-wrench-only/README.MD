@@ -1,3 +1,10 @@
+# setting up UI for wrench only deployment
+UI source code can be found under ```digiexpress-parent/ts_setup/eveli-ide```.  
+This source code is released to npmjs as: ```@dxs-ts/eveli-ide```.  
+It must be embedded as a library to user project(```pnpm add @dxs-ts/eveli-ide```).  
+Sample integration can be found under ```digiexpress-parent/ts_setup/eveli-ide/demo-app```.
+
+
 # setting up git based DB for wrench 
 
 
