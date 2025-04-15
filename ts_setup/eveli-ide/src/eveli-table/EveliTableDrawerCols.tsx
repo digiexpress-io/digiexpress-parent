@@ -5,43 +5,43 @@ import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 
 
-export const EveliTableRightMenuCols: React.FC = () => {
+export const EveliTableDrawerCols: React.FC = () => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableRightMenuColsRoot className={classes.root}>
-      <ColItem colTitle='Priority' />
-      <ColItem colTitle='Name' />
-      <ColItem colTitle='Client' />
-      <ColItem colTitle='Status' />
-      <ColItem colTitle='Assignee' />
-      <ColItem colTitle='Info' />
-      <ColItem colTitle='Due' />
-      <ColItem colTitle='Created' />
-    </EveliTableRightMenuColsRoot>
+    <EveliTableDrawerColsRoot className={classes.root}>
+      <DrawerColItem colTitle='Priority' />
+      <DrawerColItem colTitle='Name' />
+      <DrawerColItem colTitle='Client' />
+      <DrawerColItem colTitle='Status' />
+      <DrawerColItem colTitle='Assignee' />
+      <DrawerColItem colTitle='Info' />
+      <DrawerColItem colTitle='Due' />
+      <DrawerColItem colTitle='Created' />
+    </EveliTableDrawerColsRoot>
   )
 }
 
 
 
-const ColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+const DrawerColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
   const classes = useUtilityClasses();
 
   return (
-    <ColItemRoot className={classes.root}>
+    <DrawerColItemRoot className={classes.root}>
       <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
       <Typography>{colTitle}</Typography>
-    </ColItemRoot>
+    </DrawerColItemRoot>
   )
 }
 
 
 
-const ColsRootClassName = 'EveliTableRightMenuCols';
+const DrawerColsRootClassName = 'DrawerColsRoot';
 
-const EveliTableRightMenuColsRoot = styled('div', {
-  name: ColsRootClassName,
-  slot: 'RightMenuColumnsSelect',
+const EveliTableDrawerColsRoot = styled('div', {
+  name: DrawerColsRootClassName,
+  slot: 'DrawerColSelect',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -61,9 +61,9 @@ const EveliTableRightMenuColsRoot = styled('div', {
 });
 
 
-const ColItemRoot = styled('div', {
-  name: ColsRootClassName,
-  slot: 'RightMenuColumnItem',
+const DrawerColItemRoot = styled('div', {
+  name: DrawerColsRootClassName,
+  slot: 'DrawerColItem',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
@@ -95,6 +95,6 @@ const useUtilityClasses = () => {
     root: ['root'],
 
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(ColsRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(DrawerColsRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }

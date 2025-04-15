@@ -7,7 +7,7 @@ import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorPriority } from './IndicatorPriority';
 
 
-export const EveliTableRightMenuFilters: React.FC = () => {
+export const EveliTableDrawerFilters: React.FC = () => {
   const classes = useUtilityClasses();
   const [statusOpen, setStatusOpen] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -63,7 +63,7 @@ export const FilterItem: React.FC<{ filterTitle: string, children: React.ReactNo
   )
 }
 
-const FiltersRootClassName = 'EveliTableRightMenuFilters';
+const FiltersRootClassName = 'EveliTableDrawerFilters';
 
 const FilterChildren = styled('div', {
   name: FiltersRootClassName,

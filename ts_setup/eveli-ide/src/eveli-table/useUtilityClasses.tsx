@@ -60,7 +60,7 @@ export const EveliTableHeaderRoot = styled('div', {
       fontSize: '10pt'
     },
 
-    '& .EveliTable-headerCell': {
+    '.headerCell': {
       flex: 1,
       borderRight: `2px solid ${theme.palette.divider}`,
       paddingLeft: cellPadding,
@@ -110,7 +110,7 @@ export const EveliTableRowRoot = styled('div', {
     '&:last-of-type': { // target the last row to round the bottom left corner
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
-    '& .EveliTable-rowCell': {
+    '.rowCell': {
       flex: 1,
       paddingLeft: cellPadding,
       paddingRight: cellPadding,

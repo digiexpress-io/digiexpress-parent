@@ -5,22 +5,22 @@ import composeClasses from '@mui/utils/composeClasses';
 import { EveliTableSearchField } from './EveliTableSearchField';
 
 
-export const EveliTableRightMenu: React.FC<{ width: string, children: React.ReactNode }> = ({ width, children }) => {
+export const EveliTableDrawer: React.FC<{ width: string, children: React.ReactNode }> = ({ width, children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableRightMenuRoot className={classes.root} width={width}>
+    <EveliTableDrawerRoot className={classes.root} width={width}>
       <EveliTableSearchField />
       {children}
-    </EveliTableRightMenuRoot>
+    </EveliTableDrawerRoot>
   )
 }
 
 
-export const EveliTableRightMenuRootClassName = 'EveliTableRightMenu';
+export const EveliTableDrawerRootClassName = 'EveliTableDrawer';
 
-export const EveliTableRightMenuRoot = styled('div', {
-  name: EveliTableRightMenuRootClassName,
+export const EveliTableDrawerRoot = styled('div', {
+  name: EveliTableDrawerRootClassName,
   slot: 'VerticalMenuRoot',
   overridesResolver: (_props, styles) => {
     return [
@@ -47,6 +47,6 @@ const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRightMenuRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableDrawerRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }

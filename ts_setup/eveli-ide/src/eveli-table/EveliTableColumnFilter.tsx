@@ -43,7 +43,6 @@ export const EveliTableColumnFilter: React.FC = () => {
           Column 2
         </MenuItem>
 
-
       </StyledMenu>
     </EveliTableColumnFilterRoot>
   );

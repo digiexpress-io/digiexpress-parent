@@ -1,12 +1,15 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { EveliTableColRoot, EveliTableHeaderRoot, EveliTableRoot, EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
-import { EveliTableRightMenuButtonColumn } from './EveliTableRightMenuButtonColumn';
-import { EveliTableColumnOptions } from './EveliTableColumnOptions';
+
+import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
+import { EveliTableDrawerCols } from './EveliTableDrawerCols';
+import { EveliTableDrawerFilters } from './EveliTableDrawerFilters';
+import { EveliTableDrawer } from './EveliTableDrawer';
+
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
-import { EveliTableRightMenu } from './EveliTableRightMenu';
-import { EveliTableRightMenuCols } from './EveliTableRightMenuCols';
-import { EveliTableRightMenuFilters } from './EveliTableRightMenuFilters';
+import { EveliTableColumnOptions } from './EveliTableColumnOptions';
+
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
@@ -34,72 +37,72 @@ export const EveliTable: React.FC = () => {
       <EveliTableRoot className={classes.root}>
         <EveliTableColRoot width='97%'>
           <EveliTableHeaderRoot className={classes.headerRow}>
-            <EveliTableHeaderCell className={classes.headerCell} title='Priority' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Name' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Client' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Status' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Assignee' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Info' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Due' />
-            <EveliTableHeaderCell className={classes.headerCell} title='Created' />
+            <EveliTableHeaderCell children='Priority' />
+            <EveliTableHeaderCell children='Name' />
+            <EveliTableHeaderCell children='Client' />
+            <EveliTableHeaderCell children='Status' />
+            <EveliTableHeaderCell children='Assignee' />
+            <EveliTableHeaderCell children='Info' />
+            <EveliTableHeaderCell children='Due' />
+            <EveliTableHeaderCell children='Created' />
           </EveliTableHeaderRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='HIGH' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='Amanda McGibbons' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='NEW' />} />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorAssignee name='John Cena' />} />
-            <EveliTableCell className={classes.rowCell} title='Private data included' />
-            <EveliTableCell className={classes.rowCell} title='12.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='01.03.2025' />
+            <EveliTableCell children={<IndicatorPriority type='HIGH' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='Amanda McGibbons' />
+            <EveliTableCell children={<IndicatorStatus type='NEW' />} />
+            <EveliTableCell children={<IndicatorAssignee name='John Cena' />} />
+            <EveliTableCell children='Private data included' />
+            <EveliTableCell children='12.03.2025' />
+            <EveliTableCell children='01.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='MEDIUM' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='Gerald Bridgerton' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='OPEN' />} />
-            <EveliTableCell className={classes.rowCell} children={
+            <EveliTableCell children={<IndicatorPriority type='MEDIUM' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='Gerald Bridgerton' />
+            <EveliTableCell children={<IndicatorStatus type='OPEN' />} />
+            <EveliTableCell children={
               <Box display='flex' gap={1}>
                 <IndicatorAssignee name='Delana Yankee' />
                 <IndicatorAssignee name='George Miller' />
               </Box>
             }
             />
-            <EveliTableCell className={classes.rowCell} title='' />
-            <EveliTableCell className={classes.rowCell} title='14.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='02.03.2025' />
+            <EveliTableCell children='' />
+            <EveliTableCell children='14.03.2025' />
+            <EveliTableCell children='02.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='HIGH' />} />
-            <EveliTableCell className={classes.rowCell} title='School application' />
-            <EveliTableCell className={classes.rowCell} title='Pamela Anderson' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='OPEN' />} />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorAssignee name='Tina SuperExtraLongName' />} />
-            <EveliTableCell className={classes.rowCell} title='Special notes...' />
-            <EveliTableCell className={classes.rowCell} title='13.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='05.03.2025' />
+            <EveliTableCell children={<IndicatorPriority type='HIGH' />} />
+            <EveliTableCell children='School application' />
+            <EveliTableCell children='Pamela Anderson' />
+            <EveliTableCell children={<IndicatorStatus type='OPEN' />} />
+            <EveliTableCell children={<IndicatorAssignee name='Tina SuperExtraLongName' />} />
+            <EveliTableCell children='Special notes...' />
+            <EveliTableCell children='13.03.2025' />
+            <EveliTableCell children='05.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='HIGH' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='John Cena' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='COMPLETED' />} />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorAssignee name='Alan Wake' />} />
-            <EveliTableCell className={classes.rowCell} title='Private data included' />
-            <EveliTableCell className={classes.rowCell} title='12.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='01.03.2025' />
+            <EveliTableCell children={<IndicatorPriority type='HIGH' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='John Cena' />
+            <EveliTableCell children={<IndicatorStatus type='COMPLETED' />} />
+            <EveliTableCell children={<IndicatorAssignee name='Alan Wake' />} />
+            <EveliTableCell children='Private data included' />
+            <EveliTableCell children='12.03.2025' />
+            <EveliTableCell children='01.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='LOW' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='John Cena' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='COMPLETED' />} />
-            <EveliTableCell className={classes.rowCell} children={
+            <EveliTableCell children={<IndicatorPriority type='LOW' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='John Cena' />
+            <EveliTableCell children={<IndicatorStatus type='COMPLETED' />} />
+            <EveliTableCell children={
               <Box display='flex' gap={1}>
                 <IndicatorAssignee name='Sylvester Stallone' />
                 <IndicatorAssignee name='Anthony Hopkins' />
@@ -107,39 +110,39 @@ export const EveliTable: React.FC = () => {
               </Box>
             }
             />
-            <EveliTableCell className={classes.rowCell} title='Private data included' />
-            <EveliTableCell className={classes.rowCell} title='12.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='01.03.2025' />
+            <EveliTableCell children='Private data included' />
+            <EveliTableCell children='12.03.2025' />
+            <EveliTableCell children='01.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='LOW' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='Tony McPizza' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='REJECTED' />} />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorAssignee name='Jerry Seinfeld' />} />
-            <EveliTableCell className={classes.rowCell} title='Tough customer...' />
-            <EveliTableCell className={classes.rowCell} title='12.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='01.03.2025' />
+            <EveliTableCell children={<IndicatorPriority type='LOW' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='Tony McPizza' />
+            <EveliTableCell children={<IndicatorStatus type='REJECTED' />} />
+            <EveliTableCell children={<IndicatorAssignee name='Jerry Seinfeld' />} />
+            <EveliTableCell children='Tough customer...' />
+            <EveliTableCell children='12.03.2025' />
+            <EveliTableCell children='01.03.2025' />
           </EveliTableRowRoot>
 
           <EveliTableRowRoot className={classes.row}>
-            <EveliTableCell className={classes.rowCell} children={<IndicatorPriority type='MEDIUM' />} />
-            <EveliTableCell className={classes.rowCell} title='Send feedback' />
-            <EveliTableCell className={classes.rowCell} title='John Cena' />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorStatus type='OPEN' />} />
-            <EveliTableCell className={classes.rowCell} children={<IndicatorAssignee name='Alan Wake' />} />
-            <EveliTableCell className={classes.rowCell} title='Private data included' />
-            <EveliTableCell className={classes.rowCell} title='12.03.2025' />
-            <EveliTableCell className={classes.rowCell} title='01.03.2025' />
+            <EveliTableCell children={<IndicatorPriority type='MEDIUM' />} />
+            <EveliTableCell children='Send feedback' />
+            <EveliTableCell children='John Cena' />
+            <EveliTableCell children={<IndicatorStatus type='OPEN' />} />
+            <EveliTableCell children={<IndicatorAssignee name='Alan Wake' />} />
+            <EveliTableCell children='Private data included' />
+            <EveliTableCell children='12.03.2025' />
+            <EveliTableCell children='01.03.2025' />
           </EveliTableRowRoot>
         </EveliTableColRoot>
 
-        {colsMenuOpen && <EveliTableRightMenu width='15%' children={<EveliTableRightMenuCols />} />}
-        {filtersMenuOpen && <EveliTableRightMenu width='15%' children={<EveliTableRightMenuFilters />} />}
+        {colsMenuOpen && <EveliTableDrawer width='15%' children={<EveliTableDrawerCols />} />}
+        {filtersMenuOpen && <EveliTableDrawer width='15%' children={<EveliTableDrawerFilters />} />}
 
         <EveliTableColRoot width='3%'>
-          <EveliTableRightMenuButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
+          <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
         </EveliTableColRoot>
 
       </EveliTableRoot>
@@ -147,10 +150,10 @@ export const EveliTable: React.FC = () => {
   )
 }
 
-const EveliTableHeaderCell: React.FC<{ title: string, className: string }> = ({ title, className }) => {
+const EveliTableHeaderCell: React.FC<{ children: string }> = ({ children }) => {
   return (
-    <div className={className}>
-      <Typography>{title}</Typography>
+    <div className='headerCell'>
+      <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
       <EveliTableColumnFilter />
       <EveliTableColumnOptions />
@@ -159,10 +162,10 @@ const EveliTableHeaderCell: React.FC<{ title: string, className: string }> = ({ 
 }
 
 
-const EveliTableCell: React.FC<{ title?: string, className: string, children?: React.ReactNode }> = ({ title, className, children }) => {
+const EveliTableCell: React.FC<{ children?: React.ReactNode | string }> = ({ children }) => {
   return (
-    <div className={className}>
-      {children ? children : <Typography>{title}</Typography>}
+    <div className='rowCell'>
+      {(typeof children) === 'string' ? <Typography>{children}</Typography> : children}
     </div>
   )
 }
