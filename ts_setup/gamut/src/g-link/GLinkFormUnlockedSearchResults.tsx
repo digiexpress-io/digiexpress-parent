@@ -61,15 +61,17 @@ export const GLinkFormUnlockedSearchResults: React.FC<GLinkFormUnlockedSearchRes
     ...props
   }
   const Root = props.component ?? GLinkFormUnlockedSearchResultsRoot
-
+  const LinkSlot = props.slots?.link ? props.slots?.link : () => (<>
+        <Link onClick={props.onClick}>
+          <span>
+            <CircleIcon color='info' sx={{ height: '10px', width: '10px' }} />
+            <Typography>{props.label}</Typography>
+          </span>
+        </Link>
+    </>);
   return (
-    <Root ownerState={ownerState} className={classes.root} onClick={props.onClick}>
-      <Link>
-        <span>
-          <CircleIcon color='info' sx={{ height: '10px', width: '10px' }} />
-          <Typography>{props.label}</Typography>
-        </span>
-      </Link>
+    <Root ownerState={ownerState} className={classes.root}>
+      <LinkSlot {...props}/>
     </Root>
   )
 }
