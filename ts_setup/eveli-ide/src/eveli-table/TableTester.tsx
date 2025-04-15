@@ -48,7 +48,7 @@ export const TableTester: React.FC = () => {
       accessorKey: 'assignedRoles',
     },
     {
-      header: 'User',
+      header: 'Assignee',
       accessorKey: 'assignedUser',
     },
     {
