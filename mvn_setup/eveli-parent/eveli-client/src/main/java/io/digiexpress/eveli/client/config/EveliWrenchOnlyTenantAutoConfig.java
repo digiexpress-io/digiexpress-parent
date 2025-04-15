@@ -43,7 +43,7 @@ public class EveliWrenchOnlyTenantAutoConfig {
 
   @Bean 
   public AssetsWrenchController assetsWrenchController(ObjectMapper objectMapper, HdesClient client) {
-    final EveliEnvirClient envir = null; // not needed
+    final EveliEnvirClient envir = new EmptyEnvir(); // not needed
     return new AssetsWrenchController(new HdesComposerImpl(client), objectMapper, envir, "", "") {
       @Override
       public Uni<List<String>> flowNames() {
@@ -70,5 +70,44 @@ public class EveliWrenchOnlyTenantAutoConfig {
       }
     };
     return new TenantApiController(client);
+  }
+  
+  private static class EmptyEnvir implements EveliEnvirClient {
+
+    @Override
+    public CreateOneDeployment createOneDeployment() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public EveliDeploymentCompiler deploymentCompiler() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public DeploymentQuery deploymentQuery() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public DeploymentStatusBuilder deploymentStatusBuilder() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public void invalidateCache() {
+      
+    }
+
+    @Override
+    public ModifyOneDeployment modifyOneDeployment() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+
+    @Override
+    public EveliRuntimeQuery runtimeQuery() {
+      throw new RuntimeException("Empty envir does not support this operation!");
+    }
+    
   }
 }

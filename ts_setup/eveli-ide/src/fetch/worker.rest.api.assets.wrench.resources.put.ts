@@ -12,9 +12,9 @@ function hook(props: {}) {
   const headers = Composer.useQueryHeaders();
 
   return {
-    update: async(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Site> => {
+    update: async(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Site> => {
       return params
-        .fetch(url({}), { method, body: JSON.stringify({ id, body }), headers })
+        .fetch(url({}), { method, body: JSON.stringify({ id, body }), headers: { ...headers, ...( branchName ? { 'Branch-Name': branchName } : {})} })
         .then(resp => resp.json());
     }
   }

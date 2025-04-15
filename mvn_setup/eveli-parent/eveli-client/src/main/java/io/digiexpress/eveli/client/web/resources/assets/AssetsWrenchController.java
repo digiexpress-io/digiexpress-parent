@@ -81,8 +81,8 @@ public class AssetsWrenchController {
   }
   
   @GetMapping(path = "/dataModels", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ComposerState dataModels(@RequestHeader(value = "Branch-Name", required = false) String branchName) {
-    return composer.withBranch(branchName).get().await().atMost(timeout);
+  public Uni<ComposerState> dataModels(@RequestHeader(value = "Branch-Name", required = false) String branchName) {
+    return composer.withBranch(branchName).get();
   }
 
   @GetMapping(path = "/exports", produces = MediaType.APPLICATION_JSON_VALUE)
