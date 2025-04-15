@@ -47,7 +47,7 @@ export const InputMap: React.FC<GInputBaseAnyProps & GInputAddressProps> = ({ op
   return (
     <Resizer>
       {(dimensions) => (
-      <Leaflet.MapContainer center={position} zoom={13} scrollWheelZoom={true} style={{ height: '500px' }}>
+      <Leaflet.MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{ height: '500px' }}>
         <Leaflet.TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
