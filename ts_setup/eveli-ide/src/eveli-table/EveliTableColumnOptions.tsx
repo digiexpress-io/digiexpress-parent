@@ -7,8 +7,13 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import composeClasses from '@mui/utils/composeClasses';
 
+interface EveliTableColumnProps {
+  onChooseCols: () => void,
+  onSortAsc: () => void,
+  onSortDesc: () => void,
+}
 
-export const EveliTableColumnOptions: React.FC<{ onChooseCols: () => void }> = ({ onChooseCols }) => {
+export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onChooseCols, onSortAsc, onSortDesc }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -24,6 +29,16 @@ export const EveliTableColumnOptions: React.FC<{ onChooseCols: () => void }> = (
     handleClose();
   }
 
+  function handleSortAsc() {
+    onSortAsc();
+    handleClose();
+  }
+
+  function handleSortDesc() {
+    onSortDesc();
+    handleClose();
+  }
+
   const classes = useUtilityClasses();
   return (
     <EveliTableColumnOptionsRoot className={classes.root}>
@@ -33,12 +48,12 @@ export const EveliTableColumnOptions: React.FC<{ onChooseCols: () => void }> = (
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSortAsc}>
           <ListItemIcon><ArrowUpwardIcon className='menu-icon' /></ListItemIcon>
           Sort ascending
         </MenuItem>
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSortDesc}>
           <ListItemIcon><ArrowDownwardIcon className='menu-icon' /></ListItemIcon>
           Sort descending
         </MenuItem>

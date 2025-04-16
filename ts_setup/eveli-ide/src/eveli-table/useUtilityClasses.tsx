@@ -29,9 +29,8 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    // display: 'flex',
-    //flexDirection: 'row',
-    //position: 'relative'
+    fontSize: '10pt',
+    width: '100%'
   };
 });
 

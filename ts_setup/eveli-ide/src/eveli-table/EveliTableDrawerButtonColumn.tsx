@@ -54,8 +54,8 @@ const EveliTableDrawerButtonsColumnRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-    width: '100%',
-    height: '100%',
+    //width: '100%',
+    //height: '100%',
     grow: 1,
     paddingTop: theme.spacing(1),
     gap: theme.spacing(3),

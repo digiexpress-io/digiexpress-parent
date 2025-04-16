@@ -1,12 +1,21 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
 import { EveliTableRoot, useUtilityClasses } from './useUtilityClasses';
 
 
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
 import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
+import { Column } from '@tanstack/react-table';
 
+type EveliTableHeaderProps<T> = {
+  children: React.ReactNode;
+  column: Column<T, unknown>;
+  sortDirection?: false | 'asc' | 'desc';
+}
 
 export const EveliTable: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
@@ -17,16 +26,39 @@ export const EveliTable: React.FC<{ children: React.ReactNode }> = ({ children }
   )
 }
 // for testing
-export const EveliTableHeaderCell1: React.FC<{ children: any }> = ({ children }) => {
+export const EveliTableHeaderCell1 = <T,>({ children, column }: EveliTableHeaderProps<T>) => {
   const [open, setOpen] = React.useState(false);
+  const sortDirection = column.getIsSorted();
+  const isSortable = column.getCanSort();
 
-  return (<>
+  if (!isSortable) {
+    console.log('not sortable', column)
+  }
 
-    <div className='headerCell'>
-      <Typography>{children}</Typography>
+  if (!isSortable) {
+    return (
+      <div className='headerCell'>
+        <Typography>{children}</Typography>
+        <div style={{ flexGrow: 1 }} />
+        <EveliTableColumnFilter filterItems={['filter 1']} />
+      </div>
+    )
+  }
+  return (
+    <>
+      <div className='headerCell'>
+        <Typography>{children}</Typography>
+        <div style={{ marginLeft: 4 }}>
+          {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
+          {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
+        </div>
       <div style={{ flexGrow: 1 }} />
       <EveliTableColumnFilter filterItems={['filter 1']} />
-      <EveliTableColumnOptions onChooseCols={() => setOpen(true)} />
+        <EveliTableColumnOptions
+          onChooseCols={() => setOpen(true)}
+          onSortAsc={() => column.toggleSorting(false)}
+          onSortDesc={() => column.toggleSorting(true)}
+        />
     </div>
   </>
   )
@@ -41,7 +73,7 @@ export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: str
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
       <EveliTableColumnFilter filterItems={filterItems} />
-      <EveliTableColumnOptions onChooseCols={() => setOpen(true)} />
+      <EveliTableColumnOptions onChooseCols={() => setOpen(true)} onSortAsc={() => { }} onSortDesc={() => { }} />
     </div>
   </>
   )
