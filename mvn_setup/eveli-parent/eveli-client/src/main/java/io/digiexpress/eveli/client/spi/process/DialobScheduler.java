@@ -47,7 +47,7 @@ public class DialobScheduler {
   private final DialobClient dialobClient;
   private final ObjectMapper objectMapper;
   
-  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.SECONDS)
+  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
   public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnswered()) {
       try {
@@ -77,7 +77,7 @@ public class DialobScheduler {
     }
   }
   
-  @Scheduled(fixedRate = 120, timeUnit = TimeUnit.SECONDS)
+  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
   public void rejectProcessesWithDeadline() {
     processClient.queryInstances().findAllExpired().forEach(instance -> {
       log.warn("Expiry for process instance: {}, e: {}!", instance.getId());

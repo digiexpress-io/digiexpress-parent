@@ -48,6 +48,11 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
   @Override
   public Uni<Tenant> getByName(String name) {
+    final var cached = this.dataSource.getTenantCache().getTenant(name);
+    if(cached.isPresent()) {
+      return Uni.createFrom().item(cached.get());
+    }
+    
     final var sql = dataSource.getRegistry().tenant().getByName(name);
     if(log.isDebugEnabled()) {
       log.debug("Repo by name query, with props: {} \r\n{}", 
@@ -76,6 +81,10 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
 
   @Override
   public Uni<Tenant> getByNameOrId(String nameOrId) {
+    final var cached = this.dataSource.getTenantCache().getTenant(nameOrId);
+    if(cached.isPresent()) {
+      return Uni.createFrom().item(cached.get());
+    }
     final var sql = dataSource.getRegistry().tenant().getByNameOrId(nameOrId);
     
     if(log.isDebugEnabled()) {
@@ -95,6 +104,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           }
           return null;
         })
+        .onItem().invoke(tenant -> this.dataSource.getTenantCache().setTenant(tenant))
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
   }
@@ -216,7 +226,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       return create
           .onItem().transformToUni((junk) -> insert)
           .onItem().transformToUni((junk) -> nested)
-          .onItem().transform(junk -> newRepo);
+          .onItem().transform(junk -> newRepo)
+          .onItem().invoke(newTenant -> this.dataSource.getTenantCache().setTenant(newTenant));
     });
   }
 
@@ -229,14 +240,14 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           sql.getValue());
     }
     
-    
     return getClient().preparedQuery(sql.getValue())
-        .mapping(dataSource.getRegistry().tenant().defaultMapper())
-    .execute()
-    .onItem()
-    .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
-    .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
-    .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
+      .mapping(dataSource.getRegistry().tenant().defaultMapper())
+      .execute()
+      .onItem()
+      .transformToMulti((RowSet<Tenant> rowset) -> Multi.createFrom().iterable(rowset))
+      .onItem().invoke(newTenant -> this.dataSource.getTenantCache().setTenant(newTenant))
+      .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithCompletion()
+      .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlFailed("Can't find 'REPOS'!", sql, e)));
   }
   
   
@@ -328,7 +339,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
       
       return insert
           .onItem().transformToUni(junk -> nested)
-          .onItem().transform(junk -> newRepo);
+          .onItem().transform(junk -> newRepo)
+          .onItem().invoke(() -> this.dataSource.getTenantCache().invalidateAll());
     });
   }
 
@@ -337,7 +349,10 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var tenantDelete = dataSource.getRegistry().tenant().dropTable();
     final var pool = dataSource.getPool();
     return  pool.query(tenantDelete.getValue()).execute()
-        .onItem().transformToUni(rowSet -> Uni.createFrom().voidItem())
+        .onItem().transformToUni(rowSet -> {
+          this.dataSource.getTenantCache().invalidateAll();
+          return Uni.createFrom().voidItem();
+        })
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlSchemaFailed("Can't drop tenant table!", tenantDelete.getValue(), e)));
     
   }

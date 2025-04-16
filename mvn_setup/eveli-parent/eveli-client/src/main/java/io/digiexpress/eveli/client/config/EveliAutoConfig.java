@@ -76,7 +76,8 @@ import lombok.extern.slf4j.Slf4j;
     EveliPropsPrintout.class,
     EveliPropsTask.class,
     EveliPropsMq.class,
-    EveliPropsEnvir.class
+    EveliPropsEnvir.class,
+    EveliPropsDb.class
 })
 @Slf4j
 public class EveliAutoConfig {
@@ -129,7 +130,7 @@ public class EveliAutoConfig {
   }
   
   @Bean
-  public io.vertx.mutiny.pgclient.PgPool pgPool() {
+  public io.vertx.mutiny.pgclient.PgPool pgPool(EveliPropsDb db) {
     final var datasourceConfig = datasourceUrl.split(":");
     final var portAndDb = datasourceConfig[datasourceConfig.length -1].split("\\/");
 
@@ -147,7 +148,7 @@ public class EveliAutoConfig {
           .setUser(datasourceUsername)
           .setPassword(datasourcePassword)
           .setSslMode(sslMode), 
-        new PoolOptions().setMaxSize(5));
+        new PoolOptions().setMaxSize(db.getPoolMaxSize() == null ? 5 : db.getPoolMaxSize()));
     
     final var msg = new StringBuilder("\r\n")
     .append("  parsed-datasource-url: ").append(datasourceUrl).append("\r\n")

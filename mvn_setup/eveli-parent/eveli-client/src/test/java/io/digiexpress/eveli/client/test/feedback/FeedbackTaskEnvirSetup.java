@@ -35,6 +35,7 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
@@ -88,7 +89,7 @@ public class FeedbackTaskEnvirSetup {
   
   public DbState createState() {
     final var ctx = TenantTableNames.defaults("junit");
-    return DbStateSqlImpl.create(ctx, pgPool);
+    return DbStateSqlImpl.create(ctx, pgPool, new TenantCacheImpl());
   }
   
   public void printRepo(Tenant repo) {

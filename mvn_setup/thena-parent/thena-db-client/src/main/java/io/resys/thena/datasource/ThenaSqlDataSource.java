@@ -49,5 +49,12 @@ public interface ThenaSqlDataSource extends ThenaDataSource {
   ThenaRegistry getRegistry();
   ThenaSqlDataSourceErrorHandler getErrorHandler();
   
-
+  
+  TenantCache getTenantCache();
+  
+  interface TenantCache {
+    Optional<Tenant> getTenant(String idOrName);
+    void setTenant(Tenant tenant);
+    void invalidateAll();
+  }
 }

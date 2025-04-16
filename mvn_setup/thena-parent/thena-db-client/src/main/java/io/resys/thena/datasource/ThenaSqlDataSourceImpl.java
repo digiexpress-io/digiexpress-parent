@@ -36,6 +36,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   private final Optional<ThenaSqlClient> tx;
   private final ThenaRegistry registry;
   private final boolean isTenantLoaded;
+  private final TenantCache tenantCache;
   
   public ThenaSqlDataSourceImpl(
       Tenant tenant, 
@@ -43,7 +44,8 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx,
-      ThenaRegistry registry) {
+      ThenaRegistry registry,
+      TenantCache tenantCache) {
     super();
     this.tenant = tenant;
     this.tenantTableNames = tenantTableNames.toRepo(tenant);
@@ -52,6 +54,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
     this.pool = pool;
     this.tx = tx;
     this.isTenantLoaded = !tenant.getId().equals("") && !tenant.getPrefix().equals("");
+    this.tenantCache = tenantCache;
   }
   
   public ThenaSqlDataSourceImpl(
@@ -60,8 +63,10 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
       ThenaSqlPool pool,
       ThenaSqlDataSourceErrorHandler errorHandler, 
       Optional<ThenaSqlClient> tx, 
-      ThenaRegistry registry) {
+      ThenaRegistry registry,
+      TenantCache tenantCache) {
     super();
+    this.tenantCache = tenantCache;
     this.isTenantLoaded = false;
     this.tenant = ImmutableTenant.builder()
         .name(tenant)
@@ -99,7 +104,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   }
   @Override
   public ThenaSqlDataSource withTenant(Tenant tenant) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, registry);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, tx, registry, tenantCache);
   }
 
   @Override
@@ -109,7 +114,7 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
 
   @Override
   public ThenaSqlDataSource withTx(ThenaSqlClient tx) {
-    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), registry);
+    return new ThenaSqlDataSourceImpl(tenant, tenantTableNames, pool, errorHandler, Optional.of(tx), registry, tenantCache);
   }
 
   @Override
@@ -119,5 +124,9 @@ public class ThenaSqlDataSourceImpl implements ThenaSqlDataSource {
   @Override
   public ThenaRegistry getRegistry() {
     return registry;
+  }
+  @Override
+  public TenantCache getTenantCache() {
+    return tenantCache;
   }
 }

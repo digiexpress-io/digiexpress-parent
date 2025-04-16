@@ -44,6 +44,7 @@ logging.level.io.digiexpress.eveli.envir.spi.ExternalDeploymentProviderDevEnvir:
 logging.level.io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory: OFF
 logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: OFF
 logging.level.io.thestencil.client.spi.staticontent.visitors.SiteStateVisitor: OFF
+logging.level.io.resys.thena.datasource.TenantCacheImpl: DEBUG
 
 # SQL-s
 #logging.level.io.resys.thena.show_sql: DEBUG
