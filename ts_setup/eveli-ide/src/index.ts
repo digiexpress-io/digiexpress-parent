@@ -41,3 +41,4 @@ export * from './api-publications';
 export * from './api-proc-execution';
 export * from './api-wrench';
 export * from './api-stencil';
+export * from './api-tenant-config'

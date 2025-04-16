@@ -12,11 +12,11 @@ import {
   fetchtree, FetchProvider, LocaleProvider,
   IamBackendProvider, ConfigContextProvider,
   EveliComponents, 
-  router
+  router,
+  TenantConfigContextProvider
 } from '@dxs-ts/eveli-ide';
 
 import { userTheme } from './theme';
-import { TenantConfigContextProvider } from '@/api-tenant-config'
 
 const queryClient = new QueryClient();
 
