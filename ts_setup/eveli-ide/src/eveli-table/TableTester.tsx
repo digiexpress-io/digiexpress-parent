@@ -1,27 +1,16 @@
 import React from 'react';
-import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, Row, SortingState, useReactTable } from '@tanstack/react-table'
+import { Box } from '@mui/material';
+
+import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { EveliTable, EveliTableCell, EveliTableHeaderCell1 } from './EveliTable';
 import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
-import { Box } from '@mui/system';
+
+import { prioritySortingFn, statusSortingFn } from './tableSorters';
 
 
-const priorityOrder: Record<string, number> = {
-  LOW: 0,
-  NORMAL: 1,
-  HIGH: 2,
-};
-
-
-function prioritySortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {
-  const a = priorityOrder[String(rowA.original[columnId as keyof TaskApi.Task])] ?? -1;
-  const b = priorityOrder[String(rowB.original[columnId as keyof TaskApi.Task])] ?? -1;
-  if (a > b) return 1;
-  if (a < b) return -1;
-  return 0;
-}
 
 export const TableTester: React.FC = () => {
   const { getTasks } = useFetch('worker/rest/api/tasks.GET', {})
@@ -65,6 +54,7 @@ export const TableTester: React.FC = () => {
       header: 'Status',
       accessorKey: 'status',
       enableSorting: true,
+      sortingFn: statusSortingFn
     },
     {
       header: 'Roles',
