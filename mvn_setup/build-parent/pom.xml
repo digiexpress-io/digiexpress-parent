@@ -45,7 +45,7 @@
     <commons-validator.version>1.7</commons-validator.version>
     <dialob.version>3.0.1</dialob.version>
     <flexmark.version>0.62.2</flexmark.version>
-    <jgit.version>5.9.0.202009080501-r</jgit.version>
+    <jgit.version>7.2.0.202503040940-r</jgit.version>
 
     <junit.jupiter.version>5.10.1</junit.jupiter.version>
     <java-diff-utils.version>4.12</java-diff-utils.version>
@@ -374,7 +374,7 @@
       </dependency>
       <dependency>
         <groupId>org.eclipse.jgit</groupId>
-        <artifactId>org.eclipse.jgit.ssh.jsch</artifactId>
+        <artifactId>org.eclipse.jgit.ssh.apache</artifactId>
         <version>${jgit.version}</version>
       </dependency>
 

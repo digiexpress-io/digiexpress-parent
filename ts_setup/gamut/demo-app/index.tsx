@@ -1,10 +1,12 @@
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from '@tanstack/react-router'
-import { GComponents, router, RouterType } from '@dxs-ts/gamut';
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { GComponents, routeTree } from '@dxs-ts/gamut';
 
 import { DemoApp } from './DemoApp';
 
 
+// Create a new router instance
+export const router = createRouter({ routeTree })
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
@@ -15,7 +17,7 @@ root.render(<DemoApp><RouterProvider router={router} /></DemoApp>);
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
   interface Register {
-    router: RouterType
+    router: typeof router
   }
 }
 

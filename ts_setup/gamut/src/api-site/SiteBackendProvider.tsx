@@ -12,6 +12,9 @@ export interface  SiteBackendProviderProps {
   fetchFeedbackGet: SiteApi.FetchFeedbackGET;
   fetchFeedbackRatingPut: SiteApi.FetchFeedbackRatingPUT
   children: React.ReactNode;
+
+  staleTime?: number | undefined;
+  refetchTime?: number | false | undefined;
 }
 
 
@@ -32,7 +35,6 @@ export const SiteBackendContext = React.createContext<SiteBackendContextType>({
 });
 
 const staleTime = 15000;
-const refetchInterval = staleTime;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
   const { locale: selectedLocale } = useLocale();
@@ -43,8 +45,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
 
   // tanstack query config
   const siteQuery = useQuery({
-    staleTime,
-    refetchInterval,
+    staleTime: props.staleTime === undefined ? staleTime : props.staleTime,
+    refetchInterval: props.refetchTime === undefined ? staleTime : props.refetchTime,
     queryKey: ['sites', selectedLocale],
     queryFn: () => fetchSiteGet(selectedLocale).then(async response => {
       if (!response.ok) {
@@ -57,8 +59,9 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
   });
 
   const feedbackQuery = useQuery({
-    staleTime,
-    refetchInterval,
+    staleTime: props.staleTime === undefined ? staleTime : props.staleTime,
+    refetchInterval: props.refetchTime === undefined ? staleTime : props.refetchTime,
+
     queryKey: ['feedback', selectedLocale],
     queryFn: () => fetchFeedbackGet(selectedLocale).then(async response => {
       if (!response.ok) {
@@ -68,7 +71,6 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
       return feedback
     }),
   });
-
 
   const views = siteQuery.data?.views;
   const site = siteQuery.data?.site;

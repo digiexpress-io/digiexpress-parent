@@ -4,7 +4,14 @@ import { useIntl } from 'react-intl';
 
 
 export const Route = createRootRoute({
-  component: RouteComponent
+  component: RouteComponent,
+  notFoundComponent: () => {
+    return (
+      <div>
+        <p>Page Not found!</p>
+      </div>
+    )
+  },
 })
 
 function RouteComponent() {

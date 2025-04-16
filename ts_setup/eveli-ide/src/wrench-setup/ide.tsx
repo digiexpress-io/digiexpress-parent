@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { HdesApi } from '@/api-wrench';
-import { ReducerDispatch, Reducer } from './Reducer';
 import { SessionData } from './SessionData';
 import { useWrenchNav } from '../wrench-nav';
 
@@ -35,7 +34,6 @@ export declare namespace WrenchComposerApi {
     site: HdesApi.Site,
     pages: Record<HdesApi.EntityId, PageUpdate>;
     debug: DebugSessions;
-    branchName?: string;
 
     getDecision(decisionName: string): undefined | HdesApi.Entity<HdesApi.AstDecision>;
     getFlow(flowName: string): undefined | HdesApi.Entity<HdesApi.AstFlow>;
@@ -46,7 +44,6 @@ export declare namespace WrenchComposerApi {
     withPage(page: HdesApi.EntityId): Session;
     withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): Session;
     withoutPages(pages: HdesApi.EntityId[]): Session;
-    withBranch(branchName?: string): Session;
     withSite(site: HdesApi.Site): Session;
   }
 
@@ -54,9 +51,9 @@ export declare namespace WrenchComposerApi {
     handleLoad(): Promise<void>;
     handleLoadSite(site?: HdesApi.Site): Promise<void>;
     handleDebugUpdate(debug: DebugSession): void;
+    handleBranchUpdate(branchName: string | undefined): void
     handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): void;
     handlePageUpdateRemove(pages: HdesApi.EntityId[]): void;
-    handleBranchUpdate(branchName?: string): void;
   }
 
   interface ContextType {
@@ -102,7 +99,7 @@ export namespace WrenchComposerApi {
 
   export const useBranchName = () => {
     const result: ContextType = React.useContext(ComposerContext);
-    return result.session.branchName;
+    return result.service.branchName;
   }
 
   export const useQueryHeaders = () => {
@@ -141,12 +138,47 @@ export namespace WrenchComposerApi {
   }
 
 
-  export const Provider: React.FC<{ children: React.ReactNode, service: HdesApi.Service }> = ({ children, service: init }) => {
-    const [session, dispatch] = React.useReducer(Reducer, sessionData);
-    const service = React.useMemo<HdesApi.Service>(() => init, [init]);
+  export const Provider: React.FC<{ 
+    children: React.ReactNode, service: HdesApi.Service
+  }> = ({ children, service: init }) => {
+    const [session, dispatch] = React.useState(sessionData);
+    const [service, setService] = React.useState<HdesApi.Service>(init);
 
     const actions = React.useMemo(() => {
-      return new ReducerDispatch(dispatch, service);
+      async function handleLoad(): Promise<void> {
+        return service.getSite()
+          .then(site => {
+            if(site.contentType === "NOT_CREATED") {
+              service.create().site().then(created =>  dispatch((prev) => prev.withSite(created)));
+            } else {
+              dispatch((prev) => prev.withSite(site)) 
+            }
+          });
+      }
+      async function handleLoadSite(site?: HdesApi.Site): Promise<void> {
+        if(site) {
+          dispatch((prev) => prev.withSite(site)) 
+        } else {
+          return service.getSite().then(site => dispatch((prev) => prev.withSite(site)));  
+        }
+      }
+      function handleBranchUpdate(branchName?: string): void {
+        setService(prev => prev.withBranchName(branchName))
+      }
+      function handleDebugUpdate(debug: WrenchComposerApi.DebugSession): void {
+        dispatch((prev) => prev.withDebug(debug)) 
+      }
+      function handlePageUpdate(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): void {
+        dispatch((prev) => prev.withPageValue(page, value)) 
+      }
+      function handlePageUpdateRemove(pages: HdesApi.EntityId[]): void {
+        dispatch((prev) => prev.withoutPages(pages)) 
+      }
+
+      return {
+        handleLoad, handleLoadSite, handleBranchUpdate, handleDebugUpdate,
+        handlePageUpdate, handlePageUpdateRemove
+      }      
     }, [dispatch, service]);
 
     React.useLayoutEffect(() => {
@@ -158,4 +190,3 @@ export namespace WrenchComposerApi {
     </ComposerContext.Provider>);
   };
 }
-

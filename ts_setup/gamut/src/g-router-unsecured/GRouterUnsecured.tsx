@@ -19,21 +19,24 @@ import { useUtilityClasses } from './useUtilityClasses';
 
 
 export interface GRouterUnsecuredProps {
-  pageId: string;
+  pageId?: string;
+  defaultPageId?: string;
   backgroundImage?: string;
   height?: string | number
 }
 
-const Internal: React.FC<GRouterUnsecuredProps> = (props) => {
-  const { pageId } = props;
+const Internal: React.FC<GRouterUnsecuredProps> = (initProps) => {
+  
   const nav = useNavigate();
   const { locale } = useLocale();
   const { views } = useSite();
   const classes = useUtilityClasses();
   const ownerState = useThemeProps({
-    props: props,
+    props: initProps,
     name: MUI_NAME,
   });
+
+  const pageId = ownerState.pageId ?? (ownerState.defaultPageId ?? '000_index');
 
   const landingTopic = Object.values(views).find(a => a.id === pageId);
 

@@ -127,7 +127,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
           <DrawerOption label='decisions.toolbar.csvDownload' icon={<FileDownloadDoneIcon />} onClick={() => saveCsv(ast)} />
           <DrawerOption label='decisions.toolbar.csvUpload' icon={<UploadIcon />} onClick={() => setEdit({ upload: true })} />
           <DrawerOption label='decisions.toolbar.copyCommands' icon={<FileDownloadDoneIcon/>} onClick={async function() {
-              const commands = await getCommands(decision.id);
+              const commands = await getCommands(decision.id, service.branchName);
 
 
               const javaCommands = commands.map(command => 

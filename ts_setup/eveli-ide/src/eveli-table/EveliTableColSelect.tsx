@@ -5,43 +5,36 @@ import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 
 
-export const EveliTableRightMenuCols: React.FC = () => {
+export const EveliTableColSelect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableRightMenuColsRoot className={classes.root}>
-      <ColItem colTitle='Priority' />
-      <ColItem colTitle='Name' />
-      <ColItem colTitle='Client' />
-      <ColItem colTitle='Status' />
-      <ColItem colTitle='Assignee' />
-      <ColItem colTitle='Info' />
-      <ColItem colTitle='Due' />
-      <ColItem colTitle='Created' />
-    </EveliTableRightMenuColsRoot>
+    <EveliTableColSelectRoot className={classes.root}>
+      {children}
+    </EveliTableColSelectRoot>
   )
 }
 
 
 
-const ColItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+export const ColSelectItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
   const classes = useUtilityClasses();
 
   return (
-    <ColItemRoot className={classes.root}>
+    <ColSelectItemRoot className={classes.root}>
       <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
       <Typography>{colTitle}</Typography>
-    </ColItemRoot>
+    </ColSelectItemRoot>
   )
 }
 
 
 
-const ColsRootClassName = 'EveliTableRightMenuCols';
+const DrawerColsRootClassName = 'ColSelectItemRoot';
 
-const EveliTableRightMenuColsRoot = styled('div', {
-  name: ColsRootClassName,
-  slot: 'RightMenuColumnsSelect',
+const EveliTableColSelectRoot = styled('div', {
+  name: DrawerColsRootClassName,
+  slot: 'DrawerColSelect',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -61,9 +54,9 @@ const EveliTableRightMenuColsRoot = styled('div', {
 });
 
 
-const ColItemRoot = styled('div', {
-  name: ColsRootClassName,
-  slot: 'RightMenuColumnItem',
+const ColSelectItemRoot = styled('div', {
+  name: DrawerColsRootClassName,
+  slot: 'ColSelectItem',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
@@ -95,6 +88,6 @@ const useUtilityClasses = () => {
     root: ['root'],
 
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(ColsRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(DrawerColsRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }

@@ -1,11 +1,13 @@
 import React from 'react';
-import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert } from '@mui/material';
+import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SiteApi, useSite } from '../api-site';
 import { useAnchor } from './useAnchor';
-import { GLinkFormUnlockedSearchResults, GLinkPhone, GPopoverButton } from '../';
+import { GLinkFormUnlockedSearchResults, GLinkPhone, GLogo, GPopoverButton } from '../';
 import { useUtilityClasses, GPopoverSearchRoot, GSearchMuiPopover, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 import { GLinkHyper } from '../';
@@ -15,7 +17,7 @@ import { SearchApi } from '../api-search';
 export interface GPopoverSearchProps {
   itemsInColumn?: number | undefined;
   pageId: SiteApi.TopicId;
-  slots?: { link?: React.ElementType<GSearchResultProps> }
+  slots?: { topicLink?: React.ElementType<GSearchResultProps> }
   component?: GOverridableComponent<GPopoverSearchProps>
 
   getEnabledOptions?: () => SearchApi.FilterMode[];
@@ -24,10 +26,13 @@ export interface GPopoverSearchProps {
 }
 
 export interface GSearchResultProps {
-  children: SiteApi.TopicView
-  onClick?: (
-    topic: SiteApi.TopicView,
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  children: SiteApi.TopicView;
+  onClick: (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    topic: SiteApi.TopicView
+  ) => void;
+  onClose: () => void;
+  
 }
 
 interface ResultsDividerProps {
@@ -53,6 +58,20 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ searchState, title, isH
   )
 }
 
+const DefaultLinkSlot: React.FC<GSearchResultProps> = (props) => {
+  const { children: topic } = props;
+
+
+  function handleOnTopic(
+    topic: SiteApi.TopicView, 
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    props.onClick(event, topic);
+    props.onClose();
+  }
+
+  return (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>)
+}
+
 export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const props = useThemeProps({
     props: initProps,
@@ -73,14 +92,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   
   const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
 
-  function handleOnTopic(topic: SiteApi.TopicView, event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) {
-    props.onTopic(topic, event);
-    anchor.anchorProps.onClose();
-  }
 
   function handleFilterByType(type: SearchApi.FilterMode) {
     setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
   }
+  
   const Root = props.component ?? GPopoverSearchRoot;
 
   function isOptionEnabled(option: SearchApi.FilterMode): boolean {
@@ -90,10 +106,17 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     return true;
   }
 
+  const TopicLinkSlot: React.ElementType<GSearchResultProps> = props.slots?.topicLink ? props.slots?.topicLink : DefaultLinkSlot;
+
   return (
     <Root className={classes.root} ownerState={props}>
       <GPopoverButton onClick={anchor.onClick} label={<FormattedMessage id='gamut.buttons.search' />} icon={<SearchIcon />} />
-      <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open}>
+      <GSearchMuiPopover {...anchor.anchorProps} open={anchor.anchorProps.open} marginThreshold={0}>
+        <Box className={classes.logoBox}>
+          <GLogo variant='black_sm' />
+          <Box onClick={() => anchor.anchorProps.onClose()}><CloseIcon /></Box>
+        </Box>
+
         <div className={classes.layoutContainer}>
           <Grid2>
             <Typography className={classes.title}>{intl.formatMessage({ id: 'gamut.search.popover.title' })}</Typography>
@@ -146,7 +169,17 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
               ) : (
                 <>
                     <ResultsDivider searchState={state} title='gamut.search.results.serviceLinks' className={classes.resultsDividerTitle} isHidden={state.topics.length === 0} />
-                    {state.topics.map((topic) => (<Link key={topic.id} onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>))}
+                    {
+                      state.topics.map((topic) => (
+                        <TopicLinkSlot 
+                          key={topic.id}
+                          onClose={anchor.anchorProps.onClose} 
+                          onClick={(event, topic) => {
+                            props.onTopic(topic, event);
+                          }}>
+                            {topic}
+                        </TopicLinkSlot>))
+                    }
 
                     <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
                     {state.forms.map((form) => (

@@ -20,7 +20,6 @@ export const Route = createFileRoute('/secured/$locale/assets/wrench/')({
 function Component() {
   const { locale } = Route.useParams();
   const { setLocale } = useLocale();
-
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   const { ast } = useFetch('worker/rest/api/assets/wrench/commands.POST', {})

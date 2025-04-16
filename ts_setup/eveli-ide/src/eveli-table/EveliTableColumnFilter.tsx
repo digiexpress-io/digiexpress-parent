@@ -7,7 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { EveliTableSearchField } from './EveliTableSearchField';
 
 
-export const EveliTableColumnFilter: React.FC = () => {
+export const EveliTableColumnFilter: React.FC<{ filterItems: string[] }> = ({ filterItems }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -28,22 +28,13 @@ export const EveliTableColumnFilter: React.FC = () => {
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <EveliTableSearchField />
 
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
-          Select all
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
-          Column 1
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
-          Column 2
-        </MenuItem>
-
-
+        {filterItems.map((item, index) => <React.Fragment key={index}>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
+            {item}
+          </MenuItem>
+        </React.Fragment>
+        )}
       </StyledMenu>
     </EveliTableColumnFilterRoot>
   );
@@ -83,7 +74,6 @@ const EveliTableColumnFilterRoot = styled('div', {
         borderRadius: theme.spacing(0.5)
       }
     }
-
   };
 });
 

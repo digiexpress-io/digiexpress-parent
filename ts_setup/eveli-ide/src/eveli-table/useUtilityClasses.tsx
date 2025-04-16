@@ -9,9 +9,7 @@ const cellPadding = '10px';
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    headerRow: ['headerRow'],
     headerCell: ['headerCell'],
-    row: ['row'],
     rowCell: ['rowCell'],
     col: ['col']
   };
@@ -31,9 +29,9 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    display: 'flex',
-    flexDirection: 'row',
-    position: 'relative'
+    // display: 'flex',
+    //flexDirection: 'row',
+    //position: 'relative'
   };
 });
 
@@ -60,7 +58,7 @@ export const EveliTableHeaderRoot = styled('div', {
       fontSize: '10pt'
     },
 
-    '& .EveliTable-headerCell': {
+    '.headerCell': {
       flex: 1,
       borderRight: `2px solid ${theme.palette.divider}`,
       paddingLeft: cellPadding,
@@ -110,7 +108,7 @@ export const EveliTableRowRoot = styled('div', {
     '&:last-of-type': { // target the last row to round the bottom left corner
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
-    '& .EveliTable-rowCell': {
+    '.rowCell': {
       flex: 1,
       paddingLeft: cellPadding,
       paddingRight: cellPadding,

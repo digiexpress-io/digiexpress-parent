@@ -16,7 +16,7 @@ export interface GAppBarClasses {
 
 export type GAppBarClassKey = keyof GAppBarClasses;
 
-export const useUtilityClasses = (ownerState: GAppBarProps) => {
+export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     buttonLayout: ['buttonLayout'],
@@ -41,7 +41,7 @@ export const GAppBarRoot = styled("div", {
     styles.userIdentityText,
     styles.userDisplayName,
   ],
-})<{ ownerState: GAppBarProps }>(({ theme }) => ({
+})<{  }>(({ theme }) => ({
   display: 'flex',
 
   '& .GAppBar-rightSideLayout': {

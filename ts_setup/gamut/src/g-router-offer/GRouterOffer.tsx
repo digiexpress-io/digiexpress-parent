@@ -17,7 +17,16 @@ import { GRouterOfferRoot, MUI_NAME, useUtilityClasses } from './useUtilityClass
 export interface GRouterOfferProps {
   offerId: string;
   productId: string;
+  slots?: {
+    appbar?: {
+      right?: React.ElementType<GRouterOfferSlotProps>
+    }
+  }
 }
+
+export type GRouterOfferSlotProps = Omit<GRouterOfferProps, 'slots'>;
+
+const EMPTY_SLOT = () => <></>;
 
 export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
   const nav = useNavigate();
@@ -47,12 +56,15 @@ export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
     }
   }
 
+  const RightSlot: React.ElementType<GRouterOfferSlotProps> = props.slots?.appbar?.right ? props.slots?.appbar?.right : EMPTY_SLOT;
+
   return (
     <GShell drawerOpen={false}>
       <GRouterOfferRoot className={classes.root}>
         <Toolbar className={GShellClassName}>
           <GLayout variant='toolbar-n-rows-2-columns'>
             <GLogo variant='black_lg' />
+            <RightSlot {...props} />
           </GLayout>
         </Toolbar>
 

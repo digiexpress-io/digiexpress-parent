@@ -40,7 +40,7 @@ import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionConte
 import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 
 
-@ConditionalOnProperty(prefix = "wrench.inmemory", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "wrench.assets.inmemory", name = "enabled", havingValue = "true")
 @Configuration
 public class InMemoryAutoConfiguration {
 

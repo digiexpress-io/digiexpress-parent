@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.206",
+  "version": "0.0.214",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -43,6 +43,7 @@
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-router": "^1.114.23",
     "@tanstack/router-vite-plugin": "^1.114.23",
+    "@tanstack/react-table": "^8.21.3",
     "@tanstack/store": "^0.4.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "~3.2.0",

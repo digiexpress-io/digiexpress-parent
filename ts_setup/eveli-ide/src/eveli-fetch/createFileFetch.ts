@@ -22,8 +22,7 @@ export class RootFileFetch {
 
 export function createFileFetch<
   TFetchPath extends keyof HookByPath
->(path: TFetchPath) {  
-
+>(path: TFetchPath) {
   return new FetchBuilder(path).createHook;
 }
 
@@ -71,10 +70,10 @@ export class HookImpl<
     return this._original(proxyOptions);
   }
   useParams = () => {
-    return useRouteParams<TFetchId, TPath, TMethod, TParams>(this._options.path, this._options.method);
+    return useRouteParams<TFetchId, TPath, TMethod, TParams>(this._options.path, this._options.method, this._id);
   }
   useNativeParams = () => {
-    return useNativeRouteParams<TFetchId, TPath, TMethod, TParams>(this._options.path, this._options.method);
+    return useNativeRouteParams<TFetchId, TPath, TMethod, TParams>(this._options.path, this._options.method, this._id);
   }
   update = (options: {
     path: HookByPath[TFetchId]['path'],

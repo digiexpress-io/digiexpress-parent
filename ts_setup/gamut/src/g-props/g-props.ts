@@ -57,6 +57,9 @@ import {
   GLinkInfoClassKey, GLinkInfoProps,
   GLinkFormLockedClassKey, GLinkFormLockedProps,
   GLinkFormUnlockedClassKey, GLinkFormUnlockedProps,
+  
+  GLinkFormUnlockedSearchResultsClassKey, GLinkFormUnlockedSearchResultsProps,
+
   GLinkHyperClassKey, GLinkHyperProps,
   GLinkPhoneClassKey, GLinkPhoneProps
 } from '../g-link';
@@ -184,6 +187,8 @@ export interface GComponentsPropsList {
   GLinkPhone: GLinkPhoneProps;
   GLinkFormLocked: GLinkFormLockedProps;
   GLinkFormUnlocked: GLinkFormUnlockedProps;
+  GLinkFormUnlockedSearchResults: GLinkFormUnlockedSearchResultsProps,
+
   GLinkInfo: GLinkInfoProps;
   GLinksPage: GLinksPageProps;
 
@@ -282,6 +287,8 @@ export interface GComponentNameToClassKey {
   GLinkPhone: GLinkPhoneClassKey;
   GLinkFormLocked: GLinkFormLockedClassKey;
   GLinkFormUnlocked: GLinkFormUnlockedClassKey;
+  GLinkFormUnlockedSearchResults: GLinkFormUnlockedSearchResultsClassKey,
+
   GLinkInfo: GLinkInfoClassKey;
   GLinksPage: GLinksPageClassKey;
 
@@ -618,6 +625,11 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GLinkFormUnlocked'];
     styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnlocked'];
     variants?: GComponentsVariants['GLinkFormUnlocked'];
+  },
+  GLinkFormUnlockedSearchResults?: {
+    defaultProps?: GComponentsProps['GLinkFormUnlockedSearchResults'];
+    styleOverrides?: GComponentsOverrides<Theme>['GLinkFormUnlockedSearchResults'];
+    variants?: GComponentsVariants['GLinkFormUnlockedSearchResults'];
   },
   GLinkInfo?: {
     defaultProps?: GComponentsProps['GLinkInfo'];

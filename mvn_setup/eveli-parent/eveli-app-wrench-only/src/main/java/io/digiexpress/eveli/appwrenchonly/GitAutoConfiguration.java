@@ -29,13 +29,13 @@ import io.resys.hdes.client.spi.spring.GitAutoConfig;
 import io.resys.hdes.client.spi.spring.GitConfigProps;
 
 
-@ConditionalOnProperty(prefix = "wrench.git", name = "enabled", havingValue = "true")
+
+@ConditionalOnProperty(prefix = "wrench.assets.git", name = "enabled", havingValue = "true")
 @Configuration
 @EnableConfigurationProperties(value = {
   GitConfigProps.class 
 })
 @Import(GitAutoConfig.class)
 public class GitAutoConfiguration {
-
 
 }

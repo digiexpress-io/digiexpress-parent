@@ -34,7 +34,7 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses();
   const ownerState = {
     ...props,
   };
@@ -88,5 +88,17 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
         </GLayout>
       </Toolbar>
     </Root>
+  );
+};
+
+
+
+
+export const GAppBarSpacer: React.FC<{}> = () => {
+  const classes = useUtilityClasses();
+  return (
+    <GAppBarRoot className={classes.root}>
+      <Toolbar className={GShellClassName}></Toolbar>
+    </GAppBarRoot>
   );
 };

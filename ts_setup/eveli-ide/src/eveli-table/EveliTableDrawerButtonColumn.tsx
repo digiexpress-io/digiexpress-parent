@@ -18,22 +18,22 @@ const RotatedButton: React.FC<{ label: string, icon: React.ReactNode, onClick: (
 };
 
 
-export const EveliTableRightMenuButtonColumn: React.FC<{
+export const EveliTableDrawerButtonColumn: React.FC<{
   onColumnsClick: () => void,
   onFiltersClick: () => void
 }> = ({ onColumnsClick, onFiltersClick }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableRightMenuButtonsColumnRoot className={classes.root}>
+    <EveliTableDrawerButtonsColumnRoot className={classes.root}>
       <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} onClick={onColumnsClick} />
       <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} onClick={onFiltersClick} />
-    </EveliTableRightMenuButtonsColumnRoot>
+    </EveliTableDrawerButtonsColumnRoot>
   );
 };
 
 
-const MUI_NAME = 'EveliTableRightMenuButtonColumn';
+const MUI_NAME = 'EveliTableDrawerButtonColumn';
 const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
@@ -42,7 +42,7 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 }
 
-const EveliTableRightMenuButtonsColumnRoot = styled('div', {
+const EveliTableDrawerButtonsColumnRoot = styled('div', {
   name: MUI_NAME,
   slot: 'VerticalButtonsColumn',
   overridesResolver: (_props, styles) => {

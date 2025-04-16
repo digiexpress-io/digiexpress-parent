@@ -71,20 +71,18 @@ class SessionData implements WrenchComposerApi.Session {
   private _pages: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
   private _cache: SiteCache;
   private _debug: WrenchComposerApi.DebugSessions;
-  private _branchName?: string;
+
   
   constructor(props: {
     site?: HdesApi.Site;
     pages?: Record<HdesApi.EntityId, WrenchComposerApi.PageUpdate>;
     cache?: SiteCache;
     debug?: WrenchComposerApi.DebugSessions;
-    branchName?: string;
   }) {
     this._site = props.site ? props.site : { name: "", contentType: "OK", tags: {}, flows: {}, decisions: {}, services: {}, branches: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
     this._debug = props.debug ? props.debug : { values: {}};
-    this._branchName = props.branchName ? props.branchName : undefined;
   }
   get site() {
     return this._site;
@@ -94,9 +92,6 @@ class SessionData implements WrenchComposerApi.Session {
   }
   get debug() {
     return this._debug;
-  }
-  get branchName() {
-    return this._branchName;
   }
   getDecision(decisionName: string): undefined | HdesApi.Entity<HdesApi.AstDecision> {
     return this._cache.getDecision(decisionName);
@@ -111,21 +106,21 @@ class SessionData implements WrenchComposerApi.Session {
     return this._cache.getEntity(entityId);
   }
   withSite(site: HdesApi.Site) {
-    return new SessionData({ site: site, pages: this._pages, debug: this._debug, branchName: this._branchName });
+    return new SessionData({ site: site, pages: this._pages, debug: this._debug });
   }
-  withDebug(debugSession: WrenchComposerApi.DebugSession) {
+  withDebug(debugSession: WrenchComposerApi.DebugSession): SessionData {
     const newDebug: Record<HdesApi.EntityId, WrenchComposerApi.DebugSession> = {};
     newDebug[debugSession.selected] = Object.assign({}, debugSession);
     const debug: WrenchComposerApi.DebugSessions = {
       selected: debugSession.selected,
       values: Object.assign({}, this._debug.values, newDebug)
     }
-    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug, branchName: this._branchName });
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug });
   }
-  withBranch(branchName: string): WrenchComposerApi.Session {
-    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug, branchName });
+  withBranch(branchName: string): SessionData {
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, debug: this._debug });
   }
-  withoutPages(pageIds: HdesApi.EntityId[]): WrenchComposerApi.Session {
+  withoutPages(pageIds: HdesApi.EntityId[]): SessionData {
     const pages: Record<string, WrenchComposerApi.PageUpdate> = {};
     for (const page of Object.values(this._pages)) {
       if (pageIds.includes(page.origin.id)) {
@@ -133,9 +128,9 @@ class SessionData implements WrenchComposerApi.Session {
       }
       pages[page.origin.id] = page;
     }
-    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
+    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug });
   }
-  withPage(page: HdesApi.EntityId): WrenchComposerApi.Session {
+  withPage(page: HdesApi.EntityId): SessionData {
     if (this._pages[page]) {
       return this;
     }
@@ -148,16 +143,16 @@ class SessionData implements WrenchComposerApi.Session {
     }
 
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: [] });
-    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
+    return new SessionData({ site: this._site, pages, cache: this._cache, debug: this._debug});
   }
-  withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): WrenchComposerApi.Session {
+  withPageValue(page: HdesApi.EntityId, value: HdesApi.AstCommand[]): SessionData {
     const session = this.withPage(page);
     const pageUpdate = session.pages[page];
 
     const pages = Object.assign({}, session.pages);
     pages[page] = pageUpdate.withValue(value);
 
-    return new SessionData({ site: session.site, pages, cache: this._cache, debug: this._debug, branchName: this._branchName });
+    return new SessionData({ site: session.site, pages, cache: this._cache, debug: this._debug });
   }
 }
 

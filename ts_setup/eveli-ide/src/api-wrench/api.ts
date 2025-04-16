@@ -35,10 +35,21 @@ export namespace HdesApi {
 
   export class ServiceImpl implements HdesApi.Service {
     private _api: ServiceRestApi;
+    private _branchName: string | undefined;
 
-    constructor(props: ServiceRestApi) {
+    constructor(props: ServiceRestApi, branchName?: string | undefined) {
       this._api = props;
+      this._branchName = branchName;
     }
+
+    get branchName() {
+      return this._branchName;
+    }
+
+    withBranchName(branchName: string | undefined) {
+      return new ServiceImpl(this._api, branchName === 'default' ? undefined : branchName)
+    }
+
     create(): HdesApi.CreateBuilder {
       const flow = (name: string) => this.createAsset(name, undefined, "FLOW");
       const service = (name: string) => this.createAsset(name, undefined, "FLOW_TASK");
@@ -54,7 +65,7 @@ export namespace HdesApi {
       return { flow, service, decision, branch, site, tag, importData };
     }
     delete(): HdesApi.DeleteBuilder {
-      const deleteMethod = (id: string): Promise<HdesApi.Site> => this._api.remove(id);
+      const deleteMethod = (id: string): Promise<HdesApi.Site> => this._api.remove(id, this._branchName);
       const flow = (id: HdesApi.FlowId) => deleteMethod(id);
       const service = (id: HdesApi.ServiceId) => deleteMethod(id);
       const decision = (id: HdesApi.DecisionId) => deleteMethod(id);
@@ -64,22 +75,22 @@ export namespace HdesApi {
     }
 
     update(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Site> {
-      return this._api.update(id, body);
+      return this._api.update(id, body, this._branchName);
     }
     createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body?: HdesApi.AstCommand[]): Promise<HdesApi.Site> {
-      return this._api.createAsset(name, desc, type, body);
+      return this._api.createAsset(name, desc, type, body, this._branchName);
     }
     ast(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Entity<any>> {
-      return this._api.ast(id, body);
+      return this._api.ast(id, body, this._branchName);
     }
     getSite(): Promise<HdesApi.Site> {
-      return this._api.getSite();
+      return this._api.getSite(this._branchName);
     }
     debug(debug: HdesApi.DebugRequest): Promise<HdesApi.DebugResponse> {
-      return this._api.debug(debug);
+      return this._api.debug(debug, this._branchName);
     }
     copy(id: string, name: string): Promise<HdesApi.Site> {
-      return this._api.copy(id, name);
+      return this._api.copy(id, name, this._branchName);
     }
     diff(input: HdesApi.DiffRequest): Promise<HdesApi.DiffResponse> {
       return this._api.diff(input);
@@ -455,6 +466,7 @@ export declare namespace HdesApi {
   }
 
   export interface Service {
+    branchName: string | undefined;
     delete(): DeleteBuilder;
     create(): CreateBuilder;
     update(id: string, body: AstCommand[]): Promise<Site>;
@@ -464,6 +476,7 @@ export declare namespace HdesApi {
     copy(id: string, name: string): Promise<Site>
     diff(input: DiffRequest): Promise<DiffResponse>
     summary(tagId: string): Promise<AstTagSummary>
+    withBranchName(branchName: string | undefined): Service;
   }
 
   export interface StoreError extends Error {
@@ -480,15 +493,15 @@ export declare namespace HdesApi {
   }
 
   export interface ServiceRestApi {
-    update(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Site>;
-    createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body?: HdesApi.AstCommand[]): Promise<HdesApi.Site>;
-    ast(id: string, body: HdesApi.AstCommand[]): Promise<HdesApi.Entity<any>>;
-    getSite(): Promise<HdesApi.Site>;
-    debug(debug: HdesApi.DebugRequest): Promise<HdesApi.DebugResponse>;
-    copy(id: string, name: string): Promise<HdesApi.Site>;
+    update(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Site>;
+    createAsset(name: string, desc: string | undefined, type: HdesApi.AstBodyType | "SITE", body: HdesApi.AstCommand[] | undefined, branchName: string | undefined): Promise<HdesApi.Site>;
+    ast(id: string, body: HdesApi.AstCommand[], branchName: string | undefined): Promise<HdesApi.Entity<any>>;
+    getSite(branchName: string | undefined): Promise<HdesApi.Site>;
+    debug(debug: HdesApi.DebugRequest, branchName: string | undefined): Promise<HdesApi.DebugResponse>;
+    copy(id: string, name: string, branchName: string | undefined): Promise<HdesApi.Site>;
     diff(input: HdesApi.DiffRequest): Promise<HdesApi.DiffResponse>;
     summary(tagId: string): Promise<HdesApi.AstTagSummary>;
-    remove(id: string): Promise<HdesApi.Site>;
+    remove(id: string, branchName: string | undefined): Promise<HdesApi.Site>;
     importTag(tagContentAsString: string): Promise<HdesApi.Site>;
   }
 

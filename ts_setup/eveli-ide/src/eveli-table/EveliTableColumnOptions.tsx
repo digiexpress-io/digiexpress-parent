@@ -8,16 +8,21 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import composeClasses from '@mui/utils/composeClasses';
 
 
-export const EveliTableColumnOptions: React.FC = () => {
+export const EveliTableColumnOptions: React.FC<{ onChooseCols: () => void }> = ({ onChooseCols }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  function handleClose() {
     setAnchorEl(null);
   };
+
+  function handleChooseCols() {
+    onChooseCols();
+    handleClose();
+  }
 
   const classes = useUtilityClasses();
   return (
@@ -40,7 +45,7 @@ export const EveliTableColumnOptions: React.FC = () => {
 
         <Divider />
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleChooseCols}>
           <ListItemIcon><TableChartOutlinedIcon className='menu-icon' /></ListItemIcon>
           Choose columns
         </MenuItem>

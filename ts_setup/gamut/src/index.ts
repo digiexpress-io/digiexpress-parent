@@ -70,8 +70,10 @@ export * from './api-offer'
 export * from './api-bookings'
 export * from './api-contract'
 export * from './api-locale'
+export * from './api-search'
 
 export * from './router'
+
 
 export * from './g-router-bookings'
 export * from './g-router-forms-awaiting-decision'
@@ -85,7 +87,7 @@ export * from './g-router-secured-services'
 export * from './g-router-unfinished-forms'
 export * from './g-router-unsecured'
 export * from './g-router-user-overview'
-
+export * from './g-override'
 
 
 const logo = `

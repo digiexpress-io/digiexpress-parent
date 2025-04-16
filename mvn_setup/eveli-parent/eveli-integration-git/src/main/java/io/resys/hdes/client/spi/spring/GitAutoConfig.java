@@ -23,14 +23,19 @@ package io.resys.hdes.client.spi.spring;
 import java.util.Optional;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.resys.hdes.client.api.HdesClient;
 import io.resys.hdes.client.api.HdesStore;
 import io.resys.hdes.client.api.HdesStore.HdesCredsSupplier;
 import io.resys.hdes.client.api.ImmutableHdesCreds;
 import io.resys.hdes.client.spi.GitStore;
+import io.resys.hdes.client.spi.HdesClientImpl;
+import io.resys.hdes.client.spi.config.HdesClientConfig.DependencyInjectionContext;
+import io.resys.hdes.client.spi.config.HdesClientConfig.ServiceInit;
 
 
 
@@ -57,5 +62,25 @@ public class GitAutoConfig {
         .objectMapper(objectMapper)
         .creds(creds)
         .build();
+  }
+  
+  
+  @Bean
+  public HdesClient hdesClient(HdesStore store, ObjectMapper objectMapper, ApplicationContext context) {
+    final ServiceInit init = new ServiceInit() {
+      @Override
+      public <T> T get(Class<T> type) {
+        return context.getAutowireCapableBeanFactory().createBean(type);
+      }
+    };
+
+    return HdesClientImpl.builder().objectMapper(objectMapper)
+      .dependencyInjectionContext(new DependencyInjectionContext() {
+        @Override
+        public <T> T get(Class<T> type) {
+          return context.getBean(type);
+        }
+      })
+      .serviceInit(init).store(store).build();    
   }
 }

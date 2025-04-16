@@ -39,7 +39,7 @@ public class DeliveryForChannels {
   private final ThenaMqAppConfig config;
   private final ThenaMqClient client;
   
-  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.SECONDS)
+  @Scheduled(fixedRate = 3, timeUnit = TimeUnit.MINUTES)
   @Async
   public void executeSync() {
     try {
