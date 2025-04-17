@@ -9,11 +9,11 @@ import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
 
-
 import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
 import { taskSortingFn } from './tableSorters';
+import { DateTime } from 'luxon';
 
 
 
@@ -50,9 +50,7 @@ export const TableTester: React.FC = () => {
       header: 'Info',
       accessorKey: 'additionalInfo',
       enableSorting: false,
-      minSize: 100,
-      maxSize: 500,
-      size: 100,
+      size: 200,
       enableResizing: false
     },
     {
@@ -81,10 +79,24 @@ export const TableTester: React.FC = () => {
     {
       header: 'Due',
       accessorKey: 'dueDate',
+      cell: (info) => {
+        const rawDate = info.getValue();
+        if (!rawDate) return (<div>–</div>)
+
+        const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
+        const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
+        return <>{formatted}</>;
+      }
     },
     {
       header: 'Created',
       accessorKey: 'created',
+      cell: (info) => {
+        const rawDate = info.getValue();
+        const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
+        const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
+        return <>{formatted}</>;
+      }
     },
 
   ]
@@ -104,10 +116,10 @@ export const TableTester: React.FC = () => {
     <Box display='flex'>
       <EveliTable>
         {table.getHeaderGroups().map(headerGroup => {
-          const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
+          //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
 
           return (
-            <EveliTableHeaderRoot key={headerGroup.id} width={width}>
+            <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
                   <EveliTableHeaderCell1 key={header.id} column={header.column} sortDirection={header.column.getIsSorted()}>
@@ -150,7 +162,7 @@ export const TableTester: React.FC = () => {
 
       </EveliTable>
       <EveliTableDrawerButtonColumn onColumnsClick={() => { }} onFiltersClick={() => { }} />
-    </Box >
+    </Box>
   )
 
 }

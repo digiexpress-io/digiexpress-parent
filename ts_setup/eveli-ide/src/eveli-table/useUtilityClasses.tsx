@@ -30,7 +30,8 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    fontSize: '10pt'
+    fontSize: '10pt',
+    width: '100%'
   };
 });
 
@@ -45,7 +46,7 @@ export const EveliTableHeaderRoot = styled('div', {
     ];
   },
 
-})<{ width: number }>(({ theme, width }) => {
+})<{}>(({ theme }) => {
 
 
   return {
@@ -54,8 +55,6 @@ export const EveliTableHeaderRoot = styled('div', {
     border: `1px solid ${theme.palette.divider}`,
     display: 'flex',
     flexDirection: 'row',
-    width: width,
-
 
     padding: cellPadding,
     '.MuiTypography-root': {
@@ -79,6 +78,7 @@ export const EveliTableHeaderRoot = styled('div', {
       },
       '.MuiSvgIcon-root': {
         color: theme.palette.primary.main,
+        fontSize: '14pt',
         ':hover': {
           cursor: 'pointer'
         }

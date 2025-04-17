@@ -18,7 +18,7 @@ export const IndicatorAssignee: React.FC<IndicatorAssigneeProps> = ({ name }) =>
   if (!name || typeof name !== 'string') {
     return (
       <IndicatorAssigneeRoot>
-        <Typography className='unassigned'>Unassigned</Typography>
+        <Typography>--</Typography>
       </IndicatorAssigneeRoot>)
   }
   const firstName = name.substring(0, name.indexOf(" "));
@@ -53,9 +53,7 @@ const IndicatorAssigneeRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-    '.unassigned': {
-      color: theme.palette.error.main,
-    },
+
     '.MuiAvatar-root': {
       height: '25px',
       width: '25px',
