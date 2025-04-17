@@ -5,6 +5,11 @@ import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getSortedRo
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { EveliTable, EveliTableCell, EveliTableHeaderCell1 } from './EveliTable';
+import { IndicatorPriority } from './IndicatorPriority';
+import { IndicatorStatus } from './IndicatorStatus';
+import { IndicatorAssignee } from './IndicatorAssignee';
+
+
 import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
@@ -12,15 +17,14 @@ import { taskSortingFn } from './tableSorters';
 
 
 
+
 export const TableTester: React.FC = () => {
-  const { getTasks } = useFetch('worker/rest/api/tasks.GET', {})
+  const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   React.useEffect(() => {
-    getTasks().then(results => {
-      setData(results.data)
-    });
+    findAll().then(setData);
   }, []);
 
 
@@ -34,6 +38,7 @@ export const TableTester: React.FC = () => {
       accessorKey: 'priority',
       enableSorting: true,
       sortingFn: taskSortingFn,
+      cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
       footer: 'footer 1'
     },
     {
@@ -44,7 +49,7 @@ export const TableTester: React.FC = () => {
     {
       header: 'Info',
       accessorKey: 'additionalInfo',
-      enableSorting: false
+      enableSorting: false,
     },
     {
       header: 'Client',
@@ -55,6 +60,7 @@ export const TableTester: React.FC = () => {
       header: 'Status',
       accessorKey: 'status',
       enableSorting: true,
+      cell: (status) => flexRender(IndicatorStatus, { type: status.getValue() }),
       sortingFn: taskSortingFn
     },
     {
@@ -65,7 +71,7 @@ export const TableTester: React.FC = () => {
     {
       header: 'Assignee',
       accessorKey: 'assignedUser',
-      sortUndefined: 'last',
+      cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
       sortingFn: taskSortingFn
     },
     {

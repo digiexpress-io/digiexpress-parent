@@ -15,12 +15,16 @@ const getRandomDarkColor = () => {
 
 
 export const IndicatorAssignee: React.FC<IndicatorAssigneeProps> = ({ name }) => {
-
+  if (!name || typeof name !== 'string') {
+    return (
+      <IndicatorAssigneeRoot>
+        <Typography className='unassigned'>Unassigned</Typography>
+      </IndicatorAssigneeRoot>)
+  }
   const firstName = name.substring(0, name.indexOf(" "));
   const lastName = name.substring(name.indexOf(" ") + 1);
   const firstInitial = firstName.substring(0, 1);
   const secondInitial = lastName.substring(0, 1);
-
  
   return (
     <IndicatorAssigneeRoot>
@@ -49,6 +53,9 @@ const IndicatorAssigneeRoot = styled('div', {
 })(({ theme }) => {
 
   return {
+    '.unassigned': {
+      color: theme.palette.error.main,
+    },
     '.MuiAvatar-root': {
       height: '25px',
       width: '25px',

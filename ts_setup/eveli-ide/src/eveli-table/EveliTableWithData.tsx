@@ -56,7 +56,7 @@ export const EveliTableWithData: React.FC = () => {
           </EveliTableRowRoot>
 
           <EveliTableRowRoot>
-            <EveliTableCell children={<IndicatorPriority type='MEDIUM' />} />
+          <EveliTableCell children={<IndicatorPriority type='NORMAL' />} />
             <EveliTableCell children='Send feedback' />
             <EveliTableCell children='Gerald Bridgerton' />
             <EveliTableCell children={<IndicatorStatus type='OPEN' />} />
@@ -124,7 +124,7 @@ export const EveliTableWithData: React.FC = () => {
           </EveliTableRowRoot>
 
           <EveliTableRowRoot>
-            <EveliTableCell children={<IndicatorPriority type='MEDIUM' />} />
+          <EveliTableCell children={<IndicatorPriority type='NORMAL' />} />
             <EveliTableCell children='Send feedback' />
             <EveliTableCell children='John Cena' />
             <EveliTableCell children={<IndicatorStatus type='OPEN' />} />
@@ -157,7 +157,7 @@ export const EveliTableWithData: React.FC = () => {
           priority={
             <>
               <IndicatorPriority type='LOW' />
-              <IndicatorPriority type='MEDIUM' />
+              <IndicatorPriority type='NORMAL' />
               <IndicatorPriority type='HIGH' />
             </>
           }

@@ -2,7 +2,7 @@ import React from 'react';
 import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
-type PriorityType = 'HIGH' | 'MEDIUM' | 'LOW';
+type PriorityType = 'HIGH' | 'NORMAL' | 'LOW';
 
 interface TaskPriority {
   type: PriorityType;
@@ -12,8 +12,8 @@ function renderPriority(type: PriorityType): { label: string, color: string } {
   switch (type) {
     case 'HIGH':
       return { label: 'High', color: '#d90429' };
-    case 'MEDIUM':
-      return { label: 'Medium', color: '#ffb703' };
+    case 'NORMAL':
+      return { label: 'Normal', color: '#ffb703' };
     case 'LOW':
       return { label: 'Low', color: '#4cc9f0' };
     default:

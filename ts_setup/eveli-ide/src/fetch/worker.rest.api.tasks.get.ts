@@ -21,6 +21,12 @@ function hook(props: {}) {
 
 
   return {
+
+    findAll: async (): Promise<TaskApi.Task[]> => {
+      return params.fetch(url({}) + `/all`)
+        .then(response => response.json());
+    },
+
     getTasks: async (page=0, size=20): Promise<QueryResult<TaskApi.Task>> => {
       return params.fetch(url({}) + `?page=${page}&size=${size}`)
         .then(response => response.json())

@@ -15,8 +15,6 @@ const statusOrder: Record<TaskApi.TaskStatus, number> = {
   REJECTED: 3
 }
 
-
-
 export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {
   const a = rowA.original[columnId as keyof TaskApi.Task];
   const b = rowB.original[columnId as keyof TaskApi.Task];
@@ -47,6 +45,7 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
 
       return assignedUser1.localeCompare(assignedUser2);
     }
+
     default: {
       if (typeof a === 'string' && typeof b === 'string') {
         return a.localeCompare(b);
