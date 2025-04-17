@@ -1,28 +1,5 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
-import java.time.Duration;
-
-/*-
- * #%L
- * eveli-client
- * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -67,10 +44,10 @@ public class TaskApiController {
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
   private final MqEventPublisher mqEventPublisher;
-  private static final Duration timeout = Duration.ofMillis(10000);
+  
   
   @GetMapping
-  public ResponseEntity<Page<Task>> taskSearch(
+  public Uni<Page<Task>> taskSearch(
       @RequestParam(name="subject", defaultValue = "") String subject, 
       @RequestParam(name="additionalInfo", defaultValue = "") String additionalInfo, 
       @RequestParam(name="clientIdentificator", defaultValue = "") String clientIdentificator, 
@@ -95,9 +72,9 @@ public class TaskApiController {
         .page(pageable);
     
     if (worker.getPrincipal().isAdmin()) {
-      return ResponseEntity.ok(query.findAll().await().atMost(timeout));
+      return query.findAll();
     }
-    return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll().await().atMost(timeout));
+    return query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll();
   }
   
   @GetMapping("/all")
@@ -111,115 +88,125 @@ public class TaskApiController {
 
 
   @GetMapping("/{id}")
-  public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {
+  public Uni<ResponseEntity<Task>> getTaskById(@PathVariable("id") String id) {
     
     final var worker = securityClient.getUser();
-    final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
     
-    
-    if (worker.getPrincipal().isAdmin()) {
-      return ResponseEntity.ok(task);
-    }
-  
-    final var isWorkerInAssignedRoles = worker.getPrincipal().isAccessGranted(task.getAssignedRoles());
-    if(isWorkerInAssignedRoles) {
-      return ResponseEntity.ok(task);
-    }
-    
-    // alarm clocks
-    return ResponseEntity.status(403).build();
+    return taskClient.queryTasks().getOneById(id).onItem().transform(task -> {
+      if (worker.getPrincipal().isAdmin()) {
+        return ResponseEntity.ok(task);
+      }
+      final var isWorkerInAssignedRoles = worker.getPrincipal().isAccessGranted(task.getAssignedRoles());
+      if(isWorkerInAssignedRoles) {
+        return ResponseEntity.ok(task);
+      }
+
+      // alarm clocks
+      return ResponseEntity.status(403).build();
+      
+    });
+ 
   }
 
   @PostMapping
-  public ResponseEntity<TaskClient.Task> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
+  public Uni<ResponseEntity<TaskClient.Task>> createTask(@RequestBody TaskClient.CreateTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var newTask = taskClient.taskBuilder()
+    return taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .createTask(command).await().atMost(timeout);
+        .createTask(command)
+        .onItem().invoke(newTask -> {
+          mqEventPublisher.publishMqEvent(newTask);
+        })
+        .onItem().transform(newTask -> {
+          return new ResponseEntity<>(newTask, HttpStatus.CREATED);
+        });
     
-    mqEventPublisher.publishMqEvent(newTask);
-    
-    return new ResponseEntity<>(newTask, HttpStatus.CREATED);
   }
   
   @PutMapping("/{id}")
-  public ResponseEntity<TaskClient.Task> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.ModifyTaskCommand command) {
+  public Uni<ResponseEntity<TaskClient.Task>> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.ModifyTaskCommand command) {
     final var worker = securityClient.getUser().getPrincipal();
-    final var modifiedTask = taskClient.taskBuilder()
-        .userId(worker.getUsername(), worker.getEmail())
-        .modifyTask(id, command).await().atMost(timeout);
-    
-    mqEventPublisher.publishMqEvent(modifiedTask);
-    return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
-
+    return taskClient.taskBuilder()
+      .userId(worker.getUsername(), worker.getEmail())
+      .modifyTask(id, command)
+      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask))
+      .onItem().transform(modifiedTask -> {
+        return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
+      });
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTask(@PathVariable("id") String id) {
+  public Uni<TaskClient.Task> deleteTask(@PathVariable("id") String id) {
     final var worker = securityClient.getUser().getPrincipal();
-    taskClient.taskBuilder()
+    return taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
         .deleteTask(id);
   }
   
   @GetMapping(value="/unread")
-  public ResponseEntity<Collection<String>> getUnreadTasks() {
+  public Uni<List<String>> getUnreadTasks() {
     final var worker = securityClient.getUser().getPrincipal();
     
     if (worker.isAdmin()) {
-      return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
+      return taskClient.queryUnreadUserTasks()
           .userId(worker.getUsername())
-          .findAll().await().atMost(timeout));
+          .findAll();
     } 
-    return ResponseEntity.ok(taskClient.queryUnreadUserTasks()
+    return taskClient.queryUnreadUserTasks()
         .userId(worker.getUsername())
         .requireAnyRoles(worker.getRoles())
-        .findAll().await().atMost(timeout));
+        .findAll();
   }
   
   @GetMapping(value="/{id}/comments")
-  public ResponseEntity<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
+  public Uni<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)
   {
-    final var authentication = securityClient.getUser();
-    taskClient.taskBuilder()
-      .userId(authentication.getPrincipal().getUsername(), null)
-      .addWorkerCommitViewer(id)
-      .await().atMost(timeout);
+    final var authentication = securityClient.getUser();    
+    return taskClient.queryTaskComments().findAllByTaskId(id)
+        .onItem().transformToUni(comments -> {
+          
+          return taskClient.taskBuilder()
+            .userId(authentication.getPrincipal().getUsername(), null)
+            .addWorkerCommitViewer(id)
+            .onItem().transform(junk -> comments);
+          
+        });
     
-    final var comments = taskClient.queryTaskComments().findAllByTaskId(id).await().atMost(timeout);
-    return new ResponseEntity<>(comments, HttpStatus.OK);
   }
   
   @PostMapping(value="/{id}/comments")
-  public ResponseEntity<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
+  public Uni<TaskClient.TaskComment> createComment(@RequestBody TaskClient.CreateTaskCommentCommand command) 
   {
     final var worker = securityClient.getUser().getPrincipal();
-    final var newComment = taskClient.taskBuilder()
+    return taskClient.taskBuilder()
         .userId(worker.getUsername(), worker.getEmail())
-        .createTaskComment(command).await().atMost(timeout);
-    
-    mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
-    return new ResponseEntity<>(newComment, HttpStatus.CREATED);
+        .createTaskComment(command)
+        .onItem().invoke(newComment -> {
+          mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
+        });
   }
   
   @GetMapping(value="/{id}/reviews")
-  public ResponseEntity<?> getTaskFormReview(@PathVariable("id") String id)
+  public Uni<ResponseEntity<?>> getTaskFormReview(@PathVariable("id") String id)
   {
-    final var task = taskClient.queryTasks().getOneById(id).await().atMost(timeout);
- 
-    if(task.getQuestionnaireId() != null) {
-      final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
-      final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
-      final var result = Map.of(
-          "form", form,
-          "session", questionnaire
-          );
-      return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    //{ form: any, session: any }
-   
-    return ResponseEntity.notFound().build();
+    return taskClient.queryTasks().getOneById(id)
+    .onItem().transform(task -> {
+      
+      if(task.getQuestionnaireId() != null) {
+        final var questionnaire = dialobClient.getQuestionnaireById(task.getQuestionnaireId());
+        final var form = dialobClient.getFormById(questionnaire.getMetadata().getFormId());
+        final var result = Map.of(
+            "form", form,
+            "session", questionnaire
+            );
+        return new ResponseEntity<>(result, HttpStatus.OK);
+      }
+      //{ form: any, session: any }
+     
+      return ResponseEntity.notFound().build();
+      
+    });
   }
   
   @Data
@@ -227,7 +214,8 @@ public class TaskApiController {
   private static class KeyWordsResponse { List<String> keyWords; }
   
   @GetMapping("/keywords")
-  public ResponseEntity<KeyWordsResponse> getKeyWords() {
-    return ResponseEntity.ok(new KeyWordsResponse(taskClient.queryTaskKeywords().findAllKeywords().await().atMost(timeout)));
+  public Uni<KeyWordsResponse> getKeyWords() {
+    return taskClient.queryTaskKeywords().findAllKeywords()
+        .onItem().transform(resp -> new KeyWordsResponse(resp));
   }
 }
