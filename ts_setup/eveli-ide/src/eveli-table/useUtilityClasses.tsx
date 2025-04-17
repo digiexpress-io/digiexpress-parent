@@ -1,5 +1,6 @@
 import { styled, generateUtilityClass } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
+import { HeaderGroup } from '@tanstack/react-table';
 
 export const EveliTableRootClassName = 'EveliTable';
 
@@ -29,8 +30,7 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    fontSize: '10pt',
-    width: '100%'
+    fontSize: '10pt'
   };
 });
 
@@ -45,24 +45,30 @@ export const EveliTableHeaderRoot = styled('div', {
     ];
   },
 
-})<{}>(({ theme }) => {
+})<{ width: number }>(({ theme, width }) => {
+
 
   return {
     backgroundColor: theme.palette.secondary.main,
     borderRadius: `${theme.spacing(1)} 0px 0px 0px`,
     border: `1px solid ${theme.palette.divider}`,
     display: 'flex',
+    flexDirection: 'row',
+    width: width,
+
+
     padding: cellPadding,
     '.MuiTypography-root': {
       fontSize: '10pt'
     },
 
     '.headerCell': {
-      flex: 1,
       borderRight: `2px solid ${theme.palette.divider}`,
       paddingLeft: cellPadding,
       paddingRight: cellPadding,
       display: 'flex',
+      //flex: 1,
+
       alignItems: 'center',
       '.MuiTypography-root': {
         fontWeight: 'bolder',
@@ -108,12 +114,11 @@ export const EveliTableRowRoot = styled('div', {
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
     '.rowCell': {
-      flex: 1,
-      paddingLeft: cellPadding,
+      //paddingLeft: cellPadding,
       paddingRight: cellPadding,
       display: 'flex',
       alignItems: 'center',
-    }
+    },
 
   };
 });
@@ -130,7 +135,7 @@ export const EveliTableColRoot = styled('div', {
     ];
   },
 
-})<{ width: string }>(({ theme, width }) => {
+})<{ width: number }>(({ theme, width }) => {
 
   return {
     width,

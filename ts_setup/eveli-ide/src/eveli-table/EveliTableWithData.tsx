@@ -31,7 +31,8 @@ export const EveliTableWithData: React.FC = () => {
 
   return (
 
-      <EveliTable>
+    <EveliTable><></>
+      {/*
         <EveliTableColRoot width='97%'>
           <EveliTableHeaderRoot>
             <EveliTableHeaderCell children='Priority' filterItems={['value1', 'value2']} />
@@ -168,7 +169,7 @@ export const EveliTableWithData: React.FC = () => {
         <EveliTableColRoot width='3%'>
           <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
         </EveliTableColRoot>
-
+*/}
     </EveliTable>
   )
 }

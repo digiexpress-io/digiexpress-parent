@@ -33,7 +33,7 @@ export const EveliTableHeaderCell1 = <T,>({ children, column }: EveliTableHeader
 
   if (!isSortable) {
     return (
-      <div className='headerCell'>
+      <div className='headerCell' style={{ width: column.getSize() }}>
         <Typography>{children}</Typography>
         <div style={{ flexGrow: 1 }} />
         <EveliTableColumnFilter filterItems={['filter 1']} />
@@ -42,23 +42,35 @@ export const EveliTableHeaderCell1 = <T,>({ children, column }: EveliTableHeader
   }
   return (
     <>
-      <div className='headerCell'>
+      <div className='headerCell' style={{ width: column.getSize() }}>
         <Typography>{children}</Typography>
         <div style={{ marginLeft: 4 }}>
           {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
-      <div style={{ flexGrow: 1 }} />
-      <EveliTableColumnFilter filterItems={['filter 1']} />
+        <div style={{ flexGrow: 1 }} />
+        <EveliTableColumnFilter filterItems={['filter 1']} />
         <EveliTableColumnOptions
           onChooseCols={() => setOpen(true)}
           onSortAsc={() => column.toggleSorting(false)}
           onSortDesc={() => column.toggleSorting(true)}
         />
-    </div>
-  </>
+      </div>
+    </>
   )
 }
+
+
+export const EveliTableCell: React.FC<{ children?: React.ReactNode | string, width: number }> = ({ children, width }) => {
+  return (
+    <div className='rowCell' style={{ width }}>
+      {(typeof children) === 'string' ? <Typography>{children}</Typography> : children}
+    </div>
+  )
+}
+
+
+
 // original
 export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: string[] }> = ({ children, filterItems }) => {
   const [open, setOpen] = React.useState(false);
@@ -72,14 +84,5 @@ export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: str
       <EveliTableColumnOptions onChooseCols={() => setOpen(true)} onSortAsc={() => { }} onSortDesc={() => { }} />
     </div>
   </>
-  )
-}
-
-
-export const EveliTableCell: React.FC<{ children?: React.ReactNode | string }> = ({ children }) => {
-  return (
-    <div className='rowCell'>
-      {(typeof children) === 'string' ? <Typography>{children}</Typography> : children}
-    </div>
   )
 }
