@@ -22,12 +22,16 @@ export interface GUserOverviewProps {
   topicCount: number,
   bookings: number,
 
-  isItemDisabled?: (id: GUserOverviewMenuView) => boolean;
+  slotProps?: Partial<Record<GUserOverviewMenuView, GUserOverviewSlotProps>>
 
   slots?: {
     item: React.ElementType<GUserOverviewDetailProps>
   };
   component?: GOverridableComponent<GUserOverviewProps>
+}
+
+export type GUserOverviewSlotProps = {
+  disabled?: boolean | undefined;
 }
 
 
@@ -61,8 +65,8 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
   const Root = initProps.component ?? GUserOverviewRoot;
 
   function isItemDisabled(id: GUserOverviewMenuView) {
-    if(props.isItemDisabled) {
-      return props.isItemDisabled(id);
+    if(props.slotProps && props.slotProps[id]) {
+      return props.slotProps[id].disabled;
     }
     return false;
   }

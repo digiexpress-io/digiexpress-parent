@@ -26,9 +26,11 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
   },
   GUserOverview: {
     defaultProps: {
-      isItemDisabled(id) {
-        return false //id === 'bookings'
-      },
+      slotProps: {
+        bookings: {
+          disabled: false
+        }
+      }
     }
   },
   GUserOverviewMenu: {
