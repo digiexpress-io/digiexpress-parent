@@ -22,6 +22,8 @@ export interface GUserOverviewProps {
   topicCount: number,
   bookings: number,
 
+  isItemDisabled?: (id: GUserOverviewMenuView) => boolean;
+
   slots?: {
     item: React.ElementType<GUserOverviewDetailProps>
   };
@@ -58,6 +60,13 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
 
   const Root = initProps.component ?? GUserOverviewRoot;
 
+  function isItemDisabled(id: GUserOverviewMenuView) {
+    if(props.isItemDisabled) {
+      return props.isItemDisabled(id);
+    }
+    return false;
+  }
+
   return (
     <Root ownerState={ownerState} className={classes.root}>
       <Grid container spacing={1} height='100%' width='75%'>
@@ -70,16 +79,19 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
           </Item>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.serviceSelect}>
-          <Item
-            viewId='services'
-            onClick={handleClick}
-            title={intl.formatMessage({ id: 'gamut.userOverview.services.detail.title' })}
-            buttonLabel={intl.formatMessage({ id: 'gamut.services' })}
-            count={props.topicCount}
-          />
-        </Grid>
+        {isItemDisabled('services') ? <></> : (
+          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.serviceSelect}>
+            <Item
+              viewId='services'
+              onClick={handleClick}
+              title={intl.formatMessage({ id: 'gamut.userOverview.services.detail.title' })}
+              buttonLabel={intl.formatMessage({ id: 'gamut.services' })}
+              count={props.topicCount}
+            />
+          </Grid>)
+        }
 
+      {isItemDisabled('requests-in-progress') ? <></> : (
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Item 
             viewId='requests-in-progress'
@@ -88,8 +100,10 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
             buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
             count={props.startedForms}
           />
-        </Grid>
+        </Grid>)
+        }
 
+      {isItemDisabled('awaiting-decision') ? <></> : (
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Item 
             onClick={handleClick}
@@ -98,8 +112,10 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
             buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
             count={props.waitingForms}
           />
-        </Grid>
+        </Grid>)
+        }
 
+      {isItemDisabled('with-decision') ? <></> : (
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Item
             onClick={handleClick}
@@ -108,8 +124,10 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
             buttonLabel={intl.formatMessage({ id: 'gamut.forms' })}
             count={props.decidedForms}
           />
-        </Grid>
+        </Grid>)
+        }
 
+      {isItemDisabled('inbox') ? <></> : (
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Item
             onClick={handleClick}
@@ -118,8 +136,10 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
             buttonLabel={intl.formatMessage({ id: 'gamut.new-messages' })}
             count={props.newMessages}
           />
-        </Grid>
+        </Grid>)
+        }
 
+      {isItemDisabled('bookings') ? <></> : (
         <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
           <Item
             onClick={handleClick}
@@ -128,7 +148,8 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
             buttonLabel={intl.formatMessage({ id: 'gamut.bookings' })}
             count={props.bookings}
           />
-        </Grid>
+        </Grid>)
+        }
 
       </Grid>
     </Root>

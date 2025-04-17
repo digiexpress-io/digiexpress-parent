@@ -46,7 +46,7 @@ export interface GUserOverviewMenuItemSlotProps {
   endAdornment?: React.ReactNode | undefined;
   userOrRepOrCompanyName?: string | undefined;
   onClick: (view: GUserOverviewMenuView) => void;
-  hidden?: boolean;
+  disabled?: boolean;
   active: GUserOverviewMenuView
 }
 
@@ -207,12 +207,12 @@ const Item: React.FC<GUserOverviewMenuItemSlotProps & { ownerState: GUserOvervie
   const slotProps = initProps.ownerState.slotProps;
   const overrides = slotProps && slotProps[initProps.id] ? slotProps[initProps.id] : {};
   const props = { ...initProps, ...overrides };
-  const { id, endAdornment, onClick, hidden, active, userOrRepOrCompanyName } = props;
+  const { id, endAdornment, onClick, disabled, active, userOrRepOrCompanyName } = props;
 
   function handleOnClick() {
     onClick(id);
   }
-  if (hidden) {
+  if (disabled) {
     return <></>;
   }
   return (

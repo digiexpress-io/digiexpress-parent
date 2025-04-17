@@ -24,6 +24,22 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
       }
     ]
   },
+  GUserOverview: {
+    defaultProps: {
+      isItemDisabled(id) {
+        return false //id === 'bookings'
+      },
+    }
+  },
+  GUserOverviewMenu: {
+    defaultProps: {
+      slotProps: {
+        bookings: {
+          disabled: false
+        }
+      }
+    }
+  },
 
   GShell: {
     defaultProps: {
@@ -198,9 +214,7 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
     }
   },
 
-  GUserOverviewMenu: {},
   GUserOverviewDetail: {},
-  GUserOverview: {},
 
   GAppBar: {},
   GArticle: {},
