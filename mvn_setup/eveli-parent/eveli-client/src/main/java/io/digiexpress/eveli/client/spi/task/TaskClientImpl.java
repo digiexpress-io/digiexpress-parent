@@ -35,6 +35,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.DeleteOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllExternalTaskCommentsByReporterIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskByIdsVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskCommentsByTaskIdVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.FindAllTaskVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.FindAllUnreadTasksVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskByIdVisitor;
 import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisitor;
@@ -58,6 +59,7 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryTasks queryTasks() {
     return new QueryTasks() {
+      private List<String> requireAnyRoles;
       @Override
       public Uni<Task> getOneById(String taskId) {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
@@ -73,6 +75,19 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notNull(taskId, () -> "taskId can't be empty!");
         TaskAssert.notNull(commitId, () -> "commitId can't be empty!");
         return new TaskDiffVisitor(ctx, taskId, commitId).accept();
+      }
+      @Override
+      public QueryTasks requireAnyRoles(List<String> roles) {
+        if(roles == null) {
+          roles = new ArrayList<>();
+        }
+        roles.clear();
+        this.requireAnyRoles.addAll(roles);
+        return this;
+      }
+      @Override
+      public Uni<List<Task>> findAll() {
+        return ctx.getConfig().accept(new FindAllTaskVisitor(requireAnyRoles));
       }
     };
   }

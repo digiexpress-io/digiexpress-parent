@@ -48,6 +48,7 @@ import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +99,16 @@ public class TaskApiController {
     }
     return ResponseEntity.ok(query.requireAnyRoles(worker.getPrincipal().getRoles()).findAll().await().atMost(timeout));
   }
+  
+  @GetMapping("/all")
+  public Uni<List<Task>> all() {
+    final var worker = securityClient.getUser();
+    if (worker.getPrincipal().isAdmin()) {
+      return taskClient.queryTasks().findAll();
+    }
+    return taskClient.queryTasks().requireAnyRoles(worker.getPrincipal().getRoles()).findAll();
+  }
+
 
   @GetMapping("/{id}")
   public ResponseEntity<Task> getTaskById(@PathVariable("id") String id) {

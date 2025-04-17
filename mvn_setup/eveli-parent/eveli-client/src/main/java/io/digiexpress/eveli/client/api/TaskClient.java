@@ -74,9 +74,11 @@ public interface TaskClient {
   }
   
   interface QueryTasks {
+    QueryTasks requireAnyRoles(List<String> roles);
     Uni<Task> getOneById(String taskId);
     Uni<TaskDiff> getOneTaskDiff(String taskId, String commitId);
     Uni<List<Task>> findAll(List<String> taskId);
+    Uni<List<Task>> findAll();
   }
   
   interface PaginateTasks {
