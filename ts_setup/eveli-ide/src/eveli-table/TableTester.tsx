@@ -60,10 +60,13 @@ export const TableTester: React.FC = () => {
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
+      enableSorting: false
     },
     {
       header: 'Assignee',
       accessorKey: 'assignedUser',
+      sortUndefined: 'last',
+      sortingFn: taskSortingFn
     },
     {
       header: 'Due',
