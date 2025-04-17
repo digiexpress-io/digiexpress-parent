@@ -8,22 +8,6 @@ const priorityOrder: Record<TaskApi.TaskPriority, number> = {
   HIGH: 2,
 };
 
-export function prioritySortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {
-  const aRaw = rowA.original[columnId as keyof TaskApi.Task];
-  const bRaw = rowB.original[columnId as keyof TaskApi.Task];
-
-  const a = priorityOrder[aRaw as TaskApi.TaskPriority] ?? -1;
-  const b = priorityOrder[bRaw as TaskApi.TaskPriority] ?? -1;
-
-  if (a > b) {
-    return 1;
-  } else if (a < b) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
 const statusOrder: Record<TaskApi.TaskStatus, number> = {
   NEW: 0,
   OPEN: 1,
@@ -31,19 +15,34 @@ const statusOrder: Record<TaskApi.TaskStatus, number> = {
   REJECTED: 3
 }
 
-export function statusSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {
-  const aRaw = rowA.original[columnId as keyof TaskApi.Task];
-  const bRaw = rowB.original[columnId as keyof TaskApi.Task];
 
-  const a = statusOrder[aRaw as TaskApi.TaskStatus] ?? -1;
-  const b = statusOrder[bRaw as TaskApi.TaskStatus] ?? -1;
+export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {
+  const a = rowA.original[columnId as keyof TaskApi.Task];
+  const b = rowB.original[columnId as keyof TaskApi.Task];
 
-  if (a > b) {
-    return 1;
-  } else if (a < b) {
-    return -1;
-  } else {
-    return 0;
+  console.log("columnId", columnId)
+
+  switch (columnId) {
+    case 'priority': {
+      const aVal = priorityOrder[a as TaskApi.TaskPriority] ?? -1;
+      const bVal = priorityOrder[b as TaskApi.TaskPriority] ?? -1;
+      return aVal - bVal;
+    }
+    case 'status': {
+      const aVal = statusOrder[a as TaskApi.TaskStatus] ?? -1;
+      const bVal = statusOrder[b as TaskApi.TaskStatus] ?? -1;
+      return aVal - bVal;
+    }
+    case 'subject': {
+      const taskName1 = a?.toString() ?? '';
+      const taskName2 = b?.toString() ?? '';
+      return taskName1.localeCompare(taskName2);
+    }
+    default: {
+      if (typeof a === 'string' && typeof b === 'string') {
+        return a.localeCompare(b);
+      }
+      return 0;
+    }
   }
-
 }

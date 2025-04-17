@@ -8,7 +8,7 @@ import { EveliTable, EveliTableCell, EveliTableHeaderCell1 } from './EveliTable'
 import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
-import { prioritySortingFn, statusSortingFn } from './tableSorters';
+import { taskSortingFn } from './tableSorters';
 
 
 
@@ -33,12 +33,13 @@ export const TableTester: React.FC = () => {
       header: 'Priority',
       accessorKey: 'priority',
       enableSorting: true,
-      sortingFn: prioritySortingFn,
+      sortingFn: taskSortingFn,
       footer: 'footer 1'
     },
     {
       header: 'Name',
       accessorKey: 'subject',
+      sortingFn: taskSortingFn
     },
     {
       header: 'Info',
@@ -54,7 +55,7 @@ export const TableTester: React.FC = () => {
       header: 'Status',
       accessorKey: 'status',
       enableSorting: true,
-      sortingFn: statusSortingFn
+      sortingFn: taskSortingFn
     },
     {
       header: 'Roles',
@@ -85,7 +86,6 @@ export const TableTester: React.FC = () => {
       sorting,
     },
   })
-  console.log("xxx", table.getState().sorting)
 
   return (
     <Box display='flex'>

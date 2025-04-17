@@ -32,10 +32,6 @@ export const EveliTableHeaderCell1 = <T,>({ children, column }: EveliTableHeader
   const isSortable = column.getCanSort();
 
   if (!isSortable) {
-    console.log('not sortable', column)
-  }
-
-  if (!isSortable) {
     return (
       <div className='headerCell'>
         <Typography>{children}</Typography>
