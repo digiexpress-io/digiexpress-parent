@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.mq;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -34,6 +35,7 @@ import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
+import io.digiexpress.eveli.client.web.resources.worker.QueueApiController;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.thena.mq.client.api.ThenaMqAppConfig;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
@@ -49,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EveliAutoConfigMq {
  
   @Bean 
+  @ConditionalOnMissingBean
   public ThenaMqClient mqClient(io.vertx.mutiny.pgclient.PgPool pgPool, EveliPropsMq props) {
     return ThenaMqChannelStateImpl.create()
         .db(props.getChannelName()).client(pgPool)
@@ -56,6 +59,7 @@ public class EveliAutoConfigMq {
   }
   
   @Bean
+  @ConditionalOnMissingBean
   public ThenaMqAppConfig mqAppConfig(ThenaMqClient client, EveliPropsMq props, List<ThenaMqConsumer> consumers) {
     
     final var builder = client.channelBuilder()
@@ -130,5 +134,9 @@ public class EveliAutoConfigMq {
     public EveliAutoConfigMqException(String message) {
       super(message);
     }    
+  }
+  @Bean 
+  public QueueApiController queueApiController(ThenaMqClient client, ThenaMqAppConfig config) {
+    return new QueueApiController(client, config);
   }
 }
