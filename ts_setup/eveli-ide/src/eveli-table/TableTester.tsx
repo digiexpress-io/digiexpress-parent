@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { EveliTable, EveliTableCell, EveliTableHeaderCell1 } from './EveliTable';
@@ -14,14 +14,19 @@ import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
 import { taskSortingFn } from './tableSorters';
 import { DateTime } from 'luxon';
+import { EveliTablePagination } from './EveliTablePagination';
 
 
-
+const initialPageSize = 4;
 
 export const TableTester: React.FC = () => {
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0, //initial page index
+    pageSize: initialPageSize, //default page size
+  });
 
   React.useEffect(() => {
     findAll().then(setData);
@@ -29,7 +34,7 @@ export const TableTester: React.FC = () => {
 
 
 
-  const columnHelper = createColumnHelper<TaskApi.Task>();
+  //const columnHelper = createColumnHelper<TaskApi.Task>();
 
   const columns: ColumnDef<TaskApi.Task, any>[] = [
 
@@ -106,9 +111,13 @@ export const TableTester: React.FC = () => {
     data,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    rowCount: data.length,
     onSortingChange: setSorting,
     state: {
       sorting,
+      pagination
     },
   })
 
@@ -134,7 +143,6 @@ export const TableTester: React.FC = () => {
         {table.getRowModel().rows.map(row => (
           <EveliTableRowRoot key={row.id}>
             {row.getVisibleCells().map(cell => {
-
               return (
                 <EveliTableCell key={cell.id} width={cell.column.getSize()}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -143,24 +151,10 @@ export const TableTester: React.FC = () => {
             })}
           </EveliTableRowRoot>
         ))}
-        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                      header.column.columnDef.footer,
-                      header.getContext()
-                    )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
 
+        <EveliTablePagination data={data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
       </EveliTable>
+
       <EveliTableDrawerButtonColumn onColumnsClick={() => { }} onFiltersClick={() => { }} />
     </Box>
   )

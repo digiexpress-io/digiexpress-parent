@@ -46,5 +46,9 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
   caption: {
     fontSize: "0.7rem",
     fontWeight: 500,
+  },
+  subtitle2: {
+    fontSize: '10pt',
+    fontWeight: 400
   }
 }

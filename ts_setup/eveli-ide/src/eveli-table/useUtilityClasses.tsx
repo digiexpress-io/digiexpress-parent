@@ -30,7 +30,7 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
-    fontSize: '10pt',
+    ...theme.typography.subtitle2,
     width: '100%'
   };
 });
@@ -58,7 +58,7 @@ export const EveliTableHeaderRoot = styled('div', {
 
     padding: cellPadding,
     '.MuiTypography-root': {
-      fontSize: '10pt'
+      ...theme.typography.subtitle2
     },
 
     '.headerCell': {
@@ -66,8 +66,6 @@ export const EveliTableHeaderRoot = styled('div', {
       paddingLeft: cellPadding,
       paddingRight: cellPadding,
       display: 'flex',
-      //flex: 1,
-
       alignItems: 'center',
       '.MuiTypography-root': {
         fontWeight: 'bolder',
@@ -108,7 +106,7 @@ export const EveliTableRowRoot = styled('div', {
     display: 'flex',
     padding: cellPadding,
     '.MuiTypography-root': {
-      fontSize: '10pt'
+      ...theme.typography.subtitle2
     },
     '&:last-of-type': { // target the last row to round the bottom left corner
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,

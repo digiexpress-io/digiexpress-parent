@@ -44,7 +44,7 @@ export const EveliTableHeaderCell1 = <T,>({ children, column }: EveliTableHeader
     <>
       <div className='headerCell' style={{ width: column.getSize() }}>
         <Typography>{children}</Typography>
-        <div style={{ marginLeft: 4 }}>
+        <div style={{ marginLeft: 4, display: 'flex' }}>
           {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
