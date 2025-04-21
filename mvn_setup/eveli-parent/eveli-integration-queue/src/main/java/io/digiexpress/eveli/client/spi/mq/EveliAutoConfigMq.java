@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EveliAutoConfigMq {
  
   @Bean 
-  @ConditionalOnMissingBean
+  @ConditionalOnMissingBean(value = ThenaMqClient.class)
   public ThenaMqClient mqClient(io.vertx.mutiny.pgclient.PgPool pgPool, EveliPropsMq props) {
     return ThenaMqChannelStateImpl.create()
         .db(props.getChannelName()).client(pgPool)
