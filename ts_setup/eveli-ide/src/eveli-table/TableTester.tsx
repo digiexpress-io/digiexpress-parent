@@ -55,7 +55,7 @@ export const TableTester: React.FC = () => {
       header: 'Info',
       accessorKey: 'additionalInfo',
       enableSorting: false,
-      size: 200,
+      size: 100,
       enableResizing: false
     },
     {
@@ -73,7 +73,7 @@ export const TableTester: React.FC = () => {
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
-      enableSorting: false
+      enableSorting: false,
     },
     {
       header: 'Assignee',

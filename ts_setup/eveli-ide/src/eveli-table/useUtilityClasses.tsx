@@ -31,7 +31,8 @@ export const EveliTableRoot = styled('div', {
 
   return {
     ...theme.typography.subtitle2,
-    width: '100%'
+    width: '100%',
+    overflowX: 'auto',
   };
 });
 
@@ -112,11 +113,13 @@ export const EveliTableRowRoot = styled('div', {
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
     '.rowCell': {
-      //paddingLeft: cellPadding,
       paddingRight: cellPadding,
-      display: 'flex',
       alignItems: 'center',
-    },
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      display: 'block'
+    }
 
   };
 });
@@ -134,7 +137,6 @@ export const EveliTableColRoot = styled('div', {
   },
 
 })<{ width: number }>(({ theme, width }) => {
-
   return {
     width,
   };
