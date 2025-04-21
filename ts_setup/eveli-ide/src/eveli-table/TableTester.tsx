@@ -4,7 +4,11 @@ import { Box } from '@mui/material';
 import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
-import { EveliTable, EveliTableCell, EveliTableHeaderCell1 } from './EveliTable';
+
+import { EveliTable } from './EveliTable';
+import { EveliTableCell } from './EveliTableCell';
+import { EveliTableHeaderCell } from './EveliTableHeaderCell';
+
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
@@ -24,9 +28,10 @@ export const TableTester: React.FC = () => {
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [pagination, setPagination] = React.useState({
-    pageIndex: 0, //initial page index
-    pageSize: initialPageSize, //default page size
+    pageIndex: 0,
+    pageSize: initialPageSize,
   });
+  const [columnVisibility, setColumnVisibility] = React.useState({})
 
   React.useEffect(() => {
     findAll().then(setData);
@@ -113,11 +118,13 @@ export const TableTester: React.FC = () => {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    onColumnVisibilityChange: setColumnVisibility,
     rowCount: data.length,
     onSortingChange: setSorting,
     state: {
       sorting,
-      pagination
+      pagination,
+      columnVisibility
     },
   })
 
@@ -131,9 +138,9 @@ export const TableTester: React.FC = () => {
             <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <EveliTableHeaderCell1 key={header.id} column={header.column} sortDirection={header.column.getIsSorted()}>
+                  <EveliTableHeaderCell key={header.id} column={header.column} sortDirection={header.column.getIsSorted()}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </EveliTableHeaderCell1>
+                  </EveliTableHeaderCell>
                 )
               })}
             </EveliTableHeaderRoot>
