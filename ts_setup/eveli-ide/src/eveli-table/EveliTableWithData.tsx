@@ -11,7 +11,7 @@ import { EveliTableDrawer } from './EveliTableDrawer';
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
-import { EveliTable, EveliTableCell, EveliTableHeaderCell } from './EveliTable';
+import { EveliTable, EveliTableHeaderCell } from './EveliTable';
 
 
 export const EveliTableWithData: React.FC = () => {

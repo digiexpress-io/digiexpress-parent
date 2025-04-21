@@ -1,7 +1,12 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef, createColumnHelper, flexRender,
+  getCoreRowModel, getPaginationRowModel, getSortedRowModel,
+  SortingState, useReactTable
+} from '@tanstack/react-table';
+
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 
@@ -19,6 +24,7 @@ import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 import { taskSortingFn } from './tableSorters';
 import { DateTime } from 'luxon';
 import { EveliTablePagination } from './EveliTablePagination';
+import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
 
 
 const initialPageSize = 4;
@@ -26,18 +32,19 @@ const initialPageSize = 4;
 export const TableTester: React.FC = () => {
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: initialPageSize,
-  });
-  const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
+  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     findAll().then(setData);
   }, []);
 
 
+  function toggleFilterDialogOpen() {
+    setFilterDialogOpen(prev => !prev);
+  }
 
   //const columnHelper = createColumnHelper<TaskApi.Task>();
 
@@ -130,6 +137,8 @@ export const TableTester: React.FC = () => {
 
   return (
     <Box display='flex'>
+      <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} />
+
       <EveliTable>
         {table.getHeaderGroups().map(headerGroup => {
           //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
@@ -138,7 +147,11 @@ export const TableTester: React.FC = () => {
             <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <EveliTableHeaderCell key={header.id} column={header.column} sortDirection={header.column.getIsSorted()}>
+                  <EveliTableHeaderCell key={header.id}
+                    column={header.column}
+                    sortDirection={header.column.getIsSorted()}
+                    onColumnFilter={toggleFilterDialogOpen}
+                  >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </EveliTableHeaderCell>
                 )

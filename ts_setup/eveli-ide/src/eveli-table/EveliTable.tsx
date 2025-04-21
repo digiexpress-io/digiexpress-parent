@@ -23,7 +23,6 @@ export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: str
   const [open, setOpen] = React.useState(false);
 
   return (<>
-    <EveliTableColumnFilterDialog open={open} onClose={() => setOpen(false)} />
     <div className='headerCell'>
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />

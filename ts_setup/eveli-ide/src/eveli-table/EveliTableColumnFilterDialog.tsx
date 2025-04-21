@@ -1,23 +1,25 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { ColumnDef } from '@tanstack/react-table';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 
+import { TaskApi } from '@/api-task';
 
-export const EveliTableColumnFilterDialog: React.FC<{ open: boolean, onClose: () => void }> = ({ open, onClose }) => {
+
+interface EveliTableColumnFilterProps {
+  open: boolean,
+  onClose: () => void,
+  columns: ColumnDef<TaskApi.Task, any>[];
+}
+
+export const EveliTableColumnFilterDialog: React.FC<EveliTableColumnFilterProps> = ({ open, onClose, columns }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
       <DialogTitle>Select columns</DialogTitle>
       <DialogContent>
         <EveliTableColSelect>
-          <ColSelectItem colTitle='Priority' />
-          <ColSelectItem colTitle='Name' />
-          <ColSelectItem colTitle='Client' />
-          <ColSelectItem colTitle='Status' />
-          <ColSelectItem colTitle='Assignee' />
-          <ColSelectItem colTitle='Info' />
-          <ColSelectItem colTitle='Due' />
-          <ColSelectItem colTitle='Created' />
+          {columns.map(col => (<ColSelectItem colTitle={col.header?.toString() ? col.header.toString() : 'none'} key={col.id} />))}
         </EveliTableColSelect>
       </DialogContent>
       <DialogActions><Button onClick={onClose}>Close</Button></DialogActions>
