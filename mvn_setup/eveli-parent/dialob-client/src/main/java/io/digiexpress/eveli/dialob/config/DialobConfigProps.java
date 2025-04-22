@@ -42,4 +42,6 @@ public class DialobConfigProps {
   private String tenantId;
   private Long submitMessageDelay;
   private String apiKey;
+  
+  private Long connectionTimeout;
 }

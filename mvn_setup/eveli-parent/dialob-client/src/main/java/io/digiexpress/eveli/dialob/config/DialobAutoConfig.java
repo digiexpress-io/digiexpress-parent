@@ -1,5 +1,6 @@
 package io.digiexpress.eveli.dialob.config;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -51,6 +52,9 @@ public class DialobAutoConfig {
   
   @Bean 
   public DialobService dialobService(DialobConfigProps props) {
+    
+    final var timeout = props.getConnectionTimeout() == null ? 10000 : props.getConnectionTimeout(); 
+    
     final var serviceUrl = props.getServiceUrl();
     
     final ClientHttpRequestInterceptor interceptor = (HttpRequest request, byte[] body, ClientHttpRequestExecution execution) -> {
@@ -68,11 +72,13 @@ public class DialobAutoConfig {
     final var api = new RestTemplateBuilder()
         .uriTemplateHandler(new DefaultUriBuilderFactory(props.getApiUrl().orElse(serviceUrl + "/dialob/api")))
         .additionalInterceptors(interceptors)
+        .connectTimeout(Duration.ofMillis(timeout))
         .build();
 
     final var sessions = new RestTemplateBuilder()
       .uriTemplateHandler(new DefaultUriBuilderFactory(props.getSessionUrl().orElse(serviceUrl + "/session/dialob")))
       .additionalInterceptors(interceptors)
+      .connectTimeout(Duration.ofMillis(timeout))
       .build();
   
     return new DialobService(api, sessions);
