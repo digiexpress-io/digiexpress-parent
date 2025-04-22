@@ -49,3 +49,4 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
     }
   }
 }
+

@@ -26,7 +26,7 @@ export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: str
     <div className='headerCell'>
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
-      <EveliTableColumnFilter filterItems={filterItems} />
+      {/* <EveliTableColumnFilter filterItems={filterItems} /> */}
       <EveliTableColumnOptions onChooseCols={() => setOpen(true)} onSortAsc={() => { }} onSortDesc={() => { }} onClearSorting={() => { }} onClearColVisibility={() => { }} />
     </div>
   </>

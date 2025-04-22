@@ -3,11 +3,18 @@ import { generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import composeClasses from '@mui/utils/composeClasses';
+import { Column } from '@tanstack/react-table';
 
-import { EveliTableSearchField } from './EveliTableSearchField';
+import { EveliTableSearchFilter } from './EveliTableSearchFilter';
+import { TaskApi } from '@/api-task';
 
 
-export const EveliTableColumnFilter: React.FC<{ filterItems: string[] }> = ({ filterItems }) => {
+interface EveliTableColumnFilterProps {
+  filterItems: string[];
+  column: Column<TaskApi.Task, unknown>;
+}
+
+export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ filterItems, column }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -26,7 +33,7 @@ export const EveliTableColumnFilter: React.FC<{ filterItems: string[] }> = ({ fi
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <EveliTableSearchField />
+        <EveliTableSearchFilter column={column} />
 
         {filterItems.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={handleClose}>

@@ -2,8 +2,8 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import {
-  ColumnDef, createColumnHelper, flexRender,
-  getCoreRowModel, getPaginationRowModel, getSortedRowModel,
+  ColumnDef, ColumnFiltersState, createColumnHelper, flexRender,
+  getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
   SortingState, useReactTable
 } from '@tanstack/react-table';
 
@@ -21,7 +21,7 @@ import { IndicatorAssignee } from './IndicatorAssignee';
 import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
-import { taskSortingFn } from './tableSorters';
+import { taskSortingFn } from './tableHelpers';
 import { DateTime } from 'luxon';
 import { EveliTablePagination } from './EveliTablePagination';
 import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
@@ -36,66 +36,82 @@ export const TableTester: React.FC = () => {
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   React.useEffect(() => {
     findAll().then(setData);
   }, []);
 
-
   function toggleFilterDialogOpen() {
     setFilterDialogOpen(prev => !prev);
   }
 
+  function clearColVisibility() {
+    table.resetColumnVisibility();
+  };
+
+
   //const columnHelper = createColumnHelper<TaskApi.Task>();
 
   const columns: ColumnDef<TaskApi.Task, any>[] = [
-
     {
       header: 'Priority',
       accessorKey: 'priority',
       enableSorting: true,
+      enableColumnFilter: true,
       sortingFn: taskSortingFn,
       cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
-      footer: 'footer 1'
+      footer: 'footer 1',
     },
     {
       header: 'Name',
       accessorKey: 'subject',
-      sortingFn: taskSortingFn
+      sortingFn: taskSortingFn,
+      filterFn: 'includesString',
+      enableSorting: true,
+      enableColumnFilter: true,
     },
     {
       header: 'Info',
       accessorKey: 'additionalInfo',
       enableSorting: false,
       size: 100,
-      enableResizing: false
+      enableResizing: false,
+      enableColumnFilter: true,
     },
     {
       header: 'Client',
       accessorKey: 'clientIdentificator',
-      footer: 'footer 2'
+      footer: 'footer 2',
+      enableColumnFilter: true,
     },
     {
       header: 'Status',
       accessorKey: 'status',
-      enableSorting: true,
       cell: (status) => flexRender(IndicatorStatus, { type: status.getValue() }),
-      sortingFn: taskSortingFn
+      sortingFn: taskSortingFn,
+      enableSorting: true,
+      enableColumnFilter: true,
     },
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
-      enableSorting: false,
+      enableSorting: true,
+      enableColumnFilter: true,
     },
     {
       header: 'Assignee',
       accessorKey: 'assignedUser',
       cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
-      sortingFn: taskSortingFn
+      sortingFn: taskSortingFn,
+      enableSorting: true,
+      enableColumnFilter: true,
     },
     {
       header: 'Due',
       accessorKey: 'dueDate',
+      enableSorting: true,
+
       cell: (info) => {
         const rawDate = info.getValue();
         if (!rawDate) return (<div>–</div>)
@@ -103,11 +119,14 @@ export const TableTester: React.FC = () => {
         const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
         const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
         return <>{formatted}</>;
-      }
+      },
+
     },
     {
       header: 'Created',
       accessorKey: 'created',
+      enableSorting: true,
+
       cell: (info) => {
         const rawDate = info.getValue();
         const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
@@ -121,24 +140,28 @@ export const TableTester: React.FC = () => {
   const table = useReactTable({
     columns,
     data,
+    rowCount: data.length,
+
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
     onColumnVisibilityChange: setColumnVisibility,
-    rowCount: data.length,
+    onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
 
     state: {
       columnVisibility,
+      columnFilters,
       sorting,
       pagination
     },
   })
 
-  function clearColVisibility() {
-    table.resetColumnVisibility();
-  };
+  console.log(table.getColumn('subject')?.getFilterValue());
+  console.log("column filters", columnFilters);
+
 
   return (
     <Box display='flex'>
@@ -152,8 +175,7 @@ export const TableTester: React.FC = () => {
             <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <EveliTableHeaderCell key={header.id}
-                    column={header.column}
+                  <EveliTableHeaderCell key={header.id} column={header.column}
                     sortDirection={header.column.getIsSorted()}
                     onColumnFilter={toggleFilterDialogOpen}
                     onResetColVisibility={clearColVisibility}

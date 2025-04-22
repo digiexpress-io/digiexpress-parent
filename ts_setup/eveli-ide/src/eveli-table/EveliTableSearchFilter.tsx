@@ -2,25 +2,36 @@ import React from 'react';
 import { generateUtilityClass, InputAdornment, styled, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import composeClasses from '@mui/utils/composeClasses';
+import { Column } from '@tanstack/react-table';
+
+import { TaskApi } from '@/api-task';
 
 
-export const EveliTableSearchField: React.FC<{}> = () => {
+
+interface EveliTableSearchFilterProps {
+  column: Column<TaskApi.Task, unknown>;
+}
+
+export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ column }) => {
   const classes = useUtilityClasses();
+  const filterValue = column.getFilterValue() as string ?? '';
 
 
   return (
     <EveliTableSearchFieldRoot className={classes.root}>
-    <TextField placeholder='Search' slotProps={{
-      input: {
-        startAdornment: <InputAdornment position="start">
-          <SearchIcon className='filters-adornment-icon' />
-        </InputAdornment>
-      }
-    }}
-    >
-    </TextField>
+      <TextField placeholder='Search' value={filterValue} onChange={(e) => column.setFilterValue(e.target.value)}
+        slotProps={{
+          input: {
+            startAdornment: <InputAdornment position="start">
+              <SearchIcon className='filters-adornment-icon' />
+            </InputAdornment>
+          }
+        }}
+      >
+        {filterValue}
+      </TextField>
     </EveliTableSearchFieldRoot>
-    )
+  )
 }
 
 
@@ -35,7 +46,7 @@ export const EveliTableSearchFieldRoot = styled('div', {
     ];
   },
 
-})(({ theme}) => {
+})(({ theme }) => {
   return {
     '.MuiFormControl-root': {
       margin: theme.spacing(1),
