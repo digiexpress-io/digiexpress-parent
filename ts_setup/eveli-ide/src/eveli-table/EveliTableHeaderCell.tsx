@@ -3,53 +3,62 @@ import { Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-import { Column } from '@tanstack/react-table';
+import { Header } from '@tanstack/react-table';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
-import { TaskApi } from '@/api-task';
+import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 
+/**
+ * 
+ *                     column={header.column}
+                    isFilterable={header.column.getCanFilter()}
+                    isSortable={header.column.getCanSort()}
+                    sortDirection={header.column.getIsSorted()}
+ */
 
 
 type EveliTableHeaderProps = {
-  children: React.ReactNode;
-  filterComponent?: React.ReactNode | undefined;
-  column: Column<TaskApi.Task, unknown>;
-  sortDirection?: false | 'asc' | 'desc';
+  children: React.ReactNode; // title
+
+  header: Header<any, any>;
   onColumnFilter: () => void;
   onResetColVisibility: () => void;
-  isFilterable: boolean;
-  isSortable: boolean;
+
 }
 
 //TODO clean up of isFilterable / isSortable
 export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => {
+  const { column } = props.header;
+  const isFilterable = column.getCanFilter();
+  const isSortable = column.getCanSort();
+  const sortDirection = column.getIsSorted();
 
-  if (props.isSortable) {
+  if (isSortable) {
     return (
-      <div className='headerCell' style={{ width: props.column.getSize() }}>
+      <div className='headerCell' style={{ width: column.getSize() }}>
         <Typography>{props.children}</Typography>
         <div style={{ marginLeft: 4, display: 'flex' }}>
-          {props.sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
-          {props.sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
+          {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
+          {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
         <div style={{ flexGrow: 1 }} />
 
-        {props.isFilterable ? props.filterComponent : undefined}
+        <EveliTableColumnFilter filterItems={['filter 1']} header={props.header} />
 
         <EveliTableColumnOptions
           onChooseCols={props.onColumnFilter}
-          onSortAsc={() => props.column.toggleSorting(false)}
-          onSortDesc={() => props.column.toggleSorting(true)}
-          onClearSorting={() => props.column.clearSorting()}
+          onSortAsc={() => column.toggleSorting(false)}
+          onSortDesc={() => column.toggleSorting(true)}
+          onClearSorting={() => column.clearSorting()}
           onClearColVisibility={() => props.onResetColVisibility()}
         />
       </div>
     )
   }
   return (
-    <div className='headerCell' style={{ width: props.column.getSize() }}>
+    <div className='headerCell' style={{ width: column.getSize() }}>
       <Typography>{props.children}</Typography>
       <div style={{ flexGrow: 1 }} />
-      {props.isFilterable ? props.filterComponent : undefined}
+      <EveliTableColumnFilter filterItems={['filter 1']} header={props.header} />
     </div>
 
   )

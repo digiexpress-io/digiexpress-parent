@@ -6,14 +6,12 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
 import { Table } from '@tanstack/react-table';
-
-import { TaskApi } from '@/api-task';
 import composeClasses from '@mui/utils/composeClasses';
 
 
 interface EveliTablePaginationProps {
-  table: Table<TaskApi.Task>;
-  data: TaskApi.Task[],
+  table: Table<any>;
+  data: unknown[],
   initialPageSize: number;
   pagination: {
     pageIndex: number;
@@ -54,7 +52,6 @@ export const EveliTablePagination: React.FC<EveliTablePaginationProps> = (props)
       <span style={{ marginLeft: 10, marginRight: 10 }}><Typography>Page {props.pagination.pageIndex + 1} of {props.table.getPageCount()}</Typography> </span>
       <IconButton onClick={() => props.table.nextPage()} disabled={!props.table.getCanNextPage()}><KeyboardArrowRightIcon /></IconButton>
       <IconButton onClick={() => props.table.lastPage()} disabled={!props.table.getCanNextPage()}><LastPageIcon /></IconButton>
-
     </EveliTablePaginationRoot>
 
   )

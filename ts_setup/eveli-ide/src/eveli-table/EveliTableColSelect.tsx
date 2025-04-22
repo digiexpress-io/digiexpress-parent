@@ -23,6 +23,8 @@ interface ColSelectItemProps {
   onToggle: () => void;
 }
 
+//TODO disabled state for cols that cannot be hidden
+//https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-toggle-apis
 export const ColSelectItem: React.FC<ColSelectItemProps> = ({ colTitle, isVisible, onToggle }) => {
   const classes = useUtilityClasses();
 

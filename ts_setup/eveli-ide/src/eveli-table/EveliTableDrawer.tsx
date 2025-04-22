@@ -22,7 +22,6 @@ export const EveliTableDrawer: React.FC<EveliTableDrawerProps> = ({ children, ti
       <Box className='title'>{title ? <Typography>{title}</Typography> : <Box />}
         <IconButton onClick={onClose}><CloseIcon fontSize='small' /></IconButton>
       </Box>
-
       {children}
     </EveliTableDrawerRoot>
   )

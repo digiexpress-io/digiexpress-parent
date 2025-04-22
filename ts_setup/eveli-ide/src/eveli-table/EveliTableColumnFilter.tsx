@@ -3,18 +3,17 @@ import { generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import composeClasses from '@mui/utils/composeClasses';
-import { Column } from '@tanstack/react-table';
+import { Header } from '@tanstack/react-table';
 
 import { EveliTableSearchFilter } from './EveliTableSearchFilter';
-import { TaskApi } from '@/api-task';
 
 
 interface EveliTableColumnFilterProps {
   filterItems: string[];
-  column: Column<TaskApi.Task, unknown>;
+  header: Header<unknown, unknown>;
 }
 
-export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ filterItems, column }) => {
+export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ filterItems, header }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -25,6 +24,13 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
     setAnchorEl(null);
   };
 
+  const filterValue: string | undefined = header.column.getFilterValue() as string;
+  const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    header.column.setFilterValue(e.target.value)
+  }
+
   const classes = useUtilityClasses();
   return (
     <EveliTableColumnFilterRoot className={classes.root}>
@@ -33,7 +39,7 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <EveliTableSearchFilter column={column} />
+        <EveliTableSearchFilter onChange={handleChange} value={filterValue} title={title} />
 
         {filterItems.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={handleClose}>

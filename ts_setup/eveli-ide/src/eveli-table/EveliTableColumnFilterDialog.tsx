@@ -1,16 +1,13 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { ColumnDef, Table } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
-
-import { TaskApi } from '@/api-task';
 
 
 interface EveliTableColumnFilterProps {
   open: boolean,
   onClose: () => void,
-  columns: ColumnDef<TaskApi.Task, any>[];
-  table: Table<TaskApi.Task>;
+  table: Table<any>;
 }
 
 export const EveliTableColumnFilterDialog: React.FC<EveliTableColumnFilterProps> = ({ open, onClose, table }) => {

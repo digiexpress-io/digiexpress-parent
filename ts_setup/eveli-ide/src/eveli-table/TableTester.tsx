@@ -1,66 +1,26 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import {
-  ColumnDef, ColumnFiltersState, createColumnHelper, flexRender,
-  getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-  SortingState, useReactTable
-} from '@tanstack/react-table';
+import { ColumnDef, flexRender } from '@tanstack/react-table';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
 import { taskSortingFn } from './tableHelpers';
 import { DateTime } from 'luxon';
 
-import { EveliTable } from './EveliTable';
-import { EveliTableHeader } from './EveliTableHeader';
-import { EveliTableRow } from './EveliTableRow';
-import { EveliTableCell } from './EveliTableCell';
-import { EveliTableHeaderCell } from './EveliTableHeaderCell';
-import { EveliTableColumnFilter } from './EveliTableColumnFilter';
-import { EveliTablePagination } from './EveliTablePagination';
-import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
-import { EveliTableDrawer } from './EveliTableDrawer';
-import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
-import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
-
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
+import { WithTableStyles } from './WithTableStyles';
 
-const initialPageSize = 5;
 
 export const TableTester: React.FC = () => {
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'priority', desc: true }]);
-  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [colsMenuOpen, setColsMenuOpen] = React.useState(false);
-  const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
 
-
-  function toggleColsMenu() {
-    setColsMenuOpen(prev => !prev);
-    setFiltersMenuOpen(false);
-  }
-  function toggleFiltersMenu() {
-    setFiltersMenuOpen(prev => !prev);
-    setColsMenuOpen(false);
-  }
   React.useEffect(() => {
     findAll().then(setData);
   }, []);
-
-  function toggleFilterDialogOpen() {
-    setFilterDialogOpen(prev => !prev);
-  }
-
-  function clearColVisibility() {
-    table.resetColumnVisibility();
-  };
 
 
   //const columnHelper = createColumnHelper<TaskApi.Task>();
@@ -82,6 +42,7 @@ export const TableTester: React.FC = () => {
       filterFn: 'includesString',
       enableSorting: true,
       enableColumnFilter: true,
+      enableHiding: false
     },
     {
       header: 'Info',
@@ -148,89 +109,11 @@ export const TableTester: React.FC = () => {
         return <>{formatted}</>;
       }
     },
-
   ]
-
-  const table = useReactTable({
-    columns,
-    data,
-    rowCount: data.length,
-
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    onColumnVisibilityChange: setColumnVisibility,
-    onColumnFiltersChange: setColumnFilters,
-    onSortingChange: setSorting,
-    getFilteredRowModel: getFilteredRowModel(),
-
-    state: {
-      columnVisibility,
-      columnFilters,
-      sorting,
-      pagination
-    },
-  })
-
-  const allColumns = table.getAllColumns().filter(col => col.getCanHide());
 
   return (
     <Box display='flex'>
-      <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} table={table} />
-
-      <EveliTable>
-        {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}
-          children={
-            <EveliTableColSelect>
-              {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
-                isVisible={col.getIsVisible()}
-                onToggle={() => col.toggleVisibility()} />
-              ))}
-            </EveliTableColSelect>
-          }
-        />
-        }
-        {filtersMenuOpen && <EveliTableDrawer title='TODO' children={<>TODO</>} onClose={toggleFiltersMenu} />}
-
-        {table.getHeaderGroups().map(headerGroup => {
-          //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
-
-          return (
-            <EveliTableHeader key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                return (
-                  <EveliTableHeaderCell key={header.id} column={header.column}
-                    filterComponent={<EveliTableColumnFilter filterItems={['filter 1']} column={header.column} />}
-                    isFilterable={header.column.getCanFilter()}
-                    isSortable={header.column.getCanSort()}
-                    sortDirection={header.column.getIsSorted()}
-                    onColumnFilter={toggleFilterDialogOpen}
-                    onResetColVisibility={clearColVisibility}
-                  >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </EveliTableHeaderCell>
-                )
-              })}
-            </EveliTableHeader>
-          )
-        })}
-
-        {table.getRowModel().rows.map(row => (
-          <EveliTableRow key={row.id}>
-            {row.getVisibleCells().map(cell => {
-              return (
-                <EveliTableCell key={cell.id} width={cell.column.getSize()} column={cell.column}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </EveliTableCell>
-              )
-            })}
-          </EveliTableRow>
-        ))}
-        <EveliTablePagination data={data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
-      </EveliTable>
-
-      <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
+      <WithTableStyles data={data} columns={columns} />
     </Box>
   )
 

@@ -2,25 +2,21 @@ import React from 'react';
 import { generateUtilityClass, InputAdornment, styled, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import composeClasses from '@mui/utils/composeClasses';
-import { Column } from '@tanstack/react-table';
-
-import { TaskApi } from '@/api-task';
-
 
 
 interface EveliTableSearchFilterProps {
-  column: Column<TaskApi.Task, unknown>;
+  title: string;
+  value: string | undefined;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ column }) => {
+export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ value, onChange, title }) => {
   const classes = useUtilityClasses();
-  const filterValue = column.getFilterValue() as string ?? '';
-
-
+  const filterValue = value ?? ''
   return (
     <EveliTableSearchFieldRoot className={classes.root}>
-      <Typography>Filter {column.columnDef.header?.toString().toLowerCase()}</Typography>
-      <TextField placeholder='Search' value={filterValue} onChange={(e) => column.setFilterValue(e.target.value)}
+      <Typography>Filter {title}</Typography>
+      <TextField placeholder='Search' value={filterValue} onChange={onChange}
         slotProps={{
           input: {
             startAdornment: <InputAdornment position="start">

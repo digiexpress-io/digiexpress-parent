@@ -1,18 +1,19 @@
-import { TaskApi } from '@/api-task';
 import { Typography } from '@mui/material';
-import { Column } from '@tanstack/react-table';
+import { Cell } from '@tanstack/react-table';
 import React from 'react';
 
 
 interface EveliTableCellProps {
-  column: Column<TaskApi.Task, any>;
+  cell: Cell<any, unknown>;
   children?: React.ReactNode | string;
-  width: number;
 }
 
 
 
-export const EveliTableCell: React.FC<EveliTableCellProps> = ({ children, width }) => {
+export const EveliTableCell: React.FC<EveliTableCellProps> = ({ children, cell }) => {
+
+  const width = cell.column.getSize();
+
   return (
     <div className='rowCell' style={{ width }}>
       {(typeof children) === 'string' ? <Typography>{children}</Typography> : children}
