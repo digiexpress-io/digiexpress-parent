@@ -6,23 +6,19 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Column } from '@tanstack/react-table';
 import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
+import { TaskApi } from '@/api-task';
 
 
 
-type EveliTableHeaderProps<T> = {
+type EveliTableHeaderProps = {
   children: React.ReactNode;
-  column: Column<T, unknown>;
+  column: Column<TaskApi.Task, unknown>;
   sortDirection?: false | 'asc' | 'desc';
-}
-
-interface ExtraProps {
   onColumnFilter: () => void;
   onResetColVisibility: () => void;
 }
 
-
-// for testing
-export const EveliTableHeaderCell = <T,>(props: EveliTableHeaderProps<T> & ExtraProps) => {
+export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props: EveliTableHeaderProps): React.ReactElement => {
   const sortDirection = props.column.getIsSorted();
   const isSortable = props.column.getCanSort();
 
