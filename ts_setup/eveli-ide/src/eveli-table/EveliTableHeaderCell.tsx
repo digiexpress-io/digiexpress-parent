@@ -17,6 +17,7 @@ type EveliTableHeaderProps<T> = {
 
 interface ExtraProps {
   onColumnFilter: () => void;
+  onResetColVisibility: () => void;
 }
 
 
@@ -49,6 +50,7 @@ export const EveliTableHeaderCell = <T,>(props: EveliTableHeaderProps<T> & Extra
         onSortAsc={() => props.column.toggleSorting(false)}
         onSortDesc={() => props.column.toggleSorting(true)}
         onClearSorting={() => props.column.clearSorting()}
+        onClearColVisibility={() => props.onResetColVisibility()}
       />
     </div>
 

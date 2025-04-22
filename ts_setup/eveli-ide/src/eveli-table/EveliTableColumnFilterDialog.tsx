@@ -23,7 +23,8 @@ export const EveliTableColumnFilterDialog: React.FC<EveliTableColumnFilterProps>
         <EveliTableColSelect>
           {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
             isVisible={col.getIsVisible()}
-            onToggle={() => col.toggleVisibility()} />)
+            onToggle={() => col.toggleVisibility()} />
+          )
           )}
         </EveliTableColSelect>
       </DialogContent>

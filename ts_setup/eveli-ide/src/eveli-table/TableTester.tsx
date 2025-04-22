@@ -136,6 +136,10 @@ export const TableTester: React.FC = () => {
     },
   })
 
+  function clearColVisibility() {
+    table.resetColumnVisibility();
+  };
+
   return (
     <Box display='flex'>
       <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} table={table} />
@@ -152,6 +156,7 @@ export const TableTester: React.FC = () => {
                     column={header.column}
                     sortDirection={header.column.getIsSorted()}
                     onColumnFilter={toggleFilterDialogOpen}
+                    onResetColVisibility={clearColVisibility}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </EveliTableHeaderCell>

@@ -13,10 +13,11 @@ interface EveliTableColumnProps {
   onChooseCols: () => void,
   onSortAsc: () => void,
   onSortDesc: () => void,
-  onClearSorting: () => void
+  onClearSorting: () => void,
+  onClearColVisibility: () => void,
 }
 
-export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onChooseCols, onSortAsc, onSortDesc, onClearSorting }) => {
+export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onChooseCols, onSortAsc, onSortDesc, onClearSorting, onClearColVisibility }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -44,6 +45,11 @@ export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onCho
 
   function handleClearSorting() {
     onClearSorting();
+    handleClose();
+  }
+
+  function handleClearColVisibility() {
+    onClearColVisibility();
     handleClose();
   }
 
@@ -78,7 +84,7 @@ export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onCho
           <ListItemIcon><TableChartOutlinedIcon className='menu-icon' /></ListItemIcon>
           Choose columns
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleClearColVisibility}>
           <ListItemIcon><RestartAltIcon className='menu-icon' /></ListItemIcon>
           Reset columns
         </MenuItem>
