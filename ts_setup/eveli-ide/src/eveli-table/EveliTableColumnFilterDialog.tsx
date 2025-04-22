@@ -21,10 +21,9 @@ export const EveliTableColumnFilterDialog: React.FC<EveliTableColumnFilterProps>
       <DialogTitle>Select columns</DialogTitle>
       <DialogContent>
         <EveliTableColSelect>
-          {allColumns.map((col, index) => (
-            <ColSelectItem colTitle={col.columnDef.header?.toString() || col.id}
-              isVisible={col.getIsVisible()}
-              onToggle={() => col.toggleVisibility()} />)
+          {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
+            isVisible={col.getIsVisible()}
+            onToggle={() => col.toggleVisibility()} />)
           )}
         </EveliTableColSelect>
       </DialogContent>
