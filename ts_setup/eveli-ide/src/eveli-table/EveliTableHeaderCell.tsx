@@ -48,6 +48,7 @@ export const EveliTableHeaderCell = <T,>(props: EveliTableHeaderProps<T> & Extra
         onChooseCols={props.onColumnFilter}
         onSortAsc={() => props.column.toggleSorting(false)}
         onSortDesc={() => props.column.toggleSorting(true)}
+        onClearSorting={() => props.column.clearSorting()}
       />
     </div>
 

@@ -27,12 +27,12 @@ import { EveliTablePagination } from './EveliTablePagination';
 import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
 
 
-const initialPageSize = 4;
+const initialPageSize = 5;
 
 export const TableTester: React.FC = () => {
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'priority', desc: true }]);
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
@@ -128,10 +128,11 @@ export const TableTester: React.FC = () => {
     onColumnVisibilityChange: setColumnVisibility,
     rowCount: data.length,
     onSortingChange: setSorting,
+
     state: {
+      columnVisibility,
       sorting,
-      pagination,
-      columnVisibility
+      pagination
     },
   })
 

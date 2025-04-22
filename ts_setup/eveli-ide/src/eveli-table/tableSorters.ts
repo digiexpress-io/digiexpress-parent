@@ -19,8 +19,6 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
   const a = rowA.original[columnId as keyof TaskApi.Task];
   const b = rowB.original[columnId as keyof TaskApi.Task];
 
-  console.log("columnId", columnId)
-
   switch (columnId) {
     case 'priority': {
       const aVal = priorityOrder[a as TaskApi.TaskPriority] ?? -1;
@@ -40,9 +38,6 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
     case 'assignedUser': {
       const assignedUser1 = a?.toString().trim() ?? '';
       const assignedUser2 = b?.toString().trim() ?? '';
-
-      console.log('assignedUser1', assignedUser1)
-
       return assignedUser1.localeCompare(assignedUser2);
     }
 

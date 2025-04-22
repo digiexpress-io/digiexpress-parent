@@ -19,9 +19,13 @@ export const EveliTableColumnFilterDialog: React.FC<EveliTableColumnFilterProps>
       <DialogTitle>Select columns</DialogTitle>
       <DialogContent>
         <EveliTableColSelect>
-          {columns.map(col => (<ColSelectItem colTitle={col.header?.toString() ? col.header.toString() : 'none'} key={col.id} />))}
+          {columns.map(col => (
+            <ColSelectItem colTitle={col.header?.toString() ? col.header.toString() : 'none'} key={col.id} />)
+          )}
         </EveliTableColSelect>
       </DialogContent>
-      <DialogActions><Button onClick={onClose}>Close</Button></DialogActions>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
     </Dialog>)
 }
