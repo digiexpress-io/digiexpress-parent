@@ -182,20 +182,18 @@ export const TableTester: React.FC = () => {
       <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} table={table} />
 
       <EveliTable>
-        {colsMenuOpen && <EveliTableDrawer
+        {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}
           children={
             <EveliTableColSelect>
-              Show / Hide columns
               {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
                 isVisible={col.getIsVisible()}
                 onToggle={() => col.toggleVisibility()} />
-              )
-              )}
+              ))}
             </EveliTableColSelect>
           }
         />
         }
-        {filtersMenuOpen && <EveliTableDrawer children={<>TODO</>} />}
+        {filtersMenuOpen && <EveliTableDrawer title='TODO' children={<>TODO</>} onClose={toggleFiltersMenu} />}
 
         {table.getHeaderGroups().map(headerGroup => {
           //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
@@ -204,9 +202,8 @@ export const TableTester: React.FC = () => {
             <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <EveliTableHeaderCell
+                  <EveliTableHeaderCell key={header.id} column={header.column}
                     filterComponent={<EveliTableColumnFilter filterItems={['filter 1']} column={header.column} />}
-                    key={header.id} column={header.column}
                     isFilterable={header.column.getCanFilter()}
                     isSortable={header.column.getCanSort()}
                     sortDirection={header.column.getIsSorted()}
