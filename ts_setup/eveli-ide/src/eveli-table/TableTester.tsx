@@ -138,7 +138,7 @@ export const TableTester: React.FC = () => {
 
   return (
     <Box display='flex'>
-      <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} />
+      <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} table={table} />
 
       <EveliTable>
         {table.getHeaderGroups().map(headerGroup => {

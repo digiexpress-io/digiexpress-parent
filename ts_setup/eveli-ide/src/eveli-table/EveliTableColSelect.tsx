@@ -1,5 +1,6 @@
 import { generateUtilityClass, styled, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
@@ -16,13 +17,18 @@ export const EveliTableColSelect: React.FC<{ children: React.ReactNode }> = ({ c
 }
 
 
+interface ColSelectItemProps {
+  colTitle: string;
+  isVisible: boolean;
+  onToggle: () => void;
+}
 
-export const ColSelectItem: React.FC<{ colTitle: string }> = ({ colTitle }) => {
+export const ColSelectItem: React.FC<ColSelectItemProps> = ({ colTitle, isVisible, onToggle }) => {
   const classes = useUtilityClasses();
 
   return (
-    <ColSelectItemRoot className={classes.root}>
-      <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
+    <ColSelectItemRoot className={classes.root} onClick={onToggle}>
+      {isVisible ? <CheckBoxIcon className='cols-select-checkmark-icon' /> : <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />}
       <Typography>{colTitle}</Typography>
     </ColSelectItemRoot>
   )
