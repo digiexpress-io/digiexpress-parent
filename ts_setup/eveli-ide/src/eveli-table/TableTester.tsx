@@ -9,26 +9,24 @@ import {
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
-
-import { EveliTable } from './EveliTable';
-import { EveliTableCell } from './EveliTableCell';
-import { EveliTableHeaderCell } from './EveliTableHeaderCell';
-
-import { IndicatorPriority } from './IndicatorPriority';
-import { IndicatorStatus } from './IndicatorStatus';
-import { IndicatorAssignee } from './IndicatorAssignee';
-
-import { EveliTableHeaderRoot, EveliTableRowRoot } from './useUtilityClasses';
-import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
-
 import { taskSortingFn } from './tableHelpers';
 import { DateTime } from 'luxon';
+
+import { EveliTable } from './EveliTable';
+import { EveliTableHeader } from './EveliTableHeader';
+import { EveliTableRow } from './EveliTableRow';
+import { EveliTableCell } from './EveliTableCell';
+import { EveliTableHeaderCell } from './EveliTableHeaderCell';
+import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 import { EveliTablePagination } from './EveliTablePagination';
 import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
 import { EveliTableDrawer } from './EveliTableDrawer';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
-import { EveliTableColumnFilter } from './EveliTableColumnFilter';
+import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
+import { IndicatorPriority } from './IndicatorPriority';
+import { IndicatorStatus } from './IndicatorStatus';
+import { IndicatorAssignee } from './IndicatorAssignee';
 
 const initialPageSize = 5;
 
@@ -199,7 +197,7 @@ export const TableTester: React.FC = () => {
           //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
 
           return (
-            <EveliTableHeaderRoot key={headerGroup.id}>
+            <EveliTableHeader key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
                   <EveliTableHeaderCell key={header.id} column={header.column}
@@ -214,12 +212,12 @@ export const TableTester: React.FC = () => {
                   </EveliTableHeaderCell>
                 )
               })}
-            </EveliTableHeaderRoot>
+            </EveliTableHeader>
           )
         })}
 
         {table.getRowModel().rows.map(row => (
-          <EveliTableRowRoot key={row.id}>
+          <EveliTableRow key={row.id}>
             {row.getVisibleCells().map(cell => {
               return (
                 <EveliTableCell key={cell.id} width={cell.column.getSize()} column={cell.column}>
@@ -227,7 +225,7 @@ export const TableTester: React.FC = () => {
                 </EveliTableCell>
               )
             })}
-          </EveliTableRowRoot>
+          </EveliTableRow>
         ))}
         <EveliTablePagination data={data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
       </EveliTable>
