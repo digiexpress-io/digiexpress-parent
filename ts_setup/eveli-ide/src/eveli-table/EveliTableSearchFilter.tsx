@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateUtilityClass, InputAdornment, styled, TextField } from '@mui/material';
+import { generateUtilityClass, InputAdornment, styled, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import composeClasses from '@mui/utils/composeClasses';
 import { Column } from '@tanstack/react-table';
@@ -19,6 +19,7 @@ export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ 
 
   return (
     <EveliTableSearchFieldRoot className={classes.root}>
+      <Typography>Filter {column.columnDef.header?.toString().toLowerCase()}</Typography>
       <TextField placeholder='Search' value={filterValue} onChange={(e) => column.setFilterValue(e.target.value)}
         slotProps={{
           input: {
@@ -69,6 +70,11 @@ export const EveliTableSearchFieldRoot = styled('div', {
       color: theme.palette.primary.main,
       fontSize: 'medium',
     },
+    '.MuiTypography-root': {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      ...theme.typography.subtitle2,
+    }
   }
 });
 
