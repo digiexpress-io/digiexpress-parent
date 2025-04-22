@@ -49,11 +49,9 @@ import io.digiexpress.eveli.dialob.spi.DialobService;
 })
 public class DialobAutoConfig {
   
-  
   @Bean 
-  public DialobService dialobService(DialobConfigProps props) {
-    
-    final var timeout = props.getConnectionTimeout() == null ? 10000 : props.getConnectionTimeout(); 
+  public DialobService dialobService(RestTemplateBuilder restTemplateBuilder, DialobConfigProps props) {
+    final var timeout = props.getConnectionTimeout() == null ? 100000 : props.getConnectionTimeout(); 
     
     final var serviceUrl = props.getServiceUrl();
     
@@ -69,13 +67,13 @@ public class DialobAutoConfig {
     
     final var interceptors = Collections.singletonList(interceptor);
     
-    final var api = new RestTemplateBuilder()
+    final var api = restTemplateBuilder
         .uriTemplateHandler(new DefaultUriBuilderFactory(props.getApiUrl().orElse(serviceUrl + "/dialob/api")))
         .additionalInterceptors(interceptors)
         .connectTimeout(Duration.ofMillis(timeout))
         .build();
 
-    final var sessions = new RestTemplateBuilder()
+    final var sessions = restTemplateBuilder
       .uriTemplateHandler(new DefaultUriBuilderFactory(props.getSessionUrl().orElse(serviceUrl + "/session/dialob")))
       .additionalInterceptors(interceptors)
       .connectTimeout(Duration.ofMillis(timeout))
