@@ -30,6 +30,7 @@ export const EveliTableRoot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
+    position: 'relative',
     ...theme.typography.subtitle2,
     width: '100%',
     overflowX: 'auto',

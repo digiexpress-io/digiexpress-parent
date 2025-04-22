@@ -1,10 +1,9 @@
 import React from 'react';
-import { collapseClasses, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import { Column } from '@tanstack/react-table';
-import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 import { EveliTableColumnOptions } from './EveliTableColumnOptions';
 import { TaskApi } from '@/api-task';
 
@@ -12,29 +11,29 @@ import { TaskApi } from '@/api-task';
 
 type EveliTableHeaderProps = {
   children: React.ReactNode;
+  filterComponent?: React.ReactNode | undefined;
   column: Column<TaskApi.Task, unknown>;
   sortDirection?: false | 'asc' | 'desc';
   onColumnFilter: () => void;
   onResetColVisibility: () => void;
+  isFilterable: boolean;
+  isSortable: boolean;
 }
 
 //TODO clean up of isFilterable / isSortable
-export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props: EveliTableHeaderProps): React.ReactElement => {
-  const sortDirection = props.column.getIsSorted();
-  const isSortable = props.column.getCanSort();
-  const isFilterable = props.column.getCanFilter();
+export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => {
 
-  if (isSortable) {
+  if (props.isSortable) {
     return (
       <div className='headerCell' style={{ width: props.column.getSize() }}>
         <Typography>{props.children}</Typography>
         <div style={{ marginLeft: 4, display: 'flex' }}>
-          {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
-          {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
+          {props.sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
+          {props.sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
         <div style={{ flexGrow: 1 }} />
 
-        {isFilterable ? <EveliTableColumnFilter filterItems={['filter 1']} column={props.column} /> : undefined}
+        {props.isFilterable ? props.filterComponent : undefined}
 
         <EveliTableColumnOptions
           onChooseCols={props.onColumnFilter}
@@ -50,7 +49,7 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props: Eve
     <div className='headerCell' style={{ width: props.column.getSize() }}>
       <Typography>{props.children}</Typography>
       <div style={{ flexGrow: 1 }} />
-      {isFilterable ? <EveliTableColumnFilter filterItems={['filter 1']} column={props.column} /> : undefined}
+      {props.isFilterable ? props.filterComponent : undefined}
     </div>
 
   )

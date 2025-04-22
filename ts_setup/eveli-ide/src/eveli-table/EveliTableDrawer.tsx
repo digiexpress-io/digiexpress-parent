@@ -2,25 +2,20 @@ import React from 'react';
 import { generateUtilityClass, styled } from '@mui/material';
 
 import composeClasses from '@mui/utils/composeClasses';
-import { Column } from '@tanstack/react-table';
 
-import { EveliTableSearchFilter } from './EveliTableSearchFilter';
-import { TaskApi } from '@/api-task';
 
 
 interface EveliTableDrawerProps {
-  filterItems: string[];
-  column: Column<TaskApi.Task, unknown>;
+  filterItems?: string[];
   children: React.ReactNode;
 }
 
 
-export const EveliTableDrawer: React.FC<EveliTableDrawerProps> = ({ children, column }) => {
+export const EveliTableDrawer: React.FC<EveliTableDrawerProps> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
     <EveliTableDrawerRoot className={classes.root}>
-      <EveliTableSearchFilter column={column} />
       {children}
     </EveliTableDrawerRoot>
   )
@@ -46,7 +41,7 @@ export const EveliTableDrawerRoot = styled('div', {
     top: 0,
     bottom: 0,
     boxShadow: '-2px 0px 8px rgba(0, 0, 0, 0.1)',
-    right: '3%',
+    right: '0px',
     backgroundColor: theme.palette.secondary.main,
     border: `1px solid ${theme.palette.divider}`,
     zIndex: 10

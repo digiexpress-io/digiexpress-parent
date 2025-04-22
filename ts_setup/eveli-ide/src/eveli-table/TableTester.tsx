@@ -25,6 +25,9 @@ import { taskSortingFn } from './tableHelpers';
 import { DateTime } from 'luxon';
 import { EveliTablePagination } from './EveliTablePagination';
 import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
+import { EveliTableDrawer } from './EveliTableDrawer';
+import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
+import { EveliTableColumnFilter } from './EveliTableColumnFilter';
 
 
 const initialPageSize = 5;
@@ -37,7 +40,18 @@ export const TableTester: React.FC = () => {
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [colsMenuOpen, setColsMenuOpen] = React.useState(false);
+  const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
 
+
+  function toggleColsMenu() {
+    setColsMenuOpen(prev => !prev);
+    setFiltersMenuOpen(false);
+  }
+  function toggleFiltersMenu() {
+    setFiltersMenuOpen(prev => !prev);
+    setColsMenuOpen(false);
+  }
   React.useEffect(() => {
     findAll().then(setData);
   }, []);
@@ -75,7 +89,7 @@ export const TableTester: React.FC = () => {
       header: 'Info',
       accessorKey: 'additionalInfo',
       enableSorting: false,
-      size: 100,
+      size: 150,
       enableResizing: false,
       enableColumnFilter: true,
     },
@@ -111,6 +125,7 @@ export const TableTester: React.FC = () => {
       header: 'Due',
       accessorKey: 'dueDate',
       enableSorting: true,
+      enableColumnFilter: false,
 
       cell: (info) => {
         const rawDate = info.getValue();
@@ -126,6 +141,7 @@ export const TableTester: React.FC = () => {
       header: 'Created',
       accessorKey: 'created',
       enableSorting: true,
+      enableColumnFilter: false,
 
       cell: (info) => {
         const rawDate = info.getValue();
@@ -159,15 +175,28 @@ export const TableTester: React.FC = () => {
     },
   })
 
-  console.log(table.getColumn('subject')?.getFilterValue());
-  console.log("column filters", columnFilters);
-
+  const allColumns = table.getAllColumns().filter(col => col.getCanHide());
 
   return (
     <Box display='flex'>
       <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} columns={columns} table={table} />
 
       <EveliTable>
+        {colsMenuOpen && <EveliTableDrawer
+          children={
+            <EveliTableColSelect>
+              Show / Hide columns
+              {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
+                isVisible={col.getIsVisible()}
+                onToggle={() => col.toggleVisibility()} />
+              )
+              )}
+            </EveliTableColSelect>
+          }
+        />
+        }
+        {filtersMenuOpen && <EveliTableDrawer children={<>TODO</>} />}
+
         {table.getHeaderGroups().map(headerGroup => {
           //const width = headerGroup.headers.map(header => header.getSize()).reduce((partialSum, a) => partialSum + a, 0);
 
@@ -175,7 +204,11 @@ export const TableTester: React.FC = () => {
             <EveliTableHeaderRoot key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <EveliTableHeaderCell key={header.id} column={header.column}
+                  <EveliTableHeaderCell
+                    filterComponent={<EveliTableColumnFilter filterItems={['filter 1']} column={header.column} />}
+                    key={header.id} column={header.column}
+                    isFilterable={header.column.getCanFilter()}
+                    isSortable={header.column.getCanSort()}
                     sortDirection={header.column.getIsSorted()}
                     onColumnFilter={toggleFilterDialogOpen}
                     onResetColVisibility={clearColVisibility}
@@ -192,18 +225,17 @@ export const TableTester: React.FC = () => {
           <EveliTableRowRoot key={row.id}>
             {row.getVisibleCells().map(cell => {
               return (
-                <EveliTableCell key={cell.id} width={cell.column.getSize()}>
+                <EveliTableCell key={cell.id} width={cell.column.getSize()} column={cell.column}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </EveliTableCell>
               )
             })}
           </EveliTableRowRoot>
         ))}
-
         <EveliTablePagination data={data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
       </EveliTable>
 
-      <EveliTableDrawerButtonColumn onColumnsClick={() => { }} onFiltersClick={() => { }} />
+      <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
     </Box>
   )
 
