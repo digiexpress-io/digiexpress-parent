@@ -195,7 +195,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           <FormattedMessage id='button.cancel'/>
         </Button>
         <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }>
-          <FormattedMessage id='button.apply"'/>
+          <FormattedMessage id='button.apply'/>
         </Button>
       </DialogActions>
     </Dialog>
