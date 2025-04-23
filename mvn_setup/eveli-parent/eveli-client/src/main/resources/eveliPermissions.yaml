@@ -31,3 +31,6 @@ eveli:
     - path-pattern: /worker/rest/api/version
       method: GET
       roles: ROLE_Authorized
+    - path-pattern: /worker/rest/api/tenant-configs
+      method: GET
+      roles: ROLE_Authorized
