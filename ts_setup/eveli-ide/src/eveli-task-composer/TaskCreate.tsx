@@ -273,7 +273,6 @@ class TaskCreateInternal extends React.Component<AllProps, State> {
                 </Grid2>
             </Paper>
             <Grid2 container spacing={2}>
-
               <Grid2 size={{ xs: 12 }}>
                 <ExternalCommentsAccordion
                   task={editTask}

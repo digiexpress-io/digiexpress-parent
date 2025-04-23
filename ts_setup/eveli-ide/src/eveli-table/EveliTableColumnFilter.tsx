@@ -2,6 +2,7 @@ import * as React from 'react';
 import { generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import composeClasses from '@mui/utils/composeClasses';
 import { Header } from '@tanstack/react-table';
 
@@ -9,11 +10,10 @@ import { EveliTableSearchFilter } from './EveliTableSearchFilter';
 
 
 interface EveliTableColumnFilterProps {
-  filterItems: string[];
   header: Header<unknown, unknown>;
 }
 
-export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ filterItems, header }) => {
+export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ header }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -24,12 +24,27 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
     setAnchorEl(null);
   };
 
-  const filterValue: string | undefined = header.column.getFilterValue() as string;
+
+  const isString = typeof header.column.getFilterValue() === 'string';
+  const filterValueAsString: string | undefined = isString ? header.column.getFilterValue() as string : undefined;
+  const filterValueAsArray: string[] = isString ? [] : (header.column.getFilterValue() as string[] ?? []);
   const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     header.column.setFilterValue(e.target.value)
   }
+
+  function handleSelectionChange(selected: string) {
+
+    const next = filterValueAsArray.includes(selected) ?
+      filterValueAsArray.filter((value) => value !== selected) :
+      [...filterValueAsArray, selected];
+
+    header.column.setFilterValue(next);
+  }
+
+  const smth = header.column.getFacetedUniqueValues();
+  const filterItems: string[] = Array.from(smth.keys()).map(key => key as string); 
 
   const classes = useUtilityClasses();
   return (
@@ -39,11 +54,13 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <EveliTableSearchFilter onChange={handleChange} value={filterValue} title={title} />
+        <EveliTableSearchFilter onChange={handleChange} value={filterValueAsString} title={title} />
 
         {filterItems.map((item, index) => <React.Fragment key={index}>
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon><CheckBoxOutlineBlankIcon className='filters-icon' /></ListItemIcon>
+          <MenuItem onClick={() => handleSelectionChange(item)} >
+            <ListItemIcon>
+              {filterValueAsArray.includes(item) ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
+            </ListItemIcon>
             {item}
           </MenuItem>
         </React.Fragment>

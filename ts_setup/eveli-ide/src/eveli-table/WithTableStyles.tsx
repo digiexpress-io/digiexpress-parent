@@ -3,7 +3,7 @@ import React from 'react';
 import {
   ColumnDef, ColumnFiltersState, flexRender,
   getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-  SortingState, useReactTable
+  SortingState, useReactTable, getFacetedUniqueValues
 } from '@tanstack/react-table';
 
 import { EveliTable } from './EveliTable';
@@ -21,7 +21,7 @@ import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 
 const initialPageSize = 5;
 
-export function WithTableStyles<DataType extends object>(props: { 
+export function WithTableStyles<DataType extends object>(props: {
   columns: ColumnDef<DataType, unknown>[],
   data: DataType[]
 }): React.ReactNode {
@@ -66,6 +66,7 @@ export function WithTableStyles<DataType extends object>(props: {
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
 
     state: {
       columnVisibility,
@@ -73,6 +74,7 @@ export function WithTableStyles<DataType extends object>(props: {
       sorting,
       pagination
     },
+
   })
 
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());

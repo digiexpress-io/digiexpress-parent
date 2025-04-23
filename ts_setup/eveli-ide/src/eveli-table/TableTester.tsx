@@ -31,15 +31,16 @@ export const TableTester: React.FC = () => {
       accessorKey: 'priority',
       enableSorting: true,
       enableColumnFilter: true,
+      filterFn: 'arrIncludesSome',
       sortingFn: taskSortingFn,
       cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
-      footer: 'footer 1',
+      footer: 'footer 1'
     },
     {
       header: 'Name',
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
-      filterFn: 'includesString',
+      filterFn: 'arrIncludesSome',
       enableSorting: true,
       enableColumnFilter: true,
       enableHiding: false
@@ -65,12 +66,14 @@ export const TableTester: React.FC = () => {
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
+      filterFn: 'arrIncludesSome',
     },
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
       enableSorting: true,
       enableColumnFilter: true,
+      filterFn: 'arrIncludesSome',
     },
     {
       header: 'Assignee',
@@ -79,6 +82,7 @@ export const TableTester: React.FC = () => {
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
+      filterFn: 'arrIncludesSome',
     },
     {
       header: 'Due',
