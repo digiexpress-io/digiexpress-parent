@@ -31,9 +31,10 @@ export const TableTester: React.FC = () => {
       accessorKey: 'priority',
       enableSorting: true,
       enableColumnFilter: true,
+      filterFn: 'arrIncludesSome',
       sortingFn: taskSortingFn,
       cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
-      footer: 'footer 1',
+      footer: 'footer 1'
     },
     {
       header: 'Name',
