@@ -84,7 +84,7 @@ export const FrontdeskApp: React.FC = () => {
                 'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
               }}>
               <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
-                <TenantConfigContextProvider>
+                <TenantConfigContextProvider disabled={true}>
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />
                   </IamBackendProvider>
