@@ -34,6 +34,7 @@ export function WithTableStyles<DataType extends object>(props: {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [colsMenuOpen, setColsMenuOpen] = React.useState(false);
   const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
+  const [columnSizing, setColumnSizing] = React.useState({});
 
 
   function toggleColsMenu() {
@@ -59,6 +60,8 @@ export function WithTableStyles<DataType extends object>(props: {
     data: props.data,
     rowCount: props.data.length,
     columnResizeMode: 'onChange',
+    enableColumnResizing: true,
+    columnResizeDirection: 'ltr',
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -66,16 +69,23 @@ export function WithTableStyles<DataType extends object>(props: {
     onPaginationChange: setPagination,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnFiltersChange: setColumnFilters,
+    onColumnSizingChange: setColumnSizing,
     onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-
+    defaultColumn: {
+      size: 150,
+      minSize: 60,
+      maxSize: 400,
+    },
     state: {
       columnVisibility,
       columnFilters,
+      columnSizing,
       sorting,
       pagination
     },
+
   });
 
   const columnSizeVars = React.useMemo(() => {
@@ -88,6 +98,7 @@ export function WithTableStyles<DataType extends object>(props: {
     }
     return colSizes
   }, [table.getState().columnSizingInfo, table.getState().columnSizing])
+
 
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
 

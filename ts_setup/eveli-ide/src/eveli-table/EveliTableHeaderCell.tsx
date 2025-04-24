@@ -30,7 +30,6 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
 
-
         <EveliTableColumnFilter header={props.header} />
 
         <EveliTableColumnOptions
@@ -61,10 +60,9 @@ const ColumnResizer: React.FC<{ header: Header<any, any> }> = ({ header }) => {
 
   return (
     column.getCanResize() && (
-      <div
+      <div className='columnResizer'
         onMouseDown={header.getResizeHandler()}
         onTouchStart={header.getResizeHandler()}
-        className='columnResizer'
       />
     )
   )

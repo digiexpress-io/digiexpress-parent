@@ -28,6 +28,7 @@ interface ColSelectItemProps {
 export const ColSelectItem: React.FC<ColSelectItemProps> = ({ colTitle, isVisible, onToggle }) => {
   const classes = useUtilityClasses();
 
+
   return (
     <ColSelectItemRoot className={classes.root} onClick={onToggle}>
       {isVisible ? <CheckBoxIcon className='cols-select-checkmark-icon' /> : <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />}

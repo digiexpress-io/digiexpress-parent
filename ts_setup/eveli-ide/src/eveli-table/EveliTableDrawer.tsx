@@ -41,7 +41,7 @@ export const EveliTableDrawerRoot = styled('div', {
 
 })(({ theme }) => {
   return {
-    width: '15%',
+    width: '200px',
     position: 'absolute',
     overflow: 'scroll',
     top: 0,

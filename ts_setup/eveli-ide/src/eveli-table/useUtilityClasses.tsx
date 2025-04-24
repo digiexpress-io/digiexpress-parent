@@ -1,6 +1,5 @@
 import { styled, generateUtilityClass } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
-import { HeaderGroup } from '@tanstack/react-table';
 
 export const EveliTableRootClassName = 'EveliTable';
 
@@ -32,6 +31,8 @@ export const EveliTableRoot = styled('div', {
   return {
     position: 'relative',
     ...theme.typography.subtitle2,
+    flex: 1,
+    //width: '100%'
   };
 });
 

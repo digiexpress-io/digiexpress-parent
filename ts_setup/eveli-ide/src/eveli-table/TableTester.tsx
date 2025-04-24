@@ -53,8 +53,8 @@ export const TableTester: React.FC = () => {
     {
       header: 'Info',
       accessorKey: 'additionalInfo',
-      size: 150,
-      minSize: 150,
+      size: 100,
+      minSize: 100,
       enableSorting: false,
       enableResizing: true,
       enableColumnFilter: true,
