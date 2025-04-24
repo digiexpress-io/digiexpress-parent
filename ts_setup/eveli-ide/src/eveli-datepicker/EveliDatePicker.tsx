@@ -4,7 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { format } from 'date-fns';
 
 export type EveliDatePickerProps = {
-  label: String
+  label: string | React.ReactNode,
   readonly?: boolean,
   fullWidth?: boolean,
   value: string | Date | undefined | null;

@@ -48,25 +48,27 @@ export interface TaskFormDelegateProps {
 }
 
 export const TaskFormState: React.FC<{
-  task: TaskApi.Task;
+  task: Partial<TaskApi.Task> | null | undefined;
   children: React.FC<TaskFormDelegateProps>;
-  onSubmit: (task: TaskApi.Task) => Promise<void>;
+  onSubmit: (task: Partial<TaskApi.Task>) => Promise<void>;
 }> = (props) => {
+
   const { user: currentUser } = useIam();  
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
+  
 
 
   const initState = React.useMemo<TaskFormProps>(() => ({
-    clientIdentificator: props.task.clientIdentificator || '',
-    additionalInfo: props.task.additionalInfo || '',
-    priority: props.task.priority,
-    subject: props.task.subject || '',
-    description: props.task.description || '',
-    dueDate: props.task.dueDate,
-    status: props.task.status,
-    assignedUser: props.task.assignedUser || '',
-    assignedUserEmail: props.task.assignedUserEmail || '',
-    assignedRoles: props.task.assignedRoles || []
+    clientIdentificator: props.task?.clientIdentificator || '',
+    additionalInfo: props.task?.additionalInfo || '',
+    priority: props.task?.priority,
+    subject: props.task?.subject || '',
+    description: props.task?.description || '',
+    dueDate: props.task?.dueDate,
+    status: props.task?.status,
+    assignedUser: props.task?.assignedUser || '',
+    assignedUserEmail: props.task?.assignedUserEmail || '',
+    assignedRoles: props.task?.assignedRoles || []
   }), []);
   
   const [form, setForm] = React.useState<TaskFormProps>(initState);
@@ -91,7 +93,7 @@ export const TaskFormState: React.FC<{
   async function handleSubmitForm() {
     setSubmitting(true)
 
-    const taskFromValues: TaskApi.Task = {
+    const taskFromValues: Partial<TaskApi.Task> = {
       id: props.task?.id,
       version: props.task?.version,
       keyWords: props.task?.keyWords,
@@ -105,7 +107,7 @@ export const TaskFormState: React.FC<{
       assignedUserEmail: form.assignedUserEmail,
       clientIdentificator: form.clientIdentificator,
       assignedRoles: form.assignedRoles,
-      additionalInfo: form.additionalInfo
+      additionalInfo: form.additionalInfo,
     }
 
     await props.onSubmit(taskFromValues);
@@ -120,7 +122,6 @@ export const TaskFormState: React.FC<{
   const isValid = Object.values(errors).filter(isInvalid => !!isInvalid).length === 0;
   const Mess: React.FC<TaskFormDelegateProps> = props.children;
 
-  
   return (<Mess 
     currentState={form} 
     dirty={dirty} 

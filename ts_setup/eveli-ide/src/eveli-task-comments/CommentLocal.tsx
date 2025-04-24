@@ -12,7 +12,6 @@ type CommentLocalProps = {
   comment: TaskApi.Comment;
   children: React.ReactNode;
   task: TaskApi.Task;
-  loadData: () => void;
   isExternalThread?: boolean;
   isThreaded?: boolean;
   setReply: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +19,7 @@ type CommentLocalProps = {
 
 
 export const CommentLocal: React.FC<CommentLocalProps> =
-  ({ comment, children, task, loadData, isExternalThread, isThreaded, setReply }) => {
+  ({ comment, children, task, isExternalThread, isThreaded, setReply }) => {
     const [writingReply, setWritingReply] = useState(false);
     const now = new Date();
     const { formatMessage } = useIntl();
@@ -31,7 +30,6 @@ export const CommentLocal: React.FC<CommentLocalProps> =
 
     const handleCommentAdd = () => {
       setReply(true);
-      loadData();
       setWritingReply(false);
     }
 

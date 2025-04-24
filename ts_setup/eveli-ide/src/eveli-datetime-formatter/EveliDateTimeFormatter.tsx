@@ -4,9 +4,17 @@ import moment from 'moment'; // TODO: dead lib, replace with luxon
 
 import { FormattedDate, FormattedTime } from 'react-intl';
 
-export const EveliDateTimeFormatter: React.FC<{ value: any }> = ({ value }) => {
+export const EveliDateTimeFormatter: React.FC<{ value: any, variant?: 'text' }> = ({ value, variant }) => {
   if (value) {
     const localTime = moment.utc(value).local().toDate();
+
+    if(variant === 'text') {
+      return (<>
+        <FormattedDate value={localTime} />
+        &nbsp;
+        <FormattedTime value={localTime} />
+      </>)
+    }
 
     return (
       <Stack direction='column' >

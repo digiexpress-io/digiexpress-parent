@@ -37,7 +37,7 @@ export const Secondary: React.FC = () => {
           onClick={() => {
             navigate({
               from: '/secured/$locale',
-              to: '/secured/$locale/worker/tasks'
+              to: '/secured/$locale/worker/tasks/create'
             })
           }}>
           {intl.formatMessage({ id: 'button.compose' })}

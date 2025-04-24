@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { useFeedback, FeedbackApi } from '../../api-feedback';
 import { CreateOneFeedback } from './CreateOneFeedback';
 import { UpdateOneFeedback } from './UpdateOneFeedback';
+import { useSnackbar } from 'notistack';
 
 export interface UpsertOneFeedbackProps {
   taskId: string;
@@ -12,6 +13,7 @@ export interface UpsertOneFeedbackProps {
 
 export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
   const { getOneFeedback, isTaskFeedbackEnabled } = useFeedback();
+  const { enqueueSnackbar } = useSnackbar();
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [enabled, setEnabled] = React.useState<true | false | undefined>();
 
@@ -26,10 +28,10 @@ export const UpsertOneFeedback: React.FC<UpsertOneFeedbackProps> = (props) => {
     });
   }, [props.taskId, props.reload])
 
-
   function handleOnComplete(upsertedFeedback: FeedbackApi.Feedback) {
     getOneFeedback(props.taskId).then((resp) => {
       setFeedback(resp)
+      enqueueSnackbar(<FormattedMessage id="task.feedback.publishedSaved" />, { variant: 'success' });
       props.onComplete(upsertedFeedback);
     });
   }

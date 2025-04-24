@@ -11,7 +11,7 @@ function hook(props: {}) {
 
   return {
 
-    updateTask: async (task: TaskApi.Task): Promise<TaskApi.Task> => {
+    updateTask: async (task: Partial<TaskApi.Task>): Promise<TaskApi.Task> => {
       return params
         .fetch(url({ taskId: task.id! }), { method, body: JSON.stringify(task) })
         .then(response => response.json());

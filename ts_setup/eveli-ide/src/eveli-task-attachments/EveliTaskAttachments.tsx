@@ -133,7 +133,7 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
   }
 
   return (
-    <Box>
+    <>
       <input
         style={classes.input}
         id="contained-button-file"
@@ -182,6 +182,6 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
         }}
         data={attachments || []}
       />
-    </Box>
+    </>
   );
 }

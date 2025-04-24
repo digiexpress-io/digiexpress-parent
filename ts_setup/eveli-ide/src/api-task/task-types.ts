@@ -120,7 +120,7 @@ export declare namespace TaskApi {
 
 
   export interface Task {
-    id?: string;
+    id: string;
     taskRef?: string;
     version?: number;
     created?: Date;
@@ -145,6 +145,7 @@ export declare namespace TaskApi {
     clientIdentificator?: string|null;
     assignedRoles?: string[]|null;
 
+    comments: Comment[];
     questionnaireId?: string | undefined;
   }
 

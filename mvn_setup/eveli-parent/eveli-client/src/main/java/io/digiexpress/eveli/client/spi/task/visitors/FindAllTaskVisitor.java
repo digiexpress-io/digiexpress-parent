@@ -47,6 +47,7 @@ public class FindAllTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Lis
     final var builder = query
     // we don't need following docs
     .excludeDocs(
+        GrimDocType.GRIM_REMARK,
         GrimDocType.GRIM_COMMANDS, 
         GrimDocType.GRIM_COMMIT, 
         GrimDocType.GRIM_COMMIT_VIEWER, 

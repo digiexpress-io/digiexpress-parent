@@ -16,10 +16,8 @@ function Component() {
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   return (
-
-  <Container maxWidth='lg'>
-    <EveliTaskComposer />
-  </Container>
-
+    <Container maxWidth='lg'>
+      <EveliTaskComposer />
+    </Container>
   )
 }

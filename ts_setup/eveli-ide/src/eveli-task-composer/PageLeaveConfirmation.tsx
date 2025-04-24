@@ -2,16 +2,15 @@ import React from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useBlocker } from '@tanstack/react-router'
 
-import { ButtonProps, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 
 
-interface Props {
+export const PageLeavingConfirmation: React.FC<{
   navigationConfirmationRequired: () => boolean;
-}
+}> = ({ navigationConfirmationRequired }) => {
 
-export const PageLeavingConfirmation = ({ navigationConfirmationRequired }: Props) => {
-  
+
   const intl = useIntl();
   const { proceed, reset, status } = useBlocker({
     shouldBlockFn: ({ current, next }) => {
@@ -20,71 +19,40 @@ export const PageLeavingConfirmation = ({ navigationConfirmationRequired }: Prop
     enableBeforeUnload: false,
     withResolver: true,
   })
-  return (    
-    <ConfirmationDialog
-      open={status === 'blocked'}
-      text={intl.formatMessage({ id: 'confirm.unsavedChanges' })}
-      onClose={() => {
-        if(reset) {
-          reset();
-        }
-      }}
-      onAccept={() => {
-        if(proceed) {
-          proceed() 
-        }
-      }}
-    onCancel={() => {
-      if(reset) {
-        reset();
-      }
-    }}
-    title={intl.formatMessage({ id: 'confirm.close.title' })}
-  />
-  );
-};
+  const open = status === 'blocked';
+  const text = intl.formatMessage({ id: 'confirm.unsavedChanges' });
 
+  function onClose() {
+    if(reset) {
+      reset();
+    }
+  }
 
+  function onAccept() {
+    if(proceed) {
+      proceed() 
+    }
+  }
+  function onCancel() {
+    if(reset) {
+      reset();
+    }
+  }
 
-interface ConfirmationDialogProps {
-  title?: string;
-  accept?: string;
-  cancel?: string;
-  dialogOptions?: Partial<DialogProps>;
-  cancelOptions?: Partial<ButtonProps>;
-  acceptOptions?: Partial<ButtonProps>;
-  open: boolean;
-  text: string;
-  onClose: () => void;
-  onAccept: () => void;
-  onCancel: () => void;
-};
-
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
-  const { open, title, text, accept, cancel, onClose, onAccept, onCancel, dialogOptions, cancelOptions, acceptOptions } = props;
-
-  const handleCancel: React.MouseEventHandler<HTMLElement> = (event) => {
-    onCancel();
-  };
-
-  const handleAccept: React.MouseEventHandler<HTMLElement> = (event) => {
-    onAccept();
-  };
-
-  return (
-    <Dialog open={open} onClose={onClose} {...dialogOptions}>
-      {title && <DialogTitle>{title}</DialogTitle>}
+  return ( 
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>{intl.formatMessage({ id: 'confirm.close.title' })}</DialogTitle>
       <DialogContent>
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} variant='text' {...cancelOptions}>
-          <FormattedMessage id={cancel || 'button.cancel'}/>
+        <Button onClick={onCancel} variant='text'>
+          <FormattedMessage id='button.cancel'/>
         </Button>
-        <Button variant='contained' onClick={handleAccept} {...acceptOptions}>
-          <FormattedMessage id={accept || 'button.accept'}/>
+        <Button variant='contained' onClick={onAccept}>
+          <FormattedMessage id='button.accept'/>
         </Button>
       </DialogActions>
     </Dialog>
   );
-}
+};

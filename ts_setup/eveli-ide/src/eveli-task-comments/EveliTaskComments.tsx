@@ -7,25 +7,27 @@ import mapNestedEntities from './mapNestedEntities';
 import { Thread } from './Thread';
 import { FormattedMessage } from 'react-intl';
 import { TaskApi } from '../api-task';
+import { useSnackbar } from 'notistack';
 
 
 export type EveliTaskCommentsProps = {
   task: TaskApi.Task
-  isExternalThread?: boolean,
-  comments: TaskApi.Comment[],
-  loadData: () => void,
-  isThreaded?: boolean
-  onCommentPosted?: () => void;
+  isExternalThread: boolean,
+  isThreaded?: boolean | undefined;
+  reload: () => void
 }
 
-export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, comments, loadData, isThreaded, onCommentPosted }) => {
+export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, reload, isThreaded }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const { comments } = task;
 
   const toggleComment = () => {
     setWritingComment(!writingComment);
   }
+
 
   useEffect(() => {
     if (!reply && listRef.current) {
@@ -39,13 +41,12 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
 
   const handleCommentAdding = () => {
     setReply(false);
-    loadData(); 
-    onCommentPosted?.();
+    enqueueSnackbar(<FormattedMessage id="task.comments.external.added" />, { variant: 'success' })
+    reload();
     toggleComment();
   }
 
-  const getThread = (value: TaskApi.Comment[], task: TaskApi.Task) => {
-    if (!task) return null;
+  const getThread = (value: TaskApi.Comment[]) => {
     let comments = value;
     if (typeof isExternalThread !== 'undefined') {
       comments = comments.filter(comment => !!comment.external === isExternalThread);
@@ -56,18 +57,13 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
       'replyToId'
     );
     return (
-      <Thread comments={comments} task={task}
-        loadData={loadData}
+      <Thread comments={comments} task={task} isThreaded={isThreaded}
         isExternalThread={isExternalThread}
-        isThreaded={isThreaded}
         setReply={setReply}
       />);
   }
 
-  const thread = getThread(comments, task);
-  if (!task.id) {
-    return null;
-  }
+  const thread = getThread(comments);
   let buttonId = 'comment.add';
   if (typeof isExternalThread !== 'undefined') {
     if (isExternalThread) {
@@ -83,8 +79,7 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
         {thread}
       </Box>
       <Grid2 container spacing={1}>
-        {writingComment && <CommentAdd task={task}
-          onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread}  />}
+        {writingComment && <CommentAdd task={task} onAdded={handleCommentAdding} onCancel={toggleComment} isExternalThread={isExternalThread}  />}
         {!writingComment && (
           <Grid2 size={{ xs: 12 }}>
             <Button variant='contained' onClick={toggleComment}><FormattedMessage id={buttonId}/></Button>

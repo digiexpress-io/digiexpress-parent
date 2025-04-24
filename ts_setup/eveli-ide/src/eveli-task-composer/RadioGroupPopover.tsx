@@ -8,7 +8,7 @@ import { TaskApi } from '@/api-task';
 
 
 interface CommonProps {
-  label: string;
+  label: string | React.ReactNode;
   readonly?: boolean;
   messages: Record<string, { id: string; defaultMessage: string }>;
   colorMap: TaskApi.ColorMap;

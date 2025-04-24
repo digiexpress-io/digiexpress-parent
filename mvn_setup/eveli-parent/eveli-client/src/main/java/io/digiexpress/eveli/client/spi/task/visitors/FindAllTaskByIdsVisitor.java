@@ -47,6 +47,7 @@ public class FindAllTaskByIdsVisitor implements TaskStoreConfig.QueryTasksVisito
           .addMissionId(taskId)
           // we don't need following docs
           .excludeDocs(
+              GrimDocType.GRIM_REMARK,
               GrimDocType.GRIM_COMMANDS, 
               GrimDocType.GRIM_COMMIT, 
               GrimDocType.GRIM_COMMIT_VIEWER, 

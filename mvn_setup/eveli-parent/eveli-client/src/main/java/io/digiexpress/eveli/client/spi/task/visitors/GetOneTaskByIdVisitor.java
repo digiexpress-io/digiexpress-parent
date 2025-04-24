@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 import java.util.Arrays;
 import java.util.List;
 
+import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.task.TaskException;
@@ -76,11 +77,13 @@ public class GetOneTaskByIdVisitor implements TaskStoreConfig.QueryTasksVisitor<
   @Override
   public Uni<Task> end(GrimStructuredTenant config, List<GrimMissionContainer> commit) {
     final var container = commit.iterator().next();
-    return Uni.createFrom().item(TaskMapper.map(
+    final var task = TaskMapper.map(
         container.getMission(), 
         container.getAssignments().values(), 
         container.getRemarks().values(),
         container.getLinks().values(),
-        container.getMissionLabels().values()));
+        container.getMissionLabels().values());
+    
+    return Uni.createFrom().item(task);
   }
 }

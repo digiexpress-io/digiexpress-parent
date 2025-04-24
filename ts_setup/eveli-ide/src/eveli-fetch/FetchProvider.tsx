@@ -66,7 +66,7 @@ export function useRouteParams<
   const context: FetchContextType = React.useContext(FetchContext);
   const override = context.overrides && context.overrides[id];
   if(override) {
-    console.log(`fetch ${id} has override`); 
+    //console.log(`fetch ${id} has override`); 
   }
   const delegateFetch = context.state.fetch();
   const finalFetch = override ? override(delegateFetch) : delegateFetch;
