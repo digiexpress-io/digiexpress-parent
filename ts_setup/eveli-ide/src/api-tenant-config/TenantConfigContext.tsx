@@ -6,7 +6,7 @@ export interface TenantConfig {
   features: TenantFeature[];
 }
 
-export type TenantFeature = 'wrench-only'
+export type TenantFeature = 'wrench-only' | 'stencil_locale_filter'
 
 const INITIAL_CONFIG: TenantConfig = {
   features: []
@@ -14,17 +14,18 @@ const INITIAL_CONFIG: TenantConfig = {
 
 export interface TenantConfigContextProviderProps {
   disabled?: boolean;
+  features?: TenantFeature[] | undefined;
 }
 
 export const TenantConfigContext = createContext<TenantConfig>(INITIAL_CONFIG);
 
-const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children }) => {
+const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children, features: _features }) => {
   const {tenantConfig, pending} = useFetch('worker/rest/api/tenant-configs.GET', {}); 
 
   const contextValue: TenantConfig = React.useMemo(() => {
     return {
       ...tenantConfig,
-      features: tenantConfig?.features ?? []
+      features: [ ...(tenantConfig?.features ?? []), ...(_features ?? []) ]
     }
   }, [tenantConfig]);
 
