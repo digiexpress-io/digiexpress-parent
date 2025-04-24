@@ -16,6 +16,7 @@ import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
 import { EveliTableDrawer } from './EveliTableDrawer';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
+import { Box } from '@mui/system';
 
 
 
@@ -57,6 +58,7 @@ export function WithTableStyles<DataType extends object>(props: {
     columns: props.columns,
     data: props.data,
     rowCount: props.data.length,
+    columnResizeMode: 'onChange',
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -74,13 +76,23 @@ export function WithTableStyles<DataType extends object>(props: {
       sorting,
       pagination
     },
+  });
 
-  })
+  const columnSizeVars = React.useMemo(() => {
+    const headers = table.getFlatHeaders()
+    const colSizes: { [key: string]: number } = {}
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!
+      colSizes[`--header-${header.id}-size`] = header.getSize()
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+    }
+    return colSizes
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
 
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
 
   return (
-    <>
+    <Box style={columnSizeVars} display='flex'>
       <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
 
       <EveliTable>
@@ -115,7 +127,7 @@ export function WithTableStyles<DataType extends object>(props: {
       </EveliTable>
 
       <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
-    </>
+    </Box>
   )
 
 }

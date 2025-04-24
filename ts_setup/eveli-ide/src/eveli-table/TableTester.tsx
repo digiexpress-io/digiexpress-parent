@@ -29,66 +29,79 @@ export const TableTester: React.FC = () => {
     {
       header: 'Priority',
       accessorKey: 'priority',
-      enableSorting: true,
-      enableColumnFilter: true,
       filterFn: 'arrIncludesSome',
       sortingFn: taskSortingFn,
       cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
-      footer: 'footer 1'
+      minSize: 100,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
     },
     {
       header: 'Name',
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
       filterFn: 'arrIncludesSome',
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: true,
-      enableHiding: false
+      enableHiding: false,
+      enableResizing: true,
     },
     {
       header: 'Info',
       accessorKey: 'additionalInfo',
-      enableSorting: false,
       size: 150,
-      enableResizing: false,
+      minSize: 100,
+      enableSorting: false,
+      enableResizing: true,
       enableColumnFilter: true,
     },
     {
       header: 'Client',
       accessorKey: 'clientIdentificator',
-      footer: 'footer 2',
+      minSize: 100,
       enableColumnFilter: true,
+      enableResizing: true,
     },
     {
       header: 'Status',
       accessorKey: 'status',
+      filterFn: 'arrIncludesSome',
+      minSize: 100,
       cell: (status) => flexRender(IndicatorStatus, { type: status.getValue() }),
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
-      filterFn: 'arrIncludesSome',
+      enableResizing: true,
     },
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
+      filterFn: 'arrIncludesSome',
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: true,
-      filterFn: 'arrIncludesSome',
+      enableResizing: true,
     },
     {
       header: 'Assignee',
       accessorKey: 'assignedUser',
+      filterFn: 'arrIncludesSome',
       cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
       sortingFn: taskSortingFn,
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: true,
-      filterFn: 'arrIncludesSome',
+      enableResizing: true,
     },
     {
       header: 'Due',
       accessorKey: 'dueDate',
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: false,
+      enableResizing: true,
 
       cell: (info) => {
         const rawDate = info.getValue();
@@ -103,8 +116,10 @@ export const TableTester: React.FC = () => {
     {
       header: 'Created',
       accessorKey: 'created',
+      minSize: 100,
       enableSorting: true,
       enableColumnFilter: false,
+      enableResizing: true,
 
       cell: (info) => {
         const rawDate = info.getValue();
@@ -115,10 +130,7 @@ export const TableTester: React.FC = () => {
     },
   ]
 
-  return (
-    <Box display='flex'>
-      <WithTableStyles data={data} columns={columns} />
-    </Box>
-  )
+
+  return (<WithTableStyles data={data} columns={columns} />)
 
 }

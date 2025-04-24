@@ -15,23 +15,21 @@ type EveliTableHeaderProps = {
   onResetColVisibility: () => void;
 }
 
-//TODO clean up of isFilterable / isSortable
 export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => {
   const { column } = props.header;
-  const isFilterable = column.getCanFilter();
   const isSortable = column.getCanSort();
   const sortDirection = column.getIsSorted();
 
-
   if (isSortable) {
     return (
+
       <div className='headerCell' style={{ width: column.getSize() }}>
         <Typography>{props.children}</Typography>
         <div style={{ marginLeft: 4, display: 'flex' }}>
           {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
-        <div style={{ flexGrow: 1 }} />
+
 
         <EveliTableColumnFilter header={props.header} />
 
@@ -42,6 +40,8 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
           onClearSorting={() => column.clearSorting()}
           onClearColVisibility={() => props.onResetColVisibility()}
         />
+        <ColumnResizer header={props.header} />
+
       </div>
     )
   }
@@ -50,7 +50,22 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
       <Typography>{props.children}</Typography>
       <div style={{ flexGrow: 1 }} />
       <EveliTableColumnFilter header={props.header} />
+      <ColumnResizer header={props.header} />
     </div>
 
+  )
+}
+
+const ColumnResizer: React.FC<{ header: Header<any, any> }> = ({ header }) => {
+  const { column } = header;
+
+  return (
+    column.getCanResize() && (
+      <div
+        onMouseDown={header.getResizeHandler()}
+        onTouchStart={header.getResizeHandler()}
+        className='columnResizer'
+      />
+    )
   )
 }

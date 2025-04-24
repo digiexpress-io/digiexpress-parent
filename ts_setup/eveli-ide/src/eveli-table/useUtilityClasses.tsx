@@ -64,6 +64,10 @@ export const EveliTableHeaderRoot = styled('div', {
     },
 
     '.headerCell': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      position: 'relative',
       borderRight: `2px solid ${theme.palette.divider}`,
       paddingLeft: cellPadding,
       paddingRight: cellPadding,
@@ -71,10 +75,11 @@ export const EveliTableHeaderRoot = styled('div', {
       alignItems: 'center',
       '.MuiTypography-root': {
         fontWeight: 'bolder',
-      },
-      '&:last-of-type': {
-        borderRight: 'none', // remove right border from the last cell
-        paddingRight: 'unset'
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        flexShrink: 1,
+        flexGrow: 1
       },
       '.MuiSvgIcon-root': {
         color: theme.palette.primary.main,
@@ -82,6 +87,19 @@ export const EveliTableHeaderRoot = styled('div', {
         ':hover': {
           cursor: 'pointer'
         }
+      },
+      '.columnResizer': {
+        position: 'absolute',
+        ':hover': {
+          backgroundColor: theme.palette.divider,
+        },
+        right: 0,
+        top: 0,
+        bottom: 0,
+        width: '5px',
+        cursor: 'col-resize',
+        userSelect: 'none',
+        touchAction: 'none',
       }
     },
   };
