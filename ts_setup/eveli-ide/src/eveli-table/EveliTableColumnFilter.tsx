@@ -35,7 +35,6 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
   }
 
   function handleSelectionChange(selected: string) {
-
     const next = filterValueAsArray.includes(selected) ?
       filterValueAsArray.filter((value) => value !== selected) :
       [...filterValueAsArray, selected];
@@ -43,8 +42,16 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
     header.column.setFilterValue(next);
   }
 
-  const smth = header.column.getFacetedUniqueValues();
-  const filterItems: string[] = Array.from(smth.keys()).map(key => key as string); 
+  function handleClearFilters() {
+    header.column.setFilterValue(undefined);
+  }
+
+  const uniqueValues = header.column.getFacetedUniqueValues();
+  const filterItems: string[] = Array.from(uniqueValues.keys())
+    .map(key => key as string)
+    .filter(item => item)
+    .filter(item => item.length > 0);
+
 
   const classes = useUtilityClasses();
   return (
@@ -55,9 +62,14 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <EveliTableSearchFilter onChange={handleChange} value={filterValueAsString} title={title} />
-
+        <MenuItem onClick={handleClearFilters}>
+          <ListItemIcon>
+            {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
+          </ListItemIcon>
+          Show all items
+        </MenuItem>
         {filterItems.map((item, index) => <React.Fragment key={index}>
-          <MenuItem onClick={() => handleSelectionChange(item)} >
+          <MenuItem onClick={() => handleSelectionChange(item)}>
             <ListItemIcon>
               {filterValueAsArray.includes(item) ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
             </ListItemIcon>
