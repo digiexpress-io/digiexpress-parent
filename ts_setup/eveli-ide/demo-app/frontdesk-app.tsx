@@ -85,7 +85,7 @@ export const FrontdeskApp: React.FC = () => {
               }}>
               <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
                 <TenantConfigContextProvider features={[
-                  'task_review_for_blind', 
+                  'visual_accommodation', 
                   'stencil_locale_filter',
                   'eveli_publication_only']}>
                     
