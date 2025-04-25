@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.process;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,6 +52,12 @@ public class DialobScheduler {
   public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnswered()) {
       try {
+        if(instance.getTaskId() != null) {
+          log.warn("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
+          continue;
+        }
+        
+        
         final var questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
         if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
           log.warn("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
@@ -85,6 +92,7 @@ public class DialobScheduler {
     });
   }
   
+  @Async
   @EventListener
   public void handleFillCompleted(UserActionFillEvent event) {
   

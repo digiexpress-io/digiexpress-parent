@@ -33,7 +33,11 @@ public class GrimDbStateImpl implements GrimState {
   
   @Override
   public <R> Uni<R> withTransaction(TransactionFunction<R> callback) {
-    return dataSource.getPool().withTransaction(conn -> callback.apply(new GrimDbStateImpl(dataSource.withTx(conn))));
+    return dataSource.getPool().withTransaction(conn -> {
+      
+      
+      return callback.apply(new GrimDbStateImpl(dataSource.withTx(conn)));
+    });
   }
   @Override
   public GrimInserts insert() {

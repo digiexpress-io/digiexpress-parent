@@ -78,7 +78,11 @@ public class DbStateSqlImpl implements DbState {
   }
   @Override
   public <R> Uni<R> withGrimTransaction(TxScope scope, io.resys.thena.structures.grim.GrimState.TransactionFunction<R> callback) {
-    return toGrimState(scope.getTenantId()).onItem().transformToUni(state -> state.withTransaction(callback));
+    return toGrimState(scope.getTenantId()).onItem().transformToUni(state -> {
+      
+      
+      return state.withTransaction(callback);
+    });
   }
   
   // git state

@@ -55,7 +55,7 @@ public class TaskMapper {
   
   public static final String COMMENT_EXTERNAL = "EXTERNAL";
   public static final String COMMENT_INTERNAL = "INTERNAL";
-  public static final Duration atMost = Duration.ofSeconds(30);
+  public static final Duration atMost = Duration.ofMinutes(5);
   
   public static ZonedDateTime toZoned(OffsetDateTime input) {
     if(input == null) {

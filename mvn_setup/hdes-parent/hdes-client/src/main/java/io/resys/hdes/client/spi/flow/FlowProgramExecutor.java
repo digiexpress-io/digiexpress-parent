@@ -341,7 +341,7 @@ public class FlowProgramExecutor {
               .status(FlowExecutionStatus.ERROR)
               .accepts(inputs)
               .build());
-          throw new StepException(e.getMessage(), e);
+          throw new StepException("Error in step: " + step.getId() + ", error: "  + e.getMessage(), e);
         }
       }
       default: 

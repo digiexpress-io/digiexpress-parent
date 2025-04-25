@@ -132,6 +132,7 @@ public class HdesComposerImpl implements HdesComposer {
     return client.store().query().get().onItem()
         .transform(state -> new DebugVisitor(client).visit(entity, state));
   }
+  
   @Override
   public Uni<ComposerEntity<?>> dryRun(UpdateEntity entity) {
     return client.store().query().get().onItem().transform(state -> new DryRunVisitor(client).visit(state, entity));
