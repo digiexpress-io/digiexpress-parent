@@ -20,6 +20,7 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
   const isSortable = column.getCanSort();
   const sortDirection = column.getIsSorted();
 
+
   if (isSortable) {
     return (
 

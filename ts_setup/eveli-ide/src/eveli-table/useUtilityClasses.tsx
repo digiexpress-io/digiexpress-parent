@@ -31,8 +31,6 @@ export const EveliTableRoot = styled('div', {
   return {
     position: 'relative',
     ...theme.typography.subtitle2,
-    flex: 1,
-    //width: '100%'
   };
 });
 

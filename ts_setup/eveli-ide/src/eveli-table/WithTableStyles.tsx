@@ -3,7 +3,11 @@ import React from 'react';
 import {
   ColumnDef, ColumnFiltersState, flexRender,
   getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-  SortingState, useReactTable, getFacetedUniqueValues
+  SortingState, useReactTable, getFacetedUniqueValues,
+  ColumnSizingState,
+  VisibilityState,
+  OnChangeFn,
+  Updater,
 } from '@tanstack/react-table';
 
 import { EveliTable } from './EveliTable';
@@ -12,11 +16,12 @@ import { EveliTableRow } from './EveliTableRow';
 import { EveliTableHeaderCell } from './EveliTableHeaderCell';
 
 import { EveliTablePagination } from './EveliTablePagination';
-import { EveliTableColumnFilterDialog } from './EveliTableColumnFilterDialog';
+import { EveliTableColumnVisibility } from './EveliTableColumnVisibility';
 import { EveliTableDrawer } from './EveliTableDrawer';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 import { Box } from '@mui/system';
+import { tableSizeFn } from './tableSizeFn';
 
 
 
@@ -29,12 +34,12 @@ export function WithTableStyles<DataType extends object>(props: {
 
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'priority', desc: true }]);
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
-  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [colsMenuOpen, setColsMenuOpen] = React.useState(false);
   const [filtersMenuOpen, setFiltersMenuOpen] = React.useState(false);
-  const [columnSizing, setColumnSizing] = React.useState({});
+  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({});
 
 
   function toggleColsMenu() {
@@ -54,6 +59,17 @@ export function WithTableStyles<DataType extends object>(props: {
     table.resetColumnVisibility();
   };
 
+  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (updaterOrValue: Updater<VisibilityState>) => {
+    return setColumnVisibility(prev => {
+
+
+      // @ts-ignore
+      const newVisibility: Record<string, boolean> = updaterOrValue(prev);
+      table.setColumnSizing(tableSizeFn(table, prev, newVisibility))
+      return newVisibility;
+    });
+  }
+
 
   const table = useReactTable({
     columns: props.columns,
@@ -67,16 +83,19 @@ export function WithTableStyles<DataType extends object>(props: {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnVisibilityChange: onColumnVisibilityChange,
     onColumnFiltersChange: setColumnFilters,
     onColumnSizingChange: setColumnSizing,
     onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+
+
+
     defaultColumn: {
       size: 150,
       minSize: 60,
-      maxSize: 400,
+      maxSize: 400
     },
     state: {
       columnVisibility,
@@ -99,12 +118,11 @@ export function WithTableStyles<DataType extends object>(props: {
     return colSizes
   }, [table.getState().columnSizingInfo, table.getState().columnSizing])
 
-
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
 
   return (
     <Box style={columnSizeVars} display='flex'>
-      <EveliTableColumnFilterDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
+      <EveliTableColumnVisibility open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
 
       <EveliTable>
         {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}

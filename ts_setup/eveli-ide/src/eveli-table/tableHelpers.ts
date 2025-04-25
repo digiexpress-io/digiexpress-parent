@@ -1,5 +1,5 @@
 import { TaskApi } from "@/api-task";
-import { Row } from "@tanstack/react-table";
+import { Row, Table } from "@tanstack/react-table";
 
 
 const priorityOrder: Record<TaskApi.TaskPriority, number> = {
@@ -49,4 +49,3 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
     }
   }
 }
-

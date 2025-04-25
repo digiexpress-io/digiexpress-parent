@@ -14,7 +14,9 @@ import { IndicatorAssignee } from './IndicatorAssignee';
 import { WithTableStyles } from './WithTableStyles';
 
 
+
 export const TableTester: React.FC = () => {
+
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
 
@@ -22,8 +24,6 @@ export const TableTester: React.FC = () => {
     findAll().then(setData);
   }, []);
 
-
-  //const columnHelper = createColumnHelper<TaskApi.Task>();
 
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
