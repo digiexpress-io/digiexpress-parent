@@ -20,6 +20,7 @@ import { EveliShellCompose } from '@/eveli-shell-compose';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliLogo } from '@/eveli-logo';
 import { EveliPermissions } from '@/eveli-permissions';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 
 
@@ -107,28 +108,30 @@ export const Secondary: React.FC<{}> = () => {
         </EveliPermissions>
 
         <EveliPermissions id='NAV_TO_WRENCH_DEBUG'>
-        <Button variant={activeItem?.type === 'DEBUG' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<BugReportOutlinedIcon />}
-          onClick={() => onNav({ type: 'DEBUG' })}>
-          {intl.formatMessage({ id: 'menu.debug' })}
-        </Button>
+          <Button variant={activeItem?.type === 'DEBUG' ? 'explorerActive' : 'explorerInactive'}
+            startIcon={<BugReportOutlinedIcon />}
+            onClick={() => onNav({ type: 'DEBUG' })}>
+            {intl.formatMessage({ id: 'menu.debug' })}
+          </Button>
         </EveliPermissions>
 
         <EveliPermissions id='NAV_TO_WRENCH_COMPARE'>
-        <Button variant={activeItem?.type === 'COMPARE' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<CompareArrowsOutlinedIcon />}
-          onClick={() => onNav({ type: 'COMPARE' })}>
-          {intl.formatMessage({ id: 'menu.compare' })}
-        </Button>
+          <Button variant={activeItem?.type === 'COMPARE' ? 'explorerActive' : 'explorerInactive'}
+            startIcon={<CompareArrowsOutlinedIcon />}
+            onClick={() => onNav({ type: 'COMPARE' })}>
+            {intl.formatMessage({ id: 'menu.compare' })}
+          </Button>
         </EveliPermissions>
 
-        <EveliPermissions id='NAV_TO_WRENCH_RELEASES'>
-        <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
-          startIcon={<NewReleasesOutlinedIcon />}
-          onClick={() => onNav({ type: 'RELEASES' })}>
-          {intl.formatMessage({ id: 'menu.releases' })}
-        </Button>
-        </EveliPermissions>
+        <EveliTenantFeatureEnabled id='WRENCH_RELEASES'>
+          <EveliPermissions id='NAV_TO_WRENCH_RELEASES'>
+            <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
+              startIcon={<NewReleasesOutlinedIcon />}
+              onClick={() => onNav({ type: 'RELEASES' })}>
+              {intl.formatMessage({ id: 'menu.releases' })}
+            </Button>
+          </EveliPermissions>
+        </EveliTenantFeatureEnabled>
 
         <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<DashboardCustomizeOutlinedIcon />}

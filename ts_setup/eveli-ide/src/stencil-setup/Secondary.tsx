@@ -22,6 +22,7 @@ import { EveliShellCompose } from '@/eveli-shell-compose';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliLogo } from '@/eveli-logo';
 import { EveliPermissions } from '@/eveli-permissions';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 
 
@@ -130,13 +131,15 @@ const Secondary: React.FC<{}> = () => {
           </Button>
         </EveliPermissions>
 
-        <EveliPermissions id='NAV_TO_STENCIL_RELEASES'>
-          <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
-            startIcon={<NewReleasesOutlinedIcon />}
-            onClick={() => onNav({ type: 'RELEASES' })}>
-            {intl.formatMessage({ id: 'menu.releases' })}
-          </Button>
-        </EveliPermissions>
+        <EveliTenantFeatureEnabled id='STENCIL_RELEASES'>
+          <EveliPermissions id='NAV_TO_STENCIL_RELEASES'>
+            <Button variant={activeItem?.type === 'RELEASES' ? 'explorerActive' : 'explorerInactive'}
+              startIcon={<NewReleasesOutlinedIcon />}
+              onClick={() => onNav({ type: 'RELEASES' })}>
+              {intl.formatMessage({ id: 'menu.releases' })}
+            </Button>
+          </EveliPermissions>
+        </EveliTenantFeatureEnabled>
 
         <Button variant={activeItem?.type === 'ACTIVITIES' ? 'explorerActive' : 'explorerInactive'}
           startIcon={<DashboardCustomizeOutlinedIcon />}

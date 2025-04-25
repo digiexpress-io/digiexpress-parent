@@ -13,8 +13,13 @@ function notOneOf(required: TenantFeature[]): (given: TenantFeature[]) => boolea
   };
 }
 
+
 const EveliFeatureMapping = {
   'LOGIN_BUTTON': notOneOf(['wrench-only']),
+  'STENCIL_LOCALE_FILTER': oneOf(['stencil_locale_filter']),
+
+  'WRENCH_RELEASES': notOneOf(['eveli_publication_only']),
+  'STENCIL_RELEASES': notOneOf(['eveli_publication_only']),
 }
 
 export type EveliFeatureType = keyof typeof EveliFeatureMapping;
