@@ -10,7 +10,7 @@ export type TenantFeature = (
   'wrench-only' | 
   'stencil_locale_filter' | 
   'eveli_publication_only' | 
-  'task_review_for_blind');
+  'visual_accommodation');
 
 const INITIAL_CONFIG: TenantConfig = {
   features: []
