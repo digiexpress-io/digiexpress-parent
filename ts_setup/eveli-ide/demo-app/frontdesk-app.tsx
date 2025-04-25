@@ -84,7 +84,11 @@ export const FrontdeskApp: React.FC = () => {
                 'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
               }}>
               <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
-                <TenantConfigContextProvider>
+                <TenantConfigContextProvider features={[
+                  'task_review_for_blind', 
+                  'stencil_locale_filter',
+                  'eveli_publication_only']}>
+                    
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />
                   </IamBackendProvider>

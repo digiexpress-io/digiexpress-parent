@@ -4,6 +4,8 @@ import { Box, Chip, Grid2, InputLabel, Paper, TextField, Typography } from "@mui
 import { FormattedMessage } from "react-intl";
 import { TaskFormDelegateProps } from "./TaskFormState";
 import { TaskApi } from "@/api-task";
+import { FormReviewButton } from "./EveliTaskFooter";
+import { EveliTenantFeatureEnabled } from "@/api-tenant-config";
 
 const classes = {
   keywordChip: {
@@ -18,11 +20,13 @@ export interface EveliTaskHeaderProps {
   readOnly: boolean;
   createdAt: any;
   form: TaskFormDelegateProps;
+  taskId: string | undefined;
+  questionnaireId: string | undefined;
 }
 
 
 export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
-  const { keywords, readOnly, form, createdAt } = props;
+  const { keywords, readOnly, form, createdAt, taskId, questionnaireId } = props;
   const isProtected = keywords.includes('Protected');
   const isManual = keywords.includes('Manual');
   const { errors, currentState, setFieldValue } = form;
@@ -30,7 +34,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
   return (
     <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
       <Grid2 container spacing={2} alignItems="center">
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid2 size={{ xs: 12, md: 2 }}>
           <Box display='flex' alignItems='center'>
             <InputLabel><FormattedMessage id='taskDialog.category' />: </InputLabel>
             <Chip
@@ -40,12 +44,26 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
             />
           </Box>
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        <Grid2 size={{ xs: 12, md: 2 }}>
           <Typography>
             <FormattedMessage id={'task.created'} />:&nbsp;<EveliDateTimeFormatter value={createdAt} variant="text"/>
           </Typography>
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 4 }}>
+        
+        <Grid2 size={{ xs: 12, md: 2 }}>
+          <EveliTenantFeatureEnabled id='FORM_REVIEW_TASK_HEADER'>
+            <Box display='flex' alignItems='center'>
+              <InputLabel><FormattedMessage id='taskDialog.source' />: </InputLabel>
+              <Chip
+                label={isManual ? <FormattedMessage id='Internal'/> : <FormattedMessage id='CustomerCreated' />}
+                color='primary'
+                sx={classes.keywordChip}
+              />
+            </Box>
+          </EveliTenantFeatureEnabled>
+        </Grid2>
+
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <EveliDatePicker
             label={<FormattedMessage id='taskDialog.dueDate' />}
             fullWidth={true}
@@ -55,6 +73,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
           />
         </Grid2>
       </Grid2>
+
       <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
         <Grid2 size={{ xs: 12, md: 6 }}>
           <TextField
@@ -97,14 +116,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
       </Grid2>
       <Grid2 container spacing={2} alignItems="center" sx={{ mt: 1 }}>
         <Grid2 size={{ xs: 12, md: 12 }}>
-          <Box display='flex' alignItems='center'>
-            <InputLabel><FormattedMessage id='taskDialog.source' />: </InputLabel>
-            <Chip
-              label={isManual ? <FormattedMessage id='Internal'/> : <FormattedMessage id='CustomerCreated' />}
-              color='primary'
-              sx={classes.keywordChip}
-            />
-          </Box>
+          {taskId && <FormReviewButton task={{ id: taskId, questionnaireId }}/> }
         </Grid2>
       </Grid2>
     </Paper>

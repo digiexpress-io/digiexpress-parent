@@ -6,7 +6,11 @@ export interface TenantConfig {
   features: TenantFeature[];
 }
 
-export type TenantFeature = 'wrench-only' | 'stencil_locale_filter' | 'eveli_publication_only';
+export type TenantFeature = (
+  'wrench-only' | 
+  'stencil_locale_filter' | 
+  'eveli_publication_only' | 
+  'task_review_for_blind');
 
 const INITIAL_CONFIG: TenantConfig = {
   features: []

@@ -75,7 +75,7 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
         { (form) => (
           <>
             <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
-            <EveliTaskHeader form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
+            <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
             {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty /> }
             <EveliTaskSubHeader form={form} readOnly={readOnly} />
             <EveliTaskFooter task={task} form={form} readOnly={readOnly}/>

@@ -12,6 +12,7 @@ import { EveliPermissions } from '@/eveli-permissions';
 import { EveliDateTimeFormatter } from "@/eveli-datetime-formatter";
 import { TaskApi } from '@/api-task';
 import { TaskFormDelegateProps } from './TaskFormState';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 
 
@@ -48,13 +49,17 @@ const FeedbackButton: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
     </EveliPermissions>);
 }
 
-const FormReviewButton: React.FC<{task: TaskApi.Task}> = ({ task }) => {
+export const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
   const [open, setOpen] = React.useState(false);
+
+  if(!task.questionnaireId) {
+    return (<></>);
+  }
 
   return (
     <>
       <Button onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
-      {open && <DialobReview taskId={task.id} questionnaireId={task.questionnaireId!} onClose={() => setOpen(false)} />}
+      {open && <DialobReview taskId={task.id} questionnaireId={task.questionnaireId} onClose={() => setOpen(false)} />}
     </>
   )
 }
@@ -102,7 +107,9 @@ export const EveliTaskFooter: React.FC<EveliTaskFooterProps> = (props) => {
 
           {task?.questionnaireId && (
             <Box display='flex' gap={1}>
-              <FormReviewButton task={task}  />
+              <EveliTenantFeatureEnabled id='FORM_REVIEW_BUTTON_BAR'>
+                <FormReviewButton task={task}  />
+              </EveliTenantFeatureEnabled>
               <FeedbackButton task={task} />
             </Box>
           )}
