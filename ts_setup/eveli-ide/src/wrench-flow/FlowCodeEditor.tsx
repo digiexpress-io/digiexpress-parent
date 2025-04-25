@@ -68,12 +68,17 @@ export const FlowCodeEditor: React.FC<{
       }
     });
 
-    editor.languages.registerCompletionItemProvider('yaml', {
+    const disposable = editor.languages.registerCompletionItemProvider('yaml', {
       provideCompletionItems: function (model, position, context) {
-        const suggestions = ast ? new AutocompleteVisitor(ast, site, model, position).visit() : [];
-        return { suggestions }
+        let suggestions = ast ? new AutocompleteVisitor(ast, site, model, position).visit() : [];
+
+        return { suggestions, dispose: () => {
+          disposable.dispose()
+        } }
       }
     });
+
+
   }, []);
 
   return (
