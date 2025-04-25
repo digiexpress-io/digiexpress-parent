@@ -60,4 +60,11 @@ public class ProcessApiController {
         .findAll();
     return new ResponseEntity<>(processes, HttpStatus.OK);
   }
+  
+  
+  @Transactional
+  @GetMapping("/last-6-months")
+  public List<ProcessClient.ProcessInstance> findLast6Months() {
+    return client.queryInstances().findLast6Months();
+  }
 }

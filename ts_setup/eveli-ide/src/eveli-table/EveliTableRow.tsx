@@ -3,7 +3,7 @@ import { EveliTableRowRoot, useUtilityClasses } from './useUtilityClasses';
 import { flexRender, Row } from '@tanstack/react-table';
 import { EveliTableCell } from './EveliTableCell';
 
-export const EveliTableRow: React.FC<{ children: Row<unknown> }> = ({ children }) => {
+export const EveliTableRow: React.FC<{ children: Row<any> }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (

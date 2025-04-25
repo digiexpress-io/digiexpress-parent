@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.persistence.repositories;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -63,6 +65,15 @@ and created + make_interval(secs => expires_in_seconds) < expires_at
 and status in('CREATED', 'ANSWERING')
 """)
   List<ProcessEntity> findAllByExpiration();
+
+  
+  @Query(nativeQuery = true, value=
+"""
+SELECT * FROM process 
+WHERE created >= :created
+ORDER BY created DESC
+""")
+  List<ProcessEntity> findAllAfterCreated(OffsetDateTime created);
   
   @Query(nativeQuery = true, value=
 """

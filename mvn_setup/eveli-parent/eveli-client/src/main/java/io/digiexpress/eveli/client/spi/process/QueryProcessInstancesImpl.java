@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -76,5 +78,10 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   @Override
   public List<ProcessInstance> findAllExpired() {
     return processJPA.findAllByExpiration().stream().map(CreateProcessInstanceImpl::map).toList();
+  }
+  @Override
+  public List<ProcessInstance> findLast6Months() {
+    return processJPA.findAllAfterCreated(OffsetDateTime.now().minusMonths(6))
+        .stream().map(CreateProcessInstanceImpl::map).toList();
   }
 }

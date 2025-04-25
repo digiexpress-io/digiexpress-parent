@@ -1,18 +1,14 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import MaterialTable, { Column } from '@material-table/core';
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { ProcExecutionApi } from '../api-proc-execution';
-import { useMaterialTableLabels } from '../api-mui-table';
-import moment from 'moment';
+import { WithTableStyles } from '@/eveli-table';
+import { ColumnDef, sortingFns } from '@tanstack/react-table';
 
 
 
-interface TableState {
-  columns: Array<Column<ProcExecutionApi.ProcessExecution>>;
-}
 
 const formatDate = (time: any) => {
   if (time) {
@@ -28,67 +24,69 @@ const formatDate = (time: any) => {
 
 export const EveliProcExecution: React.FC = () => {
   const intl = useIntl();
-  const { loadProcesses } = useFetch('worker/rest/api/processes.GET', {})
+  const { findLast6Months } = useFetch('worker/rest/api/processes.GET', {})
+  const [data, setData] = React.useState<ProcExecutionApi.ProcessExecution[]>([]);
 
-  const tableLocalization = useMaterialTableLabels();
-
-  const tableState: TableState = {
-    columns: [
-      {
-        title: intl.formatMessage({ id: 'processTableHeader.workflow' }),
-        field: 'workflowName',
-        headerStyle: { fontWeight: 'bold' },
-      },
-      {
-        title: intl.formatMessage({ id: 'processTableHeader.questionnaireId' }),
-        field: 'questionnaireId',
-        filtering: false,
-        headerStyle: { fontWeight: 'bold' },
-      },
-      {
-        title: intl.formatMessage({ id: 'processTableHeader.status' }),
-        field: 'status',
-        headerStyle: { fontWeight: 'bold' },
-        lookup: {
-          'ANSWERED': intl.formatMessage({ id: 'process.status.ANSWERED' }),
-          'CREATED': intl.formatMessage({ id: 'process.status.CREATED' }),
-          'ANSWERING': intl.formatMessage({ id: 'process.status.ANSWERING' }),
-          'IN_PROGRESS': intl.formatMessage({ id: 'process.status.IN_PROGRESS' }),
-          'WAITING': intl.formatMessage({ id: 'process.status.WAITING' }),
-          'COMPLETED': intl.formatMessage({ id: 'process.status.COMPLETED' }),
-          'REJECTED': intl.formatMessage({ id: 'process.status.REJECTED' }),
-        },
-      },
-      {
-        title: intl.formatMessage({ id: 'processTableHeader.created' }),
-        field: 'created',
-        filtering: false,
-        render: data => formatDate(data.created),
-        headerStyle: { fontWeight: 'bold' },
-      }
-    ]
-  };
+  React.useEffect(() => {
+    findLast6Months().then(setData);
+  }, []);
 
 
+  const columns: ColumnDef<ProcExecutionApi.ProcessExecution, any>[] = [
+    {
+      header: intl.formatMessage({ id: 'processTableHeader.workflow' }),
+      accessorKey: 'workflowName',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.alphanumeric,
+      size: 200,
+      minSize: 200,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      cell: (workflowName) => workflowName.getValue(),
+    },
+    {
+      header: intl.formatMessage({ id: 'processTableHeader.questionnaireId' }),
+      accessorKey: 'questionnaireId',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.alphanumeric,
+      size: 300,
+      minSize: 300,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      cell: (questionnaireId) => questionnaireId.getValue(),
+    },
+    {
+      header: intl.formatMessage({ id: 'processTableHeader.status' }),
+      accessorKey: 'status',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.alphanumeric,
+      size: 150,
+      minSize: 150,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      cell: (status) => intl.formatMessage({ id: 'process.status.' + status.getValue() }),
+    },
+    {
+      header: intl.formatMessage({ id: 'processTableHeader.created' }),
+      accessorKey: 'created',
+      filterFn: 'includesString',
+      sortingFn: sortingFns.datetime,
+      size: 200,
+      minSize: 200,
+      enableSorting: true,
+      enableColumnFilter: true,
+      enableResizing: true,
+      cell: (info) => formatDate(info.getValue())
+    },
+  ]
   return (
-    <MaterialTable title={
-      <Typography variant='h1'>
-        <FormattedMessage id='processTable.title'/>
-      </Typography>
-      }
-      localization={tableLocalization}
-      columns={tableState.columns}
-      options={{
-        actionsColumnIndex: -1,
-        debounceInterval: 500,
-        padding: 'dense',
-        filtering: true,
-        paging: true,
-        pageSize: 20
-      }}
-      isLoading={false}
-      data={query => loadProcesses(query, tableState.columns)
-      }
-    />
-  );
+  <>
+    <Typography variant='h1'>
+      <FormattedMessage id='processTable.title'/>
+    </Typography>
+    <WithTableStyles columns={columns} data={data} options={{ initialPageSize: 30 }}/>
+  </>);
 }

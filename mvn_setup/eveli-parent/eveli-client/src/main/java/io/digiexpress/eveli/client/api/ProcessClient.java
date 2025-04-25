@@ -103,6 +103,7 @@ public interface ProcessClient {
     
     void deleteOneById(Long id);
     List<ProcessInstance> findAll();
+    List<ProcessInstance> findLast6Months();
     List<ProcessInstance> findAllAnswered();
     List<ProcessInstance> findAllExpired();
     List<ProcessInstance> findAllByUserId(String userId);    

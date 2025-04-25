@@ -32,6 +32,16 @@ function hook(props: {}) {
           totalCount: json.numberOfElements // total entries on all the pages combined
         }
       })
+    },
+
+    findLast6Months: async (): Promise<ProcExecutionApi.ProcessExecution[]> => {
+      return params.fetch(url({}) + `/last-6-months`, {
+        headers: {
+          'Accept': 'application/json'
+        },
+      })
+      .then(response => response.json())
     }
+  
   }
 }

@@ -25,13 +25,14 @@ import { tableSizeFn } from './tableSizeFn';
 
 
 
-const initialPageSize = 5;
 
 export function WithTableStyles<DataType extends object>(props: {
   columns: ColumnDef<DataType, unknown>[],
-  data: DataType[]
+  data: DataType[],
+  options?: { initialPageSize?: number }
 }): React.ReactNode {
 
+  const initialPageSize = props.options?.initialPageSize ?? 5;
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'priority', desc: true }]);
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
