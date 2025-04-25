@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
+import { Badge, Box, generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -16,6 +16,7 @@ interface EveliTableColumnFilterProps {
 export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ header }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const classes = useUtilityClasses();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -52,12 +53,14 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
     .filter(item => item)
     .filter(item => item.length > 0);
 
+  const filterValue = header.column.getFilterValue();
+  const isFilterApplied = filterValue !== undefined && (filterValueAsString || filterValueAsArray.length > 0);
 
-  const classes = useUtilityClasses();
+
   return (
     <EveliTableColumnFilterRoot className={classes.root}>
       <IconButton onClick={handleClick} disableRipple disableFocusRipple>
-        <FilterListIcon />
+        {isFilterApplied ? <Badge overlap="circular" variant="dot"><FilterListIcon /></Badge> : <FilterListIcon />}
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
@@ -115,6 +118,10 @@ const EveliTableColumnFilterRoot = styled('div', {
         backgroundColor: theme.palette.secondary.dark,
         borderRadius: theme.spacing(0.5)
       }
+    },
+    '& .MuiBadge-badge': {
+      transform: 'translate(5px, 7px)',
+      backgroundColor: theme.palette.error.main
     }
   };
 });
