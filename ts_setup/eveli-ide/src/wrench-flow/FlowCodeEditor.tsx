@@ -90,6 +90,9 @@ export const FlowCodeEditor: React.FC<{
       value={props.src} 
       options={{
         wordBasedSuggestions: 'off',
+        minimap: {
+          enabled: false
+        }
       }}
       defaultLanguage='yaml'/>
   </>);
