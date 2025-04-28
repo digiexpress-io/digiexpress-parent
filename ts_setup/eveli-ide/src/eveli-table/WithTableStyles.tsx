@@ -16,7 +16,7 @@ import { EveliTableRow } from './EveliTableRow';
 import { EveliTableHeaderCell } from './EveliTableHeaderCell';
 
 import { EveliTablePagination } from './EveliTablePagination';
-import { EveliTableColumnVisibility } from './EveliTableColumnVisibility';
+import { EveliTableColumnVisibilityDialog } from './EveliTableColumnVisibilityDialog';
 import { EveliTableDrawer } from './EveliTableDrawer';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
@@ -123,7 +123,7 @@ export function WithTableStyles<DataType extends object>(props: {
 
   return (
     <Box style={columnSizeVars} display='flex'>
-      <EveliTableColumnVisibility open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
+      <EveliTableColumnVisibilityDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
 
       <EveliTable>
         {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}

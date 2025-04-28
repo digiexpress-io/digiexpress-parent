@@ -5,7 +5,7 @@ import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
 import { useIntl } from 'react-intl';
 
 
-interface EveliTableColumnFilterProps {
+interface EveliTableColumnVisibilityDialogProps {
   open: boolean,
   onClose: () => void,
   table: Table<any>;
@@ -13,7 +13,7 @@ interface EveliTableColumnFilterProps {
 
 
 
-export const EveliTableColumnVisibility: React.FC<EveliTableColumnFilterProps> = ({ open, onClose, table }) => {
+export const EveliTableColumnVisibilityDialog: React.FC<EveliTableColumnVisibilityDialogProps> = ({ open, onClose, table }) => {
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
   const intl = useIntl();
 

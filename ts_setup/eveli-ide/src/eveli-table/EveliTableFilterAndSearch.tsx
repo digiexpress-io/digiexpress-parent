@@ -7,14 +7,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import { Header } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 
-import { EveliTableSearchFilter } from './EveliTableSearchFilter';
+import { EveliTableFilterByString } from './EveliTableFilterByString';
 
 
-interface EveliTableColumnFilterProps {
+interface EveliTableFilterAndSearchProps {
   header: Header<unknown, unknown>;
 }
 
-export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ header }) => {
+export const EveliTableFilterAndSearch: React.FC<EveliTableFilterAndSearchProps> = ({ header }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const classes = useUtilityClasses();
@@ -75,7 +75,7 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
       </IconButton>
 
       <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <EveliTableSearchFilter onChange={handleChange} value={filterValueAsString} title={title} />
+        <EveliTableFilterByString onChange={handleChange} value={filterValueAsString} title={title} />
         <MenuItem onClick={handleClearFilters}>
           <ListItemIcon>
             {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}

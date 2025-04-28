@@ -9,7 +9,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import composeClasses from '@mui/utils/composeClasses';
 import { useIntl } from 'react-intl';
 
-interface EveliTableColumnProps {
+interface EveliTableColumnSortAndChooseProps {
   onChooseCols: () => void,
   onSortAsc: () => void,
   onSortDesc: () => void,
@@ -17,7 +17,7 @@ interface EveliTableColumnProps {
   onClearColVisibility: () => void,
 }
 
-export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onChooseCols, onSortAsc, onSortDesc, onClearSorting, onClearColVisibility }) => {
+export const EveliTableColumnSortAndChoose: React.FC<EveliTableColumnSortAndChooseProps> = ({ onChooseCols, onSortAsc, onSortDesc, onClearSorting, onClearColVisibility }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const intl = useIntl();
