@@ -14,7 +14,6 @@ export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ 
   const classes = useUtilityClasses();
   const filterValue = value ?? '';
 
-  console.log('Filter value', filterValue)
   return (
     <EveliTableSearchFieldRoot className={classes.root}>
       <Typography>Filter {title}</Typography>
