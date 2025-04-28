@@ -76,8 +76,21 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Box>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updated' })}{': '}<EveliDateTimeFormatter value={feedback.updatedOnDate} /></Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.updatedBy' })}{': '}{feedback.updatedBy}</Typography>
+
+      <Typography variant='body2'>
+        <Box component='span' fontWeight='bold'>
+          {intl.formatMessage({ id: 'feedback.updated' })}:
+        </Box>{' '}
+        <EveliDateTimeFormatter value={feedback.updatedOnDate} variant='text' />
+      </Typography>
+
+      <Typography variant='body2'>
+        <Box component='span' fontWeight='bold'>
+          {intl.formatMessage({ id: 'feedback.updatedBy' })}:
+        </Box>{' '}
+        {feedback.updatedBy}
+      </Typography>
+
       <Divider sx={{ my: 2 }} />
       <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
       <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback.labelValue}</Typography>
