@@ -3,7 +3,7 @@ import { Cell } from '@tanstack/react-table';
 import React from 'react';
 
 
-interface EveliTableCellProps {
+export interface EveliTableCellProps {
   cell: Cell<any, unknown>;
   children?: React.ReactNode | string;
 }

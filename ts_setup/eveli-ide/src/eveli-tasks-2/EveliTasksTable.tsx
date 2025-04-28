@@ -1,5 +1,4 @@
 import React from 'react';
-import { Box } from '@mui/material';
 
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 
@@ -11,11 +10,11 @@ import { DateTime } from 'luxon';
 import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
-import { WithTableStyles } from './WithTableStyles';
+import { WithTableStyles } from '@/eveli-table';
 
 
 
-export const TableTester: React.FC = () => {
+export const EveliTasksTable: React.FC = () => {
 
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
@@ -140,5 +139,4 @@ export const TableTester: React.FC = () => {
 
 
   return (<WithTableStyles data={data} columns={columns} />)
-
 }
