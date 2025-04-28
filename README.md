@@ -74,6 +74,7 @@ To build and run the backend:
 
 1. **Build the project without running tests**:
    ```bash
+   cd mvn_setup/
    mvn clean install -DskipTests
    ```
 
