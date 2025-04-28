@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Table, VisibilityState } from '@tanstack/react-table';
-import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
+import { ColSelectItem, EveliTableColumnSelect } from './EveliTableColumnSelect';
 import { useIntl } from 'react-intl';
 
 
@@ -41,13 +41,13 @@ export const EveliTableColumnVisibilityDialog: React.FC<EveliTableColumnVisibili
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
       <DialogTitle>{intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Select columns' })}</DialogTitle>
       <DialogContent>
-        <EveliTableColSelect>
+        <EveliTableColumnSelect>
           {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
             isVisible={selected[col.id]}
             onToggle={() => handleColumnVisibility(col.id)} />
           )
           )}
-        </EveliTableColSelect>
+        </EveliTableColumnSelect>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>

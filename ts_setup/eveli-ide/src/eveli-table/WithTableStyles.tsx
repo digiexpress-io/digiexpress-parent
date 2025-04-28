@@ -18,7 +18,7 @@ import { EveliTableHeaderCell } from './EveliTableHeaderCell';
 import { EveliTablePagination } from './EveliTablePagination';
 import { EveliTableColumnVisibilityDialog } from './EveliTableColumnVisibilityDialog';
 import { EveliTableDrawer } from './EveliTableDrawer';
-import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
+import { ColSelectItem, EveliTableColumnSelect } from './EveliTableColumnSelect';
 import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
 import { Box } from '@mui/system';
 import { tableSizeFn } from './tableSizeFn';
@@ -128,12 +128,12 @@ export function WithTableStyles<DataType extends object>(props: {
       <EveliTable>
         {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}
           children={
-            <EveliTableColSelect>
+            <EveliTableColumnSelect>
               {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
                 isVisible={col.getIsVisible()}
                 onToggle={() => col.toggleVisibility()} />
               ))}
-            </EveliTableColSelect>
+            </EveliTableColumnSelect>
           }
         />
         }
