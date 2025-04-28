@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Badge, Box, generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
+import { Badge, generateUtilityClass, IconButton, ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import composeClasses from '@mui/utils/composeClasses';
 import { Header } from '@tanstack/react-table';
+import { useIntl } from 'react-intl';
 
 import { EveliTableSearchFilter } from './EveliTableSearchFilter';
 
@@ -17,6 +18,8 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const classes = useUtilityClasses();
+  const intl = useIntl();
+
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -77,7 +80,7 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
           <ListItemIcon>
             {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
           </ListItemIcon>
-          Show all items
+          {intl.formatMessage({ id: 'eveli.table.menu.filter.showAllItems', defaultMessage: 'Show all items ' })}
         </MenuItem>
         {filterItems.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={() => handleSelectionChange(item)}>

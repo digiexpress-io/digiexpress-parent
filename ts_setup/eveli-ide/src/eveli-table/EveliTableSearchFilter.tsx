@@ -3,6 +3,8 @@ import { generateUtilityClass, InputAdornment, styled, TextField, Typography } f
 import SearchIcon from '@mui/icons-material/Search';
 import composeClasses from '@mui/utils/composeClasses';
 
+import { useIntl } from 'react-intl';
+
 
 interface EveliTableSearchFilterProps {
   title: string;
@@ -13,10 +15,11 @@ interface EveliTableSearchFilterProps {
 export const EveliTableSearchFilter: React.FC<EveliTableSearchFilterProps> = ({ value, onChange, title }) => {
   const classes = useUtilityClasses();
   const filterValue = value ?? '';
+  const intl = useIntl();
 
   return (
     <EveliTableSearchFieldRoot className={classes.root}>
-      <Typography>Filter {title}</Typography>
+      <Typography>{intl.formatMessage({ id: 'eveli.table.menu.filter.filterBy', defaultMessage: 'Filter by ' })}{title}</Typography>
       <TextField placeholder='Search' value={filterValue} onChange={onChange}
         slotProps={{
           input: {

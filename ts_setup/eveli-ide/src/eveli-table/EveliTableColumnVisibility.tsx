@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Table, VisibilityState } from '@tanstack/react-table';
 import { ColSelectItem, EveliTableColSelect } from './EveliTableColSelect';
+import { useIntl } from 'react-intl';
 
 
 interface EveliTableColumnFilterProps {
@@ -14,6 +15,7 @@ interface EveliTableColumnFilterProps {
 
 export const EveliTableColumnVisibility: React.FC<EveliTableColumnFilterProps> = ({ open, onClose, table }) => {
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
+  const intl = useIntl();
 
   const [selected, setSelected] = React.useState<VisibilityState>(allColumns
     .reduce<Record<string, boolean>>((coll, next) => {
@@ -37,7 +39,7 @@ export const EveliTableColumnVisibility: React.FC<EveliTableColumnFilterProps> =
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
-      <DialogTitle>Select columns</DialogTitle>
+      <DialogTitle>{intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Select columns' })}</DialogTitle>
       <DialogContent>
         <EveliTableColSelect>
           {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}

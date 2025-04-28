@@ -6,8 +6,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
-
 import composeClasses from '@mui/utils/composeClasses';
+import { useIntl } from 'react-intl';
 
 interface EveliTableColumnProps {
   onChooseCols: () => void,
@@ -20,6 +20,7 @@ interface EveliTableColumnProps {
 export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onChooseCols, onSortAsc, onSortDesc, onClearSorting, onClearColVisibility }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const intl = useIntl();
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -64,17 +65,17 @@ export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onCho
 
         <MenuItem onClick={handleSortAsc}>
           <ListItemIcon><ArrowUpwardIcon className='menu-icon' /></ListItemIcon>
-          Sort ascending
+          {intl.formatMessage({ id: 'eveli.table.menu.sort.ascending', defaultMessage: 'Sort ascending' })}
         </MenuItem>
 
         <MenuItem onClick={handleSortDesc}>
           <ListItemIcon><ArrowDownwardIcon className='menu-icon' /></ListItemIcon>
-          Sort descending
+          {intl.formatMessage({ id: 'eveli.table.menu.sort.descending', defaultMessage: 'Sort descending' })}
         </MenuItem>
 
         <MenuItem onClick={handleClearSorting}>
           <ListItemIcon><NotInterestedIcon className='menu-icon' /></ListItemIcon>
-          Clear sorting
+          {intl.formatMessage({ id: 'eveli.table.menu.sort.clearSorting', defaultMessage: 'Clear sorting' })}
         </MenuItem>
 
 
@@ -82,11 +83,12 @@ export const EveliTableColumnOptions: React.FC<EveliTableColumnProps> = ({ onCho
 
         <MenuItem onClick={handleChooseCols}>
           <ListItemIcon><TableChartOutlinedIcon className='menu-icon' /></ListItemIcon>
-          Choose columns
+          {intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Choose columns' })}
+
         </MenuItem>
         <MenuItem onClick={handleClearColVisibility}>
           <ListItemIcon><RestartAltIcon className='menu-icon' /></ListItemIcon>
-          Reset columns
+          {intl.formatMessage({ id: 'eveli.table.menu.sort.colsReset', defaultMessage: 'Reset columns' })}
         </MenuItem>
       </StyledMenu>
     </EveliTableColumnOptionsRoot>
