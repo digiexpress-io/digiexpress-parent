@@ -2,8 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material';
 import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale';
-import { EveliTableWithData } from '@/eveli-table/EveliTableWithData';
-import { TableTester } from '@/eveli-table/TableTester';
+import { EveliTasksTable } from '@/eveli-tasks-2';
 
 export const Route = createFileRoute('/secured/$locale/worker/tables/')({
   component: Component,
@@ -17,6 +16,6 @@ function Component() {
 
   return (
     <Box sx={{ p: 0.5 }}> {/* mock container / wrapper */}
-      <TableTester />
+      <EveliTasksTable />
     </Box>)
 }
