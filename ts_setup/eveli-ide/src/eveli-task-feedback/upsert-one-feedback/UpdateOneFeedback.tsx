@@ -74,16 +74,14 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Box flexGrow={1} />
         <ApprovalCount approvalCount={feedback.thumbsUpCount} disapprovalCount={feedback.thumbsDownCount} />
       </Box>
-
       <Divider sx={{ my: 2 }} />
-
+      
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.updated' })}:
         </Box>{' '}
         <EveliDateTimeFormatter value={feedback.updatedOnDate} variant='text' />
       </Typography>
-
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.updatedBy' })}:
