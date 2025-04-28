@@ -80,7 +80,7 @@ export namespace TaskApi {
     COMPLETED: Colors.GREEN,
     REJECTED: Colors.GREY,
   };
-  
+
 
 }
 
@@ -88,12 +88,12 @@ export declare namespace TaskApi {
 
   export interface Attachment {
     name: string;
-    status: 'OK'|'QUARANTINED'|'UPLOADED';
+    status: 'OK' | 'QUARANTINED' | 'UPLOADED';
     created: Date;
     updated: Date;
     size: number;
   }
-  
+
   export interface AttachmentUploadResponse {
     putRequestUrl: string
   }
@@ -104,7 +104,7 @@ export declare namespace TaskApi {
     userName: string
     created: string
     commentText: string
-    replyToId?: number|null
+    replyToId?: number | null
     // added in UI for hierarchical display
     __parent?: Comment
     __children?: Comment[]
@@ -136,14 +136,14 @@ export declare namespace TaskApi {
     priority?: TaskPriority;
     additionalInfo?: string;
 
-    features?: string[]; 
+    features?: string[];
     keyWords?: string[];
     taskLinks?: TaskLink[];
     // For UI purposes
     statusCode?: number;
     priorityCode?: number;
-    clientIdentificator?: string|null;
-    assignedRoles?: string[]|null;
+    clientIdentificator?: string | null;
+    assignedRoles?: string[] | null;
 
     comments: Comment[];
     questionnaireId?: string | undefined;
@@ -154,17 +154,17 @@ export declare namespace TaskApi {
     count: number
     priority: TaskApi.TaskPriority
   }
-  
+
   export type TaskStatusStatistics = {
     count: number
     status: TaskApi.TaskStatus
   }
-  
+
   export type OverdueByGroupStatistics = {
     count: number
     assignedId: string
   }
-  
+
   export type TaskStatusTimelineStatistics = {
     statusDate: Date
     new: number

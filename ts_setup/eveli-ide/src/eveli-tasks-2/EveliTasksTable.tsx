@@ -61,6 +61,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Client',
       accessorKey: 'clientIdentificator',
+      filterFn: 'arrIncludesSome',
       size: 150,
       minSize: 150,
       enableColumnFilter: true,

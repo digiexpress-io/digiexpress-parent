@@ -40,7 +40,6 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
       const assignedUser2 = b?.toString().trim() ?? '';
       return assignedUser1.localeCompare(assignedUser2);
     }
-
     default: {
       if (typeof a === 'string' && typeof b === 'string') {
         return a.localeCompare(b);

@@ -32,13 +32,14 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
   const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    header.column.setFilterValue(e.target.value)
+    header.column.setFilterValue(e.target.value);
   }
 
   function handleSelectionChange(selected: string) {
     const next = filterValueAsArray.includes(selected) ?
       filterValueAsArray.filter((value) => value !== selected) :
       [...filterValueAsArray, selected];
+
 
     header.column.setFilterValue(next);
   }
@@ -47,11 +48,18 @@ export const EveliTableColumnFilter: React.FC<EveliTableColumnFilterProps> = ({ 
     header.column.setFilterValue(undefined);
   }
 
-  const uniqueValues = header.column.getFacetedUniqueValues();
-  const filterItems: string[] = Array.from(uniqueValues.keys())
-    .map(key => key as string)
+  const almostUniqueValues = header.column.getFacetedUniqueValues();
+  const filterItems: string[] = Array.from(new Set(Array.from(almostUniqueValues.keys())
+    .map(key => key as (string | string[]))
     .filter(item => item)
-    .filter(item => item.length > 0);
+    .filter(item => item.length > 0)
+    .map(item => {
+      if ((typeof item) === 'string') {
+        return [item];
+      }
+      return item;
+    })
+    .flatMap(items => items)));
 
   const filterValue = header.column.getFilterValue();
   const isFilterApplied = filterValue !== undefined && (filterValueAsString || filterValueAsArray.length > 0);
