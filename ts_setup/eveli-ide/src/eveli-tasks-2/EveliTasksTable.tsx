@@ -41,7 +41,7 @@ export const EveliTasksTable: React.FC = () => {
       header: 'Name',
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
-      filterFn: 'arrIncludesSome',
+      filterFn: 'arrIncludes',
       size: 150,
       minSize: 150,
       enableSorting: true,

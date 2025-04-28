@@ -9,15 +9,21 @@ const cellPadding = '10px';
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+
     headerCell: ['headerCell'],
-    rowCell: ['rowCell'],
-    col: ['col']
+    bodyCell: ['bodyCell'],
+
+    bodyRow: ['bodyRow'],
+    headerRow: ['headerRow'],
+
+    pagination: ['pagination'],
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }
 
-export const EveliTableRoot = styled('div', {
+
+export const Root = styled('div', {
   name: EveliTableRootClassName,
   slot: 'Root',
   overridesResolver: (_props, styles) => {
@@ -34,20 +40,13 @@ export const EveliTableRoot = styled('div', {
   };
 });
 
-export const EveliTableHeaderRoot = styled('div', {
+
+
+
+export const HeaderRowSlot = styled('div', {
   name: EveliTableRootClassName,
   slot: 'HeaderRow',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-      styles.headerRow,
-      styles.headerCell
-    ];
-  },
-
 })<{}>(({ theme }) => {
-
-
   return {
     backgroundColor: theme.palette.secondary.main,
     borderRadius: `${theme.spacing(1)} 0px 0px 0px`,
@@ -60,7 +59,7 @@ export const EveliTableHeaderRoot = styled('div', {
       ...theme.typography.subtitle2
     },
 
-    '.headerCell': {
+    '.EveliTable-headerCell': {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
@@ -103,17 +102,9 @@ export const EveliTableHeaderRoot = styled('div', {
 });
 
 
-export const EveliTableRowRoot = styled('div', {
+export const BodyRowSlot = styled('div', {
   name: EveliTableRootClassName,
-  slot: 'Row',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-      styles.row,
-      styles.rowCell
-    ];
-  },
-
+  slot: 'BodyRow',
 })<{}>(({ theme }) => {
 
   return {
@@ -128,7 +119,7 @@ export const EveliTableRowRoot = styled('div', {
     '&:last-of-type': { // target the last row to round the bottom left corner
       borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
     },
-    '.rowCell': {
+    '.EveliTable-bodyCell': {
       paddingRight: cellPadding,
       alignItems: 'center',
       overflow: 'hidden',
@@ -142,18 +133,47 @@ export const EveliTableRowRoot = styled('div', {
 
 
 
-export const EveliTableColRoot = styled('div', {
+export const PaginationSlot = styled('div', {
   name: EveliTableRootClassName,
-  slot: 'Col',
+  slot: 'Pagination',
   overridesResolver: (_props, styles) => {
     return [
-      styles.root,
-      styles.col
+      styles.root
     ];
   },
 
-})<{ width: number }>(({ theme, width }) => {
+})<{}>(({ theme }) => {
+
   return {
-    width,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    fontSize: '10pt',
+    width: '100%',
+    borderRadius: `0px 0px 0px ${theme.spacing(1)}`,
+    border: `1px solid ${theme.palette.divider}`,
+    borderTop: 'unset',
+    padding: theme.spacing(0.5),
+    '.MuiTypography-root': {
+      ...theme.typography.subtitle2,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1)
+    },
+    '.MuiIconButton-root': {
+      '.MuiSvgIcon-root': {
+        color: theme.palette.primary.main,
+      },
+      '&.Mui-disabled .MuiSvgIcon-root': {
+        color: theme.palette.action.disabled
+      },
+    },
+    '.MuiFormControl-root.MuiTextField-root': {
+      marginTop: '0px'
+    },
+    '.MuiTextField-root .MuiInputBase-input': {
+      paddingLeft: theme.spacing(2),
+      paddingTop: theme.spacing(0.5),
+      paddingBottom: theme.spacing(0.5)
+    }
   };
 });

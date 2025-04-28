@@ -7,7 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { Header } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 
-import { EveliTableFilterByString } from './EveliTableFilterByString';
+import { EveliTableFilterByStringField } from './EveliTableFilterByStringField';
 
 
 interface EveliTableFilterAndSearchProps {
@@ -35,6 +35,9 @@ export const EveliTableFilterAndSearch: React.FC<EveliTableFilterAndSearchProps>
   const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+
+    e.preventDefault();
+
     header.column.setFilterValue(e.target.value);
   }
 
@@ -74,14 +77,17 @@ export const EveliTableFilterAndSearch: React.FC<EveliTableFilterAndSearchProps>
         {isFilterApplied ? <Badge overlap="circular" variant="dot"><FilterListIcon /></Badge> : <FilterListIcon />}
       </IconButton>
 
-      <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <EveliTableFilterByString onChange={handleChange} value={filterValueAsString} title={title} />
-        <MenuItem onClick={handleClearFilters}>
+      <StyledMenu anchorEl={anchorEl} open={open} onClose={handleClose} action={() => { }}>
+
+        <EveliTableFilterByStringField onChange={handleChange} value={filterValueAsString} title={title} />
+
+        <MenuItem onClick={handleClearFilters} >
           <ListItemIcon>
             {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
           </ListItemIcon>
           {intl.formatMessage({ id: 'eveli.table.menu.filter.showAllItems', defaultMessage: 'Show all items ' })}
         </MenuItem>
+
         {filterItems.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={() => handleSelectionChange(item)}>
             <ListItemIcon>

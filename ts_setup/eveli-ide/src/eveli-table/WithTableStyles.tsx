@@ -10,18 +10,17 @@ import {
   Updater,
 } from '@tanstack/react-table';
 
-import { EveliTable } from './EveliTable';
-import { EveliTableHeader } from './EveliTableHeader';
-import { EveliTableRow } from './EveliTableRow';
-import { EveliTableHeaderCell } from './EveliTableHeaderCell';
 
-import { EveliTablePagination } from './EveliTablePagination';
+import { Pagination } from './Pagination';
 import { EveliTableColumnVisibilityDialog } from './EveliTableColumnVisibilityDialog';
 import { EveliTableDrawer } from './EveliTableDrawer';
 import { ColSelectItem, EveliTableColumnSelect } from './EveliTableColumnSelect';
-import { EveliTableDrawerButtonColumn } from './EveliTableDrawerButtonColumn';
+import { RightButtonBar } from './RightButtonBar';
 import { Box } from '@mui/system';
 import { tableSizeFn } from './tableSizeFn';
+import { BodyRowSlot, HeaderRowSlot, PaginationSlot, Root, useUtilityClasses } from './useUtilityClasses';
+import { HeaderCell } from './HeaderCell';
+import { BodyCell } from './BodyCell';
 
 
 
@@ -32,6 +31,7 @@ export function WithTableStyles<DataType extends object>(props: {
   options?: { initialPageSize?: number }
 }): React.ReactNode {
 
+  const classes = useUtilityClasses();
   const initialPageSize = props.options?.initialPageSize ?? 5;
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'priority', desc: true }]);
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
@@ -123,40 +123,45 @@ export function WithTableStyles<DataType extends object>(props: {
 
   return (
     <Box style={columnSizeVars} display='flex'>
-      <EveliTableColumnVisibilityDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
+      <Root className={classes.root}>
 
-      <EveliTable>
-        {colsMenuOpen && <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu}
-          children={
-            <EveliTableColumnSelect>
-              {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
-                isVisible={col.getIsVisible()}
-                onToggle={() => col.toggleVisibility()} />
-              ))}
-            </EveliTableColumnSelect>
-          }
-        />
-        }
-        {filtersMenuOpen && <EveliTableDrawer title='TODO' children={<>TODO</>} onClose={toggleFiltersMenu} />}
-
-        <EveliTableHeader>
+        <HeaderRowSlot className={classes.headerRow}>
           {table.getFlatHeaders().map(header => (
-            <EveliTableHeaderCell key={header.id}
+            <HeaderCell key={header.id}
+              className={classes.headerCell}
               header={header}
               onColumnFilter={toggleFilterDialogOpen}
               onResetColVisibility={clearColVisibility}
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
-            </EveliTableHeaderCell>
+            </HeaderCell>
           ))}
-        </EveliTableHeader>
+        </HeaderRowSlot>
 
-        {table.getRowModel().rows.map(row => (<EveliTableRow key={row.id} children={row} />))}
+        {table.getRowModel().rows.map(row => (
+          <BodyRowSlot className={classes.bodyRow}>
+            {row.getVisibleCells().map(cell => (<BodyCell className={classes.bodyCell} key={cell.id} cell={cell} children={flexRender(cell.column.columnDef.cell, cell.getContext())} />))}
+          </BodyRowSlot>
+        ))}
 
-        <EveliTablePagination data={props.data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
-      </EveliTable>
+        <PaginationSlot className={classes.root}>
+          <Pagination data={props.data} initialPageSize={initialPageSize} pagination={pagination} table={table} />
+        </PaginationSlot>
+      </Root>
 
-      <EveliTableDrawerButtonColumn onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
+      <>
+        <EveliTableColumnVisibilityDialog open={filterDialogOpen} onClose={toggleFilterDialogOpen} table={table} />
+        <RightButtonBar onColumnsClick={toggleColsMenu} onFiltersClick={toggleFiltersMenu} />
+        <EveliTableDrawer title='Show / hide columns' onClose={toggleColsMenu} open={colsMenuOpen}>
+          <EveliTableColumnSelect>
+            {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
+              isVisible={col.getIsVisible()}
+              onToggle={() => col.toggleVisibility()} />
+            ))}
+          </EveliTableColumnSelect>
+        </EveliTableDrawer>
+        <EveliTableDrawer title='TODO' children={<>TODO</>} onClose={toggleFiltersMenu} open={filtersMenuOpen} />
+      </>
     </Box>
   )
 

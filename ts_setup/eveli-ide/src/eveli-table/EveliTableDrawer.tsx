@@ -11,11 +11,15 @@ interface EveliTableDrawerProps {
   children: React.ReactNode;
   title?: string | undefined;
   onClose: () => void;
+  open: boolean;
 }
 
 
-export const EveliTableDrawer: React.FC<EveliTableDrawerProps> = ({ children, title, onClose }) => {
+export const EveliTableDrawer: React.FC<EveliTableDrawerProps> = ({ children, title, onClose, open }) => {
   const classes = useUtilityClasses();
+  if (!open) {
+    return (<></>);
+  }
 
   return (
     <EveliTableDrawerRoot className={classes.root}>
