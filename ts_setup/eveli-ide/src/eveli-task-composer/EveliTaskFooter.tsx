@@ -58,7 +58,24 @@ export const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: s
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
+      <EveliTenantFeatureEnabled id='FORM_REVIEW_FLASHY'>
+        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%',  
+            animation: 'pulse 1.5s ease-in-out infinite',
+            transition: 'transform 0.3s ease-in-out',
+            '@keyframes pulse': {
+              '0%': { transform: 'scale(1)', opacity: 1 },
+              '50%': { transform: 'scale(1.05)', opacity: 0.8 },
+              '100%': { transform: 'scale(1)', opacity: 1 },
+          }}} 
+          onClick={() => setOpen(true)} variant='contained'><FormattedMessage id='task.form.review' /></Button>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='FORM_REVIEW_NORMAL'>
+        <Button sx={{ padding: '15px', marginTop: '15px', width: '100%'}} onClick={() => setOpen(true)} variant='contained'>
+          <FormattedMessage id='task.form.review' />
+        </Button>
+      </EveliTenantFeatureEnabled>
+
       {open && <DialobReview taskId={task.id} questionnaireId={task.questionnaireId} onClose={() => setOpen(false)} />}
     </>
   )
@@ -92,10 +109,7 @@ export const EveliTaskFooter: React.FC<EveliTaskFooterProps> = (props) => {
     </Paper> }
 
     <Box sx={{
-      bottom: 10,
-      width: 'fit-content',
-      height: 'fit-content',
-      top: 35,
+      bottom: 15,
       right: 16,
       zIndex: 1100,
       position: 'fixed'
@@ -107,9 +121,6 @@ export const EveliTaskFooter: React.FC<EveliTaskFooterProps> = (props) => {
 
           {task?.questionnaireId && (
             <Box display='flex' gap={1}>
-              <EveliTenantFeatureEnabled id='FORM_REVIEW_BUTTON_BAR'>
-                <FormReviewButton task={task}  />
-              </EveliTenantFeatureEnabled>
               <FeedbackButton task={task} />
             </Box>
           )}

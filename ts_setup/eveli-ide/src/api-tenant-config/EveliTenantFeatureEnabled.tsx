@@ -21,8 +21,8 @@ const EveliFeatureMapping = {
   'WRENCH_RELEASES': notOneOf(['eveli_publication_only']),
   'STENCIL_RELEASES': notOneOf(['eveli_publication_only']),
 
-  'FORM_REVIEW_TASK_HEADER': oneOf(['visual_accommodation']),
-  'FORM_REVIEW_BUTTON_BAR': notOneOf(['visual_accommodation']),
+  'FORM_REVIEW_FLASHY': oneOf(['visual_accommodation']),
+  'FORM_REVIEW_NORMAL': notOneOf(['visual_accommodation']),
 }
 
 

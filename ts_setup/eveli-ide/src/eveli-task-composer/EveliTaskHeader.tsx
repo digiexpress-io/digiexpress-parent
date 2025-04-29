@@ -51,16 +51,16 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
         </Grid2>
         
         <Grid2 size={{ xs: 12, md: 2 }}>
-          <EveliTenantFeatureEnabled id='FORM_REVIEW_TASK_HEADER'>
-            <Box display='flex' alignItems='center'>
-              <InputLabel><FormattedMessage id='taskDialog.source' />: </InputLabel>
-              <Chip
-                label={isManual ? <FormattedMessage id='Internal'/> : <FormattedMessage id='CustomerCreated' />}
-                color='primary'
-                sx={classes.keywordChip}
-              />
-            </Box>
-          </EveliTenantFeatureEnabled>
+          
+          <Box display='flex' alignItems='center'>
+            <InputLabel><FormattedMessage id='taskDialog.source' />: </InputLabel>
+            <Chip
+              label={isManual ? <FormattedMessage id='Internal'/> : <FormattedMessage id='CustomerCreated' />}
+              color='primary'
+              sx={classes.keywordChip}
+            />
+          </Box>
+
         </Grid2>
 
         <Grid2 size={{ xs: 12, md: 6 }}>
@@ -74,8 +74,8 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
         </Grid2>
       </Grid2>
 
-      <Grid2 container spacing={2} alignItems="top" sx={{ mt: 1 }}>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+      <Grid2 container spacing={2} sx={{ mt: 1 }}>
+        <Grid2 size={{ xs: 12, md: 6, lg: 5, xl: 5 }}>
           <TextField
             label={<FormattedMessage id='taskDialog.clientIdentificator' />}
             fullWidth={true}
@@ -86,7 +86,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
             onChange={event => setFieldValue('clientIdentificator', event.target.value)}
           />
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        <Grid2 size={{ xs: 12, md: 6, lg: 5, xl: 5 }}>
           <TextField
             label={<FormattedMessage id='taskDialog.subject' />}
             required
@@ -99,6 +99,10 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
             value={currentState.subject}
             onChange={event => setFieldValue('subject', event.target.value)}
           />
+        </Grid2>
+        
+        <Grid2 size={{ xs: 12, md: 12, lg: 2, xl: 2 }} alignContent='center'>
+          {taskId && <FormReviewButton task={{ id: taskId, questionnaireId }}/>}
         </Grid2>
 
         <Grid2 size={{ xs: 12, md: 12 }}>
@@ -114,11 +118,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
           />
         </Grid2>
       </Grid2>
-      <Grid2 container spacing={2} alignItems="center" sx={{ mt: 1 }}>
-        <Grid2 size={{ xs: 12, md: 12 }}>
-          {taskId && <FormReviewButton task={{ id: taskId, questionnaireId }}/> }
-        </Grid2>
-      </Grid2>
+ 
     </Paper>
   );
 }
