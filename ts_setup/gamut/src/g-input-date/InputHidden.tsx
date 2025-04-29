@@ -20,7 +20,6 @@ export const InputHidden: React.FC<{
 
 
   React.useEffect(() => {
-
     if(inputValue !== newInputValue) {
       setInputValue(newInputValue);
       console.log("trigger", {id, newInputValue});

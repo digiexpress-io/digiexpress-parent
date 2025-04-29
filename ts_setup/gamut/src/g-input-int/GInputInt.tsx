@@ -4,7 +4,7 @@ import { TextField, useThemeProps } from '@mui/material';
 import numbro from 'numbro';
 
 import { DialobApi } from '../api-dialob';
-import { GInputBase, GInputBaseAnyProps, GInputBaseProps, LabelPosition } from '../g-input-base';
+import { GInputBase, GInputBaseAnyProps, GInputBaseProps } from '../g-input-base';
 import { GInputError } from '../g-input-error';
 import { GInputLabel } from '../g-input-label';
 import { GInputAdornment } from '../g-input-adornment';
@@ -21,7 +21,7 @@ export interface GInputIntProps {
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;

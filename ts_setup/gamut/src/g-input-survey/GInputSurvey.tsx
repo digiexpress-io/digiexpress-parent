@@ -3,7 +3,7 @@ import { useThemeProps, Box } from '@mui/material'
 import { MUI_NAME, useUtilityClasses, GInputSurveyRoot, GInputSurveyBody } from './useUtilityClasses'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
-import { GInputBase, GInputBaseProps, LabelPosition } from '../g-input-base'
+import { GInputBase, GInputBaseProps } from '../g-input-base'
 import { GInputAdornment } from '../g-input-adornment'
 import { GInputSurveyOption } from './GInputSurveyOption'
 import { DialobApi } from '../api-dialob'
@@ -13,7 +13,7 @@ import { DialobApi } from '../api-dialob'
 export interface GInputSurveyProps {
   id: string;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
   children: React.ReactNode;
 

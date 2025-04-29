@@ -1,7 +1,7 @@
 import React from 'react';
 import { OverridableStringUnion } from '@mui/types';
 
-import { GInputBase, LabelPosition } from '../g-input-base';
+import { GInputBase } from '../g-input-base';
 import { DialobApi } from '../api-dialob';
 import { useThemeInfra, GInputTextAreaRoot } from './useThemeInfra';
 
@@ -14,7 +14,7 @@ export interface GInputTextAreaProps {
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;

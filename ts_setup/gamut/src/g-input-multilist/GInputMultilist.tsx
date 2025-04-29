@@ -5,7 +5,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import { DialobApi } from '../api-dialob';
-import { GInputBase, LabelPosition } from '../g-input-base';
+import { GInputBase } from '../g-input-base';
 import { GInputBaseProps } from '../g-input-base';
 import { GInputError } from '../g-input-error';
 import { GInputLabel, GInputLabelProps } from '../g-input-label';
@@ -27,7 +27,7 @@ export interface GInputMultilistProps {
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;
