@@ -10,9 +10,8 @@ import { Table } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 
 
-interface EveliTablePaginationProps {
+export interface ToolPaginationProps {
   table: Table<any>;
-  data: unknown[],
   initialPageSize: number;
   pagination: {
     pageIndex: number;
@@ -21,12 +20,13 @@ interface EveliTablePaginationProps {
 }
 
 
-export const Pagination: React.FC<EveliTablePaginationProps> = (props) => {
+export const ToolPagination: React.FC<ToolPaginationProps> = (props) => {
   const intl = useIntl();
+  
 
   return (
     <>
-      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.data.length}</Typography>
+      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.table.getRowCount()}</Typography>
       <Typography>{intl.formatMessage({ id: 'eveli.table.footer.rowsPerPage', defaultMessage: 'Rows per page: ' })}</Typography>
       <TextField select value={props.table.getState().pagination.pageSize} onChange={e => { props.table.setPageSize(Number(e.target.value)) }}>
         {[props.initialPageSize, 10, 20].map(pageSize => (

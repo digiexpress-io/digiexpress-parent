@@ -16,7 +16,12 @@ export const useUtilityClasses = () => {
     bodyRow: ['bodyRow'],
     headerRow: ['headerRow'],
 
-    pagination: ['pagination'],
+    footer: ['footer'],
+
+    drawer: ['drawer'],
+
+    drawerButtonBar: ['drawerButtonBar'],
+    drawerButton: ['drawerButton']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -133,9 +138,9 @@ export const BodyRowSlot = styled('div', {
 
 
 
-export const PaginationSlot = styled('div', {
+export const FooterSlot = styled('div', {
   name: EveliTableRootClassName,
-  slot: 'Pagination',
+  slot: 'Footer',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -176,4 +181,99 @@ export const PaginationSlot = styled('div', {
       paddingBottom: theme.spacing(0.5)
     }
   };
+});
+
+
+export const DrawerSlot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'Drawer',
+})(({ theme }) => {
+  return {
+    width: '200px',
+    position: 'absolute',
+    overflow: 'scroll',
+    top: 0,
+    bottom: 0,
+    boxShadow: '-2px 0px 8px rgba(0, 0, 0, 0.1)',
+    right: '0px',
+    backgroundColor: theme.palette.secondary.main,
+    border: `1px solid ${theme.palette.divider}`,
+    zIndex: 10,
+
+    '.title': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginLeft: theme.spacing(1)
+    },
+
+    '& .title .MuiTypography-root': {
+      ...theme.typography.subtitle2,
+      fontWeight: 'bold'
+    }
+  }
+});
+
+
+
+
+export const DrawerButtonBarSlot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'DrawerButtonBar',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+    ];
+  },
+
+})(({ theme }) => {
+
+  return {
+    grow: 1,
+    paddingTop: theme.spacing(1),
+    gap: theme.spacing(3),
+    display: 'flex',
+    borderRadius: '0px 10px 10px 0px',
+    backgroundColor: theme.palette.secondary.main,
+    border: `1px solid ${theme.palette.divider}`,
+    borderLeft: 'unset',
+    flexDirection: 'column',
+    alignItems: 'center'
+  };
+});
+
+
+
+export const DrawerButtonSlot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'DrawerButton',
+  overridesResolver: (_props, styles) => {
+    return [
+      styles.root,
+    ];
+  },
+
+})(({ theme }) => {
+
+  return {
+    '.MuiButtonBase-root': {
+      writingMode: 'vertical-rl',
+      transform: 'rotate(360deg)',
+      backgroundColor: 'transparent',
+      ':hover': {
+        backgroundColor: 'transparent',
+      },
+
+      '.MuiButton-icon': {
+        marginRight: '0px',
+        marginLeft: '0px',
+        marginBottom: theme.spacing(1),
+
+      }
+    },
+    '.MuiTypography-root': {
+      color: theme.palette.text.primary,
+      fontSize: '10pt'
+    }
+  }
 });

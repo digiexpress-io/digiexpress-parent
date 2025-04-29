@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Table, VisibilityState } from '@tanstack/react-table';
-import { ColSelectItem, EveliTableColumnSelect } from './EveliTableColumnSelect';
+
 import { useIntl } from 'react-intl';
+import { ToolColumnVisibility } from './ToolColumnVisibility';
 
 
-interface EveliTableColumnVisibilityDialogProps {
+export interface ToolColumnVisibilityDialogProps {
   open: boolean,
   onClose: () => void,
   table: Table<any>;
@@ -13,7 +14,7 @@ interface EveliTableColumnVisibilityDialogProps {
 
 
 
-export const EveliTableColumnVisibilityDialog: React.FC<EveliTableColumnVisibilityDialogProps> = ({ open, onClose, table }) => {
+export const ToolColumnVisibilityDialog: React.FC<ToolColumnVisibilityDialogProps> = ({ open, onClose, table }) => {
   const allColumns = table.getAllColumns().filter(col => col.getCanHide());
   const intl = useIntl();
 
@@ -41,16 +42,16 @@ export const EveliTableColumnVisibilityDialog: React.FC<EveliTableColumnVisibili
     <Dialog open={open} onClose={onClose} maxWidth='xs'>
       <DialogTitle>{intl.formatMessage({ id: 'eveli.table.menu.sort.chooseCols', defaultMessage: 'Select columns' })}</DialogTitle>
       <DialogContent>
-        <EveliTableColumnSelect>
-          {allColumns.map((col, index) => (<ColSelectItem colTitle={col.columnDef.header?.toString() || col.id} key={index}
-            isVisible={selected[col.id]}
-            onToggle={() => handleColumnVisibility(col.id)} />
-          )
-          )}
-        </EveliTableColumnSelect>
+        <ToolColumnVisibility slotProps={{
+          columns: allColumns.map((col) => ({
+            colTitle: col.columnDef.header?.toString() || col.id,
+            isVisible: selected[col.id],
+            onToggle: () => handleColumnVisibility(col.id)
+          }))
+        }} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>{intl.formatMessage({ id: 'buttons.close', defaultMessage: 'Close' })}</Button>
       </DialogActions>
     </Dialog>)
 }

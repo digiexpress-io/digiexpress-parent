@@ -6,7 +6,7 @@ import React from 'react';
 
 
 
-export const EveliTableDrawerFilters: React.FC<{ status: React.ReactNode, priority: React.ReactNode }> = ({ status, priority }) => {
+export const ToolColumnFilter: React.FC<{ status: React.ReactNode, priority: React.ReactNode }> = ({ status, priority }) => {
   const classes = useUtilityClasses();
   const [statusOpen, setStatusOpen] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -42,7 +42,7 @@ export const EveliTableDrawerFilters: React.FC<{ status: React.ReactNode, priori
 
 
 
-export const FilterItem: React.FC<{ filterTitle: string, children: React.ReactNode, onClick: () => void }> = ({ filterTitle, children, onClick }) => {
+const FilterItem: React.FC<{ filterTitle: string, children: React.ReactNode, onClick: () => void }> = ({ filterTitle, children, onClick }) => {
   const classes = useUtilityClasses();
 
   return (
