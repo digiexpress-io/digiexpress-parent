@@ -26,31 +26,34 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
+  const [savedReply, setSavedReply] = React.useState<string>('');
+
   React.useEffect(() => {
     getOneFeedback(taskId)
-      .then(resp => resp)
       .then((resp) => {
-
-
         setFeedback(resp);
-
         setReply(resp?.replyText ?? '');
+        setSavedReply(resp?.replyText ?? '');
       });
-  }, [])
+  }, []);  
 
   function handlePublish() {
     if (!feedback) {
       return;
     }
-
+  
     const command: FeedbackApi.ModifyOneFeedbackReplyCommand = {
       id: feedback.id,
       commandType: 'MODIFY_ONE_FEEDBACK_REPLY',
       reply: reply
     };
-    modifyOneFeedback(taskId, command).then(onComplete);
-
+  
+    modifyOneFeedback(taskId, command).then(updatedFeedback => {
+      onComplete(updatedFeedback);
+      setSavedReply(reply);
+    });
   }
+  
 
   function confirmDelete() {
     deleteOneFeedback(taskId).then(feedback => {
@@ -104,13 +107,21 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
           minRows={4}
           placeholder='Write a reply here'
           value={reply}
-        />
+      />
 
       <Box display='flex' gap={1}>
         <Button onClick={() => setConfirmOpen(true)} variant='text'>
           <FormattedMessage id='button.delete' />
         </Button>
-        <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.update'/></Button>
+        <Button
+          variant='outlined'
+          onClick={() => setReply(savedReply)}
+        >
+          <FormattedMessage id='button.cancel' />
+        </Button>
+        <Button variant='contained' onClick={handlePublish}>
+          <FormattedMessage id='button.update' />
+        </Button>
       </Box>
 
       <Dialog
