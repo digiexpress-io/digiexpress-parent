@@ -116,10 +116,15 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Button
           variant='outlined'
           onClick={() => setReply(savedReply)}
+          disabled={reply === savedReply}
         >
           <FormattedMessage id='button.cancel' />
         </Button>
-        <Button variant='contained' onClick={handlePublish}>
+        <Button
+          variant='contained'
+          onClick={handlePublish}
+          disabled={reply === savedReply}
+        >
           <FormattedMessage id='button.update' />
         </Button>
       </Box>
