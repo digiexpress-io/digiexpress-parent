@@ -2,9 +2,9 @@ import React from 'react';
 import { Typography } from '@mui/material';
 
 import { EveliTableRoot, useUtilityClasses } from './useUtilityClasses';
-import { EveliTableColumnFilter } from './EveliTableColumnFilter';
-import { EveliTableColumnOptions } from './EveliTableColumnOptions';
-import { EveliTableColumnVisibility } from './EveliTableColumnVisibility';
+import { EveliTableFilterAndSearch } from './EveliTableFilterAndSearch';
+import { EveliTableColumnSortAndChoose } from './EveliTableColumnSortAndChoose';
+import { EveliTableColumnVisibilityDialog } from './EveliTableColumnVisibilityDialog';
 
 export const EveliTable: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
@@ -27,7 +27,7 @@ export const EveliTableHeaderCell: React.FC<{ children: string, filterItems: str
       <Typography>{children}</Typography>
       <div style={{ flexGrow: 1 }} />
       {/* <EveliTableColumnFilter filterItems={filterItems} /> */}
-      <EveliTableColumnOptions onChooseCols={() => setOpen(true)} onSortAsc={() => { }} onSortDesc={() => { }} onClearSorting={() => { }} onClearColVisibility={() => { }} />
+      <EveliTableColumnSortAndChoose onChooseCols={() => setOpen(true)} onSortAsc={() => { }} onSortDesc={() => { }} onClearSorting={() => { }} onClearColVisibility={() => { }} />
     </div>
   </>
   )

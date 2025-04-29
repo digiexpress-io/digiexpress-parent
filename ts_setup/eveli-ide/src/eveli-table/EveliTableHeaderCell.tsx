@@ -4,8 +4,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 import { Header } from '@tanstack/react-table';
-import { EveliTableColumnOptions } from './EveliTableColumnOptions';
-import { EveliTableColumnFilter } from './EveliTableColumnFilter';
+import { EveliTableColumnSortAndChoose } from './EveliTableColumnSortAndChoose';
+import { EveliTableFilterAndSearch } from './EveliTableFilterAndSearch';
 
 
 type EveliTableHeaderProps = {
@@ -31,9 +31,9 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
 
-        <EveliTableColumnFilter header={props.header} />
+        <EveliTableFilterAndSearch header={props.header} />
 
-        <EveliTableColumnOptions
+        <EveliTableColumnSortAndChoose
           onChooseCols={props.onColumnFilter}
           onSortAsc={() => column.toggleSorting(false)}
           onSortDesc={() => column.toggleSorting(true)}
@@ -49,7 +49,7 @@ export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => 
     <div className='headerCell' style={{ width: column.getSize() }}>
       <Typography>{props.children}</Typography>
       <div style={{ flexGrow: 1 }} />
-      <EveliTableColumnFilter header={props.header} />
+      <EveliTableFilterAndSearch header={props.header} />
       <ColumnResizer header={props.header} />
     </div>
 

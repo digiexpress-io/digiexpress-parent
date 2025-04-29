@@ -2,12 +2,12 @@
 import { Typography } from '@mui/material';
 import { useThemeInfra, GInputLabelRoot } from './useThemeInfra'
 import { GInputCurlyBracket } from './GInputCurlyBracket'
-import { LabelPosition } from '../g-input-base';
+import { DialobApi } from '../api-dialob';
 
 
 export interface GInputLabelProps {
   id: string;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   children: string; 
   braced?: boolean | undefined;
   

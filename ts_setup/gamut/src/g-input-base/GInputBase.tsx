@@ -21,7 +21,7 @@ export interface GInputBaseAnyProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-export type LabelPosition = 'label-left' | 'label-top';
+
 
 export interface GInputBaseProps<InputProps = {}> {
   id: string;

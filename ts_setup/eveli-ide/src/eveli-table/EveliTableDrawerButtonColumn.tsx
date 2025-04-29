@@ -4,6 +4,7 @@ import { Button, generateUtilityClass, styled, Typography } from "@mui/material"
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import composeClasses from "@mui/utils/composeClasses";
+import { useIntl } from "react-intl";
 
 const RotatedButton: React.FC<{ label: string, icon: React.ReactNode, onClick: () => void }> = ({ label, icon, onClick }) => {
   const classes = useUtilityClasses();
@@ -23,11 +24,12 @@ export const EveliTableDrawerButtonColumn: React.FC<{
   onFiltersClick: () => void
 }> = ({ onColumnsClick, onFiltersClick }) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
 
   return (
     <EveliTableDrawerButtonsColumnRoot className={classes.root}>
-      <RotatedButton label="Columns" icon={<TableChartOutlinedIcon />} onClick={onColumnsClick} />
-      <RotatedButton label="Filter" icon={<FilterListOutlinedIcon />} onClick={onFiltersClick} />
+      <RotatedButton label={intl.formatMessage({ id: 'eveli.table.drawer.buttons.colsButton', defaultMessage: 'Columns' })} icon={<TableChartOutlinedIcon />} onClick={onColumnsClick} />
+      <RotatedButton label={intl.formatMessage({ id: 'eveli.table.drawer.buttons.filtersButton', defaultMessage: 'Filters' })} icon={<FilterListOutlinedIcon />} onClick={onFiltersClick} />
     </EveliTableDrawerButtonsColumnRoot>
   );
 };

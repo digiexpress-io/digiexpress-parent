@@ -1,1 +1,2 @@
-export * from './GFormInputBoolean'
+export * from './GInputBoolean'
+export * from './GInputBooleanDialob'

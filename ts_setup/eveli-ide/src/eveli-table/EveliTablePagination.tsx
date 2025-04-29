@@ -7,6 +7,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 
 import { Table } from '@tanstack/react-table';
 import composeClasses from '@mui/utils/composeClasses';
+import { useIntl } from 'react-intl';
 
 
 interface EveliTablePaginationProps {
@@ -33,12 +34,13 @@ interface EveliTablePaginationProps {
 
 export const EveliTablePagination: React.FC<EveliTablePaginationProps> = (props) => {
   const classes = useUtilityClasses();
+  const intl = useIntl();
 
   return (
     <EveliTablePaginationRoot className={classes.root}>
-      <Typography>Total tasks: {props.data.length}</Typography>
+      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.data.length}</Typography>
 
-      <Typography>Rows per page:</Typography>
+      <Typography>{intl.formatMessage({ id: 'eveli.table.footer.rowsPerPage', defaultMessage: 'Rows per page: ' })}</Typography>
       <TextField select value={props.table.getState().pagination.pageSize} onChange={e => { props.table.setPageSize(Number(e.target.value)) }}>
         {[props.initialPageSize, 10, 20].map(pageSize => (
           <MenuItem key={pageSize} value={pageSize}>
@@ -49,7 +51,13 @@ export const EveliTablePagination: React.FC<EveliTablePaginationProps> = (props)
 
       <IconButton onClick={() => props.table.firstPage()} disabled={!props.table.getCanPreviousPage()}><FirstPageIcon /></IconButton>
       <IconButton onClick={() => props.table.previousPage()} disabled={!props.table.getCanPreviousPage()}><KeyboardArrowLeftIcon /></IconButton>
-      <span style={{ marginLeft: 10, marginRight: 10 }}><Typography>Page {props.pagination.pageIndex + 1} of {props.table.getPageCount()}</Typography> </span>
+
+
+      <span style={{ marginLeft: 10, marginRight: 10 }}>
+        <Typography>{intl.formatMessage({ id: 'eveli.table.footer.pageNumber', defaultMessage: 'Page ' })}
+          {props.pagination.pageIndex + 1} / {props.table.getPageCount()}
+        </Typography>
+      </span>
       <IconButton onClick={() => props.table.nextPage()} disabled={!props.table.getCanNextPage()}><KeyboardArrowRightIcon /></IconButton>
       <IconButton onClick={() => props.table.lastPage()} disabled={!props.table.getCanNextPage()}><LastPageIcon /></IconButton>
     </EveliTablePaginationRoot>

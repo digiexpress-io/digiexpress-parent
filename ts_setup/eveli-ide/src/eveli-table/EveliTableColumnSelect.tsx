@@ -6,18 +6,18 @@ import composeClasses from '@mui/utils/composeClasses';
 import React from 'react';
 
 
-export const EveliTableColSelect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EveliTableColumnSelect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const classes = useUtilityClasses();
 
   return (
-    <EveliTableColSelectRoot className={classes.root}>
+    <EveliTableColumnSelectRoot className={classes.root}>
       {children}
-    </EveliTableColSelectRoot>
+    </EveliTableColumnSelectRoot>
   )
 }
 
 
-interface ColSelectItemProps {
+interface ColumnSelectItemProps {
   colTitle: string;
   isVisible: boolean;
   onToggle: () => void;
@@ -25,24 +25,24 @@ interface ColSelectItemProps {
 
 //TODO disabled state for cols that cannot be hidden
 //https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-toggle-apis
-export const ColSelectItem: React.FC<ColSelectItemProps> = ({ colTitle, isVisible, onToggle }) => {
+export const ColSelectItem: React.FC<ColumnSelectItemProps> = ({ colTitle, isVisible, onToggle }) => {
   const classes = useUtilityClasses();
 
 
   return (
-    <ColSelectItemRoot className={classes.root} onClick={onToggle}>
+    <ColumnSelectItemRoot className={classes.root} onClick={onToggle}>
       {isVisible ? <CheckBoxIcon className='cols-select-checkmark-icon' /> : <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />}
       <Typography>{colTitle}</Typography>
-    </ColSelectItemRoot>
+    </ColumnSelectItemRoot>
   )
 }
 
 
 
-const DrawerColsRootClassName = 'ColSelectItemRoot';
+const EveliTableColumnSelectRootClassName = 'ColumnSelectItemRoot';
 
-const EveliTableColSelectRoot = styled('div', {
-  name: DrawerColsRootClassName,
+const EveliTableColumnSelectRoot = styled('div', {
+  name: EveliTableColumnSelectRootClassName,
   slot: 'DrawerColSelect',
   overridesResolver: (_props, styles) => {
     return [
@@ -63,8 +63,8 @@ const EveliTableColSelectRoot = styled('div', {
 });
 
 
-const ColSelectItemRoot = styled('div', {
-  name: DrawerColsRootClassName,
+const ColumnSelectItemRoot = styled('div', {
+  name: EveliTableColumnSelectRootClassName,
   slot: 'ColSelectItem',
   overridesResolver: (_props, styles) => {
     return [
@@ -97,6 +97,6 @@ const useUtilityClasses = () => {
     root: ['root'],
 
   };
-  const getUtilityClass = (slot: string) => generateUtilityClass(DrawerColsRootClassName, slot);
+  const getUtilityClass = (slot: string) => generateUtilityClass(EveliTableColumnSelectRootClassName, slot);
   return composeClasses(slots, getUtilityClass, {});
 }

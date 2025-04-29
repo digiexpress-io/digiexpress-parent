@@ -7,7 +7,7 @@ import { DialobApi } from '../api-dialob'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
 import { GInputAdornment } from '../g-input-adornment'
-import { GInputBase, GInputBaseAnyProps, GInputBaseProps, LabelPosition } from '../g-input-base'
+import { GInputBase, GInputBaseAnyProps, GInputBaseProps } from '../g-input-base'
 
 import { MUI_NAME, GInputTextRoot, useUtilityClasses } from './useUtilityClasses'
 
@@ -20,7 +20,7 @@ export interface GInputTextProps {
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;
@@ -80,5 +80,5 @@ export const GInputText: React.FC<GInputTextProps> = (initProps) => {
 
 const TextInput: React.FC<GInputBaseAnyProps & GInputTextProps> = (props) => {
   const classes = useUtilityClasses(props.id, props.variant);
-  return (<TextField value={props.value} name={props.name} onChange={props.onChange} className={classes.input} error={(props.errors?.length ?? 0) > 0} />)
+  return (<TextField value={props.value ?? ''} name={props.name} onChange={props.onChange} className={classes.input} error={(props.errors?.length ?? 0) > 0} />)
 }

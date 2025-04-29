@@ -8,7 +8,7 @@ import { DialobApi } from '../api-dialob'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
 import { GInputAdornment } from '../g-input-adornment'
-import { GInputBase, GInputBaseProps, LabelPosition } from '../g-input-base'
+import { GInputBase, GInputBaseProps } from '../g-input-base'
 
 import { MUI_NAME, GInputAddressRoot, useUtilityClasses } from './useUtilityClasses'
 import { useIntl } from 'react-intl'
@@ -22,7 +22,7 @@ export interface GInputAddressPropsVariantOverrides { }
 
 export interface GInputAddressProps {
   id: string;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;

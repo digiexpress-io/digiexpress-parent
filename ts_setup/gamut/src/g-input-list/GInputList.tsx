@@ -5,7 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useIntl } from 'react-intl';
 
 import { DialobApi } from '../api-dialob';
-import { GInputBase, GInputBaseProps, LabelPosition } from '../g-input-base';
+import { GInputBase, GInputBaseProps } from '../g-input-base';
 import { GInputError } from '../g-input-error';
 import { GInputLabel } from '../g-input-label';
 import { GInputAdornment } from '../g-input-adornment';
@@ -24,7 +24,7 @@ export interface GInputListProps {
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;

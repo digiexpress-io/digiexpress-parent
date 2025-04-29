@@ -114,7 +114,7 @@ export declare namespace DialobApi {
    */
   export type ControlId = string;
   export type ControlLocalizedString = string;
-
+  export type ControlLabelPosition = 'label-left' | 'label-top';
   export type ControlType = (
     string
   );
@@ -183,6 +183,9 @@ export declare namespace DialobApi {
     toChildren(id: ControlId): ActionItem[];
     toInputRow(id: ControlId): ControlInputRow;
     toParent(id: ControlId): ActionItem | undefined;
+
+    toLabelPosition(id: ControlId): ControlLabelPosition;
+
 
     proceedAllowed: boolean;
     completeAllowed: boolean;

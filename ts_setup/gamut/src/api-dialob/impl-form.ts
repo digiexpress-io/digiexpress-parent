@@ -66,6 +66,14 @@ export class FormImpl implements DialobApi.Form {
 
     return undefined;
   }
+  public toLabelPosition(id: string): DialobApi.ControlLabelPosition {
+    try {
+      const parent = this.toParent(id);
+      return parseInt(parent?.props.columns) > 1 ? 'label-top': 'label-left';
+    } catch(e) {
+      return 'label-left';
+    }
+  }
   public toPage(id: string): DialobApi.ControlPage {
     return parsePage(id, this);
   }

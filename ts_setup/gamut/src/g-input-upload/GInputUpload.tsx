@@ -10,7 +10,7 @@ import { DialobApi, useDialob, useForm } from '../api-dialob'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
 import { GInputAdornment } from '../g-input-adornment'
-import { GInputBase, GInputBaseAnyProps, GInputBaseProps, LabelPosition } from '../g-input-base'
+import { GInputBase, GInputBaseAnyProps, GInputBaseProps } from '../g-input-base'
 
 import { MUI_NAME, GInputUploadRoot, useUtilityClasses } from './useUtilityClasses'
 import { FormattedMessage } from 'react-intl';
@@ -24,7 +24,7 @@ export interface GInputUploadProps {
   value: string | undefined; // list of file names
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
-  labelPosition: LabelPosition,
+  labelPosition: DialobApi.ControlLabelPosition,
   description: string | undefined;
 
   errors?: DialobApi.ActionError[] | undefined;
