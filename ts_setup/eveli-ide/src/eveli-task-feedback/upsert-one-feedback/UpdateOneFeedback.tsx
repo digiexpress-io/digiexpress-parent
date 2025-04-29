@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button } from '@mui/material';
+import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl, FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
@@ -24,6 +24,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [reply, setReply] = React.useState<string>('');
 
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+
   React.useEffect(() => {
     getOneFeedback(taskId)
       .then(resp => resp)
@@ -35,7 +37,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         setReply(resp?.replyText ?? '');
       });
   }, [])
-
 
   function handlePublish() {
     if (!feedback) {
@@ -51,7 +52,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
   }
 
-  function handleDelete() {
+  function confirmDelete() {
     deleteOneFeedback(taskId).then(feedback => {
       onComplete(feedback);
     });
@@ -106,9 +107,35 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         />
 
       <Box display='flex' gap={1}>
-        <Button onClick={handleDelete}  variant='text'><FormattedMessage id='button.delete'/></Button>
+        <Button onClick={() => setConfirmOpen(true)} variant='text'>
+          <FormattedMessage id='button.delete' />
+        </Button>
         <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.update'/></Button>
       </Box>
+
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        maxWidth="xs"
+      >
+        <DialogTitle>
+          <FormattedMessage id='feedback.delete.confirmTitle' />
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            <FormattedMessage id='feedback.delete.confirmText' />
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)}>
+            <FormattedMessage id='button.cancel' />
+          </Button>
+          <Button onClick={confirmDelete} color='error'>
+            <FormattedMessage id='button.confirmDelete' />
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   )
 }
