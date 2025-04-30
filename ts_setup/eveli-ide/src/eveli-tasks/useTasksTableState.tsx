@@ -92,9 +92,15 @@ export function useTasksTableState(): TableState {
         field: 'subject',
         headerStyle: { fontWeight: 'bold' },
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'subject')?.value || "",
-        render: data => <TaskLink title={(data.subject || '') + ' ' + (data.taskRef || '') || '-'} id={data.id} keywords={data?.keyWords} />,
+        render: data => <TaskLink title={data.subject || '-'} id={data.id} keywords={data?.keyWords} />,
         hidden: tableRef.current?.state.columns.find((column: any) => column.field === "subject").hidden,
       },
+      {
+        title: 'Reference ID',
+        field: 'taskRef',
+        filtering: true,
+        hidden: true
+      },      
       {
         title: intl.formatMessage({ id: 'spoTasksTableHeader.additionalInfo' }),
         field: 'additionalInfo',
