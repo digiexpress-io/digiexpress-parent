@@ -70,6 +70,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
         label={intl.formatMessage({ id: labelId })}
         fullWidth 
         slotProps={{ input: { margin: 'dense' } }}
+        sx={{ minHeight: '72px' }}
         onChange={(event) => {
           const newValue = event.target.value;
           setForm(prev => {
@@ -95,6 +96,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               value={form.liveDate ? DateTime.fromISO(form.liveDate).toJSDate() : null}
               label={intl.formatMessage({ id: 'publications.liveDate' })}
               slots={{textField: textFieldProps => <TextField fullWidth {...textFieldProps} />}}
+              sx={{ minHeight: '72px' }}
               onChange={date => setForm(prev => {
                 const next = {...prev};
                 next.liveDate = date ? DateTime.fromJSDate(date).plus({ seconds: 1}).toLocal().toISO({ includeOffset: false,  }) : null;
@@ -102,27 +104,39 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
               })}
             />
 
-            <TextField fullWidth required name='name' 
-              label={intl.formatMessage({ id: 'publications.name' })}
-              error={!form.name}
-              helperText={!!form.name ? null : intl.formatMessage({ id: 'error.valueRequired'})} 
-              slotProps={{ input: { margin: 'dense' } }}
-              onChange={element => {
-                const newValue = element.target.value;
-
-                setForm(prev => {
-                  const next = {...prev};
-                  next.name = newValue;
-                  return next;
-                })
+          <TextField
+            fullWidth
+            required
+            name='name'
+            label={intl.formatMessage({ id: 'publications.name' })}
+            error={!form.name}
+            helperText={!form.name ? intl.formatMessage({ id: 'error.valueRequired' }) : ' '}
+            slotProps={{ input: { margin: 'dense' } }}
+            sx={{
+              position: 'relative',
+              minHeight: '72px'
             }}
-            />
+            FormHelperTextProps={{
+              sx: {
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                lineHeight: 1.2,
+                margin: 0,
+              }
+            }}
+            onChange={element => {
+              const newValue = element.target.value;
+              setForm(prev => ({ ...prev, name: newValue }));
+            }}
+          />
 
             <TextField 
               name='description' 
               label={intl.formatMessage({ id: 'publications.description' })} 
               fullWidth
               slotProps={{ input: { margin: 'dense' } }}
+              sx={{ minHeight: '72px' }}
               onChange={element => {
                 const newValue = element.target.value;
                 setForm(prev => {
