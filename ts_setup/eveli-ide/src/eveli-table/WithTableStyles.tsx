@@ -28,12 +28,10 @@ export function WithTableStyles<DataType extends object>(props: {
 
 
   const {
-    table, pagination, initialPageSize, columnSizeVars,
-    onColumnFilter,
-
-    filterDialogOpen
-
+    table, pagination, initialPageSize, columnSizeVars, filterDialogOpen,
+    onColumnFilter, onClearAll,
   } = useTableState<DataType>(props);
+
   return (
     <>
       <EveliTable
@@ -61,7 +59,7 @@ export function WithTableStyles<DataType extends object>(props: {
           drawer: {
             body: (type) => {
               if (type === 'filters') {
-                return <ToolColumnFilter table={table} />
+                return <ToolColumnFilter table={table} onClearAll={onClearAll} />
               }
               return (<ToolColumnVisibilitySelection table={table} />)
             }

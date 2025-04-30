@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, generateUtilityClass, styled, Typography } from '@mui/material';
+import { Box, Button, generateUtilityClass, styled, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -9,15 +9,15 @@ import { Column, Table } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 import { useHeaderItems } from '../tool-header-search';
 
-
 export interface ToolColumnFilterProps {
   table: Table<any>;
+  onClearAll: () => void;
 }
 
 
 export const ToolColumnFilter: React.FC<ToolColumnFilterProps> = (props) => {
   const classes = useUtilityClasses();
-
+  const intl = useIntl();
   const [expandedId, setExpandedId] = React.useState<string | undefined>(undefined);
 
   function toggleExpanded(columnId: string) {
@@ -44,6 +44,8 @@ export const ToolColumnFilter: React.FC<ToolColumnFilterProps> = (props) => {
 
   return (
     <Root className={classes.root}>
+      <Button onClick={props.onClearAll}>{intl.formatMessage({ id: 'eveli.table.resetAll', defaultMessage: 'Reset table' })}</Button>
+
       {props.table.getAllFlatColumns()
         .filter(col => col.columnDef.meta?.enableSelection)
         .map(col => <ColumnFilter
