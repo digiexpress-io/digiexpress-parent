@@ -256,6 +256,7 @@ export const fi = {
   'attachmentTableHeader.name': 'Nimi',
   'attachmentButton.addAttachment': 'Lisää tiedosto',
   'attachmentButton.downloadAttachment': 'Lataa tiedosto',
+  'attachmentButton.deleteAttachment': 'Poista tiedosto',
   'attachment.uploadOk': 'Tiedosto {fileName} ladattu',
   'attachment.uploadFailed': 'tiedoston {fileName} lataaminen epäonnistui!',
   'workflowReleaseTable.title': 'Kokoonpano',

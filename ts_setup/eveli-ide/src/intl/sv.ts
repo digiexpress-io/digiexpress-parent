@@ -252,6 +252,7 @@ export const sv = {
   'attachmentTableHeader.name': 'Name',
   'attachmentButton.addAttachment': 'Add file',
   'attachmentButton.downloadAttachment': 'Download file',
+  'attachmentButton.deleteAttachment': 'Remove file',
   'attachment.uploadOk': 'File {fileName} uploaded',
   'attachment.uploadFailed': 'File {fileName} upload failed!',
   'workflowReleaseTable.title': 'Workflow release',
