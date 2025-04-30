@@ -47,45 +47,39 @@ const TaskRoleSelect: React.FC<TaskRoleSelectProps> = ({ assignedRoles, groups, 
   const { formatMessage } = useIntl();
   const [roles, setRoles] = React.useState(groups.filter(g => assignedRoles.includes(g.id)));
 
-  const handleClose = () => {
-    acceptNewRoles(roles);
-  };
-
   const handleChange = (event: any, newValue: IamApi.UserGroup[]) => {
     setRoles(newValue);
     acceptNewRoles(newValue); 
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClose}>
-      <Autocomplete multiple value={roles} options={groups} 
-        onChange={handleChange}
-        disableCloseOnSelect
-        getOptionLabel={(option) => option.groupName}
-        renderOption={(props, option, { selected }) => (
-          <li {...props}>
-            <Checkbox
-              icon={icon}
-              checkedIcon={checkedIcon}
-              checked={selected}
-            />
-            {option.groupName}
-          </li>
-        )}
-        renderInput={(params) => (
-          <TextField {...params} value={roles} label={formatMessage({ id: 'taskDialog.assignedTo' })}
-            placeholder={formatMessage({ id: 'taskDialog.assignedTo' })}
-            autoFocus={true}
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-            }}
+    <Autocomplete multiple value={roles} options={groups} 
+      onChange={handleChange}
+      disableCloseOnSelect
+      getOptionLabel={(option) => option.groupName}
+      renderOption={(props, option, { selected }) => (
+        <li {...props} key={option.groupName}>
+          <Checkbox
+            icon={icon}
+            checkedIcon={checkedIcon}
+            checked={selected}
           />
-        )}
-      />
-      </ClickAwayListener>
-    )
+          {option.groupName}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField {...params} value={roles} label={formatMessage({ id: 'taskDialog.assignedTo' })}
+          placeholder={formatMessage({ id: 'taskDialog.assignedTo' })}
+          autoFocus={true}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+        />
+      )}
+    />
+  )
 }
 
 

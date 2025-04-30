@@ -1,57 +1,49 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-import { Header } from '@tanstack/react-table';
-import { EveliTableColumnSortAndChoose } from './EveliTableColumnSortAndChoose';
-import { EveliTableFilterAndSearch } from './EveliTableFilterAndSearch';
+import { Header, Table } from '@tanstack/react-table';
+
+import { ToolHeaderSearch } from '../tool-header-search';
+import { ToolHeaderSort } from '../tool-header-sort';
 
 
-type EveliTableHeaderProps = {
-  children: React.ReactNode; // title
+export type ToolHeaderOptionsProps = {
   header: Header<any, any>;
+  table: Table<any>
   onColumnFilter: () => void;
-  onResetColVisibility: () => void;
 }
 
-export const EveliTableHeaderCell: React.FC<EveliTableHeaderProps> = (props) => {
+export const ToolHeaderOptions: React.FC<ToolHeaderOptionsProps> = (props) => {
   const { column } = props.header;
   const isSortable = column.getCanSort();
   const sortDirection = column.getIsSorted();
 
-
   if (isSortable) {
     return (
-
-      <div className='headerCell' style={{ width: column.getSize() }}>
-        <Typography>{props.children}</Typography>
+      <>
         <div style={{ marginLeft: 4, display: 'flex' }}>
           {sortDirection === 'asc' && <ArrowUpwardIcon fontSize="small" />}
           {sortDirection === 'desc' && <ArrowDownwardIcon fontSize="small" />}
         </div>
+        <ToolHeaderSearch header={props.header} />
 
-        <EveliTableFilterAndSearch header={props.header} />
-
-        <EveliTableColumnSortAndChoose
+        <ToolHeaderSort
           onChooseCols={props.onColumnFilter}
-          onSortAsc={() => column.toggleSorting(false)}
-          onSortDesc={() => column.toggleSorting(true)}
-          onClearSorting={() => column.clearSorting()}
-          onClearColVisibility={() => props.onResetColVisibility()}
+          header={props.header}
+          table={props.table}
         />
         <ColumnResizer header={props.header} />
-
-      </div>
+      </>
     )
   }
   return (
-    <div className='headerCell' style={{ width: column.getSize() }}>
-      <Typography>{props.children}</Typography>
+    <>
       <div style={{ flexGrow: 1 }} />
-      <EveliTableFilterAndSearch header={props.header} />
+      <ToolHeaderSearch header={props.header} />
       <ColumnResizer header={props.header} />
-    </div>
+    </>
 
   )
 }
