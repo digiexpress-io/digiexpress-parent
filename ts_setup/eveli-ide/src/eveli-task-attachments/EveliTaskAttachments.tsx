@@ -85,11 +85,13 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
   };
   const handleDeleteClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
     let attachment = Array.isArray(data) ? data[0] : data;
-    deleteAttachment(taskId, attachment.name);
-    loadAttachments(taskId)
-    .then(attachments => {
-      setAttachments(attachments);
-    });
+    deleteAttachment(taskId, attachment.name)
+    .then(resp => {
+      loadAttachments(taskId)
+      .then(attachments => {
+        setAttachments(attachments);
+      });
+    })
   };
 
   const tableState: TableState = {

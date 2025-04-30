@@ -10,8 +10,8 @@ function hook(props: {}) {
   const { path, contextPath, method, url } = params;
 
   return {
-    deleteAttachment: (taskId: string, filename: string): string => {
-      return url({ filename, taskId })
+    deleteAttachment: (taskId: string, filename: string): Promise<Response> => {
+       return params.fetch(url({ filename, taskId }), {method});
     }
   
   }
