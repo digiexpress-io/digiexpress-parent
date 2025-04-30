@@ -87,4 +87,22 @@ public class AttachmentCommandsDummy implements AttachmentCommands {
       }
     };
   }
+  @Override
+  public AttachmentRemoveBuilder remove() {
+    return new AttachmentRemoveBuilder() {
+      
+      @Override
+      public void removeByTaskId(String taskId) {
+      }
+      
+      @Override
+      public void removeByProcessId(String processId) {
+      }
+      
+      @Override
+      public AttachmentRemoveBuilder filename(String filename) {
+        return this;
+      }
+    };
+  }
 }
