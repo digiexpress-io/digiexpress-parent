@@ -70,6 +70,13 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override
+  public InternalMissionQuery onlyDocs(GrimDocType... docs) {
+    docsToExclude.clear();
+    docsToExclude.addAll(Arrays.asList(GrimDocType.values()));
+    docsToExclude.removeAll(Arrays.asList(docs));
+    return this;
+  }
+  @Override
   public InternalMissionQuery excludeDocs(GrimDocType... docs) {
     docsToExclude.addAll(Arrays.asList(docs));
     return this;

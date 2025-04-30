@@ -46,10 +46,10 @@ public class FindAllUnreadTasksVisitor implements TaskStoreConfig.QueryTasksVisi
     if(!roles.isEmpty()) {
       query.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_ROLE, false, roles);
     }
-    return query
-        .addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, userId)
-        .notViewed(userId, viewerType)
-        .atLeastOneRemarkWithAnyType();
+    return query.notViewed(userId, viewerType)
+        //.addAssignment(TaskMapper.ASSIGNMENT_TYPE_TASK_USER, false, userId)
+        //.atLeastOneRemarkWithAnyType()
+        ;
 
   }
 

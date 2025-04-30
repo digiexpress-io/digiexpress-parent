@@ -128,6 +128,7 @@ public interface ThenaGrimNewObject {
     NewMissionCommitViewer commitId(String commitId);
     NewMissionCommitViewer currentTxCommit(); // ongoing tx commit
     NewMissionCommitViewer currentTreeCommit(); // whatever is last tree updated commit 
+    String getCurrentTreeCommit();
     void build(); 
   }
 }

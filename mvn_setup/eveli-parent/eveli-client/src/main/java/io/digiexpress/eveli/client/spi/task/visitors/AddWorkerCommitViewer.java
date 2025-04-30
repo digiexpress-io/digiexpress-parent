@@ -28,7 +28,9 @@ import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -36,18 +38,27 @@ import lombok.RequiredArgsConstructor;
 public class AddWorkerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
+  private final QueryEnvelopeList<GrimCommitViewer> views;
   
   public void modify(MergeMission merge) {
 
+    
     merge
     // change is viewed by worker who created it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTreeCommit().build())
+    .addViewer(viewer -> {
+      if(views.getObjects().stream().filter(view -> view.getCommitId().equals(viewer.getCurrentTreeCommit())).count() > 1) {
+        return;
+      }
+      viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTreeCommit().build();
+    })
     .build();
   }
   
   @Override
   public ModifyOneMission start(GrimStructuredTenant config, ModifyOneMission builder) {
-    builder.missionId(taskId).modifyMission(merge -> modify(merge));
+    builder
+      .missionId(taskId)
+      .modifyMission(merge -> modify(merge));
     return builder
         .commitAuthor(userId)
         .commitMessage("Adding task viewer by: " + AddWorkerCommitViewer.class.getSimpleName());

@@ -1,5 +1,7 @@
 package io.resys.thena.api.registry.grim;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -28,6 +30,7 @@ import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +42,7 @@ public interface GrimCommitViewerRegistry extends ThenaRegistryService<GrimCommi
   
   ThenaSqlClient.SqlTuple findAllObjectsByIdAndType(Collection<AnyObjectCriteria> commits);
   ThenaSqlClient.SqlTuple findAllByUsedByAndCommit(String usedBy, String usedFor, Collection<String> commits);
+  ThenaSqlClient.SqlTuple findAllViewersInDuration(@Nullable String usedBy, @Nullable String usedFor, @Nullable Duration duration, @Nullable String missionId);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   ThenaSqlClient.SqlTuple findAllByMissionIdsUsedByAndCommit(Collection<String> missionId, String usedBy, String usedFor);
   

@@ -34,9 +34,9 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
+import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
-import io.digiexpress.eveli.client.web.resources.worker.CommentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
@@ -50,11 +50,6 @@ public class EveliAutoConfigWorker {
   @Bean 
   public AttachmentApiController attachmentApiController(ProcessClient processClient, AuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
     return new AttachmentApiController(attachments, taskClient, security, processClient);
-  }
-  @Bean 
-  public CommentApiController commentApiController(TaskClient taskClient, AuthClient security, MqEventPublisher mqEventPublisher) {
-    
-    return new CommentApiController(taskClient, security, mqEventPublisher);
   }
   @Bean 
   public PrintoutController printoutController(
@@ -72,9 +67,10 @@ public class EveliAutoConfigWorker {
       AuthClient security, 
       TaskClient taskclient, 
       DialobClient dialobClient,
-      MqEventPublisher mqEventPublisher) {
+      MqEventPublisher mqEventPublisher,
+      TaskViewerPublisher viewerEventPublisher) {
     
-    return new TaskApiController(security, taskclient, dialobClient, mqEventPublisher);
+    return new TaskApiController(security, taskclient, dialobClient, mqEventPublisher, viewerEventPublisher);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {
@@ -95,5 +91,10 @@ public class EveliAutoConfigWorker {
   @Bean
   public MqEventPublisher mqEventPublisher(ApplicationEventPublisher publisher) {
     return new MqEventPublisher(publisher);
+  }
+  
+  @Bean
+  public TaskViewerPublisher viewerEventPublisher(ApplicationEventPublisher publisher, TaskClient client) {
+    return new TaskViewerPublisher(publisher, client);
   }
 }

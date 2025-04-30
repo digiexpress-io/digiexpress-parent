@@ -71,7 +71,10 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
   public void build() {
     this.built = true;
   }
-  
+  @Override
+  public String getCurrentTreeCommit() {
+    return currentTreeCommit;
+  }
   public ImmutableGrimCommitViewer close() {
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
     RepoAssert.notEmpty(userId, () -> "userId must be defined!");

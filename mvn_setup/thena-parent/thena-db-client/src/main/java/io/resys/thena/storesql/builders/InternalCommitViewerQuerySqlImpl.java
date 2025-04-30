@@ -1,5 +1,7 @@
 package io.resys.thena.storesql.builders;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -68,6 +70,22 @@ public class InternalCommitViewerQuerySqlImpl implements InternalCommitViewerQue
     final var sql = registry.commitViewers().findAllByUsedByAndCommit(userId, usedBy, commits);
     if(log.isDebugEnabled()) {
       log.debug("User findAllByUsedByAndCommit query, with props: {} \r\n{}", 
+          sql.getPropsDeepString(),
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.commitViewers().defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT_VIEWER)));
+  }
+
+  @Override
+  public Multi<GrimCommitViewer> findAllViewersInDuration(String usedBy, String usedFor, Duration duration, String missionId) {
+    final var sql = registry.commitViewers().findAllViewersInDuration(usedBy, usedFor, duration, missionId);
+    if(log.isDebugEnabled()) {
+      log.debug("User findAllViewersInDuration query, with props: {} \r\n{}", 
           sql.getPropsDeepString(),
           sql.getValue());
     }
