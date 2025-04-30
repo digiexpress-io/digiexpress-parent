@@ -39,8 +39,8 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   
   @Override
   public CommitViewersQuery commitViewersQuery() {
-    // TODO Auto-generated method stub
-    return null;
+    final var state = startingState.toGrimState(repoId);
+    return new GrimCommitViewerQueryImpl(state);
   }
   @Override
   public MissionQuery missionQuery() {

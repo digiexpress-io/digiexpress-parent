@@ -1,13 +1,14 @@
 import React from 'react';
 
 import {
-  ColumnDef, ColumnFiltersState, flexRender,
+  ColumnDef, ColumnFiltersState,
   getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
+
   SortingState, useReactTable, getFacetedUniqueValues,
   ColumnSizingState,
   VisibilityState,
   OnChangeFn,
-  Updater,
+  Updater
 } from '@tanstack/react-table';
 
 
@@ -36,7 +37,6 @@ export function useTableState<DataType extends object>(
     const onColumnFilter = React.useCallback(() => {
       setFilterDialogOpen(prev => !prev);
     }, []);
-  
 
     const onColumnVisibilityChange: OnChangeFn<VisibilityState> = React.useCallback((updaterOrValue: Updater<VisibilityState>) => {
       return setColumnVisibility(prev => {
@@ -49,6 +49,13 @@ export function useTableState<DataType extends object>(
       });
     }, []);
   
+  const onClearAll = React.useCallback(() => {
+    setColumnVisibility({});
+    setColumnFilters([])
+    setColumnSizing({})
+    setSorting([])
+  }, [])
+
 
 
     const table = useReactTable({
@@ -58,17 +65,18 @@ export function useTableState<DataType extends object>(
       columnResizeMode: 'onChange',
       enableColumnResizing: true,
       columnResizeDirection: 'ltr',
-  
+
       getCoreRowModel: getCoreRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getFacetedUniqueValues: getFacetedUniqueValues(),
+
       onPaginationChange: setPagination,
       onColumnVisibilityChange: onColumnVisibilityChange,
       onColumnFiltersChange: setColumnFilters,
       onColumnSizingChange: setColumnSizing,
       onSortingChange: setSorting,
-      getFilteredRowModel: getFilteredRowModel(),
-      getFacetedUniqueValues: getFacetedUniqueValues(),
 
       defaultColumn: {
         size: 150,
@@ -83,6 +91,11 @@ export function useTableState<DataType extends object>(
         pagination
       },  
     });
+
+  function resetTableColsAndFilters() {
+    setColumnFilters([])
+    setColumnVisibility({})
+  }
 
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders().filter(header => header.column.getIsVisible())
@@ -101,9 +114,8 @@ export function useTableState<DataType extends object>(
     pagination,
     initialPageSize,
     onColumnFilter,
-
-
-
-    filterDialogOpen
+    resetTableColsAndFilters,
+    filterDialogOpen,
+    onClearAll
   }
 }

@@ -1,5 +1,7 @@
 package io.resys.thena.structures.grim;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -62,6 +64,12 @@ public interface GrimQueries {
   interface InternalCommitViewerQuery {
     Multi<GrimAnyObject> findAnyObjects(Collection<AnyObjectCriteria> commits);
     Multi<GrimCommitViewer> findAllViewersByUsed(String userId, String usedBy, Collection<String> commits);
+    Multi<GrimCommitViewer> findAllViewersInDuration(
+      @Nullable String usedBy, 
+      @Nullable String usedFor, 
+      @Nullable Duration duration,
+      @Nullable String missionId
+    );
   }
   
   interface InternalMissionRemarkQuery {
@@ -83,6 +91,8 @@ public interface GrimQueries {
     InternalMissionQuery notViewed(@Nullable String userId, String usedFor);
     InternalMissionQuery includeViewer(String usedBy, String usedFor);
     InternalMissionQuery lockForUpdate();
+    
+    InternalMissionQuery onlyDocs(GrimDocType ...docs);
     
     InternalMissionQuery excludeDocs(GrimDocType ...docs); // multiple will be OR
     InternalMissionQuery archived(GrimArchiveQueryType includeArchived); // true to exclude any tasks with archiveAt date present

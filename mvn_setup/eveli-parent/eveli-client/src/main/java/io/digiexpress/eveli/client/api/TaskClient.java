@@ -52,8 +52,8 @@ public interface TaskClient {
     Uni<Task> createTask(CreateTaskCommand command);
     Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
     Uni<Task> deleteTask(String taskId);
-    Uni<Task> addWorkerCommitViewer(String taskId);
-    Uni<Task> addCustomerCommitViewer(String taskId);
+    Uni<Void> addWorkerCommitViewer(String taskId);
+    Uni<Void> addCustomerCommitViewer(String taskId);
     Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
   }
   

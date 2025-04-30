@@ -1,5 +1,8 @@
 package io.resys.thena.registry.grim;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -199,6 +202,40 @@ public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry
         .props(where.getProps())
         .build();
   }
+  
+  @Override
+  public SqlTuple findAllViewersInDuration(String usedBy, String usedFor, Duration duration, String missionId) {
+    final var where = new ArrayList<String>();
+    final var props = new ArrayList<>();
+    int index = 1; 
+    if(duration != null) {
+      props.add(OffsetDateTime.now().minus(duration));
+      where.add("viewers.created_at >= $" + index++);
+    }
+    if(usedBy != null) {
+      props.add(usedBy);
+      where.add("viewers.used_by = $" + index++);
+    }
+    if(usedFor != null) {
+      props.add(usedFor);
+      where.add("viewers.used_for = $" + index++);
+    }    
+    if(missionId != null) {
+      props.add(missionId);
+      where.add("viewers.mission_id = $" + index++);
+    }
+    final var statement = " WHERE " + String.join(" AND ", where); 
+    
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT viewers.* ").ln()
+        .append("  FROM ").append(options.getGrimCommitViewer()).append(" as viewers").ln()
+        .append(props.isEmpty() ? "" : statement)
+        .build())
+        .props(Tuple.from(props))
+        .build();
+  }
+  
   @Override
   public SqlTuple findAllObjectsByIdAndType(Collection<AnyObjectCriteria> commits) {
     final var byType = commits.stream().collect(Collectors.groupingBy(AnyObjectCriteria::getObjectType));

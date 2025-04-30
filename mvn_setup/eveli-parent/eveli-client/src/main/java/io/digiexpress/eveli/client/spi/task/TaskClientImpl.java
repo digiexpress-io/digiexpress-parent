@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.task;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * eveli-client
@@ -124,16 +126,27 @@ public class TaskClientImpl implements TaskClient {
         return ctx.getConfig().accept(new DeleteOneTask(userId, userEmail, taskId));
       }
       @Override
-      public Uni<Task> addWorkerCommitViewer(String taskId) {
+      public Uni<Void> addWorkerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId));
+        
+        final var config = ctx.getConfig();
+        return config.getClient().grim(ctx.getConfig().getTenantName())
+          .find().commitViewersQuery().createdIn(Duration.ofHours(1))
+          .usedBy(userId)
+          .usedFor(TaskMapper.VIEWER_WORKER)
+          .missionId(taskId)
+          .findAll().onItem().transformToUni(views -> {
+            return ctx.getConfig().accept(new AddWorkerCommitViewer(userId, taskId, views))
+                .onItem().transformToUni((task) -> Uni.createFrom().voidItem());            
+          });
       }
       @Override
-      public Uni<Task> addCustomerCommitViewer(String taskId) {
+      public Uni<Void> addCustomerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId));
+        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId))
+            .onItem().transformToUni((task) -> Uni.createFrom().voidItem());
       }
     };
   }

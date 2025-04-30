@@ -44,6 +44,7 @@ import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
+import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.smallrye.mutiny.Uni;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,7 @@ public class TaskApiController {
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
   private final MqEventPublisher mqEventPublisher;
+  private final TaskViewerPublisher viewerPublisher;
   
   
   @GetMapping
@@ -109,21 +111,21 @@ public class TaskApiController {
 
   @GetMapping("/{id}")
   public Uni<ResponseEntity<Task>> getTaskById(@PathVariable("id") String id) {
-    
     final var worker = securityClient.getUser();
     
     return taskClient.queryTasks().getOneById(id).onItem().transform(task -> {
       if (worker.getPrincipal().isAdmin()) {
+        viewerPublisher.publicTaskViewedByWorkerEvent(task, worker);
         return ResponseEntity.ok(task);
       }
       final var isWorkerInAssignedRoles = worker.getPrincipal().isAccessGranted(task.getAssignedRoles());
       if(isWorkerInAssignedRoles) {
+        viewerPublisher.publicTaskViewedByWorkerEvent(task, worker);
         return ResponseEntity.ok(task);
       }
 
       // alarm clocks
       return ResponseEntity.status(403).build();
-      
     });
  
   }

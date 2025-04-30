@@ -23,7 +23,7 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
   const intl = useIntl();
   const anchor = useAnchor();
   const search = useHeaderSearchState(header);
-  const items = useHeaderItems(header);
+  const items = useHeaderItems(header.column);
   const title: string = header.column.columnDef.header?.toString().toLowerCase() ?? '';
   
   function handleClearFilters() {
@@ -64,6 +64,7 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           </TextField>
         </FilterByStringSlot>
 
+
         <MenuItem onClick={handleClearFilters} >
           <ListItemIcon>
             {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
@@ -71,7 +72,8 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           {intl.formatMessage({ id: 'eveli.table.menu.filter.showAllItems', defaultMessage: 'Show all items ' })}
         </MenuItem>
 
-        {items.map((item, index) => <React.Fragment key={index}>
+
+        {header.column.columnDef.meta?.enableSelection && items.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={() => handleArrayChange(item)}>
             <ListItemIcon>
               {search.valueAsArray.includes(item) ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
@@ -80,6 +82,8 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           </MenuItem>
         </React.Fragment>
         )}
+
+
       </MenuSlot>
     </Root>
   );

@@ -36,6 +36,9 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: 'Name',
@@ -48,6 +51,9 @@ export const EveliTasksTable: React.FC = () => {
       enableColumnFilter: true,
       enableHiding: false,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: 'Info',
@@ -78,6 +84,9 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: 'Roles',
@@ -88,6 +97,9 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: 'Assignee',
@@ -100,6 +112,9 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: {
+        enableSelection: true
+      }
     },
     {
       header: 'Due',
@@ -114,6 +129,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Created',
       accessorKey: 'created',
+
       size: 150,
       minSize: 150,
       enableSorting: true,

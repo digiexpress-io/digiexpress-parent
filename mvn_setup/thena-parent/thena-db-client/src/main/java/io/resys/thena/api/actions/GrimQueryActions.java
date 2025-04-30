@@ -1,5 +1,7 @@
 package io.resys.thena.api.actions;
 
+import java.time.Duration;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -49,6 +51,10 @@ public interface GrimQueryActions {
   }
   
   interface CommitViewersQuery {
+    CommitViewersQuery usedBy(String userBy);
+    CommitViewersQuery usedFor(String usedFor);
+    CommitViewersQuery missionId(String missionId);
+    CommitViewersQuery createdIn(Duration duration);
     Uni<QueryEnvelopeList<GrimCommitViewer>> findAll();
   }
   
