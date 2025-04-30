@@ -109,16 +109,7 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: false,
       enableResizing: true,
-
-      cell: (info) => {
-        const rawDate = info.getValue();
-        if (!rawDate) return (<div>–</div>)
-
-        const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
-        const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
-        return <>{formatted}</>;
-      },
-
+      cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
     {
       header: 'Created',
@@ -128,16 +119,22 @@ export const EveliTasksTable: React.FC = () => {
       enableSorting: true,
       enableColumnFilter: false,
       enableResizing: true,
-
-      cell: (info) => {
-        const rawDate = info.getValue();
-        const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
-        const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
-        return <>{formatted}</>;
-      }
+      cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },
   ]
 
 
   return (<WithTableStyles data={data} columns={columns} />)
+}
+
+
+const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
+  const rawDate = value;
+  if (!rawDate) {
+    return <div>--</div>
+  }
+
+  const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
+  const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
+  return <div>{formatted}</div>;
 }

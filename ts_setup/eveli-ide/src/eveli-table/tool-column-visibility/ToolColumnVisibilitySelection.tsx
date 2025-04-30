@@ -11,15 +11,14 @@ export interface ToolColumnVisibilitySelectionProps {
 
 
 export const ToolColumnVisibilitySelection: React.FC<ToolColumnVisibilitySelectionProps> = ({ table }) => {
-  const allColumns = table.getAllColumns().filter(col => col.getCanHide());
-
+  const allColumns = table.getAllColumns().filter(col => col.getCanHide());;
 
   return (
     <ToolColumnVisibility slotProps={{
       columns: allColumns.map((col) => ({
         colTitle: col.columnDef.header?.toString() || col.id,
         isVisible: col.getIsVisible(),
-        onToggle: () => col.toggleVisibility()
+        onToggle: (newValue) => col.toggleVisibility(newValue)
       }))
     }} />
     )

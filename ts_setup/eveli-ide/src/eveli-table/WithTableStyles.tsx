@@ -34,7 +34,7 @@ export function WithTableStyles<DataType extends object>(props: {
           root: { columnSizeVars },
 
           header: {
-            cells: table.getFlatHeaders().map(header => ({
+            cells: table.getFlatHeaders().filter(h => h.column.getIsVisible()).map(header => ({
               width: header.column.getSize(),
               title: flexRender(header.column.columnDef.header, header.getContext()),
               subTitle: <ToolHeaderOptions key={header.id} header={header} table={table} onColumnFilter={onColumnFilter} />

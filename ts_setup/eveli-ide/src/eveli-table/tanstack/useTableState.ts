@@ -49,6 +49,8 @@ export function useTableState<DataType extends object>(
       });
     }, []);
   
+
+
     const table = useReactTable({
       columns: props.columns,
       data: props.data,
@@ -67,7 +69,6 @@ export function useTableState<DataType extends object>(
       onSortingChange: setSorting,
       getFilteredRowModel: getFilteredRowModel(),
       getFacetedUniqueValues: getFacetedUniqueValues(),
-  
 
       defaultColumn: {
         size: 150,
@@ -80,20 +81,19 @@ export function useTableState<DataType extends object>(
         columnSizing,
         sorting,
         pagination
-      },
-  
+      },  
     });
-    
-    const columnSizeVars = React.useMemo(() => {
-      const headers = table.getFlatHeaders()
-      const colSizes: { [key: string]: number } = {}
-      for (let i = 0; i < headers.length; i++) {
-        const header = headers[i]!
-        colSizes[`--header-${header.id}-size`] = header.getSize()
-        colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
-      }
-      return colSizes
-    }, [table.getState().columnSizingInfo, table.getState().columnSizing])
+
+  const columnSizeVars = React.useMemo(() => {
+    const headers = table.getFlatHeaders().filter(header => header.column.getIsVisible())
+    const colSizes: { [key: string]: number } = {}
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!
+      colSizes[`--header-${header.id}-size`] = header.getSize()
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+    }
+    return colSizes
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
     
   return {
     columnSizeVars,

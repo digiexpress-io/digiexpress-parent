@@ -11,7 +11,7 @@ import { Root, ColumnSlot, useUtilityClasses } from './useUtilityClasses';
 export interface ToolColumnVisibilityColumnsSlotProps {
   colTitle: string;
   isVisible: boolean;
-  onToggle: () => void;
+  onToggle: (newValue: boolean) => void;
 }
 
 
@@ -24,15 +24,22 @@ export const ToolColumnVisibility: React.FC<{
 
   return (
     <Root className={classes.root}>
-      {slotProps.columns.map(( {onToggle, colTitle, isVisible}, index ) => (
-        <ColumnSlot key={index} className={classes.columnSlot} onClick={onToggle}>
-          {isVisible ? 
-            <CheckBoxIcon className='cols-select-checkmark-icon' /> : 
-            <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
-          }
-          <Typography>{colTitle}</Typography>
-        </ColumnSlot>
-    ))}
-    </Root>
-  )
+        {slotProps.columns.map((delegateProps, index) => (<Visibility {...delegateProps} key={index} />))}
+      </Root >
+    )
+  }
+
+const Visibility: React.FC<ToolColumnVisibilityColumnsSlotProps> = ({ isVisible, colTitle, onToggle }) => {
+  const classes = useUtilityClasses();
+  function handleToggle() {
+    onToggle(!isVisible);
+  }
+
+  return (<ColumnSlot className={classes.columnSlot} onClick={handleToggle}>
+    {isVisible ?
+      <CheckBoxIcon className='cols-select-checkmark-icon' /> :
+      <CheckBoxOutlineBlankIcon className='cols-select-checkmark-icon' />
+    }
+    <Typography>{colTitle}</Typography>
+  </ColumnSlot>)
 }
