@@ -35,6 +35,7 @@ public interface AttachmentCommands {
   AttachmentQuery query();
   AttachmentUploadBuilder upload();
   AttachmentUrlBuilder url();
+  AttachmentRemoveBuilder remove();
   
   interface AttachmentQuery {
     List<Attachment> processId(String processId);
@@ -55,7 +56,12 @@ public interface AttachmentCommands {
     Optional<AttachmentUpload> processId(String processId);
   }
   
-
+  interface AttachmentRemoveBuilder {
+    AttachmentRemoveBuilder filename(String filename);
+    void removeByTaskId(String taskId);
+    void removeByProcessId(String processId);
+  }
+  
   @Value.Immutable
   @JsonSerialize(as = ImmutableAttachmentUpload.class)
   @JsonDeserialize(as = ImmutableAttachmentUpload.class)
