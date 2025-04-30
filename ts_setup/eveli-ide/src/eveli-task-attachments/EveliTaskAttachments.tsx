@@ -213,12 +213,12 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
           <FormattedMessage id='attachment.delete.confirmTitle' />
         </DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography color='error'>
             <FormattedMessage id='attachment.delete.confirmText' values={{fileName: attachmentFileName}}/>
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)}>
+          <Button onClick={() => setConfirmOpen(false)} color='secondary'>
             <FormattedMessage id='button.cancel' />
           </Button>
           <Button onClick={deleteAttachmentFile} color='error'>
