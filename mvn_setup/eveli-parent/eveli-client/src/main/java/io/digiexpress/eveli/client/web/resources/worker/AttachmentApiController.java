@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -112,6 +113,28 @@ public class AttachmentApiController {
       return ResponseEntity.status(HttpStatus.FOUND).location(attachmentUrl.get().toURI()).build();
     }
     return ResponseEntity.notFound().build();
+  }
+  
+  @DeleteMapping("/tasks/{taskId}/files/{filename}")
+  public ResponseEntity<Void> deleteTaskAttachment(
+      @PathVariable String taskId, 
+      @PathVariable String filename 
+      ) 
+      throws URISyntaxException 
+  {
+    final var authentication = securityClient.getUser();
+    log.debug("Attachment file GET API call for task id: {}, file: {}, from user {}", taskId, filename, authentication.getPrincipal().getUsername());
+    if (!checkTaskAccess(taskId, authentication)) {
+      return ResponseEntity.notFound().build();
+    }
+    final var processId = getProcessIdFromTask(taskId);
+    if (processId != null) {
+      client.remove().filename(filename).removeByProcessId(processId);
+    }
+    else {
+      client.remove().filename(filename).removeByTaskId(taskId);
+    }
+    return ResponseEntity.noContent().build();
   }
   
   /**
