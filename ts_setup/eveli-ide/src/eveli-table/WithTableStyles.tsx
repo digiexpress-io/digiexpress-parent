@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ColumnDef, flexRender } from '@tanstack/react-table';
+import { flexRender, ColumnDef, RowData } from '@tanstack/react-table';
 
 import { useTableState } from './tanstack';
 import { EveliTable } from './table';
@@ -10,6 +10,14 @@ import { ToolPagination } from './tool-pagination';
 import { ToolHeaderOptions } from './tool-header-options';
 import { ToolColumnFilter } from './tool-column-filter';
 
+
+
+// Register extra config params
+declare module "@tanstack/react-table" {
+  export interface ColumnMeta<TData extends RowData, TValue> {
+    enableSelection: boolean;
+  }
+}
 
 
 export function WithTableStyles<DataType extends object>(props: {
@@ -26,7 +34,6 @@ export function WithTableStyles<DataType extends object>(props: {
     filterDialogOpen
 
   } = useTableState<DataType>(props);
-
   return (
     <>
       <EveliTable
@@ -54,7 +61,7 @@ export function WithTableStyles<DataType extends object>(props: {
           drawer: {
             body: (type) => {
               if (type === 'filters') {
-                return <ToolColumnFilter status={<></>} priority={<></>} />
+                return <ToolColumnFilter table={table} />
               }
               return (<ToolColumnVisibilitySelection table={table} />)
             }

@@ -1,8 +1,8 @@
-import { Header } from "@tanstack/react-table";
+import { Column } from "@tanstack/react-table";
 
 
-export function useHeaderItems(header: Header<unknown, unknown>) {  
-  const almostUniqueValues = header.column.getFacetedUniqueValues();
+export function useHeaderItems(header: Column<unknown, unknown>): string[] {
+  const almostUniqueValues = header.getFacetedUniqueValues();
   const filterItems: string[] = Array.from(new Set(Array.from(almostUniqueValues.keys())
     .map(key => key as (string | string[]))
     .filter(item => item)
