@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 
-import { FormattedDate, FormattedNumber, FormattedTime, useIntl, } from 'react-intl';
+import { FormattedDate, FormattedMessage, FormattedNumber, FormattedTime, useIntl, } from 'react-intl';
 import MaterialTable, { Column, MTableAction } from '@material-table/core';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TaskApi } from '../api-task';
@@ -38,7 +38,8 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
   const intl = useIntl();
   const tableLocalization = useMaterialTableLabels();
   const tableRef = useRef();
-
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [attachmentFileName, setAttachmentFileName] = React.useState<string|null>(null);
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
   const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
@@ -83,15 +84,24 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
     const link = downloadAttachmentLink(taskId, attachment.name);
     window.open(link);
   };
-  const handleDeleteClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
+
+  const handleAttachmentDeleteClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
     let attachment = Array.isArray(data) ? data[0] : data;
-    deleteAttachment(taskId, attachment.name)
-    .then(resp => {
-      loadAttachments(taskId)
-      .then(attachments => {
-        setAttachments(attachments);
-      });
-    })
+    setAttachmentFileName(attachment.name);
+    setConfirmOpen(true);
+  };
+
+  const deleteAttachmentFile = () => {
+    if (attachmentFileName) {
+      deleteAttachment(taskId, attachmentFileName)
+      .then(resp => {
+        loadAttachments(taskId)
+        .then(attachments => {
+          setAttachments(attachments);
+        });
+      })
+    }
+    setConfirmOpen(false);
   };
 
   const tableState: TableState = {
@@ -181,7 +191,7 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
             icon: DeleteIcon,
             isFreeAction: false,
             tooltip: intl.formatMessage({ id: 'attachmentButton.deleteAttachment' }),
-            onClick: (event, data) => { handleDeleteClick(data) }
+            onClick: (event, data) => { handleAttachmentDeleteClick(data) }
           }
         ]}
         components={{
@@ -194,6 +204,28 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
         }}
         data={attachments || []}
       />
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        maxWidth="xs"
+      >
+        <DialogTitle>
+          <FormattedMessage id='attachment.delete.confirmTitle' />
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            <FormattedMessage id='attachment.delete.confirmText' values={{fileName: attachmentFileName}}/>
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)}>
+            <FormattedMessage id='button.cancel' />
+          </Button>
+          <Button onClick={deleteAttachmentFile} color='error'>
+            <FormattedMessage id='button.confirmDelete' />
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
