@@ -4,6 +4,7 @@ import { FormattedDate, FormattedNumber, FormattedTime, useIntl, } from 'react-i
 import MaterialTable, { Column, MTableAction } from '@material-table/core';
 import { Box, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { TaskApi } from '../api-task';
 import { useMaterialTableLabels } from '../api-mui-table';
 import { useFetch } from '@dxs-ts/eveli-fetch';
@@ -41,6 +42,7 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
   const { downloadAttachmentLink } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.GET', {});
   const { addAttachment } = useFetch('worker/rest/api/tasks/$taskId/files.POST', {});
+  const {deleteAttachment } = useFetch('worker/rest/api/tasks/$taskId/files/$filename.DELETE', {});
 
 
   const formatTime = (time: any) => {
@@ -81,6 +83,14 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
     const link = downloadAttachmentLink(taskId, attachment.name);
     window.open(link);
   };
+  const handleDeleteClick = (data: TaskApi.Attachment | TaskApi.Attachment[]) => {
+    let attachment = Array.isArray(data) ? data[0] : data;
+    deleteAttachment(taskId, attachment.name);
+    loadAttachments(taskId)
+    .then(attachments => {
+      setAttachments(attachments);
+    });
+  };
 
   const tableState: TableState = {
     columns: [
@@ -94,12 +104,6 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
         field: 'created',
         headerStyle: { fontWeight: 'bold' },
         render: data => formatTime(data.created)
-      },
-      {
-        title: intl.formatMessage({ id: 'attachmentTableHeader.updated' }),
-        field: 'updated',
-        headerStyle: { fontWeight: 'bold' },
-        render: data => formatTime(data.updated)
       },
       {
         title: intl.formatMessage({ id: 'attachmentTableHeader.size' }),
@@ -170,6 +174,12 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
             isFreeAction: false,
             tooltip: intl.formatMessage({ id: 'attachmentButton.downloadAttachment' }),
             onClick: (event, data) => { handleDownloadClick(data) }
+          },
+          {
+            icon: DeleteIcon,
+            isFreeAction: false,
+            tooltip: intl.formatMessage({ id: 'attachmentButton.deleteAttachment' }),
+            onClick: (event, data) => { handleDeleteClick(data) }
           }
         ]}
         components={{
