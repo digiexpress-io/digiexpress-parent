@@ -63,7 +63,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
 
       <Grid item xs={12} sm={2} md={2} lg={1} xl={1} className={classes.itemSentAt}>
-        <Typography variant='caption'>last modified</Typography>
+        <Typography variant='caption'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography>
         <GDate variant='date-only' date={sentAt} />
       </Grid>
 
