@@ -3,8 +3,8 @@ import composeClasses from '@mui/utils/composeClasses'
 
 export const EveliTableRootClassName = 'EveliTable';
 
-
 const cellPadding = '10px';
+const rowHeight = '40px';
 
 export const useUtilityClasses = () => {
   const slots = {
@@ -12,8 +12,10 @@ export const useUtilityClasses = () => {
 
     headerCell: ['headerCell'],
     bodyCell: ['bodyCell'],
+    bodyCellFiller: ['bodyCellFiller'],
 
     bodyRow: ['bodyRow'],
+    bodyFillerRow: ['bodyFillerRow'],
     headerRow: ['headerRow'],
 
     footer: ['footer'],
@@ -46,20 +48,17 @@ export const Root = styled('div', {
 });
 
 
-
-
 export const HeaderRowSlot = styled('div', {
   name: EveliTableRootClassName,
   slot: 'HeaderRow',
 })<{}>(({ theme }) => {
   return {
+    padding: cellPadding,
     backgroundColor: theme.palette.secondary.main,
     borderRadius: `${theme.spacing(1)} 0px 0px 0px`,
     border: `1px solid ${theme.palette.divider}`,
     display: 'flex',
     flexDirection: 'row',
-
-    padding: cellPadding,
     '.MuiTypography-root': {
       ...theme.typography.subtitle2
     },
@@ -113,11 +112,13 @@ export const BodyRowSlot = styled('div', {
 })<{}>(({ theme }) => {
 
   return {
+    padding: cellPadding,
+    height: rowHeight,
     backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.divider}`,
     borderTop: 'none',
     display: 'flex',
-    padding: cellPadding,
+    alignItems: 'center',
     '.MuiTypography-root': {
       ...theme.typography.subtitle2
     },
@@ -126,16 +127,29 @@ export const BodyRowSlot = styled('div', {
     },
     '.EveliTable-bodyCell': {
       paddingRight: cellPadding,
-      alignItems: 'center',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      display: 'block'
+      display: 'block',
     }
-
-  };
+  }
 });
 
+
+export const BodyFillerRowSlot = styled('div', {
+  name: EveliTableRootClassName,
+  slot: 'BodyFillerRow',
+})<{}>(({ theme }) => {
+
+  return {
+    height: rowHeight,
+    padding: cellPadding,
+    border: `1px solid ${theme.palette.divider}`,
+    borderTop: 'none',
+    display: 'flex',
+    minHeight: theme.typography.subtitle2.lineHeight
+  }
+});
 
 
 export const FooterSlot = styled('div', {
@@ -199,22 +213,18 @@ export const DrawerSlot = styled('div', {
     backgroundColor: theme.palette.secondary.main,
     border: `1px solid ${theme.palette.divider}`,
     zIndex: 10,
-
     '.title': {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       marginLeft: theme.spacing(1)
     },
-
     '& .title .MuiTypography-root': {
       ...theme.typography.subtitle2,
       fontWeight: 'bold'
     }
   }
 });
-
-
 
 
 export const DrawerButtonBarSlot = styled('div', {
@@ -263,12 +273,10 @@ export const DrawerButtonSlot = styled('div', {
       ':hover': {
         backgroundColor: 'transparent',
       },
-
       '.MuiButton-icon': {
         marginRight: '0px',
         marginLeft: '0px',
         marginBottom: theme.spacing(1),
-
       }
     },
     '.MuiTypography-root': {

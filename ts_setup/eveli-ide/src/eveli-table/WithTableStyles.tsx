@@ -54,6 +54,7 @@ export function WithTableStyles<DataType extends object>(props: {
             }))
           },
           footer: {
+            pageSize: pagination.pageSize,
             children: <ToolPagination initialPageSize={initialPageSize} pagination={pagination} table={table} />
           },
           drawer: {

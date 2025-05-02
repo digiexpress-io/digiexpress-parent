@@ -49,6 +49,6 @@ export const typography: TypographyOptions | ((palette: Palette) => TypographyOp
   },
   subtitle2: {
     fontSize: '10pt',
-    fontWeight: 400
+    fontWeight: 400,
   }
 }

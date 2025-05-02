@@ -1,14 +1,14 @@
 import React from 'react';
 
 
-import { BodyRowSlot, HeaderRowSlot, FooterSlot, Root, useUtilityClasses, DrawerSlot, DrawerButtonBarSlot, DrawerButtonSlot } from './useUtilityClasses';
+import { BodyRowSlot, HeaderRowSlot, FooterSlot, Root, useUtilityClasses, DrawerSlot, DrawerButtonBarSlot, DrawerButtonSlot, BodyFillerRowSlot } from './useUtilityClasses';
 import { Box, Button, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 
 import { useIntl } from 'react-intl';
-
+import { FillerRows } from './FillerRows';
 
 export type EveliTableDrawerType = 'filters' | 'columns';
 
@@ -21,16 +21,18 @@ export interface EveliTableProps {
       cells: { width: number, title: React.ReactNode, subTitle: React.ReactNode }[];
     }
     body: {
-      rows: { cells: { width: number, children: React.ReactNode}[] }[];
+      rows: { cells: { width: number, children: React.ReactNode }[] }[];
     },
     footer: {
-      children: React.ReactNode
+      pageSize: number;
+      children: React.ReactNode;
     }
     drawer: {
       body: (type: EveliTableDrawerType) => React.ReactNode;
     }
   }
 }
+
 
 export function EveliTable(props: EveliTableProps): React.ReactNode {
   const intl = useIntl();
@@ -43,6 +45,7 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
   const handleDrawerOpenFilters = React.useCallback(() => setDrawerOpen('filters'), [])
 
   const drawerBody = drawerOpen ? drawer.body(drawerOpen) : undefined;
+
 
   return (
     <Box style={root.columnSizeVars} display='flex'>
@@ -66,17 +69,19 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
           </BodyRowSlot>
         ))}
 
+        <FillerRows actualNumberOfRows={body.rows.length} minNumberOfRows={footer.pageSize} />
+
         <FooterSlot className={classes.footer}>
           {footer.children}
         </FooterSlot>
 
-        { !!drawerBody && (
-        <DrawerSlot className={classes.drawer}>
-          <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}`, defaultMessage: 'Drawer' })}</Typography>}
-            <IconButton onClick={handleDrawerClose}><CloseIcon fontSize='small' /></IconButton>
-          </Box>
-          {drawerBody}
-        </DrawerSlot>
+        {!!drawerBody && (
+          <DrawerSlot className={classes.drawer}>
+            <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}`, defaultMessage: 'Drawer' })}</Typography>}
+              <IconButton onClick={handleDrawerClose}><CloseIcon fontSize='small' /></IconButton>
+            </Box>
+            {drawerBody}
+          </DrawerSlot>
         )}
       </Root>
 

@@ -22,14 +22,14 @@ export interface ToolPaginationProps {
 
 export const ToolPagination: React.FC<ToolPaginationProps> = (props) => {
   const intl = useIntl();
-  
+  const pageSizes = Array.from(new Set([props.initialPageSize, 10, 20])).sort();  
 
   return (
     <>
       <Typography>{intl.formatMessage({ id: 'eveli.table.footer.tasks.total', defaultMessage: 'Total tasks: ' })} {props.table.getRowCount()}</Typography>
       <Typography>{intl.formatMessage({ id: 'eveli.table.footer.rowsPerPage', defaultMessage: 'Rows per page: ' })}</Typography>
       <TextField select value={props.table.getState().pagination.pageSize} onChange={e => { props.table.setPageSize(Number(e.target.value)) }}>
-        {[props.initialPageSize, 10, 20].map(pageSize => (
+        {pageSizes.map(pageSize => (
           <MenuItem key={pageSize} value={pageSize}>
             {pageSize}
           </MenuItem>
