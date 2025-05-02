@@ -24,6 +24,8 @@ export const sv = {
   'gamut.services': 'Tjänster',
   'gamut.bookings': 'Kalenderreservationer',
   'gamut.noValueIndicator': '-',
+  'gamut.noValueIndicatorColon': '-',
+  'gamut.textSeparator': ' ',
   'gamut.loading': 'Ditt innehåll är på väg',
   'gamut.public.servicesHome': 'Tjänster hem',
   'gamut.public.forms.summary.button.backToServicesHome': 'Tillbaka till Tjänster Hem',

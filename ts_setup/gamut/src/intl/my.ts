@@ -24,6 +24,8 @@ export const my = {
   'gamut.services': 'Perkhidmatan',
   'gamut.bookings': 'Tempahan kalendar',
   'gamut.noValueIndicator': '-',
+  'gamut.noValueIndicatorColon': '-',
+  'gamut.textSeparator': ' ',
   'gamut.loading': 'Kandungan anda sedang dalam perjalanan',
   'gamut.public.servicesHome': 'Perkhidmatan rumah',
   'gamut.public.forms.summary.button.backToServicesHome': 'Kembali ke Laman Utama Perkhidmatan',

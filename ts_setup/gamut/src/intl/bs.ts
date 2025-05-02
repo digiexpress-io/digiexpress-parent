@@ -24,6 +24,8 @@ export const bs = {
   'gamut.services': 'Usluge',
   'gamut.bookings': 'Kalendarske rezervacije',
   'gamut.noValueIndicator': '-',
+  'gamut.noValueIndicatorColon': '-',
+  'gamut.textSeparator': ' ',
   'gamut.loading': 'Učitavanje sadržaja',
   'gamut.public.servicesHome': 'Usluge',
   'gamut.public.forms.summary.button.backToServicesHome': 'Povratak na usluge',
