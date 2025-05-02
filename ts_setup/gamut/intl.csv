@@ -29,7 +29,7 @@ gamut.new-messages,,New messages,Uusi viesti,Nya meddelanden,Mesej baharu,Nove p
 gamut.services,,Services,Palvelut,Tjänster,Perkhidmatan,Usluge
 gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,Tempahan kalendar,Kalendarske rezervacije
 gamut.noValueIndicator,,-,-,-,-,-
-gamut.noValueIndicatorColon,,-,-,-,-,-
+gamut.noValueIndicatorColon,,: ,: ,: ,: ,: 
 gamut.textSeparator,, , , , , 
 gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan,Učitavanje sadržaja
 // ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,,

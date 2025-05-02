@@ -24,7 +24,7 @@ export const bs = {
   'gamut.services': 'Usluge',
   'gamut.bookings': 'Kalendarske rezervacije',
   'gamut.noValueIndicator': '-',
-  'gamut.noValueIndicatorColon': '-',
+  'gamut.noValueIndicatorColon': ': ',
   'gamut.textSeparator': ' ',
   'gamut.loading': 'Učitavanje sadržaja',
   'gamut.public.servicesHome': 'Usluge',

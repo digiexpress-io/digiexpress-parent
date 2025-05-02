@@ -24,7 +24,7 @@ export const fi = {
   'gamut.services': 'Palvelut',
   'gamut.bookings': 'Kalenteri varaukset',
   'gamut.noValueIndicator': '-',
-  'gamut.noValueIndicatorColon': '-',
+  'gamut.noValueIndicatorColon': ': ',
   'gamut.textSeparator': ' ',
   'gamut.loading': 'Sisältöä ladataan',
   'gamut.public.servicesHome': 'Palvelut pääsivu',
