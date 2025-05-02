@@ -142,10 +142,6 @@ export const EveliShellRoot = styled('div', {
         })
       }),
     },
-    '& .EveliFooter-root': {
-      marginLeft: `${drawerWidth}px`,
-      height: `${footerHeight}px`
-    },
 
     "& .MuiAppBar-root.EveliShellBase": {
       display: 'flex',

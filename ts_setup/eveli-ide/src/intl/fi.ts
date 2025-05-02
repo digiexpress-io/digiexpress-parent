@@ -375,6 +375,7 @@ export const fi = {
   'toolbar.services': 'Palvelut',
   'toolbar.import': 'Tuo dataa',
   'toolbar.tasks': 'Tehtävät',
+  'toolbar.about': 'Tietoja',
   'stencil.services.found.none': 'Ei tuloksia',
   'link.type.internal': 'Sisäinen (domainin sisällä)',
   'link.type.external': 'Ulkoinen (domainin ulkopuolella)',

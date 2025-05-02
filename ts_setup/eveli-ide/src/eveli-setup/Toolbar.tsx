@@ -15,10 +15,20 @@ import { EveliShellMiniBarClassName, EveliShellMiniBarRoot, useUtilityClasses } 
 import { EveliLocales } from '@/eveli-locales';
 import { EveliPermissions } from '@/eveli-permissions';
 
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+import { ToolbarBuildInfoRoot, useUtilityClasses as useBuildInfoClasses } from './useUtilityClasses';
+
+
 export const Toolbar: React.FC<{}> = ({ }) => {
   const navigate = useNavigate();
   const classes = useUtilityClasses();
   const location = useLocation();
+
+  const [buildOpen, setBuildOpen] = React.useState(false);
+  const info = useFetch('worker/rest/api/version.GET', {});
+  const buildClasses = useBuildInfoClasses();
 
   return (
     <EveliShellMiniBarRoot className={EveliShellMiniBarClassName}>
@@ -114,10 +124,46 @@ export const Toolbar: React.FC<{}> = ({ }) => {
         <Typography><FormattedMessage id='toolbar.help' /></Typography>
       </div>
 
+
+      <div>
+        <IconButton onClick={() => setBuildOpen(true)}>
+          <InfoOutlinedIcon />
+        </IconButton>
+        <Typography><FormattedMessage id='toolbar.about' /></Typography>
+      </div>
+
       <EveliLocales />
 
+      <Dialog open={buildOpen} onClose={() => setBuildOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <FormattedMessage id='dialog.about.title' />
+        </DialogTitle>
+
+        <DialogContent>
+          <ToolbarBuildInfoRoot className={buildClasses.root}>
+            <Typography variant='body2' >
+              <FormattedMessage id="dialog.about.preamble" />
+            </Typography>
+
+            <Typography variant='caption'>
+              <FormattedMessage id="activities.version.composer" values={{ version: info?.frontend.version, date: info?.frontend.built }} />
+            </Typography>
+
+            <Typography variant='caption' >
+              <FormattedMessage id="activities.version.core" values={{ version: info?.backend.version, date: info?.backend.built }} />
+            </Typography>
+
+            <Typography variant='caption' sx={{ mt: 2 }}>
+              <FormattedMessage id="dialog.about.trademark" />
+            </Typography>
+          </ToolbarBuildInfoRoot>
+        </DialogContent>
+      </Dialog>
+
     </EveliShellMiniBarRoot>
+    
   );
 }
+
 
 

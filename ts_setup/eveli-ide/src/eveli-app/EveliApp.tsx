@@ -10,7 +10,6 @@ import {
   EveliShellToolbarHeightOptions
 
 } from '../eveli-shell';
-import { EveliFooter } from '../eveli-footer';
 import { EveliLogin } from '../eveli-login';
 
 import { IconbarProvider } from '../api-iconbar';
@@ -50,7 +49,6 @@ export interface ContainerProps {
   tabs?: React.FC;
 
   toolbarHeight?: Partial<EveliShellToolbarHeightOptions>;
-  footerHeight?: number;
   drawerWidth?: number;
 
   children?: React.ReactNode
@@ -64,8 +62,7 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
       <EveliShell 
         drawerOpen={true} 
         toolbarHeight={components.toolbarHeight} 
-        drawerWidth={components.drawerWidth} 
-        footerHeight={components.footerHeight}>
+        drawerWidth={components.drawerWidth} >
         
         <ToggleDrawer {...components} />
 
@@ -76,10 +73,6 @@ export const EveliApp: React.FC<ContainerProps> = (components) => {
         <main role='main'>
           <MuiContainer><UserContent /></MuiContainer>
         </main>
-
-        <footer role='footer'>
-          <EveliFooter />
-        </footer>
 
         <>{components.children}</>
       </EveliShell>
