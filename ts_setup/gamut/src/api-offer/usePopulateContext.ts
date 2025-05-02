@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query'
 import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
-import { mapToOffer, mapToOfferData } from './mappers';
+import { mapToOffer, mapToOfferData, toOtherTopicLinkLocales } from './mappers';
 import { SiteApi, useSite } from '../api-site';
 
 
@@ -41,6 +41,14 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   // Get the offer (form) name based on the topic link
   const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string | undefined): string => {
     const link = Object.values(site.links).find(link => link.value === workflowName);
+
+
+    if(!link && workflowName) { 
+      const [{product}] = toOtherTopicLinkLocales(site, workflowName);
+      if(product) {
+        return product.name;
+      }
+    }
     return link ? link.name : '-';
   };
 

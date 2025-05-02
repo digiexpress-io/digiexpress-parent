@@ -11,6 +11,7 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
   const { id } = props;
   const { fetchActionGet, fetchActionPost, syncWait } = useDialob();
   const [pending, setPending] = React.useState(true);
+  const [pendingError, setPendingError] = React.useState(false);
   const [form, setState] = React.useState(new FormImpl(id, new ActionVisitor().withActions([])));
 
   const syncListener: EventHandler<ActionsQueueSyncEvent> = React.useCallback(({syncState, response}) => {
@@ -24,7 +25,16 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
     [id, syncWait, syncListener, fetchActionGet, fetchActionPost]);
 
   React.useEffect(() => {
-    queue.pull().then(() => setPending(false));
+    queue.pull().then(({ ok }) => {
+      setPending(isCurrentlyPending => {
+
+        if(isCurrentlyPending && !ok){
+          setPendingError(true);
+        }
+        return false;
+      });
+
+    });
   }, [queue]);
 
   const applyActions: (actions: DialobApi.Action[]) => void = React.useCallback((actions) => {
@@ -73,7 +83,7 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
     queueAction({ type: 'ANSWER', answer, id: itemId, });
   }, [queueAction]);
 
-  const pull: () => Promise<void> = React.useCallback(() => queue.pull(), [queue]);
+  const pull: () => Promise<{ ok: boolean }> = React.useCallback(() => queue.pull(), [queue]);
 
 
   return React.useMemo(() => Object.freeze({
@@ -81,6 +91,6 @@ export function useFormStore(props: {id: string}): DialobApi.FormStore {
     id: queue.id,
     completed: form.state.completed ?? false,
     locale: form.state.locale,
-    form, pending,
+    form, pending, pendingError
   }), [setAnswer, setLocale, goToPage, previous, next, complete, deleteRow, addRowToGroup, form, queue, pending]);
 }

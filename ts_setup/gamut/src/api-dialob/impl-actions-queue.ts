@@ -43,20 +43,21 @@ export class ActionsQueue {
     return this.options.id;
   }
 
-  public async pull(): Promise<void> {
+  public async pull(): Promise<{ ok: boolean }> {
     try {
       await this.runSyncFn(async () => {
         const response = await this.options.fetchActionGet(this.id);
         if (!response.ok) {
           throw new ActionsQueueRequestError('Failure during fetch', response.status);
         }
-        const json = await response.json();
 
-        console.log(json);
-        return json;
+        return await response.json();
       });
+
+      return { ok: true }
     } catch (e: any) {
       this.handleError(e);
+      return { ok: false }
     }
   }
 

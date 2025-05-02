@@ -23,6 +23,7 @@ export declare namespace SiteApi {
     topics: Record<string, Topic>;
     blobs: Record<string, Blob>;
     links: Record<string, TopicLink>;
+    workflowsInOtherLocales: Record<LocaleCode, TopicLink[]>
   }
 
   export interface Blob {

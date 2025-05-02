@@ -2,6 +2,8 @@ import { SiteApi } from "./site-types";
 import { IntlShape } from "react-intl";
 
 
+export const SITE_SEARCH_TOPIC = '__search_topic';
+
 
 export function getSearchTopics(site: SiteApi.Site, intl: IntlShape): { 
   topics: SiteApi.Topic[]
@@ -9,7 +11,7 @@ export function getSearchTopics(site: SiteApi.Site, intl: IntlShape): {
   const { locale, links } = site;
   const title = intl.formatMessage({id: 'gamut.search.popover.title'});
 
-  const id = '__search_topic';
+  const id = SITE_SEARCH_TOPIC;
 
   const forms = Object.values(links)
     .filter(link => link.workflow)

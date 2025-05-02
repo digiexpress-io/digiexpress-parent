@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.StencilComposer.SiteState;
-import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
@@ -54,8 +53,9 @@ public interface MigrationBuilder {
     Map<String, LocalizedSite> getSites();
   }
 
-  @JsonSerialize(as = LocalizedSiteBean.class)
-  @JsonDeserialize(as = LocalizedSiteBean.class)
+  @JsonSerialize(as = ImmutableLocalizedSite.class)
+  @JsonDeserialize(as = ImmutableLocalizedSite.class)
+  @Value.Immutable
   interface LocalizedSite {
     String getId();
     String getImages();
@@ -64,6 +64,7 @@ public interface MigrationBuilder {
     Map<String, Topic> getTopics();
     Map<String, TopicBlob> getBlobs();
     Map<String, TopicLink> getLinks();
+    Map<String, List<TopicLink>> getWorkflowsInOtherLocales();
   }
 
   @JsonSerialize(as = TopicBlobBean.class)

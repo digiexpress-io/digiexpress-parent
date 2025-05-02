@@ -3,7 +3,7 @@
   "created" : 1,
   "sites" : {
     "en" : {
-      "id" : "03b5bbd2f15a91304f3e31d3f6151481",
+      "id" : "23e9f2dd654b0b1b494936f4958540e5",
       "images" : "/images",
       "locale" : "en",
       "topics" : {
@@ -60,6 +60,24 @@
           "formTag" : null,
           "flowName" : null
         }
+      },
+      "workflowsInOtherLocales" : {
+        "en" : [ {
+          "id" : "1da109ba642e1ffd850ea556d836d698",
+          "path" : "000_test-article",
+          "type" : "workflow",
+          "name" : "cool name",
+          "value" : "workflow name",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ]
       }
     }
   }

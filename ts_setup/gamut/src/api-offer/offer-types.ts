@@ -26,6 +26,12 @@ export declare namespace OfferApi {
     productId: string; // link id which was clicked to trigger form filling
     pageId: string;
     parentPageId: string | undefined;
+
+    
+    otherLocales: {
+      locale: string;
+      productId: string;
+    }[]
   }
 
 

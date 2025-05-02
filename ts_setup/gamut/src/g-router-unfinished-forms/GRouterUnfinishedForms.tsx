@@ -56,11 +56,23 @@ export const GRouterUnfinishedForms: React.FC<GRouterUnfinishedFormsProps> = (pr
     const pageId = offer.pageId;
     const productId = offer.productId;
 
-    nav({
-      from: '/secured/$locale/views/$viewId',
-      params: { offerId, pageId, productId },
-      to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
-    })
+
+    if(!!productId) {
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { offerId, pageId, productId },
+        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+      })
+    } else if(offer.otherLocales.length > 0) {
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { offerId, pageId, productId: offer.otherLocales[0].productId, locale: offer.otherLocales[0].locale },
+        to: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId',
+      })
+    } else {
+      // TODO: polite error msgs
+      alert('Form not available!');
+    }
   }
 
   const breadcrumbs = React.useCallback(() => <UnfinishedFormsBreadcrumbs onClick={() => handleNav('user-overview')} />, []);

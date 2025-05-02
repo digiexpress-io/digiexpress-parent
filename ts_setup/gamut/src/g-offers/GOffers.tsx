@@ -35,11 +35,10 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
 
 
   const Item: React.ElementType<GOfferItemProps> = props.slots?.item ?? GOfferItem;
-  function mapToItem(offer: OfferApi.Offer): GOfferItemProps & { key: string } {
+  function mapToItem(offer: OfferApi.Offer): GOfferItemProps {
     const offerName = getLocalisedOfferName(site!, offer.name);
 
     return {
-      key: offer.id,
       created: offer.created,
       updated: offer.updated,
       name: offerName,
@@ -67,7 +66,7 @@ export const GOffers: React.FC<GOffersProps> = (initProps) => {
       }
 
       {offers.map(mapToItem).map((offer) => (
-        <Item {...offer} />
+        <Item key={offer.offerId} {...offer} />
       ))}
     </Root>)
 }

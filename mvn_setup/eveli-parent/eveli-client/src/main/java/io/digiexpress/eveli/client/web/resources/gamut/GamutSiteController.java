@@ -32,8 +32,8 @@ import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.smallrye.mutiny.Uni;
+import io.thestencil.client.api.ImmutableLocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
-import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,16 +51,16 @@ public class GamutSiteController {
     return envir.runtimeQuery().getOne().onItem().transform(runtime -> {
       final var data = runtime.getStencil(OffsetDateTime.now()).getSites().get(locale);
       if(data == null) {
-        final LocalizedSite failsafe = LocalizedSiteBean.builder().id("not-found")
+        final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("not-found")
             .images("images")
             .locale(locale)
             .build();
         return failsafe;
       }
-      return LocalizedSiteBean.builder().from(data).id(data.getId()).build();
+      return ImmutableLocalizedSite.builder().from(data).id(data.getId()).build();
     }).onFailure().recoverWithItem(error -> {
       log.error("Failed to resolve site for locale: {}, because of error: {}", locale, error.getMessage(), error);
-      final LocalizedSite failsafe = LocalizedSiteBean.builder().id("under-construction")
+      final LocalizedSite failsafe = ImmutableLocalizedSite.builder().id("under-construction")
           .images("images")
           .locale(locale)
           .build();

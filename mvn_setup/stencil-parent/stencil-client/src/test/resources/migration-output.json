@@ -2,133 +2,8 @@
   "tagName" : "test",
   "created" : 1,
   "sites" : {
-    "sv" : {
-      "id" : "b806f556bab14d831cd3bc41c9961a7a",
-      "images" : "/",
-      "locale" : "sv",
-      "topics" : {
-        "000_index" : {
-          "id" : "000_index",
-          "name" : "Välkommen",
-          "links" : [ "1836d0aa2910d7969a55a408cf5e9000", "fa378fb8b3ef730fb2e03358e90e1fd8" ],
-          "headings" : [ {
-            "id" : "1",
-            "name" : "# Välkommen",
-            "order" : 1,
-            "level" : 1
-          }, {
-            "id" : "2",
-            "name" : "#### nested",
-            "order" : 2,
-            "level" : 4
-          } ],
-          "parent" : null,
-          "blob" : "8e00c38adb059e59ff532fd4a3eab558"
-        },
-        "100_residence" : {
-          "id" : "100_residence",
-          "name" : "Boende",
-          "links" : [ "fa378fb8b3ef730fb2e03358e90e1fd8" ],
-          "headings" : [ {
-            "id" : "1",
-            "name" : "# Boende",
-            "order" : 1,
-            "level" : 1
-          }, {
-            "id" : "2",
-            "name" : "#### nested",
-            "order" : 2,
-            "level" : 4
-          } ],
-          "parent" : null,
-          "blob" : "57040a22ad185b86eb4c3b9b7358f35d"
-        },
-        "200_democracy" : {
-          "id" : "200_democracy",
-          "name" : "Demokrati",
-          "links" : [ "e7be3cf41d3029b7b2bb9698df24cfb3", "fa378fb8b3ef730fb2e03358e90e1fd8" ],
-          "headings" : [ {
-            "id" : "1",
-            "name" : "# Demokrati",
-            "order" : 1,
-            "level" : 1
-          }, {
-            "id" : "2",
-            "name" : "#### nested",
-            "order" : 2,
-            "level" : 4
-          } ],
-          "parent" : null,
-          "blob" : "bd80b19d2982a59c4807cf6090e25b0d"
-        }
-      },
-      "blobs" : {
-        "57040a22ad185b86eb4c3b9b7358f35d" : {
-          "id" : "57040a22ad185b86eb4c3b9b7358f35d",
-          "value" : "# Boende\ncontent\n\n#### nested\n"
-        },
-        "8e00c38adb059e59ff532fd4a3eab558" : {
-          "id" : "8e00c38adb059e59ff532fd4a3eab558",
-          "value" : "# Välkommen\ncontent\n\n#### nested\n"
-        },
-        "bd80b19d2982a59c4807cf6090e25b0d" : {
-          "id" : "bd80b19d2982a59c4807cf6090e25b0d",
-          "value" : "# Demokrati\ncontent\n\n#### nested\n"
-        }
-      },
-      "links" : {
-        "1836d0aa2910d7969a55a408cf5e9000" : {
-          "id" : "1836d0aa2910d7969a55a408cf5e9000",
-          "path" : "index",
-          "type" : "phone",
-          "name" : "TEXT IN SV for INDEX",
-          "value" : "+357 786767",
-          "global" : false,
-          "workflow" : false,
-          "anon" : false,
-          "startDate" : null,
-          "endDate" : null,
-          "formId" : null,
-          "formName" : null,
-          "formTag" : null,
-          "flowName" : null
-        },
-        "e7be3cf41d3029b7b2bb9698df24cfb3" : {
-          "id" : "e7be3cf41d3029b7b2bb9698df24cfb3",
-          "path" : "democracy",
-          "type" : "internal",
-          "name" : "TEXT IN SV for DEM",
-          "value" : "https://www.some.site.com/",
-          "global" : false,
-          "workflow" : false,
-          "anon" : false,
-          "startDate" : null,
-          "endDate" : null,
-          "formId" : null,
-          "formName" : null,
-          "formTag" : null,
-          "flowName" : null
-        },
-        "fa378fb8b3ef730fb2e03358e90e1fd8" : {
-          "id" : "fa378fb8b3ef730fb2e03358e90e1fd8",
-          "path" : "",
-          "type" : "workflow",
-          "name" : "workflow LINK IN SV",
-          "value" : "General message",
-          "global" : true,
-          "workflow" : true,
-          "anon" : false,
-          "startDate" : null,
-          "endDate" : null,
-          "formId" : null,
-          "formName" : null,
-          "formTag" : null,
-          "flowName" : null
-        }
-      }
-    },
     "fi" : {
-      "id" : "e1d909227c6d79e9f26590bc3d4c8e4a",
+      "id" : "3c557ba57632597c5e281ff0cbae3e04",
       "images" : "/",
       "locale" : "fi",
       "topics" : {
@@ -250,10 +125,235 @@
           "formTag" : null,
           "flowName" : null
         }
+      },
+      "workflowsInOtherLocales" : {
+        "fi" : [ {
+          "id" : "7ab7e270328afd49799cf2fdb6f75437",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN FI",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "sv" : [ {
+          "id" : "fa378fb8b3ef730fb2e03358e90e1fd8",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN SV",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "en" : [ {
+          "id" : "61b2aef581cd57d5a101c13753107d52",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN EN",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ]
+      }
+    },
+    "sv" : {
+      "id" : "9db55e47f99822f34c918bd232df08a7",
+      "images" : "/",
+      "locale" : "sv",
+      "topics" : {
+        "000_index" : {
+          "id" : "000_index",
+          "name" : "Välkommen",
+          "links" : [ "1836d0aa2910d7969a55a408cf5e9000", "fa378fb8b3ef730fb2e03358e90e1fd8" ],
+          "headings" : [ {
+            "id" : "1",
+            "name" : "# Välkommen",
+            "order" : 1,
+            "level" : 1
+          }, {
+            "id" : "2",
+            "name" : "#### nested",
+            "order" : 2,
+            "level" : 4
+          } ],
+          "parent" : null,
+          "blob" : "8e00c38adb059e59ff532fd4a3eab558"
+        },
+        "100_residence" : {
+          "id" : "100_residence",
+          "name" : "Boende",
+          "links" : [ "fa378fb8b3ef730fb2e03358e90e1fd8" ],
+          "headings" : [ {
+            "id" : "1",
+            "name" : "# Boende",
+            "order" : 1,
+            "level" : 1
+          }, {
+            "id" : "2",
+            "name" : "#### nested",
+            "order" : 2,
+            "level" : 4
+          } ],
+          "parent" : null,
+          "blob" : "57040a22ad185b86eb4c3b9b7358f35d"
+        },
+        "200_democracy" : {
+          "id" : "200_democracy",
+          "name" : "Demokrati",
+          "links" : [ "e7be3cf41d3029b7b2bb9698df24cfb3", "fa378fb8b3ef730fb2e03358e90e1fd8" ],
+          "headings" : [ {
+            "id" : "1",
+            "name" : "# Demokrati",
+            "order" : 1,
+            "level" : 1
+          }, {
+            "id" : "2",
+            "name" : "#### nested",
+            "order" : 2,
+            "level" : 4
+          } ],
+          "parent" : null,
+          "blob" : "bd80b19d2982a59c4807cf6090e25b0d"
+        }
+      },
+      "blobs" : {
+        "57040a22ad185b86eb4c3b9b7358f35d" : {
+          "id" : "57040a22ad185b86eb4c3b9b7358f35d",
+          "value" : "# Boende\ncontent\n\n#### nested\n"
+        },
+        "8e00c38adb059e59ff532fd4a3eab558" : {
+          "id" : "8e00c38adb059e59ff532fd4a3eab558",
+          "value" : "# Välkommen\ncontent\n\n#### nested\n"
+        },
+        "bd80b19d2982a59c4807cf6090e25b0d" : {
+          "id" : "bd80b19d2982a59c4807cf6090e25b0d",
+          "value" : "# Demokrati\ncontent\n\n#### nested\n"
+        }
+      },
+      "links" : {
+        "1836d0aa2910d7969a55a408cf5e9000" : {
+          "id" : "1836d0aa2910d7969a55a408cf5e9000",
+          "path" : "index",
+          "type" : "phone",
+          "name" : "TEXT IN SV for INDEX",
+          "value" : "+357 786767",
+          "global" : false,
+          "workflow" : false,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        },
+        "e7be3cf41d3029b7b2bb9698df24cfb3" : {
+          "id" : "e7be3cf41d3029b7b2bb9698df24cfb3",
+          "path" : "democracy",
+          "type" : "internal",
+          "name" : "TEXT IN SV for DEM",
+          "value" : "https://www.some.site.com/",
+          "global" : false,
+          "workflow" : false,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        },
+        "fa378fb8b3ef730fb2e03358e90e1fd8" : {
+          "id" : "fa378fb8b3ef730fb2e03358e90e1fd8",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN SV",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        }
+      },
+      "workflowsInOtherLocales" : {
+        "fi" : [ {
+          "id" : "7ab7e270328afd49799cf2fdb6f75437",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN FI",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "sv" : [ {
+          "id" : "fa378fb8b3ef730fb2e03358e90e1fd8",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN SV",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "en" : [ {
+          "id" : "61b2aef581cd57d5a101c13753107d52",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN EN",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ]
       }
     },
     "en" : {
-      "id" : "c1303e41ddbfd764a1acc7318609afe0",
+      "id" : "51928fbfa26a5f4b3e850fb8be6da39b",
       "images" : "/",
       "locale" : "en",
       "topics" : {
@@ -359,6 +459,56 @@
           "formTag" : null,
           "flowName" : null
         }
+      },
+      "workflowsInOtherLocales" : {
+        "fi" : [ {
+          "id" : "7ab7e270328afd49799cf2fdb6f75437",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN FI",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "sv" : [ {
+          "id" : "fa378fb8b3ef730fb2e03358e90e1fd8",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN SV",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ],
+        "en" : [ {
+          "id" : "61b2aef581cd57d5a101c13753107d52",
+          "path" : "",
+          "type" : "workflow",
+          "name" : "workflow LINK IN EN",
+          "value" : "General message",
+          "global" : true,
+          "workflow" : true,
+          "anon" : false,
+          "startDate" : null,
+          "endDate" : null,
+          "formId" : null,
+          "formName" : null,
+          "formTag" : null,
+          "flowName" : null
+        } ]
       }
     }
   }

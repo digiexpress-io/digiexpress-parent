@@ -4,6 +4,7 @@ import { DialobApi } from './dialob-types';
 import { useFormStore } from './useFormStore';
 import { OfferApi, useOffers } from '../api-offer';
 import { useIam } from '../api-iam';
+import { GFormUnavailable } from '../g-form-unavailable';
 
 
 export const FormContext = React.createContext<DialobApi.FormContextType>({} as any);
@@ -52,6 +53,10 @@ const WithFormProvider: React.FC<FormProviderProps & { id: string }> = (props) =
       contextValue.onAfterComplete(); //complete signal from backend is received
     }
   }, [store, contextValue]);
+
+  if(store.pendingError) {
+    return <GFormUnavailable />
+  }
 
   return (<FormContext.Provider value={contextValue}>{props.children}</FormContext.Provider>);
 }

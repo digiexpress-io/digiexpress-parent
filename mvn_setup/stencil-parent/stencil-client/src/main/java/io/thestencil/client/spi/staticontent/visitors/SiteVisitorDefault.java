@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.thestencil.client.api.ImmutableLocalizedSite;
 import io.thestencil.client.api.ImmutableTopicLink;
 import io.thestencil.client.api.MigrationBuilder.LocalizedSite;
 import io.thestencil.client.api.MigrationBuilder.Topic;
 import io.thestencil.client.api.MigrationBuilder.TopicBlob;
 import io.thestencil.client.api.MigrationBuilder.TopicHeading;
 import io.thestencil.client.api.MigrationBuilder.TopicLink;
-import io.thestencil.client.spi.beans.LocalizedSiteBean;
 import io.thestencil.client.spi.beans.TopicBean;
 import io.thestencil.client.spi.beans.TopicBlobBean;
 import io.thestencil.client.spi.beans.TopicHeadingBean;
@@ -84,10 +84,22 @@ public class SiteVisitorDefault implements SiteVisitor {
   public SiteVisitorOutput visit(String imageUrl) {
     this.imageUrl = imageUrl;
     final var builder = ImmutableSiteVisitorOutput.builder();
-    final var sites = this.localeTopicData.entrySet().stream()
+    final var initSites = this.localeTopicData.entrySet().stream()
         .map(this::visitLocale)
         .collect(Collectors.toList());
-    sites.sort((s1, s2) -> s1.getId().compareTo(s2.getId()));
+    
+    
+    final var allWkLinks = initSites.stream()
+      .collect(Collectors.toMap(site -> site.getLocale(), site -> site.getLinks().values().stream()
+          .filter(e -> Boolean.TRUE.equals(e.getWorkflow()))
+          .toList()));
+    
+    final var sites = initSites.stream().map(site -> ImmutableLocalizedSite.builder()
+        .from(site)
+        .putAllWorkflowsInOtherLocales(allWkLinks)
+        .build())
+        .sorted((s1, s2) -> s1.getId().compareTo(s2.getId()))
+        .toList();
     
     return builder.sites(sites).addAllMessage(messages).build();
   }
@@ -146,7 +158,7 @@ public class SiteVisitorDefault implements SiteVisitor {
       siteTopics.put(topic.getId(), topic);
     }
 
-    final var result = LocalizedSiteBean.builder()
+    final var result = ImmutableLocalizedSite.builder()
         .id("")
         .images(imageUrl)
         .locale(locale)
@@ -155,7 +167,7 @@ public class SiteVisitorDefault implements SiteVisitor {
         .links(sort(siteLinks))
         .build();
     final var id = Sha2.blobId(JsonObject.mapFrom(result).encode());
-    return LocalizedSiteBean.builder().from(result).id(id).build();
+    return ImmutableLocalizedSite.builder().from(result).id(id).build();
   }
   
   private <K> Map<String, K> sort(Map<String, K> input) {

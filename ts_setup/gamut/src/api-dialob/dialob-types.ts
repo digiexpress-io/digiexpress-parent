@@ -203,7 +203,8 @@ export declare namespace DialobApi {
     id: string;
     form: Form;
     pending: boolean;
-    pull(): Promise<void>;
+    pendingError: boolean | undefined;
+    pull(): Promise<{ ok: boolean }>;
 
     setAnswer(itemId: string, answer: any): void
     addRowToGroup(rowGroupId: string): void
