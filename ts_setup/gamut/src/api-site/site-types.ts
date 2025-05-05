@@ -93,6 +93,7 @@ export declare namespace SiteApi {
     feedback: Feedback;
     rating: FeedbackRating | undefined;
   }
+
   export interface FeedbackRating {
     id: string;
     replyId: string | undefined;
@@ -100,6 +101,14 @@ export declare namespace SiteApi {
     customerId: string;
     rating: number; // score 1-5
   }
+
+  export interface FeedbackContent {
+    title: string;
+    main: string | undefined;
+    sub: string | undefined;
+    question: string | undefined;
+  }
+
   export interface Feedback {
     id: FeedbackId;
       
@@ -112,7 +121,8 @@ export declare namespace SiteApi {
     customerTitle: string | undefined;
     updatedOnDate: string;
 
-    content: string;
+    content: FeedbackContent;
+
     replyText: string;
     locale: string;
     

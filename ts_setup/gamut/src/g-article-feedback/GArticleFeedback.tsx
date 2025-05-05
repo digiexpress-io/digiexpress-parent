@@ -117,9 +117,9 @@ export const GArticleFeedback: React.FC<GArticleFeedbackProps> = (initProps) => 
           <TableBody>
             {reducer[0].visibleRows.map((row) => (
               <TableRow hover tabIndex={-1} key={row.feedback.id} onClick={(_event) => handleOnRowClick(row)} className={classes.filledRow}>
-                <TableCell component="th" scope="row" padding="none">{row.feedback.customerTitle ? row.feedback.customerTitle : "-"}</TableCell>
-                <TableCell component="th" scope="row" padding="none">{row.feedback.labelValue}</TableCell>
-                <TableCell component="th" scope="row" align="left" padding="none">{row.feedback.subLabelValue}</TableCell>
+                <TableCell component="th" scope="row" padding="none">{row.feedback.content.title ? row.feedback.content.title : "-"}</TableCell>
+                <TableCell component="th" scope="row" padding="none">{row.feedback.content.main}</TableCell>
+                <TableCell component="th" scope="row" align="left" padding="none">{row.feedback.content.sub}</TableCell>
                 <TableCell component="th" scope="row" align="left" padding="none">
                   {DateTime.fromJSDate(new Date(row.feedback.updatedOnDate))
                     .setLocale(locale)

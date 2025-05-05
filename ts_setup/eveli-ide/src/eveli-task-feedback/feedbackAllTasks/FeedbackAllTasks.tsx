@@ -105,12 +105,12 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
                     <StatusIndicator size='LARGE' taskId={feedback.sourceId} />
                   </Box>
                   <Box width='35%'>
-                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.category' })}</Typography>
-                    <Typography>{feedback.labelValue}</Typography>
+                    <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.mainCategory' })}</Typography>
+                    <Typography>{feedback.content.main}</Typography>
                   </Box>
                   <Box width='35%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.subCategory' })}</Typography>
-                    <Typography>{feedback.subLabelValue}</Typography>
+                    <Typography>{feedback.content.sub}</Typography>
                   </Box>
                   <Box width='13%'>
                     <Typography variant='caption' fontWeight={500}>{intl.formatMessage({ id: 'feedback.createdBy' })}</Typography>
