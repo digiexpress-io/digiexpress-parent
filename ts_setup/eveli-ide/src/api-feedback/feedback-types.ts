@@ -20,7 +20,7 @@ export declare namespace FeedbackApi {
     sourceId: SourceId;
 
     origin: string;
-    content: string;
+    content: FeedbackContent;
     replyText: string;
 
     locale: string;
@@ -39,6 +39,14 @@ export declare namespace FeedbackApi {
     thumbsDownCount: number;
   }
 
+  export interface FeedbackContent {
+    title: string;
+    main: string | undefined;
+    sub: string | undefined;
+    question: string | undefined;
+  }
+
+
   export interface FeedbackRating {
     id: string;
     replyId: ReplyId | undefined;
@@ -53,7 +61,7 @@ export declare namespace FeedbackApi {
     userId: UserId;
 
     origin: string;
-    content: string;
+    content: FeedbackContent;
     locale: string;
 
     labelKey: string;
@@ -61,6 +69,7 @@ export declare namespace FeedbackApi {
     subLabelKey: string | undefined;
     subLabelValue: string | undefined;
     customerTitle: string | undefined;
+
 
     replys: string[];
     questionnaire: {
@@ -77,7 +86,7 @@ export declare namespace FeedbackApi {
     userId: UserId;
 
     origin: string;
-    content: string;
+    content: FeedbackContent;
     reply: string;
     locale: string;
 

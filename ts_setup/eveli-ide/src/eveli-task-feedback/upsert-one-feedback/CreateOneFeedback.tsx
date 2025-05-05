@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, CircularProgress, TextField, Typography, Button } from '@mui/material';
 import { useIntl, FormattedMessage } from 'react-intl';
-import ReactMarkdown from 'react-markdown';
 import { useNavigate } from '@tanstack/react-router';
 import { useFeedback, FeedbackApi } from '../../api-feedback';
+import { FeedbackContent } from './FeedbackContent';
 
 
 export interface CreateOneFeedbackProps {
@@ -74,15 +74,10 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     return <CircularProgress />
   }
 
-
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
-        <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
-
-        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{template?.labelValue}</Typography>
-        <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{template?.subLabelValue}</Typography>
-        <Box component='span' mt={2}><ReactMarkdown>{template?.content}</ReactMarkdown></Box>
+        <FeedbackContent feedback={template?.content} />
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 
         <TextField onChange={(e) => setReply(e.target.value)}

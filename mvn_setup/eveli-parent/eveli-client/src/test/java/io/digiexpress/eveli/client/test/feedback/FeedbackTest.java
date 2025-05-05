@@ -73,7 +73,7 @@ public class FeedbackTest extends FeedbackEnvirSetup {
         
         .reply("super-reply-by-worker")
         .build(), "super-user");
-    
+        
     Assertions.assertEquals("same,vimes", template.getReporterNames());
     
     
@@ -85,7 +85,6 @@ public class FeedbackTest extends FeedbackEnvirSetup {
     
     Assertions.assertEquals("same,vimes", queryFeedback.get().getReporterNames());
     Assertions.assertEquals("thanks, was great", queryFeedback.get().getCustomerTitle());
-
     
     
     // rate feedback as thumbs down    
