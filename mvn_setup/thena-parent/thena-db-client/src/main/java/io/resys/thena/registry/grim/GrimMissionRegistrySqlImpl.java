@@ -30,8 +30,13 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
+import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionStats;
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEventType;
 import io.resys.thena.api.entities.grim.ImmutableGrimMission;
+import io.resys.thena.api.entities.grim.ImmutableGrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimMissionRegistry;
@@ -467,5 +472,99 @@ public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
   @Override
   public Function<Row, String> idMapper() {
     return (row) -> row.getString("mission_id");
+  }
+  
+  @Override
+  public SqlTuple findAllStatsByMissionAttributes() {
+    final var params = new ArrayList<Object>();
+    params.add(GrimMissionAttributeEventType.STATUS_DATE.name());
+    params.add(GrimMissionAttributeEventType.STATUS.name());
+    params.add(GrimMissionAttributeEventType.PRIORITY.name());
+    params.add(GrimMissionAttributeEventType.OVERDUE.name());
+    params.add(GrimAssignment.ASSIGNMENT_TYPE_USER);
+    
+
+    return ImmutableSqlTuple.builder().value(new SqlStatement()
+      .append("with").ln()
+      
+      // virtual tables
+      .append("status_date_events as (").ln()
+      .append("  select").ln()
+      .append("    commit.created_at::date as event_date,").ln()
+      .append("    mission.mission_status as mission_status").ln()
+      .append("  from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  left join ").append(options.getGrimCommit()).append(" as commit").ln() 
+      .append("  on(mission.commit_id = commit.commit_id and mission.id = commit.mission_id)").ln()
+      .append("),").ln()
+
+      .append("mission_status as (").ln()
+      .append("  select").ln()
+      .append("    distinct mission.mission_status as value").ln()
+      .append("  from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append(")").ln()
+      
+      
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  $1 as event_type,").ln()
+      .append("  status_date_events.event_date as event_date, ").ln()
+      .append("  mission_status.value as attribute_value").ln()
+      .append("from mission_status ").ln()
+      .append("left join status_date_events").ln()
+      .append("  on(mission_status.value = status_date_events.mission_status)").ln()
+      .append("  group by status_date_events.event_date, mission_status.value").ln().ln()
+        
+      .append("union").ln()
+      
+        // count status values
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  $2 as event_type,").ln()
+      .append("  null as event_date,").ln()
+      .append("  mission.mission_status as attribute_value").ln()
+      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  group by mission.mission_status").ln()
+
+      .append("union").ln()
+
+      // count priority values
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  $3 as event_type,").ln()
+      .append("  null as event_date,").ln()
+      .append("  mission.mission_priority as attribute_value").ln()
+      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  group by mission.mission_priority").ln()
+      
+      .append("union").ln()
+      
+      
+      // count overdue values
+      .append("select")
+      .append("  count(*) as events_total,").ln()
+      .append("  $4 as event_type,").ln()
+      .append("  null as event_date,").ln()
+      .append("  coalesce(assignment.assignee, '__nobody') as attribute_value").ln()
+      .append("from ").append(options.getGrimMission()).append(" as mission").ln()
+      .append("  left join ").append(options.getGrimAssignment()).append(" as assignment").ln()
+      .append("  on(assignment.assignment_type = $5 and mission.id = assignment.mission_id)").ln()
+      
+      .append("  where mission.mission_due_date < current_timestamp::date").ln()
+      .append("  group by assignment.assignee").ln()
+    
+      .build())
+      .props(Tuple.from(params))
+    .build();
+  }
+  
+
+  @Override
+  public Function<Row, GrimMissionAttributeEvent> attrMapper() {
+    return (row) -> ImmutableGrimMissionAttributeEvent.builder()
+        .eventCount(row.getLong("events_total"))
+        .eventDate(Optional.ofNullable(row.getLocalDate("event_date")).orElse(null))
+        .eventType(GrimMissionStats.GrimMissionAttributeEventType.valueOf(row.getString("event_type")))
+        .attributeValue(row.getString("attribute_value"))
+        .build();
   }
 }

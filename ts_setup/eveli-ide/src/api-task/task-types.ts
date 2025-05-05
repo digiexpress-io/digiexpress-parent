@@ -55,6 +55,7 @@ export namespace TaskApi {
     COMPLETED = 'COMPLETED',
     REJECTED = 'REJECTED'
   }
+  
   export const task_status_messages = defineMessages({
     NEW: {
       id: 'task.status.new',
@@ -152,26 +153,19 @@ export declare namespace TaskApi {
   export type TaskFeatureType = 'feedback';
 
 
-  export type TaskPriorityStatistics = {
-    count: number
-    priority: TaskApi.TaskPriority
+
+  export interface TaskDasboard {
+    events: GrimMissionAttributeEvent[];
   }
 
-  export type TaskStatusStatistics = {
-    count: number
-    status: TaskApi.TaskStatus
+  export interface GrimMissionAttributeEvent {
+    eventDate: string;
+    eventCount: number;
+    eventType: GrimMissionAttributeEventType;
+    attributeValue: string
   }
+  
 
-  export type OverdueByGroupStatistics = {
-    count: number
-    assignedId: string
-  }
+  export type GrimMissionAttributeEventType = ('STATUS' | 'PRIORITY' | 'STATUS_DATE' | 'OVERDUE');
 
-  export type TaskStatusTimelineStatistics = {
-    statusDate: Date
-    new: number
-    open: number
-    completed: number
-    rejected: number
-  }
 }

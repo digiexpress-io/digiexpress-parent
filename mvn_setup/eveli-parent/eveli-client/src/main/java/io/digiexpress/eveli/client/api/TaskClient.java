@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
@@ -40,12 +41,19 @@ public interface TaskClient {
 
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
+  
   QueryUnreadUserTasks queryUnreadUserTasks();
   TaskCommandBuilder taskBuilder();
   
   QueryTaskComments queryTaskComments();
   QueryTaskKeywords queryTaskKeywords();
   
+  QueryTaskDasboard queryTaskDasboard();
+  
+  
+  interface QueryTaskDasboard {
+    Uni<TaskDasboard> findAll();
+  }
   
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
@@ -250,4 +258,14 @@ public interface TaskClient {
     @Nullable Object getRaw();
     @Nullable String getValue();
   }
+  
+  
+  
+  @JsonSerialize(as = ImmutableTaskDasboard.class)
+  @JsonDeserialize(as = ImmutableTaskDasboard.class)
+  @Value.Immutable
+  interface TaskDasboard {
+    List<GrimMissionAttributeEvent> getEvents();
+  }
+  
 }

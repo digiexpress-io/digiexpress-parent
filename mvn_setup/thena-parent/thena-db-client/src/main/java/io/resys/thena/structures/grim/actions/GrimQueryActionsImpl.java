@@ -105,4 +105,8 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   public MissionCommitQuery commitQuery() {
     return new GrimMissionCommitQueryImpl(startingState, repoId);
   }
+  @Override
+  public MissionStatsQuery missionStatsQuery() {
+    return new MissionStatsQueryImpl(startingState, repoId);
+  }
 }

@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
@@ -180,6 +181,12 @@ public class TaskApiController {
         .requireAnyRoles(worker.getRoles())
         .findAll();
   }
+  
+  @GetMapping(value="/dashboard")
+  public Uni<TaskDasboard> getDashboard() {
+    return taskClient.queryTaskDasboard().findAll();
+  }
+  
   
   @GetMapping(value="/{id}/comments")
   public Uni<List<TaskClient.TaskComment>> getTaskComments(@PathVariable("id") String id)

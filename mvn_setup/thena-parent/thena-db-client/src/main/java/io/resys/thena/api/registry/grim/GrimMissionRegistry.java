@@ -27,6 +27,7 @@ import java.util.function.Function;
 import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
 import io.resys.thena.api.entities.grim.GrimMission;
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -41,9 +42,12 @@ public interface GrimMissionRegistry extends ThenaRegistryService<GrimMission, i
   ThenaSqlClient.SqlTuple count(GrimMissionFilter filter);  
   ThenaSqlClient.SqlTuple findAllIdentifiers(GrimMissionFilter filter, List<PageSortingOrder<MissionOrderByType>> orderBy, long offset, long limit);
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
+  
+  ThenaSqlClient.SqlTuple findAllStatsByMissionAttributes();
+
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMission> mission);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimMission> mission);
-  
+
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
   ThenaSqlClient.Sql dropTable();
@@ -51,4 +55,5 @@ public interface GrimMissionRegistry extends ThenaRegistryService<GrimMission, i
   Function<io.vertx.mutiny.sqlclient.Row, GrimMission> defaultMapper();
   Function<io.vertx.mutiny.sqlclient.Row, Long> countMapper();
   Function<io.vertx.mutiny.sqlclient.Row, String> idMapper();
+  Function<io.vertx.mutiny.sqlclient.Row, GrimMissionAttributeEvent> attrMapper();
 }

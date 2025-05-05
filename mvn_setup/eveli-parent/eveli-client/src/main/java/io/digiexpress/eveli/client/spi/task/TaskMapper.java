@@ -41,7 +41,7 @@ import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 
 public class TaskMapper {
-  public static final String ASSIGNMENT_TYPE_TASK_USER = "task_user";
+  public static final String ASSIGNMENT_TYPE_TASK_USER = GrimAssignment.ASSIGNMENT_TYPE_USER;
   public static final String ASSIGNMENT_TYPE_TASK_ROLE = "task_role";
   
   public static final String LABEL_TYPE_KEYWORD = "keyword";
