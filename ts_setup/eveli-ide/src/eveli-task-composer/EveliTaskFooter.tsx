@@ -13,6 +13,7 @@ import { EveliDateTimeFormatter } from "@/eveli-datetime-formatter";
 import { TaskApi } from '@/api-task';
 import { TaskFormDelegateProps } from './TaskFormState';
 import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
+import { EveliTaskFeature } from '@/eveli-task-feature';
 
 
 
@@ -39,14 +40,12 @@ const FeedbackButton: React.FC<{ task: TaskApi.Task }> = ({ task }) => {
     });
   }
 
-  if(!task.features?.includes('feedback') ) {
-    return (<></>)
-  }
-
   return (
-    <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
-      <Button onClick={handleFeedback} variant='contained'><FormattedMessage id='task.form.feedback.manage' /></Button>
-    </EveliPermissions>);
+    <EveliTaskFeature id='TASK_FEEDBACK'>
+      <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
+        <Button onClick={handleFeedback} variant='contained'><FormattedMessage id='task.form.feedback.manage' /></Button>
+      </EveliPermissions>
+    </EveliTaskFeature>);
 }
 
 export const FormReviewButton: React.FC<{task: { id: string, questionnaireId?: string | undefined }}> = ({ task }) => {
@@ -121,6 +120,7 @@ export const EveliTaskFooter: React.FC<EveliTaskFooterProps> = (props) => {
 
           {task?.questionnaireId && (
             <Box display='flex' gap={1}>
+
               <FeedbackButton task={task} />
             </Box>
           )}

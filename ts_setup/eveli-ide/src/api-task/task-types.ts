@@ -136,7 +136,7 @@ export declare namespace TaskApi {
     priority?: TaskPriority;
     additionalInfo?: string;
 
-    features?: string[];
+    features?: TaskFeatureType[];
     keyWords?: string[];
     taskLinks?: TaskLink[];
     // For UI purposes
@@ -148,6 +148,8 @@ export declare namespace TaskApi {
     comments: Comment[];
     questionnaireId?: string | undefined;
   }
+
+  export type TaskFeatureType = 'feedback';
 
 
   export type TaskPriorityStatistics = {

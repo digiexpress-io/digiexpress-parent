@@ -21,6 +21,7 @@ package io.resys.thena.structures.grim.create;
  */
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMissionCommitViewer;
@@ -40,6 +41,7 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
   private String userId;
   private String usedFor;
   private String commitId;
+  private boolean skipViewer;
   
   
   @Override
@@ -68,6 +70,11 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
     return this;
   }
   @Override
+  public NewMissionCommitViewer skipViewer() {
+    this.skipViewer = true;
+    return this;
+  }
+  @Override
   public void build() {
     this.built = true;
   }
@@ -75,13 +82,17 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
   public String getCurrentTreeCommit() {
     return currentTreeCommit;
   }
-  public ImmutableGrimCommitViewer close() {
+  public Optional<ImmutableGrimCommitViewer> close() {
+    if(skipViewer) {
+      return Optional.empty();
+    }
+    
     RepoAssert.isTrue(built, () -> "you must call MissionChanges.build() to finalize mission CREATE or UPDATE!");
     RepoAssert.notEmpty(userId, () -> "userId must be defined!");
     RepoAssert.notEmpty(usedFor, () -> "usedFor must be defined!");
     RepoAssert.notEmpty(commitId, () -> "commitId must be defined!");
     
-    return ImmutableGrimCommitViewer.builder()
+    return Optional.of(ImmutableGrimCommitViewer.builder()
         .id(OidUtils.gen())
         .missionId(missionId)
         .commitId(commitId)
@@ -91,6 +102,6 @@ public class NewMissionCommitViewerBuilder implements NewMissionCommitViewer {
         .objectType(GrimDocType.GRIM_MISSION)
         .usedBy(userId)
         .usedFor(usedFor)
-        .build();
+        .build());
   }
 }

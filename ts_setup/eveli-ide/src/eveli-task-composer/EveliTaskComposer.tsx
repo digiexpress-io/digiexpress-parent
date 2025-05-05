@@ -14,6 +14,7 @@ import { EveliTaskBody } from './EveliTaskBody';
 import { EveliTaskSubHeader } from './EveliTaskSubHeader';
 import { EveliTaskFooter } from './EveliTaskFooter';
 import { EveliTaskBodyEmpty } from './EveliTaskBodyEmpty';
+import { EveliTaskFeatureProvider } from '@/eveli-task-feature';
 
 
 export type EveliTaskComposerProps = {
@@ -27,7 +28,6 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   const { getTask } = useFetch('worker/rest/api/tasks/$taskId.GET', {});
   const { updateTask } = useFetch('worker/rest/api/tasks/$taskId.PUT', {});
   const { createTask } = useFetch('worker/rest/api/tasks.POST', {});
-
 
 
   React.useEffect(() => {
@@ -71,18 +71,20 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
         {task?.taskRef || ''}
       </Typography>
 
-      <TaskFormState task={task} onSubmit={handleSaveTask}>
-        { (form) => (
-          <>
-            <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
-            <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
-            {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty /> }
-            <EveliTaskSubHeader form={form} readOnly={readOnly} />
-            <EveliTaskFooter task={task} form={form} readOnly={readOnly}/>
-          </>  
-          )
-        }
-      </TaskFormState>
+      <EveliTaskFeatureProvider options={task}>
+        <TaskFormState task={task} onSubmit={handleSaveTask}>
+          { (form) => (
+            <>
+              <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
+              <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
+              {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty /> }
+              <EveliTaskSubHeader form={form} readOnly={readOnly} />
+              <EveliTaskFooter task={task} form={form} readOnly={readOnly}/>
+            </>  
+            )
+          }
+        </TaskFormState>
+      </EveliTaskFeatureProvider>
     </>
     
   );
