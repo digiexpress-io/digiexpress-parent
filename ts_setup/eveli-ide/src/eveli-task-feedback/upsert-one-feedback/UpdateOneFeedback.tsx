@@ -95,7 +95,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Typography>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
 
       <FeedbackContent feedback={feedback.content} />
 

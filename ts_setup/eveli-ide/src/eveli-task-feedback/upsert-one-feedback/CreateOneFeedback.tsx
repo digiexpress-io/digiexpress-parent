@@ -77,6 +77,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
+        <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
+
         <FeedbackContent feedback={template?.content} />
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 
