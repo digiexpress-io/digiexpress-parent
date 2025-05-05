@@ -28,6 +28,7 @@ import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -45,6 +46,7 @@ public class FindAllTaskVisitor implements TaskStoreConfig.QueryTasksVisitor<Lis
   public MissionQuery start(GrimStructuredTenant config, MissionQuery query) {
   
     final var builder = query
+    .archived(GrimArchiveQueryType.ONLY_IN_FORCE)
     // we don't need following docs
     .excludeDocs(
         GrimDocType.GRIM_REMARK,
