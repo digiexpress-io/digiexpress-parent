@@ -13,7 +13,6 @@ import InfoIcon from '@mui/icons-material/Info';
 
 import { SiteApi, useSite } from '../api-site';
 import { useIntl } from 'react-intl';
-import { GMarkdown } from '../g-md';
 import { DateTime } from 'luxon';
 import { useLocale } from '../api-locale';
 import { useIam } from '../api-iam';
@@ -123,11 +122,13 @@ export const GArticleFeedbackViewer: React.FC<GArticleFeedbackViewerProps> = (pr
 
       </DialogTitle>
       <DialogContent>
-        <GMarkdown>{feedback.feedback.content}</GMarkdown>
+        <Typography className={classes.subTitle}>{feedback.feedback.content.title}</Typography>
+        <Typography>{feedback.feedback.content.question}</Typography>
+
         <Divider className={classes.contentDivider} />
         <div className={classes.replyContainer}>
-          <Typography className={classes.subTitle}>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}</Typography>
-          <GMarkdown>{feedback.feedback.replyText}</GMarkdown>
+          <Typography>{intl.formatMessage({ id: 'gamut.feedback.feedbackViewerSubTitle' })}</Typography>
+          <Typography>{feedback.feedback.replyText}</Typography>
         </div>
       </DialogContent>
       <DialogActions>

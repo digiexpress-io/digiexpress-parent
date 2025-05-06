@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
@@ -44,6 +45,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisito
 import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -209,5 +211,30 @@ public class TaskClientImpl implements TaskClient {
       }
     };
   }
-
+  @Override
+  public QueryTaskDasboard queryTaskDasboard() {
+    return new QueryTaskDasboard() {
+      
+      @Override
+      public Uni<TaskDasboard> findAll() {
+        final var config = ctx.getConfig();
+        final var grim = config.getClient().grim(config.getTenantName());
+        return grim.find().missionStatsQuery().findAllByMissionAttributes()
+          .onItem().transform(resp -> {
+            if(resp.getStatus() != QueryEnvelopeStatus.OK) {
+              throw TaskException.builder("FIND_TASK_DASKBOARD_FAIL")
+                .add(grim, resp)
+                .build();
+            }
+            final var result = resp.getObjects();
+            if(result == null) {
+              throw TaskException.builder("FIND_TASK_DASKBOARD_NO_FOUND")   
+                .add(grim, resp)
+                .build();
+            }
+            return ImmutableTaskDasboard.builder().events(result).build();
+          });
+      }
+    };
+  }
 }

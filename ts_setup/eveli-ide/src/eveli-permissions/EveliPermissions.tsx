@@ -1,8 +1,8 @@
 import { IamApi, useIam } from '@/api-iam';
 import React from 'react';
 
-function oneOf(type: IamApi.UserPermission[]): IamApi.UserPermission[] {
-  return type;
+function oneOf(type: IamApi.UserPermission[]): (input: IamApi.UserPermission) => boolean {
+  return (input) => type.includes(input);
 }
 
 const EveliPermissionMapping = {
@@ -62,11 +62,7 @@ export type EveliPermissionType = keyof typeof EveliPermissionMapping;
 export const EveliPermissions: React.FC<{ children: React.ReactNode, id: EveliPermissionType }> = ({ children, id }) => {
   const { user } = useIam();
   const required = EveliPermissionMapping[id];
-
-  const isAccessGranted = user.permissions.find((permission) => {
-    return required.includes(permission);
-  });
-
+  const isAccessGranted = user.permissions.find((permission) => required(permission));
   if (isAccessGranted) {
     return <>{children}</>
   }

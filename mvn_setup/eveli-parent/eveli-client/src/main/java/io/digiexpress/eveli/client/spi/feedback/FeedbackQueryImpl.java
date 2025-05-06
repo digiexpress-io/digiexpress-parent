@@ -33,8 +33,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
+import io.digiexpress.eveli.client.api.FeedbackClient.FeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.api.ImmutableFeedback;
+import io.digiexpress.eveli.client.api.ImmutableFeedbackQuestionnaireContent;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 
@@ -95,6 +98,15 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
+    FeedbackQuestionnaireContent content;
+    try {
+      content = new JsonObject(rs.getString("content")).mapTo(FeedbackQuestionnaireContent.class);
+    } catch(Exception e) {
+      content = ImmutableFeedbackQuestionnaireContent.builder()
+          .title("content-not-defined")
+          .build();
+    }
+    
     return ImmutableFeedback.builder()
         .id(rs.getString("id"))
         .categoryId(rs.getString("category_id"))
@@ -110,7 +122,7 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .createdBy(rs.getString("created_by"))
         .updatedBy(rs.getString("updated_by"))
         .updatedOnDate(rs.getString("updated_on_date"))
-        .content(rs.getString("content"))
+        .content(content)
         .locale(rs.getString("locale"))
         .replyText(rs.getString("reply_text"))
         .customerTitle(rs.getString("customer_title"))

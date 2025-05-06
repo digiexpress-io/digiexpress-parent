@@ -7,6 +7,10 @@ import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Toolti
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '../api-task';
+import { useTaskOverdue } from './useTaskOverdue';
+import { useStatusTimeline } from './useStatusTimeline';
+import { usePriorityCount } from './usePriorityCount';
+import { useStatusCount } from './useStatusCount';
 
 const chartPaperStyle = {
   flex: '1',
@@ -66,11 +70,29 @@ const BarLabel = (props: any) => {
   }
 };
 
+
+
 export const EveliTaskStats: React.FC = () => {
-  const { taskStatusNames, taskStatusMapping, taskStatusStats } = useFetch('statistics/status.GET', {});
-  const { taskPriorityNames, taskPriorityStats } = useFetch('statistics/priority.GET', {});
-  const { taskTimelineStats } = useFetch('statistics/status-timeline.GET', {});
-  const { tasksOverdue } = useFetch('statistics/task-overdue.GET', {});
+  const taskFetch = useFetch('worker/rest/api/tasks.GET', {})
+  const [dashboard, setDashboard] = React.useState<TaskApi.TaskDasboard>();
+
+  React.useEffect(() => {
+    taskFetch.dashboard().then(setDashboard)
+  }, []);
+
+  if(!dashboard) {
+    return (<>...loading</>)
+  }
+  return (<EveliTaskBody dashoard={dashboard}/>)
+}
+
+
+const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard}) => {
+
+  const { taskStatusNames, taskStatusMapping, taskStatusStats } = useStatusCount(dashoard);
+  const { taskPriorityNames, taskPriorityStats } = usePriorityCount(dashoard);
+  const { taskTimelineStats } = useStatusTimeline(dashoard);
+  const { tasksOverdue } = useTaskOverdue(dashoard);
   const intl = useIntl();
 
   return (

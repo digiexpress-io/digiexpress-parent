@@ -27,6 +27,7 @@ import java.util.List;
 
 import io.resys.thena.api.entities.PageQuery;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
@@ -45,6 +46,12 @@ public interface GrimQueryActions {
   MissionRemarkQuery missionRemarkQuery();
   CommitViewersQuery commitViewersQuery();
   MissionCommitQuery commitQuery();
+  MissionStatsQuery missionStatsQuery();
+  
+  interface MissionStatsQuery {
+    Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes();
+  }
+  
   
   interface MissionCommitQuery {
     Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId);

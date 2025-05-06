@@ -168,7 +168,13 @@ export function useTasksTableState(): TableState {
       {
         render: (data) => {
           return (<EveliPermissions id='DELETE_TASK'>
-            <div onClick={() => deleteTask(data.id!)}><IconButton><DeleteForeverIcon color='error' /></IconButton></div>
+            <div onClick={() => {
+              deleteTask(data.id!).then(() => {
+                tableRef.current.onQueryChange();
+              });
+
+            }}>
+              <IconButton><DeleteForeverIcon color='error' /></IconButton></div>
           </EveliPermissions>
           )
         },

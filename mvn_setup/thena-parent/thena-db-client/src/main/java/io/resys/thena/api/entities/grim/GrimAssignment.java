@@ -36,6 +36,8 @@ import jakarta.annotation.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value.Immutable
 public interface GrimAssignment extends IsGrimObject, TenantEntity {
+  public static final String ASSIGNMENT_TYPE_USER = "task_user"; // dedicated constant for default assignment
+  
   String getId();
   String getCommitId();
   String getMissionId();
@@ -59,4 +61,6 @@ public interface GrimAssignment extends IsGrimObject, TenantEntity {
   }
   
   @Override default public GrimDocType getDocType() { return GrimDocType.GRIM_ASSIGNMENT; };
+  
+
 }

@@ -39,6 +39,7 @@ import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStore;
 import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
+import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.ImmutablePageQuery;
@@ -172,50 +173,6 @@ public class PaginateTasksImpl implements PaginateTasks {
 
     return type.build();
   }
-  /**
-
-  @Query(value=
-      "select distinct t from TaskEntity t join t.assignedRoles r left join t.assignedRoles r2 where " +
-      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
-      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
-      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
-      " and priority in :priority" +
-      " and status in :status" +
-      " and lower(coalesce(r2, '')) like :searchRole" +
-      " and r in :roles" +
-      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
-  Page<TaskEntity> searchTasks(
-      @Param("subject") String subject, 
-      @Param("clientIdentificator") String clientIdentificator, 
-      @Param("assignedUser") String assignedUser, 
-      @Param("status") List<Integer> status,
-      @Param("priority") List<Integer> priority,
-      @Param("roles") List<String> roles,
-      @Param("searchRole") String searchRole,
-      @Param("dueDate") String dueDate,
-      Pageable page);
-  
-  @Query(value=
-      "select distinct t from TaskEntity t left join t.assignedRoles r2 where " +
-      " (lower(subject) like :subject or lower(taskRef) like :subject)" +
-      " and lower(coalesce(clientIdentificator, '')) like :clientIdentificator" +
-      " and lower(coalesce(assignedUser, '')) like :assignedUser" +
-      " and priority in :priority" +
-      " and status in :status" +
-      " and lower(coalesce(r2, '')) like :searchRole" +
-      " and (:dueDate is null or t.dueDate < CURRENT_DATE)")
-  Page<TaskEntity> searchTasksAdmin(
-      @Param("subject") String subject,  
-      @Param("clientIdentificator") String clientIdentificator,
-      @Param("assignedUser") String assignedUser,
-      @Param("status") List<Integer> status,
-      @Param("priority") List<Integer> priority,
-      @Param("searchRole") String searchRole,
-      @Param("dueDate") String dueDate,
-      Pageable page);
-
-   */
-
   public MissionQuery start(GrimStructuredTenant config, MissionQuery builder) {
     TaskAssert.notEmpty("pageable", () -> "pageable can't be null!");
     if (this.status.isEmpty()) {
@@ -243,6 +200,7 @@ public class PaginateTasksImpl implements PaginateTasks {
       .priority(priorities)
       .likeTitle(subject)
       .likeReporterId(clientIdentificator)
+      .archived(GrimArchiveQueryType.ONLY_IN_FORCE)
       .overdue(dueDate == null ? null : !dueDate.isEmpty()); // false = mission.mission_due_date < CURRENT_DATE 
     
     if (requireAnyRoles == null) {

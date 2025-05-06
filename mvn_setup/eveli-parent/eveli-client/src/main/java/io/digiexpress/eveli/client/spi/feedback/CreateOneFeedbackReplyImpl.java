@@ -34,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
 import io.digiexpress.eveli.client.spi.asserts.ProcessAssert;
+import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -100,7 +101,7 @@ VALUES
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
      categeoryStm.setObject(1, UUID.fromString(categoryId));
-     categeoryStm.setString(2, command.getContent());
+     categeoryStm.setString(2, JsonObject.mapFrom(command.getContent()).encode());
      categeoryStm.setString(3, command.getLocale());
      categeoryStm.setString(4, command.getLabelValue().trim());
      categeoryStm.setObject(5, command.getSubLabelValue().isBlank() ? null : command.getSubLabelValue().trim());

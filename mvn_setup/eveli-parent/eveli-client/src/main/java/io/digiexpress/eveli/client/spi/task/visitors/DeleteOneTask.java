@@ -53,9 +53,8 @@ public class DeleteOneTask implements TaskStoreConfig.MergeTaskVisitor<TaskClien
     
     merge
     .archivedAt(OffsetDateTime.now())
-    
     // change is viewed by worker who deleted it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).build())
+    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_WORKER).currentTxCommit().build())
     
     .build();
   }

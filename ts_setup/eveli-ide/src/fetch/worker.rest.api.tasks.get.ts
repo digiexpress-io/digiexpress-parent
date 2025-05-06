@@ -21,6 +21,10 @@ function hook(props: {}) {
 
 
   return {
+    dashboard: async (): Promise<TaskApi.TaskDasboard> => {
+      return params.fetch(url({}) + `/dashboard`)
+        .then(response => response.json());
+    },
 
     findAll: async (): Promise<TaskApi.Task[]> => {
       return params.fetch(url({}) + `/all`)

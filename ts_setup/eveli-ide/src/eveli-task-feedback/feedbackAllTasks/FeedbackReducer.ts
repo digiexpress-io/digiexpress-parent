@@ -3,12 +3,10 @@ import { FeedbackApi } from '../../api-feedback';
 export class FeedbackReducer {
   private _data: FeedbackApi.Feedback[];
 
-
   private _visibleRows: FeedbackApi.Feedback[];
 
   private _filterByCategory: string | undefined;
   private _filterBySubCategory: string | undefined;
-
 
   private _categories: string[];
   private _subcategories: string[];
@@ -46,7 +44,7 @@ export class FeedbackReducer {
           return true;
         }
 
-        if (item.content.toLocaleLowerCase().indexOf(this._searchString) > -1) {
+        if (item.content.title.indexOf(this._searchString) > -1) {
           return true;
         }
 

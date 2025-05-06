@@ -151,7 +151,9 @@ public class NewMissionBuilder implements ThenaGrimNewObject.NewMission {
     delegate.currentTxCommit();
     viewer.accept(delegate);
     final var viewed = delegate.close();
-    this.next.addCommitViewers(viewed);
+    if(viewed.isPresent()) {
+      this.next.addCommitViewers(viewed.get());
+    }
     return this;
   }
   @Override

@@ -34,6 +34,7 @@ import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.ProcessClient;
+import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -48,20 +49,20 @@ public class DialobScheduler {
   private final DialobClient dialobClient;
   private final ObjectMapper objectMapper;
   
-  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
-  public void executeFlow() {
-    for(final var instance : processClient.queryInstances().findAllAnswered()) {
+  
+  private void executeFlowForInstance(ProcessInstance instance) {
+    
       try {
         if(instance.getTaskId() != null) {
           log.warn("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
-          continue;
+          return;
         }
         
         
         final var questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
         if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
           log.warn("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
-          continue;
+          return;
         }
         
         processClient.createBodyBuilder()
@@ -81,6 +82,13 @@ public class DialobScheduler {
       } catch(Exception e) {
         log.error("Failed to run flow for process instance: {}, e: {}!", instance.getId(), e.getMessage(), e);
       }
+    
+  }
+  
+  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
+  public void executeFlow() {
+    for(final var instance : processClient.queryInstances().findAllAnswered()) {
+      executeFlowForInstance(instance);
     }
   }
   
@@ -114,6 +122,14 @@ public class DialobScheduler {
         if(completed) {
           final var instance = processClient.queryInstances().findOneByQuestionnaireId(event.getSessionId()).get();
           processClient.changeInstanceStatus().answered(instance.getId().toString());
+          
+          
+          final var answeredInstance = processClient.queryInstances().findOneById(String.valueOf(instance.getId()));
+          if(answeredInstance.isPresent()) {
+            log.info("Executing flow directly for process: {} after dialob completion event!", instance.getId());
+            executeFlowForInstance(answeredInstance.get());
+          }
+          
         }
       } catch(Exception e) {
         log.error("Failed to check for complete event for session id: {}!", event.getSessionId());

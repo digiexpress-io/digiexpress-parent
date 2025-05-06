@@ -69,7 +69,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
 
             <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
             {search.forms.map((form) => (
-              <ListItem dense>
+              <ListItem dense key={form.linkToForm.id}>
               <GLinkFormUnlockedSearchResults
                 key={form.linkToForm.id}
                 label={form.linkToForm.name}

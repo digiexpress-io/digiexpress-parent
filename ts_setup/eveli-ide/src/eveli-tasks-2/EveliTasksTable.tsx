@@ -11,6 +11,7 @@ import { IndicatorPriority } from './IndicatorPriority';
 import { IndicatorStatus } from './IndicatorStatus';
 import { IndicatorAssignee } from './IndicatorAssignee';
 import { WithTableStyles } from '@/eveli-table';
+import { TaskLink } from '@/eveli-tasks/TaskLink';
 
 
 
@@ -44,6 +45,7 @@ export const EveliTasksTable: React.FC = () => {
       header: 'Name',
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
+      cell: (task) => flexRender(TaskLink, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
       filterFn: 'arrIncludes',
       size: 150,
       minSize: 150,

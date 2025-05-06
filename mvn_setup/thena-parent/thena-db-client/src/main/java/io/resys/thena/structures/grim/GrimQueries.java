@@ -33,6 +33,7 @@ import io.resys.thena.api.entities.grim.GrimAnyObject;
 import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitTree;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
+import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
@@ -46,6 +47,8 @@ public interface GrimQueries {
   ThenaDataSource getDataSource();
   InternalMissionQuery missions();
   InternalMissionLabelQuery missionLabels();
+  InternalMissionStatsQuery missionStats();
+  
   InternalCommitViewerQuery commitViewer();
   InternalCommitTreeQuery commitTree();
   InternalCommitQuery commit();
@@ -84,6 +87,11 @@ public interface GrimQueries {
 
   interface InternalMissionLabelQuery {
     Uni<List<GrimUniqueMissionLabel>> findAllUnique();
+  }    
+  
+  interface InternalMissionStatsQuery {
+    Uni<List<GrimMissionAttributeEvent>> findAllByMissionAttributes();    
+    
   }    
   
   interface InternalMissionQuery {

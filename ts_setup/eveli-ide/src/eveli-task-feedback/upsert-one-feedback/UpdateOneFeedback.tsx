@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, CircularProgress, Divider, TextField, Typography, useTheme, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl, FormattedMessage } from 'react-intl';
-import ReactMarkdown from 'react-markdown';
 
 import { useFeedback, FeedbackApi } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';
 import { EveliDateTimeFormatter } from '@/eveli-datetime-formatter';
+import { FeedbackContent } from './FeedbackContent';
 
 export interface UpdateOneFeedbackProps {
   taskId: string;
@@ -70,6 +70,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     return (<CircularProgress />)
   }
   
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
       <Box display='flex' alignItems='center'>
@@ -94,10 +95,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       </Typography>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant='body2' fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerFeedback' })}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.category' })}{': '}{feedback.labelValue}</Typography>
-      <Typography variant='body2'>{intl.formatMessage({ id: 'feedback.subCategory' })}{': '}{feedback.subLabelValue}</Typography>
-      <Box component='span' mt={2}><ReactMarkdown>{feedback.content}</ReactMarkdown></Box>
+
+      <FeedbackContent feedback={feedback.content} />
 
       <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 

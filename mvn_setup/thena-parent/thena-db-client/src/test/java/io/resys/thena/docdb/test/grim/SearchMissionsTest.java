@@ -266,6 +266,13 @@ public class SearchMissionsTest extends DbTestTemplate {
         .await().atMost(Duration.ofMinutes(1))
         .getObjects().size());
     
+
+    
+    Assertions.assertEquals(4, getClient().grim(repo).find()
+        .missionStatsQuery()
+        .findAllByMissionAttributes()
+        .await().atMost(Duration.ofMinutes(1))
+        .getObjects().size());
   }
   
   private void createTestData(TenantCommitResult repo) {
