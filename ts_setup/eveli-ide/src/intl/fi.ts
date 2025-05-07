@@ -1,4 +1,5 @@
 export const fi = {
+  'eveli.textSeparatorColon': ': ',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',
   'tasksView.title': 'Tehtävät',

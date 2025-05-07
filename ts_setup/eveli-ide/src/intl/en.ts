@@ -1,5 +1,6 @@
 export const en = {
   'document.title': ' DigiExpress',
+  'eveli.textSeparatorColon': ': ',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',
   'eveli.permissions.none.desc2': 'Please contact your system administrator.',
@@ -890,5 +891,6 @@ export const en = {
   'queue.all_messages.created': 'Created',
   'menu.messages': 'Messages',
   'menu.deliveries': 'Deliveries',
+  'explorer.pages': 'Pages',
   'articles.searchAll': 'Search all articles'
 }

@@ -1,4 +1,5 @@
 export const sv = {
+  'eveli.textSeparatorColon': ': ',
   'tasksView.title': 'Uppgiften',
   'tasksTableHeader.taskName': 'Uppgiftens namn',
   'tasksTableHeader.category': 'Typ',
