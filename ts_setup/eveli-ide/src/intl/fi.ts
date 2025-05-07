@@ -304,6 +304,7 @@ export const fi = {
   'publications.createNewTag': 'Luo uusi versio \"{tag}\"',
   'publications.downloadFailed': 'Julkaisun lataus epäonnistui, syy: {cause}',
   'publications.tagCreationFailed': 'Julkaisun luominen epäonnistui, syy: {cause}',
+  'publications.uploadDialogTitle': 'Lataa julkaisu',
   'dialobForms.dialog.heading': 'Lomakkeet',
   'dialobForms.table.tooltip.add': 'Lisää',
   'dialobForms.table.label': 'Nimi',

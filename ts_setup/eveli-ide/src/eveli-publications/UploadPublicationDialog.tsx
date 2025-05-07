@@ -54,14 +54,14 @@ export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit
       <Dialog open={open} onClose={handleClose} maxWidth='sm' >
           <input type="file" hidden ref={inputFile} accept="json" onChange={handleFileChange} />
             <DialogTitle>
-             <FormattedMessage id='publications.dialogTitle'/>
+             <FormattedMessage id='publications.uploadDialogTitle'/>
             </DialogTitle>
             <DialogContent>
               { !!uploadErrorText &&
                 <Alert severity="error">{uploadErrorText}</Alert>
               }
               <DialogContentText>
-                <FormattedMessage id='publications.dialog.upload.description'/>
+                <FormattedMessage id='publications.dialog.upload.description'/> 
               </DialogContentText>          
             </DialogContent>
             <DialogActions>
@@ -70,7 +70,7 @@ export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit
                 onClick={() => inputFile.current?.click()}
                 autoFocus
               >
-                <FormattedMessage id='publications.upload'/>             
+                <FormattedMessage id='publications.upload'/>        
               </Button>
             </DialogActions>
       </Dialog>

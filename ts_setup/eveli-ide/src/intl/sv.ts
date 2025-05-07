@@ -299,6 +299,7 @@ export const sv = {
   'publications.createNewTag': 'Create new tag \"{tag}\"',
   'publications.downloadFailed': 'Release download failed, cause: {cause}',
   'publications.tagCreationFailed': 'Release creation failed, cause: {cause}',
+  'publications.uploadDialogTitle': 'Ladda upp publicering',
   'dialobForms.dialog.heading': 'Forms',
   'dialobForms.table.tooltip.add': 'Add',
   'dialobForms.table.label': 'ID',
