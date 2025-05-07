@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>hdes-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>5.1.57</version>
   </parent>
   <packaging>jar</packaging>
   <artifactId>hdes-client</artifactId>
