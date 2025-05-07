@@ -11,6 +11,7 @@ const taskStatusMapping: StatusTitleMap = {
   'OPEN': 'task.status.open',
   'REJECTED': 'task.status.rejected',
   'COMPLETED': 'task.status.completed',
+  'TRANSFERRED': 'task.status.transferred',
 }
 
 export function useStatusCount(dashboard: TaskApi.TaskDasboard): { 

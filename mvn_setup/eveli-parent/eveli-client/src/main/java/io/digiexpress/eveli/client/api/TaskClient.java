@@ -38,18 +38,13 @@ import jakarta.annotation.Nullable;
 import jakarta.json.JsonPatch.Operation;
 
 public interface TaskClient {
-
+  TaskCommandBuilder taskBuilder();  
   PaginateTasks paginateTasks();
   QueryTasks queryTasks();
-  
   QueryUnreadUserTasks queryUnreadUserTasks();
-  TaskCommandBuilder taskBuilder();
-  
   QueryTaskComments queryTaskComments();
   QueryTaskKeywords queryTaskKeywords();
-  
   QueryTaskDasboard queryTaskDasboard();
-  
   
   interface QueryTaskDasboard {
     Uni<TaskDasboard> findAll();
@@ -57,12 +52,18 @@ public interface TaskClient {
   
   interface TaskCommandBuilder {
     TaskCommandBuilder userId(String userId, String userEmail);
+    
+    
     Uni<Task> createTask(CreateTaskCommand command);
+    Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
+    
     Uni<Task> modifyTask(String taskId, ModifyTaskCommand command);
     Uni<Task> deleteTask(String taskId);
+    Uni<Task> transferTask(String taskId, TransferTaskCommand command);
+    
     Uni<Void> addWorkerCommitViewer(String taskId);
     Uni<Void> addCustomerCommitViewer(String taskId);
-    Uni<TaskComment> createTaskComment(CreateTaskCommentCommand command);
+
   }
   
   interface QueryTaskComments {
@@ -172,12 +173,17 @@ public interface TaskClient {
   
   
   
+  @JsonSerialize(as = ImmutableTransferTaskCommand.class)
+  @JsonDeserialize(as = ImmutableTransferTaskCommand.class)
+  @Value.Immutable
+  interface TransferTaskCommand {
+    String getTransferTitle();
+  }
   
   
   
   
-
-  enum TaskStatus { NEW, OPEN, COMPLETED, REJECTED, DELEGATED }
+  enum TaskStatus { NEW, OPEN, COMPLETED, TRANSFERRED, REJECTED, DELEGATED }
   enum TaskPriority { LOW, NORMAL, HIGH }
   enum TaskCommentSource { FRONTDESK, PORTAL }
   
@@ -208,13 +214,16 @@ public interface TaskClient {
     @Nullable String getAssignedUser();
     @Nullable String getAssignedUserEmail();
 
+    
+    @Nullable String getTransferredId();
+    
     String getSubject();
     TaskPriority getPriority();
 
     List<String> getKeyWords();
     List<String> getFeatures();
     Set<String> getAssignedRoles();
-    
+
     List<TaskComment> getComments();
   }
   

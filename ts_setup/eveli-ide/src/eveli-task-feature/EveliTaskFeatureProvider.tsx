@@ -21,7 +21,9 @@ export const EveliTaskFeatureProvider: React.FC<EveliTaskFeatureProviderProps> =
 
   const contextValue: EveliTaskFeatureContextType = React.useMemo(() => {
   return { 
-    features: [ ...(options?.features ?? []) ] 
+    features: [ 
+      ...(options?.features ?? []),
+    ] 
   };    
   }, [options]);
 

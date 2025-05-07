@@ -29,6 +29,8 @@ import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.spi.AttachmentCommandsDummy;
 import io.digiexpress.eveli.client.spi.comms.CommsClientDummy;
+import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
+import io.digiexpress.eveli.client.spi.dms.DocContainerClientDummy;
 
 @Configuration
 public class MockServicesProvider {
@@ -43,6 +45,13 @@ public class MockServicesProvider {
   @ConditionalOnMissingBean
   public CommsClient notificationCommands() {
     return new CommsClientDummy();
+  }
+
+  
+  @Bean
+  @ConditionalOnMissingBean
+  public DocContainerClient docContainerClient() {
+    return new DocContainerClientDummy();
   }
 
 }

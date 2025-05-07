@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.TaskFileClient;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.task.visitors.AddCustomerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.AddWorkerCommitViewer;
 import io.digiexpress.eveli.client.spi.task.visitors.CreateOneTask;
@@ -45,6 +47,7 @@ import io.digiexpress.eveli.client.spi.task.visitors.GetOneTaskCommentByIdVisito
 import io.digiexpress.eveli.client.spi.task.visitors.ModifyOneTask;
 import io.digiexpress.eveli.client.spi.task.visitors.PaginateTasksImpl;
 import io.digiexpress.eveli.client.spi.task.visitors.TaskDiffVisitor;
+import io.digiexpress.eveli.client.spi.task.visitors.TransferTaskVisitor;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,8 @@ import lombok.RequiredArgsConstructor;
 public class TaskClientImpl implements TaskClient {
 
   private final TaskNotificator notificator;
+  private final TaskFileClient taskFilesClient;
+  private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
   
   
@@ -149,6 +154,12 @@ public class TaskClientImpl implements TaskClient {
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
         return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId))
             .onItem().transformToUni((task) -> Uni.createFrom().voidItem());
+      }
+      @Override
+      public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
+        TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
+        TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
+        return new TransferTaskVisitor(ctx, taskFilesClient, docContainerClient, userId, taskId, command).accept();
       }
     };
   }

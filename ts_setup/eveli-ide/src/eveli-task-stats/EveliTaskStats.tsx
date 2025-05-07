@@ -36,6 +36,7 @@ const statusColorMap: StatusColorMap = {
   OPEN: 'blue',
   COMPLETED: 'green',
   REJECTED: 'grey',
+  TRANSFERRED: 'grey',
 };
 
 type PriorityColorMap = {

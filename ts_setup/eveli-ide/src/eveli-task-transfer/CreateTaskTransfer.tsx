@@ -1,0 +1,45 @@
+import React from 'react';
+import { Box, Button, TextField, Typography, Stack } from '@mui/material';
+
+import { FormattedMessage, useIntl } from 'react-intl';
+import { TaskApi } from '@/api-task';
+import { useFetch } from '@dxs-ts/eveli-fetch';
+
+export interface CreateTaskTransferProps {
+  task: TaskApi.Task;
+  onTransferComplete: () => void;
+}
+
+export const CreateTaskTransfer: React.FC<CreateTaskTransferProps> = (props) => {
+  const intl = useIntl();
+  const [title, setTitle] = React.useState<string>('');
+  const [isSaving, setSaving] = React.useState(false);
+  const { transferTask } = useFetch('worker/rest/api/tasks/$taskId/transfers.PUT', {})
+
+  function handleOnTransfer() {
+    setSaving(true)
+    transferTask(props.task, { transferTitle: title }).then(() => props.onTransferComplete())
+  }
+
+  return (
+    <>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
+        <Stack spacing={3}>
+          <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'task.transfer.create.title' })}</Typography>
+          <div>
+            <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'task.transfer.create.docTitle' })}</Typography>
+            <TextField onChange={(e) => setTitle(e.target.value)}
+              sx={{ mb: 3 }}
+              placeholder={intl.formatMessage({ id: 'task.transfer.create.docTitle.placeholder' })}
+              value={title ?? ''}
+            />
+          </div>
+        </Stack>
+
+      </div>
+      <Box display='flex' gap={1}>
+        <Button variant='contained' onClick={handleOnTransfer} disabled={!title || isSaving}><FormattedMessage id='button.publish' /></Button>
+      </Box>
+    </>
+  );
+}

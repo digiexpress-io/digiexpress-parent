@@ -33,6 +33,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
+import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
@@ -49,6 +50,8 @@ public class TaskMapper {
   
   public static final String LINK_TYPE_CLIENT_LOCALE = "client_locale";
   public static final String LINK_TYPE_ADDITIONAL_INFO = "additional_info";
+  public static final String LINK_TYPE_TRANSFERRED_ID = "transferred_id";
+  
   
   public static final String VIEWER_WORKER = "WORKER";
   public static final String VIEWER_CUSTOMER = "CUSTOMER";
@@ -90,6 +93,17 @@ public class TaskMapper {
         );
   }
   
+  
+  public static TaskClient.Task map(OneMissionEnvelope commited) {
+    final var task = TaskMapper.map(
+        commited.getMission(), 
+        commited.getAssignments(), 
+        commited.getRemarks(), 
+        commited.getLinks(),
+        commited.getLabels());
+    return task;
+  }
+  
   public static TaskClient.Task map(
       GrimMission commited, 
       Collection<GrimAssignment> assignments, 
@@ -119,6 +133,12 @@ public class TaskMapper {
     
     final var clientLocale = links.stream()
         .filter(e -> TaskMapper.LINK_TYPE_CLIENT_LOCALE.equals(e.getLinkType()))
+        .map(e -> e.getLinkValue())
+        .findFirst();
+    
+    
+    final var transferredId = links.stream()
+        .filter(e -> TaskMapper.LINK_TYPE_TRANSFERRED_ID.equals(e.getLinkType()))
         .map(e -> e.getLinkValue())
         .findFirst();
 
@@ -172,6 +192,8 @@ public class TaskMapper {
       .assignedRoles(assignedRoles)
 
       .comments(remarks.stream().map(TaskMapper::map).toList())
+      
+      .transferredId(transferredId.orElse(null))
       
       .keyWords(keywords)
       .features(features)

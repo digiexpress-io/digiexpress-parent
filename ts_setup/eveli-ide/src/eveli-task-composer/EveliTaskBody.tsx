@@ -5,6 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import AttachmentIcon from '@mui/icons-material/Attachment';
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 
 import { FormattedMessage } from "react-intl";
 
@@ -13,6 +14,8 @@ import { TaskApi } from "@/api-task";
 import { EveliTaskComments } from "@/eveli-task-comments";
 import { StatusIndicator, UpsertOneFeedback } from "@/eveli-task-feedback";
 import { EveliTaskAttachments } from "@/eveli-task-attachments";
+import { EveliTaskFeature } from "@/eveli-task-feature";
+import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "@/eveli-task-transfer";
 
 
 
@@ -104,6 +107,21 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
           </AccordionDetails>
         </Accordion>
       </Grid2>
+
+
+      <EveliTaskFeature id="TASK_TRANSFER">
+      <Grid2 size={{ xs: 12 }}>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
+              <Typography sx={classes.accordionTitle}><FormattedMessage id="task.transfer.published" /></Typography>
+              <Badge badgeContent={<EveliTaskTransferStatusIndicator task={task} />}><DriveFileMoveOutlinedIcon /></Badge>
+            </AccordionSummary>
+            <AccordionDetails sx={classes.accordionDetails}>
+              <EveliTaskTransfer task={task} onTransferComplete={onReload}/>
+            </AccordionDetails>
+          </Accordion>
+        </Grid2>
+      </EveliTaskFeature>
     </Grid2>
   );
 }
