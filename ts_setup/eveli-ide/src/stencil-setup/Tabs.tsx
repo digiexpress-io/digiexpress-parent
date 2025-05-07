@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ExplorerItem, useStencilNav, useStencilTabChange, useStencilTabClose, toExplorerId } from '../stencil-nav';
 import { StencilComposerApi } from './ide';
 import { SaveOutlined } from '@mui/icons-material';
+import { useIntl } from 'react-intl';
 
 
 
@@ -27,6 +28,30 @@ const ArticleTabIndicator: React.FC<{ item: ExplorerItem }> = ({ item }) => {
       />)
   }
   return (<></>)
+}
+
+
+const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
+  const intl = useIntl();
+  const { session } = StencilComposerApi.useComposer();
+
+
+  if (item.type === 'ARTICLE_LINKS' || item.type === 'ARTICLE_PAGES' || item.type === 'ARTICLE_WORKFLOWS') {
+    const suffix = getLabelSuffix(item);
+    function getLabelSuffix(item: ExplorerItem) {
+      switch (item.type) {
+        case 'ARTICLE_LINKS': return (intl.formatMessage({ id: 'explorer.tabs.links' }));
+        case 'ARTICLE_PAGES': return (intl.formatMessage({ id: 'explorer.pages' }));
+        case 'ARTICLE_WORKFLOWS': return (intl.formatMessage({ id: 'explorer.tabs.services' }));
+      }
+    }
+    const view = session.articles.find(view => view.article.id === item.article);
+    if (!view) {
+      throw new Error(`Can't find article: ${item.article}`);
+    }
+    return <>{view.article.body.name}{intl.formatMessage({ id: 'eveli.textSeparatorColon' })}{suffix}</>;
+  }
+  return (<>{item.type}</>)
 }
 
 
@@ -54,7 +79,7 @@ export const Tabs: React.FC<{}> = () => {
           explorer.map((tab, index) => (
             <Tab key={index}
               value={toExplorerId(tab)} wrapped={true}
-              label={tab.type}
+              label={<TabLabel item={tab} />}
               iconPosition="end"
               icon={(<>
                 <ArticleTabIndicator item={tab} />
