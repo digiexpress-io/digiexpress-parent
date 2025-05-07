@@ -11,7 +11,8 @@ interface CommonProps {
   label: string | React.ReactNode;
   readonly?: boolean;
   messages: Record<string, { id: string; defaultMessage: string }>;
-  colorMap: TaskApi.ColorMap;
+  colorMap: TaskApi.ColorMap; // TODO::: prolly delete whole component 
+  invalidValues?: string[];
   value: string | undefined
   handleCallback?: (newValue: string) => void;
 }
@@ -27,7 +28,7 @@ const getColor = (color: TaskApi.Colors) => {
   }
 }
 
-const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback, value }: CommonProps) => {
+const RadioGroupPopover = ({ label, readonly, messages, colorMap, invalidValues, handleCallback, value }: CommonProps) => {
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [radioValue, setRadioValue] = React.useState<string | undefined>();
@@ -103,7 +104,9 @@ const RadioGroupPopover = ({ label, readonly, messages, colorMap, handleCallback
       >
         <Box sx={{ p: 2 }}>
           <RadioGroup value={radioValue ? radioValue : value || ''} onChange={handleChange}>
-            {entries.map(([value, color]) =>
+            {entries
+              .filter(([value]) => invalidValues ? !invalidValues.includes(value) : true)
+              .map(([value, color]) =>
               <FormControlLabel
                 key={value}
                 value={value}

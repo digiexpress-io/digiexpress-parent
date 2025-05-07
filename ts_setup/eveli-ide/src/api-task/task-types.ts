@@ -53,7 +53,8 @@ export namespace TaskApi {
     NEW = 'NEW',
     OPEN = 'OPEN',
     COMPLETED = 'COMPLETED',
-    REJECTED = 'REJECTED'
+    REJECTED = 'REJECTED',
+    TRANSFERRED = 'TRANSFERRED'
   }
   
   export const task_status_messages = defineMessages({
@@ -73,6 +74,10 @@ export namespace TaskApi {
       id: 'task.status.rejected',
       defaultMessage: 'Rejected',
     },
+    TRANSFERRED: {
+      id: 'task.status.transferred',
+      defaultMessage: 'Transferred',
+    },
   });
 
   export const task_status_colors: ColorMap = {
@@ -80,6 +85,7 @@ export namespace TaskApi {
     OPEN: Colors.BLUE,
     COMPLETED: Colors.GREEN,
     REJECTED: Colors.GREY,
+    TRANSFERRED: Colors.GREY,
   };
 
 
@@ -136,6 +142,7 @@ export declare namespace TaskApi {
     description?: string;
     priority?: TaskPriority;
     additionalInfo?: string;
+    transferredId?: string | undefined;
 
     features?: TaskFeatureType[];
     keyWords?: string[];
@@ -150,9 +157,11 @@ export declare namespace TaskApi {
     questionnaireId?: string | undefined;
   }
 
-  export type TaskFeatureType = 'feedback';
+  export type TaskFeatureType = 'feedback' | 'transfer';
 
-
+  export interface TransferTaskCommand {
+    transferTitle: string;
+  }
 
   export interface TaskDasboard {
     events: GrimMissionAttributeEvent[];

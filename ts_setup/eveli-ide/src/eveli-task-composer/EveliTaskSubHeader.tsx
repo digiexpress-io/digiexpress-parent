@@ -180,6 +180,7 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
             readonly={readOnly}
             messages={TaskApi.task_status_messages}
             colorMap={TaskApi.task_status_colors}
+            invalidValues={[TaskApi.TaskStatus.TRANSFERRED]}
             handleCallback={newValue => setFieldValue('status', newValue as any)}
             value={currentState.status}
           />

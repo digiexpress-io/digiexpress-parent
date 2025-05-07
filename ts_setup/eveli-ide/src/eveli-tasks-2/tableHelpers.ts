@@ -12,7 +12,8 @@ const statusOrder: Record<TaskApi.TaskStatus, number> = {
   NEW: 0,
   OPEN: 1,
   COMPLETED: 2,
-  REJECTED: 3
+  REJECTED: 3,
+  TRANSFERRED: 4
 }
 
 export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, columnId: string) {

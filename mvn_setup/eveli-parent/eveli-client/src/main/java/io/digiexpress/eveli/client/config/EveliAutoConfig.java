@@ -41,6 +41,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ImmutableTenantConfig;
 import io.digiexpress.eveli.client.api.ProcessClient;
@@ -50,6 +51,7 @@ import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringTransactionWrapper;
@@ -58,6 +60,7 @@ import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
+import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -158,14 +161,22 @@ public class EveliAutoConfig {
     return new SpringTransactionWrapper(entityManager);
   }  
   @Bean 
-  public TaskClient taskClient(TaskNotificator taskNotificator, io.vertx.mutiny.pgclient.PgPool pgPool) {    
+  public TaskClient taskClient(
+      DocContainerClient docContainerClient,
+      AttachmentCommands attachmentCommands,
+      RestTemplate restTemplate,
+      TaskNotificator taskNotificator, 
+      io.vertx.mutiny.pgclient.PgPool pgPool) {
+    
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName("task-tenant")
         .client(DbStateSqlImpl.create().client(pgPool).build())
         .build();
     final var store = new TaskStoreImpl(config);
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
-    return new TaskClientImpl(taskNotificator, store);
+    
+    final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
+    return new TaskClientImpl(taskNotificator, fileClient, docContainerClient, store);
   }
   
   @Bean

@@ -175,7 +175,7 @@ public abstract class TaskEnvirSetup {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(notificator, store);
+      return new TaskClientImpl(notificator, null, null, store);
     }
     
     @Bean

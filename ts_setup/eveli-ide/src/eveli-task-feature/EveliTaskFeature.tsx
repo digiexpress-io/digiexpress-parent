@@ -8,6 +8,7 @@ function oneOf(type: TaskApi.TaskFeatureType[]): (input: TaskApi.TaskFeatureType
 
 const EveliTaskFeatureMapping = {
   'TASK_FEEDBACK': oneOf(['feedback']),
+  'TASK_TRANSFER': oneOf(['transfer']),
 }
 
 

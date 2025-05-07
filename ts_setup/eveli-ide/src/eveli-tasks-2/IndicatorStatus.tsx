@@ -1,31 +1,31 @@
 import React from 'react';
 import { alpha, generateUtilityClass, styled, Typography } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
+import { TaskApi } from '@/api-task';
 
-type StatusType = 'NEW' | 'OPEN' | 'COMPLETED' | 'REJECTED';
 
-interface TaskStatus {
-  type: StatusType;
-}
-
-function renderStatus(type: StatusType): { label: string, color: string } {
+function renderStatus(type: TaskApi.TaskStatus): { label: string, color: string } {
   switch (type) {
-    case 'NEW':
+    case TaskApi.TaskStatus.NEW:
       return { label: 'New', color: '#ffb703' };
-    case 'OPEN':
+    case TaskApi.TaskStatus.OPEN:
       return { label: 'Open', color: '#70e000' };
-    case 'COMPLETED':
+    case TaskApi.TaskStatus.COMPLETED:
       return { label: 'Completed', color: '#48bfe3' };
-    case 'REJECTED':
+    case TaskApi.TaskStatus.REJECTED:
       return { label: 'Rejected', color: '#d90429' };
+    case TaskApi.TaskStatus.TRANSFERRED:
+      return { label: 'Transferred', color: '#d90429' };
     default:
       return { label: 'No status', color: '#ccc5b9' };
   }
 };
 
-export const IndicatorStatus: React.FC<TaskStatus> = (props) => {
+export const IndicatorStatus: React.FC<{
+  status: TaskApi.TaskStatus
+}> = (props) => {
   const classes = useUtilityClasses();
-  const values = renderStatus(props.type);
+  const values = renderStatus(props.status);
 
   return (
     <IndicatorStatusRoot className={classes.root} ownerState={{ ...props, color: values.color }}>
@@ -35,17 +35,17 @@ export const IndicatorStatus: React.FC<TaskStatus> = (props) => {
 }
 
 
-const MUI_NAME = 'IndicatorStatusRootClassName'
+const MUI_NAME = 'EveliTaskTableStatusIndicator'
 const IndicatorStatusRoot = styled('div', {
   name: MUI_NAME,
-  slot: 'Status',
+  slot: 'Root',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
     ];
   },
 
-})<{ ownerState: TaskStatus & { color: string } }>(({ theme, ownerState }) => {
+})<{ ownerState: { color: string } }>(({ theme, ownerState }) => {
 
   return {
     backgroundColor: alpha(ownerState.color, 0.2),

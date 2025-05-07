@@ -157,6 +157,18 @@ public class TaskApiController {
         return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
       });
   }
+  
+  @PutMapping("/{id}/transfers")
+  public Uni<ResponseEntity<TaskClient.Task>> saveTask(@PathVariable("id") String id, @RequestBody TaskClient.TransferTaskCommand command) {
+    final var worker = securityClient.getUser().getPrincipal();
+    return taskClient.taskBuilder()
+      .userId(worker.getUsername(), worker.getEmail())
+      .transferTask(id, command)
+      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask))
+      .onItem().transform(modifiedTask -> {
+        return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
+      });
+  }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)

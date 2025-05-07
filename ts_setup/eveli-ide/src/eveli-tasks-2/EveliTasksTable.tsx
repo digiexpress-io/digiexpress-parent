@@ -81,7 +81,7 @@ export const EveliTasksTable: React.FC = () => {
       filterFn: 'arrIncludesSome',
       size: 150,
       minSize: 150,
-      cell: (status) => flexRender(IndicatorStatus, { type: status.getValue() }),
+      cell: (status) => flexRender(IndicatorStatus, { status: status.getValue() }),
       sortingFn: taskSortingFn,
       enableSorting: true,
       enableColumnFilter: true,
