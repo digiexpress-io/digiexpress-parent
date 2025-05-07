@@ -3,7 +3,8 @@ import { Box, Typography, Table, TableContainer, TableBody, TableCell, TableRow,
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { StyledSearchField } from './StyledInputField';
+import { StyledSearchField } from './StyledInputField'
+import { CancelButton } from '@/eveli-styles';
 
 
 interface StyledTransferListProps {
@@ -70,9 +71,11 @@ const StyledTransferList: React.FC<StyledTransferListProps> = (props) => {
           </Box>
           <Box flexGrow={1} />
           <Box>
-            <Button variant='text' onClick={cancel.onClick} sx={{ marginRight: 1 }}>
-              <FormattedMessage id={props.cancel.label}/>
-            </Button>
+            <CancelButton
+              onClick={cancel.onClick}
+              labelId={props.cancel.label}
+              sx={{ marginRight: 1 }}
+            />
             <Button onClick={() => submit.onClick(selected)}>
               <FormattedMessage id={props.submit.label}/>
             </Button>

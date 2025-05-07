@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface WorkflowDeleteProps {
@@ -30,9 +31,7 @@ const WorkflowDelete: React.FC<WorkflowDeleteProps> = ({ workflow, onClose }) =>
       <DialogTitle><FormattedMessage id='services.delete' /></DialogTitle>
       <DialogContent><FormattedMessage id="services.delete.desc" /></DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleDelete}>
           <FormattedMessage id='button.delete'/>
         </Button>

@@ -3,6 +3,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useBlocker } from '@tanstack/react-router'
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -46,9 +47,7 @@ export const PageLeavingConfirmation: React.FC<{
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} variant='text'>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onCancel} />
         <Button variant='contained' onClick={onAccept}>
           <FormattedMessage id='button.accept'/>
         </Button>

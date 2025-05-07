@@ -6,6 +6,7 @@ import * as Burger from '@/eveli-styles';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
+import { CancelButton } from '@/eveli-styles';
 
 const SelectTask: React.FC<{ value: HdesApi.Entity<HdesApi.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
   const { ast } = value;
@@ -112,9 +113,7 @@ const SelectAsset: React.FC<SelectAssetProps> = ({ onClose, onSelect, selected }
       </List>
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => {
           if(link) {
             onSelect(link);

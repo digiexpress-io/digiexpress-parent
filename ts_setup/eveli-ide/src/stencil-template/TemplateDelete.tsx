@@ -8,6 +8,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface TemplateDeleteProps {
@@ -38,9 +39,7 @@ const TemplateDelete: React.FC<TemplateDeleteProps> = ({ templateId, onClose }) 
     <DialogTitle><FormattedMessage id='template.delete' /></DialogTitle>
     <DialogContent><FormattedMessage id='template.delete.message' /></DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete}>
           <FormattedMessage id='button.delete.template' />
       </Button>

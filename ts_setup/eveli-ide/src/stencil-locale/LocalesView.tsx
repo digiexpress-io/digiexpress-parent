@@ -18,6 +18,7 @@ import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { EveliPermissions } from '@/eveli-permissions';
+import { CancelButton } from '@/eveli-styles';
 
 
 const Header: React.FC<{ label: string }> = ({ label }) => {
@@ -64,9 +65,7 @@ const LocalesView: React.FC<{}> = () => {
           {editLocale.body.enabled ? <FormattedMessage id="locale.disable" /> : <FormattedMessage id="locale.enable" />}
         </DialogContent>
         <DialogActions>
-          <Button variant='text' onClick={onClose}>
-            <FormattedMessage id='button.cancel' />
-          </Button>
+          <CancelButton onClick={onClose} />
           <Button onClick={editLocale.body.enabled ? () => handleEnable(editLocale, false) : () => handleEnable(editLocale, true)}>
             <FormattedMessage id={editLocale.body.enabled ? "button.disable" : "button.enable"} />
           </Button>

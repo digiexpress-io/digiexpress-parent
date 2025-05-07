@@ -12,6 +12,7 @@ import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import {ErrorView} from '../../wrench-styles';
 import { useWrenchNav } from '../../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 const FlowDelete: React.FC<{ flowId:HdesApi.FlowId, onClose: () => void }> = ({ flowId, onClose }) => {
@@ -61,9 +62,7 @@ const FlowDelete: React.FC<{ flowId:HdesApi.FlowId, onClose: () => void }> = ({ 
     <DialogTitle><FormattedMessage id='flows.delete.title' /></DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete} disabled={apply}>
         <FormattedMessage id='buttons.delete'/>
       </Button>
@@ -160,9 +159,7 @@ const FlowOptions: React.FC<{ flow:HdesApi.Entity<HdesApi.AstFlow> }> = ({ flow 
           <DialogTitle><FormattedMessage id='flows.composer.copyTitle' /></DialogTitle>
           <DialogContent>{editor}</DialogContent>
           <DialogActions>
-            <Button variant='text' onClick={handleDialogClose}>
-              <FormattedMessage id='button.cancel'/>
-            </Button>
+            <CancelButton onClick={handleDialogClose} />
             <Button onClick={handleCopy} disabled={apply}>
               <FormattedMessage id='buttons.copy'/>
             </Button>

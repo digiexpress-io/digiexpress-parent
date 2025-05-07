@@ -23,6 +23,8 @@ import { AssetMapper } from '../wrench-compare/CompareView'
 import { ErrorView } from '../wrench-styles';
 import { ExplorerItem, useWrenchNav } from "../wrench-nav";
 import { EveliDateTimeFormatter } from "@/eveli-datetime-formatter";
+import { CancelButton } from '@/eveli-styles';
+
 
 type SortOptions = 'name' | 'created';
 type SortDirections = 'asc' | 'desc';
@@ -174,9 +176,7 @@ const DeleteDialog: React.FC<{ asset?: ReleaseBranch | Release, onClose: () => v
     <DialogTitle><FormattedMessage id={prefix + '.delete.title'} /></DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete} disabled={apply}>
         <FormattedMessage id='buttons.delete'/>
       </Button>
@@ -227,9 +227,7 @@ const ReleaseDelete: React.FC<{ release: Release, onClose: () => void }> = ({ re
     <DialogTitle><FormattedMessage id='release.delete.title' /></DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete} disabled={apply}>
         <FormattedMessage id='buttons.delete'/>
       </Button>
@@ -371,9 +369,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
                 <DialogTitle><FormattedMessage id='releases.details.title' values={{name: release.body.name }}/></DialogTitle>
                 <DialogContent><AssetMapper assets={details} /></DialogContent>
                 <DialogActions>
-                  <Button variant='text' onClick={() => setDetailsDialogOpen(false)}>
-                    <FormattedMessage id='button.cancel'/>
-                  </Button>
+                  <CancelButton onClick={() => setDetailsDialogOpen(false)} />
                 </DialogActions>
               </Dialog>
               )}

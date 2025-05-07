@@ -24,3 +24,7 @@ export {
   StyledSearchField as SearchField, 
   StyledDateField as DateField, 
   StyledDateTimeField as DateTimeField } from './StyledInputField';
+
+export { 
+  CancelButton 
+} from './StyledButtons';

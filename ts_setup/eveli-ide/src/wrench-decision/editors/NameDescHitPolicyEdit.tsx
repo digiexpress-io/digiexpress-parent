@@ -5,6 +5,7 @@ import { ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@/eveli-styles';
 
 const hitPolicyOptions = [
   { key: 'ALL', value: 'ALL', text: 'ALL' },
@@ -36,9 +37,7 @@ const NameDescHitPolicyEdit: React.FC<{
         }))} />
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => {
           const commands:HdesApi.AstCommand[] = [];
           if (name !== decision.name) {

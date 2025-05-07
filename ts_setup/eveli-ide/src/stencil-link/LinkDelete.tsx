@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface LinkDeleteProps {
@@ -35,9 +36,7 @@ const LinkDelete: React.FC<LinkDeleteProps> = ({ linkId, onClose }) => {
     <DialogTitle><FormattedMessage id='link.delete.title' /></DialogTitle>
     <DialogContent><FormattedMessage id="link.delete" /></DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete}>
           <FormattedMessage id='button.delete.link' />
       </Button>

@@ -12,6 +12,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
 import { EveliPermissions } from '@/eveli-permissions';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -38,7 +39,7 @@ const TemplatesView: React.FC<{}> = () => {
     <Box display='flex' alignItems='center' my={1}>
       <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
       <Box flexGrow={1} />
-      <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+      <CancelButton onClick={() => onTabCurrentClose()} />
 
       <EveliPermissions id='CREATE_STENCIL_ASSET'>
         <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>

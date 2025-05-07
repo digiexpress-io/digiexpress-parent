@@ -11,6 +11,7 @@ import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
 import { LocaleLabels } from '../stencil-locale';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -191,9 +192,7 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1 }>
           <FormattedMessage id='button.apply'/>
         </Button>

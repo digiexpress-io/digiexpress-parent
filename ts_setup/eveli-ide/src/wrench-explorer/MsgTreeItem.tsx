@@ -4,6 +4,7 @@ import {  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -25,9 +26,7 @@ const MsgTreeItem: React.FC<{
           {props.msg.msg}
         </DialogContent>
         <DialogActions>
-          <Button variant='text' onClick={onClose}>
-            <FormattedMessage id='button.cancel'/>
-          </Button>
+          <CancelButton onClick={onClose} />
         </DialogActions>
       </Dialog>) : undefined}
 

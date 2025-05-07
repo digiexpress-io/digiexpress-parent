@@ -14,6 +14,7 @@ import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { ErrorView } from '../../wrench-styles';
 import { useWrenchNav } from '../../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => void }> = ({ decisionId, onClose }) => {
@@ -68,9 +69,7 @@ const DecisionDelete: React.FC<{ decisionId: HdesApi.DecisionId, onClose: () => 
       <DialogTitle><FormattedMessage id='decisions.delete.title' /></DialogTitle>
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel' />
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleSubmit} disabled={apply}>
           <FormattedMessage id='buttons.delete' />
         </Button>
@@ -168,9 +167,7 @@ const DecisionOptions: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> 
           <DialogTitle><FormattedMessage id='decisions.composer.copyTitle' /></DialogTitle>
           <DialogContent>{editor}</DialogContent>
           <DialogActions>
-            <Button variant='text' onClick={handleDialogClose}>
-              <FormattedMessage id='button.cancel' />
-            </Button>
+            <CancelButton onClick={handleDialogClose} />
             <Button onClick={() => handleCopy()} disabled={apply}>
               <FormattedMessage id='buttons.copy' />
             </Button>

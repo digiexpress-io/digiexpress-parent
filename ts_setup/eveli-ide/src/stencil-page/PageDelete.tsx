@@ -8,6 +8,7 @@ import { StencilApi } from '@/api-stencil';
 import { useStencilNav } from '../stencil-nav';
 
 import * as Burger from '@/eveli-styles';
+import { CancelButton } from '@/eveli-styles';
 
 
 const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
@@ -56,9 +57,7 @@ const PageDelete: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleI
         />
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={props.onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={props.onClose} />
         <Button onClick={handleDelete} disabled={!pageId}>
           <FormattedMessage id='button.delete.page' />
         </Button>

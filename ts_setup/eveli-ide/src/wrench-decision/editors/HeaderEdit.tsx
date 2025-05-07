@@ -6,6 +6,7 @@ import { HdesApi } from '@/api-wrench';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { EditValueSet } from './builders/EditValueSet';
 import { EditIntlValueSet } from './builders';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface HeaderEditProps {
@@ -133,9 +134,7 @@ const HeaderEdit: React.FC<HeaderEditProps> = ({ dt, header, onClose, onChange }
         onChange([{ type: 'DELETE_HEADER', id: header.id }]);
         onClose();
       }} />
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => {
           onChange(commands);
           onClose(); }}>

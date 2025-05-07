@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface ArticleDeleteProps {
@@ -29,9 +30,7 @@ const ArticleDelete: React.FC<ArticleDeleteProps> = ({ articleId, onClose }) => 
       <DialogTitle><FormattedMessage id='article.delete.title' /></DialogTitle>
       <DialogContent><FormattedMessage id='article.delete.description' /></DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleDelete} >
           <FormattedMessage id='button.delete.article' />
         </Button>

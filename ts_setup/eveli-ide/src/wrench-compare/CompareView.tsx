@@ -11,6 +11,7 @@ import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import * as Burger from '@/eveli-styles';
 import { useWrenchNav } from "../wrench-nav";
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -103,7 +104,7 @@ const CompareDialog: React.FC<CompareDialogProps> = ({ open, setOpen, diff }) =>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button  onClick={() => setOpen(false)}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+        <CancelButton onClick={() => setOpen(false)} />
       </DialogActions>
     </Dialog>
   );
@@ -155,7 +156,7 @@ const CompareView: React.FC = () => {
         </Box>
         <Box flexGrow={1} />
         <Box alignSelf="center">
-          <Button  onClick={() => onTabCurrentClose()} sx={{ marginRight: 1 }} variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <CancelButton onClick={() => onTabCurrentClose()} />
           <Button variant='contained'  onClick={() => setOpen(true)} disabled={disabled} ><FormattedMessage id='activities.compare.view'/></Button>
         </Box>
       </Box>

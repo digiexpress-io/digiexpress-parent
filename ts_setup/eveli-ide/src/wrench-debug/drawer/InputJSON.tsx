@@ -2,6 +2,7 @@ import React from 'react'
 
 import { TextareaAutosize, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { FormattedMessage } from 'react-intl'
+import { CancelButton } from '@/eveli-styles';
 
 interface InputJSONProps {
   value: string;
@@ -42,9 +43,7 @@ const InputJSON: React.FC<InputJSONProps> = ({ onSelect, onClose, value }) => {
       />
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => {
           try {
             onSelect(JSON.parse(json));

@@ -6,6 +6,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
+import { CancelButton } from '@/eveli-styles';
 
 
 const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId }> = (props) => {
@@ -56,9 +57,7 @@ const PageEdit: React.FC<{ onClose: () => void, articleId: StencilApi.ArticleId 
       />
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={props.onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={props.onClose} />
       <Button onClick={handleUpdate} disabled={!valid}>
         <FormattedMessage id='button.update'/>
       </Button>

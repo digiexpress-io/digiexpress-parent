@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { TaskApi } from '../api-task';
 import { useMaterialTableLabels } from '../api-mui-table';
 import { useFetch } from '@dxs-ts/eveli-fetch';
-
+import { CancelButton } from '@/eveli-styles';
 
 const classes = {
   addButton: {
@@ -218,9 +218,7 @@ export const EveliTaskAttachments: React.FC<EveliTaskAttachmentsProps> = ({ task
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)} color='secondary'>
-            <FormattedMessage id='button.cancel' />
-          </Button>
+          <CancelButton onClick={() => setConfirmOpen(false)} color='secondary'/>
           <Button onClick={deleteAttachmentFile} color='error'>
             <FormattedMessage id='button.confirmDelete' />
           </Button>

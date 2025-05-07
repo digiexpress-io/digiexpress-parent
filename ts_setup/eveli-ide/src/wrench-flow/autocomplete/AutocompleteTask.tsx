@@ -9,6 +9,7 @@ import { HdesApi } from '@/api-wrench';
 
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { FlowAstAutocomplete, toLowerCamelCase, executeTemplate } from './api';
+import { CancelButton } from '@/eveli-styles';
 
 
 const SelectTask: React.FC<{ value:HdesApi.Entity<HdesApi.AstBody>, onClick: () => void, linked: boolean }> = ({ value, onClick, linked }) => {
@@ -162,9 +163,7 @@ const AutocompleteTask: React.FC<AutocompleteTaskProps> = ({ onClose, guided, fl
       <Button variant='text' disabled={usedNames.includes(name) || name.trim().length === 0 || apply || link ? true : false } onClick={handleSave}>
           <FormattedMessage id="flows.autocomplete.task.create" />
       </Button>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button disabled={(link ? false : true) || apply} onClick={handleSave}>
         <FormattedMessage id='flows.autocomplete.task.link'/>
       </Button>

@@ -11,6 +11,7 @@ import Builder, {
   EditDateTime, EditDateTimeSimple,
   EditDate, EditDateSimple } from './builders';
 import { ValueSetChooser } from './builders/ValueSetChooser';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface CellEditProps {
@@ -88,9 +89,7 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
           }}>
           <FormattedMessage id="decisions.cells.newvalue.clear"/>
         </Button>
-        <Button variant='text' onClick={props.onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={props.onClose} />
         <Button onClick={() => {
             const command:HdesApi.AstCommand = { id: props.cell.id, value: value.value, type: 'SET_CELL_VALUE' };
             props.onChange(command);

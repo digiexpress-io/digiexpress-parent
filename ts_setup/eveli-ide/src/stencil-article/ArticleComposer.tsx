@@ -9,6 +9,7 @@ import { StencilApi } from '@/api-stencil';
 import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
 
 import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@/eveli-styles';
 
 const DUMMY_ID = "none-selected"
 
@@ -76,9 +77,7 @@ const ArticleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </Box>
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleCreate} disabled={!name}>
         <FormattedMessage id='article.create'/>
       </Button>

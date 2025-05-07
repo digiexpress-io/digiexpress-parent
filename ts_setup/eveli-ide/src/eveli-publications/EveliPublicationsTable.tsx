@@ -18,6 +18,7 @@ import { EveliDateTimeFormatter } from '../eveli-datetime-formatter';
 import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 import { EveliPermissions } from '@/eveli-permissions';
+import { CancelButton } from '@/eveli-styles';
 
 const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
@@ -82,7 +83,7 @@ const PublicationStatus: React.FC<PublicationApi.Publication & { onSubmit: () =>
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} variant='text'><FormattedMessage id='button.cancel' /></Button>
+          <CancelButton onClick={() => setOpen(false)} />
         </DialogActions>
       </Dialog>
       <IconButton onClick={() => setOpen(true)}><CircleIcon color={color} /></IconButton>

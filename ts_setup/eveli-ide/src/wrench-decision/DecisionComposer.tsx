@@ -10,6 +10,7 @@ import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { ErrorView } from '../wrench-styles';
 import { useWrenchNav } from '../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -66,9 +67,7 @@ const DecisionComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     <DialogTitle><FormattedMessage id='decisions.composer.title' /></DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => handleCreate()} disabled={apply}>
         <FormattedMessage id='buttons.create'/>
       </Button>

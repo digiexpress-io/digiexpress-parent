@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { InputFORMField } from './InputFORMField';
+import { CancelButton } from '@/eveli-styles';
 
 interface InputFORMProps {
   value: string;
@@ -91,9 +92,7 @@ const InputFORM: React.FC<InputFORMProps> = ({ onSelect, onClose, value, selecte
       )}
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={() => {
           onSelect(json);
           onClose();

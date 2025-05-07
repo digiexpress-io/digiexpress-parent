@@ -10,6 +10,8 @@ import { PublicationApi } from '../api-publications';
 
 import UploadIcon from '@mui/icons-material/Upload';
 
+import { CancelButton } from '@/eveli-styles';
+
 
 export interface UploadReleaseProps {
   onSubmit: () => void;
@@ -63,9 +65,7 @@ export const UploadPublicationDialog: React.FC<UploadReleaseProps> = ({ onSubmit
               </DialogContentText>          
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} >
-                <FormattedMessage id='button.cancel'/>
-              </Button>
+              <CancelButton onClick={handleClose} />
               <Button 
                 onClick={() => inputFile.current?.click()}
                 autoFocus

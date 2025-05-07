@@ -9,6 +9,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
 import { LocaleLabels } from '../stencil-locale';
+import { CancelButton } from '@/eveli-styles';
 
 const selectSub = { ml: 2, color: "article.dark" }
 
@@ -111,9 +112,7 @@ const LinkComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Box>
       </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleCreate} disabled={!value || changeInProgress || labels.length < 1}>
         <FormattedMessage id='button.create'/>
       </Button>

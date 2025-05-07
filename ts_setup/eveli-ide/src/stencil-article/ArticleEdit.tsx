@@ -8,6 +8,7 @@ import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { ArticleOrderNumberViewer } from './ArticleOrderNumberViewer';
+import { CancelButton } from '@/eveli-styles';
 
 
 const selectSub = { ml: 2, color: "article.dark" }
@@ -87,9 +88,7 @@ const ArticleEdit: React.FC<{ articleId: StencilApi.ArticleId, onClose: () => vo
       </Box>
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleUpdate} disabled={!name}>
         <FormattedMessage id='button.update' />
       </Button>

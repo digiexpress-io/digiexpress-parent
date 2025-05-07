@@ -9,6 +9,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { PublicationApi } from '@/api-publications';
 import { useLocale } from '@/api-locale'
 import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 export const Route = createFileRoute('/secured/$locale/assets/migrate/')({
@@ -66,9 +67,7 @@ function Component() {
         </DialogContentText>          
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} >
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={handleClose} />
         <Button 
           onClick={() => inputFile.current?.click()}
           autoFocus

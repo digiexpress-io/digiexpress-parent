@@ -19,6 +19,7 @@ import { DebugOutput } from './outputs/DebugOutput';
 import { DebugOptionType } from './api';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { useWrenchNav } from '../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 const getData = (session: Composer.Session): {
@@ -272,9 +273,7 @@ const DebugView: React.FC<{}> = ({ }) => {
         <DialogTitle><FormattedMessage id='debug.csv.download' /></DialogTitle>
         <DialogContent>{dialogChildren}</DialogContent>
         <DialogActions>
-          <Button variant='text' onClick={() => setDialogShow(false)}>
-            <FormattedMessage id='button.cancel'/>
-          </Button>
+          <CancelButton onClick={() => setDialogShow(false)} />
           <Button onClick={() => downloadCsv(delimiter, wrap)}>
             <FormattedMessage id='buttons.download'/>
           </Button>

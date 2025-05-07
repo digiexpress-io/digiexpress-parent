@@ -6,6 +6,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
+import { CancelButton } from '@/eveli-styles';
 
 const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -38,9 +39,7 @@ const LocaleComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!locale || locales.includes(locale) || locale.length !== 2 }>
           <FormattedMessage id='button.create'/>
         </Button>

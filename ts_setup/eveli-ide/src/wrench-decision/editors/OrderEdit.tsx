@@ -5,6 +5,7 @@ import { ListItemText, InputLabel, Button, Dialog, DialogTitle, DialogContent, D
 
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
+import { CancelButton } from '@/eveli-styles';
 
 
 type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN";
@@ -221,9 +222,7 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
       <DialogTitle><FormattedMessage id='decisions.toolbar.organize.rows.columns' /></DialogTitle>
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={props.onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={props.onClose} />
         <Button onClick={() => {
               if (commands) {
                 props.onChange([commands]);

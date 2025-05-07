@@ -9,6 +9,7 @@ import * as Burger from '@/eveli-styles';
 import { Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 import { useStencilNav } from '../stencil-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -85,9 +86,7 @@ const NewPage: React.FC<{ onClose: () => void, articleId?: StencilApi.ArticleId 
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={props.onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={props.onClose} />
         <Button onClick={handleCreate} disabled={!locale}>
           <FormattedMessage id='button.create'/>
         </Button>

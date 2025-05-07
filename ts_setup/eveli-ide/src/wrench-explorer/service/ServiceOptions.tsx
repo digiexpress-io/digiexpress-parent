@@ -11,6 +11,7 @@ import { WrenchComposerApi as Composer } from '../../wrench-setup';
 import { HdesApi } from '@/api-wrench';
 import { ErrorView } from '../../wrench-styles';
 import { useWrenchNav } from '../../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 const ServiceDelete: React.FC<{ serviceId:HdesApi.ServiceId, onClose: () => void }> = ({ serviceId, onClose }) => {
@@ -61,9 +62,7 @@ const ServiceDelete: React.FC<{ serviceId:HdesApi.ServiceId, onClose: () => void
     <DialogTitle><FormattedMessage id='services.delete.title' /></DialogTitle>
     <DialogContent>{editor}</DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleDelete} disabled={apply}>
         <FormattedMessage id='services.delete.title'/>
       </Button>
@@ -152,9 +151,7 @@ const ServiceOptions: React.FC<{ service:HdesApi.Entity<HdesApi.AstService> }> =
           <DialogTitle><FormattedMessage id='services.composer.copyTitle' /></DialogTitle>
           <DialogContent>{editor}</DialogContent>
           <DialogActions>
-            <Button variant='text' onClick={handleDialogClose}>
-              <FormattedMessage id='button.cancel'/>
-            </Button>
+            <CancelButton onClick={handleDialogClose} />
             <Button onClick={handleCopy} disabled={apply}>
               <FormattedMessage id='buttons.copy'/>
             </Button>

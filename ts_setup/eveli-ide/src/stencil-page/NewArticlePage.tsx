@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface NewArticlePageProps {
@@ -71,9 +72,7 @@ const NewArticlePage: React.FC<NewArticlePageProps> = ({ article, open, onClose,
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleCreate}>
           <FormattedMessage id='button.create'/>
         </Button>

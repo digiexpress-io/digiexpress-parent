@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface ReleaseDeleteProps {
@@ -30,9 +31,7 @@ const ReleaseDelete: React.FC<ReleaseDeleteProps> = ({ id, onClose }) => {
       <DialogTitle><FormattedMessage id='release.delete.title' /></DialogTitle>
       <DialogContent><FormattedMessage id="release.delete.desc" /></DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleDelete}>
           <FormattedMessage id='button.delete'/>
         </Button>

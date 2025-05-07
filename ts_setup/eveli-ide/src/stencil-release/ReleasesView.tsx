@@ -6,6 +6,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { ReleaseComposer } from '.';
 import { ReleaseTable } from './ReleaseTable';
 import { useStencilNav } from '../stencil-nav';
+import { CancelButton } from '@/eveli-styles';
 
 
 const ReleasesView: React.FC<{}> = () => {
@@ -26,7 +27,7 @@ const ReleasesView: React.FC<{}> = () => {
           <Typography variant="body2"><FormattedMessage id="release.desc" /></Typography>
         </Box>
         <Box flexGrow={1} />
-        <Button onClick={() => onTabCurrentClose()} variant='text'><FormattedMessage id='button.cancel' /></Button>
+        <CancelButton onClick={() => onTabCurrentClose()} />
         <Button variant='contained' onClick={() => setReleaseComposer(true)}>
           <FormattedMessage id="button.create" />
         </Button>

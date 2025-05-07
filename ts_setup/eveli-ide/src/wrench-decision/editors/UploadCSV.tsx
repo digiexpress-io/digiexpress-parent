@@ -2,6 +2,7 @@ import React from 'react'
 import { TextareaAutosize, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { HdesApi } from '@/api-wrench';
 import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface UploadCSVProps {
@@ -22,9 +23,7 @@ const UploadCSV: React.FC<UploadCSVProps> = ({ onChange, onClose }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={() => {
             const commands:HdesApi.AstCommand[] = [];
             if (csv.trim().length > 0) {

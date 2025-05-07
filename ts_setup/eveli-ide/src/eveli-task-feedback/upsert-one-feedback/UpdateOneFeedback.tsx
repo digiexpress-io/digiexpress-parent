@@ -8,6 +8,7 @@ import { StatusIndicator } from '../status-indicator';
 import { ApprovalCount } from '../approval-count';
 import { EveliDateTimeFormatter } from '@/eveli-datetime-formatter';
 import { FeedbackContent } from './FeedbackContent';
+import { CancelButton } from '@/eveli-styles';
 
 export interface UpdateOneFeedbackProps {
   taskId: string;
@@ -112,13 +113,10 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Button onClick={() => setConfirmOpen(true)} variant='text'>
           <FormattedMessage id='button.delete' />
         </Button>
-        <Button
-          variant='outlined'
+        <CancelButton
           onClick={() => setReply(savedReply)}
           disabled={reply === savedReply}
-        >
-          <FormattedMessage id='button.cancel' />
-        </Button>
+        />
         <Button
           variant='contained'
           onClick={handlePublish}
@@ -142,9 +140,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)}>
-            <FormattedMessage id='button.cancel' />
-          </Button>
+          <CancelButton onClick={() => setConfirmOpen(false)} />
           <Button onClick={confirmDelete} color='error'>
             <FormattedMessage id='button.confirmDelete' />
           </Button>

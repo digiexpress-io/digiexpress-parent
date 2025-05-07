@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface InputCSVProps {
@@ -40,9 +41,7 @@ const InputCSV: React.FC<InputCSVProps> = ({ onSelect, onClose, value }) => {
       />
     </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={() => {
             onSelect(csv);
             onClose();

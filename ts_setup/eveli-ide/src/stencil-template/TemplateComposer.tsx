@@ -8,6 +8,7 @@ import MDEditor from '@uiw/react-md-editor';
 import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
+import { CancelButton } from '@/eveli-styles';
 
 
 interface TemplateComposerProps {
@@ -73,9 +74,7 @@ const TemplateComposer: React.FC<TemplateComposerProps> = ({ onClose }) => {
       </Box>
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleCreate} disabled={!name || !content}>
         <FormattedMessage id='button.add'/>
       </Button>

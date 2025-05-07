@@ -7,6 +7,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import * as Burger from '@/eveli-styles';
 import { EveliPermissions } from '@/eveli-permissions';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -49,9 +50,7 @@ const ReleaseComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Burger.TextField label='release.composer.note' helperText='release.composer.helper' onChange={setNote} value={note} />
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel' />
-        </Button>
+      <CancelButton onClick={onClose} />
         <EveliPermissions id='CREATE_STENCIL_ASSET'>
           <Button onClick={handleCreate} disabled={!name || site.contentType === 'EMPTY'}>
             <FormattedMessage id='button.create' />

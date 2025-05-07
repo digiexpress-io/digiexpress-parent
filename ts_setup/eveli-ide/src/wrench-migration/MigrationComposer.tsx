@@ -4,6 +4,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/
 import * as Burger from '@/eveli-styles';
 import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { FormattedMessage } from 'react-intl';
+import { CancelButton } from '@/eveli-styles';
 
 const MigrationComposer: React.FC<{ onClose: () => void}> = ({onClose}) => {
   const [file, setFile] = React.useState<string | undefined>();
@@ -28,9 +29,7 @@ const MigrationComposer: React.FC<{ onClose: () => void}> = ({onClose}) => {
     <DialogTitle><FormattedMessage id='migrations.title' /></DialogTitle>
     <DialogContent><Burger.FileField value="" onChange={setFile} label="migrations.select" /></DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleCreate} disabled={loading || !file}>
         <FormattedMessage id='migrations.create'/>
       </Button>

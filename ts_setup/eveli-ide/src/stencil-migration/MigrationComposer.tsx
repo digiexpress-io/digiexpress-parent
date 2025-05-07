@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import * as Burger from '@/eveli-styles';
+import { CancelButton } from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 
 const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -36,9 +37,7 @@ const MigrationComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <Burger.FileField value='' onChange={setFile} label="imports.select" />
     </DialogContent>
     <DialogActions>
-      <Button variant='text' onClick={onClose}>
-        <FormattedMessage id='button.cancel'/>
-      </Button>
+      <CancelButton onClick={onClose} />
       <Button onClick={handleCreate} disabled={loading || !file }>
           <FormattedMessage id='imports.import.action' />
       </Button>

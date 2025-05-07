@@ -4,6 +4,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { PublicationApi } from '../api-publications';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -143,7 +144,7 @@ export const CreateOrEditWorkflowDialog: React.FC<CreateOrEditWorkflowDialogProp
             </Grid2>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+            <CancelButton onClick={handleClose} />
             <Button variant='contained' onClick={handleSubmit} disabled={isSubmitting || !isValid}><FormattedMessage id='button.accept'/></Button>
           </DialogActions>
       </Dialog>

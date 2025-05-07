@@ -8,6 +8,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import { PublicationApi } from '../api-publications'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
+import { CancelButton } from '@/eveli-styles';
 
 
 
@@ -152,7 +153,7 @@ export const NewPublicationDialog: React.FC<NewReleaseProps> = ({ onSubmit, open
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}  variant='text'><FormattedMessage id='button.cancel'/></Button>
+          <CancelButton onClick={handleClose} />
           <Button variant='contained' onClick={handleSubmit} disabled={isSubmitting || !isValid}>
             <FormattedMessage id='button.accept'/>
           </Button>

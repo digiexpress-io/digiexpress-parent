@@ -10,6 +10,7 @@ import { WrenchComposerApi as Composer } from '../wrench-setup';
 import { ErrorView } from '../wrench-styles';
 import { HdesApi } from '@/api-wrench';
 import { useWrenchNav } from '../wrench-nav';
+import { CancelButton } from '@/eveli-styles';
 
 const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { service, actions } = Composer.useComposer();
@@ -70,9 +71,7 @@ const ServiceComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <DialogTitle><FormattedMessage id='services.composer.title' /></DialogTitle>
       <DialogContent>{editor}</DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={apply}>
           <FormattedMessage id='buttons.create'/>
         </Button>

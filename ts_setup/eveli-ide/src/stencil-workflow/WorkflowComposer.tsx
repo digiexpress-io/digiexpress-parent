@@ -9,6 +9,7 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { LocaleLabels } from '../stencil-locale';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { CancelButton } from '@/eveli-styles';
 
 const selectSub = { ml: 2, color: "article.dark" }
 
@@ -193,9 +194,7 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button variant='text' onClick={onClose}>
-          <FormattedMessage id='button.cancel'/>
-        </Button>
+        <CancelButton onClick={onClose} />
         <Button onClick={handleCreate} disabled={!technicalname || !flowName || !formName || !formTag || changeInProgress || labels.length < 1}>
           <FormattedMessage id='button.add'/>
         </Button>

@@ -4,7 +4,7 @@ import { useIntl, FormattedMessage } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 import { useFeedback, FeedbackApi } from '../../api-feedback';
 import { FeedbackContent } from './FeedbackContent';
-
+import { CancelButton } from '@/eveli-styles';
 
 export interface CreateOneFeedbackProps {
   taskId: string;
@@ -92,7 +92,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
       </div>
       <Box display='flex' gap={1}>
-        <Button onClick={handleCancel} variant='text'><FormattedMessage id='button.cancel' /></Button>
+        <CancelButton onClick={handleCancel} />
         <Button variant='contained' onClick={handlePublish} disabled={!command?.reply}><FormattedMessage id='button.publish' /></Button>
       </Box>
     </>
