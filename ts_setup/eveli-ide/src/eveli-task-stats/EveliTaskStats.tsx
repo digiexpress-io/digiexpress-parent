@@ -16,15 +16,15 @@ const chartPaperStyle = {
   flex: '1',
   marginTop: 2,
   padding: 1,
-  borderRadius: 2
+  borderRadius: 1
 };
 const chartStyle = {
   flex: '1',
-  height: 200,
+  height: 300,
   marginTop: 2,
 };
 
-const FILL_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const OVERDUE_FILL_COLORS = ['#1976D2', '#388E3C', '#FB8C00', '#D32F2F'];
 
 type StatusColorMap = {
   [status in TaskApi.TaskStatus]: string
@@ -32,11 +32,12 @@ type StatusColorMap = {
 
 
 const statusColorMap: StatusColorMap = {
-  NEW: 'brown',
-  OPEN: 'blue',
-  COMPLETED: 'green',
-  REJECTED: 'grey',
+  NEW: '#FB8C00',
+  OPEN: '#388E3C',
+  COMPLETED: '#1976D2',
+  REJECTED: '#D32F2F',
   TRANSFERRED: 'grey',
+
 };
 
 type PriorityColorMap = {
@@ -44,25 +45,27 @@ type PriorityColorMap = {
 }
 
 const priorityColorMap: PriorityColorMap = {
-  LOW: 'green',
-  NORMAL: 'blue',
-  HIGH: 'red',
+  LOW: '#388E3C',
+  NORMAL: '#1976D2',
+  HIGH: '#D32F2F',
 };
 
 
-
-
 const BarLabel = (props: any) => {
-  const {
-    value,
-    ...rest
-  } = props;
+  const { value, x, y, width } = props;
 
   if (value > 0) {
     return (
       <text
-        {...rest}
-        className="recharts-bar-label">
+        x={(x + width / 2) - 5}
+        y={y + 20}
+        style={{
+          fontSize: "12pt",
+          fontWeight: "bold",
+
+        }}
+
+      >
         {value}
       </text>
     );
@@ -101,7 +104,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
       <Grid2 container spacing={2}>
         <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
           <Paper sx={chartPaperStyle}>
-            <Typography component='h2' variant='h6' gutterBottom>
+            <Typography component='h2' fontWeight='bold' gutterBottom>
               <FormattedMessage id='task.statistics.statusCount' />
             </Typography>
             <Box sx={chartStyle}>
@@ -121,7 +124,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
           <Paper sx={chartPaperStyle}>
-            <Typography component='h2' variant='h6' gutterBottom>
+            <Typography component='h2' fontWeight='bold' gutterBottom>
               <FormattedMessage id='task.statistics.priorityCount' />
             </Typography>
             <Box sx={chartStyle}>
@@ -141,7 +144,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 6, lg: 4 }}>
           <Paper sx={chartPaperStyle}>
-            <Typography component='h2' variant='h6' gutterBottom>
+            <Typography component='h2' fontWeight='bold' gutterBottom>
               <FormattedMessage id='task.statistics.overdue' />
             </Typography>
             <Box sx={chartStyle}>
@@ -149,7 +152,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
                 <PieChart>
                   <Pie data={tasksOverdue} dataKey="count" nameKey="assignedId" label>
                     {tasksOverdue?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={FILL_COLORS[index % FILL_COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={OVERDUE_FILL_COLORS[index % OVERDUE_FILL_COLORS.length]} />
                     ))}
                   </Pie>
                   <Legend verticalAlign='bottom' />
@@ -161,7 +164,7 @@ const EveliTaskBody: React.FC<{ dashoard: TaskApi.TaskDasboard }> = ({dashoard})
         </Grid2>
         <Grid2 size={{ xs: 12, sm: 12, lg: 12 }}>
           <Paper sx={chartPaperStyle}>
-            <Typography component='h2' variant='h6' gutterBottom>
+            <Typography component='h2' fontWeight='bold' gutterBottom>
               <FormattedMessage id='task.statistics.daily' />
             </Typography>
             <Box sx={chartStyle}>
