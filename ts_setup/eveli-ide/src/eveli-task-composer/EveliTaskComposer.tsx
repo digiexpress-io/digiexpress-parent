@@ -66,26 +66,26 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   const readOnly: boolean = (status === TaskApi.TaskStatus.COMPLETED || status === TaskApi.TaskStatus.REJECTED);
 
   return (<>
-      <Typography variant='h1'>
-        <FormattedMessage id='taskDialog.task'/>
-        {task?.taskRef || ''}
-      </Typography>
+    <Typography variant='h1'>
+      <FormattedMessage id='taskDialog.task' />{' '}
+      {task?.taskRef || ''}
+    </Typography>
 
-      <EveliTaskFeatureProvider options={task}>
-        <TaskFormState task={task} onSubmit={handleSaveTask}>
-          { (form) => (
-            <>
-              <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
-              <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
-              {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty /> }
-              <EveliTaskSubHeader form={form} readOnly={readOnly} />
-              <EveliTaskFooter task={task} form={form} readOnly={readOnly}/>
-            </>  
-            )
-          }
-        </TaskFormState>
-      </EveliTaskFeatureProvider>
-    </>
-    
+    <EveliTaskFeatureProvider options={task}>
+      <TaskFormState task={task} onSubmit={handleSaveTask}>
+        {(form) => (
+          <>
+            <PageLeavingConfirmation navigationConfirmationRequired={() => form.dirty && !form.isSubmitting} />
+            <EveliTaskHeader taskId={task?.id} questionnaireId={task?.questionnaireId} form={form} createdAt={task?.created} readOnly={readOnly} keywords={keywords} />
+            {task ? <EveliTaskBody task={task} readOnly={readOnly} onReload={handleReload} /> : <EveliTaskBodyEmpty />}
+            <EveliTaskSubHeader form={form} readOnly={readOnly} />
+            <EveliTaskFooter task={task} form={form} readOnly={readOnly} />
+          </>
+        )
+        }
+      </TaskFormState>
+    </EveliTaskFeatureProvider>
+  </>
+
   );
 }
