@@ -5,7 +5,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
 
 import { useIntl } from 'react-intl';
-import { GInboxMessageNotAllowedRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { GInboxMessageNotAllowed as MsgNotAllowed, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 export interface GInboxMessageNotAllowedProps { }
 
@@ -23,7 +23,7 @@ export const GInboxMessageNotAllowed: React.FC<GInboxMessageNotAllowedProps> = (
 
 
   return (
-    <GInboxMessageNotAllowedRoot className={classes.root}>
+    <MsgNotAllowed className={classes.msgNotAllowed}>
       <Box className={classes.msgNotAllowedContentSpacing}>
         <div className={classes.msgNotAllowedContentFlex}>
           <InfoIcon className={classes.msgNotAllowedIconError} />
@@ -43,6 +43,6 @@ export const GInboxMessageNotAllowed: React.FC<GInboxMessageNotAllowedProps> = (
         </div>
 
       </Box>
-    </GInboxMessageNotAllowedRoot>
+    </MsgNotAllowed>
   )
 }

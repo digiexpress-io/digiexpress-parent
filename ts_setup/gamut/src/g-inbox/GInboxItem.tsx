@@ -1,11 +1,11 @@
 import React from 'react';
-import { Avatar, Grid, Tooltip, Typography, useThemeProps } from '@mui/material';
+import { Grid, Tooltip, Typography, useThemeProps } from '@mui/material';
 import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
 import { GDate } from '../g-date';
-import { GInboxItemRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { GInboxItem as InboxItem, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useComms } from '../api-comms';
 
 
@@ -30,7 +30,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   });
-  const { title, subTitle, senderName, sentAt, onClick, id, contractStatus, taskRefId } = props;
+  const { title, subTitle, senderName, sentAt, onClick, id, taskRefId } = props;
 
   const tooltipContent = subTitle && intl.formatMessage({ id: 'gamut.inbox.newMessageFrom' }) + senderName + ": " + props.subTitle;
   const subject = getSubject(id);
@@ -38,7 +38,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
 
   return (
-    <GInboxItemRoot container className={classes.itemRoot} onClick={() => onClick(id)}>
+    <InboxItem container className={classes.inboxItem} onClick={() => onClick(id)}>
 
       <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
 
@@ -52,22 +52,22 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
         </Typography>
       </Grid>
 
-      <Grid item xs={6} sm={3} md={2} lg={2} xl={2} className={classes.itemTitle}>
+      <Grid item xs={6} sm={3} md={2} lg={2} xl={2} className={classes.inboxItemTitle}>
           <Typography component='span'>{title}</Typography>
 
       </Grid>
 
-      <Grid item xs={12} sm={5} md={6} lg={7} xl={7} className={classes.itemAttachments}>
+      <Grid item xs={12} sm={5} md={6} lg={7} xl={7} className={classes.inboxItemAttachments}>
         {props.children}
       </Grid>
 
 
-      <Grid item xs={12} sm={2} md={2} lg={1} xl={1} className={classes.itemSentAt}>
+      <Grid item xs={12} sm={2} md={2} lg={1} xl={1} className={classes.inboxItemSentAt}>
         <Typography variant='caption'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography>
         <GDate variant='date-only' date={sentAt} />
       </Grid>
 
-    </GInboxItemRoot>
+    </InboxItem>
 
   )
 }

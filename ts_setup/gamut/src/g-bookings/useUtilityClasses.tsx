@@ -50,9 +50,9 @@ export const GBookingsRoot = styled("div", {
 
 
 
-export const GBookingItemRoot = styled("div", {
+export const GBookingItem = styled("div", {
   name: MUI_NAME,
-  slot: 'Item',
+  slot: 'BookingItem',
   overridesResolver: (_props, styles) => {
     return [
       styles.root,

@@ -4,7 +4,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
-import { GBookingItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
+import { GBookingItem as ItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
 import { GConfirm, GDate, GDateProps, GFlex } from '../';
 
 
@@ -57,7 +57,7 @@ export const GBookingItem: React.FC<GBookingItemProps> = (initProps) => {
       cancelButton={intl.formatMessage({ id: 'gamut.bookings.deleteBooking.cancelButton' })}
       deleteButton={intl.formatMessage({ id: 'gamut.bookings.deleteBooking.deleteButton' })}
     />
-    <GBookingItemRoot className={classes.root} ownerState={ownerState} as={ownerState.component} onClick={onClick}>
+    <ItemRoot className={classes.root} ownerState={ownerState} as={ownerState.component} onClick={onClick}>
       <GFlex variant='body'>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={6} xl={6} >
@@ -82,7 +82,7 @@ export const GBookingItem: React.FC<GBookingItemProps> = (initProps) => {
           </Grid>
         </Grid>
       </GFlex>
-    </GBookingItemRoot>
+    </ItemRoot>
   </>
   )
 }

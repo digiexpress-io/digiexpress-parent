@@ -12,21 +12,21 @@ export interface GInboxMessagesClasses {
   attachments: string;
   title: string;
 
-  msgItemRoot: string;
+  msgItem: string;
   msgItemSender: string;
   msgItemSentat: string;
   msgItemMyMessage: string;
   msgItemTheirMessage: string;
   msgItemCommentText: string;
 
-  newMsgRoot: string;
+  newMsgItem: string;
   newMsgButtons: string;
   newMsgTitle: string;
   newMsgSenderName: string;
   newMsgAddButton: string;
   newMsgCancelButton: string;
 
-  msgNotAllowedRoot: string;
+  msgNotAllowed: string;
   msgNotAllowedContent: string;
   msgNotAllowedContentSpacing: string;
   msgNotAllowedContentFlex: string;
@@ -48,21 +48,21 @@ export const GInboxMessagesRoot = styled("div", {
       styles.attachments,
       styles.title,
 
-      styles.msgItemRoot,
+      styles.msgItem,
       styles.msgItemSender,
       styles.msgItemSentAt,
       styles.msgItemMyMessage,
       styles.msgItemTheirMessage,
       styles.msgItemCommentText,
 
-      styles.newMsgRoot,
+      styles.newMsgItem,
       styles.newMsgButtons,
       styles.newMsgTitle,
       styles.newMsgSenderName,
       styles.newMsgAddButton,
       styles.newMsgCancelButton,
 
-      styles.msgNotAllowedRoot,
+      styles.msgNotAllowed,
       styles.msgNotAllowedContent,
       styles.msgNotAllowedContentSpacing,
       styles.msgNotAllowedContentFlex,
@@ -129,7 +129,7 @@ export const GInboxMessagesRoot = styled("div", {
     },
     // ------
 
-    '.GInboxMessages-msgNotAllowedRoot': {
+    '.GInboxMessages-msgNotAllowed': {
       paddingLeft: theme.spacing(3),
       paddingRight: theme.spacing(2),
       paddingBottom: theme.spacing(3),
@@ -161,7 +161,7 @@ export const GInboxMessagesRoot = styled("div", {
 
     },
 
-    '.GInboxMessages-newMsgRoot': {
+    '.GInboxMessages-newMsgItem': {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -213,7 +213,7 @@ export const GInboxMessagesRoot = styled("div", {
 
     '& .GInboxMessages-newMsgAddButton .MuiButton-root': {},
 
-    '.GInboxMessages-msgItemRoot': {
+    '.GInboxMessages-msgItem': {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -264,12 +264,12 @@ export const GInboxMessagesRoot = styled("div", {
 });
 
 
-export const GInboxMessageRoot = styled('div', {
+export const GInboxMessageItem = styled('div', {
   name: MUI_NAME,
   slot: 'MessageItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.msgItemRoot,
+      styles.msgItem,
 
     ];
   },
@@ -281,12 +281,12 @@ export const GInboxMessageRoot = styled('div', {
 
 
 
-export const GInboxNewMessageRoot = styled(Paper, {
+export const GInboxNewMessageItem = styled(Paper, {
   name: MUI_NAME,
-  slot: 'NewMessage',
+  slot: 'NewMessageItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.newMsgRoot
+      styles.newMsgItem
     ];
   },
 })(({ theme }) => {
@@ -295,12 +295,12 @@ export const GInboxNewMessageRoot = styled(Paper, {
   };
 });
 
-export const GInboxMessageNotAllowedRoot = styled(Paper, {
+export const GInboxMessageNotAllowed = styled(Paper, {
   name: MUI_NAME,
   slot: 'MessageNotAllowed',
   overridesResolver: (_props, styles) => {
     return [
-      styles.msgNotAllowedRoot,
+      styles.msgNotAllowed,
       styles.msgNotAllowedContent,
       styles.msgNotAllowedContentSpacing,
       styles.msgNotAllowedContentFlex,
@@ -323,21 +323,21 @@ export const useUtilityClasses = () => {
     attachments: ['attachments'],
     title: ['title'],
 
-    msgItemRoot: ['msgItemRoot'],
+    msgItem: ['msgItem'],
     msgItemSender: ['msgItemSender'],
     msgItemSentat: ['msgItemSentat'],
     msgItemMyMessage: ['msgItemMyMessage'],
     msgItemTheirMessage: ['msgItemTheirMessage'],
     msgItemCommentText: ['msgItemCommentText'],
 
-    newMsgRoot: ['newMsgRoot'],
+    newMsgItem: ['newMsgItem'],
     newMsgButtons: ['newMsgButtons'],
     newMsgTitle: ['newMsgTitle'],
     newMsgSenderName: ['newMsgSenderName'],
     newMsgAddButton: ['newMsgAddButton'],
     newMsgCancelButton: ['newMsgCancelButton'],
 
-    msgNotAllowedRoot: ['msgNotAllowedRoot'],
+    msgNotAllowed: ['msgNotAllowed'],
     msgNotAllowedContent: ['msgNotAllowedContent'],
     msgNotAllowedContentSpacing: ['msgNotAllowedContentSpacing'],
     msgNotAllowedContentFlex: ['msgNotAllowedContentFlex'],

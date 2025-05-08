@@ -1,6 +1,5 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
-import { GAppBarProps } from './GAppBar';
 
 
 export const MUI_NAME = 'GAppBar';
