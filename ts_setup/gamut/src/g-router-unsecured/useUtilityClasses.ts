@@ -9,7 +9,6 @@ export const MUI_NAME = 'GRouterUnsecured';
 
 export interface GRouterUnsecuredClasses {
   root: string;
-  menuButtonContainer: string;
 }
 export type GRouterUnsecuredClassKey = keyof GRouterUnsecuredClasses;
 
@@ -29,8 +28,7 @@ export const GRouterUnsecuredRoot = styled("div", {
   slot: 'Root',
   overridesResolver: (_props, styles) => {
     return [
-      styles.root,
-      styles.menuButtonContainer
+      styles.root
     ];
   },
 })<{ ownerState: GRouterUnsecuredProps }>(({ theme, ownerState }) => {
