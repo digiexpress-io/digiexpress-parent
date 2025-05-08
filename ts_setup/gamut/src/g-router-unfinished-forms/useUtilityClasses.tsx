@@ -60,7 +60,7 @@ export const GRouterUnfinishedFormsRoot = styled("div", {
       styles.subTitleText
     ];
   },
-})<{ ownerState: GRouterUnfinishedFormsProps }>(({ theme, ownerState }) => {
+})<{ ownerState: GRouterUnfinishedFormsProps }>(({ theme }) => {
   return {
 
     '& .GRouterUnfinishedForms-titleLayout': {

@@ -7,7 +7,7 @@ import {
   GLinkFormUnlockedSearchResults,
 } from '../';
 
-import { GRouterSecuredServicesSearchResultsRoot, OwnerState } from './useUtilityClasses';
+import { GRouterSecuredServicesSearchResults, OwnerState } from './useUtilityClasses';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useIntl } from 'react-intl';
 import { SearchApi } from '../api-search';
@@ -50,7 +50,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
     search.external.length === 0;
 
   return (
-    <GRouterSecuredServicesSearchResultsRoot className={classes.searchResults}>
+    <GRouterSecuredServicesSearchResults>
       {noResults ? (
         <Alert severity='info' variant='outlined'>
           {intl.formatMessage({ id: 'gamut.search.results.noResults' })}
@@ -107,6 +107,6 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             </List>
         </>
       )}
-    </GRouterSecuredServicesSearchResultsRoot>
+    </GRouterSecuredServicesSearchResults>
   );
 }
