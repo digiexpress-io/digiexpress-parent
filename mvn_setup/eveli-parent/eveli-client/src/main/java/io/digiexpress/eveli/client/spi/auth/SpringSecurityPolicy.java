@@ -81,6 +81,7 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
       Set<String> userRoles = authentication.get().getAuthorities().stream().map(auth->auth.getAuthority()).collect(Collectors.toSet());
       log.debug("Worker REST API path, user authenticated, checking roles");
       boolean access = findAccess(path, method, userRoles);
+      log.debug("Worker REST API path, access check result: {}", access);
       return new AuthorizationDecision(access);      
     }
     

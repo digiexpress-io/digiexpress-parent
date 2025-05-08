@@ -19,7 +19,7 @@ eveli:
     - path-pattern: /worker/rest/api/queues/**
       method: GET
       roles: ROLE_TASK_ADMIN
-    - path-pattern: /worker/rest/api/pdf/**
+    - path-pattern: /worker/rest/api/pdf
       method: GET
       roles: ROLE_TASK_WORKER,ROLE_TASK_ADMIN
     - path-pattern: /worker/rest/api/assets/**
