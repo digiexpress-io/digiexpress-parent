@@ -34,7 +34,18 @@ const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) =
           <Button onClick={() => setOpen(false)}><FormattedMessage id='button.accept' /></Button>
         </DialogActions>
       </Dialog>
-      <Box width='200px' height='46px' textOverflow='ellipsis' overflow='hidden' sx={{ cursor: 'pointer' }} onClick={() => setOpen(true)}>
+      <Box
+        width="100%"
+        display="flex"
+        alignItems="center"
+        sx={{
+          cursor: 'pointer',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+        }}
+        onClick={() => setOpen(true)}
+      >
         {description}
       </Box>
     </>
@@ -153,35 +164,38 @@ export const PublicationsTable: React.FC = () => {
   ];
 
   return (
-    <>
-      <Box display='flex' justifyContent='space-between' alignItems='center' mb={2}>
-        <Typography variant='h1'>
-          <FormattedMessage id='publicationsTable.title' />
-        </Typography>
-        <Box display='flex' gap={1}>
-          <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
-            <Tooltip title={intl.formatMessage({ id: 'publicationsTable.addButton' })}>
-              <IconButton onClick={() => setNewDialogOpen(true)}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </EveliPermissions>
-          <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
-            <Tooltip title={intl.formatMessage({ id: 'publicationsTable.uploadButton' })}>
-              <IconButton onClick={() => setUploadDialogOpen(true)}>
-                <FileUploadIcon />
-              </IconButton>
-            </Tooltip>
-          </EveliPermissions>
+    <Box pl={1} pr={3}>
+      <Box sx={{ display: 'inline-block' }}>
+        <Box display='flex' alignItems='center' mb={2}>
+          <Typography variant='h1' sx={{ flexGrow: 1 }}>
+            <FormattedMessage id='publicationsTable.title' />
+          </Typography>
+          <Box display='flex' gap={1}>
+            <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+              <Tooltip title={intl.formatMessage({ id: 'publicationsTable.addButton' })}>
+                <IconButton onClick={() => setNewDialogOpen(true)}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            </EveliPermissions>
+            <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+              <Tooltip title={intl.formatMessage({ id: 'publicationsTable.uploadButton' })}>
+                <IconButton onClick={() => setUploadDialogOpen(true)}>
+                  <FileUploadIcon />
+                </IconButton>
+              </Tooltip>
+            </EveliPermissions>
+          </Box>
         </Box>
+        <WithTableStyles
+          columns={columns}
+          data={assetReleases || []}
+          options={{ initialPageSize: 30 }}
+        />
       </Box>
-      <WithTableStyles
-        columns={columns}
-        data={assetReleases || []}
-        options={{ initialPageSize: 30 }}
-      />
       <NewPublicationDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={refreshAssetReleases} />
       <UploadPublicationDialog open={uploadDialogOpen} setOpen={setUploadDialogOpen} onSubmit={refreshAssetReleases} />
-    </>
+    </Box>
   );
+
 };
