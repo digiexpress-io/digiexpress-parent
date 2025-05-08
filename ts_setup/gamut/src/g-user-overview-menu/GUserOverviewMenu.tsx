@@ -23,7 +23,7 @@ import { useIam } from '../api-iam';
 import { GAuthRepPerson } from '../g-auth-rep-person';
 import { GAuthRepCompany } from '../g-auth-rep-company';
 
-import { useUtilityClasses, GUserOverviewMenuRoot, GUserOverviewMenuItemRoot, MUI_NAME } from './useUtilityClasses';
+import { useUtilityClasses, GUserOverviewMenuRoot, GUserOverviewMenuItem, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
 
 
@@ -216,16 +216,16 @@ const Item: React.FC<GUserOverviewMenuItemSlotProps & { ownerState: GUserOvervie
     return <></>;
   }
   return (
-    <GUserOverviewMenuItemRoot className={classes.item}>
+    <GUserOverviewMenuItem className={classes.menuItem}>
       <ListItemButton onClick={handleOnClick} selected={props.id === active} className={classes.menuButton}>
         <Box className={classes.menuButtonLayout}>
           <FormattedMessage id={`gamut.userOverview.buttons.${id}`} />
           {userOrRepOrCompanyName && (<Typography className={classes.userOrRepOrCompanyNameStyle}>{userOrRepOrCompanyName}</Typography>
           )}
         </Box>
-        {endAdornment && <ListItemIcon className={classes.icon}>{endAdornment}</ListItemIcon>}
+        {endAdornment && <ListItemIcon className={classes.overviewMenuIcon}>{endAdornment}</ListItemIcon>}
       </ListItemButton>
-    </GUserOverviewMenuItemRoot>
+    </GUserOverviewMenuItem>
   )
 }
 

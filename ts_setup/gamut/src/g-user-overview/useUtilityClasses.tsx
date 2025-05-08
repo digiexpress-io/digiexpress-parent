@@ -8,33 +8,22 @@ export const MUI_NAME = 'GUserOverview';
 
 export interface GUserOverviewClasses {
   root: string;
-  serviceSelect: string;
 }
 
 export type GUserOverviewClassKey = keyof GUserOverviewClasses;
 
 export interface GUserOverviewDetailClasses {
-  root: string;
-  count: string;
-  title: string;
-  countAvatar: string;
-  countAvatarLabel: string;
-  buttonLabel: string;
+  root: string
 }
 export type GUserOverviewDetailClassKey = keyof GUserOverviewDetailClasses;
 
 
-export const GUserOverviewDetailRoot = styled(Box, {
+export const GUserOverviewDetail = styled(Box, {
   name: MUI_NAME,
-  slot: 'Item',
+  slot: 'OverviewItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.root,
-      styles.count,
-      styles.title,
-      styles.countAvatar,
-      styles.countAvatarLabel,
-      styles.buttonLabel
+      styles.overviewItem
     ];
   },
 })<{ ownerState: GUserOverviewDetailProps }>(({ theme, ownerState }) => {
@@ -52,27 +41,27 @@ export const GUserOverviewDetailRoot = styled(Box, {
       borderColor: 'rgba(194,190,194,1)',
       boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
     } : undefined,
-    '& .GUserOverview-title': {
+    '& .GUserOverview-overviewItemTitle': {
       ...theme.typography.h4,
       padding: theme.spacing(2),
       textAlign: 'left',
-    },
-    '& .GUserOverview-count': {
+    },  
+    '& .GUserOverview-overviewItemCount': {
       display: 'flex',
       alignItems: 'center',
       padding: theme.spacing(2),
     },
-    '& .GUserOverview-countAvatar': {
+    '& .GUserOverview-overviewItemCountAvatar': {
       backgroundColor: alpha(theme.palette.primary.light, 0.1),
       color: theme.palette.text.primary,
       marginRight: theme.spacing(1),
       height: '60px',
       width: '60px'
     },
-    '& .GUserOverview-countAvatarLabel': {
+    '& .GUserOverview-overviewItemCountAvatarLabel': {
       ...theme.typography.h1
     },
-    '& .GUserOverview-buttonLabel': {
+    '& .GUserOverview-overviewItemButtonLabel': {
       ...theme.typography.body1
     },
 
@@ -91,7 +80,6 @@ export const GUserOverviewRoot = styled(Box, {
   overridesResolver: (props, styles) => {
     return [
       styles.root,
-      styles.serviceSelect
     ];
   },
 })<{ ownerState: GUserOverviewProps }>(({ theme }) => {
@@ -101,7 +89,7 @@ export const GUserOverviewRoot = styled(Box, {
     justifyContent: 'center',
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(1),
-    '& .GUserOverview-serviceSelect': {
+    '& .GUserOverviewItem-serviceSelect': {
       [theme.breakpoints.up('md')]: {
         display: 'none'
       }
@@ -121,11 +109,13 @@ export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
     serviceSelect: ['serviceSelect'],
-    count: ['count'],
-    title: ['title'],
-    countAvatar: ['countAvatar'],
-    countAvatarLabel: ['countAvatarLabel'],
-    buttonLabel: ['buttonLabel']
+
+    overviewItem: ['overviewItem'],
+    overviewItemTitle: ['overviewItemTitle'],
+    overviewItemCount: ['overviewItemCount'],
+    overviewItemCountAvatar: ['overviewItemCountAvatar'],
+    overviewItemCountAvatarLabel: ['overviewItemCountAvatarLabel'],
+    overviewItemButtonLabel: ['overviewItemButtonLabel']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
