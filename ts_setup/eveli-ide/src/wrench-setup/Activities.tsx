@@ -90,11 +90,10 @@ export function useActivities(): ActivityProps[] {
       composer: () => {
         const nav = useWrenchNav();
         React.useLayoutEffect(() => {
-          () => nav.onNav({ type: 'DEBUG' })
-        }, [])
-
-        return (<></>)
-      },
+          nav.onNav({ type: 'DEBUG' });
+        }, []);
+        return (<></>);
+      },      
       onView: undefined,
       title: <FormattedMessage id="activities.debug.title" />,
       desc: <FormattedMessage id="activities.debug.desc" />,
