@@ -84,7 +84,7 @@ export const GUserOverview: React.FC<GUserOverviewProps> = (initProps) => {
         </Grid>
 
         {isItemDisabled('services') ? <></> : (
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className={classes.serviceSelect}>
+          <Grid item xs={12} sm={12} md={6} lg={6} xl={6} className='serviceSelect'>
             <Item
               viewId='services'
               onClick={handleClick}

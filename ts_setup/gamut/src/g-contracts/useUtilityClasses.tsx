@@ -23,7 +23,7 @@ export type GContractsClassKey = keyof GContractsClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    item: ['item'],
+    contractItem: ['contractItem'],
     status: ['status'],
     lastModified: ['lastModified'],
     taskRefId: ['taskRefId'],
@@ -37,20 +37,12 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getUtilityClass, {});
 }
 
-export const GContractItemRoot = styled("div", {
+export const GContractItem = styled("div", {
   name: MUI_NAME,
-  slot: 'Item',
+  slot: 'ContractItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.root,
-      styles.status,
-      styles.taskRefId,
-      styles.lastModified,
-      styles.messages,
-      styles.files,
-      styles.messagesCount,
-      styles.filesCount,
-      styles.noValue
+      styles.contractItem
     ];
   },
 })<{ ownerState: GContractItemProps }>(({ theme, ownerState }) => {

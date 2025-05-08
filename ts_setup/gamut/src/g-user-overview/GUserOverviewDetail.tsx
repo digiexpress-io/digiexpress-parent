@@ -1,7 +1,7 @@
 import React from 'react';
 import { useThemeProps, Typography, Avatar, CardContent } from '@mui/material';
 import { GUserOverviewMenuView } from '../';
-import { GUserOverviewDetailRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { GUserOverviewDetail as OverviewDetail, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
 export interface GUserOverviewDetailProps {
@@ -33,19 +33,19 @@ export const GUserOverviewDetail: React.FC<GUserOverviewDetailProps> = (initProp
   }
 
   return (
-    <GUserOverviewDetailRoot ownerState={ownerState} className={classes.root} onClick={handleClick}>
-      <Typography className={classes.title}>{props.title}</Typography>
+    <OverviewDetail ownerState={ownerState} className={classes.overviewItem} onClick={handleClick}>
+      <Typography className={classes.overviewItemTitle}>{props.title}</Typography>
 
       {props.children && <CardContent>{props.children}</CardContent>}
       {props.count === undefined ? <></> :
-        <div className={classes.count}>
-          <Avatar className={classes.countAvatar}>
-            <Typography className={classes.countAvatarLabel}>{props.count}</Typography>
+        <div className={classes.overviewItemCount}>
+          <Avatar className={classes.overviewItemCountAvatar}>
+            <Typography className={classes.overviewItemCountAvatarLabel}>{props.count}</Typography>
           </Avatar>
-          <Typography className={classes.buttonLabel}>{props.buttonLabel}</Typography>
+          <Typography className={classes.overviewItemButtonLabel}>{props.buttonLabel}</Typography>
         </div>
       }
-    </GUserOverviewDetailRoot>)
+    </OverviewDetail>)
 }
 
 

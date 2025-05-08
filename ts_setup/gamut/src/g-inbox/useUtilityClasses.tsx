@@ -6,12 +6,10 @@ export const MUI_NAME = 'GInbox';
 
 export interface GInboxClasses {
   root: string,
-  itemRoot: string,
-  itemTitle: string,
-  itemSubTitle: string,
-  itemLayout: string,
-  itemSentAt: string,
-  itemAttachments: string,
+  inboxItem: string,
+  inboxItemTitle: string,
+  inboxItemSentAt: string,
+  inboxItemAttachments: string,
   taskRefLayout: string,
   newMsgIndicator: string
 }
@@ -20,12 +18,10 @@ export type GInboxClassKey = keyof GInboxClasses;
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    itemRoot: ['itemRoot'],
-    itemTitle: ['itemTitle'],
-    itemSubTitle: ['itemSubTitle'],
-    itemLayout: ['itemLayout'],
-    itemSentAt: ['itemSentAt'],
-    itemAttachments: ['itemAttachments'],
+    inboxItem: ['inboxItem'],
+    inboxItemTitle: ['inboxItemTitle'],
+    inboxItemSentAt: ['inboxItemSentAt'],
+    inboxItemAttachments: ['inboxItemAttachments'],
     taskRefLayout: ['taskRefLayout'],
     newMsgIndicator: ['newMsgIndicator']
 
@@ -41,12 +37,10 @@ export const GInboxRoot = styled("div", {
   overridesResolver: (_props, styles) => {
     return [
       styles.root,
-      styles.itemRoot,
-      styles.itemTitle,
-      styles.itemSubTitle,
-      styles.itemLayout,
-      styles.itemSentAt,
-      styles.itemAttachments,
+      styles.inboxItem,
+      styles.inboxItemTitle,
+      styles.inboxItemSentAt,
+      styles.inboxItemAttachments,
       styles.taskRefLayout,
       styles.newMsgIndicator
     ];
@@ -54,7 +48,7 @@ export const GInboxRoot = styled("div", {
 })(({ theme }) => {
   return {
 
-    '.GInbox-itemRoot': {
+    '.GInbox-inboxItem': {
       cursor: 'pointer',
       alignItems: 'center',
       paddingLeft: theme.spacing(2),
@@ -69,15 +63,13 @@ export const GInboxRoot = styled("div", {
         boxShadow: '0px 7px 5px -3px rgba(194,190,194,0.7)',
       },
     },
-    '.GInbox-itemTitle': {
+    '.GInbox-inboxItemTitle': {
       fontSize: theme.typography.body2.fontSize,
       [theme.breakpoints.down('sm')]: {
         textAlign: 'right',
       }
     },
-    '.GInbox-itemSubTitle': {
-      fontSize: theme.typography.body2.fontSize
-    },
+
     '.GInbox-newMsgIndicator': {
       marginRight: theme.spacing(1),
       color: theme.palette.error.main,
@@ -93,15 +85,9 @@ export const GInboxRoot = styled("div", {
       display: 'flex',
       alignItems: 'center'
     },
-    '.GInbox-itemLayout': {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    },
 
     // date positioning
-    '.GInbox-itemSentAt': {
+    '.GInbox-inboxItemSentAt': {
       display: 'flex',
       [theme.breakpoints.up('sm')]: {
         alignItems: 'flex-end',
@@ -111,7 +97,7 @@ export const GInboxRoot = styled("div", {
         justifyContent: 'space-between',
       }
     },
-    '.GInbox-itemAttachments': {
+    '.GInbox-inboxItemAttachments': {
       display: 'flex',
       [theme.breakpoints.up('sm')]: {
         justifyContent: 'flex-end'
@@ -136,12 +122,12 @@ export const GInboxRoot = styled("div", {
 
 
 
-export const GInboxItemRoot = styled(Grid, {
+export const GInboxItem = styled(Grid, {
   name: MUI_NAME,
-  slot: 'Item',
+  slot: 'InboxItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.itemRoot,
+      styles.inboxItem,
     ];
   },
 })(({ theme }) => {

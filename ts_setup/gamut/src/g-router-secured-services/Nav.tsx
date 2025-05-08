@@ -8,7 +8,7 @@ import { useIntl } from 'react-intl';
 import {
   GUserOverviewMenuView,
 } from '../';
-import { GRouterSecuredServicesBreadcrumbsRoot, useUtilityClasses, OwnerState } from './useUtilityClasses';
+import { GRouterSecuredServicesBreadcrumbs, OwnerState } from './useUtilityClasses';
 
 
 
@@ -19,7 +19,6 @@ export interface GRouterSecuredServicesProps {
 }
 
 export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
-  const classes = useUtilityClasses();
   const intl = useIntl();
   const { topic } = ownerState;
 
@@ -38,7 +37,7 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
 
 
   return (
-    <GRouterSecuredServicesBreadcrumbsRoot className={classes.root}>
+    <GRouterSecuredServicesBreadcrumbs>
       <Link onClick={() => handleNav('user-overview')}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
@@ -49,6 +48,6 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
       <Typography>
         {topic?.name}
       </Typography>
-    </GRouterSecuredServicesBreadcrumbsRoot>);
+    </GRouterSecuredServicesBreadcrumbs>);
 }
 

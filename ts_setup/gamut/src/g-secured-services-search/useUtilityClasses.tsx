@@ -28,14 +28,12 @@ export const GSecuredServicesSearchRoot = styled('div', {
 })<{ ownerState: GSecuredServicesSearchProps }>(({ theme }) => {
 
   return {
-
     padding: theme.spacing(1),
     minHeight: '10vh',
-    '.GServicesSearch-icon': {
+    '.GSecuredServicesSearch-icon': {
       color: theme.palette.primary.main
     },
-    '.GServicesSearch-input': {
-      backgroundColor: alpha(theme.palette.warning.main, 0.1),
+    '.GSecuredServicesSearch-input': {
     }
   };
 });

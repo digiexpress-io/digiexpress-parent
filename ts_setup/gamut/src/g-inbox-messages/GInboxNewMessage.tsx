@@ -5,7 +5,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 import { useIntl } from 'react-intl';
-import { GInboxNewMessageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { GInboxNewMessageItem, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { ContractApi, useContracts } from '../api-contract';
 
 export interface GInboxNewMessageProps {
@@ -59,7 +59,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
 
 
   return (
-    <GInboxNewMessageRoot className={classes.newMsgRoot}>
+    <GInboxNewMessageItem className={classes.newMsgItem}>
       <div className={classes.newMsgTitle}>
         {props.senderName ?
           <Typography className={classes.newMsgSenderName}>
@@ -96,7 +96,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
         </Button>
       </div>
-    </GInboxNewMessageRoot>
+    </GInboxNewMessageItem>
   )
 }
 

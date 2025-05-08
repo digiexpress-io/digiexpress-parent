@@ -5,8 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { GFlex } from '../g-flex';
 import { GDate, GDateProps } from '../g-date';
-import { GContractItemRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
-import { useContracts } from '../api-contract';
+import { GContractItem as ContractItem, useUtilityClasses, MUI_NAME } from './useUtilityClasses';
 
 
 export interface GContractItemProps {
@@ -44,7 +43,7 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
   }
 
   return (
-    <GContractItemRoot className={classes.item} ownerState={ownerState} onClick={() => onClick(exchangeId)}>
+    <ContractItem className={classes.contractItem} ownerState={ownerState} onClick={() => onClick(exchangeId)}>
       <GFlex variant='body'>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -113,6 +112,6 @@ export const GContractItem: React.FC<GContractItemProps> = (initProps) => {
           <Grid item xs={12} sm={12} md={12} lg={1} xl={1} />
         </Grid>
       </GFlex>
-    </GContractItemRoot>
+    </ContractItem>
   )
 }

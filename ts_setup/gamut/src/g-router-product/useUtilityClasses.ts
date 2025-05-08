@@ -12,6 +12,7 @@ export interface GRouterProductClasses {
   productBodyText: string;
   formStartButton: string;
   loginAlert: string;
+  formAuthButton: string;
 }
 
 export type GRouterProductClassKey = keyof GRouterProductClasses;
@@ -45,7 +46,8 @@ export const GRouterProductRoot = styled("div", {
       styles.productSubTitle,
       styles.productBodyText,
       styles.formStartButton,
-      styles.loginAlert
+      styles.loginAlert,
+      styles.formAuthButton
     ];
   },
 })(({ theme }) => {
@@ -84,9 +86,9 @@ export const GRouterProductRoot = styled("div", {
   }
 });
 
-export const GRouterProductTitleRoot = styled("div", {
+export const GRouterProductTitle = styled("div", {
   name: MUI_NAME,
-  slot: 'ProductTitleRoot',
+  slot: 'ProductTitle',
   overridesResolver: (_props, styles) => {
     return [
       styles.root
@@ -99,7 +101,7 @@ export const GRouterProductTitleRoot = styled("div", {
   }
 });
 
-export const GRouterProductButtonsRoot = styled("div", {
+export const GRouterProductButtons = styled("div", {
   name: MUI_NAME,
   slot: 'ProductButtons',
   overridesResolver: (_props, styles) => {
@@ -123,7 +125,7 @@ export const GRouterProductButtonsRoot = styled("div", {
   }
 });
 
-export const GRouterProductBreadcrumbsRoot = styled(Breadcrumbs, {
+export const GRouterProductBreadcrumbs = styled(Breadcrumbs, {
   name: MUI_NAME,
   slot: 'ProductBreadcrumbs',
   overridesResolver: (_props, styles) => {
@@ -137,7 +139,7 @@ export const GRouterProductBreadcrumbsRoot = styled(Breadcrumbs, {
   }
 });
 
-export const GRouterProductAnonBreadcrumbsRoot = styled(Breadcrumbs, {
+export const GRouterProductAnonBreadcrumbs = styled(Breadcrumbs, {
   name: MUI_NAME,
   slot: 'ProductAnonBreadcrumbs',
   overridesResolver: (_props, styles) => {

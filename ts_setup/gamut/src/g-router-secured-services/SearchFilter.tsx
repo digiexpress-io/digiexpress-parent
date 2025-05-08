@@ -1,17 +1,13 @@
 import React from 'react';
 import { Chip } from '@mui/material';
-
 import { useIntl } from 'react-intl';
-
-
-import { OwnerState, useUtilityClasses, GRouterSecuredServicesFilterButtonsRoot } from './useUtilityClasses';
+import { OwnerState, GRouterSecuredServicesFilterButtons } from './useUtilityClasses';
 import { SearchApi } from '../api-search';
 import { GSecuredServicesSearch } from '../g-secured-services-search';
 
 
 
 export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ }) => {
-  const classes = useUtilityClasses();
   const intl = useIntl();
   const { value: search, filterMode: handleFilterByType, find } = SearchApi.useSearch();
 
@@ -20,7 +16,7 @@ export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ }) => {
       value={search.searchString}
       onChange={({ currentTarget }) => find(currentTarget.value)}
     />
-    <GRouterSecuredServicesFilterButtonsRoot className={classes.searchFilterButtons}>
+    <GRouterSecuredServicesFilterButtons>
       <Chip
         color={search.searchOptionType === 'ALL' ? 'primary' : undefined}
         label={intl.formatMessage({ id: 'gamut.search.results.allResults' })}
@@ -41,7 +37,7 @@ export const SearchFilters: React.FC<{ ownerState: OwnerState }> = ({ }) => {
         color={search.searchOptionType === 'LINKS' ? 'primary' : undefined}
         label={intl.formatMessage({ id: 'gamut.search.popover.allLinks' })}
         onClick={() => handleFilterByType('LINKS')} />
-    </GRouterSecuredServicesFilterButtonsRoot>
+    </GRouterSecuredServicesFilterButtons>
   </>
   );
 }

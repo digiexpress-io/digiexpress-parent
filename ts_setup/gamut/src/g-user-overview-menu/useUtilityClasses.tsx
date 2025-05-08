@@ -3,16 +3,10 @@ import { generateUtilityClass, styled, List, ListItem } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GUserOverviewMenuProps } from './GUserOverviewMenu';
 
-export const MUI_NAME = 'GUserOverviewMenu'
+export const MUI_NAME = 'GUserOverviewMenu';
 
 export interface GUserOverviewMenuClasses {
-  root: string;
-  item: string;
-  menuButton: string;
-  menuButtonLayout: string;
-  userOrRepOrCompanyNameStyle: string;
-  icon: string;
-  formCount: string;
+  root: string
 }
 export type GUserOverviewMenuClassKey = keyof GUserOverviewMenuClasses;
 
@@ -34,31 +28,25 @@ export const GUserOverviewMenuRoot = styled(List, {
   };
 });
 
-export const GUserOverviewMenuItemRoot = styled(ListItem, {
+export const GUserOverviewMenuItem = styled(ListItem, {
   name: MUI_NAME,
-  slot: 'Item',
+  slot: 'MenuItem',
   overridesResolver: (_props, styles) => {
     return [
-      styles.root,
-      styles.item,
-      styles.menuButton,
-      styles.menuButtonLayout,
-      styles.userOrRepOrCompanyNameStyle,
-      styles.icon,
-      styles.formCount
+      styles.menuItem
     ];
   },
 })<{}>(({ theme }) => {
   return {
-    '& .GUserOverviewMenu-icon': {
+    '& .GUserOverviewMenu-overviewMenuIcon': {
       justifyContent: 'right',
       color: theme.palette.primary.main,
     },
-    '& .MuiButtonBase-root.Mui-selected .GUserOverviewMenu-icon': {
+    '& .GUserOverviewMenu-formCount': {
+      backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
-    },
-    '& .MuiButtonBase-root.Mui-selected:hover .GUserOverviewMenu-icon': {
-      color: theme.palette.primary.contrastText,
+      height: '30px',
+      width: '30px'
     },
     '& .GUserOverviewMenu-menuButtonLayout': {
       display: "flex",
@@ -67,6 +55,12 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
     },
     '& .GUserOverviewMenu-userOrRepOrCompanyNameStyle': {
       ...theme.typography.caption
+    },
+    '& .MuiButtonBase-root.Mui-selected .GUserOverviewMenu-icon': {
+      color: theme.palette.primary.contrastText,
+    },
+    '& .MuiButtonBase-root.Mui-selected:hover .GUserOverviewMenu-icon': {
+      color: theme.palette.primary.contrastText,
     },
     '& .MuiButtonBase-root': {
       justifyContent: 'space-between',
@@ -79,12 +73,6 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
         backgroundColor: theme.palette.primary.light
       }
     },
-    '& .GUserOverviewMenu-formCount': {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-      height: '30px',
-      width: '30px'
-    }
   }
 });
 
@@ -93,9 +81,10 @@ export const GUserOverviewMenuItemRoot = styled(ListItem, {
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
-    item: ['item'],
+    menuItem: ['menuItem'],
     menuButton: ['menuButton'],
     menuButtonLayout: ['menuButtonLayout'],
+    overviewMenuIcon: ['overviewMenuIcon'],
     userOrRepOrCompanyNameStyle: ['userOrRepOrCompanyNameStyle'],
     icon: ['icon'],
     formCount: ['formCount']

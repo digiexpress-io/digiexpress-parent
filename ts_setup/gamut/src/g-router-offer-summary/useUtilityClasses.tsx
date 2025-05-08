@@ -104,7 +104,11 @@ export const GRouterOfferSummaryRoot = styled("div", {
 });
 
 
-export const SummaryBox: React.FC<{ topicLink: SiteApi.TopicLink | undefined, buttonBackToMsg: string, onNav: () => void }> = ({ topicLink, buttonBackToMsg, onNav }) => {
+export const SummaryBox: React.FC<{
+  topicLink: SiteApi.TopicLink | undefined,
+  buttonBackToMsg: string,
+  onNav: () => void
+}> = ({ topicLink, buttonBackToMsg, onNav }) => {
   const intl = useIntl();
   const classes = useUtilityClasses();
 
