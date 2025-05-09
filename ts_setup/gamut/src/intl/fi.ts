@@ -26,6 +26,7 @@ export const fi = {
   'gamut.noValueIndicator': '-',
   'gamut.noValueIndicatorColon': '-',
   'gamut.textSeparator': ' ',
+  'gamut.textSeparatorColon': ': ',
   'gamut.loading': 'Sisältöä ladataan',
   'gamut.public.servicesHome': 'Palvelut pääsivu',
   'gamut.public.forms.summary.button.backToServicesHome': 'Takaisin Palvelut pääsivulle',

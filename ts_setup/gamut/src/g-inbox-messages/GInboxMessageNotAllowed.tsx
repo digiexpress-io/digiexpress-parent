@@ -1,11 +1,11 @@
 import React from 'react';
-import { Box, Divider, Typography, useThemeProps } from '@mui/material';
+import { Box, Divider, Paper, Typography, useThemeProps } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
 
 import { useIntl } from 'react-intl';
-import { GInboxMessageNotAllowed as MsgNotAllowed, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 export interface GInboxMessageNotAllowedProps { }
 
@@ -23,7 +23,7 @@ export const GInboxMessageNotAllowed: React.FC<GInboxMessageNotAllowedProps> = (
 
 
   return (
-    <MsgNotAllowed className={classes.msgNotAllowed}>
+    <Paper className={classes.msgNotAllowed}>
       <Box className={classes.msgNotAllowedContentSpacing}>
         <div className={classes.msgNotAllowedContentFlex}>
           <InfoIcon className={classes.msgNotAllowedIconError} />
@@ -43,6 +43,6 @@ export const GInboxMessageNotAllowed: React.FC<GInboxMessageNotAllowedProps> = (
         </div>
 
       </Box>
-    </MsgNotAllowed>
+    </Paper>
   )
 }
