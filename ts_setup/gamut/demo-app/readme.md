@@ -59,6 +59,34 @@ There are two types of logos: **lg** (large) and **sm** (small), and they can be
      }
      ```
 
+
+### ⚠️ Important: Logo Dimensions Matter
+
+**Do not use custom logo dimensions.** The layout—especially on mobile—is sensitive to the height of the logo. If a different size is used, elements like the locale selector, login button, or "logged in as" text may become misaligned, clipped, or overly compressed.
+
+Please **always use the provided dimensions** when overriding the logo variants:
+
+```tsx
+{
+  props: { variant: 'black_lg', img: user_logo_light },
+  style: { width: '200px', height: 'auto' }
+},
+{
+  props: { variant: 'black_sm', img: user_logo_light },
+  style: { width: '150px', height: 'auto' }
+},
+{
+  props: { variant: 'black_sm_mob', img: user_logo_light },
+  style: { width: '120px', height: 'auto' }
+}
+```
+
+- Ensure `height: 'auto'` is preserved to maintain proportional scaling.
+- Avoid specifying arbitrary height or width values that deviate from these defaults.
+
+These values are carefully chosen to ensure proper alignment of the entire AppBar across all screen sizes.
+
+
 ### Step 3: Modify the `components_g` Object
 
 The `components_g` object contains the components and their variants. You can modify any of the properties and styles as required for your project.
