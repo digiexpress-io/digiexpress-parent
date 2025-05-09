@@ -22,6 +22,7 @@ export const sv = {
   'taskDialog.task': 'Uppgiften',
   'taskDialog.category': 'Typ',
   'taskDialog.source': 'Källa',
+  'taskDialog.additionalInfo': 'Tilläggsinformation',
   'task.priority.low': 'Inte bråttom',
   'task.priority.normal': 'Normal',
   'task.priority.high': 'Brådskande',

@@ -24,6 +24,7 @@ export const fi = {
   'taskDialog.task': 'Tehtävä',
   'taskDialog.category': 'Tyyppi',
   'taskDialog.source': 'Lähde',
+  'taskDialog.additionalInfo': 'Lisätieto',
   'task.priority.low': 'Ei kiireellinen',
   'task.priority.normal': 'Normaali',
   'task.priority.high': 'Kiire',
