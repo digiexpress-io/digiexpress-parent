@@ -1,7 +1,6 @@
 import { Popover, styled, generateUtilityClass } from "@mui/material";
 import { GPopoverTopicsProps } from "./GPopoverTopics";
 import composeClasses from "@mui/utils/composeClasses";
-import { margin } from "@mui/system";
 
 export interface GPopoverTopicsClasses {
   root: string;

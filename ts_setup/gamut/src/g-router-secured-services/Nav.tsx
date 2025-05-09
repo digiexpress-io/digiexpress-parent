@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Typography } from '@mui/material';
+import { Breadcrumbs, Link, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -8,7 +8,8 @@ import { useIntl } from 'react-intl';
 import {
   GUserOverviewMenuView,
 } from '../';
-import { GRouterSecuredServicesBreadcrumbs, OwnerState } from './useUtilityClasses';
+import { OwnerState } from './useUtilityClasses';
+import { useUtilityClasses } from './useUtilityClasses';
 
 
 
@@ -21,7 +22,7 @@ export interface GRouterSecuredServicesProps {
 export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const intl = useIntl();
   const { topic } = ownerState;
-
+  const classes = useUtilityClasses();
   const nav = useNavigate();
 
   function handleNav(viewId: GUserOverviewMenuView | undefined) {
@@ -37,7 +38,7 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
 
 
   return (
-    <GRouterSecuredServicesBreadcrumbs>
+    <Breadcrumbs className={classes.servicesBreadcrumbs}>
       <Link onClick={() => handleNav('user-overview')}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
@@ -48,6 +49,6 @@ export const Nav: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
       <Typography>
         {topic?.name}
       </Typography>
-    </GRouterSecuredServicesBreadcrumbs>);
+    </Breadcrumbs>);
 }
 

@@ -1,5 +1,5 @@
 
-import { alpha, generateUtilityClass, styled } from '@mui/material';
+import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { GSecuredServicesSearchProps } from './GSecuredServicesSearch';
 

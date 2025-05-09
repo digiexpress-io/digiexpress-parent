@@ -1,4 +1,4 @@
-import { Breadcrumbs, generateUtilityClass, styled } from "@mui/material";
+import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 
 
@@ -13,6 +13,7 @@ export interface GRouterProductClasses {
   formStartButton: string;
   loginAlert: string;
   formAuthButton: string;
+  productBreadcrumbs: string;
 }
 
 export type GRouterProductClassKey = keyof GRouterProductClasses;
@@ -29,6 +30,9 @@ export const useUtilityClasses = () => {
     formStartButton: ['formStartButton'],
     loginAlert: ['loginAlert'],
     formAuthButton: ['formAuthButton'],
+    productBreadcrumbs: ['productBreadcrumbs'],
+    anonBreadcrumbs: ['anonBreadcrumbs']
+
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -47,7 +51,9 @@ export const GRouterProductRoot = styled("div", {
       styles.productBodyText,
       styles.formStartButton,
       styles.loginAlert,
-      styles.formAuthButton
+      styles.formAuthButton,
+      styles.productBreadcrumbs,
+      styles.anonBreadcrumbs
     ];
   },
 })(({ theme }) => {
@@ -68,7 +74,9 @@ export const GRouterProductRoot = styled("div", {
     '.GRouterProduct-productTitle': {
       textAlign: 'center',
       marginBottom: theme.spacing(3),
-      ...theme.typography.h1
+      ...theme.typography.h1,
+      display: 'flex',
+      flexDirection: 'column'
     },
     '.GRouterProduct-productSubTitle': {
       marginBottom: theme.spacing(1),
@@ -83,23 +91,14 @@ export const GRouterProductRoot = styled("div", {
     '.GRouterProduct-loginAlert': {
       padding: theme.spacing(3)
     },
+    '.GRouterProduct-productBreadcrumbs': {
+    },
+    '.GRouterProduct-anonBreadcrumbs': {
+    },
   }
 });
 
-export const GRouterProductTitle = styled("div", {
-  name: MUI_NAME,
-  slot: 'ProductTitle',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-})(({ theme }) => {
-  return {
-    display: 'flex',
-    flexDirection: 'column'
-  }
-});
+
 
 export const GRouterProductButtons = styled("div", {
   name: MUI_NAME,
@@ -125,33 +124,7 @@ export const GRouterProductButtons = styled("div", {
   }
 });
 
-export const GRouterProductBreadcrumbs = styled(Breadcrumbs, {
-  name: MUI_NAME,
-  slot: 'ProductBreadcrumbs',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-})(({ theme }) => {
-  return {
 
-  }
-});
-
-export const GRouterProductAnonBreadcrumbs = styled(Breadcrumbs, {
-  name: MUI_NAME,
-  slot: 'ProductAnonBreadcrumbs',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-})(({ theme }) => {
-  return {
-
-  }
-});
 
 
 
