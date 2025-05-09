@@ -14,6 +14,7 @@ export const CommsProvider: React.FC<{
   options: { staleTime: number, queryKey: string };
   getSubjects: CommsApi.GetSubjectsFetchGET;
   replyTo: CommsApi.ReplyToFetchPOST;
+  markViewed: CommsApi.ViewSubjectFetchPUT;
 }> = (props) => {
   const data = usePopulateContext(props);
 
@@ -32,17 +33,21 @@ export const CommsProvider: React.FC<{
 
 
   return React.useMemo(() => {
-    const exchanges = data.subjects.filter((c) => c.exchange.length);
-
+    const exchanges = data.subjects.filter((c) => c.exchange.length).length;
+    const unread = data.subjects.filter((c) => !c.isViewed).length;
     const contextValue: CommsApi.CommsContextType = {
       subjects: sortedByDate,
       isPending: data.isPending,
-      subjectStats: Object.freeze({ exchanges: exchanges.length }),
+      subjectStats: Object.freeze({
+        exchanges,
+        unread
+      }),
       getSubject: (id) => data.subjects.find((subject) => subject.id === id),
       toggleSubjectSortOrder,
       sortOrder,
       replyTo: data.replyTo, 
       refresh: data.refresh,
+      markViewed: (subjectId) => props.markViewed(subjectId).then(_data => { })
     };
 
     return (<CommsContext.Provider value={contextValue}>{props.children}</CommsContext.Provider>);

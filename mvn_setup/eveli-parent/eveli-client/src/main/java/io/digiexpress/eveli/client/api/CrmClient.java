@@ -21,11 +21,14 @@ package io.digiexpress.eveli.client.api;
  */
 
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 
 import io.digiexpress.eveli.client.api.AuthClient.Liveness;
 import jakarta.annotation.Nullable;
@@ -43,6 +46,14 @@ public interface CrmClient {
     AUTH_CUSTOMER // normal logged in customer
   }
   
+  
+  @Value.Immutable @JsonSerialize(as = ImmutableCustomerId.class) @JsonDeserialize(as = ImmutableCustomerId.class)
+  interface CustomerId {
+    String getSafeId();
+    String getHolderId();
+  }
+
+  
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerRoles.class) @JsonDeserialize(as = ImmutableCustomerRoles.class)
   interface CustomerRoles {
     String getIdentifier();
@@ -54,6 +65,21 @@ public interface CrmClient {
   interface Customer {
     CustomerType getType();
     CustomerPrincipal getPrincipal();
+    
+    default CustomerId getCustomerId() {
+
+      final var principle = getPrincipal();
+      final var holderId = Optional.ofNullable(principle.getRepresentedId()).orElse(principle.getSsn());
+      
+      
+      return ImmutableCustomerId.builder()
+          .holderId(holderId)
+          .safeId(Hashing
+            .murmur3_128()
+            .hashString(holderId, Charsets.UTF_8)
+            .toString())
+          .build();
+    }
   }
 
   

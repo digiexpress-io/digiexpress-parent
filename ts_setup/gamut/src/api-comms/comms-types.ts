@@ -45,18 +45,23 @@ export declare namespace CommsApi {
     text: string;
   }
 
+  export type ViewSubjectFetchPUT = (subjectId: SubjectId) => Promise<Response>;
   export type GetSubjectsFetchGET = () => Promise<Response>;
   export type ReplyToFetchPOST = (comment: ReplyTo) => Promise<Response>;
 
   export interface CommsContextType {
     subjects: readonly Subject[];
     isPending: boolean;
-    subjectStats: { exchanges: number },
+    subjectStats: {
+      exchanges: number; // number of tasks with any messanging, does not matter if they are viewed or not 
+      unread: number; // number of tasks with messages that have not been viewed
+    },
     getSubject(contractId: SubjectId): Subject | undefined;
 
     toggleSubjectSortOrder(): void;
     sortOrder: SubjectSortOrder;
 
+    markViewed(contractId: SubjectId): Promise<void>; 
     replyTo(comment: ReplyTo): Promise<void>; 
     refresh(): Promise<void>;
   }

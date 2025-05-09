@@ -30,6 +30,7 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
 
@@ -128,5 +129,37 @@ public class GamutClientImpl implements GamutClient {
   @Override
   public UserActionMetaQuery userActionMetaQuery() {
     return new UserActionMetaQueryImpl(envir);
+  }
+
+  @Override
+  public UserActionViewBuilder userActionViewBuilder() {
+
+    return new UserActionViewBuilder() {
+      private String actionId;
+      @Override
+      public UserActionViewBuilder actionId(String actionId) {
+        TaskAssert.notNull(actionId, () -> "actionId can't be null!");
+        this.actionId = actionId;
+        return this;
+      }
+      @Override
+      public Uni<Void> create() {
+        final var action = userActionQuery().findOneById(actionId);
+        if(action.isEmpty()) {
+          return Uni.createFrom().voidItem();        
+        }
+        final var taskId = action.get().getTaskId();
+        if(taskId == null) {
+          return Uni.createFrom().voidItem();
+        }
+        
+        final var customerId = authClient.getCustomer().getCustomerId();
+        return taskClient.taskBuilder()
+            .userId(customerId.getSafeId(), null)
+            .addCustomerCommitViewer(taskId);
+      }
+      
+
+    };
   }
 }

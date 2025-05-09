@@ -48,7 +48,7 @@ public class TaskViewerPublisher {
   public void publicTaskViewedByWorkerEvent(Task task, AuthClient.User user) {
     publisher.publishEvent(new TaskViewedByWorkerEvent(task, user));
   }
-  
+
   @Data
   @AllArgsConstructor
   public static class TaskViewedByWorkerEvent {

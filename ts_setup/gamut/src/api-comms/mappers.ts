@@ -27,6 +27,7 @@ export function mapToSubjectData(data: LegacyProcessApi.Process[], user: IamApi.
       .appendStr(proc.taskStatus ?? '')
       .appendStr(proc.reviewUri ?? '')
       .appendStr(proc.taskCreated ?? '')
+      .appendStr(proc.viewed + '')
       .appendStr(proc.taskUpdated ?? '');
 
     for (const doc of contract.documents) {

@@ -50,6 +50,12 @@ public interface GamutClient {
   CancelUserActionBuilder cancelUserActionBuilder();
   UserActionFillEventBuilder fillEvent();
   UserActionMetaQuery userActionMetaQuery();
+  UserActionViewBuilder userActionViewBuilder();
+  
+  interface UserActionViewBuilder {
+    UserActionViewBuilder actionId(String actionId);
+    Uni<Void> create();
+  }
   
   interface UserActionMetaQuery {
     UserActionMetaQuery locale(String locale);
@@ -96,6 +102,7 @@ public interface GamutClient {
   
   interface UserActionQuery {
     List<UserAction> findAll();
+    Optional<UserAction> findOneById(String id);
     Optional<UserAction> findOneAnonById(String id); // only anon forms can be fetched by id
   }
   

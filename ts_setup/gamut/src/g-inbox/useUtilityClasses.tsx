@@ -49,6 +49,8 @@ export const GInboxRoot = styled("div", {
   return {
 
     '.GInbox-inboxItem': {
+      display: 'flex',
+      flexWrap: 'wrap',
       cursor: 'pointer',
       alignItems: 'center',
       paddingLeft: theme.spacing(2),
@@ -83,7 +85,7 @@ export const GInboxRoot = styled("div", {
     },
     '.GInbox-taskRefLayout': {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
 
     // date positioning
@@ -120,20 +122,4 @@ export const GInboxRoot = styled("div", {
   };
 });
 
-
-
-export const GInboxItem = styled(Grid, {
-  name: MUI_NAME,
-  slot: 'InboxItem',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.inboxItem,
-    ];
-  },
-})(({ theme }) => {
-
-  return {
-
-  };
-});
 

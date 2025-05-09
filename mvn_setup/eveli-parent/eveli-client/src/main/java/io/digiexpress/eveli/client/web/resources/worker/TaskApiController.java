@@ -185,11 +185,11 @@ public class TaskApiController {
     
     if (worker.isAdmin()) {
       return taskClient.queryUnreadUserTasks()
-          .userId(worker.getUsername())
+          .workerId(worker.getUsername())
           .findAll();
     } 
     return taskClient.queryUnreadUserTasks()
-        .userId(worker.getUsername())
+        .workerId(worker.getUsername())
         .requireAnyRoles(worker.getRoles())
         .findAll();
   }

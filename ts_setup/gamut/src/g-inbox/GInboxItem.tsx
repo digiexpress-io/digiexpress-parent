@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
 import { GDate } from '../g-date';
-import { GInboxItem as InboxItem, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useComms } from '../api-comms';
 
 
@@ -34,12 +34,11 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
   const tooltipContent = subTitle && intl.formatMessage({ id: 'gamut.inbox.newMessageFrom' }) + senderName + ": " + props.subTitle;
   const subject = getSubject(id);
+
   const isViewed = subject?.isViewed;
 
-
   return (
-    <InboxItem container className={classes.inboxItem} onClick={() => onClick(id)}>
-
+    <div className={classes.inboxItem} onClick={() => onClick(id)}>
       <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
 
         {isViewed ? <></> : <Tooltip title={tooltipContent}>
@@ -53,8 +52,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
       </Grid>
 
       <Grid item xs={6} sm={3} md={2} lg={2} xl={2} className={classes.inboxItemTitle}>
-          <Typography component='span'>{title}</Typography>
-
+        <Typography component='span'>{title}</Typography>
       </Grid>
 
       <Grid item xs={12} sm={5} md={6} lg={7} xl={7} className={classes.inboxItemAttachments}>
@@ -67,7 +65,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
         <GDate variant='date-only' date={sentAt} />
       </Grid>
 
-    </InboxItem>
+    </div>
 
   )
 }
