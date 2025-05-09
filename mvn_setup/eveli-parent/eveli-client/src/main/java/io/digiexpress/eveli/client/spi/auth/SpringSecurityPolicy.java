@@ -55,6 +55,7 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
   private final static String WORKER_LOGOUT_PATH = "/worker/logout";
   
   private final static String WORKER_PATH = "/worker/rest/api";
+  private final static String TENANT_CONFIG_PATH = "/worker/rest/api/tenant-configs";
   private final static String SITE_PATH = "/portal/site";
   private final static String IAM_PATH = "/portal/secured/iam";
   private final static String ACTIONS_PATH = "/portal/secured/actions";
@@ -73,6 +74,11 @@ public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthori
         path.equals(WORKER_LOGOUT_PATH)) {
       log.debug("Login/logout path, authorized");
       return new AuthorizationDecision(true);    
+    }
+    
+    if (path.equals(TENANT_CONFIG_PATH)) {
+      log.debug("Tenant config, authorized");
+      return new AuthorizationDecision(true);      
     }
 
     // worker side
