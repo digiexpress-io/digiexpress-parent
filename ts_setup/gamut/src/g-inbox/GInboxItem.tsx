@@ -40,7 +40,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   return (
     <InboxItem container className={classes.inboxItem} onClick={() => onClick(id)}>
 
-      <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
+      <Grid item xs={6} sm={2} md={2} lg sx={{ flexGrow: 1 }} className={classes.taskRefLayout}>
 
         {isViewed ? <></> : <Tooltip title={tooltipContent}>
           <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
@@ -57,13 +57,15 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
 
       </Grid>
 
-      <Grid item xs={12} sm={5} md={6} lg={7} xl={7} className={classes.inboxItemAttachments}>
+      <Grid item xs={12} sm={5} md={6} lg sx={{ flexGrow: 1 }} className={classes.inboxItemAttachments}>
         {props.children}
       </Grid>
 
 
-      <Grid item xs={12} sm={2} md={2} lg={1} xl={1} className={classes.inboxItemSentAt}>
-        <Typography variant='caption'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography>
+      <Grid item xs={12} sm={2} md={2} lg sx={{ flexGrow: 0, flexShrink: 0, flexBasis: 'auto' }} className={classes.inboxItemSentAt}>
+        <Typography variant='caption' sx={{ whiteSpace: 'nowrap' }}>
+          {intl.formatMessage({ id: 'gamut.forms.lastModified' })}
+        </Typography>
         <GDate variant='date-only' date={sentAt} />
       </Grid>
 

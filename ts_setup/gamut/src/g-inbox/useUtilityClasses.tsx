@@ -89,14 +89,22 @@ export const GInboxRoot = styled("div", {
     // date positioning
     '.GInbox-inboxItemSentAt': {
       display: 'flex',
-      [theme.breakpoints.up('sm')]: {
-        alignItems: 'flex-end',
-        flexDirection: 'column'
-      },
-      [theme.breakpoints.down('md')]: {
+      width: '100%',
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'row', 
         justifyContent: 'space-between',
-      }
+        alignItems: 'center',
+      }, 
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+      },
+      [theme.breakpoints.up('md')]: {
+        justifyContent: 'space-between',
+        textAlign: 'right',
+      },
     },
+
     '.GInbox-inboxItemAttachments': {
       display: 'flex',
       [theme.breakpoints.up('sm')]: {
