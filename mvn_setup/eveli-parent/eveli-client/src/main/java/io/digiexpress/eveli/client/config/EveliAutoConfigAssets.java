@@ -23,11 +23,11 @@ package io.digiexpress.eveli.client.config;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,7 +65,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 
-@DependsOn(EveliAutoConfigAssets.BEAN_NAME)
+@ConditionalOnBean(name = EveliAutoConfigAssets.BEAN_NAME)
 @Configuration
 @Slf4j
 public class EveliAutoConfigAssets {

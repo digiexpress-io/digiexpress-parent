@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.app;
 
+import java.io.IOException;
+
 /*-
  * #%L
  * eveli-app
@@ -24,9 +26,11 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,6 +41,7 @@ import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
 import io.digiexpress.eveli.client.config.EveliProps;
 import io.digiexpress.eveli.client.config.EveliPropsAssets;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
+import io.digiexpress.eveli.envir.api.ExternalDeploymentProvider;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
 import io.vertx.pgclient.PgConnectOptions;
@@ -45,6 +50,17 @@ import io.vertx.sqlclient.PoolOptions;
 
 @Configuration
 public class AppConfig {
+  
+  /**
+  @Value("classpath:exported-test-prod.json")
+  Resource prodDeployment;
+  
+  @Bean
+  public ExternalDeploymentProvider classpathExternalDeploymentProvider(ObjectMapper om) throws IOException {
+    return new ClasspathExternalDeploymentProvider(prodDeployment.getInputStream(), om);
+  }
+  */
+  
   @Bean
   public ThenaMqClient mqClient2(EveliPropsMq props, EveliPropsDbResolved dbConfig) {
     final var sslMode = SslMode.ALLOW;
