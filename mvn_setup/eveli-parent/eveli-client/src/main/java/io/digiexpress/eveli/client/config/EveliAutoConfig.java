@@ -43,7 +43,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.FeedbackClient;
-import io.digiexpress.eveli.client.api.ImmutableTenantConfig;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
@@ -62,11 +61,11 @@ import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
+import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.thena.storesql.DbStateSqlImpl;
-import io.smallrye.mutiny.Uni;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
@@ -232,23 +231,15 @@ public class EveliAutoConfig {
     return new ProcessClientImpl(processJPA, ts, envir);
   }
 
+  
   @Bean
-  public TenantApiController tenantApiController() {
-    final TenantConfigClient client = new TenantConfigClient() {
-      @Override
-      public TenantConfigClientConfigQuery createConfigQuery() {
-        return new TenantConfigClientConfigQuery() {
-          
-          @Override
-          public Uni<TenantConfig> getOne() {
-            return Uni.createFrom().item(ImmutableTenantConfig
-                .builder()
-                .build());
-          }
-        };
-      }
-    };
-    return new TenantApiController(client);
+  @ConditionalOnMissingBean
+  public TenantConfigClient tenantConfigClient(EveliProps props) {
+    return new TenantConfigClientProps(props);
+  }  
+  @Bean
+  public TenantApiController tenantApiController(TenantConfigClient tenantClient, EveliProps props) {
+    return new TenantApiController(tenantClient);
   }
 
 }

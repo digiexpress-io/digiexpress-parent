@@ -19,6 +19,7 @@ import { NewPublicationDialog } from './NewPublicationDialog';
 import { UploadPublicationDialog } from './UploadPublicationDialog';
 import { EveliPermissions } from '@/eveli-permissions';
 import { CancelButton } from '@/eveli-styles';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 const DeploymentInfo: React.FC<PublicationApi.Publication> = ({ description }) => {
   const [open, setOpen] = useState(false);
@@ -171,20 +172,22 @@ export const PublicationsTable: React.FC = () => {
             <FormattedMessage id='publicationsTable.title' />
           </Typography>
           <Box display='flex' gap={1}>
-            <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
-              <Tooltip title={intl.formatMessage({ id: 'publicationsTable.addButton' })}>
-                <IconButton onClick={() => setNewDialogOpen(true)}>
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
-            </EveliPermissions>
-            <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
-              <Tooltip title={intl.formatMessage({ id: 'publicationsTable.uploadButton' })}>
-                <IconButton onClick={() => setUploadDialogOpen(true)}>
-                  <FileUploadIcon />
-                </IconButton>
-              </Tooltip>
-            </EveliPermissions>
+            <EveliTenantFeatureEnabled id='PUBLICATION_UPDATE'>
+              <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+                <Tooltip title={intl.formatMessage({ id: 'publicationsTable.addButton' })}>
+                  <IconButton onClick={() => setNewDialogOpen(true)}>
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+              </EveliPermissions>
+              <EveliPermissions id='CREATE_EVELI_PUBLICATION'>
+                <Tooltip title={intl.formatMessage({ id: 'publicationsTable.uploadButton' })}>
+                  <IconButton onClick={() => setUploadDialogOpen(true)}>
+                    <FileUploadIcon />
+                  </IconButton>
+                </Tooltip>
+              </EveliPermissions>
+            </EveliTenantFeatureEnabled>
           </Box>
         </Box>
         <WithTableStyles

@@ -82,9 +82,17 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
         if(predefined.isPresent() && (predefined.get().getId().equals(id) || predefined.get().getName().equals(id))) {
           return Uni.createFrom().item(predefined.get());
         }
-        
+
         final var config = ctx.getConfig();
+        if(ctx.isExternalProviderOnly()) {
+          throw DocStoreException.builder("GET_ONE_DEPLOYMENT_BY_ID_FAIL")
+          .add(config)
+          .add((m) -> m.addArgs(JsonObject.of("deploymentId", id).encode()))
+          .build();
+        }
+
         return config.accept(this).onItem().transform(e -> {
+          
           if(e.size() != 1) {
             throw DocStoreException.builder("GET_ONE_DEPLOYMENT_BY_ID_FAIL")
               .add(config)
@@ -105,6 +113,14 @@ public class DeploymentQueryImpl implements DeploymentQuery, DocObjectsVisitor<L
           final var isIncludeExternal = predefined.isPresent() && (this.ids.isEmpty() || this.ids.contains(predefined.get().getId()));
           
           final var config = ctx.getConfig();
+          if(ctx.isExternalProviderOnly()) {
+            if(isIncludeExternal) {
+              return Uni.createFrom().item(Arrays.asList(predefined.get()));
+            }
+            return Uni.createFrom().item(Collections.emptyList());
+          }
+          
+          
           return config.accept(this)
               .onItem().transform(e -> {
                 

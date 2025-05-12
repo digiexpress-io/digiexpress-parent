@@ -197,17 +197,19 @@ public class AssetsPublicationController {
       .toList();
     
     return Multi.createFrom().items(workflows.stream())
-        .onItem().transform(this::getFormIdById)
-        .collect().asList();
+        .onItem().transform(form -> Optional.of(getFormIdById(form)))
+        .onFailure().recoverWithItem(() -> Optional.<Form>empty())
+        .collect().asList().onItem().transform(items -> items.stream().filter(f -> f.isPresent()).map(e -> e.get()).toList());
   }
 
   private Form getFormIdById(final Entity<Workflow> stencilService) {
     try {
       return dialobClient.getFormById(stencilService.getBody().getFormId());
     } catch(Exception e) {
-      throw new DialobFormNotFoundException(
-          "Can't resolve for by tag or form name, will try by form id for topic: " + 
-          JsonObject.mapFrom(stencilService).encodePrettily());
+      final var msg = "Can't resolve for by tag or form name, will try by form id for topic: " + 
+          JsonObject.mapFrom(stencilService).encodePrettily();
+      log.error(msg + e.getMessage(), e);
+      throw new DialobFormNotFoundException(msg);
     }
   }
   

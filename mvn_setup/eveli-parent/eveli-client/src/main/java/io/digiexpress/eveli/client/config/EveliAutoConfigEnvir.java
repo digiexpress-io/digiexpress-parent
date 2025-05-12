@@ -34,6 +34,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.TenantConfigClient;
+import io.digiexpress.eveli.client.api.TenantConfigClient.TenantConfig;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
@@ -65,7 +67,8 @@ public class EveliAutoConfigEnvir {
       AuthClient authClient,
       Optional<ExternalDeploymentProvider> depProvider,
       ApplicationContext context,
-      EveliPropsEnvir envirProps) {
+      EveliPropsEnvir envirProps,
+      TenantConfigClient tenantConfigClient) {
     
     final boolean isDev = true;
     final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
@@ -74,16 +77,18 @@ public class EveliAutoConfigEnvir {
         return Uni.createFrom().item(Optional.empty());
       }
     });
-    final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient);
-    final EveliRuntimeCache cache = cache(envirProps);
+    final var tenantConfig = tenantConfigClient.createConfigQuery().getOne().await().atMost(Duration.ofMinutes(5));
+    final EveliEnvirStore store = envirStore(pool, externalProvider, objectMapper, authClient, tenantConfig);
+    
+    final var cache = cache(envirProps);
     final var hdesClientConfig = hdesConfig(objectMapper, context);
     final var envir = new EveliEnvirClientImpl(store, hdesClientConfig, dialobClient, cache, isDev);
     
+    // create db only if required by tenant config
+    if(!tenantConfig.isExternalDeployment()) {
+      store.query().createIfNot().await().atMost(Duration.ofMinutes(5));
     
-    store.query()
-      .createIfNot()
-      .await().atMost(Duration.ofMinutes(5));
-    
+    }
     return envir;
   }
 
@@ -104,10 +109,11 @@ public class EveliAutoConfigEnvir {
       io.vertx.mutiny.pgclient.PgPool pool, 
       ExternalDeploymentProvider externalProvider, 
       ObjectMapper objectMapper, 
-      AuthClient authClient) {
+      AuthClient authClient,
+      TenantConfig tenantConfig) {
     
     return EveliEnvirStore
-      .builder(externalProvider)
+      .builder(externalProvider, tenantConfig.isExternalDeployment())
       .repoName("envir")
       .pgPool(pool)
       .objectMapper(objectMapper)
