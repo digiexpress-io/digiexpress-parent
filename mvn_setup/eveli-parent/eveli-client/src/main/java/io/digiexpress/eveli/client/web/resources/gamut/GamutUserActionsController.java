@@ -139,6 +139,11 @@ public class GamutUserActionsController {
     }
   }
   
+  @PutMapping(value="{actionId}/views")
+  public Uni<ResponseEntity<?>> markUserActionViewed(@PathVariable("actionId") String actionId) {
+    return gamutClient.userActionViewBuilder().actionId(actionId).create().onItem().transform(junk -> ResponseEntity.ok().build());
+  }
+  
   @PostMapping(value="{actionId}/messages")
   public ResponseEntity<UserMessage> createMessage(@PathVariable("actionId") String actionId, @RequestBody ReplayToInit raw) {
     try {
@@ -202,8 +207,6 @@ public class GamutUserActionsController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
   }
-  
-  
 
   @GetMapping
   public Uni<ResponseEntity<?>> kindOfCreateActionOrGet(

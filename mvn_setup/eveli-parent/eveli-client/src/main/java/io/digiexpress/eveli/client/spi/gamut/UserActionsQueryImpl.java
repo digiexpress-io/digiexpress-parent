@@ -23,6 +23,7 @@ package io.digiexpress.eveli.client.spi.gamut;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.CrmClient.CustomerId;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
@@ -57,11 +59,28 @@ public class UserActionsQueryImpl implements UserActionQuery {
   private final AttachmentCommands attachmentsCommands;
   private final Duration atMost = Duration.ofSeconds(30);
   
+  
+  @Override
+  public Optional<UserAction> findOneById(String id) {
+    final var customer = authClient.getCustomer().getCustomerId();
+    final List<ProcessInstance> processes = hdesCommands.queryInstances()
+        .findOneById(id).map(e -> Arrays.asList(e))
+        .orElse(Collections.emptyList());
+    final var tasks = visitTasks(processes, customer);
+    final var auth = visitAuthorization();
+    
+    return processes.stream()
+        .filter(proc -> customer.getHolderId().equals(proc.getUserId()))
+        .filter(process -> isAuthorizedProcess(process, auth))
+        .map(process -> visitUserAction(process, tasks))
+        .findFirst();
+  }
+  
   @Override
   public List<UserAction> findAll() {
-    final var ssn = visitUserId();
-    final var processes = hdesCommands.queryInstances().findAllByUserId(ssn);
-    final var tasks = visitTasks(processes, ssn);
+    final var customer = authClient.getCustomer().getCustomerId();
+    final var processes = hdesCommands.queryInstances().findAllByUserId(customer.getHolderId());
+    final var tasks = visitTasks(processes, customer);
     final var auth = visitAuthorization();
     
     return processes.stream()
@@ -84,15 +103,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .map(process -> visitUserAction(process, tasks))
         .findFirst();
   }
-  
-  private String visitUserId() {
-    final var customer = authClient.getCustomer().getPrincipal();
-    if(customer.getRepresentedId() != null) {
-      return customer.getRepresentedId();
-    }
-    return customer.getSsn();
-  }
-  
+
   private AttachmentsContext visitAttachments(ProcessInstance process) {
     final List<AttachmentCommands.Attachment> processAttachments = attachmentsCommands.query().processId(process.getId().toString());
     final List<AttachmentCommands.Attachment> taskAttachments = process.getTaskId() == null ? 
@@ -115,9 +126,9 @@ public class UserActionsQueryImpl implements UserActionQuery {
         .build();
   }
   
-  private TasksContext visitTasks(List<ProcessInstance> processes, String userId) {
+  private TasksContext visitTasks(List<ProcessInstance> processes, CustomerId userId) {
     final var taskIds = processes.stream().filter(t -> t.getTaskId() != null).map(t -> t.getTaskId()).toList();
-    final var unreadTasks = taskClient.queryUnreadUserTasks().userId(userId).findAll().await().atMost(atMost);
+    final var unreadTasks = taskClient.queryUnreadUserTasks().customerId(userId.getSafeId()).findAll().await().atMost(atMost);
     final var allTasks = taskClient.queryTasks().findAll(taskIds).await().atMost(atMost);    
     
     return new TasksContext(
@@ -162,8 +173,11 @@ public class UserActionsQueryImpl implements UserActionQuery {
       }
     }
     
-    final var viewed = userMessages.isEmpty() || tasks.getUnreadTaskIds().contains(task.getId());
-    return new UserMessagesContext(userMessages, viewed, lastUpdate);
+    final var isMessagingDisabled = userMessages.isEmpty();
+    final var isNewMessages = tasks.getUnreadTaskIds().contains(task.getId());
+    
+    final var isViewed = isMessagingDisabled || !isNewMessages;
+    return new UserMessagesContext(userMessages, isViewed, lastUpdate);
   }
   
 
@@ -237,4 +251,5 @@ public class UserActionsQueryImpl implements UserActionQuery {
     private final boolean viewed;
     private final OffsetDateTime updated;
   }
+
 }

@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { useIntl } from 'react-intl';
 
 import { GDate } from '../g-date';
-import { GInboxMessageItem, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 
 
 
@@ -29,7 +29,7 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
 
 
   return (
-    <GInboxMessageItem className={classes.msgItem}>
+    <div className={classes.msgItem}>
       <Grid2>
         <Grid2 size={{ xs: 12, sm: 9, md: 9, lg: 9, xl: 9 }} className={classes.msgItemSender}>
           {isMyMessage ? <Avatar className={classes.msgItemMyMessage}>{firstInitial}</Avatar> :
@@ -51,7 +51,7 @@ export const GInboxMessage: React.FC<GInboxMessageProps> = (initProps) => {
           </Typography>
         </Grid2>
       </Grid2>
-    </GInboxMessageItem>
+    </div>
   )
 }
 

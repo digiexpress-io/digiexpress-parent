@@ -137,7 +137,7 @@ export const GUserOverviewMenu: React.FC<GUserOverviewMenuProps> = (initProps) =
       <Item id='requests-in-progress' onClick={handleItemClick} endAdornment={<FormCount total={offers.length} />} ownerState={ownerState} active={active} />
       <Item id='awaiting-decision' onClick={handleItemClick} endAdornment={<FormCount total={contractStats.awaitingDecision} />} ownerState={ownerState} active={active} />
       <Item id='with-decision' onClick={handleItemClick} endAdornment={<FormCount total={contractStats.decided} />} ownerState={ownerState} active={active} />
-      <Item id='inbox' onClick={handleItemClick} endAdornment={<FormCount total={subjectStats.exchanges} />} ownerState={ownerState} active={active} />
+      <Item id='inbox' onClick={handleItemClick} endAdornment={<FormCount total={subjectStats.unread} />} ownerState={ownerState} active={active} />
       <Item id='bookings' onClick={handleItemClick} endAdornment={<FormCount total={bookingStats.total} />} ownerState={ownerState} active={active} />
 
       {iam.authType === 'REP_PERSON' && (

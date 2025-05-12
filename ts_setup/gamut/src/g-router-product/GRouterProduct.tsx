@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar, Alert, AlertTitle } from '@mui/material';
+import { Container, Link, Typography, Button, List, ListItem, ListItemIcon, ListItemText, Toolbar, Alert, AlertTitle, Breadcrumbs } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SaveIcon from '@mui/icons-material/Save';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
@@ -20,8 +20,7 @@ import { useIntl } from 'react-intl';
 import { SiteApi } from '../api-site';
 
 import {
-  GRouterProductAnonBreadcrumbs, GRouterProductBreadcrumbs,
-  GRouterProductRoot, GRouterProductTitle, GRouterProductButtons,
+  GRouterProductRoot, GRouterProductButtons,
   useUtilityClasses
 } from './useUtilityClasses';
 import { GAuthFormStart } from '../g-auth-form-start';
@@ -169,7 +168,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   const userName = user?.firstName + " " + user?.lastName || user?.representedCompany?.name || user?.representedPerson?.name || 'no user name';
 
   return (
-    <GRouterProductTitle>
+    <div className={classes.productTitle}>
       <Typography className={classes.productTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.welcome' })}</Typography>
       <Typography className={classes.productSubTitle}>{intl.formatMessage({ id: 'gamut.forms.filling.start' })}{intl.formatMessage({ id: 'gamut.textSeparator' })}{topicLink?.name ?? "-"}</Typography>
 
@@ -199,7 +198,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
           </ListItem>
         )}
       </List>
-    </GRouterProductTitle>
+    </div>
   )
 }
 
@@ -208,7 +207,7 @@ const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
   const { topic, topicLink } = props.ownerState;
   const intl = useIntl();
   const nav = useNavigate();
-
+  const classes = useUtilityClasses();
 
   function handleUserOverview() {
     nav({
@@ -226,7 +225,7 @@ const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
   }
 
   return (
-    <GRouterProductBreadcrumbs>
+    <Breadcrumbs className={classes.productBreadcrumbs}>
       <Link onClick={handleUserOverview}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.userOverview.home' })}
@@ -240,7 +239,7 @@ const ProductBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
       <Typography>
         {topicLink?.name ?? "-"}
       </Typography>
-    </GRouterProductBreadcrumbs>)
+    </Breadcrumbs>)
 }
 
 const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
@@ -248,6 +247,7 @@ const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
   const intl = useIntl();
   const nav = useNavigate();
   const { locale } = useLocale();
+  const classes = useUtilityClasses();
 
   function handleHomePage(locale: string) {
     nav({
@@ -257,7 +257,7 @@ const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
     })
   }
   return (
-    <GRouterProductAnonBreadcrumbs>
+    <Breadcrumbs className={classes.anonBreadcrumbs}>
       <Link onClick={() => handleHomePage(locale)}>
         <HomeIcon />
         {intl.formatMessage({ id: 'gamut.public.servicesHome' })}
@@ -268,5 +268,5 @@ const AnonBreadcrumbs: React.FC<GRouterProductOwnerState> = (props) => {
       <Typography>
         {topicLink?.name ?? "-"}
       </Typography>
-    </GRouterProductAnonBreadcrumbs>)
+    </Breadcrumbs>)
 }

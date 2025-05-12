@@ -7,7 +7,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ForkRightIcon from '@mui/icons-material/KeyboardArrowDown';
+import ForkRightIcon from '@mui/icons-material/ForkRight';
 
 import { FormattedMessage, useIntl } from "react-intl";
 import fileDownload from 'js-file-download'
@@ -278,7 +278,7 @@ const RelRow: React.FC<{ release: Release }> = ({ release }) => {
       <FormattedMessage id="release.branch.creating" values={{ name: branchName }} />,
       { persist: true, variant: 'info' }
     );
-    service.create().branch([command])
+    service.withBranchName(branchName).create().branch([command])
       .then((data) => {
         actions.handleBranchUpdate(branchName);
         actions.handleLoadSite(data);

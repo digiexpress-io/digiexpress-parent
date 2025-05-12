@@ -26,6 +26,7 @@ export const en = {
   'taskDialog.task': 'Task',
   'taskDialog.category': 'Type',
   'taskDialog.source': 'Source',
+  'taskDialog.additionalInfo': 'Additional information',
   'task.priority.low': 'Low',
   'task.priority.normal': 'Normal',
   'task.priority.high': 'High',

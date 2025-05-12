@@ -1,4 +1,4 @@
-import { Breadcrumbs, generateUtilityClass, styled } from "@mui/material";
+import { generateUtilityClass, styled } from "@mui/material";
 import composeClasses from "@mui/utils/composeClasses";
 import { SearchApi } from '../api-search';
 import { SiteApi } from '../api-site';
@@ -77,55 +77,19 @@ export const GRouterSecuredServicesRoot = styled("div", {
       border: `1px solid ${theme.palette.primary.main}`,
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
-    }
-  }
-});
-
-export const GRouterSecuredServicesFilterButtons = styled("div", {
-  name: MUI_NAME,
-  slot: 'FilterButtons',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-})(({ theme }) => {
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    padding: theme.spacing(1),
-  }
-}
-);
-
-export const GRouterSecuredServicesSearchResults = styled("div", {
-  name: MUI_NAME,
-  slot: 'SearchResults',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-    ];
-  },
-})(({ theme }) => {
-  return {
-    gap: theme.spacing(1),
-    padding: theme.spacing(1),
-  }
-}
-);
-
-
-export const GRouterSecuredServicesBreadcrumbs = styled(Breadcrumbs, {
-  name: MUI_NAME,
-  slot: 'ServicesBreadcrumbs',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root,
-    ];
-  },
-})(({ theme }) => {
-  return {
+    },
+    '& .GRouterSecuredServices-searchResults': {
+      gap: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
+    '& .GRouterSecuredServices-searchFilterButtons': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(1),
+      padding: theme.spacing(1),
+    },
 
   }
 });
+
+

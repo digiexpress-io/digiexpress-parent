@@ -28,7 +28,9 @@ import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
 import io.resys.thena.api.actions.GrimCommitActions.ModifyOneMission;
 import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimMergeObject.MergeMission;
+import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -36,12 +38,19 @@ import lombok.RequiredArgsConstructor;
 public class AddCustomerCommitViewer implements TaskStoreConfig.MergeTaskVisitor<TaskClient.Task> {
   private final String userId;
   private final String taskId;
+  private final QueryEnvelopeList<GrimCommitViewer> views;
   
   public void modify(MergeMission merge) {
 
     merge
     // change is viewed by worker who created it
-    .addViewer(viewer -> viewer.userId(userId).usedFor(TaskMapper.VIEWER_CUSTOMER).build())
+    .addViewer(viewer -> {
+      if(views.getObjects().stream().filter(view -> view.getCommitId().equals(viewer.getCurrentTreeCommit())).count() > 1) {
+        viewer.skipViewer().build();
+        return;
+      }
+      viewer.userId(userId).usedFor(TaskMapper.VIEWER_CUSTOMER).currentTreeCommit().build();
+    })
     .build();
   }
   

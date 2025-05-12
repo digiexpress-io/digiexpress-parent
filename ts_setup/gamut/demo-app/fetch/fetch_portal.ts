@@ -46,7 +46,18 @@ export function createSubjectFetch(url: (string | undefined) = '/portal/secured/
     });
     return response;
   }
-  return { fetchGet, fetchPost };
+
+
+  const fetchPut: CommsApi.ViewSubjectFetchPUT = async (subjectId) => {
+    // await new Promise((res) => setTimeout(() => { }, 2000));
+    const response = await window.fetch(url + '/' + subjectId + '/views', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: undefined
+    });
+    return response;
+  }
+  return { fetchGet, fetchPost, fetchPut };
 }
 
 

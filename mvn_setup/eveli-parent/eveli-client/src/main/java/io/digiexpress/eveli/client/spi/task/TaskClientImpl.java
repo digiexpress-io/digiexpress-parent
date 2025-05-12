@@ -152,8 +152,19 @@ public class TaskClientImpl implements TaskClient {
       public Uni<Void> addCustomerCommitViewer(String taskId) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
         TaskAssert.notEmpty(taskId, () -> "taskId can't be empty!");
-        return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId))
-            .onItem().transformToUni((task) -> Uni.createFrom().voidItem());
+        final var config = ctx.getConfig();
+        
+        return config.getClient().grim(ctx.getConfig().getTenantName())
+          .find().commitViewersQuery().createdIn(Duration.ofHours(1))
+          .usedBy(userId)
+          .usedFor(TaskMapper.VIEWER_CUSTOMER)
+          .missionId(taskId)
+          .findAll().onItem().transformToUni(views -> {
+            return ctx.getConfig().accept(new AddCustomerCommitViewer(userId, taskId, views))
+                .onItem().transformToUni((task) -> Uni.createFrom().voidItem());            
+          });
+        
+
       }
       @Override
       public Uni<Task> transferTask(String taskId, TransferTaskCommand command) {
@@ -202,11 +213,17 @@ public class TaskClientImpl implements TaskClient {
   @Override
   public QueryUnreadUserTasks queryUnreadUserTasks() {
     return new QueryUnreadUserTasks() {
-      private String userId;
+      private String workerId;
+      private String customerId;
       private final List<String> roles = new ArrayList<>();
       @Override
-      public QueryUnreadUserTasks userId(String userId) {
-        this.userId = userId;
+      public QueryUnreadUserTasks workerId(String workerId) {
+        this.workerId = workerId;
+        return this;
+      }
+      @Override
+      public QueryUnreadUserTasks customerId(String customerId) {
+        this.customerId = customerId;
         return this;
       }
       @Override
@@ -217,9 +234,14 @@ public class TaskClientImpl implements TaskClient {
       }
       @Override
       public Uni<List<String>> findAll() {
-        TaskAssert.notEmpty("userId", () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(userId, roles, TaskMapper.VIEWER_WORKER));
+        TaskAssert.isTrue(workerId != null || customerId != null, () -> "workerId or customerId both can't be empty!");
+        
+        if(customerId != null) {
+          return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(customerId, roles, TaskMapper.VIEWER_CUSTOMER));          
+        }
+        return ctx.getConfig().accept(new FindAllUnreadTasksVisitor(workerId, roles, TaskMapper.VIEWER_WORKER));
       }
+
     };
   }
   @Override

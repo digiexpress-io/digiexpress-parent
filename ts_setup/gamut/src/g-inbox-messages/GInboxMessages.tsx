@@ -45,12 +45,24 @@ export const GInboxMessages: React.FC<GInboxMessagesProps> = (initProps) => {
   const { getSubject } = useComms();
   const { getLocalisedOfferName } = useOffers();
   const { site } = useSite();
-  const { replyTo } = useComms();
+  const { replyTo, markViewed, refresh } = useComms();
   const { getContract } = useContracts();
 
-  const subject = getSubject(props.subjectId);
+  const { subjectId } = props;
+  const subject = getSubject(subjectId);
+  const isViewed = !!subject?.isViewed;
   const contract = subject ? getContract(subject.contractId) : undefined;
   const offerName = site && contract ? getLocalisedOfferName(site, contract.offer.name) : '';
+
+
+
+  React.useLayoutEffect(() => {
+    if (isViewed) {
+      return;
+    }
+    markViewed(subjectId).then(() => refresh());
+  }, [isViewed, subjectId]);
+
 
   if (!subject || !site || !contract) {
     console.error("no site / contract", { subject, site, contract });

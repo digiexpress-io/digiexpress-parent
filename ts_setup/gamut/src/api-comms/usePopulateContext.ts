@@ -35,7 +35,9 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
     queryKey: [queryKey],
     queryFn: () => getSubjects()
       .then(data => data.json())
-      .then((data: LegacyProcessApi.Process[]) => data),
+      .then((data: LegacyProcessApi.Process[]) => {
+        return data;
+      }),
   });
 
   const subjectData = mapToSubjectData(processes ?? [], user);

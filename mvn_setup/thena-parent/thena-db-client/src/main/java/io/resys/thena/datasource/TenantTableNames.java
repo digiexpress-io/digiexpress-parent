@@ -50,6 +50,18 @@ public abstract class TenantTableNames {
   public abstract String getGrimObjectiveGoal();
   public abstract String getGrimRemark();
   
+  // file-system structures
+  public abstract String getFsCommit();
+  public abstract String getFsCommitTree();
+  public abstract String getFsDirentAssignment();
+  public abstract String getFsDirentData();
+  public abstract String getFsDirent();
+  public abstract String getFsDirentRef();
+  public abstract String getFsDirentLabel();
+  public abstract String getFsDirentLink();
+  public abstract String getFsDirentRemark();
+  
+  
   // git structures
   public abstract String getRefs();
   public abstract String getTags();
@@ -124,6 +136,17 @@ public abstract class TenantTableNames {
         .grimObjectiveGoal( prefix + DEFAULTS.getGrimObjectiveGoal())
         .grimRemark(        prefix + DEFAULTS.getGrimRemark())
         
+        
+        .fsCommit(            prefix + DEFAULTS.getFsCommit())
+        .fsCommitTree(        prefix + DEFAULTS.getFsCommitTree())
+        .fsDirentAssignment(  prefix + DEFAULTS.getFsDirentAssignment())
+        .fsDirentData(        prefix + DEFAULTS.getFsDirentData())
+        .fsDirent(            prefix + DEFAULTS.getFsDirent())
+        .fsDirentRef(         prefix + DEFAULTS.getFsDirentRef())
+        .fsDirentLabel(       prefix + DEFAULTS.getFsDirentLabel())
+        .fsDirentLink(        prefix + DEFAULTS.getFsDirentLink())
+        .fsDirentRemark(      prefix + DEFAULTS.getFsDirentRemark())
+        
         .build();
   }
   
@@ -155,6 +178,16 @@ public abstract class TenantTableNames {
         
         .orgCommits("org_commits")
         .orgCommitTrees("org_commit_trees")
+        
+        .fsCommit("fs_commits")
+        .fsCommitTree("fs_commit_trees")
+        .fsDirentAssignment("fs_dirent_assignment")
+        .fsDirentData("fs_dirent_data")
+        .fsDirent("fs_dirents")
+        .fsDirentLabel("fs_dirent_labels")
+        .fsDirentLink("fs_dirent_links")
+        .fsDirentRemark("fs_dirent_remarks")
+        .fsDirentRef("fs_dirent_ref")
         
         .grimAssignment("grim_assignment")
         .grimCommit("grim_commit")

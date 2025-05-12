@@ -26,6 +26,7 @@ export const sv = {
   'gamut.noValueIndicator': '-',
   'gamut.noValueIndicatorColon': '-',
   'gamut.textSeparator': ' ',
+  'gamut.textSeparatorColon': ': ',
   'gamut.loading': 'Ditt innehåll är på väg',
   'gamut.public.servicesHome': 'Tjänster hem',
   'gamut.public.forms.summary.button.backToServicesHome': 'Tillbaka till Tjänster Hem',

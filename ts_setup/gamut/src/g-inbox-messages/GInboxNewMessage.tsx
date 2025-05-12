@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, TextField, Typography, useThemeProps } from '@mui/material';
+import { Button, Paper, TextField, Typography, useThemeProps } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 import { useIntl } from 'react-intl';
-import { GInboxNewMessageItem, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
+import { MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { ContractApi, useContracts } from '../api-contract';
 
 export interface GInboxNewMessageProps {
@@ -59,7 +59,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
 
 
   return (
-    <GInboxNewMessageItem className={classes.newMsgItem}>
+    <Paper className={classes.newMsgItem}>
       <div className={classes.newMsgTitle}>
         {props.senderName ?
           <Typography className={classes.newMsgSenderName}>
@@ -69,7 +69,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           <Typography className={classes.newMsgSenderName}>
             {intl.formatMessage({ id: 'gamut.inbox.newMessage.sendNew' })}
           </Typography>}
-        <Typography>{intl.formatMessage({ id: 'gamut.inbox.newMessage.replyingTo.subject' })}{props.offerName}</Typography>
+        <Typography>{intl.formatMessage({ id: 'gamut.inbox.newMessage.replyingTo.subject' })}{intl.formatMessage({ id: 'gamut.textSeparatorColon' })}{props.offerName}</Typography>
       </div>
 
       <TextField multiline minRows={ownerState.minRows}
@@ -96,7 +96,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           <Typography>{intl.formatMessage({ id: 'gamut.buttons.cancel' })}</Typography>
         </Button>
       </div>
-    </GInboxNewMessageItem>
+    </Paper>
   )
 }
 

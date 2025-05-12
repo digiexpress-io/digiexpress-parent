@@ -31,6 +31,7 @@ gamut.bookings,,Calendar reservations,Kalenteri varaukset,Kalenderreservationer,
 gamut.noValueIndicator,Use dash (-) only,-,-,-,-,-
 gamut.noValueIndicatorColon,Use dash (-) only,-,-,-,-,-
 gamut.textSeparator,Empty space only, , , ,,
+gamut.textSeparatorColon,Colon plus space used to separate text items,: ,: ,: ,
 gamut.loading,,Your content is on the way,Sisältöä ladataan,Ditt innehåll är på väg,Kandungan anda sedang dalam perjalanan,Učitavanje sadržaja
 // ------------------- GAMUT PUBLIC ----------------------,,,,#VALUE!,,
 gamut.public.servicesHome,,Services home,Palvelut pääsivu,Tjänster hem,Perkhidmatan rumah,Usluge

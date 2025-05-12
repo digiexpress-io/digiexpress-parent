@@ -1,4 +1,4 @@
-import { Paper, alpha, generateUtilityClass, lighten, styled } from '@mui/material';
+import { alpha, generateUtilityClass, lighten, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
@@ -132,7 +132,6 @@ export const GInboxMessagesRoot = styled("div", {
     '.GInboxMessages-msgNotAllowed': {
       paddingLeft: theme.spacing(3),
       paddingRight: theme.spacing(2),
-      paddingBottom: theme.spacing(3),
     },
 
     '.GInboxMessages-msgNotAllowedContentSpacing': {
@@ -142,7 +141,6 @@ export const GInboxMessagesRoot = styled("div", {
     '.GInboxMessages-msgNotAllowedContent': {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
-      marginLeft: theme.spacing(5)
     },
 
     '.GInboxMessages-msgNotAllowedIcon': {
@@ -260,56 +258,6 @@ export const GInboxMessagesRoot = styled("div", {
       fontWeight: 'bold',
       fontSize: theme.typography.body2.fontSize,
     }
-  };
-});
-
-
-export const GInboxMessageItem = styled('div', {
-  name: MUI_NAME,
-  slot: 'MessageItem',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.msgItem,
-
-    ];
-  },
-})(({ theme }) => {
-  return {
-
-  };
-});
-
-
-
-export const GInboxNewMessageItem = styled(Paper, {
-  name: MUI_NAME,
-  slot: 'NewMessageItem',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.newMsgItem
-    ];
-  },
-})(({ theme }) => {
-  return {
-
-  };
-});
-
-export const GInboxMessageNotAllowed = styled(Paper, {
-  name: MUI_NAME,
-  slot: 'MessageNotAllowed',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.msgNotAllowed,
-      styles.msgNotAllowedContent,
-      styles.msgNotAllowedContentSpacing,
-      styles.msgNotAllowedContentFlex,
-      styles.msgNotAllowedIcon
-    ];
-  },
-})(({ theme }) => {
-  return {
-
   };
 });
 
