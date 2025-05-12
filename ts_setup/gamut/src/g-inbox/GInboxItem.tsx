@@ -38,14 +38,8 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
   const isViewed = subject?.isViewed;
 
   return (
-<<<<<<< HEAD
-    <InboxItem container className={classes.inboxItem} onClick={() => onClick(id)}>
-
-      <Grid item xs={6} sm={2} md={2} lg sx={{ flexGrow: 1 }} className={classes.taskRefLayout}>
-=======
     <div className={classes.inboxItem} onClick={() => onClick(id)}>
       <Grid item xs={6} sm={2} md={2} lg={2} xl={2} className={classes.taskRefLayout}>
->>>>>>> 62f2a26cc18f4593f6f569dd84f624b733b4a5b8
 
         {isViewed ? <></> : <Tooltip title={tooltipContent}>
           <MarkEmailUnreadOutlinedIcon className={classes.newMsgIndicator} />
