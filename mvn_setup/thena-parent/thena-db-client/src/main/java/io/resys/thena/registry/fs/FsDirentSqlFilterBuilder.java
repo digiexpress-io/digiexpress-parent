@@ -23,7 +23,7 @@ package io.resys.thena.registry.fs;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
+import io.resys.thena.api.actions.FsQueryActions.FsArchiveQueryType;
 import io.resys.thena.api.registry.fs.FsDirentFilter;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.TenantTableNames;
@@ -62,14 +62,20 @@ public class FsDirentSqlFilterBuilder {
   
   public SqlTuple where(FsDirentFilter filter) {    
     
-
+    
+    // by id
+    if(filter.getDirentIds().isPresent()) {
+      builder.append(" dirent.id = ANY($").append(index++).append(")").ln();
+      params.add(filter.getDirentIds().get().toArray());
+    }
+    
     // archive filter
-    if(GrimArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
+    if(FsArchiveQueryType.ONLY_ARCHIVED.equals(filter.getArchived())) {
       and();
-      builder.append(" mission.archived_at is NOT NULL").ln();      
-    } else if(GrimArchiveQueryType.ONLY_IN_FORCE.equals(filter.getArchived())) {
+      builder.append(" dirent.archived_at is NOT NULL").ln();      
+    } else if(FsArchiveQueryType.ONLY_IN_FORCE.equals(filter.getArchived())) {
       and();
-      builder.append(" mission.archived_at is NULL").ln();
+      builder.append(" dirent.archived_at is NULL").ln();
     }
     
     final var result = builder.toString();

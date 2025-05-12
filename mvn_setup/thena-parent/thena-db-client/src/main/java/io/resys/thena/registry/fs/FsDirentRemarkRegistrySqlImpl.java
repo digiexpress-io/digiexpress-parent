@@ -208,11 +208,6 @@ public class FsDirentRemarkRegistrySqlImpl implements FsDirentRemarkRegistry {
     .append(");").ln()
     
     .append("ALTER TABLE ").append(options.getFsDirentRemark()).ln()
-    .append("  ADD CONSTRAINT ").append(options.getFsDirentRemark()).append("_EXTRA_FK").ln()
-    .append("  FOREIGN KEY (remark_id)").ln()
-    .append("  REFERENCES ").append(options.getFsDirentRemark()).append(" (id);").ln().ln()
-
-    .append("ALTER TABLE ").append(options.getFsDirentRemark()).ln()
     .append("  ADD CONSTRAINT ").append(options.getFsDirentRemark()).append("_PARENT_FK").ln()
     .append("  FOREIGN KEY (parent_id)").ln()
     .append("  REFERENCES ").append(options.getFsDirentRemark()).append(" (id);").ln().ln()

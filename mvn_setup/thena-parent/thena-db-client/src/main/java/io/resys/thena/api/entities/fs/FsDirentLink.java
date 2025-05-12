@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.fs;
 
+import java.beans.Transient;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -24,6 +26,7 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,6 +50,8 @@ public interface FsDirentLink extends TenantEntity, IsFsObject {
   String getLinkType();
   
   @Nullable JsonObject getLinkBody();
+  
+  @Transient @JsonIgnore
   @Nullable FsDirentLinkTransitives getTransitives();
   
   

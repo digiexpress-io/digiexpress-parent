@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import io.resys.thena.api.entities.fs.FsDirentLabel;
-import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
+import io.resys.thena.api.entities.fs.FsUniqueDirentLabel;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -32,7 +32,7 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface FsDirentLabelRegistry extends ThenaRegistryService<FsDirentLabel, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.Sql findAllUniques();
-  ThenaSqlClient.SqlTuple findAllByMissionIds(FsDirentFilter filter);
+  ThenaSqlClient.SqlTuple findAll(FsDirentFilter filter);
   ThenaSqlClient.SqlTupleList insertAll(Collection<FsDirentLabel> labels);
   ThenaSqlClient.SqlTupleList deleteAll(Collection<FsDirentLabel> labels);
   
@@ -43,5 +43,5 @@ public interface FsDirentLabelRegistry extends ThenaRegistryService<FsDirentLabe
   
   Function<io.vertx.mutiny.sqlclient.Row, FsDirentLabel> defaultMapper();
   
-  Function<io.vertx.mutiny.sqlclient.Row, GrimUniqueMissionLabel> uniqueLabelMapper();
+  Function<io.vertx.mutiny.sqlclient.Row, FsUniqueDirentLabel> uniqueLabelMapper();
 }

@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.structures.doc.DocState;
+import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
@@ -38,7 +39,11 @@ public interface DbState {
   Uni<GrimState> toGrimState(String tenantId);
   GrimState toGrimState(Tenant repo);
   <R> Uni<R> withGrimTransaction(TxScope tenantId, GrimState.TransactionFunction<R> callback);
+
   
+  Uni<FsState> toFsState(String tenantId);
+  FsState toFsState(Tenant repo);
+  <R> Uni<R> withFsTransaction(TxScope tenantId, FsState.TransactionFunction<R> callback);
   
   Uni<GitState> toGitState(String tenantId);
   GitState toGitState(Tenant repo);

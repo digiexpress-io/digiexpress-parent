@@ -52,29 +52,3 @@ public interface DmsClient {
     Optional<String> getParentId(); 
   }
 }
-
-
-/**
- * 
-
-Dirent
-
-export interface HdesFileSystem {
-  id: HdesFileSystemId;
-  version: string;
-  type: string
-  tree: HdesFileTree;
-}
-
-export interface HdesFileTree {
-  files: HdesFile[];
-}
-
-export interface HdesFile {
-  id: HdesFileId;
-  absolutePath: string; // path to file
-  mountTo: string | undefined; // technical asset GID
-  fileName: string;
-  fileType: HdesFileType;
-}
-*/

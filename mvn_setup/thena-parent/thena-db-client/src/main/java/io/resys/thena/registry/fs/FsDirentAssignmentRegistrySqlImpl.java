@@ -116,7 +116,7 @@ public class FsDirentAssignmentRegistrySqlImpl implements FsDirentAssignmentRegi
         .append("  assignment_type,").ln()
         .append("  assignee_contact)").ln()
         
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6)").ln()
         .build())
         .props(asssignments.stream()
             .map(doc -> Tuple.from(new Object[]{ 

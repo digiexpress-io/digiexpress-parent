@@ -37,5 +37,5 @@ public interface FsRegistry {
   FsDirentLabelRegistry direntLabels();
   FsDirentLinkRegistry direntLinks();
   FsDirentRegistry dirents();
-  FsDirentRemarkRegistry remarks();
+  FsDirentRemarkRegistry direntRemarks();
 }

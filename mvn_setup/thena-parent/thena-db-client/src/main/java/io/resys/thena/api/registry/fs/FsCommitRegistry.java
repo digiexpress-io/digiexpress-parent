@@ -31,7 +31,6 @@ import io.resys.thena.datasource.ThenaSqlClient;
 public interface FsCommitRegistry extends ThenaRegistryService<FsCommit, io.vertx.mutiny.sqlclient.Row> {
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTuple findAll(FsDirentFilter filter);
-  ThenaSqlClient.SqlTuple findAllByDirentId(String direntId);
   ThenaSqlClient.SqlTuple findAllByIds(Collection<String> id);
   
   ThenaSqlClient.SqlTupleList insertAll(Collection<FsCommit> commits);  

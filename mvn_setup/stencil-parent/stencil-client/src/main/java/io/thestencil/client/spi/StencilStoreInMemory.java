@@ -183,6 +183,21 @@ public class StencilStoreInMemory implements StencilStore {
     public GrimStructuredTenant grim(Tenant repo) {
       throw new IllegalArgumentException("no read or writes supported!");
     }
+
+    @Override
+    public FsStructuredTenant fs(String tenantIdOrName) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public FsStructuredTenant fs(TenantCommitResult repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
+
+    @Override
+    public FsStructuredTenant fs(Tenant repo) {
+      throw new IllegalArgumentException("no read or writes supported!");
+    }
     
   }
 

@@ -25,9 +25,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.fs.FsDirentLabel;
+import io.resys.thena.api.entities.fs.FsUniqueDirentLabel;
 import io.resys.thena.api.entities.fs.ImmutableFsDirentLabel;
-import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
-import io.resys.thena.api.entities.grim.ImmutableGrimUniqueMissionLabel;
+import io.resys.thena.api.entities.fs.ImmutableFsUniqueDirentLabel;
 import io.resys.thena.api.registry.fs.FsDirentFilter;
 import io.resys.thena.api.registry.fs.FsDirentLabelRegistry;
 import io.resys.thena.datasource.ImmutableSql;
@@ -125,14 +125,10 @@ public class FsDirentLabelRegistrySqlImpl implements FsDirentLabelRegistry {
     .append("  label_body JSONB,").ln()
 
     .append("  dirent_id VARCHAR(40) NOT NULL,").ln()
-    .append("  objective_id VARCHAR(40),").ln()
-    .append("  goal_id VARCHAR(40),").ln()
-    .append("  remark_id VARCHAR(40),").ln()
     
     .append("  UNIQUE NULLS NOT DISTINCT(dirent_id, label_type, label_value)").ln()    
     .append(");").ln()
 
-    
     .append("CREATE INDEX ").append(options.getFsDirentLabel()).append("_DIRENT_INDEX")
     .append(" ON ").append(options.getFsDirentLabel()).append(" (dirent_id);").ln()
     
@@ -173,7 +169,7 @@ public class FsDirentLabelRegistrySqlImpl implements FsDirentLabelRegistry {
     };
   }
   @Override
-  public SqlTuple findAllByMissionIds(FsDirentFilter filter) {
+  public SqlTuple findAll(FsDirentFilter filter) {
     final var where = new FsDirentSqlFilterBuilder(options).where(filter);
     
     return ImmutableSqlTuple.builder()
@@ -202,10 +198,10 @@ public class FsDirentLabelRegistrySqlImpl implements FsDirentLabelRegistry {
   }
 
   @Override
-  public Function<Row, GrimUniqueMissionLabel> uniqueLabelMapper() {
+  public Function<Row, FsUniqueDirentLabel> uniqueLabelMapper() {
     return (row) -> {
       
-      return ImmutableGrimUniqueMissionLabel.builder()
+      return ImmutableFsUniqueDirentLabel.builder()
           .labelType(row.getString("label_type"))
           .labelValue(row.getString("label_value"))
           .labelBody(row.getJsonObject("label_body"))

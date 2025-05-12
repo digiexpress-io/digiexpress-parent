@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
+import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,7 @@ public class SqlDbSchemaPrintTest {
     final var git = new GitRegistrySqlImpl(names);
     final var doc = new DocRegistrySqlImpl(names);
     final var org = new OrgRegistrySqlImpl(names);
+    final var fs = new FsRegistrySqlImpl(names);
     
     final var schema = new StringBuilder()
       .append(sqlSchema.createTable().getValue())
@@ -85,6 +87,25 @@ public class SqlDbSchemaPrintTest {
       .append(org.orgMembers().createConstraints().getValue())
       .append(org.orgParties().createConstraints().getValue())
       .append(org.orgCommits().createConstraints().getValue())
+      
+      
+      .append(fs.commits().createTable().getValue())
+      .append(fs.commitTrees().createTable().getValue())
+      .append(fs.dirents().createTable().getValue())
+      .append(fs.direntData().createTable().getValue())
+      .append(fs.direntLabels().createTable().getValue())
+      .append(fs.direntLinks().createTable().getValue())
+      .append(fs.direntRemarks().createTable().getValue())
+      .append(fs.direntAssignments().createTable().getValue())
+
+      .append(fs.commits().createConstraints().getValue())
+      .append(fs.commitTrees().createConstraints().getValue())
+      .append(fs.dirents().createConstraints().getValue())
+      .append(fs.direntData().createConstraints().getValue())
+      .append(fs.direntLabels().createConstraints().getValue())
+      .append(fs.direntLinks().createConstraints().getValue())
+      .append(fs.direntRemarks().createConstraints().getValue())
+      .append(fs.direntAssignments().createConstraints().getValue())
       
       .toString();
     
