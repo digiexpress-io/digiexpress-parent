@@ -93,10 +93,11 @@ INSERT INTO feedback_reply
   created_by,
   reporter_names,
   reply_text,
-  customer_title
+  customer_title,
+  customer_question
 )
 VALUES
-(?,?,?,?,?,?,?,?,?,?,?,?,?)
+(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 
 """, new String[] {"id"} ), 
    (PreparedStatement categeoryStm) -> {
@@ -115,6 +116,7 @@ VALUES
      categeoryStm.setString(11, command.getReporterNames());
      categeoryStm.setString(12, command.getReply());
      categeoryStm.setString(13, command.getCustomerTitle());
+     categeoryStm.setString(14, command.getQuestion());
 
     
      categeoryStm.execute();

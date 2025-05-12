@@ -24,6 +24,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [reply, setReply] = React.useState<string>('');
+  const [question, setQuestion] = React.useState<string>('');
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -34,6 +35,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       .then((resp) => {
         setFeedback(resp);
         setReply(resp?.replyText ?? '');
+        setQuestion(resp?.content?.question ?? '');
         setSavedReply(resp?.replyText ?? '');
       });
   }, []);  
@@ -46,7 +48,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
     const command: FeedbackApi.ModifyOneFeedbackReplyCommand = {
       id: feedback.id,
       commandType: 'MODIFY_ONE_FEEDBACK_REPLY',
-      reply: reply
+      reply: reply,
+      question: question
     };
   
     modifyOneFeedback(taskId, command).then(updatedFeedback => {
@@ -99,14 +102,23 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
       <FeedbackContent feedback={feedback.content} />
 
-      <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
+      <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
+      <TextField onChange={(e) => setQuestion(e.target.value)}
+        sx={{ mb: 3 }}
+        multiline
+        minRows={4}
+        placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder', defaultMessage: 'Customer question' })}
+        value={question}
+      />
 
-        <TextField onChange={(e) => setReply(e.target.value)}
-          sx={{ mb: 3 }}
-          multiline
-          minRows={4}
-          placeholder='Write a reply here'
-          value={reply}
+
+      <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
+      <TextField onChange={(e) => setReply(e.target.value)}
+        sx={{ mb: 3 }}
+        multiline
+        minRows={4}
+        placeholder='Write a reply here'
+        value={reply}
       />
 
       <Box display='flex' gap={1}>

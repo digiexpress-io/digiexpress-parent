@@ -67,6 +67,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
         
         .processId(template.getProcessId())
         .reporterNames(template.getReporterNames())
+        .question(template.getContent().getQuestion())
         
         .reply("Proletariat John here, replying to you")
         .taskId(taskId)
@@ -80,6 +81,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
           .id(feedback.getId())
           .commandType(ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY)
           .reply("This is my updated reply from John")
+          .question("better question")
           .build(), "JOHN");
       
       Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");

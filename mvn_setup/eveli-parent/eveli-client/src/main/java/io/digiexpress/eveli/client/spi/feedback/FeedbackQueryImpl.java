@@ -52,6 +52,7 @@ SELECT
   feedback_reply.locale,
   feedback_reply.source_id,
   feedback_reply.customer_title,
+  feedback_reply.customer_question,
   
   feedback_reply.localized_label,
   feedback_reply.localized_sub_label,
@@ -98,13 +99,12 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
   }
   
   private Feedback map(ResultSet rs) throws SQLException {
-    FeedbackQuestionnaireContent content;
+    ImmutableFeedbackQuestionnaireContent.Builder content;
     try {
-      content = new JsonObject(rs.getString("content")).mapTo(FeedbackQuestionnaireContent.class);
+      final var from  = new JsonObject(rs.getString("content")).mapTo(FeedbackQuestionnaireContent.class);
+      content = ImmutableFeedbackQuestionnaireContent.builder().from(from);
     } catch(Exception e) {
-      content = ImmutableFeedbackQuestionnaireContent.builder()
-          .title("content-not-defined")
-          .build();
+      content = ImmutableFeedbackQuestionnaireContent.builder().title("content-not-defined");
     }
     
     return ImmutableFeedback.builder()
@@ -122,10 +122,11 @@ LEFT JOIN feedback_category ON (feedback_category.id = feedback_reply.category_i
         .createdBy(rs.getString("created_by"))
         .updatedBy(rs.getString("updated_by"))
         .updatedOnDate(rs.getString("updated_on_date"))
-        .content(content)
+        .content(content.question(rs.getString("customer_question")).build())
         .locale(rs.getString("locale"))
         .replyText(rs.getString("reply_text"))
         .customerTitle(rs.getString("customer_title"))
+        
         .build();
   }
 

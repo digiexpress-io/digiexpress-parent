@@ -88,6 +88,7 @@ export declare namespace FeedbackApi {
     origin: string;
     content: FeedbackContent;
     reply: string;
+    question: string;
     locale: string;
 
     labelKey: string;
@@ -95,6 +96,7 @@ export declare namespace FeedbackApi {
     subLabelKey?: string | undefined;
     subLabelValue?: string | undefined;
     customerTitle: string | undefined;
+ 
   }
 
   export interface ModifyOneFeedbackCommand { }
@@ -102,6 +104,7 @@ export declare namespace FeedbackApi {
     id: string;
     commandType: 'MODIFY_ONE_FEEDBACK_REPLY';
     reply: string;
+    question: string;
   }
 
   export interface UpsertFeedbackRankingCommand extends ModifyOneFeedbackCommand {
