@@ -99,7 +99,7 @@ public class AssetsPublicationController {
   
   
   @Getter @RequiredArgsConstructor
-  private static class CompileEvent {
+  public static class CompileEvent {
     private final String deploymentId;
     private final String userId;
   }
