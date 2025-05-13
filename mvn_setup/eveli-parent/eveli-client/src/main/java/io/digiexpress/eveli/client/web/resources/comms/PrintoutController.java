@@ -79,6 +79,7 @@ public class PrintoutController {
         input.setForm(form);
         input.setSession(questionnaire);
         input.setLang(questionnaire.getMetadata().getLanguage());
+        input.setReferenceId(task.getTaskRef());
         ResponseEntity<byte[]> printoutResponse = callPrintoutService(restTemplate, input);
         log.info("PDF printout request completed for user: {} for printout of task: {} and questionnaire: {}", 
             worker.getUsername(), taskId, questionnaireId);
@@ -146,6 +147,7 @@ public class PrintoutController {
     String lang;
     Form form;
     Questionnaire session;
+    String referenceId;
   }
 
 }
