@@ -42,6 +42,9 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
   function _disableMaterialUIFocusOnUl(event: React.KeyboardEvent<HTMLInputElement>) {
     event.stopPropagation();
   }
+  const currentFilter = header.column.getFilterValue();
+
+  const isShowAllChecked = currentFilter === undefined || currentFilter === '' || (Array.isArray(currentFilter) && currentFilter.length === 0);
 
   return (
     <Root className={classes.root}>
@@ -64,14 +67,12 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           </TextField>
         </FilterByStringSlot>
 
-
         <MenuItem onClick={handleClearFilters} >
           <ListItemIcon>
-            {header.column.getFilterValue() === undefined ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
+            {isShowAllChecked ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
           </ListItemIcon>
           {intl.formatMessage({ id: 'eveli.table.menu.filter.showAllItems', defaultMessage: 'Show all items ' })}
         </MenuItem>
-
 
         {header.column.columnDef.meta?.enableSelection && items.map((item, index) => <React.Fragment key={index}>
           <MenuItem onClick={() => handleArrayChange(item)}>
@@ -82,8 +83,6 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           </MenuItem>
         </React.Fragment>
         )}
-
-
       </MenuSlot>
     </Root>
   );

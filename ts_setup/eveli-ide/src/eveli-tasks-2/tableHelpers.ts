@@ -1,5 +1,5 @@
 import { TaskApi } from "@/api-task";
-import { Row, Table } from "@tanstack/react-table";
+import { Row } from "@tanstack/react-table";
 
 
 const priorityOrder: Record<TaskApi.TaskPriority, number> = {
@@ -48,4 +48,31 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
       return 0;
     }
   }
+}
+
+export function filterTaskRefOrSubjectFn(row: Row<TaskApi.Task>, _columnId: string, filterValue: string[]): boolean {
+  const subject = row.original.subject?.toLowerCase() || '';
+  const taskRef = row.original.taskRef?.toLowerCase() || '';
+  const cleanedFilterValues = Array.isArray(filterValue) ? filterValue.map((filter) => filter.toLowerCase()) : [(filterValue as string).toLowerCase()];
+
+  if (!filterValue || filterValue.length === 0) {
+    return true;
+  }
+
+  return cleanedFilterValues.some((filter) => {
+    return subject.includes(filter) || taskRef.includes(filter);
+  })
+}
+
+export function filterStatusOrPriorityFn(row: Row<TaskApi.Task>, _columnId: string, filterValue: string | string[]): boolean {
+  const status = row.original.status?.toLowerCase();
+  const priority = row.original.priority?.toLowerCase();
+
+  const filters = Array.isArray(filterValue) ? filterValue.map((f) => f.toLowerCase()) : [filterValue.toLowerCase()];
+
+  if (!filterValue || filterValue.length === 0) {
+    return true;
+  }
+
+  return (filters.some((filter) => status?.includes(filter) || priority?.includes(filter)));
 }
