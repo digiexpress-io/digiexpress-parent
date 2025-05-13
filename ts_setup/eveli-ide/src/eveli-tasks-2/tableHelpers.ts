@@ -1,5 +1,5 @@
 import { TaskApi } from "@/api-task";
-import { Row } from "@tanstack/react-table";
+import { FilterFnOption, Row } from "@tanstack/react-table";
 
 
 const priorityOrder: Record<TaskApi.TaskPriority, number> = {
@@ -50,7 +50,7 @@ export function taskSortingFn(rowA: Row<TaskApi.Task>, rowB: Row<TaskApi.Task>, 
   }
 }
 
-export function filterTaskRefOrSubjectFn(row: Row<TaskApi.Task>, _columnId: string, filterValue: string[]): boolean {
+export const filterTaskRefOrSubjectFn: FilterFnOption<TaskApi.Task> = (row, _columnId: string, filterValue: string[]) => {
   const subject = row.original.subject?.toLowerCase() || '';
   const taskRef = row.original.taskRef?.toLowerCase() || '';
   const cleanedFilterValues = Array.isArray(filterValue) ? filterValue.map((filter) => filter.toLowerCase()) : [(filterValue as string).toLowerCase()];
@@ -64,9 +64,25 @@ export function filterTaskRefOrSubjectFn(row: Row<TaskApi.Task>, _columnId: stri
   })
 }
 
-export function filterStatusOrPriorityFn(row: Row<TaskApi.Task>, _columnId: string, filterValue: string | string[]): boolean {
-  const status = row.original.status?.toLowerCase();
-  const priority = row.original.priority?.toLowerCase();
+
+export const filterStringOrArrayFn: FilterFnOption<TaskApi.Task> = (row, columnId: string, filterValue: string | string[]) => {
+  const rowValue = row.getValue(columnId) as string;
+  const target = Array.isArray(rowValue) ? rowValue.map((v) => v.toLowerCase()) : [(rowValue as string).toLowerCase()];
+
+  if (!filterValue || filterValue.length === 0) {
+    return true;
+  }
+
+  const filters = Array.isArray(filterValue) ? filterValue.map((f) => f.toLowerCase()) : [filterValue.toLowerCase()];
+
+  return filters.some((filter) => target.some((target) => target.includes(filter))
+  );
+}
+
+/*
+export const filterStringOrArrayFn: FilterFnOption<TaskApi.Task> = (row, columnId: string, filterValue: string | string[]) => {
+  const rowValue = row.getValue(columnId) as string;
+  const target = rowValue?.toLowerCase();
 
   const filters = Array.isArray(filterValue) ? filterValue.map((f) => f.toLowerCase()) : [filterValue.toLowerCase()];
 
@@ -74,5 +90,7 @@ export function filterStatusOrPriorityFn(row: Row<TaskApi.Task>, _columnId: stri
     return true;
   }
 
-  return (filters.some((filter) => status?.includes(filter) || priority?.includes(filter)));
+  return filters.some((filter) => target?.includes(filter));
 }
+*/
+
