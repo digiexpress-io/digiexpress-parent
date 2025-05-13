@@ -6,14 +6,6 @@ interface IndicatorAssigneeProps {
   name: string;
 }
 
-const getRandomDarkColor = () => {
-  const hue = Math.floor(Math.random() * 360); 
-  const saturation = 60 + Math.random() * 40;  
-  const lightness = 20 + Math.random() * 20; 
-  return `hsla(${hue}, ${saturation}%, ${lightness}%)`;
-};
-
-
 export const IndicatorAssignee: React.FC<IndicatorAssigneeProps> = ({ name }) => {
   if (!name || typeof name !== 'string') {
     return (
@@ -57,7 +49,6 @@ const IndicatorAssigneeRoot = styled('div', {
     '.MuiAvatar-root': {
       height: '25px',
       width: '25px',
-      backgroundColor: getRandomDarkColor(),
     }
   };
 })

@@ -4,7 +4,7 @@ import { ColumnDef, flexRender } from '@tanstack/react-table';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { TaskApi } from '@/api-task';
-import { taskSortingFn } from './tableHelpers';
+import { filterFormattedDateFn, filterStringOrArrayFn, filterTaskRefOrSubjectFn, taskSortingFn } from './tableHelpers';
 import { DateTime } from 'luxon';
 
 import { IndicatorPriority } from './IndicatorPriority';
@@ -24,12 +24,11 @@ export const EveliTasksTable: React.FC = () => {
     findAll().then(setData);
   }, []);
 
-
   const columns: ColumnDef<TaskApi.Task, any>[] = [
     {
       header: 'Priority',
       accessorKey: 'priority',
-      filterFn: 'arrIncludesSome',
+      filterFn: filterStringOrArrayFn,
       sortingFn: taskSortingFn,
       cell: (priority) => flexRender(IndicatorPriority, { type: priority.getValue() }),
       size: 150,
@@ -46,7 +45,7 @@ export const EveliTasksTable: React.FC = () => {
       accessorKey: 'subject',
       sortingFn: taskSortingFn,
       cell: (task) => flexRender(TaskLink, { title: task.getValue(), id: task.row.original.id, keywords: task.row.original.keyWords }),
-      filterFn: 'arrIncludes',
+      filterFn: filterTaskRefOrSubjectFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -69,7 +68,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Client',
       accessorKey: 'clientIdentificator',
-      filterFn: 'arrIncludesSome',
+      filterFn: 'includesString',
       size: 150,
       minSize: 150,
       enableColumnFilter: true,
@@ -78,7 +77,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Status',
       accessorKey: 'status',
-      filterFn: 'arrIncludesSome',
+      filterFn: filterStringOrArrayFn,
       size: 150,
       minSize: 150,
       cell: (status) => flexRender(IndicatorStatus, { status: status.getValue() }),
@@ -93,7 +92,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Roles',
       accessorKey: 'assignedRoles',
-      filterFn: 'arrIncludesSome',
+      filterFn: filterStringOrArrayFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -106,7 +105,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Assignee',
       accessorKey: 'assignedUser',
-      filterFn: 'arrIncludesSome',
+      filterFn: filterStringOrArrayFn,
       cell: (assignee) => flexRender(IndicatorAssignee, { name: assignee.getValue() }),
       sortingFn: taskSortingFn,
       size: 150,
@@ -121,6 +120,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Due',
       accessorKey: 'dueDate',
+      filterFn: filterFormattedDateFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -131,7 +131,7 @@ export const EveliTasksTable: React.FC = () => {
     {
       header: 'Created',
       accessorKey: 'created',
-
+      filterFn: filterFormattedDateFn,
       size: 150,
       minSize: 150,
       enableSorting: true,
@@ -141,18 +141,16 @@ export const EveliTasksTable: React.FC = () => {
     },
   ]
 
-
   return (<WithTableStyles data={data} columns={columns} />)
 }
-
 
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
   const rawDate = value;
   if (!rawDate) {
     return <div>--</div>
   }
-
   const dateTime = DateTime.fromISO(rawDate).setLocale('fi');
   const formatted = dateTime.toLocaleString(DateTime.DATE_SHORT);
+
   return <div>{formatted}</div>;
 }
