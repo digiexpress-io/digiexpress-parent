@@ -55,7 +55,7 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
       comments,
       'id',
       'replyToId'
-    );
+    ).sort((a,b)=> {if (a.created > b.created) return 1;if (a.created < b.created) return -1; return 0;});
     return (
       <Thread comments={comments} task={task} isThreaded={isThreaded}
         isExternalThread={isExternalThread}
