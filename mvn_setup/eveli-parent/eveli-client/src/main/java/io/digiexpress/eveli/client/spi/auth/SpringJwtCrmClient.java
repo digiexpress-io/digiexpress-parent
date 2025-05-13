@@ -40,7 +40,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -58,7 +57,6 @@ import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.annotation.Nullable;
-import jakarta.json.JsonString;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -199,14 +197,14 @@ public class SpringJwtCrmClient implements CrmClient {
     }
     
     
-    final var name = (JsonString) value.get("name");
-    final var personId = (JsonString) value.get("personId");
+    final var name = value.get("name");
+    final var personId =  value.get("personId");
 
     
     return ImmutableCustomerRepresentedPerson.builder()
-        .name(name.getString())
-        .personId(personId.getString())
-        .representativeName(getRepresentativeName(name.getString()))
+        .name(name.toString())
+        .personId(personId.toString())
+        .representativeName(getRepresentativeName(name.toString()))
         .build();
   }
   
@@ -218,12 +216,12 @@ public class SpringJwtCrmClient implements CrmClient {
       return null;
     }
     
-    final var name = (JsonString) value.get("name");
-    final var companyId = (JsonString) value.get("identifier");
+    final var name = value.get("name");
+    final var companyId = value.get("identifier");
     
     return ImmutableCustomerRepresentedCompany.builder()
-        .name(name.getString())
-        .companyId(companyId.getString())
+        .name(name.toString())
+        .companyId(companyId.toString())
         .build();
   }
   
