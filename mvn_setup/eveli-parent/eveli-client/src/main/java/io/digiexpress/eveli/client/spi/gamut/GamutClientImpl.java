@@ -28,6 +28,7 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.smallrye.mutiny.Uni;
@@ -38,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class GamutClientImpl implements GamutClient {
   private final ProcessClient processInstanceClient;
   private final TaskClient taskClient;
-  
+  private final MqEventPublisher mqEventPublisher;
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
   private final CrmClient authClient;
@@ -72,7 +73,7 @@ public class GamutClientImpl implements GamutClient {
 
   @Override
   public ReplyToBuilder replyToBuilder() {
-    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient);
+    return new ReplyToBuilderImpl(processInstanceClient, taskClient, authClient, mqEventPublisher);
   }
 
   @Override

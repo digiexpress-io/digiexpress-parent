@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
@@ -138,7 +139,7 @@ public class TaskApiController {
         .userId(worker.getUsername(), worker.getEmail())
         .createTask(command)
         .onItem().invoke(newTask -> {
-          mqEventPublisher.publishMqEvent(newTask);
+          mqEventPublisher.publishMqEvent(newTask, TaskCommentSource.FRONTDESK);
         })
         .onItem().transform(newTask -> {
           return new ResponseEntity<>(newTask, HttpStatus.CREATED);
@@ -152,7 +153,7 @@ public class TaskApiController {
     return taskClient.taskBuilder()
       .userId(worker.getUsername(), worker.getEmail())
       .modifyTask(id, command)
-      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask))
+      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask, TaskCommentSource.FRONTDESK))
       .onItem().transform(modifiedTask -> {
         return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
       });
@@ -164,7 +165,7 @@ public class TaskApiController {
     return taskClient.taskBuilder()
       .userId(worker.getUsername(), worker.getEmail())
       .transferTask(id, command)
-      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask))
+      .onItem().invoke(modifiedTask -> mqEventPublisher.publishMqEvent(modifiedTask, TaskCommentSource.FRONTDESK))
       .onItem().transform(modifiedTask -> {
         return new ResponseEntity<>(modifiedTask, HttpStatus.OK);
       });
@@ -224,7 +225,7 @@ public class TaskApiController {
         .userId(worker.getUsername(), worker.getEmail())
         .createTaskComment(command)
         .onItem().invoke(newComment -> {
-          mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion());
+          mqEventPublisher.publishMqEvent(newComment.getTaskId(), newComment.getVersion(), TaskCommentSource.FRONTDESK);
         });
   }
   

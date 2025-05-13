@@ -32,6 +32,7 @@ import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.gamut.GamutClientImpl;
+import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutFeedbackController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutIamController;
 import io.digiexpress.eveli.client.web.resources.gamut.GamutSiteController;
@@ -53,17 +54,19 @@ public class EveliAutoConfigGamut {
       AttachmentCommands attachmentCommands,
       EveliEnvirClient envir, 
       DialobClient dialobCommands,
-      CrmClient authClient
+      CrmClient authClient,
+      MqEventPublisher mqEventPublisher
     ) {
     
     return new GamutClientImpl(
         processRepository, 
         taskclient, 
-        
+        mqEventPublisher,
         attachmentCommands, 
         dialobCommands,
         authClient,
         envir
+        
     );
   }
   

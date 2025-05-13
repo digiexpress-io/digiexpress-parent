@@ -59,7 +59,7 @@ public class PublisherForTaskEvents {
     final List<Optional<QueueMessage>> result = taskClient.queryTasks()
       .getOneTaskDiff(taskId, commitId)
       .onItem().transformToMulti(diff -> {
-        return new WrenchFlowCommand(envir).getQueueMessages(diff)
+        return new WrenchFlowCommand(envir, event.getSource()).getQueueMessages(diff)
           .onItem().transformToMulti(items -> Multi.createFrom().items(items.stream()))
           
           .onItem().transformToUni(notification -> createMessage(diff, notification))

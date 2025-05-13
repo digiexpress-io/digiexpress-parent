@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskDiff;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliRuntime;
@@ -49,13 +50,14 @@ public class WrenchFlowCommand {
   private final EveliEnvirClient envir;
   private final String flowName = "task_mq_router";
   private final String default_locale = "fi";
+  private final TaskCommentSource source;
 
   public Uni<List<TaskNotification>> getQueueMessages(TaskDiff diff) {
-    return envir.runtimeQuery().getOne().onItem().transform(runtime -> runFlow(diff, runtime));
+    return envir.runtimeQuery().getOne().onItem().transform(runtime -> runFlow(diff, runtime, source));
   }
   
   @SuppressWarnings("unchecked")
-  private List<TaskNotification> runFlow(TaskDiff diff, EveliRuntime envir) {
+  private List<TaskNotification> runFlow(TaskDiff diff, EveliRuntime envir, TaskCommentSource source) {
     try {
       final List<TaskNotification> queues = new ArrayList<>();
       final var taskGroupId = diff.getTask().getAssignedRoles().isEmpty() ? "" : diff.getTask().getAssignedRoles().iterator().next();
@@ -70,7 +72,8 @@ public class WrenchFlowCommand {
                 "taskRef",  diff.getTask().getTaskRef(),
                 "clientId", diff.getTask().getClientIdentificator(),
                 "taskGroupId", taskGroupId,
-                "clientLanguage", language
+                "clientLanguage", language,
+                "taskSource", source 
             ))
             .flow(flowName)
             .andGetBody();
