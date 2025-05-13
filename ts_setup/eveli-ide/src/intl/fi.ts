@@ -233,6 +233,7 @@ export const fi = {
   'feedback.sendScreenshot': 'Lähetä ruutukaappaus',
   'feedback.close': 'Peru',
   'feedback.send': 'Lähetä',
+  'feedback.taskReferenceId': 'Tehtävän viite',
   'feedback.mainCategory': 'Aihe',
   'feedback.subCategory': 'Tarkempi aihealue',
   'feedback.feedbackValue': 'Palaute',

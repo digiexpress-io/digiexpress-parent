@@ -235,6 +235,7 @@ export const en = {
   'feedback.sendScreenshot': 'Send screenshot',
   'feedback.close': 'Close',
   'feedback.send': 'Send',
+  'feedback.taskReferenceId': 'Task Reference ID',
   'feedback.mainCategory': 'Subject',
   'feedback.subCategory': 'Specific topic area',
   'feedback.feedbackValue': 'Customer feedback',
