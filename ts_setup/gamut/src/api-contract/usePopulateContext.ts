@@ -4,7 +4,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query'
 import { ContractApi } from './contract-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
-
+import { useAssertAuthentication, assertAuthenticatedResponse } from '../api-iam';
 
 import { mapToContractData } from './mappers'
 import { useSite } from '../api-site';
@@ -38,9 +38,14 @@ export function usePopulateContext(props: UsePropulateProps): PopulateContractCo
     refetchInterval: 15000,
     queryKey: [queryKey],
     queryFn: () => getContracts()
-      .then(data => data.json())
+      .then(data => { 
+        assertAuthenticatedResponse(data);
+        return data.json();
+      })
       .then((data: LegacyProcessApi.Process[]) => data),
   });
+
+  useAssertAuthentication(error);
 
   const contractData = mapToContractData(processes ?? [], site);
 

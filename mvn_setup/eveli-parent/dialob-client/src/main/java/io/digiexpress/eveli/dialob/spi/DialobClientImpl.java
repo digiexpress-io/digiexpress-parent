@@ -2,8 +2,9 @@ package io.digiexpress.eveli.dialob.spi;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,6 +78,27 @@ public class DialobClientImpl implements DialobClient {
       return o1.getKey().compareTo(o2.getKey());
     }
   };
+  
+  @Override
+  public List<FormListItem> findAllForms() {
+    try {
+      final String body = createProxyClient().formRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+      return Arrays.asList(objectMapper.readerForArrayOf(FormListItem.class).readValue(body));
+    } catch (IOException e) {
+      throw new DialobException(e.getMessage(), e);
+    }
+  }
+  
+
+  @Override
+  public List<FormTag> findAllFormTags() {
+    try {
+      final String body = createProxyClient().tagsRequest("", "", HttpMethod.GET, null, Collections.emptyMap()).getBody();
+      return Arrays.asList(objectMapper.readerForArrayOf(FormTag.class).readValue(body));
+    } catch (IOException e) {
+      throw new DialobException(e.getMessage(), e);
+    }
+  }
   
   @Override
   public ProxyAnswer proxyAnswer(Questionnaire q, Answer answer) {
@@ -192,7 +214,7 @@ public class DialobClientImpl implements DialobClient {
     return dialobService.getApi().getForObject(uri, FormTag.class);
   }
   @Override
-  public List<FormTag> findAllFormTags(String formName) {
+  public List<FormTag> getOneFormTags(String formName) {
     final var uri = "/forms/" + formName + "/tags";
     final var tags = dialobService.getApi().getForObject(uri, FormTag[].class);
     return Arrays.asList(tags);
@@ -391,4 +413,5 @@ public class DialobClientImpl implements DialobClient {
     private final Optional<FormValueSet> valueSet;
     private final Optional<FormValueSetEntry> valueSetEntry; 
   }
+
 }

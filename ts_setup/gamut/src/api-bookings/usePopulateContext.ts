@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { BookingApi } from './booking-types';
 import { mapToBooking, mapToBookingData } from './mappers';
+import { useAssertAuthentication, assertAuthenticatedResponse } from '../api-iam';
 
 
 
@@ -30,12 +31,15 @@ export function usePopulateContext(props: UsePropulateProps): PopulateBookingCon
     staleTime,
     queryKey: [queryKey],
     queryFn: () => getBookings()
-      .then(data => data.json())
+      .then(data => {
+        assertAuthenticatedResponse(data)
+        return data.json();
+      })
       .then((data: BookingApi.Booking[]) => {
         return data;
       }),
   });
-
+  useAssertAuthentication(error);
 
 
   // Create new booking and reload after that

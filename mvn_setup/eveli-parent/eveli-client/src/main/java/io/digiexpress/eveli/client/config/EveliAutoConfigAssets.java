@@ -129,8 +129,8 @@ public class EveliAutoConfigAssets {
   }
   
   @Bean
-  public AssetsDialobController assetsDialobController(DialobClient client, ObjectMapper objectMapper) {
-    return new AssetsDialobController(client, objectMapper);
+  public AssetsDialobController assetsDialobController(DialobClient client) {
+    return new AssetsDialobController(client);
   }
   @Bean 
   public AssetsWorkflowController workflowController(

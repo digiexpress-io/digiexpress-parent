@@ -113,7 +113,7 @@ const AuthSetup: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (iam.authType === 'ANON' ? <PublicSetup>{children}</PublicSetup> : <SecuredSetup>{children}</SecuredSetup>)
 }
 
-export const DemoApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const DemoApp: React.FC<{ children: any }> = ({ children }) => {
   const queryClient = new QueryClient()
 
   const liveness = 60000;

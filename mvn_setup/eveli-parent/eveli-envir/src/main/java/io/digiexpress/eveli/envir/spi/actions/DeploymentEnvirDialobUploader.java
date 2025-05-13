@@ -69,7 +69,7 @@ public class DeploymentEnvirDialobUploader {
     
     final var form = found.get();
 
-    final var tag = dialobClient.findAllFormTags(form.getName()).stream()
+    final var tag = dialobClient.getOneFormTags(form.getName()).stream()
         .filter(e -> e.getName().equals(link.getFormTag()))
         .findFirst();
     

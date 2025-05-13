@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToSubjectData } from './mappers'
 import { CommsApi } from './comms-types';
-import { useIam } from '../api-iam';
-
+import { useAssertAuthentication, useIam } from '../api-iam';
+import { assertAuthenticatedResponse } from '../api-iam';
 
 
 export interface UsePropulateProps {
@@ -34,11 +34,16 @@ export function usePopulateContext(props: UsePropulateProps): PopulateCommsConte
     staleTime,
     queryKey: [queryKey],
     queryFn: () => getSubjects()
-      .then(data => data.json())
+      .then(data => {
+        assertAuthenticatedResponse(data);
+        return data.json();
+      })
       .then((data: LegacyProcessApi.Process[]) => {
         return data;
       }),
   });
+
+  useAssertAuthentication(error);
 
   const subjectData = mapToSubjectData(processes ?? [], user);
 

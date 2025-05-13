@@ -4,6 +4,7 @@ import { OfferApi } from './offer-types';
 import { LegacyProcessApi } from '../api-legacy-processes';
 import { mapToOffer, mapToOfferData, toOtherTopicLinkLocales } from './mappers';
 import { SiteApi, useSite } from '../api-site';
+import { useAssertAuthentication, assertAuthenticatedResponse } from '../api-iam';
 
 
 
@@ -35,8 +36,17 @@ export function usePopulateContext(props: UsePropulateProps): PopulateOfferConte
   const { data: processes, error, refetch, isPending } = useQuery({
     staleTime,
     queryKey: [queryKey],
-    queryFn: () => getAllOffers().then(data => data.json()).then((data: LegacyProcessApi.Process[]) => data)
+    queryFn: () => getAllOffers()
+      .then(data => {
+        assertAuthenticatedResponse(data);
+        return data.json();
+        
+      })
+      .then((data: LegacyProcessApi.Process[]) => data)
   });
+
+  useAssertAuthentication(error);
+  
 
   // Get the offer (form) name based on the topic link
   const getLocalisedOfferName = (site: SiteApi.Site, workflowName: string | undefined): string => {

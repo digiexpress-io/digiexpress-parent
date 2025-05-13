@@ -4,6 +4,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -41,7 +46,7 @@ public interface DmsAssetsClient {
     String getValue();
   }
 
-  
+  @Value.Immutable @JsonSerialize(as = ImmutableDmsAssetFile.class) @JsonDeserialize(as = ImmutableDmsAssetFile.class)
   interface DmsAssetFile extends DmsAssetDirent {
     String getId(); // internal GID
 

@@ -3,6 +3,8 @@ import { IamApi } from './iam-types'
 
 import { IamLiveness } from './IamLiveness'
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { useLocale } from '../api-locale';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -102,7 +104,7 @@ function useUser(props: IamBackendProviderProps): {
 
   const staleTime = props.staleTime === undefined ? 1000 * 60 : props.staleTime;
   const refetchInterval = staleTime;
-  const { data, isPending, refetch } = useQuery({
+  const { data, isPending, refetch, } = useQuery({
     staleTime,
     refetchInterval,
     queryKey: ['iam/user'],
@@ -168,3 +170,39 @@ async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.U
     return undefined;
   }
 }
+
+
+export function assertAuthenticatedResponse(resp: Response) {
+  if(resp.status === 401) {
+    throw new UnauthorizedRequestError("Not authorized", resp.status);
+  }
+}
+
+
+export function useAssertAuthentication(error: Error | undefined | null) {
+  const nav = useNavigate();
+  const { locale } = useLocale();
+  
+  React.useEffect(() => {
+    if(error?.name === 'UnauthorizedRequestError') {
+      nav({
+        params: { locale },
+        to: '/public/$locale/login'
+      })  
+    } 
+  }, [error])
+}
+
+export class UnauthorizedRequestError extends Error {
+  reason: string;
+  code: number;
+  constructor(reason: string, code: number) {
+    super(reason);
+
+    Object.setPrototypeOf(this, UnauthorizedRequestError.prototype);
+    this.reason = reason;
+    this.code = code;
+    this.name = 'UnauthorizedRequestError';
+  }
+}
+

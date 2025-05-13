@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as PublicLocaleImport } from './routes/public.$locale'
 import { Route as PublicLocaleIndexImport } from './routes/public.$locale.index'
+import { Route as PublicLocaleLoginImport } from './routes/public.$locale.login'
 import { Route as SecuredLocaleViewsViewIdImport } from './routes/secured.$locale.views.$viewId'
 import { Route as PublicLocalePagesPageIdImport } from './routes/public.$locale.pages.$pageId'
 import { Route as SecuredLocaleViewsViewIdIndexImport } from './routes/secured.$locale.views.$viewId.index'
@@ -45,6 +46,12 @@ const PublicLocaleRoute = PublicLocaleImport.update({
 const PublicLocaleIndexRoute = PublicLocaleIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicLocaleRoute,
+} as any)
+
+const PublicLocaleLoginRoute = PublicLocaleLoginImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => PublicLocaleRoute,
 } as any)
 
@@ -156,6 +163,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/public/$locale'
       preLoaderRoute: typeof PublicLocaleImport
       parentRoute: typeof rootRoute
+    }
+    '/public/$locale/login': {
+      id: '/public/$locale/login'
+      path: '/login'
+      fullPath: '/public/$locale/login'
+      preLoaderRoute: typeof PublicLocaleLoginImport
+      parentRoute: typeof PublicLocaleImport
     }
     '/public/$locale/': {
       id: '/public/$locale/'
@@ -296,11 +310,13 @@ const PublicLocalePagesPageIdRouteWithChildren =
   )
 
 interface PublicLocaleRouteChildren {
+  PublicLocaleLoginRoute: typeof PublicLocaleLoginRoute
   PublicLocaleIndexRoute: typeof PublicLocaleIndexRoute
   PublicLocalePagesPageIdRoute: typeof PublicLocalePagesPageIdRouteWithChildren
 }
 
 const PublicLocaleRouteChildren: PublicLocaleRouteChildren = {
+  PublicLocaleLoginRoute: PublicLocaleLoginRoute,
   PublicLocaleIndexRoute: PublicLocaleIndexRoute,
   PublicLocalePagesPageIdRoute: PublicLocalePagesPageIdRouteWithChildren,
 }
@@ -365,6 +381,7 @@ const SecuredLocalePagesPageIdProductsProductIdRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/public/$locale': typeof PublicLocaleRouteWithChildren
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale/': typeof PublicLocaleIndexRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
@@ -383,6 +400,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale': typeof PublicLocaleIndexRoute
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdIndexRoute
@@ -398,6 +416,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/public/$locale': typeof PublicLocaleRouteWithChildren
+  '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale/': typeof PublicLocaleIndexRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
@@ -419,6 +438,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/public/$locale'
+    | '/public/$locale/login'
     | '/public/$locale/'
     | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
@@ -436,6 +456,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/public/$locale/login'
     | '/public/$locale'
     | '/secured/$locale/views/$viewId/$subjectId'
     | '/public/$locale/pages/$pageId'
@@ -449,6 +470,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/public/$locale'
+    | '/public/$locale/login'
     | '/public/$locale/'
     | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
@@ -503,9 +525,14 @@ export const routeTree = rootRoute
     "/public/$locale": {
       "filePath": "public.$locale.tsx",
       "children": [
+        "/public/$locale/login",
         "/public/$locale/",
         "/public/$locale/pages/$pageId"
       ]
+    },
+    "/public/$locale/login": {
+      "filePath": "public.$locale.login.tsx",
+      "parent": "/public/$locale"
     },
     "/public/$locale/": {
       "filePath": "public.$locale.index.tsx",

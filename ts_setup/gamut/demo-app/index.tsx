@@ -11,7 +11,7 @@ export const router = createRouter({ routeTree })
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
-root.render(<DemoApp><RouterProvider router={router} /></DemoApp>);
+root.render(<RouterProvider router={router} InnerWrap={({children}) => <DemoApp children={children}/>} />);
 
 
 // Register the router instance for type safety

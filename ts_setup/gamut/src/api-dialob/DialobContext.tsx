@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query'
 import { DialobApi } from './dialob-types';
-
+import { assertAuthenticatedResponse, useAssertAuthentication } from '../api-iam';
 
 // Root props for Provider
 export interface DialobProps {
@@ -42,11 +42,16 @@ export function useDialobReview(props: { id: string }): {
     staleTime: 5000,
     queryKey: ['reviews/' + id],
     queryFn: () => fetchReviewGet(props.id)
-      .then(data => data.json())
+      .then(data => {
+        assertAuthenticatedResponse(data);
+        return data.json()
+      })
       .then((data: { form: any, session: any }) => {
         return data;
       }),
   });
+
+  useAssertAuthentication(error);
 
   return { isPending, review }
 }

@@ -25,12 +25,15 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import io.dialob.api.form.Form;
 import io.dialob.api.form.FormItem;
 import io.dialob.api.form.FormTag;
 import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
+import lombok.Data;
 
 // TODO:: clean up this mess
 public interface DialobClient {
@@ -40,12 +43,18 @@ public interface DialobClient {
   DialobClientProxy createProxyClient(); // combines form and questionnaire api-s 
   
   
+  List<FormListItem> findAllForms();
+  List<FormTag> findAllFormTags();
+
+  
   Form createForm(Form form);
   Form updateForm(Form form);
   FormTag createTag(String formId, String tagName);
   Form getFormById(String formId);
+  
   Optional<Form> findOneFormById(String formId);
-  List<FormTag> findAllFormTags(String formName);
+  List<FormTag> getOneFormTags(String formName);
+  
   FormTag getFormTag(String formName, String formTag);
   Form getFormByNameAndTag(String formName, String formTag);
     
@@ -80,6 +89,14 @@ public interface DialobClient {
     DialobSessionBuilder addContext(String id, Serializable value);
     DialobSessionBuilder addAnswer(String id, Serializable value);
     IdAndRevision build();
+  }
+  
+  
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  @Data
+  public static class FormListItem {
+    private String id;
+    private Form.Metadata metadata;
   }
   
   
