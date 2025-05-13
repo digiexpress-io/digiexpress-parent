@@ -85,12 +85,12 @@ public class GamutUserActionsController {
   }
   @GetMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
-    ResponseEntity<String> responseEntity = dialob.createProxy().sessionGet(sessionId);
+    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionGet(sessionId);
     return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
   }
   @PostMapping(value="/fill/{sessionId}")
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    final var resp = dialob.createProxy().sessionPost(sessionId, body);
+    final var resp = dialob.createProxyClient().sessionPost(sessionId, body);
     
     if(resp.getStatusCode().is2xxSuccessful()) {
       final var event = gamutClient.fillEvent()

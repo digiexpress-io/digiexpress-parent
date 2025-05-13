@@ -32,30 +32,32 @@ import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.api.rest.IdAndRevision;
 
-
+// TODO:: clean up this mess
 public interface DialobClient {
 
   DialobSessionBuilder createSession();
-  DialobProxy createProxy();  
+  void completeSession(String questionnaireId);
+  DialobClientProxy createProxyClient(); // combines form and questionnaire api-s 
+  
+  
   Form createForm(Form form);
   Form updateForm(Form form);
   FormTag createTag(String formId, String tagName);
-  
   Form getFormById(String formId);
   Optional<Form> findOneFormById(String formId);
-  
   List<FormTag> findAllFormTags(String formName);
   FormTag getFormTag(String formName, String formTag);
   Form getFormByNameAndTag(String formName, String formTag);
-  
+    
   
   Questionnaire getQuestionnaireById(String questionnaireId);
-  Questionnaire getQuestionnaireAndMetaById(String questionnaireId);
-  Dialob getDialobById(String questionnaireId);
-  
-  void completeSession(String questionnaireId);
-  
   ProxyAnswer proxyAnswer(Questionnaire q, Answer answer);
+  
+  // attaches form meta data to questionnaire
+  Questionnaire getQuestionnaireAndMetaById(String questionnaireId);
+  
+  // used by wrench flows
+  Dialob getDialobById(String questionnaireId);
   
   
   // Wrapper object, shorthand name for simplicity

@@ -20,7 +20,7 @@ package io.digiexpress.eveli.dialob.spi;
  * #L%
  */
 
-import io.digiexpress.eveli.dialob.api.DialobProxy;
+import io.digiexpress.eveli.dialob.api.DialobClientProxy;
 import io.digiexpress.eveli.dialob.spi.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class DialobProxyImpl implements DialobProxy {
+public class DialobProxyImpl implements DialobClientProxy {
 
   private final DialobService dialobService;
 
