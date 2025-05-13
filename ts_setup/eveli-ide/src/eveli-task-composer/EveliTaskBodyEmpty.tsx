@@ -26,7 +26,7 @@ export const EveliTaskBodyEmpty: React.FC<{  }> = ({  }) => {
       <NewTaskAccordionMsg id='task.comments.external.createTask' />
     </Grid2>
     <Grid2 size={{ xs: 12 }}>
-      <NewTaskAccordionMsg id='task.comments.attachments.createTask' />
+      <NewTaskAccordionMsg id='task.attachments.createTask' />
     </Grid2>
     <Grid2 size={{ xs: 12 }}>
       <NewTaskAccordionMsg id='task.comments.internal.createTask' />
