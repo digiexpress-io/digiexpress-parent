@@ -14,6 +14,7 @@ export interface GLocalesProps {
   hidden?: boolean;
   onClick?: (newLocale: string) => void;
   component?: GOverridableComponent<GLocalesProps>;
+  showOnlyFlag?: boolean;
 }
 
 export const GLocales: React.FC<GLocalesProps> = (initProps) => {
@@ -56,11 +57,13 @@ export const GLocales: React.FC<GLocalesProps> = (initProps) => {
 
   return (
     <Root ownerState={ownerState} className={classes.root}>
-      <Button onClick={anchorOnClick}
+      <Button
+        onClick={anchorOnClick}
         variant='text'
         startIcon={startIcon}
-        className={classes.selectedLocale}>
-        <FormattedMessage id={"gamut.locale." + value} />
+        className={classes.selectedLocale}
+      >
+        {!props.showOnlyFlag && <FormattedMessage id={"gamut.locale." + value} />}
       </Button>
       <Popover {...anchorProps}>
         <List disablePadding>

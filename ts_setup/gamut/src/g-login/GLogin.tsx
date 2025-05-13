@@ -11,6 +11,7 @@ import { GOverridableComponent } from '../g-override';
 export interface GLoginProps {
   icon?: OverridableComponent<SvgIconTypeMap> & { muiName: string }
   component?: GOverridableComponent<GLoginProps>;
+  hideStartIcon?: boolean;
 }
 
 export const GLogin: React.FC<GLoginProps> = (initProps) => {
@@ -31,7 +32,12 @@ export const GLogin: React.FC<GLoginProps> = (initProps) => {
   return (
     <GAuth>
       <Root ownerState={ownerState} className={classes.root}>
-        <Button type='submit' variant='contained' startIcon={<StartIcon />}>
+        <Button 
+          type='submit' 
+          variant='contained' 
+          //startIcon={<StartIcon />}
+          startIcon={!props.hideStartIcon ? <StartIcon /> : undefined}
+        >
           <FormattedMessage id='gamut.buttons.login' />
         </Button>
       </Root>

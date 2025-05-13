@@ -1,5 +1,5 @@
 import React from 'react';
-import { Toolbar, useThemeProps } from '@mui/material';
+import { Toolbar, useThemeProps, useMediaQuery, useTheme } from '@mui/material';
 import { GShellClassName } from '../g-shell';
 import { GLayout } from '../g-layout';
 import { GLogo } from '../g-logo';
@@ -29,6 +29,9 @@ export interface GAppBarProps {
 }
 
 export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const iam = useIam();
   const props = useThemeProps({
     props: initProps,
@@ -77,8 +80,10 @@ export const GAppBar: React.FC<GAppBarProps> = (initProps) => {
                 <GUserIdentity userName={iam.userName ?? ''} classes={classes} />
               )}
             <div className={classes.buttonLayout}>
-              <GLocales value={props.locale} onClick={props.onLocale} />
-              {iam.authType === 'ANON' ? <GLogin /> : <GLogout/>}
+              <GLocales value={props.locale} onClick={props.onLocale} showOnlyFlag={isMobile} />
+              {iam.authType === 'ANON'
+                ? <GLogin hideStartIcon={isMobile} />
+                : <GLogout hideStartIcon={isMobile} />}
             </div>
           </div>
           <>

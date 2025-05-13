@@ -13,6 +13,7 @@ import { GOverridableComponent } from '../g-override'
 export interface GLogoutProps {
   icon?: OverridableComponent<SvgIconTypeMap> & { muiName: string };
   component?: GOverridableComponent<GLogoutProps>;
+  hideStartIcon?: boolean;
 }
 
 
@@ -33,7 +34,12 @@ export const GLogout: React.FC<GLogoutProps> = (initProps) => {
   return (
     <Root className={classes.root} ownerState={ownerState}>
       <GAuthUn>
-        <Button type='submit' variant='outlined' startIcon={<StartIcon />}>
+        <Button 
+          type='submit' 
+          variant='outlined' 
+          //startIcon={<StartIcon />}
+          startIcon={!props.hideStartIcon ? <StartIcon /> : undefined}
+        >
           <FormattedMessage id='gamut.buttons.logout' />
         </Button>
       </GAuthUn>
