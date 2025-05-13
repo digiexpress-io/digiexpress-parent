@@ -25,6 +25,6 @@ export function useStatusTimeline(dashboard: TaskApi.TaskDasboard): { taskTimeli
     return collector;
   }, {});
 
-  const taskTimelineStats: TaskStatusTimelineStatistics[] = Object.values(data);
+  const taskTimelineStats: TaskStatusTimelineStatistics[] = Object.values(data).sort((a,b)=>(new Date(a.statusDate).getTime() - new Date(b.statusDate).getTime()));
   return { taskTimelineStats }
 }

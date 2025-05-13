@@ -35,7 +35,8 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
         subLabelKey: template.subLabelKey,
         subLabelValue: template.subLabelValue,
         reply: template.replys?.join("\r\n\r\n") ?? '',
-        customerTitle: template.customerTitle
+        customerTitle: template.customerTitle,
+        question: template.content?.question ?? '' 
       });
 
       setTemplate(template);
@@ -44,8 +45,12 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
 
   }, []);
 
-  function setReply(value: string) {
-    setCommand(prev => (prev ? { ...prev, reply: value } : undefined));
+  function setReply(reply: string) {
+    setCommand(prev => (prev ? { ...prev, reply } : undefined));
+  }
+
+  function setQuestion(question: string) {
+    setCommand(prev => (prev ? { ...prev, question } : undefined));
   }
 
 
@@ -78,10 +83,19 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
-
         <FeedbackContent feedback={template?.content} />
-        <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
 
+        <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
+        <TextField onChange={(e) => setQuestion(e.target.value)}
+          sx={{ mb: 3 }}
+          multiline
+          minRows={4}
+          placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder', defaultMessage: 'Customer question' })}
+          value={command?.question ?? ''}
+        />
+
+
+        <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
         <TextField onChange={(e) => setReply(e.target.value)}
           sx={{ mb: 3 }}
           multiline

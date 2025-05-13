@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.config;
 
+import java.util.List;
+
 /*-
  * #%L
  * eveli-client
@@ -33,4 +35,6 @@ public class EveliProps {
    * https://${CONTAINER_APP_NAME}.${CONTAINER_APP_ENV_DNS_SUFFIX}/${server.servlet.context-path}
    */
   private String serviceUrl;
+  
+  private List<String> tenantFeatures;
 }

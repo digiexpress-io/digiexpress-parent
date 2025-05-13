@@ -1,0 +1,10 @@
+spring:
+  config.activate.on-profile: 'prod'
+
+logging.level.io.digiexpress.eveli.envir.spi.actions.DeploymentBuilderLogger: DEBUG
+logging.level.io.digiexpress.eveli.envir.spi.EveliRuntimeCacheInMemory: DEBUG
+logging.level.io.digiexpress.eveli.envir.spi.actions.EveliRuntimeLogger: DEBUG
+logging.level.io.thestencil.client.spi.staticontent.visitors.SiteStateVisitor: DEBUG
+
+# disable certain eveli feature
+eveli.tenant-features: wrench-disabled, stencil-disabled, external-deployment

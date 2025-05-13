@@ -112,6 +112,7 @@ public interface FeedbackClient {
     FeedbackQuestionnaireContent getContent();
     String getReply();
     String getLocale();
+    @Nullable String getQuestion();
   }
   
   @JsonTypeInfo(
@@ -140,6 +141,8 @@ public interface FeedbackClient {
   @Value.Immutable
   interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
     String getReply();
+    String getQuestion();
+    
     @Value.Default
     @Override default ModifyFeedbackCommandType getCommandType() { return ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY; }
   }

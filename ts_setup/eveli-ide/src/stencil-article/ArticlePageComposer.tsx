@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, useTheme } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from '@mui/material';
 
 import MDEditor, { ICommand, commands, TextState, TextAreaTextApi } from '@uiw/react-md-editor';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage } from 'react-intl';
-import ArticlePageItem from '../stencil-explorer/article/ArticlePageItem';
 import { SimpleTreeView } from '@mui/x-tree-view';
+import ArticlePageItem from '../stencil-explorer/article/ArticlePageItem';
 
 const regexp_starts_with = new RegExp('^# .');
 
@@ -42,10 +42,12 @@ const templateCommand = (template: StencilApi.Template): ICommand => ({
 
 
 const MdLocaleSelect: React.FC<{locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site, onClick: () => void}> = ({ locale, color, site, onClick }) => {
-  return (
+  return (<>
     <div style={{ fontWeight: 'bold', fontSize: 15, alignItems: 'center', color }} onClick={onClick}>
-      <FormattedMessage id='pages.locale.selected' defaultMessage='selected'/> {locale?.body.value}
-    </div>);
+      <FormattedMessage id='pages.locale.selected' defaultMessage='Selected:' /> {locale?.body.value}
+    </div>
+  </>
+  );
 }
 
 const getMdCommands = (locale: StencilApi.SiteLocale, color: string, site: StencilApi.Site, onClick: () => void) => {
@@ -102,12 +104,16 @@ const ArticlePageSelect: React.FC<{ articleId: StencilApi.ArticleId, open: boole
   return (
     <Dialog open={open}>
       <DialogTitle>
-        <FormattedMessage id='pages.select.locale' defaultMessage='Select article locale'/>
+        <FormattedMessage id='pages.select.locale' defaultMessage='Select article locale(s) to edit page content' />
       </DialogTitle>
       <DialogContent>
+
+        <Box mb={2}><FormattedMessage id='pages.select.locale.edit.desc' defaultMessage='Up to two page languages can be edited side-by-side in the same tab.' /></Box>
+
         <SimpleTreeView>
           {view.pages.map(pageView => (<ArticlePageItem key={pageView.page.id} article={view} page={pageView} />))}
         </SimpleTreeView>
+
       </DialogContent>
       <DialogActions>
         <Button variant='contained' onClick={onClose}><FormattedMessage id='button.close'/></Button>

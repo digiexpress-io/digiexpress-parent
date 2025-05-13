@@ -19,6 +19,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { ToolbarBuildInfoRoot, useUtilityClasses as useBuildInfoClasses } from './useUtilityClasses';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 
 export const Toolbar: React.FC<{}> = ({ }) => {
@@ -49,55 +50,57 @@ export const Toolbar: React.FC<{}> = ({ }) => {
         </div>
       </EveliPermissions>
 
+      <EveliTenantFeatureEnabled id='WRENCH_ENABLED'>
+        <EveliPermissions id='NAV_TO_WRENCH'>
+          <div>
+            <IconButton
+              {...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive } : {})}
+              onClick={() => navigate({
+                from: '/secured/$locale',
+                to: '/secured/$locale/assets/wrench',
+                search: { explorer: [] }
+              })}>
+              <BuildOutlinedIcon />
+            </IconButton>
+            <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
+          </div>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
 
-      <EveliPermissions id='NAV_TO_WRENCH'>
-        <div>
-          <IconButton
-            {...(location.pathname.includes('wrench') ? { disabled: true, className: classes.itemActive } : {})}
-            onClick={() => navigate({
-              from: '/secured/$locale',
-              to: '/secured/$locale/assets/wrench',
-              search: { explorer: [] }
-            })}>
-            <BuildOutlinedIcon />
-          </IconButton>
-          <Typography><FormattedMessage id='toolbar.wrench' /></Typography>
-        </div>
-      </EveliPermissions>
+      <EveliTenantFeatureEnabled id='STENCIL_ENABLED'>
+        <EveliPermissions id='NAV_TO_STENCIL'>
+          <div>
+            <IconButton
+              {...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive } : {})}
+              onClick={() => navigate({
+                from: '/secured/$locale',
+                to: '/secured/$locale/assets/stencil',
+                search: { explorer: [] }
+              })}>
+              <EditNoteOutlinedIcon />
+            </IconButton>
+            <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
+          </div>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
 
-
-      <EveliPermissions id='NAV_TO_STENCIL'>
-        <div>
-          <IconButton
-            {...(location.pathname.includes('stencil') ? { disabled: true, className: classes.itemActive } : {})}
-            onClick={() => navigate({
-              from: '/secured/$locale',
-              to: '/secured/$locale/assets/stencil',
-              search: { explorer: [] }
-            })}>
-            <EditNoteOutlinedIcon />
-          </IconButton>
-          <Typography><FormattedMessage id='toolbar.stencil' /></Typography>
-        </div>
-      </EveliPermissions>
-
-
-      <EveliPermissions id='NAV_TO_DIALOB'>
-        <div>
-          <IconButton {...(location.pathname.endsWith('forms') ? { disabled: true, className: classes.itemActive } : {})}
-            onClick={() => navigate({
-              from: '/secured/$locale',
-              to: '/secured/$locale/assets/forms'
-            })}>
-            <ListIcon />
-          </IconButton>
-          <Typography {...(location.pathname.endsWith('forms') ? { className: classes.textActive } : {})
-          }>
-            <FormattedMessage id='menu.forms' />
-          </Typography>
-        </div>
-      </EveliPermissions>
-
+      <EveliTenantFeatureEnabled id='DIALOB_ENABLED'>
+        <EveliPermissions id='NAV_TO_DIALOB'>
+          <div>
+            <IconButton {...(location.pathname.endsWith('forms') ? { disabled: true, className: classes.itemActive } : {})}
+              onClick={() => navigate({
+                from: '/secured/$locale',
+                to: '/secured/$locale/assets/forms'
+              })}>
+              <ListIcon />
+            </IconButton>
+            <Typography {...(location.pathname.endsWith('forms') ? { className: classes.textActive } : {})
+            }>
+              <FormattedMessage id='menu.forms' />
+            </Typography>
+          </div>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
 
       <EveliPermissions id='NAV_TO_RELEASES'>
         <div>

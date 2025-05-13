@@ -25,11 +25,10 @@ import java.time.OffsetDateTime;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.entities.TenantEntity;
-import io.resys.thena.api.entities.fs.ThenaFsObject.IsFsObject;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
-public interface FsCommit extends TenantEntity, IsFsObject {
+public interface FsCommit extends TenantEntity {
   String getCommitId();
   @Nullable String getParentCommitId();  
   @Nullable String getDirentId();
@@ -38,6 +37,4 @@ public interface FsCommit extends TenantEntity, IsFsObject {
   String getCommitAuthor();
   String getCommitLog();
   String getCommitMessage();
-  
-  @Override default public FsDocType getDocType() { return FsDocType.FS_COMMIT; };
 }

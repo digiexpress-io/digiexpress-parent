@@ -27,7 +27,7 @@ import org.springframework.http.ResponseEntity;
 
 
 // whatever api 
-public interface DialobProxy {
+public interface DialobClientProxy {
   
   ResponseEntity<String> sessionGet(String sessionId);
   ResponseEntity<String> sessionPost(String sessionId, String body);

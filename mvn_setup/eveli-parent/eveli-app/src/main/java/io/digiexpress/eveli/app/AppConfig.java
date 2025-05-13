@@ -20,22 +20,14 @@ package io.digiexpress.eveli.app;
  * #L%
  */
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.digiexpress.eveli.client.api.OrgClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfig.EveliPropsDbResolved;
-import io.digiexpress.eveli.client.config.EveliAutoConfigAssets;
-import io.digiexpress.eveli.client.config.EveliAutoConfigAssets.EveliEditEnvir;
-import io.digiexpress.eveli.client.config.EveliProps;
-import io.digiexpress.eveli.client.config.EveliPropsAssets;
 import io.digiexpress.eveli.client.config.EveliPropsMq;
 import io.digiexpress.thena.mq.client.api.ThenaMqClient;
 import io.digiexpress.thena.mq.client.spi.persistence.ThenaMqChannelStateImpl;
@@ -63,20 +55,6 @@ public class AppConfig {
         .build();
   }
   
-  
-  
-  // Bean controlling that stencil/wrench assets can be edited
-  @Bean(name = EveliAutoConfigAssets.BEAN_NAME)
-  public EveliEditEnvir eveliEditEnvir(
-      EveliProps eveliProps, 
-      EveliPropsAssets assetProps,
-      ObjectMapper objectMapper,
-      ApplicationContext context,
-      io.vertx.mutiny.pgclient.PgPool pgPool) {
-    
-    return EveliAutoConfigAssets.getOrCreateDb(EveliAutoConfigAssets.eveliEditEnvir(eveliProps, assetProps, objectMapper, context, pgPool))
-        .await().atMost(Duration.ofMinutes(5));
-  }
   
   @Bean
   public OrgClient orgClient() {

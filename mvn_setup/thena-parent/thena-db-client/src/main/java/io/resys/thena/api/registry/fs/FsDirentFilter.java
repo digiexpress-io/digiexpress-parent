@@ -1,5 +1,8 @@
 package io.resys.thena.api.registry.fs;
 
+import java.util.List;
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-db-client
@@ -22,13 +25,12 @@ package io.resys.thena.api.registry.fs;
 
 import org.immutables.value.Value;
 
-import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
+import io.resys.thena.api.actions.FsQueryActions.FsArchiveQueryType;
 import jakarta.annotation.Nullable;
 
 @Value.Immutable
 public interface FsDirentFilter {
-  @Nullable GrimArchiveQueryType getArchived();
-  
+  @Nullable FsArchiveQueryType getArchived();
   @Nullable Boolean getLockForUpdate();
-
+  Optional<List<String>> getDirentIds();
 }

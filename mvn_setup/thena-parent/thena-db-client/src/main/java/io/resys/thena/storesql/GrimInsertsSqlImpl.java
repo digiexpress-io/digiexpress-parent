@@ -99,7 +99,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
 
     final Uni<GrimBatchMissions> del_data_uni = Execute.apply(tx, del_missionData).onItem()
         .transform(row -> successOutput(inputBatch, "Data deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete data \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete data \r\n" + inputBatch.getDeleteData(), e));
 
     final Uni<GrimBatchMissions> del_remarks_uni = Execute.apply(tx, del_remarks).onItem()
         .transform(row -> successOutput(inputBatch, "Remarks deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
@@ -107,11 +107,11 @@ public class GrimInsertsSqlImpl implements GrimInserts {
 
     final Uni<GrimBatchMissions> del_goals_uni = Execute.apply(tx, del_goals).onItem()
         .transform(row -> successOutput(inputBatch, "Goals deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete goals \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete goals \r\n" + inputBatch.getDeleteGoals(), e));
 
     final Uni<GrimBatchMissions> del_objectives_uni = Execute.apply(tx, del_objectives).onItem()
         .transform(row -> successOutput(inputBatch, "Objectives deleted, number of deleted entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete objectives \r\n" + inputBatch.getDeleteRemarks(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to delete objectives \r\n" + inputBatch.getDeleteObjectives(), e));
 
     
     
@@ -145,7 +145,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
     
     final Uni<GrimBatchMissions> upd_links_uni = Execute.apply(tx, upd_links).onItem()
         .transform(row -> successOutput(inputBatch, "Mission links updated, number of updated entries: " + + (row == null ? 0 : row.rowCount())))
-        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission links \r\n" + inputBatch.getUpdateMissions(), e));
+        .onFailure().transform(e -> failOutput(inputBatch, "Failed to update mission links \r\n" + inputBatch.getUpdateLinks(), e));
     
 
     

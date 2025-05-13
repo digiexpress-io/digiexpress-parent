@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.fs;
 
+import java.beans.Transient;
+
 /*-
  * #%L
  * thena-db-client
@@ -24,6 +26,7 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -59,6 +62,7 @@ public interface FsDirent extends TenantEntity, IsFsObject {
   String getDirentDescription();
   @Nullable String getDirentUserType(); // user defined optional type
   
+  @Transient @JsonIgnore
   @Nullable FsDirentTransitives getTransitives();
   
   @Override default public FsDocType getDocType() { return FsDocType.FS_DIRENT; };

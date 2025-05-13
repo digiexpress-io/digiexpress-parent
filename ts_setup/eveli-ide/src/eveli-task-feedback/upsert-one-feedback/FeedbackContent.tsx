@@ -41,13 +41,6 @@ export const FeedbackContent: React.FC<{ feedback: FeedbackApi.FeedbackContent |
         <Typography>{feedback.title}</Typography>
       </div>
     }
-
-    {feedback.question &&
-      <div style={{ marginBottom: 10 }}>
-        <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
-        <Typography>{feedback.question}</Typography>
-      </div>
-    }
   </>
   )
 }

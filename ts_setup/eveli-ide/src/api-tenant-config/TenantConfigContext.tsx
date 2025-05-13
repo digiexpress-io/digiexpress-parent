@@ -8,6 +8,14 @@ export interface TenantConfig {
 
 export type TenantFeature = (
   'wrench-only' | 
+  "wrench-disabled" |
+  "stencil-disabled"  |
+  "external-deployment" |
+
+
+  'queues-visually-disabled' |
+  'feedback-visually-disabled' |
+
   'stencil_locale_filter' | 
   'eveli_publication_only' | 
   'visual_accommodation');

@@ -20,6 +20,7 @@ import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.structures.fs.FsPrinter;
 import io.resys.thena.structures.git.GitPrinter;
 import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.support.DocDbPrinter;
@@ -142,6 +143,9 @@ public class DbTestTemplate {
     } else if(repo.getType() == StructureType.grim) {
       final String result = new GrimPrinter(createState()).print(repo);
       log.debug(result);
+    } else if(repo.getType() == StructureType.fs) {
+      final String result = new FsPrinter(createState()).print(repo);
+      log.debug(result);
     }
   }
   public Tenant getRepo() {
@@ -180,6 +184,8 @@ public class DbTestTemplate {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     } else if(client.getType() == StructureType.grim) {
       return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
+    } else if(client.getType() == StructureType.fs) {
+      return new FsPrinter(createState()).printWithStaticIds(client, replacements);
     }
     return new GitPrinter(createState()).printWithStaticIds(client);
   }

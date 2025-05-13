@@ -54,7 +54,7 @@ import io.dialob.api.questionnaire.Answer;
 import io.dialob.api.questionnaire.ImmutableQuestionnaire;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.digiexpress.eveli.dialob.api.DialobClient;
-import io.digiexpress.eveli.dialob.api.DialobProxy;
+import io.digiexpress.eveli.dialob.api.DialobClientProxy;
 import io.digiexpress.eveli.dialob.spi.DialobAssert.DialobException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import lombok.Data;
@@ -118,7 +118,7 @@ public class DialobClientImpl implements DialobClient {
     return new DialobSessionBuilderImpl(objectMapper, dialobService);
   }
   @Override
-  public DialobProxy createProxy() {
+  public DialobClientProxy createProxyClient() {
     return new DialobProxyImpl(dialobService);
   }
   @Override
@@ -135,7 +135,7 @@ public class DialobClientImpl implements DialobClient {
     try {
       final var headers = headers().toSingleValueMap();
       final var body = objectMapper.writeValueAsString(form);
-      final var resp = createProxy().formRequest("", null, HttpMethod.POST, body, headers);
+      final var resp = createProxyClient().formRequest("", null, HttpMethod.POST, body, headers);
       return objectMapper.readValue(resp.getBody(), Form.class);
     } catch (IOException e) {
       throw new DialobException(e.getMessage(), e);
@@ -147,7 +147,7 @@ public class DialobClientImpl implements DialobClient {
     try {
       final var headers = headers().toSingleValueMap();
       final var body = objectMapper.writeValueAsString(form);
-      final var resp = createProxy().formRequest("/" + form.getId(), null, HttpMethod.PUT, body, headers);
+      final var resp = createProxyClient().formRequest("/" + form.getId(), null, HttpMethod.PUT, body, headers);
       return objectMapper.readValue(resp.getBody(), Form.class);
     } catch (IOException e) {
       throw new DialobException(e.getMessage(), e);
@@ -163,11 +163,11 @@ public class DialobClientImpl implements DialobClient {
           .formName(formId)
           .type(Type.NORMAL)
           .build());
-      final var postTagResp = createProxy().formRequest("/" + formId + "/tags", null, HttpMethod.POST, body, headers);
+      final var postTagResp = createProxyClient().formRequest("/" + formId + "/tags", null, HttpMethod.POST, body, headers);
       DialobAssert.isTrue(postTagResp.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + postTagResp.getStatusCode() + " but expecting 2xx!");
       
       
-      final var getTagResp = createProxy().formRequest("/" + formId + "/tags/" + tagName, null, HttpMethod.GET, body, headers);
+      final var getTagResp = createProxyClient().formRequest("/" + formId + "/tags/" + tagName, null, HttpMethod.GET, body, headers);
       DialobAssert.isTrue(getTagResp.getStatusCode().is2xxSuccessful(), () -> "DIALOB status was: " + getTagResp.getStatusCode() + " but expecting 2xx!");
       
       return objectMapper.readValue(getTagResp.getBody(), FormTag.class);

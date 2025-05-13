@@ -69,7 +69,8 @@ UPDATE feedback_reply
 SET 
   updated_on_date = ?,
   updated_by = ?,
-  reply_text = ?
+  reply_text = ?,
+  customer_question = ?
 WHERE
   id = ?
 """), 
@@ -77,7 +78,9 @@ WHERE
       statement.setTimestamp(1, now);
       statement.setString(2, userId);
       statement.setString(3, command.getReply());
-      statement.setObject(4, UUID.fromString(replyId));
+      statement.setObject(4, command.getQuestion());
+      statement.setObject(5, UUID.fromString(replyId));
+
       return statement.executeUpdate();
     }); 
     

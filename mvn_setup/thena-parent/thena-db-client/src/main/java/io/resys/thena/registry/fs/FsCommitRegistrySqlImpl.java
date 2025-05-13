@@ -74,18 +74,6 @@ public class FsCommitRegistrySqlImpl implements FsCommitRegistry {
         .build();
   }
   @Override
-  public SqlTuple findAllByDirentId(String direntId) {
-    return ImmutableSqlTuple.builder()
-        .value(new SqlStatement()
-        .append("SELECT * ").ln()
-        .append("  FROM ").append(options.getFsCommit()).ln()
-        .append("  WHERE dirent_id = $1").ln() 
-        .build())
-        .props(Tuple.of(direntId))
-        .build();
-  }
-
-  @Override
   public SqlTupleList insertAll(Collection<FsCommit> commits) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()

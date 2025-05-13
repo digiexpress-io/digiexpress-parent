@@ -40,6 +40,7 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
 import io.resys.thena.storesql.builders.InternalTenantQueryImpl;
 import io.resys.thena.structures.doc.DocState;
+import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.GitState.TransactionFunction;
 import io.resys.thena.structures.grim.GrimState;
@@ -62,6 +63,27 @@ public class DbStateSqlImpl implements DbState {
   public InternalTenantQuery tenant() {
     return new InternalTenantQueryImpl(dataSource);
   }
+  
+  @Override
+  public Uni<FsState> toFsState(String tenantId) {
+    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
+      if(tenant == null) {
+        return tenantNotFound(tenantId);
+      }
+      return Uni.createFrom().item(toFsState(tenant));
+    });
+  }
+  @Override
+  public FsState toFsState(Tenant repo) {
+    return new FsDbStateImpl(dataSource.withTenant(repo));
+  }
+  @Override
+  public <R> Uni<R> withFsTransaction(TxScope scope, io.resys.thena.structures.fs.FsState.TransactionFunction<R> callback) {
+    return toFsState(scope.getTenantId()).onItem().transformToUni(state -> {
+      return state.withTransaction(callback);
+    });
+  }
+  
 
   @Override
   public Uni<GrimState> toGrimState(String tenantId) {

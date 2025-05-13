@@ -116,6 +116,7 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
     final var grim = next.getRegistry().grim();
+    final var fs = next.getRegistry().fs();
     final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
     
@@ -183,8 +184,32 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
           .append(org.orgMembers().createConstraints().getValue())
           .append(org.orgParties().createConstraints().getValue())
           .append(org.orgCommits().createConstraints().getValue())
-          .append(org.orgCommitTrees().createConstraints().getValue())
-          .toString();
+          .append(org.orgCommitTrees().createConstraints().getValue());
+        
+        
+      } else if(newRepo.getType() == StructureType.fs) {
+        
+        tablesCreate
+
+        .append(fs.direntAssignments().createTable().getValue())
+        .append(fs.commits().createTable().getValue())
+        .append(fs.commitTrees().createTable().getValue())
+        .append(fs.direntData().createTable().getValue())
+        .append(fs.direntLabels().createTable().getValue())
+        .append(fs.direntLinks().createTable().getValue())
+        .append(fs.dirents().createTable().getValue())
+        .append(fs.direntRemarks().createTable().getValue())
+
+        .append(fs.direntAssignments().createConstraints().getValue())
+        .append(fs.commits().createConstraints().getValue())
+        .append(fs.commitTrees().createConstraints().getValue())
+        
+        .append(fs.direntData().createConstraints().getValue())
+        .append(fs.direntLabels().createConstraints().getValue())
+        .append(fs.direntLinks().createConstraints().getValue())
+        .append(fs.dirents().createConstraints().getValue())
+        .append(fs.direntRemarks().createConstraints().getValue());
+        
         
       } else  {
         tablesCreate
@@ -258,6 +283,8 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
     final var doc = next.getRegistry().doc();
     final var org = next.getRegistry().org();
     final var grim = next.getRegistry().grim();
+    final var fs = next.getRegistry().fs();
+    
     
     final var sqlQuery = next.getRegistry();
     final var pool = next.getPool();
@@ -290,6 +317,20 @@ public class InternalTenantQueryImpl implements InternalTenantQuery {
         .append(grim.commitViewers().dropTable().getValue())
         .append(grim.missions().dropTable().getValue())
         .append(grim.commits().dropTable().getValue())
+        
+        ;
+      } else if(newRepo.getType() == StructureType.fs) {
+        tablesDrop
+        .append(fs.direntAssignments().dropTable().getValue())
+        .append(fs.direntData().dropTable().getValue())
+        .append(fs.direntLabels().dropTable().getValue())
+        .append(fs.direntLinks().dropTable().getValue())
+        .append(fs.direntRemarks().dropTable().getValue())
+
+        
+        .append(fs.commitTrees().dropTable().getValue())
+        .append(fs.dirents().dropTable().getValue())
+        .append(fs.commits().dropTable().getValue())
         
         ;
       } else if(newRepo.getType() == StructureType.org) {

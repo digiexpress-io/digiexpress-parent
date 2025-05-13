@@ -23,6 +23,8 @@ package io.resys.thena.spi;
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.DocCommitActions;
 import io.resys.thena.api.actions.DocQueryActions;
+import io.resys.thena.api.actions.FsCommitActions;
+import io.resys.thena.api.actions.FsQueryActions;
 import io.resys.thena.api.actions.GitBranchActions;
 import io.resys.thena.api.actions.GitCommitActions;
 import io.resys.thena.api.actions.GitDiffActions;
@@ -39,6 +41,8 @@ import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.doc.actions.DocAppendActionsImpl;
 import io.resys.thena.structures.doc.actions.DocQueryActionsImpl;
+import io.resys.thena.structures.fs.actions.FsCommitActionsImpl;
+import io.resys.thena.structures.fs.actions.FsQueryActionsImpl;
 import io.resys.thena.structures.git.GitRepoQueryImpl;
 import io.resys.thena.structures.git.commits.CommitActionsImpl;
 import io.resys.thena.structures.git.diff.DiffActionsImpl;
@@ -113,6 +117,17 @@ public class ThenaClientPgSql implements ThenaClient {
       @Override public String getTenantId() { return repoId; }
     };
   }
+  @Override
+  public FsStructuredTenant fs(String tenantIdOrName) {
+    RepoAssert.notEmpty(tenantIdOrName, () -> "tenantIdOrName can't be empty!");
+    return new FsStructuredTenant() {
+      @Override public FsProjectQuery tenants() { return null; }
+      @Override public String getTenantId() { return tenantIdOrName; }
+      @Override public FsQueryActions find() { return new FsQueryActionsImpl(state, tenantIdOrName); }
+      @Override public FsCommitActions commit() { return new FsCommitActionsImpl(state, tenantIdOrName); }
+    };
+  }
+  
 
   @Override
   public GitStructuredTenant git(TenantCommitResult repo) {
@@ -145,5 +160,13 @@ public class ThenaClientPgSql implements ThenaClient {
   @Override
   public GrimStructuredTenant grim(Tenant repo) {
     return this.grim(repo.getId());
+  }
+  @Override
+  public FsStructuredTenant fs(TenantCommitResult repo) {
+    return this.fs(repo.getRepo().getId());
+  }
+  @Override
+  public FsStructuredTenant fs(Tenant repo) {
+    return this.fs(repo.getId());
   }
 }

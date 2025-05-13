@@ -37,11 +37,14 @@ public interface TenantConfigClient {
     Uni<TenantConfig> getOne();
   }
   
-  
   @Value.Immutable
   @JsonSerialize(as = ImmutableTenantConfig.class)
   @JsonDeserialize(as = ImmutableTenantConfig.class)
   interface TenantConfig {
     List<String> getFeatures();
+    
+    boolean isWrenchDisabled();
+    boolean isStencilDisabled();
+    boolean isExternalDeployment();
   }
 }
