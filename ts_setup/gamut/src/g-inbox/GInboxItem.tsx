@@ -51,7 +51,7 @@ export const GInboxItem: React.FC<GInboxItemProps> = (initProps) => {
         </Typography>
       </Grid>
 
-      <Grid item xs={6} sm={3} md={2} lg={2} xl={2} className={classes.inboxItemTitle}>
+      <Grid item xs={6} sm={3} md={2} lg={6} xl={6} className={classes.inboxItemTitle}>
         <Typography component='span'>{title}</Typography>
       </Grid>
 
