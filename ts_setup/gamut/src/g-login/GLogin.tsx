@@ -35,7 +35,6 @@ export const GLogin: React.FC<GLoginProps> = (initProps) => {
         <Button 
           type='submit' 
           variant='contained' 
-          //startIcon={<StartIcon />}
           startIcon={!props.hideStartIcon ? <StartIcon /> : undefined}
         >
           <FormattedMessage id='gamut.buttons.login' />

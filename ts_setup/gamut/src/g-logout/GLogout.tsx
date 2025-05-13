@@ -37,7 +37,6 @@ export const GLogout: React.FC<GLogoutProps> = (initProps) => {
         <Button 
           type='submit' 
           variant='outlined' 
-          //startIcon={<StartIcon />}
           startIcon={!props.hideStartIcon ? <StartIcon /> : undefined}
         >
           <FormattedMessage id='gamut.buttons.logout' />
