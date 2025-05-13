@@ -1,5 +1,6 @@
 import { TaskApi } from "@/api-task";
 import { FilterFnOption, Row } from "@tanstack/react-table";
+import { DateTime } from "luxon";
 
 
 const priorityOrder: Record<TaskApi.TaskPriority, number> = {
@@ -64,33 +65,45 @@ export const filterTaskRefOrSubjectFn: FilterFnOption<TaskApi.Task> = (row, _col
   })
 }
 
+export const filterFormattedDateFn: FilterFnOption<TaskApi.Task> = (row, columnId, filterValue) => {
+  const rawDate = row.getValue(columnId) as string | undefined;
 
-export const filterStringOrArrayFn: FilterFnOption<TaskApi.Task> = (row, columnId: string, filterValue: string | string[]) => {
-  const rowValue = row.getValue(columnId) as string;
-  const target = Array.isArray(rowValue) ? rowValue.map((v) => v.toLowerCase()) : [(rowValue as string).toLowerCase()];
-
-  if (!filterValue || filterValue.length === 0) {
-    return true;
+  if (!rawDate) {
+    return false;
   }
 
-  const filters = Array.isArray(filterValue) ? filterValue.map((f) => f.toLowerCase()) : [filterValue.toLowerCase()];
+  const formatted = DateTime.fromISO(rawDate).toFormat('d.M.yyyy').toLowerCase();
+  const filters = Array.isArray(filterValue) ? filterValue : [filterValue];
 
-  return filters.some((filter) => target.some((target) => target.includes(filter))
+  return filters.some(f => formatted.includes(f.toLowerCase()));
+};
+
+
+
+function normalize(input: string | string[]): string[] {
+  const normalized: string[] = [];
+  if (Array.isArray(input)) {
+    normalized.push(...input);
+  } else if (input) {
+    normalized.push(input);
+  }
+
+  return normalized
+    .filter(value => !!value?.trim())
+    .map(value => value.toLowerCase())
+}
+
+export const filterStringOrArrayFn: FilterFnOption<TaskApi.Task> = (row, columnId: string, initFilters: string | string[]) => {
+  const filters = normalize(initFilters);
+  if (filters.length === 0) {
+    return true;
+  }
+  const rawValue: string | string[] | undefined | null = row.getValue(columnId);
+  if (rawValue === null || rawValue === undefined) {
+    return false;
+  }
+  const valueToFilter = normalize(rawValue);
+  return filters.some((filter) => valueToFilter.some((target) => target.includes(filter))
   );
 }
-
-/*
-export const filterStringOrArrayFn: FilterFnOption<TaskApi.Task> = (row, columnId: string, filterValue: string | string[]) => {
-  const rowValue = row.getValue(columnId) as string;
-  const target = rowValue?.toLowerCase();
-
-  const filters = Array.isArray(filterValue) ? filterValue.map((f) => f.toLowerCase()) : [filterValue.toLowerCase()];
-
-  if (!filterValue || filterValue.length === 0) {
-    return true;
-  }
-
-  return filters.some((filter) => target?.includes(filter));
-}
-*/
 
