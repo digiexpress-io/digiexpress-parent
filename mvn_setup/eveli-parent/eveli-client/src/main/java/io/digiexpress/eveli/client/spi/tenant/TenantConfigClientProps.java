@@ -32,10 +32,15 @@ import io.smallrye.mutiny.Uni;
 public class TenantConfigClientProps implements TenantConfigClient {
   
   private final TenantConfig config;
-
+  // hardcoded features
   private final static String WRENCH_DISABLED = "wrench-disabled";
   private final static String STENCIL_DISABLED = "stencil-disabled";
   private final static String EXTERNAL_DEPLOYMENT = "external-deployment";
+  
+  // just for doc purpose 
+  private final static String FEEDBACK_VISUALLY_DISABLED = "feedback-visually-disabled";
+  private final static String QUEUES_VISUALLY_DISABLED = "queues-visually-disabled";
+  
   
   public TenantConfigClientProps(EveliProps config) {
     final var features = Optional

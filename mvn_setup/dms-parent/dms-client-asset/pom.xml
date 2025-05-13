@@ -6,7 +6,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
-  <artifactId>dms-client</artifactId>
+  <artifactId>dms-client-assets</artifactId>
 
 
   <dependencies>
@@ -18,9 +18,22 @@
 
     <dependency>
       <groupId>io.digiexpress</groupId>
-      <artifactId>thena-db-client</artifactId>
+      <artifactId>dialob-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>stencil-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>hdes-client</artifactId>
     </dependency>
 
+
+    <dependency>
+      <groupId>io.digiexpress</groupId>
+      <artifactId>thena-db-client</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

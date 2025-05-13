@@ -12,6 +12,10 @@ export type TenantFeature = (
   "stencil-disabled"  |
   "external-deployment" |
 
+
+  'queues-visually-disabled' |
+  'feedback-visually-disabled' |
+
   'stencil_locale_filter' | 
   'eveli_publication_only' | 
   'visual_accommodation');

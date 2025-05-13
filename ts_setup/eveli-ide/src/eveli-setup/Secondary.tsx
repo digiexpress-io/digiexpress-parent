@@ -18,6 +18,7 @@ import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
 import { EveliLogo } from '@/eveli-logo';
 import { EveliPermissions } from '@/eveli-permissions';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
 export const Secondary: React.FC = () => {
   const intl = useIntl();
@@ -92,30 +93,34 @@ export const Secondary: React.FC = () => {
         </Button>
       </EveliPermissions>
 
+      <EveliTenantFeatureEnabled id='FEEDBACK_ENABLED'>
+        <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
+          <Button startIcon={<ThumbUpAltOutlinedIcon />}
+            variant={location.pathname.endsWith('feedback') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/feedback'
+            })}
+          >
+            {intl.formatMessage({ id: 'menu.feedback' })}
+          </Button>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
 
-      <EveliPermissions id='NAV_TO_TASKS_FEEDBACK'>
-        <Button startIcon={<ThumbUpAltOutlinedIcon />}
-          variant={location.pathname.endsWith('feedback') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/feedback'
-          })}
-        >
-          {intl.formatMessage({ id: 'menu.feedback' })}
-        </Button>
-      </EveliPermissions>
 
-      <EveliPermissions id='NAV_TO_TASKS_QUEUES'>
-        <Button startIcon={<CloudQueueIcon />}
-          variant={location.pathname.endsWith('queues') ? 'explorerActive' : 'explorerInactive'}
-          onClick={() => navigate({
-            from: '/secured/$locale',
-            to: '/secured/$locale/worker/queues'
-          })}
-        >
-          {intl.formatMessage({ id: 'menu.queues' })}
-        </Button>
-      </EveliPermissions>
+      <EveliTenantFeatureEnabled id='QUEUES_ENABLED'>
+        <EveliPermissions id='NAV_TO_TASKS_QUEUES'>
+          <Button startIcon={<CloudQueueIcon />}
+            variant={location.pathname.endsWith('queues') ? 'explorerActive' : 'explorerInactive'}
+            onClick={() => navigate({
+              from: '/secured/$locale',
+              to: '/secured/$locale/worker/queues'
+            })}
+          >
+            {intl.formatMessage({ id: 'menu.queues' })}
+          </Button>
+        </EveliPermissions>
+      </EveliTenantFeatureEnabled>
 
     </EveliShellExplorer>
   </>

@@ -29,6 +29,9 @@ const EveliFeatureMapping = {
 
   'FORM_REVIEW_FLASHY': oneOf(['visual_accommodation']),
   'FORM_REVIEW_NORMAL': notOneOf(['visual_accommodation']),
+
+  'QUEUES_ENABLED': notOneOf(['queues-visually-disabled']),
+  'FEEDBACK_ENABLED': notOneOf(['feedback-visually-disabled']),
 }
 
 
