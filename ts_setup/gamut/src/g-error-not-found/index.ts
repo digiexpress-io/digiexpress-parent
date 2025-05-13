@@ -1,0 +1,1 @@
+export { GErrorNotFound } from './GErrorNotFound';

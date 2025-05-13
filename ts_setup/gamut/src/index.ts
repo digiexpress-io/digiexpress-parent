@@ -16,6 +16,9 @@ export * from './g-props'
 export * from './g-app-bar'
 export * from './g-divider'
 
+export * from './g-error-not-found'
+export * from './g-error'
+
 export * from './g-locales'
 export * from './g-login'
 

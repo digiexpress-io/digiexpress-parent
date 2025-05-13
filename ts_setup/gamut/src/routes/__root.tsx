@@ -1,17 +1,15 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
 import React from 'react';
+
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { useIntl } from 'react-intl';
 
+import { GErrorNotFound } from '../g-error-not-found';
+import { GError } from '../g-error';
 
 export const Route = createRootRoute({
   component: RouteComponent,
-  notFoundComponent: () => {
-    return (
-      <div>
-        <p>Page Not found!</p>
-      </div>
-    )
-  },
+  notFoundComponent: GErrorNotFound,
+  errorComponent: GError
 })
 
 function RouteComponent() {
