@@ -54,7 +54,12 @@ public class DeploymentEnvirDialobUploader {
     if(!Boolean.TRUE.equals(link.getWorkflow())) {
       return;
     }
-    visitForm(locale, link);
+    try {
+      visitForm(locale, link);
+    } catch(Exception e) {
+      addError();
+      logger.failedToUpdateForm(link, e);
+    }
   }
   
   private void visitForm(String locale, TopicLink link) {
