@@ -56,7 +56,7 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
     <GLinksPageRoot className={classes.root} as={themeProps.component}>
       {formLinks.length ?
         <GLinks header={intl.formatMessage({ id: 'gamut.article.pagelinks.forms.title' })}>
-          {formLinks.map((formLink) => ((formLink.anon || loggedIn) ?
+          {formLinks.map((formLink) => (anon.isFormLinkEnabled(formLink) ?
             <GLinkFormUnlocked key={formLink.id} onClick={() => handleForm(formLink)} label={formLink.name} value={formLink.value} /> :
             <GLinkFormLocked key={formLink.id} onClick={() => handleForm(formLink)} label={formLink.name} value={formLink.value} /> 
           ))}

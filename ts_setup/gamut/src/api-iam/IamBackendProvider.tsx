@@ -5,6 +5,7 @@ import { IamLiveness } from './IamLiveness'
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useLocale } from '../api-locale';
+import { SiteApi } from '../api-site';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -79,6 +80,8 @@ function createContext(
     userName = user.firstName + ' ' + user.lastName;
   }
 
+
+
   return Object.freeze({
     authType, user, userRoles, userProducts,
     userName, 
@@ -89,6 +92,20 @@ function createContext(
       const data = await reload();
       return data;
     },
+    isFormLinkEnabled: (form: SiteApi.TopicLink) => {
+      
+
+      if(form.anon) {
+        return true;
+      }
+      if(authType === 'ANON') {
+        return false;
+      }
+      if(authType === 'USER') {
+        return true;
+      }
+      return (userProducts?.products ?? []).includes(form.value);
+    }
   });
 }
 

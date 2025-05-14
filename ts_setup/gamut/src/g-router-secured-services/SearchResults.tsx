@@ -5,6 +5,8 @@ import {
   GLinkPhone,
   GLinkHyper,
   GLinkFormUnlockedSearchResults,
+  GLinkFormLocked,
+  useIam,
 } from '../';
 
 import { OwnerState, useUtilityClasses } from './useUtilityClasses';
@@ -39,6 +41,7 @@ const ResultsDivider: React.FC<ResultsDividerProps> = ({ title, isHidden }) => {
 export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState }) => {
   const { onTopic, onForm } = ownerState;
   const { value: search } = SearchApi.useSearch();
+  const iam = useIam();
   const intl = useIntl();
   const classes = useUtilityClasses();
 
@@ -57,7 +60,7 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
         </Alert>
       ) : (
         <>
-            <ResultsDivider searchState={search} title='gamut.search.results.serviceLinks' isHidden={search.topics.length === 0} />
+          <ResultsDivider searchState={search} title='gamut.search.results.serviceLinks' isHidden={search.topics.length === 0} />
           <List dense>
             {search.topics.map((topic) => (
               <ListItem key={topic.id}>
@@ -69,12 +72,21 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
             <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
             {search.forms.map((form) => (
               <ListItem dense key={form.linkToForm.id}>
-              <GLinkFormUnlockedSearchResults
+
+              { iam.isFormLinkEnabled(form.linkToForm) ?
+              (<GLinkFormUnlockedSearchResults
                 key={form.linkToForm.id}
                 label={form.linkToForm.name}
                 value={form.linkToForm.value}
                 onClick={() => { onForm(form) }}
-              />
+              />) : (
+                <GLinkFormLocked
+                  key={form.linkToForm.id}
+                  label={form.linkToForm.name}
+                  value={form.linkToForm.value}
+                  onClick={() => { onForm(form) }}
+                />)
+              }
             </ListItem>
           ))}
 
