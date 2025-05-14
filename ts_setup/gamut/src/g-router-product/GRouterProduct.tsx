@@ -123,8 +123,8 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
     offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
       if (anonymousUser) {
         nav({
-          params: { locale, pageId },
-          to: '/public/$locale/pages/$pageId',
+          params: { locale, pageId, productId, offerId: offer.id },
+          to: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
         })
       } else {
         nav({
@@ -165,6 +165,9 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   const { user } = useIam();
 
   const userName = user?.firstName + " " + user?.lastName || user?.representedCompany?.name || user?.representedPerson?.name || 'no user name';
+  const anonUser = !user;
+
+  console.log(user)
 
   return (
     <div className={classes.productTitle}>
@@ -182,7 +185,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
           <ListItem>
             <ListItemText>
               <Alert severity='success' variant='filled' className={classes.loginAlert}>
-                <AlertTitle>{intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
+                <AlertTitle>{anonUser ? intl.formatMessage({ id: 'gamut.forms.filling.anonUser_and_welcome' }) : intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
                 {intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_proceed' }, { userName })}
               </Alert>
             </ListItemText>

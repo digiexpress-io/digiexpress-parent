@@ -45,7 +45,7 @@ export const GRouterOffer: React.FC<GRouterOfferProps> = (initProps) => {
     if (anonymousUser) {
       nav({
         from: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
-        to: '/public/$locale/pages/$pageId/products/$productId',
+        to: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
       })
     }
     else {
