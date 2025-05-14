@@ -38,8 +38,7 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)
   const anonymousUser = anon.authType === 'ANON';
-  const anonLink: boolean = anonymousUser && topicLink?.anon === true;
-  const allowed: boolean = (!anonymousUser || anonLink) && !!topicLink;
+  const allowed: boolean = topicLink ? anon.isFormLinkEnabled(topicLink) : false;
   const ownerState = {
     topic,
     topicLink,

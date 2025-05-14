@@ -93,8 +93,6 @@ function createContext(
       return data;
     },
     isFormLinkEnabled: (form: SiteApi.TopicLink) => {
-      
-
       if(form.anon) {
         return true;
       }
