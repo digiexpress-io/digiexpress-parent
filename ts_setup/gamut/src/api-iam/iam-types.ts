@@ -27,7 +27,6 @@ export declare namespace IamApi {
   }
   export interface UserRoles {
     roles: string[];
-    principal: object;
   }
 
   export interface UserProducts {

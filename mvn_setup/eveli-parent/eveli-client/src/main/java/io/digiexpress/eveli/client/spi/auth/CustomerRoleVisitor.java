@@ -42,7 +42,6 @@ import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,8 +57,7 @@ public class CustomerRoleVisitor {
   @Value.Immutable @JsonSerialize(as = ImmutableUserRoles.class) @JsonDeserialize(as = ImmutableUserRoles.class)
   interface UserRoles {
     List<String> getRoles();
-    @Nullable
-    UserRolesPrincipal getPrincipal(); 
+    //@Nullable UserRolesPrincipal getPrincipal(); 
   }
   @Value.Immutable @JsonSerialize(as = ImmutableUserRolesPrincipal.class) @JsonDeserialize(as = ImmutableUserRolesPrincipal.class)
   interface UserRolesPrincipal {
@@ -102,7 +100,7 @@ public class CustomerRoleVisitor {
     if (!resp.getStatusCode().is2xxSuccessful()) {
       String error = "Can't create response, e = " + resp.getStatusCode()  + " | " + resp.getHeaders();
       log.error("USER ROLES: Error: {} body: {}", error, resp.getBody());
-      return ImmutableCustomerRoles.builder().identifier("").username("").build();
+      return ImmutableCustomerRoles.builder().build();
     }
     
     final ImmutableUserRoles userRoles;
@@ -110,49 +108,34 @@ public class CustomerRoleVisitor {
       final JsonObject body = new JsonObject(resp.getBody());
       logger.rolesGetPersonBody(body);
       if(body.isEmpty()) {
-        return ImmutableCustomerRoles.builder().identifier("").username("").build();
+        return ImmutableCustomerRoles.builder().build();
       }
 
       final var jsonRoles = body.getJsonArray("roles");
       final var roles = jsonRoles.stream().map(data -> (String) data).collect(Collectors.toList());
-      final var jsonPrincipal = body.getJsonObject("principal");
-      final var principal = jsonPrincipal == null ? null : ImmutableUserRolesPrincipal.builder()
-          .name(jsonPrincipal.getString("name"))
-          .identifier(jsonPrincipal.getString("personId"))
-          .build();
       
       userRoles = ImmutableUserRoles.builder()
         .roles(roles)
-        .principal(principal)
         .build();
     } else {
       final JsonArray bodies = new JsonArray(resp.getBody());
       logger.rolesGetCompanyBody(bodies);
       if(bodies.isEmpty()) {
-        return ImmutableCustomerRoles.builder().identifier("").username("").build();
+        return ImmutableCustomerRoles.builder().build();
       }
       
       final var body = bodies.getJsonObject(0);
-      final var jsonName = body.getString("name");
-      final var jsonIdentifier = body.getString("identifier");
       final var jsonRoles = body.getJsonArray("roles");
       final var roles = jsonRoles.stream().map(data -> (String) data).collect(Collectors.toList());
       
-      final var principal = jsonIdentifier == null ? null : ImmutableUserRolesPrincipal.builder()
-          .name(jsonName)
-          .identifier(jsonIdentifier)
-          .build(); 
       userRoles = ImmutableUserRoles.builder()
           .roles(roles)
-          .principal(principal)
           .build();
     }
     
     logger.rolesGetOk(userRoles);
     
     return ImmutableCustomerRoles.builder()
-        .identifier(userRoles.getPrincipal().getIdentifier())
-        .username(userRoles.getPrincipal().getName())
         .addAllRoles(userRoles.getRoles())
         .build();
   }

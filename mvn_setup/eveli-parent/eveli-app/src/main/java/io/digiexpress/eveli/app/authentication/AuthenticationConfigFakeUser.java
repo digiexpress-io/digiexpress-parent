@@ -196,11 +196,7 @@ public class AuthenticationConfigFakeUser  {
 
       @Override
       public CustomerRoles getCustomerRoles() {
-        final var customer = getCustomer();
-        
         return ImmutableCustomerRoles.builder()
-            .identifier(customer.getPrincipal().getSsn())
-            .username(customer.getPrincipal().getUsername())
             .build();
       }
     };
