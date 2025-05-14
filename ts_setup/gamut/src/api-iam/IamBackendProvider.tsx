@@ -28,7 +28,7 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
 
 
   React.useEffect(() => { 
-    if(user) {
+    if(user && (user.representedCompany || user.representedPerson)) {
       getUserRoles(props).then(async userRoles => {
         const userProducts = userRoles?.roles.length ? await getUserProducts(props) : undefined;
         setUserRolesProducts({userRoles, userProducts});
