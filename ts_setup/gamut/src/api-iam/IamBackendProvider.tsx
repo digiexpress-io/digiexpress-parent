@@ -116,8 +116,13 @@ function useUser(props: IamBackendProviderProps): {
           console.log("ANON user", resp.status);
           return null;
         }
+        
         const json = await resp.json();
         setFirstLoad(false);
+        if(json.type === 'ANON') {
+          return null;
+        }
+
         return json.principal;
       } catch (e) {
         setFirstLoad(false);
