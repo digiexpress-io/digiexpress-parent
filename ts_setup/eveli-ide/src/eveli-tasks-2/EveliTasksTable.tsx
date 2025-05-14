@@ -124,7 +124,7 @@ export const EveliTasksTable: React.FC = () => {
       size: 150,
       minSize: 150,
       enableSorting: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       enableResizing: true,
       cell: (dueDate) => flexRender(AnyTaskDateTimeShort, { value: dueDate.getValue() })
     },
@@ -135,7 +135,7 @@ export const EveliTasksTable: React.FC = () => {
       size: 150,
       minSize: 150,
       enableSorting: true,
-      enableColumnFilter: false,
+      enableColumnFilter: true,
       enableResizing: true,
       cell: (created) => flexRender(AnyTaskDateTimeShort, { value: created.getValue() })
     },

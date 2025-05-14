@@ -46,6 +46,11 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
 
   const isShowAllChecked = currentFilter === undefined || currentFilter === '' || (Array.isArray(currentFilter) && currentFilter.length === 0);
 
+  if (header.column.getCanFilter() === false) {
+    return (<></>) // hide filter icon to prevent opening the menu popover
+  }
+
+
   return (
     <Root className={classes.root}>
       <IconButton onClick={anchor.handleClick} disableRipple disableFocusRipple>
@@ -67,7 +72,7 @@ export const ToolHeaderSearch: React.FC<EveliTableFilterAndSearchProps> = ({ hea
           </TextField>
         </FilterByStringSlot>
 
-        <MenuItem onClick={handleClearFilters} >
+        <MenuItem onClick={handleClearFilters}>
           <ListItemIcon>
             {isShowAllChecked ? <CheckBoxIcon className='filters-icon' /> : <CheckBoxOutlineBlankIcon className='filters-icon' />}
           </ListItemIcon>
