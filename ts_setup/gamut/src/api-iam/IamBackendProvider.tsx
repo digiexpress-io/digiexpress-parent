@@ -169,10 +169,10 @@ async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.U
     }
 
     console.error("Can't get user products", { status: products.status, statusText: products.statusText });
-    return undefined;
+    return { products: [] };
   } catch(error) {
-    console.error("Can't get user products", error);
-    return undefined;
+    console.error("Can't get user products", error);    
+    return { products: [] };
   }
 }
 
