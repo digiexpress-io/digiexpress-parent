@@ -20,7 +20,7 @@ export function createIamFetch(url: (string | undefined) = '/portal/secured/iam'
   }
 
   const fetchUserProductsGET: IamApi.FetchUserProductsGET = async () => {
-    const response = await window.fetch(`${url}/authorizations`, {
+    const response = await window.fetch(`/portal/secured/actions/authorizations`, {
       method: 'GET',
       headers: undefined,
       credentials: undefined,
