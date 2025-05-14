@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.groovy.parser.antlr4.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.digiexpress.eveli.client.api.CommsClient;
 import io.digiexpress.eveli.client.api.OrgClient;
@@ -89,10 +89,9 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
   }
   
   private List<String> getEmails(TaskNotification notification) {
-    final List<String> emails = (StringUtils.isEmpty(notification.getTaskGroupId()) ? 
-        (StringUtils.isEmpty(notification.getAssigneeEmail()) ? Collections.emptyList() : Arrays.asList(notification.getAssigneeEmail())) : 
-        orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId())
-    );
+    final List<String> emails = StringUtils.isNotEmpty(notification.getAssigneeEmail()) ? Arrays.asList(notification.getAssigneeEmail()) :
+        (StringUtils.isNotEmpty(notification.getTaskGroupId()) ? 
+            orgClient.queryGroupEmails().findAllByGroupName(notification.getTaskGroupId()) :Collections.emptyList()); 
     
     final var updaterIsAssignee = notification.getUpdaterId().equals(notification.getAssigneeId());
     
