@@ -71,8 +71,8 @@ public class EveliAutoConfigGamut {
   }
   
   @Bean
-  public GamutFeedbackController gamutFeedbackController(EveliPropsGamut props, GamutClient gamutClient, DialobClient dialobClient) {
-    return new GamutFeedbackController(gamutClient, dialobClient);
+  public GamutFeedbackController gamutFeedbackController(EveliPropsGamut props, GamutClient gamutClient, DialobClient dialobClient, ApplicationEventPublisher publisher) {
+    return new GamutFeedbackController(gamutClient, dialobClient, publisher);
   }
 
   @Bean

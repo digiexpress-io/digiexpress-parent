@@ -34,11 +34,13 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
+import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.task.TaskViewerPublisher;
 import io.digiexpress.eveli.client.web.resources.comms.PrintoutController;
 import io.digiexpress.eveli.client.web.resources.worker.AttachmentApiController;
 import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
+import io.digiexpress.eveli.client.web.resources.worker.SchedulerApiCotroller;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -96,5 +98,10 @@ public class EveliAutoConfigWorker {
   @Bean
   public TaskViewerPublisher viewerEventPublisher(ApplicationEventPublisher publisher, TaskClient client) {
     return new TaskViewerPublisher(publisher, client);
+  }
+  
+  @Bean
+  public SchedulerApiCotroller schedulerApiCotroller(DialobScheduler dialob) {
+    return new SchedulerApiCotroller(dialob);
   }
 }

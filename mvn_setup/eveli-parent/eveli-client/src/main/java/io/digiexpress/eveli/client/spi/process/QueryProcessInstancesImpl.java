@@ -29,6 +29,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.data.domain.Sort;
 
+import com.google.common.collect.ImmutableList;
+
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
@@ -73,7 +75,10 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
   }
   @Override
   public List<ProcessInstance> findAllAnswered() {
-    return processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList();
+    return ImmutableList.<ProcessClient.ProcessInstance>builder()
+        .addAll(processJPA.findAllByStatus(ProcessStatus.ANSWERED).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatus(ProcessStatus.CREATED).stream().map(CreateProcessInstanceImpl::map).toList())
+        .build();
   }
   @Override
   public List<ProcessInstance> findAllExpired() {

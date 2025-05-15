@@ -3,7 +3,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { GAuthUnRepPersonProps } from './GAuthUnRepPerson';
 
 
-export const MUI_NAME = 'GAuthRepPerson';
+export const MUI_NAME = 'GAuthUnRepPerson';
 
 export interface GAuthUnRepPersonClasses {
   root: string;

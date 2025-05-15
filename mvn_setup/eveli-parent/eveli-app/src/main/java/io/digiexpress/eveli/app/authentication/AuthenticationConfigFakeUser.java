@@ -185,6 +185,12 @@ public class AuthenticationConfigFakeUser  {
                 .firstName("same")
                 .lastName("vimes")
                 .protectionOrder(false)
+                /*
+                .representedCompany(ImmutableCustomerRepresentedCompany.builder()
+                    .companyId("Serial-X")
+                    .name("Night Watch")
+                    .build())
+                    */
                 .contact(ImmutableCustomerContact.builder()
                     .email("same.vimes@resys.io")
                     .addressValue("test-street")
