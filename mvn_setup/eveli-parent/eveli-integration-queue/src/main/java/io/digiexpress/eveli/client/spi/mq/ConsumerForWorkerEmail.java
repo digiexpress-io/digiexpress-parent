@@ -73,7 +73,7 @@ public class ConsumerForWorkerEmail implements ThenaMqConsumer {
       
       return ImmutableMessageResponse.builder().ack(MessageResponseStatus.OK).build();
     } catch (Exception e) {
-      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily());
+      log.error("Failed while accepting new message: \r\n{}", JsonObject.mapFrom(msg).encodePrettily(), e);
       return ImmutableMessageResponse.builder()
           .ack(MessageResponseStatus.ERROR)
           .build();
