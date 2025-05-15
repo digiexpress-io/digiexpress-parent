@@ -236,6 +236,7 @@ feedback.sendScreenshot,,Send screenshot,Lähetä ruutukaappaus,Skicka en skärm
 feedback.close,,Close,Peru,Avbryt,
 feedback.send,,Send,Lähetä,Skicka,
 feedback.taskReferenceId,,Task Reference ID,Tehtävän viite,Ärende-ID,
+feedback.taskId,,Task ID,Tehtävän ID,Ärende-ID,
 feedback.mainCategory,,Subject,Aihe,Subject,
 feedback.subCategory,,Specific topic area,Tarkempi aihealue,Specific topic area,
 feedback.feedbackValue,,Customer feedback,Palaute,Customer feedback,

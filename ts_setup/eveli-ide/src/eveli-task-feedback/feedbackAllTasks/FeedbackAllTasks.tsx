@@ -1,42 +1,26 @@
 import React from 'react';
-import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
-import * as Burger from '@/eveli-styles';
 import { useFeedback } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
-import { FeedbackReducer } from './FeedbackReducer';
 
 import { WithTableStyles } from '@/eveli-table';
 import { ColumnDef, sortingFns } from '@tanstack/react-table';
 
-export interface FeedbackAllTasksProps { }
+export interface FeedbackAllTasksProps {}
 
 export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const theme = useTheme();
   const { findAllFeedback } = useFeedback();
-  const [state, setState] = React.useState(new FeedbackReducer({ data: [] }));
+  const [data, setData] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    findAllFeedback().then(data => setState(prev => prev.withData(data)));
+    findAllFeedback().then(setData);
   }, []);
-
-  function handleSearch(searchString: string) {
-    setState(prev => prev.withSearchBy(searchString))
-  }
-
-  function handleChangeCategory(event: SelectChangeEvent<string>) {
-    const { value } = event.target;
-    setState(prev => prev.withFilterByCategory(value))
-  }
-
-  function handleChangeSubCategory(event: SelectChangeEvent<string>) {
-    const { value } = event.target;
-    setState(prev => prev.withFilterBySubCategory(value))
-  }
 
   function handleFeedbackNav(feedbackId: string) {
     navigate({
@@ -58,14 +42,14 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       cell: (info) => <StatusIndicator size='LARGE' taskId={info.row.original.sourceId} />,
     },
     {
-      header: intl.formatMessage({ id: 'feedback.taskReferenceId' }),
+      header: intl.formatMessage({ id: 'feedback.taskId' }),
       accessorKey: 'sourceId',
       size: 250,
       minSize: 250,
       filterFn: 'includesString',
       sortingFn: sortingFns.alphanumeric,
       enableSorting: true,
-      enableColumnFilter: true,
+      enableColumnFilter: false,
       enableResizing: true,
       cell: (info) => (
         <Box
@@ -86,6 +70,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { enableSelection: true },
       cell: (info) => info.getValue(),
     },
     {
@@ -98,6 +83,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { enableSelection: true },
       cell: (info) => info.getValue(),
     },
     {
@@ -110,6 +96,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { enableSelection: true },
       cell: (info) => info.getValue(),
     },
     {
@@ -122,12 +109,13 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
       enableSorting: true,
       enableColumnFilter: true,
       enableResizing: true,
+      meta: { enableSelection: true },
       cell: (info) => info.getValue(),
     },
   ];
 
   return (
-    <Box >
+    <Box>
       <Box sx={{ display: 'inline-block' }}>
         <Box display='flex' alignItems='center' mb={2}>
           <Typography variant='h1' sx={{ flexGrow: 1 }}>
@@ -135,62 +123,14 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
           </Typography>
         </Box>
 
-        <Box display='flex' mb={3} gap={1} alignItems='end' width="100%">
-          <Box flex="1">
-            <Burger.TextField
-              label='feedback.search'
-              onChange={handleSearch}
-              value={state.searchBy ?? ''}
-              placeholder={intl.formatMessage({ id: 'feedback.search.placeholder' })}
-            />
-          </Box>
-
-          <Box flex="2" display='flex' gap={2}>
-            <FormControl sx={{ flex: 1 }}>
-              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.category' })}</Typography>
-              <Select
-                sx={{ padding: 0 }}
-                value={state.filterByCategory ?? ''}
-                onChange={handleChangeCategory}
-                fullWidth
-              >
-                <MenuItem value=''>{intl.formatMessage({ id: 'feedback.filter.selectNone' })}</MenuItem>
-                {state.categories.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl sx={{ flex: 1 }}>
-              <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.search.filter.subCategory' })}</Typography>
-              <Select
-                sx={{ padding: 0 }}
-                value={state.filterBySubCategory ?? ''}
-                onChange={handleChangeSubCategory}
-                fullWidth
-              >
-                <MenuItem value=''>{intl.formatMessage({ id: 'feedback.filter.selectNone' })}</MenuItem>
-                {state.subcategories.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Box>
-
         <WithTableStyles
           columns={columns}
-          data={state.visibleRows}
+          data={data}
           options={{
             initialPageSize: 15
           }}
         />
       </Box>
     </Box>
-
   );
 };

@@ -236,6 +236,7 @@ export const en = {
   'feedback.close': 'Close',
   'feedback.send': 'Send',
   'feedback.taskReferenceId': 'Task Reference ID',
+  'feedback.taskId': 'Task ID',
   'feedback.mainCategory': 'Subject',
   'feedback.subCategory': 'Specific topic area',
   'feedback.feedbackValue': 'Customer feedback',
