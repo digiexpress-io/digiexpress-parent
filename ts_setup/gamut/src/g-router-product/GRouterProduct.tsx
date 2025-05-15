@@ -41,8 +41,6 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const allowed: boolean = topicLink ? anon.isFormLinkEnabled(topicLink) : false;
   const notAuth = !anonymousUser && !allowed; //logged-in user who is not authorized / otherwise not allowed to fill form
 
-  console.log(anon)
-
   const ownerState = {
     topic,
     topicLink,
