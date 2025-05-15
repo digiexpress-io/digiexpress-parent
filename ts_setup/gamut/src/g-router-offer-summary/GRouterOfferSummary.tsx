@@ -47,7 +47,7 @@ export const GRouterOfferSummary: React.FC<GRouterOfferSummaryProps> = (initProp
   function navBack() {
     if (anonymousUser) {
       nav({
-        from: '/secured/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
+        from: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId/summary',
         params: { locale },
         to: '/public/$locale'
       })

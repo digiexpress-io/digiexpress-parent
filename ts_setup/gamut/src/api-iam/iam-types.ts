@@ -1,3 +1,5 @@
+import { SiteApi } from "../api-site";
+
 export namespace IamApi {
 
 }
@@ -27,7 +29,6 @@ export declare namespace IamApi {
   }
   export interface UserRoles {
     roles: string[];
-    principal: object;
   }
 
   export interface UserProducts {
@@ -81,5 +82,7 @@ export declare namespace IamApi {
     getUser: () => Promise<User | undefined>;
     fetchUserGET: IamApi.FetchUserGET;
     reload: () => Promise<User | undefined>
+
+    isFormLinkEnabled: (link: SiteApi.TopicLink) => boolean
   }
 }

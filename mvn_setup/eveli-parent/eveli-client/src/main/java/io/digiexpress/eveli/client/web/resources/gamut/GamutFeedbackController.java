@@ -25,6 +25,7 @@ import java.util.Collections;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,7 @@ public class GamutFeedbackController {
   private static final Duration timeout = Duration.ofSeconds(15);
   private final GamutClient gamutClient;
   private final DialobClient dialob;
+  private final ApplicationEventPublisher publisher;
   
   @GetMapping(value="fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyGet(@PathVariable("sessionId") String sessionId) {
@@ -66,8 +68,16 @@ public class GamutFeedbackController {
   }
   @PostMapping(value="/fill/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> fillProxyPost(@PathVariable("sessionId") String sessionId, @RequestBody String body) {
-    ResponseEntity<String> responseEntity = dialob.createProxyClient().sessionPost(sessionId, body);
-    return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+    ResponseEntity<String> resp = dialob.createProxyClient().sessionPost(sessionId, body);
+    if(resp.getStatusCode().is2xxSuccessful()) {
+      final var event = gamutClient.fillEvent()
+        .requestBody(body)
+        .responseBody(resp.getBody())
+        .sessionId(sessionId)
+        .create();
+      publisher.publishEvent(event);
+    }
+    return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
   }
   @DeleteMapping(value="/{actionId}")
   public ResponseEntity<UserAction> cancelAction(@PathVariable("actionId") String actionId) {

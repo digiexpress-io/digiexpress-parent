@@ -38,14 +38,16 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const topic = site.views[props.pageId];
   const topicLink = topic.links.find(l => l.id === props.productId)
   const anonymousUser = anon.authType === 'ANON';
-  const anonLink: boolean = anonymousUser && topicLink?.anon === true;
-  const allowed: boolean = (!anonymousUser || anonLink) && !!topicLink;
+  const allowed: boolean = topicLink ? anon.isFormLinkEnabled(topicLink) : false;
+  const notAuth = !anonymousUser && !allowed; //logged-in user who is not authorized / otherwise not allowed to fill form
+
   const ownerState = {
     topic,
     topicLink,
     anonymousUser,
     locale: props.locale,
-    allowed
+    allowed,
+    notAuth
   }
   return (
     <GShell drawerOpen={false}>
@@ -84,6 +86,7 @@ interface GRouterProductOwnerState {
     anonymousUser: boolean;
     allowed: boolean;
     locale: string;
+    notAuth: boolean;
   }
 }
 
@@ -124,8 +127,8 @@ const StartProductForm: React.FC<GRouterProductOwnerState> = (props) => {
     offers.createOffer({ locale, productId, parentPageId, pageId }).then((offer) => {
       if (anonymousUser) {
         nav({
-          params: { locale, pageId },
-          to: '/public/$locale/pages/$pageId',
+          params: { locale, pageId, productId, offerId: offer.id },
+          to: '/public/$locale/pages/$pageId/products/$productId/offers/$offerId',
         })
       } else {
         nav({
@@ -166,6 +169,9 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
   const { user } = useIam();
 
   const userName = user?.firstName + " " + user?.lastName || user?.representedCompany?.name || user?.representedPerson?.name || 'no user name';
+  const anonUser = !user;
+
+  console.log(user)
 
   return (
     <div className={classes.productTitle}>
@@ -183,7 +189,7 @@ const ProductTitle: React.FC<GRouterProductOwnerState> = (props) => {
           <ListItem>
             <ListItemText>
               <Alert severity='success' variant='filled' className={classes.loginAlert}>
-                <AlertTitle>{intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
+                <AlertTitle>{anonUser ? intl.formatMessage({ id: 'gamut.forms.filling.anonUser_and_welcome' }) : intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_welcome' }, { userName })}</AlertTitle>
                 {intl.formatMessage({ id: 'gamut.forms.filling.authenticated_and_proceed' }, { userName })}
               </Alert>
             </ListItemText>

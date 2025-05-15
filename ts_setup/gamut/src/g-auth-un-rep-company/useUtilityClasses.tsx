@@ -2,7 +2,7 @@ import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 
 
-export const MUI_NAME = 'GAuthRepCompany';
+export const MUI_NAME = 'GAuthUnRepCompany';
 
 export interface GAuthUnRepCompanyClasses {
   root: string;

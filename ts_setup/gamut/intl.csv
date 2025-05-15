@@ -104,6 +104,7 @@ gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!,Dobr
 gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini,Za popunjavanje obrasca potrebno je biti prijavljen
 gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Moi {userName}!,Moi {userName}!,Hello {userName}!,Zdravo {userName}!
 gamut.forms.filling.authenticated_and_proceed,,Please click below to start the form,Valitsemalla tästä aloitat lomakkeen täyttämisen,Klicka nedan för att starta formuläret,Sila klik di bawah untuk memulakan borang,Kliknite ispod da pokrenete obrazac
+gamut.forms.filling.anonUser_and_welcome,,Hello!,Hello!,,
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini,Popunjavanje obrasca započinje
 gamut.forms.filling.login-then-start.button,,Log in now,Kirjaudu sisään,Logga in nu,Log in now,Prijavi se sada
 gamut.forms.filling.start.info1,,Your form progress is saved automatically as you go,Lomake päivittyy automaatisesti sitä täytettäessä,Dina formulärförlopp sparas automatiskt när du går,Kemajuan borang anda disimpan secara automatik semasa anda pergi,Obrazac se automatski sprema tokom popunjavanja

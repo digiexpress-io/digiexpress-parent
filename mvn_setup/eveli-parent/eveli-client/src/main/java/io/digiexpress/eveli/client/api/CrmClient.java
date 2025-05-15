@@ -56,8 +56,6 @@ public interface CrmClient {
   
   @Value.Immutable @JsonSerialize(as = ImmutableCustomerRoles.class) @JsonDeserialize(as = ImmutableCustomerRoles.class)
   interface CustomerRoles {
-    String getIdentifier();
-    String getUsername();
     List<String> getRoles();
   }
   

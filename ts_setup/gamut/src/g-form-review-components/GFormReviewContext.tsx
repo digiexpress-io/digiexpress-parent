@@ -47,18 +47,19 @@ export class GFormReviewContextType {
   }
   // CONTEXT -------------------------------------------------------------
   private replaceVariable(varName: string) {
-    let questionnaireValue = this.questionnaire.context.find(context => context.id === varName);
+    let questionnaireValue = this.questionnaire.context?.find(context => context.id === varName);
     if (questionnaireValue) {
       return questionnaireValue.value;
     }
-    questionnaireValue = this.questionnaire.variableValues.find(context => context.id === varName);
+    questionnaireValue = this.questionnaire.variableValues?.find(context => context.id === varName);
     if (questionnaireValue) {
       return questionnaireValue.value;
     }
-    questionnaireValue = this.questionnaire.answers.find(context => context.id === varName);
+    questionnaireValue = this.questionnaire.answers?.find(context => context.id === varName);
     if (questionnaireValue) {
       return questionnaireValue.value;
     }
+    return "-";
   }
 
 

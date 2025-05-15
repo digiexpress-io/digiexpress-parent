@@ -185,6 +185,12 @@ public class AuthenticationConfigFakeUser  {
                 .firstName("same")
                 .lastName("vimes")
                 .protectionOrder(false)
+                /*
+                .representedCompany(ImmutableCustomerRepresentedCompany.builder()
+                    .companyId("Serial-X")
+                    .name("Night Watch")
+                    .build())
+                    */
                 .contact(ImmutableCustomerContact.builder()
                     .email("same.vimes@resys.io")
                     .addressValue("test-street")
@@ -196,11 +202,7 @@ public class AuthenticationConfigFakeUser  {
 
       @Override
       public CustomerRoles getCustomerRoles() {
-        final var customer = getCustomer();
-        
         return ImmutableCustomerRoles.builder()
-            .identifier(customer.getPrincipal().getSsn())
-            .username(customer.getPrincipal().getUsername())
             .build();
       }
     };

@@ -5,6 +5,7 @@ import { IamLiveness } from './IamLiveness'
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useLocale } from '../api-locale';
+import { SiteApi } from '../api-site';
 
 
 export const IamBackendContext = React.createContext<IamApi.IamBackendContextType>({} as any);
@@ -25,18 +26,19 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   const [userRolesProducts, setUserRolesProducts] = React.useState<{userRoles: IamApi.UserRoles | undefined, userProducts: IamApi.UserProducts | undefined}>();
 
   const { user, isFirstLoad, reload } = useUser(props);
-
+  const isRolesEnabled = !!user && !!(user.representedCompany || user.representedPerson);
 
   React.useEffect(() => { 
-    if(user) {
-      getUserRoles(props).then(async userRoles => {
-        const userProducts = userRoles?.roles.length ? await getUserProducts(props) : undefined;
+    if(isRolesEnabled) {
+
+      Promise.all([getUserRoles(props), getUserProducts(props)])
+      .then(([userRoles, userProducts]) => {
         setUserRolesProducts({userRoles, userProducts});
-      });
+      })
     } else {
       setUserRolesProducts(undefined);
     }
-  }, [props, user]);
+  }, [props, user, isRolesEnabled]);
 
   // create the context
   const contextValue: IamApi.IamBackendContextType = React.useMemo(() => 
@@ -79,6 +81,8 @@ function createContext(
     userName = user.firstName + ' ' + user.lastName;
   }
 
+
+
   return Object.freeze({
     authType, user, userRoles, userProducts,
     userName, 
@@ -89,6 +93,18 @@ function createContext(
       const data = await reload();
       return data;
     },
+    isFormLinkEnabled: (form: SiteApi.TopicLink) => {
+      if(form.anon) {
+        return true;
+      }
+      if(authType === 'ANON') {
+        return false;
+      }
+      if(authType === 'USER') {
+        return true;
+      }
+      return (userProducts?.products ?? []).includes(form.value);
+    }
   });
 }
 
@@ -116,8 +132,13 @@ function useUser(props: IamBackendProviderProps): {
           console.log("ANON user", resp.status);
           return null;
         }
+        
         const json = await resp.json();
         setFirstLoad(false);
+        if(json.type === 'ANON') {
+          return null;
+        }
+
         return json.principal;
       } catch (e) {
         setFirstLoad(false);
@@ -160,14 +181,19 @@ async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.U
   try {
     const products = await props.fetchUserProductsGET();
     if(products.ok) {
-      return products.json();
+      return products.json().then(data => {
+        const products: IamApi.UserProducts = {
+          products: data.allowedProcessNames
+        }
+        return products;
+      });
     }
 
     console.error("Can't get user products", { status: products.status, statusText: products.statusText });
-    return undefined;
+    return { products: [] };
   } catch(error) {
-    console.error("Can't get user products", error);
-    return undefined;
+    console.error("Can't get user products", error);    
+    return { products: [] };
   }
 }
 
