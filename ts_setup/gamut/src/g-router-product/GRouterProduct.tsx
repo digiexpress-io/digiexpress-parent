@@ -39,12 +39,17 @@ export const GRouterProduct: React.FC<GRouterProductProps> = (props) => {
   const topicLink = topic.links.find(l => l.id === props.productId)
   const anonymousUser = anon.authType === 'ANON';
   const allowed: boolean = topicLink ? anon.isFormLinkEnabled(topicLink) : false;
+  const notAuth = !anonymousUser && !allowed; //logged-in user who is not authorized / otherwise not allowed to fill form
+
+  console.log(anon)
+
   const ownerState = {
     topic,
     topicLink,
     anonymousUser,
     locale: props.locale,
-    allowed
+    allowed,
+    notAuth
   }
   return (
     <GShell drawerOpen={false}>
@@ -83,6 +88,7 @@ interface GRouterProductOwnerState {
     anonymousUser: boolean;
     allowed: boolean;
     locale: string;
+    notAuth: boolean;
   }
 }
 
