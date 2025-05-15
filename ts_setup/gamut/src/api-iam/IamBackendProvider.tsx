@@ -180,7 +180,13 @@ async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.U
   try {
     const products = await props.fetchUserProductsGET();
     if(products.ok) {
-      return products.json();
+      return products.json().then(data => {
+
+        const products: IamApi.UserProducts = {
+          products: data.allowedProcessNames
+        }
+        return products;
+      });
     }
 
     console.error("Can't get user products", { status: products.status, statusText: products.statusText });
