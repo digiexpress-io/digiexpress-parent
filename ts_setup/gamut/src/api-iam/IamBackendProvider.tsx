@@ -26,18 +26,19 @@ export const IamBackendProvider: React.FC<IamBackendProviderProps> = (props) => 
   const [userRolesProducts, setUserRolesProducts] = React.useState<{userRoles: IamApi.UserRoles | undefined, userProducts: IamApi.UserProducts | undefined}>();
 
   const { user, isFirstLoad, reload } = useUser(props);
-
+  const isRolesEnabled = !!user && !!(user.representedCompany || user.representedPerson);
 
   React.useEffect(() => { 
-    if(user && (user.representedCompany || user.representedPerson)) {
-      getUserRoles(props).then(async userRoles => {
-        const userProducts = userRoles?.roles.length ? await getUserProducts(props) : undefined;
+    if(isRolesEnabled) {
+
+      Promise.all([getUserRoles(props), getUserProducts(props)])
+      .then(([userRoles, userProducts]) => {
         setUserRolesProducts({userRoles, userProducts});
-      });
+      })
     } else {
       setUserRolesProducts(undefined);
     }
-  }, [props, user]);
+  }, [props, user, isRolesEnabled]);
 
   // create the context
   const contextValue: IamApi.IamBackendContextType = React.useMemo(() => 
@@ -181,7 +182,6 @@ async function getUserProducts(props: IamBackendProviderProps): Promise<IamApi.U
     const products = await props.fetchUserProductsGET();
     if(products.ok) {
       return products.json().then(data => {
-
         const products: IamApi.UserProducts = {
           products: data.allowedProcessNames
         }
