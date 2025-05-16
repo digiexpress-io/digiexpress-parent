@@ -25,9 +25,8 @@ export const GMarkdownRoot = styled("div", {
     'ul': {
       paddingLeft: theme.spacing(3),
       marginBottom: theme.typography.body1.lineHeight,
-      //marginTop: theme.typography.body1.lineHeight,
     },
-    'ul > li > p': {
+    'ul > li > span': { // span = typography
       marginBottom: theme.typography.body1.lineHeight
     },
     'ul:last-of-type': {
