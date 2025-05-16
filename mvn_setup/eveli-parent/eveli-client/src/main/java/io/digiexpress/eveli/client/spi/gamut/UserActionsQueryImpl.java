@@ -47,9 +47,11 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 
+@Slf4j
 @RequiredArgsConstructor
 public class UserActionsQueryImpl implements UserActionQuery {
   
@@ -156,8 +158,13 @@ public class UserActionsQueryImpl implements UserActionQuery {
       return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
     }
     final var user = authClient.getCustomer();
-    
     final var task = tasks.getTasksById().get(process.getTaskId());
+    
+    if(task == null) {
+      log.error("Process id: {} has no task with id: {}", process.getId(), process.getTaskId());
+      return new UserMessagesContext(Collections.emptyList(), true, process.getUpdated());
+    }
+    
     var lastUpdate = process.getUpdated();
     final var userMessages = new ArrayList<UserMessage>();
     for(final var msg : task.getComments()) {
