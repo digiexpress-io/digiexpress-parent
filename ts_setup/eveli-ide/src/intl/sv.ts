@@ -230,6 +230,7 @@ export const sv = {
   'feedback.close': 'Avbryt',
   'feedback.send': 'Skicka',
   'feedback.taskReferenceId': 'Ärende-ID',
+  'feedback.taskId': 'Ärende-ID',
   'feedback.mainCategory': 'Subject',
   'feedback.subCategory': 'Specific topic area',
   'feedback.feedbackValue': 'Customer feedback',

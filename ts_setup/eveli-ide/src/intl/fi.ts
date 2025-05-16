@@ -234,6 +234,7 @@ export const fi = {
   'feedback.close': 'Peru',
   'feedback.send': 'Lähetä',
   'feedback.taskReferenceId': 'Tehtävän viite',
+  'feedback.taskId': 'Tehtävän ID',
   'feedback.mainCategory': 'Aihe',
   'feedback.subCategory': 'Tarkempi aihealue',
   'feedback.feedbackValue': 'Palaute',
