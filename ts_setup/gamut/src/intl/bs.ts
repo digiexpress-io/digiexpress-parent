@@ -101,6 +101,7 @@ export const bs = {
   'gamut.forms.filling.summary.info4': 'Nove poruke osoblja u vezi sa zahtjevom',
   'gamut.forms.filling.summary.info5': 'Nove poslane ili zatražene datoteke',
   'gamut.forms.filling.summary.info6': 'Za dodatna pitanja moguće je kontaktirati telefonom na xxxx-xxxx',
+  'gamut.forms.filling.representativeNotAuthorized': 'Nemate ovlasti za ispunjavanje ovog obrasca. Obratite se našem uredu.',
   'gamut.forms.summary.button.back-to-overview': 'Povratak na Moj pregled',
   'gamut.forms.answer.date.placeholder.day': 'dd',
   'gamut.forms.answer.date.placeholder.month': 'mm',

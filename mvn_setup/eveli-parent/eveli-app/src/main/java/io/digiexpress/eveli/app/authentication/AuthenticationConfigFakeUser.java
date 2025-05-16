@@ -51,6 +51,7 @@ import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
 
 
 

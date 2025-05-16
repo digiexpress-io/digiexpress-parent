@@ -106,6 +106,7 @@ export const fi = {
   'gamut.forms.filling.summary.info4': 'Uudet koskien pyyntöäsi',
   'gamut.forms.filling.summary.info5': 'Uudet tiedostot, jotka olemme toimittaneet sinulle tai pyytäneet sinulta',
   'gamut.forms.filling.summary.info6': 'Jäikö kysyttävää? Ota yhteyttä puhelimitse numeroon xxxx-xxxx kysymyksiä varten.',
+  'gamut.forms.filling.representativeNotAuthorized': 'Ei valtuutusta täyttää tätä lomaketta. Ota yhteyttä.',
   'gamut.forms.summary.button.back-to-overview': 'Takaisin Minun Asiat sivulle',
   'gamut.forms.answer.date.placeholder.day': 'pp',
   'gamut.forms.answer.date.placeholder.month': 'kk',

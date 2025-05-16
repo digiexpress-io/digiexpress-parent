@@ -103,6 +103,7 @@ export const my = {
   'gamut.forms.filling.summary.info4': 'Mesej baharu daripada kakitangan kami mengenai permintaan anda',
   'gamut.forms.filling.summary.info5': 'Fail baharu yang telah kami hantar kepada anda atau diminta daripada anda',
   'gamut.forms.filling.summary.info6': 'Masih ada soalan? Hubungi kami melalui telefon di xxxx-xxxx dengan pertanyaan',
+  'gamut.forms.filling.representativeNotAuthorized': 'Anda tidak memiliki izin untuk mengisi formulir ini. Hubungi kantor kami.',
   'gamut.forms.summary.button.back-to-overview': 'Kembali ke Gambaran Keseluruhan Saya',
   'gamut.forms.answer.date.placeholder.day': 'hh',
   'gamut.forms.answer.date.placeholder.month': 'bb',

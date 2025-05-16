@@ -104,6 +104,7 @@ export const sv = {
   'gamut.forms.filling.summary.info4': 'Nya meddelanden från vår personal angående din förfrågan',
   'gamut.forms.filling.summary.info5': 'Nya filer som vi har skickat till dig eller begärt av dig',
   'gamut.forms.filling.summary.info6': 'Har du fortfarande frågor? Kontakta oss per telefon på xxxx-xxxx med frågor',
+  'gamut.forms.filling.representativeNotAuthorized': 'Ej behörig att fylla i detta formulär. Kontakta vårt kontor.',
   'gamut.forms.summary.button.back-to-overview': 'Tillbaka till Min översikt',
   'gamut.forms.answer.date.placeholder.day': 'dd',
   'gamut.forms.answer.date.placeholder.month': 'mm',
