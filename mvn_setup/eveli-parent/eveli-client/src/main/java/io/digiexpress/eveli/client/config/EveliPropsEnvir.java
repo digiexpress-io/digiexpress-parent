@@ -30,7 +30,8 @@ import lombok.Data;
 @Data
 @ConfigurationProperties(prefix = "eveli.envir")
 public class EveliPropsEnvir {
-
+  private Boolean devEnabled;
+  
   private Caches cacheExpirations;
   
   @Data

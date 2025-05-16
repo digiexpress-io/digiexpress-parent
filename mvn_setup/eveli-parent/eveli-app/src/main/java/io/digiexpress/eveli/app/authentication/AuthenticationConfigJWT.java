@@ -63,7 +63,9 @@ public class AuthenticationConfigJWT {
   
   @Bean
   public SpringJwtAuthClient authClientJwt() {
-    return new SpringJwtAuthClient();
+    SpringJwtAuthClient springJwtAuthClient = new SpringJwtAuthClient();
+    springJwtAuthClient.setAdminAccessEnabled(true);
+    return springJwtAuthClient;
   }
 
   @Bean

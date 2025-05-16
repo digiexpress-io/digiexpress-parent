@@ -70,7 +70,7 @@ public class EveliAutoConfigEnvir {
       EveliPropsEnvir envirProps,
       TenantConfigClient tenantConfigClient) {
     
-    final boolean isDev = true;
+    final boolean isDev = envirProps.getDevEnabled() == null ? true : Boolean.TRUE.equals(envirProps.getDevEnabled());
     final ExternalDeploymentProvider externalProvider = depProvider.orElse(new ExternalDeploymentProvider() {
       @Override
       public Uni<Optional<EveliDeployment>> getDeployment(boolean emptyBranchBody) {

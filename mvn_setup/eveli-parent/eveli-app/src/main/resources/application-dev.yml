@@ -112,3 +112,7 @@ eveli.user-registry.service-url:
 
 eveli.envir.cache-expirations.short-deployment: PT1M
 eveli.envir.cache-expirations.long-runtime: PT30M
+eveli.envir.dev-enabled: false
+
+
+

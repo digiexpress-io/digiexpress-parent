@@ -36,7 +36,7 @@ import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 
 public class SpringJwtAuthClient implements AuthClient {
-
+  private boolean isAdminAccessEnabled = false;
   @Override
   public User getUser() {
     final var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,7 +55,7 @@ public class SpringJwtAuthClient implements AuthClient {
     return ImmutableUser.builder()
         .isAuthenticated(true)
         .principal(ImmutableUserPrincipal.builder()
-            .isAdmin(true)
+            .isAdmin(isAdminAccessEnabled)
             .username(getUserName(token))
             .email(getEmail(token))
             .roles(authentication.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toList()))
@@ -92,5 +92,13 @@ public class SpringJwtAuthClient implements AuthClient {
     }
     return userName;
       
+  }
+
+  public boolean isAdminAccessEnabled() {
+    return isAdminAccessEnabled;
+  }
+
+  public void setAdminAccessEnabled(boolean isAdminAccessEnabled) {
+    this.isAdminAccessEnabled = isAdminAccessEnabled;
   }
 }
