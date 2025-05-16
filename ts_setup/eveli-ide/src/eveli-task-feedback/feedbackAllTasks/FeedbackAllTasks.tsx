@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
-import { useFeedback } from '../../api-feedback';
+import { FeedbackApi, useFeedback } from '../../api-feedback';
 import { StatusIndicator } from '../status-indicator';
 
 import { WithTableStyles } from '@/eveli-table';
@@ -16,7 +16,7 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { findAllFeedback } = useFeedback();
-  const [data, setData] = React.useState<any[]>([]);
+  const [data, setData] = React.useState<FeedbackApi.Feedback[]>([]);
 
   React.useEffect(() => {
     findAllFeedback().then(setData);
