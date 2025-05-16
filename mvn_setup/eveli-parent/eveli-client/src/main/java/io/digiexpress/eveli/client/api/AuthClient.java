@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 
-
 public interface AuthClient {
   Liveness getLiveness();
   User getUser();
@@ -59,11 +58,19 @@ public interface AuthClient {
     List<String> getRoles();
     
     default boolean isAccessGranted(Collection<String> entityRoles) {
-      final var workerRoles = this.getRoles();
-      final var isWorkerInAssignedRoles = entityRoles.stream()
-          .filter(assignedRole -> workerRoles.contains(assignedRole)).findFirst().isPresent();
-      
-      return isWorkerInAssignedRoles;
+      final var logger = new AuthApiLogger();
+      try {
+        logger.add(this);
+        logger.accessForEntityWithRoles(entityRoles);
+
+        final var workerRoles = this.getRoles();
+        final var isWorkerInAssignedRoles = entityRoles.stream()
+            .filter(assignedRole -> workerRoles.contains(assignedRole)).findFirst().isPresent();
+        logger.isAccessGranted(isWorkerInAssignedRoles);
+        return isWorkerInAssignedRoles;
+      } finally {
+        logger.close(); 
+      }
     }
   }
 }
