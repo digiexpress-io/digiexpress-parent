@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.digiexpress.eveli.client.api.AuthClient.UserPrincipal;
+import io.digiexpress.eveli.client.api.WorkerAuthClient.UserPrincipal;
 import io.vertx.core.json.JsonObject;
 import lombok.Builder;
 import lombok.Data;

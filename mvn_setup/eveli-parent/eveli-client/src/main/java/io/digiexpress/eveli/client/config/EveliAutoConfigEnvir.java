@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient;
 import io.digiexpress.eveli.client.api.TenantConfigClient.TenantConfig;
 import io.digiexpress.eveli.dialob.api.DialobClient;
@@ -64,7 +64,7 @@ public class EveliAutoConfigEnvir {
       io.vertx.mutiny.pgclient.PgPool pool,
       DialobClient dialobClient, 
       ObjectMapper objectMapper, 
-      AuthClient authClient,
+      WorkerAuthClient authClient,
       Optional<ExternalDeploymentProvider> depProvider,
       ApplicationContext context,
       EveliPropsEnvir envirProps,
@@ -109,7 +109,7 @@ public class EveliAutoConfigEnvir {
       io.vertx.mutiny.pgclient.PgPool pool, 
       ExternalDeploymentProvider externalProvider, 
       ObjectMapper objectMapper, 
-      AuthClient authClient,
+      WorkerAuthClient authClient,
       TenantConfig tenantConfig) {
     
     return EveliEnvirStore

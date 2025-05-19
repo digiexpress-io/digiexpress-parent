@@ -47,30 +47,31 @@ export interface EveliTaskBodyProps {
 
 export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
   const { task, readOnly, onReload } = props;
-  const { id, features } = task;
-  const isFeedbackEnabled = features?.includes('feedback') ;
+  const { id } = task;
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
   
   React.useEffect(() => {
     loadAttachments(id).then(setAttachments);
-  }, [id]);  
+  }, [id]);
 
   return (
     <Grid2 container spacing={2}>
-      <Grid2 size={{ xs: 12 }}>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
-            <Typography sx={classes.accordionTitle}><FormattedMessage id="externalComments" /></Typography>
-            <Badge badgeContent={task.comments.filter(c => c.external).length} color="warning"><ChatBubbleOutlineIcon /></Badge>
-          </AccordionSummary>
-          <AccordionDetails sx={classes.accordionDetails}>
-            <EveliTaskComments task={task} isExternalThread={true} reload={onReload}/>
-          </AccordionDetails>
-        </Accordion>
-      </Grid2>
+      <EveliTaskFeature id="CRM_MESSAGES">
+        <Grid2 size={{ xs: 12 }}>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
+              <Typography sx={classes.accordionTitle}><FormattedMessage id="externalComments" /></Typography>
+              <Badge badgeContent={task.comments.filter(c => c.external).length} color="warning"><ChatBubbleOutlineIcon /></Badge>
+            </AccordionSummary>
+            <AccordionDetails sx={classes.accordionDetails}>
+              <EveliTaskComments task={task} isExternalThread={true} reload={onReload} />
+            </AccordionDetails>
+          </Accordion>
+        </Grid2>
+      </EveliTaskFeature>
 
-      {isFeedbackEnabled && (
+      <EveliTaskFeature id="TASK_FEEDBACK">
         <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
@@ -78,11 +79,11 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
               <Badge badgeContent={<StatusIndicator size="SMALL" taskId={task.id} />}><SupportAgentIcon /></Badge>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>
-              <UpsertOneFeedback taskId={task.id} onComplete={() => {}} reload={0} />
+              <UpsertOneFeedback taskId={task.id} onComplete={() => { }} reload={0} />
             </AccordionDetails>
           </Accordion>
         </Grid2>
-      )}
+      </EveliTaskFeature>
 
       <Grid2 size={{ xs: 12 }}>
         <Accordion>
@@ -95,7 +96,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
           </AccordionDetails>
         </Accordion>
       </Grid2>
-      
+
       <Grid2 size={{ xs: 12 }}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
@@ -103,21 +104,21 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
             <Badge badgeContent={task.comments.filter(c => !c.external).length} color="primary"><ChatBubbleOutlineIcon /></Badge>
           </AccordionSummary>
           <AccordionDetails sx={classes.accordionDetails}>
-            <EveliTaskComments task={task} isExternalThread={false} isThreaded reload={onReload}/>
+            <EveliTaskComments task={task} isExternalThread={false} isThreaded reload={onReload} />
           </AccordionDetails>
         </Accordion>
       </Grid2>
 
 
       <EveliTaskFeature id="TASK_TRANSFER">
-      <Grid2 size={{ xs: 12 }}>
+        <Grid2 size={{ xs: 12 }}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
               <Typography sx={classes.accordionTitle}><FormattedMessage id="task.transfer.published" /></Typography>
               <Badge badgeContent={<EveliTaskTransferStatusIndicator task={task} />}><DriveFileMoveOutlinedIcon /></Badge>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>
-              <EveliTaskTransfer task={task} onTransferComplete={onReload}/>
+              <EveliTaskTransfer task={task} onTransferComplete={onReload} />
             </AccordionDetails>
           </Accordion>
         </Grid2>

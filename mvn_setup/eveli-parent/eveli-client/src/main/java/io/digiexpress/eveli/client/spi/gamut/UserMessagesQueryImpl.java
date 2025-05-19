@@ -22,8 +22,8 @@ package io.digiexpress.eveli.client.spi.gamut;
 
 import java.util.List;
 
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessagesQuery;
@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class UserMessagesQueryImpl implements UserMessagesQuery {
   private final ProcessClient processRepository;
   private final TaskClient taskClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   
   @Override
   public List<UserMessage> findAllByActionId(String actionId) throws ProcessNotFoundException {

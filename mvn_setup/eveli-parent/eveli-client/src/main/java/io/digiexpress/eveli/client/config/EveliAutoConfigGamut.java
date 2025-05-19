@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
@@ -54,7 +54,7 @@ public class EveliAutoConfigGamut {
       AttachmentCommands attachmentCommands,
       EveliEnvirClient envir, 
       DialobClient dialobCommands,
-      CrmClient authClient,
+      GamutAuthClient authClient,
       MqEventPublisher mqEventPublisher
     ) {
     
@@ -76,7 +76,7 @@ public class EveliAutoConfigGamut {
   }
 
   @Bean
-  public GamutIamController gamutIamController(CrmClient crmClient) {
+  public GamutIamController gamutIamController(GamutAuthClient crmClient) {
     return new GamutIamController(crmClient);
   }
   
@@ -88,7 +88,7 @@ public class EveliAutoConfigGamut {
   @Bean
   public GamutUserActionsController gamutUserActionsController(
       FeedbackClient feedback,
-      GamutClient gamutClient, DialobClient dialobClient, CrmClient crmClient, ProcessClient processRepository,
+      GamutClient gamutClient, DialobClient dialobClient, GamutAuthClient crmClient, ProcessClient processRepository,
       ApplicationEventPublisher publisher
       ) {
     return new GamutUserActionsController(publisher, gamutClient, crmClient, dialobClient, processRepository, feedback);

@@ -91,10 +91,10 @@ public abstract class FeedbackEnvirSetup {
     @Autowired ApplicationEventPublisher publisher;
 
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository processJPA) {
       final var repoId = "test-task-client-" + TEST_INDEX.incrementAndGet();
       final var setup = new FeedbackTaskEnvirSetup(CONTAINER, new TaskEventPublisher(publisher), repoId);
-      return setup.getTaskClient();
+      return setup.getTaskClient(processJPA);
     }
     
     @Bean

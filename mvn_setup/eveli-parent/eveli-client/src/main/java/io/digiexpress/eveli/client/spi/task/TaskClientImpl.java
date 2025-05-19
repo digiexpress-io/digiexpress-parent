@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.ImmutableTaskDasboard;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskFileClient;
@@ -52,6 +53,7 @@ import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 public class TaskClientImpl implements TaskClient {
 
@@ -59,6 +61,7 @@ public class TaskClientImpl implements TaskClient {
   private final TaskFileClient taskFilesClient;
   private final DocContainerClient docContainerClient;
   private final TaskStore ctx;
+  private final CustomerAccountClient crmClient;
   
   
   @Override
@@ -119,7 +122,12 @@ public class TaskClientImpl implements TaskClient {
       @Override
       public Uni<Task> createTask(CreateTaskCommand command) {
         TaskAssert.notEmpty(userId, () -> "userId can't be empty!");
-        return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command));
+        if(command.getQuestionnaireId() == null) {
+          return ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, null));  
+        }
+        return crmClient.accountQuery().getOneByAnyId(command.getQuestionnaireId())
+          .onItem().transformToUni(account -> ctx.getConfig().accept(new CreateOneTask(userId, notificator, command, account)));
+        
       }
       @Override
       public Uni<Task> modifyTask(String taskId, ModifyTaskCommand command) {

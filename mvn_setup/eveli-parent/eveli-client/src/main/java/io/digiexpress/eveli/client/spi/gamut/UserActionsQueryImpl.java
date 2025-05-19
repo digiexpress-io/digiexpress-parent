@@ -31,8 +31,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerId;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerId;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionQuery;
 import io.digiexpress.eveli.client.api.GamutClient.UserMessage;
@@ -57,7 +57,7 @@ public class UserActionsQueryImpl implements UserActionQuery {
   
   private final ProcessClient hdesCommands;
   private final TaskClient taskClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final AttachmentCommands attachmentsCommands;
   private final Duration atMost = Duration.ofSeconds(30);
   

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,21 +35,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class GamutIamController {
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   
 
   @GetMapping
-  public CrmClient.Customer getUser() {
+  public GamutAuthClient.Customer getUser() {
     return authClient.getCustomer();
   }
   
   @GetMapping(path = "/roles")
-  public CrmClient.CustomerRoles getRoles() {
+  public GamutAuthClient.CustomerRoles getRoles() {
     return authClient.getCustomerRoles();
   }
 
   @GetMapping(path = "/liveness")
-  public AuthClient.Liveness getLiveness() {
+  public WorkerAuthClient.Liveness getLiveness() {
     return authClient.getLiveness();
   }
 }

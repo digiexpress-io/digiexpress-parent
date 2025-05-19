@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.rest.IdAndRevision;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient.DialobFormNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.UserAction;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionBuilder;
@@ -60,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserActionsBuilderImpl implements UserActionBuilder {
   private final ProcessClient hdesCommands;  
   private final DialobClient dialobCommands;
-  private final CrmClient auth;
+  private final GamutAuthClient auth;
   private final EveliEnvirClient envir;
   private boolean anon = false;
   private String actionId;
