@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CustomerFeedback;
 import io.digiexpress.eveli.client.api.FeedbackClient.UpsertFeedbackRankingCommand;
@@ -71,7 +71,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GamutUserActionsController {
   private final ApplicationEventPublisher publisher;
   private final GamutClient gamutClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final DialobClient dialob;
   private final ProcessClient hdes;
   private final FeedbackClient feedback;

@@ -32,9 +32,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.util.AntPathMatcher;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpringSecurityPolicy implements AuthorizationManager<RequestAuthorizationContext> {
   
-  private final AuthClient authClient;
-  private final CrmClient crmClient;
+  private final WorkerAuthClient authClient;
+  private final GamutAuthClient crmClient;
   private final EveliAutoConfigPermissions authProps;
   
   private final static String PORTAL_LOGIN_PATH = "/portal/login";

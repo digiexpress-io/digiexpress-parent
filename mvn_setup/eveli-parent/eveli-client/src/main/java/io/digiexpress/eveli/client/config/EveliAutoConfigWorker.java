@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -50,12 +50,12 @@ import io.digiexpress.eveli.dialob.api.DialobClient;
 @Configuration
 public class EveliAutoConfigWorker {
   @Bean 
-  public AttachmentApiController attachmentApiController(ProcessClient processClient, AuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
+  public AttachmentApiController attachmentApiController(ProcessClient processClient, WorkerAuthClient security, TaskClient taskClient, AttachmentCommands attachments) {
     return new AttachmentApiController(attachments, taskClient, security, processClient);
   }
   @Bean 
   public PrintoutController printoutController(
-      AuthClient authClient,  
+      WorkerAuthClient authClient,  
       RestTemplate restTemplate,
       DialobClient dialobClient,
       TaskClient taskClient,
@@ -66,7 +66,7 @@ public class EveliAutoConfigWorker {
   @Bean 
   public TaskApiController taskApiController(
       FeedbackClient feedback,
-      AuthClient security, 
+      WorkerAuthClient security, 
       TaskClient taskclient, 
       DialobClient dialobClient,
       MqEventPublisher mqEventPublisher,
@@ -83,11 +83,11 @@ public class EveliAutoConfigWorker {
       return new PortalAccessValidatorImpl(client);
   }
   @Bean
-  public WorkerIamController workerIamController(AuthClient authClient) {
+  public WorkerIamController workerIamController(WorkerAuthClient authClient) {
     return new WorkerIamController(authClient);
   } 
   @Bean 
-  public FeedbackApiController feedbackApiController(AuthClient authClient, FeedbackClient feedbackClient) {
+  public FeedbackApiController feedbackApiController(WorkerAuthClient authClient, FeedbackClient feedbackClient) {
     return new FeedbackApiController(authClient, feedbackClient);
   }
   @Bean

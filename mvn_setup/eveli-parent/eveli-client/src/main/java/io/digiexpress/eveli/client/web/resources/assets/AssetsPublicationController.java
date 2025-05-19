@@ -43,7 +43,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.dialob.api.form.Form;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient.EveliDeployment;
@@ -81,7 +81,7 @@ public class AssetsPublicationController {
   private final StencilClient stencilClient;
   private final HdesClient wrenchClient;
   private final DialobClient dialobClient;
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final ApplicationEventPublisher publisher;
 
   @Value.Immutable

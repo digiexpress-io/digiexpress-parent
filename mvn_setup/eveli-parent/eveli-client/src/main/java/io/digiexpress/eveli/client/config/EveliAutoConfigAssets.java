@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsAnyTagController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDialobController;
@@ -89,7 +89,7 @@ public class EveliAutoConfigAssets {
   @Bean
   public AssetsAnyTagController assetsAnyTagController(
       EveliEditEnvir context, 
-      AuthClient security, 
+      WorkerAuthClient security, 
       DialobClient dialobClient,
       EveliEnvirClient envir
   ) {
@@ -100,7 +100,7 @@ public class EveliAutoConfigAssets {
   public AssetsDeploymentController assetsDeploymentController(
       ApplicationEventPublisher publisher,
       EveliEditEnvir context, 
-      AuthClient auth, 
+      WorkerAuthClient auth, 
       DialobClient dialobClient,
       EveliEnvirClient envir) {
     
@@ -109,7 +109,7 @@ public class EveliAutoConfigAssets {
   @Bean 
   public AssetsPublicationController assetReleaseController(
       EveliEditEnvir context, 
-      AuthClient security,
+      WorkerAuthClient security,
       DialobClient dialobClient,
       EveliEnvirClient envir,
       ApplicationEventPublisher publisher
@@ -120,7 +120,7 @@ public class EveliAutoConfigAssets {
   @Bean 
   public AssetsMigrationController assetsMigrationController(
       EveliEditEnvir context, 
-      AuthClient security,
+      WorkerAuthClient security,
       DialobClient dialobClient,
       EveliEnvirClient envir,
       ApplicationEventPublisher publisher

@@ -157,7 +157,7 @@ export declare namespace TaskApi {
     questionnaireId?: string | undefined;
   }
 
-  export type TaskFeatureType = 'feedback' | 'transfer';
+  export type TaskFeatureType = 'feedback' | 'transfer' | 'anon';
 
   export interface TransferTaskCommand {
     transferTitle: string;

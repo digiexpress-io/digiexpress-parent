@@ -28,15 +28,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 
-import io.digiexpress.eveli.client.api.AuthClient.Liveness;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SpringJwtCrmClient implements CrmClient {
+public class SpringJwtCrmClient implements GamutAuthClient {
   private final RestTemplate rest;
   private final String serviceUrlCompany;
   private final String serviceUrlPerson;

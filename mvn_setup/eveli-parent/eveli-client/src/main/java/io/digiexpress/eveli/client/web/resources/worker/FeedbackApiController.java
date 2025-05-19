@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.FeedbackClient.CreateFeedbackCommand;
 import io.digiexpress.eveli.client.api.FeedbackClient.Feedback;
@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class FeedbackApiController {
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final FeedbackClient feedbackClient;
 
   @GetMapping

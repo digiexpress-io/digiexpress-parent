@@ -21,7 +21,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  */
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient;
 import io.digiexpress.eveli.client.api.ImmutableUserAction;
 import io.digiexpress.eveli.client.api.ProcessClient;
@@ -42,7 +42,7 @@ public class GamutClientImpl implements GamutClient {
   private final MqEventPublisher mqEventPublisher;
   private final AttachmentCommands attachmentsCommands;
   private final DialobClient dialobCommands;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final EveliEnvirClient envir;
 
 

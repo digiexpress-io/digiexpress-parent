@@ -31,7 +31,7 @@ import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsDeploymentController;
 import io.digiexpress.eveli.client.web.resources.assets.AssetsPublicationControllerReadOnly;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
@@ -56,7 +56,7 @@ public class AppConfigProd {
   }
   
   @Bean
-  public AssetsDeploymentController AssetsDeploymentController(AuthClient authClient, EveliEnvirClient envirClient, ApplicationEventPublisher publisher) {
+  public AssetsDeploymentController AssetsDeploymentController(WorkerAuthClient authClient, EveliEnvirClient envirClient, ApplicationEventPublisher publisher) {
     return new AssetsDeploymentController(authClient, envirClient, publisher);
   }
   

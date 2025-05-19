@@ -26,7 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class TaskViewerPublisher {
     this.taskClient = taskClient;
   }
   
-  public void publicTaskViewedByWorkerEvent(Task task, AuthClient.User user) {
+  public void publicTaskViewedByWorkerEvent(Task task, WorkerAuthClient.User user) {
     publisher.publishEvent(new TaskViewedByWorkerEvent(task, user));
   }
 
@@ -53,7 +53,7 @@ public class TaskViewerPublisher {
   @AllArgsConstructor
   public static class TaskViewedByWorkerEvent {
     private final Task task;
-    private final AuthClient.User user;
+    private final WorkerAuthClient.User user;
   }
   
   @Async

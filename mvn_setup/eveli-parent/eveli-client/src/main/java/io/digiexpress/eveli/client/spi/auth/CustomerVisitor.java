@@ -27,10 +27,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import io.digiexpress.eveli.client.api.CrmClient;
-import io.digiexpress.eveli.client.api.CrmClient.Customer;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerAddress;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient.Customer;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerAddress;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerAddress;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
@@ -137,7 +137,7 @@ public class CustomerVisitor {
   }
   
   @SuppressWarnings({ "unchecked" })
-  private CrmClient.CustomerRepresentedPerson toRepresentedPerson(Jwt idToken) {
+  private GamutAuthClient.CustomerRepresentedPerson toRepresentedPerson(Jwt idToken) {
     final var value = (Map<String, Object>) idToken.getClaim("representedPerson");
     if(value == null) {
       return null;
@@ -157,7 +157,7 @@ public class CustomerVisitor {
   
 
   @SuppressWarnings({ "unchecked" })
-  private CrmClient.CustomerRepresentedCompany toRepresentedCompany(Jwt idToken) {
+  private GamutAuthClient.CustomerRepresentedCompany toRepresentedCompany(Jwt idToken) {
     final var value = (Map<String, Object>) idToken.getClaim("representedOrganization");
     if(value == null) {
       return null;

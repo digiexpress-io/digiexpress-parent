@@ -30,11 +30,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
-import io.digiexpress.eveli.client.api.AuthClient.Liveness;
+import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
 import jakarta.annotation.Nullable;
 
-public interface CrmClient {
 
+
+// currently logged in customer
+public interface GamutAuthClient {
   Liveness getLiveness();
   Customer getCustomer();
   CustomerRoles getCustomerRoles();

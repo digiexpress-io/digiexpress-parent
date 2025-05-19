@@ -58,6 +58,17 @@ public class TaskMapper {
   
   public static final String COMMENT_EXTERNAL = "EXTERNAL";
   public static final String COMMENT_INTERNAL = "INTERNAL";
+  
+  public static final String TASK_FEATURE_FEEDBACK = "feedback";
+  public static final String TASK_FEATURE_TRANSFER = "transfer";
+  public static final String TASK_FEATURE_ANON = "anon";
+  
+  
+  
+  
+  public final static String DEFAULT_CLIENT_LANG = "fi";
+  
+  
   public static final Duration atMost = Duration.ofMinutes(5);
   
   public static ZonedDateTime toZoned(OffsetDateTime input) {

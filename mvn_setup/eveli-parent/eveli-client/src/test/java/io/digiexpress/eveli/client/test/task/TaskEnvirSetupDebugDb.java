@@ -39,6 +39,8 @@ import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
@@ -148,7 +150,7 @@ public abstract class TaskEnvirSetupDebugDb {
     }
     
     @Bean
-    public TaskClient taskClient(ApplicationEventPublisher publisher) {
+    public TaskClient taskClient(ApplicationEventPublisher publisher, ProcessRepository proc) {
       final var config = ImmutableTaskStoreConfig.builder()
           .tenantName("task-tenant")
           .client(THENA_STATE)
@@ -163,7 +165,8 @@ public abstract class TaskEnvirSetupDebugDb {
           .await().atMost(Duration.ofMinutes(1));
 
       log.info("repo created: {}", repo);
-      return new TaskClientImpl(notificator, null, null, store);
+      final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
+      return new TaskClientImpl(notificator, null, null, store, customer);
     }
     
     @Bean

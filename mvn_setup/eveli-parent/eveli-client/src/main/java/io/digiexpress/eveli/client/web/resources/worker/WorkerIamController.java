@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,16 +34,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class WorkerIamController {
-  private final AuthClient authClient;
+  private final WorkerAuthClient authClient;
   
 
   @GetMapping
-  public AuthClient.User getUser() {
+  public WorkerAuthClient.User getUser() {
     return authClient.getUser();
   }
   
   @GetMapping(path = "/liveness")
-  public AuthClient.Liveness getLiveness() {
+  public WorkerAuthClient.Liveness getLiveness() {
     return authClient.getLiveness();
   }
 }
