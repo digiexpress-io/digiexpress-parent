@@ -20,13 +20,7 @@ const EveliTaskFeatureMapping = {
   'CRM_MESSAGES': notOneOf(['anon']),
 }
 
-
-//   const isAnonCustomer = !!props.task.clientIdentificator; // Anonymous customer in gamut (not authenticated)
-
-
 export type EveliTaskFeatureType = keyof typeof EveliTaskFeatureMapping;
-
-
 export const EveliTaskFeature: React.FC<{ children: React.ReactNode, id: EveliTaskFeatureType }> = ({ children, id }) => {
   const { features } = useTaskFeatures();
   const required = EveliTaskFeatureMapping[id];

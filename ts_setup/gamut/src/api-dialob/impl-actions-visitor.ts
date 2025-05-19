@@ -61,7 +61,12 @@ export class ActionVisitor {
 
   private withAnswer(action: {id: string, answer: any}) {
     const answer = this._items[action.id];
-    if (!answer) throw new ActionVisitorError(`No item found with id '${action.id}'`);
+    if (!answer) {
+      const msg = `No item found with id '${action.id}', ${JSON.stringify(action ?? {})}`;
+      //console.error(msg, this._items);
+      //return;
+      throw new ActionVisitorError(msg)
+    };
     if (answer.type === 'questionnaire' || answer.type === 'group' || answer.type === 'surveygroup' || answer.type === 'note') {
       throw new ActionVisitorError(`Item '${action.id}' is not an answer!`);
     }
