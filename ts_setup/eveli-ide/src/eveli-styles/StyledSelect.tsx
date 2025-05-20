@@ -16,6 +16,7 @@ interface StyledSelectProps<T> {
 
 const StyledSelectLabel = styled(InputLabel)(({ theme }) => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(1),
   color: theme.palette.text.primary,
   fontWeight: theme.typography.h1.fontWeight,
   paddingLeft: theme.spacing(2),
