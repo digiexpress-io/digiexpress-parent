@@ -32,6 +32,11 @@ public class MigClientImpl implements MigClient {
   public TargetTaskBuilder taskBuilder() {
     return new TargetTaskBuilderImpl(target_tasks);
   }
+  @Override
+  public TargetTaskRolesBuilder taskRolesBuilder() {
+    return new TargetTaskRolesBuilderImpl(target_tasks);
+  }
+
 
   @Override
   public SourceThenaQuery thenaQuary() {

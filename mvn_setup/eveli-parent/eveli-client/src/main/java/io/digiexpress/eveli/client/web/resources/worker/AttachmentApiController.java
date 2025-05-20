@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.digiexpress.eveli.client.api.AttachmentCommands;
 import io.digiexpress.eveli.client.api.AttachmentCommands.Attachment;
 import io.digiexpress.eveli.client.api.AttachmentCommands.AttachmentUpload;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class AttachmentApiController {
   
   private final AttachmentCommands client;
   private final TaskClient taskClient;  
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final ProcessClient processClient;
   private static final Duration timeout = Duration.ofMillis(10000);
   
@@ -167,7 +167,7 @@ public class AttachmentApiController {
     return ResponseEntity.notFound().build();
   }
 
-  private boolean checkTaskAccess(String taskId, AuthClient.User authentication) {
+  private boolean checkTaskAccess(String taskId, WorkerAuthClient.User authentication) {
     log.debug("Checking task {} access for user {}", taskId, authentication.getPrincipal().getUsername());
     List<String> roles = authentication.getPrincipal().getRoles();
     

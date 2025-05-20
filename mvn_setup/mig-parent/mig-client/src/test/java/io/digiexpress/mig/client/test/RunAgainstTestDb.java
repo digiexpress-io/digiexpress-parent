@@ -2,6 +2,7 @@ package io.digiexpress.mig.client.test;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.mig.client.api.ImmutableFormFilter;
@@ -10,7 +11,7 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
 
-//@Disabled
+@Disabled
 public class RunAgainstTestDb {
   final io.vertx.mutiny.pgclient.PgPool src_pg_pool = io.vertx.mutiny.pgclient.PgPool.pool(
       new PgConnectOptions()

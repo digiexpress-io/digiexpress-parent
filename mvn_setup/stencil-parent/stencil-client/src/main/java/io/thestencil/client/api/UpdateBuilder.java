@@ -131,16 +131,12 @@ public interface UpdateBuilder {
     List<LocaleLabel> getLabels();
     @Nullable
     List<String> getArticles();
-    @Nullable
-    Boolean getDevMode();
     
-    @Nullable
-    Boolean getAnon();
+    @Nullable Boolean getDisabled();
+    @Nullable Boolean getDevMode();
+    @Nullable Boolean getAnon();
     
-    
-    @Nullable
-    LocalDateTime getStartDate();
-    @Nullable
-    LocalDateTime getEndDate();
+    @Nullable LocalDateTime getStartDate();
+    @Nullable LocalDateTime getEndDate();
   }
 }

@@ -86,7 +86,7 @@ public class SiteStateVisitor {
     return result.tagName(entity.getName()).build();
   }
   
-  private boolean isWorkflowEnabled(Entity<Workflow> link) {
+  private boolean isWorkflowInPeriod(Entity<Workflow> link) {
     if(link.getBody().getStartDate() == null && link.getBody().getEndDate() == null) {
       return true;
     }
@@ -111,11 +111,15 @@ public class SiteStateVisitor {
   private List<LinkResource> visitWorkflows(Entity<Workflow> link) {
     final List<LinkResource> result = new ArrayList<>();
     
+    if(Boolean.TRUE.equals(link.getBody().getDisabled())) {
+      return result;
+    }
+    
     if(!dev && Boolean.TRUE.equals(link.getBody().getDevMode())){
       return result;
     }
     
-    if(!isWorkflowEnabled(link)) {
+    if(!isWorkflowInPeriod(link)) {
       return result;
     }
     

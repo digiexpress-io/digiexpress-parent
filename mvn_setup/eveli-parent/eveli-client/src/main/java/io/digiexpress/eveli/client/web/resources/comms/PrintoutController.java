@@ -35,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
 
 import io.dialob.api.form.Form;
 import io.dialob.api.questionnaire.Questionnaire;
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import lombok.Data;
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PrintoutController {
 
   private final TaskClient client;
-  private final AuthClient auth;
+  private final WorkerAuthClient auth;
   private final DialobClient dialob;
   private final RestTemplate restTemplate;
   private final String serviceUrl;

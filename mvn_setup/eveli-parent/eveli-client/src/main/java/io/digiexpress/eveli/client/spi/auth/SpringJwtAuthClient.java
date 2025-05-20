@@ -30,12 +30,12 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
 
-public class SpringJwtAuthClient implements AuthClient {
+public class SpringJwtAuthClient implements WorkerAuthClient {
   private boolean isAdminAccessEnabled = false;
   @Override
   public User getUser() {

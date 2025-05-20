@@ -28,6 +28,9 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
+import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
+import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
@@ -112,7 +115,7 @@ public class FeedbackTaskEnvirSetup {
   }
 
   
-  public TaskClient getTaskClient() {
+  public TaskClient getTaskClient(ProcessRepository proc) {
     final TaskNotificator notificator = new NotificationMessagingComponent(publisher);
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName(repoId)
@@ -127,7 +130,8 @@ public class FeedbackTaskEnvirSetup {
         .await().atMost(Duration.ofMinutes(1));
     log.info("Repo created: " + repo);
     
-    return new TaskClientImpl(notificator, null, null, store);
+    final var customer = new CustomerAccountClientImpl(new ProcessClientImpl(proc, null, null));
+    return new TaskClientImpl(notificator, null, null, store, customer);
   }
   
 }

@@ -22,6 +22,16 @@ export const GMarkdownRoot = styled("div", {
   },
 })<{ ownerState: GMarkdownProps }>(({ theme }) => {
   return {
+    'ul': {
+      paddingLeft: theme.spacing(3),
+      marginBottom: theme.typography.body1.lineHeight,
+    },
+    'ul > li > span': { // span = typography
+      marginBottom: theme.typography.body1.lineHeight
+    },
+    'ul:last-of-type': {
+      marginBottom: theme.spacing(2),
+    },
   };
 });
 

@@ -19,7 +19,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
       oldValue.filter(v => v !== targetValue) : 
       [...oldValue, targetValue];
 
-    store.setAnswer(store.id, newValue);
+    store.setAnswer(element.id, newValue);
   }
 
   return (

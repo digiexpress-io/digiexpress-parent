@@ -9,7 +9,9 @@ import java.util.Map;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import io.digiexpress.mig.client.api.ImmutableSourceRole;
 import io.digiexpress.mig.client.api.SourceTasks;
+import io.digiexpress.mig.client.api.SourceTasks.SourceRole;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.EntityQueryLoggerImpl;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEvent;
 import io.digiexpress.mig.client.spi.loggers.EntityQueryLogger.LogEventLevel;
@@ -55,6 +57,19 @@ public class TargetTaskLogger {
     log.error("\r\n{}", EntityQueryLogger.generateLog(messages), e);
   }
   
+  public void skipRole(SourceRole e) {
+    final var type = ImmutableSourceRole.class;
+    inserted_count.put(type, inserted_count.getOrDefault(type, 0) + 1);
+    messages.add(LogEvent.builder()
+        .level(LogEventLevel.INFO)
+        .props(Map.of(
+            "text", "Skipping role for task, already exists",
+            "taskId", String.valueOf(e.getTask_id()),
+            "role", e.getAssigned_roles()
+        ))
+        .build());
+  }
+  
   public void ok(SourceTasks e) {
     final var errorsPresent = messages.stream()
         .filter(t -> t.getLevel() == LogEventLevel.ERROR)
@@ -77,6 +92,7 @@ public class TargetTaskLogger {
               "commits inserted", String.valueOf(inserted_count.getOrDefault(GrimCommit.class, 0)),
               "missions inserted", String.valueOf(inserted_count.getOrDefault(GrimMission.class, 0)),
               "assignments inserted", String.valueOf(inserted_count.getOrDefault(GrimAssignment.class, 0)),
+              "assignment role's skipped", String.valueOf(inserted_count.getOrDefault(ImmutableSourceRole.class, 0)),
               "labels inserted", String.valueOf(inserted_count.getOrDefault(GrimMissionLabel.class, 0)),
               "remarks inserted", String.valueOf(inserted_count.getOrDefault(GrimRemark.class, 0)),
               "processes inserted", String.valueOf(inserted_count.getOrDefault(ProcessEntity.class, 0))

@@ -42,6 +42,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
+import io.digiexpress.eveli.client.api.CustomerAccountClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
@@ -50,6 +51,7 @@ import io.digiexpress.eveli.client.event.NotificationMessagingComponent;
 import io.digiexpress.eveli.client.event.TaskEventPublisher;
 import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.persistence.repositories.ProcessRepository;
+import io.digiexpress.eveli.client.spi.crm.CustomerAccountClientImpl;
 import io.digiexpress.eveli.client.spi.dms.DocContainerClient;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackClientImpl;
 import io.digiexpress.eveli.client.spi.feedback.FeedbackWithHistory;
@@ -158,9 +160,16 @@ public class EveliAutoConfig {
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {
     return new SpringTransactionWrapper(entityManager);
-  }  
+  }
+  
+  @Bean 
+  public CustomerAccountClient customerAccountClient(ProcessClient processClient) {
+    return new CustomerAccountClientImpl(processClient);
+  }
+  
   @Bean 
   public TaskClient taskClient(
+      CustomerAccountClient crmClient,
       DocContainerClient docContainerClient,
       AttachmentCommands attachmentCommands,
       RestTemplate restTemplate,
@@ -175,7 +184,7 @@ public class EveliAutoConfig {
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
     
     final var fileClient = new TaskFileClientImpl(attachmentCommands, restTemplate);    
-    return new TaskClientImpl(taskNotificator, fileClient, docContainerClient, store);
+    return new TaskClientImpl(taskNotificator, fileClient, docContainerClient, store, crmClient);
   }
   
   @Bean

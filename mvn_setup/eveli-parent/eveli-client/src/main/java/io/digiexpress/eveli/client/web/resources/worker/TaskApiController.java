@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.digiexpress.eveli.client.api.AuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
@@ -63,7 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/worker/rest/api/tasks")
 @Slf4j
 public class TaskApiController {    
-  private final AuthClient securityClient;
+  private final WorkerAuthClient securityClient;
   private final TaskClient taskClient;
   private final DialobClient dialobClient;
   private final MqEventPublisher mqEventPublisher;

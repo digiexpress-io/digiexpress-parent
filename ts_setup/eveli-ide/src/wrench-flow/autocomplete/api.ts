@@ -380,8 +380,6 @@ export class AutocompleteVisitor {
       }
     }
 
-    
-    
     if (isAround || isEndOfLine) {
       this._result.push(this.ac().id("new input")
         .append(isEndOfLine)
@@ -448,8 +446,9 @@ export class AutocompleteVisitor {
     const AFTER = [KEY_ID, KEY_DESC];
     const after = AFTER
       .filter(name => this.hasNonNull(name, flow))
-      .map(name => this.get(name, flow).start);
-    if (!after.length) {
+      .map(name => this.get(name, flow));
+      
+    if (!after.length || !this.isAfter(after)) {
       return;
     }
     this._result.push(this.ac().id("inputs block")
@@ -457,6 +456,7 @@ export class AutocompleteVisitor {
       .addField("myInputParam", { indent: 2 })
       .addField("required", { indent: 4, value: true })
       .addField("type", { indent: 4, value: "STRING" })
+      .addField("debugValue", { indent: 4, value: "\"test-string\"" })
       .build());
   }
 

@@ -20,7 +20,7 @@ package io.digiexpress.eveli.client.spi.gamut;
  * #L%
  */
 
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.GamutClient.ProcessNotFoundException;
 import io.digiexpress.eveli.client.api.GamutClient.ReplayToInit;
 import io.digiexpress.eveli.client.api.GamutClient.ReplyToBuilder;
@@ -43,7 +43,7 @@ import lombok.experimental.Accessors;
 public class ReplyToBuilderImpl implements ReplyToBuilder {
   private final ProcessClient processRepository;
   private final TaskClient taskClient;
-  private final CrmClient authClient;
+  private final GamutAuthClient authClient;
   private final MqEventPublisher mqEventPublisher;
   private String actionId;
   private ReplayToInit from;

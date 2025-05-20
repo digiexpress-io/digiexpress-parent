@@ -41,9 +41,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.AuthClient.Liveness;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
@@ -51,7 +49,8 @@ import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
 import io.digiexpress.eveli.client.api.ImmutableUserPrincipal;
-import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient.Liveness;
 
 
 
@@ -145,8 +144,8 @@ public class AuthenticationConfigFakeUser  {
   }
   
   @Bean
-  public AuthClient authClientFakeUser() {
-    return new AuthClient() {
+  public WorkerAuthClient authClientFakeUser() {
+    return new WorkerAuthClient() {
       @Override
       public User getUser() {
         return ImmutableUser.builder()
@@ -170,8 +169,8 @@ public class AuthenticationConfigFakeUser  {
   }
   
   @Bean
-  public CrmClient crm() {
-    return new CrmClient() {
+  public GamutAuthClient crm() {
+    return new GamutAuthClient() {
       @Override
       public Liveness getLiveness() {
         return null;

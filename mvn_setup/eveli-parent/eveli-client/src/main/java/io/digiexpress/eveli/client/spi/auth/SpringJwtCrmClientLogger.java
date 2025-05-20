@@ -27,7 +27,7 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import io.digiexpress.eveli.client.api.CrmClient.CustomerPrincipal;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerPrincipal;
 import io.digiexpress.eveli.client.spi.auth.CustomerRoleVisitor.UserRoles;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

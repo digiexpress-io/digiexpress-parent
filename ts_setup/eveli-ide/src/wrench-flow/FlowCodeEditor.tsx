@@ -20,6 +20,7 @@ export const FlowCodeEditor: React.FC<{
   const { site } = WrenchComposerApi.useComposer();
   const { messages, onChange, ast } = props;
   const monaco: typeof monaco_editor | null = useMonaco();
+  const astRef = React.useRef<HdesApi.AstFlow | undefined>(ast);
   const [guided, setGuided] = React.useState<FlowAstAutocomplete>();
 
   React.useEffect(() => {
@@ -59,6 +60,10 @@ export const FlowCodeEditor: React.FC<{
     onChange(newValue ?? '');
   }
 
+  React.useEffect(() => {
+    astRef.current = ast;
+  }, [ast]);
+
   const beforeMount: BeforeMount = React.useCallback((editor) => {
 
     editor.editor.addCommand({
@@ -68,18 +73,14 @@ export const FlowCodeEditor: React.FC<{
       }
     });
 
-    const disposable = editor.languages.registerCompletionItemProvider('yaml', {
+    editor.languages.registerCompletionItemProvider('yaml', {
       provideCompletionItems: function (model, position, context) {
-        let suggestions = ast ? new AutocompleteVisitor(ast, site, model, position).visit() : [];
-
-        return { suggestions, dispose: () => {
-          disposable.dispose()
-        } }
+        let suggestions = astRef.current ? new AutocompleteVisitor(astRef.current, site, model, position).visit() : [];
+        return { suggestions };
       }
     });
 
-
-  }, []);
+  }, []); 
 
   return (
   <>

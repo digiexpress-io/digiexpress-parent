@@ -279,6 +279,7 @@ public class CreateBuilderImpl implements CreateBuilder {
   public static Entity<Workflow> workflow(CreateWorkflow init, SiteState state, StencilClient client) {
     final var gid = client.getStore().gid(EntityType.WORKFLOW);
     final var workflow = ImmutableWorkflow.builder()
+        .disabled(init.getDisabled())
         .devMode(init.getDevMode())
         .anon(Boolean.TRUE.equals(init.getAnon()))
         .value(init.getValue())

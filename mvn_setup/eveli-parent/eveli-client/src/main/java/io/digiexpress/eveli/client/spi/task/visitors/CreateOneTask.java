@@ -1,6 +1,14 @@
 package io.digiexpress.eveli.client.spi.task.visitors;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
+import com.google.common.collect.ImmutableList;
+
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CrmAccountType;
 
 /*-
  * #%L
@@ -37,6 +45,7 @@ import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,7 +53,7 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
   private final String userId;
   private final TaskNotificator notificator;
   private final CreateTaskCommand command;
-  private final static String DEFAULT_CLIENT_LANG = "fi";
+  @Nullable private final CustomerAccount account;
   
   private void createTask(CreateTaskCommand commmand, NewMission mission) {
     final var status = commmand.getStatus() == null ? TaskStatus.NEW: commmand.getStatus();
@@ -87,7 +96,7 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
     if(command.getQuestionnaireId() != null) {
       mission
       .addLink(newLink -> newLink
-        .linkValue(Optional.ofNullable(commmand.getClientLanguage() ).orElse(DEFAULT_CLIENT_LANG))
+        .linkValue(Optional.ofNullable(commmand.getClientLanguage() ).orElse(TaskMapper.DEFAULT_CLIENT_LANG))
         .linkType(TaskMapper.LINK_TYPE_CLIENT_LOCALE)
         .build()
       );
@@ -120,18 +129,41 @@ public class CreateOneTask implements TaskStoreConfig.CreateOneTaskVisitor<TaskC
           .build());
     }
     
-    if(commmand.getFeaturesAsCsv() != null && !commmand.getFeaturesAsCsv().trim().isEmpty()) {
-      for(final var feature : commmand.getFeaturesAsCsv().split(",")) {
-        mission.addLabels(newLabel -> newLabel
-            .labelType(TaskMapper.LABEL_TYPE_FEATURES)
-            .labelValue(feature)
-            .build());
-      }
+    
+    final var features = ImmutableList.<String>builder()
+        .addAll(getCsvFeatures(command))
+        .addAll(getCrmFeatures(account))
+        .build();
+    
+    for(final var feature : features) {
+      mission.addLabels(newLabel -> newLabel
+          .labelType(TaskMapper.LABEL_TYPE_FEATURES)
+          .labelValue(feature)
+          .build());
     }
+  
     
     mission.build();
   }
-
+  
+  
+  private List<String> getCrmFeatures(CustomerAccount account) {
+    if(account == null) {
+      return Collections.emptyList();
+    }
+    if(account.getType() == CrmAccountType.ANON) {
+      return Arrays.asList(TaskMapper.TASK_FEATURE_ANON);
+    }
+    return Collections.emptyList();
+  }
+  
+  private List<String> getCsvFeatures(CreateTaskCommand commmand) {
+    if(commmand.getFeaturesAsCsv() != null && !commmand.getFeaturesAsCsv().trim().isEmpty()) {
+      return Arrays.asList(commmand.getFeaturesAsCsv().split(","));
+    }
+    return Collections.emptyList();
+  }
+  
   @Override
   public CreateOneMission start(GrimStructuredTenant config, CreateOneMission builder) {
     

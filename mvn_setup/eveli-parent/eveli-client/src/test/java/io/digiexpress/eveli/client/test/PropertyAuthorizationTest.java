@@ -39,8 +39,8 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.digiexpress.eveli.client.api.AuthClient;
-import io.digiexpress.eveli.client.api.CrmClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.config.EveliAutoConfigPermissions;
 import io.digiexpress.eveli.client.spi.auth.SpringSecurityPolicy;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,11 +61,11 @@ public class PropertyAuthorizationTest {
   @MockitoBean
   Authentication authentication;
   @MockitoBean
-  AuthClient portalClient;
+  WorkerAuthClient portalClient;
   @MockitoBean
-  CrmClient crmClient;
+  GamutAuthClient crmClient;
   @MockitoBean
-  private AuthClient.User portalUser;
+  private WorkerAuthClient.User portalUser;
 
   Collection userRole = createAuthorities("ROLE_USER");
   Collection adminRole = createAuthorities("ROLE_ADMIN");

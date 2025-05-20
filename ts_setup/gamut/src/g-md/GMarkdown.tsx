@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, useThemeProps } from '@mui/material';
+import CircleIcon from '@mui/icons-material/Circle';
 import ReactMarkdown, { Components } from 'react-markdown';
 import { useUtilityClasses, GMarkdownRoot, MUI_NAME } from './useUtilityClasses';
 import { GOverridableComponent } from '../g-override';
@@ -26,7 +27,6 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
       <ReactMarkdown
         remarkPlugins={props.remarkPlugins ?? undefined}
         children={props.children ?? "no children to render"} components={
-          
           {
             h1: (props) => (<Typography variant={'h1'}>{props.children}</Typography>),
             h2: (props) => (<Typography variant={'h2'}>{props.children}</Typography>),
@@ -35,7 +35,7 @@ export const GMarkdown: React.FC<GMarkdownProps> = (initProps) => {
             h5: (props) => (<Typography variant={'h5'}>{props.children}</Typography>),
             h6: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
             p: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
-            ul: (props) => (<Typography variant={'body1'}>{props.children}</Typography>),
+            li: (props) => (<li><Typography component="span" variant={'body1'}>{props.children}</Typography></li>),
             a: linkRenderer,
             ...(props.overrides ?? {})
         }} />

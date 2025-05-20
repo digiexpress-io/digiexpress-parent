@@ -37,8 +37,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.digiexpress.eveli.client.api.CrmClient.CustomerRoles;
-import io.digiexpress.eveli.client.api.CrmClient.CustomerType;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerRoles;
+import io.digiexpress.eveli.client.api.GamutAuthClient.CustomerType;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
