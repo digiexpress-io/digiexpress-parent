@@ -109,13 +109,14 @@ const StyledTextField: React.FC<StyledInputFieldProps<string> & { type?: React.I
         value={value}
         error={error}
         onChange={({ target }) => onChange(target.value)}
-        onKeyPress={onEnter ? (event) => {
-          const key = event.key;
-          if (key === 'Enter') {
+        onKeyDown={(event) => {
+          event.stopPropagation();
+          if (onEnter && event.key === 'Enter') {
             onEnter();
           }
-        } : undefined}
+        }}
       />
+
       <BottomText helperText={helperText} errorMessage={errorMessage} error={error} />
     </>
   );
