@@ -61,6 +61,20 @@ export declare namespace IamApi {
     'USER'
   )
 
+  export type FormLinkAuthType = (
+    'IS_ANON_FORM_ENABLED' | // form is anon
+    'IS_ANON_FORM_DISABLED' | // form is anon
+
+    'IS_USER_FORM_ENABLED' | // user is logged in and form is enabled
+    'IS_USER_FORM_DISABLED' |
+
+    'IS_REP_ENABLED' |
+    'IS_REP_DISABLED' |
+
+    'IS_FORM_DISABLED'
+  )
+
+
   export type FetchUserGET = () => Promise<Response>;
   export type FetchUserRolesGET = () => Promise<Response>;
   export type FetchUserProductsGET = () => Promise<Response>;
@@ -84,5 +98,6 @@ export declare namespace IamApi {
     reload: () => Promise<User | undefined>
 
     isFormLinkEnabled: (link: SiteApi.TopicLink) => boolean
+    getFormLinkAuthType: (link: SiteApi.TopicLink | undefined) => FormLinkAuthType
   }
 }

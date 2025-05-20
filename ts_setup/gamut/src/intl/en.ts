@@ -91,7 +91,7 @@ export const en = {
   'gamut.forms.filling.welcome': 'Welcome!',
   'gamut.forms.filling.must_be_authenticated': 'You must be logged in to fill this form',
   'gamut.forms.filling.authenticated_and_welcome': 'Hello {userName}!',
-  'gamut.forms.filling.authenticated_and_proceed': 'Please click below to start the form',
+  'gamut.forms.filling.proceed_to_form': 'Please click below to start the form',
   'gamut.forms.filling.anonUser_and_welcome': 'Hello!',
   'gamut.forms.filling.start': 'You are about to start this form',
   'gamut.forms.filling.login-then-start.button': 'Log in now',

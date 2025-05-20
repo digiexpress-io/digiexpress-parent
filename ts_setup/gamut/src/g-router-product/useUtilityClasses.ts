@@ -26,7 +26,6 @@ export const useUtilityClasses = () => {
     productTitle: ['productTitle'],
     productSubTitle: ['productSubTitle'],
     productBodyText: ['productBodyText'],
-    productBodyTextError: ['productBodyTextError'],
     formStartButton: ['formStartButton'],
     loginAlert: ['loginAlert'],
     formAuthButton: ['formAuthButton'],
@@ -84,9 +83,6 @@ export const GRouterProductRoot = styled("div", {
     },
     '.GRouterProduct-productBodyText': {
       ...theme.typography.body1
-    },
-    '.GRouterProduct-productBodyTextError': {
-
     },
     '.GRouterProduct-loginAlert': {
       padding: theme.spacing(3)

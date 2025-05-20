@@ -45,6 +45,7 @@ import io.digiexpress.eveli.client.api.GamutAuthClient;
 import io.digiexpress.eveli.client.api.ImmutableCustomer;
 import io.digiexpress.eveli.client.api.ImmutableCustomerContact;
 import io.digiexpress.eveli.client.api.ImmutableCustomerPrincipal;
+import io.digiexpress.eveli.client.api.ImmutableCustomerRepresentedCompany;
 import io.digiexpress.eveli.client.api.ImmutableCustomerRoles;
 import io.digiexpress.eveli.client.api.ImmutableLiveness;
 import io.digiexpress.eveli.client.api.ImmutableUser;
@@ -185,18 +186,21 @@ public class AuthenticationConfigFakeUser  {
                 .firstName("same")
                 .lastName("vimes")
                 .protectionOrder(false)
-                /*
+                
+                
                 .representedCompany(ImmutableCustomerRepresentedCompany.builder()
                     .companyId("Serial-X")
                     .name("Night Watch")
                     .build())
-                    */
+                
+                
                 .contact(ImmutableCustomerContact.builder()
                     .email("same.vimes@resys.io")
                     .addressValue("test-street")
                     .build())
+                
                 .build())
-            .type(CustomerType.AUTH_CUSTOMER)
+            .type(CustomerType.REP_COMPANY)
             .build();
       }
 

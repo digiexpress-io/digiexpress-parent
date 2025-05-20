@@ -87,7 +87,7 @@ export const bs = {
   'gamut.forms.filling.welcome': 'Dobrodošli!',
   'gamut.forms.filling.must_be_authenticated': 'Za popunjavanje obrasca potrebno je biti prijavljen',
   'gamut.forms.filling.authenticated_and_welcome': 'Zdravo {userName}!',
-  'gamut.forms.filling.authenticated_and_proceed': 'Kliknite ispod da pokrenete obrazac',
+  'gamut.forms.filling.proceed_to_form': 'Kliknite ispod da pokrenete obrazac',
   'gamut.forms.filling.start': 'Popunjavanje obrasca započinje',
   'gamut.forms.filling.login-then-start.button': 'Prijavi se sada',
   'gamut.forms.filling.start.info1': 'Obrazac se automatski sprema tokom popunjavanja',
