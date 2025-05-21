@@ -87,7 +87,7 @@ const UserMessage: React.FC<{
 }> = (props) => {
 
   const { debug } = props;
-  const debugEnabled = true;
+  const debugEnabled = false;
   const classes = useUtilityClasses();
   if (!props.enabled) {
     return (
