@@ -62,16 +62,16 @@ export declare namespace IamApi {
   )
 
   export type FormLinkAuthType = (
-    'IS_ANON_FORM_ENABLED' | // form is anon
-    'IS_ANON_FORM_DISABLED' | // form is anon
+    'IS_ANON_FORM_ENABLED' | // form can be filled anonymously
+    'IS_ANON_FORM_DISABLED' | // form cannot be filled anonymously
 
     'IS_USER_FORM_ENABLED' | // user is logged in and form is enabled
-    'IS_USER_FORM_DISABLED' |
+    'IS_USER_FORM_DISABLED' | // user is logged in but form has error for some reason
 
-    'IS_REP_ENABLED' |
-    'IS_REP_DISABLED' |
+    'IS_REP_ENABLED' | // representative is authorized to fill this form
+    'IS_REP_DISABLED' | // representative is not authorized to fill this form
 
-    'IS_FORM_DISABLED'
+    'IS_FORM_DISABLED' // form has error for some reason
   )
 
 
