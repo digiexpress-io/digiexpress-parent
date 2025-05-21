@@ -69,7 +69,14 @@ const CellEdit: React.FC<CellEditProps> = (props) => {
 
 
 
-  return (<Dialog open={true} onClose={props.onClose}>
+  return (
+    <Dialog
+      open={true}
+      onClose={props.onClose}
+      maxWidth="md"
+      fullWidth
+      scroll="body"
+    >
     <DialogTitle>
       <FormattedMessage id='decisions.cells.dialog.title' values={{
         name: props.dt.name,
