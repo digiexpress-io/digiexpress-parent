@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.spi.process;
 
+import java.time.OffsetDateTime;
+
 /*-
  * #%L
  * eveli-client
@@ -50,18 +52,34 @@ public class DialobScheduler {
   private final ObjectMapper objectMapper;
   
   
-  private void executeFlowForInstance(ProcessInstance instance) {
+  private void executeFlowForInstance(ProcessInstance init) {
+      // resync
     
       try {
+        final var optional = processClient.queryInstances().findOneById(init.getId().toString());
+        if(optional.isEmpty()) {
+          log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", init.getId());
+          return;          
+        }
+        
+        final var instance = optional.get();
+        
         if(instance.getTaskId() != null) {
-          log.warn("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
+          log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
           return;
         }
         
+        Questionnaire questionnaire = null;
+        try {
+          questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
+          if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
+            log.debug("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
+            return;
+          }
+        } catch(Exception e) { }
         
-        final var questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
-        if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
-          log.warn("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
+        if(questionnaire == null) {
+          log.error("Skipping execution because questionnaire: {} could not be found!", instance.getQuestionnaireId());
           return;
         }
         
@@ -80,19 +98,18 @@ public class DialobScheduler {
         .build();
         
       } catch(Exception e) {
-        log.error("Failed to run flow for process instance: {}, e: {}!", instance.getId(), e.getMessage(), e);
+        log.error("Failed to run flow for process instance: {}, e: {}!", init.getId(), e.getMessage(), e);
       }
-    
   }
   
-  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
+  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
   public void executeFlow() {
-    for(final var instance : processClient.queryInstances().findAllAnswered()) {
+    for(final var instance : processClient.queryInstances().findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))) {
       executeFlowForInstance(instance);
     }
   }
   
-  @Scheduled(fixedRate = 15, timeUnit = TimeUnit.MINUTES)
+  @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
   public void rejectProcessesWithDeadline() {
     processClient.queryInstances().findAllExpired().forEach(instance -> {
       log.warn("Expiry for process instance: {}, e: {}!", instance.getId());
@@ -115,7 +132,7 @@ public class DialobScheduler {
         
         final var questionnaire = dialobClient.getDialobById(event.getSessionId());
         if(questionnaire.unwrap().getMetadata().getStatus() != Questionnaire.Metadata.Status.COMPLETED) {
-          log.warn("Skipping session sync because questionnaire {} status is {}", event.getSessionId(), questionnaire.unwrap().getMetadata().getStatus());          
+          log.debug("Skipping session sync because questionnaire {} status is {}", event.getSessionId(), questionnaire.unwrap().getMetadata().getStatus());          
         }
         
         final var completed = actions.getActions().stream().filter(action -> action.getType() == Action.Type.COMPLETE).findFirst().isPresent();
@@ -126,7 +143,7 @@ public class DialobScheduler {
           
           final var answeredInstance = processClient.queryInstances().findOneById(String.valueOf(instance.getId()));
           if(answeredInstance.isPresent()) {
-            log.info("Executing flow directly for process: {} after dialob completion event!", instance.getId());
+            log.debug("Executing flow directly for process: {} after dialob completion event!", instance.getId());
             executeFlowForInstance(answeredInstance.get());
           }
           

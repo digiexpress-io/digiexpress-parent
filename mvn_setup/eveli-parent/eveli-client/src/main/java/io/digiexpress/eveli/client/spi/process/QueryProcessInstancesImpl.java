@@ -89,4 +89,11 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
     return processJPA.findAllAfterCreated(OffsetDateTime.now().minusMonths(6))
         .stream().map(CreateProcessInstanceImpl::map).toList();
   }
+  @Override
+  public List<ProcessInstance> findAllAnsweredFrom(OffsetDateTime pickupFrom) {
+    return ImmutableList.<ProcessClient.ProcessInstance>builder()
+        .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.ANSWERED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
+        .addAll(processJPA.findAllByStatusFromGivenDate(ProcessStatus.CREATED, pickupFrom).stream().map(CreateProcessInstanceImpl::map).toList())
+        .build();
+  }
 }

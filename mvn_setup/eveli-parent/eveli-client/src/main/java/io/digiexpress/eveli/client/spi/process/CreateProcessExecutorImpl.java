@@ -21,7 +21,9 @@ package io.digiexpress.eveli.client.spi.process;
  */
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,6 +34,7 @@ import io.digiexpress.eveli.client.api.ProcessClient.QueryProcessInstances;
 import io.digiexpress.eveli.client.spi.asserts.TaskAssert;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.resys.hdes.client.api.programs.FlowProgram.FlowResult;
+import io.resys.thena.support.RepoAssert;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -71,9 +74,23 @@ public class CreateProcessExecutorImpl implements CreateProcessExecutor {
     flowInput.put("workflowName", instance.getWorkflowName());
     final var runtime = envir.runtimeQuery().getOne().await().atMost(ProcessClientImpl.asset_setup_duration);
     
+    
+    final var flowName = Optional.ofNullable(instance.getFlowName()).orElseGet(() -> {
+      return runtime.getStencil(OffsetDateTime.now())
+        .getSites().values().stream().flatMap(e -> e.getLinks().values().stream())
+        .filter(topic -> Boolean.TRUE.equals(topic.getWorkflow()))
+        .filter(topic -> topic.getValue().equals(instance.getWorkflowName()))
+        .map(e -> e.getFlowName())
+        .findFirst().orElse(null);
+    });
+    
+    
+    RepoAssert.notEmpty(flowName, () -> "Can't identify stencil workflow for name: " + instance.getWorkflowName() + "!");
+    
+    
     final FlowResult run = runtime.getWrench()
         .inputMap(flowInput)
-        .flow(instance.getFlowName())
+        .flow(flowName)
         .andGetBody();
     
     return run;

@@ -33,7 +33,7 @@ management:
 # quarkus warnings when something takes too long, or simply at breakpoint with debugger
 logging.level.io.vertx.core.impl.btc.BlockedThreadChecker: OFF
 logging.level.io.vertx.core.impl.BlockedThreadChecker: OFF
-
+logging.level.io.digiexpress.eveli.dialob: OFF
 # wrench asset compiler noise, for broken assets
 logging.level.io.resys.hdes.client.spi.groovy: OFF
 logging.level.io.resys.hdes.client.spi.envir: OFF

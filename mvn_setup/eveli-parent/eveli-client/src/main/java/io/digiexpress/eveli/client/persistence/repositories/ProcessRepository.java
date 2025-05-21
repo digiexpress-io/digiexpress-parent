@@ -56,6 +56,10 @@ public interface ProcessRepository extends PagingAndSortingRepository<ProcessEnt
   @Query(value="select p from ProcessEntity p where status = :status and taskId is null")
   List<ProcessEntity> findAllByStatus(ProcessStatus status);
   
+  @Query(value="select p from ProcessEntity p where status = :status and taskId is null and created > :created")
+  List<ProcessEntity> findAllByStatusFromGivenDate(ProcessStatus status, OffsetDateTime created);
+  
+  
 
   @Query(nativeQuery = true, value=
 """
