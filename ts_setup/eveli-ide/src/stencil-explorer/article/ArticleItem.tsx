@@ -1,12 +1,14 @@
 import * as React from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-
+import { Box, Tooltip, Typography, useTheme } from "@mui/material";
 import LinkIcon from '@mui/icons-material/Link';
+
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import FaceIcon from '@mui/icons-material/Face';
 
 import ConstructionIcon from '@mui/icons-material/Construction';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '../../stencil-setup';
@@ -19,23 +21,38 @@ import { EveliPermissions } from "@/eveli-permissions";
 interface WorkflowItemProps {
   labelText: string;
   nodeId: string;
-  children?: React.ReactChild;
+  children?: React.ReactNode;
   devMode?: boolean,
+  disabledMode?: boolean,
+  anonMode?: boolean,
   onClick: () => void;
 }
 
 const WorkflowItem: React.FC<WorkflowItemProps> = (props) => {
   const theme = useTheme();
+  const intl = useIntl();
+
+  const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
+  const noConfig = !props.devMode && !props.anonMode && !props.disabledMode;
+
+
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
-        <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : AccountTreeOutlinedIcon} color={theme.palette.primary.dark} sx={{ pl: 1, mr: 1 }} />
-          <Typography noWrap={true} sx={{ fontWeight: "inherit", flexGrow: 1 }}>
+        <Box display='flex' alignItems='center'>
+          <Typography noWrap={true} sx={{ fontWeight: "inherit" }}>
             {props.labelText}
           </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
+
+            {noConfig && <Tooltip title={intl.formatMessage({ id: 'services.none.tooltip' })}><AccountTreeOutlinedIcon sx={{ mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' }} /></Tooltip>}
+            {props.devMode && <Tooltip title={intl.formatMessage({ id: 'services.devmode.tooltip' })}><ConstructionIcon sx={iconStyle} /></Tooltip>}
+            {props.disabledMode && <Tooltip title={intl.formatMessage({ id: 'services.disabledmode.tooltip' })}><NotInterestedIcon sx={iconStyle} /></Tooltip>}
+            {props.anonMode && <Tooltip title={intl.formatMessage({ id: 'services.anonmode.tooltip' })}><FaceIcon sx={iconStyle} /></Tooltip>}
+
+          </Box>
         </Box>
       }
     />
@@ -132,6 +149,8 @@ const ArticleItem: React.FC<{
                 key={view.workflow.id}
                 labelText={session.getWorkflowName(view.workflow.id).name}
                 devMode={view.workflow.body.devMode}
+                disabledMode={view.workflow.body.disabled}
+                anonMode={view.workflow.body.anon}
                 nodeId={view.workflow.id}
 
                 onClick={() => options.setEditWorkflow(view.workflow.id)} />))}

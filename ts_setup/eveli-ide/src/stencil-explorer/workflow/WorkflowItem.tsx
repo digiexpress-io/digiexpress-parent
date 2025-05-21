@@ -1,11 +1,16 @@
 import * as React from "react";
+import { Box, Tooltip, useTheme } from '@mui/material';
 
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import EditIcon from '@mui/icons-material/ModeEdit';
 import ConstructionIcon from '@mui/icons-material/Construction';
-import { FormattedMessage } from 'react-intl';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import FaceIcon from '@mui/icons-material/Face';
+
+
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import * as Burger from '@/eveli-styles';
 import { EveliPermissions } from "@/eveli-permissions";
@@ -17,27 +22,35 @@ import { WorkflowOptions } from './WorkflowOptions';
 import ArticleItem from '../article/ArticleItem';
 
 const WorkflowItem: React.FC<{ workflowId: StencilApi.WorkflowId }> = ({ workflowId }) => {
+  const intl = useIntl();
+  const theme = useTheme();
+
   const { session } = Composer.useComposer();
   const view = session.getWorkflowView(workflowId);
   const { workflow } = view;
 
-
   const workflowName = session.getWorkflowName(workflow.id);
+  const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
 
   return (
     <>
       <Burger.TreeItem
         itemId={workflow.id}
-        labelText={workflowName.name}
+        labelText={<Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
+          {workflowName.name}
+          {workflow.body.devMode && <Tooltip title={intl.formatMessage({ id: 'services.devmode.tooltip' })}><ConstructionIcon sx={iconStyle} /></Tooltip>}
+          {workflow.body.disabled && <Tooltip title={intl.formatMessage({ id: 'services.disabledmode.tooltip' })}><NotInterestedIcon sx={iconStyle} /></Tooltip>}
+          {workflow.body.anon && <Tooltip title={intl.formatMessage({ id: 'services.anonmode.tooltip' })}><FaceIcon sx={iconStyle} /></Tooltip>}
+        </Box>
+        }
         labelcolor="explorerItem"
-        labelIcon={workflow.body.devMode ? ConstructionIcon : AccountTreeOutlinedIcon}>
+        labelIcon={AccountTreeOutlinedIcon}>
 
         <EveliPermissions id='EDIT_STENCIL_ASSET'>
           <Burger.TreeItem itemId={workflow.id + 'options-nested'} labelText={<FormattedMessage id="options" />} labelIcon={EditIcon}>
             <WorkflowOptions workflow={workflow} />
           </Burger.TreeItem>
         </EveliPermissions>
-
 
         {/** Article options */}
         <Burger.TreeItem itemId={workflow.id + 'articles-nested'}

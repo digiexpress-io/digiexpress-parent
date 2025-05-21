@@ -242,6 +242,7 @@ export declare namespace StencilApi {
       value: string,
       labels: LocaleLabel[],
       devMode?: boolean,
+      disabled?: boolean,
       anon?: boolean,
       startDate?: string | undefined,
       endDate?: string | undefined,
@@ -259,6 +260,7 @@ export declare namespace StencilApi {
     labels: LocaleLabel[] | undefined,
     devMode: boolean | undefined,
     anon: boolean | undefined,
+    disabled: boolean | undefined,
     startDate?: string | undefined,
     endDate?: string | undefined,
     formName: string,
@@ -314,6 +316,8 @@ export declare namespace StencilApi {
     articles: ArticleId[];
     devMode: boolean | undefined;
     anon: boolean | undefined;
+    disabled: boolean | undefined;
+
     startDate?: string | undefined;
     endDate?: string | undefined;
     formName: string;

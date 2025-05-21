@@ -12,6 +12,7 @@ import * as Burger from '@/eveli-styles';
 import { LocaleLabels } from '../stencil-locale';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { CancelButton } from '@/eveli-styles';
+import { WorkflowConfigOptions, WorkflowOptions } from './WorkflowConfigOptions';
 
 
 
@@ -28,28 +29,33 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
   const [startdate, setStartdate] = React.useState<string>(workflow.body.startDate ?? '');
   const [enddate, setEnddate] = React.useState<string>(workflow.body.endDate ?? '');
 
-  const [anon, setAnon] = React.useState(workflow.body.anon);
-  const [devMode, setDevMode] = React.useState(workflow.body.devMode);
   const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>(workflow.body.articles);
   const [technicalname, setTechnicalname] = React.useState(workflow.body.value);
-  //const articles: StencilApi.Article[] = session.getArticlesForLocales(workflow.body.labels.map(l => l.locale));
   const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>(workflow.body.labels);
   const [flowName, setFlowName] = React.useState<string>(workflow.body.flowName || '');
   const [formName, setFormName] = React.useState<string>(workflow.body.formName || '');
   const [formTag, setFormTag] = React.useState<string>(workflow.body.formTag || '');
   const [changeInProgress, setChangeInProgress] = React.useState(false);
+  const [workflowOptions, setWorkflowOptions] = React.useState<WorkflowOptions>({
+    anon: workflow.body.anon,
+    devMode: workflow.body.devMode,
+    disabled: workflow.body.disabled
+  });
 
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
   const { allTags: allDialobTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
 
   const handleCreate = () => {
+
     const entity: StencilApi.WorkflowMutator = { 
       workflowId: workflow.id, 
       value: technicalname, 
       articles: articleId, 
-      anon: anon,
-      labels, devMode,
+      devMode: workflowOptions.devMode,
+      anon: workflowOptions.anon,
+      disabled: workflowOptions.disabled,
+      labels,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,
       flowName: flowName,
@@ -57,13 +63,20 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
       formTag: formTag,
       formId: allDialobTags.find(tag => tag.formName === formName && tag.tagName === formTag)?.tagFormId,
     };
-    service.update().workflow(entity).then(success => {
+
+
+    service.update().workflow(entity).then(_success => {
       enqueueSnackbar(message, { variant: 'success' });
-      console.log(success)
       onClose();
       actions.handleLoadSite();
     })
   }
+
+
+  function handleOptionsChange(newOptions: WorkflowOptions) {
+    setWorkflowOptions(newOptions);
+  }
+
   const message = <FormattedMessage id="snack.workflow.editedMessage" />
   const articles: { id: string, value: string }[] = Object.values(site.articles)
     .sort((a1, a2) => {
@@ -141,24 +154,9 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
           </Box>
         </Box>
 
-        <Box display="flex">
-          <Box flexGrow={1}>
-            <Burger.Switch
-              checked={anon ? anon : false}
-              onChange={setAnon}
-              helperText={"services.anonmode.helper"}
-              label={"services.anonmode"}
-            />
-          </Box>
-          <Box maxWidth="50%">
-            <Burger.Switch
-              checked={devMode ? devMode : false}
-              onChange={setDevMode}
-              helperText={"services.devmode.helper"}
-              label={"services.devmode"}
-            />
-          </Box>
-        </Box>
+
+        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
+
 
 
         <LocaleLabels

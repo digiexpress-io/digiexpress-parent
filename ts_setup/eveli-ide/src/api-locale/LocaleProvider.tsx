@@ -36,7 +36,9 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
   const intlMessages = messages[locale];
 
   return (<LocaleContext.Provider value={contextValue}>
-    <IntlProvider locale={locale} messages={intlMessages}>
+    <IntlProvider locale={locale} messages={intlMessages} onError={() => {
+
+    }}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={DATE_LOCALE_MAP[locale]}>
         {props.children}
       </LocalizationProvider>

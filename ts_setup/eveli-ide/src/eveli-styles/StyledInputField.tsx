@@ -28,7 +28,7 @@ const StyledFormControl = styled(FormControl)<FormControlProps>(({ theme }) => (
   backgroundColor: theme.palette.background.paper,
 }));
 
-const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+export const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
   marginTop: theme.spacing(2),
   color: theme.palette.text.primary,
   fontWeight: theme.typography.h1.fontWeight,

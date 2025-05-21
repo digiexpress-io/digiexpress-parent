@@ -4,6 +4,7 @@ import { ListItemText, Paper, Box, Typography, Button, Checkbox,  Dialog, Dialog
 import { useSnackbar } from 'notistack';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { FormattedMessage } from 'react-intl';
+
 import * as Burger from '@/eveli-styles';
 import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
@@ -11,19 +12,16 @@ import { LocaleLabels } from '../stencil-locale';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { CancelButton } from '@/eveli-styles';
 
+import { WorkflowConfigOptions, WorkflowOptions } from './WorkflowConfigOptions';
+
 const selectSub = { ml: 2, color: "article.dark" }
 
 const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { service, actions, site } = Composer.useComposer();
-
-  const [devMode, setDevMode] = React.useState<boolean>(false);
   const [startdate, setStartdate] = React.useState<string>('');
   const [enddate, setEnddate] = React.useState<string>('');
 
-  let articleSelectOpen: boolean | undefined;
-
-  const [anon, setAnon] = React.useState<boolean>(false);
   const [articleId, setArticleId] = React.useState<StencilApi.ArticleId[]>([]);
   const [technicalname, setTechnicalname] = React.useState('');
   const [labels, setLabels] = React.useState<StencilApi.LocaleLabel[]>([]);
@@ -33,6 +31,8 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [formName, setFormName] = React.useState<string>('');
   const [formTag, setFormTag] = React.useState<string>('');
 
+  const [workflowOptions, setWorkflowOptions] = React.useState<WorkflowOptions>({ anon: undefined, devMode: undefined, disabled: undefined });
+
   const { flows: allFlows = [] } = useFetch('worker/rest/api/assets/wrench/flow-names.GET', {});
   const { allTags } = useFetch('worker/rest/api/assets/dialob/tags.GET', {});
 
@@ -41,9 +41,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const entity: StencilApi.CreateWorkflow = { 
       value: technicalname, 
       articles: articleId, 
-      devMode, 
       labels,
-      anon,
+      devMode: workflowOptions.devMode,
+      anon: workflowOptions.anon,
+      disabled: workflowOptions.disabled,
       startDate: startdate ? startdate : undefined,
       endDate: enddate ? enddate : undefined,
       flowName: flowName,
@@ -58,6 +59,11 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       actions.handleLoadSite();
     })
   }
+
+  function handleOptionsChange(newOptions: WorkflowOptions) {
+    setWorkflowOptions(newOptions);
+  }
+
   const message = <FormattedMessage id="snack.workflow.createdMessage" />
   //const articles: StencilApi.Article[] = session.getArticlesForLocales(locales);
 
@@ -92,10 +98,10 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
       .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
 
-    const formTags = React.useMemo(() => allTags
-      .filter(t=>t.formName === formName)
-      .map(tag=>{return {id:tag.tagName, value:tag.tagName}})
-      .sort((a,b)=>a.value.localeCompare(b.value)), [allTags, formName]);
+  const formTags = React.useMemo(() => allTags
+    .filter(t => t.formName === formName)
+    .map(tag => { return { id: tag.tagName, value: tag.tagName } })
+    .sort((a, b) => a.value.localeCompare(b.value)), [allTags, formName]);
 
   return (
     <Dialog open={true} onClose={onClose}>
@@ -129,25 +135,9 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             />
           </Box>
         </Box>
-        <Box display="flex">
-          <Box flexGrow={1}>
-            <Burger.Switch
-              checked={anon ? anon : false}
-              onChange={setAnon}
-              helperText={"services.anonmode.helper"}
-              label={"services.anonmode"}
-            />
-          </Box>
-          <Box maxWidth="50%" sx={{ ml: 1 }}>
 
-            <Burger.Switch
-              checked={devMode}
-              helperText="services.devmode.helper"
-              label="services.devmode"
-              onChange={setDevMode}
-            />
-          </Box>
-        </Box>
+        <WorkflowConfigOptions onChange={handleOptionsChange} value={workflowOptions} />
+
         <Box display="flex">
           <Box flexGrow={1}>
             <Burger.DateTimeField label='services.startdate' helperText='services.startdate.description'
@@ -171,7 +161,6 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Paper variant="elevation" sx={{ mt: 1, pl: 1, pr: 1, pb: 1, borderRadius: 2 }}>
           <Burger.SelectMultiple label='article.select'
             multiline
-            open={articleSelectOpen}
             selected={articleId}
             disabled={!locales.length}
             onChange={setArticleId}

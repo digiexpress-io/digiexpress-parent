@@ -12,12 +12,15 @@ export {
   StyledSwitch as Switch,
 } from './StyledSwitch';
 
+
+
 export { 
   StyledTransferList as TransferList,
 } from './StyledTransferList';
 
 
 export { 
+  StyledInputLabel as InputLabel, 
   StyledTextField as TextField, 
   StyledNumberField as NumberField, 
   StyledFileField as FileField, 

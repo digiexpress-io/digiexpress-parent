@@ -33,6 +33,8 @@ function hook(props: {}) {
           .then(resp => resp.json())
       },
       workflow: async (init: StencilApi.WorkflowMutator): Promise<StencilApi.Workflow> => {
+
+        console.log(init);
         return params
           .fetch(url({ assetType: `workflows`}), { method, body: JSON.stringify(init) })
           .then(resp => resp.json())
