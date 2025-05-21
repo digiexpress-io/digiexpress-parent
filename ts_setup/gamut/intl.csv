@@ -103,7 +103,7 @@ gamut.forms.page.cancel,,Cancel,Cancel,Cancel,Batal,Otkaži
 gamut.forms.filling.welcome,,Welcome!,Tervetuloa,Välkomna!,Selamat datang!,Dobrodošli!
 gamut.forms.filling.must_be_authenticated,,You must be logged in to fill this form,Sinun on kirjauduttava sisään täyttääksesi tämän lomakkeen,Du måste vara inloggad för att fylla i detta formulär,Anda mesti log masuk untuk mengisi borang ini,Za popunjavanje obrasca potrebno je biti prijavljen
 gamut.forms.filling.authenticated_and_welcome,,Hello {userName}!,Moi {userName}!,Moi {userName}!,Hello {userName}!,Zdravo {userName}!
-gamut.forms.filling.authenticated_and_proceed,,Please click below to start the form,Valitsemalla tästä aloitat lomakkeen täyttämisen,Klicka nedan för att starta formuläret,Sila klik di bawah untuk memulakan borang,Kliknite ispod da pokrenete obrazac
+gamut.forms.filling.proceed_to_form,,Please click below to start the form,Valitsemalla tästä aloitat lomakkeen täyttämisen,Klicka nedan för att starta formuläret,Sila klik di bawah untuk memulakan borang,Kliknite ispod da pokrenete obrazac
 gamut.forms.filling.anonUser_and_welcome,,Hello!,Hello!,,
 gamut.forms.filling.start,,You are about to start this form,Olet aloittamassa lomaketta,Du är på väg att starta detta formulär,Anda akan memulakan borang ini,Popunjavanje obrasca započinje
 gamut.forms.filling.login-then-start.button,,Log in now,Kirjaudu sisään,Logga in nu,Log in now,Prijavi se sada

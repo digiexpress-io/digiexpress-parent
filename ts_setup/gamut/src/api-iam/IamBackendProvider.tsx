@@ -82,6 +82,18 @@ function createContext(
   }
 
 
+  const isFormLinkEnabled = (form: SiteApi.TopicLink) => {
+    if (form.anon) {
+      return true;
+    }
+    if (authType === 'ANON') {
+      return false;
+    }
+    if (authType === 'USER') {
+      return true;
+    }
+    return (userProducts?.products ?? []).includes(form.value);
+  }
 
   return Object.freeze({
     authType, user, userRoles, userProducts,
@@ -93,17 +105,40 @@ function createContext(
       const data = await reload();
       return data;
     },
-    isFormLinkEnabled: (form: SiteApi.TopicLink) => {
-      if(form.anon) {
-        return true;
+    isFormLinkEnabled,
+
+    getFormLinkAuthType: (link: SiteApi.TopicLink | undefined): IamApi.FormLinkAuthType => {
+      const iam = useIam();
+      if (!link) {
+        return 'IS_FORM_DISABLED';
       }
-      if(authType === 'ANON') {
-        return false;
+
+      const { user, authType } = iam;
+      const allowed: boolean = link ? iam.isFormLinkEnabled(link) : false;
+
+      const isAnon = authType === 'ANON';
+      if (isAnon) {
+        return (allowed ?
+          'IS_ANON_FORM_ENABLED' :
+          'IS_ANON_FORM_DISABLED');
       }
-      if(authType === 'USER') {
-        return true;
+
+
+      const isRep = !!(user?.representedCompany || user?.representedPerson);
+      if (isRep) {
+        return (allowed ?
+          'IS_REP_ENABLED' :
+          'IS_REP_DISABLED');
       }
-      return (userProducts?.products ?? []).includes(form.value);
+
+      const isUser = authType === 'USER';
+      if (isUser) {
+        return (allowed ?
+          'IS_USER_FORM_ENABLED' :
+          'IS_USER_FORM_DISABLED');
+      }
+
+      return 'IS_FORM_DISABLED';
     }
   });
 }
