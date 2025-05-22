@@ -51,6 +51,10 @@ public class QueryProcessInstancesImpl implements QueryProcessInstances {
     return processJPA.findById(Long.parseLong(id)).map(CreateProcessInstanceImpl::map);
   }
   @Override
+  public Optional<ProcessClient.ProcessInstance> findOneByIdAndLock(String id) {
+    return processJPA.findByIdWithLock(Long.parseLong(id)).map(CreateProcessInstanceImpl::map);
+  }
+  @Override
   public Optional<ProcessClient.ProcessInstance> findOneByQuestionnaireId(String questionnaireId) {
     return processJPA.findByQuestionnaireId(questionnaireId).map(CreateProcessInstanceImpl::map);
   }

@@ -59,6 +59,7 @@ import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.SpringT
 import io.digiexpress.eveli.client.spi.process.CreateProcessExecutorImpl.TransactionWrapper;
 import io.digiexpress.eveli.client.spi.process.DialobScheduler;
 import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
+import io.digiexpress.eveli.client.spi.process.SyncDialobAndProcess;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskFileClientImpl;
@@ -211,14 +212,24 @@ public class EveliAutoConfig {
           .modules(new GuavaModule(), new JavaTimeModule(), new Jdk8Module())
           .build();
   }
+  
+  
+  @Bean
+  public SyncDialobAndProcess syncDialobAndProcess(
+      ProcessClient processClient, 
+      DialobClient dialobClient,
+      ObjectMapper objectMapper) {
+    return new SyncDialobAndProcess(processClient, dialobClient, objectMapper);
+  }
 
   @Bean
   public DialobScheduler dialobScheduler(
       ProcessClient processClient, 
       DialobClient dialobClient,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper,
+      SyncDialobAndProcess sync) {
     
-    return new DialobScheduler(processClient, dialobClient, objectMapper);
+    return new DialobScheduler(processClient, dialobClient, sync);
   }
   
 

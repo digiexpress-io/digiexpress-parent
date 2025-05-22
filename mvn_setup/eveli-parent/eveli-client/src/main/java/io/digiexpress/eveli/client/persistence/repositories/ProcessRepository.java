@@ -27,17 +27,29 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import io.digiexpress.eveli.client.api.ProcessClient.ProcessStatus;
 import io.digiexpress.eveli.client.persistence.entities.ProcessEntity;
+import jakarta.persistence.LockModeType;
+
 
 public interface ProcessRepository extends PagingAndSortingRepository<ProcessEntity, Long>{
   Optional<ProcessEntity> findByQuestionnaireId(String questionnaireId);
   Optional<ProcessEntity> findByTaskId(String taskId);
   Optional<ProcessEntity> findById(Long id);
+  
+    
+  @Query(nativeQuery = true, value =
+"""
+SELECT * FROM process 
+WHERE id = :id
+FOR UPDATE
+""")
+  Optional<ProcessEntity> findByIdWithLock(Long id);
   
   @Query(value=
       "select p from ProcessEntity p where " +

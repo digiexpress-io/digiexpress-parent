@@ -28,15 +28,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.dialob.api.proto.Action;
 import io.dialob.api.proto.Actions;
 import io.dialob.api.questionnaire.Questionnaire;
-import io.dialob.api.questionnaire.Questionnaire.Metadata.Status;
 import io.digiexpress.eveli.client.api.GamutClient.UserActionFillEvent;
 import io.digiexpress.eveli.client.api.ProcessClient;
-import io.digiexpress.eveli.client.api.ProcessClient.ProcessInstance;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.vertx.core.json.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -49,63 +45,14 @@ public class DialobScheduler {
   
   private final ProcessClient processClient;
   private final DialobClient dialobClient;
-  private final ObjectMapper objectMapper;
+  private final SyncDialobAndProcess syncDialobAndProcess;
   
   
-  private void executeFlowForInstance(ProcessInstance init) {
-      // resync
-    
-      try {
-        final var optional = processClient.queryInstances().findOneById(init.getId().toString());
-        if(optional.isEmpty()) {
-          log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", init.getId());
-          return;          
-        }
-        
-        final var instance = optional.get();
-        
-        if(instance.getTaskId() != null) {
-          log.debug("Skipping execution: {} because task is already created, process status handling is probably wrong!", instance.getId());
-          return;
-        }
-        
-        Questionnaire questionnaire = null;
-        try {
-          questionnaire = dialobClient.getQuestionnaireAndMetaById(instance.getQuestionnaireId());
-          if(questionnaire.getMetadata().getStatus() != Status.COMPLETED) {
-            log.debug("Skipping execution because questionnaire: {} state is not completed!", instance.getQuestionnaireId());
-            return;
-          }
-        } catch(Exception e) { }
-        
-        if(questionnaire == null) {
-          log.error("Skipping execution because questionnaire: {} could not be found!", instance.getQuestionnaireId());
-          return;
-        }
-        
-        processClient.createBodyBuilder()
-        .processInstanceId(instance.getId())
-        .formBody(objectMapper.writeValueAsString(questionnaire))
-        .build();
-        
-        
-        final var flow = processClient.createExecutor().processInstance(instance).execute();
-        
-        
-        processClient.createBodyBuilder()
-        .processInstanceId(instance.getId())
-        .flowBody(objectMapper.writeValueAsString(flow))
-        .build();
-        
-      } catch(Exception e) {
-        log.error("Failed to run flow for process instance: {}, e: {}!", init.getId(), e.getMessage(), e);
-      }
-  }
   
   @Scheduled(fixedRate = 24, timeUnit = TimeUnit.HOURS)
   public void executeFlow() {
     for(final var instance : processClient.queryInstances().findAllAnsweredFrom(OffsetDateTime.now().minusMonths(6))) {
-      executeFlowForInstance(instance);
+      syncDialobAndProcess.executeFlowForInstance(instance);
     }
   }
   
@@ -144,7 +91,7 @@ public class DialobScheduler {
           final var answeredInstance = processClient.queryInstances().findOneById(String.valueOf(instance.getId()));
           if(answeredInstance.isPresent()) {
             log.debug("Executing flow directly for process: {} after dialob completion event!", instance.getId());
-            executeFlowForInstance(answeredInstance.get());
+            syncDialobAndProcess.executeFlowForInstance(answeredInstance.get());
           }
           
         }

@@ -99,7 +99,8 @@ public interface ProcessClient {
   interface QueryProcessInstances {
     Optional<ProcessInstance> findOneById(String id);
     Optional<ProcessInstance> findOneByTaskId(String taskId);    
-    Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);    
+    Optional<ProcessInstance> findOneByQuestionnaireId(String questionnaireId);
+    Optional<ProcessInstance> findOneByIdAndLock(String id);
     
     void deleteOneById(Long id);
     List<ProcessInstance> findAll();
