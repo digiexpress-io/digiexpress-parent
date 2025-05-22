@@ -51,7 +51,7 @@ export const GInputGroupRow: React.FC<GInputGroupRowProps> = (initProps) => {
       {props.label && (
         <Label {...props} className={classes.label}>
           <div>
-            <Typography>{props.order + 1} ‒ {props.label}</Typography>
+            <Typography>{props.order + 1}</Typography>
           </div>
           <Divider flexItem />
           <IconButton color='error' onClick={handleDelete}>
