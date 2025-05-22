@@ -4,7 +4,7 @@ import { GInputGroupRow } from './GInputGroupRow';
 
 
 
-export const GInputGroupRowDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
+export const GInputGroupRowDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store, children }) => {
   const meta = store.form.toInputRow(element.id);
   const description = store.form.toDescription(element.id);
 
@@ -13,7 +13,7 @@ export const GInputGroupRowDialob: React.FC<GFormBaseElementProps> = ({ actionIt
       id={element.id}
       label={element.label}
       description={description}
-      children={undefined}
+      children={children}
       order={meta.order}
       total={meta.total}
       columns={element.props?.columns}
