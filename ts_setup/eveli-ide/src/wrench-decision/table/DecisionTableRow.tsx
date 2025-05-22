@@ -12,13 +12,14 @@ const DecisionTableRow: React.FC<{
     row:HdesApi.AstDecisionRow;
     header:HdesApi.TypeDef;
     cell:HdesApi.AstDecisionCell;
-  }) => React.ReactNode
-}> = ({ row, headers, renderCell }) => {
+  }) => React.ReactNode;
+  dragProps?: React.HTMLAttributes<HTMLTableRowElement>;
+}> = ({ row, headers, renderCell, dragProps }) => {
 
   const cells: Record<string,HdesApi.AstDecisionCell> = {};
   row.cells.forEach(e => cells[e.header] = e);
 
-  return (<TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+  return (<TableRow hover role="checkbox" tabIndex={-1} key={row.id} {...dragProps}>
     <TableCell key='_reserved' align="left" sx={{
       position: "sticky",
       left: 0,

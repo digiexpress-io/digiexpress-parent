@@ -109,6 +109,38 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     return <span>loading ...</span>
   }
 
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
+
+  const handleDragStart = (index: number) => () => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (index: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (targetIndex: number) => () => {
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+    moveRow(draggedIndex, targetIndex);
+    setDraggedIndex(null);
+  };
+
+  const moveRow = (fromIndex: number, toIndex: number) => {
+    if (!ast) return;
+
+    const reordered = [...ast.rows];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+
+    const commands = reordered.map((row, order) => ({
+      type: 'MOVE_ROW' as const,
+      id: row.id,
+      value: `${order}`,
+    }));
+
+    onChange(commands);
+  };
+
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
     {edit?.rowsColumns ? <OrderEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
@@ -171,7 +203,25 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
           </Button>
         </Decision.Header>
       )}
-      renderRow={rowProps => <Decision.Row {...rowProps} />}
+
+      renderRow={(rowProps) => {
+        const index = ast.rows.findIndex((r) => r.id === rowProps.row.id);
+      
+        const dragProps = {
+          draggable: true,
+          onDragStart: handleDragStart(index),
+          onDragOver: handleDragOver(index),
+          onDrop: handleDrop(index),
+        };
+      
+        return (
+          <Decision.Row
+            {...rowProps}
+            dragProps={dragProps}
+          />
+        );
+      }}
+      
       renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} errors={decision.errors} onClick={() => setEdit({ cell: cellProps.cell })} />}
     />
   </Box >);
