@@ -212,6 +212,7 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
           <Decision.Row
             {...rowProps}
             dragProps={dragProps}
+            onDelete={(id) => onChange([{ type: 'DELETE_ROW', id }])}
           />
         );
       }}

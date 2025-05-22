@@ -13,7 +13,7 @@ const DecisionTableHeader: React.FC<{
   children: React.ReactNode,
   onClick: (header:HdesApi.TypeDef) => void
 }> = ({ ast, headers, children, onClick }) => {
-  const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 1;
+  const totalCols = ast.headers.returnDefs.length + ast.headers.acceptDefs.length + 2;
 
   return (<TableHead sx={{ position: "sticky", top: 0 }}>
     <TableRow>
@@ -40,6 +40,10 @@ const DecisionTableHeader: React.FC<{
           <FormattedMessage id="decisions.table.outputs.title" />
         </Typography>
       </TableCell>
+      <TableCell
+        align="center"
+        sx={{ backgroundColor: "secondary.contrastText", color: "primary.contrastText" }}
+      />
     </TableRow>
 
     <TableRow>
@@ -58,6 +62,12 @@ const DecisionTableHeader: React.FC<{
             <Box><EditIcon /></Box>
           </Box>
         </TableCell>))}
+        <TableCell
+          key="_delete"
+          align="center"
+          sx={{ backgroundColor: "secondary.contrastText", color: "primary.contrastText" }}
+        >
+        </TableCell>
     </TableRow>
   </TableHead>);
 }
