@@ -82,6 +82,7 @@ const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 }
 
 const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
   const { service, actions, session } = Composer.useComposer();
   const update = session.pages[decision.id];
 
@@ -109,8 +110,6 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
     return <span>loading ...</span>
   }
 
-  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
-
   const handleDragStart = (index: number) => () => {
     setDraggedIndex(index);
   };
@@ -121,25 +120,20 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
 
   const handleDrop = (targetIndex: number) => () => {
     if (draggedIndex === null || draggedIndex === targetIndex) return;
-    moveRow(draggedIndex, targetIndex);
+  
+    const sourceRow = ast.rows[draggedIndex];
+    const targetRow = ast.rows[targetIndex];
+  
+    onChange([
+      {
+        type: 'MOVE_ROW' as const,
+        id: sourceRow.id,
+        value: targetRow.id,
+      }
+    ]);
+  
     setDraggedIndex(null);
-  };
-
-  const moveRow = (fromIndex: number, toIndex: number) => {
-    if (!ast) return;
-
-    const reordered = [...ast.rows];
-    const [moved] = reordered.splice(fromIndex, 1);
-    reordered.splice(toIndex, 0, moved);
-
-    const commands = reordered.map((row, order) => ({
-      type: 'MOVE_ROW' as const,
-      id: row.id,
-      value: `${order}`,
-    }));
-
-    onChange(commands);
-  };
+  };  
 
   return (<Box sx={{ width: '100%', overflow: 'hidden', padding: 1 }}>
     {edit?.meta ? <NameDescHitPolicyEdit decision={ast} onChange={onChange} onClose={() => setEdit(undefined)} /> : null}
