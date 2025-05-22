@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Table, TableBody, TableContainer, TablePagination } from '@mui/material';
+import { IconButton, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 import { HdesApi } from '@/api-wrench';
 
@@ -27,8 +28,9 @@ const DecisionTable: React.FC<{
   renderHeader: (props: RenderHeaderProps) => React.ReactNode;
   renderRow: (props: RenderRowProps) => React.ReactNode;
   renderCell: (props: RenderCellProps) => React.ReactNode;
+  onAddRow: () => void;
 
-}> = ({ ast, renderRow, renderHeader, renderCell }) => {
+}> = ({ ast, renderRow, renderHeader, renderCell, onAddRow }) => {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(50);
@@ -57,8 +59,30 @@ const DecisionTable: React.FC<{
         <TableBody>
           {rows
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => <React.Fragment key={row.id}>{renderRow({ row, renderCell, headers: headers })}</React.Fragment>)
-          }
+            .map((row) => (
+              <React.Fragment key={row.id}>
+                {renderRow({ row, renderCell, headers })}
+              </React.Fragment>
+            ))}
+
+          <TableRow>
+            <TableCell
+              colSpan={headers.length + 2}
+              align="left"
+              sx={{
+                pl: 0,
+                borderBottom: "unset"
+              }}
+            >
+              <IconButton
+                color="primary"
+                onClick={() => onAddRow()}
+              >
+                <AddIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+
         </TableBody>
       </Table>
     </TableContainer>

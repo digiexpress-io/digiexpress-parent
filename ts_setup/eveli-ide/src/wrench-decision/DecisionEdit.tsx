@@ -218,6 +218,8 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
       }}
       
       renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} errors={decision.errors} onClick={() => setEdit({ cell: cellProps.cell })} />}
+      
+      onAddRow={() => onChange([{ type: 'ADD_ROW', id: "" }])}
     />
   </Box >);
 }
