@@ -22,7 +22,10 @@ export function _formatRaw(address: MapApi.RawAddress | undefined): string | und
       address.village ??
       address.municipality);
 
-    return [fragment_1, fragment_2, address.postcode]
+    // European format, postal code after street address
+    // English has postal code last
+    // TODO: make it customizable
+    return [fragment_1, address.postcode, fragment_2]
       .map(f => f?.trim())
       .filter(f => !!f)
       .join(", ");
