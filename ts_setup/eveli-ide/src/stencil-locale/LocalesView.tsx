@@ -19,6 +19,8 @@ import { StencilComposerApi as Composer } from '@/stencil-setup';
 import { StencilApi } from '@/api-stencil';
 import { EveliPermissions } from '@/eveli-permissions';
 import { CancelButton } from '@/eveli-styles';
+import { useStencilNav } from '../stencil-nav';
+import { LocaleComposer } from './LocaleComposer';
 
 
 const Header: React.FC<{ label: string }> = ({ label }) => {
@@ -35,6 +37,8 @@ const LocalesView: React.FC<{}> = () => {
   const [editLocale, setEditLocale] = React.useState<StencilApi.SiteLocale | undefined>();
   const locales = Object.values(site.locales);
   const title = useIntl().formatMessage({ id: "locales" });
+  const { onTabCurrentClose } = useStencilNav();
+  const [createLocaleOpen, setCreateLocaleOpen] = React.useState(false);
 
   const handleEnable = (locale: StencilApi.SiteLocale, enabled: boolean) => {
     const entity: StencilApi.LocaleMutator = { localeId: locale.id, value: locale.body.value, enabled: enabled };
@@ -58,6 +62,8 @@ const LocalesView: React.FC<{}> = () => {
 
   const onClose = () => setEditLocale(undefined);
   return (<>
+    {createLocaleOpen && <LocaleComposer onClose={() => setCreateLocaleOpen(false)} />}
+
     {editLocale ?
       (<Dialog open={true} onClose={onClose}>
         <DialogTitle><FormattedMessage id={editLocale.body.enabled === true ? "locale.disable.title" : "locale.enable.title"} /></DialogTitle>
@@ -73,10 +79,21 @@ const LocalesView: React.FC<{}> = () => {
       </Dialog>) : null
     }
 
-    <Typography variant="h1">{title}{": "}{locales.length}</Typography>
-    <Typography variant="body2"><FormattedMessage id='locales.overview.description' /></Typography>
-
-    <Box mb={1} />
+    <Box display="flex" alignItems="center" my={1}>
+      <Box>
+        <Typography variant="h1">{title}{": "}{locales.length}</Typography>
+        <Typography variant="body2"><FormattedMessage id='locales.overview.description' /></Typography>
+      </Box>
+      <Box flexGrow={1} />
+      <Box display="flex" gap={1}>
+        <CancelButton onClick={() => onTabCurrentClose()} />
+        <EveliPermissions id='CREATE_STENCIL_ASSET'>
+        <Button variant="contained" onClick={() => setCreateLocaleOpen(true)}>
+          <FormattedMessage id="button.create" />
+        </Button>
+        </EveliPermissions>
+      </Box>
+    </Box>
 
     <TableContainer component={Paper}>
       <Table size="small">

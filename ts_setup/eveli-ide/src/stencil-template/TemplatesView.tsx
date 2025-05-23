@@ -39,11 +39,14 @@ const TemplatesView: React.FC<{}> = () => {
     <Box display='flex' alignItems='center' my={1}>
       <Typography variant="body2"><FormattedMessage id={"templates.templatesview.description"} /></Typography>
       <Box flexGrow={1} />
-      <CancelButton onClick={() => onTabCurrentClose()} />
-
-      <EveliPermissions id='CREATE_STENCIL_ASSET'>
-        <Button variant='contained' onClick={() => setTemplateComposer(true)} ><FormattedMessage id='button.create' /></Button>
-      </EveliPermissions>
+      <Box display="flex" gap={1}>
+        <CancelButton onClick={() => onTabCurrentClose()} />
+        <EveliPermissions id='CREATE_STENCIL_ASSET'>
+          <Button variant='contained' onClick={() => setTemplateComposer(true)} >
+            <FormattedMessage id='button.create' />
+          </Button>
+        </EveliPermissions>
+      </Box>
     </Box>
 
     <TableContainer component={Paper}>

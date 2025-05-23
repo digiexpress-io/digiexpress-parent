@@ -27,10 +27,12 @@ const ReleasesView: React.FC<{}> = () => {
           <Typography variant="body2"><FormattedMessage id="release.desc" /></Typography>
         </Box>
         <Box flexGrow={1} />
-        <CancelButton onClick={() => onTabCurrentClose()} />
-        <Button variant='contained' onClick={() => setReleaseComposer(true)}>
-          <FormattedMessage id="button.create" />
-        </Button>
+        <Box display="flex" gap={1}>
+          <CancelButton onClick={() => onTabCurrentClose()} />
+          <Button variant='contained' onClick={() => setReleaseComposer(true)}>
+            <FormattedMessage id="button.create" />
+          </Button>
+        </Box>
       </Box>
 
       <ReleaseTable releases={releases} />
