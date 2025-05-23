@@ -1,4 +1,6 @@
 export const sv = {
+  'booleanValue.true': 'Ja',
+  'booleanValue.false': 'Inga',
   'eveli.textSeparatorColon': ': ',
   'tasksView.title': 'Uppgiften',
   'tasksTableHeader.taskName': 'Uppgiftens namn',

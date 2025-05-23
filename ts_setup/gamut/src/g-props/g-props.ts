@@ -16,7 +16,6 @@ import { GPopoverSearchClassKey, GPopoverSearchProps } from '../g-popover-search
 import { GConfirmClassKey, GConfirmProps } from '../g-confirm';
 import { GLoaderClassKey, GLoaderProps } from '../g-loader';
 
-import { GSecuredServicesClassKey, GSecuredServicesProps } from '../g-secured-services';
 import { GSecuredServicesSearchClassKey, GSecuredServicesSearchProps } from '../g-secured-services-search';
 
 import { GTooltipClassKey, GTooltipProps } from '../g-tooltip';
@@ -166,7 +165,6 @@ export interface GComponentsPropsList {
 
   GLogo: GLogoProps;
 
-  GSecuredServices: GSecuredServicesProps;
   GSecuredServicesSearch: GSecuredServicesSearchProps;
 
   GTooltip: GTooltipProps;
@@ -263,7 +261,6 @@ export interface GComponentNameToClassKey {
 
   GLogo: GLogoClassKey;
 
-  GSecuredServices: GSecuredServicesClassKey;
   GSecuredServicesSearch: GSecuredServicesSearchClassKey;
 
   GTooltip: GTooltipClassKey;
@@ -539,11 +536,6 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GLogo'];
     styleOverrides?: GComponentsOverrides<Theme>['GLogo'];
     variants?: GComponentsVariants['GLogo'];
-  },
-  GSecuredServices?: {
-    defaultProps?: GComponentsProps['GSecuredServices'];
-    styleOverrides?: GComponentsOverrides<Theme>['GSecuredServices'];
-    variants?: GComponentsVariants['GSecuredServices'];
   },
   GSecuredServicesSearch?: {
     defaultProps?: GComponentsProps['GSecuredServicesSearch'];

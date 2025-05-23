@@ -100,11 +100,13 @@ const WorkflowEdit: React.FC<WorkflowEditProps> = ({ onClose, workflowId }) => {
     const allForms = React.useMemo(() => allDialobTags
       .filter((tag,index) => index === allDialobTags.findIndex(tag2=>tag2.formName === tag.formName))
       .map(({formName, formLabel}) => ({id: formName, value: formLabel}))
+      .filter(tag => !!tag.value)
       .sort((a,b) => a.value.localeCompare(b.value)), [allDialobTags]);
   
     const formTags = React.useMemo(() => allDialobTags
       .filter((tag) => tag.formName === formName)
       .map(({tagName}) => ({id: tagName, value: tagName}))
+      .filter(tag => !!tag.value)
       .sort((a,b)=> a.value.localeCompare(b.value)), [allDialobTags, formName]);
 
   return (

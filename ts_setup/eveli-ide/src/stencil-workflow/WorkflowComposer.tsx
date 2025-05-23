@@ -96,11 +96,13 @@ const WorkflowComposer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const allForms = React.useMemo(() => allTags
       .filter((tag,index)=>index === allTags.findIndex(tag2=>tag2.formName === tag.formName))
       .map(tag=>{return {id:tag.formName, value:tag.formLabel}})
+      .filter(tag => !!tag.value)
       .sort((a,b)=>a.value.localeCompare(b.value)), [allTags]);
 
   const formTags = React.useMemo(() => allTags
     .filter(t => t.formName === formName)
     .map(tag => { return { id: tag.tagName, value: tag.tagName } })
+    .filter(tag => !!tag.value)
     .sort((a, b) => a.value.localeCompare(b.value)), [allTags, formName]);
 
   return (

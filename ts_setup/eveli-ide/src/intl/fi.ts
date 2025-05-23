@@ -1,4 +1,6 @@
 export const fi = {
+  'booleanValue.true': 'Kyllä',
+  'booleanValue.false': 'Ei',
   'eveli.textSeparatorColon': ': ',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',

@@ -1,5 +1,7 @@
 ID,Info,en,fi,sv,ma
 document.title,, DigiExpress,,,
+booleanValue.true,,Yes,Kyllä,Ja,
+booleanValue.false,,No,Ei,Inga,
 eveli.textSeparatorColon,,: ,: ,: ,
 eveli.permissions.none.title,,Oops!,Oops!,,
 eveli.permissions.none.desc1,,You don't have the correct access rights to use this application.,You don't have the correct access rights to use this application.,,
