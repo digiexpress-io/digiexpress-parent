@@ -118,33 +118,46 @@ export const PublicationsTable: React.FC = () => {
       accessorKey: 'status',
       cell: info => <PublicationStatus {...info.row.original} onSubmit={refreshAssetReleases} />,
       size: 60,
+      minSize: 60,
+      enableSorting: false,
+      enableColumnFilter: false,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.name' }),
       accessorKey: 'name',
       cell: info => info.getValue(),
+      size: 200,
+      minSize: 150,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.description' }),
       accessorKey: 'description',
       cell: info => <DeploymentInfo {...info.row.original} />,
+      size: 300,
+      minSize: 250,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.liveDate' }),
       accessorKey: 'startsAt',
       sortingFn: sortingFns.datetime,
       cell: info => <EveliDateTimeFormatter value={info.getValue()} />,
+      size: 160,
+      minSize: 140,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.created' }),
       accessorKey: 'createdAt',
       sortingFn: sortingFns.datetime,
       cell: info => <EveliDateTimeFormatter value={info.getValue()} />,
+      size: 160,
+      minSize: 140,
     },
     {
       header: intl.formatMessage({ id: 'publicationsTableHeader.createdBy' }),
       accessorKey: 'createdBy',
       cell: info => info.getValue(),
+      size: 150,
+      minSize: 120,
     },
     {
       header: '',
@@ -161,8 +174,11 @@ export const PublicationsTable: React.FC = () => {
         </Box>
       ),
       size: 60,
+      minSize: 60,
+      enableSorting: false,
+      enableColumnFilter: false,
     },
-  ];
+  ];  
 
   return (
     <Box pl={1} pr={3}>
