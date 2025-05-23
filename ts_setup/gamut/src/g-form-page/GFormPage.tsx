@@ -120,7 +120,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
       <GFormPageFooter ownerState={ownerState} className={classes.footer} as={ownerState.slots?.footer}>
 
         {
-          <Button onClick={handleCancel} variant='outlined' color='primary' autoFocus>
+          <Button onClick={handleCancel} variant='outlined' color='primary'>
             <FormattedMessage id='gamut.forms.page.cancel' />
           </Button>
         }
@@ -132,7 +132,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
         }
 
         {
-          <Button onClick={handleComplete} variant='contained' color='primary' autoFocus disabled={!props.completeAllowed}>
+          <Button onClick={handleComplete} variant='contained' color='primary' disabled={!props.completeAllowed}>
             <FormattedMessage id='gamut.forms.page.complete' />
           </Button>
         }
