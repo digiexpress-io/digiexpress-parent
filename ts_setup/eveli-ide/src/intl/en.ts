@@ -1,5 +1,7 @@
 export const en = {
   'document.title': ' DigiExpress',
+  'booleanValue.true': 'Yes',
+  'booleanValue.false': 'No',
   'eveli.textSeparatorColon': ': ',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',
