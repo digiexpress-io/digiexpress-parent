@@ -9,7 +9,7 @@ import { GError } from '../g-error';
 export const Route = createRootRoute({
   component: RouteComponent,
   notFoundComponent: GErrorNotFound,
-  errorComponent: GError
+  errorComponent: GError,
 })
 
 function RouteComponent() {
