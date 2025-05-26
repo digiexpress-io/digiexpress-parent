@@ -12,8 +12,8 @@ importers:
         specifier: ^1.2.10
         version: 1.2.10(lill4dao2nkzh35w2i53q4jw7q)
       '@dxs-ts/gamut':
-        specifier: ^1.0.200
-        version: 1.0.201(q2mqk5tswvv5nkie3pezxi2htm)
+        specifier: ^1.0.202
+        version: 1.0.202(q2mqk5tswvv5nkie3pezxi2htm)
       '@emotion/react':
         specifier: ^11.13.3
         version: 11.14.0(@types/react@18.3.22)(react@18.3.1)
@@ -307,8 +307,8 @@ packages:
       react-dom: ^18.2.0
       react-intl: ^5.20.10
 
-  '@dxs-ts/gamut@1.0.201':
-    resolution: {integrity: sha512-Kko85OjGGsg266OM0ZGeoJDgm6mrzHR6Kwxc7DnUKD2ZdNl82d9DiiFxSjq6k/oV3wHX+xVqYfSlB2ZCLh9cQA==}
+  '@dxs-ts/gamut@1.0.202':
+    resolution: {integrity: sha512-fZBHEs2ik0yMhgnG6p8qu64tbBNZB4SgSYwaFhguGn80IA/U7MQigYDUXq4sg+Pj+NuDztwbXdv6gb5HBMOs3g==}
     peerDependencies:
       '@date-io/date-fns': ^2.11.0
       '@date-io/moment': 1.3.13
@@ -3954,7 +3954,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-intl: 6.8.9(react@18.3.1)(typescript@5.8.3)
 
-  '@dxs-ts/gamut@1.0.201(q2mqk5tswvv5nkie3pezxi2htm)':
+  '@dxs-ts/gamut@1.0.202(q2mqk5tswvv5nkie3pezxi2htm)':
     dependencies:
       '@date-io/date-fns': 3.2.1(date-fns@4.1.0)
       '@date-io/moment': 1.3.13(moment@2.30.1)

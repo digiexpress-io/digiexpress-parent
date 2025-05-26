@@ -1,19 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Components, Container, createTheme, ThemeOptions, ThemeProvider, Theme } from '@mui/material'
-import { GShell, GFormTip, WithFormProvider, DialobProvider, LocaleApi, LocaleProvider } from '@dxs-ts/gamut'
+import { Container, createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
+import { GShell, GFormTip, WithFormProvider, DialobProvider, LocaleProvider } from '@dxs-ts/gamut'
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { useTenantConfig } from '@/api-tenant-config';
 
 export const Route = createFileRoute('/secured/$locale/assets/forms/$formId')({
   component: Component,
 })
 
 
-export const themeOptions: ThemeOptions = {};
-const siteTheme = createTheme(themeOptions);
-
 
 function Component() {
   const { formId } = Route.useParams();
+  const { gamutThemeOptions } = useTenantConfig();
+  const siteTheme = createTheme(gamutThemeOptions);
 
   const { getDialobSession } = useFetch('worker/rest/api/assets/dialob/fill/$sessionId.GET', {});
   const { saveDialobSession } = useFetch('worker/rest/api/assets/dialob/fill/$sessionId.POST', {});
