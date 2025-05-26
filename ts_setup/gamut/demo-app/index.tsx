@@ -10,7 +10,7 @@ export const router = createRouter({
   routeTree,
   scrollRestorationBehavior: 'instant',
   scrollRestoration: true,
-  scrollToTopSelectors: [`.${GShellClassName}`,]
+  scrollToTopSelectors: [`.${GShellClassName}`]
 })
 
 const container = document.getElementById('root');
