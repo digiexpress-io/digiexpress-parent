@@ -6,7 +6,6 @@ import { GInputList } from './GInputList';
 
 export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
 
-
   const valueset = store.form.toValueSet(element.id);
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
@@ -16,14 +15,14 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
     const newValue = event.target.value === UNDEFINED_SELECTION_VALUE ? undefined : event.target.value;
     store.setAnswer(element.id, newValue);
   }
-
+  const variant = element.props?.variant === 'radio' ? 'list-radio' : 'list';
   return (
     <GInputList
       id={element.id}
       label={element.label}
       description={desc}
       errors={errors}
-      variant='list'
+      variant={variant}
       undefinedValue={UNDEFINED_SELECTION_VALUE}
       value={element.value ?? UNDEFINED_SELECTION_VALUE}
       datasource={valueset}

@@ -31,6 +31,7 @@ import { Route as SecuredLocaleAssetsStencilIndexImport } from './routes/secured
 import { Route as SecuredLocaleAssetsServicesIndexImport } from './routes/secured.$locale.assets.services.index'
 import { Route as SecuredLocaleAssetsMigrateIndexImport } from './routes/secured.$locale.assets.migrate.index'
 import { Route as SecuredLocaleAssetsFormsIndexImport } from './routes/secured.$locale.assets.forms.index'
+import { Route as SecuredLocaleAssetsFormsFormIdImport } from './routes/secured.$locale.assets.forms.$formId'
 import { Route as SecuredLocaleWorkerTasksCreateIndexImport } from './routes/secured.$locale.worker.tasks.create.index'
 import { Route as SecuredLocaleWorkerTasksTaskIdIndexImport } from './routes/secured.$locale.worker.tasks.$taskId.index'
 import { Route as SecuredLocaleWorkerQueuesMessagesIndexImport } from './routes/secured.$locale.worker.queues.messages.index'
@@ -172,6 +173,13 @@ const SecuredLocaleAssetsFormsIndexRoute =
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
 
+const SecuredLocaleAssetsFormsFormIdRoute =
+  SecuredLocaleAssetsFormsFormIdImport.update({
+    id: '/forms/$formId',
+    path: '/forms/$formId',
+    getParentRoute: () => SecuredLocaleAssetsRoute,
+  } as any)
+
 const SecuredLocaleWorkerTasksCreateIndexRoute =
   SecuredLocaleWorkerTasksCreateIndexImport.update({
     id: '/create/',
@@ -266,6 +274,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/publications'
       preLoaderRoute: typeof SecuredLocalePublicationsIndexImport
       parentRoute: typeof SecuredLocaleImport
+    }
+    '/secured/$locale/assets/forms/$formId': {
+      id: '/secured/$locale/assets/forms/$formId'
+      path: '/forms/$formId'
+      fullPath: '/secured/$locale/assets/forms/$formId'
+      preLoaderRoute: typeof SecuredLocaleAssetsFormsFormIdImport
+      parentRoute: typeof SecuredLocaleAssetsImport
     }
     '/secured/$locale/assets/forms/': {
       id: '/secured/$locale/assets/forms/'
@@ -392,6 +407,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface SecuredLocaleAssetsRouteChildren {
+  SecuredLocaleAssetsFormsFormIdRoute: typeof SecuredLocaleAssetsFormsFormIdRoute
   SecuredLocaleAssetsFormsIndexRoute: typeof SecuredLocaleAssetsFormsIndexRoute
   SecuredLocaleAssetsMigrateIndexRoute: typeof SecuredLocaleAssetsMigrateIndexRoute
   SecuredLocaleAssetsServicesIndexRoute: typeof SecuredLocaleAssetsServicesIndexRoute
@@ -400,6 +416,7 @@ interface SecuredLocaleAssetsRouteChildren {
 }
 
 const SecuredLocaleAssetsRouteChildren: SecuredLocaleAssetsRouteChildren = {
+  SecuredLocaleAssetsFormsFormIdRoute: SecuredLocaleAssetsFormsFormIdRoute,
   SecuredLocaleAssetsFormsIndexRoute: SecuredLocaleAssetsFormsIndexRoute,
   SecuredLocaleAssetsMigrateIndexRoute: SecuredLocaleAssetsMigrateIndexRoute,
   SecuredLocaleAssetsServicesIndexRoute: SecuredLocaleAssetsServicesIndexRoute,
@@ -491,6 +508,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
@@ -517,6 +535,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale': typeof SecuredLocaleIndexRoute
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
@@ -546,6 +565,7 @@ export interface FileRoutesById {
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
   '/secured/$locale/assets/migrate/': typeof SecuredLocaleAssetsMigrateIndexRoute
   '/secured/$locale/assets/services/': typeof SecuredLocaleAssetsServicesIndexRoute
@@ -576,6 +596,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications'
+    | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
     | '/secured/$locale/assets/services'
@@ -601,6 +622,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/worker'
     | '/secured/$locale'
     | '/secured/$locale/publications'
+    | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms'
     | '/secured/$locale/assets/migrate'
     | '/secured/$locale/assets/services'
@@ -628,6 +650,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications/'
+    | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms/'
     | '/secured/$locale/assets/migrate/'
     | '/secured/$locale/assets/services/'
@@ -694,6 +717,7 @@ export const routeTree = rootRoute
       "filePath": "secured.$locale.assets.tsx",
       "parent": "/secured/$locale",
       "children": [
+        "/secured/$locale/assets/forms/$formId",
         "/secured/$locale/assets/forms/",
         "/secured/$locale/assets/migrate/",
         "/secured/$locale/assets/services/",
@@ -733,6 +757,10 @@ export const routeTree = rootRoute
     "/secured/$locale/publications/": {
       "filePath": "secured.$locale.publications.index.tsx",
       "parent": "/secured/$locale"
+    },
+    "/secured/$locale/assets/forms/$formId": {
+      "filePath": "secured.$locale.assets.forms.$formId.tsx",
+      "parent": "/secured/$locale/assets"
     },
     "/secured/$locale/assets/forms/": {
       "filePath": "secured.$locale.assets.forms.index.tsx",

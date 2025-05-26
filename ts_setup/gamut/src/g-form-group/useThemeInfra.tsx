@@ -3,7 +3,8 @@ import React from 'react'
 import { generateUtilityClass, styled, SxProps, useThemeProps } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '../api-variants'
-import { GFormGroupProps } from './GFormGroup'
+import { GFormGroupProps, GFormGroupSlot } from './g-form-group-types'
+import { GFormGroupCollapseble } from './GFormGroupCollapseble'
 
 
 
@@ -17,22 +18,25 @@ export function useThemeInfra(initProps: GFormGroupProps) {
   const classes = useUtilityClasses(props);
   const ownerState = { ...props };
   const slots: {
-    label: React.ElementType<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>,
-    body: React.ElementType<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>
+    label: GFormGroupSlot;
+    body: GFormGroupSlot;
+    collapsible: GFormGroupSlot;
   } = {
     label: props.slots?.label ?? GFormGroupLabel as any,
-    body: props.slots?.body ?? GFormGroupBody as any
+    body: props.slots?.body ?? GFormGroupBody as any,
+    collapsible: props.slots?.body ?? GFormGroupCollapseble as any,
   }
   return { classes, ownerState, slots };
 }
 
 
 // ------------------- MATERIAL INFRA, CSS CLASS NAMES FOR SELECTORS -------
-const useUtilityClasses = (ownerState: GFormGroupProps) => {
+export const useUtilityClasses = (ownerState: GFormGroupProps) => {
   const slots = {
     root: ['root', ownerState.id],
     label: ['label'],
-    body: ['body']
+    body: ['body'],
+    collapsible: ['collapsible']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -51,7 +55,7 @@ export const GFormGroupRoot = styled('div', {
   },
 })<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>(({ theme, ownerState }) => {
 
-  // Each child group have a greater margin than its parent group to visually show nested levels
+  // Each child group must have a greater margin than its parent group to visually show nested levels
   const nestingLevel = ownerState.level ?? 0;
 
   return {
@@ -68,7 +72,7 @@ export const GFormGroupRoot = styled('div', {
 
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
-const GFormGroupLabel = styled('div', {
+export const GFormGroupLabel = styled('div', {
   name: MUI_NAME,
   slot: 'Label',
   overridesResolver: (props, styles) => {

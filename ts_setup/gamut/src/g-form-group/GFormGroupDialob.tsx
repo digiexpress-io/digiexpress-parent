@@ -10,6 +10,7 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
   // starts from 1: Page is group 1
   const parents = store.form.toParents(element.id);
   const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
+  const collapsible: boolean | undefined = element.props.collapsible ? (element.props.collapsible === 'true') : undefined;
 
   return (
     <GFormGroup
@@ -19,6 +20,7 @@ export const GFormGroupDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       children={children}
       level={parents.length}
       border={border}
+      collapsible={collapsible}
       columns={element.props?.columns}
     />);
 }

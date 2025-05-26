@@ -46,6 +46,11 @@ export function useSlotVariant(element: DialobApi.ActionItem, store: DialobApi.F
   if(element.type === 'text' && element.view === 'text') {
     return { variant: 'text' };
   }
+  /*
+  if (element.type === 'list' && element.view === 'radio') {
+    return { variant: 'list-radio' };
+  }
+    */
   if(element.type === 'surveygroup' && (
     !element.view || 
     element.view === 'verticalSurveygroup' || 
