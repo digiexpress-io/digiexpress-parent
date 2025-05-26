@@ -24,38 +24,64 @@ const LinkOverride = React.forwardRef<any, LinkProps & { taskId?: string }>((ite
 })
 
 export const TaskLink: React.FC<TaskLinkProps> = ({ title, id, keywords }) => {
-
   const { unreadTasks } = useFetch('worker/rest/api/tasks/unread.GET', {});
-  const link = (<Link href="#" component={LinkOverride} {...{ taskId: id }}>{title}</Link>);
+  const isUnread = id && unreadTasks.includes(id);
+  const isProtected = keywords && keywords[0]?.includes('Protected');
 
-  if (id && unreadTasks.includes(id)) {
-    if (keywords && keywords[0]?.includes('Protected')) {
-      return (
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          {link}
-          <Box display="flex">
-            <LockIcon color='secondary' fontSize='small' sx={{ marginLeft: 1 }} />
-            <EmojiPeopleOutlinedIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
-          </Box>
-        </Box>
-      )
-    } else {
-      return (
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          {link}
-          <EmojiPeopleOutlinedIcon fontSize='small' color='primary' sx={{ marginLeft: 1 }} />
-        </Box>
-      )
-    }
-  }
-  if (keywords && keywords[0]?.includes('Protected')) {
-    return (
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+  const link = (
+    <Box
+      sx={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        minWidth: 0,
+      }}
+    >
+      <Link
+        href="#"
+        component={LinkOverride}
+        taskId={id}
+        sx={{
+          display: 'inline-block',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          maxWidth: '100%',
+        }}
+      >
+        {title}
+      </Link>
+    </Box>
+  );
+
+  const icons = (
+    <>
+      {isProtected && (
+        <LockIcon
+          color={isUnread ? 'secondary' : 'primary'}
+          fontSize="small"
+          sx={{ ml: 1, flexShrink: 0 }}
+        />
+      )}
+      {isUnread && (
+        <EmojiPeopleOutlinedIcon
+          color="primary"
+          fontSize="small"
+          sx={{ ml: 1, flexShrink: 0 }}
+        />
+      )}
+    </>
+  );
+
+  return (
+    <Box display="flex" alignItems="center" sx={{ minWidth: 0, width: '100%' }}>
+      <Box sx={{ minWidth: 0, flexGrow: 1, overflow: 'hidden' }}>
         {link}
-        <LockIcon color='primary' fontSize='small' sx={{ marginLeft: 1 }} />
       </Box>
-    )
-  }
-  return link;
-}
+      {icons}
+    </Box>
+  );
+};
+
+
 
