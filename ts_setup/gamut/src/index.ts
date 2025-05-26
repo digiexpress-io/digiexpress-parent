@@ -76,6 +76,7 @@ export * from './api-search'
 
 export * from './router'
 
+export * from './g-theme'
 
 export * from './g-router-bookings'
 export * from './g-router-forms-awaiting-decision'
