@@ -27,6 +27,21 @@ export class FormImpl implements DialobApi.Form {
     return new FormImpl(this._id, next);
   }
 
+  public toParents(id: string): DialobApi.ActionItem[] {
+    const parents: DialobApi.ActionItem[] = []
+    let parent: DialobApi.ActionItem | undefined;
+    let targetId = id;
+    while ((parent = this.toParent(targetId))) {
+      if (parent.type !== 'group') {
+        break;
+      }
+      targetId = parent.id;
+      parents.push(parent);
+    }
+
+    return parents;
+  }
+
   public toInputRow(id: string): DialobApi.ControlInputRow {
     return parseInputRow(id, this);
   }

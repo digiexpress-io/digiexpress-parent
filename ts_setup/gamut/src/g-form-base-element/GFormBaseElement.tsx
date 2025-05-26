@@ -71,7 +71,6 @@ export const GFormBaseElement: React.FC<GFormBaseElementProps> = (initProps) => 
   const { actionItem: element, formStore: store} = props;
   const { variant } = useSlotVariant(element, store);
 
-
   const Component: React.ElementType<GFormBaseElementProps> = Slots[variant] ?? UnknownSlot;
   return (<Component {...props}>{props.children}</Component>);
 }

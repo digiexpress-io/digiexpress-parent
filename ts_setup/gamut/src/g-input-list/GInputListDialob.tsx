@@ -11,7 +11,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
   const errors = store.form.toErrors(element.id);
-  
+
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const newValue = event.target.value === UNDEFINED_SELECTION_VALUE ? undefined : event.target.value;
     store.setAnswer(element.id, newValue);
@@ -26,7 +26,7 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
       variant='list'
       undefinedValue={UNDEFINED_SELECTION_VALUE}
       value={element.value ?? UNDEFINED_SELECTION_VALUE}
-      datasource={valueset!}
+      datasource={valueset}
       onChange={onChange}
       labelPosition={labelPosition}
     />);

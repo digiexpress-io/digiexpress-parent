@@ -1,4 +1,4 @@
-import { Theme, Components, alpha } from '@mui/material';
+import { Theme, Components } from '@mui/material';
 import user_logo_light from './digi_express_logo.png';
 import { DemoFooter } from './DemoFooter';
 
@@ -251,6 +251,12 @@ export const components_g: Components<Omit<Theme, 'components'>> = {
 
   GLinksPage: {},
   GSort: {},
+
+  // DIALOB FILL
+
+  GFormGroup: {},
+
+  GInputMultilist: {},
 
   // ---------------------- DIALOB REVIEW ------------------------
   GFormReviewBoolean: {},

@@ -9,6 +9,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
   const desc = store.form.toDescription(element.id);
   const labelPosition = store.form.toLabelPosition(element.id);
   const errors = store.form.toErrors(element.id);
+  const border: boolean | undefined = element.props?.border ? (element.props?.border === 'true') : undefined;
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {      
     const multichoiceEvent = event as React.ChangeEvent<HTMLInputElement>;
@@ -29,6 +30,7 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
       description={desc}
       variant='multilist'
       errors={errors}
+      border={border}
       value={element.value}
       datasource={valueset!}
       onChange={onChange}

@@ -16,6 +16,7 @@ import { Route as PublicLocaleImport } from './routes/public.$locale'
 import { Route as PublicLocaleIndexImport } from './routes/public.$locale.index'
 import { Route as PublicLocaleLoginImport } from './routes/public.$locale.login'
 import { Route as SecuredLocaleViewsViewIdImport } from './routes/secured.$locale.views.$viewId'
+import { Route as SecuredLocaleFormsFormIdImport } from './routes/secured.$locale.forms.$formId'
 import { Route as PublicLocalePagesPageIdImport } from './routes/public.$locale.pages.$pageId'
 import { Route as SecuredLocaleViewsViewIdIndexImport } from './routes/secured.$locale.views.$viewId.index'
 import { Route as PublicLocalePagesPageIdIndexImport } from './routes/public.$locale.pages.$pageId.index'
@@ -60,6 +61,12 @@ const PublicLocaleLoginRoute = PublicLocaleLoginImport.update({
 const SecuredLocaleViewsViewIdRoute = SecuredLocaleViewsViewIdImport.update({
   id: '/secured/$locale/views/$viewId',
   path: '/secured/$locale/views/$viewId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SecuredLocaleFormsFormIdRoute = SecuredLocaleFormsFormIdImport.update({
+  id: '/secured/$locale/forms/$formId',
+  path: '/secured/$locale/forms/$formId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -202,6 +209,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/public/$locale/pages/$pageId'
       preLoaderRoute: typeof PublicLocalePagesPageIdImport
       parentRoute: typeof PublicLocaleImport
+    }
+    '/secured/$locale/forms/$formId': {
+      id: '/secured/$locale/forms/$formId'
+      path: '/secured/$locale/forms/$formId'
+      fullPath: '/secured/$locale/forms/$formId'
+      preLoaderRoute: typeof SecuredLocaleFormsFormIdImport
+      parentRoute: typeof rootRoute
     }
     '/secured/$locale/views/$viewId': {
       id: '/secured/$locale/views/$viewId'
@@ -434,6 +448,7 @@ export interface FileRoutesByFullPath {
   '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale/': typeof PublicLocaleIndexRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
   '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
@@ -454,6 +469,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale': typeof PublicLocaleIndexRoute
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdIndexRoute
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdIndexRoute
@@ -472,6 +488,7 @@ export interface FileRoutesById {
   '/public/$locale/login': typeof PublicLocaleLoginRoute
   '/public/$locale/': typeof PublicLocaleIndexRoute
   '/public/$locale/pages/$pageId': typeof PublicLocalePagesPageIdRouteWithChildren
+  '/secured/$locale/forms/$formId': typeof SecuredLocaleFormsFormIdRoute
   '/secured/$locale/views/$viewId': typeof SecuredLocaleViewsViewIdRouteWithChildren
   '/secured/$locale/views/$viewId/$subjectId': typeof SecuredLocaleViewsViewIdSubjectIdRoute
   '/public/$locale/pages/$pageId/': typeof PublicLocalePagesPageIdIndexRoute
@@ -496,6 +513,7 @@ export interface FileRouteTypes {
     | '/public/$locale/login'
     | '/public/$locale/'
     | '/public/$locale/pages/$pageId'
+    | '/secured/$locale/forms/$formId'
     | '/secured/$locale/views/$viewId'
     | '/secured/$locale/views/$viewId/$subjectId'
     | '/public/$locale/pages/$pageId/'
@@ -515,6 +533,7 @@ export interface FileRouteTypes {
     | '/'
     | '/public/$locale/login'
     | '/public/$locale'
+    | '/secured/$locale/forms/$formId'
     | '/secured/$locale/views/$viewId/$subjectId'
     | '/public/$locale/pages/$pageId'
     | '/secured/$locale/views/$viewId'
@@ -531,6 +550,7 @@ export interface FileRouteTypes {
     | '/public/$locale/login'
     | '/public/$locale/'
     | '/public/$locale/pages/$pageId'
+    | '/secured/$locale/forms/$formId'
     | '/secured/$locale/views/$viewId'
     | '/secured/$locale/views/$viewId/$subjectId'
     | '/public/$locale/pages/$pageId/'
@@ -551,6 +571,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PublicLocaleRoute: typeof PublicLocaleRouteWithChildren
+  SecuredLocaleFormsFormIdRoute: typeof SecuredLocaleFormsFormIdRoute
   SecuredLocaleViewsViewIdRoute: typeof SecuredLocaleViewsViewIdRouteWithChildren
   SecuredLocalePagesPageIdProductsProductIdRoute: typeof SecuredLocalePagesPageIdProductsProductIdRouteWithChildren
 }
@@ -558,6 +579,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PublicLocaleRoute: PublicLocaleRouteWithChildren,
+  SecuredLocaleFormsFormIdRoute: SecuredLocaleFormsFormIdRoute,
   SecuredLocaleViewsViewIdRoute: SecuredLocaleViewsViewIdRouteWithChildren,
   SecuredLocalePagesPageIdProductsProductIdRoute:
     SecuredLocalePagesPageIdProductsProductIdRouteWithChildren,
@@ -575,6 +597,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/public/$locale",
+        "/secured/$locale/forms/$formId",
         "/secured/$locale/views/$viewId",
         "/secured/$locale/pages/$pageId/products/$productId"
       ]
@@ -605,6 +628,9 @@ export const routeTree = rootRoute
         "/public/$locale/pages/$pageId/",
         "/public/$locale/pages/$pageId/products/$productId"
       ]
+    },
+    "/secured/$locale/forms/$formId": {
+      "filePath": "secured.$locale.forms.$formId.tsx"
     },
     "/secured/$locale/views/$viewId": {
       "filePath": "secured.$locale.views.$viewId.tsx",

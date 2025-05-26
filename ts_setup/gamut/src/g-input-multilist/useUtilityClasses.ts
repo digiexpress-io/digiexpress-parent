@@ -1,6 +1,7 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '../api-variants';
+import { GInputMultilistProps } from './GInputMultilist';
 
 
 export const MUI_NAME = 'GInputMultilist';
@@ -16,11 +17,19 @@ export const GInputMultilistRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: { variant: string } }>(({ theme }) => {
+})<{ ownerState: GInputMultilistProps }>(({ theme, ownerState }) => {
+
   return {
+    ...(ownerState.border ? {
+      border: `1px solid ${theme.palette.divider}`,
+      padding: theme.spacing(2),
+      margin: theme.spacing(1),
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+    } : {}),
 
   };
-});
+})
+
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
 export const GInput = styled('div', {
@@ -35,18 +44,18 @@ export const GInput = styled('div', {
   },
 })(({ theme }) => {
   return {
-    display: 'flex', 
+    display: 'flex',
     flexDirection: 'row',
 
     '& .GInputMultilist-list': {
-      display: 'flex', 
+      display: 'flex',
       flexDirection: 'column',
       width: '100%'
     },
 
     '& .GInputMultilist-option': {
       borderRadius: theme.spacing(0.5),
-      
+
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
 

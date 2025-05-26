@@ -20,7 +20,7 @@ export interface GInputListPropsVariantOverrides { };
 export interface GInputListProps {
   id: string;
   value: string;
-  datasource: DialobApi.ActionValueSet;
+  datasource: DialobApi.ActionValueSet | undefined;
 
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   label: string | undefined;
@@ -39,7 +39,7 @@ export interface GInputListProps {
   slots?: Record<OverridableStringUnion<
     'list',
     GInputListPropsVariantOverrides>,
-    React.ElementType>; 
+    React.ElementType>;
 
   component?: React.ElementType<GInputListProps>;
 }
@@ -50,7 +50,7 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
     props: initProps,
     name: MUI_NAME,
   })
-  
+
 
   const {
     variant = 'list',
@@ -59,11 +59,11 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
   } = props;
 
   const ownerState = { ...props, variant, keys, name: id }
-  
+
   const slots: GInputBaseProps<GInputListProps> = {
     id,
     slots: {
-      error: GInputError, 
+      error: GInputError,
       label: GInputLabel,
       adornment: GInputAdornment,
       input: GInputDropdown,
@@ -93,25 +93,32 @@ const GInputDropdown: React.FC<GInputListProps> = (props) => {
     const event: React.ChangeEvent<HTMLInputElement> = selectEvent as React.ChangeEvent<HTMLInputElement>;
     onChange(event);
   }
-  const { value: selectedValue, undefinedValue, keys } = props; 
+  const { value: selectedValue, undefinedValue, keys } = props;
+  if (!datasource) {
+    return (<>
+      valueset is not defined
+    </>);
+  }
+
+
   return (
     <GInputSelect
       className={classes.input}
-      onChange={handleChange} 
+      onChange={handleChange}
       renderValue={(selected: string) => <Collapsed datasource={datasource} keys={props.keys} selected={selected} className={classes.collapsed} />}
       value={selectedValue}>
 
 
-      <GInputSelectOption value={undefinedValue}>{intl.formatMessage({id: 'gamut.buttons.select'})}</GInputSelectOption>
+      <GInputSelectOption value={undefinedValue}>{intl.formatMessage({ id: 'gamut.buttons.select' })}</GInputSelectOption>
 
       {/** All selection from data source */}
       {datasource.entries.map(({ key, value }) => {
         const selected = key === selectedValue;
         const prefix = selected ? <CheckIcon /> : null;
         return (<GInputSelectOption key={key} value={key} className={classes.option}>
-            {keys && <div className={classes.optionKey}>{key}</div>}
-            <div className={classes.optionValue}>{value}</div>
-            <div className={classes.optionChecked}>{prefix}</div>
+          {keys && <div className={classes.optionKey}>{key}</div>}
+          <div className={classes.optionValue}>{value}</div>
+          <div className={classes.optionChecked}>{prefix}</div>
         </GInputSelectOption>);
       })}
 

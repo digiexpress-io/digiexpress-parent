@@ -4,7 +4,6 @@ import { generateUtilityClass, styled, SxProps, useThemeProps } from '@mui/mater
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '../api-variants'
 import { GFormGroupProps } from './GFormGroup'
-import { display, maxWidth, width } from '@mui/system'
 
 
 
@@ -17,14 +16,14 @@ export function useThemeInfra(initProps: GFormGroupProps) {
   });
   const classes = useUtilityClasses(props);
   const ownerState = { ...props };
-  const slots: { 
-    label: React.ElementType, 
-    body: React.ElementType
+  const slots: {
+    label: React.ElementType<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>,
+    body: React.ElementType<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>
   } = {
-    label: props.slots?.label ?? GFormGroupLabel,
-    body: props.slots?.body ?? GFormGroupBody
+    label: props.slots?.label ?? GFormGroupLabel as any,
+    body: props.slots?.body ?? GFormGroupBody as any
   }
-  return { classes, ownerState, props, slots };
+  return { classes, ownerState, slots };
 }
 
 
@@ -50,9 +49,20 @@ export const GFormGroupRoot = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: GFormGroupProps }>(({ theme }) => {
+})<{ ownerState: GFormGroupProps, className: string, children: React.ReactNode }>(({ theme, ownerState }) => {
+
+  // Each child group have a greater margin than its parent group to visually show nested levels
+  const nestingLevel = ownerState.level ?? 0;
+
   return {
 
+    // Page 
+    ...(ownerState.border ? {
+      border: `1px solid ${theme.palette.divider}`,
+      padding: theme.spacing(2),
+      margin: nestingLevel > 1 ? theme.spacing(nestingLevel) : theme.spacing(1),
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+    } : {}),
   };
 });
 
@@ -67,7 +77,8 @@ const GFormGroupLabel = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-})<GFormGroupProps>(({ theme, label }) => {
+})<{ ownerState: GFormGroupProps }>(({ theme, ownerState }) => {
+  const { label } = ownerState;
   return {
     display: 'flex',
     '& .MuiDivider-root': {
@@ -93,19 +104,20 @@ const GFormGroupBody = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-  
-})<GFormGroupProps>(({ theme, columns, id, children }) => {
+
+})<{ ownerState: GFormGroupProps }>(({ theme, ownerState }) => {
+  const { columns, id, children } = ownerState;
   let enabled = false;
   try {
     enabled = !!columns && parseInt(columns) > 1;
-  } catch(e) {
+  } catch (e) {
     console.warn('unsupported columns definition', { id, columns });
   }
-  if(!enabled) {
+  if (!enabled) {
     return {};
   }
   const colCount = parseInt(columns!);
-  const rowCount = Math.round(React.Children.count(children)/colCount);
+  const rowCount = Math.round(React.Children.count(children) / colCount);
 
   const labels: SxProps = colCount > 2 ? {
     '& .GInputBase-label': {
@@ -117,12 +129,12 @@ const GFormGroupBody = styled('div', {
       overflow: 'hidden',
     }
   } : {};
-  
+
   return {
     display: 'grid',
 
-    gridAutoFlow: 'row', 
-    gridTemplateRows: `repeat(${rowCount}, auto)`, 
+    gridAutoFlow: 'row',
+    gridTemplateRows: `repeat(${rowCount}, auto)`,
     gridTemplateColumns: `repeat(${colCount}, 1fr)`,
 
     '& .GFormBase-root': {

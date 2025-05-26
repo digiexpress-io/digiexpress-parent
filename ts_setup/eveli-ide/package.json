@@ -29,7 +29,7 @@
     "yaml": "^2.6.0"
   },
   "peerDependencies": {
-    "@dialob/dashboard-material": "^1.2.8",
+    "@dialob/dashboard-material": "^1.2.10",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@material-table/core": "^6.4.4",
