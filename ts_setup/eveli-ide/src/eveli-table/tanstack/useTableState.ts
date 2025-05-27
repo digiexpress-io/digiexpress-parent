@@ -24,31 +24,31 @@ export function useTableState<DataType extends object>(
     options?: { initialPageSize?: number }
   }) {
 
-    const initialPageSize = props.options?.initialPageSize ?? 20;
+  const initialPageSize = props.options?.initialPageSize ?? 20;
 
-    const [sorting, setSorting] = React.useState<SortingState>([]); //{ id: 'priority', desc: true }
-    const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-    const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({});
-    const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
-    
+  const [sorting, setSorting] = React.useState<SortingState>([]); //{ id: 'priority', desc: true }
+  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: initialPageSize });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({});
+  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
 
-    const onColumnFilter = React.useCallback(() => {
-      setFilterDialogOpen(prev => !prev);
-    }, []);
 
-    const onColumnVisibilityChange: OnChangeFn<VisibilityState> = React.useCallback((updaterOrValue: Updater<VisibilityState>) => {
-      return setColumnVisibility(prev => {
-  
-  
-        // @ts-ignore
-        const newVisibility: Record<string, boolean> = updaterOrValue(prev);
-        table.setColumnSizing(tableSizeFn(table, prev, newVisibility))
-        return newVisibility;
-      });
-    }, []);
-  
+  const onColumnFilter = React.useCallback(() => {
+    setFilterDialogOpen(prev => !prev);
+  }, []);
+
+
+  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = React.useCallback((updaterOrValue: Updater<VisibilityState>) => {
+    setColumnVisibility(prev => {
+      const newVisibility = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue;
+
+      table.setColumnSizing(tableSizeFn(table, prev, newVisibility));
+      return newVisibility;
+    });
+  }, []);
+
+
   const onClearAll = React.useCallback(() => {
     setColumnVisibility({});
     setColumnFilters([])
@@ -58,39 +58,39 @@ export function useTableState<DataType extends object>(
 
 
 
-    const table = useReactTable({
-      columns: props.columns,
-      data: props.data,
-      rowCount: props.data.length,
-      columnResizeMode: 'onChange',
-      enableColumnResizing: true,
-      columnResizeDirection: 'ltr',
+  const table = useReactTable({
+    columns: props.columns,
+    data: props.data,
+    rowCount: props.data.length,
+    columnResizeMode: 'onChange',
+    enableColumnResizing: true,
+    columnResizeDirection: 'ltr',
 
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getFacetedUniqueValues: getFacetedUniqueValues(),
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
 
-      onPaginationChange: setPagination,
-      onColumnVisibilityChange: onColumnVisibilityChange,
-      onColumnFiltersChange: setColumnFilters,
-      onColumnSizingChange: setColumnSizing,
-      onSortingChange: setSorting,
+    onPaginationChange: setPagination,
+    onColumnVisibilityChange: onColumnVisibilityChange,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnSizingChange: setColumnSizing,
+    onSortingChange: setSorting,
 
-      defaultColumn: {
-        size: 150,
-        minSize: 60,
-        maxSize: 400
-      },
-      state: {
-        columnVisibility,
-        columnFilters,
-        columnSizing,
-        sorting,
-        pagination
-      },  
-    });
+    defaultColumn: {
+      size: 150,
+      minSize: 60,
+      maxSize: 400
+    },
+    state: {
+      columnVisibility,
+      columnFilters,
+      columnSizing,
+      sorting,
+      pagination
+    },
+  });
 
   function resetTableColsAndFilters() {
     setColumnFilters([])
@@ -107,7 +107,7 @@ export function useTableState<DataType extends object>(
     }
     return colSizes
   }, [table.getState().columnSizingInfo, table.getState().columnSizing])
-    
+
   return {
     columnSizeVars,
     table,
