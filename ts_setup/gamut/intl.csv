@@ -45,18 +45,12 @@ gamut.buttons.select,,Select,Valitse,Välja,Pilih,Odaberi
 gamut.buttons.close,,Close,Sulje,Nära,Tutup,Zatvori
 gamut.buttons.reply,,Reply,Vastaa,Svar,Balas,Odgovori
 gamut.buttons.delete,,Delete,Poista,Radera,Padam,Izbriši
-gamut.buttons.error.back,,Go back,,,
-gamut.buttons.error.backToHome,,Go back to our homepage,,,
 gamut.buttons.serviceSelect,,Our services,Palvelumme,Våra tjänster,Perkhidmatan kami,Naše usluge
 gamut.buttons.attachment.add,,Add attachment,Lisää liite,Lägg till bilaga,Tambah lampiran,Dodaj prilog
 gamut.buttons.sort-last-modified.contracts,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,Sortiraj prema posljednjoj izmjeni
 gamut.buttons.sort-last-modified.offers,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
 gamut.buttons.sort-last-modified.inbox,,Sort by last modified,Järjestä viimeksi muokattu mukaan,Sortera efter senaste modifiering,Isih mengikut terakhir diubah suai,
 ,,,,,,
-// ------------------- GAMUT ERRORS ----------------------,,,,#VALUE!,,
-gamut.error,,"Ooops, we have enountered an error!",,,
-gamut.error.notTranslated,,"Sorry, this page has not been translated into your selected language",,,
-gamut.error.notFound,,"Ooops, the thing you are looking for is not found!",,,
 // ------------------- GAMUT LOCALES ----------------------,,,,#VALUE!,,
 gamut.locale.en,,English,Englanti,Engelska,Inggeris,Engleski
 gamut.locale.fi,,Finnish,Suomi,Finska,Bahasa Finland,Finski
@@ -221,7 +215,5 @@ gamut.feedback.updatedOnDate,,Updated date,Päivitä päivämäärä,Uppdaterat 
 gamut.feedback.feedbackViewerTitle,,Customer feedback,Asiakas palaute,Kundrespons,Maklum balas pelanggan,Povratna informacija klijenta
 gamut.feedback.feedbackViewerSubTitle,,Organisation reply,Organisaation palaute,Organisationens svar,Balasan organisasi,Odgovor organizacije
 // ----------------------- DIALOB REVIEW -------------------------,,,,,,
-dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
-dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
 dialob.review.title,,Form review,Lomakkeen esikatselu,Formulärgranskning,Semakan borang,Pregled obrasca
 dialob.review.button.close,,Close,Sulje,Stäng,Tutup,Zatvori
