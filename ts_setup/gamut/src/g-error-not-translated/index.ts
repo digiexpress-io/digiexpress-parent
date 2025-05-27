@@ -1,0 +1,1 @@
+export { GErrorNotTranslated } from './GErrorNotTranslated';

@@ -25,16 +25,18 @@ const setLock = (bool: boolean) => {
   }];*/
 
 
-function getConfig(init: {}, root: string): Config {
+function getConfig(init: any, root: string): Config {
   return {
     intlDirectory: "src/intl",
-    csv: "intl.csv" 
+    csv: "intl.csv",
+    ignoreErrors: init.ignoreErrors === true
   };
 }
 
 export interface Config {
   intlDirectory: string; // target
   csv: string;
+  ignoreErrors?: boolean
 }
 export function intlTsVite(options: Partial<Config> = {}): Plugin {
 
@@ -50,7 +52,7 @@ export function intlTsVite(options: Partial<Config> = {}): Plugin {
       const config = userConfig;
       const root = process.cwd();
       const csvFile = createFilePath([root], config.csv);
-      const intlFiles: IntlFile[] = await parseCsv(csvFile.fullPath);
+      const intlFiles: IntlFile[] = await parseCsv(csvFile.fullPath, config.ignoreErrors === true);
     
       for(const newFile of intlFiles) {
         const path = createFilePath([root, config.intlDirectory], newFile.fileName);

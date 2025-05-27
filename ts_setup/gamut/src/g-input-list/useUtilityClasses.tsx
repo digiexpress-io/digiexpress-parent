@@ -1,4 +1,4 @@
-import { Select, SelectProps, generateUtilityClass, styled, useThemeProps, MenuItem, MenuItemProps } from '@mui/material';
+import { Select, SelectProps, generateUtilityClass, styled, useThemeProps, MenuItem, MenuItemProps, RadioGroup, RadioGroupProps, Radio } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '../api-variants';
 
@@ -23,6 +23,25 @@ export const GInputListRoot = styled('div', {
 });
 
 // ------------------- MATERIAL INFRA, ALLOWS STYLE OVERRIDES --------------
+export const GInputRadioGroup = styled(RadioGroup, {
+  name: MUI_NAME,
+  slot: 'Input',
+  overridesResolver: (props, styles) => {
+    return [
+      styles.root,
+      styles.input,
+      styles.collapsed,
+      useVariantOverride(props, styles),
+      props.name,
+    ];
+  },
+})<RadioGroupProps>(({ theme }) => {
+  return {
+  };
+});
+
+
+
 export const GInputSelect = styled(Select<string>, {
   name: MUI_NAME,
   slot: 'Input',

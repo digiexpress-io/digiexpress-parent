@@ -11,6 +11,7 @@ export const FormContext = React.createContext<DialobApi.FormContextType>({} as 
 
 export interface FormProviderProps {
   executionId: string;
+  debugFormId?: string;
   variant: string;
   onAfterComplete: () => void;
   children: React.ReactNode;
@@ -30,7 +31,7 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
     }
   }, [props.executionId, authType, offers]);
 
-  const formId = offer?.formId;
+  const formId = props.debugFormId ?? offer?.formId;
 
   if (!offer || !formId) {
     return <>Failed to load form...</>;
@@ -38,7 +39,7 @@ export const FormProvider: React.FC<FormProviderProps> = (props) => {
   return (<WithFormProvider {...props} id={formId}>{props.children}</WithFormProvider>);
 }
 
-const WithFormProvider: React.FC<FormProviderProps & { id: string }> = (props) => {
+export const WithFormProvider: React.FC<FormProviderProps & { id: string }> = (props) => {
   
   const { id, executionId, variant, onAfterComplete } = props;
   const store = useFormStore({ id });

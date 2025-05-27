@@ -184,6 +184,9 @@ export declare namespace DialobApi {
     toInputRow(id: ControlId): ControlInputRow;
     toParent(id: ControlId): ActionItem | undefined;
 
+    toParents(id: ControlId): ActionItem[];
+
+
     toLabelPosition(id: ControlId): ControlLabelPosition;
 
 

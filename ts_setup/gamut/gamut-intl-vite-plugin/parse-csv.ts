@@ -2,9 +2,12 @@ import csv  from 'csv-parser';
 import { createReadStream } from 'node:fs'
 
 class CsvReadVisitor {
+  private _ignoreErrors: boolean;
   private _locales: Record<string, string[]> = {}; 
+  private _visited: string[] = [];
   private _index = 1;
-  constructor() {
+  constructor(ignoreErrors: boolean) {
+    this._ignoreErrors = ignoreErrors;
   }
 
   visitLine(object: Record<string, string>) {
@@ -55,7 +58,16 @@ class CsvReadVisitor {
       this._locales[props.locale] = [];
     }
 
-    this._locales[props.locale].push(`'${props.intlKey}': '${props.intlValue}'`);
+    const unqiueKey = `${props.locale}.${props.intlKey}`;
+    if (this._visited.includes(unqiueKey)) {
+      console.error(`Duplicate locale lines with key: ${unqiueKey}!`)
+      if (this._ignoreErrors) {
+        return;
+      }
+    }
+    this._visited.push(unqiueKey);
+
+    this._locales[props.locale].push(`'${props.intlKey}': '${props.intlValue.trim()}'`);
   }
 
   visitIntlFile(locale: string): IntlFile {
@@ -89,9 +101,8 @@ export type IntlFile = {
 }
 
 
-export function parseCsv(path: string): Promise<IntlFile[]> {
-  const visitor = new CsvReadVisitor();
-  
+export function parseCsv(path: string, ignoreErrors: boolean): Promise<IntlFile[]> {
+  const visitor = new CsvReadVisitor(ignoreErrors);
 
   const promise = new Promise<IntlFile[]>((resolve, reject) => {
     createReadStream(path).pipe(csv())

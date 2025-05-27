@@ -36,6 +36,10 @@ import { GLogoutClassKey, GLogoutProps } from '../g-logout';
 import { GMarkdownClassKey, GMarkdownProps } from '../g-md';
 import { GLayoutClassKey, GLayoutProps } from '../g-layout';
 import { GFormBaseClassKey, GFormBaseProps } from '../g-form-base';
+
+import { GFormGroupClassKey, GFormGroupProps } from '../g-form-group';
+import { GInputMultilistClassKey, GInputMultilistProps } from '../g-input-multilist';
+
 import { GFooterClassKey, GFooterProps } from '../g-footer';
 import { GUserOverviewMenuClassKey, GUserOverviewMenuProps } from '../g-user-overview-menu';
 import {
@@ -56,7 +60,7 @@ import {
   GLinkInfoClassKey, GLinkInfoProps,
   GLinkFormLockedClassKey, GLinkFormLockedProps,
   GLinkFormUnlockedClassKey, GLinkFormUnlockedProps,
-  
+
   GLinkFormUnlockedSearchResultsClassKey, GLinkFormUnlockedSearchResultsProps,
 
   GLinkHyperClassKey, GLinkHyperProps,
@@ -138,6 +142,9 @@ export interface GComponentsPropsList {
   GFormReviewText: ItemProps;
   GFormReviewTime: ItemProps;
   GFormReviewMultiChoice: ItemProps;
+
+  GFormGroup: GFormGroupProps;
+  GInputMultilist: GInputMultilistProps;
 
   GAppBar: GAppBarProps;
   GArticle: GArticleProps;
@@ -235,6 +242,9 @@ export interface GComponentNameToClassKey {
   GFormReviewText: GFormReviewTextClassKey;
   GFormReviewTime: GFormReviewTimeClassKey;
   GFormReviewMultiChoice: GFormReviewMultiChoiceClassKey;
+
+  GFormGroup: GFormGroupClassKey;
+  GInputMultilist: GInputMultilistClassKey;
 
   GSort: GSortClassKey;
 
@@ -439,6 +449,18 @@ export interface GComponents<Theme = unknown> {
     defaultProps?: GComponentsProps['GFormReviewTime'];
     styleOverrides?: GComponentsOverrides<Theme>['GFormReviewTime'];
     variants?: GComponentsVariants['GFormReviewTime'];
+  },
+
+  GFormGroup?: {
+    defaultProps?: GComponentsProps['GFormGroup'];
+    styleOverrides?: GComponentsOverrides<Theme>['GFormGroup'];
+    variants?: GComponentsVariants['GFormGroup'];
+  },
+
+  GInputMultilist?: {
+    defaultProps?: GComponentsProps['GInputMultilist'];
+    styleOverrides?: GComponentsOverrides<Theme>['GInputMultilist'];
+    variants?: GComponentsVariants['GInputMultilist'];
   },
 
   GSort?: {

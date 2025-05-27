@@ -63,7 +63,7 @@ services:
       - dialob-backend
 
   dialob-service:
-    image: resys/dialob-boot:2.1.21
+    image: resys/dialob-boot:2.2.8
     restart: no
     ports:
       - 8081:8081
@@ -86,11 +86,14 @@ services:
       - DIALOB_TENANT_FIXED_ID=00000000-0000-0000-0000-000000000000
       - QUESTIONNAIRE_REST_URL=/session/dialob
       - COMPOSER_ADMINAPPURL=/ui/forms
+#      - COMPOSER_FILLING_APP_URL=http://localhost:3001/secured/fi/forms
+      - COMPOSER_FILLING_APP_URL=http://localhost:3000/secured/en/assets/forms
+      - COMPOSER_TENANTS_DEFAULT_TEMPLATE=https://s3.eu-central-1.amazonaws.com/cdn.resys.io/dialob-composer-material/dev/index.html
     networks:
       - dialob-backend
-  
+
   dialob-session:
-    image: resys/dialob-session-boot:2.1.21
+    image: resys/dialob-session-boot:2.2.8
     restart: no
     ports:
       - 8082:8082

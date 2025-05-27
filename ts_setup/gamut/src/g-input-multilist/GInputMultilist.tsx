@@ -15,6 +15,11 @@ import { GInputBaseAnyProps } from '../g-input-base';
 import { MUI_NAME, GInputMultilistRoot, useUtilityClasses, GInput } from './useUtilityClasses';
 
 
+export interface GInputMultilistClasses {
+  root: string;
+}
+export type GInputMultilistClassKey = keyof GInputMultilistClasses;
+
 
 // extension hook for adding custom input types
 export interface GInputMultilistPropsVariantOverrides { };
@@ -32,6 +37,11 @@ export interface GInputMultilistProps {
 
   errors?: DialobApi.ActionError[] | undefined;
   keys?: boolean | undefined; // display keys
+
+  /**
+  - Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
+   */
+  border?: boolean | undefined;
 
   variant: OverridableStringUnion<
     'multilist',

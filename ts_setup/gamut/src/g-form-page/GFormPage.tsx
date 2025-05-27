@@ -3,7 +3,9 @@ import { Typography, IconButton, Fade, MenuItem, ListItemIcon, Button } from '@m
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 import { FormattedMessage } from 'react-intl';
+import { useNavigate } from '@tanstack/react-router';
 
 import { GFormStepper } from '../g-form-stepper'
 import {
@@ -11,7 +13,8 @@ import {
   GFormPageRoot, GFormPageTitle, GFormPageSubTitle,
   GFormPageBody, GFormPageHeader, GFormPageMenu, GFormPageFooter
 } from './useUtilityClasses';
-import { useNavigate } from '@tanstack/react-router';
+import { useIam } from '../api-iam';
+import { useLocale } from '../api-locale';
 
 
 
@@ -48,6 +51,8 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const nav = useNavigate();
+  const { authType } = useIam();
+  const { locale } = useLocale();
   const { ownerState, classes, props } = useThemeInfra(initProps);
 
   function handlePageChange(id: string) {
@@ -67,7 +72,15 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   function handleComplete() {
     props.onComplete();
   }
+
   function handleCancel() {
+    if (authType === 'ANON') {
+      nav({
+        from: '/public/$locale/pages/$pageId/products/$productId',
+        params: { locale },
+        to: '/public/$locale'
+      })
+    }
     nav({
       from: '/secured/$locale/pages/$pageId/products/$productId',
       params: { viewId: 'user-overview' },
