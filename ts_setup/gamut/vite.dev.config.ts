@@ -31,7 +31,7 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
           // svgr options
         },
       }),
-      intlTsVite({})
+      intlTsVite({ ignoreErrors: true })
     ],
     build: {
       chunkSizeWarningLimit: 5000,
