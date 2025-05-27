@@ -29,5 +29,10 @@ export {
   StyledDateTimeField as DateTimeField } from './StyledInputField';
 
 export { 
-  CancelButton 
+  StyledCancelButton as CancelButton
 } from './StyledButtons';
+
+export {
+  StyledConfirmDialog as ConfirmDialog
+} from './StyledConfirmDialog';
+

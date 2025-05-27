@@ -20,6 +20,8 @@ import fileDownload from 'js-file-download'
 import Decision from './table';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
+import { ConfirmDialog } from '@/eveli-styles';
+
 
 interface EditMode {
   cell?: HdesApi.AstDecisionCell,
@@ -82,6 +84,7 @@ const DrawerSection: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 }
 
 const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> = ({ decision }) => {
+  const [confirmDelete, setConfirmDelete] = React.useState<{ type: 'ROW' | 'COLUMN', id: string } | null>(null);
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
   const { service, actions, session } = Composer.useComposer();
   const update = session.pages[decision.id];
@@ -212,15 +215,42 @@ const DecisionEdit: React.FC<{ decision: HdesApi.Entity<HdesApi.AstDecision> }> 
           <Decision.Row
             {...rowProps}
             dragProps={dragProps}
-            onDelete={(id) => onChange([{ type: 'DELETE_ROW', id }])}
+            onDelete={(id) => setConfirmDelete({ type: 'ROW', id })}
           />
         );
       }}
       
       renderCell={cellProps => <Decision.Cell onChange={onChange} {...cellProps} dt={ast} errors={decision.errors} onClick={() => setEdit({ cell: cellProps.cell })} />}
-      
+
       onAddRow={() => onChange([{ type: 'ADD_ROW', id: "" }])}
     />
+
+    <ConfirmDialog
+      open={!!confirmDelete}
+      title={intl.formatMessage({ id: 'decisions.deleteConfirmTitle' })}
+      message={intl.formatMessage(
+        { id: 'decisions.deleteConfirmText' },
+        {
+          type: intl.formatMessage({
+            id: confirmDelete?.type === 'ROW'
+              ? 'decisions.type.row'
+              : 'decisions.type.column'
+          })
+        }
+      )}
+      confirmLabel={intl.formatMessage({ id: 'button.confirmDelete' })}
+      onCancel={() => setConfirmDelete(null)}
+      onConfirm={() => {
+        if (!confirmDelete) return;
+        const { type, id } = confirmDelete;
+        const cmd: HdesApi.AstCommand = type === 'ROW'
+          ? { type: 'DELETE_ROW', id }
+          : { type: 'DELETE_HEADER', id };
+        onChange([cmd]);
+        setConfirmDelete(null);
+      }}
+    />
+
   </Box >);
 }
 

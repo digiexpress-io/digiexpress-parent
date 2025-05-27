@@ -1,18 +1,19 @@
 import React from 'react'
 
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { ListItemText, InputLabel, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 import * as Burger from '@/eveli-styles';
 import { HdesApi } from '@/api-wrench';
-import { CancelButton } from '@/eveli-styles';
+import { CancelButton, ConfirmDialog } from '@/eveli-styles';
 
 
 type OperationType = "MOVE_ROW" | "DELETE_ROW" | "MOVE_COLUMN" | "DELETE_COLUMN" | "EXPRESSION_COLUMN";
 
 interface DelegateProps {
-  decision:HdesApi.AstDecision;
-  onChange: (commands:HdesApi.AstCommand) => void;
+  decision: HdesApi.AstDecision;
+  onChange: (commands: HdesApi.AstCommand) => void;
+  setConfirmDelete: (value: { type: 'ROW' | 'COLUMN'; id: string }) => void;
 }
 
 interface OrderEditProps {
@@ -121,16 +122,18 @@ const DeleteRow: React.FC<DelegateProps> = ({ decision, onChange }) => {
   }
 
   return (<>
-    <Burger.Select label="decisions.toolbar.organize.action.deleteRow"
+    <Burger.Select
+      label="decisions.toolbar.organize.action.deleteRow"
       selected={row}
       onChange={rowId => {
-        setRow(rowId)
-        onChange({ id: rowId, type: "DELETE_ROW" });
+        setRow(rowId);
+        onChange({ type: 'DELETE_ROW', id: rowId });
       }}
       items={decision.rows.map((v, index) => ({
         id: v.id,
         value: (<ListItemText primary={index} />)
-      }))} />
+      }))}
+    />
     <div>
       <InputLabel sx={{ paddingBottom: 1 }}><FormattedMessage id='decisions.toolbar.organize.action.deleteRow.contents' /></InputLabel>
       {preview}
@@ -181,7 +184,7 @@ const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
   return (<Burger.Select label="decisions.toolbar.organize.action.deleteColumn" helperText="decisions.toolbar.organize.action.deleteColumn.helper"
     onChange={value => {
       setTo(value);
-      onChange({ id: value as any, type: "DELETE_HEADER" });
+      onChange({ type: 'DELETE_HEADER', id: value });
     }}
     selected={to}
     items={headers.map(v => ({
@@ -192,10 +195,16 @@ const DeleteColumn: React.FC<DelegateProps> = ({ decision, onChange }) => {
 }
 
 const OrderEdit: React.FC<OrderEditProps> = (props) => {
+  const intl = useIntl();
   const [commands, setCommands] = React.useState<HdesApi.AstCommand>();
   const [operation, setOperation] = React.useState<OperationType | string>('');
+  const [confirmDelete, setConfirmDelete] = React.useState<{ type: 'ROW' | 'COLUMN'; id: string } | null>(null);
 
-  const delegate: DelegateProps = { onChange: setCommands, decision: props.decision };
+  const delegate: DelegateProps = {
+    onChange: setCommands,
+    decision: props.decision,
+    setConfirmDelete
+  };  
   const operations: Record<OperationType, React.ReactElement> = {
     "EXPRESSION_COLUMN": (<ExpressionColumn {...delegate} />),
     "MOVE_ROW": (<MoveRow {...delegate} />),
@@ -224,14 +233,50 @@ const OrderEdit: React.FC<OrderEditProps> = (props) => {
       <DialogActions>
         <CancelButton onClick={props.onClose} />
         <Button onClick={() => {
-              if (commands) {
-                props.onChange([commands]);
-              }
-              props.onClose();
-            }}>
+          if (!commands) {
+            props.onClose();
+            return;
+          }
+
+          if ((commands.type === 'DELETE_ROW' || commands.type === 'DELETE_HEADER') && commands.id) {
+            setConfirmDelete({
+              type: commands.type === 'DELETE_ROW' ? 'ROW' : 'COLUMN',
+              id: commands.id
+            });
+          } else {
+            props.onChange([commands]);
+            props.onClose();
+          }          
+        }}>
           <FormattedMessage id='buttons.apply'/>
         </Button>
       </DialogActions>
+      <ConfirmDialog
+        open={!!confirmDelete}
+        title={intl.formatMessage({ id: "decisions.deleteConfirmTitle" })}
+        message={intl.formatMessage(
+          { id: "decisions.deleteConfirmText" },
+          {
+            type: intl.formatMessage({
+              id: confirmDelete?.type === 'ROW'
+                ? 'decisions.type.row'
+                : 'decisions.type.column'
+            })
+          }
+        )}
+        confirmLabel={intl.formatMessage({ id: 'button.confirmDelete' })}
+        onCancel={() => setConfirmDelete(null)}
+        onConfirm={() => {
+          if (!confirmDelete) return;
+          const { type, id } = confirmDelete;
+          const cmd: HdesApi.AstCommand = type === 'ROW'
+            ? { type: 'DELETE_ROW', id }
+            : { type: 'DELETE_HEADER', id };
+          props.onChange([cmd]);
+          setConfirmDelete(null);
+          props.onClose();
+        }}
+      />
     </Dialog>
   );
 }
