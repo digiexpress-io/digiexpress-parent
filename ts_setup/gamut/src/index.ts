@@ -18,6 +18,7 @@ export * from './g-divider'
 
 export * from './g-error-not-found'
 export * from './g-error'
+export * from './g-error-not-translated'
 
 export * from './g-locales'
 export * from './g-login'

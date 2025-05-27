@@ -51,9 +51,8 @@ const Internal: React.FC<GRouterUnsecuredProps> = (initProps) => {
   function handleLocale(locale: string) {
     nav({
       from: '/public/$locale',
-      params: { locale },
-
-      to: '/public/$locale',
+      params: { locale, pageId },
+      to: '/public/$locale/pages/$pageId',
     })
   }
 
