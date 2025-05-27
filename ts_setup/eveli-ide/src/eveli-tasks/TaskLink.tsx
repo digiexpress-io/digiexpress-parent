@@ -41,13 +41,6 @@ export const TaskLink: React.FC<TaskLinkProps> = ({ title, id, keywords }) => {
         href="#"
         component={LinkOverride}
         taskId={id}
-        sx={{
-          display: 'inline-block',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          maxWidth: '100%',
-        }}
       >
         {title}
       </Link>
@@ -74,7 +67,7 @@ export const TaskLink: React.FC<TaskLinkProps> = ({ title, id, keywords }) => {
   );
 
   return (
-    <Box display="flex" alignItems="center" sx={{ minWidth: 0, width: '100%' }}>
+    <Box display="flex" alignItems="center">
       <Box sx={{ minWidth: 0, flexGrow: 1, overflow: 'hidden' }}>
         {link}
       </Box>
