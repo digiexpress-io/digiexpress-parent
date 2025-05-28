@@ -19,11 +19,11 @@ taskPriority.low,,Low,Ei kiireellinen,Inte bråttom
 taskPriority.normal,,Normal,Normaali,Normal
 taskPriority.high,,High,Kiire,Brådskande
 taskDialog.priority,,Priority,Prioriteetti,Prioritet
-taskDialog.subject,,Subject,Aihe,Ämne
+taskDialog.subject,Task detail,Subject,Aihe,Ämne
 taskDialog.description,,Description,Asiakkaan tiedot,Kundupgifter
-taskDialog.dueDate,,Due date,Eräpäivä,Deadline
-taskDialog.assignedTo,,User role,Käsittelijän rooli,Hanteraregrupp
-taskDialog.assignedUser,,User,Käsittelijä,Användare
+taskDialog.dueDate,Task detail,Due date,Eräpäivä,Deadline
+taskDialog.assignedTo,Task detail,User role,Käsittelijän rooli,Hanteraregrupp
+taskDialog.assignedUser,Task detail,User,Käsittelijä,Användare
 taskDialog.status,,Status,Tila,Status
 taskDialog.task,,Task,Tehtävä,Uppgiften
 taskDialog.category,,Type,Tyyppi,Typ
@@ -34,10 +34,10 @@ task.priority.normal,,Normal,Normaali,Normal
 task.priority.high,,High,Kiire,Brådskande
 task.status.new,,New,Uusi,Nya
 task.status.open,,Open,Käsittelyssä,Läsning
-task.status.completed,,Completed,Tehty,Redo
-task.status.rejected,,Rejected,Hylätty,Övergiven
-task.form.review,,View completed form,Katso täytetty lomake,Review form
-task.form.feedback.manage,,Manage feedback,Hallinoi palautetta,Manage feedback
+task.status.completed,,Completed,Valmis,Redo
+task.status.rejected,,No processing,Ei käsittelyä,Ingen bearbetning
+task.form.review,,View form,Avaa lomake,Visa formulär
+task.form.feedback.manage,,Manage feedback,Hallinnoi palautetta,Hantera feedback
 task.form.feedback.updated,,Feedback update successful,Palautteen päivitys onnistui!,Uppdatering av feedback lyckades!
 task.created,,Created,Luotu,Skapad
 task.updated,,Updated,Päivitetty,Uppdaterad
@@ -45,15 +45,15 @@ comments,,Comments,Kommentit,Meddelanden
 task.comments.external.createTask,,Create task before adding external comments,Luo tehtävä ennen ulkoisten kommenttien lisäämistä,Skapa uppgift innan du lägger till externa kommentarer
 task.comments.internal.createTask,,Create task before adding internal comments,Luo tehtävä ennen sisäisten kommenttien lisäämistä,Skapa uppgift innan du lägger till interna kommentarer
 task.attachments.createTask,,Create task before uploading attachments,Luo tehtävä ennen liitteiden lataamista,Skapa uppgift innan du laddar upp bilagor
-task.comments.external.added,,External comment added,Ulkonen kommentti lisätty,Extern kommentar har lagts till
-task.feedback.publishedSaved,,Published reply saved,Julkaistu vastaus tallennettu,Publicerat svar har sparats
-task.comments.internal.added,,Internal comment added,Sisäinen kommentti lisätty,Intern kommentar har lagts till
-internalComments,,Internal comments,Sisäiset kommentit,Interna kommentarer
-externalComments,,External comments,Julkiset kommentit,Kundmeddelanden
-comment.store,,Save,Tallenna,Spara
-comment.add,,Add comment,Lisää kommentti,Skriv en kommentar
-comment.addInternal,,Add internal comment,Sisäinen kommentti,Skriva en intern kommentar
-comment.addExternal,,Message to client,Viesti/palaute asiakkaalle,Skriva ett meddelande till kunden
+task.comments.external.added,,Internal comment added,Sisäinen kommentti tallletettu,Intern kommentar tillagd
+task.feedback.publishedSaved,,Message to client sended,Viesti asiakkaalle lähetetty,Meddelande till klient har skickats
+task.comments.internal.added,task detail,Comment added,Kommentti lisätty,Kommentar har lagts till
+internalComments,task detail,Internal comments,Sisäiset kommentit,Interna kommentarer
+externalComments,task detail,Client messages,Asiakas viestit,Kundmeddelanden
+comment.store,task detail,Save,Tallenna,Spara
+comment.add,task detail,Add comment,Lisää kommentti,Skriv en kommentar
+comment.addInternal,task detail,Add internal comment,Lisää sisäinen kommentti,Skriva en intern kommentar
+comment.addExternal,task detail,Message to client,Viesti/palaute asiakkaalle,Meddelande till klienten
 comment.reply,,Reply,Vastaa,Ansvar
 taskButton.addTask,,Add task,Lisää tehtävä,Mer uppgift
 taskButton.refresh,,Check for new tasks,Tarkista uudet tehtävät,Sök efter nya uppgifter
@@ -77,7 +77,7 @@ table.toolbar.showColumnsTitle,,Show columns,Näytä sarakkeet,Visa kolumner
 table.toolbar.addRemoveColumns,,Add or remove columns,Lisää tai poista sarakkeita,Lägg till eller ta bort kolumner
 taskLink.title,,Task link,Lomake,Uppgiften link
 taskLink.button.open,,View related data,Asiakkaan antamat tiedot,Uppgifter som kunden lämnat
-taskLink.pdf.open,,PDF,PDF,PDF
+taskLink.pdf.open,task detail,PDF,PDF,PDF
 explorer.title,,Public feedback,Julkinen viesti,Public feedback
 explorer.login,,Log in,Kirjaudu sisään,Logga in
 locale.fi,,Suomi,Suomi,Finska
@@ -149,7 +149,6 @@ button.send,,Send,Lähetä,Skicka
 button.dismiss,,Dismiss,Sulje,Stäng
 button.editRoles,,Edit,Muokkaa,Redigera
 button.select,,Select,Valita,Select
-button.confirm,,Confirm,Vahvista,Bekräfta,
 error.minTextLength,,Value should be at least {minLength} characters long,Annetun arvon pitää olla vähintään {minLength} merkkiä,Texten måste vara minst {minLength} tecken lång.
 error.maxTextLength,,Value should be no more than {max} characters long,Annetun arvon tulee olla enintään {max} merkkiä pitkä,Texten måste vara max {max} tecken lång.
 error.valueRequired,,Value required,Vaaditaan,Nödvändig
@@ -166,31 +165,31 @@ table.body.addTooltip,,Add,Lisää,Lägg till
 table.body.editTooltip,,Edit,Avaa,Öppna
 table.body.editRow.deleteMessage,,Are you sure you want to delete this?,Halutko varmasti poistaa tämän?,Är du säker på att du vill radera detta?
 workflowTable.title,,Stencil services,Kokoonpano,Sammansättning
-workflowTableHeader.name,,Name,Nimi,Namn
-workflowTableHeader.formName,,Form,Lomake,Formulär
-workflowTableHeader.flowName,,Flow,Prosessi,Process
-workflowTableHeader.updated,,Updated,Päivitetty,Uppdaterad
-workflowTable.addButton,,New workflow,Lisää uusi,Lägg till ny
-workflowTable.editButton,,Edit workflow,Muokka,Editera
-workflow.dialogTitle,,Stencil service,Työnkulku,Nytt arbetsflöde
-workflow.name,,Name,Nimi,Namn
-workflow.form.formName,,Form name,Lomakkeen nimi,Formulär namn
-workflow.form.formTag,,Form tag,Lomakkeen versio,Formulär version
-workflow.flowName,,Flow name,Prosessi,Process
-processTable.title,,Stencil service execution history,Työt,Arbeten
-processTableHeader.workflow,,Stencil service name,Tyyppi,Typ
-processTableHeader.user,,User id,Käyttäjä,Användare
-processTableHeader.status,,Status,Tila,Status
-processTableHeader.created,,Created,Luotu,Skapad
-processTableHeader.questionnaireId,,Questionnaire,Lomake,Formulär
-process.status.ANSWERED,,Answered,Lähetetty,Skickad
-process.status.CREATED,,Created,Luotu,Skapad
-process.status.ANSWERING,,Answering,Keskeneräinen,På hälft
-process.status.IN_PROGRESS,,In progress,Käsittelyssä,Under arbete
-process.status.WAITING,,Waiting,Odottaa,Väntar
-process.status.COMPLETED,,Completed,Valmis,Färdig
-process.status.REJECTED,,Rejected,Hylätty,Avslagen
-comment.button,,Send comment,Anna palautetta,Ge respons
+workflowTableHeader.name,theWrench,Name,Nimi,Namn
+workflowTableHeader.formName,theWrench,Form,Lomake,Formulär
+workflowTableHeader.flowName,theWrench,Flow,Prosessi,Process
+workflowTableHeader.updated,theWrench,Updated,Päivitetty,Uppdaterad
+workflowTable.addButton,theWrench,New workflow,Lisää uusi,Lägg till ny
+workflowTable.editButton,theWrench,Edit workflow,Muokka,Editera
+workflow.dialogTitle,theWrench,Stencil service,Työnkulku,Nytt arbetsflöde
+workflow.name,theWrench,Name,Nimi,Namn
+workflow.form.formName,theWrench,Form name,Lomakkeen nimi,Formulär namn
+workflow.form.formTag,theWrench,Form tag,Lomakkeen versio,Formulär version
+workflow.flowName,theWrench,Flow name,Prosessi,Process
+processTable.title,theWrench,Stencil service execution history,Työt,Arbeten
+processTableHeader.workflow,theWrench,Stencil service name,Tyyppi,Typ
+processTableHeader.user,theWrench,User id,Käyttäjä,Användare
+processTableHeader.status,theWrench,Status,Tila,Status
+processTableHeader.created,theWrench,Created,Luotu,Skapad
+processTableHeader.questionnaireId,theWrench,Questionnaire,Lomake,Formulär
+process.status.ANSWERED,theWrench,Answered,Lähetetty,Skickad
+process.status.CREATED,theWrench,Created,Luotu,Skapad
+process.status.ANSWERING,theWrench,Answering,Keskeneräinen,På hälft
+process.status.IN_PROGRESS,theWrench,In progress,Käsittelyssä,Under arbete
+process.status.WAITING,theWrench,Waiting,Odottaa,Väntar
+process.status.COMPLETED,theWrench,Completed,Valmis,Färdig
+process.status.REJECTED,theWrench,Rejected,Hylätty,Avslagen
+comment.button,theWrench,Send comment,Anna palautetta,Ge respons
 comment.title,,Send comment,Anna palautetta,Ge respons
 comment.form.email,,E-mail,Sähköposti,E-post
 comment.form.feedbackType,,Type,Tyyppi,Typ
@@ -205,8 +204,8 @@ spoTasksTableHeader.category,,Type,Tyyppi,Typ
 spoTasksTableHeader.status,,Status,Tila,Status
 spoTasksTableHeader.priority,,Priority,Prioriteetti,Prioritet
 spoTasksTableHeader.dueDate,,Due,Eräpäivä,Förfallodag
-spoTasksTableHeader.assigned,,Assignee,Käsittelijä,Hanterare
-spoTasksTableHeader.assignedUser,,User,Käyttäjä,Användare
+spoTasksTableHeader.assigned,,Role,Rooli,Roll
+spoTasksTableHeader.assignedUser,,Handler,Käsittelijä,Hanterare
 spoTasksTableHeader.created,,Created,Luotu,Ankomnstdatum
 spoTasksTableHeader.clientName,,Client,Asiakas,Kund
 spoTasksTableHeader.additionalInfo,,Info,Info,Info
@@ -560,29 +559,29 @@ links.change,,Change existing links,Muokkaa linkkejä,Ändra befintliga länkar
 link.create,,Create new link,Luo linkki,Skapa ny länk
 link.devmode.helper,,"If Development mode is active, this link will only appear in the development environment for testing. It will not be included in production releases.",,Om utvecklingsläget är aktivt kommer denna länk endast att visas i utvecklingsmiljön för testning. Det kommer inte att inkluderas i produktionsutgåvor.
 link.devmode,,Development mode,Kehitysversion aktivointi,Utvecklingsläge
-locale.create,,Create locale,Luo sijainti,Skapa språk
-locale.disable.title,,Disable this locale?,Poista sijainti käytöstä?,Inaktivera den här lokalen?
-locale.enable.title,,Enable this locale?,Salli sijainnin käyttö?,Vill du aktivera det här språket?
-locale.disable,,Any Pages using this locale will be hidden on the UI. Pages can still be edited.,Kaikki tätä sijaintia käyttävät sivut ovat käyttöliittymässä piilossa. Sivuja voidaan edelleen muokata.,Alla sidor som använder detta språk kommer att döljas i användargränssnittet. Sidor kan fortfarande redigeras.
-locale.enable,,All Pages using this locale will be displayed on the UI.,Kaikki tätä sijaintia käyttävät sivut ovat esillä käyttöliittymässä.,Alla sidor som använder den här lokalen kommer att visas i användargränssnittet.
-locale.composer.title,,Create a new locale,Luo uusi sijainti,Skapa en ny lokal
+locale.create,,Create locale,Luo lokalisointi,Skapa språklokalisering
+locale.disable.title,,Disable this locale?,Poista lokalisointi käytöstä?,Inaktivera den här språklokalisering?
+locale.enable.title,,Enable this locale?,Salli lokalisoinnin käyttö?,Vill du aktivera det här språklokaliseret ?
+locale.disable,,Any Pages using this locale will be hidden on the UI. Pages can still be edited.,Kaikki tätä lokalisointi käyttävät sivut ovat käyttöliittymässä piilossa. Sivuja voidaan edelleen muokata.,Alla sidor som använder dettaspråklokaliseringkommer att döljas i användargränssnittet. Sidor kan fortfarande redigeras.
+locale.enable,,All Pages using this locale will be displayed on the UI.,Kaikki tätä lokalisointi käyttävät sivut ovat esillä käyttöliittymässä.,Alla sidor som använder den här lspråklokalisering kommer att visas i användargränssnittet.
+locale.composer.title,,Create a new locale,Luo uusi lokalisointi,Skapa en ny språklokalisering
 locale.composer.placeholder,,Two-letter language code,Kaksikirjaiminen kielitunniste,Språkkod på två bokstäver
 locale.composer.helper,,"Two-letter language codes designate the content language. Common examples: en = English, fi = Finnish, sv = Swedish",Kaksikirjaiminen kielitunniste,"Språkkoder på två bokstäver anger innehållsspråket. Vanliga exempel: en = engelska, fi = finska, sv = svenska"
-locale.overview,,Locale usage overview,Lokalisointien yhteenveto,Översikt över användning av språk
+locale.overview,,Locale usage overview,Lokalisointien yhteenveto,Översikt över användning av språklokalisering
 locales.overview.description,,Manage the languages of your site content. Disable locales to hide all content associated with that language from your site,,Hantera språken för innehållet på din webbplats. Inaktivera språk för att dölja allt innehåll som är kopplat till det språket från din webbplats
-locales.content,,Page in this locale has content,Tässä sijainnissa olevalla sivulla on sisältöä,Sidan i det här språket har innehåll
-locales.nocontent,,Page in this locale has no content,Tässä sijainnissa olevalla sivulla ei ole sisältöä,Sidan i det här språket har inget innehåll
-locales.nopage,,There is no page for this locale in this Article,Tällä sijainnilla ei ole sivua tässä artikkelissa,Det finns ingen sida för detta språk i denna artikel
+locales.content,,Page in this locale has content,Sivulta löytyy lokalisoitua sisältöä,Sidan i det här språket har innehåll
+locales.nocontent,,Page in this locale has no content,Sivulta ei löydy lokalisoitua,Sidan i det här språket har inget innehåll
+locales.nopage,,There is no page for this locale in this Article,Artikkelissa ei löyd tätä kieliversiota,Det finns ingen sida för detta språk i denna artikel
 locales.label.table.locale,,Language code,Kielikoodi,Språkkod
 newpage.title,,Create a new page,Luo uusi sivu,Skapa en ny sida
-newpage.info,,A page consists of localised content and must be associated with an Article.,Sivu koostuu paikannetusta sisällöstä ja sen tulee olla yhdistetty artikkeliin.,En sida består av lokaliserat innehåll och måste kopplas till en artikel.
+newpage.info,,A page consists of localised content and must be associated with an Article.,Sivulla on sisällöstä ja sen tulee olla yhdistetty artikkeliin.,En sida består av lokaliserat innehåll och måste kopplas till en artikel.
 newpage.article.info,,Confirm creation of page for: {article} with locale: {locale},Vahvista sivun luominen artikkelille: {article} sijainnilla: {locale},Bekräfta skapandet av sidan för: {article} med språk: {locale}
 page.create,,Create page,Luo sivu,Skapa sida
 page.delete.dialog.title,,Delete a page from article:,Poista sivu tästä artikkelista,Ta bort en sida från artikeln:
 page.delete.description,,The selected page and all of its content will be permanently removed from your site,,Den valda sidan och allt dess innehåll kommer att tas bort permanent från din webbplats
 pages.save,,Save pages,Tallenna sivut,Spara sidor
 pages.add,,Add a page,Lisää sivu,Lägg till en sida
-pages.change,,Change a page locale,Muuta sivun sijaintia,Ändra en sidspråk
+pages.change,,Change a page locale,Muuta sivun lokalisointia,Ändra en sidspråk
 pages.select.locale,,Edit localised page content,Muokkaa lokalisoitua sivun sisältöä,Redigera lokaliserat sidinnehåll
 pages.select.locale.edit.desc,,Select two languages to enable side-by-side editing in one tab.,Ota käyttöön vierekkäinen muokkaus yhdellä välilehdellä valitsemalla kaksi kieltä.,Välj två språk för att möjliggöra sida vid sida redigering på en flik.
 pages.edit.language1,,Edit this language,Muokkaa tätä kieltä,Redigera detta språk
@@ -610,7 +609,7 @@ release.delete.desc,,Delete this release permanently from site data?,Haluatko po
 releases.view.note,,Notes,Lisä tietoa,Anteckningar
 releases.view.tag,,Name,Nimi,Namn
 releases.view.created,,Created,Luotu,Skapad
-releases.view.download,,JSON download,JSON a,Ladda ner JSON
+releases.view.download,,JSON download,JSON alas lataus,Ladda ner JSON
 buttons.create,,Create,Lisää,Skapa
 buttons.apply,,Apply,Laita voimaan,Tillämpas
 buttons.delete,,Delete,Poista,Radera
@@ -622,155 +621,151 @@ explorer.tabs.flows,,Flows,Virtaukset,Flöden
 explorer.tabs.decisions,,Decisions,Päätökset,Beslut
 explorer.active.branch,,Active branch: {name},Aktiivinen haara: {name},Aktiv gren: {name}
 explorer.active.branch.default,,Default,Oletus,Standard
-activities.flows.title,,Flows,Virtaukset,Flöden
-activities.flows.desc,,A a sequence of tasks which are defined by using simple configuration language.,"Tehtäväsarja, joka määritellään käyttämällä yksinkertaista konfigurointikieltä.",En sekvens av uppgifter som definieras med ett enkelt konfigurationsspråk.
-activities.decisions.title,,Decisions,Päätökset,Beslut
-activities.decisions.desc,,A decision table that can be used to make decisions based on input data.,"Päätöstaulukko, jonka avulla voidaan tehdä päätöksiä syöttötietojen perusteella.",En beslutstabell som kan användas för att fatta beslut baserat på indata.
-activities.services.title,,Services,Palvelut,Tjänster
-activities.services.desc,,A piece of Java or Groovy code that is embedded inside of a flow as a task.,"Pala Java- tai Groovy-koodia, joka on upotettu vuon sisään tehtävänä.",En del av Java- eller Groovy-kod som är inbäddad i ett flöde som en uppgift.
-activities.releases.title,,Releases,Julkaisut,Släpps
-activities.releases.desc,,A Release is a snapshot of all site content at one certain point of time.,Julkaisu on tilannekuva kaikesta sivuston sisällöstä tiettynä ajankohtana.,En release är en ögonblicksbild av allt innehåll på webbplatsen vid en viss tidpunkt.
-activities.releases.desc.additional,,"Each Release can be downloaded to be used for production or backup purposes, or can be branched for further editing. This will replace all current assets so make sure any changes are saved.","Jokainen julkaisu voidaan ladata käytettäväksi tuotanto- tai varmuuskopiointitarkoituksiin, tai ne voidaan haaroittaa lisämuokkausta varten. Tämä korvaa kaikki nykyiset varat, joten varmista, että kaikki muutokset tallennetaan.","Varje utgåva kan laddas ner för att användas för produktion eller säkerhetskopiering, eller kan förgrenas för ytterligare redigering. Detta kommer att ersätta alla befintliga tillgångar så se till att alla ändringar sparas."
-activities.releases.view,,View all releases,Katso kaikki julkaisut,Se alla utgåvor
-activities.releases.graph,,Graph,Kaavio,Graf
-activities.compare.title,,Compare,Vertaa,Jämföra
-activities.compare.desc,,Compare two releases to see what has changed between them.,"Vertaa kahta julkaisua nähdäksesi, mikä on muuttunut niiden välillä.",Jämför två utgåvor för att se vad som har förändrats mellan dem.
-activities.compare.view,,Compare,Vertaa,Jämföra
-activities.templates.view,,View all templates,Näytä kaikki mallit,Se alla mallar
-activities.debug.title,,Debug,Debug,Felsökning
-activities.debug.desc,,"Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.","Simuloi omaisuuden suorittamista. Voidaan tehdä lomakesyötteen, JSON-syötteen tai CSV-tiedoston avulla.","Simulera utförande av en tillgång. Kan göras via formulärinmatning, JSON-inmatning eller genom att använda en CSV-fil."
-activities.debug.view,,Simulate,Simuloida,Simulera
-activities.assets.saveSuccess,,Saved asset: {name},Tallennettu sisältö: {name},Sparad tillgång: {name}
-programs.error.title,,Program error,Ohjelmavirhe,Programfel
-programs.warning.title,,Program warning,Ohjelman varoitus,Programvarning
-flows,,Flows,Virtaukset,Flöden
-migrations.title,,Migration,Muuttoliike,Migration
-migrations.create,,Perform migration,Suorita siirto,Utför migrering
-migrations.select,,Select tag.json file,Valitse tag.json-tiedosto,Välj tag.json-fil
-flows.edit.title,,Edit flow,Muokkaa kulkua,Redigera flöde
-flows.copyas.title,,Copy flow as,Kopioi kulku muodossa,Kopiera flöde som
-flows.delete.title,,Delete flow,Poista virtaus,Ta bort flöde
-flows.delete.error.title,,Failed to delete flow,Kulun poistaminen epäonnistui,Det gick inte att ta bort flödet
-flows.delete.content,,Are you sure you want to delete FLOW: {name}?,Haluatko varmasti poistaa kohteen FLOW: {name}?,Är du säker på att du vill ta bort FLOW: {name}?
-flows.deleted.message,,Deleted FLOW: {name},Poistettu FLOW: {name},Raderat FLÖDE: {name}
-flows.simulate.title,,Debug the flow,Virheenkorjaus,Felsök flödet
-flows.composer.title,,Create new FLOW,Luo uusi FLOW,Skapa nytt FLOW
-flows.composer.copyTitle,,Copy FLOW as,Kopioi FLOW nimellä,Kopiera FLOW som
-flows.composer.createdMessage,,Created FLOW: {name},Luotu FLOW: {name},Skapat FLÖDE: {name}
-flows.composer.copiedMessage,,Copied FLOW {name} as: {newName},Kopioitu FLOW {name} muodossa: {newName},Kopierade FLÖDE {name} som: {newName}
-flows.composer.errorsTitle,,Failed to create FLOW,FLOW:n luominen epäonnistui,Det gick inte att skapa FLOW
-flows.composer.assetName,,Unique name for the FLOW,Ainutlaatuinen nimi FLOW:lle,Unikt namn för FLOW
-flows.autocomplete.task.create,,Create new asset,Luo uusi sisältö,Skapa ny tillgång
-flows.autocomplete.task.link,,Link selected asset,Linkitä valittu sisältö,Länka vald tillgång
-flows.autocomplete.task.searchField,,Search for asset...,Hae kohdetta...,Sök efter tillgång...
-flows.autocomplete.task.searchPlaceholder,,Asset name or description,Kohteen nimi tai kuvaus,Tillgångens namn eller beskrivning
-flows.autocomplete.task.selectType,,Select asset type to link,Valitse linkitettävä sisältötyyppi,Välj tillgångstyp att länka
-flows.autocomplete.task.searchHelper,,Matches asset name and description,Vastaa sisällön nimeä ja kuvausta,Matchar tillgångens namn och beskrivning
-flows.autocomplete.task.searchResults,,Search results,Hakutulokset,Sökresultat
-flows.autocomplete.task,,Add existing asset or create new one,Lisää olemassa oleva sisältö tai luo uusi,Lägg till befintlig tillgång eller skapa en ny
-flows.autocomplete.task.snackbar.created,,Created new {type}: {name},Luotu uusi {type}: {name},Skapat ny {type}: {name}
-flows.autocomplete.task.snackbar.creating,,Creating new {type}: {name},Luodaan uutta {type}: {name},Skapar ny {type}: {name}
-flows.graph.show,,Show flow graph,Näytä vuokaavio,Visa flödesdiagram
-flows.graph.hide,,Hide flow graph,Piilota vuokaavio,Dölj flödesdiagram
-services.searchAll,,Search all services,Hae kaikista palveluista,Sök i alla tjänster
-services.edit.title,,Edit service,Muokkaa palvelua,Redigera tjänst
-services.copyas.title,,Copy service as,Kopiopalvelu nimellä,Kopiera tjänst som
-services.delete.title,,Delete service,Poista palvelu,Ta bort tjänsten
-services.delete.error.title,,Failed to delete SERVICE,Palvelun SERVICE poistaminen epäonnistui,Det gick inte att ta bort SERVICE
-services.delete.content,,Are you sure you want to delete SERVICE: {name}?,Haluatko varmasti poistaa PALVELUN: {name}?,Är du säker på att du vill ta bort SERVICE: {name}?
-services.deleted.message,,Deleted SERVICE: {name},Poistettu PALVELU: {name},Raderad SERVICE: {name}
-services.simulate.title,,Debug the service,Tee palvelun virheenkorjaus,Felsök tjänsten
-services.composer.title,,Create new SERVICE,Luo uusi PALVELU,Skapa ny SERVICE
-services.composer.copyTitle,,Copy SERVICE as,Kopioi PALVELU nimellä,Kopiera SERVICE som
-services.composer.createdMessage,,Created SERVICE: {name},Luotu PALVELU: {name},Skapat TJÄNST: {name}
-services.composer.copiedMessage,,Copied SERVICE {name} as: {newName},Kopioitu PALVELU {name} muodossa: {newName},Kopierade SERVICE {name} som: {newName}
-services.composer.errorsTitle,,Failed to create SERVICE,Palvelun SERVICE luominen epäonnistui,Det gick inte att skapa SERVICE
-services.composer.assetName,,Unique name for the SERVICE,Ainutlaatuinen nimi PALVELULLE,Unikt namn för TJÄNSTEN
-decisions.name,,Name,Nimi,Namn
-decisions.desc,,Description,Kuvaus,Beskrivning
-decisions.simulate.title,,Debug the decision,Korjaa päätös,Felsök beslutet
-decisions.hitpolicy,,Hit-policy,Osumapolitiikka,Hit-policy
-decisions.edit.title,,Edit decision,Muokkaa päätöstä,Redigera beslut
-decisions.copyas.title,,Copy decision as,Kopioi päätös nimellä,Kopiera beslut som
-decisions.delete.error.title,,Failed to delete DECISION,DECISION poistaminen epäonnistui,Det gick inte att ta bort DECISION
-decisions.delete.title,,Delete decision,Poista päätös,Ta bort beslut
-decisions.delete.content,,Are you sure you want to delete DECISION: {name}?,Haluatko varmasti poistaa PÄÄTÖS: {name}?,Är du säker på att du vill ta bort BESLUT: {name}?
-decisions.deleted.message,,Deleted DECISION: {name},Poistettu PÄÄTÖS: {name},Raderat BESLUT: {name}
-decisions.table.hitpolicy,,Matches,Ottelut,Tändstickor
-decisions.table.options,,Options,Vaihtoehdot,Alternativ
-decisions.composer.title,,Create new DECISION,Luo uusi PÄÄTÖS,Skapa nytt BESLUT
-decisions.composer.copyTitle,,Copy DECISION as,Kopioi PÄÄTÖS muodossa,Kopiera BESLUT som
-decisions.composer.createdMessage,,Created DECISION: {name},Luotu PÄÄTÖS: {name},Skapat BESLUT: {name}
-decisions.composer.copiedMessage,,Copied DECISION {name} as: {newName},PÄÄTÖS {name} kopioitu muodossa: {newName},Kopierade BESLUT {name} som: {newName}
-decisions.composer.errorsTitle,,Failed to create DECISION,PÄÄTÖKSEN luominen epäonnistui,Det gick inte att skapa DECISION
-decisions.composer.assetName,,Unique name for the DECISION,PÄÄTÖKSEN ainutlaatuinen nimi,Unikt namn för BESLUTET
-decisions.toolbar.addInputColumn,,Add input column,Lisää syöttösarake,Lägg till inmatningskolumn
-decisions.toolbar.addOutputColumn,,Add output column,Lisää tulossarake,Lägg till utdatakolumn
-decisions.toolbar.addRow,,Add row,Lisää rivi,Lägg till rad
-decisions.toolbar.csvDownload,,"Download CSV, with separator \';\'","Lataa CSV, erotin \';\'","Ladda ner CSV, med separator \';\'"
-decisions.toolbar.csvUpload,,"Upload CSV, with separator \';\'","Lataa CSV, erotin \';\'","Ladda upp CSV, med separator \';\'"
-decisions.toolbar.nameAndHitpolicy,,Name and hit-policy,Nimi ja osumakäytäntö,Namn och träffpolicy
-decisions.toolbar.organize.rows.columns,,Organize rows and columns,Järjestä rivit ja sarakkeet,Organisera rader och kolumner
-decisions.toolbar.organize.action,,Select action,Valitse toiminto,Välj åtgärd
-decisions.toolbar.organize.action.helper,,Move column or row based on name/index,Siirrä saraketta tai riviä nimen/hakemiston perusteella,Flytta kolumn eller rad baserat på namn/index
-decisions.toolbar.organize.action.expression,,Select expression,Valitse lauseke,Välj uttryck
-decisions.toolbar.organize.action.expression.column,,Select column,Valitse sarake,Välj kolumn
-decisions.toolbar.organize.action.deleteColumn,,Delete whole column,Poista koko sarake,Ta bort hela kolumnen
-decisions.toolbar.organize.action.deleteRow,,Delete whole row,Poista koko rivi,Ta bort hela raden
-decisions.toolbar.organize.action.deleteRow.contents,,Row contents,Rivin sisältö,Radens innehåll
-decisions.toolbar.organize.action.move.from.column,,Column to move,Siirrettävä sarake,Kolumn att flytta
-decisions.toolbar.organize.action.move.from.row,,Row to move,Rivi siirtääksesi,Rad att flytta
-decisions.toolbar.organize.action.move.to.column,,New Position,Uusi asema,Ny position
-decisions.toolbar.organize.action.move.to.row,,New Position,Uusi asema,Ny position
-decisions.table.inputs.title,,Matching rules,Sovitussäännöt,Matchande regler
-decisions.table.outputs.title,,Results,Tulokset,Resultat
-decisions.header.dialog.title,,"Decision table: {name}, column: {column}","Päätöstaulukko: {name}, sarake: {column}","Beslutstabell: {name}, kolumn: {column}"
-decisions.cells.dialog.title,,"Decision table: {name}, column: {column}, value: {value}","Päätöstaulukko: {nimi}, sarake: {sarake}, arvo: {arvo}","Beslutstabell: {name}, kolumn: {column}, värde: {value}"
-decisions.cells.newvalue.boolean,,Enter new value,Syötä uusi arvo,Ange nytt värde
-decisions.cells.newvalue.boolean.helper,,Select boolean value,Valitse boolen arvo,Välj booleskt värde
-decisions.cells.newvalue.boolean.empty,,No value selected,Arvoa ei ole valittu,Inget värde valt
-decisions.cells.newvalue.date.operator,,Operator,Operaattori,Operatör
-decisions.cells.newvalue.date.start,,Start date,Aloituspäivämäärä,Startdatum
-decisions.cells.newvalue.date.end,,End date,Päättymispäivämäärä,Slutdatum
-decisions.cells.newvalue.date.value,,Date,Päivämäärä,Datum
-decisions.cells.newvalue.number.comparisonType,,Comparison,Vertailu,Jämförelse
-decisions.cells.newvalue.number.comparisonTypeEmpty,,Comparison not selected,Vertailua ei valittu,Jämförelse har inte valts
-decisions.cells.newvalue.number.comparisonValue,,New numerical value,Uusi numeerinen arvo,Nytt numeriskt värde
-decisions.cells.newvalue.number.comparisonToRange,,Change to range,Vaihda alueelle,Byt till intervall
-decisions.cells.newvalue.number.rangeStart,,Start,Aloita,Start
-decisions.cells.newvalue.number.rangeEnd,,End,Loppu,Avsluta
-decisions.cells.newvalue.number.value,,New numerical value,Uusi numeerinen arvo,Nytt numeriskt värde
-decisions.cells.newvalue.number.rangeIncluded,,Included,Mukana,Ingår
-decisions.cells.newvalue.number.rangeToComparison,,Change to comparison,Vaihda vertailuun,Ändra till jämförelse
-decisions.cells.newvalue.string.comparisonType,,Comparison,Vertailu,Jämförelse
-decisions.cells.newvalue.string.addValue,,Add new value,Lisää uutta arvoa,Lägg till nytt värde
-decisions.cells.newvalue.string.available,,Available values,Käytettävissä olevat arvot,Tillgängliga värden
-decisions.cells.newvalue.string.selected,,Selected values,Valitut arvot,Valda värden
-decisions.cells.newvalue.string.empty,,Comparison not selected,Vertailua ei valittu,Jämförelse har inte valts
-decisions.cells.newvalue.clear,,Clear current value,Tyhjennä nykyinen arvo,Rensa aktuellt värde
-decisions.valueSet,,Define value set,Määritä arvosarja,Definiera värdeuppsättning
-decisions.valueSet.description,,Value sets can be used to define a predetermined set of values for any input,Arvojoukkoja voidaan käyttää ennalta määrättyjen arvojen määrittämiseen mille tahansa tulolle,Värdeuppsättningar kan användas för att definiera en förutbestämd uppsättning värden för vilken ingång som helst
-decisions.valueSet.add,,Add to value set,Lisää arvosarjaan,Lägg till värdeuppsättning
-decisions.valueSet.remove,,Remove from value set,Poista arvojoukosta,Ta bort från värdeuppsättningen
-decisions.valueSet.current,,Current value set,Nykyinen arvo asetettu,Aktuellt värde inställt
-decisions.valueSet.empty,,Value set is empty,Arvojoukko on tyhjä,Värdet är tomt
-decisions.deleteConfirmTitle,,Confirm Deletion,Vahvista poisto,Bekräfta borttagning,
-decisions.deleteConfirmText,,Are you sure you want to delete this {type}?,Haluatko varmasti poistaa tämän {type}?,Är du säker på att du vill ta bort denna {type}?,
-decisions.type.row,,row,rivin,rad,
-decisions.type.column,,column,sarakkeen,kolumn,
-dt.header.name,,Name,Nimi,Namn
-dt.header.delete,,Delete,Poistaa,Radera
-dt.header.expression,,Expression,Ilmaisu,Uttryck
-dt.header.dataType,,Data type,Tietotyyppi,Datatyp
-dt.header.script,,Script,Käsikirjoitus,Manus
-decisions,,Decisions,Päätökset,Beslut
-program.status.DEPENDENCY_ERROR,,Dependency Errors,Riippuvuusvirheet,Beroendefel
-program.status.UP,,Program is UP,Ohjelma on YLÖS,Programmet är UPP
-program.status.AST_ERROR,,Syntax errors,Syntaksivirheet,Syntaxfel
-program.status.PROGRAM_ERROR,,Compiler errors,Kääntäjän virheet,Kompilatorfel
-package.explorer.flows,,flows,virtaa,flöden
-package.explorer.servicetasks,,services,palvelut,tjänster
-package.explorer.decisiontables,,decisions,päätöksiä,beslut
+activities.flows.title,,Workflow,Workflow,Workflow
+activities.flows.desc,,A a sequence of tasks which are defined by using simple configuration language.,A a sequence of tasks which are defined by using simple configuration language.,A a sequence of tasks which are defined by using simple configuration language.
+activities.decisions.title,,Decisions,Decisions,Decisions
+activities.decisions.desc,,A decision table that can be used to make decisions based on input data.,A decision table that can be used to make decisions based on input data.,A decision table that can be used to make decisions based on input data.
+activities.services.title,,Services,Services,Services
+activities.services.desc,,A piece of Java or Groovy code that is embedded inside of a flow as a task.,A piece of Java or Groovy code that is embedded inside of a flow as a task.,A piece of Java or Groovy code that is embedded inside of a flow as a task.
+activities.releases.title,,Releases,Releases,Releases
+activities.releases.desc,,A Release is a snapshot of all site content at one certain point of time.,A Release is a snapshot of all site content at one certain point of time.,A Release is a snapshot of all site content at one certain point of time.
+activities.releases.desc.additional,,"Each Release can be downloaded to be used for production or backup purposes, or can be branched for further editing. This will replace all current assets so make sure any changes are saved.","Each Release can be downloaded to be used for production or backup purposes, or can be branched for further editing. This will replace all current assets so make sure any changes are saved.","Each Release can be downloaded to be used for production or backup purposes, or can be branched for further editing. This will replace all current assets so make sure any changes are saved."
+activities.releases.view,,View all releases,View all releases,View all releases
+activities.releases.graph,,Graph,Graph,Graph
+activities.compare.title,,Compare,Compare,Compare
+activities.compare.desc,,Compare two releases to see what has changed between them.,Compare two releases to see what has changed between them.,Compare two releases to see what has changed between them.
+activities.compare.view,,Compare,Compare,Compare
+activities.templates.view,,View all templates,View all templates,View all templates
+activities.debug.title,,Debug,Debug,Debug
+activities.debug.desc,,"Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.","Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file.","Simulate execution of an asset. Can be done via form input, JSON input, or by using a CSV file."
+activities.debug.view,,Simulate,Simulate,Simulate
+activities.assets.saveSuccess,,Saved asset: {name},Saved asset: {name},Saved asset: {name}
+programs.error.title,,Program error,Program error,Program error
+programs.warning.title,,Program warning,Program warning,Program warning
+flows,,Flows,Flows,Flows
+migrations.title,,Migration,Migration,Migration
+migrations.create,,Perform migration,Perform migration,Perform migration
+migrations.select,,Select tag.json file,Select tag.json file,Select tag.json file
+flows.edit.title,,Edit flow,Edit flow,Edit flow
+flows.copyas.title,,Copy flow as,Copy flow as,Copy flow as
+flows.delete.title,,Delete flow,Delete flow,Delete flow
+flows.delete.error.title,,Failed to delete flow,Failed to delete flow,Failed to delete flow
+flows.delete.content,,Are you sure you want to delete FLOW: {name}?,Are you sure you want to delete FLOW: {name}?,Are you sure you want to delete FLOW: {name}?
+flows.deleted.message,,Deleted FLOW: {name},Deleted FLOW: {name},Deleted FLOW: {name}
+flows.simulate.title,,Debug the flow,Debug the flow,Debug the flow
+flows.composer.title,,Create new FLOW,Create new FLOW,Create new FLOW
+flows.composer.copyTitle,,Copy FLOW as,Copy FLOW as,Copy FLOW as
+flows.composer.createdMessage,,Created FLOW: {name},Created FLOW: {name},Created FLOW: {name}
+flows.composer.copiedMessage,,Copied FLOW {name} as: {newName},Copied FLOW {name} as: {newName},Copied FLOW {name} as: {newName}
+flows.composer.errorsTitle,,Failed to create FLOW,Failed to create FLOW,Failed to create FLOW
+flows.composer.assetName,,Unique name for the FLOW,Unique name for the FLOW,Unique name for the FLOW
+flows.autocomplete.task.create,,Create new asset,Create new asset,Create new asset
+flows.autocomplete.task.link,,Link selected asset,Link selected asset,Link selected asset
+flows.autocomplete.task.searchField,,Search for asset...,Search for asset...,Search for asset...
+flows.autocomplete.task.searchPlaceholder,,Asset name or description,Asset name or description,Asset name or description
+flows.autocomplete.task.selectType,,Select asset type to link,Select asset type to link,Select asset type to link
+flows.autocomplete.task.searchHelper,,Matches asset name and description,Matches asset name and description,Matches asset name and description
+flows.autocomplete.task.searchResults,,Search results,Search results,Search results
+flows.autocomplete.task,,Add existing asset or create new one,Add existing asset or create new one,Add existing asset or create new one
+flows.autocomplete.task.snackbar.created,,Created new {type}: {name},Created new {type}: {name},Created new {type}: {name}
+flows.autocomplete.task.snackbar.creating,,Creating new {type}: {name},Creating new {type}: {name},Creating new {type}: {name}
+flows.graph.show,,Show flow graph,Show flow graph,Show flow graph
+flows.graph.hide,,Hide flow graph,Hide flow graph,Hide flow graph
+services.searchAll,,Search all services,Search all services,Search all services
+services.edit.title,,Edit service,Edit service,Edit service
+services.copyas.title,,Copy service as,Copy service as,Copy service as
+services.delete.title,,Delete service,Delete service,Delete service
+services.delete.error.title,,Failed to delete SERVICE,Failed to delete SERVICE,Failed to delete SERVICE
+services.delete.content,,Are you sure you want to delete SERVICE: {name}?,Are you sure you want to delete SERVICE: {name}?,Are you sure you want to delete SERVICE: {name}?
+services.deleted.message,,Deleted SERVICE: {name},Deleted SERVICE: {name},Deleted SERVICE: {name}
+services.simulate.title,,Debug the service,Debug the service,Debug the service
+services.composer.title,,Create new SERVICE,Create new SERVICE,Create new SERVICE
+services.composer.copyTitle,,Copy SERVICE as,Copy SERVICE as,Copy SERVICE as
+services.composer.createdMessage,,Created SERVICE: {name},Created SERVICE: {name},Created SERVICE: {name}
+services.composer.copiedMessage,,Copied SERVICE {name} as: {newName},Copied SERVICE {name} as: {newName},Copied SERVICE {name} as: {newName}
+services.composer.errorsTitle,,Failed to create SERVICE,Failed to create SERVICE,Failed to create SERVICE
+services.composer.assetName,,Unique name for the SERVICE,Unique name for the SERVICE,Unique name for the SERVICE
+decisions.name,,Name,Name,Name
+decisions.desc,,Description,Description,Description
+decisions.simulate.title,,Debug the decision,Debug the decision,Debug the decision
+decisions.hitpolicy,,Hit-policy,Hit-policy,Hit-policy
+decisions.edit.title,,Edit decision,Edit decision,Edit decision
+decisions.copyas.title,,Copy decision as,Copy decision as,Copy decision as
+decisions.delete.error.title,,Failed to delete DECISION,Failed to delete DECISION,Failed to delete DECISION
+decisions.delete.title,,Delete decision,Delete decision,Delete decision
+decisions.delete.content,,Are you sure you want to delete DECISION: {name}?,Are you sure you want to delete DECISION: {name}?,Are you sure you want to delete DECISION: {name}?
+decisions.deleted.message,,Deleted DECISION: {name},Deleted DECISION: {name},Deleted DECISION: {name}
+decisions.table.hitpolicy,,Matches,Matches,Matches
+decisions.table.options,,Options,Options,Options
+decisions.composer.title,,Create new DECISION,Create new DECISION,Create new DECISION
+decisions.composer.copyTitle,,Copy DECISION as,Copy DECISION as,Copy DECISION as
+decisions.composer.createdMessage,,Created DECISION: {name},Created DECISION: {name},Created DECISION: {name}
+decisions.composer.copiedMessage,,Copied DECISION {name} as: {newName},Copied DECISION {name} as: {newName},Copied DECISION {name} as: {newName}
+decisions.composer.errorsTitle,,Failed to create DECISION,Failed to create DECISION,Failed to create DECISION
+decisions.composer.assetName,,Unique name for the DECISION,Unique name for the DECISION,Unique name for the DECISION
+decisions.toolbar.addInputColumn,,Add input column,Add input column,Add input column
+decisions.toolbar.addOutputColumn,,Add output column,Add output column,Add output column
+decisions.toolbar.addRow,,Add row,Add row,Add row
+decisions.toolbar.csvDownload,,"Download CSV, with separator \';\'","Download CSV, with separator \';\'","Download CSV, with separator \';\'"
+decisions.toolbar.csvUpload,,"Upload CSV, with separator \';\'","Upload CSV, with separator \';\'","Upload CSV, with separator \';\'"
+decisions.toolbar.nameAndHitpolicy,,Name and hit-policy,Name and hit-policy,Name and hit-policy
+decisions.toolbar.organize.rows.columns,,Organize rows and columns,Organize rows and columns,Organize rows and columns
+decisions.toolbar.organize.action,,Select action,Select action,Select action
+decisions.toolbar.organize.action.helper,,Move column or row based on name/index,Move column or row based on name/index,Move column or row based on name/index
+decisions.toolbar.organize.action.expression,,Select expression,Select expression,Select expression
+decisions.toolbar.organize.action.expression.column,,Select column,Select column,Select column
+decisions.toolbar.organize.action.deleteColumn,,Delete whole column,Delete whole column,Delete whole column
+decisions.toolbar.organize.action.deleteRow,,Delete whole row,Delete whole row,Delete whole row
+decisions.toolbar.organize.action.deleteRow.contents,,Row contents,Row contents,Row contents
+decisions.toolbar.organize.action.move.from.column,,Column to move,Column to move,Column to move
+decisions.toolbar.organize.action.move.from.row,,Row to move,Row to move,Row to move
+decisions.toolbar.organize.action.move.to.column,,New Position,New Position,New Position
+decisions.toolbar.organize.action.move.to.row,,New Position,New Position,New Position
+decisions.table.inputs.title,,Matching rules,Matching rules,Matching rules
+decisions.table.outputs.title,,Results,Results,Results
+decisions.header.dialog.title,,"Decision table: {name}, column: {column}","Decision table: {name}, column: {column}","Decision table: {name}, column: {column}"
+decisions.cells.dialog.title,,"Decision table: {name}, column: {column}, value: {value}","Decision table: {name}, column: {column}, value: {value}","Decision table: {name}, column: {column}, value: {value}"
+decisions.cells.newvalue.boolean,,Enter new value,Enter new value,Enter new value
+decisions.cells.newvalue.boolean.helper,,Select boolean value,Select boolean value,Select boolean value
+decisions.cells.newvalue.boolean.empty,,No value selected,No value selected,No value selected
+decisions.cells.newvalue.date.operator,,Operator,Operator,Operator
+decisions.cells.newvalue.date.start,,Start date,Start date,Start date
+decisions.cells.newvalue.date.end,,End date,End date,End date
+decisions.cells.newvalue.date.value,,Date,Date,Date
+decisions.cells.newvalue.number.comparisonType,,Comparison,Comparison,Comparison
+decisions.cells.newvalue.number.comparisonTypeEmpty,,Comparison not selected,Comparison not selected,Comparison not selected
+decisions.cells.newvalue.number.comparisonValue,,New numerical value,New numerical value,New numerical value
+decisions.cells.newvalue.number.comparisonToRange,,Change to range,Change to range,Change to range
+decisions.cells.newvalue.number.rangeStart,,Start,Start,Start
+decisions.cells.newvalue.number.rangeEnd,,End,End,End
+decisions.cells.newvalue.number.value,,New numerical value,New numerical value,New numerical value
+decisions.cells.newvalue.number.rangeIncluded,,Included,Included,Included
+decisions.cells.newvalue.number.rangeToComparison,,Change to comparison,Change to comparison,Change to comparison
+decisions.cells.newvalue.string.comparisonType,,Comparison,Comparison,Comparison
+decisions.cells.newvalue.string.addValue,,Add new value,Add new value,Add new value
+decisions.cells.newvalue.string.available,,Available values,Available values,Available values
+decisions.cells.newvalue.string.selected,,Selected values,Selected values,Selected values
+decisions.cells.newvalue.string.empty,,Comparison not selected,Comparison not selected,Comparison not selected
+decisions.cells.newvalue.clear,,Clear current value,Clear current value,Clear current value
+decisions.valueSet,,Define value set,Define value set,Define value set
+decisions.valueSet.description,,Value sets can be used to define a predetermined set of values for any input,Value sets can be used to define a predetermined set of values for any input,Value sets can be used to define a predetermined set of values for any input
+decisions.valueSet.add,,Add to value set,Add to value set,Add to value set
+decisions.valueSet.remove,,Remove from value set,Remove from value set,Remove from value set
+decisions.valueSet.current,,Current value set,Current value set,Current value set
+decisions.valueSet.empty,,Value set is empty,Value set is empty,Value set is empty
+dt.header.name,,Name,Name,Name
+dt.header.delete,,Delete,Delete,Delete
+dt.header.expression,,Expression,Expression,Expression
+dt.header.dataType,,Data type,Data type,Data type
+dt.header.script,,Script,Script,Script
+decisions,,Decisions,Decisions,Decisions
+program.status.DEPENDENCY_ERROR,,Dependency Errors,Dependency Errors,Dependency Errors
+program.status.UP,,Program is UP,Program is UP,Program is UP
+program.status.AST_ERROR,,Syntax errors,Syntax errors,Syntax errors
+program.status.PROGRAM_ERROR,,Compiler errors,Compiler errors,Compiler errors
+package.explorer.flows,,flows,flows,flows
+package.explorer.servicetasks,,services,services,services
+package.explorer.decisiontables,,decisions,decisions,decisions
 dialog.addtype.title,,Add new asset,Lisää uusi sisältö,Lägg till ny tillgång
 dialog.addtype.button.cancel,,Cancel,Peruuttaa,Avboka
 dialog.addtype.button.confirm,,Create,Luoda,Skapa
