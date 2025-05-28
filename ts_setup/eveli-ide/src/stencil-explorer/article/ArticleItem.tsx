@@ -69,25 +69,31 @@ interface LinkItemProps {
 
 const LinkItem: React.FC<LinkItemProps> = (props) => {
   const theme = useTheme();
+  const intl = useIntl();
+
+  const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
 
   return (
     <Burger.TreeItemRoot
       itemId={props.nodeId}
       onClick={props.onClick}
       label={
-        <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
-          <Box component={props.devMode ? ConstructionIcon : LinkIcon} color={theme.palette.primary.light} sx={{ pl: 1, mr: 1 }} />
-          <Typography align="left" maxWidth="300px" noWrap={true} variant="body2"
-            sx={{ fontWeight: "inherit", flexGrow: 1 }}
-          >
+        <Box display="flex" alignItems="center">
+          <Typography noWrap sx={{ fontWeight: "inherit" }}>
             {props.labelText}
           </Typography>
+          <Box display="flex" alignItems="center">
+            {props.devMode && (
+              <Tooltip title={intl.formatMessage({ id: 'services.devmode.tooltip' })}>
+                <ConstructionIcon sx={iconStyle} />
+              </Tooltip>
+            )}
+          </Box>
         </Box>
       }
     />
   );
-}
-
+};
 
 interface ArticleItemOptions {
   setEditWorkflow: (workflowId: StencilApi.WorkflowId) => void,
@@ -100,18 +106,29 @@ const ArticleItem: React.FC<{
   options?: ArticleItemOptions
 }> = ({ articleId, nodeId, options }) => {
   const theme = useTheme();
+  const intl = useIntl();
 
   const { session, isArticleSaved } = Composer.useComposer();
   const view = session.getArticleView(articleId);
   const { article, pages, workflows, links } = view;
   const saved = isArticleSaved(article);
+  const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
 
   const articleName = session.getArticleName(view.article.id);
   return (
     <>
       <Burger.TreeItem itemId={nodeId ? nodeId : article.id}
-        labelText={articleName.name}
-        labelIcon={article.body.devMode ? ConstructionIcon : MenuBookOutlinedIcon}
+        labelIcon={MenuBookOutlinedIcon}
+        labelText={
+          <Box sx={{ display: "flex", alignItems: "center", p: 0.5, pr: 0 }}>
+            {articleName.name}
+            {article.body.devMode && (
+              <Tooltip title={intl.formatMessage({ id: 'services.devmode.tooltip' })}>
+                <ConstructionIcon sx={iconStyle} />
+              </Tooltip>
+            )}
+          </Box>
+        }
       //labelcolor={saved ? "explorerItem" : "secondary.light"}
       >
 
