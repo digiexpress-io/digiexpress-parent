@@ -47,7 +47,11 @@ export class FormImpl implements DialobApi.Form {
   }
   
   public toParent(id: string): DialobApi.ActionItem | undefined {
-    const [parentId] = this._state.reverseItemMap[id];
+    const parents = this._state.reverseItemMap[id];
+    if (!parents || parents.size === 0) {
+      return undefined;
+    }
+    const [parentId] = parents;
     return parentId ? this.getItem(parentId) : undefined;
   }
 
