@@ -4,7 +4,7 @@ import { generateUtilityClass, styled, SxProps, useThemeProps } from '@mui/mater
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '../api-variants'
 import { GFormGroupProps, GFormGroupSlot } from './g-form-group-types'
-import { GFormGroupCollapseble } from './GFormGroupCollapseble'
+import { GFormGroupCollapsible } from './GFormGroupCollapsible'
 
 
 
@@ -24,7 +24,7 @@ export function useThemeInfra(initProps: GFormGroupProps) {
   } = {
     label: props.slots?.label ?? GFormGroupLabel as any,
     body: props.slots?.body ?? GFormGroupBody as any,
-    collapsible: props.slots?.body ?? GFormGroupCollapseble as any,
+    collapsible: props.slots?.collapsible ?? GFormGroupCollapsible as any,
   }
   return { classes, ownerState, slots };
 }
@@ -83,8 +83,10 @@ export const GFormGroupLabel = styled('div', {
   },
 })<{ ownerState: GFormGroupProps }>(({ theme, ownerState }) => {
   const { label } = ownerState;
+
   return {
     display: 'flex',
+
     '& .MuiDivider-root': {
       display: label ? undefined : 'none',
       flexGrow: 1,
