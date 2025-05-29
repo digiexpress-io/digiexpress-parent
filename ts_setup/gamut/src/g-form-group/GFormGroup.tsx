@@ -7,10 +7,12 @@ import { GFormGroupProps } from './g-form-group-types';
 export const GFormGroup: React.FC<GFormGroupProps> = (initProps) => {
   const { ownerState, classes, slots } = useThemeInfra(initProps);
 
+  const isLabelDisplayedHere = !ownerState.collapsible && ownerState.label;
+
   return (
     <GFormGroupRoot ownerState={ownerState} as={ownerState.component} className={classes.root}>
       <slots.collapsible ownerState={ownerState} className={classes.collapsible}>
-        {ownerState.label && (
+        {isLabelDisplayedHere && (
           <slots.label ownerState={ownerState} className={classes.label}>
             <div>
               <Typography>
