@@ -69,12 +69,12 @@ const getLocale = () => {
   let selectedLocale = '';
 
   let nextIsLocale = false;
-  for(const path of window.location.pathname.split('\/')) {
+  for (const path of window.location.pathname.split('/')) {
     if (path === 'secured' || path === 'public') {
-      nextIsLocale = true
+      nextIsLocale = true;
       continue;
     }
-    if(nextIsLocale) {
+    if (nextIsLocale) {
       selectedLocale = path;
       break;
     }
@@ -83,19 +83,22 @@ const getLocale = () => {
   let locale = 'en';
   if (selectedLocale) {
     locale = selectedLocale;
-  }
-  else {
+  } else {
     const language = navigator.language;
     if (language.length > 2) {
-      locale = language.split("-")[0];
-    }
-    else {
+      locale = language.split('-')[0];
+    } else {
       locale = language;
     }
   }
-  if (locale !== 'en' && locale !== 'fi') {
+
+  const supportedLocales = ['en', 'fi', 'sv'];
+  if (!supportedLocales.includes(locale)) {
+    console.warn(`Unsupported locale '${locale}' — falling back to 'en'`);
     return 'en';
   }
+
   return locale;
-}
+};
+
 
