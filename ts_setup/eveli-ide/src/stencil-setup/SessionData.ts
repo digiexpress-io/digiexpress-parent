@@ -263,17 +263,26 @@ class SessionData implements StencilComposerApi.Session {
   private _pages: Record<StencilApi.PageId, StencilComposerApi.PageUpdate>;
   private _cache: SiteCache;
   private _filter: StencilComposerApi.SessionFilter;
+  private _commitlogs: Record<string, StencilApi.SiteCommitLog[]>;
 
   constructor(props: {
     site?: StencilApi.Site,
     pages?: Record<StencilApi.PageId, StencilComposerApi.PageUpdate>,
     cache?: SiteCache;
     filter?: StencilComposerApi.SessionFilter;
+    commitlogs?: StencilApi.SiteCommitLog[];
   }) {
     this._filter = props.filter ? props.filter : new ImmutableSessionFilter({});
     this._site = props.site ? props.site : { name: "", contentType: "NO_CONNECTION", releases: {}, articles: {}, links: {}, locales: {}, pages: {}, workflows: {}, templates: {} };
     this._pages = props.pages ? props.pages : {};
     this._cache = props.cache ? props.cache : new SiteCache(this._site);
+    this._commitlogs = (props.commitlogs ?? []).reduce<Record<string, StencilApi.SiteCommitLog[]>>((collector, item) => {
+      if (!collector[item.objectId]) {
+        collector[item.objectId] = [];
+      }
+      collector[item.objectId].push(item);
+      return collector;
+    }, {});
   }
   get search() {
     return this._cache.getSearchData();
@@ -385,7 +394,7 @@ class SessionData implements StencilComposerApi.Session {
   }
 
   withSite(site: StencilApi.Site) {
-    return new SessionData({ site: site, pages: this._pages, filter: this._filter });
+    return new SessionData({ site: site, pages: this._pages, filter: this._filter, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withoutPages(pageIds: StencilApi.PageId[]): StencilComposerApi.Session {
     const pages: Record<string, StencilComposerApi.PageUpdate> = {};
@@ -395,7 +404,7 @@ class SessionData implements StencilComposerApi.Session {
       }
       pages[page.origin.id] = page;
     }
-    return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
+    return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withPage(page: StencilApi.PageId): StencilComposerApi.Session {
     if (this._pages[page]) {
@@ -404,7 +413,7 @@ class SessionData implements StencilComposerApi.Session {
     const pages = Object.assign({}, this._pages);
     const origin = this._site.pages[page];
     pages[page] = new ImmutablePageUpdate({ origin, saved: true, value: origin.body.content });
-    return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter });
+    return new SessionData({ site: this._site, pages, cache: this._cache, filter: this._filter, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
   withPageValue(page: StencilApi.PageId, value: StencilApi.LocalisedContent): StencilComposerApi.Session {
     const session = this.withPage(page);
@@ -413,11 +422,25 @@ class SessionData implements StencilComposerApi.Session {
     const pages = Object.assign({}, session.pages);
     pages[page] = pageUpdate.withValue(value);
 
-    return new SessionData({ site: session.site, pages, cache: this._cache, filter: this._filter });
+    return new SessionData({ site: session.site, pages, cache: this._cache, filter: this._filter, commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
   }
 
   withLocaleFilter(locale?: StencilApi.LocaleId) {
-    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, filter: this._filter.withLocale(locale) });
+    return new SessionData({ site: this._site, pages: this._pages, cache: this._cache, filter: this._filter.withLocale(locale), commitlogs: Object.values(this._commitlogs).flatMap(c => c) });
+  }
+
+  withCommitlogs(commitlogs: StencilApi.SiteCommitLog[]) {
+    return new SessionData({ site: this._site, pages: this._pages, filter: this._filter, commitlogs });
+  }
+
+  getLastUpdated(anyObjectId: string): string {
+    try {
+      const lastUpdated = this._commitlogs[anyObjectId];
+      return lastUpdated[lastUpdated.length - 1].createdAt
+    } catch (e) {
+      console.error(e);
+      return new Date().toISOString();
+    }
   }
 }
 

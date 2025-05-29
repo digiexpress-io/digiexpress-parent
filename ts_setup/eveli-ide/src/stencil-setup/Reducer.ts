@@ -15,14 +15,14 @@ interface Action {
   setFilterLocale?: StencilApi.LocaleId;
   setPageUpdateRemove?: {pages: StencilApi.PageId[]}
   setPageUpdate?: { page: StencilApi.PageId, value: StencilApi.LocalisedContent };
-  setSite?: { site: StencilApi.Site };
+  setSite?: { site: StencilApi.Site, commitlogs: StencilApi.SiteCommitLog[] };
 }
 
 const ActionBuilder = {
   setFilterLocale: (locale?: StencilApi.LocaleId ) => ({type: ActionType.setFilterLocale, setFilterLocale: locale }),
   setPageUpdateRemove: (setPageUpdateRemove: { pages: StencilApi.PageId[] } ) => ({type: ActionType.setPageUpdateRemove, setPageUpdateRemove }),
   setPageUpdate: (setPageUpdate: { page: StencilApi.PageId, value: StencilApi.LocalisedContent }) => ({ type: ActionType.setPageUpdate, setPageUpdate }),
-  setSite: (setSite: { site: StencilApi.Site }) => ({ type: ActionType.setSite, setSite }),
+  setSite: (setSite: { site: StencilApi.Site, commitlogs: StencilApi.SiteCommitLog[] }) => ({ type: ActionType.setSite, setSite }),
 }
 
 class ReducerDispatch implements StencilComposerApi.Actions {
@@ -35,12 +35,12 @@ class ReducerDispatch implements StencilComposerApi.Actions {
     this._service = service;
   }
   async handleLoad(): Promise<void> {
-    return this._service.getSite()
-      .then(site => {
+    return Promise.all([this._service.getSite(), this._service.getSiteCommitLog()])
+      .then(([site, commitlogs]) => {
         if(site.contentType === "NOT_CREATED") {
-          this._service.create().site().then(created => this._sessionDispatch(ActionBuilder.setSite({site: created})));
+          this._service.create().site().then(created => this._sessionDispatch(ActionBuilder.setSite({ site: created, commitlogs: [] })));
         } else {
-          this._sessionDispatch(ActionBuilder.setSite({site})) 
+          this._sessionDispatch(ActionBuilder.setSite({ site, commitlogs })) 
         }
       });
   }
@@ -48,7 +48,7 @@ class ReducerDispatch implements StencilComposerApi.Actions {
     this._sessionDispatch(ActionBuilder.setFilterLocale(locale));
   }
   async handleLoadSite(): Promise<void> {
-    return this._service.getSite().then(site => this._sessionDispatch(ActionBuilder.setSite({site})));
+    return Promise.all([this._service.getSite(), this._service.getSiteCommitLog()]).then(([site, commitlogs]) => this._sessionDispatch(ActionBuilder.setSite({ site, commitlogs })));
   }
   handlePageUpdate(page: StencilApi.PageId, value: StencilApi.LocalisedContent): void {
     this._sessionDispatch(ActionBuilder.setPageUpdate({page, value}));
@@ -63,7 +63,7 @@ const Reducer = (state: StencilComposerApi.Session, action: Action): StencilComp
     case ActionType.setSite: {
       if (action.setSite) {
         console.log("new site", action.setSite.site);
-        return state.withSite(action.setSite.site);
+        return state.withSite(action.setSite.site).withCommitlogs(action.setSite.commitlogs);
       }
       console.error("Action data error", action);
       return state;

@@ -32,11 +32,12 @@ function Component() {
   const { create } = useFetch('worker/rest/api/assets/stencil/$assetType.POST', {});
   const { update } = useFetch('worker/rest/api/assets/stencil/$assetType.PUT', {});
   const { getReleaseContent } = useFetch('worker/rest/api/assets/stencil/releases/$releaseId.GET', {});
+  const { getSiteCommitLog } = useFetch('worker/rest/api/assets/stencil/commitlogs.GET', {})
 
   React.useLayoutEffect(() => setLocale(locale), [locale])
 
   const service = React.useMemo(() => {
-    const store: StencilApi.StencilRestApi = { getSite, delete: del, create, update, getReleaseContent };
+    const store: StencilApi.StencilRestApi = { getSite, delete: del, create, update, getReleaseContent, getSiteCommitLog };
     return StencilApi.service({ store });
   }, [getSite, del, create, update, getReleaseContent]);
 

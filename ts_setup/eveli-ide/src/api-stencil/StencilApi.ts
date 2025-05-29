@@ -84,6 +84,14 @@ export declare namespace StencilApi {
   export type TemplateType = "page";
 
 
+
+  export interface SiteCommitLog {
+    objectId: string,
+    commitId: string,
+    createdAt: string,
+    createdBy: string
+  }
+
   export interface Site {
     name: string,
     contentType: "OK" | "NOT_CREATED" | "EMPTY" | "ERRORS" | "NO_CONNECTION",
@@ -271,6 +279,7 @@ export declare namespace StencilApi {
 
   export interface Service {
     getSite(): Promise<Site>,
+    getSiteCommitLog(): Promise<SiteCommitLog[]>,
     getReleaseContent(releaseId: string): Promise<{}>,
 
     create(): CreateBuilder;
@@ -371,6 +380,7 @@ export declare namespace StencilApi {
 
   export interface StencilRestApi {
     getSite(): Promise<Site>,
+    getSiteCommitLog(): Promise<SiteCommitLog[]>,
     getReleaseContent(releaseId: string): Promise<{}>,
 
     create(): CreateBuilder;

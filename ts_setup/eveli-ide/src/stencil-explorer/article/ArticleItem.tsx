@@ -113,8 +113,9 @@ const ArticleItem: React.FC<{
   const { article, pages, workflows, links } = view;
   const saved = isArticleSaved(article);
   const iconStyle = { mx: 0.5, color: theme.palette.primary.dark, fontSize: 'medium' };
-
   const articleName = session.getArticleName(view.article.id);
+
+
   return (
     <>
       <Burger.TreeItem itemId={nodeId ? nodeId : article.id}
@@ -193,7 +194,6 @@ const ArticleItem: React.FC<{
           </Burger.TreeItem>) : null
 
         }
-
       </Burger.TreeItem>
     </>)
 }
