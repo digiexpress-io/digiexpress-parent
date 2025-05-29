@@ -1,6 +1,7 @@
 package io.resys.thena.registry.git;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
@@ -28,21 +29,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteriaType;
 import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobCommit;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.entities.git.ImmutableBlob;
+import io.resys.thena.api.entities.git.ImmutableBlobCommit;
 import io.resys.thena.api.entities.git.ImmutableBlobHistory;
+import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.registry.git.BlobRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonArray;
@@ -447,5 +453,91 @@ WHERE blobs.value LIKE $1
   private static String getFieldIndex(MatchCriteria criteria, int fieldIndex) {
     RepoAssert.isTrue(criteria.getValue() != null || criteria.getTargetDate() != null, () -> "Criteria must define value! But was: " + JsonObject.mapFrom(criteria));
     return "$" + String.valueOf(fieldIndex);
+  }
+  
+  @Override
+  public SqlTuple findAllBlobCommits(String branchName, boolean includBlob) {
+    return ImmutableSqlTuple.builder().value(new SqlStatement().ln()
+
+    .append("WITH RECURSIVE generation AS (").ln()
+    .append("  SELECT id, parent, 0 AS order_no,").ln()
+    .append("  ARRAY[parent, id]::text[] as parents").ln()
+    .append("  FROM ").append(options.getCommits()).ln().ln()
+        
+    .append("  WHERE id in(select refs.commit from ").append(options.getRefs()).append(" as refs WHERE name = $1)").ln()
+
+    .append("  UNION all").ln()
+
+    .append("  SELECT child.id, child.parent, g.order_no +1 AS order_no,").ln() 
+    .append("    array_cat(ARRAY[child.id]::text[], g.parents) as parents").ln()
+    .append("  FROM ").append(options.getCommits()).append(" as child").ln()
+    .append("  JOIN generation g ON g.parent = child.id").ln()
+    .append(")").ln()
+
+        
+    .append("SELECT ").ln()
+    
+    .append("  all_commits.id as commit_id, ").ln() 
+    .append("  all_commits.author as commit_author,").ln()
+    .append("  all_commits.datetime as commit_datetime, ").ln() 
+    .append("  all_commits.message as commit_message,").ln()
+    .append("  all_commits.parent as commit_parent,").ln()
+    .append("  all_commits.merge as commit_merge,").ln()
+    .append("  all_commits.tree as commit_tree,").ln()
+    
+    .append("  versions.name as object_id,").ln()
+    .append("  ").append(includBlob ? "blobs.id" : "null").append(" as blob_id,").ln()
+    .append("  ").append(includBlob ? "blobs.value" : "null").append(" as blob_value").ln()
+    
+    .append("FROM ").append(options.getCommits()).append(" as all_commits").ln()
+    
+    .append("LEFT JOIN ").append(options.getTreeItems()).append(" as all_items").ln()
+    .append("  ON(all_items.tree = all_commits.tree)").ln()
+    
+    .append("RIGHT JOIN (").ln()
+    .append("  SELECT items.name, items.blob, min(id) as version_id").ln()
+    .append("  FROM ").append(options.getTreeItems()).append(" as items").ln()
+    .append("  GROUP BY items.name, items.blob").ln()
+    .append(") AS versions on(all_items.id = versions.version_id )").ln()
+    
+    .append("LEFT JOIN ").append(options.getBlobs()).append(" as blobs").ln()
+    .append("  ON(blobs.id = versions.blob)").ln()
+    .append("WHERE all_commits.id IN(select distinct(unnest(parents)) from generation) ").ln()
+    
+    .append("ORDER BY all_commits.datetime desc").ln()
+    
+    
+    .build())
+    .props(Tuple.of(branchName)).build();
+  }
+  @Override
+  public Function<Row, BlobCommit> blobCommitMapper() {
+
+
+    
+    return (row -> {
+      
+      final var commit = ImmutableCommit.builder()
+        .id(row.getString("commit_id"))
+        .author(row.getString("commit_author"))
+        .dateTime(LocalDateTime.parse(row.getString("commit_datetime")))
+        .message(row.getString("commit_message"))
+        .parent(Optional.ofNullable(row.getString("commit_parent")))
+        .merge(Optional.ofNullable(row.getString("commit_merge")))
+        .tree(row.getString("commit_tree"))
+        .build();
+      
+      final var blob_id = row.getString("blob_id");
+      final var blob = blob_id == null ? null : ImmutableBlob.builder()
+        .id(blob_id)
+        .value(jsonObject(row, "blob_value"))
+        .build();
+      
+      return ImmutableBlobCommit.builder()
+          .resourceName(row.getString("object_id"))
+          .commit(commit)
+          .blob(Optional.ofNullable(blob))
+          .build();
+    });
   }
 }

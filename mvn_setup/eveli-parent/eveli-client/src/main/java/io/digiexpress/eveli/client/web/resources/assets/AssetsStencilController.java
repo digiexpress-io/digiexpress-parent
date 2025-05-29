@@ -65,6 +65,7 @@ import io.thestencil.client.api.StencilClient.Link;
 import io.thestencil.client.api.StencilClient.Locale;
 import io.thestencil.client.api.StencilClient.Page;
 import io.thestencil.client.api.StencilClient.Release;
+import io.thestencil.client.api.StencilClient.SiteCommitLog;
 import io.thestencil.client.api.StencilClient.Template;
 import io.thestencil.client.api.StencilClient.Workflow;
 import io.thestencil.client.api.StencilComposer;
@@ -123,6 +124,11 @@ public class AssetsStencilController {
   public Uni<SiteState> createSites() {
     return getClient().onItem().transformToUni(composer -> composer.create().repo())
         .onItem().invoke(() -> envir.invalidateCache());
+  }
+  
+  @GetMapping("/commitlogs") 
+  public Uni<List<SiteCommitLog>> createCommitLog() {
+    return getClient().onItem().transformToUni(composer -> composer.getClient().commitLog().build());
   }
 
   @GetMapping("/sites")

@@ -28,6 +28,7 @@ import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobCommit;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Commit;
@@ -45,6 +46,13 @@ public interface GitQueries {
   GitBlobQuery blobs();
   GitBlobHistoryQuery blobHistory();
   
+  GitBlobCommitQuery blobCommits();
+  
+  interface GitBlobCommitQuery {
+    GitBlobCommitQuery branchName(String branchName);
+    GitBlobCommitQuery includBlob(boolean includBlob); //load blob jsonb-s, default is false
+    Uni<List<BlobCommit>> findAll();
+  }
   
   interface GitRefQuery {
     Uni<Branch> name(String name);
@@ -61,6 +69,7 @@ public interface GitQueries {
     Multi<BlobHistory> find();
   }
   
+  
   interface GitBlobQuery {
     Uni<Blob> getById(String blobId);
     
@@ -73,6 +82,7 @@ public interface GitQueries {
     Uni<CommitLock> getLock(LockCriteria criteria);
     Multi<Commit> findAll();
   }
+  
   interface GitTreeQuery {
     Uni<Tree> getById(String treeId);
     Multi<Tree> findAll();

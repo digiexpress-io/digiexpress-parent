@@ -31,10 +31,11 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.resys.thena.api.actions.GitCommitActions.CommitResultEnvelope;
-import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.actions.TenantActions.CommitStatus;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.docdb.test.config.DbTestTemplate;
 import io.resys.thena.docdb.test.config.PgProfile;
 import io.vertx.core.json.JsonObject;
@@ -165,6 +166,35 @@ public class SimpleGitTest extends DbTestTemplate {
     
     log.debug("created commit 1 {}", commit_1);
     Assertions.assertEquals(CommitResultStatus.OK, commit_1.getStatus());
+    
+    
+    {
+    // Query history
+    final var blob_history = getClient().git(repo).history().blobCommitQuery()
+      .branchName("main")
+      .includBlob(true)
+      .findAll()
+      .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
+      .await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals(QueryEnvelopeStatus.OK, blob_history.getStatus());
+    
+    Assertions.assertEquals(4, blob_history.getObjects().getValues().size());
+    }
+    
+    {
+      
+      
+      // Query history
+      final var blob_history = getClient().git(repo).history().blobCommitQuery()
+        .branchName("main")
+        .includBlob(false)
+        .findAll()
+        .onFailure().invoke(e -> e.printStackTrace()).onFailure().recoverWithNull()
+        .await().atMost(Duration.ofMinutes(1));
+      Assertions.assertEquals(QueryEnvelopeStatus.OK, blob_history.getStatus());
+      
+      Assertions.assertEquals(4, blob_history.getObjects().getValues().size());
+    }
     
     super.printRepo(repo.getRepo());
   }

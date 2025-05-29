@@ -21,6 +21,7 @@ package io.resys.thena.storesql;
  */
 
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.storesql.builders.GitBlobCommitQuerySqlPool;
 import io.resys.thena.storesql.builders.GitBlobHistoryQuerySqlPool;
 import io.resys.thena.storesql.builders.GitBlobQuerySqlPool;
 import io.resys.thena.storesql.builders.GitCommitQuerySqlPool;
@@ -58,5 +59,9 @@ public class GitDbQueriesSqlImpl implements GitQueries {
   @Override
   public GitBlobHistoryQuery blobHistory() {
     return new GitBlobHistoryQuerySqlPool(dataSource);
+  }
+  @Override
+  public GitBlobCommitQuery blobCommits() {
+    return new GitBlobCommitQuerySqlPool(dataSource);
   }
 }
