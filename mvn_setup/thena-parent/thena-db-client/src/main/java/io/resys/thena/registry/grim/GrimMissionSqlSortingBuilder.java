@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 import io.resys.thena.api.actions.GrimQueryActions.MissionOrderByType;
 import io.resys.thena.api.entities.PageQuery.PageSortDirection;
 import io.resys.thena.api.entities.PageQuery.PageSortingOrder;
+import io.resys.thena.datasource.GrimTableNames;
 import io.resys.thena.datasource.ImmutableSql;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.storesql.support.SqlStatement;
 import lombok.Data;
@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 
 public class GrimMissionSqlSortingBuilder {
-  private final TenantTableNames options;
+  private final GrimTableNames options;
   
   private final List<Object> params;
   private final SqlStatement orderBy = new SqlStatement();
@@ -46,7 +46,7 @@ public class GrimMissionSqlSortingBuilder {
   private int index;
   private int joinIndex = 1;
   
-  public GrimMissionSqlSortingBuilder(TenantTableNames options, long offset, long limit) {
+  public GrimMissionSqlSortingBuilder(GrimTableNames options, long offset, long limit) {
     super();
     this.options = options;
     this.params = new ArrayList<Object>();
@@ -55,7 +55,7 @@ public class GrimMissionSqlSortingBuilder {
     this.limit = limit;
   }
   
-  public GrimMissionSqlSortingBuilder(TenantTableNames options, List<Object> params, long offset, long limit) {
+  public GrimMissionSqlSortingBuilder(GrimTableNames options, List<Object> params, long offset, long limit) {
     super();
     this.options = options;
     this.params = params;

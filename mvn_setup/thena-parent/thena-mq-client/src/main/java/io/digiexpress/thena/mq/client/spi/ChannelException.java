@@ -22,9 +22,11 @@ package io.digiexpress.thena.mq.client.spi;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import org.immutables.value.Value;
+
 import io.digiexpress.thena.mq.client.api.entities.Channel;
-import io.resys.thena.api.envelope.ImmutableMessage;
-import io.resys.thena.api.envelope.Message;
 
 
 public class ChannelException extends RuntimeException {
@@ -39,25 +41,25 @@ public class ChannelException extends RuntimeException {
   }
 
   public static class Builder {
-    public Message notChannelWithName(String channelName) {
+    public ChannelExceptionMessage notChannelWithName(String channelName) {
       final var text = new StringBuilder()
           .append("Channel with name: '").append(channelName).append("' does not exist!")
           .toString();
-      return ImmutableMessage.builder()
+      return ImmutableChannelExceptionMessage.builder()
             .text(text)
           .build();
     }
-    public Message notChannelWithName(String channel, List<Channel> others) {
+    public ChannelExceptionMessage notChannelWithName(String channel, List<Channel> others) {
       final var text = new StringBuilder()
           .append("Channel with name: '").append(channel).append("' does not exist!")
           .append(" known channels: '").append(String.join(",", others.stream().map(r -> r.getChannelName()).toList())).append("'")
           .toString();
-      return ImmutableMessage.builder()
+      return ImmutableChannelExceptionMessage.builder()
             .text(text)
           .build();
     }
-    public Message nameNotUnique(String name, String id) {
-      return ImmutableMessage.builder()
+    public ChannelExceptionMessage nameNotUnique(String name, String id) {
+      return ImmutableChannelExceptionMessage.builder()
             .text(new StringBuilder()
             .append("Repo with name: '").append(name).append("' already exists,")
             .append(" id: '").append(id).append("'")
@@ -65,6 +67,12 @@ public class ChannelException extends RuntimeException {
             .toString())
           .build();
     }
-
   }
+  
+  @Value.Immutable
+  public interface ChannelExceptionMessage {
+    String getText();
+    @Nullable Throwable getException();
+  }
+
 }

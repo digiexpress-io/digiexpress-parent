@@ -2,9 +2,9 @@ package io.resys.thena.spi;
 
 /*-
  * #%L
- * thena-docdb-api
+ * thena-db-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,21 @@ package io.resys.thena.spi;
  * #L%
  */
 
-import org.immutables.value.Value;
-
 import io.resys.thena.api.entities.Tenant;
-import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-public interface DbState {
-  ThenaDataSource getDataSource();
-  InternalTenantQuery tenant();
+public interface DbState extends TenantDataSource {
+
   
   Uni<GrimState> toGrimState(String tenantId);
   GrimState toGrimState(Tenant repo);
   <R> Uni<R> withGrimTransaction(TxScope tenantId, GrimState.TransactionFunction<R> callback);
 
-  
   Uni<FsState> toFsState(String tenantId);
   FsState toFsState(Tenant repo);
   <R> Uni<R> withFsTransaction(TxScope tenantId, FsState.TransactionFunction<R> callback);
@@ -56,20 +50,5 @@ public interface DbState {
   Uni<OrgState> toOrgState(String tenantId);
   OrgState toOrgState(Tenant repo);
   <R> Uni<R> withOrgTransaction(TxScope tenantId, OrgState.TransactionFunction<R> callback);
-  
-  interface InternalTenantQuery {
-    Uni<Tenant> getByName(String name);
-    Uni<Tenant> getByNameOrId(String nameOrId);
-    Multi<Tenant> findAll();
-    Uni<Void> delete();
-    Uni<Tenant> delete(Tenant newRepo);
-    Uni<Tenant> insert(Tenant newRepo);
-  }
-  
-  @Value.Immutable
-  interface TxScope {
-    String getTenantId();
-    String getCommitAuthor();
-    String getCommitMessage();
-  }
+
 }

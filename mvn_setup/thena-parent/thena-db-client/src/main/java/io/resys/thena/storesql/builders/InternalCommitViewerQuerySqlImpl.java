@@ -32,6 +32,7 @@ import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry.AnyObjectCriteria;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.registry.grim.GrimRegistrySqlImpl;
 import io.resys.thena.structures.grim.GrimQueries.InternalCommitViewerQuery;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -46,7 +47,7 @@ public class InternalCommitViewerQuerySqlImpl implements InternalCommitViewerQue
   public InternalCommitViewerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
-    this.registry = dataSource.getRegistry().grim();
+    this.registry = new GrimRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
 

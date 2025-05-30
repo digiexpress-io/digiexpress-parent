@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
@@ -44,7 +44,7 @@ public class SqlDbSchemaPrintTest {
   final Charset UTF_8 = StandardCharsets.UTF_8;
   @Test
   public void printSchema() throws IOException {
-    final var names = TenantTableNames.defaults("public");
+    final var names = TenantContext.defaults("public");
     final var sqlSchema = new TenantRegistrySqlImpl(names);
     final var git = new GitRegistrySqlImpl(names);
     final var doc = new DocRegistrySqlImpl(names);

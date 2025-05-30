@@ -28,10 +28,10 @@ import io.resys.thena.api.entities.git.ImmutableTreeValue;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.entities.git.TreeValue;
 import io.resys.thena.api.registry.git.TreeValueRegistry;
+import io.resys.thena.datasource.GitTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TreeValueRegistrySqlImpl implements TreeValueRegistry {
-  private final TenantTableNames options;
+  private final GitTableNames options;
   
   @Override
   public ThenaSqlClient.Sql findAll() {

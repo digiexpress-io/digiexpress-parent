@@ -14,6 +14,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>thena-sql-client</module>
     <module>thena-db-client</module>
     <module>thena-mq-client</module>
   </modules>

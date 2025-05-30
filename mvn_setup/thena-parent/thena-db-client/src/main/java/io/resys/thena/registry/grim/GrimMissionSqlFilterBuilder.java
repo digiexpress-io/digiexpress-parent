@@ -27,8 +27,8 @@ import java.util.List;
 
 import io.resys.thena.api.actions.GrimQueryActions.GrimArchiveQueryType;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
+import io.resys.thena.datasource.GrimTableNames;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -36,19 +36,19 @@ import io.vertx.mutiny.sqlclient.Tuple;
 
 public class GrimMissionSqlFilterBuilder {
 
-  private final TenantTableNames options;
+  private final GrimTableNames options;
   private final List<Object> params;
   private final SqlStatement builder = new SqlStatement();
   private int index;
   
-  public GrimMissionSqlFilterBuilder(TenantTableNames options) {
+  public GrimMissionSqlFilterBuilder(GrimTableNames options) {
     super();
     this.options = options;
     this.params = new ArrayList<Object>();
     this.index = 1;
   }
   
-  public GrimMissionSqlFilterBuilder(TenantTableNames options, List<Object> params) {
+  public GrimMissionSqlFilterBuilder(GrimTableNames options, List<Object> params) {
     super();
     this.options = options;
     this.params = params;

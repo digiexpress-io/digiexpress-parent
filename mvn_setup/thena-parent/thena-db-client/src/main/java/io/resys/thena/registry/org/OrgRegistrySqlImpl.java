@@ -29,11 +29,12 @@ import io.resys.thena.api.registry.org.OrgMembershipRegistry;
 import io.resys.thena.api.registry.org.OrgPartyRegistry;
 import io.resys.thena.api.registry.org.OrgPartyRightRegistry;
 import io.resys.thena.api.registry.org.OrgRightRegistry;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.OrgTableNames;
+import io.resys.thena.datasource.TenantContext;
 
 public class OrgRegistrySqlImpl implements OrgRegistry {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
+
+  private final OrgTableNames options;
   private final OrgCommitRegistry orgCommits;
   private final OrgCommitTreeRegistry orgCommitTrees;
   private final OrgMemberRightRegistry orgMemberRights;
@@ -43,10 +44,10 @@ public class OrgRegistrySqlImpl implements OrgRegistry {
   private final OrgPartyRegistry orgParties;
   private final OrgRightRegistry orgRights;
   
-  public OrgRegistrySqlImpl(TenantTableNames options) {
-    this.options = options;  
+  public OrgRegistrySqlImpl(TenantContext tenant) {
+    this.options = OrgTableNames.defaults().toRepo(tenant.getPrefix());  
     orgCommits = new OrgCommitRegistrySqlImpl(options);
-    orgCommitTrees =new OrgCommitTreeRegistrySqlImpl(options);
+    orgCommitTrees = new OrgCommitTreeRegistrySqlImpl(options);
     orgMemberRights = new OrgMemberRightRegistrySqlImpl(options);
     orgMemberships = new OrgMembershipRegistrySqlImpl(options);
     orgMembers = new OrgMemberRegistrySqlImpl(options);

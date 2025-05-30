@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
+import io.resys.thena.datasource.DocTableNames;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DocsSqlFilterBuilder {
-  private final TenantTableNames options;
+  private final DocTableNames options;
   private final List<Object> params = new ArrayList<Object>();
   private final List<String> filters = new ArrayList<String>();
   

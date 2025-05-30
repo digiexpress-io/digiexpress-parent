@@ -43,6 +43,7 @@ import io.resys.thena.api.registry.grim.ImmutableGrimLinkFilter;
 import io.resys.thena.api.registry.grim.ImmutableGrimMissionFilter;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.registry.grim.GrimRegistrySqlImpl;
 import io.resys.thena.structures.grim.GrimQueries;
 import io.resys.thena.structures.grim.GrimQueries.InternalMissionQuery;
 import io.smallrye.mutiny.Multi;
@@ -66,7 +67,7 @@ public class InternalMissionContainerQuerySqlImpl implements GrimQueries.Interna
   public InternalMissionContainerQuerySqlImpl(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
-    this.registry = dataSource.getRegistry().grim();
+    this.registry = new GrimRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override

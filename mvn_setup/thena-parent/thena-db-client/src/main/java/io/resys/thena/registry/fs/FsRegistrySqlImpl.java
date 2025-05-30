@@ -29,11 +29,11 @@ import io.resys.thena.api.registry.fs.FsDirentLabelRegistry;
 import io.resys.thena.api.registry.fs.FsDirentLinkRegistry;
 import io.resys.thena.api.registry.fs.FsDirentRegistry;
 import io.resys.thena.api.registry.fs.FsDirentRemarkRegistry;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.FsTableNames;
+import io.resys.thena.datasource.TenantContext;
 
 public class FsRegistrySqlImpl implements FsRegistry {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
+  private final FsTableNames options;
   private final FsDirentAssignmentRegistry assignments;
   private final FsCommitRegistry commits;
   private final FsCommitTreeRegistry commitTrees;
@@ -43,8 +43,8 @@ public class FsRegistrySqlImpl implements FsRegistry {
   private final FsDirentRegistry mission;
   private final FsDirentRemarkRegistry remarks;
   
-  public FsRegistrySqlImpl(TenantTableNames options) {
-    this.options = options;
+  public FsRegistrySqlImpl(TenantContext tenant) {
+    this.options = FsTableNames.defaults().toRepo(tenant.getPrefix());
     this.commits = new FsCommitRegistrySqlImpl(options);
     this.commitTrees = new FsCommitTreeRegistrySqlImpl(options);
     this.assignments = new FsDirentAssignmentRegistrySqlImpl(options);

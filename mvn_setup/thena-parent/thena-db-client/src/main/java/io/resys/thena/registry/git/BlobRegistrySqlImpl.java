@@ -43,10 +43,10 @@ import io.resys.thena.api.entities.git.ImmutableBlobCommit;
 import io.resys.thena.api.entities.git.ImmutableBlobHistory;
 import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.registry.git.BlobRegistry;
+import io.resys.thena.datasource.GitTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
@@ -59,7 +59,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BlobRegistrySqlImpl implements BlobRegistry {
-  protected final TenantTableNames options;
+  protected final GitTableNames options;
   
   @Override
   public ThenaSqlClient.Sql findAll() {

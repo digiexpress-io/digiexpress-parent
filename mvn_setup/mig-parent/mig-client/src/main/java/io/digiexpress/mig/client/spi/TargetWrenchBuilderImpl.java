@@ -11,7 +11,7 @@ import io.digiexpress.mig.client.spi.loggers.TargetThenaLogger;
 import io.resys.thena.api.entities.git.Blob;
 import io.resys.thena.api.entities.git.Branch;
 import io.resys.thena.api.entities.git.Tree;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -22,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 public class TargetWrenchBuilderImpl implements TargetWrenchBuilder {
   private final TargetThenaLogger logger = new TargetThenaLogger();
   private final io.vertx.mutiny.pgclient.PgPool pool;
-  private TenantTableNames names;
+  private TenantContext names;
 
   @Override
   public Uni<SourceThena> build(SourceThena source, String tenantName) {
-    this.names = TenantTableNames.defaults("").toRepo(tenantName);
+    this.names = TenantContext.defaults("").withTenantPrefix(tenantName);
     return pool.withTransaction(conn -> execute(conn, source));
   }
   /**

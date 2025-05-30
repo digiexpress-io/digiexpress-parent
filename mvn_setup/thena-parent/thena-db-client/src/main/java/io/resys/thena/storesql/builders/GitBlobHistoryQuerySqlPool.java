@@ -29,6 +29,7 @@ import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.structures.git.GitQueries.GitBlobHistoryQuery;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -51,7 +52,7 @@ public class GitBlobHistoryQuerySqlPool implements GitBlobHistoryQuery {
   
   @Override
   public Multi<BlobHistory> find() {
-    final var registry = context.getRegistry().git().blobs();
+    final var registry = new GitRegistrySqlImpl(context.getRegistry()).blobs();
     
     final var sql = registry.find(name, latestOnly, criteria);
     final var stream = context.getClient().preparedQuery(sql.getValue())

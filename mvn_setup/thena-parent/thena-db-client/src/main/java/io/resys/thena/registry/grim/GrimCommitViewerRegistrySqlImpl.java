@@ -35,10 +35,10 @@ import io.resys.thena.api.entities.grim.ImmutableGrimCommitViewer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.registry.grim.GrimCommitViewerRegistry;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
+import io.resys.thena.datasource.GrimTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -51,7 +51,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GrimCommitViewerRegistrySqlImpl implements GrimCommitViewerRegistry {
-  private final TenantTableNames options;
+  private final GrimTableNames options;
   
   
   @Override

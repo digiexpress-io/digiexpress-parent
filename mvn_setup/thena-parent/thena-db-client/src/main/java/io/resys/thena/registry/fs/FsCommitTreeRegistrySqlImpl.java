@@ -29,10 +29,10 @@ import io.resys.thena.api.entities.fs.FsCommitTree;
 import io.resys.thena.api.entities.fs.FsCommitTree.FsCommitTreeOperation;
 import io.resys.thena.api.entities.fs.ImmutableFsCommitTree;
 import io.resys.thena.api.registry.fs.FsCommitTreeRegistry;
+import io.resys.thena.datasource.FsTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -45,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FsCommitTreeRegistrySqlImpl implements FsCommitTreeRegistry {
-  private final TenantTableNames options;
+  private final FsTableNames options;
   
   @Override
   public ThenaSqlClient.Sql dropTable() {

@@ -27,6 +27,7 @@ import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.git.BlobCommit;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.structures.git.GitQueries.GitBlobCommitQuery;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.sqlclient.RowSet;
@@ -53,7 +54,7 @@ public class GitBlobCommitQuerySqlPool implements GitBlobCommitQuery {
   }
   @Override
   public Uni<List<BlobCommit>> findAll() {
-    final var registry = wrapper.getRegistry().git().blobs();
+    final var registry = new GitRegistrySqlImpl(wrapper.getRegistry()).blobs();
     
     final var sql = registry.findAllBlobCommits(branchName, includBlob);
     if(log.isDebugEnabled()) {

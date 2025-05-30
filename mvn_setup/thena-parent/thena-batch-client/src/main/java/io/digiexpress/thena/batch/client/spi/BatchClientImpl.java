@@ -1,0 +1,131 @@
+package io.digiexpress.thena.batch.client.spi;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import io.digiexpress.thena.batch.client.api.BatchClient;
+import io.digiexpress.thena.batch.client.api.entities.Envelope;
+import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelope;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelopeLog;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstance;
+import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstanceTransitives;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
+import io.digiexpress.thena.batch.client.spi.createbatchconfig.CreateBatchConfigImpl;
+import io.digiexpress.thena.batch.client.spi.createoneruntimeinstance.CreateOneRuntimeInstanceImpl;
+import io.resys.thena.api.actions.TenantActions;
+import io.resys.thena.api.entities.ImmutableTenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.spi.TenantActionsImpl;
+import io.smallrye.mutiny.Uni;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@RequiredArgsConstructor
+public class BatchClientImpl implements BatchClient {
+  private final BatchDb batchDb;
+  
+  @Override
+  public TenantActions manageTenants() {
+    return new TenantActionsImpl(batchDb, StructureType.batch);
+  }
+
+  @Override
+  public CreateBatchConfig createBatchConfig() {
+    return new CreateBatchConfigImpl(batchDb);
+  }
+
+  @Override
+  public BatchClient withTenant(String tenantId) {
+    // create tenant that will be loaded later
+    return new BatchClientImpl(batchDb.withTenant(ImmutableTenant.builder()
+        .type(StructureType.batch)
+        .name(tenantId)
+        .id("")
+        .rev("")
+        .prefix("")
+        .externalId(null)
+        .build()));
+  }
+
+  @Override
+  public CreateOneRuntimeInstance createOneRuntimeInstance() {
+    return new CreateOneRuntimeInstanceImpl(batchDb);
+  }
+  @Override
+  public CreateBatchEnvir createBatchEnvir() {
+    return new CreateBatchEnvirImpl(batchDb);
+  }
+  @Override
+  public RuntimeInstanceQuery queryRuntimeInstances() {
+    return new RuntimeInstanceQuery() {
+      private final List<RuntimeStatus> status = new ArrayList<>();
+      @Override
+      public RuntimeInstanceQuery status(RuntimeStatus... status) {
+        this.status.addAll(Arrays.asList(status));
+        return this;
+      }
+      @Override
+      public Uni<Envelope<List<RuntimeInstance>>> findAll() {
+        return batchDb.withTenant().onItem().transformToUni(db -> onQuery(db)
+            .onFailure().recoverWithItem(t -> onError(db, t)));
+      }
+      
+      private Envelope<List<RuntimeInstance>> onError(BatchDb batchDb, Throwable throwable) {
+        return ImmutableEnvelope.<List<RuntimeInstance>>builder()
+            .tenantId(batchDb.getDataSource().getTenant().getId())
+            .addOperationLogs(ImmutableEnvelopeLog.builder()
+                .text(new StringBuilder()
+                  .append("Runtime instance querry to: '").append(batchDb.getDataSource().getTenant().getId()).append("'").append(" is rejected.")
+                  .append(System.lineSeparator())
+                  .append("Message: ").append(throwable.getMessage())
+                  .toString())
+                .exception(throwable)
+                .build())
+            .operationStatus(OperationStatus.ERROR)
+          .build();
+      }
+      
+      private Uni<Envelope<List<RuntimeInstance>>> onQuery(BatchDb batchDb) {
+        return Uni.combine().all().unis(
+            batchDb.query().queryInstances().findAllByStatus(status), 
+            batchDb.query().querySteps().findAllByInstanceStatus(status)
+          )
+          .asTuple()
+          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2()));
+      }
+      
+      private Envelope<List<RuntimeInstance>> onMap(BatchDb batchDb, List<RuntimeInstance> instances, List<RuntimeStep> steps) {
+        final var grouped = steps.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
+        
+        
+        final Envelope<List<RuntimeInstance>> result = ImmutableEnvelope.<List<RuntimeInstance>>builder()
+            .tenant(batchDb.getDataSource().getTenant())
+            .tenantId(batchDb.getDataSource().getTenant().getId())
+            .operationStatus(Envelope.OperationStatus.OK)
+            .object(instances.stream().map(instance -> {
+              
+              final RuntimeInstance built = ImmutableRuntimeInstance.builder()
+                  .from(instance)
+                  .transitives(ImmutableRuntimeInstanceTransitives.builder()
+                      .addAllSteps(grouped.getOrDefault(instance.getId(), Collections.emptyList()))
+                      .build())
+                  .build();
+              
+              return built;
+            }).toList())
+            .build();
+        
+        return result;
+      }
+    };
+  }
+}

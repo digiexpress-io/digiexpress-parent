@@ -31,10 +31,10 @@ import io.resys.thena.api.entities.fs.ImmutableFsDirent;
 import io.resys.thena.api.entities.fs.ImmutableFsDirentTransitives;
 import io.resys.thena.api.registry.fs.FsDirentFilter;
 import io.resys.thena.api.registry.fs.FsDirentRegistry;
+import io.resys.thena.datasource.FsTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FsDirentRegistrySqlImpl implements FsDirentRegistry {
-  private final TenantTableNames options;
+  private final FsTableNames options;
   
   
   @Override

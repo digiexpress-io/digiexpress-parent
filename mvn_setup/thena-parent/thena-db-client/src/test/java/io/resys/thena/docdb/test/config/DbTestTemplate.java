@@ -17,7 +17,7 @@ import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.fs.FsPrinter;
@@ -124,7 +124,7 @@ public class DbTestTemplate {
   }
   
   public DbState createState() {
-    final var ctx = TenantTableNames.defaults(db);
+    final var ctx = TenantContext.defaults(db);
     return DbStateSqlImpl.create(ctx, pgPool, new TenantCacheImpl());
   }
   
