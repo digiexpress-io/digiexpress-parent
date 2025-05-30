@@ -9,13 +9,12 @@ import { useGArticleLinks } from './useGArticleLinks';
 import { GLinkFormLocked, GLinkHyper, GLinkPhone, GLinkInfo, GLinkFormUnlocked, GLinkArticle } from '../g-link';
 import { GLinksPageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useIam } from '../api-iam';
-import { useLocale } from '../api-locale';
-
 
 
 export interface GLinksPageProps {
   children: SiteApi.TopicView;
   component?: React.ElementType<GLinksPageProps>;
+  viewId?: string | undefined;
 }
 
 
@@ -25,7 +24,6 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
   const nav = useNavigate();
   const anon = useIam();
   const loggedIn = anon.authType !== 'ANON';
-  //const { locale } = useLocale();
   const { topics } = useSite();
 
   const childTopics = (props.children.children ?? []).flatMap(child => {
@@ -43,6 +41,7 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
     const pageId: string = props.children.id
     const productId: string = form.id;
 
+
     if (loggedIn) {
       nav({
         params: { productId, pageId, locale: intl.locale },
@@ -57,9 +56,13 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
   }
 
   function handleTopicChange(topic: SiteApi.TopicView) {
-
     if (loggedIn) {
-
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { viewId: 'services' },
+        search: { topicId: topic.id },
+        to: '/secured/$locale/views/$viewId',
+      })
     } else {
       nav({
         from: '/public/$locale',
