@@ -8,6 +8,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
 
+  <name>eveli-parent</name>
   <artifactId>eveli-parent</artifactId>
   <packaging>pom</packaging>
   

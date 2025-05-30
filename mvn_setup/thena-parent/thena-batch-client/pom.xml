@@ -6,6 +6,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
+  <name>thena-batch-client</name>
   <artifactId>thena-batch-client</artifactId>
 
 

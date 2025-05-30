@@ -6,6 +6,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
+  <name>thena-mq-client</name>
   <artifactId>thena-mq-client</artifactId>
 
   <dependencies>

@@ -10,6 +10,7 @@
     <relativePath>../build-parent/pom.xml</relativePath>
   </parent>
 
+  <name>thena-parent</name>
   <artifactId>thena-parent</artifactId>
   <packaging>pom</packaging>
 

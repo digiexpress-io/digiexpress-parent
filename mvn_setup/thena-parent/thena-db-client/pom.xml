@@ -9,6 +9,7 @@
   </parent>
   <packaging>jar</packaging>
   <artifactId>thena-db-client</artifactId>
+  <name>thena-db-client</name>
 
   <dependencies>
     

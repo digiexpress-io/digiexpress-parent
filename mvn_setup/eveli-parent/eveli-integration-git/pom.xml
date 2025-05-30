@@ -8,6 +8,7 @@
   </parent>
   <packaging>jar</packaging>
   <artifactId>eveli-integration-git</artifactId>
+  <name>eveli-integration-git</name>
 
 
   <dependencies>

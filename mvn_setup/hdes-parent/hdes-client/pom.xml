@@ -6,6 +6,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
+  <name>hdes-client</name>
   <artifactId>hdes-client</artifactId>
 
 

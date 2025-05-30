@@ -7,6 +7,7 @@
     <version>0.y-SNAPSHOT</version>
   </parent>
   <artifactId>eveli-envir</artifactId>
+  <name>eveli-envir</name>
   
   <dependencies>
   
