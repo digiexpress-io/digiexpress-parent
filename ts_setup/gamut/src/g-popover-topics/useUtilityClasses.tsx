@@ -1,4 +1,4 @@
-import { Popover, styled, generateUtilityClass } from "@mui/material";
+import { Popover, styled, generateUtilityClass, alpha } from "@mui/material";
 import { GPopoverTopicsProps } from "./GPopoverTopics";
 import composeClasses from "@mui/utils/composeClasses";
 
@@ -15,7 +15,8 @@ export const useUtilityClasses = (ownerState: GPopoverTopicsProps) => {
     popover: ['popover'],
     topics: ['topics'],
     topicsLayout: ['topicsLayout'],
-    logoBox: ['logoBox']
+    logoBox: ['logoBox'],
+    childTopic: ['childTopic']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -31,11 +32,12 @@ export const GPopoverTopicsRoot = styled('div', {
       styles.topics,
       styles.topicsLayout,
       styles.popover,
-      styles.logoBox
+      styles.logoBox,
+      styles.childTopic
     ];
   },
 })(({ theme }) => {
-  return {   
+  return {
     [theme.breakpoints.up('lg')]: {
       paddingLeft: theme.spacing(2)
     },
@@ -56,6 +58,28 @@ export const GTopicsMuiPopover = styled(Popover, {
       [theme.breakpoints.up('md')]: {
         width: '32vw'
       },
+    },
+    '& .GPopoverTopics-topicsLayout .GPopoverTopics-childTopic:not(:first-of-type)': {
+      marginBottom: '0px'
+    },
+
+    '& .GPopoverTopics-topicsLayout > .GPopoverTopics-childTopic': {
+      display: 'flex',
+      alignItems: 'center',
+      ...theme.typography.body2,
+      color: alpha(theme.palette.text.primary, 0.8),
+      marginLeft: theme.spacing(1),
+      marginTop: '0px',
+      marginBottom: '0px',
+      [theme.breakpoints.down('sm')]: {
+        marginTop: theme.spacing(0.5),
+        marginBottom: theme.spacing(0.5)
+      }
+    },
+    '& .GPopoverTopics-topicsLayout > .GPopoverTopics-childTopic .MuiSvgIcon-root': {
+      fontSize: '6pt',
+      marginRight: theme.spacing(1),
+      color: theme.palette.primary.main
     },
     '& .MuiPopover-paper': {
       minWidth: '100%',
@@ -80,16 +104,16 @@ export const GTopicsMuiPopover = styled(Popover, {
       marginBottom: theme.spacing(3),
       justifyContent: 'space-between'
     },
-    '& .MuiDivider-root': {
+    '& .MuiDivider-vertical': {
       margin: theme.spacing(1)
     },
     '& .MuiLink-root': {
       display: 'block',
       textDecoration: 'none',
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-      color: theme.palette.primary.dark,
-      fontWeight: theme.typography.fontWeightMedium,
+      color: theme.palette.text.primary,
+      ...theme.typography.body1,
+      fontWeight: 'bold',
       '&:focus, &:hover, &:visited, &:link, &:active': {
         textDecoration: 'underline'
       }
@@ -114,9 +138,9 @@ export const GTopics = styled('div', {
       '& .MuiDivider-root': {
         borderRight: `3px solid ${theme.palette.primary.main}`,
       },
-      '& .MuiDivider-root:last-of-type': {
-        display: 'none',
-      },
+      '& .MuiDivider-vertical:last-of-type': {
+        display: 'none'
+      }
     },
   };
 });
