@@ -14,6 +14,7 @@ import io.digiexpress.thena.batch.client.api.executor.ExecutorResult.ExecutorSta
 import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.digiexpress.thena.batch.client.spi.batchenvir.BatchEnvirLogger;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunner;
+import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunner.ThreadPoolTerminatedException;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunnerAfter;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunnerBefore;
 import io.digiexpress.thena.batch.client.spi.batchenvir.step.StepRunnerCreated;
@@ -97,13 +98,23 @@ public class InstanceRunnerConsumer {
     
     return new StepRunnerCreated(context, config).accept().onItem().transformToUni(step -> {
         
-        final var stepRunner = new StepRunner<Entity, EntityConfig>(config, runtime, context, step);
+        final var stepRunner = new StepRunner<Entity, EntityConfig>(config, context, step);
         final var query = stepRunner.start(context);
 
         return query.findAll()
           .onSubscription().call(sub -> new StepRunnerBefore(context, config, step).accept())
           .onItem()
-          .transformToUni((Entity entity) -> stepRunner.visitEntity(entity, query.getConfig(), context))
+          .transformToUni((Entity entity) -> {
+            
+            try {
+              return stepRunner.visitEntity(entity, query.getConfig(), context);
+            } catch(ThreadPoolTerminatedException t) {
+              // api caller cancelled whole execution
+              throw t;
+            } catch(Throwable t) {
+              return Uni.createFrom().failure(t);
+            }
+          })
           
           // concurrent proc config
           .merge(

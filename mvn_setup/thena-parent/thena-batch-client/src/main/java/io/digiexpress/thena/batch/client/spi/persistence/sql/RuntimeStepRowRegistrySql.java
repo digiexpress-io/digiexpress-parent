@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExecutionStatus;
-import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTableNames;
 import io.digiexpress.thena.batch.client.spi.persistence.RuntimeStepRowRegistry;
@@ -51,21 +50,21 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .value(new SqlStatement()
         .append("INSERT INTO ").append(options.getRuntimeStepRows())
         .append("(")
-        .append("  id, step_id, ").ln()
+        .append("  id, step_id, runtime_id, external_id,").ln()
         .append("  row_number, row_created_at, row_ended_at, row_status, row_execution_status, row_input, row_output ").ln()
         .append(")")
-        .append("VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)").ln()
+        .append("VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
         .build())
         .props(docs.stream()
             .map(doc -> Tuple.from(new Object[]{ 
                 doc.getId(), 
                 doc.getStepId(),
+                doc.getRuntimeId(),
+                doc.getExternalId(),
                 
                 doc.getRowNumber(),
                 doc.getCreatedAt(),
                 doc.getEndedAt().orElse(null),
-                
-                doc.getStatus().name(),
                 doc.getExecutionStatus().name(),
                 
                 doc.getInput().orElse(null),
@@ -83,12 +82,13 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("(").ln()
         .append("  id               VARCHAR(40) PRIMARY KEY,").ln()
         .append("  step_id          VARCHAR(40) NOT NULL,").ln()
+        .append("  runtime_id       VARCHAR(40) NOT NULL,").ln()
+        .append("  external_id      VARCHAR(40) NOT NULL,").ln()
         
         .append("  row_number       BIGSERIAL NOT NULL,").ln()
         .append("  row_created_at   TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
         .append("  row_ended_at     TIMESTAMP WITH TIME ZONE,").ln()
         
-        .append("  row_status           VARCHAR(100) NOT NULL,").ln()
         .append("  row_execution_status VARCHAR(100) NOT NULL,").ln()
         
         .append("  row_input        JSONB,").ln()
@@ -100,9 +100,21 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_STEP_INDEX")
         .append(" ON ").append(options.getRuntimeStepRows()).append(" (step_id);").ln()
         
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_INSTANCE_INDEX")
+        .append(" ON ").append(options.getRuntimeStepRows()).append(" (runtime_id);").ln()
+        
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_EXT_INDEX")
+        .append(" ON ").append(options.getRuntimeStepRows()).append(" (external_id);").ln()
+
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_CREATED_INDEX")
+        .append(" ON ").append(options.getRuntimeStepRows()).append(" (row_created_at);").ln()
+        
         .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_ROW_NUMBER_INDEX")
         .append(" ON ").append(options.getRuntimeStepRows()).append(" (row_number);").ln()
 
+        .append("CREATE INDEX IF NOT EXISTS ").append(options.getRuntimeStepRows()).append("_ROW_STATUS_INDEX")
+        .append(" ON ").append(options.getRuntimeStepRows()).append(" (row_execution_status);").ln()
+        
         .build()).build();
   }
   
@@ -117,6 +129,12 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("  FOREIGN KEY (step_id)").ln()
         .append("  REFERENCES ").append(options.getRuntimeSteps()).append(" (id);").ln().ln()
         
+        
+        .append("ALTER TABLE ").append(options.getRuntimeStepRows()).ln()
+        .append("  ADD CONSTRAINT ").append(options.getRuntimeStepRows()).append("_INSTANCE_FK").ln()
+        .append("  FOREIGN KEY (runtime_id)").ln()
+        .append("  REFERENCES ").append(options.getRuntimeInstances()).append(" (id);").ln().ln()
+
         
         .build())
         .build();
@@ -135,6 +153,8 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         
       .id(row.getString("id"))
       .stepId(row.getString("step_id"))
+      .runtimeId(row.getString("runtime_id"))
+      .externalId(row.getString("external_id"))
 
       .rowNumber(row.getLong("row_number"))
       .createdAt(row.getOffsetDateTime("row_created_at"))
@@ -142,8 +162,6 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
       .input(Optional.ofNullable(row.getJsonObject("row_input")))
       .output(Optional.ofNullable(row.getJsonObject("row_output")))
 
-      
-      .status(RuntimeStatus.valueOf(row.getString("row_status")))
       .executionStatus(RuntimeExecutionStatus.valueOf(row.getString("row_execution_status")))
       .endedAt(Optional.ofNullable(row.getOffsetDateTime("row_ended_at")))
       

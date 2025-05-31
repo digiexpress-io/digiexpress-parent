@@ -12,6 +12,7 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeParams;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.smallrye.mutiny.Uni;
 
 public interface BatchDbBuilder {
@@ -41,6 +42,8 @@ public interface BatchDbBuilder {
     
     List<RuntimeStep> getRuntimeStepInserts();
     List<RuntimeStep> getRuntimeStepUpdates();
+    
+    List<RuntimeStepRow> getRuntimeStepRowInserts();
     
     // meta
     String getTenantId();    
@@ -79,6 +82,8 @@ public interface BatchDbBuilder {
           
           .addAllRuntimeStepUpdates(this.getRuntimeStepUpdates())
           .addAllRuntimeStepInserts(this.getRuntimeStepInserts())
+          
+          .addAllRuntimeStepRowInserts(this.getRuntimeStepRowInserts())
           
           .addAllCommitMessages(this.getCommitMessages())
           .addAllCommitAuthors(this.getCommitAuthors());

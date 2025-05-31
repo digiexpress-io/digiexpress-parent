@@ -11,6 +11,7 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeParams;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbBuilder;
 import io.digiexpress.thena.batch.client.api.persistence.ImmutableBatchTransactionEntries;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTenantRegistry;
@@ -59,7 +60,9 @@ public class BatchDbBuilderImpl implements BatchDbBuilder {
           visitInsertRuntimeLogs(entries),
           
           visitInsertRuntimeSteps(entries),
-          visitModifyRuntimeSteps(entries)
+          visitModifyRuntimeSteps(entries),
+          
+          visitInsertRuntimeStepRows(entries)
           
         )
         .with(BatchTransactionEntries.class, (List<BatchTransactionEntries> items) -> visitSuccess(entries, items))
@@ -67,6 +70,11 @@ public class BatchDbBuilderImpl implements BatchDbBuilder {
         .recoverWithUni(this::visitError);
   }
   
+  private Uni<BatchTransactionEntries> visitInsertRuntimeStepRows(BatchTransactionEntries inputBatch) {
+    final var data = inputBatch.getRuntimeStepRowInserts();
+    final var sql = registry.getRuntimeStepRows().insertMany(data);
+    return visitExecution(sql, RuntimeStepRow.class);
+  }  
   
   private Uni<BatchTransactionEntries> visitModifyRuntimeInstances(BatchTransactionEntries inputBatch) {
     final var data = inputBatch.getRuntimeInstanceUpdates();

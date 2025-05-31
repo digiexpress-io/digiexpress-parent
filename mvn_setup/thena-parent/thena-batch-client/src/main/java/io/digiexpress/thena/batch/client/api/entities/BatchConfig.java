@@ -10,10 +10,10 @@ public interface BatchConfig {
   String getAppId();
   List<Batch> getBatches();
   
-  int getThreads();
   int getConcurrency();
   int getRetryAttempts();
-  long getThreadPoolPulse(); // check every n millis if threadpool is alive
+  
+  int getEventThreads();
   
   List<BatchConfigWithExecutor> findAllExecutors(String batchId);
   

@@ -68,12 +68,7 @@ public class BatchConfigImpl implements BatchConfig {
     return 1;
   }
   @Override
-  public int getThreads() {
-    return 1;
+  public int getEventThreads() {
+    return 4;
   }
-  @Override
-  public long getThreadPoolPulse() {
-    return 10 * 1000;
-  }
-
 }

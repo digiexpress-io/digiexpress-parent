@@ -103,9 +103,9 @@ public class CancelOneBatchDbTest extends DbTestTemplate {
     Assertions.assertEquals(1, instances.size());
     Assertions.assertEquals(RuntimeStatus.CANCELLED, instances.get(0).getStatus());
     
-    
-
     Assertions.assertEquals(2, instances.get(0).getTransitives().getSteps().size());
+    Assertions.assertEquals(RuntimeStatus.CANCELLED, instances.get(0).getTransitives().getSteps().get(0).getStatus());
+    Assertions.assertEquals(RuntimeStatus.SKIPPED, instances.get(0).getTransitives().getSteps().get(1).getStatus());
   }
   
   

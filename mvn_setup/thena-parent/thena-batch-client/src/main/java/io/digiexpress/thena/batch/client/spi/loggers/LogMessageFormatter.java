@@ -69,7 +69,8 @@ public class LogMessageFormatter {
             .append(System.lineSeparator());
           
       });
-      } catch(Exception e) {e.printStackTrace();
+      } catch(Exception e) {
+        e.printStackTrace();
         System.err.println("");
       }
     }
