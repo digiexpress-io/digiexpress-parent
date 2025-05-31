@@ -126,12 +126,6 @@ public class SuccessBatchDbTest extends DbTestTemplate {
     Assertions.assertEquals(OperationStatus.OK, config.getOperationStatus());
     
     final var envir = config.getObject();
-    
-    // before
-    
-    // Promise<iterator>
-    
-    // after
     return envir;
   }
 }

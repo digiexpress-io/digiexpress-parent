@@ -57,12 +57,13 @@ public class DbTestTemplate {
   private BatchClient client;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
-  protected final Duration atMost = Duration.ofMinutes(2);
+  protected static final Duration atMost = Duration.ofMinutes(2);
   
   private static AtomicInteger index = new AtomicInteger(1);
   private BiConsumer<BatchClient, Tenant> callback;
   private String db;
   private Tenant repo;
+  private static volatile boolean init_performed;
   private final Map<String, String> replacements = new HashMap<>();
 
   
@@ -94,7 +95,8 @@ public class DbTestTemplate {
     waitUntilPostgresqlAcceptsConnections(pgPool);
 
     this.client = new BatchClientImpl(BatchDbImpl.create().db("junit").client(pgPool).build());
-    if(callback != null) {
+    if(callback != null && !init_performed) {
+      init_performed = true;
       repo = this.client.manageTenants().commit()
           .name("junit" + index.incrementAndGet(), StructureType.batch)
           .build()

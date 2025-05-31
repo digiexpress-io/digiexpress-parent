@@ -97,35 +97,39 @@ public class InstanceRunnerConsumer {
   private <Entity, EntityConfig> Uni<ExecutorResult> visitConsumer(RuntimeInstance runtime, BatchConfigWithExecutor config) {
     
     return new StepRunnerCreated(context, config).accept().onItem().transformToUni(step -> {
-        
-        final var stepRunner = new StepRunner<Entity, EntityConfig>(config, context, step);
-        final var query = stepRunner.start(context);
 
-        return query.findAll()
-          .onSubscription().call(sub -> new StepRunnerBefore(context, config, step).accept())
-          .onItem()
-          .transformToUni((Entity entity) -> {
+        try {
+          final var stepRunner = new StepRunner<Entity, EntityConfig>(config, context, step);
+          final var query = stepRunner.start(context);
+  
+          return query.findAll()
+            .onSubscription().call(sub -> new StepRunnerBefore(context, config, step).accept())
+            .onItem()
+            .transformToUni((Entity entity) -> {
+              
+              try {
+                return stepRunner.visitEntity(entity, query.getConfig(), context);
+              } catch(ThreadPoolTerminatedException t) {
+                // api caller cancelled whole execution
+                throw t;
+              } catch(Throwable t) {
+                return Uni.createFrom().failure(t);
+              }
+            })
             
-            try {
-              return stepRunner.visitEntity(entity, query.getConfig(), context);
-            } catch(ThreadPoolTerminatedException t) {
-              // api caller cancelled whole execution
-              throw t;
-            } catch(Throwable t) {
-              return Uni.createFrom().failure(t);
-            }
-          })
-          
-          // concurrent proc config
-          .merge(
-              context.getConfig().getConcurrency()
-              // turn to one.... disable concurrent proc.
-              //.merge(1)
-          )
-
-          .onItem().ignoreAsUni().onItem().transformToUni(ignore -> stepRunner.end(query, context))
-          .onItem().call(result -> new StepRunnerAfter(context, config, step).accept())
-          .onFailure().recoverWithUni((t) -> new StepRunnerFail(context, config, step, t).accept());     
+            // concurrent proc config
+            .merge(
+                context.getConfig().getConcurrency()
+                // turn to one.... disable concurrent proc.
+                //.merge(1)
+            )
+  
+            .onItem().ignoreAsUni().onItem().transformToUni(ignore -> stepRunner.end(query, context))
+            .onItem().call(result -> new StepRunnerAfter(context, config, step).accept())
+            .onFailure().recoverWithUni((t) -> new StepRunnerFail(context, config, step, t).accept());   
+        } catch(Throwable t) {
+          return new StepRunnerFail(context, config, step, t).accept();
+        }
       });
   }
   

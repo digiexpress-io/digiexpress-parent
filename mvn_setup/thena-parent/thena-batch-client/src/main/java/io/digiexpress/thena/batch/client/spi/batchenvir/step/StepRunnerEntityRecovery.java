@@ -40,7 +40,7 @@ public class StepRunnerEntityRecovery {
         .stepId(this.step.getId())
         .executionStatus(RuntimeExecutionStatus.ERROR)
         .rowNumber(event.getEntityNumber())
-        .externalId(event.getProcessed().get().getEntityId())
+        .externalId(event.getEntityNumber() + "")
         .createdAt(event.getCreatedAt())
         .endedAt(OffsetDateTime.now())
         .output(JsonObject.of(

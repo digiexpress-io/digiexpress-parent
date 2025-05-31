@@ -7,10 +7,10 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConfig.BatchConfigWit
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
-import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExecutionStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog.ExecutionLogLevel;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
@@ -58,10 +58,14 @@ public class InstanceRunnerAfter {
       .build();
     
     final var isCancelled = steps.stream().filter(t -> t.getStatus() == RuntimeStatus.CANCELLED).findFirst().isPresent();
+    final var isError = steps.stream().filter(t -> t.getExecutionStatus() == RuntimeExecutionStatus.ERROR).findFirst().isPresent();
+    
+
+    
     
     final RuntimeInstance updatedInstance = ImmutableRuntimeInstance.builder().from(instance)
       .status(isCancelled ? RuntimeInstance.RuntimeStatus.CANCELLED : RuntimeInstance.RuntimeStatus.COMPLETED)
-      .executionStatus(RuntimeExecutionStatus.OK)
+      .executionStatus((!isCancelled && isError) ? RuntimeExecutionStatus.ERROR : RuntimeExecutionStatus.OK)
       .endedAt(now)
       .build();
     
