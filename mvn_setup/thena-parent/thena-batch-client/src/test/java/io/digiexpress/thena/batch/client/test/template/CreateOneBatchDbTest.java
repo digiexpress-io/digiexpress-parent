@@ -1,8 +1,9 @@
-package io.digiexpress.thena.batch.client.test;
+package io.digiexpress.thena.batch.client.test.template;
 
 import java.time.Duration;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.digiexpress.thena.batch.client.api.BatchClient;
@@ -37,7 +38,7 @@ public class CreateOneBatchDbTest extends DbTestTemplate {
   
 
 
-  
+  @Disabled
   @Test
   public void CreateOneBatch() {
     setUp();

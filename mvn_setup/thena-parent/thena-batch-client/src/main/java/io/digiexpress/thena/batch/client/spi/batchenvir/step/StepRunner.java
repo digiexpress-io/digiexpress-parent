@@ -97,7 +97,7 @@ public class StepRunner<Entity, EntityConfig> {
                   entityNumber, executed.getEntityId());
           })
           
-          .onItem().invoke(processed -> onSuccess(event.processed(Optional.of(processed)).build(), mainContext))
+          .onItem().call(processed -> onSuccess(event.processed(Optional.of(processed)).build(), mainContext))
  
           // Failsafe on the stream
       .onFailure().invoke(t -> {

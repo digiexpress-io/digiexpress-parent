@@ -53,7 +53,7 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
         .append("INSERT INTO ").append(options.getRuntimeStepRows())
         .append("(")
         .append("  id, step_id, runtime_id, external_id,").ln()
-        .append("  row_number, row_created_at, row_ended_at, row_status, row_execution_status, row_input, row_output ").ln()
+        .append("  row_number, row_created_at, row_ended_at, row_execution_status, row_input, row_output ").ln()
         .append(")")
         .append("VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)").ln()
         .build())

@@ -1,4 +1,4 @@
-package io.digiexpress.thena.batch.client.test;
+package io.digiexpress.thena.batch.client.test.template;
 
 import java.util.Arrays;
 

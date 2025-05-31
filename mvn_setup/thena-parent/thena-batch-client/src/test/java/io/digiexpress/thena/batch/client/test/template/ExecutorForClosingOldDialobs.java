@@ -1,4 +1,4 @@
-package io.digiexpress.thena.batch.client.test;
+package io.digiexpress.thena.batch.client.test.template;
 
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
