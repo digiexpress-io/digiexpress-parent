@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CancelOneBatchDbTest extends DbTestTemplate {
   final String batchName = "run-all-dialob-related-tasks";
-  final CancelClosingOldDialobs closeDialobs = new CancelClosingOldDialobs();
+  final CancelStep1 closeDialobs = new CancelStep1();
   BatchClient client;
   
   public void setUp() {
@@ -128,7 +128,7 @@ public class CancelOneBatchDbTest extends DbTestTemplate {
           .batchName(batchName)
           .consumerName("report-closed")
           .comment("test consumer")
-          .build(new CancelReportingOldDialobs()))
+          .build(new CancelStep2()))
       .commitAuthor("junitTest")
       .commitMessage("create batch with 2 consumers")
       .build()

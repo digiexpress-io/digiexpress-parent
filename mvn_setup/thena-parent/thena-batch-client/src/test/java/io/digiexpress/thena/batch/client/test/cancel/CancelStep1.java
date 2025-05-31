@@ -1,6 +1,7 @@
 package io.digiexpress.thena.batch.client.test.cancel;
 
-import java.util.Arrays;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
@@ -12,10 +13,14 @@ import io.digiexpress.thena.batch.client.api.executor.ImmutableExecutorResult;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-public class CancelReportingOldDialobs implements Executor<CancelReportingOldDialobs.EntityForTesting, CancelReportingOldDialobs.ExecutorConfigForTesting> {
+
+@Setter
+public class CancelStep1 implements Executor<CancelStep1.EntityForTesting, CancelStep1.ExecutorConfigForTesting> {
 
 
+  public final AtomicInteger index = new AtomicInteger(0);
 
   @Override
   public ExecutorQuery<EntityForTesting, ExecutorConfigForTesting> before(ExecutorContext context) {
@@ -26,13 +31,15 @@ public class CancelReportingOldDialobs implements Executor<CancelReportingOldDia
       }
       @Override
       public Multi<EntityForTesting> findAll() {
-        return Multi.createFrom().items(Arrays.asList(
-            new EntityForTesting("entity-1"),
-            new EntityForTesting("entity-2"),
-            new EntityForTesting("entity-3"),
-            new EntityForTesting("entity-4"),
-            new EntityForTesting("entity-5")
-        ).stream());
+        return Multi.createFrom()
+            .ticks().every(Duration.ofMillis(100))
+            .onItem().transform(counter -> {
+              
+              final var nextId = index.incrementAndGet();
+              
+              
+              return new EntityForTesting("entity-" + nextId);
+            });
       }
       
     };
@@ -40,6 +47,7 @@ public class CancelReportingOldDialobs implements Executor<CancelReportingOldDia
 
   @Override
   public Uni<ExecutorEntity> accept(EntityForTesting entity, ExecutorConfigForTesting config, ExecutorContext context) {
+
     return Uni.createFrom().item(ImmutableExecutorEntity.builder()
         .status(ExecutorEntity.ExecutorEntityStatus.OK)
         .entityId(entity.id)
@@ -52,10 +60,7 @@ public class CancelReportingOldDialobs implements Executor<CancelReportingOldDia
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
   }
-  
-  
 
-  
   @RequiredArgsConstructor
   public static class EntityForTesting {
     private final String id;
@@ -64,5 +69,5 @@ public class CancelReportingOldDialobs implements Executor<CancelReportingOldDia
   public static class ExecutorConfigForTesting {
     
   }
-}
 
+}
