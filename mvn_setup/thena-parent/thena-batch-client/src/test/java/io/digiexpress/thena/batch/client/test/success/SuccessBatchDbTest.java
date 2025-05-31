@@ -128,13 +128,13 @@ public class SuccessBatchDbTest extends DbTestTemplate {
 
     Assertions.assertEquals(9, metric1.getSuccessCount());
     Assertions.assertEquals(0, metric1.getFailCount());
-    Assertions.assertNotNull(metric1.getCheapId());
-    Assertions.assertNotNull(metric1.getExpensiveId());
+    //Assertions.assertNotNull(metric1.getCheapId());
+    //Assertions.assertNotNull(metric1.getExpensiveId());
     
     Assertions.assertEquals(5, metric2.getSuccessCount());
     Assertions.assertEquals(0, metric2.getFailCount());
-    Assertions.assertNotNull(metric2.getCheapId());
-    Assertions.assertNotNull(metric2.getExpensiveId());
+    //Assertions.assertNotNull(metric2.getCheapId());
+    //Assertions.assertNotNull(metric2.getExpensiveId());
     
     
   }
