@@ -10,6 +10,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenan
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTenantRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
@@ -241,6 +242,29 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .transformToUni((RowSet<RuntimeStep> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' by instance status!")));
 
+      }
+    };
+  }
+
+  @Override
+  public BatchDbStepRowQuery queryStepRows() {
+    return new BatchDbStepRowQuery() {
+      
+      @Override
+      public Uni<List<RuntimeStepRow>> findAllByInstanceStatus(List<RuntimeStatus> status) {
+        
+        final var sql = registry.getRuntimeStepRows().findAllByInstanceStatus(status);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryStepRows.findAllByInstanceStatus query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeStepRows().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeStepRow> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' by instance status!")));
       }
     };
   }

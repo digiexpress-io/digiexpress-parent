@@ -9,6 +9,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenan
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.smallrye.mutiny.Uni;
 
 public interface BatchDbQuery {
@@ -20,7 +21,7 @@ public interface BatchDbQuery {
   BatchDbInstanceQuery queryInstances();
   
   BatchDbStepQuery querySteps();
-  
+  BatchDbStepRowQuery queryStepRows();
   
   interface BatchDbBatchQuery {
     Uni<List<Batch>> findAllByAppId(String appId, boolean lockForUpdate);
@@ -39,6 +40,9 @@ public interface BatchDbQuery {
     Uni<List<RuntimeStep>> findAllByInstanceStatus(List<RuntimeStatus> status);
   }
   
+  interface BatchDbStepRowQuery {
+    Uni<List<RuntimeStepRow>> findAllByInstanceStatus(List<RuntimeStatus> status);
+  }
   
   interface BatchDbBatchConsumerQuery {
     Uni<List<BatchConsumer>> findAllByAppId(String appId, boolean lockForUpdate);

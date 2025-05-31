@@ -83,10 +83,9 @@ public class StepRunner<Entity, EntityConfig> {
     
     
     return executor.accept(entity, config, mainContext)          
-        
       // enabled concurrent processing          
       .emitOn(threadPool)
-      
+  
       // just log of processed event
       .onItem().invoke(executed -> {
         BatchEnvirLogger.STEP_ENTITY

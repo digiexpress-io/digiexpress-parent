@@ -15,4 +15,5 @@ public interface RuntimeInstanceTransitives {
   List<RuntimeLog> getLogs(); // only of status is ERROR
   
   List<RuntimeStep> getSteps();
+  List<RuntimeStepRow> getStepRows();
 }

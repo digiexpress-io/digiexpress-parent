@@ -92,7 +92,7 @@ public class CancelOneBatchDbTest extends DbTestTemplate {
       .commitAuthor("junit")
       .execute(instance.getObject())
       .await().atMost(Duration.ofMinutes(1));
-    
+
     
     Assertions.assertNotNull(done.getEndedAt());
     Assertions.assertEquals(RuntimeStatus.CANCELLED, done.getStatus());

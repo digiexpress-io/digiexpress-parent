@@ -1,6 +1,7 @@
 package io.digiexpress.thena.batch.client.spi.batchenvir;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.digiexpress.thena.batch.client.api.BatchEnvir.BatchEnvirKillBuilder;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
@@ -24,6 +25,7 @@ public class BatchEnvirKillBuilderImpl implements BatchEnvirKillBuilder {
   
   private String commitMessage;
   private String commitAuthor;
+  private boolean graceful = true;
   
   @Override
   public Uni<List<RuntimeInstance>> killAll() {
@@ -39,10 +41,21 @@ public class BatchEnvirKillBuilderImpl implements BatchEnvirKillBuilder {
     // TODO Auto-generated method stub
     return null;
   }
+  @Override
+  public BatchEnvirKillBuilder graceful(boolean graceful) {
+    this.graceful = graceful;
+    return this;
+  }
   
   private Uni<RuntimeInstance> cancel(StartedRuntimeInstance instance) {    
+    
+    
     return Uni.createFrom().item(() -> {
-      instance.getContext().getThreadPool().shutdownNow();
+      if(graceful) {
+        instance.getContext().getThreadPool().shutdown();
+      } else {
+        instance.getContext().getThreadPool().shutdownNow();
+      }
       return "";
     }).onItem().transformToUni(ignore -> new InstanceRunnerCancel(instance.getContext()).accept());
   }

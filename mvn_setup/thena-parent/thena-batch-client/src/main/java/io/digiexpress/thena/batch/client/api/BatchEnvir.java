@@ -22,6 +22,8 @@ public interface BatchEnvir {
     BatchEnvirKillBuilder commitMessage(String commitMessage);
     BatchEnvirKillBuilder commitAuthor(String commitAuthor);
     
+    BatchEnvirKillBuilder graceful(boolean graceful); // true - await till submitted things are completed
+    
     Uni<List<RuntimeInstance>> killAll();
     Uni<RuntimeInstance> killInstance(String runtimeIdOrName);    
   }

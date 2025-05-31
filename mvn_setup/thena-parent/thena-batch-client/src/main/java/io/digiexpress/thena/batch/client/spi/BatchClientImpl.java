@@ -16,6 +16,7 @@ import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstanceTr
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
 import io.digiexpress.thena.batch.client.spi.createbatchconfig.CreateBatchConfigImpl;
 import io.digiexpress.thena.batch.client.spi.createoneruntimeinstance.CreateOneRuntimeInstanceImpl;
@@ -97,15 +98,22 @@ public class BatchClientImpl implements BatchClient {
       private Uni<Envelope<List<RuntimeInstance>>> onQuery(BatchDb batchDb) {
         return Uni.combine().all().unis(
             batchDb.query().queryInstances().findAllByStatus(status), 
-            batchDb.query().querySteps().findAllByInstanceStatus(status)
+            batchDb.query().querySteps().findAllByInstanceStatus(status),
+            batchDb.query().queryStepRows().findAllByInstanceStatus(status)
           )
           .asTuple()
-          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2()));
+          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
       }
       
-      private Envelope<List<RuntimeInstance>> onMap(BatchDb batchDb, List<RuntimeInstance> instances, List<RuntimeStep> steps) {
-        final var grouped = steps.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
+      private Envelope<List<RuntimeInstance>> onMap(
+          BatchDb batchDb, 
+          List<RuntimeInstance> instances, 
+          List<RuntimeStep> steps,
+          List<RuntimeStepRow> stepRows
+      ) {
         
+        final var groupedSteps = steps.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
+        final var groupedStepRows = stepRows.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
         
         final Envelope<List<RuntimeInstance>> result = ImmutableEnvelope.<List<RuntimeInstance>>builder()
             .tenant(batchDb.getDataSource().getTenant())
@@ -116,7 +124,8 @@ public class BatchClientImpl implements BatchClient {
               final RuntimeInstance built = ImmutableRuntimeInstance.builder()
                   .from(instance)
                   .transitives(ImmutableRuntimeInstanceTransitives.builder()
-                      .addAllSteps(grouped.getOrDefault(instance.getId(), Collections.emptyList()))
+                      .addAllSteps(groupedSteps.getOrDefault(instance.getId(), Collections.emptyList()))
+                      .addAllStepRows(groupedStepRows.getOrDefault(instance.getId(), Collections.emptyList()))
                       .build())
                   .build();
               

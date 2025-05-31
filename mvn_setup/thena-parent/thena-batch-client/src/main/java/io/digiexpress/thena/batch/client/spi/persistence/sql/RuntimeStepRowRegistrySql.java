@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeExecutionStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTableNames;
 import io.digiexpress.thena.batch.client.spi.persistence.RuntimeStepRowRegistry;
@@ -14,6 +15,7 @@ import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -167,5 +169,19 @@ public class RuntimeStepRowRegistrySql implements RuntimeStepRowRegistry {
       
       
       .build();
+  }
+  
+  @Override
+  public SqlTuple findAllByInstanceStatus(List<RuntimeStatus> status) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT rows.* ").ln()
+        .append("  FROM ").append(options.getRuntimeStepRows()).append(" as rows").ln()
+        .append("  LEFT JOIN ").append(options.getRuntimeInstances()).append(" as instances").ln()
+        .append("  ON(rows.runtime_id = instances.id)").ln()
+        .append("  WHERE (instances.instance_status = ANY($1) OR $1 IS NULL)").ln() 
+        .build())
+        .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
+        .build();
   }
 }
