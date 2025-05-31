@@ -18,6 +18,7 @@
     <module>thena-sql-client</module>
     <module>thena-db-client</module>
     <module>thena-mq-client</module>
+    <module>thena-batch-client</module>
   </modules>
 
 </project>
