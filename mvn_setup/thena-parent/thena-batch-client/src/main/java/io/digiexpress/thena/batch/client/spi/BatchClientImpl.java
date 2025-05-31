@@ -1,5 +1,25 @@
 package io.digiexpress.thena.batch.client.spi;
 
+/*-
+ * #%L
+ * thena-batch-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +35,7 @@ import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeInstanceTransitives;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDb;
@@ -99,21 +120,24 @@ public class BatchClientImpl implements BatchClient {
         return Uni.combine().all().unis(
             batchDb.query().queryInstances().findAllByStatus(status), 
             batchDb.query().querySteps().findAllByInstanceStatus(status),
-            batchDb.query().queryStepRows().findAllByInstanceStatus(status)
+            batchDb.query().queryStepRows().findAllByInstanceStatus(status),
+            batchDb.query().queryMetrics().findAllByInstanceStatus(status)
           )
           .asTuple()
-          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2(), tuple.getItem3()));
+          .onItem().transform(tuple -> onMap(batchDb, tuple.getItem1(), tuple.getItem2(), tuple.getItem3(), tuple.getItem4()));
       }
       
       private Envelope<List<RuntimeInstance>> onMap(
           BatchDb batchDb, 
           List<RuntimeInstance> instances, 
           List<RuntimeStep> steps,
-          List<RuntimeStepRow> stepRows
+          List<RuntimeStepRow> stepRows,
+          List<RuntimeMetric> metrics
       ) {
         
         final var groupedSteps = steps.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
         final var groupedStepRows = stepRows.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
+        final var groupedMetrics = metrics.stream().collect(Collectors.groupingBy(e -> e.getRuntimeId()));
         
         final Envelope<List<RuntimeInstance>> result = ImmutableEnvelope.<List<RuntimeInstance>>builder()
             .tenant(batchDb.getDataSource().getTenant())
@@ -124,8 +148,23 @@ public class BatchClientImpl implements BatchClient {
               final RuntimeInstance built = ImmutableRuntimeInstance.builder()
                   .from(instance)
                   .transitives(ImmutableRuntimeInstanceTransitives.builder()
-                      .addAllSteps(groupedSteps.getOrDefault(instance.getId(), Collections.emptyList()))
-                      .addAllStepRows(groupedStepRows.getOrDefault(instance.getId(), Collections.emptyList()))
+                      
+                      .addAllSteps(
+                        groupedSteps.getOrDefault(instance.getId(), Collections.emptyList())
+                        .stream().sorted((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+                        .toList()
+                      )
+                      .addAllStepRows(
+                          groupedStepRows.getOrDefault(instance.getId(), Collections.emptyList())
+                          .stream().sorted((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+                          .toList()
+                      )
+                      .addAllMetrics(
+                          groupedMetrics.getOrDefault(instance.getId(), Collections.emptyList())
+                          .stream().sorted((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+                          .toList()
+                      )
+                      
                       .build())
                   .build();
               

@@ -27,12 +27,14 @@ import java.util.stream.Collectors;
 
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTableNames;
 import io.digiexpress.thena.batch.client.spi.persistence.RuntimeMetricRegistry;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -70,9 +72,9 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
         .append("INSERT INTO ").append(options.getRuntimeMetrics())
         .append(" (").ln()
         .append("  id, runtime_id, step_id, ").ln()
-        .append("  metric_created_at, metric_updated_at, metric_name, metric_value_counter, metric_value_structured").ln()
+        .append("  metric_created_at, metric_updated_at, metric_name, metric_body").ln()
         .append(" )").ln()
-        .append(" VALUES($1, $2, $3, $4, $5, $6, $7, $8)").ln()
+        .append(" VALUES($1, $2, $3, $4, $5, $6, $7)").ln()
         .build())
         .props(users.stream()
             .map(doc -> Tuple.from(new Object[]{ 
@@ -84,12 +86,30 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
                 doc.getUpdatedAt().orElse(null),
 
                 doc.getName(),
-                doc.getValueCounter(),
-                doc.getValueStructured()
+                doc.getValueStructured().orElse(null)
              }))
             .collect(Collectors.toList()))
         .build();
   }
+  
+  @Override
+  public ThenaSqlClient.SqlTupleList updateMany(List<RuntimeMetric> users) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getRuntimeMetrics())
+        .append(" SET metric_updated_at = $1, metric_body = $2").ln()
+        .append(" WHERE id = $3").ln()
+        .build())
+        .props(users.stream()
+            .map(doc -> Tuple.from(new Object[]{ 
+                doc.getUpdatedAt().orElse(null),
+                doc.getValueStructured().orElse(null),
+                doc.getId()
+             }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
 
 
   @Override
@@ -101,11 +121,10 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
         .append("  runtime_id     VARCHAR(40) NOT NULL,").ln()
         .append("  step_id        VARCHAR(40),").ln()
         
-        .append("  metric_created_at        TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
-        .append("  metric_updated_at        TIMESTAMP WITH TIME ZONE,").ln()
-        .append("  metric_name              TEXT NOT NULL,").ln()
-        .append("  metric_value_counter     BIGSERIAL,").ln()
-        .append("  metric_value_structured  JSONB,").ln()
+        .append("  metric_created_at    TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
+        .append("  metric_updated_at    TIMESTAMP WITH TIME ZONE,").ln()
+        .append("  metric_name          TEXT NOT NULL,").ln()
+        .append("  metric_body          JSONB,").ln()
         
         .append("  UNIQUE(runtime_id, step_id, metric_name)")
         .append(");").ln()
@@ -161,11 +180,24 @@ public class RuntimeMetricRegistrySql implements RuntimeMetricRegistry {
           .updatedAt(Optional.ofNullable(row.getOffsetDateTime("metric_updated_at")))
           
           .name(row.getString("metric_name"))
-          .valueCounter(Optional.ofNullable(row.getLong("metric_value_counter")))
-          .valueStructured(Optional.ofNullable(row.getJsonObject("metric_value_structured")))
+          .valueStructured(Optional.ofNullable(row.getJsonObject("metric_body")))
           
           .build()
     ;
   }
 
+  
+  @Override
+  public SqlTuple findAllByInstanceStatus(List<RuntimeStatus> status) {
+    return ImmutableSqlTuple.builder()
+        .value(new SqlStatement()
+        .append("SELECT metrics.* ").ln()
+        .append("  FROM ").append(options.getRuntimeMetrics()).append(" as metrics").ln()
+        .append("  LEFT JOIN ").append(options.getRuntimeInstances()).append(" as instances").ln()
+        .append("  ON(metrics.runtime_id = instances.id)").ln()
+        .append("  WHERE (instances.instance_status = ANY($1) OR $1 IS NULL)").ln() 
+        .build())
+        .props(Tuple.of(status.isEmpty() ? null : status.stream().map(e -> e.name()).toArray()))
+        .build();
+  }
 }

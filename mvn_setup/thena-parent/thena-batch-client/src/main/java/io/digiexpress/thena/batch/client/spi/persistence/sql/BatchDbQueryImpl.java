@@ -1,5 +1,25 @@
 package io.digiexpress.thena.batch.client.spi.persistence.sql;
 
+/*-
+ * #%L
+ * thena-batch-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,10 +28,12 @@ import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenantContainer;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery;
+import io.digiexpress.thena.batch.client.api.persistence.BatchDbQuery.BatchDbMetricQuery;
 import io.digiexpress.thena.batch.client.spi.persistence.BatchTenantRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
@@ -265,6 +287,29 @@ public class BatchDbQueryImpl implements BatchDbQuery {
           .onItem()
           .transformToUni((RowSet<RuntimeStepRow> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
           .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_STEP' by instance status!")));
+      }
+    };
+  }
+
+  @Override
+  public BatchDbMetricQuery queryMetrics() {
+    return new BatchDbMetricQuery() {
+      
+      @Override
+      public Uni<List<RuntimeMetric>> findAllByInstanceStatus(List<RuntimeStatus> status) {
+        
+        final var sql = registry.getRuntimeMetrics().findAllByInstanceStatus(status);
+        if(log.isDebugEnabled()) {
+          log.debug("BatchDbQueryImpl.queryMetrics.findAllByInstanceStatus query, with props: {} \r\n{}", 
+              sql.getProps().deepToString(),
+              sql.getValue());
+        }
+        return dataSource.getClient().preparedQuery(sql.getValue())
+          .mapping(registry.getRuntimeMetrics().defaultMapper())
+          .execute(sql.getProps())
+          .onItem()
+          .transformToUni((RowSet<RuntimeMetric> rowset) -> Multi.createFrom().iterable(rowset).collect().asList())
+          .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find next 'RUNTIME_METRIC' by instance status!")));
       }
     };
   }

@@ -1,5 +1,25 @@
 package io.digiexpress.thena.batch.client.spi.batchenvir.step;
 
+/*-
+ * #%L
+ * thena-batch-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.Executors;
@@ -46,9 +66,7 @@ public class StepRunner<Entity, EntityConfig> {
     try {
       
       final var start = executor.before(mainContext);
-      processor.subscribe().withSubscriber(new StepEventSubscriber(mainContext, config, step));      
-
-      
+      processor.subscribe().withSubscriber(new StepEventSubscriber(mainContext, config, step));
       return start;
     } catch(RuntimeException e) {
       BatchEnvirLogger.STEP_ERROR
@@ -97,7 +115,7 @@ public class StepRunner<Entity, EntityConfig> {
                   entityNumber, executed.getEntityId());
           })
           
-          .onItem().call(processed -> onSuccess(event.processed(Optional.of(processed)).build(), mainContext))
+          .onItem().call(processed -> onSuccess(event.endedAt(OffsetDateTime.now()).processed(Optional.of(processed)).build(), mainContext))
  
           // Failsafe on the stream
       .onFailure().invoke(t -> {
@@ -107,7 +125,7 @@ public class StepRunner<Entity, EntityConfig> {
         .addProps(step)
         .append("Step failed to process entity no: {}, message: {}", entityNumber, t.getMessage());
       })
-      .onFailure().recoverWithUni(processed -> onFailureRecover(event.throwable(Optional.of(processed)).build(), mainContext));
+      .onFailure().recoverWithUni(processed -> onFailureRecover(event.endedAt(OffsetDateTime.now()).throwable(Optional.of(processed)).build(), mainContext));
   }
   
   
@@ -133,6 +151,7 @@ public class StepRunner<Entity, EntityConfig> {
   public Uni<ExecutorResult> end(ExecutorQuery<Entity, EntityConfig> query, ExecutorContext mainContext) {
     Uni<ExecutorResult> start;
     try {
+      
       return executor
           .after(query.getConfig(), mainContext)
           .onItem().invoke(e -> processor.onComplete());
@@ -143,12 +162,24 @@ public class StepRunner<Entity, EntityConfig> {
     return start;
   }
   
+  public void close(ExecutorContext context) {
+    try {
+      // don't do this... executorService.shutdown();
+      // don't do this... threadPool.shutdownNow();
+    } catch(Throwable t) {
+      BatchEnvirLogger.STEP_ERROR
+      .withContext(context)
+      .addProps(config)
+      .addProps(step)
+      .append("Step failed to shutdown workers, message: {}", entityNumber, t.getMessage());
+    }
+  }
+  
   public static class ThreadPoolTerminatedException extends RuntimeException {
     private static final long serialVersionUID = 6367466782179355177L;
     public ThreadPoolTerminatedException() {
       super("Thread pool has been terminated while processing items");
     }
-    
   }
 
 }

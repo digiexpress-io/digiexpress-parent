@@ -1,5 +1,25 @@
 package io.digiexpress.thena.batch.client.api.persistence;
 
+/*-
+ * #%L
+ * thena-batch-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +28,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
 import io.digiexpress.thena.batch.client.api.entities.BatchContainers.BatchTenantContainer;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
 import io.smallrye.mutiny.Uni;
@@ -22,6 +43,11 @@ public interface BatchDbQuery {
   
   BatchDbStepQuery querySteps();
   BatchDbStepRowQuery queryStepRows();
+  BatchDbMetricQuery queryMetrics();
+  
+  interface BatchDbMetricQuery {
+    Uni<List<RuntimeMetric>> findAllByInstanceStatus(List<RuntimeStatus> status);
+  }
   
   interface BatchDbBatchQuery {
     Uni<List<Batch>> findAllByAppId(String appId, boolean lockForUpdate);

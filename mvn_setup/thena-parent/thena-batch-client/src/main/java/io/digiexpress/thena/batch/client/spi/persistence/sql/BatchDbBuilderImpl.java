@@ -1,5 +1,25 @@
 package io.digiexpress.thena.batch.client.spi.persistence.sql;
 
+/*-
+ * #%L
+ * thena-batch-client
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import java.util.List;
 
 import io.digiexpress.thena.batch.client.api.BatchLogConstants;
@@ -9,6 +29,7 @@ import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelopeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog;
+import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeParams;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
@@ -62,13 +83,31 @@ public class BatchDbBuilderImpl implements BatchDbBuilder {
           visitInsertRuntimeSteps(entries),
           visitModifyRuntimeSteps(entries),
           
-          visitInsertRuntimeStepRows(entries)
+          visitInsertRuntimeStepRows(entries),
+          
+          visitInsertRuntimeMetrics(entries),
+          visitModifyRuntimeMetric(entries)
+          
           
         )
         .with(BatchTransactionEntries.class, (List<BatchTransactionEntries> items) -> visitSuccess(entries, items))
         .onFailure(BatchTransactionException.class)
         .recoverWithUni(this::visitError);
   }
+
+  
+  private Uni<BatchTransactionEntries> visitInsertRuntimeMetrics(BatchTransactionEntries inputBatch) {
+    final var data = inputBatch.getRuntimeMetricInserts();
+    final var sql = registry.getRuntimeMetrics().insertMany(data);
+    return visitExecution(sql, RuntimeMetric.class);
+  }  
+  
+  private Uni<BatchTransactionEntries> visitModifyRuntimeMetric(BatchTransactionEntries inputBatch) {
+    final var data = inputBatch.getRuntimeMetricUpdates();
+    final var sql = registry.getRuntimeMetrics().updateMany(data);
+    return visitExecution(sql, RuntimeMetric.class);
+  }  
+  
   
   private Uni<BatchTransactionEntries> visitInsertRuntimeStepRows(BatchTransactionEntries inputBatch) {
     final var data = inputBatch.getRuntimeStepRowInserts();
