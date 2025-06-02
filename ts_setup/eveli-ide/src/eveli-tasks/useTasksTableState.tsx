@@ -46,6 +46,9 @@ function getStatusCode(status: TaskApi.TaskStatus | undefined) {
     case TaskApi.TaskStatus.OPEN: return 2;
     case TaskApi.TaskStatus.COMPLETED: return 3;
     case TaskApi.TaskStatus.REJECTED: return 4;
+    case TaskApi.TaskStatus.WAITING: return 5;
+    case TaskApi.TaskStatus.DELEGATED: return 6;
+    case TaskApi.TaskStatus.TRANSFERRED: return 7;
     default: return 0;
   }
 }

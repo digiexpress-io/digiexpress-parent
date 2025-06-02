@@ -36,6 +36,9 @@ task.status.new,,New,Uusi,Nya
 task.status.open,,Open,Käsittelyssä,Läsning
 task.status.completed,,Completed,Valmis,Redo
 task.status.rejected,,No processing,Ei käsittelyä,Ingen bearbetning
+task.status.transferred,,Transferred,Siirretty,Överförs
+task.status.delegated,,Delegated,Delegoitu,Delegerad
+task.status.waiting,,Waiting,Odottaa,Väntar
 task.form.review,,View form,Avaa lomake,Visa formulär
 task.form.feedback.manage,,Manage feedback,Hallinnoi palautetta,Hantera feedback
 task.form.feedback.updated,,Feedback update successful,Palautteen päivitys onnistui!,Uppdatering av feedback lyckades!

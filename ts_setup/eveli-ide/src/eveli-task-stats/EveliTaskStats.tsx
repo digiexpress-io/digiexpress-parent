@@ -37,6 +37,8 @@ const statusColorMap: StatusColorMap = {
   COMPLETED: '#1976D2',
   REJECTED: '#D32F2F',
   TRANSFERRED: 'grey',
+  DELEGATED: 'grey',
+  WAITING: 'yellow'
 
 };
 

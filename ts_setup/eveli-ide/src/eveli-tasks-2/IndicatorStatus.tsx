@@ -16,6 +16,10 @@ function renderStatus(type: TaskApi.TaskStatus): { label: string, color: string 
       return { label: 'Rejected', color: '#d90429' };
     case TaskApi.TaskStatus.TRANSFERRED:
       return { label: 'Transferred', color: '#d90429' };
+    case TaskApi.TaskStatus.DELEGATED:
+      return { label: 'Delegated', color: '#d90429' };
+    case TaskApi.TaskStatus.WAITING:
+      return { label: 'Waiting', color: '#ffff00' };
     default:
       return { label: 'No status', color: '#ccc5b9' };
   }
