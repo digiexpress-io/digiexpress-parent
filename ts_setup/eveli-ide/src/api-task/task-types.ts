@@ -54,7 +54,9 @@ export namespace TaskApi {
     OPEN = 'OPEN',
     COMPLETED = 'COMPLETED',
     REJECTED = 'REJECTED',
-    TRANSFERRED = 'TRANSFERRED'
+    TRANSFERRED = 'TRANSFERRED',
+    DELEGATED = 'DELEGATED',
+    WAITING = 'WAITING'
   }
   
   export const task_status_messages = defineMessages({
@@ -77,6 +79,14 @@ export namespace TaskApi {
     TRANSFERRED: {
       id: 'task.status.transferred',
       defaultMessage: 'Transferred',
+    },    
+    DELEGATED: {
+      id: 'task.status.delegated',
+      defaultMessage: 'Delegated',
+    },
+    WAITING: {
+      id: 'task.status.waiting',
+      defaultMessage: 'Waiting',
     },
   });
 
@@ -86,6 +96,8 @@ export namespace TaskApi {
     COMPLETED: Colors.GREEN,
     REJECTED: Colors.GREY,
     TRANSFERRED: Colors.GREY,
+    DELEGATED: Colors.GREY,
+    WAITING: Colors.GREY
   };
 
 
