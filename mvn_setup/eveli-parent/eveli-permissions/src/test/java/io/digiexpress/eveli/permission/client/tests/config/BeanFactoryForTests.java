@@ -1,8 +1,8 @@
-package io.digiexpress.thena.batch.client.api.executor;
+package io.digiexpress.eveli.permission.client.tests.config;
 
 /*-
  * #%L
- * thena-batch-client
+ * eveli-permissions
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,8 +20,17 @@ package io.digiexpress.thena.batch.client.api.executor;
  * #L%
  */
 
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public interface ExecutorConfig extends Serializable {
+import io.vertx.core.json.jackson.DatabindCodec;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
 
+@Dependent
+public class BeanFactoryForTests {
+  
+  @Produces
+  public ObjectMapper objectMapper() {
+    return DatabindCodec.mapper(); 
+  }
 }

@@ -1,10 +1,12 @@
-package io.digiexpress.thena.batch.client.api.executor;
+package io.digiexpress.eveli.permission.client.tests.config;
+
+import java.util.Map;
 
 /*-
  * #%L
- * thena-batch-client
+ * thena-docdb-pgsql
  * %%
- * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2021 Copyright 2021 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +22,20 @@ package io.digiexpress.thena.batch.client.api.executor;
  * #L%
  */
 
-import java.io.Serializable;
+import io.quarkus.test.junit.QuarkusTestProfile;
 
-public interface ExecutorConfig extends Serializable {
+public class OrgPgProfile implements QuarkusTestProfile {
+  @Override
+  public Map<String, String> getConfigOverrides() {
+    return Map.of(
+      "quarkus.datasource.db-kind", "pg",
+      "quarkus.datasource.reactive.max-size", "20",
+      "quarkus.datasource.devservices.image-name", "postgres:17"
+    );
+  }
 
+  @Override
+  public String getConfigProfile() {
+    return "org-pg-profile";
+  }
 }

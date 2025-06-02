@@ -1,8 +1,8 @@
-package io.digiexpress.thena.batch.client.api.executor;
+package io.digiexpress.eveli.permission.client.api.model;
 
 /*-
  * #%L
- * thena-batch-client
+ * eveli-permissions
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,8 +20,6 @@ package io.digiexpress.thena.batch.client.api.executor;
  * #L%
  */
 
-import java.io.Serializable;
-
-public interface ExecutorConfig extends Serializable {
-
+public enum ChangeType {
+  ADD, REMOVE, SET_ALL
 }

@@ -1,8 +1,8 @@
-package io.digiexpress.thena.batch.client.api.executor;
+package io.digiexpress.eveli.userprofile.client.spi.support;
 
 /*-
  * #%L
- * thena-batch-client
+ * eveli-user-profile
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -20,8 +20,7 @@ package io.digiexpress.thena.batch.client.api.executor;
  * #L%
  */
 
-import java.io.Serializable;
-
-public interface ExecutorConfig extends Serializable {
-
+public class DataConstants {
+  public static final String DOC_TYPE_USER_PROFILE = "USER_PROFILE";
+  public static final String DOC_TYPE_USER_PROFILE_SETTINGS = "UI_SETTINGS";
 }

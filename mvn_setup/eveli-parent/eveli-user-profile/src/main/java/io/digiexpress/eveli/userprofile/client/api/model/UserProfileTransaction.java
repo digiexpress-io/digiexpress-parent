@@ -1,8 +1,8 @@
-package io.digiexpress.thena.batch.client.api.executor;
+package io.digiexpress.eveli.userprofile.client.api.model;
 
 /*-
  * #%L
- * thena-batch-client
+ * eveli-user-profile
  * %%
  * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
@@ -21,7 +21,15 @@ package io.digiexpress.thena.batch.client.api.executor;
  */
 
 import java.io.Serializable;
+import java.util.List;
 
-public interface ExecutorConfig extends Serializable {
+import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@Value.Immutable @JsonSerialize(as = ImmutableUserProfileTransaction.class) @JsonDeserialize(as = ImmutableUserProfileTransaction.class)
+public interface UserProfileTransaction extends Serializable {
+  String getId();
+  List<UserProfileCommand> getCommands(); 
 }

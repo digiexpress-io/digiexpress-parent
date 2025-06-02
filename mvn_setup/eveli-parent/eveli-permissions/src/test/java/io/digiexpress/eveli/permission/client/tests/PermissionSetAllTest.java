@@ -1,0 +1,133 @@
+package io.digiexpress.eveli.permission.client.tests;
+
+/*-
+ * #%L
+ * eveli-permissions
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.time.Duration;
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import io.digiexpress.eveli.permission.client.api.PermissionClient;
+import io.digiexpress.eveli.permission.client.api.model.ChangeType;
+import io.digiexpress.eveli.permission.client.api.model.ImmutableChangePermissionPrincipals;
+import io.digiexpress.eveli.permission.client.api.model.ImmutableChangePermissionRoles;
+import io.digiexpress.eveli.permission.client.api.model.ImmutableCreatePermission;
+import io.digiexpress.eveli.permission.client.api.model.ImmutableCreatePrincipal;
+import io.digiexpress.eveli.permission.client.api.model.ImmutableCreateRole;
+import io.digiexpress.eveli.permission.client.api.model.Principal;
+import io.digiexpress.eveli.permission.client.api.model.Principal.Permission;
+import io.digiexpress.eveli.permission.client.api.model.Principal.Role;
+import io.digiexpress.eveli.permission.client.tests.config.DbTestTemplate;
+import io.digiexpress.eveli.permission.client.tests.config.OrgPgProfile;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
+import io.vertx.core.json.Json;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@QuarkusTest
+@TestProfile(OrgPgProfile.class)
+public class PermissionSetAllTest extends DbTestTemplate {
+
+  private Role createRole(PermissionClient client, String name) {
+    
+    return client.createRole().createOne(ImmutableCreateRole.builder()
+        .name(name)
+        .description("desc of role")
+        .comment("Created this for testing")
+        .build())
+        .await().atMost(Duration.ofMinutes(1)); 
+  }
+  
+  
+ private Principal createPrincipal(PermissionClient client, String name) {
+    
+    return client.createPrincipal().createOne(ImmutableCreatePrincipal.builder()
+        .name(name)
+        .email("james@gmail.com")
+        .comment("created new user")
+        .build())
+        .await().atMost(Duration.ofMinutes(5));
+  }
+  
+  
+  private Permission createPermission(PermissionClient client, String name) {
+    return client.createPermission().createOne(ImmutableCreatePermission.builder()
+        .name(name)
+        .description("desc of permission for set all")
+        .comment("created a new permission")
+        .build())
+        .await().atMost(Duration.ofMinutes(1));
+}
+  
+  @Test
+  public void createPermissionSetAllTest() {
+    
+    final PermissionClient client = getClient().tenantQuery()
+        .repoName("PermissionSetAllTest-1")
+        .create()
+        .await().atMost(Duration.ofMinutes(1));
+    
+    final var permission1 = createPermission(client, "permissionForSetAll");
+    
+    final var updateRoles = ImmutableChangePermissionRoles.builder()
+        .id(permission1.getId())
+        .comment("added all roles")
+        .changeType(ChangeType.SET_ALL)
+        .roles(Arrays.asList(
+            createRole(client, "role1").getName(),
+            createRole(client, "role2").getName(),
+            createRole(client, "role3").getName())           
+            )
+        .build();
+    
+    final var updatePrincipals = ImmutableChangePermissionPrincipals.builder()
+        .id(permission1.getId())
+        .comment("added all principals")
+        .changeType(ChangeType.SET_ALL)
+        .principals(Arrays.asList(
+            createPrincipal(client, "AmySmith").getName(),
+            createPrincipal(client, "JohnDoe").getName(),
+            createPrincipal(client, "CommanderONeil").getName())
+            )
+        .build();
+    
+    
+    final var updatedPermission1 = client.updatePermission().updateOne(Arrays.asList(
+        updateRoles, 
+        updatePrincipals
+        )).await().atMost(Duration.ofMinutes(1));
+    
+    
+    log.debug(Json.encodePrettily(permission1));
+    log.debug(Json.encodePrettily(updatedPermission1));
+    
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", updatedPermission1.getPrincipals().toString()); 
+    Assertions.assertEquals("[role1, role2, role3]", updatedPermission1.getRoles().toString()); 
+
+    final var queried = client.permissionQuery().get(updatedPermission1.getId()).await().atMost(Duration.ofMinutes(1));
+    Assertions.assertEquals("[AmySmith, JohnDoe, CommanderONeil]", queried.getPrincipals().toString());
+    Assertions.assertEquals("[role1, role2, role3]", queried.getRoles().toString());
+
+  }
+  
+}
