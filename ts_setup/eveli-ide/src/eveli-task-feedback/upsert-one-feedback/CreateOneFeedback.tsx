@@ -19,7 +19,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   const [command, setCommand] = React.useState<FeedbackApi.CreateFeedbackCommand>();
   const [template, setTemplate] = React.useState<FeedbackApi.FeedbackTemplate>();
 
-
   React.useEffect(() => {
     getOneTemplate(taskId!).then(template => {
 
@@ -44,6 +43,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     });
 
   }, []);
+
 
   function setReply(reply: string) {
     setCommand(prev => (prev ? { ...prev, reply } : undefined));
@@ -75,15 +75,19 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     })
   }
 
-  if (!command) {
+  if (!command || !template) {
     return <CircularProgress />
   }
+
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
-        <FeedbackContent feedback={template?.content} />
+        <FeedbackContent feedback={{ ...template, ...command }} onChange={(next) => {
+
+          setCommand(prev => (prev ? { ...prev, ...next } : undefined));
+        }} />
 
         <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
         <TextField onChange={(e) => setQuestion(e.target.value)}
@@ -93,7 +97,6 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
           placeholder={intl.formatMessage({ id: 'feedback.feedbackValue.placeholder', defaultMessage: 'Customer question' })}
           value={command?.question ?? ''}
         />
-
 
         <Typography mt={2} fontWeight='bold'>{intl.formatMessage({ id: 'feedback.myReply' })}</Typography>
         <TextField onChange={(e) => setReply(e.target.value)}

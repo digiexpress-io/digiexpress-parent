@@ -15,21 +15,42 @@ export declare namespace FeedbackApi {
   export type CustomerId = string;
 
 
-  export interface Feedback {
-    id: FeedbackId;
-    sourceId: SourceId;
 
+  export interface FeedbackTopic {
+    main: FeedbackTopicItem[];
+    sub: FeedbackTopicItem[];
+  }
+
+  export interface FeedbackTopicItem {
+    labelKey: string;
+    labelValue: string;
+  }
+
+  export interface FeedbackContent {
     origin: string;
-    content: FeedbackContent;
-    replyText: string;
+
+
+    customerTitle: string | undefined;
+
+    labelKey: string;
+    subLabelKey: string | undefined;
+    labelValue: string;
+    subLabelValue: string | undefined;
 
     locale: string;
 
-    labelKey: string;
-    labelValue: string;
-    subLabelKey: string | undefined;
-    subLabelValue: string | undefined;
-    customerTitle: string | undefined;
+    content: {
+      title: string;
+      main: string | undefined;
+      sub: string | undefined;
+      question: string | undefined;
+    }
+  }
+
+  export interface Feedback extends FeedbackContent {
+    id: FeedbackId;
+    sourceId: SourceId;
+    replyText: string;
 
     updatedBy: string;
     updatedOnDate: string;
@@ -38,13 +59,19 @@ export declare namespace FeedbackApi {
     thumbsUpCount: number;
     thumbsDownCount: number;
   }
-
-  export interface FeedbackContent {
-    title: string;
-    main: string | undefined;
-    sub: string | undefined;
-    question: string | undefined;
+  export interface FeedbackTemplate extends FeedbackContent {
+    processId: ProcessId;
+    taskId: TaskId;
+    userId: UserId;
+    replys: string[];
+    questionnaire: {
+      metadata: {
+        label: string;
+        completed: string;
+      }
+    };
   }
+
 
 
   export interface FeedbackRating {
@@ -55,30 +82,6 @@ export declare namespace FeedbackApi {
     rating: number; // score 1-5
   }
 
-  export interface FeedbackTemplate {
-    processId: ProcessId;
-    taskId: TaskId;
-    userId: UserId;
-
-    origin: string;
-    content: FeedbackContent;
-    locale: string;
-
-    labelKey: string;
-    labelValue: string;
-    subLabelKey: string | undefined;
-    subLabelValue: string | undefined;
-    customerTitle: string | undefined;
-
-
-    replys: string[];
-    questionnaire: {
-      metadata: {
-        label: string;
-        completed: string;
-      }
-    };
-  }
 
   export interface CreateFeedbackCommand {
     processId: ProcessId;
@@ -86,7 +89,12 @@ export declare namespace FeedbackApi {
     userId: UserId;
 
     origin: string;
-    content: FeedbackContent;
+    content: {
+      title: string;
+      main: string | undefined;
+      sub: string | undefined;
+      question: string | undefined;
+    };
     reply: string;
     question: string;
     locale: string;
@@ -105,6 +113,11 @@ export declare namespace FeedbackApi {
     commandType: 'MODIFY_ONE_FEEDBACK_REPLY';
     reply: string;
     question: string;
+
+    labelKey: string;
+    labelValue: string;
+    subLabelKey?: string | undefined;
+    subLabelValue?: string | undefined;
   }
 
   export interface UpsertFeedbackRankingCommand extends ModifyOneFeedbackCommand {

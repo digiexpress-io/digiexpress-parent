@@ -82,6 +82,11 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
           .commandType(ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY)
           .reply("This is my updated reply from John")
           .question("better question")
+          
+          .labelKey("main label key")
+          .labelValue("main label value")
+          .subLabelKey("bad")
+          .subLabelValue("label for super bad")
           .build(), "JOHN");
       
       Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");

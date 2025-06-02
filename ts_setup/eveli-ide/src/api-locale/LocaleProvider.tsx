@@ -34,7 +34,7 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
 
   const messages: any = React.useMemo(() => merge(options), [options]);
   const [locale, setLocale] = React.useState<string>(getLocale(props));
-  const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale }), [locale]);
+  const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale, messages }), [locale, messages]);
   const intlMessages = messages[locale];
 
   return (<LocaleContext.Provider value={contextValue}>

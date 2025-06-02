@@ -1,6 +1,7 @@
 import React from 'react';
 import { FeedbackApi } from './feedback-types';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { useFeedbackTopics } from './feedback-topics';
 
 export interface FeedbackContextType {
   getOneTemplate: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.FeedbackTemplate>;
@@ -11,6 +12,7 @@ export interface FeedbackContextType {
   getOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback | undefined>;
   isTaskFeedbackEnabled: (taskId: FeedbackApi.TaskId) => Promise<true | false>;
   deleteOneFeedback: (taskId: FeedbackApi.TaskId) => Promise<FeedbackApi.Feedback>;
+  getFeedbackTopics: (templateOrFeedback: FeedbackApi.FeedbackContent) => Promise<FeedbackApi.FeedbackTopic>;
 }
 
 export const FeedbackContext = React.createContext<FeedbackContextType>({} as any);
@@ -29,29 +31,32 @@ export const FeedbackProvider: React.FC<FeedbackProviderProps> = (props) => {
   const { findAllFeedback } = useFetch('worker/rest/api/feedback.GET', {});
   const { getOneFeedback } = useFetch('worker/rest/api/feedback/$feedbackId.GET', {});
 
+  const { getFeedbackTopics } = useFeedbackTopics();
 
   // create the context 
   const contextValue: FeedbackContextType = React.useMemo(() => {
     // return all methods
     return {
-      getOneTemplate, 
-      createOneFeedback, 
-      findAllFeedback, 
-      getOneFeedback, 
-      deleteOneFeedback, 
-      modifyOneFeedback, 
+      getOneTemplate,
+      createOneFeedback,
+      findAllFeedback,
+      getOneFeedback,
+      deleteOneFeedback,
+      modifyOneFeedback,
       rankOneFeedback,
-      isTaskFeedbackEnabled
+      isTaskFeedbackEnabled,
+      getFeedbackTopics
     };
   }, [
-    getOneTemplate, 
-    createOneFeedback, 
-    findAllFeedback, 
-    getOneFeedback, 
-    deleteOneFeedback, 
-    modifyOneFeedback, 
+    getOneTemplate,
+    createOneFeedback,
+    findAllFeedback,
+    getOneFeedback,
+    deleteOneFeedback,
+    modifyOneFeedback,
     rankOneFeedback,
-    isTaskFeedbackEnabled
+    isTaskFeedbackEnabled,
+    getFeedbackTopics
   ]);
 
   return (<FeedbackContext.Provider value={contextValue}>{props.children}</FeedbackContext.Provider>);
