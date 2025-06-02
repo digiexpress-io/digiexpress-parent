@@ -184,7 +184,7 @@ public interface TaskClient {
   
   
   
-  enum TaskStatus { NEW, OPEN, COMPLETED, TRANSFERRED, REJECTED, DELEGATED }
+  enum TaskStatus { NEW, OPEN, COMPLETED, TRANSFERRED, REJECTED, DELEGATED, WAITING }
   enum TaskPriority { LOW, NORMAL, HIGH }
   enum TaskCommentSource { FRONTDESK, PORTAL }
   

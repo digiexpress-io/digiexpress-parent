@@ -73,6 +73,9 @@ public class ProcessInstanceStatusBuilderImpl implements ProcessInstanceStatusBu
         else if (taskStatus == TaskStatus.REJECTED) {
           entity.setStatus(ProcessStatus.REJECTED);
         }
+        else if (taskStatus == TaskStatus.WAITING) {
+          entity.setStatus(ProcessStatus.WAITING);
+        }
         processJPA.save(entity);
       }
     } else {
