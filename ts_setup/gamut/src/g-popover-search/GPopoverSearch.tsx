@@ -13,6 +13,9 @@ import { GOverridableComponent } from '../g-override';
 import { GLinkHyper } from '../';
 import { SearchApi } from '../api-search';
 
+import { GLinkFormUnlockedSearchResults as GLinkFormUnlockedSearchResultsUnsecured } from '../g-link/GLinkFormUnlockedSearchResultsUnsecured';
+import { useIam } from '../api-iam/IamBackendProvider';
+
 
 export interface GPopoverSearchProps {
   itemsInColumn?: number | undefined;
@@ -108,6 +111,8 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
 
   const TopicLinkSlot: React.ElementType<GSearchResultProps> = props.slots?.topicLink ? props.slots?.topicLink : DefaultLinkSlot;
 
+  const iam = useIam();
+
   return (
     <Root className={classes.root} ownerState={props}>
       <GPopoverButton onClick={anchor.onClick} label={<FormattedMessage id='gamut.buttons.search' />} icon={<SearchIcon />} />
@@ -182,12 +187,22 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
                     }
 
                     <ResultsDivider searchState={state} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={state.forms.length === 0} />
-                    {state.forms.map((form) => (
-                    <GLinkFormUnlockedSearchResults key={form.linkToForm.id} label={form.linkToForm.name} value={form.linkToForm.value}
-                      onClick={() => { props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id }); }}
-                    />
-                  ))}
 
+                    {state.forms.map((form) => {
+                      const authType = iam.getFormLinkAuthType(form.linkToForm);
+
+                      return (
+                        <GLinkFormUnlockedSearchResultsUnsecured
+                          key={form.linkToForm.id}
+                          label={form.linkToForm.name}
+                          value={form.linkToForm.value}
+                          formLinkAuthType={authType}
+                          onClick={() => {
+                            props.onFormLink({ pageId: form.topic.id, productId: form.linkToForm.id });
+                          }}
+                        />
+                      );
+                    })}
                     <ResultsDivider searchState={state} title='gamut.search.results.phoneLinks' className={classes.resultsDividerTitle} isHidden={state.phones.length === 0} />
                     {state.phones.map((phone) => (<GLinkPhone key={phone.id} label={phone.name} value={phone.value} />))}
 
