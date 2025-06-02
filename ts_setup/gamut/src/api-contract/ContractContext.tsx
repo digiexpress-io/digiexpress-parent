@@ -30,8 +30,8 @@ export const ContractProvider: React.FC<{
   };
 
   return React.useMemo(() => {
-    const awaitingDecision = data.contracts.filter((c) => c.status === 'OPEN' || c.status === 'NEW' );
-    const decided = data.contracts.filter((c) => c.status === 'COMPLETED' || c.status === 'REJECTED');
+    const awaitingDecision = data.contracts.filter((c) => c.status === 'OPEN' || c.status === 'NEW' || c.status === 'TRANSFERRED' || c.status === 'WAITING');
+    const decided = data.contracts.filter((c) => c.status === 'COMPLETED' || c.status === 'REJECTED' || c.status === 'DELEGATED');
 
     const contextValue: ContractApi.ContractContextType = {
       contracts: sortedByDate,
