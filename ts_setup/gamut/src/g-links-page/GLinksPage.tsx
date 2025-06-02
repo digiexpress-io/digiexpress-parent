@@ -3,18 +3,18 @@ import { useThemeProps } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useNavigate } from '@tanstack/react-router';
 
-import { SiteApi } from '../api-site';
+import { SiteApi, useSite } from '../api-site';
 import { GLinks } from '../g-links';
 import { useGArticleLinks } from './useGArticleLinks';
-import { GLinkFormLocked, GLinkHyper, GLinkPhone, GLinkInfo, GLinkFormUnlocked } from '../g-link';
+import { GLinkFormLocked, GLinkHyper, GLinkPhone, GLinkInfo, GLinkFormUnlocked, GLinkArticle } from '../g-link';
 import { GLinksPageRoot, MUI_NAME, useUtilityClasses } from './useUtilityClasses';
 import { useIam } from '../api-iam';
-
 
 
 export interface GLinksPageProps {
   children: SiteApi.TopicView;
   component?: React.ElementType<GLinksPageProps>;
+  viewId?: string | undefined;
 }
 
 
@@ -23,7 +23,13 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
   const intl = useIntl();
   const nav = useNavigate();
   const anon = useIam();
-  const loggedIn = anon.authType !== 'ANON'
+  const loggedIn = anon.authType !== 'ANON';
+  const { topics } = useSite();
+
+  const childTopics = (props.children.children ?? []).flatMap(child => {
+    const topic = topics.find(topic => topic.id === child.id);
+    return topic ? [topic] : [];
+  });
 
   const themeProps = useThemeProps({
     props,
@@ -35,6 +41,7 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
     const pageId: string = props.children.id
     const productId: string = form.id;
 
+
     if (loggedIn) {
       nav({
         params: { productId, pageId, locale: intl.locale },
@@ -44,6 +51,23 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
       nav({
         params: { productId, pageId, locale: intl.locale },
         to: '/public/$locale/pages/$pageId/products/$productId',
+      })
+    }
+  }
+
+  function handleTopicChange(topic: SiteApi.TopicView) {
+    if (loggedIn) {
+      nav({
+        from: '/secured/$locale/views/$viewId',
+        params: { viewId: 'services' },
+        search: { topicId: topic.id },
+        to: '/secured/$locale/views/$viewId',
+      })
+    } else {
+      nav({
+        from: '/public/$locale',
+        params: { locale: intl.locale, pageId: topic.id },
+        to: '/public/$locale/pages/$pageId',
       })
     }
   }
@@ -68,6 +92,12 @@ export const GLinksPage: React.FC<GLinksPageProps> = (props) => {
           {hyperlinks.map(link => <GLinkHyper key={link.id} label={link.name} value={link.value} />)}
           {phoneLinks.map(link => <GLinkPhone key={link.id} label={link.name} value={link.value} />)}
           {infoLinks.map(link => <GLinkInfo key={link.id} label={link.name} value={link.value} />)}
+        </GLinks> : <></>
+      }
+
+      {childTopics.length ?
+        <GLinks header={intl.formatMessage({ id: 'gamut.article.childtopics.title', defaultMessage: 'Pages' })}>
+          {childTopics.map(child => <GLinkArticle key={child.id} label={child.name} value={child.name} onClick={() => handleTopicChange(child)} />)}
         </GLinks> : <></>
       }
     </GLinksPageRoot>);

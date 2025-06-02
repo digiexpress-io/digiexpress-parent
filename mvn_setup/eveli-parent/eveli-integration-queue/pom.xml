@@ -6,6 +6,7 @@
     <artifactId>eveli-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
 	</parent>
+	<name>eveli-integration-queue</name>
 	<artifactId>eveli-integration-queue</artifactId>
 
 	<dependencies>

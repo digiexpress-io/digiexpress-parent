@@ -28,16 +28,17 @@ import java.util.stream.Collectors;
 
 import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.entities.CommitLockStatus;
+import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocLock;
-import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.DocQueries.DocBranchQuery;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
@@ -55,7 +56,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
 
   public DocBranchQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().doc();
+    this.registry = new DocRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
 

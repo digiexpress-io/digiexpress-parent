@@ -28,6 +28,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.structures.doc.DocQueries.DocQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -43,7 +44,7 @@ public class DocQuerySqlPool implements DocQuery {
   
   public DocQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().doc();
+    this.registry = new DocRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
   @Override

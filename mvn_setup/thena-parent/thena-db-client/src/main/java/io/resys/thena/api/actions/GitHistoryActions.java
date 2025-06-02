@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.immutables.value.Value;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
+import io.resys.thena.api.entities.git.BlobCommit;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.envelope.GitContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
@@ -34,7 +35,29 @@ import io.smallrye.mutiny.Uni;
 public interface GitHistoryActions {
 
   BlobHistoryQuery blobQuery();
+  BlobCommitQuery blobCommitQuery();
   
+  
+  interface BlobCommitQuery {
+    BlobCommitQuery branchName(String branchName);
+    BlobCommitQuery includBlob(boolean includBlob); //load blob jsonb-s, default is false
+    Uni<QueryEnvelope<BlobCommitObjects>> findAll();
+  }
+  @Value.Immutable
+  interface BlobCommitObjects extends GitContainer {
+    List<BlobCommit> getValues();
+    
+    default <T> List<T> accept(BlobVisitor<T> visitor) {
+      return getValues().stream()
+          .map(value -> value.getBlob())
+          .filter(e -> e.isPresent())
+          .map(blob -> visitor.visit(blob.get().getValue()))
+          .collect(Collectors.toUnmodifiableList());
+    }
+  }
+  
+  
+  // TODO... figure out cleaner purpose and query method....
   interface BlobHistoryQuery {
     BlobHistoryQuery branchName(String branchName);
     BlobHistoryQuery matchBy(MatchCriteria ... matchCriteria);

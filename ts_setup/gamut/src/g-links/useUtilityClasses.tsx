@@ -55,6 +55,10 @@ export const GLinksRoot = styled("div", {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
+    '& .GLinkArticle-root': {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+    },
     '& a': {
       fontWeight: theme.typography.fontWeightMedium,
     },

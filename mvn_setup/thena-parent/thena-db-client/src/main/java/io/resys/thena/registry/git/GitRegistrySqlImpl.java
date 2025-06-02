@@ -27,11 +27,11 @@ import io.resys.thena.api.registry.git.CommitRegistry;
 import io.resys.thena.api.registry.git.TagRegistry;
 import io.resys.thena.api.registry.git.TreeRegistry;
 import io.resys.thena.api.registry.git.TreeValueRegistry;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.GitTableNames;
+import io.resys.thena.datasource.TenantContext;
 
 public class GitRegistrySqlImpl implements GitRegistry {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
+  private final GitTableNames options;
   private final BlobRegistry blobs;
   private final CommitRegistry commits;
   private final TreeValueRegistry treeValues;
@@ -39,9 +39,9 @@ public class GitRegistrySqlImpl implements GitRegistry {
   private final BranchRegistry branches;
   private final TagRegistry tags;
   
-  public GitRegistrySqlImpl(TenantTableNames options) {
+  public GitRegistrySqlImpl(TenantContext tenant) {
     super();
-    this.options = options;
+    this.options = GitTableNames.defaults().toRepo(tenant.getPrefix());
     this.blobs = new BlobRegistrySqlImpl(options);
     this.commits = new CommitRegistrySqlImpl(options);
     this.treeValues = new TreeValueRegistrySqlImpl(options);

@@ -28,6 +28,7 @@ import io.resys.thena.api.LogConstants;
 import io.resys.thena.api.registry.FsRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.structures.fs.FsQueries;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class InternalFsDirentSequenceSql implements FsQueries.InternalDirentSequ
   public InternalFsDirentSequenceSql(ThenaSqlDataSource dataSource) {
     super();
     this.dataSource = dataSource;
-    this.registry = dataSource.getRegistry().fs();
+    this.registry = new FsRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
 

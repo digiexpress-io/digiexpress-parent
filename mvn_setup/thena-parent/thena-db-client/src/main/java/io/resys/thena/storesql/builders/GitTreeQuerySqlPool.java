@@ -29,6 +29,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.structures.git.GitQueries.GitTreeQuery;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -44,7 +45,7 @@ public class GitTreeQuerySqlPool implements GitTreeQuery {
   
   public GitTreeQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().git();
+    this.registry = new GitRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
   

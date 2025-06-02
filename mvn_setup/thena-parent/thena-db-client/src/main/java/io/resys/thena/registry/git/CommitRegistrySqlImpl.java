@@ -35,9 +35,9 @@ import io.resys.thena.api.entities.git.ImmutableCommit;
 import io.resys.thena.api.entities.git.ImmutableCommitTree;
 import io.resys.thena.api.entities.git.ImmutableTreeValue;
 import io.resys.thena.api.registry.git.CommitRegistry;
+import io.resys.thena.datasource.GitTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.resys.thena.structures.git.GitQueries.LockCriteria;
@@ -48,7 +48,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CommitRegistrySqlImpl implements CommitRegistry {
-  private final TenantTableNames options;
+  private final GitTableNames options;
  
   @Override
   public ThenaSqlClient.Sql findAll() {

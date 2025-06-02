@@ -32,6 +32,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.UpsertStatus;
@@ -51,7 +52,7 @@ public class GitDbInsertsSqlPool implements GitInserts {
   
   public GitDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().git();
+    this.registry = new GitRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
 

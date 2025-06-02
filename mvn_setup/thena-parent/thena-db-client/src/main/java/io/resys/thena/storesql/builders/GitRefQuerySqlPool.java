@@ -27,6 +27,7 @@ import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
+import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.structures.git.GitQueries.GitRefQuery;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Multi;
@@ -44,7 +45,7 @@ public class GitRefQuerySqlPool implements GitRefQuery {
 
   public GitRefQuerySqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().git();
+    this.registry = new GitRegistrySqlImpl(dataSource.getRegistry());
     this.errorHandler = dataSource.getErrorHandler();
   }
   

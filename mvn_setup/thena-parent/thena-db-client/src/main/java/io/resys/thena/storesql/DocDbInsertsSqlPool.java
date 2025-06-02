@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts;
@@ -42,7 +43,7 @@ public class DocDbInsertsSqlPool implements DocInserts {
 
   public DocDbInsertsSqlPool(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().doc();
+    this.registry = new DocRegistrySqlImpl(dataSource.getRegistry());
   }
   
   @Override

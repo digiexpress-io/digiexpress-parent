@@ -25,9 +25,9 @@ import java.util.function.Function;
 import io.resys.thena.api.entities.git.ImmutableTree;
 import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.registry.git.TreeRegistry;
+import io.resys.thena.datasource.GitTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TreeRegistrySqlImpl implements TreeRegistry {
-  private final TenantTableNames options;
+  private final GitTableNames options;
   
   @Override
   public ThenaSqlClient.Sql findAll() {

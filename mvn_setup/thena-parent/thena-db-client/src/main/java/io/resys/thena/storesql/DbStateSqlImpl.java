@@ -21,24 +21,20 @@ package io.resys.thena.storesql;
  */
 
 import java.util.Optional;
-import java.util.function.Function;
 
 import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.exceptions.RepoException;
-import io.resys.thena.api.registry.ThenaRegistry;
 import io.resys.thena.datasource.TenantCacheImpl;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.resys.thena.datasource.ThenaDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
 import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
 import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
-import io.resys.thena.registry.ThenaRegistrySqlImpl;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ThenaClientPgSql;
-import io.resys.thena.storesql.builders.InternalTenantQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
@@ -61,8 +57,10 @@ public class DbStateSqlImpl implements DbState {
   }
   @Override
   public InternalTenantQuery tenant() {
-    return new InternalTenantQueryImpl(dataSource);
+    return new DbStateTenantQuery(dataSource);
   }
+  
+  
   
   @Override
   public Uni<FsState> toFsState(String tenantId) {
@@ -171,13 +169,12 @@ public class DbStateSqlImpl implements DbState {
     }); 
   }
 
-  public static DbStateSqlImpl create(TenantTableNames names, io.vertx.mutiny.sqlclient.Pool client, TenantCache tenantCache) {
+  public static DbStateSqlImpl create(TenantContext names, io.vertx.mutiny.sqlclient.Pool client, TenantCache tenantCache) {
     final var pool = new ThenaSqlPoolVertx(client);
     final var errorHandler = new PgErrors();
     final var dataSource = new ThenaSqlDataSourceImpl(
         "", names, pool, errorHandler, 
         Optional.empty(),
-        Builder.defaultRegistry(names),
         tenantCache
     );
     return new DbStateSqlImpl(dataSource);
@@ -191,16 +188,13 @@ public class DbStateSqlImpl implements DbState {
     private io.vertx.mutiny.sqlclient.Pool client;
     private String db = "docdb";
     private ThenaSqlDataSourceErrorHandler errorHandler;
-    private Function<TenantTableNames, ThenaRegistry> registry;
-    private TenantCache tenantCache;
-    
-    public Builder registry(Function<TenantTableNames, ThenaRegistry> registry) {this.registry = registry; return this; }
-    
+
+    private TenantCache tenantCache;    
     public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
     public Builder db(String db) { this.db = db; return this; }
     public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
     public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
-    public static ThenaRegistry defaultRegistry(TenantTableNames ctx) { return new ThenaRegistrySqlImpl(ctx); }
+
     
     public ThenaClient build() {
       RepoAssert.notNull(client, () -> "client must be defined!");
@@ -208,16 +202,15 @@ public class DbStateSqlImpl implements DbState {
       
       final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
       
-      final var ctx = TenantTableNames.defaults(db);
+      final var ctx = TenantContext.defaults(db);
       this.errorHandler = new PgErrors();
       
-      final Function<TenantTableNames, ThenaRegistry> registry = this.registry == null ? Builder::defaultRegistry : this.registry;
+      
       final var pool = new ThenaSqlPoolVertx(client);
       
       final var dataSource = new ThenaSqlDataSourceImpl(
           db, ctx, pool, errorHandler, 
           Optional.empty(),
-          registry.apply(ctx),
           tenantCache
       );
       

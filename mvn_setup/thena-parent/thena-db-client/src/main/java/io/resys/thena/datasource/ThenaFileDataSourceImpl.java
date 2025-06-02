@@ -25,12 +25,12 @@ import io.resys.thena.api.entities.Tenant;
 public class ThenaFileDataSourceImpl implements ThenaFileDataSource {
 
   private final Tenant tenant;
-  private final TenantTableNames tenantTableNames;
+  private final TenantContext tenantTableNames;
     
-  public ThenaFileDataSourceImpl(Tenant tenant, TenantTableNames tenantTableNames) {
+  public ThenaFileDataSourceImpl(Tenant tenant, TenantContext tenantTableNames) {
     super();
     this.tenant = tenant;
-    this.tenantTableNames = tenantTableNames.toRepo(tenant);
+    this.tenantTableNames = tenantTableNames.withTenant(tenant);
   }
 
   public boolean isLocked(Throwable t) {
@@ -43,12 +43,17 @@ public class ThenaFileDataSourceImpl implements ThenaFileDataSource {
   }
 
   @Override
-  public TenantTableNames getTenantTableNames() {
+  public TenantContext getTenantContext() {
     return tenantTableNames;
   }
 
   @Override
   public ThenaFileDataSource withTenant(Tenant tenant) {
     return new ThenaFileDataSourceImpl(tenant, tenantTableNames);
+  }
+
+  @Override
+  public boolean isTenantLoaded() {
+    return true;
   }
 }

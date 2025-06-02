@@ -1,5 +1,7 @@
 package io.resys.thena.api.entities.grim;
 
+import java.beans.Transient;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -24,6 +26,7 @@ import java.time.OffsetDateTime;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -44,6 +47,7 @@ public interface GrimRemark extends IsGrimObject, TenantEntity {
   String getCreatedWithCommitId();
   String getMissionId();
   @Nullable String getParentId();
+  //@Transient @JsonIgnore
   @Nullable GrimRemarkTransitives getTransitives();
   
   String getRemarkText(); // user inputed free text

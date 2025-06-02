@@ -6,6 +6,7 @@
     <artifactId>eveli-parent</artifactId>
     <version>0.y-SNAPSHOT</version>
   </parent>
+  <name>eveli-app-wrench-only</name>
   <artifactId>eveli-app-wrench-only</artifactId>
 
   <properties>

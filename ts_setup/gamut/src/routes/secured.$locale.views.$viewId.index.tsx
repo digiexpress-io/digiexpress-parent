@@ -10,25 +10,41 @@ import { GRouterFormsAwaitingDecision } from '../g-router-forms-awaiting-decisio
 import { GRouterFormsWithDecision } from '../g-router-forms-with-decision';
 import { useLocale } from '../api-locale';
 
+
+
+
+export interface ViewRouteSearchParams {
+  topicId?: string | undefined;
+}
+
+export function parseViewRouteSearchParams(search: Record<string, unknown>): ViewRouteSearchParams {
+  return { topicId: search['topicId'] as string | undefined }
+}
+
+
 export const Route = createFileRoute('/secured/$locale/views/$viewId/')({
   component: Component,
+  validateSearch: (search: Record<string, unknown>): ViewRouteSearchParams => parseViewRouteSearchParams(search)
 })
 
 function Component() {
-  const { viewId, locale } = Route.useParams();
+  const { viewId, locale, } = Route.useParams();
+  const { topicId } = Route.useSearch();
+
   const { setLocale } = useLocale();
 
   React.useEffect(() => setLocale(locale), [locale])
 
 
-  return React.useMemo(() => (<ChooseComponent viewId={viewId as any} locale={locale} />), [viewId, locale])
+  return React.useMemo(() => (<ChooseComponent viewId={viewId as any} locale={locale} topicId={topicId} />), [viewId, locale, topicId])
 }
 
 
-function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string }) {
-  const { viewId, locale = 'en' } = props;
+function ChooseComponent(props: { viewId: GUserOverviewMenuView, locale: string, topicId: string | undefined }) {
+  const { viewId, locale = 'en', topicId } = props;
+
   if (viewId === 'services') {
-    return <GRouterSecuredServices locale={locale} viewId={viewId} />
+    return <GRouterSecuredServices locale={locale} viewId={viewId} activeTopicId={topicId} />
   } else if (viewId === 'requests-in-progress') {
     return <GRouterUnfinishedForms locale={locale} viewId={viewId} />
   } else if (viewId === 'user-overview') {

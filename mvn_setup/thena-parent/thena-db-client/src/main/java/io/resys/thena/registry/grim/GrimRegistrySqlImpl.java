@@ -35,11 +35,11 @@ import io.resys.thena.api.registry.grim.GrimMissionRegistry;
 import io.resys.thena.api.registry.grim.GrimObjectiveGoalRegistry;
 import io.resys.thena.api.registry.grim.GrimObjectiveRegistry;
 import io.resys.thena.api.registry.grim.GrimRemarkRegistry;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.GrimTableNames;
+import io.resys.thena.datasource.TenantContext;
 
 public class GrimRegistrySqlImpl implements GrimRegistry {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
+  private final GrimTableNames options;
   private final GrimAssignmentRegistry assignments;
   private final GrimCommitRegistry commits;
   private final GrimCommitTreeRegistry commitTrees;
@@ -53,8 +53,8 @@ public class GrimRegistrySqlImpl implements GrimRegistry {
   private final GrimRemarkRegistry remarks;
   private final GrimCommandsRegistry commands;
   
-  public GrimRegistrySqlImpl(TenantTableNames options) {
-    this.options = options;
+  public GrimRegistrySqlImpl(TenantContext tenant) {
+    this.options = GrimTableNames.defaults().toRepo(tenant.getPrefix());
     assignments = new GrimAssignmentRegistrySqlImpl(options);
     commits = new GrimCommitRegistrySqlImpl(options);
     commitTrees = new GrimCommitTreeRegistrySqlImpl(options);

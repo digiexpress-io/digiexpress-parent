@@ -25,8 +25,8 @@ import java.util.List;
 
 import io.resys.thena.api.actions.FsQueryActions.FsArchiveQueryType;
 import io.resys.thena.api.registry.fs.FsDirentFilter;
+import io.resys.thena.datasource.FsTableNames;
 import io.resys.thena.datasource.ImmutableSqlTuple;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -34,19 +34,19 @@ import io.vertx.mutiny.sqlclient.Tuple;
 
 public class FsDirentSqlFilterBuilder {
 
-  private final TenantTableNames options;
+  private final FsTableNames options;
   private final List<Object> params;
   private final SqlStatement builder = new SqlStatement();
   private int index;
   
-  public FsDirentSqlFilterBuilder(TenantTableNames options) {
+  public FsDirentSqlFilterBuilder(FsTableNames options) {
     super();
     this.options = options;
     this.params = new ArrayList<Object>();
     this.index = 1;
   }
   
-  public FsDirentSqlFilterBuilder(TenantTableNames options, List<Object> params) {
+  public FsDirentSqlFilterBuilder(FsTableNames options, List<Object> params) {
     super();
     this.options = options;
     this.params = params;

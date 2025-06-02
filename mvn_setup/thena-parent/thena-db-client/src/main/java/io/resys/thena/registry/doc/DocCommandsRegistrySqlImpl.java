@@ -30,10 +30,10 @@ import io.resys.thena.api.entities.doc.Doc.DocFilter;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
 import io.resys.thena.api.registry.doc.DocCommandsRegistry;
+import io.resys.thena.datasource.DocTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -45,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DocCommandsRegistrySqlImpl implements DocCommandsRegistry {
-  private final TenantTableNames options;
+  private final DocTableNames options;
   
   
   @Override

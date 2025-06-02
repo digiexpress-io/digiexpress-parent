@@ -23,7 +23,7 @@ import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.TenantContext;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.subscription.Cancellable;
 import io.vertx.mutiny.sqlclient.Row;
@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class TargetTaskBuilderImpl implements TargetTaskBuilder {
   private final TargetTaskLogger logger = new TargetTaskLogger();
   private final io.vertx.mutiny.pgclient.PgPool target_tasks;
-  private TenantTableNames names;
+  private TenantContext names;
   private final String anonUser = "unknown";
   
   private final AtomicLong counter = new AtomicLong();
@@ -64,7 +64,7 @@ delete from process;
   
   @Override
   public Uni<SourceTasks> build(SourceTasks source, String tenantName) {
-    this.names = TenantTableNames.defaults("").toRepo(tenantName);
+    this.names = TenantContext.defaults("").withTenantPrefix(tenantName);
     return target_tasks.withTransaction(conn -> execute(conn, source));
   }
   

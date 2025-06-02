@@ -1,0 +1,187 @@
+package io.digiexpress.eveli.permission.client.spi;
+
+/*-
+ * #%L
+ * eveli-permissions
+ * %%
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import java.util.Arrays;
+import java.util.List;
+
+import io.digiexpress.eveli.permission.client.api.PermissionClient.PrincipalAccessEvaluator;
+import io.digiexpress.eveli.permission.client.api.PermissionClient.UpdatePrincipalAction;
+import io.digiexpress.eveli.permission.client.api.model.ChangeType;
+import io.digiexpress.eveli.permission.client.api.model.ImmutablePrincipal;
+import io.digiexpress.eveli.permission.client.api.model.Principal;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalEmail;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalExternalId;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalName;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalPermissions;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalRoles;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.ChangePrincipalStatus;
+import io.digiexpress.eveli.permission.client.api.model.PrincipalCommand.PrincipalUpdateCommand;
+import io.resys.thena.api.actions.OrgCommitActions.ModType;
+import io.resys.thena.api.actions.OrgCommitActions.ModifyOneMember;
+import io.resys.thena.api.actions.OrgCommitActions.OneMemberEnvelope;
+import io.resys.thena.api.entities.CommitResultStatus;
+import io.resys.thena.api.entities.org.OrgActorStatusType;
+import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Uni;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class UpdatePrincipalActionImpl implements UpdatePrincipalAction {
+  
+  private final PermissionStore ctx;
+
+  @Override
+  public Uni<Principal> updateOne(PrincipalUpdateCommand command) {
+    return updateOne(Arrays.asList(command));
+  }
+
+  @Override
+  public Uni<Principal> updateOne(List<PrincipalUpdateCommand> commands) {
+    final var ids = commands.stream().map(c -> c.getId()).distinct().toList();
+    RepoAssert.isTrue(ids.size() == 1, () -> "Update commands must have same id because they are for the same role!");
+    final var id = ids.get(0);
+         
+    return createRequest(id, commands).onItem().transform(response -> createResponse(id, response));
+  }
+        
+  public Uni<OneMemberEnvelope> createRequest(String id, List<PrincipalUpdateCommand> commands){
+    final ModifyOneMember modifyOneMember = ctx.getOrg(ctx.getConfig().getRepoId()).commit().modifyOneMember();
+
+    for (PrincipalUpdateCommand command : commands) {
+      switch(command.getCommandType()) {
+      
+      case CHANGE_PRINCIPAL_ROLES: {
+        final var roles = (ChangePrincipalRoles) command;
+        
+        if(roles.getChangeType() == ChangeType.ADD) {
+          roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.ADD, role));
+          
+        } else if(roles.getChangeType() == ChangeType.REMOVE) {
+          roles.getRoles().forEach(role -> modifyOneMember.modifyParties(ModType.REMOVE, role)); 
+
+        } else if(roles.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneMember.setAllParties(roles.getRoles()); 
+          
+        } else {
+          throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType() + "/" + roles.getChangeType());
+        }
+        break;
+      }
+     
+      case CHANGE_PRINCIPAL_PERMISSIONS: {
+        final var permissions = (ChangePrincipalPermissions) command;
+        
+        if(permissions.getChangeType() == ChangeType.ADD) {
+          permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.ADD, perm));
+          
+        } else if(permissions.getChangeType() == ChangeType.REMOVE) {
+          permissions.getPermissions().forEach(perm -> modifyOneMember.modifyRights(ModType.REMOVE, perm));
+
+        } else if(permissions.getChangeType() == ChangeType.SET_ALL) {
+          modifyOneMember.setAllRights(permissions.getPermissions());
+          
+        } else {
+          throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType() + "/" + permissions.getChangeType());
+        }
+        break;
+      }
+      
+      case CHANGE_PRINCIPAL_STATUS: {
+        final var status = (ChangePrincipalStatus) command;
+        modifyOneMember.status(status.getStatus());
+        break;
+      } 
+      
+      case CHANGE_PRINCIPAL_NAME: {
+        final var name = (ChangePrincipalName) command;
+        modifyOneMember.userName(name.getName());
+        break;
+      }
+      
+      case CHANGE_PRINCIPAL_EMAIL: {
+        final var email = (ChangePrincipalEmail) command;
+        modifyOneMember.email(email.getEmail());
+        break;
+      }
+      case CHANGE_PRINCIPAL_EXT_ID: {
+        final var externalId = (ChangePrincipalExternalId) command;
+        modifyOneMember.externalId(externalId.getExternalId());
+        break;
+      }      
+      default: throw new UpdatePrincipalException("Command type not found exception: " + command.getCommandType());
+      }
+    }
+    
+    
+    return modifyOneMember
+      .memberId(id)
+      .author(ctx.getConfig().getAuthor().get())
+      .message("Principal update")
+      .build();
+  }
+    
+  
+  public Principal createResponse(String id, OneMemberEnvelope response) {
+    if(response.getStatus() != CommitResultStatus.OK) {
+      final var msg = "failed to update principal by id='%s'!".formatted(id);
+      throw new UpdatePrincipalException(msg, response);
+    }
+
+    
+    final var principal = response.getMember();
+    final var roles = response.getDirectParties().stream().map(party -> party.getPartyName()).toList();
+    final var permissions = response.getDirectRights().stream().map(right -> right.getRightName()).toList();
+    
+    return ImmutablePrincipal.builder()
+      .id(principal.getId())
+      .version(principal.getCommitId())
+      
+      .name(principal.getUserName())
+      .email(principal.getEmail())
+      .roles(roles).directRoles(roles)
+      .permissions(permissions).directPermissions(permissions)
+      .status(OrgActorStatusType.IN_FORCE)
+      .build();
+  }
+
+  public static class UpdatePrincipalException extends RuntimeException {
+    private static final long serialVersionUID = -3041737023950149699L;
+
+    public UpdatePrincipalException(String message, OneMemberEnvelope response) {
+      super(message + System.lineSeparator() + " " +
+        String.join(System.lineSeparator() + " ", response.getMessages().stream().map(e -> e.getText()).toList()));
+          response.getMessages().stream().filter(e -> e.getException() != null).forEach(e -> {
+          addSuppressed(e.getException());
+     });
+    }
+    
+    public UpdatePrincipalException(String message) {
+      super(message);
+    }
+  }
+
+  @Override
+  public UpdatePrincipalAction evalAccess(PrincipalAccessEvaluator eval) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+}

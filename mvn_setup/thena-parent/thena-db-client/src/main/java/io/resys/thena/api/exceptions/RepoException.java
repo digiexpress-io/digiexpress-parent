@@ -27,7 +27,7 @@ import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.envelope.Message;
 
 
-public class RepoException extends DocDBException {
+public class RepoException extends RuntimeException {
   private static final long serialVersionUID = 4311634600357697485L;
 
   public RepoException(String msg) {
@@ -75,15 +75,7 @@ public class RepoException extends DocDBException {
             .toString())
           .build();
     }
-    public Message nameNotUnique(String name, String id) {
-      return ImmutableMessage.builder()
-            .text(new StringBuilder()
-            .append("Repo with name: '").append(name).append("' already exists,")
-            .append(" id: '").append(id).append("'")
-            .append("!")
-            .toString())
-          .build();
-    }
+
     public String updateConflict(String id, String dbRev, String userRev, String name) {
       return new StringBuilder()
           .append("Repo with")

@@ -40,10 +40,10 @@ import io.resys.thena.api.entities.grim.ImmutableGrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.ImmutableGrimMissionTransitives;
 import io.resys.thena.api.registry.grim.GrimMissionFilter;
 import io.resys.thena.api.registry.grim.GrimMissionRegistry;
+import io.resys.thena.datasource.GrimTableNames;
 import io.resys.thena.datasource.ImmutableSql;
 import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
-import io.resys.thena.datasource.TenantTableNames;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.Sql;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
@@ -56,7 +56,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GrimMissionRegistrySqlImpl implements GrimMissionRegistry {
-  private final TenantTableNames options;
+  private final GrimTableNames options;
   
   
   @Override

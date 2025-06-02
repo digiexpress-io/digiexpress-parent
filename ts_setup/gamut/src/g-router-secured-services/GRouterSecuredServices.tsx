@@ -25,6 +25,8 @@ export interface GRouterSecuredServicesProps {
   locale: string;
   viewId: GUserOverviewMenuView;
   defaultViewId?: string;
+
+  activeTopicId?: string | undefined;
 }
 
 export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (initProps) => {
@@ -34,16 +36,28 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
   const classes = useUtilityClasses();
   const theme = useTheme();
   const withDrawer = !useMediaQuery(theme.breakpoints.down("md"));
-  const [topic, setTopic] = React.useState<SiteApi.TopicView>();
+
 
   const props = useThemeProps({
     props: initProps,
     name: MUI_NAME,
   });
 
-  
+  const defaultViewId = props.activeTopicId ?? props.defaultViewId ?? '000_index';
+  const topic = Object.values(views).find((view: SiteApi.TopicView) => view.id === defaultViewId);
+
+
+  function setTopic(topic: SiteApi.TopicView) {
+    nav({
+      from: '/secured/$locale/views/$viewId',
+      params: { viewId: 'services' },
+      search: { topicId: topic.id },
+      to: '/secured/$locale/views/$viewId',
+    })
+  }
+
   const ownerState: OwnerState = {
-    defaultViewId: props.defaultViewId ?? '000_index',
+    defaultViewId,
     locale: props.locale,
     viewId: props.viewId,
     topic,
@@ -51,8 +65,6 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
     onForm,
     onTopic: setTopic,
   }
-
-
 
   function onForm(form: SearchApi.LinkToForm) {
     const productId = form.linkToForm.id;
@@ -80,13 +92,6 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
       to: '/secured/$locale/views/$viewId',
     })
   }
-
-  React.useEffect(() => {
-    if (!topic && withDrawer) {
-      const defaultTopic = Object.values(views).find((view: SiteApi.TopicView) => view.id === ownerState.defaultViewId);
-      setTopic(defaultTopic);
-    }
-  }, [topic, views]);
 
   const left = React.useCallback(() => {
     return (

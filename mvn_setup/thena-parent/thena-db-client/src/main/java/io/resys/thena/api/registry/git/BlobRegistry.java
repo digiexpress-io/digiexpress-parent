@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
 import io.resys.thena.api.entities.git.Blob;
+import io.resys.thena.api.entities.git.BlobCommit;
 import io.resys.thena.api.entities.git.BlobHistory;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
@@ -45,6 +46,9 @@ public interface BlobRegistry extends ThenaRegistryService<Blob, io.vertx.mutiny
   ThenaSqlClient.SqlTuple findByTree(String treeId, List<String> blobNames, List<MatchCriteria> criteria);
   ThenaSqlClient.SqlTuple findByIds(Collection<String> blobId);
   
+  
+  ThenaSqlClient.SqlTuple findAllBlobCommits(String branchName, boolean includBlob);
+  
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
   ThenaSqlClient.Sql dropTable();
@@ -52,4 +56,5 @@ public interface BlobRegistry extends ThenaRegistryService<Blob, io.vertx.mutiny
   Function<io.vertx.mutiny.sqlclient.Row, Blob> defaultMapper();
   
   Function<io.vertx.mutiny.sqlclient.Row, BlobHistory> historyMapper();
+  Function<io.vertx.mutiny.sqlclient.Row, BlobCommit> blobCommitMapper();
 }

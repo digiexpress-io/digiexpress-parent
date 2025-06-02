@@ -70,6 +70,9 @@ export declare namespace StencilComposerApi {
 
     withLocaleFilter(locale?: StencilApi.LocaleId): Session;
     withSite(site: StencilApi.Site): Session;
+    withCommitlogs(commitlogs: StencilApi.SiteCommitLog[]): Session;
+
+    getLastUpdated(anyObjectId: string): string;
   }
 
   interface Actions {

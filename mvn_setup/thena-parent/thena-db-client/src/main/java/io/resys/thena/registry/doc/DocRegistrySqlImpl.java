@@ -26,20 +26,21 @@ import io.resys.thena.api.registry.doc.DocCommandsRegistry;
 import io.resys.thena.api.registry.doc.DocCommitRegistry;
 import io.resys.thena.api.registry.doc.DocCommitTreeRegistry;
 import io.resys.thena.api.registry.doc.DocMainRegistry;
-import io.resys.thena.datasource.TenantTableNames;
+import io.resys.thena.datasource.DocTableNames;
+import io.resys.thena.datasource.TenantContext;
 
 public class DocRegistrySqlImpl implements DocRegistry {
-  @SuppressWarnings("unused")
-  private final TenantTableNames options;
+
+  private final DocTableNames options;
   private final DocBranchRegistry docBranches;
   private final DocCommitRegistry docCommits;
   private final DocCommitTreeRegistry docLogs;
   private final DocCommandsRegistry docCommands;
   private final DocMainRegistry docs;
   
-  public DocRegistrySqlImpl(TenantTableNames options) {
+  public DocRegistrySqlImpl(TenantContext tenant) {
     super();
-    this.options = options;
+    this.options = DocTableNames.defaults().toRepo(tenant.getPrefix());
     this.docBranches = new DocBranchRegistrySqlImpl(options);
     this.docCommits = new DocCommitRegistrySqlImpl(options);
     this.docLogs = new DocLogRegistrySqlImpl(options);

@@ -27,6 +27,7 @@ import java.util.List;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.GrimRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
+import io.resys.thena.registry.grim.GrimRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.grim.GrimInserts;
@@ -42,7 +43,7 @@ public class GrimInsertsSqlImpl implements GrimInserts {
   
   public GrimInsertsSqlImpl(ThenaSqlDataSource dataSource) {
     this.wrapper = dataSource;
-    this.registry = dataSource.getRegistry().grim();
+    this.registry = new GrimRegistrySqlImpl(dataSource.getRegistry());
   }
 
   @Override

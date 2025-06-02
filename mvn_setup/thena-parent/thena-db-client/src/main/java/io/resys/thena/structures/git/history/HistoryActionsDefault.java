@@ -2,9 +2,9 @@ package io.resys.thena.structures.git.history;
 
 /*-
  * #%L
- * thena-docdb-api
+ * thena-db-client
  * %%
- * Copyright (C) 2015 - 2024 Copyright 2022 ReSys OÜ
+ * Copyright (C) 2015 - 2025 Copyright 2022 ReSys OÜ
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,19 @@ package io.resys.thena.structures.git.history;
  */
 
 import io.resys.thena.api.actions.GitHistoryActions;
+import io.resys.thena.api.actions.ImmutableBlobCommitObjects;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
+import io.resys.thena.support.RepoAssert;
+import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @RequiredArgsConstructor
 public class HistoryActionsDefault implements GitHistoryActions {
 
@@ -35,4 +45,43 @@ public class HistoryActionsDefault implements GitHistoryActions {
     return new BlobHistoryQueryImpl(state, repoId);
   }
 
+  @Override
+  public BlobCommitQuery blobCommitQuery() {
+    
+    return new BlobCommitQuery() {
+      private boolean includBlob;
+      private String branchName;
+      @Override
+      public BlobCommitQuery includBlob(boolean includBlob) {
+        this.includBlob = includBlob;
+        return this;
+      }
+      @Override
+      public BlobCommitQuery branchName(String branchName) {
+        this.branchName = branchName;
+        return this;
+      }
+      @Override
+      public Uni<QueryEnvelope<BlobCommitObjects>> findAll() {
+        RepoAssert.notEmpty(repoId, () -> "repoId is not defined!");
+        RepoAssert.notEmpty(branchName, () -> "branchName is not defined!");
+        
+        
+        return state.tenant().getByNameOrId(repoId).onItem()
+        .transformToUni((Tenant existing) -> {
+          if(existing == null) {
+            return Uni.createFrom().item(QueryEnvelope.<BlobCommitObjects>repoNotFound(repoId, log));
+          }
+          final var ctx = state.toGitState(existing);
+          return ctx.query().blobCommits().includBlob(includBlob).branchName(branchName).findAll()
+              .onItem().transform(found -> ImmutableQueryEnvelope
+                  .<GitHistoryActions.BlobCommitObjects>builder().status(QueryEnvelopeStatus.OK).objects(ImmutableBlobCommitObjects.builder()
+                      .values(found)
+                      .build())
+                  .build());
+        });
+      }
+
+    };
+  }
 }

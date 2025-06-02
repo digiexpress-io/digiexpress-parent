@@ -31,6 +31,7 @@ import io.smallrye.mutiny.Uni;
 import io.thestencil.client.api.ImmutableStencilConfig;
 import io.thestencil.client.api.StencilClient;
 import io.thestencil.client.api.StencilStore;
+import io.thestencil.client.spi.builders.SiteCommitLogBuilderImpl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -51,7 +52,10 @@ public class StencilClientImpl implements StencilClient {
   public SitesBuilder sites() {
     return new SitesBuilderImpl();
   }
-  
+  @Override
+  public SiteCommitLogBuilder commitLog() {
+    return new SiteCommitLogBuilderImpl(store);
+  }
   @Override
   public ClientRepoBuilder repo() {
     return new ClientRepoBuilder() {
@@ -118,4 +122,5 @@ public class StencilClientImpl implements StencilClient {
       return new StencilClientImpl(store);
     }
   }
+
 }
