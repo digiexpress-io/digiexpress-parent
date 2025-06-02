@@ -15,8 +15,12 @@ export const EveliError: React.FC = () => {
 
   let locale = 'en';
   try {
+    // useLocale() might fail if the context hasn't been set up (e.g. during app crashes).
+    // We catch and ignore errors here to ensure the error screen itself never crashes.
     locale = useLocale()?.locale || 'en';
-  } catch {}
+  } catch {
+    // Intentionally left blank: if useLocale() throws, we fall back to 'en' above to keep the error page stable.
+  }  
 
   const handleGoHome = () => {
     navigate({
