@@ -23,6 +23,7 @@ package io.digiexpress.thena.batch.client.test.durability;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.digiexpress.thena.batch.client.api.executor.Executor;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
@@ -131,7 +132,9 @@ public class DurabilityStep1 implements Executor<DurabilityStep1.EntityForTestin
     private final int index;
   }
   
-  public static class ExecutorConfigForTesting {
+  public static class ExecutorConfigForTesting implements ExecutorConfig {
+
+    private static final long serialVersionUID = 7835655957598393561L;
     
   }
   

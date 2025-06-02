@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig.BatchConfigWithExecutor;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
@@ -40,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public class StepRunner<Entity, EntityConfig> {
+public class StepRunner<Entity, E extends ExecutorConfig> {
   private final BroadcastProcessor<StepEvent> processor = BroadcastProcessor.create();
   private final ScheduledExecutorService executorService;
 
@@ -48,7 +49,7 @@ public class StepRunner<Entity, EntityConfig> {
   private final BatchConfigWithExecutor config;
   private final RuntimeStep step;
 
-  private final Executor<Entity, EntityConfig> executor;
+  private final Executor<Entity, E> executor;
   private final AtomicLong entityNumber = new AtomicLong();
   private final ScheduledExecutorService threadPool;
 
@@ -56,13 +57,13 @@ public class StepRunner<Entity, EntityConfig> {
   public StepRunner(BatchConfigWithExecutor config, ExecutorContext context, RuntimeStep step) {
     super();
     this.config = config;
-    this.executor = (Executor<Entity, EntityConfig>) config.getExecutor();
+    this.executor = (Executor<Entity, E>) config.getExecutor();
     this.step = step;
     this.threadPool = context.getThreadPool();
     this.executorService = Executors.newScheduledThreadPool(context.getConfig().getEventThreads());
   }
   
-  public ExecutorQuery<Entity, EntityConfig> start(ExecutorContext mainContext) {
+  public ExecutorQuery<Entity, E> start(ExecutorContext mainContext) {
     try {
       
       final var start = executor.before(mainContext);
@@ -77,7 +78,7 @@ public class StepRunner<Entity, EntityConfig> {
     }
   }
   
-  public Uni<ExecutorEntity> visitEntity(Entity entity, EntityConfig config, ExecutorContext mainContext) {
+  public Uni<ExecutorEntity> visitEntity(Entity entity, E config, ExecutorContext mainContext) {
     // something cancelled the processing, nobody listening down from here
     if(threadPool.isShutdown()) {
       // pull the plug on the events
@@ -148,7 +149,7 @@ public class StepRunner<Entity, EntityConfig> {
   }
   
   
-  public Uni<ExecutorResult> end(ExecutorQuery<Entity, EntityConfig> query, ExecutorContext mainContext) {
+  public Uni<ExecutorResult> end(ExecutorQuery<Entity, E> query, ExecutorContext mainContext) {
     Uni<ExecutorResult> start;
     try {
       

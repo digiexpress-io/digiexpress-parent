@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.digiexpress.thena.batch.client.api.executor.Executor;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
@@ -86,7 +87,9 @@ public class CancelStep1 implements Executor<CancelStep1.EntityForTesting, Cance
     private final String id;
   }
   
-  public static class ExecutorConfigForTesting {
+  public static class ExecutorConfigForTesting implements ExecutorConfig {
+
+    private static final long serialVersionUID = 4324839493809730759L;
     
   }
 

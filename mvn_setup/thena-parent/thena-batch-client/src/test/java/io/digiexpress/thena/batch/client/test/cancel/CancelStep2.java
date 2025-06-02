@@ -23,6 +23,7 @@ package io.digiexpress.thena.batch.client.test.cancel;
 import java.util.Arrays;
 
 import io.digiexpress.thena.batch.client.api.executor.Executor;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
@@ -81,7 +82,9 @@ public class CancelStep2 implements Executor<CancelStep2.EntityForTesting, Cance
     private final String id;
   }
   
-  public static class ExecutorConfigForTesting {
+  public static class ExecutorConfigForTesting implements ExecutorConfig {
+
+    private static final long serialVersionUID = 5115193532241504347L;
     
   }
 }

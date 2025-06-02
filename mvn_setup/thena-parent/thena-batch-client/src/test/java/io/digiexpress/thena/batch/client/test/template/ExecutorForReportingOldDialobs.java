@@ -23,6 +23,7 @@ package io.digiexpress.thena.batch.client.test.template;
 import java.util.Arrays;
 
 import io.digiexpress.thena.batch.client.api.executor.Executor;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorEntity;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorQuery;
@@ -72,16 +73,15 @@ public class ExecutorForReportingOldDialobs implements Executor<ExecutorForRepor
         .status(ExecutorResult.ExecutorStatus.OK)
         .build());
   }
-  
-  
 
-  
   @RequiredArgsConstructor
   public static class EntityForTesting {
     private final String id;
   }
   
-  public static class ExecutorConfigForTesting {
+  public static class ExecutorConfigForTesting implements ExecutorConfig {
+
+    private static final long serialVersionUID = 6867830303176506960L;
     
   }
 }

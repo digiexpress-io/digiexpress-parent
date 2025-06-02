@@ -28,6 +28,7 @@ import io.digiexpress.thena.batch.client.api.entities.BatchConfig.BatchConfigWit
 import io.digiexpress.thena.batch.client.api.entities.ImmutableRuntimeLog;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeLog.ExecutionLogLevel;
+import io.digiexpress.thena.batch.client.api.executor.ExecutorConfig;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorContext;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult;
 import io.digiexpress.thena.batch.client.api.executor.ExecutorResult.ExecutorStatus;
@@ -114,12 +115,12 @@ public class InstanceRunnerConsumer {
   }
   
   
-  private <Entity, EntityConfig> Uni<ExecutorResult> visitConsumer(RuntimeInstance runtime, BatchConfigWithExecutor config) {
+  private <Entity, E extends ExecutorConfig> Uni<ExecutorResult> visitConsumer(RuntimeInstance runtime, BatchConfigWithExecutor config) {
     
     return new StepRunnerCreated(context, config).accept().onItem().transformToUni(step -> {
 
         try {
-          final var stepRunner = new StepRunner<Entity, EntityConfig>(config, context, step);
+          final var stepRunner = new StepRunner<Entity, E>(config, context, step);
           final var query = stepRunner.start(context);
   
           return query.findAll()

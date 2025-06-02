@@ -22,10 +22,11 @@ package io.digiexpress.thena.batch.client.api.executor;
 
 import io.smallrye.mutiny.Uni;
 
-public interface Executor<Entity, ExecutorConfig> {
-  ExecutorQuery<Entity, ExecutorConfig> before(ExecutorContext context);
+public interface Executor<Entity, E extends ExecutorConfig> {
   
-  Uni<ExecutorEntity> accept(Entity entity, ExecutorConfig config, ExecutorContext context);
+  ExecutorQuery<Entity, E> before(ExecutorContext context);
   
-  Uni<ExecutorResult> after(ExecutorConfig config, ExecutorContext context);  
+  Uni<ExecutorEntity> accept(Entity entity, E config, ExecutorContext context);
+  
+  Uni<ExecutorResult> after(E config, ExecutorContext context);  
 }
