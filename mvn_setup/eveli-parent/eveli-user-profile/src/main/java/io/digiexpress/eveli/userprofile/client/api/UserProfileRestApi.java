@@ -22,36 +22,34 @@ package io.digiexpress.eveli.userprofile.client.api;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
 import io.smallrye.mutiny.Uni;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+
 
 
 public interface UserProfileRestApi {
   
-  @GET @Path("userprofiles") @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(name = "userprofiles", produces = MediaType.APPLICATION_JSON_VALUE)
   Uni<List<UserProfile>> findAllUserProfiles();
   
-  @GET @Path("userprofiles/{profileId}") @Produces(MediaType.APPLICATION_JSON)
+  @GetMapping(name = "userprofiles/{profileId}", produces = MediaType.APPLICATION_JSON_VALUE)
   Uni<UserProfile> getUserProfileById(@PathParam("profileId") String profileId);
   
-  @POST @Path("userprofiles") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @GetMapping(name = "userprofiles", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   Uni<UserProfile> createUserProfile(CreateUserProfile command);
 
-  @PUT @Path("userprofiles/{profileId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @PutMapping(name = "userprofiles/{profileId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   Uni<UserProfile> updateUserProfile(@PathParam("profileId") String profileId, List<UserProfileUpdateCommand> commands);
   
-  @DELETE @Path("userprofiles/{profileId}") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+  @DeleteMapping(name = "userprofiles/{profileId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   Uni<UserProfile> deleteUserProfile(@PathParam("profileId") String profileId, UserProfileUpdateCommand command);
   
 }

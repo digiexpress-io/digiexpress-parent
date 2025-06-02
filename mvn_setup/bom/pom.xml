@@ -15,6 +15,16 @@
     <dependencies>
       <dependency>
         <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-user-profile</artifactId>
+        <version>${project.version}</version>
+      </dependency>  
+      <dependency>
+        <groupId>io.digiexpress</groupId>
+        <artifactId>eveli-permissions</artifactId>
+        <version>${project.version}</version>
+      </dependency>  
+      <dependency>
+        <groupId>io.digiexpress</groupId>
         <artifactId>eveli-client</artifactId>
         <version>${project.version}</version>
       </dependency>

@@ -68,6 +68,9 @@ import io.digiexpress.eveli.client.spi.tenant.TenantConfigClientProps;
 import io.digiexpress.eveli.client.web.resources.worker.TenantApiController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
 import io.digiexpress.eveli.envir.api.EveliEnvirClient;
+import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
+import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
@@ -156,7 +159,6 @@ public class EveliAutoConfig {
   ) {
     final var history = new FeedbackWithHistory(tx, jdbc, om);
     return new FeedbackClientImpl(taskClient, processClient, dialobClient, jdbc, history, feedbackProps);
-
   }
   @Bean
   public TransactionWrapper transactionWrapper(EntityManager entityManager) {
@@ -262,4 +264,13 @@ public class EveliAutoConfig {
     return new TenantApiController(tenantClient);
   }
 
+  @Bean
+  public UserProfileClient userProfileClient(io.vertx.mutiny.pgclient.PgPool pgPool) {    
+    final var store = UserProfileStore.builder()
+        .repoName("worker-profile")
+        .pgPool(pgPool)
+        .build();
+    store.query().createIfNot().await().atMost(Duration.ofMinutes(1));
+    return new UserProfileClientImpl(store);
+  }
 }

@@ -39,6 +39,7 @@ public class UserProfileStore extends DocStoreImpl<UserProfileStore> {
   
   @Override
   public StoreTenantQuery<UserProfileStore> query() {
-    return super.query().repoType(StructureType.doc);
+    final var resp = super.query().repoType(StructureType.doc).repoName(config.getRepoId());
+    return resp;
   }
 }
