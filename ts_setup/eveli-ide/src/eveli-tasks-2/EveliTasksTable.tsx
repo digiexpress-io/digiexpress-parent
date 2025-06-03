@@ -13,13 +13,19 @@ import { IndicatorAssignee } from './IndicatorAssignee';
 import { WithTableStyles } from '@/eveli-table';
 import { TaskLink } from '@/eveli-tasks/TaskLink';
 
+import { Box, Typography, IconButton, Tooltip } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useIntl, FormattedMessage } from 'react-intl';
 
+import { useNavigate } from '@tanstack/react-router';
+import { EveliPermissions } from '@/eveli-permissions';
 
 export const EveliTasksTable: React.FC = () => {
-
+  const intl = useIntl();
   const { findAll } = useFetch('worker/rest/api/tasks.GET', {})
   const [data, setData] = React.useState<TaskApi.Task[]>([]);
-
+  const navigate = useNavigate();
+  
   React.useEffect(() => {
     findAll().then(setData);
   }, []);
@@ -141,7 +147,31 @@ export const EveliTasksTable: React.FC = () => {
     },
   ]
 
-  return (<WithTableStyles data={data} columns={columns} />)
+  return (
+    <Box sx={{ display: 'inline-block' }}>
+      <Box display="flex" alignItems="center" mb={2}>
+        <Typography variant="h1" sx={{ flexGrow: 1 }}>
+          <FormattedMessage id="tasksView.title" />
+        </Typography>
+        <EveliPermissions id="CREATE_TASK">
+          <Tooltip title={intl.formatMessage({ id: 'taskButton.addTask' })}>
+            <IconButton
+              onClick={() => {
+                navigate({
+                  from: '/secured/$locale',
+                  to: '/secured/$locale/worker/tasks/create',
+                });
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </EveliPermissions>
+      </Box>
+  
+      <WithTableStyles data={data} columns={columns} />
+    </Box>
+  );  
 }
 
 const AnyTaskDateTimeShort: React.FC<{ value: any }> = ({ value }) => {
