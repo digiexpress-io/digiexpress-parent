@@ -28,10 +28,7 @@ export declare namespace FeedbackApi {
 
   export interface FeedbackContent {
     origin: string;
-
-
     customerTitle: string | undefined;
-
     labelKey: string;
     subLabelKey: string | undefined;
     labelValue: string;
@@ -118,6 +115,8 @@ export declare namespace FeedbackApi {
     labelValue: string;
     subLabelKey?: string | undefined;
     subLabelValue?: string | undefined;
+
+    customerTitle: string;
   }
 
   export interface UpsertFeedbackRankingCommand extends ModifyOneFeedbackCommand {

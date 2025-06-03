@@ -23,6 +23,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const { modifyOneFeedback, getOneFeedback, deleteOneFeedback } = useFeedback();
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [reply, setReply] = React.useState<string>('');
+  const [customerTitle, setCustomerTitle] = React.useState<string>('');
   const [question, setQuestion] = React.useState<string>('');
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [savedReply, setSavedReply] = React.useState<string>('');
@@ -39,6 +40,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
         setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
         setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
+
+        setCustomerTitle(resp?.customerTitle ?? '')
       });
   }, []);
 
@@ -57,7 +60,9 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
       labelValue: main.labelValue,
 
       subLabelKey: sub.subLabelKey,
-      subLabelValue: sub.subLabelValue
+      subLabelValue: sub.subLabelValue,
+
+      customerTitle: customerTitle
     };
 
     modifyOneFeedback(taskId, command).then(updatedFeedback => {
@@ -80,6 +85,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   if (!feedback) {
     return (<CircularProgress />)
   }
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
@@ -106,7 +112,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
       <Divider sx={{ my: 2 }} />
 
-      <FeedbackContent feedback={{ ...feedback, ...main, ...sub }} onChange={(props) => {
+      <FeedbackContent feedback={{ ...feedback, ...main, ...sub, customerTitle }} onChange={(props) => {
         setMain({
           labelKey: props.labelKey,
           labelValue: props.labelValue,
@@ -114,7 +120,8 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         setSub({
           subLabelKey: props.subLabelKey ?? '',
           subLabelValue: props.subLabelValue ?? '',
-        })
+        }),
+          setCustomerTitle(props.customerTitle)
       }} />
 
       <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>

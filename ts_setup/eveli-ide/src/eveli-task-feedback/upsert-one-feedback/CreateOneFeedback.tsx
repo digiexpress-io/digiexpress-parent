@@ -45,6 +45,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   }, []);
 
 
+
   function setReply(reply: string) {
     setCommand(prev => (prev ? { ...prev, reply } : undefined));
   }
@@ -107,7 +108,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
       </div>
       <Box display='flex' gap={1}>
         <CancelButton onClick={handleCancel} />
-        <Button variant='contained' onClick={handlePublish} disabled={!command?.reply}><FormattedMessage id='button.publish' /></Button>
+        <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.publish' /></Button>
       </Box>
     </>
   )
