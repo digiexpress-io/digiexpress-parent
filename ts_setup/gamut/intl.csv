@@ -86,6 +86,7 @@ gamut.forms.formName,,Name,Lomakkeen nimi,Namn,Nama,Ime
 gamut.forms.taskRefId,,Reference Id,Viitetunnus,"
 Referens ID",Id Rujukan,Referentni broj
 gamut.forms.started,,Started,Aloitettu,Startade,Bermula,Započeto
+gamut.forms.attachments,,Attachments,Attachments,,
 gamut.forms.status,,Status,Tila,Status,Status,Status
 gamut.forms.status.OPEN,,In progress,Käsittelyssä,Pågår,Sedang berlangsung,U toku
 gamut.forms.status.NEW,,Processing starts soon,Valmis käsittelyyn,Bearbetningen startar snart,Pemprosesan bermula tidak lama lagi,Obrada počinje uskoro

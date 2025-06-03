@@ -72,6 +72,7 @@ export const en = {
   'gamut.forms.formName': 'Name',
   'gamut.forms.taskRefId': 'Reference Id',
   'gamut.forms.started': 'Started',
+  'gamut.forms.attachments': 'Attachments',
   'gamut.forms.status': 'Status',
   'gamut.forms.status.OPEN': 'In progress',
   'gamut.forms.status.NEW': 'Processing starts soon',

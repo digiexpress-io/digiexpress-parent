@@ -72,6 +72,7 @@ export const fi = {
   'gamut.forms.formName': 'Lomakkeen nimi',
   'gamut.forms.taskRefId': 'Viitetunnus',
   'gamut.forms.started': 'Aloitettu',
+  'gamut.forms.attachments': 'Attachments',
   'gamut.forms.status': 'Tila',
   'gamut.forms.status.OPEN': 'Käsittelyssä',
   'gamut.forms.status.NEW': 'Valmis käsittelyyn',
