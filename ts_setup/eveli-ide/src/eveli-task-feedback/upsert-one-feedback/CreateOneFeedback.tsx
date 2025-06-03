@@ -84,10 +84,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
-        <FeedbackContent feedback={{ ...template, ...command }} onChange={(next) => {
-
-          setCommand(prev => (prev ? { ...prev, ...next } : undefined));
-        }} />
+        <FeedbackContent feedback={{ ...template, ...command }} onChange={(next) => { setCommand(prev => (prev ? { ...prev, ...next } : undefined)) }} />
 
         <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
         <TextField onChange={(e) => setQuestion(e.target.value)}

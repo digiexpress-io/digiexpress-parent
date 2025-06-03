@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FeedbackApi, useFeedback } from '@/api-feedback';
 
@@ -76,7 +76,7 @@ export const FeedbackContent: React.FC<{
     {feedback.content.title &&
       <div style={{ marginBottom: 10 }}>
         <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerTitle' })}</Typography>
-        <Typography>{feedback.content.title}</Typography>
+        <TextField sx={{ width: '100%' }} value={feedback.content.title} />
       </div>
     }
     </>)
