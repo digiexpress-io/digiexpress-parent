@@ -6,7 +6,7 @@ import {
   generateUtilityClass,
   Link
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ForwardIcon from '@mui/icons-material/Forward';
 import LockIcon from '@mui/icons-material/Lock';
 import composeClasses from '@mui/utils/composeClasses';
 import { GOverridableComponent } from '../g-override';
@@ -57,9 +57,9 @@ const getFormLinkIcon = (authType: IamApi.FormLinkAuthType) => {
     case 'IS_ANON_FORM_ENABLED':
     case 'IS_USER_FORM_ENABLED':
     case 'IS_REP_ENABLED':
-      return <ArrowForwardIcon color="info" sx={{ height: '20px', width: '20px' }} />;
+      return <ForwardIcon color="info" />;
     default:
-      return <LockIcon color="error" sx={{ height: '20px', width: '20px' }} />;
+      return <LockIcon color="error" />;
   }
 };
 
