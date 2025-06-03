@@ -19,6 +19,9 @@ export declare namespace ContractApi {
     | 'OPEN' // task worker has started working on the task
     | "COMPLETED"  // task worker has completed work
     | "REJECTED" // task worker has completed work and rejected the task
+    | "TRANSFERRED" //
+    | "DELEGATED" // task is delegated to external provider and completed
+    | "WAITING"  // task is waiting for decision
   )
 
   export interface ContractDocument {

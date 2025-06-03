@@ -60,7 +60,8 @@ export const EveliTaskComposer: React.FC<EveliTaskComposerProps> = (props) => {
   }
   const status: TaskApi.TaskStatus = task?.status ?? TaskApi.TaskStatus.NEW;
   const keywords: string[] = (task?.keyWords ?? []).flatMap(element => element.split(','));
-  const readOnly: boolean = (status === TaskApi.TaskStatus.COMPLETED || status === TaskApi.TaskStatus.REJECTED || status === TaskApi.TaskStatus.TRANSFERRED);
+  const readOnly: boolean = (status === TaskApi.TaskStatus.COMPLETED || status === TaskApi.TaskStatus.REJECTED 
+    || status === TaskApi.TaskStatus.TRANSFERRED || status === TaskApi.TaskStatus.DELEGATED);
 
   return (<>
     <Typography variant='h1'>

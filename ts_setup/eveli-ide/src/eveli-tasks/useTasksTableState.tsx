@@ -46,6 +46,9 @@ function getStatusCode(status: TaskApi.TaskStatus | undefined) {
     case TaskApi.TaskStatus.OPEN: return 2;
     case TaskApi.TaskStatus.COMPLETED: return 3;
     case TaskApi.TaskStatus.REJECTED: return 4;
+    case TaskApi.TaskStatus.WAITING: return 5;
+    case TaskApi.TaskStatus.DELEGATED: return 6;
+    case TaskApi.TaskStatus.TRANSFERRED: return 7;
     default: return 0;
   }
 }
@@ -125,6 +128,9 @@ export function useTasksTableState(): TableState {
           'OPEN': intl.formatMessage({ id: 'task.status.open' }),
           'REJECTED': intl.formatMessage({ id: 'task.status.rejected' }),
           'COMPLETED': intl.formatMessage({ id: 'task.status.completed' }),
+          'TRANSFERRED': intl.formatMessage({ id: 'task.status.transferred' }),
+          'DELEGATED': intl.formatMessage({ id: 'task.status.delegated' }),
+          'WAITING':  intl.formatMessage({ id: 'task.status.waiting' }),
         },
         defaultFilter: tableContext.filters?.find((filter: any) => filter.column.field === 'status')?.value || ['NEW', 'OPEN'],
         headerStyle: { fontWeight: 'bold' },
