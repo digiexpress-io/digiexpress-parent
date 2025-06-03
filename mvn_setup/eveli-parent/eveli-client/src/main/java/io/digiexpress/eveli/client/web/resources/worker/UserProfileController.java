@@ -1,5 +1,7 @@
 package io.digiexpress.eveli.client.web.resources.worker;
 
+import java.util.Arrays;
+
 /*-
  * #%L
  * eveli-user-profile
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.eveli.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand.UiSettingsUpdateCommand;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
@@ -56,7 +59,23 @@ public class UserProfileController {
   @GetMapping("/{id}")
   public Uni<UserProfile> getUserProfileById(@PathVariable("id") String profileId) {
     assertAccess(profileId);
-    return userProfileClient.userProfileQuery().get(getUserId(profileId));
+    final var id = getUserId(profileId);
+    return userProfileClient.userProfileQuery().findByIds(Arrays.asList(id))
+        .onItem().transformToUni(items -> {
+          
+          // create profile if non
+          if(items.isEmpty()) {
+            final var principal = workerAuthClient.getUser().getPrincipal();
+            final var command = ImmutableCreateUserProfile.builder()
+                .id(principal.getUsername())
+                .email(principal.getEmail())
+                .build();
+            return userProfileClient.createUserProfile().createOne(command);
+          } 
+          
+          // Profile exists
+          return Uni.createFrom().item(items.iterator().next());
+        });
   }
   @PostMapping
   public Uni<UserProfile> createUserProfile(CreateUserProfile command) {
