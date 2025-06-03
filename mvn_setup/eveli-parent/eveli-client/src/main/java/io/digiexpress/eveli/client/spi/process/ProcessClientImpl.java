@@ -78,5 +78,5 @@ public class ProcessClientImpl implements ProcessClient {
         return processJPA.findQuestionnaireByTaskId(taskId).map(json -> new JsonObject(json));
       }
     };
-  }  
+  }
 }

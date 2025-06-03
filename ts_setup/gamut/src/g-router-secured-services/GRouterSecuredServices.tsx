@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Container, Drawer, useTheme, useMediaQuery, useThemeProps } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useIntl } from 'react-intl';
@@ -93,21 +93,19 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
     })
   }
 
-  const left = React.useCallback(() => {
-    return (
-      <>
-        {!topic && !ownerState.withDrawer && (
-          <>
-            <SearchFilters ownerState={ownerState} />
-            <SearchResults ownerState={ownerState} />
-          </>
-        )}
-        {!!topic && <GArticle>{topic}</GArticle>}
-      </>
-    );
-  }, [ownerState]);
 
   const breadcrumbs = React.useCallback(() => <Nav ownerState={ownerState} />, [ownerState]);
+
+  const leftContents = (<>
+    {!topic && !ownerState.withDrawer && (
+      <>
+        <SearchFilters ownerState={ownerState} />
+        <SearchResults ownerState={ownerState} />
+      </>
+    )}
+    {!!topic && <GArticle>{topic}</GArticle>}
+  </>);
+
 
   return (
     <SearchApi.SearchProvider>
@@ -122,11 +120,17 @@ export const GRouterSecuredServices: React.FC<GRouterSecuredServicesProps> = (in
             </Drawer>)
           }
 
-          <main role='main'><Container><GLayout variant='secured-1-row-1-column' slots={{ breadcrumbs, left }} /></Container></main>
+          <main role='main'><Container><GLayout variant='secured-1-row-1-column' left={leftContents} slots={{ breadcrumbs, left: Left }} /></Container></main>
           <footer role='footer'><GFooter /></footer>
         </GRouterSecuredServicesRoot>
       </GShell>
     </SearchApi.SearchProvider>
   );
+}
+
+
+const Left: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+
+  return (<>{children}</>)
 }
 

@@ -11,7 +11,9 @@ export declare namespace LocaleApi {
 
   export interface LocaleContextType {
     locale: string
+    messages: Localizations;
     setLocale: (newLocale: string) => void
+
   }
   
 }

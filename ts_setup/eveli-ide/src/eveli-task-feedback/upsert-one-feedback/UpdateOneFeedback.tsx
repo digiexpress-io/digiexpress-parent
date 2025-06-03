@@ -21,14 +21,13 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   const theme = useTheme();
 
   const { modifyOneFeedback, getOneFeedback, deleteOneFeedback } = useFeedback();
-
   const [feedback, setFeedback] = React.useState<FeedbackApi.Feedback>();
   const [reply, setReply] = React.useState<string>('');
   const [question, setQuestion] = React.useState<string>('');
-
   const [confirmOpen, setConfirmOpen] = React.useState(false);
-
   const [savedReply, setSavedReply] = React.useState<string>('');
+  const [main, setMain] = React.useState({ labelKey: '', labelValue: '' });
+  const [sub, setSub] = React.useState({ subLabelKey: '', subLabelValue: '' });
 
   React.useEffect(() => {
     getOneFeedback(taskId)
@@ -37,27 +36,35 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         setReply(resp?.replyText ?? '');
         setQuestion(resp?.content?.question ?? '');
         setSavedReply(resp?.replyText ?? '');
+
+        setMain({ labelKey: resp?.labelKey ?? '', labelValue: resp?.labelValue ?? '' })
+        setSub({ subLabelKey: resp?.subLabelKey ?? '', subLabelValue: resp?.subLabelValue ?? '' })
       });
-  }, []);  
+  }, []);
 
   function handlePublish() {
     if (!feedback) {
       return;
     }
-  
+
     const command: FeedbackApi.ModifyOneFeedbackReplyCommand = {
       id: feedback.id,
       commandType: 'MODIFY_ONE_FEEDBACK_REPLY',
       reply: reply,
-      question: question
+      question: question,
+
+      labelKey: main.labelKey,
+      labelValue: main.labelValue,
+
+      subLabelKey: sub.subLabelKey,
+      subLabelValue: sub.subLabelValue
     };
-  
+
     modifyOneFeedback(taskId, command).then(updatedFeedback => {
       onComplete(updatedFeedback);
       setSavedReply(reply);
     });
   }
-  
 
   function confirmDelete() {
     deleteOneFeedback(taskId).then(feedback => {
@@ -73,7 +80,6 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
   if (!feedback) {
     return (<CircularProgress />)
   }
-  
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: theme.spacing(3) }}>
@@ -84,7 +90,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <ApprovalCount approvalCount={feedback.thumbsUpCount} disapprovalCount={feedback.thumbsDownCount} />
       </Box>
       <Divider sx={{ my: 2 }} />
-      
+
       <Typography variant='body2'>
         <Box component='span' fontWeight='bold'>
           {intl.formatMessage({ id: 'feedback.updated' })}:
@@ -100,7 +106,16 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
 
       <Divider sx={{ my: 2 }} />
 
-      <FeedbackContent feedback={feedback.content} />
+      <FeedbackContent feedback={{ ...feedback, ...main, ...sub }} onChange={(props) => {
+        setMain({
+          labelKey: props.labelKey,
+          labelValue: props.labelValue,
+        })
+        setSub({
+          subLabelKey: props.subLabelKey ?? '',
+          subLabelValue: props.subLabelValue ?? '',
+        })
+      }} />
 
       <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
       <TextField onChange={(e) => setQuestion(e.target.value)}
@@ -132,7 +147,7 @@ export const UpdateOneFeedback: React.FC<UpdateOneFeedbackProps> = ({ taskId, on
         <Button
           variant='contained'
           onClick={handlePublish}
-          disabled={reply === savedReply}
+          ///disabled={reply === savedReply}
         >
           <FormattedMessage id='button.update' />
         </Button>

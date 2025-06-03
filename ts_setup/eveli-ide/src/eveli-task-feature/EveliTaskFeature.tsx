@@ -27,7 +27,7 @@ export const EveliTaskFeature: React.FC<{ children: React.ReactNode, id: EveliTa
   const isEnabled = required(features);
 
   if (id === 'CRM_MESSAGES') {
-    console.log(id, { isEnabled, required }, features.map(f => f))
+    //console.log(id, { isEnabled, required }, features.map(f => f))
   }
   if (isEnabled) {
     return <>{children}</>

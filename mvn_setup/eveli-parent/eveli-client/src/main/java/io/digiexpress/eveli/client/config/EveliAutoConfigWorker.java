@@ -27,10 +27,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import io.digiexpress.eveli.client.api.AttachmentCommands;
-import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.api.FeedbackClient;
 import io.digiexpress.eveli.client.api.ProcessClient;
 import io.digiexpress.eveli.client.api.TaskClient;
+import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.client.iam.PortalAccessValidator;
 import io.digiexpress.eveli.client.iam.PortalAccessValidatorImpl;
 import io.digiexpress.eveli.client.spi.mq.MqEventPublisher;
@@ -42,8 +42,10 @@ import io.digiexpress.eveli.client.web.resources.worker.FeedbackApiController;
 import io.digiexpress.eveli.client.web.resources.worker.ProcessApiController;
 import io.digiexpress.eveli.client.web.resources.worker.SchedulerApiCotroller;
 import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
+import io.digiexpress.eveli.client.web.resources.worker.UserProfileController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 
 
 
@@ -63,6 +65,12 @@ public class EveliAutoConfigWorker {
   ) {
     return new PrintoutController(taskClient, authClient, dialobClient, restTemplate, printoutConfig.getServiceUrl());
   }
+  
+  @Bean
+  public UserProfileController userProfileController(UserProfileClient useProfileClient, WorkerAuthClient authClient) {
+    return new UserProfileController(useProfileClient, authClient);
+  }
+  
   @Bean 
   public TaskApiController taskApiController(
       FeedbackClient feedback,

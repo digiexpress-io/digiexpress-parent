@@ -13,13 +13,13 @@ export interface GLayoutProps {
   children?: React.ReactNode | undefined;
   variant: 'toolbar-n-rows-2-columns' | 'secured-1-row-2-columns' | 'secured-1-row-1-column' | 'secured-1-row-1-column-small' | 'fill-session-start-end';
   slots?: {
-    left?: React.ElementType,
+    left?: React.ElementType<{ children?: React.ReactNode | undefined }>,
     right?: React.ElementType;
     center?: React.ElementType;
     topTitle?: React.ElementType;
     breadcrumbs?: React.ElementType;
   };
-
+  left?: React.ReactNode;
   component?: GOverridableComponent<GLayoutProps>;
 }
 
@@ -46,7 +46,7 @@ export const GLayout: React.FC<GLayoutProps> = (initProps) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={8} className={classes.left}>
-            <Left />
+            <Left children={themeProps.left} />
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={4} className={classes.right}>
@@ -76,7 +76,7 @@ export const GLayout: React.FC<GLayoutProps> = (initProps) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={12} className={classes.oneColContent}>
-            <Left />
+            <Left children={themeProps.left} />
           </Grid>
           {themeProps.children}
         </Grid>
@@ -130,7 +130,7 @@ export const GLayout: React.FC<GLayoutProps> = (initProps) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={12} className={classes.oneColContentSmall}>
-            <Left />
+            <Left children={themeProps.left} />
           </Grid>
           {themeProps.children}
         </Grid>

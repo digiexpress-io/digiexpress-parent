@@ -258,6 +258,7 @@ export const fi = {
   'feedback.isPublished': 'Tämä vastine on julkaistu',
   'feedback.delete.confirmTitle': 'Poista palaute?',
   'feedback.delete.confirmText': 'Haluatko varmasti poistaa tämän palautteen?',
+  'feedback.main_topic.youthservice': 'Nuorisopalvelu',
   'help.title': 'Ohjeet',
   'attachmentView.title': 'Liitetiedostot',
   'attachmentTableHeader.size': 'Koko',

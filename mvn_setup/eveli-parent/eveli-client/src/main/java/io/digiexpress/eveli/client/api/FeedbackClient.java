@@ -142,7 +142,11 @@ public interface FeedbackClient {
   interface ModifyOneFeedbackReplyCommand extends ModifyOneFeedbackCommand {
     String getReply();
     String getQuestion();
-    
+    String getLabelKey();
+    String getLabelValue();
+    @Nullable String getSubLabelKey();
+    @Nullable String getSubLabelValue();
+
     @Value.Default
     @Override default ModifyFeedbackCommandType getCommandType() { return ModifyFeedbackCommandType.MODIFY_ONE_FEEDBACK_REPLY; }
   }
