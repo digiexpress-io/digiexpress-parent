@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
+import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
+import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand.UiSettingsUpdateCommand;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.CreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UserProfileCommand.UserProfileUpdateCommand;
@@ -46,29 +48,57 @@ public class UserProfileController {
 
   private final UserProfileClient userProfileClient;
   private final WorkerAuthClient workerAuthClient;
-
+  
   @GetMapping
   public Uni<List<UserProfile>> findAllUserProfiles() {
     return userProfileClient.userProfileQuery().findAll();
   }
   @GetMapping("/{id}")
   public Uni<UserProfile> getUserProfileById(@PathVariable("id") String profileId) {
-    if("current".equals(profileId)) {
-      return userProfileClient.userProfileQuery().get(workerAuthClient.getUser().getPrincipal().getUsername());
-    }
-    return userProfileClient.userProfileQuery().get(profileId);
+    assertAccess(profileId);
+    return userProfileClient.userProfileQuery().get(getUserId(profileId));
   }
   @PostMapping
   public Uni<UserProfile> createUserProfile(CreateUserProfile command) {
+    assertAccess(command.getUsername());
     return userProfileClient.createUserProfile().createOne(command);
   }
-  
   @PutMapping("/{id}")
   public Uni<UserProfile> updateUserProfile(@PathVariable("id") String profileId, List<UserProfileUpdateCommand> commands) {
+    assertAccess(profileId);
     return userProfileClient.updateUserProfile().updateOne(commands);
   }
   @DeleteMapping("/{id}")
   public Uni<UserProfile> deleteUserProfile(@PathVariable("id") String profileId, UserProfileUpdateCommand command) {
+    assertAccess(profileId);
     return userProfileClient.updateUserProfile().updateOne(command);
+  }
+  
+  
+  @PutMapping("/{id}/ui-settings")
+  public Uni<UiSettings> uiSettings(@PathVariable("id") String profileId, UiSettingsUpdateCommand commands) {
+    assertAccess(profileId);
+    assertAccess(commands.getUserId());
+    return userProfileClient.updateUiSettings().updateOne(commands);
+  }
+  @GetMapping("/{id}/ui-settings/{settingsId}")
+  public Uni<UiSettings> getUISettings(@PathVariable("id") String profileId, @PathVariable("settingsId") String settingsId) {
+    assertAccess(profileId);
+    return userProfileClient.uiSettingsQuery().get(getUserId(profileId), settingsId);
+  }
+  public String getUserId(String init) {
+    if("current".equals(init)) {
+      return workerAuthClient.getUser().getPrincipal().getUsername();      
+    }
+    return init;
+  }
+
+  private void assertAccess(String id) {
+    if(workerAuthClient.getUser().getPrincipal().getUsername().equals(id) || "current".equals(id)) {
+      return;
+    }
+    
+    // todo fix this later
+    throw new RuntimeException("not allowed!");
   }
 }
