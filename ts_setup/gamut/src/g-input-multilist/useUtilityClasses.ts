@@ -1,7 +1,7 @@
 import { generateUtilityClass, styled } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '../api-variants';
-import { GInputMultilistProps } from './GInputMultilist';
+import { GInputMultilistProps } from './g-input-multilist-types';
 
 
 export const MUI_NAME = 'GInputMultilist';

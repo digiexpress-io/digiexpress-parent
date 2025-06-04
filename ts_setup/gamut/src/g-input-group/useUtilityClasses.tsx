@@ -49,14 +49,16 @@ export const GInputGroupRoot = styled('div', {
 export const GInputGroupLabel = styled('div', {
   name: MUI_NAME,
   slot: 'Label',
-  shouldForwardProp: (prop) => prop !== 'onAddRow',
+  shouldForwardProp: (prop) => prop !== 'onAddRow' && prop !== 'ownerState',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputGroupProps>(({ theme, label }) => {
+})<{ ownerState: GInputGroupProps, className: string }>(({ theme, ownerState }) => {
+
+  const { label } = ownerState;
   return {
     display: 'flex',
     '& .MuiDivider-root': {
@@ -76,14 +78,14 @@ export const GInputGroupLabel = styled('div', {
 export const GInputGroupBody = styled('div', {
   name: MUI_NAME,
   slot: 'Body',
-  shouldForwardProp: (prop) => prop !== 'onAddRow',
+  shouldForwardProp: (prop) => prop !== 'onAddRow' && prop !== 'ownerState',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputGroupProps>(({ theme }) => {
+})<{ ownerState: GInputGroupProps, className: string }>(({ theme }) => {
   return {
 
   };

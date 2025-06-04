@@ -1,53 +1,52 @@
 import React from 'react';
-import { Autocomplete, Checkbox, TextField } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { Autocomplete, AutocompleteProps, FilterOptionsState, TextField } from '@mui/material';
+
+import { GInputAutoCompleteProps } from './g-input-autocomplete-types';
+import { OptionsProvider } from './GInputAutocompleteProvider';
+import { GInputAutoCompleteOption } from './GInputAutocompleteOption';
+import { InputHiddenUni, InputHiddenMulti } from './InputHidden';
 
 
-const options = ['cat', 'camel', 'dog', 'fish', 'parrot', 'papaya', 'lizard']
 
 // single choice
-export const GInputAutoComplete1: React.FC = () => {
+export const GInputAutoComplete: React.FC<GInputAutoCompleteProps> = (props) => {
+  const ownerState = useOwnerState(props);
+  const [value, setValue] = React.useState(props.value);
 
-
-  return (<Autocomplete
-    disablePortal
-    options={options}
-    value={options[1]}
-    renderInput={(params) => <TextField {...params} hiddenLabel />}
-  />)
+  return (
+    <OptionsProvider {...props}>
+      {props.multiple ?
+        <InputHiddenMulti id={props.id} value={value as string[]} onChange={props.onChange} /> :
+        <InputHiddenUni id={props.id} value={value as string} onChange={props.onChange} />
+      }
+      <Autocomplete
+        filterOptions={(options, state) => filterOptions(props, options, state)}
+        disablePortal {...ownerState}
+        onChange={(_ignore, newValue) => setValue(newValue)}
+        renderInput={(params) => <TextField {...params} hiddenLabel />}
+      />
+    </OptionsProvider>)
 }
 
-
-
-
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-// multi-choice
-export const GInputAutoComplete: React.FC = () => {
-  return (<Autocomplete
-    disablePortal
-    options={options}
-    disableCloseOnSelect
-    multiple={true}
-    renderInput={(params) => <TextField {...params} hiddenLabel />}
-    renderOption={(props, option, { selected }) => {
-      const { key, ...optionProps } = props;
-      return (
-        <li key={key} {...optionProps}>
-          <Checkbox
-            icon={icon}
-            checkedIcon={checkedIcon}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option}
-        </li>
-      );
-    }}
-  />)
+function filterOptions(props: GInputAutoCompleteProps, _options: string[], state: FilterOptionsState<string>): string[] {
+  const inputValue = state.inputValue.toLocaleLowerCase();
+  return (props.datasource?.entries ?? [])
+    .filter(v => v.value.toLocaleLowerCase().indexOf(inputValue) > - 1)
+    .map(v => v.value)
 }
 
+function useOwnerState(props: GInputAutoCompleteProps): Partial<AutocompleteProps<string, true, false, false, any>> & { options: string[] } {
+  const options = props.datasource ? props.datasource.entries.map(e => e.key) : [];
+
+  if (props.multiple) {
+    return {
+      options,
+      disableCloseOnSelect: true,
+      multiple: true,
+      renderOption: (props, option, state, ownerState) => <GInputAutoCompleteOption key={props.key} props={props} option={option} state={state} ownerState={ownerState} />,
+      value: props.value as any
+    }
+  }
+  return { options, value: props.value as any }
+}
 

@@ -12,6 +12,7 @@ import { GInputRadio } from './GInputRadio';
 import { GInputListProps } from './g-input-list-types';
 import { GInputDropdown } from './GInputDropdown';
 import { GInputAutoComplete } from '../g-input-autocomplete';
+import { UNDEFINED_SELECTION_VALUE } from '../g-form-base-element';
 
 export const GInputList: React.FC<GInputListProps> = (initProps) => {
 
@@ -35,7 +36,7 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
       case 'list-radio':
         return GInputRadio;
       case 'autocomplete':
-        return GInputAutoComplete;
+        return GInputListAutocomplete;
       case 'list':
       default:
         return GInputDropdown;
@@ -62,4 +63,16 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
   return (<GInputListRoot className={classes.root} ownerState={ownerState} as={props.component}>
     <GInputBase id={props.id} slots={slots.slots} slotProps={slots.slotProps} />
   </GInputListRoot>);
+}
+
+
+
+const GInputListAutocomplete: React.FC<GInputListProps> = (initProps) => {
+  return <GInputAutoComplete
+    id={initProps.id}
+    datasource={initProps.datasource}
+    multiple={false}
+    onChange={initProps.onChange}
+    value={initProps.value ?? UNDEFINED_SELECTION_VALUE}
+  />
 }

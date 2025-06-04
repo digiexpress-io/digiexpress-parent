@@ -4,6 +4,17 @@ import { GInputMultilist } from './GInputMultilist';
 
 
 
+function parseValue(value: any): string[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (!value) {
+    return [];
+  }
+  return [value];
+}
+
+
 export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
   const valueset = store.form.toValueSet(element.id);
   const desc = store.form.toDescription(element.id);
@@ -13,14 +24,8 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
 
   function onChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {      
     const multichoiceEvent = event as React.ChangeEvent<HTMLInputElement>;
-    const targetValue = multichoiceEvent.target.value as string;
-
-    const oldValue: string[] = element.value ?? [];
-    const newValue: string[] = oldValue.includes(targetValue) ? 
-      oldValue.filter(v => v !== targetValue) : 
-      [...oldValue, targetValue];
-
-    store.setAnswer(element.id, newValue);
+    const newValue: string = multichoiceEvent.target.value;
+    store.setAnswer(element.id, newValue ? newValue.split(',') : []);
   }
 
   return (
@@ -28,10 +33,10 @@ export const GInputMultilistDialob: React.FC<GFormBaseElementProps> = ({ actionI
       id={element.id}
       label={element.label}
       description={desc}
-      variant='multilist'
+      variant={element.props.variant}
       errors={errors}
       border={border}
-      value={element.value}
+      value={parseValue(element.value)}
       datasource={valueset!}
       onChange={onChange}
       labelPosition={labelPosition}

@@ -75,6 +75,8 @@ export const GInputSurveyBody = styled('div', {
     prop !== 'description' && 
     prop !== 'vertical' && 
     prop !== 'labelPosition' && 
+    prop !== 'border' &&
+    prop !== 'ownerState' && 
     prop !== 'questions'),
     
   overridesResolver: (props, styles) => {
@@ -83,7 +85,7 @@ export const GInputSurveyBody = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputSurveyProps>(({ theme, options }) => {
+})<{ ownerState: GInputSurveyProps }>(({ theme }) => {
   return {
 
   };

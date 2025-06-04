@@ -33,7 +33,7 @@ export interface GInputSurveyProps {
   component?: React.ElementType<GInputSurveyProps>;
   slots?: {
     option: React.ElementType<GInputSurveyOptionProps>;
-    body: React.ElementType<GInputSurveyProps>;
+    body: React.ElementType<{ ownerState: GInputSurveyProps }>;
   };
 }
 
@@ -84,12 +84,11 @@ const Options: React.FC<GInputSurveyProps> = (props) => {
   const { id, options } = props;
   const classes = useUtilityClasses(id);
   
-  const Body: React.ElementType<GInputSurveyProps> = props.slots?.body ?? GInputSurveyBody as any;
+  const Body: React.ElementType<{ ownerState: GInputSurveyProps, className: string }> = props.slots?.body ?? GInputSurveyBody as any;
   const Option: React.ElementType<GInputSurveyOptionProps> = props.slots?.option ?? GInputSurveyOption as any;
 
   return (
-    
-    <Body {...props} className={classes.body}>
+    <Body ownerState={props} className={classes.body}>
       <div />
       {options.map((e, index) => (<Option index={index} id={id} key={e.label} label={e.label} description={e.description} className={classes.option} />))}
       {props.children}
