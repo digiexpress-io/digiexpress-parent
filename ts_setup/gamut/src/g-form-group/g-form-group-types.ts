@@ -12,6 +12,7 @@ export interface GFormGroupProps {
 
   /**
    - if true, render an accordion, otherwise flat group
+   - Set in Composer properties collapsible = true
    */
   collapsible?: boolean | undefined;
 
@@ -24,6 +25,7 @@ export interface GFormGroupProps {
   /**
   - Styles for parent and child group items, resembling MUI Paper, which include a border, elevation, and padding/margins   
   - For every level of nesting of a group within other groups, it will have additional margins calculated from its level property
+  - Set in Composer properties: border = true  
    */
   border?: boolean | undefined;
 
