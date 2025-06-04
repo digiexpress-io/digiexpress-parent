@@ -32,7 +32,7 @@ function hook(props: {}) {
         const baseUrl = url({ profileId: 'current/ui-settings' });
         return params.fetch(baseUrl, { method: 'PUT', body: JSON.stringify(commands)}).then(response => response.json());
       },
-      findUiSettings(settingsId: string): Promise<PrefsApi.UiSettings | undefined> {
+      async findUiSettings(settingsId: string): Promise<PrefsApi.UiSettings | undefined> {
         const baseUrl = url({ profileId: 'current/ui-settings/' + settingsId});
         return params.fetch(baseUrl).then(response => response.json());
       }

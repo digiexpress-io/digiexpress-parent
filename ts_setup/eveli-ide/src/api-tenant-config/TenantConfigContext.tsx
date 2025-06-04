@@ -2,6 +2,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { GThemeOptions } from '@dxs-ts/gamut'
 import { ThemeOptions } from '@mui/material';
+import { EveliFeatureMapping, EveliFeatureType } from './EveliFeatureMapping';
 
 export interface TenantConfig {
   features: TenantFeature[];
@@ -13,7 +14,7 @@ export type TenantFeature = (
   "wrench-disabled" |
   "stencil-disabled"  |
   "external-deployment" |
-
+  "smart_tables" |
 
   'queues-visually-disabled' |
   'feedback-visually-disabled' |
@@ -24,7 +25,7 @@ export type TenantFeature = (
 
 const INITIAL_CONFIG: TenantConfig = {
   features: [],
-  gamutThemeOptions: GThemeOptions,
+  gamutThemeOptions: GThemeOptions
 }
 
 export interface TenantConfigContextProviderProps {
@@ -59,13 +60,21 @@ export const TenantConfigContextProvider: React.FC<PropsWithChildren<TenantConfi
   if(props.disabled === true) {
     return (<>{props.children}</>)
   }
-
-  return (
-    <WithProvider {...props}/>
-  );
+  return (<WithProvider {...props}/>);
 };
 
 
-
-
 export const useTenantConfig = () => useContext(TenantConfigContext);
+export const useTenantConfigFeatures = () => {
+  const context = useContext(TenantConfigContext);
+
+  return {
+    isEnabled: (id: EveliFeatureType) => {
+      const required = EveliFeatureMapping[id];
+      const isEnabled = required(context.features);
+      return isEnabled;
+    }
+  }  
+}
+
+

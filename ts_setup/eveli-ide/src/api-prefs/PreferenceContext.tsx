@@ -27,19 +27,17 @@ export function createPrefContext(hardInit?: PreferenceInit) {
     const { user } = useIam();
     const userId = user.userId;
     const [state, setState] = React.useState(initPreference(init, uiSettings));
+
     const withConfig: WithConfig = React.useCallback((config) => initWithConfig(setState, backend, userId, config), [setState, backend, userId]);
-    
     const withVisibility: WithVisibility = React.useCallback((visibility) => initWithVisibility(setState, backend, userId, visibility), [setState, backend, userId]);
     const withVisibleFields: WithVisibleFields = React.useCallback((visibility) => initWithVisibleFields(setState, backend, userId, visibility), [setState, backend, userId]);
-
+    
     const contextValue: PreferenceContextType = React.useMemo(() => {
       return { pref: state, withVisibility, withVisibleFields, withConfig };
     }, [state, withVisibility, withVisibleFields, withConfig]);
 
     return (<PreferenceContext.Provider value={contextValue}>{children}</PreferenceContext.Provider>);
   }
-
-
 
   const PreferenceContext = React.createContext<PreferenceContextType>({} as any);
 

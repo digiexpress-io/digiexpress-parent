@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,24 +79,24 @@ public class UserProfileController {
         });
   }
   @PostMapping
-  public Uni<UserProfile> createUserProfile(CreateUserProfile command) {
+  public Uni<UserProfile> createUserProfile(@RequestBody CreateUserProfile command) {
     assertAccess(command.getUsername());
     return userProfileClient.createUserProfile().createOne(command);
   }
   @PutMapping("/{id}")
-  public Uni<UserProfile> updateUserProfile(@PathVariable("id") String profileId, List<UserProfileUpdateCommand> commands) {
+  public Uni<UserProfile> updateUserProfile(@PathVariable("id") String profileId, @RequestBody List<UserProfileUpdateCommand> commands) {
     assertAccess(profileId);
     return userProfileClient.updateUserProfile().updateOne(commands);
   }
   @DeleteMapping("/{id}")
-  public Uni<UserProfile> deleteUserProfile(@PathVariable("id") String profileId, UserProfileUpdateCommand command) {
+  public Uni<UserProfile> deleteUserProfile(@PathVariable("id") String profileId, @RequestBody UserProfileUpdateCommand command) {
     assertAccess(profileId);
     return userProfileClient.updateUserProfile().updateOne(command);
   }
   
   
   @PutMapping("/{id}/ui-settings")
-  public Uni<UiSettings> uiSettings(@PathVariable("id") String profileId, UiSettingsUpdateCommand commands) {
+  public Uni<UiSettings> uiSettings(@PathVariable("id") String profileId, @RequestBody UiSettingsUpdateCommand commands) {
     assertAccess(profileId);
     assertAccess(commands.getUserId());
     return userProfileClient.updateUiSettings().updateOne(commands);

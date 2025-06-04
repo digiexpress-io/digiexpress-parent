@@ -2,13 +2,15 @@ import React from 'react';
 
 import { flexRender, ColumnDef, RowData } from '@tanstack/react-table';
 
-import { useTableState } from './tanstack';
+import { useTable } from './tanstack';
 import { EveliTable } from './table';
 
 import { ToolColumnVisibilityDialog, ToolColumnVisibilitySelection } from './tool-column-visibility';
 import { ToolPagination } from './tool-pagination';
 import { ToolHeaderOptions } from './tool-header-options';
 import { ToolColumnFilter } from './tool-column-filter';
+import { CircularProgress } from '@mui/material';
+import { TableState, useTableState } from './table-state';
 
 
 
@@ -26,11 +28,26 @@ export function WithTableStyles<DataType extends object>(props: {
   options?: { initialPageSize?: number }
 }): React.ReactNode {
 
+  const initialPageSize = props.options?.initialPageSize ?? 20 
+  const { loading, state } = useTableState({ initialPageSize });
 
-  const {
-    table, pagination, initialPageSize, columnSizeVars, filterDialogOpen,
-    onColumnFilter, onClearAll,
-  } = useTableState<DataType>(props);
+  if(loading) {
+    return <CircularProgress />
+  }
+  return (<RenderTable columns={props.columns} data={props.data} options={{ initialPageSize }} state={state}/>)
+}
+
+
+
+
+function RenderTable<DataType extends object>(props: {
+  columns: ColumnDef<DataType, unknown>[],
+  data: DataType[],
+  options: { initialPageSize: number },
+  state: [TableState, React.Dispatch<React.SetStateAction<TableState>>];
+}): React.ReactNode {
+
+  const { table, pagination, columnSizeVars, filterDialogOpen, onColumnFilter, onClearAll } = useTable<DataType>(props);
 
   return (
     <>
@@ -55,7 +72,7 @@ export function WithTableStyles<DataType extends object>(props: {
           },
           footer: {
             pageSize: pagination.pageSize,
-            children: <ToolPagination initialPageSize={initialPageSize} pagination={pagination} table={table} />
+            children: <ToolPagination initialPageSize={props.options.initialPageSize} pagination={pagination} table={table} />
           },
           drawer: {
             body: (type) => {
