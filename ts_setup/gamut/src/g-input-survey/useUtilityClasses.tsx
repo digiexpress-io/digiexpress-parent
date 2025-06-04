@@ -40,6 +40,7 @@ export const GInputSurveyRoot = styled('div', {
     ...(ownerState.border ? {
       border: `1px solid ${theme.palette.divider}`,
       padding: theme.spacing(2),
+      margin: theme.spacing(2),
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
     } : {}),
 

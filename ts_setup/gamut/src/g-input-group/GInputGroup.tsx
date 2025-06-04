@@ -11,6 +11,12 @@ export interface GInputGroupProps {
   children: React.ReactNode;
   onAddRow: (id: string) => void;
 
+  /**
+- Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
+- Set in Composer properties: border = true  
+ */
+  border?: boolean | undefined;
+
   component?: React.ElementType<GInputGroupProps>;
   slots?: {
     label: React.ElementType<GInputGroupProps>;
@@ -38,7 +44,6 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
 
   return (
     <GInputGroupRoot className={classes.root} ownerState={ownerState} as={props.component}>
-
 
       <Label {...props} className={classes.label}>
         <div>
