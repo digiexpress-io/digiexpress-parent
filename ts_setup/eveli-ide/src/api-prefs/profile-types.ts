@@ -34,11 +34,6 @@ export declare namespace PrefsApi {
     enabled: boolean;
   }
 
-  export interface UiSettingsForSorting {
-    dataId: string;
-    direction: 'asc' | 'desc';
-  }
-
 
   export interface UiSettingsForConfig {
     dataId: string;
@@ -50,7 +45,6 @@ export declare namespace PrefsApi {
     settingsId: string;
     userId: string;
     visibility: UiSettingForVisibility[];
-    sorting: UiSettingsForSorting[];
     config: UiSettingsForConfig[];
   }
 
@@ -98,7 +92,6 @@ export declare namespace PrefsApi {
     userId: string;
     settingsId: string;
     visibility: UiSettingForVisibility[];
-    sorting: UiSettingsForSorting[];
     config: UiSettingsForConfig[];
   }
 

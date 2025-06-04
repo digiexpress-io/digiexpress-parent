@@ -36,14 +36,8 @@ public interface UiSettings extends Serializable {
   
   List<UiSettings.UiSettingForConfig> getConfig();
   List<UiSettings.UiSettingForVisibility> getVisibility();
-  List<UiSettings.UiSettingsForSorting> getSorting();
-  
 
-  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForVisibility.class) @JsonDeserialize(as = ImmutableUiSettingForVisibility.class)
-  interface UiSettingForVisibility extends Serializable {
-    String getDataId();
-    Boolean getEnabled();
-  }
+  
   
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForConfig.class) @JsonDeserialize(as = ImmutableUiSettingForConfig.class)
   interface UiSettingForConfig extends Serializable {
@@ -51,9 +45,10 @@ public interface UiSettings extends Serializable {
     String getValue();
   }
   
-  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingsForSorting.class) @JsonDeserialize(as = ImmutableUiSettingsForSorting.class)
-  interface UiSettingsForSorting extends Serializable {
+  @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForVisibility.class) @JsonDeserialize(as = ImmutableUiSettingForVisibility.class)
+  interface UiSettingForVisibility extends Serializable {
     String getDataId();
-    String getDirection();
+    Boolean getEnabled();
   }
+
 }

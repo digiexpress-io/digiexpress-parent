@@ -27,7 +27,6 @@ import java.util.List;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettingForConfig;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettingForVisibility;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettings;
-import io.digiexpress.eveli.userprofile.client.api.model.ImmutableUiSettingsForSorting;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettingsCommand.UpsertUiSettings;
@@ -89,7 +88,6 @@ public class UiSettingsCommandVisitor {
     
     final var newEntity = builder
         .config(command.getConfig().stream().map(e -> ImmutableUiSettingForConfig.builder().from(e).build()).toList())
-        .sorting(command.getSorting().stream().map(e -> ImmutableUiSettingsForSorting.builder().from(e).build()).toList())
         .visibility(command.getVisibility().stream().map(e -> ImmutableUiSettingForVisibility.builder().from(e).build()).toList())
         .build();
     

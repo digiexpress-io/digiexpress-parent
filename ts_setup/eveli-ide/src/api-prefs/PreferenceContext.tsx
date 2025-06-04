@@ -8,8 +8,8 @@ import { PreferenceContextType, PreferenceInit } from './pref-types';
 
 
 import { 
-  WithSorting, WithConfig, initWithConfig, WithVisibility, WithVisibleFields, 
-  initPreference, initWithSorting, initWithVisibility, initWithVisibleFields 
+  WithConfig, initWithConfig, WithVisibility, WithVisibleFields, 
+  initPreference, initWithVisibility, initWithVisibleFields 
 } from './initMethods';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
@@ -28,13 +28,13 @@ export function createPrefContext(hardInit?: PreferenceInit) {
     const userId = user.userId;
     const [state, setState] = React.useState(initPreference(init, uiSettings));
     const withConfig: WithConfig = React.useCallback((config) => initWithConfig(setState, backend, userId, config), [setState, backend, userId]);
-    const withSorting: WithSorting = React.useCallback((sorting) => initWithSorting(setState, backend, userId, sorting), [setState, backend, userId]);
+    
     const withVisibility: WithVisibility = React.useCallback((visibility) => initWithVisibility(setState, backend, userId, visibility), [setState, backend, userId]);
     const withVisibleFields: WithVisibleFields = React.useCallback((visibility) => initWithVisibleFields(setState, backend, userId, visibility), [setState, backend, userId]);
 
     const contextValue: PreferenceContextType = React.useMemo(() => {
-      return { pref: state, withSorting, withVisibility, withVisibleFields, withConfig };
-    }, [state, withSorting, withVisibility, withVisibleFields, withConfig]);
+      return { pref: state, withVisibility, withVisibleFields, withConfig };
+    }, [state, withVisibility, withVisibleFields, withConfig]);
 
     return (<PreferenceContext.Provider value={contextValue}>{children}</PreferenceContext.Provider>);
   }

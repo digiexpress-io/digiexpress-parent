@@ -1,4 +1,4 @@
-import { Preference, VisibilityRule, SortingRule, DataId, PreferenceId, ConfigRule } from './pref-types';
+import { Preference, VisibilityRule, DataId, PreferenceId, ConfigRule } from './pref-types';
 
 
 export interface ImmutablePreferenceInit {
@@ -6,7 +6,6 @@ export interface ImmutablePreferenceInit {
   backendId: string | undefined;
   fields: readonly DataId[];
   visibility: Record<DataId, VisibilityRule>;
-  sorting: Record<DataId, SortingRule>;
   config: Record<DataId, ConfigRule>;
 }
 
@@ -16,14 +15,12 @@ export class ImmutablePreference implements Preference {
   private _fields: readonly DataId[];
   
   private _visibility: Record<DataId, VisibilityRule>;
-  private _sorting: Record<DataId, SortingRule>;
   private _config: Record<DataId, ConfigRule>;
 
   constructor(init: ImmutablePreferenceInit) {
     this._id = init.id;
     this._fields = init.fields;
     this._visibility = this.initVisibility(init);
-    this._sorting = init.sorting;
     this._config = init.config;
   }
 
@@ -42,13 +39,9 @@ export class ImmutablePreference implements Preference {
   get config() { return Object.values(this._config) }
   
   get visibility() { return Object.values(this._visibility) }
-  get sorting() { return Object.values(this._sorting) }
 
   getVisibility(dataId: DataId): VisibilityRule {
     return this._visibility[dataId];
-  }
-  getSorting(dataId?: DataId): SortingRule | undefined{
-    return dataId ? this._sorting[dataId] : Object.values(this._sorting)[0];
   }
   getConfig(dataId: DataId): ConfigRule | undefined {
     return this._config[dataId];
@@ -63,12 +56,6 @@ export class ImmutablePreference implements Preference {
     }
 
     return new ImmutablePreference(this.clone({ config: nextState }));
-  }
-
-  withSorting(newValue: SortingRule): ImmutablePreference {
-    const sorting: Record<DataId, SortingRule> = {  }; // composite sorting not supported yet
-    sorting[newValue.dataId] = { ...newValue };
-    return new ImmutablePreference(this.clone({ sorting }));
   }
   withVisibility(newValue: VisibilityRule): ImmutablePreference {
     const visibility: Record<DataId, VisibilityRule> = { ...this._visibility };
@@ -89,7 +76,6 @@ export class ImmutablePreference implements Preference {
       id: this._id,
       fields: init.fields ?? this._fields,
       visibility: init.visibility ?? this._visibility,
-      sorting: init.sorting ?? this._sorting,
       config: init.config ?? this._config,
     };
   }

@@ -7,11 +7,6 @@ export interface VisibilityRule {
   enabled: boolean;
 }
 
-export interface SortingRule {
-  dataId: DataId;
-  direction: 'asc' | 'desc';
-}
-
 export interface ConfigRule {
   dataId: DataId;
   value: string;
@@ -22,19 +17,16 @@ export interface Preference {
   fields: readonly DataId[]; //used for visibility and sorting as definition for all the field names on top of what constrains can be added
   
   visibility: readonly VisibilityRule[];
-  sorting: readonly SortingRule[];
   config: readonly ConfigRule[];
 
   getVisibility(dataId: DataId): VisibilityRule;
   getConfig(dataId: DataId): ConfigRule | undefined;
-  getSorting(dataId?: DataId): SortingRule | undefined;
 }
 
 export interface PreferenceContextType {
   pref: Preference;
   
   withConfig(config: ConfigRule): void;
-  withSorting(sorting: Omit<SortingRule, "id">): void;
   withVisibility(visibility: Omit<VisibilityRule, "id">): void;
   withVisibleFields(visibility: DataId[]): void;
 }
@@ -43,6 +35,5 @@ export interface PreferenceContextType {
 export interface PreferenceInit {
   id: PreferenceId;
   fields: DataId[];
-  sorting?: SortingRule;
   config?: ConfigRule;
 }
