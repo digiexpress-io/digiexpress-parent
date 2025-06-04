@@ -3,6 +3,11 @@ import { GFormBaseElementProps, UNDEFINED_SELECTION_VALUE } from '../g-form-base
 import { GInputList } from './GInputList';
 
 
+/**
+ *  Composer property: `variant = radio` = Flat list of choices with Radio buttons
+ *  Composer property: `variant = autocomplete` = Drop down single choice menu with autocompleting text input
+ *  Composer property: no variant = Drop-down single-choice select menu 
+ */
 
 export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: element, formStore: store }) => {
 
@@ -15,7 +20,10 @@ export const GInputListDialob: React.FC<GFormBaseElementProps> = ({ actionItem: 
     const newValue = event.target.value === UNDEFINED_SELECTION_VALUE ? undefined : event.target.value;
     store.setAnswer(element.id, newValue);
   }
-  const variant = element.props?.variant === 'radio' ? 'list-radio' : 'list';
+  //  const variant = element.props?.variant === 'radio' ? 'list-radio' : 'list';
+
+  const variant = element.props?.variant ?? 'autocomplete';
+
   return (
     <GInputList
       id={element.id}

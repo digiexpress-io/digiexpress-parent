@@ -11,7 +11,7 @@ import { GInputListRoot, useUtilityClasses, MUI_NAME } from './useUtilityClasses
 import { GInputRadio } from './GInputRadio';
 import { GInputListProps } from './g-input-list-types';
 import { GInputDropdown } from './GInputDropdown';
-
+import { GInputAutoComplete } from '../g-input-autocomplete';
 
 export const GInputList: React.FC<GInputListProps> = (initProps) => {
 
@@ -28,8 +28,19 @@ export const GInputList: React.FC<GInputListProps> = (initProps) => {
 
 
   const ownerState = { ...props, variant, keys, name: id }
-  const InputComponent = variant === 'list-radio' ? GInputRadio : GInputDropdown;
+  //const InputComponent = variant === 'list-radio' ? GInputRadio : GInputDropdown;
 
+  const InputComponent = (() => {
+    switch (variant) {
+      case 'list-radio':
+        return GInputRadio;
+      case 'autocomplete':
+        return GInputAutoComplete;
+      case 'list':
+      default:
+        return GInputDropdown;
+    }
+  })();
 
   const slots: GInputBaseProps<GInputListProps> = {
     id,
