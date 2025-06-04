@@ -8,6 +8,9 @@
   "files": [
     "build"
   ],
+  "publishConfig": {
+    "provenance": true
+  },
   "repository": "git@github.com:digiexpress-io/digiexpress-parent.git",
   "peerDependencies": {
     "@date-io/date-fns": "^2.11.0",
