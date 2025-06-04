@@ -12,7 +12,7 @@ import { GInputRadio } from './GInputRadio';
 import { GInputListProps } from './g-input-list-types';
 import { GInputDropdown } from './GInputDropdown';
 import { GInputAutoComplete } from '../g-input-autocomplete';
-import { UNDEFINED_SELECTION_VALUE } from '../g-form-base-element';
+
 
 export const GInputList: React.FC<GInputListProps> = (initProps) => {
 
@@ -73,6 +73,6 @@ const GInputListAutocomplete: React.FC<GInputListProps> = (initProps) => {
     datasource={initProps.datasource}
     multiple={false}
     onChange={initProps.onChange}
-    value={initProps.value ?? UNDEFINED_SELECTION_VALUE}
+    value={initProps.value}
   />
 }

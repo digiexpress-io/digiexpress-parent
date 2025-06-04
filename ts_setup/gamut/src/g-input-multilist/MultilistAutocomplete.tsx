@@ -5,10 +5,6 @@ import { GInputBaseAnyProps } from '../g-input-base';
 
 import { GInputMultilistProps } from './g-input-multilist-types';
 import { GInputAutoComplete } from '../g-input-autocomplete';
-import { UNDEFINED_SELECTION_VALUE } from '../g-form-base-element';
-
-
-
 
 
 export const MultilistAutocomplete: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
@@ -20,7 +16,7 @@ export const MultilistAutocomplete: React.FC<GInputBaseAnyProps & GInputMultilis
       datasource={datasource}
       multiple={true}
       onChange={onChange}
-      value={props.value ?? UNDEFINED_SELECTION_VALUE} />
+      value={props.value} />
   );
 }
 

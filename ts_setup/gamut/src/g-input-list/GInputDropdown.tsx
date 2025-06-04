@@ -31,7 +31,7 @@ export const GInputDropdown: React.FC<GInputListProps> = (props) => {
       value={selectedValue}>
 
 
-      <GInputSelectOption value={undefinedValue}>{intl.formatMessage({ id: 'gamut.buttons.select' })}</GInputSelectOption>
+      <GInputSelectOption key={undefinedValue} value={undefinedValue}>{intl.formatMessage({ id: 'gamut.buttons.select' })}</GInputSelectOption>
 
       {/** All selection from data source */}
       {datasource.entries.map(({ key, value }) => {

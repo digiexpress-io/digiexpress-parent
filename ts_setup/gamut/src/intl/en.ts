@@ -74,6 +74,7 @@ export const en = {
   'gamut.forms.started': 'Started',
   'gamut.forms.attachments': 'Attachments',
   'gamut.forms.status': 'Status',
+  'gamut.forms.selectionUndefined': 'Select',
   'gamut.forms.status.OPEN': 'In progress',
   'gamut.forms.status.NEW': 'Processing starts soon',
   'gamut.forms.status.COMPLETED': 'Completed',

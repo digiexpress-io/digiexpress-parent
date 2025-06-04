@@ -2,7 +2,7 @@
 import { DialobApi } from '../api-dialob';
 
 
-export const UNDEFINED_SELECTION_VALUE = '_undefined_';
+export const UNDEFINED_SELECTION_VALUE = 'gamut.forms.selectionUndefined';
 
 
 export type GFormBaseSlotVariant = (
