@@ -932,5 +932,18 @@ export const en = {
   'articles.searchAll': 'Search all articles',
   'eveli.error.general': 'Ooops, we have encountered an error!',
   'eveli.error.notFound': 'Ooops, the thing you are looking for is not found!',
-  'eveli.error.backToHome': 'Go back to our home page'
+  'eveli.error.backToHome': 'Go back to our home page',
+  'eveli.userProfile.title': 'User Profile',
+  'eveli.userProfile.id': 'Id',
+  'eveli.userProfile.displayName': 'Display name',
+  'eveli.userProfile.created': 'Created',
+  'eveli.userProfile.updated': 'Updated',
+  'eveli.userProfile.firstName': 'First name',
+  'eveli.userProfile.lastName': 'Last name',
+  'eveli.userProfile.email': 'Email',
+  'eveli.userProfile.notificationSettings': 'Notification settings',
+  'eveli.userProfile.userRoles': 'My roles',
+  'eveli.userProfile.editDetails': 'Edit personal details',
+  'eveli.userProfile.currentDetails': 'My current details',
+  'eveli.userProfile.userActivity': 'Recent activity'
 }

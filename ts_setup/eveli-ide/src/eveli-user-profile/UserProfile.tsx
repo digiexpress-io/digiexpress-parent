@@ -1,25 +1,29 @@
 import React from 'react';
-import { Stack, Typography, Paper, CircularProgress } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
-
-
+import { Typography, CircularProgress, Divider, Box, Grid2, ThemeProvider } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import EditIcon from '@mui/icons-material/Edit';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { FormattedMessage } from 'react-intl';
 
 import { UserAvatar } from './UserAvatar';
 import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
-import { Section, SectionRow } from '@/eveli-styles';
+import { SectionRow } from '@/eveli-styles';
 import { PrefsApi } from '@/api-prefs';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { EveliUserOverviewDetail, EveliUserProfileRoot, useUtilityClasses } from './useUtilityClasses';
+import { UserActivity } from './UserActivity';
+
 
 
 export const UserProfile: React.FC<{}> = () => {
-  const intl = useIntl();
   const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {})
   const [state, setState] = React.useState<PrefsApi.UserProfile>();
   const [loading, setLoading] = React.useState<boolean>(true);
+  const classes = useUtilityClasses();
 
   React.useEffect(() => {
     restApi().currentUserProfile().then(userProfile => {
-      alert('')
+      //alert('')
       setState(userProfile);
       setLoading(false);
     });
@@ -34,46 +38,74 @@ export const UserProfile: React.FC<{}> = () => {
     .join(', ');
 
   return (<>
-    <UserAvatar user={state} />
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
+      <Typography variant='h1'><FormattedMessage id='eveli.userProfile.title' /></Typography><UserAvatar user={state} />
+    </div>
 
-    <Paper sx={{ p: 1, height: '100%' }}>
-      <Stack spacing={1}>
 
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.info' /></Typography>
-          <>
-            <SectionRow label={<FormattedMessage id='userProfile.frontoffice.id'/>} value={state.id} />
-            <SectionRow label={<FormattedMessage id='userProfile.frontoffice.displayName'/>} value={displayName} />
-            <SectionRow label={<FormattedMessage id='userProfile.frontoffice.created'/>} value={new Date(state.created).toISOString()} />
-            <SectionRow label={<FormattedMessage id='userProfile.frontoffice.updated'/>} value={new Date(state.updated).toISOString()} />
-          </>
-        </Section>
+    <EveliUserProfileRoot className={classes.root}>
+      <Grid2 container>
+        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
+          <EveliUserOverviewDetail>
+            <div className={classes.sectionTitle}>
+              <PersonIcon />
+              <Typography><FormattedMessage id='eveli.userProfile.currentDetails' /></Typography>
+            </div>
+            <Divider className={classes.divider} />
 
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.firstName' /></Typography>
-          <FirstName init={state} />
-        </Section>
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.lastName' /></Typography>
-          <LastName init={state} />
-        </Section>
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.email' /></Typography>
+
+            <div style={{ marginTop: 10 }}>
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.id' />} value={state.id} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={displayName} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={new Date(state.created).toISOString()} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={new Date(state.updated).toISOString()} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value='TODO' />
+            </div>
+          </EveliUserOverviewDetail>
+        </Grid2>
+
+        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
+          <EveliUserOverviewDetail>
+            <div className={classes.sectionTitle}>
+              <EditIcon />
+              <Typography><FormattedMessage id='eveli.userProfile.editDetails' /></Typography>
+            </div>
+
+            <Divider className={classes.divider} />
+
+            <FirstName init={state} />
+            <LastName init={state} />
           <EmailAddress init={state} />
-        </Section>
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.notificationSettings' /></Typography>
-          <NotificationSettings />
-        </Section>
+          </EveliUserOverviewDetail>
+        </Grid2>
 
-        <Section>
-          <Typography fontWeight='bold'><FormattedMessage id='userProfile.frontoffice.user.roles' /></Typography>
-          <>
-            ROLES TODO
-          </>
-        </Section>
-      </Stack >
-    </Paper >
+        <Grid2 size={{ md: 4, lg: 4, xl: 4 }}>
+          <EveliUserOverviewDetail>
+            <div className={classes.sectionTitle}>
+              <NotificationsIcon />
+              <Typography><FormattedMessage id='eveli.userProfile.notificationSettings' /></Typography>
+            </div>
+            <Divider className={classes.divider} />
+
+          <NotificationSettings />
+          </EveliUserOverviewDetail>
+        </Grid2>
+
+        <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
+          <EveliUserOverviewDetail>
+            <div className={classes.sectionTitle}>
+              <NotificationsIcon />
+              <Typography><FormattedMessage id='eveli.userProfile.userActivity' /></Typography>
+            </div>
+            <Divider className={classes.divider} />
+
+            <UserActivity />
+          </EveliUserOverviewDetail>
+        </Grid2>
+
+      </Grid2>
+    </EveliUserProfileRoot>
+
   </>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Box, Paper, Typography, CircularProgress } from '@mui/material';
+import { Avatar, Box, Typography, CircularProgress, useTheme } from '@mui/material';
 import { PrefsApi } from '@/api-prefs';
 
 function stringToColor(string: String) {
@@ -22,7 +22,7 @@ function stringToColor(string: String) {
 }
 
 const UserAvatar: React.FC<{ user: PrefsApi.UserProfile }> = ({ user }) => {
-
+  const theme = useTheme();
   const firstLetter = user.details.firstName.substring(0, 1).toUpperCase();
   const secondLetter = user.details.lastName.substring(0, 1).toUpperCase();
   const twoLetters = firstLetter + secondLetter;
@@ -31,17 +31,20 @@ const UserAvatar: React.FC<{ user: PrefsApi.UserProfile }> = ({ user }) => {
     return <CircularProgress />;
   }
 
-  return (<Box display='flex' justifyContent='start'>
-    <Paper variant="outlined" sx={{ p: 0.5, borderRadius: 6, width: 'fit-content' }}>
-      <Box display="flex" alignItems="center">
+  return (
+    <Box display="flex" alignItems="center"
+      sx={{
+        border: `1px solid ${theme.palette.divider}`,
+        minWidth: "25%",
+        padding: theme.spacing(1),
+        borderRadius: theme.spacing(3)
+      }}>
         <Avatar sx={{ backgroundColor: stringToColor(user.details.firstName), mr: 1 }}>{twoLetters}</Avatar>
         <Box display='flex' flexDirection='column'>
           <Typography variant='h4' fontWeight='bolder'>{user.details.firstName + " " + user.details.lastName}</Typography>
           <Typography variant='body1'>@{user.details.username}</Typography>
         </Box>
-      </Box>
-    </Paper>
-  </Box>
+    </Box>
   );
 };
 

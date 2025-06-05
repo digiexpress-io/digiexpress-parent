@@ -17,7 +17,7 @@ export const Section: React.FC<SectionProps> = (props) => {
   const showLoader: boolean = props.loadingValue ? false : true;
 
   const formattedLabel = props.required ? (
-    <Box sx={{ backgroundColor: 'primary.contrastText', px: 0.5, width: props.width, display: 'flex' }}>
+    <Box sx={{ backgroundColor: 'primary.main', px: 0.5, width: props.width, display: 'flex' }}>
       {label}
       {props.required && <span>&nbsp;*</span>}
     </Box>
@@ -37,9 +37,9 @@ export const Section: React.FC<SectionProps> = (props) => {
         </Box>
       </Box>
 
-      <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: 'primary.contrastText' }}>
+      <Box sx={{ borderRadius: '8px', border: 1, p: 2, borderColor: 'primary.main' }}>
         {children.splice(1)}
-        {loadingEnabled && showLoader && < CircularProgress size='10pt' />}
+        {loadingEnabled && showLoader && <CircularProgress size='10pt' />}
       </Box>
     </Box>
   )
@@ -53,10 +53,10 @@ export const SectionRow: React.FC<{ label: React.ReactNode, value: string | numb
   return (
     <Grid container>
       <Grid item md={3} lg={3}>
-        <Typography fontWeight='bolder'>{label}</Typography>
+        <Typography fontWeight='bolder' variant='subtitle2'>{label}</Typography>
       </Grid>
-      <Grid item md={9} lg={9}>
-        <Typography>{value}</Typography>
+      <Grid item md={9} lg={9} textAlign='right'>
+        <Typography variant='subtitle2'>{value}</Typography>
       </Grid>
     </Grid>
   )

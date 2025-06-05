@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography, Stack, Divider, styled, SwitchProps } from '@mui/material';
+import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography, Stack, Divider, styled, SwitchProps, Box } from '@mui/material';
 
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
@@ -12,7 +12,7 @@ function useBackend() {
     return restApi().updateUserProfile('current', commands)
   }
 
-  return {updateUserProfile}
+  return { updateUserProfile }
 }
 
 
@@ -35,9 +35,9 @@ const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
     await backend.updateUserProfile([command]);
   }
 
-  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    placeholder={intl.formatMessage({ id: 'userProfile.frontoffice.firstName' })}
+  return (<TextField variant='outlined'
     fullWidth
+    label={intl.formatMessage({ id: 'eveli.userProfile.firstName' })}
     value={firstName}
     onChange={handleFirstNameChange}
     onBlur={handleChange}
@@ -54,8 +54,9 @@ const LastName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   }
 
 
-  return (<TextField InputProps={{ disableUnderline: true }} variant='standard'
-    placeholder={intl.formatMessage({ id: 'userProfile.frontoffice.lastName' })}
+  return (<TextField variant='outlined'
+
+    label={intl.formatMessage({ id: 'eveli.userProfile.lastName' })}
     fullWidth
     value={lastName}
     onChange={handleLastNameChange}
@@ -73,10 +74,8 @@ const EmailAddress: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   }
 
   return (
-    <TextField
-      InputProps={{ disableUnderline: true }}
-      variant="standard"
-      placeholder={intl.formatMessage({ id: 'userProfile.frontoffice.email' })}
+    <TextField variant="outlined"
+      label={intl.formatMessage({ id: 'eveli.userProfile.email' })}
       fullWidth
       value={email}
       onChange={handleEmailChange}
@@ -85,19 +84,23 @@ const EmailAddress: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   );
 };
 
+
 const StyledSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+
 ))(({ theme }) => ({
-  width: 42,
-  height: 26,
+
+  width: 29,
+  height: 18,
   padding: 0,
-  margin: 3,
+  marginRight: theme.spacing(3),
+
   '& .MuiSwitch-switchBase': {
     padding: 0,
-    margin: 2,
+    margin: 1.4,
     transitionDuration: '300ms',
     '&.Mui-checked': {
-      transform: 'translateX(16px)',
+      transform: 'translateX(11px)',
       color: '#fff',
       '& + .MuiSwitch-track': {
         opacity: 1,
@@ -119,11 +122,11 @@ const StyledSwitch = styled((props: SwitchProps) => (
   },
   '& .MuiSwitch-thumb': {
     boxSizing: 'border-box',
-    width: 22,
-    height: 22,
+    width: 15.4,
+    height: 15.4,
   },
   '& .MuiSwitch-track': {
-    borderRadius: 26 / 2,
+    borderRadius: 9.1,
     opacity: 1,
     transition: theme.transitions.create(['background-color'], {
       duration: 500,
@@ -151,42 +154,46 @@ const NotificationSettings: React.FC<{}> = () => {
   return (<Stack direction='column' spacing={2}>
 
     <FormControl component="fieldset" variant="standard">
-      <Typography variant='body1' fontWeight='400'>Channel</Typography>
-      <FormGroup>
-        <FormControlLabel
-          control={<StyledSwitch checked={state.a} onChange={handleChange} name="a" />}
-          label="Receive email messages for new events"
-        />
-        <FormControlLabel
-          control={<StyledSwitch checked={state.b} onChange={handleChange} name="b" />}
-          label="Receive system notifications for new events"
-        />
-      </FormGroup>
+      <Typography variant='body1' fontWeight='500'>Channel</Typography>
+      <Box sx={{ p: 1, alignItems: 'center' }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<StyledSwitch checked={state.a} onChange={handleChange} name="a" />}
+            label={<Typography variant="subtitle2">Receive email messages for new events</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledSwitch checked={state.b} onChange={handleChange} name="b" />}
+            label={<Typography variant="subtitle2">Receive system notifications for new events</Typography>}
+          />
+        </FormGroup>
+      </Box>
     </FormControl>
 
     <Divider />
     <FormControl component="fieldset" variant="standard">
-      <Typography fontWeight='400'>Notification types</Typography>
+      <Typography fontWeight='500'>Notification types</Typography>
 
-      <FormGroup>
-        <FormControlLabel
-          control={<StyledSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
-          label="When a new task is assigned to me"
-        />
-        <FormControlLabel
-          control={<StyledSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
-          label="When a new comment is assigned to me"
-        />
-        <FormControlLabel
-          control={<StyledSwitch checked={state.jason} onChange={handleChange} name="jason" />}
-          label="When a task has become overdue"
-        />
-        <FormControlLabel
-          control={<StyledSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
-          label="When a new message from a customer has arrived"
-        />
+      <Box sx={{ p: 1 }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<StyledSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
+            label={<Typography variant="subtitle2">When a new task is assigned to me</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
+            label={<Typography variant="subtitle2">When a new comment is assigned to me</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledSwitch checked={state.jason} onChange={handleChange} name="jason" />}
+            label={<Typography variant="subtitle2">When a task has become overdue</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
+            label={<Typography variant="subtitle2">When a new message from a customer has arrived</Typography>}
+          />
 
-      </FormGroup>
+        </FormGroup>
+      </Box>
     </FormControl>
   </Stack>)
 }
