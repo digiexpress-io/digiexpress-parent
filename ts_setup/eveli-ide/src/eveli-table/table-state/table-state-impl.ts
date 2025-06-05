@@ -232,7 +232,7 @@ export function useTableState(props: { initialPageSize: number }) {
         console.error('Failed to parse table settings', e)
       }
       setLoading(false);
-    });
+    }).catch(e => setLoading(false));
 
   }, [loading, isSmartTables]);
 
