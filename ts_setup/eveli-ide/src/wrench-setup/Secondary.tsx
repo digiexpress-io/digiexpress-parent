@@ -18,7 +18,6 @@ import { useWrenchNav } from '../wrench-nav';
 import { useActivities, ActivityProps } from './Activities';
 import { EveliShellCompose } from '@/eveli-shell-compose';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
-import { EveliLogo } from '@/eveli-logo';
 import { EveliPermissions } from '@/eveli-permissions';
 import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
@@ -73,8 +72,6 @@ export const Secondary: React.FC<{}> = () => {
       </EveliShellCompose>
 
       <EveliShellExplorer>
-        <EveliLogo />
-
         <EveliPermissions id='CREATE_WRENCH_ASSET'>
         <Button startIcon={<CreateOutlinedIcon />}
           className={classes.composeButton}

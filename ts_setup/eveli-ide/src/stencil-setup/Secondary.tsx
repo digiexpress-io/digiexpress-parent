@@ -73,8 +73,6 @@ const Secondary: React.FC<{}> = () => {
       {migrationsDialogOpen && <MigrationComposer onClose={() => setMigrationsDialogOpen(false)} />}
 
       <EveliShellExplorer>
-        <EveliLogo />
-
         <EveliPermissions id='CREATE_STENCIL_ASSET'>
           <Button startIcon={<CreateOutlinedIcon />}
             className={classes.composeButton}
