@@ -19,7 +19,7 @@ export type ExplorerItem = (
   { type: 'SERVICES' } |
   { type: 'LINKS' } |
   { type: 'LOCALES' } |
-  { type: 'MIGRATIONS' } |
+  { type: 'ASSISTANCE' } |
   { type: 'TEMPLATES' } |
   { type: 'RELEASES' } |
 

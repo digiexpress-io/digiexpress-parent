@@ -51,6 +51,11 @@ const TabLabel: React.FC<{ item: ExplorerItem }> = ({ item }) => {
     }
     return <>{view.article.body.name}{intl.formatMessage({ id: 'eveli.textSeparatorColon' })}{suffix}</>;
   }
+
+  if (item.type === 'ASSISTANCE') {
+    return <>{intl.formatMessage({ id: 'article.timestamps.title' })}</>;
+  }
+  
   return (<>{item.type}</>)
 }
 

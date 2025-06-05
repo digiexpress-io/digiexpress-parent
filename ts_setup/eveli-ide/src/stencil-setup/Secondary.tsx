@@ -5,7 +5,6 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
-import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import FormatShapesOutlinedIcon from '@mui/icons-material/FormatShapesOutlined';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -123,11 +122,11 @@ const Secondary: React.FC<{}> = () => {
           </Button>
         </EveliPermissions>
 
-        <EveliPermissions id='NAV_TO_STENCIL_MIGRATIONS'>
-          <Button variant={activeItem?.type === 'MIGRATIONS' ? 'explorerActive' : 'explorerInactive'}
-            startIcon={<UploadFileOutlinedIcon />}
-            onClick={() => setMigrationsDialogOpen(true)}>
-            {intl.formatMessage({ id: 'menu.migrations' })}
+        <EveliPermissions id='NAV_TO_STENCIL_ASSISTANCE'>
+          <Button variant={activeItem?.type === 'ASSISTANCE' ? 'explorerActive' : 'explorerInactive'}
+            startIcon={<HelpOutlineOutlinedIcon />}
+            onClick={() => onNav({ type: 'ASSISTANCE' })}>
+            {intl.formatMessage({ id: 'article.timestamps.title' })}
           </Button>
         </EveliPermissions>
 

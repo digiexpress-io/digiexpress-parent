@@ -13,7 +13,7 @@ import { ReleasesView } from '../stencil-release';
 
 import { Activities } from './Activities';
 
-
+import { ArticleTimestampsView } from '../stencil-locale/ArticleTimestampsView';
 
 import { StencilComposerApi as Composer } from './ide';
 
@@ -51,6 +51,7 @@ const Main: React.FC<{}> = () => {
       }
       case 'ARTICLE_LINKS': return (<Box sx={root}><ArticleLinksComposer key={explorer.article + "-links"} articleId={explorer.article} /></Box>)
       case 'ARTICLE_WORKFLOWS': return (<Box sx={root}><ArticleWorkflowsComposer key={explorer.article + "-workflows"} articleId={explorer.article} /></Box>)
+      case 'ASSISTANCE': return (<Box sx={root}><ArticleTimestampsView /></Box>);
     }
     return (<Box sx={root}></Box>)
   }, [activeItem, site]);
