@@ -5,6 +5,8 @@ import { SiteCache } from './site-reducer';
 import { useLocale } from '../api-locale';
 import { getSearchTopics } from './search-topics';
 import { useIntl } from 'react-intl';
+import { useNavigate } from '@tanstack/react-router';
+import { maintainace_en } from './fallback-content';
 
 
 export interface  SiteBackendProviderProps {
@@ -37,6 +39,7 @@ export const SiteBackendContext = React.createContext<SiteBackendContextType>({
 const staleTime = 15000;
 
 export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) => {
+  const nav = useNavigate();
   const { locale: selectedLocale } = useLocale();
   const intl = useIntl();
   const fetchSiteGet: SiteApi.FetchSiteGET = React.useMemo(() => props.fetchSiteGet, [props.fetchSiteGet])
@@ -50,7 +53,10 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     queryKey: ['sites', selectedLocale],
     queryFn: () => fetchSiteGet(selectedLocale).then(async response => {
       if (!response.ok) {
-        throw new SiteRequestError('Failure during fetch', response.status);
+        console.error('site not available', response.status);
+        const site: SiteApi.Site = maintainace_en;
+        const siteExtensions = getSearchTopics(site, intl);
+        return { site, views: new SiteCache(site, siteExtensions).topics }
       }
       const site: SiteApi.Site = await response.json();
       const siteExtensions = getSearchTopics(site, intl);
@@ -65,7 +71,8 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     queryKey: ['feedback', selectedLocale],
     queryFn: () => fetchFeedbackGet(selectedLocale).then(async response => {
       if (!response.ok) {
-        throw new SiteRequestError('Failure during fetch', response.status);
+        console.error('feedback not available', response.status);
+        return [];
       }
       const feedback: SiteApi.CustomerFeedback[] = await response.json();
       return feedback
@@ -83,11 +90,6 @@ export const SiteBackendProvider: React.FC<SiteBackendProviderProps> = (props) =
     }
     return Object.freeze({ site, views: views ?? {}, pending, locale: selectedLocale, feedback, voteOnReply });
   }, [site, views, pending, selectedLocale, feedback, fetchFeedbackRatingPut]);
-
-
-  if (siteQuery.isPending) {
-    return (<>Loading for the first time ...</>)
-  }
 
   return (<SiteBackendContext.Provider value={contextValue}>{props.children}</SiteBackendContext.Provider>);
 }
