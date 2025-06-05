@@ -1,14 +1,14 @@
 
 
-import { PreferenceInit, VisibilityRule, DataId, ConfigRule } from './pref-types';
+
 import { ImmutablePreference } from './ImmutablePreference';
 import { PrefsApi } from './profile-types';
 
 
 
-export type WithVisibleFields = (visibleFields: DataId[]) => void;
-export type WithVisibility = (visibility: Omit<VisibilityRule, "id">) => void;
-export type WithConfig = (config: ConfigRule | (ConfigRule[])) => void;
+export type WithVisibleFields = (visibleFields: PrefsApi.DataId[]) => void;
+export type WithVisibility = (visibility: Omit<PrefsApi.VisibilityRule, "id">) => void;
+export type WithConfig = (config: PrefsApi.ConfigRule | (PrefsApi.ConfigRule[])) => void;
 
 
 async function storeSettings(backend: PrefsApi.PrefsRestApi, userId: string, pref: ImmutablePreference): Promise<void> {
@@ -24,29 +24,12 @@ async function storeSettings(backend: PrefsApi.PrefsRestApi, userId: string, pre
   await backend.updateUiSettings(command);
 }
 
-export function initPreference(
-  init: PreferenceInit, initProfile: PrefsApi.UiSettings | undefined
-): ImmutablePreference {
-  const { id } = init;
-  const fields = Object.freeze(init.fields);
-  const visibility: Record<string, VisibilityRule> = {};
-  const config: Record<string, ConfigRule> = {};
-  const stored = initProfile;
-
-  // backend
-  if(stored) {
-    stored.visibility.forEach(e => visibility[e.dataId] = e);
-    stored.config?.forEach(e => config[e.dataId] = e);
-  }
-  return new ImmutablePreference({ id, fields, visibility, backendId: stored?.id, config });
-}
-
 export function parsePreference(
   settingsId: string, initProfile:PrefsApi.UiSettings | undefined
 ): ImmutablePreference {
   const fields: string[] = [];
-  const visibility: Record<string, VisibilityRule> = {};
-  const config: Record<string, ConfigRule> = {};
+  const visibility: Record<string, PrefsApi.VisibilityRule> = {};
+  const config: Record<string, PrefsApi.ConfigRule> = {};
   const stored = initProfile;
 
   // backend
@@ -61,7 +44,7 @@ export function initWithConfig(
   setPref: React.Dispatch<React.SetStateAction<ImmutablePreference>>,
   backend: PrefsApi.PrefsRestApi, 
   userId: string, 
-  config: ConfigRule | (ConfigRule[])
+  config: PrefsApi.ConfigRule | (PrefsApi.ConfigRule[])
 ) {
 
   setPref(currentState => {
@@ -84,7 +67,7 @@ export function initWithVisibleFields(
   setPref: React.Dispatch<React.SetStateAction<ImmutablePreference>>,
   backend: PrefsApi.PrefsRestApi, 
   userId: string, 
-  visibility: DataId[]) {
+  visibility: PrefsApi.DataId[]) {
 
 
   setPref(currentState => {
@@ -99,7 +82,7 @@ export function initWithVisibility(
   setPref: React.Dispatch<React.SetStateAction<ImmutablePreference>>,
   backend: PrefsApi.PrefsRestApi, 
   userId: string, 
-  visibility: VisibilityRule) {
+  visibility: PrefsApi.VisibilityRule) {
 
   setPref(currentState => {
     const nextState = currentState.withVisibility(visibility);

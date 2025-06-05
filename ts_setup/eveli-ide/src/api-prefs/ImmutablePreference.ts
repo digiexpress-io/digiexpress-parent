@@ -1,21 +1,21 @@
-import { Preference, VisibilityRule, DataId, PreferenceId, ConfigRule } from './pref-types';
+import { PrefsApi } from "./profile-types";
 
 
 export interface ImmutablePreferenceInit {
-  id: PreferenceId;
+  id: PrefsApi.PreferenceId;
   backendId: string | undefined;
-  fields: readonly DataId[];
-  visibility: Record<DataId, VisibilityRule>;
-  config: Record<DataId, ConfigRule>;
+  fields: readonly PrefsApi.DataId[];
+  visibility: Record<PrefsApi.DataId, PrefsApi.VisibilityRule>;
+  config: Record<PrefsApi.DataId, PrefsApi.ConfigRule>;
 }
 
-export class ImmutablePreference implements Preference {
+export class ImmutablePreference implements PrefsApi.Preference {
   private _backendId: string | undefined;
-  private _id: PreferenceId;
-  private _fields: readonly DataId[];
+  private _id: PrefsApi.PreferenceId;
+  private _fields: readonly PrefsApi.DataId[];
   
-  private _visibility: Record<DataId, VisibilityRule>;
-  private _config: Record<DataId, ConfigRule>;
+  private _visibility: Record<PrefsApi.DataId, PrefsApi.VisibilityRule>;
+  private _config: Record<PrefsApi.DataId, PrefsApi.ConfigRule>;
 
   constructor(init: ImmutablePreferenceInit) {
     this._id = init.id;
@@ -24,8 +24,8 @@ export class ImmutablePreference implements Preference {
     this._config = init.config;
   }
 
-  initVisibility(init: ImmutablePreferenceInit): Record<DataId, VisibilityRule> {
-    const result: Record<DataId, VisibilityRule> = {};
+  initVisibility(init: ImmutablePreferenceInit): Record<PrefsApi.DataId, PrefsApi.VisibilityRule> {
+    const result: Record<PrefsApi.DataId, PrefsApi.VisibilityRule> = {};
     for(const dataId of init.fields) {
       const enabled: boolean = init.visibility[dataId]?.enabled ?? true;
       result[dataId] = { dataId, enabled };
@@ -40,16 +40,16 @@ export class ImmutablePreference implements Preference {
   
   get visibility() { return Object.values(this._visibility) }
 
-  getVisibility(dataId: DataId): VisibilityRule {
+  getVisibility(dataId: PrefsApi.DataId): PrefsApi.VisibilityRule {
     return this._visibility[dataId];
   }
-  getConfig(dataId: DataId): ConfigRule | undefined {
+  getConfig(dataId: PrefsApi.DataId): PrefsApi.ConfigRule | undefined {
     return this._config[dataId];
   }
 
-  withConfig(config: ConfigRule | (ConfigRule[])): ImmutablePreference {
-    const nextState: Record<DataId, ConfigRule> = { ...this._config };
-    const newValues: ConfigRule[] = Array.isArray(config) ? config as ConfigRule[] : [config as ConfigRule];
+  withConfig(config: PrefsApi.ConfigRule | (PrefsApi.ConfigRule[])): ImmutablePreference {
+    const nextState: Record<PrefsApi.DataId, PrefsApi.ConfigRule> = { ...this._config };
+    const newValues: PrefsApi.ConfigRule[] = Array.isArray(config) ? config as PrefsApi.ConfigRule[] : [config as PrefsApi.ConfigRule];
 
     for(const value of newValues) {
       nextState[value.dataId] = { ...value };
@@ -57,13 +57,13 @@ export class ImmutablePreference implements Preference {
 
     return new ImmutablePreference(this.clone({ config: nextState }));
   }
-  withVisibility(newValue: VisibilityRule): ImmutablePreference {
-    const visibility: Record<DataId, VisibilityRule> = { ...this._visibility };
+  withVisibility(newValue: PrefsApi.VisibilityRule): ImmutablePreference {
+    const visibility: Record<PrefsApi.DataId, PrefsApi.VisibilityRule> = { ...this._visibility };
     visibility[newValue.dataId] = { ...newValue };
     return new ImmutablePreference(this.clone({ visibility }));
   }
-  withVisibleFields(newValueFields: DataId[]): ImmutablePreference {
-    const visibility: Record<DataId, VisibilityRule> = { };
+  withVisibleFields(newValueFields: PrefsApi.DataId[]): ImmutablePreference {
+    const visibility: Record<PrefsApi.DataId, PrefsApi.VisibilityRule> = { };
     for(const dataId of this._fields) {
       const enabled = newValueFields.includes(dataId);
       visibility[dataId] = { dataId, enabled };

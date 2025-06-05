@@ -13,6 +13,29 @@ export declare namespace PrefsApi {
     findUiSettings(settingsId: string): Promise<UiSettings | undefined>;
   }
 
+  export type PreferenceId = string;
+  export type DataId = string;
+
+  export interface VisibilityRule {
+    dataId: DataId;
+    enabled: boolean;
+  }
+
+  export interface ConfigRule {
+    dataId: DataId;
+    value: string;
+  }
+
+  export interface Preference {
+    id: PreferenceId;
+    fields: readonly DataId[]; //used for visibility and sorting as definition for all the field names on top of what constrains can be added
+    
+    visibility: readonly VisibilityRule[];
+    config: readonly ConfigRule[];
+
+    getVisibility(dataId: DataId): VisibilityRule;
+    getConfig(dataId: DataId): ConfigRule | undefined;
+  }
 
   export type NotificationType = string;
 
@@ -124,15 +147,5 @@ export declare namespace PrefsApi {
 
   export interface ArchiveUserProfile extends UserProfileUpdateCommand<'ArchiveUserProfile'> {
     commandType: 'ArchiveUserProfile';
-  }
-
-  export interface UserProfileDescriptor {
-    id: string,
-    email: string | undefined,
-    displayName: string,
-    entry: UserProfile,
-    created: string,
-    updated: string,
-    notificationSettings: NotificationSetting[];
   }
 }

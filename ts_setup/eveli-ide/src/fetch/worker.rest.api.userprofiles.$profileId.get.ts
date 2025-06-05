@@ -14,7 +14,7 @@ function hook(props: {}) {
     restApi: (): PrefsApi.PrefsRestApi => ({
       async currentUserProfile(): Promise<PrefsApi.UserProfile> {
         const baseUrl = url({ profileId: 'current' });
-        return params.fetch(`baseUrl`).then(response => response.json());
+        return params.fetch(`${baseUrl}`).then(response => response.json());
       },
       async getUserProfileById(profileId: string): Promise<PrefsApi.UserProfile> {
         const baseUrl = url({ profileId });

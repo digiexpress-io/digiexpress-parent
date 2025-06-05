@@ -4,16 +4,31 @@ import { CircularProgress } from '@mui/material';
 import { useIam } from '@/api-iam';
 
 import { PrefsApi } from './profile-types';
-import { PreferenceContextType, PreferenceInit } from './pref-types';
+
 
 
 import { 
   WithConfig, initWithConfig, WithVisibility, WithVisibleFields, 
-  initPreference, initWithVisibility, initWithVisibleFields 
+  initWithVisibility, initWithVisibleFields 
 } from './initMethods';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { ImmutablePreference } from './ImmutablePreference';
 
 
+
+export interface PreferenceInit {
+  id: PrefsApi.PreferenceId;
+  fields: PrefsApi.DataId[];
+  config?: PrefsApi.ConfigRule;
+}
+
+export interface PreferenceContextType {
+  pref: PrefsApi.Preference;
+  
+  withConfig(config: PrefsApi.ConfigRule): void;
+  withVisibility(visibility: Omit<PrefsApi.VisibilityRule, "id">): void;
+  withVisibleFields(visibility: PrefsApi.DataId[]): void;
+}
 
 export function createPrefContext(hardInit?: PreferenceInit) {
 
@@ -76,4 +91,24 @@ export function createPrefContext(hardInit?: PreferenceInit) {
     Provider: PreferenceProvider,
     usePreference
   };
+}
+
+
+
+
+function initPreference(
+  init: PreferenceInit, initProfile: PrefsApi.UiSettings | undefined
+): ImmutablePreference {
+  const { id } = init;
+  const fields = Object.freeze(init.fields);
+  const visibility: Record<string, PrefsApi.VisibilityRule> = {};
+  const config: Record<string, PrefsApi.ConfigRule> = {};
+  const stored = initProfile;
+
+  // backend
+  if(stored) {
+    stored.visibility.forEach(e => visibility[e.dataId] = e);
+    stored.config?.forEach(e => config[e.dataId] = e);
+  }
+  return new ImmutablePreference({ id, fields, visibility, backendId: stored?.id, config });
 }
