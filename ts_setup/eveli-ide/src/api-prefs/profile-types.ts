@@ -5,7 +5,7 @@ export namespace PrefsApi {
 export declare namespace PrefsApi {
 
   export interface PrefsRestApi {
-    currentUserProfile(): Promise<UserProfile>;
+    currentUserProfile(createIfNotDefined?: boolean): Promise<UserProfile>;
     getUserProfileById(id: string): Promise<UserProfile>;
     findAllUserProfiles(): Promise<UserProfile[]>;
     updateUserProfile(profileId: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile>;
@@ -77,6 +77,7 @@ export declare namespace PrefsApi {
     updated: string;
     details: UserDetails;
     notificationSettings: NotificationSetting[];
+    tenantFeatures: string[] | undefined;
   }
 
   export interface UserProfileTransaction {

@@ -12,9 +12,16 @@ function hook(props: {}) {
   
   return {
     restApi: (): PrefsApi.PrefsRestApi => ({
-      async currentUserProfile(): Promise<PrefsApi.UserProfile> {
-        const baseUrl = url({ profileId: 'current' });
-        return params.fetch(`${baseUrl}`).then(response => response.json());
+      async currentUserProfile(createIfNotDefined?: boolean): Promise<PrefsApi.UserProfile> {
+        const baseUrl = url({ profileId: 'current' + (createIfNotDefined ? '?create=true': '') });
+        return params.fetch(`${baseUrl}`)
+          .then(async (response) => {
+            const length = response.headers.get('Content-Length');
+            if(length === '0') {
+              return undefined;
+            }
+            return response.json();
+          });
       },
       async getUserProfileById(profileId: string): Promise<PrefsApi.UserProfile> {
         const baseUrl = url({ profileId });

@@ -45,7 +45,7 @@ function hook(props: {}) {
 
     loadTasks: async (query:Query<TaskApi.Task>, columns:Column<any>[]) => {
 
-      console.log(query, columns);
+      // console.log(query, columns);
       // store paging info to allow restoring of page on navigation back
       let page = query.page;
       let pageSize = query.pageSize;

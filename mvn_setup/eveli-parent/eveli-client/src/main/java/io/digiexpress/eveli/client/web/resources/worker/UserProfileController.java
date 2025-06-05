@@ -31,9 +31,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.digiexpress.eveli.client.api.WorkerAuthClient;
+import io.digiexpress.eveli.client.config.EveliWrenchOnlyTenantAutoConfig;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.api.model.ImmutableCreateUserProfile;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
@@ -58,11 +60,18 @@ public class UserProfileController {
     return userProfileClient.userProfileQuery().findAll();
   }
   @GetMapping("/{id}")
-  public Uni<UserProfile> getUserProfileById(@PathVariable("id") String profileId) {
+  public Uni<UserProfile> getUserProfileById(
+      @PathVariable("id") String profileId,
+      @RequestParam(required = false, name = "create", defaultValue = "false") boolean create
+  ) {
     assertAccess(profileId);
     final var id = getUserId(profileId);
     return userProfileClient.userProfileQuery().findByIds(Arrays.asList(id))
         .onItem().transformToUni(items -> {
+          
+          if(items.isEmpty() && !create) {
+            return Uni.createFrom().nullItem();
+          }
           
           // create profile if non
           if(items.isEmpty()) {
@@ -70,6 +79,7 @@ public class UserProfileController {
             final var command = ImmutableCreateUserProfile.builder()
                 .id(principal.getUsername())
                 .email(principal.getEmail())
+                .addTenantFeatures(EveliWrenchOnlyTenantAutoConfig.FEATURE_USER_PROFILE)
                 .build();
             return userProfileClient.createUserProfile().createOne(command);
           } 
@@ -93,14 +103,13 @@ public class UserProfileController {
     assertAccess(profileId);
     return userProfileClient.updateUserProfile().updateOne(command);
   }
-  
-  
   @PutMapping("/{id}/ui-settings")
   public Uni<UiSettings> uiSettings(@PathVariable("id") String profileId, @RequestBody UiSettingsUpdateCommand commands) {
     assertAccess(profileId);
     assertAccess(commands.getUserId());
     return userProfileClient.updateUiSettings().updateOne(commands);
   }
+  
   @GetMapping("/{id}/ui-settings/{settingsId}")
   public Uni<UiSettings> getUISettings(@PathVariable("id") String profileId, @PathVariable("settingsId") String settingsId) {
     assertAccess(profileId);

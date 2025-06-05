@@ -35,6 +35,7 @@ public interface UserProfile extends Serializable {
   String getId();
   UserDetails getDetails();
   List<NotificationSetting> getNotificationSettings();
+  List<String> getTenantFeatures();
   
   @Nullable String getVersion();
   @Nullable Instant getCreated();

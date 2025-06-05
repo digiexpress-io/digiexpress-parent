@@ -130,7 +130,7 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
           .docId(inserted.getItem1().getId())
           .docType(DataConstants.DOC_TYPE_USER_PROFILE)
           .branchContent(JsonObject.mapFrom(inserted.getItem1()))
-          .commands(inserted.getItem2())
+// no need to log this .commands(inserted.getItem2())
           .next();
         insertedProfiles.add(inserted.getItem1());
       } catch(NoChangesException e) {
