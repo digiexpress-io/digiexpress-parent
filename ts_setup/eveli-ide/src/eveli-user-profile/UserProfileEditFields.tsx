@@ -169,7 +169,6 @@ const NotificationSettings: React.FC<{}> = () => {
       </Box>
     </FormControl>
 
-    <Divider />
     <FormControl component="fieldset" variant="standard">
       <Typography fontWeight='500'>Notification types</Typography>
 
