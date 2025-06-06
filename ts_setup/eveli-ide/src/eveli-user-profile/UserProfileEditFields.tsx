@@ -1,9 +1,10 @@
 import React from 'react';
-import { TextField, FormControl, FormControlLabel, FormGroup, Switch, Typography, Stack, Divider, styled, SwitchProps, Box } from '@mui/material';
+import { TextField, FormControl, FormControlLabel, FormGroup, Typography, Stack, Box } from '@mui/material';
 
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { StyledNotificationSwitch } from './useUtilityClasses';
 
 function useBackend() {
   const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
@@ -85,56 +86,8 @@ const EmailAddress: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
 };
 
 
-const StyledSwitch = styled((props: SwitchProps) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-
-))(({ theme }) => ({
-
-  width: 29,
-  height: 18,
-  padding: 0,
-  marginRight: theme.spacing(3),
-
-  '& .MuiSwitch-switchBase': {
-    padding: 0,
-    margin: 1.4,
-    transitionDuration: '300ms',
-    '&.Mui-checked': {
-      transform: 'translateX(11px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        opacity: 1,
-        border: 0,
-      },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: 0.5,
-      },
-    },
-    '&.Mui-disabled .MuiSwitch-thumb': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    '&.Mui-disabled + .MuiSwitch-track': {
-      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxSizing: 'border-box',
-    width: 15.4,
-    height: 15.4,
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 9.1,
-    opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
-      duration: 500,
-    }),
-  },
-}));
-
 const NotificationSettings: React.FC<{}> = () => {
+
   const [state, setState] = React.useState({
     gilad: true,
     jason: false,
@@ -158,11 +111,11 @@ const NotificationSettings: React.FC<{}> = () => {
       <Box sx={{ p: 1, alignItems: 'center' }}>
         <FormGroup>
           <FormControlLabel
-            control={<StyledSwitch checked={state.a} onChange={handleChange} name="a" />}
+            control={<StyledNotificationSwitch checked={state.a} onChange={handleChange} name="a" />}
             label={<Typography variant="subtitle2">Receive email messages for new events</Typography>}
           />
           <FormControlLabel
-            control={<StyledSwitch checked={state.b} onChange={handleChange} name="b" />}
+            control={<StyledNotificationSwitch checked={state.b} onChange={handleChange} name="b" />}
             label={<Typography variant="subtitle2">Receive system notifications for new events</Typography>}
           />
         </FormGroup>
@@ -175,19 +128,19 @@ const NotificationSettings: React.FC<{}> = () => {
       <Box sx={{ p: 1 }}>
         <FormGroup>
           <FormControlLabel
-            control={<StyledSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
+            control={<StyledNotificationSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
             label={<Typography variant="subtitle2">When a new task is assigned to me</Typography>}
           />
           <FormControlLabel
-            control={<StyledSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
+            control={<StyledNotificationSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
             label={<Typography variant="subtitle2">When a new comment is assigned to me</Typography>}
           />
           <FormControlLabel
-            control={<StyledSwitch checked={state.jason} onChange={handleChange} name="jason" />}
+            control={<StyledNotificationSwitch checked={state.jason} onChange={handleChange} name="jason" />}
             label={<Typography variant="subtitle2">When a task has become overdue</Typography>}
           />
           <FormControlLabel
-            control={<StyledSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
+            control={<StyledNotificationSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
             label={<Typography variant="subtitle2">When a new message from a customer has arrived</Typography>}
           />
 
