@@ -64,10 +64,14 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
     final var config = ctx.getConfig();
     this.command = command;
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyOneBranch()
-        .commitMessage("Update user profile ui settings: " + command.getUserId() + "/" + command.getSettingsId())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createOneDoc()
-        .commitMessage("Insert user profile ui settings: " + command.getUserId() + "/" + command.getSettingsId())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
   }
 

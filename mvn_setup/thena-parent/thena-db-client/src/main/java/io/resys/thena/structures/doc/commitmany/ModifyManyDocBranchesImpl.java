@@ -62,6 +62,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
   private String message;
   private AddItemToModifyDocBranch lastItem;
   private Boolean excludeBranchContentFromLog;
+  private boolean commitTreeEnabled = true;
   
   @Data @Builder
   private static class ItemModData {
@@ -85,6 +86,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
   @Override public int getItemsAdded() { return items.size();}
   @Override public ModifyManyDocBranchesImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
+  @Override public ModifyManyDocBranchesImpl commitTreeEnabled(boolean commitTreeEnabled) { this.commitTreeEnabled = commitTreeEnabled; return this; }
+  
   @Override public AddItemToModifyDocBranch item() {
     final var parent = this;
     final var item = ItemModData.builder().branchName(branchName);
@@ -214,7 +217,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
       }
       
-      final var batch = new BatchForOneBranchModify(lock, tx, author, message, excludeBranchContentFromLog)
+      final var batch = new BatchForOneBranchModify(lock, tx, author, message, excludeBranchContentFromLog, commitTreeEnabled)
         .replace(item.getReplace())
         .merge(item.getMerge())
         .commands(item.getCommands())

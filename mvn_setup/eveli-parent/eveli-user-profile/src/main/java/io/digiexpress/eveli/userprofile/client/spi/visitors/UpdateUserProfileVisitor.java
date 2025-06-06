@@ -72,10 +72,14 @@ public class UpdateUserProfileVisitor implements DocObjectsVisitor<Uni<List<User
         .collect(Collectors.groupingBy(UserProfileUpdateCommand::getId));
     this.profileIds = new ArrayList<>(commandsByUserProfileId.keySet());
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyManyBranches()
-        .commitMessage("Update user profiles: " + commandsByUserProfileId.size())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createManyDocs()
-        .commitMessage("Upsert user profiles: " + commandsByUserProfileId.size())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
   }
 

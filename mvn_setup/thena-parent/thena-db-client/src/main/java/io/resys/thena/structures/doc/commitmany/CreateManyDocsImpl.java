@@ -56,6 +56,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
  
   private String commitAuthor;
   private String commitMessage;
+  private boolean commitTreeEnabled = true;
   private AddItemToCreateDoc lasItemBuilder;
 
   
@@ -72,7 +73,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
     RepoAssert.isNull(lasItemBuilder, () -> "previous item() method chain left unfinished, next() method must be called to finish item()!");
     
     final var parent = this;
-    final var oneDoc = new BatchForOneDocCreate(repoId, commitAuthor, commitMessage, excludeBranchContentFromLog);
+    final var oneDoc = new BatchForOneDocCreate(repoId, commitAuthor, commitMessage, excludeBranchContentFromLog, commitTreeEnabled);
 
     lasItemBuilder = new AddItemToCreateDoc() {
       @Override public AddItemToCreateDoc branchName(String branchName) { oneDoc.branchName(branchName); return this;}
@@ -137,6 +138,7 @@ public class CreateManyDocsImpl implements CreateManyDocs {
         .commits(rsp.getItems().stream()
             .flatMap(i -> i.getDocCommit().stream())
             .collect(Collectors.toList()))
+        
         .addAllCommitTree(rsp.getItems().stream()
             .flatMap(i -> i.getDocCommitTree().stream())
             .collect(Collectors.toList()))

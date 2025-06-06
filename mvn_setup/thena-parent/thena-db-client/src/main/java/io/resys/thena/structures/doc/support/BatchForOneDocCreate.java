@@ -52,6 +52,7 @@ public class BatchForOneDocCreate {
   private final String author;
   private final String message;
   private final Boolean excludeBranchContentFromLog;
+  private final boolean commitTreeEnabled;
   
   private String docType;
   private String docDescription;
@@ -90,7 +91,7 @@ public class BatchForOneDocCreate {
         .commitMessage(this.message)
         .parent(Optional.empty())
         .commitLog("")
-        .build());
+        .build(), commitTreeEnabled);
     
     final var doc = ImmutableDoc.builder()
         .id(docId)

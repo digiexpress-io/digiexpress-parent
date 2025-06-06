@@ -69,6 +69,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private Boolean excludeBranchContentFromLog;
   private OffsetDateTime docStartsAt;
   private OffsetDateTime docEndsAt;
+  private boolean commitTreeEnabled = true;
 
   @Override
   public CreateOneDocImpl commitLogExcludesBranchBody() {
@@ -90,7 +91,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   
   private Uni<OneDocEnvelope> doInTx(DocState tx) {  
-    final var batch = new BatchForOneDocCreate(tx.getTenantId(), commitAuthor, commitMessage, excludeBranchContentFromLog)
+    final var batch = new BatchForOneDocCreate(tx.getTenantId(), commitAuthor, commitMessage, excludeBranchContentFromLog, commitTreeEnabled)
         .docId(docId)
         .docType(docType)
         .docName(docName)

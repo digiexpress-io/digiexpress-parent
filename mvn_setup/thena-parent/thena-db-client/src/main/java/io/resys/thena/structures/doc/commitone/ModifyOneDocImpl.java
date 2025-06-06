@@ -62,6 +62,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   private Optional<String> docDescription;
   private Optional<OffsetDateTime> docStartsAt;
   private Optional<OffsetDateTime> docEndsAt;
+  private Boolean excludeBranchContentFromLog;
+  private boolean commitTreeEnabled = true;
   
   private Optional<String> docName;
   private Optional<String> docSubStatus;
@@ -82,6 +84,8 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   @Override public ModifyOneDocImpl docSubStatus(String docSubStatus) { this.docSubStatus = Optional.ofNullable(docSubStatus); return this; }
   @Override public ModifyOneDocImpl docStartsAt(OffsetDateTime docStartsAt) { this.docStartsAt = Optional.ofNullable(docStartsAt); return this; }
   @Override public ModifyOneDocImpl docEndsAt(OffsetDateTime docEndsAt) { this.docEndsAt = Optional.ofNullable(docEndsAt); return this; }
+  @Override public ModifyOneDocImpl commitTreeEnabled(boolean commitTreeEnabled) { this.commitTreeEnabled = commitTreeEnabled; return this; }
+  @Override public ModifyOneDocImpl commitLogExcludesBranchBody() { this.excludeBranchContentFromLog = Boolean.TRUE; return this; }
   
   @Override
   public Uni<OneDocEnvelope> build() {
@@ -106,7 +110,7 @@ public class ModifyOneDocImpl implements ModifyOneDoc {
   
   private Uni<OneDocEnvelope> doInLock(DocLock docLock, DocState tx) {
 
-    final var batch = new BatchForOneDocModify(docLock, tx, author, message)
+    final var batch = new BatchForOneDocModify(docLock, tx, author, message, excludeBranchContentFromLog, commitTreeEnabled)
         .commands(commands)
         .meta(meta)
         .docName(docName)

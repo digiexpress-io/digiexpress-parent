@@ -55,6 +55,7 @@ public class BatchForOneBranchModify {
   private final String author;
   private final String message;
   private final Boolean excludeBranchContentFromLog;
+  private final boolean commitTreeEnabled;
   
   private JsonObject appendBlobs;
   private List<JsonObject> commands;
@@ -88,7 +89,7 @@ public class BatchForOneBranchModify {
         .commitMessage(this.message)
         .parent(lock.getBranch().get().getCommitId())
         .commitLog("")
-        .build());
+        .build(), commitTreeEnabled);
     
 
     final var docBranch = ImmutableDocBranch.builder()

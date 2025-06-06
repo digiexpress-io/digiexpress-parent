@@ -40,12 +40,11 @@ import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
 import io.vertx.core.json.JsonObject;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 
-@RequiredArgsConstructor
+
 @Setter @Accessors(fluent = true)
 public class BatchForOneDocModify {
 
@@ -53,6 +52,8 @@ public class BatchForOneDocModify {
   private final DocState tx;
   private final String author;
   private final String message;
+  private final Boolean excludeBranchContentFromLog;
+  private final boolean commitTreeEnabled;
   
   private List<JsonObject> commands = null;
   private Optional<String> ownerId;
@@ -66,7 +67,19 @@ public class BatchForOneDocModify {
   private Optional<JsonObject> meta;
   private boolean remove;
 
-  
+
+  public BatchForOneDocModify(
+      DocLock docLock, DocState tx, String author,
+      String message, Boolean excludeBranchContentFromLog,
+      boolean commitTreeEnabled) {
+    super();
+    this.docLock = docLock;
+    this.tx = tx;
+    this.author = author;
+    this.message = message;
+    this.commitTreeEnabled = commitTreeEnabled;
+    this.excludeBranchContentFromLog = Boolean.TRUE.equals(excludeBranchContentFromLog);
+  }
   
   public DocBatchForOne create() {
     RepoAssert.notNull(docLock, () -> "docLock can't be empty!");
@@ -76,7 +89,7 @@ public class BatchForOneDocModify {
     
     final var now = OffsetDateTime.now();
     
-    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), false, ImmutableDocCommit.builder()
+    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), excludeBranchContentFromLog, ImmutableDocCommit.builder()
         .id(OidUtils.gen())
         .docId(docLock.getDoc().get().getId())
         .createdAt(now)
@@ -84,7 +97,7 @@ public class BatchForOneDocModify {
         .commitMessage(this.message)
         .parent(docLock.getDoc().get().getCommitId())
         .commitLog("")
-        .build());
+        .build(), commitTreeEnabled);
     
 
     final var doc = ImmutableDoc.builder()
@@ -146,7 +159,4 @@ public class BatchForOneDocModify {
         .addAllDocLock(docLock.getBranches())
         .build();
   }
-  
-
-
 }

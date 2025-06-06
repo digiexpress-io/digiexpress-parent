@@ -72,7 +72,8 @@ public interface DocCommitActions {
 
     CreateOneDoc commitAuthor(String author);
     CreateOneDoc commitMessage(String message);
-    CreateOneDoc commitLogExcludesBranchBody(); // don't log content into db 
+    CreateOneDoc commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log 
+    CreateOneDoc commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
     
     CreateOneDoc branchName(String branchName); // first branch of the document, when empty generated as 'main' by the system
     CreateOneDoc branchContent(JsonObject branchContent);
@@ -83,7 +84,9 @@ public interface DocCommitActions {
   interface CreateManyDocs { 
     CreateManyDocs commitAuthor(String author);
     CreateManyDocs commitMessage(String message);
-    CreateManyDocs commitLogExcludesBranchBody(); // don't log content into db 
+    CreateManyDocs commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log 
+    CreateManyDocs commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
+    
     AddItemToCreateDoc item();
     Uni<ManyDocsEnvelope> build();
   }
@@ -126,6 +129,8 @@ public interface DocCommitActions {
     ModifyOneDoc ownerId(@Nullable String ownerId);       //user given 'grouping' identifier for claiming ownership  
     ModifyOneDoc meta(@Nullable JsonObject docMeta);
     ModifyOneDoc commands(List<JsonObject> commands);
+    ModifyOneDoc commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
+    ModifyOneDoc commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log
     
     ModifyOneDoc remove();   // remove the whole document                         
     Uni<OneDocEnvelope> build();
@@ -133,7 +138,8 @@ public interface DocCommitActions {
   interface ModifyManyDocs {
     ModifyManyDocs commitAuthor(String author);
     ModifyManyDocs commitMessage(String message);
-    
+    ModifyManyDocs commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
+    ModifyManyDocs commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log
     AddItemToModifyDoc item();
     Uni<ManyDocsEnvelope> build();
   }
@@ -165,7 +171,8 @@ public interface DocCommitActions {
     CreateOneDocBranch commands(List<JsonObject> commands);
     CreateOneDocBranch branchName(String branchName);
     CreateOneDocBranch branchContent(JsonObject branchContent);
-    CreateOneDocBranch commitLogExcludesBranchBody(); // don't log content into db 
+    CreateOneDocBranch commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log 
+    CreateOneDocBranch commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
     
     Uni<OneDocEnvelope> build();
   }
@@ -184,7 +191,8 @@ public interface DocCommitActions {
 
     ModifyOneDocBranch commitAuthor(String author);
     ModifyOneDocBranch commitMessage(String message);
-    ModifyOneDocBranch commitLogExcludesBranchBody(); // don't log content into db 
+    ModifyOneDocBranch commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log 
+    ModifyOneDocBranch commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
     
     Uni<OneDocEnvelope> build();
   }
@@ -193,7 +201,9 @@ public interface DocCommitActions {
     int getItemsAdded();
     ModifyManyDocBranches commitAuthor(String author);
     ModifyManyDocBranches commitMessage(String message);
-    ModifyManyDocBranches commitLogExcludesBranchBody(); // don't log content into db 
+    ModifyManyDocBranches commitLogExcludesBranchBody(); // disables writing into doc_log(body_before, body_after, body_patch) and doc_commit.commit_log 
+    ModifyManyDocBranches commitTreeEnabled(boolean commitTreeEnabled); // disabled doc_log table fully
+    
     AddItemToModifyDocBranch item();
     Uni<ManyDocsEnvelope> build();
   }

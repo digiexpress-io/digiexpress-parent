@@ -66,7 +66,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   
   private JsonObject branchContent = null;
   private List<JsonObject> commands = null;
-
+  private boolean commitTreeEnabled = true;
   private String docId;
 
   private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
@@ -142,7 +142,8 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .commitMessage(this.commitMessage)
       .parent(lock.getCommit().get().getId())
       .commitLog("")
-      .build()
+      .build(), 
+      commitTreeEnabled
     );
 
     final var docBranch = ImmutableDocBranch.builder()

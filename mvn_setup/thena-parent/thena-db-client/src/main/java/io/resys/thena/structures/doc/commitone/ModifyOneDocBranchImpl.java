@@ -64,7 +64,8 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   private String commitMessage;
   private boolean remove;
   private Boolean excludeBranchContentFromLog;
-
+  private boolean commitTreeEnabled = true;
+  
   @Override
   public ModifyOneDocBranchImpl commitLogExcludesBranchBody() {
     excludeBranchContentFromLog = Boolean.TRUE;
@@ -147,7 +148,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   }
 
   private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocState tx) {  
-    final var batch = new BatchForOneBranchModify(lock, tx, commitAuthor, commitMessage, excludeBranchContentFromLog)
+    final var batch = new BatchForOneBranchModify(lock, tx, commitAuthor, commitMessage, excludeBranchContentFromLog, commitTreeEnabled)
       .replace(replace)
       .merge(merge)
       .commands(commands)

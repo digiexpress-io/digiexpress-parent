@@ -55,8 +55,9 @@ public class DocCommitBuilder {
   private final String docId;
   private final Optional<String> branchId;
   private final boolean excludeBranchContentFromLog;
+  private boolean commitTreeEnabled = true;
   
-  public DocCommitBuilder(String tenantId, Boolean excludeBranchContentFromLog, DocCommit commit) {
+  public DocCommitBuilder(String tenantId, Boolean excludeBranchContentFromLog, DocCommit commit, boolean commitTreeEnabled) {
     super();
     this.commitId = commit.getId();
     this.tenantId = tenantId;
@@ -66,6 +67,7 @@ public class DocCommitBuilder {
     this.createdAt = commit.getCreatedAt();
     this.branchId = commit.getBranchId();
     this.excludeBranchContentFromLog = Boolean.TRUE.equals(excludeBranchContentFromLog);
+    this.commitTreeEnabled = commitTreeEnabled;
   }
   public String getTenantId() {
     return tenantId;
@@ -76,7 +78,6 @@ public class DocCommitBuilder {
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
-  
   
   public DocCommitBuilder add(IsDocObject entity) {
     if(entity instanceof DocBranch) {
@@ -132,7 +133,6 @@ public class DocCommitBuilder {
   }
   public DocCommitBuilder merge(IsDocObject previous, IsDocObject next) {
     
-
     if(previous instanceof DocBranch) {
       final var branchPrev = (DocBranch) previous;
       final var branchNext = (DocBranch) next;
@@ -211,8 +211,10 @@ public class DocCommitBuilder {
     return this;
   }
   public Tuple2<DocCommit, List<DocCommitTree>> close() {
-    final var commit = this.commit.commitLog(this.logger.build()).build();
-    return Tuple2.of(commit, Collections.unmodifiableList(this.trees));
+    final var commit = this.commit
+          .commitLog(excludeBranchContentFromLog ? "": this.logger.build())
+          .build();
+    return Tuple2.of(commit, commitTreeEnabled ? Collections.unmodifiableList(this.trees) : Collections.emptyList());
   }
   
   @Value.Immutable
