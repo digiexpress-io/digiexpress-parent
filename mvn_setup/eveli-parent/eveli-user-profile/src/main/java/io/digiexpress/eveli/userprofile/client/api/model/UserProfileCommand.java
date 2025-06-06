@@ -76,6 +76,8 @@ public interface UserProfileCommand extends Serializable {
     
     String getEmail();
     
+    List<String> getTenantFeatures();
+    
     List<NotificationSetting> getNotificationSettings();
     
     @Value.Default

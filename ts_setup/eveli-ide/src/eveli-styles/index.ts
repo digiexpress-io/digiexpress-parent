@@ -18,6 +18,8 @@ export {
   StyledTransferList as TransferList,
 } from './StyledTransferList';
 
+export * from './StyledSection';
+
 
 export { 
   StyledInputLabel as InputLabel, 

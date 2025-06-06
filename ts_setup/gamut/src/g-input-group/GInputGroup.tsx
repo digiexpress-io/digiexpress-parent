@@ -11,10 +11,16 @@ export interface GInputGroupProps {
   children: React.ReactNode;
   onAddRow: (id: string) => void;
 
+  /**
+- Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
+- Set in Composer properties: border = true  
+ */
+  border?: boolean | undefined;
+
   component?: React.ElementType<GInputGroupProps>;
   slots?: {
-    label: React.ElementType<GInputGroupProps>;
-    body: React.ElementType<GInputGroupProps>;
+    label: React.ElementType<{ ownerState: GInputGroupProps, className: string }>;
+    body: React.ElementType<{ ownerState: GInputGroupProps, className: string }>;
   };
 }
 
@@ -29,8 +35,8 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
   const ownerState = { ...props };
   const classes = useUtilityClasses(id);
 
-  const Label = props.slots?.label ?? GInputGroupLabel;
-  const Body = props.slots?.body ?? GInputGroupBody;
+  const Label: React.ElementType<{ ownerState: GInputGroupProps, className: string }> = props.slots?.label ?? GInputGroupLabel;
+  const Body: React.ElementType<{ ownerState: GInputGroupProps, className: string }> = props.slots?.body ?? GInputGroupBody;
 
   function handleAddRow() {
     props.onAddRow(props.id);
@@ -38,9 +44,7 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
 
   return (
     <GInputGroupRoot className={classes.root} ownerState={ownerState} as={props.component}>
-
-
-      <Label {...props} className={classes.label}>
+      <Label ownerState={props} className={classes.label}>
         <div>
           <Typography>{props.label}</Typography>
         </div>
@@ -49,10 +53,8 @@ export const GInputGroup: React.FC<GInputGroupProps> = (initProps) => {
           <AddIcon />
         </IconButton>
       </Label>
-      
-      <Body {...props} className={classes.body}>
+      <Body ownerState={props} className={classes.body}>
         {children}
       </Body>
-
     </GInputGroupRoot>);
 }

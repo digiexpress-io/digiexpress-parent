@@ -2,7 +2,7 @@
 import { generateUtilityClass, styled } from '@mui/material'
 import composeClasses from '@mui/utils/composeClasses'
 import { useVariantOverride } from '../api-variants';
-import { GInputSurveyOptionProps, GInputSurveyProps } from './GInputSurvey';
+import { GInputSurveyProps } from './GInputSurvey';
 
 export const MUI_NAME = 'GInputSurvey';
 
@@ -36,6 +36,14 @@ export const GInputSurveyRoot = styled('div', {
   const colCount = vertical ? questions.length : optionsCount;
 
   return {
+
+    ...(ownerState.border ? {
+      border: `1px solid ${theme.palette.divider}`,
+      padding: theme.spacing(2),
+      margin: theme.spacing(2),
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+    } : {}),
+
     '& .GInputSurvey-body': {
       display: 'grid', 
       alignItems: 'center', 
@@ -67,6 +75,8 @@ export const GInputSurveyBody = styled('div', {
     prop !== 'description' && 
     prop !== 'vertical' && 
     prop !== 'labelPosition' && 
+    prop !== 'border' &&
+    prop !== 'ownerState' && 
     prop !== 'questions'),
     
   overridesResolver: (props, styles) => {
@@ -75,7 +85,7 @@ export const GInputSurveyBody = styled('div', {
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputSurveyProps>(({ theme, options }) => {
+})<{ ownerState: GInputSurveyProps }>(({ theme }) => {
   return {
 
   };

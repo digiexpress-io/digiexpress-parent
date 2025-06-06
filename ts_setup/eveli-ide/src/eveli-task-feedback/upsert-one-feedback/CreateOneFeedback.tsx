@@ -45,6 +45,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
   }, []);
 
 
+
   function setReply(reply: string) {
     setCommand(prev => (prev ? { ...prev, reply } : undefined));
   }
@@ -84,10 +85,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
     <>
       <div style={{ display: 'flex', flexDirection: 'column', padding: 10 }}>
         <Typography variant='h3' fontWeight='bold' mr={3}>{intl.formatMessage({ id: 'feedback.create.title' })}</Typography>
-        <FeedbackContent feedback={{ ...template, ...command }} onChange={(next) => {
-
-          setCommand(prev => (prev ? { ...prev, ...next } : undefined));
-        }} />
+        <FeedbackContent feedback={{ ...template, ...command }} onChange={(next) => { setCommand(prev => (prev ? { ...prev, ...next } : undefined)) }} />
 
         <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.feedbackValue' })}</Typography>
         <TextField onChange={(e) => setQuestion(e.target.value)}
@@ -110,7 +108,7 @@ export const CreateOneFeedback: React.FC<CreateOneFeedbackProps> = ({ taskId, on
       </div>
       <Box display='flex' gap={1}>
         <CancelButton onClick={handleCancel} />
-        <Button variant='contained' onClick={handlePublish} disabled={!command?.reply}><FormattedMessage id='button.publish' /></Button>
+        <Button variant='contained' onClick={handlePublish}><FormattedMessage id='button.publish' /></Button>
       </Box>
     </>
   )

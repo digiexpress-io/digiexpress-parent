@@ -144,6 +144,7 @@ public interface FeedbackClient {
     String getQuestion();
     String getLabelKey();
     String getLabelValue();
+    String getCustomerTitle();
     @Nullable String getSubLabelKey();
     @Nullable String getSubLabelValue();
 

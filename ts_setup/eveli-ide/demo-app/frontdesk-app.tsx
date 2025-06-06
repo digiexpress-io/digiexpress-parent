@@ -87,7 +87,8 @@ export const FrontdeskApp: React.FC = () => {
                 <TenantConfigContextProvider features={[
                   'visual_accommodation', 
                   'stencil_locale_filter',
-                  'eveli_publication_only']}>
+                  'eveli_publication_only',
+                  'smart_tables']}>
                     
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />

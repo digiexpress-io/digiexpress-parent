@@ -20,7 +20,7 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
   const { options = {} } = props;
 
   const messages: any = React.useMemo(() => merge(options), [options]);
-  const [locale, setLocale] = React.useState<string>(getLocale(props, messages));
+  const [locale, setLocale] = React.useState<string>(getDefaultLocale(props, messages));
   const contextValue: LocaleApi.LocaleContextType = React.useMemo(() => Object.freeze({ locale, setLocale }), [locale]);
   const intlMessages = messages[locale];
 
@@ -50,7 +50,7 @@ function merge(options: LocaleApi.Localizations): LocaleApi.Localizations {
   return merged;
 }
 
-const getLocale = (props: LocaleProviderProps, messages: Record<string, any>) => {
+export const getDefaultLocale = (props: LocaleProviderProps, messages: Record<string, any>) => {
   const resolvedDefault =  props.defaultLocale ? props.defaultLocale() : undefined;
   if(resolvedDefault) {
     return resolvedDefault;

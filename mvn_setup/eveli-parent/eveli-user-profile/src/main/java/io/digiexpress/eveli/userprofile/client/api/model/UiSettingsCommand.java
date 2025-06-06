@@ -62,7 +62,6 @@ public interface UiSettingsCommand extends Serializable {
   interface UpsertUiSettings extends UiSettingsUpdateCommand {
     List<UiSettings.UiSettingForConfig> getConfig();
     List<UiSettings.UiSettingForVisibility> getVisibility();
-    List<UiSettings.UiSettingsForSorting> getSorting();
     @Override default UiSettingsCommandType getCommandType() { return UiSettingsCommandType.UpsertUiSettings; }
   }  
 }

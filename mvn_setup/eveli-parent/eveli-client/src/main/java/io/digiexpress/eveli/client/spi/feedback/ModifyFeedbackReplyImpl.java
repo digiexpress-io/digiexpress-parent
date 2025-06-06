@@ -92,7 +92,8 @@ SET
   customer_question = ?,
   localized_label = ?,
   localized_sub_label = ?,
-  category_id = ?
+  category_id = ?,
+  customer_title = ?
 WHERE
   id = ?
 """), 
@@ -106,8 +107,10 @@ WHERE
       statement.setString(5, command.getLabelValue());
       statement.setString(6, command.getSubLabelValue());
       statement.setObject(7, UUID.fromString(category));
+      statement.setObject(8, command.getCustomerTitle());
       
-      statement.setObject(8, UUID.fromString(replyId));
+      
+      statement.setObject(9, UUID.fromString(replyId));
 
       return statement.executeUpdate();
     }); 

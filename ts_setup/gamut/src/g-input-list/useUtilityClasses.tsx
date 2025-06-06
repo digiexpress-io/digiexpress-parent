@@ -1,4 +1,4 @@
-import { Select, SelectProps, generateUtilityClass, styled, useThemeProps, MenuItem, MenuItemProps, RadioGroup, RadioGroupProps, Radio } from '@mui/material';
+import { Select, SelectProps, generateUtilityClass, styled, MenuItem, MenuItemProps, RadioGroup, RadioGroupProps } from '@mui/material';
 import composeClasses from '@mui/utils/composeClasses';
 import { useVariantOverride } from '../api-variants';
 

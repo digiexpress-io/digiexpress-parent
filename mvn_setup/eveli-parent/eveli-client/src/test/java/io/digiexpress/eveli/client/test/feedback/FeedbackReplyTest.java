@@ -62,6 +62,9 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
         .subLabelKey(template.getSubLabelKey())
         .subLabelValue(template.getSubLabelValue())
         
+        .customerTitle(template.getCustomerTitle())
+        
+        
         .locale(template.getLocale())
         .origin(template.getOrigin())
         
@@ -87,6 +90,7 @@ public class FeedbackReplyTest extends FeedbackEnvirSetup {
           .labelValue("main label value")
           .subLabelKey("bad")
           .subLabelValue("label for super bad")
+          .customerTitle("My opinion to you: a poem")
           .build(), "JOHN");
       
       Assertions.assertNotNull(updatedReply, "Can't find modified feedback reply!");

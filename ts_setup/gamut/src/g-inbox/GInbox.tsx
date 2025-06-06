@@ -1,7 +1,7 @@
 import React from 'react';
-import { useThemeProps } from '@mui/system';
 import { useUtilityClasses, GInboxRoot, MUI_NAME } from './useUtilityClasses';
 import { IntlShape, useIntl } from 'react-intl';
+import { Grid, Typography, useThemeProps } from '@mui/material';
 
 import { GInboxItem, GInboxItemProps } from './GInboxItem';
 import { GInboxFormReview, GInboxFormReviewProps } from '../g-inbox-form-review';
@@ -13,6 +13,7 @@ import { IamApi, useIam } from '../api-iam';
 import { useContracts } from '../api-contract';
 import { useSite } from '../api-site';
 import { useOffers } from '../api-offer';
+import { GFlex } from '../g-flex';
 
 
 
@@ -71,6 +72,15 @@ export const GInbox: React.FC<GInboxProps> = (initProps) => {
         label={intl.formatMessage({ id: 'gamut.buttons.sort-last-modified.inbox' })}
         direction={sortOrder}
       />
+      <GFlex variant='header'>
+        <Grid container>
+          <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.taskRefId' })}</Typography></Grid>
+          <Grid item md={2} lg={4} xl={4} sx={{ justifyContent: 'flex-start !important' }}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.formName' })}</Typography></Grid>
+          <Grid item md={4} lg={4} xl={4}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.attachments' })}</Typography></Grid>
+          <Grid item md={2} lg={2} xl={2}><Typography fontWeight='bold'>{intl.formatMessage({ id: 'gamut.forms.lastModified' })}</Typography></Grid>
+        </Grid>
+      </GFlex>
+
       {subjects
         .map((subject) => {
           const contract = getContract(subject.contractId);

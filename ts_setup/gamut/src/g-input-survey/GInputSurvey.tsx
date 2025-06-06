@@ -1,5 +1,5 @@
 import React from 'react'
-import { useThemeProps, Box } from '@mui/material'
+import { useThemeProps } from '@mui/material'
 import { MUI_NAME, useUtilityClasses, GInputSurveyRoot, GInputSurveyBody } from './useUtilityClasses'
 import { GInputError } from '../g-input-error'
 import { GInputLabel } from '../g-input-label'
@@ -24,10 +24,16 @@ export interface GInputSurveyProps {
   vertical?: boolean | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 
+  /**
+  - Styles resembling MUI Paper, which include a border, elevation, and padding/margins 
+  - Set in Composer properties: border = true  
+   */
+  border?: boolean | undefined;
+
   component?: React.ElementType<GInputSurveyProps>;
   slots?: {
     option: React.ElementType<GInputSurveyOptionProps>;
-    body: React.ElementType<GInputSurveyProps>;
+    body: React.ElementType<{ ownerState: GInputSurveyProps }>;
   };
 }
 
@@ -78,12 +84,11 @@ const Options: React.FC<GInputSurveyProps> = (props) => {
   const { id, options } = props;
   const classes = useUtilityClasses(id);
   
-  const Body: React.ElementType<GInputSurveyProps> = props.slots?.body ?? GInputSurveyBody as any;
+  const Body: React.ElementType<{ ownerState: GInputSurveyProps, className: string }> = props.slots?.body ?? GInputSurveyBody as any;
   const Option: React.ElementType<GInputSurveyOptionProps> = props.slots?.option ?? GInputSurveyOption as any;
 
   return (
-    
-    <Body {...props} className={classes.body}>
+    <Body ownerState={props} className={classes.body}>
       <div />
       {options.map((e, index) => (<Option index={index} id={id} key={e.label} label={e.label} description={e.description} className={classes.option} />))}
       {props.children}

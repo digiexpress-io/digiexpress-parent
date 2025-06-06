@@ -40,6 +40,9 @@ import io.smallrye.mutiny.Uni;
 
 @Configuration
 public class EveliWrenchOnlyTenantAutoConfig {
+  
+  public static String FEATURE_WRENCH_ONLY = "wrench-only";
+  public static String FEATURE_USER_PROFILE = "user_profile";
 
   @Bean 
   public AssetsWrenchController assetsWrenchController(ObjectMapper objectMapper, HdesClient client) {
@@ -63,7 +66,7 @@ public class EveliWrenchOnlyTenantAutoConfig {
           public Uni<TenantConfig> getOne() {
             return Uni.createFrom().item(ImmutableTenantConfig
                 .builder()
-                .addFeatures("wrench-only")
+                .addFeatures(FEATURE_WRENCH_ONLY)
                 .build());
           }
         };

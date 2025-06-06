@@ -138,6 +138,7 @@ public class UserProfileCommandVisitor {
     this.current = ImmutableUserProfile.builder()
       .id(id)
       .details(createDetails(command))
+      .tenantFeatures(command.getTenantFeatures())
       .notificationSettings(command.getNotificationSettings().stream()
           .map(e -> ImmutableNotificationSetting.builder()
               .from(e)

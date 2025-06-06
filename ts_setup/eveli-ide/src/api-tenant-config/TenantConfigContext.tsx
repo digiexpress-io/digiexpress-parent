@@ -2,6 +2,7 @@ import { useFetch } from '@dxs-ts/eveli-fetch';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { GThemeOptions } from '@dxs-ts/gamut'
 import { ThemeOptions } from '@mui/material';
+import { EveliFeatureMapping, EveliFeatureType } from './EveliFeatureMapping';
 
 export interface TenantConfig {
   features: TenantFeature[];
@@ -13,8 +14,8 @@ export type TenantFeature = (
   "wrench-disabled" |
   "stencil-disabled"  |
   "external-deployment" |
-
-
+  "smart_tables" |
+  "user_profile" |
   'queues-visually-disabled' |
   'feedback-visually-disabled' |
 
@@ -24,7 +25,7 @@ export type TenantFeature = (
 
 const INITIAL_CONFIG: TenantConfig = {
   features: [],
-  gamutThemeOptions: GThemeOptions,
+  gamutThemeOptions: GThemeOptions
 }
 
 export interface TenantConfigContextProviderProps {
@@ -37,16 +38,44 @@ export const TenantConfigContext = createContext<TenantConfig>(INITIAL_CONFIG);
 
 const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children, features: _features, gamutThemeOptions }) => {
   const {tenantConfig, pending} = useFetch('worker/rest/api/tenant-configs.GET', {}); 
+  const profile = useFetch('worker/rest/api/userprofiles/$profileId.GET', {}); 
 
+  const [userTenantConfig, setUserTenantConfig] = React.useState<TenantFeature[]>();
+  
+  
   const contextValue: TenantConfig = React.useMemo(() => {
-    return {
-      gamutThemeOptions: gamutThemeOptions ?? GThemeOptions,
-      ...tenantConfig,
-      features: [ ...(tenantConfig?.features ?? []), ...(_features ?? []) ]
+    if(pending) {
+      return Object.freeze({ ...INITIAL_CONFIG })
     }
-  }, [tenantConfig]);
 
+    const mergedTheme = gamutThemeOptions ?? GThemeOptions;
+    const features = Array.from(new Set([ ...(tenantConfig?.features ?? []), ...(_features ?? []), ...(userTenantConfig ?? []) ]));
+    console.log('Tenant features', features);
 
+    return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features })
+  }, [tenantConfig, pending, userTenantConfig]);
+
+  React.useEffect(() => {
+    if(pending || userTenantConfig) {
+      return;
+    }
+    const createIfNotDefined = contextValue.features.includes('user_profile');
+    profile.restApi().currentUserProfile(createIfNotDefined)
+      .then(profile => {
+        if(!profile) {
+          console.log('User profile disabled');
+          setUserTenantConfig([])
+          return;
+        }
+        console.log('Checking user profile', profile);
+        setUserTenantConfig(profile.tenantFeatures?.map(e => e as TenantFeature) ?? [])
+      })
+      .catch((e) => {
+        console.log('User profile disabled');
+        setUserTenantConfig([]);
+      });
+
+  }, [pending, contextValue, userTenantConfig]);
   return (
     <TenantConfigContext.Provider value={contextValue}>
       {!pending && children}
@@ -59,13 +88,21 @@ export const TenantConfigContextProvider: React.FC<PropsWithChildren<TenantConfi
   if(props.disabled === true) {
     return (<>{props.children}</>)
   }
-
-  return (
-    <WithProvider {...props}/>
-  );
+  return (<WithProvider {...props}/>);
 };
 
 
-
-
 export const useTenantConfig = () => useContext(TenantConfigContext);
+export const useTenantConfigFeatures = () => {
+  const context = useContext(TenantConfigContext);
+
+  return {
+    isEnabled: (id: EveliFeatureType) => {
+      const required = EveliFeatureMapping[id];
+      const isEnabled = required(context.features);
+      return isEnabled;
+    }
+  }  
+}
+
+

@@ -29,9 +29,15 @@ export const GInputGroupRoot = styled('div', {
       useVariantOverride(props, styles)
     ];
   },
-})<{ ownerState: {  } }>(({ theme }) => {
+})<{ ownerState: GInputGroupProps }>(({ theme, ownerState }) => {
   return {
-    
+    ...(ownerState.border ? {
+      border: `1px solid ${theme.palette.divider}`,
+      padding: theme.spacing(2),
+      margin: theme.spacing(1),
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+    } : {}),
+
   };
 });
 
@@ -43,14 +49,16 @@ export const GInputGroupRoot = styled('div', {
 export const GInputGroupLabel = styled('div', {
   name: MUI_NAME,
   slot: 'Label',
-  shouldForwardProp: (prop) => prop !== 'onAddRow',
+  shouldForwardProp: (prop) => prop !== 'onAddRow' && prop !== 'ownerState',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputGroupProps>(({ theme, label }) => {
+})<{ ownerState: GInputGroupProps, className: string }>(({ theme, ownerState }) => {
+
+  const { label } = ownerState;
   return {
     display: 'flex',
     '& .MuiDivider-root': {
@@ -70,14 +78,14 @@ export const GInputGroupLabel = styled('div', {
 export const GInputGroupBody = styled('div', {
   name: MUI_NAME,
   slot: 'Body',
-  shouldForwardProp: (prop) => prop !== 'onAddRow',
+  shouldForwardProp: (prop) => prop !== 'onAddRow' && prop !== 'ownerState',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
       ...useVariantOverride(props, styles)
     ];
   },
-})<GInputGroupProps>(({ theme }) => {
+})<{ ownerState: GInputGroupProps, className: string }>(({ theme }) => {
   return {
 
   };

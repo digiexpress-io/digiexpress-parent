@@ -1,6 +1,6 @@
 {
   "name": "@dxs-ts/eveli-ide",
-  "version": "0.0.321",
+  "version": "0.0.330",
   "homepage": "https://github.com/digiexpress-io/digiexpress-parent",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -8,6 +8,9 @@
   "files": [
     "build"
   ],
+  "publishConfig": {
+    "provenance": true
+  },
   "repository": "git@github.com:digiexpress-io/digiexpress-parent.git",
   "scripts": {
     "start": "START_MODE=frontdesk vite",
@@ -26,6 +29,7 @@
     "luxon": "^3.6.1",
     "monaco-editor": "^0.52.2",
     "react-markdown": "^9.0.1",
+    "ts-md5": "^1.3.1",
     "yaml": "^2.6.0"
   },
   "peerDependencies": {

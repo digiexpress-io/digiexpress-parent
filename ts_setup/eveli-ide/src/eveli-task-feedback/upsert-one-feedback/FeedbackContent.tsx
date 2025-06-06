@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { FeedbackApi, useFeedback } from '@/api-feedback';
 
@@ -20,8 +20,10 @@ export const FeedbackContent: React.FC<{
     subLabelKey: string | undefined;
     labelValue: string;
     subLabelValue: string | undefined;
+    customerTitle: string;
   }) => void
 }> = ({ feedback, onChange }) => {
+
   const intl = useIntl();
   const initData = React.useMemo(() => feedback, []);
   const [feedbackTopics, setFeedbackTopics] = React.useState<FeedbackApi.FeedbackTopic>();
@@ -37,7 +39,8 @@ export const FeedbackContent: React.FC<{
       labelKey: value.labelKey,
       labelValue: value.labelValue,
       subLabelKey: feedback.subLabelKey,
-      subLabelValue: feedback.subLabelValue
+      subLabelValue: feedback.subLabelValue,
+      customerTitle: feedback.customerTitle ?? ''
     })
   }
 
@@ -47,7 +50,18 @@ export const FeedbackContent: React.FC<{
       labelKey: feedback.labelKey,
       labelValue: feedback.labelValue,
       subLabelKey: value.labelKey,
-      subLabelValue: value.labelValue
+      subLabelValue: value.labelValue,
+      customerTitle: feedback.customerTitle ?? ''
+    })
+  }
+
+  const handleCustomerTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      labelKey: feedback.labelKey,
+      labelValue: feedback.labelValue,
+      subLabelKey: feedback.subLabelKey,
+      subLabelValue: feedback.subLabelValue,
+      customerTitle: event.currentTarget.value ?? ''
     })
   }
 
@@ -73,12 +87,12 @@ export const FeedbackContent: React.FC<{
       />
     </div>
 
-    {feedback.content.title &&
-      <div style={{ marginBottom: 10 }}>
-        <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerTitle' })}</Typography>
-        <Typography>{feedback.content.title}</Typography>
-      </div>
-    }
+
+    <div style={{ marginBottom: 10 }}>
+      <Typography fontWeight='bold'>{intl.formatMessage({ id: 'feedback.customerTitle' })}</Typography>
+      <TextField sx={{ width: '100%' }} value={feedback.customerTitle ?? ''} onChange={handleCustomerTitleChange} />
+    </div>
+
     </>)
   }
 

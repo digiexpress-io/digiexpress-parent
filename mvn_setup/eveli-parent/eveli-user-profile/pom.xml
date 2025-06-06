@@ -7,6 +7,7 @@
   </parent>
   <packaging>jar</packaging>
   <artifactId>eveli-user-profile</artifactId>
+  <name>eveli-user-profile</name>
 
   <dependencies>
     <dependency>

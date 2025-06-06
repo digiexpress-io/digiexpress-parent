@@ -15,6 +15,7 @@ import { EveliLogin } from '../eveli-login';
 import { IconbarProvider } from '../api-iconbar';
 import { FormattedMessage } from 'react-intl';
 import { EveliShellExplorer } from '../eveli-shell-explorer';
+import { EveliLogo } from '@/eveli-logo';
 
 
 const ToggleDrawer: React.FC<ContainerProps> = (components) => {
@@ -31,6 +32,8 @@ const ToggleDrawer: React.FC<ContainerProps> = (components) => {
         <UserTabs />
       </div>
       <div className={EveliShellLargeBarClassName}>
+        <EveliLogo />
+
         <UserButtons />
 
         <EveliShellExplorer>

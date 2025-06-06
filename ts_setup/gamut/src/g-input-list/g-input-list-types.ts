@@ -19,8 +19,8 @@ export interface GInputListProps {
   undefinedValue: string;
   keys?: boolean | undefined; // display keys
 
-  variant: OverridableStringUnion<'list' | 'list-radio', GInputListPropsVariantOverrides> | undefined;
-  slots?: Record<OverridableStringUnion<'list' | 'list-radio', GInputListPropsVariantOverrides>, React.ElementType>;
+  variant: OverridableStringUnion<'list' | 'list-radio' | 'autocomplete', GInputListPropsVariantOverrides> | undefined;
+  slots?: Record<OverridableStringUnion<'list' | 'list-radio' | 'autocomplete', GInputListPropsVariantOverrides>, React.ElementType>;
 
   component?: React.ElementType<GInputListProps>;
 }

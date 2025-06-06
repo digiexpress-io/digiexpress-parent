@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
-
 import TaskOutlinedIcon from '@mui/icons-material/TaskOutlined';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
@@ -13,10 +12,8 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
-
 import { useUtilityClasses } from '../eveli-shell/useUtilityClasses';
 import { EveliShellExplorer } from '@/eveli-shell-explorer';
-import { EveliLogo } from '@/eveli-logo';
 import { EveliPermissions } from '@/eveli-permissions';
 import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
@@ -30,9 +27,6 @@ export const Secondary: React.FC = () => {
   return (<>
 
     <EveliShellExplorer>
-      <EveliLogo />
-
-
       <EveliPermissions id='CREATE_TASK'>
         <Button startIcon={<CreateOutlinedIcon />} className={classes.composeButton}
           onClick={() => {

@@ -1,60 +1,20 @@
 import React from 'react'
-import { useThemeProps, Typography, Button } from '@mui/material';
-import { OverridableStringUnion } from '@mui/types'
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { useThemeProps } from '@mui/material';
 
-import { DialobApi } from '../api-dialob';
+
 import { GInputBase } from '../g-input-base';
 import { GInputBaseProps } from '../g-input-base';
 import { GInputError } from '../g-input-error';
 import { GInputLabel, GInputLabelProps } from '../g-input-label';
 import { GInputAdornment } from '../g-input-adornment';
-import { GInputBaseAnyProps } from '../g-input-base';
-
-import { MUI_NAME, GInputMultilistRoot, useUtilityClasses, GInput } from './useUtilityClasses';
 
 
-export interface GInputMultilistClasses {
-  root: string;
-}
-export type GInputMultilistClassKey = keyof GInputMultilistClasses;
+import { MUI_NAME, GInputMultilistRoot, useUtilityClasses } from './useUtilityClasses';
+import { GInputMultilistProps } from './g-input-multilist-types';
+import { CheckboxList } from './CheckboxList';
+import { MultilistAutocomplete } from './MultilistAutocomplete';
 
 
-// extension hook for adding custom input types
-export interface GInputMultilistPropsVariantOverrides { };
-
-
-export interface GInputMultilistProps {
-  id: string;
-  value: string[] | undefined;
-  datasource: DialobApi.ActionValueSet;
-
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  label: string | undefined;
-  labelPosition: DialobApi.ControlLabelPosition,
-  description: string | undefined;
-
-  errors?: DialobApi.ActionError[] | undefined;
-  keys?: boolean | undefined; // display keys
-
-  /**
-  - Styles resembling MUI Paper, which include a border, elevation, and padding/margins   
-   */
-  border?: boolean | undefined;
-
-  variant: OverridableStringUnion<
-    'multilist',
-    GInputMultilistPropsVariantOverrides
-  > | undefined;
-
-  slots?: Record<OverridableStringUnion<
-    'multilist',
-    GInputMultilistPropsVariantOverrides>,
-    React.ElementType>; 
-
-  component?: React.ElementType<GInputMultilistProps>;
-}
 
 export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
   
@@ -77,13 +37,22 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
     variant, value, keys
   }
   
+  const InputComponent = (() => {
+    switch (variant) {
+      case 'radio': return CheckboxList;
+      default: return MultilistAutocomplete;
+    }
+  })();
+
+  const LabelComponent = variant === 'radio' ? Label : GInputLabel;
+
   const slots: GInputBaseProps<GInputMultilistProps> = {
     id,
     slots: {
       error: GInputError, 
-      label: Label,
+      label: LabelComponent,
       adornment: GInputAdornment,
-      input: CheckboxList,
+      input: InputComponent,
     },
     slotProps: {
       error: { id, errors },
@@ -99,68 +68,9 @@ export const GInputMultilist: React.FC<GInputMultilistProps> = (initProps) => {
   </GInputMultilistRoot>);
 }
 
-
-
 const Label: React.FC<GInputLabelProps> = (props) => {
   return (<GInputLabel {...props} braced/>)
 }
 
 
-const Checkbox: React.FC<{
-  optionKey: string,
-  optionValue: string,
-  ownerState: GInputBaseAnyProps & GInputMultilistProps,
-}> = (props) => {
-  const ref = React.useRef<HTMLInputElement>(null); 
-
-  
-  const {ownerState, optionKey, optionValue} = props;
-  const { onChange, value, keys, variant, id } = ownerState;
-  const checked = value?.includes(optionKey) ?? false;
-  const classes = useUtilityClasses(id, variant);
-
-
-  React.useEffect(() => {
-    function poulateTheChange(event: any) {
-      onChange(event);
-    }
-    ref.current?.addEventListener("input", poulateTheChange);
-    return () => ref.current?.removeEventListener("input", poulateTheChange);
-  }, [onChange]);
-
-
-  function toggleInput() {
-    const event = new Event('input', { bubbles: true });
-    ref.current?.dispatchEvent(event);
-  }
-
-  function doNothing() {
-  }
-
-  return (
-    <Button className={classes.option} variant='outlined'
-      onClick={toggleInput}
-      startIcon={checked ? <CheckBoxIcon className={classes.optionIcon} /> : <CheckBoxOutlineBlankIcon className={classes.optionIcon} />}>
-
-      <Typography className={classes.optionTitle}>{keys && optionKey} {optionValue}</Typography>
-
-      <input hidden value={optionKey} ref={ref} onChange={doNothing} />
-    </Button>)
-
-}
-
-const CheckboxList: React.FC<GInputBaseAnyProps & GInputMultilistProps> = (props) => {
-  const { datasource } = props;
-  const classes = useUtilityClasses(props.id, props.variant);
-  return (
-    <GInput className={classes.input}>
-      
-      <div className={classes.list}>
-      {datasource.entries.map(({ key, value }) => (
-        <Checkbox key={key} optionValue={value} optionKey={key} ownerState={props} />
-      ))}
-      </div>
-    </GInput>
-  );
-}
 

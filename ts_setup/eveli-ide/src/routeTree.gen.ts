@@ -19,6 +19,7 @@ import { Route as SecuredLocaleAssetsImport } from './routes/secured.$locale.ass
 import { Route as PublicLocaleAuthImport } from './routes/public.$locale.auth'
 import { Route as SecuredLocalePublicationsIndexImport } from './routes/secured.$locale.publications.index'
 import { Route as SecuredLocaleWorkerTasksImport } from './routes/secured.$locale.worker.tasks'
+import { Route as SecuredLocaleWorkerProfileImport } from './routes/secured.$locale.worker.profile'
 import { Route as SecuredLocaleWorkerTasksIndexImport } from './routes/secured.$locale.worker.tasks.index'
 import { Route as SecuredLocaleWorkerTablesIndexImport } from './routes/secured.$locale.worker.tables.index'
 import { Route as SecuredLocaleWorkerQueuesIndexImport } from './routes/secured.$locale.worker.queues.index'
@@ -88,6 +89,14 @@ const SecuredLocaleWorkerTasksRoute = SecuredLocaleWorkerTasksImport.update({
   path: '/tasks',
   getParentRoute: () => SecuredLocaleWorkerRoute,
 } as any)
+
+const SecuredLocaleWorkerProfileRoute = SecuredLocaleWorkerProfileImport.update(
+  {
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any,
+)
 
 const SecuredLocaleWorkerTasksIndexRoute =
   SecuredLocaleWorkerTasksIndexImport.update({
@@ -260,6 +269,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/secured/$locale/'
       preLoaderRoute: typeof SecuredLocaleIndexImport
       parentRoute: typeof SecuredLocaleImport
+    }
+    '/secured/$locale/worker/profile': {
+      id: '/secured/$locale/worker/profile'
+      path: '/profile'
+      fullPath: '/secured/$locale/worker/profile'
+      preLoaderRoute: typeof SecuredLocaleWorkerProfileImport
+      parentRoute: typeof SecuredLocaleWorkerImport
     }
     '/secured/$locale/worker/tasks': {
       id: '/secured/$locale/worker/tasks'
@@ -448,6 +464,7 @@ const SecuredLocaleWorkerTasksRouteWithChildren =
   )
 
 interface SecuredLocaleWorkerRouteChildren {
+  SecuredLocaleWorkerProfileRoute: typeof SecuredLocaleWorkerProfileRoute
   SecuredLocaleWorkerTasksRoute: typeof SecuredLocaleWorkerTasksRouteWithChildren
   SecuredLocaleWorkerDashboardIndexRoute: typeof SecuredLocaleWorkerDashboardIndexRoute
   SecuredLocaleWorkerFeedbackIndexRoute: typeof SecuredLocaleWorkerFeedbackIndexRoute
@@ -461,6 +478,7 @@ interface SecuredLocaleWorkerRouteChildren {
 }
 
 const SecuredLocaleWorkerRouteChildren: SecuredLocaleWorkerRouteChildren = {
+  SecuredLocaleWorkerProfileRoute: SecuredLocaleWorkerProfileRoute,
   SecuredLocaleWorkerTasksRoute: SecuredLocaleWorkerTasksRouteWithChildren,
   SecuredLocaleWorkerDashboardIndexRoute:
     SecuredLocaleWorkerDashboardIndexRoute,
@@ -506,6 +524,7 @@ export interface FileRoutesByFullPath {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -534,6 +553,7 @@ export interface FileRoutesByTo {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
   '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
@@ -563,6 +583,7 @@ export interface FileRoutesById {
   '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
   '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
   '/secured/$locale/': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
   '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
   '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
   '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -594,6 +615,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale/'
+    | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms/$formId'
@@ -621,6 +643,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale'
+    | '/secured/$locale/worker/profile'
     | '/secured/$locale/publications'
     | '/secured/$locale/assets/forms/$formId'
     | '/secured/$locale/assets/forms'
@@ -648,6 +671,7 @@ export interface FileRouteTypes {
     | '/secured/$locale/assets'
     | '/secured/$locale/worker'
     | '/secured/$locale/'
+    | '/secured/$locale/worker/profile'
     | '/secured/$locale/worker/tasks'
     | '/secured/$locale/publications/'
     | '/secured/$locale/assets/forms/$formId'
@@ -729,6 +753,7 @@ export const routeTree = rootRoute
       "filePath": "secured.$locale.worker.tsx",
       "parent": "/secured/$locale",
       "children": [
+        "/secured/$locale/worker/profile",
         "/secured/$locale/worker/tasks",
         "/secured/$locale/worker/dashboard/",
         "/secured/$locale/worker/feedback/",
@@ -744,6 +769,10 @@ export const routeTree = rootRoute
     "/secured/$locale/": {
       "filePath": "secured.$locale.index.tsx",
       "parent": "/secured/$locale"
+    },
+    "/secured/$locale/worker/profile": {
+      "filePath": "secured.$locale.worker.profile.tsx",
+      "parent": "/secured/$locale/worker"
     },
     "/secured/$locale/worker/tasks": {
       "filePath": "secured.$locale.worker.tasks.tsx",
