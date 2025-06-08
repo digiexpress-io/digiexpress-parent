@@ -1,6 +1,7 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
 import { useIam } from '@/api-iam';
 import { EveliPermissionsNone } from '@/eveli-permissions-none';
+import { useLocale } from '@/api-locale';
 
 
 
@@ -11,11 +12,13 @@ export const Route = createFileRoute('/')({
 
 function Component() {
   const iam = useIam();
+  const { locale } = useLocale();
+  
   if (iam.authType === 'ANON') {
     return <Navigate {...{
       from: '/',
       to: '/public/$locale/auth',
-      params: { locale: 'en' }
+      params: { locale }
     }} />
   } else if (iam.user.permissions.length === 0) {
     return (<EveliPermissionsNone />)
@@ -23,7 +26,7 @@ function Component() {
     return <Navigate {...{
       from: '/',
       to: '/secured/$locale',
-      params: { locale: 'en' }
+      params: { locale }
     }} />
   }
 }
