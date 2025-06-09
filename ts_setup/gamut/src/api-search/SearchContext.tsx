@@ -9,8 +9,10 @@ import { useSite } from '../api-site';
 export const SearchContext = React.createContext<SearchApi.SearchContextType>({} as any);
 
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = (props) => {
-  const { views } = useSite();
+  const { views, pending } = useSite();
   const intl = useIntl();
+  const { locale } = intl;
+
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
 
@@ -24,6 +26,15 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = (props) =
 
   const contextValue: SearchApi.SearchContextType = React.useMemo(() => ({ value: state, find, filterMode }),
     [state, find, filterMode]);
+
+
+  // reinit search after locale change
+  React.useEffect(() => {
+    if(!pending) {
+      setState(SearchApi.getInstance(views, noValueIndicatorColon))
+    }
+  }, [locale, pending]);
+
 
   return (<SearchContext.Provider value={contextValue}>{props.children}</SearchContext.Provider>);
 }
