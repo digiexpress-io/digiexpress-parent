@@ -126,9 +126,8 @@ const ServiceItem: React.FC<{ serviceId: HdesApi.ServiceId }> = ({ serviceId }) 
     .filter(a => a.refType === "DT")
     .map(a => ({ entity: session.getDecision(a.ref), ref: a }));
   const flows: RefFlow[] = service.associations
-    .filter(a => a.owner && a.refType === "FLOW")
+    .filter(a => a.refType === "FLOW")
     .map(a => ({ entity: session.getFlow(a.ref), ref: a }));
-
 
   return (
     <Burger.TreeItem itemId={service.id} labelText={serviceName}
