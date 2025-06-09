@@ -12,11 +12,11 @@ import { FormattedMessage } from "react-intl";
 import { useFetch } from "@dxs-ts/eveli-fetch";
 import { TaskApi } from "@/api-task";
 import { EveliTaskComments } from "@/eveli-task-comments";
-import { StatusIndicator, UpsertOneFeedback } from "@/eveli-task-feedback";
 import { EveliTaskAttachments } from "@/eveli-task-attachments";
 import { EveliTaskFeature } from "@/eveli-task-feature";
 import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "@/eveli-task-transfer";
 import { EveliTaskClientMessages } from "./EveliTaskClientMessages";
+import { StatusIndicator, UpsertOneFeedback } from "@/eveli-task-feedback";
 
 
 
@@ -60,13 +60,21 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
     <Grid2 container spacing={2}>
       <EveliTaskFeature id="CRM_MESSAGES">
         <Grid2 size={{ xs: 12 }}>
-
+          <EveliTaskClientMessages onReload={onReload} task={task} />
         </Grid2>
       </EveliTaskFeature>
 
       <EveliTaskFeature id="TASK_FEEDBACK">
         <Grid2 size={{ xs: 12 }}>
-          <EveliTaskClientMessages onReload={onReload} task={task} />
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
+              <Typography sx={classes.accordionTitle}><FormattedMessage id="task.feedback.published" /></Typography>
+              <Badge badgeContent={<StatusIndicator size="SMALL" taskId={task.id} />}><SupportAgentIcon /></Badge>
+            </AccordionSummary>
+            <AccordionDetails sx={classes.accordionDetails}>
+              <UpsertOneFeedback taskId={task.id} onComplete={() => { }} reload={0} />
+            </AccordionDetails>
+          </Accordion>
         </Grid2>
       </EveliTaskFeature>
 
