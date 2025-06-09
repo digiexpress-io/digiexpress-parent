@@ -9,7 +9,7 @@ export const EveliTaskCountIndicator: React.FC<{ count: number | undefined }> = 
 
 
   return (
-    <EveliTaskCountIndicatorRoot className={classes.root}>
+    <EveliTaskCountIndicatorRoot className={classes.root} count={count}>
       <Typography>{count}</Typography>
     </EveliTaskCountIndicatorRoot>
   )
@@ -30,9 +30,23 @@ export const EveliTaskCountIndicatorRoot = styled(Avatar, {
   overridesResolver: (props, styles) => {
     return [
       styles.root,
+      styles.hasCount
     ];
   },
-})(({ theme }) => {
+})<{ count: number | undefined }>(({ theme, count }) => {
+
+  if (count && count > 0) {
+    return {
+      width: '20pt',
+      height: '20pt',
+      backgroundColor: theme.palette.primary.main,
+      '&.EveliTaskCountIndicator-root .MuiTypography-root': {
+        color: theme.palette.primary.contrastText,
+        fontWeight: 'bold'
+      }
+    }
+  }
+
   return {
     width: '20pt',
     height: '20pt',
@@ -48,6 +62,7 @@ export const EveliTaskCountIndicatorRoot = styled(Avatar, {
 export const useUtilityClasses = () => {
   const slots = {
     root: ['root'],
+    hasCount: ['hasCount']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});

@@ -1,11 +1,9 @@
 import { EveliDatePicker } from "@/eveli-datepicker";
 import { EveliDateTimeFormatter } from "@/eveli-datetime-formatter";
-import { Box, Chip, Grid2, InputLabel, Paper, TextField, Typography } from "@mui/material";
+import { Box, Chip, Grid2, InputLabel, TextField, Typography } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { TaskFormDelegateProps } from "./TaskFormState";
-import { TaskApi } from "@/api-task";
 import { FormReviewButton } from "./EveliTaskFooter";
-import { EveliTenantFeatureEnabled } from "@/api-tenant-config";
 
 const classes = {
   keywordChip: {
@@ -32,7 +30,7 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
   const { errors, currentState, setFieldValue } = form;
 
   return (
-    <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
+    <Box sx={{ p: 2, mb: 2 }}>
       <Grid2 container spacing={2} alignItems="center">
         <Grid2 size={{ xs: 12, md: 2 }}>
           <Box display='flex' alignItems='center'>
@@ -119,6 +117,6 @@ export const EveliTaskHeader: React.FC<EveliTaskHeaderProps> = (props) => {
         </Grid2>
       </Grid2>
  
-    </Paper>
+    </Box>
   );
 }

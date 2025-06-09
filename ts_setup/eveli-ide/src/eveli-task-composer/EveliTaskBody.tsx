@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Accordion, AccordionDetails, AccordionSummary, Badge, Box, Grid2, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Badge, Box, Grid2, ThemeProvider, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
@@ -13,7 +13,6 @@ import { EveliTaskComments } from "@/eveli-task-comments";
 import { EveliTaskAttachments } from "@/eveli-task-attachments";
 import { EveliTaskFeature } from "@/eveli-task-feature";
 import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "@/eveli-task-transfer";
-import { EveliTaskClientMessages } from "./EveliTaskClientMessages";
 import { StatusIndicator, UpsertOneFeedback } from "@/eveli-task-feedback";
 import { EveliTaskCountIndicator } from "./EveliTaskCountIndicator";
 
@@ -40,8 +39,7 @@ export const classes = {
     width: '17%',
     display: 'flex',
     justifyContent: 'space-between'
-  }
-
+  },
 };
 
 
@@ -64,10 +62,20 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
 
 
   return (
-    <Grid2 container spacing={2}>
+    <Grid2 container spacing={2} paddingLeft={2} paddingRight={2}>
       <EveliTaskFeature id="CRM_MESSAGES">
         <Grid2 size={{ xs: 12 }}>
-          <EveliTaskClientMessages onReload={onReload} task={task} />
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Box sx={classes.spacer}>
+                <Typography sx={classes.accordionTitle}><FormattedMessage id="externalComments" /></Typography>
+                <EveliTaskCountIndicator count={task.comments.filter(c => c.external).length} />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <EveliTaskComments task={task} isExternalThread={true} reload={onReload} />
+            </AccordionDetails>
+          </Accordion>
         </Grid2>
       </EveliTaskFeature>
 
@@ -76,7 +84,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
               <Box sx={classes.spacer}>
-              <Typography sx={classes.accordionTitle}><FormattedMessage id="task.feedback.published" /></Typography>
+                <Typography sx={classes.accordionTitle}><FormattedMessage id="task.feedback.published" /></Typography>
                 <StatusIndicator taskId={task.id} size='SMALL' />
               </Box>
             </AccordionSummary>
@@ -120,8 +128,8 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
               <Box sx={classes.spacer}>
-                <Typography sx={classes.accordionTitle}><FormattedMessage id="task.transfer.published" /></Typography>
                 <Badge badgeContent={<EveliTaskTransferStatusIndicator task={task} />}><DriveFileMoveOutlinedIcon /></Badge>
+                <Typography sx={classes.accordionTitle}><FormattedMessage id="task.transfer.published" /></Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={classes.accordionDetails}>

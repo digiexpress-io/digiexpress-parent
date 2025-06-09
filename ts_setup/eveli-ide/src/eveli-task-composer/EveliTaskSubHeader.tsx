@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Autocomplete, Checkbox, ClickAwayListener, Grid2, Paper, TextField } from "@mui/material";
+import { Autocomplete, Box, Checkbox, ClickAwayListener, Grid2, Paper, TextField } from "@mui/material";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
@@ -113,7 +113,7 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
   }
 
   return (
-    <Paper elevation={2} sx={{ p: 2, mb: 2, mt: 2 }}>
+    <Box sx={{ p: 2, mb: 2, mt: 2 }}>
       <Grid2 container spacing={2}>
         {!!groups.length &&
           <Grid2 size={{ xs: 12, md: 6 }}>
@@ -197,6 +197,6 @@ export const EveliTaskSubHeader: React.FC<EveliTaskSubHeader> = (props) => {
           />
         </Grid2>
       </Grid2>
-    </Paper>
+    </Box>
   );
 }
