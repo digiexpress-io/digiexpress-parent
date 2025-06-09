@@ -9,7 +9,7 @@ export const EveliTaskCountIndicator: React.FC<{ count: number | undefined }> = 
 
 
   return (
-    <EveliTaskCountIndicatorRoot className={classes.root} count={count}>
+    <EveliTaskCountIndicatorRoot className={classes.root}>
       <Typography>{count}</Typography>
     </EveliTaskCountIndicatorRoot>
   )
@@ -33,19 +33,7 @@ export const EveliTaskCountIndicatorRoot = styled(Avatar, {
       styles.hasCount
     ];
   },
-})<{ count: number | undefined }>(({ theme, count }) => {
-
-  if (count && count > 0) {
-    return {
-      width: '20pt',
-      height: '20pt',
-      backgroundColor: theme.palette.primary.main,
-      '&.EveliTaskCountIndicator-root .MuiTypography-root': {
-        color: theme.palette.primary.contrastText,
-        fontWeight: 'bold'
-      }
-    }
-  }
+})(({ theme }) => {
 
   return {
     width: '20pt',
