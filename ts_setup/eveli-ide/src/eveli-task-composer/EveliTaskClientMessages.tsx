@@ -56,7 +56,7 @@ export type EveliTaskClientMessagesClassKey = keyof EveliTaskClientMessagesClass
 
 export const EveliTaskClientMessagesRoot = styled("div", {
   name: MUI_NAME,
-  slot: 'Search',
+  slot: 'Root',
   overridesResolver: (props, styles) => {
     return [
       styles.root,
@@ -67,9 +67,11 @@ export const EveliTaskClientMessagesRoot = styled("div", {
   },
 })<{ ownerState: EveliTaskClientMessagesProps }>(({ theme }) => {
   return {
-    padding: theme.spacing(1),
     width: '100%',
-
+    '& .EveliTaskClientMessages-accordionTitle': {
+      fontWeight: 'bold',
+      marginRight: theme.spacing(2)
+    },
   }
 })
 

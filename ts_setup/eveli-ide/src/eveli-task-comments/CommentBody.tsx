@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ListItem, Link, Typography, Grid2, Box, alpha } from '@mui/material';
-import { FormattedDate, useIntl } from 'react-intl';
+import { ListItem, Typography, Grid2, Box, alpha } from '@mui/material';
+import { FormattedDate } from 'react-intl';
 import { toZonedTime } from 'date-fns-tz';
 
 
@@ -8,7 +8,7 @@ import { CommentAdd } from './CommentAdd';
 import { TaskApi } from '../api-task';
 
 
-type CommentLocalProps = {
+type CommentBodyProps = {
   comment: TaskApi.Comment;
   children: React.ReactNode;
   task: TaskApi.Task;
@@ -17,7 +17,7 @@ type CommentLocalProps = {
 }
 
 
-export const CommentLocal: React.FC<CommentLocalProps> =
+export const CommentBody: React.FC<CommentBodyProps> =
   ({ comment, children, task, isExternalThread, setReply }) => {
     const [writingReply, setWritingReply] = useState(false);
     const now = new Date();
@@ -31,12 +31,7 @@ export const CommentLocal: React.FC<CommentLocalProps> =
       setWritingReply(false);
     }
 
-    function getCommentAlignment() {
-      if (isExternalThread && comment.source && comment.source === TaskApi.CommentSource.FRONTDESK) {
-        return "right";
-      }
-      return "left";
-    }
+
 
     let createdTime = comment.created;
     const created = new Date(createdTime);
@@ -70,7 +65,7 @@ export const CommentLocal: React.FC<CommentLocalProps> =
       </React.Fragment>
     )
     return (
-      <ListItem component='div' style={{ display: 'block', textAlign: getCommentAlignment() }} dense>
+      <ListItem component='div' style={{ display: 'block' }} dense>
         {header}
         {body}
         {writingReply && (

@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from '@mui/material';
 
 import { TaskApi } from '../api-task';
-import { CommentLocal } from './CommentLocal';
+import { CommentBody } from './CommentBody';
 
 type Props = {
   comments: TaskApi.Comment[]
@@ -15,9 +15,9 @@ export const Thread: React.FC<Props> = ({ comments, task, isExternalThread, setR
   return (
     <List component='div' dense>
       {comments.map((comment) => (
-        <CommentLocal key={comment.id} comment={comment} task={task} isExternalThread={isExternalThread} setReply={setReply}>
+        <CommentBody key={comment.id} comment={comment} task={task} isExternalThread={isExternalThread} setReply={setReply}>
           {comment.__children && <Thread key={`${comment.id}-thread`} setReply={setReply} comments={comment.__children} task={task} isExternalThread={isExternalThread} />}
-        </CommentLocal>
+        </CommentBody>
       ))}
     </List>
   );

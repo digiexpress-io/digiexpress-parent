@@ -74,7 +74,7 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
   }
   return (
     <Box p={1}>
-      <Box style={{ maxHeight: '40vh', overflow: 'auto' }} ref={listRef}>
+      <Box ref={listRef}>
         {thread}
       </Box>
       <Grid2 container spacing={1}>
