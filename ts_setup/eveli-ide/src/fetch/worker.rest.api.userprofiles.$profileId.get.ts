@@ -25,7 +25,14 @@ function hook(props: {}) {
       },
       async getUserProfileById(profileId: string): Promise<PrefsApi.UserProfile> {
         const baseUrl = url({ profileId });
-        return params.fetch(baseUrl).then(response => response.json());
+        return params.fetch(baseUrl)
+          .then(async (response) => {
+            const length = response.headers.get('Content-Length');
+            if(length === '0') {
+              return undefined;
+            }
+            return response.json();
+          });
       },
       async findAllUserProfiles(): Promise<PrefsApi.UserProfile[]> {
         const baseUrl = url({ profileId: '' });
@@ -41,7 +48,14 @@ function hook(props: {}) {
       },
       async findUiSettings(settingsId: string): Promise<PrefsApi.UiSettings | undefined> {
         const baseUrl = url({ profileId: 'current/ui-settings/' + settingsId});
-        return params.fetch(baseUrl).then(response => response.json());
+        return params.fetch(baseUrl)
+          .then(async (response) => {
+            const length = response.headers.get('Content-Length');
+            if(length === '0') {
+              return undefined;
+            }
+            return response.json();
+          });
       }
     })
   }

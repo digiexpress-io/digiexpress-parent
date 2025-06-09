@@ -203,7 +203,7 @@ export const DrawerSlot = styled('div', {
   slot: 'Drawer',
 })(({ theme }) => {
   return {
-    width: '250px',
+    width: '450px',
     position: 'absolute',
     overflow: 'scroll',
     top: 0,

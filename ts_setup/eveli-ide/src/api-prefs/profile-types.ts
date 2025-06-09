@@ -6,7 +6,7 @@ export declare namespace PrefsApi {
 
   export interface PrefsRestApi {
     currentUserProfile(createIfNotDefined?: boolean): Promise<UserProfile>;
-    getUserProfileById(id: string): Promise<UserProfile>;
+    getUserProfileById(id: string): Promise<UserProfile | undefined>;
     findAllUserProfiles(): Promise<UserProfile[]>;
     updateUserProfile(profileId: string, commands: UserProfileUpdateCommand<any>[]): Promise<UserProfile>;
     updateUiSettings(commands: UpsertUiSettings): Promise<UserProfile>;
@@ -15,28 +15,6 @@ export declare namespace PrefsApi {
 
   export type PreferenceId = string;
   export type DataId = string;
-
-  export interface VisibilityRule {
-    dataId: DataId;
-    enabled: boolean;
-  }
-
-  export interface ConfigRule {
-    dataId: DataId;
-    value: string;
-  }
-
-  export interface Preference {
-    id: PreferenceId;
-    fields: readonly DataId[]; //used for visibility and sorting as definition for all the field names on top of what constrains can be added
-    
-    visibility: readonly VisibilityRule[];
-    config: readonly ConfigRule[];
-
-    getVisibility(dataId: DataId): VisibilityRule;
-    getConfig(dataId: DataId): ConfigRule | undefined;
-  }
-
   export type NotificationType = string;
 
   export interface UserDetails {
@@ -54,12 +32,14 @@ export declare namespace PrefsApi {
 
   export interface UiSettingForVisibility {
     dataId: string;
+    label: string | undefined;
     enabled: boolean;
   }
 
 
   export interface UiSettingsForConfig {
     dataId: string;
+    label: string | undefined;
     value: string;
   }
 

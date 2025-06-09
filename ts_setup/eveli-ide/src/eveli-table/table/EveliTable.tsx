@@ -9,8 +9,9 @@ import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 
 import { useIntl } from 'react-intl';
 import { FillerRows } from './FillerRows';
+import { EveliTenantFeatureEnabled } from '@/api-tenant-config';
 
-export type EveliTableDrawerType = 'filters' | 'columns';
+export type EveliTableDrawerType = 'filters' | 'columns' | 'saved-filters';
 
 export interface EveliTableProps {
   slotProps: {
@@ -43,6 +44,7 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
   const handleDrawerClose = React.useCallback(() => setDrawerOpen(undefined), [])
   const handleDrawerOpenColumns = React.useCallback(() => setDrawerOpen('columns'), [])
   const handleDrawerOpenFilters = React.useCallback(() => setDrawerOpen('filters'), [])
+  const handleDrawerOpenSavedFilters = React.useCallback(() => setDrawerOpen('saved-filters'), [])
 
   const drawerBody = drawerOpen ? drawer.body(drawerOpen) : undefined;
 
@@ -77,7 +79,7 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
 
         {!!drawerBody && (
           <DrawerSlot className={classes.drawer}>
-            <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}`, defaultMessage: 'Drawer' })}</Typography>}
+            <Box className='title'>{<Typography>{intl.formatMessage({ id: `eveli.table.drawer.title.${drawerOpen}`, defaultMessage: drawerOpen })}</Typography>}
               <IconButton onClick={handleDrawerClose}><CloseIcon fontSize='small' /></IconButton>
             </Box>
             {drawerBody}
@@ -91,11 +93,21 @@ export function EveliTable(props: EveliTableProps): React.ReactNode {
             <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.colsButton', defaultMessage: 'Columns' })}</Typography>
           </Button>
         </DrawerButtonSlot>
+        
         <DrawerButtonSlot className={classes.drawerButton}>
           <Button variant='text' startIcon={<FilterListOutlinedIcon />} onClick={handleDrawerOpenFilters} disableRipple>
             <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.filtersButton', defaultMessage: 'Filters' })}</Typography>
           </Button>
         </DrawerButtonSlot>
+
+        <EveliTenantFeatureEnabled id='SMART_TABLES'>
+          <DrawerButtonSlot className={classes.drawerButton}>
+            <Button variant='text' startIcon={<FilterListOutlinedIcon />} onClick={handleDrawerOpenSavedFilters} disableRipple>
+              <Typography>{intl.formatMessage({ id: 'eveli.table.drawer.buttons.savedFiltersButton', defaultMessage: 'Saved Filters' })}</Typography>
+            </Button>
+          </DrawerButtonSlot>
+        </EveliTenantFeatureEnabled>
+
       </DrawerButtonBarSlot>
     </Box>
   )

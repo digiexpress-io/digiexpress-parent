@@ -24,7 +24,6 @@ export function useTable<DataType extends object>(
     state: [TableState, React.Dispatch<React.SetStateAction<TableState>>];
   }) {
 
-
   const [state, setState] = props.state;
 
   const onColumnFilter = React.useCallback(() => setState(prev => prev.setFilterDialogOpen(!prev.filterDialogOpen)), []);
@@ -38,12 +37,17 @@ export function useTable<DataType extends object>(
     setState(state => {
       const prev = state.columnVisibility;
       const newVisibility = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue;
-      table.setColumnSizing(tableSizeFn(table, prev, newVisibility));
+      //TODO:: state managment bug??  table.setColumnSizing(tableSizeFn(table, prev, newVisibility));
       return state.setColumnVisibility(newVisibility);
     }), []);
 
   const onClearAll = React.useCallback(() => setState(state => state.clear()), [])
   const resetTableColsAndFilters = React.useCallback(() => setState(state => state.clearFiltersAndVisibility()), [])
+
+  React.useEffect(() => {
+    
+  }, [state.columnVisibility]);
+
 
   const table = useReactTable({
     getCoreRowModel: getCoreRowModel(),

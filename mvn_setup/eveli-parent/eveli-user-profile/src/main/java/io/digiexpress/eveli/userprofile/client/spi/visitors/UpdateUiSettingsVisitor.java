@@ -77,7 +77,10 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
 
   @Override
   public Uni<QueryEnvelope<DocObject>> start(ThenaDocConfig config, DocObjectsQuery builder) {
-    return builder.ownerId(command.getSettingsId()).parentId(command.getUserId()).findOne();
+    return builder
+        .ownerId(command.getSettingsId())
+        .parentId(command.getUserId())
+        .findOne();
   }
 
   @Override

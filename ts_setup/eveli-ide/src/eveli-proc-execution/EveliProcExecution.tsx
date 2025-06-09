@@ -87,6 +87,6 @@ export const EveliProcExecution: React.FC = () => {
     <Typography variant='h1'>
       <FormattedMessage id='processTable.title'/>
     </Typography>
-    <WithTableStyles columns={columns} data={data} options={{ initialPageSize: 30 }}/>
+    <WithTableStyles columns={columns} data={data} options={{ initialPageSize: 30, tableId: 'process-execution' }}/>
   </>);
 }

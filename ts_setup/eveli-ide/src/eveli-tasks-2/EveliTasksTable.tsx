@@ -169,7 +169,7 @@ export const EveliTasksTable: React.FC = () => {
         </EveliPermissions>
       </Box>
   
-      <WithTableStyles data={data} columns={columns} />
+      <WithTableStyles data={data} columns={columns} options={{ tableId: 'tasks'}}/>
     </Box>
   );  
 }

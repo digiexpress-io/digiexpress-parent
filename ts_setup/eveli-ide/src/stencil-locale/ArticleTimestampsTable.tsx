@@ -74,7 +74,10 @@ export const ArticleTimestampsTable: React.FC = () => {
       <WithTableStyles
         columns={columns}
         data={rows}
-        options={{ initialPageSize: 30 }}
+        options={{ 
+          initialPageSize: 30, 
+          tableId: 'stencil-content-assists' 
+        }}
       />
     </>
   );

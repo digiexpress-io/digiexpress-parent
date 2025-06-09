@@ -127,7 +127,8 @@ export const FeedbackAllTasks: React.FC<FeedbackAllTasksProps> = () => {
           columns={columns}
           data={data}
           options={{
-            initialPageSize: 15
+            initialPageSize: 15,
+            tableId: 'feedback'
           }}
         />
       </Box>
