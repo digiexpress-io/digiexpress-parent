@@ -1,6 +1,6 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Badge, Typography, generateUtilityClass, styled, useThemeProps } from '@mui/material';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { FormattedMessage } from 'react-intl';
@@ -30,9 +30,9 @@ export const EveliTaskClientMessages: React.FC<EveliTaskClientMessagesProps> = (
   return (
     <EveliTaskClientMessagesRoot className={classes.root} ownerState={ownerState}>
       <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} className={classes.accordionSummary} >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} className={classes.accordionSummary}>
           <Typography className={classes.accordionTitle}><FormattedMessage id="externalComments" /></Typography>
-          <Badge badgeContent={ownerState.task.comments.filter(c => c.external).length} color="warning"><ChatBubbleOutlineIcon /></Badge>
+          <Badge badgeContent={ownerState.task.comments.filter(c => c.external).length} color="primary"><EmailOutlinedIcon /></Badge>
         </AccordionSummary>
         <AccordionDetails className={classes.accordionDetails}>
           <EveliTaskComments task={ownerState.task} isExternalThread={true} reload={ownerState.onReload} />
@@ -72,6 +72,7 @@ export const EveliTaskClientMessagesRoot = styled("div", {
       fontWeight: 'bold',
       marginRight: theme.spacing(2)
     },
+
   }
 })
 

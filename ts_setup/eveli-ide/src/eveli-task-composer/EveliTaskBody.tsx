@@ -2,7 +2,8 @@ import React from "react";
 
 import { Accordion, AccordionDetails, AccordionSummary, Badge, Grid2, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
@@ -56,6 +57,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
     loadAttachments(id).then(setAttachments);
   }, [id]);
 
+
   return (
     <Grid2 container spacing={2}>
       <EveliTaskFeature id="CRM_MESSAGES">
@@ -79,7 +81,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
       </EveliTaskFeature>
 
       <Grid2 size={{ xs: 12 }}>
-        <Accordion>
+        <Accordion >
           <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
             <Typography sx={classes.accordionTitle}><FormattedMessage id="attachmentView.title" /></Typography>
             <Badge badgeContent={attachments?.length} color='secondary'><AttachmentIcon /></Badge>
@@ -94,14 +96,13 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary}>
             <Typography sx={classes.accordionTitle}><FormattedMessage id="internalComments" /></Typography>
-            <Badge badgeContent={task.comments.filter(c => !c.external).length} color="primary"><ChatBubbleOutlineIcon /></Badge>
+            <Badge badgeContent={task.comments.filter(c => !c.external).length} color="primary"><DescriptionOutlinedIcon /></Badge>
           </AccordionSummary>
           <AccordionDetails sx={classes.accordionDetails}>
             <EveliTaskComments task={task} isExternalThread={false} reload={onReload} />
           </AccordionDetails>
         </Accordion>
       </Grid2>
-
 
       <EveliTaskFeature id="TASK_TRANSFER">
         <Grid2 size={{ xs: 12 }}>
