@@ -22,11 +22,6 @@ Commands
 
 
 Commits
-  - id: 7
-    doc id: 2, branch id: 3, parent: 8, message: -, author: not-configured
-  - commit log:
-
-
   - id: 4
     doc id: 2, branch id: 3, parent: 7, message: -, author: not-configured
   - commit log:

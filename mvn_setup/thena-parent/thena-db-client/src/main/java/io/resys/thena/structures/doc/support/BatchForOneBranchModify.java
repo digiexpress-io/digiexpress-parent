@@ -34,7 +34,6 @@ import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
@@ -80,16 +79,14 @@ public class BatchForOneBranchModify {
     final var branchId = lock.getBranch().get().getId();
     final var doc = lock.getDoc().get();
     final var now = OffsetDateTime.now();
-    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), excludeBranchContentFromLog, ImmutableDocCommit.builder()
-        .id(OidUtils.gen())
-        .docId(doc.getId())
-        .branchId(branchId)
-        .createdAt(now)
-        .commitAuthor(this.author)
+    
+    final var commitBuilder = DocCommitBuilder.from(tx.getTenantId(), lock)
+        .excludeBranchContentFromLog(excludeBranchContentFromLog)
+        .commitTreeEnabled(commitTreeEnabled)
         .commitMessage(this.message)
-        .parent(lock.getBranch().get().getCommitId())
-        .commitLog("")
-        .build(), commitTreeEnabled);
+        .commitAuthor(this.author)
+        .branchId(branchId)
+        .create();
     
 
     final var docBranch = ImmutableDocBranch.builder()
@@ -101,7 +98,7 @@ public class BatchForOneBranchModify {
       .build();
     commitBuilder.merge(lock.getBranch().get(), docBranch);
     
-    final List<DocCommands> docLogs = commands == null ? Collections.emptyList() : Arrays.asList(
+    final List<DocCommands> docLogs = commands == null || commands.isEmpty() ? Collections.emptyList() : Arrays.asList(
         ImmutableDocCommands.builder()
           .id(OidUtils.gen())
           .docId(doc.getId())
@@ -115,15 +112,13 @@ public class BatchForOneBranchModify {
     docLogs.forEach(command -> commitBuilder.add(command));
 
     final var commit = commitBuilder.close();
-    return ImmutableDocBatchForOne.builder()
+    return commit.merge(ImmutableDocBatchForOne.builder()
       .doc(doc)
+      .log("")
       .addDocBranch(docBranch)
-      .addDocCommit(commit.getItem1())
-      .addAllDocCommitTree(commit.getItem2())
       .addAllDocCommands(docLogs)
       .addDocLock(lock)
-      .log(commit.getItem1().getCommitLog())
-      .build();
+      .build());
   }
   
   public static ManyDocsEnvelope mapTo(DocBatchForMany rsp) {
@@ -133,9 +128,14 @@ public class BatchForOneBranchModify {
         .filter(i -> i.getDoc().isPresent())
         .map(i -> i.getDoc().get())
         .collect(Collectors.toList()))
-    .commits(rsp.getItems().stream()
+    
+    .addAllCommits(rsp.getItems().stream()
         .flatMap(i -> i.getDocCommit().stream())
         .collect(Collectors.toList()))
+    .addAllCommits(rsp.getItems().stream()
+        .flatMap(i -> i.getDocCommitsToUpdate().stream())
+        .collect(Collectors.toList()))
+    
     .commitTree(rsp.getItems().stream()
         .flatMap(i -> i.getDocCommitTree().stream())
         .collect(Collectors.toList()))

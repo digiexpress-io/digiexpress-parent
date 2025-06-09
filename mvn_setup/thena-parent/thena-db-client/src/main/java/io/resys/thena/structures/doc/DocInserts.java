@@ -45,8 +45,38 @@ public interface DocInserts {
     List<DocCommit> getDocCommit();
     List<DocCommitTree> getDocCommitTree();
     List<DocCommands> getDocCommands();
-    String getLog();
     List<Message> getMessages();
+    
+    String getLog();
+  
+    List<DocCommit> getDocCommitsToUpdate();
+    
+    
+    default DocCommit getFirstDocCommit() {
+      if(getDocCommitsToUpdate().isEmpty()) {
+        return getDocCommit().iterator().next();
+      }
+      return getDocCommitsToUpdate().iterator().next();
+    }
+    
+    
+    default DocBatchForOne merge(DocBatchForOne other) {
+      return ImmutableDocBatchForOne.builder()
+          .from(this)
+          .log(this.getLog() + other.getLog())
+          
+          .addAllMessages(other.getMessages())
+          .addAllDocCommands(other.getDocCommands())
+          .addAllDocCommitTree(other.getDocCommitTree())
+          .addAllDocCommit(other.getDocCommit())
+          .addAllDocBranch(other.getDocBranch())
+          .addAllDocLock(other.getDocLock())
+          .doc(other.getDoc().or(() -> getDoc()))
+          
+          .addAllDocCommitsToUpdate(other.getDocCommitsToUpdate())
+          
+          .build();
+    }
   }
   
   Uni<DocBatchForMany> batchMany(DocBatchForMany output);

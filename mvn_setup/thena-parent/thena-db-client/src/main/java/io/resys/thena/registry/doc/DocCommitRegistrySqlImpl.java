@@ -36,6 +36,7 @@ import io.resys.thena.datasource.ImmutableSqlTuple;
 import io.resys.thena.datasource.ImmutableSqlTupleList;
 import io.resys.thena.datasource.ThenaSqlClient;
 import io.resys.thena.datasource.ThenaSqlClient.SqlTuple;
+import io.resys.thena.datasource.ThenaSqlClient.SqlTupleList;
 import io.resys.thena.storesql.support.SqlStatement;
 import io.vertx.mutiny.sqlclient.Row;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -104,7 +105,44 @@ public class DocCommitRegistrySqlImpl implements DocCommitRegistry {
         }) .collect(Collectors.toList()))
         .build();
   }
-  
+  @Override
+  public SqlTupleList deleteAll(Collection<DocCommit> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getDocCommits())
+        .append(" WHERE id = $1")
+        .build())
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{doc.getId()}))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
+  public SqlTupleList updateAll(Collection<DocCommit> commits) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("UPDATE ").append(options.getDocCommits())
+        .append(" SET ").ln()
+        
+        .append(" created_at = $1, ").ln()
+        .append(" author = $2, ").ln()
+        .append(" message = $3, ").ln()
+        .append(" commit_log = $4 ").ln()
+        
+        .append(" WHERE id = $5")
+        .build())
+        .props(commits.stream()
+            .map(doc -> Tuple.from(new Object[]{
+                doc.getCreatedAt(),
+                doc.getCommitAuthor(),
+                doc.getCommitMessage(),
+                doc.getCommitLog(),
+                doc.getId()
+            }))
+            .collect(Collectors.toList()))
+        .build();
+  }
+
 
   @Override
   public Function<Row, DocCommit> defaultMapper() {

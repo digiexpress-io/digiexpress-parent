@@ -146,6 +146,7 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
             builder
               .status(CommitLockStatus.LOCK_TAKEN)
               .doc(branch.getDoc())
+              .commit(branch.getCommit())
               .addBranches(branch);
           }
           
@@ -207,7 +208,10 @@ public class DocBranchQuerySqlPool implements DocBranchQuery {
             }
             final var docId = lock.getDoc().get().getId();
             if(!result.containsKey(docId)) {
-              result.put(docId, ImmutableDocLock.builder().doc(lock.getDoc()).status(CommitLockStatus.LOCK_TAKEN));
+              result.put(docId, ImmutableDocLock.builder()
+                  .doc(lock.getDoc())
+                  .commit(lock.getCommit())
+                  .status(CommitLockStatus.LOCK_TAKEN));
             }
             result.get(docId).addBranches(lock);
           }

@@ -164,7 +164,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .doc(batch.getDoc().get())
-          .commit(batch.getDocCommit().iterator().next())
+          .commit(batch.getFirstDocCommit())
           .branch(batch.getDocBranch().iterator().next())
           .commands(batch.getDocCommands())
           .commitTree(batch.getDocCommitTree())

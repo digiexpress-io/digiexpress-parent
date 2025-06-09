@@ -23,8 +23,8 @@ package io.resys.thena.api.registry.doc;
 import java.util.Collection;
 import java.util.function.Function;
 
-import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.Doc.DocFilter;
+import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.registry.ThenaRegistryService;
 import io.resys.thena.datasource.ThenaSqlClient;
 
@@ -34,6 +34,10 @@ public interface DocCommitRegistry extends ThenaRegistryService<DocCommit, io.ve
   ThenaSqlClient.Sql findAll();
   ThenaSqlClient.SqlTupleList insertAll(Collection<DocCommit> commits);
   ThenaSqlClient.SqlTuple findAll(DocFilter filter);
+  
+  ThenaSqlClient.SqlTupleList deleteAll(Collection<DocCommit> commits);
+  ThenaSqlClient.SqlTupleList updateAll(Collection<DocCommit> commits);
+
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

@@ -31,6 +31,7 @@ import io.resys.thena.api.entities.CommitLockStatus;
 public interface DocLock extends DocEntity {
   CommitLockStatus getStatus();
   Optional<Doc> getDoc();
+  Optional<DocCommit> getCommit();
   List<DocBranchLock> getBranches();
   Optional<String> getMessage();
   

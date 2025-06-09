@@ -114,7 +114,7 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
         .parentDocId(inserted.getItem1().getUserId())
         .ownerId(inserted.getItem1().getSettingsId())
         .branchContent(JsonObject.mapFrom(inserted.getItem1()))
-        .commands(inserted.getItem2())
+        //.commands(inserted.getItem2())
         .build();
     } catch(NoChangesException e) {
       // nothing to do
@@ -138,7 +138,8 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
           .docId(updated.getItem1().getId())
           .branchName(docBranch.getBranchName())
           .replace(JsonObject.mapFrom(updated.getItem1()))
-          .commands(updated.getItem2());
+         //.commands(updated.getItem2())
+          ;
         
         return updated.getItem1();
       } catch(NoChangesException e) {

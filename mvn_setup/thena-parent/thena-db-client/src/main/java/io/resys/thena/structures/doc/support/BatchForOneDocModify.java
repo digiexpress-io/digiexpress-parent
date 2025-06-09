@@ -32,7 +32,6 @@ import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
@@ -89,16 +88,13 @@ public class BatchForOneDocModify {
     
     final var now = OffsetDateTime.now();
     
-    final var commitBuilder = new DocCommitBuilder(tx.getTenantId(), excludeBranchContentFromLog, ImmutableDocCommit.builder()
-        .id(OidUtils.gen())
-        .docId(docLock.getDoc().get().getId())
-        .createdAt(now)
-        .commitAuthor(this.author)
-        .commitMessage(this.message)
-        .parent(docLock.getDoc().get().getCommitId())
-        .commitLog("")
-        .build(), commitTreeEnabled);
-    
+    final var commitBuilder = DocCommitBuilder.from(tx.getTenantId(), docLock)
+      .excludeBranchContentFromLog(excludeBranchContentFromLog)
+      .commitTreeEnabled(commitTreeEnabled)
+      .commitMessage(this.message)
+      .commitAuthor(this.author)
+      .create();
+  
 
     final var doc = ImmutableDoc.builder()
       .from(docLock.getDoc().get())
@@ -150,13 +146,11 @@ public class BatchForOneDocModify {
     
     final var commit = commitBuilder.close();
     
-    return batchBuilder
+    return commit.merge(batchBuilder
         .doc(doc)
-        .addDocCommit(commit.getItem1())
-        .addAllDocCommitTree(commit.getItem2())
+        .log("")
         .addAllDocCommands(docLogs)
-        .log(commit.getItem1().getCommitLog())
         .addAllDocLock(docLock.getBranches())
-        .build();
+        .build());
   }
 }
