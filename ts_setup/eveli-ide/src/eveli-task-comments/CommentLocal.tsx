@@ -13,16 +13,14 @@ type CommentLocalProps = {
   children: React.ReactNode;
   task: TaskApi.Task;
   isExternalThread?: boolean;
-  isThreaded?: boolean;
   setReply: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
 export const CommentLocal: React.FC<CommentLocalProps> =
-  ({ comment, children, task, isExternalThread, isThreaded, setReply }) => {
+  ({ comment, children, task, isExternalThread, setReply }) => {
     const [writingReply, setWritingReply] = useState(false);
     const now = new Date();
-    const { formatMessage } = useIntl();
 
     const toggleReply = () => {
       setWritingReply(!writingReply);
@@ -69,11 +67,6 @@ export const CommentLocal: React.FC<CommentLocalProps> =
             </Typography>
           </Box>
         </Box>
-        {isThreaded &&
-          <Link href="#" onClick={e => { e.preventDefault(); toggleReply() }}>
-            {formatMessage({ id: 'comment.reply' })}
-          </Link>
-        }
       </React.Fragment>
     )
     return (

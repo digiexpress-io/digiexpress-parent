@@ -16,6 +16,7 @@ import { StatusIndicator, UpsertOneFeedback } from "@/eveli-task-feedback";
 import { EveliTaskAttachments } from "@/eveli-task-attachments";
 import { EveliTaskFeature } from "@/eveli-task-feature";
 import { EveliTaskTransfer, EveliTaskTransferStatusIndicator } from "@/eveli-task-transfer";
+import { EveliTaskClientMessages } from "./EveliTaskClientMessages";
 
 
 
@@ -50,7 +51,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
   const { id } = task;
   const [attachments, setAttachments] = React.useState<TaskApi.Attachment[]>([]);
   const { loadAttachments } = useFetch('worker/rest/api/tasks/$taskId/files.GET', {});
-  
+
   React.useEffect(() => {
     loadAttachments(id).then(setAttachments);
   }, [id]);
@@ -59,29 +60,13 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
     <Grid2 container spacing={2}>
       <EveliTaskFeature id="CRM_MESSAGES">
         <Grid2 size={{ xs: 12 }}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
-              <Typography sx={classes.accordionTitle}><FormattedMessage id="externalComments" /></Typography>
-              <Badge badgeContent={task.comments.filter(c => c.external).length} color="warning"><ChatBubbleOutlineIcon /></Badge>
-            </AccordionSummary>
-            <AccordionDetails sx={classes.accordionDetails}>
-              <EveliTaskComments task={task} isExternalThread={true} reload={onReload} />
-            </AccordionDetails>
-          </Accordion>
+
         </Grid2>
       </EveliTaskFeature>
 
       <EveliTaskFeature id="TASK_FEEDBACK">
         <Grid2 size={{ xs: 12 }}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={classes.accordionSummary} >
-              <Typography sx={classes.accordionTitle}><FormattedMessage id="task.feedback.published" /></Typography>
-              <Badge badgeContent={<StatusIndicator size="SMALL" taskId={task.id} />}><SupportAgentIcon /></Badge>
-            </AccordionSummary>
-            <AccordionDetails sx={classes.accordionDetails}>
-              <UpsertOneFeedback taskId={task.id} onComplete={() => { }} reload={0} />
-            </AccordionDetails>
-          </Accordion>
+          <EveliTaskClientMessages onReload={onReload} task={task} />
         </Grid2>
       </EveliTaskFeature>
 
@@ -104,7 +89,7 @@ export const EveliTaskBody: React.FC<EveliTaskBodyProps> = (props) => {
             <Badge badgeContent={task.comments.filter(c => !c.external).length} color="primary"><ChatBubbleOutlineIcon /></Badge>
           </AccordionSummary>
           <AccordionDetails sx={classes.accordionDetails}>
-            <EveliTaskComments task={task} isExternalThread={false} isThreaded reload={onReload} />
+            <EveliTaskComments task={task} isExternalThread={false} reload={onReload} />
           </AccordionDetails>
         </Accordion>
       </Grid2>

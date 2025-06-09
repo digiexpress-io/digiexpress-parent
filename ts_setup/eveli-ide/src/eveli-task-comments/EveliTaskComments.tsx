@@ -13,11 +13,10 @@ import { useSnackbar } from 'notistack';
 export type EveliTaskCommentsProps = {
   task: TaskApi.Task
   isExternalThread: boolean,
-  isThreaded?: boolean | undefined;
   reload: () => void
 }
 
-export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, reload, isThreaded }) => {
+export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isExternalThread, reload }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [writingComment, setWritingComment] = useState(false);
   const [reply, setReply] = useState(false);
@@ -57,7 +56,7 @@ export const EveliTaskComments: React.FC<EveliTaskCommentsProps> = ({ task, isEx
       'replyToId'
     ).sort((a,b)=> {if (a.created > b.created) return 1;if (a.created < b.created) return -1; return 0;});
     return (
-      <Thread comments={comments} task={task} isThreaded={isThreaded}
+      <Thread comments={comments} task={task}
         isExternalThread={isExternalThread}
         setReply={setReply}
       />);
