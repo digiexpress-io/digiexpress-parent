@@ -33,7 +33,6 @@ import io.resys.thena.registry.TenantRegistrySqlImpl;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
-import io.resys.thena.registry.grim.GrimRegistrySqlImpl;
 import io.resys.thena.registry.org.OrgRegistrySqlImpl;
 import io.resys.thena.spi.InternalTenantQueryImpl;
 import io.resys.thena.spi.TenantDataSource.InternalTenantQuery;
@@ -54,7 +53,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
     final var git = new GitRegistrySqlImpl(next.getRegistry());
     final var doc = new DocRegistrySqlImpl(next.getRegistry());
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
-    final var grim = new GrimRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
     final var sqlQuery = new TenantRegistrySqlImpl(next.getRegistry());
     final var pool = next.getPool();
@@ -79,33 +77,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
           .append(git.treeValues().createConstraints().getValue())
           .toString();
       } else if(newRepo.getType() == StructureType.grim) {
-        tablesCreate
-        .append(grim.commands().createTable().getValue())
-        .append(grim.assignments().createTable().getValue())
-        .append(grim.commits().createTable().getValue())
-        .append(grim.commitTrees().createTable().getValue())
-        .append(grim.commitViewers().createTable().getValue())
-        .append(grim.missionData().createTable().getValue())
-        .append(grim.missionLabels().createTable().getValue())
-        .append(grim.missionLinks().createTable().getValue())
-        .append(grim.missions().createTable().getValue())
-        .append(grim.goals().createTable().getValue())
-        .append(grim.objectives().createTable().getValue())
-        .append(grim.remarks().createTable().getValue())
 
-        .append(grim.commands().createConstraints().getValue())
-        .append(grim.assignments().createConstraints().getValue())
-        .append(grim.commits().createConstraints().getValue())
-        .append(grim.commitTrees().createConstraints().getValue())
-        .append(grim.commitViewers().createConstraints().getValue())
-        .append(grim.missionData().createConstraints().getValue())
-        .append(grim.missionLabels().createConstraints().getValue())
-        .append(grim.missionLinks().createConstraints().getValue())
-        .append(grim.missions().createConstraints().getValue())
-        .append(grim.goals().createConstraints().getValue())
-        .append(grim.objectives().createConstraints().getValue())
-        .append(grim.remarks().createConstraints().getValue())
-        ;
       } else if(newRepo.getType() == StructureType.org) {
         
         tablesCreate
@@ -202,7 +174,6 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
     final var git = new GitRegistrySqlImpl(next.getRegistry());
     final var doc = new DocRegistrySqlImpl(next.getRegistry());
     final var org = new OrgRegistrySqlImpl(next.getRegistry());
-    final var grim = new GrimRegistrySqlImpl(next.getRegistry());
     final var fs = new FsRegistrySqlImpl(next.getRegistry());
     final var sqlQuery = new TenantRegistrySqlImpl(next.getRegistry());
     
@@ -221,23 +192,7 @@ public class DbStateTenantQuery extends InternalTenantQueryImpl implements Inter
         .append(git.blobs().dropTable().getValue());
 
       } else if(newRepo.getType() == StructureType.grim) {
-        tablesDrop
-        .append(grim.assignments().dropTable().getValue())
-        .append(grim.missionData().dropTable().getValue())
-        .append(grim.missionLabels().dropTable().getValue())
-        .append(grim.missionLinks().dropTable().getValue())
-        .append(grim.remarks().dropTable().getValue())
-        .append(grim.commands().dropTable().getValue())
-        
-        .append(grim.goals().dropTable().getValue())
-        .append(grim.objectives().dropTable().getValue())
-        
-        .append(grim.commitTrees().dropTable().getValue())
-        .append(grim.commitViewers().dropTable().getValue())
-        .append(grim.missions().dropTable().getValue())
-        .append(grim.commits().dropTable().getValue())
-        
-        ;
+
       } else if(newRepo.getType() == StructureType.fs) {
         tablesDrop
         .append(fs.direntAssignments().dropTable().getValue())

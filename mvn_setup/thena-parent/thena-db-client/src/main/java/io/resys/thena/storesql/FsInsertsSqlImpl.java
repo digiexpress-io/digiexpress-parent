@@ -24,12 +24,12 @@ package io.resys.thena.storesql;
 
 import java.util.List;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.FsRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.registry.fs.FsRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.fs.FsInserts;
 import io.resys.thena.structures.fs.ImmutableFsBatchDirents;
 import io.resys.thena.support.RepoAssert;

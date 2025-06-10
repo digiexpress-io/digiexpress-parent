@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.org.ImmutableOrgCommit;
 import io.resys.thena.api.entities.org.ImmutableOrgMembership;
 import io.resys.thena.api.entities.org.ImmutableOrgParty;
@@ -36,7 +37,6 @@ import io.resys.thena.api.entities.org.OrgParty;
 import io.resys.thena.api.entities.org.OrgPartyRight;
 import io.resys.thena.api.entities.org.OrgRight;
 import io.resys.thena.api.entities.org.ThenaOrgObject.OrgDocSubType;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.org.ImmutableOrgBatchForOne;
 import io.resys.thena.structures.org.commitlog.OrgCommitBuilder;
 import io.resys.thena.support.OidUtils;

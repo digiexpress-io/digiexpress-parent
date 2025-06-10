@@ -1,0 +1,103 @@
+package io.resys.thena.grim.spi;
+
+import java.util.Optional;
+
+import io.resys.thena.api.actions.TenantActions;
+import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.Tenant.StructureType;
+import io.resys.thena.datasource.TenantCacheImpl;
+import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.datasource.ThenaSqlDataSource.TenantCache;
+import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler;
+import io.resys.thena.datasource.ThenaSqlDataSourceImpl;
+import io.resys.thena.datasource.vertx.ThenaSqlPoolVertx;
+import io.resys.thena.grim.api.GrimClient;
+import io.resys.thena.grim.api.GrimCommitActions;
+import io.resys.thena.grim.api.GrimQueryActions;
+import io.resys.thena.grim.spi.actions.GrimCommitActionsImpl;
+import io.resys.thena.grim.spi.actions.GrimQueryActionsImpl;
+import io.resys.thena.spi.TenantActionsImpl;
+import io.resys.thena.storesql.PgErrors;
+import io.resys.thena.support.RepoAssert;
+import lombok.RequiredArgsConstructor;
+
+
+@RequiredArgsConstructor
+public class GrimClientImpl implements GrimClient {
+  private final GrimDataSource startingState;
+  
+  @Override
+  public GrimStructuredTenant grim(String repoId) {
+    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
+    return new GrimStructuredTenant() {
+      @Override public GrimQueryActions find() { return new GrimQueryActionsImpl(startingState, repoId); }
+      @Override public GrimCommitActions commit() { return new GrimCommitActionsImpl(startingState, repoId); }
+      @Override public GrimProjectQuery tenants() { return null; }
+      @Override public String getTenantId() { return repoId; }
+    };
+  }
+  @Override
+  public GrimStructuredTenant grim(TenantCommitResult repo) {
+    return grim(repo.getRepo().getId());
+  }
+  @Override
+  public GrimStructuredTenant grim(Tenant repo) {
+    return this.grim(repo.getId());
+  }
+  @Override
+  public TenantActions tenants() {
+    return new TenantActionsImpl(startingState, StructureType.grim);
+  }
+  
+  
+  public static GrimDataSource create(TenantContext names, io.vertx.mutiny.sqlclient.Pool client, TenantCache tenantCache) {
+    final var pool = new ThenaSqlPoolVertx(client);
+    final var errorHandler = new PgErrors();
+    final var dataSource = new ThenaSqlDataSourceImpl(
+        "", names, pool, errorHandler, 
+        Optional.empty(),
+        tenantCache
+    );
+    return new GrimDataSourceImpl(dataSource);
+  }
+  
+  public static Builder create() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private io.vertx.mutiny.sqlclient.Pool client;
+    private String db = "docdb";
+    private ThenaSqlDataSourceErrorHandler errorHandler;
+
+    private TenantCache tenantCache;    
+    public Builder errorHandler(ThenaSqlDataSourceErrorHandler errorHandler) {this.errorHandler = errorHandler; return this; }
+    public Builder db(String db) { this.db = db; return this; }
+    public Builder tenantCache(TenantCache tenantCache) { this.tenantCache = tenantCache; return this; }
+    public Builder client(io.vertx.mutiny.sqlclient.Pool client) { this.client = client; return this; }
+
+    
+    public GrimClientImpl build() {
+      RepoAssert.notNull(client, () -> "client must be defined!");
+      RepoAssert.notNull(db, () -> "db must be defined!");
+      
+      final var tenantCache = this.tenantCache == null ? new TenantCacheImpl() : this.tenantCache;
+      
+      final var ctx = TenantContext.defaults(db);
+      this.errorHandler = new PgErrors();
+      
+      
+      final var pool = new ThenaSqlPoolVertx(client);
+      
+      final var dataSource = new ThenaSqlDataSourceImpl(
+          db, ctx, pool, errorHandler, 
+          Optional.empty(),
+          tenantCache
+      );
+      
+      final var state = new GrimDataSourceImpl(dataSource);
+      return new GrimClientImpl(state);
+    }
+  }
+}

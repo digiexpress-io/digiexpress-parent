@@ -34,12 +34,13 @@ import io.digiexpress.eveli.client.spi.process.ProcessClientImpl;
 import io.digiexpress.eveli.client.spi.task.ImmutableTaskStoreConfig;
 import io.digiexpress.eveli.client.spi.task.TaskClientImpl;
 import io.digiexpress.eveli.client.spi.task.TaskStoreImpl;
-import io.resys.thena.api.ThenaClient;
 import io.resys.thena.api.actions.TenantActions.TenantCommitResult;
 import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.datasource.TenantCacheImpl;
 import io.resys.thena.datasource.TenantContext;
+import io.resys.thena.grim.api.GrimClient;
+import io.resys.thena.grim.spi.GrimClientImpl;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.git.GitPrinter;
@@ -53,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FeedbackTaskEnvirSetup {
   private final TaskEventPublisher publisher;
-  private final ThenaClient dbState;
+  private final GrimClient dbState;
   private final io.vertx.mutiny.pgclient.PgPool pgPool;
   private final String repoId;
   
@@ -67,7 +68,7 @@ public class FeedbackTaskEnvirSetup {
           .setPassword(cont.getPassword()), 
         new PoolOptions().setMaxSize(5));
     waitUntilPostgresqlAcceptsConnections(pgPool);
-    this.dbState = DbStateSqlImpl.create()
+    this.dbState = GrimClientImpl.create()
         .db("junit")
         .client(pgPool)
         .build();
@@ -86,7 +87,7 @@ public class FeedbackTaskEnvirSetup {
     connection.closeAndForget();
   }
 
-  public ThenaClient getDbState() {
+  public GrimClient getDbState() {
     return dbState;
   }
   
@@ -101,14 +102,14 @@ public class FeedbackTaskEnvirSetup {
   }
   
   public void prettyPrint(String repoId) {
-    Tenant repo = getDbState().git(repoId).tenants().get()
+    Tenant repo = getDbState().grim(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     
     printRepo(repo);
   }
 
   public String toRepoExport(String repoId) {
-    getDbState().git(repoId).tenants().get()
+    getDbState().grim(repoId).tenants().get()
         .await().atMost(Duration.ofMinutes(1)).getRepo();
     final String result = null;//new TestExporter(createState()).print(repo);
     return result;

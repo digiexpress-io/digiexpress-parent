@@ -39,7 +39,6 @@ import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.GitState.TransactionFunction;
-import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
@@ -78,29 +77,6 @@ public class DbStateSqlImpl implements DbState {
   @Override
   public <R> Uni<R> withFsTransaction(TxScope scope, io.resys.thena.structures.fs.FsState.TransactionFunction<R> callback) {
     return toFsState(scope.getTenantId()).onItem().transformToUni(state -> {
-      return state.withTransaction(callback);
-    });
-  }
-  
-
-  @Override
-  public Uni<GrimState> toGrimState(String tenantId) {
-    return tenant().getByNameOrId(tenantId).onItem().transformToUni(tenant -> {
-      if(tenant == null) {
-        return tenantNotFound(tenantId);
-      }
-      return Uni.createFrom().item(toGrimState(tenant));
-    });
-  }
-  @Override
-  public GrimState toGrimState(Tenant repo) {
-    return new GrimDbStateImpl(dataSource.withTenant(repo));
-  }
-  @Override
-  public <R> Uni<R> withGrimTransaction(TxScope scope, io.resys.thena.structures.grim.GrimState.TransactionFunction<R> callback) {
-    return toGrimState(scope.getTenantId()).onItem().transformToUni(state -> {
-      
-      
       return state.withTransaction(callback);
     });
   }

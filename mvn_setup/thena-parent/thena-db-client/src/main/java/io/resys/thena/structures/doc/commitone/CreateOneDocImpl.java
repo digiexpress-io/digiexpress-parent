@@ -26,11 +26,11 @@ import java.util.List;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;

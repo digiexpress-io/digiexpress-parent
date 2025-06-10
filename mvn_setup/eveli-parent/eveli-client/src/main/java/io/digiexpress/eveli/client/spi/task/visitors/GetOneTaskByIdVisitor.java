@@ -23,18 +23,17 @@ package io.digiexpress.eveli.client.spi.task.visitors;
 import java.util.Arrays;
 import java.util.List;
 
-import io.digiexpress.eveli.client.api.ImmutableTask;
 import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.Task;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.MissionQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimQueryActions.MissionQuery;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

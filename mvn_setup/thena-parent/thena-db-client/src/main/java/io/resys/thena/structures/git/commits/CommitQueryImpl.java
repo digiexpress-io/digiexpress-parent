@@ -23,6 +23,8 @@ package io.resys.thena.structures.git.commits;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import io.resys.thena.api.actions.GitCommitActions.CommitObjects;
 import io.resys.thena.api.actions.GitCommitActions.CommitQuery;
 import io.resys.thena.api.actions.GitPullActions.MatchCriteria;
@@ -33,6 +35,8 @@ import io.resys.thena.api.entities.git.Tree;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.ThenaContainer;
+import io.resys.thena.api.exceptions.RepoException;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState;
 import io.resys.thena.structures.git.objects.ObjectsUtils;
@@ -71,7 +75,7 @@ public class CommitQueryImpl implements CommitQuery {
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag)
         .onItem().transformToUni(commit -> {
           if(commit == null) {
-            return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
+            return Uni.createFrom().item(CommitLogger.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
           }
           return getState(existing, commit, ctx);
         });

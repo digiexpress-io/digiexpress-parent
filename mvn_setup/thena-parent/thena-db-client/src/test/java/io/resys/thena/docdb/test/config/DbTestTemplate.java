@@ -22,7 +22,6 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.fs.FsPrinter;
 import io.resys.thena.structures.git.GitPrinter;
-import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
@@ -142,8 +141,7 @@ public class DbTestTemplate {
       log.debug(result);
       
     } else if(repo.getType() == StructureType.grim) {
-      final String result = new GrimPrinter(createState()).print(repo);
-      log.debug(result);
+
     } else if(repo.getType() == StructureType.fs) {
       final String result = new FsPrinter(createState()).print(repo);
       log.debug(result);
@@ -184,7 +182,7 @@ public class DbTestTemplate {
     } else if(client.getType() == StructureType.org) {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     } else if(client.getType() == StructureType.grim) {
-      return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
+
     } else if(client.getType() == StructureType.fs) {
       return new FsPrinter(createState()).printWithStaticIds(client, replacements);
     }
