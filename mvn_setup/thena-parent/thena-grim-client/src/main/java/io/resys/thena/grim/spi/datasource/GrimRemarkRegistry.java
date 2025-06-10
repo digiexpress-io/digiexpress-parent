@@ -38,6 +38,7 @@ public interface GrimRemarkRegistry extends ThenaRegistryService<GrimRemark, io.
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimRemark> remarks);
   ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimRemark> remarks);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimRemark> remarks);
+  ThenaSqlClient.SqlTupleList deleteAllByMissionId(Collection<String> missionIds);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

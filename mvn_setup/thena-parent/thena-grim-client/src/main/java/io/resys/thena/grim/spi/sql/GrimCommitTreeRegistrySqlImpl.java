@@ -113,7 +113,20 @@ public class GrimCommitTreeRegistrySqlImpl implements GrimCommitTreeRegistry {
         .props(Tuple.of(missionId))
         .build();    
   }
-  
+  @Override
+  public SqlTupleList deleteAllByMissionId(Collection<String> missionId) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE tree FROM ").append(options.getGrimCommitTree()).append(" as tree ").ln()
+        .append(" LEFT JOIN ").append(options.getGrimCommit()).append(" as commit ").ln()
+        .append(" ON (commit.id = tree.commit_id)").ln()
+        .append(" WHERE commit.mission_id = $1")
+        .build())
+        .props(missionId.stream()
+            .map(doc -> Tuple.from(new Object[]{doc}))
+            .collect(Collectors.toList()))
+        .build();
+  }
   
   @Override
   public Sql createTable() {

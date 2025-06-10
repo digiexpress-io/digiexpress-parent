@@ -206,6 +206,20 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
         .build();
   }
   @Override
+  public SqlTupleList deleteAllByMissionId(Collection<String> missionId) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE goal FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
+        .append(" LEFT JOIN ").append(options.getGrimObjective()).append(" as objective ").ln()
+        .append(" ON (objective.id = goal.commit_id)").ln()
+        .append(" WHERE objective.mission_id = $1")
+        .build())
+        .props(missionId.stream()
+            .map(doc -> Tuple.from(new Object[]{doc}))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public Sql createTable() {
     return ImmutableSql.builder().value(new SqlStatement().ln()
     .append("CREATE TABLE ").append(options.getGrimObjectiveGoal()).ln()

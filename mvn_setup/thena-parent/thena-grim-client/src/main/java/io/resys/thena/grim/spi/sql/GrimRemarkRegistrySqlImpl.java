@@ -213,7 +213,18 @@ public class GrimRemarkRegistrySqlImpl implements GrimRemarkRegistry {
             .collect(Collectors.toList()))
         .build();
   }
-
+  @Override
+  public SqlTupleList deleteAllByMissionId(Collection<String> missionId) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimRemark())
+        .append(" WHERE mission_id = $1")
+        .build())
+        .props(missionId.stream()
+            .map(doc -> Tuple.from(new Object[]{doc}))
+            .collect(Collectors.toList()))
+        .build();
+  }
   @Override
   public SqlTupleList updateAll(Collection<GrimRemark> remarks) {
     return ImmutableSqlTupleList.builder()

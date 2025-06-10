@@ -35,6 +35,8 @@ public interface GrimCommandsRegistry extends ThenaRegistryService<GrimCommands,
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommands> commits);  
   ThenaSqlClient.SqlTuple getById(String id);
   
+  ThenaSqlClient.SqlTupleList deleteAllByMissionId(Collection<String> missionIds);
+  
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
   ThenaSqlClient.Sql dropTable();

@@ -103,6 +103,18 @@ public class GrimAssignmentRegistrySqlImpl implements GrimAssignmentRegistry {
         .build();
   }
 
+  @Override
+  public SqlTupleList deleteAllByMissionId(Collection<String> assignments) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimAssignment())
+        .append(" WHERE mission_id = $1")
+        .build())
+        .props(assignments.stream()
+            .map(doc -> Tuple.from(new Object[]{doc}))
+            .collect(Collectors.toList()))
+        .build();
+  }
 
   @Override
   public SqlTupleList insertAll(Collection<GrimAssignment> asssignments) {

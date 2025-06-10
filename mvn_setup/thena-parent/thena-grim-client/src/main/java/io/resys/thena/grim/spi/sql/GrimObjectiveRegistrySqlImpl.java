@@ -142,6 +142,18 @@ public class GrimObjectiveRegistrySqlImpl implements GrimObjectiveRegistry {
         .build();
   }
   @Override
+  public SqlTupleList deleteAllByMissionId(Collection<String> missionId) {
+    return ImmutableSqlTupleList.builder()
+        .value(new SqlStatement()
+        .append("DELETE FROM ").append(options.getGrimObjective())
+        .append(" WHERE mission_id = $1")
+        .build())
+        .props(missionId.stream()
+            .map(doc -> Tuple.from(new Object[]{doc}))
+            .collect(Collectors.toList()))
+        .build();
+  }
+  @Override
   public SqlTupleList insertAll(Collection<GrimObjective> objective) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()

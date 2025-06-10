@@ -48,6 +48,7 @@ public interface GrimCommitViewerRegistry extends ThenaRegistryService<GrimCommi
   
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimCommitViewer> commits);
   ThenaSqlClient.SqlTupleList updateAll(Collection<GrimCommitViewer> commits);
+  ThenaSqlClient.SqlTupleList deleteAllByMissionId(Collection<String> missionIds);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();

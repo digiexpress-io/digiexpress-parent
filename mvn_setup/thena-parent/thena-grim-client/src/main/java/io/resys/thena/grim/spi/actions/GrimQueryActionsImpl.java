@@ -109,4 +109,9 @@ public class GrimQueryActionsImpl implements GrimQueryActions {
   public MissionStatsQuery missionStatsQuery() {
     return new MissionStatsQueryImpl(startingState, repoId);
   }
+  @Override
+  public MissionDeleteQuery missionDeleteQuery() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

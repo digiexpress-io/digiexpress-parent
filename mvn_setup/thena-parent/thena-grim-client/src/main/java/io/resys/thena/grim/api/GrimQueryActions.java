@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import io.resys.thena.api.entities.PageQuery;
+import io.resys.thena.api.entities.grim.GrimCommit;
 import io.resys.thena.api.entities.grim.GrimCommitViewer;
 import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEvent;
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
@@ -35,12 +36,14 @@ import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
 import io.resys.thena.api.envelope.QueryEnvelopePage;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 
 
 public interface GrimQueryActions {
 
+  MissionDeleteQuery missionDeleteQuery();
   MissionQuery missionQuery();
   MissionLabelQuery missionLabelQuery();
   MissionRemarkQuery missionRemarkQuery();
@@ -48,11 +51,14 @@ public interface GrimQueryActions {
   MissionCommitQuery commitQuery();
   MissionStatsQuery missionStatsQuery();
   
+  
+  interface MissionDeleteQuery {
+    Multi<GrimCommit> deleteAll(List<String> missionId);
+  }
+  
   interface MissionStatsQuery {
     Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes();
   }
-  
-  
   interface MissionCommitQuery {
     Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId);
   }

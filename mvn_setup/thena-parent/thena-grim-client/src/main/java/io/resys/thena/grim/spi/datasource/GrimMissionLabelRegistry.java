@@ -36,7 +36,7 @@ public interface GrimMissionLabelRegistry extends ThenaRegistryService<GrimMissi
   ThenaSqlClient.SqlTuple findAllByMissionIds(GrimMissionFilter filter);
   ThenaSqlClient.SqlTupleList insertAll(Collection<GrimMissionLabel> users);
   ThenaSqlClient.SqlTupleList deleteAll(Collection<GrimMissionLabel> users);
-  
+  ThenaSqlClient.SqlTupleList deleteAllByMissionId(Collection<String> missionIds);
   
   ThenaSqlClient.Sql createTable();
   ThenaSqlClient.Sql createConstraints();
