@@ -1,5 +1,5 @@
 import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, OnChangeFn, Updater, PaginationState } from "@tanstack/react-table";
-import { TableState } from "./table-state-types";
+import { TableState, TableStateInitWith } from "./table-state-types";
 import React from "react";
 import { Md5 } from 'ts-md5';
 import { useLastTableState } from "./last-table-state";
@@ -156,6 +156,11 @@ class TableStateImpl implements TableState {
     });
     this._onNext(state);
     return state;
+  }
+
+  public isActive(init: TableStateInitWith): boolean {
+    const currentFilterValue = JSON.stringify(this.copy());
+    return JSON.stringify(init) === currentFilterValue
   }
 }
 

@@ -25,7 +25,7 @@ export const Root = styled('div', {
     '& .EveliTableDrawerSavedFilters-optionButtons': {
       display: 'flex',
       justifyContent: 'center',
-      gap: theme.spacing(1)
+      gap: theme.spacing(1),
     }
   };
 });

@@ -22,19 +22,17 @@ export interface ToolColumnSavedFilterProps {
 }
 
 
+type DialogState = (
+  { type: 'CREATE' } |
+  { type: 'UPDATE', value: SavedFilter })
+
 export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (props) => {
   const classes = useUtilityClasses();
   const intl = useIntl();
   const backend = useSavedTableFilters(props.tableId);
-  const [openSaveAs, setOpenSaveAs] = React.useState<boolean>(false);
   const [tableState, setTableState] = props.state;
-
+  const [dialog, setDialog] = React.useState<DialogState>();
   const filters = (backend.filters ?? []);
-
-  const currentFilterValue = JSON.stringify(tableState.copy());
-  const active = filters
-    .filter(({ filter }) => JSON.stringify(filter) === currentFilterValue)
-    .map(e => e.id);
 
 
   function handleClearFilters(event: React.MouseEvent<HTMLElement>, columnId: string) {
@@ -44,32 +42,46 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
   }
 
   function handleSaveDefault() {
-    backend.onSave(tableState)
+    backend.onSave(tableState, {
+      type: 'CREATE',
+      label: 'default'
+    })
   }
   function handleOpenSaveAs() {
-    setOpenSaveAs(true);
+    setDialog({ type: 'CREATE' });
   }
-  function handleCloseSaveAs() {
-    setOpenSaveAs(false);
+  function handleClose() {
+    setDialog(undefined);
+  }
+  function handleOpenUpdate(value: SavedFilter) {
+    setDialog({ type: 'UPDATE', value });
+  }
+
+  function handleDelete(value: SavedFilter) {
+    backend.onSave(tableState, { type: 'DELETE', dataId: value.id })
   }
 
   return (
     <Root className={classes.root}>
-      <SaveAsDialog {...props} open={openSaveAs} onClose={handleCloseSaveAs} />
+      {dialog?.type === 'CREATE' && <SaveAsDialog ownerState={props} onClose={handleClose} />}
+      {dialog?.type === 'UPDATE' && <UpdateFilterNameDialog ownerState={props} onClose={handleClose} value={dialog.value} />}
 
       <div className={classes.optionButtons}>
         <Button onClick={handleSaveDefault}>
           {intl.formatMessage({ id: 'eveli.table.saveasdefault', defaultMessage: 'Save as default' })}
         </Button>
         <Button onClick={handleOpenSaveAs} variant='outlined'>
-          {intl.formatMessage({ id: 'eveli.table.saveas', defaultMessage: 'Save as ...' })}
+          {intl.formatMessage({ id: 'eveli.table.saveas', defaultMessage: 'New filter from current' })}
         </Button>
       </div>
 
       {filters.map(filter => (
-        <FilterItem key={filter.id} enabled={active.includes(filter.id)} onClick={() => {
-          setTableState(prev => prev.restore(filter.filter))
-        }} filter={filter}
+        <FilterItem key={filter.id}
+          value={filter}
+          ownerState={props}
+          onDelete={() => handleDelete(filter)}
+          onEdit={() => handleOpenUpdate(filter)}
+          onRestore={() => setTableState(prev => prev.restore(filter.filter))} 
         />
       ))}
     </Root>
@@ -77,8 +89,11 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
 }
 
 
-const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClose: () => void }> = (props) => {
-  const backend = useSavedTableFilters(props.tableId);
+const SaveAsDialog: React.FC<{
+  ownerState: ToolColumnSavedFilterProps;
+  onClose: () => void
+}> = (props) => {
+  const backend = useSavedTableFilters(props.ownerState.tableId);
   const intl = useIntl();
   const [name, setName] = React.useState<string>('');
 
@@ -88,17 +103,17 @@ const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClo
 
   function handleSaveAs(event: React.SyntheticEvent) {
     event.preventDefault();
-    backend.onSave(props.state[0], { label: name, type: 'CREATE' }).then(() => props.onClose());
+    backend.onSave(props.ownerState.state[0], { label: name, type: 'CREATE' }).then(() => props.onClose());
   }
 
+
   function handleCancel() {
-    setName('')
     props.onClose();
   }
 
   return (
-    <Dialog open={props.open} onClose={props.onClose} slotProps={{ paper: { component: 'form', onSubmit: handleSaveAs } }}>
-      <DialogTitle>{intl.formatMessage({ id: 'eveli.table.saveas.title', defaultMessage: 'Save current filter as' })}</DialogTitle>
+    <Dialog open={true} onClose={props.onClose} slotProps={{ paper: { component: 'form', onSubmit: handleSaveAs } }}>
+      <DialogTitle>{intl.formatMessage({ id: 'eveli.table.saveas.title', defaultMessage: 'Save current configuration as filter' })}</DialogTitle>
       <DialogContent>
         <TextField autoFocus required fullWidth variant='standard' margin='dense' type='text'
           id='filter.name' name='filter.name'
@@ -116,26 +131,80 @@ const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClo
 
 
 
+const UpdateFilterNameDialog: React.FC<{
+  ownerState: ToolColumnSavedFilterProps;
+  value: SavedFilter;
+  onClose: () => void;
+}> = (props) => {
+
+  const backend = useSavedTableFilters(props.ownerState.tableId);
+  const intl = useIntl();
+  const [name, setName] = React.useState<string>(props.value.name);
+
+  function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
+    setName(event.currentTarget.value);
+  }
+
+  function handleUpdateName(event: React.SyntheticEvent) {
+    event.preventDefault();
+    backend.onSave(props.ownerState.state[0], { label: name, type: 'UPDATE', dataId: props.value.id }).then(() => props.onClose());
+  }
+
+  function handleCancel() {
+    props.onClose();
+  }
+
+  return (
+    <Dialog open={true} onClose={props.onClose} slotProps={{ paper: { component: 'form', onSubmit: handleUpdateName } }}>
+      <DialogTitle>{intl.formatMessage({ id: 'eveli.table.updatefilter.title', defaultMessage: 'Update filter name' })}</DialogTitle>
+      <DialogContent>
+        <TextField
+          fullWidth
+          value={name}
+          onChange={handleChangeName}
+          label={intl.formatMessage({ id: 'eveli.table.saveas.name', defaultMessage: 'Filter name' })}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={handleCancel}>
+          {intl.formatMessage({ id: 'button.cancel' })}
+        </Button>
+        <Button type="submit" onClick={handleUpdateName} disabled={!name.trim()}>
+          {intl.formatMessage({ id: 'button.accept' })}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 
-const FilterItem: React.FC<{ filter: SavedFilter, onClick: () => void, enabled: boolean }> = ({ filter, enabled, onClick }) => {
+const FilterItem: React.FC<{
+  value: SavedFilter;
+  ownerState: ToolColumnSavedFilterProps;
+
+  onDelete: () => void;
+  onEdit: () => void;
+  onRestore: () => void;
+}> = ({ onDelete, onEdit, onRestore, value, ownerState }) => {
+
   const classes = useUtilityClasses();
+  const enabled = ownerState.state[0].isActive(value.filter);
 
   return (
     <StyledFilterItem>
       <ListItem dense disableGutters disablePadding>
-        <ListItemButton onClick={onClick}>
+        <ListItemButton onClick={onRestore}>
           {enabled ? <CheckCircleIcon className={classes.activeFilter} /> : <CheckCircleIcon visibility='hidden' />}
           <ListItemText>
-            <Typography variant='subtitle2'>{filter.name}</Typography>
+            <Typography variant='subtitle2'>{value.name}</Typography>
           </ListItemText>
         </ListItemButton>
       </ListItem>
-
       <Box flexGrow={1} />
+
       <>
-        <ModeEditOutlineOutlinedIcon />
-        <DeleteOutlineIcon />
+        <ModeEditOutlineOutlinedIcon onClick={onEdit} />
+        <DeleteOutlineIcon onClick={onDelete} />
       </>
 
     </StyledFilterItem>

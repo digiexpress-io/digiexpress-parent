@@ -39,4 +39,6 @@ export interface TableState {
   clearFiltersAndVisibility(): TableState;
   restore(props: TableStateInitWith): TableState;
   copy(): TableStateInitWith
+
+  isActive: (init: TableStateInitWith) => boolean;
 }

@@ -45,33 +45,46 @@ export function useSavedTableFilters(tableId: string) {
     next: TableState, 
     operation?: (
       { dataId: string, label: string, type: 'UPDATE' } |
-      { label: string, type: 'CREATE' })
+      { label: string, type: 'CREATE' } |
+      { dataId: string, type: 'DELETE' }
+    )
 ): Promise<void> {
 
-    let dataId: string | undefined;
+    let toBeSaved: PrefsApi.UiSettingsForConfig | undefined;
+    let dataId: string;
     if(operation?.type === 'CREATE') {
       dataId = `${data?.length ?? 1}`;
-    } else if(operation?.type === 'UPDATE') {
+      toBeSaved = {
+        dataId: dataId,
+        label: operation?.label ?? default_profile,
+        value: JSON.stringify(next.copy())
+      };
+    } else if (operation?.type === 'UPDATE') {
       dataId = operation.dataId;
+      toBeSaved = {
+        dataId,
+        label: operation.label,
+        value: JSON.stringify(next.copy())
+      };
+    } else if (operation?.type === 'DELETE') {
+      dataId = operation.dataId;
+    } else {
+      throw new Error("not implemented")
     }
 
-    const toBeSaved: PrefsApi.UiSettingsForConfig = {
-      dataId: dataId ?? default_profile,
-      label: operation?.label ?? default_profile,
-      value: JSON.stringify(next.copy())
-    };
-
     const configs = (data ?? []).reduce<Record<string, PrefsApi.UiSettingsForConfig>>((collector, next) => {
-      if(next.id === toBeSaved.dataId) {
-        collector[toBeSaved.dataId] = toBeSaved;
+      if (next.id === dataId && !toBeSaved) {
+        return collector;
+      } else if (next.id === dataId) {
+        collector[dataId] = toBeSaved!;
       } else {
         collector[next.id] = { dataId: next.id, label: next.name, value: JSON.stringify(next.filter) };
       }
       return collector;
     }, {});
 
-    if(!configs[toBeSaved.dataId]) {
-      configs[toBeSaved.dataId] = toBeSaved;
+    if (!configs[dataId] && toBeSaved) {
+      configs[dataId] = toBeSaved;
     }
 
 
