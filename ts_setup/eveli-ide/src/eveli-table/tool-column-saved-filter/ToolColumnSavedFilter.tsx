@@ -1,11 +1,19 @@
 import React from 'react';
-import {  Button, ButtonGroup, generateUtilityClass, styled, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
+import {
+  Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions,
+  Typography, Box, ListItem, ListItemText, ListItemButton,
+} from '@mui/material';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import composeClasses from '@mui/utils/composeClasses';
+
 import { Column, Table } from '@tanstack/react-table';
 import { useIntl } from 'react-intl';
 import { TableState } from '../table-state';
-import { useSavedTableFilters } from '../table-state/saved-table-filters';
+import { SavedFilter, useSavedTableFilters } from '../table-state/saved-table-filters';
+import { Root, StyledFilterItem, useUtilityClasses } from './useUtilityClasses';
+
 
 export interface ToolColumnSavedFilterProps {
   table: Table<any>;
@@ -21,9 +29,16 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
   const [openSaveAs, setOpenSaveAs] = React.useState<boolean>(false);
   const [tableState, setTableState] = props.state;
 
+  const filters = (backend.filters ?? []);
+
+  const currentFilterValue = JSON.stringify(tableState.copy());
+  const active = filters
+    .filter(({ filter }) => JSON.stringify(filter) === currentFilterValue)
+    .map(e => e.id);
+
 
   function handleClearFilters(event: React.MouseEvent<HTMLElement>, columnId: string) {
-    
+
   }
   function toggleFilter(event: React.MouseEvent<HTMLElement>, col: Column<any, unknown>, value: string) {
   }
@@ -40,26 +55,29 @@ export const ToolColumnSavedFilter: React.FC<ToolColumnSavedFilterProps> = (prop
 
   return (
     <Root className={classes.root}>
-      <SaveAsDialog {...props} open={openSaveAs} onClose={handleCloseSaveAs}/>
+      <SaveAsDialog {...props} open={openSaveAs} onClose={handleCloseSaveAs} />
 
-      <ButtonGroup size='small' >
+      <div className={classes.optionButtons}>
         <Button onClick={handleSaveDefault}>
           {intl.formatMessage({ id: 'eveli.table.saveasdefault', defaultMessage: 'Save as default' })}
         </Button>
-        <Button onClick={handleOpenSaveAs}>
+        <Button onClick={handleOpenSaveAs} variant='outlined'>
           {intl.formatMessage({ id: 'eveli.table.saveas', defaultMessage: 'Save as ...' })}
         </Button>
-      </ButtonGroup>
+      </div>
 
-      {(backend.filters ?? []).map(filter => (<div key={filter.id} onClick={() => {
-        setTableState(prev => prev.restore(filter.filter))
-      }}>{filter.name}</div>))}
+      {filters.map(filter => (
+        <FilterItem key={filter.id} enabled={active.includes(filter.id)} onClick={() => {
+          setTableState(prev => prev.restore(filter.filter))
+        }} filter={filter}
+        />
+      ))}
     </Root>
   )
 }
 
 
-const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClose: () => void}> = (props) => {
+const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClose: () => void }> = (props) => {
   const backend = useSavedTableFilters(props.tableId);
   const intl = useIntl();
   const [name, setName] = React.useState<string>('');
@@ -71,6 +89,11 @@ const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClo
   function handleSaveAs(event: React.SyntheticEvent) {
     event.preventDefault();
     backend.onSave(props.state[0], { label: name, type: 'CREATE' }).then(() => props.onClose());
+  }
+
+  function handleCancel() {
+    setName('')
+    props.onClose();
   }
 
   return (
@@ -85,42 +108,36 @@ const SaveAsDialog: React.FC<ToolColumnSavedFilterProps & { open: boolean, onClo
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSaveAs}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
-        <Button type='submit'> {intl.formatMessage({ id: 'button.accept' })}</Button>
+        <Button variant='outlined' onClick={handleCancel}>{intl.formatMessage({ id: 'button.cancel' })}</Button>
+        <Button type='submit' onClick={handleSaveAs} disabled={!name.trim()}> {intl.formatMessage({ id: 'button.accept' })}</Button>
       </DialogActions>
     </Dialog>)
 }
 
 
-const FiltersRootClassName = 'EveliTableDrawerSavedFilters';
-
-
-const Root = styled('div', {
-  name: FiltersRootClassName,
-  slot: 'Root',
-  overridesResolver: (_props, styles) => {
-    return [
-      styles.root
-    ];
-  },
-
-})(({ theme }) => {
-  return {
-    width: '100%',
-    padding: theme.spacing(1),
-    gap: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'left',
-    flexDirection: 'column'
-  };
-});
 
 
 
-const useUtilityClasses = () => {
-  const slots = {
-    root: ['root']
-  };
-  const getUtilityClass = (slot: string) => generateUtilityClass(FiltersRootClassName, slot);
-  return composeClasses(slots, getUtilityClass, {});
+const FilterItem: React.FC<{ filter: SavedFilter, onClick: () => void, enabled: boolean }> = ({ filter, enabled, onClick }) => {
+  const classes = useUtilityClasses();
+
+  return (
+    <StyledFilterItem>
+      <ListItem dense disableGutters disablePadding>
+        <ListItemButton onClick={onClick}>
+          {enabled ? <CheckCircleIcon className={classes.activeFilter} /> : <CheckCircleIcon visibility='hidden' />}
+          <ListItemText>
+            <Typography variant='subtitle2'>{filter.name}</Typography>
+          </ListItemText>
+        </ListItemButton>
+      </ListItem>
+
+      <Box flexGrow={1} />
+      <>
+        <ModeEditOutlineOutlinedIcon />
+        <DeleteOutlineIcon />
+      </>
+
+    </StyledFilterItem>
+  )
 }
