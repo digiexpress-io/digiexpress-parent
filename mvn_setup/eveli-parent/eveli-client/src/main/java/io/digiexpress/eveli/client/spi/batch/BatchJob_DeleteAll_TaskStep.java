@@ -31,7 +31,7 @@ public class BatchJob_DeleteAll_TaskStep implements Executor<ProcessInstance, Pr
       }
       @Override
       public Multi<ProcessInstance> findAll() {
-        return Multi.createFrom().items(processClient.queryInstances().findAll().stream());
+        return Multi.createFrom().items();
       }
       
     };
@@ -41,7 +41,7 @@ public class BatchJob_DeleteAll_TaskStep implements Executor<ProcessInstance, Pr
   public Uni<ExecutorEntity> accept(ProcessInstance entity, ProcessCleanupConfig config, ExecutorContext context) {
     
     // Delete process
-    processClient.queryInstances().deleteOneById(entity.getId());
+    //processClient.queryInstances().deleteOneById(entity.getId());
     
     return Uni.createFrom().item(ImmutableExecutorEntity.builder()
         .status(ExecutorEntity.ExecutorEntityStatus.OK)
