@@ -32,6 +32,7 @@ import io.resys.thena.api.entities.grim.GrimMissionStats.GrimMissionAttributeEve
 import io.resys.thena.api.entities.grim.GrimUniqueMissionLabel;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelopeList;
@@ -53,13 +54,17 @@ public interface GrimQueryActions {
   
   
   interface MissionDeleteQuery {
-    Multi<GrimCommit> deleteAll(List<String> missionId);
+    MissionDeleteQuery missionId(List<String> missionId);
+    MissionDeleteQuery commitAuthor(String author);
+    MissionDeleteQuery commitMessage(String message);
+    Multi<GrimCommit> deleteAll();
   }
   
   interface MissionStatsQuery {
     Uni<QueryEnvelopeList<GrimMissionAttributeEvent>> findAllByMissionAttributes();
   }
   interface MissionCommitQuery {
+    Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits();
     Uni<QueryEnvelope<GrimContainerVersion>> findCommit(String missionId, String currentCommitId);
   }
   

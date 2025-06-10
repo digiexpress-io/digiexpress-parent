@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @QuarkusTest
 @TestProfile(PgProfile.class)
 @Slf4j
-public class CreateMissionWithGoalsAndAssignees extends DbTestTemplate {
+public class CreateMissionWithGoalsAndAssigneesTest extends DbTestTemplate {
 
   @Value.Immutable
   public interface TestContent extends Serializable {

@@ -74,10 +74,12 @@ public interface GrimDataSource extends TenantDataSource {
   
   
   interface InternalCommitTreeQuery {
+    Uni<List<GrimCommitTree>> findAll();
     Uni<List<GrimCommitTree>> findAllByMissionId(String missionId);
   }
   
   interface InternalCommitQuery {
+    Uni<List<GrimCommit>> findAll();
     Uni<List<GrimCommit>> findAllByMissionId(String missionId);
   }
   

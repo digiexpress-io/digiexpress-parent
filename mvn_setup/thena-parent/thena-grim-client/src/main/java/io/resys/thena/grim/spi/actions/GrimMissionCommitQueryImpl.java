@@ -54,10 +54,12 @@ import io.resys.thena.api.entities.grim.ImmutableGrimObjective;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoal;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveGoalTransitives;
 import io.resys.thena.api.entities.grim.ImmutableGrimObjectiveTransitives;
+import io.resys.thena.api.entities.grim.ImmutableGrimProjectObjects;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemark;
 import io.resys.thena.api.entities.grim.ImmutableGrimRemarkTransitives;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimContainerVersion;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimProjectObjects;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimDocType;
 import io.resys.thena.api.entities.grim.ThenaGrimObject.GrimRelationType;
 import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
@@ -754,5 +756,29 @@ public class GrimMissionCommitQueryImpl implements MissionCommitQuery {
       final var after =  Optional.ofNullable(tree.getBodyAfter()).map(b -> b.mapTo(type));
       return Tuple2.of(before, after);
     }
+  }
+
+
+  @Override
+  public Uni<QueryEnvelope<GrimProjectObjects>> findAllCommits() {
+    return startingState.toGrimState(repoId).onItem().transformToUni(tx -> {
+      return Uni.combine().all().unis(
+          tx.commit().findAll(),
+          tx.commitTree().findAll()
+        ).asTuple().onItem().transform(tuple -> {
+          
+          final var commits = tuple.getItem1().stream().collect(Collectors.toMap(e -> e.getCommitId(), e -> e));
+          final var commitTrees = tuple.getItem2().stream().collect(Collectors.toMap(e -> e.getId(), e -> e));
+          return ImmutableQueryEnvelope.<GrimProjectObjects>builder()
+              .repo(tx.getDataSource().getTenant())
+              .status(QueryEnvelopeStatus.OK)
+              .objects(ImmutableGrimProjectObjects.builder()
+                  .commits(commits)
+                  .commitTrees(commitTrees)
+                  .build())
+              .build();
+        });
+      
+    });
   }
 }

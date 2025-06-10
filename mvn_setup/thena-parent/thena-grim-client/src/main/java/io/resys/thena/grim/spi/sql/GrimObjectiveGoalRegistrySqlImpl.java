@@ -209,10 +209,9 @@ public class GrimObjectiveGoalRegistrySqlImpl implements GrimObjectiveGoalRegist
   public SqlTupleList deleteAllByMissionId(Collection<String> missionId) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("DELETE goal FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
-        .append(" LEFT JOIN ").append(options.getGrimObjective()).append(" as objective ").ln()
-        .append(" ON (objective.id = goal.commit_id)").ln()
-        .append(" WHERE objective.mission_id = $1")
+        .append("DELETE FROM ").append(options.getGrimObjectiveGoal()).append(" as goal ").ln()
+        .append(" USING ").append(options.getGrimObjective()).append(" as objective ").ln()
+        .append(" WHERE objective.id = goal.objective_id AND objective.mission_id = $1")
         .build())
         .props(missionId.stream()
             .map(doc -> Tuple.from(new Object[]{doc}))

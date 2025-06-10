@@ -63,4 +63,22 @@ public class InternalCommitTreeQuerySqlImpl implements InternalCommitTreeQuery {
         .collect().asList()
         .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)));
   }
+  
+  @Override
+  public Uni<List<GrimCommitTree>> findAll() {
+    
+    final var sql = registry.commitTrees().findAll();
+    if(log.isDebugEnabled()) {
+      log.debug("User findAll query, with props: {} \r\n{}", 
+          "",
+          sql.getValue());
+    }
+    return dataSource.getClient().preparedQuery(sql.getValue())
+        .mapping(registry.commitTrees().defaultMapper())
+        .execute()
+        .onItem()
+        .transformToMulti(RowSet::toMulti)
+        .collect().asList()
+        .onFailure().invoke(e -> errorHandler.deadEnd(sql.failed(e, "Can't find '%s'!", GrimDocType.GRIM_COMMIT)));
+  }
 }
