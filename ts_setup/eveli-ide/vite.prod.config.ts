@@ -19,13 +19,13 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
     base: process.env.PUBLIC_URL || '',
     resolve: { alias },
     plugins: [
-      TanStackRouterVite({}),
+      // has to be already compiled generated TanStackRouterVite({}),
       react({ }),
       dts({ rollupTypes: false, exclude: 'demo-app' }),
       checker({ typescript: true }),
       svgr({ svgrOptions: {} }),
       intlTsVite({}),
-      fetchVite()
+      // has to be already compiled generated fetchVite()
     ],
     
     build: {
