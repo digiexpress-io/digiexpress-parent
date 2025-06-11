@@ -20,6 +20,7 @@ export interface GPopoverSearchClasses {
   inputFieldContainer: string;
 
   logoBox: string;
+  childTopic: string;
 }
 
 export type GPopoverSearchClassKey = keyof GPopoverSearchClasses;
@@ -36,7 +37,8 @@ export const useUtilityClasses = (ownerState: GPopoverSearchProps) => {
     inputField: ['inputField'],
     inputFieldContainer: ['inputFieldContainer'],
     resultsDividerTitle: ['resultsDividerTitle'],
-    logoBox: ['logoBox']
+    logoBox: ['logoBox'],
+    childTopic: ['childTopic']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -184,7 +186,23 @@ export const GSearchMuiPopover = styled(Popover, {
       '&:focus, &:hover, &:visited, &:link, &:active': {
         textDecoration: 'underline'
       }
-    }
+    },
+
+    '& .GPopoverSearch-childTopic': {
+      display: 'flex',
+      alignItems: 'center',
+      ...theme.typography.body2,
+      color: theme.palette.text.secondary,
+      marginLeft: theme.spacing(1),
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    
+    '& .GPopoverSearch-childTopic .MuiSvgIcon-root': {
+      fontSize: '6pt',
+      marginRight: theme.spacing(1),
+      color: theme.palette.primary.main
+    },    
   };
 });
 

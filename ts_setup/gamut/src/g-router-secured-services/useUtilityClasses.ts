@@ -13,7 +13,8 @@ export interface GRouterSecuredServicesClasses {
   searchResults: string,
   resultsDividerTitle: string,
   resultsDivider: string,
-  servicesBreadcrumbs: string
+  servicesBreadcrumbs: string,
+  childTopic: string;
 }
 export type GRouterSecuredServicesClassKey = keyof GRouterSecuredServicesClasses;
 
@@ -37,7 +38,8 @@ export const useUtilityClasses = () => {
     searchResults: ['searchResults'],
     resultsDividerTitle: ['resultsDividerTitle'],
     resultsDivider: ['resultsDivider'],
-    servicesBreadcrumbs: ['servicesBreadcrumbs']
+    servicesBreadcrumbs: ['servicesBreadcrumbs'],
+    childTopic: ['childTopic']
   };
   const getUtilityClass = (slot: string) => generateUtilityClass(MUI_NAME, slot);
   return composeClasses(slots, getUtilityClass, {});
@@ -88,7 +90,21 @@ export const GRouterSecuredServicesRoot = styled("div", {
       gap: theme.spacing(1),
       padding: theme.spacing(1),
     },
-
+    '& .GRouterSecuredServices-childTopic': {
+      display: 'flex',
+      alignItems: 'center',
+      ...theme.typography.body2,
+      color: theme.palette.text.secondary,
+      marginLeft: theme.spacing(1),
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    
+    '& .GRouterSecuredServices-childTopic .MuiSvgIcon-root': {
+      fontSize: '6pt',
+      marginRight: theme.spacing(1),
+      color: theme.palette.primary.main,
+    },
   }
 });
 

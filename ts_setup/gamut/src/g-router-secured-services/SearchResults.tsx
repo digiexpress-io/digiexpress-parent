@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert, Divider, Link, List, ListItem, Typography } from '@mui/material';
+import CircleIcon from '@mui/icons-material/Circle';
 
 import {
   GLinkPhone,
@@ -12,6 +13,7 @@ import {
 import { OwnerState, useUtilityClasses } from './useUtilityClasses';
 import { useIntl } from 'react-intl';
 import { SearchApi } from '../api-search';
+import { SiteApi, useSite } from '../api-site';
 
 interface ResultsDividerProps {
   searchState: SearchApi.SearchState,
@@ -51,6 +53,12 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
     search.internal.length === 0 &&
     search.external.length === 0;
 
+  const childTopicIds = new Set(
+    (Object.values(useSite().views) as SiteApi.TopicView[])
+      .flatMap(topic => topic.children ?? [])
+      .map(child => child.id)
+  );
+
   return (
     <div className={classes.searchResults}>
       {noResults ? (
@@ -61,13 +69,21 @@ export const SearchResults: React.FC<{ ownerState: OwnerState }> = ({ ownerState
       ) : (
         <>
           <ResultsDivider searchState={search} title='gamut.search.results.serviceLinks' isHidden={search.topics.length === 0} />
-          <List dense>
-            {search.topics.map((topic) => (
-              <ListItem key={topic.id}>
-                <Link onClick={() => onTopic(topic)}>{topic.name}</Link>
-              </ListItem>
-            ))}
-          </List>
+            <List dense>
+              {search.topics.map((topic) => {
+                const isChild = childTopicIds.has(topic.id);
+
+                return (
+                  <ListItem
+                    key={topic.id}
+                    className={isChild ? classes.childTopic : undefined}
+                  >
+                    {isChild && <CircleIcon fontSize="small" />}
+                    <Link onClick={() => onTopic(topic)}>{topic.name}</Link>
+                  </ListItem>
+                );
+              })}
+            </List>
 
             <ResultsDivider searchState={search} title='gamut.search.results.formLinks' className={classes.resultsDividerTitle} isHidden={search.forms.length === 0} />
             {search.forms.map((form) => (

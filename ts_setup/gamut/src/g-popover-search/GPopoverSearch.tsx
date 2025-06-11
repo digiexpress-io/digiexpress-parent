@@ -1,6 +1,7 @@
 import React from 'react';
 import { useThemeProps, TextField, Typography, Chip, Grid2, Link, Divider, Alert, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -86,6 +87,7 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   const { views } = useSite();
   const noValueIndicatorColon = intl.formatMessage({ id: 'gamut.noValueIndicatorColon' });
   const [state, setState] = React.useState(SearchApi.getInstance(views, noValueIndicatorColon));
+  const iam = useIam();
 
   const noResults = state.topics.length === 0 &&
     state.forms.length === 0 &&
@@ -95,6 +97,11 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
   
   const enabledOptions = props.getEnabledOptions ? props.getEnabledOptions() : undefined;
 
+  const childTopicIds = new Set(
+    Object.values(views)
+      .flatMap(topic => topic.children ?? [])
+      .map(child => child.id)
+  );  
 
   function handleFilterByType(type: SearchApi.FilterMode) {
     setState(prev => prev.filterMode(prev.searchOptionType === type ? 'ALL' : type));
@@ -109,9 +116,27 @@ export const GPopoverSearch: React.FC<GPopoverSearchProps> = (initProps) => {
     return true;
   }
 
+  const DefaultLinkSlot: React.FC<GSearchResultProps> = (props) => {
+    const { children: topic } = props;
+    const isChild = childTopicIds.has(topic.id);
+  
+    function handleOnTopic(
+      topic: SiteApi.TopicView,
+      event: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>
+    ) {
+      props.onClick(event, topic);
+      props.onClose();
+    }
+  
+    return (
+      <Box className={isChild ? classes.childTopic : undefined}>
+        {isChild && <CircleIcon fontSize="small" />}
+        <Link onClick={(event) => handleOnTopic(topic, event)}>{topic.name}</Link>
+      </Box>
+    );
+  };
+  
   const TopicLinkSlot: React.ElementType<GSearchResultProps> = props.slots?.topicLink ? props.slots?.topicLink : DefaultLinkSlot;
-
-  const iam = useIam();
 
   return (
     <Root className={classes.root} ownerState={props}>
