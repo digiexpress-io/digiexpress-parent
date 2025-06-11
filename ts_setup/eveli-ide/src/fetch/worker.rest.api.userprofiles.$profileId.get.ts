@@ -38,7 +38,7 @@ function hook(props: {}) {
         const baseUrl = url({ profileId: '' });
         return params.fetch(baseUrl).then(response => response.json());
       },
-      async updateUserProfile(profileId: string, commands: PrefsApi.UserProfileUpdateCommand<any>[]): Promise<PrefsApi.UserProfile> {
+      async updateUserProfile(commands: PrefsApi.UserProfileUpdateCommand<any>[]): Promise<PrefsApi.UserProfile> {
         const baseUrl = url({ profileId: 'current' });
         return params.fetch(baseUrl, { method: 'PUT', body: JSON.stringify(commands)}).then(response => response.json());
       },

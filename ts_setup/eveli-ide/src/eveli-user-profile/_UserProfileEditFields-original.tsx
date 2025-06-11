@@ -10,7 +10,7 @@ function useBackend() {
   const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
 
   async function updateUserProfile(commands: PrefsApi.UserProfileUpdateCommand<any>[]) {
-    return restApi().updateUserProfile('current', commands)
+    return restApi().updateUserProfile(commands)
   }
 
   return { updateUserProfile }

@@ -37,7 +37,7 @@ export const EveliUserProfileRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-
+    marginBottom: theme.spacing(10),
     '& .EveliUserProfile-divider': {
       marginBottom: theme.spacing(3)
     },

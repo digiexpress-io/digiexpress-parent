@@ -55,7 +55,7 @@ export const SectionRow: React.FC<{ label: React.ReactNode, value: any }> = ({ l
       <Grid item md={3} lg={3}>
         <Typography fontWeight='bolder' variant='subtitle2'>{label}</Typography>
       </Grid>
-      <Grid item md={9} lg={9} textAlign='right'>
+      <Grid item md={9} lg={9} textAlign='left'>
         <Typography variant='subtitle2'>{value}</Typography>
       </Grid>
     </Grid>
