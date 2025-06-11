@@ -27,12 +27,12 @@ import io.resys.thena.api.actions.DocCommitActions.ModifyOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
@@ -64,7 +64,8 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   private String commitMessage;
   private boolean remove;
   private Boolean excludeBranchContentFromLog;
-
+  private boolean commitTreeEnabled = true;
+  
   @Override
   public ModifyOneDocBranchImpl commitLogExcludesBranchBody() {
     excludeBranchContentFromLog = Boolean.TRUE;
@@ -147,7 +148,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
   }
 
   private Uni<OneDocEnvelope> doInLock(DocBranchLock lock, DocState tx) {  
-    final var batch = new BatchForOneBranchModify(lock, tx, commitAuthor, commitMessage, excludeBranchContentFromLog)
+    final var batch = new BatchForOneBranchModify(lock, tx, commitAuthor, commitMessage, excludeBranchContentFromLog, commitTreeEnabled)
       .replace(replace)
       .merge(merge)
       .commands(commands)
@@ -163,7 +164,7 @@ public class ModifyOneDocBranchImpl implements ModifyOneDocBranch {
         return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .doc(batch.getDoc().get())
-          .commit(batch.getDocCommit().iterator().next())
+          .commit(batch.getFirstDocCommit())
           .branch(batch.getDocBranch().iterator().next())
           .commands(batch.getDocCommands())
           .commitTree(batch.getDocCommitTree())

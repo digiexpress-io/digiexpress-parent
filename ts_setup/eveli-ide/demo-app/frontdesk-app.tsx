@@ -88,7 +88,8 @@ export const FrontdeskApp: React.FC = () => {
                   'visual_accommodation', 
                   'stencil_locale_filter',
                   'eveli_publication_only',
-                  'smart_tables']}>
+                  'smart_tables',
+                  'user_profile']}>
                     
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />

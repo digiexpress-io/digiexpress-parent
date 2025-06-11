@@ -73,6 +73,7 @@ public interface UserProfileClient {
 
   interface UiSettingsQuery {
     Uni<List<UiSettings>> findAll(String profileId);
+    Uni<Optional<UiSettings>> findOne(String profileId, String settingsId);
     Uni<UiSettings> get(String profileId, String settingsId);
   }
   

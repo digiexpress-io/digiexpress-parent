@@ -71,7 +71,7 @@ import io.digiexpress.eveli.envir.api.EveliEnvirClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileClientImpl;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
-import io.resys.thena.storesql.DbStateSqlImpl;
+import io.resys.thena.grim.spi.GrimClientImpl;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.PoolOptions;
@@ -181,7 +181,7 @@ public class EveliAutoConfig {
     
     final var config = ImmutableTaskStoreConfig.builder()
         .tenantName("task-tenant")
-        .client(DbStateSqlImpl.create().client(pgPool).build())
+        .client(GrimClientImpl.create().client(pgPool).build())
         .build();
     final var store = new TaskStoreImpl(config);
     store.query().createIfNot().await().atMost(Duration.ofMinutes(1));

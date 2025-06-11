@@ -1,10 +1,8 @@
 import { SortingState, VisibilityState, ColumnFiltersState, ColumnSizingState, OnChangeFn, Updater, PaginationState } from "@tanstack/react-table";
-import { TableState } from "./table-state-types";
+import { TableState, TableStateInitWith } from "./table-state-types";
 import React from "react";
 import { Md5 } from 'ts-md5';
-import { useFetch } from "@dxs-ts/eveli-fetch";
-import { useIam } from "@/api-iam";
-import { useTenantConfig, useTenantConfigFeatures } from "@/api-tenant-config";
+import { useLastTableState } from "./last-table-state";
 
 
 
@@ -159,6 +157,11 @@ class TableStateImpl implements TableState {
     this._onNext(state);
     return state;
   }
+
+  public isActive(init: TableStateInitWith): boolean {
+    const currentFilterValue = JSON.stringify(this.copy());
+    return JSON.stringify(init) === currentFilterValue
+  }
 }
 
 function initTableState(props: { 
@@ -178,63 +181,28 @@ function initTableState(props: {
 
 
 
-export function useTableState(props: { initialPageSize: number }) {
-  const settigsId = 'tables';
-  const dataId = 'table-state';
-
-  const { user } = useIam();
-  const { isEnabled } = useTenantConfigFeatures()
-  const isSmartTables = isEnabled('SMART_TABLES');
+export function useTableState(props: { initialPageSize: number, tableId: string }) {
+  
   const [loading, setLoading] = React.useState(true);
-  const [lastSync, setLastSync] = React.useState<string>();
-  const { restApi } = useFetch('worker/rest/api/userprofiles/$profileId.GET', {});
-  const onNext: (next: TableState) => Promise<void> = React.useCallback(async (next) => {
+  const lastTableState = useLastTableState(props.tableId);
 
-    setLastSync(prev => {
-      if(!prev || next?.hash === prev) { 
-        return next.hash;
-      }
-      if(isSmartTables) {
-        restApi().updateUiSettings({
-          commandType: 'UpsertUiSettings',
-          settingsId: settigsId,
-          userId: user.userId,
-          visibility: [],
-          config: [{
-            dataId: dataId,
-            value: JSON.stringify(next.copy())
-          }]
-        })
-      }
-      return next.hash;
-    })
-  }, []);
-  const state = React.useState(initTableState({ initialPageSize: props.initialPageSize, onNext }));
-
-
+  const state = React.useState(initTableState({ 
+    initialPageSize: props.initialPageSize, 
+    onNext: lastTableState.onNext 
+  }));
 
   React.useEffect(() => {
-    if(!loading || !isSmartTables) {
+    if(!loading) {
       setLoading(false);
       return;
     }
-
-    restApi().findUiSettings(settigsId).then(data => {
-      if(!data?.config) {
-        return;
-      }
-      try {
-        const config = data.config.find(config => config.dataId === dataId);
-        if(config) {
-          state[1]((prev) => prev.restore(JSON.parse(config.value)));
-        }
-      } catch(e) {
-        console.error('Failed to parse table settings', e)
+    lastTableState.onRestore().then(config => {
+      if(config) {
+        state[1]((prev) => prev.restore(config));
       }
       setLoading(false);
-    }).catch(e => setLoading(false));
-
-  }, [loading, isSmartTables]);
+    })
+  }, [loading]);
 
   return { state, loading };
 }

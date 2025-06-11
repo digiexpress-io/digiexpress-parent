@@ -9,7 +9,14 @@ import {
 } from '@tanstack/react-table';
 
 
-
+export interface TableStateInitWith {
+  sorting: SortingState;
+  pagination: PaginationState;
+  columnVisibility: VisibilityState;
+  columnFilters: ColumnFiltersState;
+  columnSizing: ColumnSizingState;
+  filterDialogOpen: boolean;
+}
 
 export interface TableState {
   sorting: SortingState;
@@ -18,6 +25,7 @@ export interface TableState {
   columnFilters: ColumnFiltersState;
   columnSizing: ColumnSizingState;
   filterDialogOpen: boolean;
+
   hash: string;
   
   setSorting(next: Updater<SortingState>): TableState;
@@ -29,21 +37,8 @@ export interface TableState {
 
   clear(): TableState;
   clearFiltersAndVisibility(): TableState;
-  restore(props: {
-    sorting: SortingState;
-    pagination: PaginationState;
-    columnVisibility: VisibilityState;
-    columnFilters: ColumnFiltersState;
-    columnSizing: ColumnSizingState;
-    filterDialogOpen: boolean;  
-  }):TableState;
+  restore(props: TableStateInitWith): TableState;
+  copy(): TableStateInitWith
 
-  copy(): {
-    sorting: SortingState;
-    pagination: PaginationState;
-    columnVisibility: VisibilityState;
-    columnFilters: ColumnFiltersState;
-    columnSizing: ColumnSizingState;
-    filterDialogOpen: boolean;  
-  }
+  isActive: (init: TableStateInitWith) => boolean;
 }

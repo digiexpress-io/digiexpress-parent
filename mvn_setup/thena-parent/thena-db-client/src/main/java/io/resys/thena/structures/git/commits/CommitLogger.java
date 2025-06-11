@@ -1,5 +1,9 @@
 package io.resys.thena.structures.git.commits;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -21,6 +25,14 @@ package io.resys.thena.structures.git.commits;
  */
 
 import io.resys.thena.api.LogConstants;
+import io.resys.thena.api.entities.Tenant;
+import io.resys.thena.api.entities.git.Commit;
+import io.resys.thena.api.envelope.ImmutableQueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope;
+import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.api.envelope.ThenaContainer;
+import io.resys.thena.api.exceptions.RepoException;
+import io.resys.thena.structures.git.objects.PullObjectsQueryImpl.BlobAndTree;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = LogConstants.SHOW_COMMIT)
@@ -41,5 +53,32 @@ public class CommitLogger {
       data.append("Log DEBUG disabled for: " + LogConstants.SHOW_COMMIT + "!");
     }
     return data.toString();
+  }
+  
+  public static <T extends ThenaContainer> QueryEnvelope<T> repoCommitNotFound(Tenant repo, String refCriteria, Logger logger) {
+    final var error = RepoException.builder().noCommit(repo, refCriteria);
+    logger.warn(error.getText());
+    return ImmutableQueryEnvelope
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(error)
+        .build();
+  }
+  
+  public static <T extends ThenaContainer> QueryEnvelope<T> repoBlobNotFound(
+      Tenant repo, 
+      BlobAndTree blobAndTree, 
+      Commit commit,
+      List<String> docIds,
+      Logger logger) {
+    
+    final var error = RepoException.builder()
+        .noBlob(repo, blobAndTree.getTreeId(), commit.getId(), docIds.toArray(new String[] {}));
+    logger.warn(error.getText());
+    return ImmutableQueryEnvelope
+        .<T>builder()
+        .status(QueryEnvelopeStatus.ERROR)
+        .addMessages(error)
+        .build();
   }
 } 

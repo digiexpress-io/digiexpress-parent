@@ -26,11 +26,11 @@ import java.util.List;
 
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDoc;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
@@ -69,6 +69,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   private Boolean excludeBranchContentFromLog;
   private OffsetDateTime docStartsAt;
   private OffsetDateTime docEndsAt;
+  private boolean commitTreeEnabled = true;
 
   @Override
   public CreateOneDocImpl commitLogExcludesBranchBody() {
@@ -90,7 +91,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
   }
   
   private Uni<OneDocEnvelope> doInTx(DocState tx) {  
-    final var batch = new BatchForOneDocCreate(tx.getTenantId(), commitAuthor, commitMessage, excludeBranchContentFromLog)
+    final var batch = new BatchForOneDocCreate(tx.getTenantId(), commitAuthor, commitMessage, excludeBranchContentFromLog, commitTreeEnabled)
         .docId(docId)
         .docType(docType)
         .docName(docName)
@@ -121,7 +122,7 @@ public class CreateOneDocImpl implements CreateOneDoc {
         return ImmutableOneDocEnvelope.builder()
           .repoId(repoId)
           .doc(batch.getDoc().get())
-          .commit(batch.getDocCommit().iterator().next())
+          .commit(batch.getFirstDocCommit())
           .branch(batch.getDocBranch().iterator().next())
           .commands(batch.getDocCommands())
           .commitTree(batch.getDocCommitTree())

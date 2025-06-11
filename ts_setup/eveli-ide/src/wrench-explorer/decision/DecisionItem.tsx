@@ -50,7 +50,8 @@ const DecisionItem: React.FC<{ decisionId: HdesApi.DecisionId }> = ({ decisionId
   const saved = isArticleSaved(decision);
   const decisionName = decision.ast ? decision.ast.name : decision.id;
 
-  const flows: HdesApi.Entity<HdesApi.AstFlow>[] = [];
+  const assocs = decision.associations.filter(a => a.refType === 'FLOW');
+  const flows: HdesApi.Entity<HdesApi.AstFlow>[] = assocs.map(a =>  a.id ? session.site.flows[a.id] : session.getFlow(a.ref)).filter(a => !!a);
 
   return (
     <Burger.TreeItem itemId={decision.id} labelText={decisionName} labelIcon={TableChartOutlinedIcon} labelcolor={saved ? "explorerItem" : "secondary.light"}>

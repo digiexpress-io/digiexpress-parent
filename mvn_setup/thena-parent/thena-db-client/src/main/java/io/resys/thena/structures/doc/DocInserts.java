@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocBranch;
 import io.resys.thena.api.entities.doc.DocCommands;
@@ -32,7 +33,6 @@ import io.resys.thena.api.entities.doc.DocCommit;
 import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.envelope.Message;
-import io.resys.thena.structures.BatchStatus;
 import io.smallrye.mutiny.Uni;
 
 public interface DocInserts {
@@ -45,8 +45,38 @@ public interface DocInserts {
     List<DocCommit> getDocCommit();
     List<DocCommitTree> getDocCommitTree();
     List<DocCommands> getDocCommands();
-    String getLog();
     List<Message> getMessages();
+    
+    String getLog();
+  
+    List<DocCommit> getDocCommitsToUpdate();
+    
+    
+    default DocCommit getFirstDocCommit() {
+      if(getDocCommitsToUpdate().isEmpty()) {
+        return getDocCommit().iterator().next();
+      }
+      return getDocCommitsToUpdate().iterator().next();
+    }
+    
+    
+    default DocBatchForOne merge(DocBatchForOne other) {
+      return ImmutableDocBatchForOne.builder()
+          .from(this)
+          .log(this.getLog() + other.getLog())
+          
+          .addAllMessages(other.getMessages())
+          .addAllDocCommands(other.getDocCommands())
+          .addAllDocCommitTree(other.getDocCommitTree())
+          .addAllDocCommit(other.getDocCommit())
+          .addAllDocBranch(other.getDocBranch())
+          .addAllDocLock(other.getDocLock())
+          .doc(other.getDoc().or(() -> getDoc()))
+          
+          .addAllDocCommitsToUpdate(other.getDocCommitsToUpdate())
+          
+          .build();
+    }
   }
   
   Uni<DocBatchForMany> batchMany(DocBatchForMany output);

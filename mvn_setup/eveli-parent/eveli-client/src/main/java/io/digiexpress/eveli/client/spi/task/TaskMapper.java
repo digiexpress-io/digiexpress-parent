@@ -33,13 +33,13 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.api.TaskClient.TaskCommentSource;
 import io.digiexpress.eveli.client.api.TaskClient.TaskPriority;
 import io.digiexpress.eveli.client.api.TaskClient.TaskStatus;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.grim.GrimAssignment;
 import io.resys.thena.api.entities.grim.GrimMission;
 import io.resys.thena.api.entities.grim.GrimMissionLabel;
 import io.resys.thena.api.entities.grim.GrimMissionLink;
 import io.resys.thena.api.entities.grim.GrimRemark;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 
 public class TaskMapper {
   public static final String ASSIGNMENT_TYPE_TASK_USER = GrimAssignment.ASSIGNMENT_TYPE_USER;

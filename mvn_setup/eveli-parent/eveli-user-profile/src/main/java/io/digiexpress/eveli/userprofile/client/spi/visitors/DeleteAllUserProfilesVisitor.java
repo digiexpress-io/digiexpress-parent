@@ -52,7 +52,9 @@ public class DeleteAllUserProfilesVisitor implements DocObjectsVisitor<Uni<List<
   public Uni<QueryEnvelope<DocTenantObjects>> start(ThenaDocConfig config, DocObjectsQuery query) {
     this.removeCommand = config.getClient().doc(config.getRepoId()).commit().modifyManyDocs()
         .commitAuthor(config.getAuthor().get())
-        .commitMessage("Delete Tenants");
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-");
     
     // Build the blob criteria for finding all documents of type Project
     return query.docType(DataConstants.DOC_TYPE_USER_PROFILE).findAll();

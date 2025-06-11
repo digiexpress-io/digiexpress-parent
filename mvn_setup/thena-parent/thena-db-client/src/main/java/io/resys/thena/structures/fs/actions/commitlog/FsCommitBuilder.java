@@ -24,12 +24,12 @@ import java.time.OffsetDateTime;
 
 import com.google.common.base.Objects;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.fs.FsCommit;
 import io.resys.thena.api.entities.fs.FsCommitTree.FsCommitTreeOperation;
 import io.resys.thena.api.entities.fs.ImmutableFsCommit;
 import io.resys.thena.api.entities.fs.ImmutableFsCommitTree;
 import io.resys.thena.api.entities.fs.ThenaFsObject.IsFsObject;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.fs.ImmutableFsBatchDirents;
 import io.resys.thena.support.OidUtils;
 import io.vertx.core.json.JsonObject;

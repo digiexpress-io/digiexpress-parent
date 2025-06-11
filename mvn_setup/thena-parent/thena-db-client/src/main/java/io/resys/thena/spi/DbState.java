@@ -24,16 +24,10 @@ import io.resys.thena.api.entities.Tenant;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.fs.FsState;
 import io.resys.thena.structures.git.GitState;
-import io.resys.thena.structures.grim.GrimState;
 import io.resys.thena.structures.org.OrgState;
 import io.smallrye.mutiny.Uni;
 
 public interface DbState extends TenantDataSource {
-
-  
-  Uni<GrimState> toGrimState(String tenantId);
-  GrimState toGrimState(Tenant repo);
-  <R> Uni<R> withGrimTransaction(TxScope tenantId, GrimState.TransactionFunction<R> callback);
 
   Uni<FsState> toFsState(String tenantId);
   FsState toFsState(Tenant repo);

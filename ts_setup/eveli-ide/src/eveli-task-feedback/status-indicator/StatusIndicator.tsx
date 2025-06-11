@@ -27,7 +27,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   if (!feedbackExists && props.size === 'SMALL') {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
-        <Avatar sx={{ height: '20px', width: '20px', backgroundColor: theme.palette.primary.light }}>
+        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.error.main }}>
           <DoNotDisturbAltIcon fontSize='inherit' />
         </Avatar>
       </Tooltip>
@@ -37,7 +37,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   if (!feedbackExists && props.size === 'LARGE') {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.notPublished' })}>
-        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.primary.light }}>
+        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.error.main }}>
           <DoNotDisturbAltIcon fontSize='small' />
         </Avatar>
       </Tooltip>)
@@ -46,7 +46,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = (props) => {
   if (props.size === 'SMALL') {
     return (
       <Tooltip title={intl.formatMessage({ id: 'feedback.isPublished' })}>
-        <Avatar sx={{ height: 'auto', width: 'auto', backgroundColor: theme.palette.success.main }}>
+        <Avatar sx={{ height: '20pt', width: '20pt', backgroundColor: theme.palette.success.main }}>
           <DoneIcon fontSize='inherit' />
         </Avatar>
       </Tooltip>

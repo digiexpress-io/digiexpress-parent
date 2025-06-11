@@ -113,7 +113,13 @@ public class UserProfileController {
   @GetMapping("/{id}/ui-settings/{settingsId}")
   public Uni<UiSettings> getUISettings(@PathVariable("id") String profileId, @PathVariable("settingsId") String settingsId) {
     assertAccess(profileId);
-    return userProfileClient.uiSettingsQuery().get(getUserId(profileId), settingsId);
+    return userProfileClient.uiSettingsQuery().findOne(getUserId(profileId), settingsId)
+        .onItem().transformToUni(result -> {
+          if(result.isPresent()) {
+            return Uni.createFrom().item(result.get());
+          }
+          return Uni.createFrom().nullItem();
+        });
   }
   public String getUserId(String init) {
     if("current".equals(init)) {

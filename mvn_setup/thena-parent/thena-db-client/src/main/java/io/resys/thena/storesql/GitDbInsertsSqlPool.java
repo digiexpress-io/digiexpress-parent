@@ -1,5 +1,7 @@
 package io.resys.thena.storesql;
 
+import io.resys.thena.api.entities.BatchStatus;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -34,7 +36,6 @@ import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleFailed;
 import io.resys.thena.datasource.ThenaSqlDataSourceErrorHandler.SqlTupleListFailed;
 import io.resys.thena.registry.git.GitRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.UpsertStatus;
 import io.resys.thena.structures.git.GitInserts;
 import io.resys.thena.structures.git.ImmutableGitBatch;

@@ -24,11 +24,11 @@ import io.digiexpress.eveli.client.api.TaskClient;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimQueryActions.MissionRemarkQuery;
 import io.resys.thena.api.entities.grim.ThenaGrimContainers.GrimMissionContainer;
 import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimQueryActions.MissionRemarkQuery;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 

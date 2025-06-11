@@ -38,6 +38,7 @@ import io.resys.thena.api.envelope.QueryEnvelope;
 import io.resys.thena.api.envelope.QueryEnvelope.QueryEnvelopeStatus;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.structures.git.GitState;
+import io.resys.thena.structures.git.commits.CommitLogger;
 import io.resys.thena.support.RepoAssert;
 import io.smallrye.mutiny.Uni;
 import lombok.Data;
@@ -103,7 +104,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
       final var ctx = state.toGitState(existing);
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag).onItem().transformToUni(commit -> {
         if(commit == null) {
-          return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log)); 
+          return Uni.createFrom().item(CommitLogger.repoCommitNotFound(existing, branchNameOrCommitOrTag, log)); 
         }
         return getListState(existing, commit, ctx);
       });
@@ -124,7 +125,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
       final var ctx = state.toGitState(existing);
       return ObjectsUtils.findCommit(ctx, branchNameOrCommitOrTag).onItem().transformToUni(commit -> {
           if(commit == null) {
-            return Uni.createFrom().item(QueryEnvelope.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
+            return Uni.createFrom().item(CommitLogger.repoCommitNotFound(existing, branchNameOrCommitOrTag, log));
           }
           return getState(existing, commit, ctx);
         });
@@ -136,7 +137,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
         .transformToUni(blobTree -> {
           
           if(blobTree.getBlob().size() != 1) {
-            return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobTree, commit, docIds, log));
+            return Uni.createFrom().item(CommitLogger.repoBlobNotFound(repo, blobTree, commit, docIds, log));
           }
           
           return Uni.createFrom().item(ImmutableQueryEnvelope.<GitPullActions.PullObject>builder()
@@ -157,7 +158,7 @@ public class PullObjectsQueryImpl implements PullObjectsQuery {
         .transformToUni(blobAndTree -> {
           
           if(blobAndTree.getBlob().isEmpty()) {
-            return Uni.createFrom().item(QueryEnvelope.repoBlobNotFound(repo, blobAndTree, commit, docIds, log));
+            return Uni.createFrom().item(CommitLogger.repoBlobNotFound(repo, blobAndTree, commit, docIds, log));
           }
           return Uni.createFrom().item(ImmutableQueryEnvelope.<GitPullActions.PullObjects>builder()
             .repo(repo)

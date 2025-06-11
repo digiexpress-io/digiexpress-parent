@@ -31,8 +31,6 @@ import io.resys.thena.api.actions.GitDiffActions;
 import io.resys.thena.api.actions.GitHistoryActions;
 import io.resys.thena.api.actions.GitPullActions;
 import io.resys.thena.api.actions.GitTagActions;
-import io.resys.thena.api.actions.GrimCommitActions;
-import io.resys.thena.api.actions.GrimQueryActions;
 import io.resys.thena.api.actions.OrgCommitActions;
 import io.resys.thena.api.actions.OrgHistoryActions;
 import io.resys.thena.api.actions.OrgQueryActions;
@@ -50,8 +48,6 @@ import io.resys.thena.structures.git.history.HistoryActionsDefault;
 import io.resys.thena.structures.git.objects.BranchActionsImpl;
 import io.resys.thena.structures.git.objects.ObjectsActionsImpl;
 import io.resys.thena.structures.git.tags.TagActionsDefault;
-import io.resys.thena.structures.grim.actions.GrimCommitActionsImpl;
-import io.resys.thena.structures.grim.actions.GrimQueryActionsImpl;
 import io.resys.thena.structures.org.actions.OrgCommitActionsImpl;
 import io.resys.thena.structures.org.actions.OrgHistoryActionsImpl;
 import io.resys.thena.structures.org.actions.OrgQueryActionsImpl;
@@ -107,16 +103,7 @@ public class ThenaClientPgSql implements ThenaClient {
       @Override public OrgProjectQuery tenants() { return new OrgProjectQueryImpl(state, repoId); }
     };
   }
-  @Override
-  public GrimStructuredTenant grim(String repoId) {
-    RepoAssert.notEmpty(repoId, () -> "repoId can't be empty!");
-    return new GrimStructuredTenant() {
-      @Override public GrimQueryActions find() { return new GrimQueryActionsImpl(state, repoId); }
-      @Override public GrimCommitActions commit() { return new GrimCommitActionsImpl(state, repoId); }
-      @Override public GrimProjectQuery tenants() { return null; }
-      @Override public String getTenantId() { return repoId; }
-    };
-  }
+
   @Override
   public FsStructuredTenant fs(String tenantIdOrName) {
     RepoAssert.notEmpty(tenantIdOrName, () -> "tenantIdOrName can't be empty!");
@@ -153,14 +140,7 @@ public class ThenaClientPgSql implements ThenaClient {
   public OrgStructuredTenant org(Tenant repo) {
     return this.org(repo.getId());
   }
-  @Override
-  public GrimStructuredTenant grim(TenantCommitResult repo) {
-    return grim(repo.getRepo().getId());
-  }
-  @Override
-  public GrimStructuredTenant grim(Tenant repo) {
-    return this.grim(repo.getId());
-  }
+
   @Override
   public FsStructuredTenant fs(TenantCommitResult repo) {
     return this.fs(repo.getRepo().getId());

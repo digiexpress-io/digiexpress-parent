@@ -1,6 +1,7 @@
 import React from 'react';
-import { Avatar, Box, Typography, CircularProgress, useTheme } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import { PrefsApi } from '@/api-prefs';
+import { EveliAvatar, EveliUserAvatar, useUtilityClasses } from './useUtilityClasses';
 
 function stringToColor(string: String) {
   let hash = 0;
@@ -21,8 +22,9 @@ function stringToColor(string: String) {
   return color;
 }
 
+
 const UserAvatar: React.FC<{ user: PrefsApi.UserProfile }> = ({ user }) => {
-  const theme = useTheme();
+  const classes = useUtilityClasses();
   const firstLetter = user.details.firstName.substring(0, 1).toUpperCase();
   const secondLetter = user.details.lastName.substring(0, 1).toUpperCase();
   const twoLetters = firstLetter + secondLetter;
@@ -32,19 +34,14 @@ const UserAvatar: React.FC<{ user: PrefsApi.UserProfile }> = ({ user }) => {
   }
 
   return (
-    <Box display="flex" alignItems="center"
-      sx={{
-        border: `1px solid ${theme.palette.divider}`,
-        minWidth: "25%",
-        padding: theme.spacing(1),
-        borderRadius: theme.spacing(3)
-      }}>
-        <Avatar sx={{ backgroundColor: stringToColor(user.details.firstName), mr: 1 }}>{twoLetters}</Avatar>
-        <Box display='flex' flexDirection='column'>
-          <Typography variant='h4' fontWeight='bolder'>{user.details.firstName + " " + user.details.lastName}</Typography>
-          <Typography variant='body1'>@{user.details.username}</Typography>
-        </Box>
-    </Box>
+    <EveliUserAvatar className={classes.avatar}>
+      <EveliAvatar bgColor={stringToColor(user.details.firstName)}>{twoLetters}</EveliAvatar>
+      <Box display='flex' flexDirection='column'>
+        <Typography className={classes.avatarUserFirstLastName}>{user.details.firstName + " " + user.details.lastName}</Typography>
+        <Typography className={classes.avatarUserName}>@{user.details.username}</Typography>
+      </Box>
+
+    </EveliUserAvatar>
   );
 };
 

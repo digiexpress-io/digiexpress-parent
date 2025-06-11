@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 
-import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
 import io.digiexpress.eveli.client.api.CustomerAccountClient.CrmAccountType;
+import io.digiexpress.eveli.client.api.CustomerAccountClient.CustomerAccount;
 
 /*-
  * #%L
@@ -39,11 +39,11 @@ import io.digiexpress.eveli.client.event.TaskNotificator;
 import io.digiexpress.eveli.client.spi.task.TaskException;
 import io.digiexpress.eveli.client.spi.task.TaskMapper;
 import io.digiexpress.eveli.client.spi.task.TaskStoreConfig;
-import io.resys.thena.api.ThenaClient.GrimStructuredTenant;
-import io.resys.thena.api.actions.GrimCommitActions.CreateOneMission;
-import io.resys.thena.api.actions.GrimCommitActions.OneMissionEnvelope;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.grim.ThenaGrimNewObject.NewMission;
+import io.resys.thena.grim.api.GrimClient.GrimStructuredTenant;
+import io.resys.thena.grim.api.GrimCommitActions.CreateOneMission;
+import io.resys.thena.grim.api.GrimCommitActions.OneMissionEnvelope;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;

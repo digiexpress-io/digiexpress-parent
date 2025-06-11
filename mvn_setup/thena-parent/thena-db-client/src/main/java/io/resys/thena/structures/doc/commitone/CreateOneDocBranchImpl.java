@@ -30,23 +30,22 @@ import java.util.Optional;
 import io.resys.thena.api.actions.DocCommitActions.CreateOneDocBranch;
 import io.resys.thena.api.actions.DocCommitActions.OneDocEnvelope;
 import io.resys.thena.api.actions.ImmutableOneDocEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.Doc;
 import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForMany;
-import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBranchLockCriteria;
+import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
 import io.resys.thena.support.OidUtils;
 import io.resys.thena.support.RepoAssert;
@@ -66,7 +65,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
   
   private JsonObject branchContent = null;
   private List<JsonObject> commands = null;
-
+  private boolean commitTreeEnabled = true;
   private String docId;
 
   private String branchName = DocObjectsQueryImpl.BRANCH_MAIN;
@@ -133,17 +132,14 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     
     final var now = OffsetDateTime.now();
     
-    final var commitBuilder = new DocCommitBuilder(repoId, excludeBranchContentFromLog, ImmutableDocCommit.builder()
-      .id(OidUtils.gen())
-      .docId(doc.getId())
-      .branchId(branchId)
-      .createdAt(now)
-      .commitAuthor(this.commitAuthor)
-      .commitMessage(this.commitMessage)
-      .parent(lock.getCommit().get().getId())
-      .commitLog("")
-      .build()
-    );
+    final var commitBuilder = DocCommitBuilder.from(repoId, lock)
+        .excludeBranchContentFromLog(excludeBranchContentFromLog)
+        .commitTreeEnabled(commitTreeEnabled)
+        .commitMessage(this.commitMessage)
+        .commitAuthor(this.commitAuthor)
+        .branchId(branchId)
+        .create();
+     
 
     final var docBranch = ImmutableDocBranch.builder()
       .id(branchId)
@@ -158,7 +154,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       .build();
     commitBuilder.add(docBranch);
     
-    final List<DocCommands> docLogs = commands == null ? Collections.emptyList() : Arrays.asList(
+    final List<DocCommands> docLogs = commands == null || commands.isEmpty() ? Collections.emptyList() : Arrays.asList(
         ImmutableDocCommands.builder()
           .id(OidUtils.gen())
           .docId(doc.getId())
@@ -174,14 +170,12 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
     
     final var commit = commitBuilder.close();
 
-    final var batch = ImmutableDocBatchForOne.builder()
-      .doc(Optional.empty())
-      .addDocBranch(docBranch)
-      .addAllDocCommands(docLogs)
-      .log(commit.getItem1().getCommitLog())
-      .addDocCommit(commit.getItem1())
-      .addAllDocCommitTree(commit.getItem2())
-      .build();
+    final var batch = commit.merge(ImmutableDocBatchForOne.builder()
+        .doc(Optional.empty())
+        .addDocBranch(docBranch)
+        .addAllDocCommands(docLogs)
+        .log("")
+        .build());
 
     return tx.insert()
     .batchMany(ImmutableDocBatchForMany.builder().addItems(batch).repo(repoId).status(BatchStatus.OK).log("").build())
@@ -193,7 +187,7 @@ public class CreateOneDocBranchImpl implements CreateOneDocBranch {
       return ImmutableOneDocEnvelope.builder()
         .repoId(repoId)
         .doc(doc)
-        .commit(batch.getDocCommit().iterator().next())
+        .commit(batch.getFirstDocCommit())
         .branch(batch.getDocBranch().iterator().next())
         .commands(batch.getDocCommands())
         .commitTree(batch.getDocCommitTree())

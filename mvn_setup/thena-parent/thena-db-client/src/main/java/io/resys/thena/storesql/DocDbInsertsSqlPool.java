@@ -24,12 +24,12 @@ package io.resys.thena.storesql;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.api.registry.DocRegistry;
 import io.resys.thena.datasource.ThenaSqlDataSource;
 import io.resys.thena.registry.doc.DocRegistrySqlImpl;
 import io.resys.thena.storesql.support.Execute;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocInserts;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
 import io.resys.thena.support.RepoAssert;
@@ -89,7 +89,9 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .insertAll(output.stream().flatMap(e -> e.getDocCommands().stream())
         .collect(Collectors.toList()));
     
-    
+    final var commitUpdate = registry.docCommits()
+        .updateAll(output.stream().flatMap(e -> e.getDocCommitsToUpdate().stream())
+        .collect(Collectors.toList()));
     
     final Uni<DocBatchForMany> docsUni1 = Execute.apply(tx, docInserts).onItem()
         .transform(row -> successOutput(many, "Doc inserted, number of new entries: " + (row == null ? 0 : row.rowCount())))
@@ -119,8 +121,12 @@ public class DocDbInsertsSqlPool implements DocInserts {
         .transform(row -> successOutput(many, "Commands saved, number of new entries: "  + (row == null ? 0 : row.rowCount())))
         .onFailure().transform(e -> failOutput(many, "Failed to save commands", e));
     
+    final Uni<DocBatchForMany> commitUpdUni = Execute.apply(tx, commitUpdate).onItem()
+        .transform(row -> successOutput(many, "Commits updated, number of updated entries: "  + (row == null ? 0 : row.rowCount())))
+        .onFailure().transform(e -> failOutput(many, "Failed to update commits", e));
     
-    return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni, commandsUni).asTuple()
+    
+    return Uni.combine().all().unis(docsUni1, docsUni2, commitUni, branchUniInsert, branchUniUpdate, logUni, commandsUni, commitUpdUni).asTuple()
         .onItem().transform(tuple -> merge(many,
                 tuple.getItem1(), 
                 tuple.getItem2(), 
@@ -128,7 +134,8 @@ public class DocDbInsertsSqlPool implements DocInserts {
                 tuple.getItem4(),
                 tuple.getItem5(),
                 tuple.getItem6(),
-                tuple.getItem7()
+                tuple.getItem7(),
+                tuple.getItem8()
         ))
         .onFailure(DocBatchManyException.class)
         .recoverWithUni((ex) -> {

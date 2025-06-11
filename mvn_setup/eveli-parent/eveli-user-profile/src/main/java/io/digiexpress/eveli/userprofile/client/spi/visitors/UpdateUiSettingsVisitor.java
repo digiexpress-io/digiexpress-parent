@@ -64,16 +64,23 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
     final var config = ctx.getConfig();
     this.command = command;
     this.updateBuilder = config.getClient().doc(config.getRepoId()).commit().modifyOneBranch()
-        .commitMessage("Update user profile ui settings: " + command.getUserId() + "/" + command.getSettingsId())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
     this.createBuilder = config.getClient().doc(config.getRepoId()).commit().createOneDoc()
-        .commitMessage("Insert user profile ui settings: " + command.getUserId() + "/" + command.getSettingsId())
+        .commitLogExcludesBranchBody()
+        .commitTreeEnabled(false)
+        .commitMessage("-")
         .commitAuthor(config.getAuthor().get());
   }
 
   @Override
   public Uni<QueryEnvelope<DocObject>> start(ThenaDocConfig config, DocObjectsQuery builder) {
-    return builder.ownerId(command.getSettingsId()).parentId(command.getUserId()).findOne();
+    return builder
+        .ownerId(command.getSettingsId())
+        .parentId(command.getUserId())
+        .findOne();
   }
 
   @Override
@@ -107,7 +114,7 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
         .parentDocId(inserted.getItem1().getUserId())
         .ownerId(inserted.getItem1().getSettingsId())
         .branchContent(JsonObject.mapFrom(inserted.getItem1()))
-        .commands(inserted.getItem2())
+        //.commands(inserted.getItem2())
         .build();
     } catch(NoChangesException e) {
       // nothing to do
@@ -131,7 +138,8 @@ public class UpdateUiSettingsVisitor implements DocObjectVisitor<Uni<UiSettings>
           .docId(updated.getItem1().getId())
           .branchName(docBranch.getBranchName())
           .replace(JsonObject.mapFrom(updated.getItem1()))
-          .commands(updated.getItem2());
+         //.commands(updated.getItem2())
+          ;
         
         return updated.getItem1();
       } catch(NoChangesException e) {

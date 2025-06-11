@@ -28,6 +28,8 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import jakarta.annotation.Nullable;
+
 @Value.Immutable @JsonSerialize(as = ImmutableUiSettings.class) @JsonDeserialize(as = ImmutableUiSettings.class)
 public interface UiSettings extends Serializable {
   String getId();
@@ -42,12 +44,14 @@ public interface UiSettings extends Serializable {
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForConfig.class) @JsonDeserialize(as = ImmutableUiSettingForConfig.class)
   interface UiSettingForConfig extends Serializable {
     String getDataId();
+    @Nullable String getLabel();
     String getValue();
   }
   
   @Value.Immutable @JsonSerialize(as = ImmutableUiSettingForVisibility.class) @JsonDeserialize(as = ImmutableUiSettingForVisibility.class)
   interface UiSettingForVisibility extends Serializable {
     String getDataId();
+    @Nullable String getLabel();
     Boolean getEnabled();
   }
 

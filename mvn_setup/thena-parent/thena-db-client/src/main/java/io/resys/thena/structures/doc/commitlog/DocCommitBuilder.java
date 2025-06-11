@@ -34,14 +34,20 @@ import io.resys.thena.api.entities.doc.DocCommitTree;
 import io.resys.thena.api.entities.doc.DocCommitTree.DocCommitTreeOperation;
 import io.resys.thena.api.entities.doc.DocEntity.DocType;
 import io.resys.thena.api.entities.doc.DocEntity.IsDocObject;
+import io.resys.thena.api.entities.doc.DocLock;
+import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.api.entities.doc.ImmutableDocCommitTree;
 import io.resys.thena.jsonpatch.JsonPatch;
+import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
+import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.support.OidUtils;
-import io.smallrye.mutiny.tuples.Tuple2;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 
@@ -55,8 +61,17 @@ public class DocCommitBuilder {
   private final String docId;
   private final Optional<String> branchId;
   private final boolean excludeBranchContentFromLog;
+  private final boolean updateCommit;
+  private boolean commitTreeEnabled = true;
+
+
   
-  public DocCommitBuilder(String tenantId, Boolean excludeBranchContentFromLog, DocCommit commit) {
+  private DocCommitBuilder(
+      String tenantId, 
+      Boolean excludeBranchContentFromLog, 
+      DocCommit commit, 
+      boolean commitTreeEnabled,
+      boolean updateCommit) {
     super();
     this.commitId = commit.getId();
     this.tenantId = tenantId;
@@ -66,6 +81,8 @@ public class DocCommitBuilder {
     this.createdAt = commit.getCreatedAt();
     this.branchId = commit.getBranchId();
     this.excludeBranchContentFromLog = Boolean.TRUE.equals(excludeBranchContentFromLog);
+    this.commitTreeEnabled = commitTreeEnabled;
+    this.updateCommit = updateCommit;
   }
   public String getTenantId() {
     return tenantId;
@@ -76,7 +93,6 @@ public class DocCommitBuilder {
   public OffsetDateTime getCreatedAt() {
     return createdAt;
   }
-  
   
   public DocCommitBuilder add(IsDocObject entity) {
     if(entity instanceof DocBranch) {
@@ -132,7 +148,6 @@ public class DocCommitBuilder {
   }
   public DocCommitBuilder merge(IsDocObject previous, IsDocObject next) {
     
-
     if(previous instanceof DocBranch) {
       final var branchPrev = (DocBranch) previous;
       final var branchNext = (DocBranch) next;
@@ -210,9 +225,27 @@ public class DocCommitBuilder {
     this.logger.remove(current);
     return this;
   }
-  public Tuple2<DocCommit, List<DocCommitTree>> close() {
-    final var commit = this.commit.commitLog(this.logger.build()).build();
-    return Tuple2.of(commit, Collections.unmodifiableList(this.trees));
+  public DocBatchForOne close() {
+    final var commit = this.commit
+          .commitLog(excludeBranchContentFromLog ? "": this.logger.build())
+          .build();
+    
+    final var builder = ImmutableDocBatchForOne.builder()
+        .doc(Optional.empty())
+        
+        .log(commit.getCommitLog());
+    
+    if(commitTreeEnabled) {
+      builder.addAllDocCommitTree(this.trees);
+    }
+    
+    if(!commitTreeEnabled && this.updateCommit) {
+      builder.addDocCommitsToUpdate(commit);
+    } else {
+      builder.addDocCommit(commit);
+    }
+    
+    return builder.build();
   }
   
   @Value.Immutable
@@ -226,4 +259,67 @@ public class DocCommitBuilder {
     }
   }
   
+  
+  @RequiredArgsConstructor
+  @Data @Accessors(fluent = true, chain = true)
+  public static class DocCommitBuilderFactory {
+    private final String tenantId;
+    private final String docId;
+    private final String parentCommitId;
+    private final DocLock docLock;
+    private final DocBranchLock branchLock;
+    
+    private Boolean excludeBranchContentFromLog;
+    private boolean commitTreeEnabled;
+    private String commitAuthor;
+    private String commitMessage;
+    private String branchId;
+    
+    public DocCommitBuilder create() {
+      
+      final String commitId;
+      final String parentCommit;
+      final boolean updateCommit;
+      // commit tree is disabled, keep only first and last commit
+      if(!commitTreeEnabled && docLock != null) {
+        commitId = docLock.getCommit().get().getId();
+        parentCommit = docLock.getCommit().get().getParent().orElse(null);
+        updateCommit = true;
+      } else if(!commitTreeEnabled && branchLock != null) {
+        commitId = branchLock.getCommit().get().getId();
+        parentCommit = branchLock.getCommit().get().getParent().orElse(null);;
+        updateCommit = true;
+      } else {
+        commitId = OidUtils.gen();
+        parentCommit = parentCommitId;
+        updateCommit = false;
+      }
+      
+      return new DocCommitBuilder(tenantId, excludeBranchContentFromLog, ImmutableDocCommit.builder()
+          .id(commitId)
+          .docId(docId)
+          .branchId(Optional.ofNullable(branchId))
+          .createdAt(OffsetDateTime.now())
+          .commitAuthor(commitAuthor)
+          .commitMessage(commitMessage)
+          .parent(Optional.ofNullable(parentCommit))
+          .commitLog("")
+          .build(), 
+          commitTreeEnabled,
+          updateCommit
+        );
+    }
+  }
+  public static DocCommitBuilderFactory from(String tenantId, DocLock lock) {
+    return new DocCommitBuilderFactory(tenantId, lock.getDoc().get().getId(), lock.getDoc().get().getCommitId(), lock, null);
+  }
+  
+  public static DocCommitBuilderFactory from(String tenantId, DocBranchLock lock) {
+    final var doc = lock.getDoc().get();
+    return new DocCommitBuilderFactory(tenantId, doc.getId(), lock.getCommit().get().getId(), null, lock);
+  }
+  
+  public static DocCommitBuilderFactory from(String tenantId, String docId) {
+    return new DocCommitBuilderFactory(tenantId, docId, null, null, null);
+  }
 }

@@ -25,7 +25,7 @@ export function useSite() {
     return createTopicGroups(topics, itemsInColumn);
   }
 
-  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply };
+  return { getTopicGroups, getLink, site, views, feedback, topics, voteOnReply, pending: result.pending };
 }
 
 

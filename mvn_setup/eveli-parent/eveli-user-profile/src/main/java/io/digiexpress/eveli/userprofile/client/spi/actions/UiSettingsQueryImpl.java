@@ -21,12 +21,21 @@ package io.digiexpress.eveli.userprofile.client.spi.actions;
  */
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient.UiSettingsQuery;
 import io.digiexpress.eveli.userprofile.client.api.model.UiSettings;
 import io.digiexpress.eveli.userprofile.client.spi.UserProfileStore;
+import io.digiexpress.eveli.userprofile.client.spi.support.DataConstants;
 import io.digiexpress.eveli.userprofile.client.spi.visitors.FindAllUserUiSettingsVisitor;
 import io.digiexpress.eveli.userprofile.client.spi.visitors.GetUserUiSettingsVisitor;
+import io.resys.thena.api.entities.doc.Doc;
+import io.resys.thena.api.entities.doc.DocBranch;
+import io.resys.thena.api.entities.doc.DocCommands;
+import io.resys.thena.api.entities.doc.DocCommit;
+import io.resys.thena.api.entities.doc.DocCommitTree;
+import io.resys.thena.api.envelope.DocContainer.DocObject;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 
@@ -43,6 +52,39 @@ public class UiSettingsQueryImpl implements UiSettingsQuery {
   @Override
   public Uni<UiSettings> get(String profileId, String settingsId) {
     return ctx.getConfig().accept(new GetUserUiSettingsVisitor(profileId, settingsId));
+  }
+
+  @Override
+  public Uni<Optional<UiSettings>> findOne(String profileId, String settingsId) {
+    final var config = ctx.getConfig();
+    
+    return config.getClient()
+      .doc(config.getRepoId())
+      .find().docQuery()
+      .docType(DataConstants.DOC_TYPE_USER_PROFILE_SETTINGS)
+      .parentId(profileId)
+      .ownerId(settingsId)
+      .findOne()
+      .onItem().transform(envelope -> {
+        
+        if(envelope.getObjects() == null) {
+          return Optional.<UiSettings>empty();
+        }
+        
+        final DocObject ref = envelope.getObjects();
+        
+        final List<UiSettings> mapped = ref.accept((
+            Doc doc, 
+            DocBranch docBranch, 
+            Map<String, DocCommit> commit, 
+            List<DocCommands> commands,
+            List<DocCommitTree> trees
+        ) -> GetUserUiSettingsVisitor.mapToUiSettings(docBranch));
+        
+        
+        return Optional.of(mapped.iterator().next());
+
+      });
   }
 
 }

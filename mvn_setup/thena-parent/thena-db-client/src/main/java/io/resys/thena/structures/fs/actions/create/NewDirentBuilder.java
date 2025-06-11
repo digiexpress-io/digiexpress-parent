@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import io.resys.thena.api.entities.fs.FsDirent.DirentType;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.fs.ImmutableFsDirent;
 import io.resys.thena.api.entities.fs.ImmutableFsDirentContainer;
 import io.resys.thena.api.entities.fs.ImmutableFsDirentData;
@@ -40,7 +41,6 @@ import io.resys.thena.api.entities.fs.ThenaFsNewObject.NewDirentAssignment;
 import io.resys.thena.api.entities.fs.ThenaFsNewObject.NewDirentLabel;
 import io.resys.thena.api.entities.fs.ThenaFsNewObject.NewDirentLink;
 import io.resys.thena.api.entities.fs.ThenaFsNewObject.NewDirentRemark;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.fs.ImmutableFsBatchDirents;
 import io.resys.thena.structures.fs.actions.commitlog.FsCommitBuilder;
 import io.resys.thena.support.OidUtils;

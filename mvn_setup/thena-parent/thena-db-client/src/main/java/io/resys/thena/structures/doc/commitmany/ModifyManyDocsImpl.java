@@ -31,12 +31,12 @@ import io.resys.thena.api.actions.DocCommitActions.AddItemToModifyDoc;
 import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocs;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocQueries.DocLockCriteria;
 import io.resys.thena.structures.doc.DocState;
 import io.resys.thena.structures.doc.ImmutableDocBatchForMany;
@@ -58,6 +58,8 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
   private final String repoId;
   private String author;
   private String message;
+  private boolean commitTreeEnabled = true;
+  private Boolean excludeBranchContentFromLog;
   
   private final List<ItemModData> items = new ArrayList<ItemModData>();
   private AddItemToModifyDoc lastItem;
@@ -79,6 +81,9 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
   
   @Override public ModifyManyDocsImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "author can't be empty!"); return this; }
   @Override public ModifyManyDocsImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "message can't be empty!"); return this; }
+  @Override public ModifyManyDocsImpl commitTreeEnabled(boolean commitTreeEnabled) { this.commitTreeEnabled = commitTreeEnabled; return this; }
+  @Override public ModifyManyDocsImpl commitLogExcludesBranchBody() { excludeBranchContentFromLog = Boolean.TRUE; return this; }
+  
   @Override public AddItemToModifyDoc item() {
     final var parent = this;
     final var item = ItemModData.builder();
@@ -151,7 +156,7 @@ public class ModifyManyDocsImpl implements ModifyManyDocs {
           many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
         }
         
-        final var batch = new BatchForOneDocModify(lock, tx, author, message)
+        final var batch = new BatchForOneDocModify(lock, tx, author, message, excludeBranchContentFromLog, commitTreeEnabled)
           .meta(item.getMeta())
           .remove(item.getRemove() == null ? false : item.getRemove())
           .commands(item.getCommands())

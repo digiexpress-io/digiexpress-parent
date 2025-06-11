@@ -22,7 +22,6 @@ import io.resys.thena.spi.DbState;
 import io.resys.thena.storesql.DbStateSqlImpl;
 import io.resys.thena.structures.fs.FsPrinter;
 import io.resys.thena.structures.git.GitPrinter;
-import io.resys.thena.structures.grim.GrimPrinter;
 import io.resys.thena.support.DocDbPrinter;
 import io.resys.thena.support.OrgDbPrinter;
 import io.vertx.core.json.JsonObject;
@@ -60,6 +59,7 @@ public class DbTestTemplate {
   private ThenaClient client;
   @Inject io.vertx.mutiny.pgclient.PgPool pgPool;
   @Inject io.vertx.mutiny.core.Vertx vertx;
+  protected static Duration atMost = Duration.ofMinutes(1);
   
   private static AtomicInteger index = new AtomicInteger(1);
   private BiConsumer<ThenaClient, Tenant> callback;
@@ -80,11 +80,11 @@ public class DbTestTemplate {
   	}
   	
   	final var connectOptions = new PgConnectOptions()
-  			.setDatabase("debug_task_db")
+  			.setDatabase("eveli-app")
         .setHost("localhost")
-        .setPort(5432)
-        .setUser("postgres")
-        .setPassword("postgres");
+        .setPort(5433)
+        .setUser("eveli-app")
+        .setPassword("password123");
     final var poolOptions = new PoolOptions().setMaxSize(6);
     this.pgPool = io.vertx.mutiny.pgclient.PgPool.pool(vertx, connectOptions, poolOptions);
   }
@@ -141,8 +141,7 @@ public class DbTestTemplate {
       log.debug(result);
       
     } else if(repo.getType() == StructureType.grim) {
-      final String result = new GrimPrinter(createState()).print(repo);
-      log.debug(result);
+
     } else if(repo.getType() == StructureType.fs) {
       final String result = new FsPrinter(createState()).print(repo);
       log.debug(result);
@@ -183,7 +182,7 @@ public class DbTestTemplate {
     } else if(client.getType() == StructureType.org) {
       return new OrgDbPrinter(createState()).printWithStaticIds(client, replacements);
     } else if(client.getType() == StructureType.grim) {
-      return new GrimPrinter(createState()).printWithStaticIds(client, replacements);
+
     } else if(client.getType() == StructureType.fs) {
       return new FsPrinter(createState()).printWithStaticIds(client, replacements);
     }

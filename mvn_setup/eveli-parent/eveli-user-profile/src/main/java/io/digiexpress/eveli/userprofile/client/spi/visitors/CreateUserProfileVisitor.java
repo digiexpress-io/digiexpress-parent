@@ -50,7 +50,9 @@ public class CreateUserProfileVisitor implements ThenaDocConfig.DocCreateVisitor
   public CreateManyDocs start(ThenaDocConfig config, CreateManyDocs builder) {
     builder
       .commitAuthor(config.getAuthor().get())
-      .commitMessage("creating user profile");
+      .commitLogExcludesBranchBody()
+      .commitTreeEnabled(false)
+      .commitMessage("-");
     
     for(final var command : commands) {
       try {

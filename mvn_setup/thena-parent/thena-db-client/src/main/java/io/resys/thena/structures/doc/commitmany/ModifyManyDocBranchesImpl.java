@@ -30,12 +30,12 @@ import io.resys.thena.api.actions.DocCommitActions.ManyDocsEnvelope;
 import io.resys.thena.api.actions.DocCommitActions.ModifyManyDocBranches;
 import io.resys.thena.api.actions.GitCommitActions.JsonObjectMerge;
 import io.resys.thena.api.actions.ImmutableManyDocsEnvelope;
+import io.resys.thena.api.entities.BatchStatus;
 import io.resys.thena.api.entities.CommitResultStatus;
 import io.resys.thena.api.entities.doc.DocLock.DocBranchLock;
 import io.resys.thena.api.envelope.ImmutableMessage;
 import io.resys.thena.spi.DbState;
 import io.resys.thena.spi.ImmutableTxScope;
-import io.resys.thena.structures.BatchStatus;
 import io.resys.thena.structures.doc.DocQueries.DocBranchLockCriteria;
 import io.resys.thena.structures.doc.actions.DocObjectsQueryImpl;
 import io.resys.thena.structures.doc.DocState;
@@ -62,6 +62,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
   private String message;
   private AddItemToModifyDocBranch lastItem;
   private Boolean excludeBranchContentFromLog;
+  private boolean commitTreeEnabled = true;
   
   @Data @Builder
   private static class ItemModData {
@@ -85,6 +86,8 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
   @Override public int getItemsAdded() { return items.size();}
   @Override public ModifyManyDocBranchesImpl commitAuthor(String author) { this.author = RepoAssert.notEmpty(author, () -> "commitAuthor can't be empty!"); return this; }
   @Override public ModifyManyDocBranchesImpl commitMessage(String message) { this.message = RepoAssert.notEmpty(message, () -> "commitMessage can't be empty!"); return this; }
+  @Override public ModifyManyDocBranchesImpl commitTreeEnabled(boolean commitTreeEnabled) { this.commitTreeEnabled = commitTreeEnabled; return this; }
+  
   @Override public AddItemToModifyDocBranch item() {
     final var parent = this;
     final var item = ItemModData.builder().branchName(branchName);
@@ -214,7 +217,7 @@ public class ModifyManyDocBranchesImpl implements ModifyManyDocBranches {
         many.status(BatchStatus.ERROR).addAllMessages(valid.getMessages());
       }
       
-      final var batch = new BatchForOneBranchModify(lock, tx, author, message, excludeBranchContentFromLog)
+      final var batch = new BatchForOneBranchModify(lock, tx, author, message, excludeBranchContentFromLog, commitTreeEnabled)
         .replace(item.getReplace())
         .merge(item.getMerge())
         .commands(item.getCommands())

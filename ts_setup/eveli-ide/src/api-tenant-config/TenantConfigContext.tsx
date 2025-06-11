@@ -39,9 +39,7 @@ export const TenantConfigContext = createContext<TenantConfig>(INITIAL_CONFIG);
 const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children, features: _features, gamutThemeOptions }) => {
   const {tenantConfig, pending} = useFetch('worker/rest/api/tenant-configs.GET', {}); 
   const profile = useFetch('worker/rest/api/userprofiles/$profileId.GET', {}); 
-
   const [userTenantConfig, setUserTenantConfig] = React.useState<TenantFeature[]>();
-  
   
   const contextValue: TenantConfig = React.useMemo(() => {
     if(pending) {
@@ -50,7 +48,6 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
 
     const mergedTheme = gamutThemeOptions ?? GThemeOptions;
     const features = Array.from(new Set([ ...(tenantConfig?.features ?? []), ...(_features ?? []), ...(userTenantConfig ?? []) ]));
-    console.log('Tenant features', features);
 
     return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features })
   }, [tenantConfig, pending, userTenantConfig]);
@@ -76,6 +73,9 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
       });
 
   }, [pending, contextValue, userTenantConfig]);
+
+
+
   return (
     <TenantConfigContext.Provider value={contextValue}>
       {!pending && children}

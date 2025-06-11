@@ -86,7 +86,6 @@ public class GetUserUiSettingsVisitor implements DocObjectVisitor<UiSettings>{
   }
 
   public static UiSettings mapToUiSettings(DocBranch docBranch) {
-    return docBranch.getValue()
-      .mapTo(ImmutableUiSettings.class);
+    return docBranch.getValue().mapTo(ImmutableUiSettings.class);
   }
 }

@@ -31,7 +31,6 @@ import io.resys.thena.api.entities.doc.DocCommands;
 import io.resys.thena.api.entities.doc.ImmutableDoc;
 import io.resys.thena.api.entities.doc.ImmutableDocBranch;
 import io.resys.thena.api.entities.doc.ImmutableDocCommands;
-import io.resys.thena.api.entities.doc.ImmutableDocCommit;
 import io.resys.thena.structures.doc.DocInserts.DocBatchForOne;
 import io.resys.thena.structures.doc.ImmutableDocBatchForOne;
 import io.resys.thena.structures.doc.commitlog.DocCommitBuilder;
@@ -52,6 +51,7 @@ public class BatchForOneDocCreate {
   private final String author;
   private final String message;
   private final Boolean excludeBranchContentFromLog;
+  private final boolean commitTreeEnabled;
   
   private String docType;
   private String docDescription;
@@ -80,17 +80,16 @@ public class BatchForOneDocCreate {
     // fallbacks: json.id ?? this.docId ?? generate doc id
     final var docId = Optional.ofNullable(this.docId).orElseGet(() -> Optional.ofNullable(branchContent.getString("id")).orElse(OidUtils.gen()));
     final var branchId = OidUtils.gen();
-    final var now = OffsetDateTime.now();
-    final var commitBuilder = new DocCommitBuilder(repoId, excludeBranchContentFromLog, ImmutableDocCommit.builder()
-        .id(OidUtils.gen())
-        .docId(docId)
-        .branchId(branchId)
-        .createdAt(now)
-        .commitAuthor(this.author)
+    final var now = OffsetDateTime.now();    
+    
+    final var commitBuilder = DocCommitBuilder.from(repoId, docId)
+        .excludeBranchContentFromLog(excludeBranchContentFromLog)
+        .commitTreeEnabled(commitTreeEnabled)
         .commitMessage(this.message)
-        .parent(Optional.empty())
-        .commitLog("")
-        .build());
+        .commitAuthor(this.author)
+        .branchId(branchId)
+        .create();
+    
     
     final var doc = ImmutableDoc.builder()
         .id(docId)
@@ -125,7 +124,7 @@ public class BatchForOneDocCreate {
       .build();
     commitBuilder.add(docBranch);
     
-    final List<DocCommands> docLogs = commands == null ? Collections.emptyList() : Arrays.asList(
+    final List<DocCommands> docLogs = commands == null || commands.isEmpty() ? Collections.emptyList() : Arrays.asList(
         ImmutableDocCommands.builder()
           .id(OidUtils.gen())
           .docId(doc.getId())
@@ -139,14 +138,12 @@ public class BatchForOneDocCreate {
     docLogs.forEach(command -> commitBuilder.add(command));
 
     final var commit = commitBuilder.close();
-    final var batch = ImmutableDocBatchForOne.builder()
-      .doc(doc)
-      .addDocBranch(docBranch)
-      .addDocCommit(commit.getItem1())
-      .addAllDocCommitTree(commit.getItem2())
-      .addAllDocCommands(docLogs)
-      .log(commit.getItem1().getCommitLog())
-      .build();
+    final var batch = commit.merge(ImmutableDocBatchForOne.builder()
+        .doc(doc)
+        .log("")
+        .addDocBranch(docBranch)
+        .addAllDocCommands(docLogs)
+        .build());
     return batch;
   }
 }

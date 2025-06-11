@@ -209,7 +209,7 @@ export const PublicationsTable: React.FC = () => {
         <WithTableStyles
           columns={columns}
           data={assetReleases || []}
-          options={{ initialPageSize: 30 }}
+          options={{ initialPageSize: 30, tableId: 'publications' }}
         />
       </Box>
       <NewPublicationDialog open={newDialogOpen} setOpen={setNewDialogOpen} onSubmit={refreshAssetReleases} />
