@@ -3,6 +3,7 @@ export const sv = {
   'booleanValue.true': 'Ja',
   'booleanValue.false': 'Inga',
   'eveli.textSeparatorColon': ':',
+  'eveli.noValueIndicator': '--',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'Du har inte rätt åtkomsträttigheter för att använda denna applikation.',
   'eveli.permissions.none.desc2': 'Kontakta din systemadministratör.',

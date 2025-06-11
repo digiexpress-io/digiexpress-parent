@@ -79,7 +79,8 @@ export declare namespace PrefsApi {
     'ChangeUserDetailsLastName' |
     'ChangeUserDetailsEmail' |
     'ChangeNotificationSetting' |
-    'ArchiveUserProfile';
+    'ArchiveUserProfile' |
+    'ChangeTenantFeatures';
 
   export interface UserProfileUpdateCommand<T extends UserProfileCommandType> extends UserProfileCommand {
     commandType: T;
@@ -122,8 +123,15 @@ export declare namespace PrefsApi {
 
   export interface ChangeNotificationSetting extends UserProfileUpdateCommand<'ChangeNotificationSetting'> {
     commandType: 'ChangeNotificationSetting';
-    type: NotificationType;
-    enabled: boolean;
+    notificationSettings: {     
+      type: NotificationType;
+      enabled: boolean;
+    }[];
+  }
+
+  export interface ChangeTenantFeatures extends UserProfileUpdateCommand<'ChangeTenantFeatures'> {
+    commandType: 'ChangeTenantFeatures';
+    tenantFeatures: string[];
   }
 
   export interface ArchiveUserProfile extends UserProfileUpdateCommand<'ArchiveUserProfile'> {

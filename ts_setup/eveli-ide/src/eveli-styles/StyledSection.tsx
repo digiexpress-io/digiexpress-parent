@@ -48,7 +48,7 @@ export const Section: React.FC<SectionProps> = (props) => {
 
 
 
-export const SectionRow: React.FC<{ label: React.ReactNode, value: string | number | undefined }> = ({ label, value }) => {
+export const SectionRow: React.FC<{ label: React.ReactNode, value: any }> = ({ label, value }) => {
 
   return (
     <Grid container>

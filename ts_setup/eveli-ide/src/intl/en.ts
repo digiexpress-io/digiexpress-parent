@@ -3,6 +3,7 @@ export const en = {
   'booleanValue.true': 'Yes',
   'booleanValue.false': 'No',
   'eveli.textSeparatorColon': ':',
+  'eveli.noValueIndicator': '--',
   'eveli.permissions.none.title': 'Oops!',
   'eveli.permissions.none.desc1': 'You don\'t have the correct access rights to use this application.',
   'eveli.permissions.none.desc2': 'Please contact your system administrator.',
@@ -946,5 +947,18 @@ export const en = {
   'eveli.userProfile.userRoles': 'My roles',
   'eveli.userProfile.editDetails': 'Edit personal details',
   'eveli.userProfile.currentDetails': 'My current details',
-  'eveli.userProfile.userActivity': 'Recent activity'
+  'eveli.userProfile.userActivity': 'Recent activity',
+  'eveli.userProfile.tenantConfig.select.LOGIN_BUTTON': 'Login button',
+  'eveli.userProfile.tenantConfig.select.STENCIL_ENABLED': 'Stencil enabled',
+  'eveli.userProfile.tenantConfig.select.WRENCH_ENABLED': 'Wrench enabled',
+  'eveli.userProfile.tenantConfig.select.PUBLICATION_UPDATE': 'Publication update',
+  'eveli.userProfile.tenantConfig.select.STENCIL_LOCALE_FILTER': 'Stencil locale filter',
+  'eveli.userProfile.tenantConfig.select.DIALOB_ENABLED': 'Dialob enabled',
+  'eveli.userProfile.tenantConfig.select.WRENCH_RELEASES': 'Wrench releases',
+  'eveli.userProfile.tenantConfig.select.STENCIL_RELEASES': 'Stencil releases',
+  'eveli.userProfile.tenantConfig.select.FORM_REVIEW_FLASHY': 'Form review flashy',
+  'eveli.userProfile.tenantConfig.select.FORM_REVIEW_NORMAL': 'Form review normal',
+  'eveli.userProfile.tenantConfig.select.QUEUES_ENABLED': 'Queues enabled',
+  'eveli.userProfile.tenantConfig.select.FEEDBACK_ENABLED': 'Feedback enabled',
+  'eveli.userProfile.tenantConfig.select.SMART_TABLES': 'Smart tables'
 }
