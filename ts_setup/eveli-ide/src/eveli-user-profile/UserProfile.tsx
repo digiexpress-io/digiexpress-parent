@@ -7,12 +7,11 @@ import { FormattedMessage } from 'react-intl';
 import { DateTime } from 'luxon';
 
 import { UserAvatar } from './UserAvatar';
-import { FirstName, LastName, EmailAddress, NotificationSettings } from './UserProfileEditFields';
+import { FirstName, LastName, NotificationSettings } from './UserProfileEditFields';
 import { SectionRow } from '@/eveli-styles';
 import { PrefsApi } from '@/api-prefs';
 import { useFetch } from '@dxs-ts/eveli-fetch';
 import { EveliUserOverviewDetail, EveliUserProfileRoot, EveliUserProfileHeader, useUtilityClasses } from './useUtilityClasses';
-import { UserActivity } from './UserActivity';
 
 
 const formatFinnishDate = (isoString: string) =>
@@ -56,10 +55,10 @@ export const UserProfile: React.FC<{}> = () => {
             </div>
             <Divider className={classes.divider} />
 
-
             <div style={{ marginTop: 10 }}>
               <SectionRow label={<FormattedMessage id='eveli.userProfile.id' />} value={state.id} />
-              <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={displayName} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={state.details.username} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.email' />} value={state.details.email} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(state.created)} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(state.updated)} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value='TODO' />
@@ -78,7 +77,6 @@ export const UserProfile: React.FC<{}> = () => {
 
             <FirstName init={state} />
             <LastName init={state} />
-            <EmailAddress init={state} />
           </EveliUserOverviewDetail>
         </Grid2>
 
@@ -94,18 +92,6 @@ export const UserProfile: React.FC<{}> = () => {
           </EveliUserOverviewDetail>
         </Grid2>
 
-        <Grid2 size={{ md: 12, lg: 12, xl: 12 }}>
-          <EveliUserOverviewDetail>
-            <div className={classes.sectionTitle}>
-              <NotificationsIcon />
-              <Typography><FormattedMessage id='eveli.userProfile.userActivity' /></Typography>
-            </div>
-            <Divider className={classes.divider} />
-
-            <UserActivity />
-          </EveliUserOverviewDetail>
-        </Grid2>
-
       </Grid2>
     </EveliUserProfileRoot>
 
@@ -113,13 +99,3 @@ export const UserProfile: React.FC<{}> = () => {
   );
 }
 
-/*
-
-const UserProfileHeader: React.FC<{ state: PrefsApi.UserProfile }> = ({ state }) => {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
-      <Typography variant='h1'><FormattedMessage id='eveli.userProfile.title' /></Typography><UserAvatar user={state} />
-    </div>)
-} 
-
-*/

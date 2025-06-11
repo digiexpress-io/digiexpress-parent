@@ -37,7 +37,7 @@ export const EveliUserProfileRoot = styled('div', {
 })(({ theme }) => {
 
   return {
-    display: 'flex',
+
     '& .EveliUserProfile-divider': {
       marginBottom: theme.spacing(3)
     },
@@ -52,9 +52,7 @@ export const EveliUserProfileRoot = styled('div', {
         color: theme.palette.primary.main,
         marginRight: theme.spacing(1)
       }
-    },
-
-
+    }
   };
 });
 
@@ -71,7 +69,6 @@ export const EveliUserOverviewDetail = styled(Box, {
 
   return {
     padding: theme.spacing(2),
-    height: '100%',
 
   };
 });
