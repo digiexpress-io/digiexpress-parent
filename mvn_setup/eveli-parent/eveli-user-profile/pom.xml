@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.digiexpress</groupId>
     <artifactId>eveli-parent</artifactId>
-    <version>0.y-SNAPSHOT</version>
+    <version>5.1.78</version>
   </parent>
   <packaging>jar</packaging>
   <artifactId>eveli-user-profile</artifactId>
