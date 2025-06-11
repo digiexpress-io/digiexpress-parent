@@ -20,19 +20,10 @@ function useBackend() {
 const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   const intl = useIntl();
   const backend = useBackend();
-  const [firstName, setFirstName] = React.useState(init.details.lastName);
-  const disabled = firstName === init.details.firstName;
-
-  React.useEffect(() => {
-    setFirstName(init.details.firstName);
-  }, [init.details.firstName]);
+  const [firstName, setFirstName] = React.useState(init.details.firstName);
 
   function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setFirstName(event.target.value);
-  }
-
-  function handleReset() {
-    setFirstName(init.details.firstName);
   }
 
   async function handleChange() {
@@ -44,7 +35,6 @@ const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
     await backend.updateUserProfile([command]);
   }
 
-
   return (
     <Box display='flex' alignItems='center' justifyContent='space-between'>
       <TextField variant='outlined' sx={{ width: '70%' }}
@@ -52,28 +42,21 @@ const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
         value={firstName}
         onChange={handleFirstNameChange}
       />
-      <div style={{ display: 'flex', gap: 4 }}>
-        <Button disabled={disabled} variant='outlined' onClick={handleReset}>{intl.formatMessage({ id: 'buttons.reset' })}</Button>
-        <Button disabled={disabled} onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
-      </div>
+      <Button onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
     </Box>
 
   );
 }
 
-
 const LastName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   const intl = useIntl();
   const backend = useBackend();
   const [lastName, setLastName] = React.useState(init.details.lastName);
-  const disabled = lastName === init.details.lastName;
 
   function handleLastNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setLastName(event.target.value);
   }
-  function handleReset() {
-    setLastName(init.details.lastName);
-  }
+
 
   async function handleChange() {
     const command: PrefsApi.ChangeUserDetailsLastName = {
@@ -91,11 +74,10 @@ const LastName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
         label={intl.formatMessage({ id: 'eveli.userProfile.lastName' })}
         value={lastName}
         onChange={handleLastNameChange}
+        onBlur={handleChange}
       />
-      <div style={{ display: 'flex', gap: 4 }}>
-        <Button disabled={disabled} variant='outlined' onClick={handleReset}>{intl.formatMessage({ id: 'buttons.reset' })}</Button>
-        <Button disabled={disabled} onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
-      </div>
+      <Button onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
+
     </Box>
   );
 }
@@ -141,48 +123,48 @@ const NotificationSettings: React.FC<{}> = () => {
 
   return (
     <Stack direction='column' spacing={2}>
-      <FormControl component="fieldset" variant="standard">
-        <Typography variant='body1' fontWeight='500'>Channel</Typography>
-        <Box sx={{ p: 1, alignItems: 'center' }}>
-          <FormGroup>
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.a} onChange={handleChange} name="a" />}
-              label={<Typography variant="subtitle2">Receive email messages for new events</Typography>}
-            />
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.b} onChange={handleChange} name="b" />}
-              label={<Typography variant="subtitle2">Receive system notifications for new events</Typography>}
-            />
-          </FormGroup>
-        </Box>
-      </FormControl>
+    <FormControl component="fieldset" variant="standard">
+      <Typography variant='body1' fontWeight='500'>Channel</Typography>
+      <Box sx={{ p: 1, alignItems: 'center' }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.a} onChange={handleChange} name="a" />}
+            label={<Typography variant="subtitle2">Receive email messages for new events</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.b} onChange={handleChange} name="b" />}
+            label={<Typography variant="subtitle2">Receive system notifications for new events</Typography>}
+          />
+        </FormGroup>
+      </Box>
+    </FormControl>
 
-      <FormControl component="fieldset" variant="standard">
-        <Typography fontWeight='500'>Notification types</Typography>
+    <FormControl component="fieldset" variant="standard">
+      <Typography fontWeight='500'>Notification types</Typography>
 
-        <Box sx={{ p: 1 }}>
-          <FormGroup>
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
-              label={<Typography variant="subtitle2">When a new task is assigned to me</Typography>}
-            />
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
-              label={<Typography variant="subtitle2">When a new comment is assigned to me</Typography>}
-            />
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.jason} onChange={handleChange} name="jason" />}
-              label={<Typography variant="subtitle2">When a task has become overdue</Typography>}
-            />
-            <FormControlLabel
-              control={<StyledNotificationSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
-              label={<Typography variant="subtitle2">When a new message from a customer has arrived</Typography>}
-            />
+      <Box sx={{ p: 1 }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.gilad} onChange={handleChange} name="gilad" />}
+            label={<Typography variant="subtitle2">When a new task is assigned to me</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.juliet} onChange={handleChange} name="juliet" />}
+            label={<Typography variant="subtitle2">When a new comment is assigned to me</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.jason} onChange={handleChange} name="jason" />}
+            label={<Typography variant="subtitle2">When a task has become overdue</Typography>}
+          />
+          <FormControlLabel
+            control={<StyledNotificationSwitch checked={state.antoine} onChange={handleChange} name="antoine" />}
+            label={<Typography variant="subtitle2">When a new message from a customer has arrived</Typography>}
+          />
 
-          </FormGroup>
-        </Box>
-      </FormControl>
-    </Stack>)
+        </FormGroup>
+      </Box>
+    </FormControl>
+  </Stack>)
 }
 
 

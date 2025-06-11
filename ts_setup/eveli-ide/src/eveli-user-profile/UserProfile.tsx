@@ -30,8 +30,6 @@ export const UserProfile: React.FC<{}> = () => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const userRoles = user.roles.length ? user.roles.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
   const userPermissions = user.permissions.length ? user.permissions.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
-
-
   const classes = useUtilityClasses();
 
   React.useEffect(() => {
@@ -40,9 +38,8 @@ export const UserProfile: React.FC<{}> = () => {
       setState(userProfile);
       setLoading(false);
     });
-  }, []);
+  }, [restApi]);
 
-  console.log(user)
 
   if (loading || !state) {
     return <CircularProgress />;
@@ -67,6 +64,7 @@ export const UserProfile: React.FC<{}> = () => {
             <div style={{ marginTop: 10 }}>
               <SectionRow label={<FormattedMessage id='eveli.userProfile.id' />} value={state.id} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={state.details.username} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.firstAndLastName' />} value={state.details.firstName + " " + state.details.lastName} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.email' />} value={state.details.email} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(state.created)} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(state.updated)} />
@@ -122,4 +120,5 @@ export const UserProfile: React.FC<{}> = () => {
   </>
   );
 }
+
 
