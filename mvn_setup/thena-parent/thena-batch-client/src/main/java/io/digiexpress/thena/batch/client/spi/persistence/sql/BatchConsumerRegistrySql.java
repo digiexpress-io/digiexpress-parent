@@ -21,6 +21,7 @@ package io.digiexpress.thena.batch.client.spi.persistence.sql;
  */
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -122,7 +123,7 @@ public class BatchConsumerRegistrySql implements BatchConsumerRegistry {
   public ThenaSqlClient.SqlTupleList updateMany(List<BatchConsumer> users) {
     return ImmutableSqlTupleList.builder()
         .value(new SqlStatement()
-        .append("UPDATE ").append(options.getBatches())
+        .append("UPDATE ").append(options.getBatchConsumers())
         .append(" SET consumer_qualified_java_name = $1, consumer_status = $2, batch_name = $3, consumer_updated_at = $4, consumer_updated_by = $5, consumer_comment = $6")
         .append(" WHERE id = $7")
         .build())
@@ -169,8 +170,10 @@ public class BatchConsumerRegistrySql implements BatchConsumerRegistry {
         .append("  consumer_qualified_java_name TEXT NOT NULL,").ln()
         .append("  consumer_comment             TEXT NOT NULL,").ln()
         .append("  consumer_status              VARCHAR(100) NOT NULL,").ln()
+        
         .append("  consumer_created_at          TIMESTAMP WITH TIME ZONE NOT NULL,").ln()
         .append("  consumer_created_by          TEXT NOT NULL,").ln()
+        
         .append("  consumer_updated_at          TIMESTAMP WITH TIME ZONE,").ln()
         .append("  consumer_updated_by          TEXT,").ln()
         
@@ -224,14 +227,17 @@ public class BatchConsumerRegistrySql implements BatchConsumerRegistry {
         .appId(row.getString("app_id"))
         
         .consumerName(row.getString("consumer_name"))
-        .qualifiedJavaName(row.getString("qualified_java_name"))
+        .qualifiedJavaName(row.getString("consumer_qualified_java_name"))
 
         .status(BatchStatus.valueOf(row.getString("consumer_status")))
-        .comment(row.getString("comment"))
+        .comment(row.getString("consumer_comment"))
         
         .batchName(row.getString("batch_name"))
-        .createdAt(row.getOffsetDateTime("created_at"))
-        .updatedAt(row.getOffsetDateTime("updated_at"))
+        .createdBy(row.getString("consumer_created_by"))
+        .createdAt(row.getOffsetDateTime("consumer_created_at"))
+        
+        .updatedBy(Optional.ofNullable(row.getString("consumer_updated_by")))
+        .updatedAt(Optional.ofNullable(row.getOffsetDateTime("consumer_updated_at")))
         
         .build();
   }
