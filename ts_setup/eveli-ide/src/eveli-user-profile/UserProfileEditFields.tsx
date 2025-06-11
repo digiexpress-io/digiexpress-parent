@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, FormControl, FormControlLabel, FormGroup, Typography, Stack, Box } from '@mui/material';
+import { TextField, FormControl, FormControlLabel, FormGroup, Typography, Stack, Box, Button } from '@mui/material';
 
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
@@ -18,7 +18,6 @@ function useBackend() {
 
 
 const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
-
   const intl = useIntl();
   const backend = useBackend();
   const [firstName, setFirstName] = React.useState(init.details.firstName);
@@ -36,18 +35,22 @@ const FirstName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
     await backend.updateUserProfile([command]);
   }
 
-  return (<TextField variant='outlined'
-    fullWidth
-    label={intl.formatMessage({ id: 'eveli.userProfile.firstName' })}
-    value={firstName}
-    onChange={handleFirstNameChange}
-    onBlur={handleChange}
-  />);
+  return (
+    <Box display='flex' alignItems='center' justifyContent='space-between'>
+      <TextField variant='outlined' sx={{ width: '70%' }}
+        label={intl.formatMessage({ id: 'eveli.userProfile.firstName' })}
+        value={firstName}
+        onChange={handleFirstNameChange}
+      />
+      <Button onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
+    </Box>
+
+  );
 }
 
 const LastName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
-
   const intl = useIntl();
+  const backend = useBackend();
   const [lastName, setLastName] = React.useState(init.details.lastName);
 
   function handleLastNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -55,14 +58,28 @@ const LastName: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
   }
 
 
-  return (<TextField variant='outlined'
+  async function handleChange() {
+    const command: PrefsApi.ChangeUserDetailsLastName = {
+      commandType: 'ChangeUserDetailsLastName',
+      id: init.id,
+      lastName
+    };
+    await backend.updateUserProfile([command]);
+  }
 
-    label={intl.formatMessage({ id: 'eveli.userProfile.lastName' })}
-    fullWidth
-    value={lastName}
-    onChange={handleLastNameChange}
-    onBlur={() => { }}
-  />);
+
+  return (
+    <Box display='flex' alignItems='center' justifyContent='space-between'>
+      <TextField variant='outlined' sx={{ width: '70%' }}
+        label={intl.formatMessage({ id: 'eveli.userProfile.lastName' })}
+        value={lastName}
+        onChange={handleLastNameChange}
+        onBlur={handleChange}
+      />
+      <Button onClick={handleChange}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
+
+    </Box>
+  );
 }
 
 const EmailAddress: React.FC<{ init: PrefsApi.UserProfile }> = ({ init }) => {
@@ -104,8 +121,8 @@ const NotificationSettings: React.FC<{}> = () => {
     });
   };
 
-  return (<Stack direction='column' spacing={2}>
-
+  return (
+    <Stack direction='column' spacing={2}>
     <FormControl component="fieldset" variant="standard">
       <Typography variant='body1' fontWeight='500'>Channel</Typography>
       <Box sx={{ p: 1, alignItems: 'center' }}>

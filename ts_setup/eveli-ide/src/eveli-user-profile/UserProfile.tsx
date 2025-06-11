@@ -29,6 +29,7 @@ export const UserProfile: React.FC<{}> = () => {
   const [state, setState] = React.useState<PrefsApi.UserProfile>();
   const [loading, setLoading] = React.useState<boolean>(true);
   const userRoles = user.roles.length ? user.roles.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
+  const userPermissions = user.permissions.length ? user.permissions.join(", ") : intl.formatMessage({ id: 'eveli.noValueIndicator' });
 
 
   const classes = useUtilityClasses();
@@ -70,6 +71,8 @@ export const UserProfile: React.FC<{}> = () => {
               <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(state.created)} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(state.updated)} />
               <SectionRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
+              <SectionRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
+
             </div>
           </EveliUserOverviewDetail>
         </Grid2>

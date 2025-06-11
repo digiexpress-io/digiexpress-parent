@@ -945,6 +945,7 @@ export const en = {
   'eveli.userProfile.email': 'Email',
   'eveli.userProfile.notificationSettings': 'Notification settings',
   'eveli.userProfile.userRoles': 'My roles',
+  'eveli.userProfile.userPermissions': 'My permissions',
   'eveli.userProfile.editDetails': 'Edit personal details',
   'eveli.userProfile.currentDetails': 'My current details',
   'eveli.userProfile.userActivity': 'Recent activity',
