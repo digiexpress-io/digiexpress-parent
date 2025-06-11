@@ -1,5 +1,7 @@
 package io.digiexpress.thena.batch.client.api;
 
+import java.util.List;
+
 /*-
  * #%L
  * thena-batch-client
@@ -25,5 +27,12 @@ public class BatchException extends RuntimeException {
 
   public BatchException(String msg) {
     super(msg);
+  }
+  
+  public BatchException(String msg, List<Throwable> ex) {
+    super(msg);
+    for(final var e : ex) {
+      super.addSuppressed(e);
+    }
   }
 }

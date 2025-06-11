@@ -89,7 +89,8 @@ export const FrontdeskApp: React.FC = () => {
                   'stencil_locale_filter',
                   'eveli_publication_only',
                   'smart_tables',
-                  'user_profile']}>
+                  'user_profile', 
+                  'batches']}>
                     
                   <IamBackendProvider onExpire={handleExpire}>
                     <RouterProvider router={router} />

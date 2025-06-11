@@ -11,8 +11,10 @@ export interface TenantConfig {
 
 export type TenantFeature = (
   'wrench-only' | 
+
   "wrench-disabled" |
   "stencil-disabled"  |
+  
   "external-deployment" |
   "smart_tables" |
   "user_profile" |
@@ -21,7 +23,11 @@ export type TenantFeature = (
 
   'stencil_locale_filter' | 
   'eveli_publication_only' | 
-  'visual_accommodation');
+  'visual_accommodation' |
+
+  'batches'
+
+);
 
 const INITIAL_CONFIG: TenantConfig = {
   features: [],

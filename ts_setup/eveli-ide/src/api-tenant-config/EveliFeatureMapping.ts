@@ -33,6 +33,8 @@ export const EveliFeatureMapping = {
   'FEEDBACK_ENABLED': notOneOf(['feedback-visually-disabled']),
 
   'SMART_TABLES': oneOf(['smart_tables']),
+
+  'BATCHES': oneOf(['batches']),
 }
 
 

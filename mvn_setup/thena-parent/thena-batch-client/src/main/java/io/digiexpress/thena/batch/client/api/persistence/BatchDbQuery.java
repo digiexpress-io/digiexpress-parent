@@ -31,6 +31,7 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeSta
 import io.digiexpress.thena.batch.client.api.entities.RuntimeMetric;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStep;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeStepRow;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 public interface BatchDbQuery {
@@ -50,6 +51,7 @@ public interface BatchDbQuery {
   }
   
   interface BatchDbBatchQuery {
+    Multi<Batch> findAll();
     Uni<List<Batch>> findAllByAppId(String appId, boolean lockForUpdate);
     Uni<Optional<Batch>> findOneByAppIdAndName(String appId, String batchName);     
   }

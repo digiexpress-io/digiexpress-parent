@@ -1,5 +1,7 @@
 package io.resys.thena.spi;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -79,8 +81,6 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
         })
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> {
-          
-          
           dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name'!", sql, e));
         });
   }
@@ -114,6 +114,41 @@ public abstract class InternalTenantQueryImpl implements InternalTenantQuery {
         .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithNull()
         .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
   }
+  
+  @Override
+  public Uni<Optional<Tenant>> findByNameOrId(String nameOrId) {
+    final var cached = this.dataSource.getTenantCache().getTenant(nameOrId);
+    if(cached.isPresent()) {
+      return Uni.createFrom().item(Optional.of(cached.get()));
+    }
+    final var sql = registry.getByNameOrId(nameOrId);
+    
+    if(log.isDebugEnabled()) {
+      log.debug("Find tenant by nameOrId query, with props: {} \r\n{}", 
+          sql.getProps().deepToString(), 
+          sql.getValue());
+    }
+    
+    return getClient().preparedQuery(sql.getValue())
+        .mapping(registry.defaultMapper())
+        .execute(sql.getProps())
+        .onItem()
+        .transform((RowSet<Tenant> rowset) -> {
+          final var it = rowset.iterator();
+          if(it.hasNext()) {
+            return Optional.of(it.next());
+          }
+          return Optional.<Tenant>empty();
+        })
+        .onItem().invoke(tenant -> {
+          if(tenant.isPresent()) {
+            this.dataSource.getTenantCache().setTenant(tenant.get());  
+          }
+        })
+        .onFailure(e -> dataSource.getErrorHandler().notFound(e)).recoverWithItem(Optional.empty())
+        .onFailure().invoke(e -> dataSource.getErrorHandler().deadEnd(new SqlTupleFailed("Can't find 'REPOS' by 'name' or 'id'!", sql, e)));
+  }
+  
   
   @Override
   public Multi<Tenant> findAll() {

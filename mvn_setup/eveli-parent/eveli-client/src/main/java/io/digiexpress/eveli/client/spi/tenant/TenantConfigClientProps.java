@@ -37,10 +37,15 @@ public class TenantConfigClientProps implements TenantConfigClient {
   private final static String STENCIL_DISABLED = "stencil-disabled";
   private final static String EXTERNAL_DEPLOYMENT = "external-deployment";
   
+  public final static String BATCHES = "batches";
+  public final static String BATCHES_DEV = "batches-dev";
+  
   // just for doc purpose 
   private final static String FEEDBACK_VISUALLY_DISABLED = "feedback-visually-disabled";
   private final static String QUEUES_VISUALLY_DISABLED = "queues-visually-disabled";
   
+  
+  public final static String SPRING_PROP_NAME = "eveli.tenant-features"; 
   
   public TenantConfigClientProps(EveliProps config) {
     final var features = Optional
@@ -67,5 +72,8 @@ public class TenantConfigClientProps implements TenantConfigClient {
       }
     };
   }
-
+  
+  public TenantConfig getConfig() {
+    return config;
+  }
 }

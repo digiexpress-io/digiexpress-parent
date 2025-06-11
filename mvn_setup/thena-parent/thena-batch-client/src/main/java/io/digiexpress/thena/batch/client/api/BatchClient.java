@@ -25,6 +25,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.immutables.value.Value;
+
 import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.BatchConfig;
 import io.digiexpress.thena.batch.client.api.entities.BatchConsumer;
@@ -33,19 +35,26 @@ import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance;
 import io.digiexpress.thena.batch.client.api.entities.RuntimeInstance.RuntimeStatus;
 import io.digiexpress.thena.batch.client.api.executor.Executor;
 import io.resys.thena.api.actions.TenantActions;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 
 public interface BatchClient {
   BatchClient withTenant(String tenantId);
   TenantActions manageTenants();
   
-  CreateBatchConfig createBatchConfig();
-  CreateOneRuntimeInstance createOneRuntimeInstance();
-  
+  BatchQuery queryBatches();
   RuntimeInstanceQuery queryRuntimeInstances();
+  CreateOneRuntimeInstance createOneRuntimeInstance();  
   
+  CreateBatchConfig createBatchConfig();
   CreateBatchEnvir createBatchEnvir();
+  
+  
+  interface BatchQuery {
+    Multi<Batch> findAll();
+  }
   
   interface CreateBatchEnvir {
     CreateBatchEnvir config(BatchConfig config);
@@ -86,6 +95,8 @@ public interface BatchClient {
     CreateBatchConfig addConsumer(Consumer<BatchConsumerBuilder> consumerBuilder);
     CreateBatchConfig commitMessage(String commitMessage);
     CreateBatchConfig commitAuthor(String commitAuthor);
+    CreateBatchConfig addAll(List<BatchDefinition> def);
+    
     Uni<Envelope<BatchConfig>> build();
 
   }
@@ -102,5 +113,23 @@ public interface BatchClient {
     BatchConsumerBuilder comment(String comment);
     BatchConsumerBuilder consumerName(String consumerName);
     BatchConsumer build(Executor<?, ?> worker);
+  }
+  
+  
+  // Marker interface
+  @Value.Immutable
+  interface BatchDefinition {
+    String getBatchName();
+    String getComment(); // user comment, what should this batch do
+    @Nullable String getExternalId();
+    
+    List<BatchStepDefinition> getSteps();
+  }
+  
+  @Value.Immutable
+  interface BatchStepDefinition {
+    String getName();
+    String getComment(); // user comment, what should this step do
+    Executor<?, ?> getExecutor();
   }
 }

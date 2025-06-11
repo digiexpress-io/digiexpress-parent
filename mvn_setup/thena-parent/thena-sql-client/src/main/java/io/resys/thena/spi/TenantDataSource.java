@@ -1,5 +1,7 @@
 package io.resys.thena.spi;
 
+import java.util.Optional;
+
 /*-
  * #%L
  * thena-docdb-api
@@ -37,6 +39,8 @@ public interface TenantDataSource {
   interface InternalTenantQuery {
     Uni<Tenant> getByName(String name);
     Uni<Tenant> getByNameOrId(String nameOrId);
+    Uni<Optional<Tenant>> findByNameOrId(String nameOrId);
+    
     Multi<Tenant> findAll();
     Uni<Void> delete();
     Uni<Tenant> delete(Tenant newRepo);

@@ -31,6 +31,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -83,6 +84,10 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Configuration
+@Import(value = { 
+    EveliBatchesAutoConfig.class,
+    EveliBatchesDevAutoConfig.class
+})
 @EnableConfigurationProperties( value = {
     EveliProps.class, 
     EveliPropsAssets.class,  
@@ -259,11 +264,12 @@ public class EveliAutoConfig {
   public TenantConfigClient tenantConfigClient(EveliProps props) {
     return new TenantConfigClientProps(props);
   }  
+  
   @Bean
   public TenantApiController tenantApiController(TenantConfigClient tenantClient, EveliProps props) {
     return new TenantApiController(tenantClient);
   }
-
+  
   @Bean
   public UserProfileClient userProfileClient(io.vertx.mutiny.pgclient.PgPool pgPool) {    
     final var store = UserProfileStore.builder()

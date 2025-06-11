@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.digiexpress.thena.batch.client.api.BatchClient;
+import io.digiexpress.thena.batch.client.api.entities.Batch;
 import io.digiexpress.thena.batch.client.api.entities.Envelope;
 import io.digiexpress.thena.batch.client.api.entities.Envelope.OperationStatus;
 import io.digiexpress.thena.batch.client.api.entities.ImmutableEnvelope;
@@ -45,6 +46,7 @@ import io.resys.thena.api.actions.TenantActions;
 import io.resys.thena.api.entities.ImmutableTenant;
 import io.resys.thena.api.entities.Tenant.StructureType;
 import io.resys.thena.spi.TenantActionsImpl;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +61,17 @@ public class BatchClientImpl implements BatchClient {
   public TenantActions manageTenants() {
     return new TenantActionsImpl(batchDb, StructureType.batch);
   }
-
+  
+  @Override
+  public BatchQuery queryBatches() {
+    return new BatchQuery() {
+      @Override
+      public Multi<Batch> findAll() {
+        return batchDb.query().queryBatches().findAll();
+      }
+    };
+  }
+  
   @Override
   public CreateBatchConfig createBatchConfig() {
     return new CreateBatchConfigImpl(batchDb);
@@ -176,4 +188,6 @@ public class BatchClientImpl implements BatchClient {
       }
     };
   }
+
+
 }
