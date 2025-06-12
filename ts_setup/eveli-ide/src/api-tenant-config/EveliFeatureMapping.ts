@@ -32,6 +32,8 @@ export const EveliFeatureMapping = {
   'QUEUES_ENABLED': notOneOf(['queues-visually-disabled']),
   'FEEDBACK_ENABLED': notOneOf(['feedback-visually-disabled']),
 
+  'PROFILE_ENABLED': oneOf(['user_profile']),
+
   'SMART_TABLES': oneOf(['smart_tables']),
 
   'BATCHES': oneOf(['batches']),

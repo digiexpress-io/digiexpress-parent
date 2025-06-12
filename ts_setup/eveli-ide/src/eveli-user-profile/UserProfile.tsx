@@ -100,12 +100,13 @@ export const UserProfile: React.FC<{}> = () => {
 
           <Divider className={classes.divider} />
 
-          <Box display='flex' justifyContent='center' gap={1}>
+          <Box display='flex' flexDirection='column'>
             <UserProfileFirstName init={profile} onChange={handleChange} />
             <UserProfileLastName init={profile} onChange={handleChange} />
           </Box>
         </EveliUserOverviewDetail>
 
+        {/* //TODO
         <EveliUserOverviewDetail>
           <div className={classes.sectionTitle}>
             <NotificationsIcon />
@@ -115,8 +116,7 @@ export const UserProfile: React.FC<{}> = () => {
 
           <UserProfileNotifications />
         </EveliUserOverviewDetail>
-
-
+         */}
 
         <EveliUserOverviewDetail>
           <div className={classes.sectionTitle}>
@@ -130,7 +130,7 @@ export const UserProfile: React.FC<{}> = () => {
         </EveliUserOverviewDetail>
 
         <div style={{ display: 'flex', gap: 4, justifyContent: 'center' }}>
-          <Button sx={{ width: '40%' }} disabled={Object.values(changes).length === 0} onClick={handleSave}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
+          <Button disabled={Object.values(changes).length === 0} onClick={handleSave}>{intl.formatMessage({ id: 'buttons.apply' })}</Button>
         </div>
       </EveliUserProfileRoot>
     </Box>

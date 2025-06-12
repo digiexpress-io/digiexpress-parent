@@ -8,6 +8,7 @@ import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from '@tanstack/react-router'
@@ -114,6 +115,18 @@ export const Secondary: React.FC = () => {
             {intl.formatMessage({ id: 'menu.queues' })}
           </Button>
         </EveliPermissions>
+      </EveliTenantFeatureEnabled>
+
+      <EveliTenantFeatureEnabled id='PROFILE_ENABLED'>
+        <Button startIcon={<PersonOutlineOutlinedIcon />}
+          variant={location.pathname.endsWith('profile') ? 'explorerActive' : 'explorerInactive'}
+          onClick={() => navigate({
+            from: '/secured/$locale',
+            to: '/secured/$locale/worker/profile'
+          })}
+        >
+          {intl.formatMessage({ id: 'menu.profile' })}
+        </Button>
       </EveliTenantFeatureEnabled>
 
     </EveliShellExplorer>

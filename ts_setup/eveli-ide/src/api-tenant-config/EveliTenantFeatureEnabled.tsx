@@ -1,5 +1,5 @@
 import React from 'react';
-import { TenantFeature, useTenantConfig } from './TenantConfigContext';
+import { useTenantConfig } from './TenantConfigContext';
 import { EveliFeatureMapping, EveliFeatureType } from './EveliFeatureMapping';
 
 
