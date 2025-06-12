@@ -2,6 +2,7 @@
 //TODO NOTE
 ```typescript
 
+
 /**
  *  MUI theme TYPE integration
  */
