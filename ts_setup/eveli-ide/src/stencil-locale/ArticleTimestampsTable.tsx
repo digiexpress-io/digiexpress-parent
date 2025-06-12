@@ -49,6 +49,8 @@ export const ArticleTimestampsTable: React.FC = () => {
       accessorKey: 'name',
       enableColumnFilter: false,
       enableSorting: true,
+      size: 350,
+      minSize: 300,
     },
     ...locales.map(locale => ({
       id: locale.body.value,
@@ -58,6 +60,8 @@ export const ArticleTimestampsTable: React.FC = () => {
       enableSorting: true,
       enableHiding: true,
       sortingFn: sortingFns.datetime,
+      size: 180,
+      minSize: 160,
       cell: (info: CellContext<RowData, unknown>) => {
         const value = info.getValue() as Date | null;
         return value ? value.toLocaleDateString() : (
