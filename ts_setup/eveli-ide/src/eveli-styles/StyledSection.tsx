@@ -48,16 +48,3 @@ export const Section: React.FC<SectionProps> = (props) => {
 
 
 
-export const SectionRow: React.FC<{ label: React.ReactNode, value: any }> = ({ label, value }) => {
-
-  return (
-    <Grid container>
-      <Grid item md={3} lg={3}>
-        <Typography fontWeight='bolder' variant='subtitle2'>{label}</Typography>
-      </Grid>
-      <Grid item md={9} lg={9} textAlign='left'>
-        <Typography variant='subtitle2'>{value}</Typography>
-      </Grid>
-    </Grid>
-  )
-}

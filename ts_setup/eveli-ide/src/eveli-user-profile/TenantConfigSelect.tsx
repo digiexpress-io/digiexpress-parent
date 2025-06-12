@@ -53,10 +53,11 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
 
   return (
     <Box sx={{ minWidth: 120 }}>
-      <Typography>{intl.formatMessage({
-        id: `eveli.userProfile.tenantConfig.select.title`,
-        defaultMessage: 'Personalise your user experience by adding and removing features'
-      })}
+      <Typography variant='subtitle2' mb={3}>
+        {intl.formatMessage({
+          id: `eveli.userProfile.tenantConfig.select.title`,
+          defaultMessage: 'Personalise your user experience by adding and removing features'
+        })}
       </Typography>
       <FormControl fullWidth>
         <InputLabel>{inputLabel}</InputLabel>

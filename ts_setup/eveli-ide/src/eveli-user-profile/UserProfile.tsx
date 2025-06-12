@@ -14,8 +14,8 @@ import { UserProfileNotifications } from './UserProfileNotifications';
 
 import { UserProfileFirstName } from './UserProfileFirstName';
 import { UserProfileLastName } from './UserProfileLastName';
+import { UserProfileDetailRow } from './UserProfileDetailRow';
 
-import { SectionRow } from '@/eveli-styles';
 import { PrefsApi } from '@/api-prefs';
 import { useIam } from '@/api-iam';
 import { useFetch } from '@dxs-ts/eveli-fetch';
@@ -81,15 +81,14 @@ export const UserProfile: React.FC<{}> = () => {
           <Divider className={classes.divider} />
 
           <div style={{ marginTop: 10 }}>
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.id' />} value={profile.id} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={profile.details.username} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.firstAndLastName' />} value={profile.details.firstName + " " + profile.details.lastName} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.email' />} value={profile.details.email} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(profile.created)} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(profile.updated)} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
-            <SectionRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
-
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.id' />} value={profile.id} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.displayName' />} value={profile.details.username} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.firstAndLastName' />} value={profile.details.firstName + " " + profile.details.lastName} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.email' />} value={profile.details.email} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.created' />} value={formatFinnishDate(profile.created)} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.updated' />} value={formatFinnishDate(profile.updated)} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userRoles' />} value={userRoles} />
+            <UserProfileDetailRow label={<FormattedMessage id='eveli.userProfile.userPermissions' />} value={userPermissions} />
           </div>
         </EveliUserOverviewDetail>
 
