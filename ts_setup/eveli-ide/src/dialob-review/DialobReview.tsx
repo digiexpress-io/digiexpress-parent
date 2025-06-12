@@ -7,12 +7,8 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { GFormReview, DialobProvider } from '@dxs-ts/gamut';
 
 import { useFetch } from '@dxs-ts/eveli-fetch';
+import { DialobReviewProps } from './dialob-review-types';
 
-export interface DialobReviewProps {
-  taskId: string;
-  questionnaireId: string;
-  onClose: () => void;
-}
 
 // cross reference to gamut project
 // start gamut in limited scope

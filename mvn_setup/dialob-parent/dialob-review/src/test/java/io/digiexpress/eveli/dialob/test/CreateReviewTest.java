@@ -42,6 +42,13 @@ public class CreateReviewTest {
     final var actions = client.createReview().form(form).formData(formData).build();
     
     Assertions.assertNotNull(actions);
-    Assertions.assertEquals(16, actions.getActions().size());
+    Assertions.assertEquals(12, actions.getActions().size());
+    
+    Assertions.assertEquals(1, 
+        actions.getActions().stream()
+          .filter(e -> e.getItem() != null)
+          .filter(e -> e.getItem().getId() != null)
+          .filter(e -> e.getItem().getId().equals("questionnaire"))
+          .count());
   }
 }

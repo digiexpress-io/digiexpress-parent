@@ -24,7 +24,9 @@ import io.dialob.api.form.Form;
 import io.dialob.api.proto.Actions;
 import io.dialob.api.proto.ImmutableActions;
 import io.dialob.api.questionnaire.ImmutableQuestionnaire;
+import io.dialob.api.questionnaire.ImmutableQuestionnaireMetadata;
 import io.dialob.api.questionnaire.Questionnaire;
+import io.dialob.api.questionnaire.Questionnaire.Metadata;
 import io.dialob.questionnaire.service.api.FormActions;
 import io.dialob.questionnaire.service.api.FormActionsUpdatesCallback;
 import io.digiexpress.eveli.dialob.api.DialobReviewClient;
@@ -57,6 +59,11 @@ public class DialobReviewClientImpl implements DialobReviewClient {
             ImmutableQuestionnaire.builder()
               .from(formData)
               .id(formData.getId() + "-review") // wipe the ID, just in case
+              .metadata(ImmutableQuestionnaireMetadata.builder()
+                  .from(formData.getMetadata())
+                  .status(Metadata.Status.OPEN)
+                  .completed(null)
+                  .build())
               .build())
           .accept();
         
