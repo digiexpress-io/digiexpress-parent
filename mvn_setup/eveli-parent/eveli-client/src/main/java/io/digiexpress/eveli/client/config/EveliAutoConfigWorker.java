@@ -45,6 +45,7 @@ import io.digiexpress.eveli.client.web.resources.worker.TaskApiController;
 import io.digiexpress.eveli.client.web.resources.worker.UserProfileController;
 import io.digiexpress.eveli.client.web.resources.worker.WorkerIamController;
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.digiexpress.eveli.userprofile.client.api.UserProfileClient;
 
 
@@ -77,10 +78,11 @@ public class EveliAutoConfigWorker {
       WorkerAuthClient security, 
       TaskClient taskclient, 
       DialobClient dialobClient,
+      DialobReviewClient dialobReviewClient,
       MqEventPublisher mqEventPublisher,
       TaskViewerPublisher viewerEventPublisher) {
     
-    return new TaskApiController(security, taskclient, dialobClient, mqEventPublisher, viewerEventPublisher);
+    return new TaskApiController(security, taskclient, dialobClient, dialobReviewClient, mqEventPublisher, viewerEventPublisher);
   }
   @Bean 
   public ProcessApiController processApiController(ProcessClient client) {

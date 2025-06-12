@@ -1,4 +1,4 @@
-package io.digiexpress.eveli.dialob.api;
+package io.digiexpress.eveli.dialob.test;
 
 /*-
  * #%L
@@ -20,17 +20,20 @@ package io.digiexpress.eveli.dialob.api;
  * #L%
  */
 
-import io.dialob.api.form.Form;
-import io.dialob.api.proto.Actions;
-import io.dialob.api.questionnaire.Questionnaire;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-public interface DialobReviewClient {
-
-  ReviewBuilder createReview();
+public class DialobReviewConfig {
   
-  interface ReviewBuilder {
-    ReviewBuilder form(Form form);
-    ReviewBuilder formData(Questionnaire formData);
-    Actions build();
+  public static String toExpectedFile(String fileName) {
+    return toString(DialobReviewConfig.class, fileName);
   }
+
+  public static String toString(Class<?> type, String resource) {
+    try {
+      return new String(type.getClassLoader().getResourceAsStream(resource).readAllBytes(), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }  
 }

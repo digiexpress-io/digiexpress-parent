@@ -14,5 +14,6 @@
 
   <modules>
     <module>dialob-client</module>
+    <module>dialob-review</module>
   </modules>
 </project>

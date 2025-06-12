@@ -38,7 +38,9 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.digiexpress.eveli.dialob.api.DialobClient;
+import io.digiexpress.eveli.dialob.api.DialobReviewClient;
 import io.digiexpress.eveli.dialob.spi.DialobClientImpl;
+import io.digiexpress.eveli.dialob.spi.DialobReviewClientImpl;
 import io.digiexpress.eveli.dialob.spi.DialobService;
 
 
@@ -88,5 +90,10 @@ public class DialobAutoConfig {
         .objectMapper(objectMapper)
         .dialobService(service)
         .build();
+  }  
+  
+  @Bean 
+  public DialobReviewClient dialobReviewClient() {
+    return new DialobReviewClientImpl();
   }  
 }
