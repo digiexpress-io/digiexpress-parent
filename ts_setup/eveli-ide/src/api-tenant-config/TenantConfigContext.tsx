@@ -9,29 +9,34 @@ export interface TenantConfig {
   gamutThemeOptions: ThemeOptions;
 }
 
-export type TenantFeature = (
-  'wrench-only' | 
 
-  "wrench-disabled" |
-  "stencil-disabled"  |
-  
-  "external-deployment" |
-  "smart_tables" |
-  "user_profile" |
-  'queues-visually-disabled' |
-  'feedback-visually-disabled' |
+export const tenant_features = [
+  'wrench-only',
 
-  'stencil_locale_filter' | 
-  'eveli_publication_only' | 
-  'visual_accommodation' |
+  "wrench-disabled",
+  "stencil-disabled",
+
+  "external-deployment",
+  "smart_tables",
+  "user_profile",
+  'queues-visually-disabled',
+  'feedback-visually-disabled',
+
+  'stencil_locale_filter',
+  'eveli_publication_only',
+  'visual_accommodation',
 
   'batches'
+] as const;
 
-);
+export type TenantFeature = typeof tenant_features[number];
 
-const INITIAL_CONFIG: TenantConfig = {
+
+
+const INITIAL_CONFIG: TenantConfigContextType = {
   features: [],
-  gamutThemeOptions: GThemeOptions
+  gamutThemeOptions: GThemeOptions,
+  hardcodedFeatures: []
 }
 
 export interface TenantConfigContextProviderProps {
@@ -40,23 +45,29 @@ export interface TenantConfigContextProviderProps {
   gamutThemeOptions?: ThemeOptions | undefined;
 }
 
-export const TenantConfigContext = createContext<TenantConfig>(INITIAL_CONFIG);
+export interface TenantConfigContextType extends TenantConfig {
+  hardcodedFeatures: TenantFeature[];
+}
+
+export const TenantConfigContext = createContext<TenantConfigContextType>(INITIAL_CONFIG);
 
 const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>> = ({ children, features: _features, gamutThemeOptions }) => {
   const {tenantConfig, pending} = useFetch('worker/rest/api/tenant-configs.GET', {}); 
   const profile = useFetch('worker/rest/api/userprofiles/$profileId.GET', {}); 
   const [userTenantConfig, setUserTenantConfig] = React.useState<TenantFeature[]>();
   
-  const contextValue: TenantConfig = React.useMemo(() => {
+
+  const contextValue: TenantConfigContextType = React.useMemo(() => {
     if(pending) {
-      return Object.freeze({ ...INITIAL_CONFIG })
+      return Object.freeze({ ...INITIAL_CONFIG, hardcodedFeatures: _features ?? [] })
     }
+    const hardcodedFeatures = Array.from(new Set([...(tenantConfig?.features ?? []), ...(_features ?? [])]));
 
     const mergedTheme = gamutThemeOptions ?? GThemeOptions;
     const features = Array.from(new Set([ ...(tenantConfig?.features ?? []), ...(_features ?? []), ...(userTenantConfig ?? []) ]));
 
-    return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features })
-  }, [tenantConfig, pending, userTenantConfig]);
+    return Object.freeze({ gamutThemeOptions: mergedTheme, ...tenantConfig, features, hardcodedFeatures })
+  }, [tenantConfig, pending, userTenantConfig, _features]);
 
   React.useEffect(() => {
     if(pending || userTenantConfig) {
@@ -67,7 +78,7 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
       .then(profile => {
         if(!profile) {
           console.log('User profile disabled');
-          setUserTenantConfig([])
+          setUserTenantConfig((prev) => prev ?? []);
           return;
         }
         console.log('Checking user profile', profile);
@@ -75,7 +86,7 @@ const WithProvider: React.FC<PropsWithChildren<TenantConfigContextProviderProps>
       })
       .catch((e) => {
         console.log('User profile disabled');
-        setUserTenantConfig([]);
+        setUserTenantConfig((prev) => prev ?? []);
       });
 
   }, [pending, contextValue, userTenantConfig]);

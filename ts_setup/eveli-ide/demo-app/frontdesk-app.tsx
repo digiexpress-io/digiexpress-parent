@@ -88,8 +88,8 @@ export const FrontdeskApp: React.FC = () => {
                   'visual_accommodation', 
                   'stencil_locale_filter',
                   'eveli_publication_only',
-                  'smart_tables',
-                  'user_profile', 
+                   //'smart_tables',
+                   //'user_profile', 
                   'batches']}>
                     
                   <IamBackendProvider onExpire={handleExpire}>

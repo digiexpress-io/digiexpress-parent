@@ -14,7 +14,7 @@ function notOneOf(required: TenantFeature[]): (given: TenantFeature[]) => boolea
 
 
 export const EveliFeatureMapping = {
-  'LOGIN_BUTTON': notOneOf(['wrench-only']),
+  'LOGIN_BUTTON': notOneOf(['wrench-only']), // wrench is the only application -- everything else is gone
   'STENCIL_ENABLED': notOneOf(['stencil-disabled']),
   'WRENCH_ENABLED': notOneOf(['wrench-disabled']),
   'PUBLICATION_UPDATE': notOneOf(['external-deployment']),

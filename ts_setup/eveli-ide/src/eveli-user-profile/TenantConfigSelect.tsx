@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Select, FormControl, SelectChangeEvent, MenuItem, InputLabel, Chip, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
-import { EveliFeatureMapping } from '@/api-tenant-config';
+import { tenant_features, useTenantConfig } from '@/api-tenant-config';
 
 
 
@@ -15,11 +15,12 @@ export interface TenantConfigSelectProps {
 
 export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProfile, onChange }) => {
   const intl = useIntl();
+  const { hardcodedFeatures } = useTenantConfig();
 
   const [selectedFeatures, setSelectedFeatures] = React.useState<string[]>(userProfile.tenantFeatures ?? []);
-  const tenantFeatureKeys = Object.keys(EveliFeatureMapping);
   const inputLabel = intl.formatMessage({ id: 'eveli.userProfile.tenantConfig.select', defaultMessage: 'Config option' });
 
+  console.log(hardcodedFeatures)
 
   function handleChange(event: SelectChangeEvent<string[]>) {
     const value = event.target.value;
@@ -71,7 +72,7 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
               />))}
           </Box>
           )}>
-          {tenantFeatureKeys.map((key) => (
+          {tenant_features.map((key) => (
             <MenuItem key={key} value={key}>
               {intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}`, defaultMessage: key })}
             </MenuItem>
