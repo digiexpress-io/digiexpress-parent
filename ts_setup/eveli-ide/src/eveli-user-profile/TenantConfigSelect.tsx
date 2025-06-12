@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Select, FormControl, SelectChangeEvent, MenuItem, InputLabel, Chip, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { PrefsApi } from '@/api-prefs';
-import { tenant_features, useTenantConfig } from '@/api-tenant-config';
+import { tenant_features, TenantFeature, useTenantConfig } from '@/api-tenant-config';
 
 
 
@@ -20,7 +20,25 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
   const [selectedFeatures, setSelectedFeatures] = React.useState<string[]>(userProfile.tenantFeatures ?? []);
   const inputLabel = intl.formatMessage({ id: 'eveli.userProfile.tenantConfig.select', defaultMessage: 'Config option' });
 
-  console.log(hardcodedFeatures)
+  React.useEffect(() => {
+    const userFeatures = userProfile.tenantFeatures ?? [];
+    const intialSelected = [
+      ...hardcodedFeatures,
+      ...userFeatures.filter((feature => !hardcodedFeatures.includes(feature as TenantFeature))),
+    ]
+    setSelectedFeatures(intialSelected);
+  }, []);
+
+  function isHardcodedFeature(value: TenantFeature): boolean {
+    return hardcodedFeatures.includes(value);
+  }
+
+  const sortedTenantFeatures = [...tenant_features].sort((a, b) => a.localeCompare(b));
+  const sortedHardcodedFeatures = [...hardcodedFeatures].sort((a, b) => a.localeCompare(b));
+  const filteredTenantFeatures = sortedTenantFeatures.filter(f => !hardcodedFeatures.includes(f));
+  const combinedSortedFeatures = [...filteredTenantFeatures, ...sortedHardcodedFeatures];
+
+
 
   function handleChange(event: SelectChangeEvent<string[]>) {
     const value = event.target.value;
@@ -40,6 +58,10 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
 
   function handleDelete(e: React.MouseEvent, value: string) {
     e.stopPropagation();
+    if (hardcodedFeatures.includes(value as typeof hardcodedFeatures[number])) {
+      return;
+    }
+
     const updated = selectedFeatures.filter((item) => item !== value);
     setSelectedFeatures(updated);
 
@@ -64,19 +86,27 @@ export const TenantConfigSelect: React.FC<TenantConfigSelectProps> = ({ userProf
         <InputLabel>{inputLabel}</InputLabel>
         <Select multiple value={selectedFeatures} label={inputLabel} onChange={handleChange}
           renderValue={() => (<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {(selectedFeatures).map((value) => (
-              <Chip key={value}
-                label={intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${value}`, defaultMessage: value })}
-                onMouseDown={(e) => e.stopPropagation()}
-                onDelete={(e) => handleDelete(e, value)}
-              />))}
+            {(selectedFeatures).map((value: any) => {
+              const isHardcoded = isHardcodedFeature(value);
+
+              return (
+                <Chip key={value} label={intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${value}`, defaultMessage: value })}
+                  onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+                  onDelete={!isHardcoded ? (e) => handleDelete(e, value) : undefined}
+                  color={!isHardcoded ? 'info' : 'warning'}
+                />
+              )
+            })}
           </Box>
           )}>
-          {tenant_features.map((key) => (
-            <MenuItem key={key} value={key}>
-              {intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}`, defaultMessage: key })}
-            </MenuItem>
-          ))}
+          {combinedSortedFeatures.map((key) => {
+            const isHardcoded = isHardcodedFeature(key);
+            return (
+              <MenuItem key={key} value={key} disabled={isHardcoded}>
+                {intl.formatMessage({ id: `eveli.userProfile.tenantConfig.select.${key}`, defaultMessage: key })}
+              </MenuItem>
+            )
+          })}
         </Select>
       </FormControl>
     </Box>

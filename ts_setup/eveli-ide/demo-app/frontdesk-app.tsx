@@ -11,7 +11,7 @@ import { SnackbarProvider } from 'notistack';
 import {
   fetchtree, FetchProvider, LocaleProvider,
   IamBackendProvider, ConfigContextProvider,
-  EveliComponents, 
+  EveliComponents,
   router,
   TenantConfigContextProvider
 } from '@dxs-ts/eveli-ide';
@@ -34,7 +34,7 @@ declare module '@mui/material' {
 }
 
 
-function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof window.fetch  {
+function fetchOverrideForAttachments(parentFetch: typeof window.fetch): typeof window.fetch {
   return async (input: RequestInfo | URL, init?: RequestInit) => {
 
     // my custom fetch, override init
@@ -58,53 +58,53 @@ export const FrontdeskApp: React.FC = () => {
   async function handleExpire() {
     console.log("SESSION EXPIRED");
   }
-  
+
   const logoutUrl = '/logout';
   const loginUrl = '/oauth2/authorization/oidcprovider';
 
- return (
-  <QueryClientProvider client={queryClient}>
-    <LocaleProvider>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={userTheme}>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LocaleProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={userTheme}>
 
-          <SnackbarProvider
-            maxSnack={3}
-            ref={notistackRef}
-            action={(key) => (
-              <Button onClick={handleCloseNotification(key)}>
-                <FormattedMessage id='button.dismiss' />
-              </Button>
-            )}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          >
+            <SnackbarProvider
+              maxSnack={3}
+              ref={notistackRef}
+              action={(key) => (
+                <Button onClick={handleCloseNotification(key)}>
+                  <FormattedMessage id='button.dismiss' />
+                </Button>
+              )}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            >
 
-            <FetchProvider tree={fetchtree} initContextPath='/' 
-              overrides={{
-                'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
-              }}>
-              <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
-                <TenantConfigContextProvider features={[
-                  'visual_accommodation', 
-                  'stencil_locale_filter',
-                  'eveli_publication_only',
-                   //'smart_tables',
-                   //'user_profile', 
-                  'batches']}>
-                    
-                  <IamBackendProvider onExpire={handleExpire}>
-                    <RouterProvider router={router} />
-                  </IamBackendProvider>
-                </TenantConfigContextProvider>
-              </ConfigContextProvider>
-            </FetchProvider>
+              <FetchProvider tree={fetchtree} initContextPath='/'
+                overrides={{
+                  'worker/rest/api/tasks/$taskId/files.POST': fetchOverrideForAttachments,
+                }}>
+                <ConfigContextProvider logoutUrl={logoutUrl} loginUrl={loginUrl}>
+                  <TenantConfigContextProvider features={[
+                    'visual_accommodation',
+                    'stencil_locale_filter',
+                    'eveli_publication_only',
+                    'smart_tables',
+                    'user_profile',
+                    'batches']}>
 
-          </SnackbarProvider>
+                    <IamBackendProvider onExpire={handleExpire}>
+                      <RouterProvider router={router} />
+                    </IamBackendProvider>
+                  </TenantConfigContextProvider>
+                </ConfigContextProvider>
+              </FetchProvider>
 
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </LocaleProvider>
-  </QueryClientProvider>
-);
+            </SnackbarProvider>
+
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </LocaleProvider>
+    </QueryClientProvider>
+  );
 
 }
