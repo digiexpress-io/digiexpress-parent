@@ -27,7 +27,7 @@ export interface GFormPageProps {
   id: string;
   proceedAllowed: boolean;
   completeAllowed: boolean;
-
+  disabled: boolean;
   pageNumber: number; // starts from 1..n
   pages: { id: string; title: string | undefined, pageNumber: number }[];
   onChangePage: (pageId: string) => void;
@@ -54,6 +54,7 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
   const { authType } = useIam();
   const { locale } = useLocale();
   const { ownerState, classes, props } = useThemeInfra(initProps);
+
 
   function handlePageChange(id: string) {
     setAnchorEl(null);
@@ -132,10 +133,10 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
 
       <GFormPageFooter ownerState={ownerState} className={classes.footer} as={ownerState.slots?.footer}>
 
-        {
+        {!props.disabled && (
           <Button onClick={handleCancel} variant='outlined' color='primary'>
             <FormattedMessage id='gamut.forms.page.cancel' />
-          </Button>
+          </Button>)
         }
 
         {props.pages.length !== props.pageNumber &&
@@ -144,10 +145,10 @@ export const GFormPage: React.FC<GFormPageProps> = (initProps) => {
           </Button>
         }
 
-        {
+        {!props.disabled && (
           <Button onClick={handleComplete} variant='contained' color='primary' disabled={!props.completeAllowed}>
             <FormattedMessage id='gamut.forms.page.complete' />
-          </Button>
+          </Button>)
         }
       </GFormPageFooter>
     </GFormPageRoot>)

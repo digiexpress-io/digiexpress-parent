@@ -1,5 +1,4 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 
 import { useLocale } from '@/api-locale'
 import { useFetch } from '@dxs-ts/eveli-fetch';
@@ -10,7 +9,7 @@ import { EveliSetup } from '@/eveli-setup';
 import { EveliApp } from '@/eveli-app';
 import { StencilStickySave } from '@/stencil-sticky-save';
 
-export const Route = createFileRoute('/secured/$locale/assets/stencil/')({
+export const Route = createFileRoute({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
 })

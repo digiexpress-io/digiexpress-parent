@@ -8,248 +8,410 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as SecuredLocaleImport } from './routes/secured.$locale'
-import { Route as SecuredLocaleIndexImport } from './routes/secured.$locale.index'
-import { Route as SecuredLocaleWorkerImport } from './routes/secured.$locale.worker'
-import { Route as SecuredLocaleAssetsImport } from './routes/secured.$locale.assets'
-import { Route as PublicLocaleAuthImport } from './routes/public.$locale.auth'
-import { Route as SecuredLocalePublicationsIndexImport } from './routes/secured.$locale.publications.index'
-import { Route as SecuredLocaleWorkerTasksImport } from './routes/secured.$locale.worker.tasks'
-import { Route as SecuredLocaleWorkerProfileImport } from './routes/secured.$locale.worker.profile'
-import { Route as SecuredLocaleWorkerBatchesImport } from './routes/secured.$locale.worker.batches'
-import { Route as SecuredLocaleWorkerTasksIndexImport } from './routes/secured.$locale.worker.tasks.index'
-import { Route as SecuredLocaleWorkerTablesIndexImport } from './routes/secured.$locale.worker.tables.index'
-import { Route as SecuredLocaleWorkerQueuesIndexImport } from './routes/secured.$locale.worker.queues.index'
-import { Route as SecuredLocaleWorkerMonitoringIndexImport } from './routes/secured.$locale.worker.monitoring.index'
-import { Route as SecuredLocaleWorkerHelpIndexImport } from './routes/secured.$locale.worker.help.index'
-import { Route as SecuredLocaleWorkerFeedbackIndexImport } from './routes/secured.$locale.worker.feedback.index'
-import { Route as SecuredLocaleWorkerDashboardIndexImport } from './routes/secured.$locale.worker.dashboard.index'
-import { Route as SecuredLocaleWorkerBatchesIndexImport } from './routes/secured.$locale.worker.batches.index'
-import { Route as SecuredLocaleAssetsWrenchIndexImport } from './routes/secured.$locale.assets.wrench.index'
-import { Route as SecuredLocaleAssetsStencilIndexImport } from './routes/secured.$locale.assets.stencil.index'
-import { Route as SecuredLocaleAssetsServicesIndexImport } from './routes/secured.$locale.assets.services.index'
-import { Route as SecuredLocaleAssetsMigrateIndexImport } from './routes/secured.$locale.assets.migrate.index'
-import { Route as SecuredLocaleAssetsFormsIndexImport } from './routes/secured.$locale.assets.forms.index'
-import { Route as SecuredLocaleAssetsFormsFormIdImport } from './routes/secured.$locale.assets.forms.$formId'
-import { Route as SecuredLocaleWorkerTasksCreateIndexImport } from './routes/secured.$locale.worker.tasks.create.index'
-import { Route as SecuredLocaleWorkerTasksTaskIdIndexImport } from './routes/secured.$locale.worker.tasks.$taskId.index'
-import { Route as SecuredLocaleWorkerQueuesMessagesIndexImport } from './routes/secured.$locale.worker.queues.messages.index'
-import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexImport } from './routes/secured.$locale.worker.queues.deliveries.index'
-import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
-import { Route as SecuredLocaleWorkerBatchesCreateIndexImport } from './routes/secured.$locale.worker.batches.create.index'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SecuredLocaleRouteImport } from './routes/secured.$locale'
+import { Route as SecuredLocaleIndexRouteImport } from './routes/secured.$locale.index'
+import { Route as SecuredLocaleWorkerRouteImport } from './routes/secured.$locale.worker'
+import { Route as SecuredLocaleAssetsRouteImport } from './routes/secured.$locale.assets'
+import { Route as PublicLocaleAuthRouteImport } from './routes/public.$locale.auth'
+import { Route as SecuredLocalePublicationsIndexRouteImport } from './routes/secured.$locale.publications.index'
+import { Route as SecuredLocaleWorkerTasksRouteImport } from './routes/secured.$locale.worker.tasks'
+import { Route as SecuredLocaleWorkerProfileRouteImport } from './routes/secured.$locale.worker.profile'
+import { Route as SecuredLocaleWorkerBatchesRouteImport } from './routes/secured.$locale.worker.batches'
+import { Route as SecuredLocaleWorkerTasksIndexRouteImport } from './routes/secured.$locale.worker.tasks.index'
+import { Route as SecuredLocaleWorkerTablesIndexRouteImport } from './routes/secured.$locale.worker.tables.index'
+import { Route as SecuredLocaleWorkerQueuesIndexRouteImport } from './routes/secured.$locale.worker.queues.index'
+import { Route as SecuredLocaleWorkerMonitoringIndexRouteImport } from './routes/secured.$locale.worker.monitoring.index'
+import { Route as SecuredLocaleWorkerHelpIndexRouteImport } from './routes/secured.$locale.worker.help.index'
+import { Route as SecuredLocaleWorkerFeedbackIndexRouteImport } from './routes/secured.$locale.worker.feedback.index'
+import { Route as SecuredLocaleWorkerDashboardIndexRouteImport } from './routes/secured.$locale.worker.dashboard.index'
+import { Route as SecuredLocaleWorkerBatchesIndexRouteImport } from './routes/secured.$locale.worker.batches.index'
+import { Route as SecuredLocaleAssetsWrenchIndexRouteImport } from './routes/secured.$locale.assets.wrench.index'
+import { Route as SecuredLocaleAssetsStencilIndexRouteImport } from './routes/secured.$locale.assets.stencil.index'
+import { Route as SecuredLocaleAssetsServicesIndexRouteImport } from './routes/secured.$locale.assets.services.index'
+import { Route as SecuredLocaleAssetsMigrateIndexRouteImport } from './routes/secured.$locale.assets.migrate.index'
+import { Route as SecuredLocaleAssetsFormsIndexRouteImport } from './routes/secured.$locale.assets.forms.index'
+import { Route as SecuredLocaleAssetsFormsFormIdRouteImport } from './routes/secured.$locale.assets.forms.$formId'
+import { Route as SecuredLocaleWorkerTasksCreateIndexRouteImport } from './routes/secured.$locale.worker.tasks.create.index'
+import { Route as SecuredLocaleWorkerTasksTaskIdIndexRouteImport } from './routes/secured.$locale.worker.tasks.$taskId.index'
+import { Route as SecuredLocaleWorkerQueuesMessagesIndexRouteImport } from './routes/secured.$locale.worker.queues.messages.index'
+import { Route as SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport } from './routes/secured.$locale.worker.queues.deliveries.index'
+import { Route as SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport } from './routes/secured.$locale.worker.feedback.$feedbackId.index'
+import { Route as SecuredLocaleWorkerBatchesCreateIndexRouteImport } from './routes/secured.$locale.worker.batches.create.index'
 
-// Create/Update Routes
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const SecuredLocaleRoute = SecuredLocaleImport.update({
+const SecuredLocaleRoute = SecuredLocaleRouteImport.update({
   id: '/secured/$locale',
   path: '/secured/$locale',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const SecuredLocaleIndexRoute = SecuredLocaleIndexImport.update({
+const SecuredLocaleIndexRoute = SecuredLocaleIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SecuredLocaleRoute,
 } as any)
-
-const SecuredLocaleWorkerRoute = SecuredLocaleWorkerImport.update({
+const SecuredLocaleWorkerRoute = SecuredLocaleWorkerRouteImport.update({
   id: '/worker',
   path: '/worker',
   getParentRoute: () => SecuredLocaleRoute,
 } as any)
-
-const SecuredLocaleAssetsRoute = SecuredLocaleAssetsImport.update({
+const SecuredLocaleAssetsRoute = SecuredLocaleAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
   getParentRoute: () => SecuredLocaleRoute,
 } as any)
-
-const PublicLocaleAuthRoute = PublicLocaleAuthImport.update({
+const PublicLocaleAuthRoute = PublicLocaleAuthRouteImport.update({
   id: '/public/$locale/auth',
   path: '/public/$locale/auth',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
 const SecuredLocalePublicationsIndexRoute =
-  SecuredLocalePublicationsIndexImport.update({
+  SecuredLocalePublicationsIndexRouteImport.update({
     id: '/publications/',
     path: '/publications/',
     getParentRoute: () => SecuredLocaleRoute,
   } as any)
-
-const SecuredLocaleWorkerTasksRoute = SecuredLocaleWorkerTasksImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => SecuredLocaleWorkerRoute,
-} as any)
-
-const SecuredLocaleWorkerProfileRoute = SecuredLocaleWorkerProfileImport.update(
-  {
+const SecuredLocaleWorkerTasksRoute =
+  SecuredLocaleWorkerTasksRouteImport.update({
+    id: '/tasks',
+    path: '/tasks',
+    getParentRoute: () => SecuredLocaleWorkerRoute,
+  } as any)
+const SecuredLocaleWorkerProfileRoute =
+  SecuredLocaleWorkerProfileRouteImport.update({
     id: '/profile',
     path: '/profile',
     getParentRoute: () => SecuredLocaleWorkerRoute,
-  } as any,
-)
-
-const SecuredLocaleWorkerBatchesRoute = SecuredLocaleWorkerBatchesImport.update(
-  {
+  } as any)
+const SecuredLocaleWorkerBatchesRoute =
+  SecuredLocaleWorkerBatchesRouteImport.update({
     id: '/batches',
     path: '/batches',
     getParentRoute: () => SecuredLocaleWorkerRoute,
-  } as any,
-)
-
+  } as any)
 const SecuredLocaleWorkerTasksIndexRoute =
-  SecuredLocaleWorkerTasksIndexImport.update({
+  SecuredLocaleWorkerTasksIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerTasksRoute,
   } as any)
-
 const SecuredLocaleWorkerTablesIndexRoute =
-  SecuredLocaleWorkerTablesIndexImport.update({
+  SecuredLocaleWorkerTablesIndexRouteImport.update({
     id: '/tables/',
     path: '/tables/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerQueuesIndexRoute =
-  SecuredLocaleWorkerQueuesIndexImport.update({
+  SecuredLocaleWorkerQueuesIndexRouteImport.update({
     id: '/queues/',
     path: '/queues/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerMonitoringIndexRoute =
-  SecuredLocaleWorkerMonitoringIndexImport.update({
+  SecuredLocaleWorkerMonitoringIndexRouteImport.update({
     id: '/monitoring/',
     path: '/monitoring/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerHelpIndexRoute =
-  SecuredLocaleWorkerHelpIndexImport.update({
+  SecuredLocaleWorkerHelpIndexRouteImport.update({
     id: '/help/',
     path: '/help/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerFeedbackIndexRoute =
-  SecuredLocaleWorkerFeedbackIndexImport.update({
+  SecuredLocaleWorkerFeedbackIndexRouteImport.update({
     id: '/feedback/',
     path: '/feedback/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerDashboardIndexRoute =
-  SecuredLocaleWorkerDashboardIndexImport.update({
+  SecuredLocaleWorkerDashboardIndexRouteImport.update({
     id: '/dashboard/',
     path: '/dashboard/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerBatchesIndexRoute =
-  SecuredLocaleWorkerBatchesIndexImport.update({
+  SecuredLocaleWorkerBatchesIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => SecuredLocaleWorkerBatchesRoute,
   } as any)
-
 const SecuredLocaleAssetsWrenchIndexRoute =
-  SecuredLocaleAssetsWrenchIndexImport.update({
+  SecuredLocaleAssetsWrenchIndexRouteImport.update({
     id: '/wrench/',
     path: '/wrench/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleAssetsStencilIndexRoute =
-  SecuredLocaleAssetsStencilIndexImport.update({
+  SecuredLocaleAssetsStencilIndexRouteImport.update({
     id: '/stencil/',
     path: '/stencil/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleAssetsServicesIndexRoute =
-  SecuredLocaleAssetsServicesIndexImport.update({
+  SecuredLocaleAssetsServicesIndexRouteImport.update({
     id: '/services/',
     path: '/services/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleAssetsMigrateIndexRoute =
-  SecuredLocaleAssetsMigrateIndexImport.update({
+  SecuredLocaleAssetsMigrateIndexRouteImport.update({
     id: '/migrate/',
     path: '/migrate/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleAssetsFormsIndexRoute =
-  SecuredLocaleAssetsFormsIndexImport.update({
+  SecuredLocaleAssetsFormsIndexRouteImport.update({
     id: '/forms/',
     path: '/forms/',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleAssetsFormsFormIdRoute =
-  SecuredLocaleAssetsFormsFormIdImport.update({
+  SecuredLocaleAssetsFormsFormIdRouteImport.update({
     id: '/forms/$formId',
     path: '/forms/$formId',
     getParentRoute: () => SecuredLocaleAssetsRoute,
   } as any)
-
 const SecuredLocaleWorkerTasksCreateIndexRoute =
-  SecuredLocaleWorkerTasksCreateIndexImport.update({
+  SecuredLocaleWorkerTasksCreateIndexRouteImport.update({
     id: '/create/',
     path: '/create/',
     getParentRoute: () => SecuredLocaleWorkerTasksRoute,
   } as any)
-
 const SecuredLocaleWorkerTasksTaskIdIndexRoute =
-  SecuredLocaleWorkerTasksTaskIdIndexImport.update({
+  SecuredLocaleWorkerTasksTaskIdIndexRouteImport.update({
     id: '/$taskId/',
     path: '/$taskId/',
     getParentRoute: () => SecuredLocaleWorkerTasksRoute,
   } as any)
-
 const SecuredLocaleWorkerQueuesMessagesIndexRoute =
-  SecuredLocaleWorkerQueuesMessagesIndexImport.update({
+  SecuredLocaleWorkerQueuesMessagesIndexRouteImport.update({
     id: '/queues/messages/',
     path: '/queues/messages/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerQueuesDeliveriesIndexRoute =
-  SecuredLocaleWorkerQueuesDeliveriesIndexImport.update({
+  SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport.update({
     id: '/queues/deliveries/',
     path: '/queues/deliveries/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute =
-  SecuredLocaleWorkerFeedbackFeedbackIdIndexImport.update({
+  SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport.update({
     id: '/feedback/$feedbackId/',
     path: '/feedback/$feedbackId/',
     getParentRoute: () => SecuredLocaleWorkerRoute,
   } as any)
-
 const SecuredLocaleWorkerBatchesCreateIndexRoute =
-  SecuredLocaleWorkerBatchesCreateIndexImport.update({
+  SecuredLocaleWorkerBatchesCreateIndexRouteImport.update({
     id: '/create/',
     path: '/create/',
     getParentRoute: () => SecuredLocaleWorkerBatchesRoute,
   } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
+  '/public/$locale/auth': typeof PublicLocaleAuthRoute
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
+  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
+  '/secured/$locale/': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
+  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
+  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
+  '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
+  '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
+  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
+  '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
+  '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
+  '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
+  '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
+  '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
+  '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
+  '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
+  '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/public/$locale/auth': typeof PublicLocaleAuthRoute
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
+  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
+  '/secured/$locale': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
+  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
+  '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
+  '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
+  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
+  '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
+  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
+  '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
+  '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
+  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
+  '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
+  '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
+  '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
+  '/public/$locale/auth': typeof PublicLocaleAuthRoute
+  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
+  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
+  '/secured/$locale/': typeof SecuredLocaleIndexRoute
+  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
+  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
+  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
+  '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
+  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
+  '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
+  '/secured/$locale/assets/migrate/': typeof SecuredLocaleAssetsMigrateIndexRoute
+  '/secured/$locale/assets/services/': typeof SecuredLocaleAssetsServicesIndexRoute
+  '/secured/$locale/assets/stencil/': typeof SecuredLocaleAssetsStencilIndexRoute
+  '/secured/$locale/assets/wrench/': typeof SecuredLocaleAssetsWrenchIndexRoute
+  '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
+  '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
+  '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
+  '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
+  '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
+  '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
+  '/secured/$locale/worker/tables/': typeof SecuredLocaleWorkerTablesIndexRoute
+  '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
+  '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
+  '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
+  '/secured/$locale/worker/queues/deliveries/': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
+  '/secured/$locale/worker/queues/messages/': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
+  '/secured/$locale/worker/tasks/$taskId/': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
+  '/secured/$locale/worker/tasks/create/': typeof SecuredLocaleWorkerTasksCreateIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/secured/$locale'
+    | '/public/$locale/auth'
+    | '/secured/$locale/assets'
+    | '/secured/$locale/worker'
+    | '/secured/$locale/'
+    | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/profile'
+    | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/publications'
+    | '/secured/$locale/assets/forms/$formId'
+    | '/secured/$locale/assets/forms'
+    | '/secured/$locale/assets/migrate'
+    | '/secured/$locale/assets/services'
+    | '/secured/$locale/assets/stencil'
+    | '/secured/$locale/assets/wrench'
+    | '/secured/$locale/worker/batches/'
+    | '/secured/$locale/worker/dashboard'
+    | '/secured/$locale/worker/feedback'
+    | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/monitoring'
+    | '/secured/$locale/worker/queues'
+    | '/secured/$locale/worker/tables'
+    | '/secured/$locale/worker/tasks/'
+    | '/secured/$locale/worker/batches/create'
+    | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/queues/deliveries'
+    | '/secured/$locale/worker/queues/messages'
+    | '/secured/$locale/worker/tasks/$taskId'
+    | '/secured/$locale/worker/tasks/create'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/public/$locale/auth'
+    | '/secured/$locale/assets'
+    | '/secured/$locale/worker'
+    | '/secured/$locale'
+    | '/secured/$locale/worker/profile'
+    | '/secured/$locale/publications'
+    | '/secured/$locale/assets/forms/$formId'
+    | '/secured/$locale/assets/forms'
+    | '/secured/$locale/assets/migrate'
+    | '/secured/$locale/assets/services'
+    | '/secured/$locale/assets/stencil'
+    | '/secured/$locale/assets/wrench'
+    | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/dashboard'
+    | '/secured/$locale/worker/feedback'
+    | '/secured/$locale/worker/help'
+    | '/secured/$locale/worker/monitoring'
+    | '/secured/$locale/worker/queues'
+    | '/secured/$locale/worker/tables'
+    | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/worker/batches/create'
+    | '/secured/$locale/worker/feedback/$feedbackId'
+    | '/secured/$locale/worker/queues/deliveries'
+    | '/secured/$locale/worker/queues/messages'
+    | '/secured/$locale/worker/tasks/$taskId'
+    | '/secured/$locale/worker/tasks/create'
+  id:
+    | '__root__'
+    | '/'
+    | '/secured/$locale'
+    | '/public/$locale/auth'
+    | '/secured/$locale/assets'
+    | '/secured/$locale/worker'
+    | '/secured/$locale/'
+    | '/secured/$locale/worker/batches'
+    | '/secured/$locale/worker/profile'
+    | '/secured/$locale/worker/tasks'
+    | '/secured/$locale/publications/'
+    | '/secured/$locale/assets/forms/$formId'
+    | '/secured/$locale/assets/forms/'
+    | '/secured/$locale/assets/migrate/'
+    | '/secured/$locale/assets/services/'
+    | '/secured/$locale/assets/stencil/'
+    | '/secured/$locale/assets/wrench/'
+    | '/secured/$locale/worker/batches/'
+    | '/secured/$locale/worker/dashboard/'
+    | '/secured/$locale/worker/feedback/'
+    | '/secured/$locale/worker/help/'
+    | '/secured/$locale/worker/monitoring/'
+    | '/secured/$locale/worker/queues/'
+    | '/secured/$locale/worker/tables/'
+    | '/secured/$locale/worker/tasks/'
+    | '/secured/$locale/worker/batches/create/'
+    | '/secured/$locale/worker/feedback/$feedbackId/'
+    | '/secured/$locale/worker/queues/deliveries/'
+    | '/secured/$locale/worker/queues/messages/'
+    | '/secured/$locale/worker/tasks/$taskId/'
+    | '/secured/$locale/worker/tasks/create/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  SecuredLocaleRoute: typeof SecuredLocaleRouteWithChildren
+  PublicLocaleAuthRoute: typeof PublicLocaleAuthRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -257,216 +419,485 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/secured/$locale': {
       id: '/secured/$locale'
       path: '/secured/$locale'
       fullPath: '/secured/$locale'
-      preLoaderRoute: typeof SecuredLocaleImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof SecuredLocaleRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public/$locale/auth': {
       id: '/public/$locale/auth'
       path: '/public/$locale/auth'
       fullPath: '/public/$locale/auth'
-      preLoaderRoute: typeof PublicLocaleAuthImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof PublicLocaleAuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/secured/$locale/assets': {
       id: '/secured/$locale/assets'
       path: '/assets'
       fullPath: '/secured/$locale/assets'
-      preLoaderRoute: typeof SecuredLocaleAssetsImport
-      parentRoute: typeof SecuredLocaleImport
+      preLoaderRoute: typeof SecuredLocaleAssetsRouteImport
+      parentRoute: typeof SecuredLocaleRoute
     }
     '/secured/$locale/worker': {
       id: '/secured/$locale/worker'
       path: '/worker'
       fullPath: '/secured/$locale/worker'
-      preLoaderRoute: typeof SecuredLocaleWorkerImport
-      parentRoute: typeof SecuredLocaleImport
+      preLoaderRoute: typeof SecuredLocaleWorkerRouteImport
+      parentRoute: typeof SecuredLocaleRoute
     }
     '/secured/$locale/': {
       id: '/secured/$locale/'
       path: '/'
       fullPath: '/secured/$locale/'
-      preLoaderRoute: typeof SecuredLocaleIndexImport
-      parentRoute: typeof SecuredLocaleImport
+      preLoaderRoute: typeof SecuredLocaleIndexRouteImport
+      parentRoute: typeof SecuredLocaleRoute
     }
     '/secured/$locale/worker/batches': {
       id: '/secured/$locale/worker/batches'
       path: '/batches'
       fullPath: '/secured/$locale/worker/batches'
-      preLoaderRoute: typeof SecuredLocaleWorkerBatchesImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerBatchesRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/profile': {
       id: '/secured/$locale/worker/profile'
       path: '/profile'
       fullPath: '/secured/$locale/worker/profile'
-      preLoaderRoute: typeof SecuredLocaleWorkerProfileImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerProfileRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tasks': {
       id: '/secured/$locale/worker/tasks'
       path: '/tasks'
       fullPath: '/secured/$locale/worker/tasks'
-      preLoaderRoute: typeof SecuredLocaleWorkerTasksImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerTasksRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/publications/': {
       id: '/secured/$locale/publications/'
       path: '/publications'
       fullPath: '/secured/$locale/publications'
-      preLoaderRoute: typeof SecuredLocalePublicationsIndexImport
-      parentRoute: typeof SecuredLocaleImport
+      preLoaderRoute: typeof SecuredLocalePublicationsIndexRouteImport
+      parentRoute: typeof SecuredLocaleRoute
     }
     '/secured/$locale/assets/forms/$formId': {
       id: '/secured/$locale/assets/forms/$formId'
       path: '/forms/$formId'
       fullPath: '/secured/$locale/assets/forms/$formId'
-      preLoaderRoute: typeof SecuredLocaleAssetsFormsFormIdImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsFormsFormIdRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/assets/forms/': {
       id: '/secured/$locale/assets/forms/'
       path: '/forms'
       fullPath: '/secured/$locale/assets/forms'
-      preLoaderRoute: typeof SecuredLocaleAssetsFormsIndexImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsFormsIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/assets/migrate/': {
       id: '/secured/$locale/assets/migrate/'
       path: '/migrate'
       fullPath: '/secured/$locale/assets/migrate'
-      preLoaderRoute: typeof SecuredLocaleAssetsMigrateIndexImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsMigrateIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/assets/services/': {
       id: '/secured/$locale/assets/services/'
       path: '/services'
       fullPath: '/secured/$locale/assets/services'
-      preLoaderRoute: typeof SecuredLocaleAssetsServicesIndexImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsServicesIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/assets/stencil/': {
       id: '/secured/$locale/assets/stencil/'
       path: '/stencil'
       fullPath: '/secured/$locale/assets/stencil'
-      preLoaderRoute: typeof SecuredLocaleAssetsStencilIndexImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsStencilIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/assets/wrench/': {
       id: '/secured/$locale/assets/wrench/'
       path: '/wrench'
       fullPath: '/secured/$locale/assets/wrench'
-      preLoaderRoute: typeof SecuredLocaleAssetsWrenchIndexImport
-      parentRoute: typeof SecuredLocaleAssetsImport
+      preLoaderRoute: typeof SecuredLocaleAssetsWrenchIndexRouteImport
+      parentRoute: typeof SecuredLocaleAssetsRoute
     }
     '/secured/$locale/worker/batches/': {
       id: '/secured/$locale/worker/batches/'
       path: '/'
       fullPath: '/secured/$locale/worker/batches/'
-      preLoaderRoute: typeof SecuredLocaleWorkerBatchesIndexImport
-      parentRoute: typeof SecuredLocaleWorkerBatchesImport
+      preLoaderRoute: typeof SecuredLocaleWorkerBatchesIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerBatchesRoute
     }
     '/secured/$locale/worker/dashboard/': {
       id: '/secured/$locale/worker/dashboard/'
       path: '/dashboard'
       fullPath: '/secured/$locale/worker/dashboard'
-      preLoaderRoute: typeof SecuredLocaleWorkerDashboardIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerDashboardIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/feedback/': {
       id: '/secured/$locale/worker/feedback/'
       path: '/feedback'
       fullPath: '/secured/$locale/worker/feedback'
-      preLoaderRoute: typeof SecuredLocaleWorkerFeedbackIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerFeedbackIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/help/': {
       id: '/secured/$locale/worker/help/'
       path: '/help'
       fullPath: '/secured/$locale/worker/help'
-      preLoaderRoute: typeof SecuredLocaleWorkerHelpIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerHelpIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/monitoring/': {
       id: '/secured/$locale/worker/monitoring/'
       path: '/monitoring'
       fullPath: '/secured/$locale/worker/monitoring'
-      preLoaderRoute: typeof SecuredLocaleWorkerMonitoringIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerMonitoringIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/queues/': {
       id: '/secured/$locale/worker/queues/'
       path: '/queues'
       fullPath: '/secured/$locale/worker/queues'
-      preLoaderRoute: typeof SecuredLocaleWorkerQueuesIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerQueuesIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tables/': {
       id: '/secured/$locale/worker/tables/'
       path: '/tables'
       fullPath: '/secured/$locale/worker/tables'
-      preLoaderRoute: typeof SecuredLocaleWorkerTablesIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerTablesIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tasks/': {
       id: '/secured/$locale/worker/tasks/'
       path: '/'
       fullPath: '/secured/$locale/worker/tasks/'
-      preLoaderRoute: typeof SecuredLocaleWorkerTasksIndexImport
-      parentRoute: typeof SecuredLocaleWorkerTasksImport
+      preLoaderRoute: typeof SecuredLocaleWorkerTasksIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerTasksRoute
     }
     '/secured/$locale/worker/batches/create/': {
       id: '/secured/$locale/worker/batches/create/'
       path: '/create'
       fullPath: '/secured/$locale/worker/batches/create'
-      preLoaderRoute: typeof SecuredLocaleWorkerBatchesCreateIndexImport
-      parentRoute: typeof SecuredLocaleWorkerBatchesImport
+      preLoaderRoute: typeof SecuredLocaleWorkerBatchesCreateIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerBatchesRoute
     }
     '/secured/$locale/worker/feedback/$feedbackId/': {
       id: '/secured/$locale/worker/feedback/$feedbackId/'
       path: '/feedback/$feedbackId'
       fullPath: '/secured/$locale/worker/feedback/$feedbackId'
-      preLoaderRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/queues/deliveries/': {
       id: '/secured/$locale/worker/queues/deliveries/'
       path: '/queues/deliveries'
       fullPath: '/secured/$locale/worker/queues/deliveries'
-      preLoaderRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerQueuesDeliveriesIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/queues/messages/': {
       id: '/secured/$locale/worker/queues/messages/'
       path: '/queues/messages'
       fullPath: '/secured/$locale/worker/queues/messages'
-      preLoaderRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexImport
-      parentRoute: typeof SecuredLocaleWorkerImport
+      preLoaderRoute: typeof SecuredLocaleWorkerQueuesMessagesIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerRoute
     }
     '/secured/$locale/worker/tasks/$taskId/': {
       id: '/secured/$locale/worker/tasks/$taskId/'
       path: '/$taskId'
       fullPath: '/secured/$locale/worker/tasks/$taskId'
-      preLoaderRoute: typeof SecuredLocaleWorkerTasksTaskIdIndexImport
-      parentRoute: typeof SecuredLocaleWorkerTasksImport
+      preLoaderRoute: typeof SecuredLocaleWorkerTasksTaskIdIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerTasksRoute
     }
     '/secured/$locale/worker/tasks/create/': {
       id: '/secured/$locale/worker/tasks/create/'
       path: '/create'
       fullPath: '/secured/$locale/worker/tasks/create'
-      preLoaderRoute: typeof SecuredLocaleWorkerTasksCreateIndexImport
-      parentRoute: typeof SecuredLocaleWorkerTasksImport
+      preLoaderRoute: typeof SecuredLocaleWorkerTasksCreateIndexRouteImport
+      parentRoute: typeof SecuredLocaleWorkerTasksRoute
     }
   }
 }
 
-// Create and export the route tree
+declare module './routes/index' {
+  const createFileRoute: CreateFileRoute<
+    '/',
+    FileRoutesByPath['/']['parentRoute'],
+    FileRoutesByPath['/']['id'],
+    FileRoutesByPath['/']['path'],
+    FileRoutesByPath['/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale',
+    FileRoutesByPath['/secured/$locale']['parentRoute'],
+    FileRoutesByPath['/secured/$locale']['id'],
+    FileRoutesByPath['/secured/$locale']['path'],
+    FileRoutesByPath['/secured/$locale']['fullPath']
+  >
+}
+declare module './routes/public.$locale.auth' {
+  const createFileRoute: CreateFileRoute<
+    '/public/$locale/auth',
+    FileRoutesByPath['/public/$locale/auth']['parentRoute'],
+    FileRoutesByPath['/public/$locale/auth']['id'],
+    FileRoutesByPath['/public/$locale/auth']['path'],
+    FileRoutesByPath['/public/$locale/auth']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets',
+    FileRoutesByPath['/secured/$locale/assets']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets']['id'],
+    FileRoutesByPath['/secured/$locale/assets']['path'],
+    FileRoutesByPath['/secured/$locale/assets']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker',
+    FileRoutesByPath['/secured/$locale/worker']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker']['id'],
+    FileRoutesByPath['/secured/$locale/worker']['path'],
+    FileRoutesByPath['/secured/$locale/worker']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/',
+    FileRoutesByPath['/secured/$locale/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/']['id'],
+    FileRoutesByPath['/secured/$locale/']['path'],
+    FileRoutesByPath['/secured/$locale/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.batches' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/batches',
+    FileRoutesByPath['/secured/$locale/worker/batches']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/batches']['id'],
+    FileRoutesByPath['/secured/$locale/worker/batches']['path'],
+    FileRoutesByPath['/secured/$locale/worker/batches']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.profile' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/profile',
+    FileRoutesByPath['/secured/$locale/worker/profile']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/profile']['id'],
+    FileRoutesByPath['/secured/$locale/worker/profile']['path'],
+    FileRoutesByPath['/secured/$locale/worker/profile']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.tasks' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/tasks',
+    FileRoutesByPath['/secured/$locale/worker/tasks']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/tasks']['id'],
+    FileRoutesByPath['/secured/$locale/worker/tasks']['path'],
+    FileRoutesByPath['/secured/$locale/worker/tasks']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.publications.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/publications/',
+    FileRoutesByPath['/secured/$locale/publications/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/publications/']['id'],
+    FileRoutesByPath['/secured/$locale/publications/']['path'],
+    FileRoutesByPath['/secured/$locale/publications/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.forms.$formId' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/forms/$formId',
+    FileRoutesByPath['/secured/$locale/assets/forms/$formId']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/forms/$formId']['id'],
+    FileRoutesByPath['/secured/$locale/assets/forms/$formId']['path'],
+    FileRoutesByPath['/secured/$locale/assets/forms/$formId']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.forms.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/forms/',
+    FileRoutesByPath['/secured/$locale/assets/forms/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/forms/']['id'],
+    FileRoutesByPath['/secured/$locale/assets/forms/']['path'],
+    FileRoutesByPath['/secured/$locale/assets/forms/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.migrate.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/migrate/',
+    FileRoutesByPath['/secured/$locale/assets/migrate/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/migrate/']['id'],
+    FileRoutesByPath['/secured/$locale/assets/migrate/']['path'],
+    FileRoutesByPath['/secured/$locale/assets/migrate/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.services.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/services/',
+    FileRoutesByPath['/secured/$locale/assets/services/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/services/']['id'],
+    FileRoutesByPath['/secured/$locale/assets/services/']['path'],
+    FileRoutesByPath['/secured/$locale/assets/services/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.stencil.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/stencil/',
+    FileRoutesByPath['/secured/$locale/assets/stencil/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/stencil/']['id'],
+    FileRoutesByPath['/secured/$locale/assets/stencil/']['path'],
+    FileRoutesByPath['/secured/$locale/assets/stencil/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.assets.wrench.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/assets/wrench/',
+    FileRoutesByPath['/secured/$locale/assets/wrench/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/assets/wrench/']['id'],
+    FileRoutesByPath['/secured/$locale/assets/wrench/']['path'],
+    FileRoutesByPath['/secured/$locale/assets/wrench/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.batches.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/batches/',
+    FileRoutesByPath['/secured/$locale/worker/batches/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/batches/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/batches/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/batches/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.dashboard.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/dashboard/',
+    FileRoutesByPath['/secured/$locale/worker/dashboard/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/dashboard/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/dashboard/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/dashboard/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.feedback.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/feedback/',
+    FileRoutesByPath['/secured/$locale/worker/feedback/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.help.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/help/',
+    FileRoutesByPath['/secured/$locale/worker/help/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/help/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/help/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/help/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.monitoring.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/monitoring/',
+    FileRoutesByPath['/secured/$locale/worker/monitoring/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/monitoring/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/monitoring/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/monitoring/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.queues.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/queues/',
+    FileRoutesByPath['/secured/$locale/worker/queues/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/queues/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/queues/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/queues/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.tables.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/tables/',
+    FileRoutesByPath['/secured/$locale/worker/tables/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/tables/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/tables/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/tables/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.tasks.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/tasks/',
+    FileRoutesByPath['/secured/$locale/worker/tasks/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.batches.create.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/batches/create/',
+    FileRoutesByPath['/secured/$locale/worker/batches/create/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/batches/create/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/batches/create/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/batches/create/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.feedback.$feedbackId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/feedback/$feedbackId/',
+    FileRoutesByPath['/secured/$locale/worker/feedback/$feedbackId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/$feedbackId/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/$feedbackId/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/feedback/$feedbackId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.queues.deliveries.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/queues/deliveries/',
+    FileRoutesByPath['/secured/$locale/worker/queues/deliveries/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/queues/deliveries/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/queues/deliveries/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/queues/deliveries/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.queues.messages.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/queues/messages/',
+    FileRoutesByPath['/secured/$locale/worker/queues/messages/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/queues/messages/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/queues/messages/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/queues/messages/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.tasks.$taskId.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/tasks/$taskId/',
+    FileRoutesByPath['/secured/$locale/worker/tasks/$taskId/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/$taskId/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/$taskId/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/$taskId/']['fullPath']
+  >
+}
+declare module './routes/secured.$locale.worker.tasks.create.index' {
+  const createFileRoute: CreateFileRoute<
+    '/secured/$locale/worker/tasks/create/',
+    FileRoutesByPath['/secured/$locale/worker/tasks/create/']['parentRoute'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/create/']['id'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/create/']['path'],
+    FileRoutesByPath['/secured/$locale/worker/tasks/create/']['fullPath']
+  >
+}
 
 interface SecuredLocaleAssetsRouteChildren {
   SecuredLocaleAssetsFormsFormIdRoute: typeof SecuredLocaleAssetsFormsFormIdRoute
@@ -582,381 +1013,11 @@ const SecuredLocaleRouteWithChildren = SecuredLocaleRoute._addFileChildren(
   SecuredLocaleRouteChildren,
 )
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
-  '/public/$locale/auth': typeof PublicLocaleAuthRoute
-  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
-  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
-  '/secured/$locale/': typeof SecuredLocaleIndexRoute
-  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
-  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
-  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
-  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
-  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
-  '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
-  '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
-  '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
-  '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
-  '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
-  '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
-  '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
-  '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
-  '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
-  '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
-  '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
-  '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
-  '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
-  '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
-  '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
-  '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/public/$locale/auth': typeof PublicLocaleAuthRoute
-  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
-  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
-  '/secured/$locale': typeof SecuredLocaleIndexRoute
-  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
-  '/secured/$locale/publications': typeof SecuredLocalePublicationsIndexRoute
-  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
-  '/secured/$locale/assets/forms': typeof SecuredLocaleAssetsFormsIndexRoute
-  '/secured/$locale/assets/migrate': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services': typeof SecuredLocaleAssetsServicesIndexRoute
-  '/secured/$locale/assets/stencil': typeof SecuredLocaleAssetsStencilIndexRoute
-  '/secured/$locale/assets/wrench': typeof SecuredLocaleAssetsWrenchIndexRoute
-  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesIndexRoute
-  '/secured/$locale/worker/dashboard': typeof SecuredLocaleWorkerDashboardIndexRoute
-  '/secured/$locale/worker/feedback': typeof SecuredLocaleWorkerFeedbackIndexRoute
-  '/secured/$locale/worker/help': typeof SecuredLocaleWorkerHelpIndexRoute
-  '/secured/$locale/worker/monitoring': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/queues': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables': typeof SecuredLocaleWorkerTablesIndexRoute
-  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksIndexRoute
-  '/secured/$locale/worker/batches/create': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
-  '/secured/$locale/worker/feedback/$feedbackId': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
-  '/secured/$locale/worker/queues/deliveries': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
-  '/secured/$locale/worker/queues/messages': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
-  '/secured/$locale/worker/tasks/$taskId': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
-  '/secured/$locale/worker/tasks/create': typeof SecuredLocaleWorkerTasksCreateIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/secured/$locale': typeof SecuredLocaleRouteWithChildren
-  '/public/$locale/auth': typeof PublicLocaleAuthRoute
-  '/secured/$locale/assets': typeof SecuredLocaleAssetsRouteWithChildren
-  '/secured/$locale/worker': typeof SecuredLocaleWorkerRouteWithChildren
-  '/secured/$locale/': typeof SecuredLocaleIndexRoute
-  '/secured/$locale/worker/batches': typeof SecuredLocaleWorkerBatchesRouteWithChildren
-  '/secured/$locale/worker/profile': typeof SecuredLocaleWorkerProfileRoute
-  '/secured/$locale/worker/tasks': typeof SecuredLocaleWorkerTasksRouteWithChildren
-  '/secured/$locale/publications/': typeof SecuredLocalePublicationsIndexRoute
-  '/secured/$locale/assets/forms/$formId': typeof SecuredLocaleAssetsFormsFormIdRoute
-  '/secured/$locale/assets/forms/': typeof SecuredLocaleAssetsFormsIndexRoute
-  '/secured/$locale/assets/migrate/': typeof SecuredLocaleAssetsMigrateIndexRoute
-  '/secured/$locale/assets/services/': typeof SecuredLocaleAssetsServicesIndexRoute
-  '/secured/$locale/assets/stencil/': typeof SecuredLocaleAssetsStencilIndexRoute
-  '/secured/$locale/assets/wrench/': typeof SecuredLocaleAssetsWrenchIndexRoute
-  '/secured/$locale/worker/batches/': typeof SecuredLocaleWorkerBatchesIndexRoute
-  '/secured/$locale/worker/dashboard/': typeof SecuredLocaleWorkerDashboardIndexRoute
-  '/secured/$locale/worker/feedback/': typeof SecuredLocaleWorkerFeedbackIndexRoute
-  '/secured/$locale/worker/help/': typeof SecuredLocaleWorkerHelpIndexRoute
-  '/secured/$locale/worker/monitoring/': typeof SecuredLocaleWorkerMonitoringIndexRoute
-  '/secured/$locale/worker/queues/': typeof SecuredLocaleWorkerQueuesIndexRoute
-  '/secured/$locale/worker/tables/': typeof SecuredLocaleWorkerTablesIndexRoute
-  '/secured/$locale/worker/tasks/': typeof SecuredLocaleWorkerTasksIndexRoute
-  '/secured/$locale/worker/batches/create/': typeof SecuredLocaleWorkerBatchesCreateIndexRoute
-  '/secured/$locale/worker/feedback/$feedbackId/': typeof SecuredLocaleWorkerFeedbackFeedbackIdIndexRoute
-  '/secured/$locale/worker/queues/deliveries/': typeof SecuredLocaleWorkerQueuesDeliveriesIndexRoute
-  '/secured/$locale/worker/queues/messages/': typeof SecuredLocaleWorkerQueuesMessagesIndexRoute
-  '/secured/$locale/worker/tasks/$taskId/': typeof SecuredLocaleWorkerTasksTaskIdIndexRoute
-  '/secured/$locale/worker/tasks/create/': typeof SecuredLocaleWorkerTasksCreateIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/secured/$locale'
-    | '/public/$locale/auth'
-    | '/secured/$locale/assets'
-    | '/secured/$locale/worker'
-    | '/secured/$locale/'
-    | '/secured/$locale/worker/batches'
-    | '/secured/$locale/worker/profile'
-    | '/secured/$locale/worker/tasks'
-    | '/secured/$locale/publications'
-    | '/secured/$locale/assets/forms/$formId'
-    | '/secured/$locale/assets/forms'
-    | '/secured/$locale/assets/migrate'
-    | '/secured/$locale/assets/services'
-    | '/secured/$locale/assets/stencil'
-    | '/secured/$locale/assets/wrench'
-    | '/secured/$locale/worker/batches/'
-    | '/secured/$locale/worker/dashboard'
-    | '/secured/$locale/worker/feedback'
-    | '/secured/$locale/worker/help'
-    | '/secured/$locale/worker/monitoring'
-    | '/secured/$locale/worker/queues'
-    | '/secured/$locale/worker/tables'
-    | '/secured/$locale/worker/tasks/'
-    | '/secured/$locale/worker/batches/create'
-    | '/secured/$locale/worker/feedback/$feedbackId'
-    | '/secured/$locale/worker/queues/deliveries'
-    | '/secured/$locale/worker/queues/messages'
-    | '/secured/$locale/worker/tasks/$taskId'
-    | '/secured/$locale/worker/tasks/create'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/public/$locale/auth'
-    | '/secured/$locale/assets'
-    | '/secured/$locale/worker'
-    | '/secured/$locale'
-    | '/secured/$locale/worker/profile'
-    | '/secured/$locale/publications'
-    | '/secured/$locale/assets/forms/$formId'
-    | '/secured/$locale/assets/forms'
-    | '/secured/$locale/assets/migrate'
-    | '/secured/$locale/assets/services'
-    | '/secured/$locale/assets/stencil'
-    | '/secured/$locale/assets/wrench'
-    | '/secured/$locale/worker/batches'
-    | '/secured/$locale/worker/dashboard'
-    | '/secured/$locale/worker/feedback'
-    | '/secured/$locale/worker/help'
-    | '/secured/$locale/worker/monitoring'
-    | '/secured/$locale/worker/queues'
-    | '/secured/$locale/worker/tables'
-    | '/secured/$locale/worker/tasks'
-    | '/secured/$locale/worker/batches/create'
-    | '/secured/$locale/worker/feedback/$feedbackId'
-    | '/secured/$locale/worker/queues/deliveries'
-    | '/secured/$locale/worker/queues/messages'
-    | '/secured/$locale/worker/tasks/$taskId'
-    | '/secured/$locale/worker/tasks/create'
-  id:
-    | '__root__'
-    | '/'
-    | '/secured/$locale'
-    | '/public/$locale/auth'
-    | '/secured/$locale/assets'
-    | '/secured/$locale/worker'
-    | '/secured/$locale/'
-    | '/secured/$locale/worker/batches'
-    | '/secured/$locale/worker/profile'
-    | '/secured/$locale/worker/tasks'
-    | '/secured/$locale/publications/'
-    | '/secured/$locale/assets/forms/$formId'
-    | '/secured/$locale/assets/forms/'
-    | '/secured/$locale/assets/migrate/'
-    | '/secured/$locale/assets/services/'
-    | '/secured/$locale/assets/stencil/'
-    | '/secured/$locale/assets/wrench/'
-    | '/secured/$locale/worker/batches/'
-    | '/secured/$locale/worker/dashboard/'
-    | '/secured/$locale/worker/feedback/'
-    | '/secured/$locale/worker/help/'
-    | '/secured/$locale/worker/monitoring/'
-    | '/secured/$locale/worker/queues/'
-    | '/secured/$locale/worker/tables/'
-    | '/secured/$locale/worker/tasks/'
-    | '/secured/$locale/worker/batches/create/'
-    | '/secured/$locale/worker/feedback/$feedbackId/'
-    | '/secured/$locale/worker/queues/deliveries/'
-    | '/secured/$locale/worker/queues/messages/'
-    | '/secured/$locale/worker/tasks/$taskId/'
-    | '/secured/$locale/worker/tasks/create/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SecuredLocaleRoute: typeof SecuredLocaleRouteWithChildren
-  PublicLocaleAuthRoute: typeof PublicLocaleAuthRoute
-}
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SecuredLocaleRoute: SecuredLocaleRouteWithChildren,
   PublicLocaleAuthRoute: PublicLocaleAuthRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/secured/$locale",
-        "/public/$locale/auth"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/secured/$locale": {
-      "filePath": "secured.$locale.tsx",
-      "children": [
-        "/secured/$locale/assets",
-        "/secured/$locale/worker",
-        "/secured/$locale/",
-        "/secured/$locale/publications/"
-      ]
-    },
-    "/public/$locale/auth": {
-      "filePath": "public.$locale.auth.tsx"
-    },
-    "/secured/$locale/assets": {
-      "filePath": "secured.$locale.assets.tsx",
-      "parent": "/secured/$locale",
-      "children": [
-        "/secured/$locale/assets/forms/$formId",
-        "/secured/$locale/assets/forms/",
-        "/secured/$locale/assets/migrate/",
-        "/secured/$locale/assets/services/",
-        "/secured/$locale/assets/stencil/",
-        "/secured/$locale/assets/wrench/"
-      ]
-    },
-    "/secured/$locale/worker": {
-      "filePath": "secured.$locale.worker.tsx",
-      "parent": "/secured/$locale",
-      "children": [
-        "/secured/$locale/worker/batches",
-        "/secured/$locale/worker/profile",
-        "/secured/$locale/worker/tasks",
-        "/secured/$locale/worker/dashboard/",
-        "/secured/$locale/worker/feedback/",
-        "/secured/$locale/worker/help/",
-        "/secured/$locale/worker/monitoring/",
-        "/secured/$locale/worker/queues/",
-        "/secured/$locale/worker/tables/",
-        "/secured/$locale/worker/feedback/$feedbackId/",
-        "/secured/$locale/worker/queues/deliveries/",
-        "/secured/$locale/worker/queues/messages/"
-      ]
-    },
-    "/secured/$locale/": {
-      "filePath": "secured.$locale.index.tsx",
-      "parent": "/secured/$locale"
-    },
-    "/secured/$locale/worker/batches": {
-      "filePath": "secured.$locale.worker.batches.tsx",
-      "parent": "/secured/$locale/worker",
-      "children": [
-        "/secured/$locale/worker/batches/",
-        "/secured/$locale/worker/batches/create/"
-      ]
-    },
-    "/secured/$locale/worker/profile": {
-      "filePath": "secured.$locale.worker.profile.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/tasks": {
-      "filePath": "secured.$locale.worker.tasks.tsx",
-      "parent": "/secured/$locale/worker",
-      "children": [
-        "/secured/$locale/worker/tasks/",
-        "/secured/$locale/worker/tasks/$taskId/",
-        "/secured/$locale/worker/tasks/create/"
-      ]
-    },
-    "/secured/$locale/publications/": {
-      "filePath": "secured.$locale.publications.index.tsx",
-      "parent": "/secured/$locale"
-    },
-    "/secured/$locale/assets/forms/$formId": {
-      "filePath": "secured.$locale.assets.forms.$formId.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/assets/forms/": {
-      "filePath": "secured.$locale.assets.forms.index.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/assets/migrate/": {
-      "filePath": "secured.$locale.assets.migrate.index.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/assets/services/": {
-      "filePath": "secured.$locale.assets.services.index.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/assets/stencil/": {
-      "filePath": "secured.$locale.assets.stencil.index.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/assets/wrench/": {
-      "filePath": "secured.$locale.assets.wrench.index.tsx",
-      "parent": "/secured/$locale/assets"
-    },
-    "/secured/$locale/worker/batches/": {
-      "filePath": "secured.$locale.worker.batches.index.tsx",
-      "parent": "/secured/$locale/worker/batches"
-    },
-    "/secured/$locale/worker/dashboard/": {
-      "filePath": "secured.$locale.worker.dashboard.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/feedback/": {
-      "filePath": "secured.$locale.worker.feedback.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/help/": {
-      "filePath": "secured.$locale.worker.help.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/monitoring/": {
-      "filePath": "secured.$locale.worker.monitoring.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/queues/": {
-      "filePath": "secured.$locale.worker.queues.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/tables/": {
-      "filePath": "secured.$locale.worker.tables.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/tasks/": {
-      "filePath": "secured.$locale.worker.tasks.index.tsx",
-      "parent": "/secured/$locale/worker/tasks"
-    },
-    "/secured/$locale/worker/batches/create/": {
-      "filePath": "secured.$locale.worker.batches.create.index.tsx",
-      "parent": "/secured/$locale/worker/batches"
-    },
-    "/secured/$locale/worker/feedback/$feedbackId/": {
-      "filePath": "secured.$locale.worker.feedback.$feedbackId.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/queues/deliveries/": {
-      "filePath": "secured.$locale.worker.queues.deliveries.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/queues/messages/": {
-      "filePath": "secured.$locale.worker.queues.messages.index.tsx",
-      "parent": "/secured/$locale/worker"
-    },
-    "/secured/$locale/worker/tasks/$taskId/": {
-      "filePath": "secured.$locale.worker.tasks.$taskId.index.tsx",
-      "parent": "/secured/$locale/worker/tasks"
-    },
-    "/secured/$locale/worker/tasks/create/": {
-      "filePath": "secured.$locale.worker.tasks.create.index.tsx",
-      "parent": "/secured/$locale/worker/tasks"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

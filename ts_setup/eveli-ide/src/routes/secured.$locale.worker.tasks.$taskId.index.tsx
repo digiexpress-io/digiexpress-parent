@@ -1,11 +1,10 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 
 import { Container } from '@mui/material';
 import { useLocale } from '@/api-locale';
 import { EveliTaskComposer } from '@/eveli-task-composer';
 
-export const Route = createFileRoute('/secured/$locale/worker/tasks/$taskId/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

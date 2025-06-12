@@ -1,4 +1,4 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { Navigate } from '@tanstack/react-router'
 import { useIam } from '@/api-iam';
 import { EveliPermissionsNone } from '@/eveli-permissions-none';
 import { useLocale } from '@/api-locale';
@@ -6,7 +6,7 @@ import { useLocale } from '@/api-locale';
 
 
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

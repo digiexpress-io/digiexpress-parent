@@ -1,9 +1,9 @@
 import React from 'react'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 import { useLocale } from '@/api-locale';
 import { EveliTaskStats } from '@/eveli-task-stats';
 
-export const Route = createFileRoute('/secured/$locale/worker/batches')({
+export const Route = createFileRoute({
   component: Component,
 })
 

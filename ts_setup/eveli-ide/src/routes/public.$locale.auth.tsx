@@ -1,10 +1,9 @@
 import { EveliLogin } from '@/eveli-login'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import { createFileRoute } from '@tanstack/react-router'
 
 import { FormattedMessage } from 'react-intl'
 
-export const Route = createFileRoute('/public/$locale/auth')({
+export const Route = createFileRoute({
   component: RouteComponent,
 })
 

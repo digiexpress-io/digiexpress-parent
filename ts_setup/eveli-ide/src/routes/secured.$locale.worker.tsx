@@ -1,5 +1,5 @@
 import React from 'react'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 
 
 
@@ -10,7 +10,7 @@ import { useLocale } from '@/api-locale';
 import { EveliApp } from '@/eveli-app';
 
 
-export const Route = createFileRoute('/secured/$locale/worker')({
+export const Route = createFileRoute({
   component: Component,
 })
 

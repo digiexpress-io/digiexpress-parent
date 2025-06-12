@@ -3,7 +3,6 @@ import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Button, Alert } from '@mui/material';
 
 import { FormattedMessage } from 'react-intl';
-import { createFileRoute } from '@tanstack/react-router'
 import { useFetch } from '@dxs-ts/eveli-fetch';
 
 import { PublicationApi } from '@/api-publications';
@@ -12,7 +11,7 @@ import { parseStencilSearchParams, StencilRouteSearchParams } from '@/stencil-na
 import { CancelButton } from '@/eveli-styles';
 
 
-export const Route = createFileRoute('/secured/$locale/assets/migrate/')({
+export const Route = createFileRoute({
   component: Component,
   validateSearch: (search: Record<string, unknown>): StencilRouteSearchParams => parseStencilSearchParams(search)
 })

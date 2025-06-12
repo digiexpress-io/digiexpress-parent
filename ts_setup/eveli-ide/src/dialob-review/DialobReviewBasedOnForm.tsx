@@ -45,7 +45,7 @@ export const DialobReviewBasedOnForm: React.FC<DialobReviewProps> = (props) => {
 
           <DialogContent>
             <LocaleProvider disableErrors defaultLocale={() => intl.locale}>
-              <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete}> 
+              <WithFormProvider id='' executionId='' variant='' onAfterComplete={handleOnComplete} disabled> 
                 <GFormTip executionId='' variant='' onAfterComplete={handleOnComplete} />
               </WithFormProvider>
             </LocaleProvider>
