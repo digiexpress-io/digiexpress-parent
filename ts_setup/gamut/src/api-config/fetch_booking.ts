@@ -1,4 +1,5 @@
-import { BookingApi } from "@dxs-ts/gamut";
+
+import { BookingApi } from '../api-bookings';
 import { DateTime } from 'luxon';
 
 

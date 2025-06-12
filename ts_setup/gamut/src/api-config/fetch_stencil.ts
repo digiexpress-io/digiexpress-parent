@@ -1,4 +1,4 @@
-import { SiteApi } from "@dxs-ts/gamut";
+import { SiteApi } from "../api-site";
 
 export function createSiteFetch(url: (string | undefined) = '/portal/site') {
   const fetchSiteGet: SiteApi.FetchSiteGET = async (locale: string) => {

@@ -1,4 +1,7 @@
-import { CommsApi, ContractApi, SiteApi } from "@dxs-ts/gamut";
+import { ContractApi } from "../api-contract";
+import { CommsApi } from "../api-comms";
+import { SiteApi } from "../api-site";
+
 
 
 

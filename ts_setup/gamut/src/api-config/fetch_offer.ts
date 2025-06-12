@@ -1,4 +1,5 @@
-import { OfferApi } from "@dxs-ts/gamut";
+import { OfferApi } from "../api-offer";
+
 
 export function createPublicOfferFetch(url: (string | undefined) = '/portal/feedback') {
   const fetchPost: OfferApi.CreateOfferFetchPOST = async (request: OfferApi.OfferRequest) => {

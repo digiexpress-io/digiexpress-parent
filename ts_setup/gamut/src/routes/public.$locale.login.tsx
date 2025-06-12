@@ -1,10 +1,9 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { useLocale } from '../api-locale';
 import { GErrorLogin } from '../g-error-login';
 
 
-export const Route = createFileRoute('/public/$locale/login')({
+export const Route = createFileRoute({
   component: Component,
 })
 

@@ -1,8 +1,7 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { GRouterUnsecured } from '../g-router-unsecured'
 
-export const Route = createFileRoute('/public/$locale/pages/$pageId/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

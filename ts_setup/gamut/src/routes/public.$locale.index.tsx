@@ -1,9 +1,8 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { GRouterUnsecured } from '../g-router-unsecured';
 import { useLocale } from '../api-locale';
 
-export const Route = createFileRoute('/public/$locale/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

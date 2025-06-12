@@ -1,10 +1,7 @@
 import React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
 import { GRouterProduct } from '../g-router-product'
 
-export const Route = createFileRoute(
-  '/public/$locale/pages/$pageId/products/$productId/',
-)({
+export const Route = createFileRoute({
   component: Component,
 })
 

@@ -1,10 +1,10 @@
 import React from 'react'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 import { GRouterProduct } from '../g-router-product';
 
 
 
-export const Route = createFileRoute('/secured/$locale/pages/$pageId/products/$productId/')({
+export const Route = createFileRoute({
   component: Component,
 })
 

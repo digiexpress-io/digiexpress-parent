@@ -1,11 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { Container } from '@mui/material'
 
 import { GShell } from '../g-shell'
 import { GFormTip } from '../g-form'
 import { WithFormProvider } from '../api-dialob'
 
-export const Route = createFileRoute('/secured/$locale/forms/$formId/review')({
+export const Route = createFileRoute({
   component: Component,
 })
 function Component() {

@@ -1,4 +1,4 @@
-import { DialobApi } from "@dxs-ts/gamut";
+import { DialobApi } from "../api-dialob";
 
 
 export function createPublicDialobFetch(url: (string | undefined) = '/portal/feedback') {

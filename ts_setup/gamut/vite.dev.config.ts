@@ -1,5 +1,5 @@
 import { ConfigEnv, UserConfig } from 'vite';
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { tanstackRouter } from '@tanstack/router-vite-plugin';
 
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
@@ -18,13 +18,18 @@ export default function defineConfig(props: ConfigEnv): UserConfig {
   return {
     base: process.env.PUBLIC_URL || '',
     plugins: [
+      tanstackRouter({
+        target: 'react',
+        autoCodeSplitting: true,
+        verboseFileRoutes: false,
+      }),
       react({
         jsxImportSource: '@emotion/react',
         babel: {
           plugins: ['@emotion/babel-plugin'],
         },
       }),
-      TanStackRouterVite(),
+
       checker({ typescript: true }),
       svgr({
         svgrOptions: {
