@@ -89,6 +89,7 @@ export const GInboxNewMessage: React.FC<GInboxNewMessageProps> = (initProps) => 
           id="file-upload-input"
           type="file"
           multiple
+          accept='.jpg, .jpeg, .png, .pdf'
           style={{ display: 'none' }}
           onChange={handleFileUpload}
         />
