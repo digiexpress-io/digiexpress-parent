@@ -23,6 +23,7 @@ package io.digiexpress.eveli.dialob.spi;
 import io.dialob.api.form.Form;
 import io.dialob.api.proto.Actions;
 import io.dialob.api.proto.ImmutableActions;
+import io.dialob.api.questionnaire.ImmutableQuestionnaire;
 import io.dialob.api.questionnaire.Questionnaire;
 import io.dialob.questionnaire.service.api.FormActions;
 import io.dialob.questionnaire.service.api.FormActionsUpdatesCallback;
@@ -52,7 +53,12 @@ public class DialobReviewClientImpl implements DialobReviewClient {
         DialobReviewAssert.notNull(form, () -> "form must be defined!");
         DialobReviewAssert.notNull(formData, () -> "form must be defined!");
         
-        final var envir = new DialobSessionEnvir(form, formData).accept();
+        final var envir = new DialobSessionEnvir(form, 
+            ImmutableQuestionnaire.builder()
+              .from(formData)
+              .id(formData.getId() + "-review") // wipe the ID, just in case
+              .build())
+          .accept();
         
         final var formActions = new FormActions();
         envir.buildFullForm(new FormActionsUpdatesCallback(formActions));
